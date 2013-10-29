@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_Acc" script:language="StarBasic">REM  *****  BASIC  *****
+
+&apos; nuove tabelle (in genere accessorie per il nuovo Taxi
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+Sub Sposta_foglio_sincronizza &apos;(sSheetSRC as string, sSheetTarget as string)&apos; il dispacht sballa il riferimento ad S1
+&apos; quindi sposto il foglio allo stesso numero 
+ print ThisComponent.CurrentController.Frame.Name
+&apos;	iSheetnumSRC = SheetNameToNumber (sSheetSRC)
+&apos;	iSheetnumT = SheetNameToNumber (sSheetTarget)
+&apos;&apos;print iSheetnumSRC &amp; &quot; - &quot; &amp; iSheetnumT
+&apos;	if iSheetnumSRC &lt;&gt; iSheetnumT then
+&apos;		moveByName(sSheetSRC ,iSheetnumT)
+&apos;	end if
+
+&apos;	iSheetnumSRC = SheetNameToNumber (sSheetSRC)
+&apos;	iSheetnumT = SheetNameToNumber (sSheetTarget)
+&apos;print iSheetnumSRC &apos;&amp; &quot; - &quot; &amp; iSheetnumT
+
+
+end sub
+
+Function Cerca_riferimenti (osheet as object)
+
+dim sLinked_0 as string
+dim sLinked_1 as string
+dim sLinked_2 as string
+dim ilastUrow as long
+
+	Barra_Apri_Chiudi_4
+	oProgressbar =ThisComponent.GetCurrentController.GetFrame.CreateStatusIndicator()
+	oProgressBar.Value = 10
+	oProgressBar.Text = &quot;Questa operazione è un po&apos; lunga...Attendi pazientemente!&quot;
+&apos;	oSheet = ThisComponent.currentController.activeSheet 
+	sLinked_0 = &quot;&quot;
+	sLinked_1 = &quot;&quot;
+	sLinked_2 = &quot;&quot;
+	tabLinked() = Array(sLinked_1 , sLinked_2 , sLinked_2)	
+	
+&apos;xray tablinked
+	
+	ilastUrow = getLastUsedRow(oSheet)
+	ilastUCol = getLastUsedCol(oSheet)
+	tabLinked() = Array(sLinked_0 , sLinked_1 , sLinked_2)
+	
+	if ilastUrow &gt; 0 then &apos; se la tabella nom almeno due righr piene ikast row risulta 0 e da&apos; errore div /0  
+		ilastUrow =2
+	end if
+	For i = 1 to ilastUrow
+		&apos; questa è solo una progress bar 
+		if i = cint(20/100*ilastUrow) or _
+		    i = cint(30/100*ilastUrow) or _
+		    i = cint(42/100*ilastUrow) or _
+		    i = cint(56/100*ilastUrow) or _
+		    i = cint(65/100*ilastUrow) or _
+		    i = cint(80/100*ilastUrow) or _
+			i = cint(90/100*ilastUrow) then 
+			 &apos;  print i &amp; &quot; A&quot;
+			   oProgressBar.Value = i*100/ilastUrow
+			   oProgressBar.Text = &quot;Lo so... questa operazione è un po&apos; lunga... ma pazienta! (&quot; &amp; i &amp; &quot;)&quot;	
+			&apos;   print &quot;b&quot;
+		end if		
+
+		for n = 0 to ilastUCol
+			oCell = oSheet.GetCellByPosition( n , i) &apos;occhio Bart, tendi ad invertirli
+			if ocell.Type = com.sun.star.table.CellContentType.FORMULA then
+	 			sRif_1 = ocell.formula
+	 			s = InStr(2, sRif_1, &quot;.&quot;)-2
+	 			sRif_1 = Replace_G(mid(sRif_1, 2, s), &quot;&apos;&quot;, &quot;&quot;)
+	 			sRif_1 = Replace_G(sRif_1,&quot;$&quot;, &quot;&quot;)
+	 			if not ThisComponent.Sheets.hasByName(sRif_1) then 
+	 			 	 &apos; se si tratta di una normale funzione
+	 			 	&apos; ovvero se non c&apos;è una tab con quel nome
+	 			 	sRif_1 = &quot;&quot;
+					goto finito
+	 			end if
+ 				if tabLinked (0) =&quot;&quot; then
+	 						sLinked_0 = sRif_1
+ 							tabLinked() = Array(sLinked_0 , sLinked_1 , sLinked_2)
+ 							goto finito
+	 			end if
+	 				if tabLinked (1) =&quot;&quot; and tabLinked (0) &lt;&gt; sRif_1 then
+	 	 					sLinked_0 = sLinked_0
+	 						sLinked_1 = sRif_1
+	 						tabLinked()= Array(sLinked_0 , sLinked_1 , sLinked_2)
+	 						goto finito
+	 			end if
+	 		&apos;	end if
+	 			if tabLinked (2) =&quot;&quot; and tabLinked (0) &lt;&gt; sRif_1 and _
+	 					tabLinked (1) &lt;&gt; sRif_1 then
+	 	 					sLinked_0 = sLinked_0
+	 	 					sLinked_1 = sLinked_1
+	 						sLinked_2 = sRif_1
+	 						tabLinked() = Array(sLinked_0 , sLinked_1 , sLinked_2)
+	 						goto finito
+	 			end if
+	 		end if
+			finito:
+		next
+	next
+		&apos;xray tabLinked
+	Cerca_riferimenti = tabLinked
+
+end function
+
+
+
+
+
+
+Function trova_file &apos; file picker (generico) non usato
+	sFileURL = GetFileURL( _
+    &quot;Cerca il file .&quot;)
+	If sFileURL = &quot;&quot; Then Exit function
+ 			&apos; oSFAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+	trova_file = sFileURL	
+END FUNCTION
+
+
+Sub Accoda_un_computo &apos; accodamento di dati partendo dal file DCC
+		&apos; la soluzione classica partiva dal sorgente...
+&apos;	sURLdest = ConvertToUrl(ThisComponent.getURL()) 
+	if 	not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;S1&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;S2&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;)) then
+		msgbox &quot; Questo NON è un template di Ultimus, e l&apos;azione richiesta non è ammessa!&quot;
+		exit sub
+	end if
+	sURLdest = ConvertfromUrl(ThisComponent.getURL()) 
+	sNomedest = FileNameoutofPath(sURLdest)
+	&apos;print &quot;sUltimus:  &quot; &amp; sUltimus &apos;&amp; &quot; -- &quot; &amp; sURLdest&apos;&apos;
+	if sURLdest = sUltimus then
+			if  msgbox (&quot; Vuoi accodare un computo in questo  documento?&quot; &amp; CHR$(10)_
+				&amp; &quot;(&quot;&amp; sNomedest &amp; &quot; )&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest  ) = 6 then
+				goto esegui	
+			  else
+			 &apos; 	print 1
+			  	exit sub
+			end if	
+		else
+			if ismissing(sUltimus) or sUltimus = &quot;&quot; then
+				if  msgbox (&quot; Vuoi accodare un computo in questo  documento?&quot; &amp; CHR$(10)_
+					&amp; &quot;(&quot;&amp; sNomedest &amp; &quot; )&quot; &amp; CHR$(10) &amp; CHR$(10)_
+					&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest  ) = 6 then
+					Scrivi_Globale
+					Aggiorniamoli 
+					goto esegui	 				
+				  else
+				  &apos;	print &quot;1a&quot;
+				  	exit sub
+				end if
+			end if
+	end if
+	
+	if sURLdest &lt;&gt; sUltimus then
+	 	if  msgbox (&quot; Il DCC (il Doc di Contabilità Corrente ) è un altro&quot; &amp;  CHR$(10)_
+	 			&amp; &quot;(cioè: &quot; &amp;  sUltimus &amp; &quot;)&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot; Vuoi comunque accodare dei dati di un altro computo qui in &quot; &amp; CHR$(10)_
+				&amp;  &quot;  &quot; &amp; sNomedest &amp; &quot;   ? &quot; &amp; CHR$(10)_
+				&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest  ) = 6 then	
+				&apos; rende DCC questo file&quot;
+				Scrivi_Globale
+				Aggiorniamoli 
+				goto esegui	 
+			else
+			  	exit sub
+		end if	
+	end if
+	esegui:
+	Main_Importa_Altro_Computo(&quot;qualcosa&quot;)
+
+END SUB
+
+sub prova_focus 
+	sTargetURL = ConvertToURL(&quot;file:///home/aimar/Pippo.ods&quot;) 
+	sSheetTarget = &quot;leo&quot; &apos;&quot;gina&quot;
+	&apos; sRangeTarget = &quot;$D$15&quot;
+	Focus_su_altro_Doc ( sTargetURL , sSheetTarget , sRangeTarget )
+				
+end sub
+
+
+
+
+
+
+
+
+
+
+
+</script:module>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="VarGlobal" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+&apos;Global Scrivi_testo_componente as integer
+Global ErroreDet as integer
+Global sModulSubName as string
+Global oActiveCell1
+Global SGenericoMemo
+Global sMemoPesca
+
+FUNCTION Controllo_riga_rossa_EP () &apos; sperimentale... visto che ho contaop 24 controlli forse è
+&apos; meglio accentrarli?
+	sString$ = &quot;Fine elenco&quot;
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Quasi certamente manca la riga rossa di chiusura della tabella! Controlla e  PROVVEDI! &quot;
+		Controllo_riga_rossa_EP = &quot;assente&quot;
+	end if 
+End FUNCTION
+
+
+SUB Detentore_On_Off()
+	Select Case ErroreDet 
+		case = &quot;&quot;
+				ErroreDet = 1
+				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1
+		case = 1
+				ErroreDet = 0
+				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=0
+				msgbox &quot;Detentore Errori : Disattivato!&quot;
+		case = 0 
+				ErroreDet = 1
+				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1
+			msgbox &quot;Detentore Errori : Attivato!&quot;
+		
+	end select 
+END SUB
+
+
+
+Sub DETENTORE_GENERALE_ERRORI____________
+Clessid_lock_End
+Ripristina_controlli_con_nuovaFinestra
+	If msgbox (&quot;Si è verificato un errore durante l&apos;esecuzione di questa macro!&quot;&amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;         Disattivo il detentore di errore per il Debug?&quot;&amp; CHR$(10)_
+		&amp; &quot;&quot;&amp; CHR$(10), 292, &quot;             ..........ERRORE..............&quot;) = 6 then
+		print ErroreDet
+			ErroreDet = 0
+			print ErroreDet
+		else 
+		print ErroreDet
+			ErroreDet = 1
+			print ErroreDet
+	end if
+End Sub
+
+Sub Altro_Detentore_generale_errore
+	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	 ThisComponent.unlockControllers 	
+End sub
+
+Sub DETENTORE_GENERALE_ERRORI(sModulSubName as string, Erl as string,  Err as string,  Error$ as string )
+
+print &quot;sModulSubName&quot; &amp; &quot; - &quot; &amp; Erl &amp; &quot; - &quot; &amp; Err &amp; &quot; - &quot; &amp; Error$
+	If msgbox (&quot; NelModulo: &quot; &amp; sModulSubName &amp; &quot;&quot; &amp; CHR(10)_
+	 &amp; &quot;Alla Riga n.: &quot; &amp; Erl &amp; &quot; &quot; &amp;CHR(10)_
+	 &amp; &quot;Si è verificato questo errore: &quot;&amp;CHR(10)_
+	 &amp;  Err &amp; &quot;: &quot; &amp; Error$ &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;         Disattivo il detentore di errore per il Debug?&quot;&amp; CHR$(10)_
+		&amp; &quot;&quot;&amp; CHR$(10), 292, &quot;             ..........ERRORE..............&quot;) = 6 then
+	&apos;	print ErroreDet
+			ErroreDet = 0
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=0
+	&apos;		print ErroreDet
+		else 
+	&apos;	print ErroreDet
+			ErroreDet = 1
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1
+	&apos;		print ErroreDet
+	end if
+Clessid_lock_End	
+&apos;Ripristina_controlli_con_nuovaFinestra
+End Sub
+
+Sub DETENTORE_GENERALE_ERRORI_0
+Clessid_lock_End
+Ripristina_controlli_con_nuovaFinestra
+MsgBox _
+	&quot; Nella SUB: &quot; &amp; sModulSubName &amp; &quot;&quot; &amp; CHR(10)_
+	 &amp; &quot;Colonna nr.: &quot; &amp; Erl &amp; &quot;-      Riga nr. &quot; &amp;CHR(10)_
+	 &amp; &quot;Si è verificato questo errore: &quot;&amp;CHR(10)_
+	 &amp;  Err &amp; &quot;: &quot; &amp; Error$ 
+	 
+	 &apos;salvare in un file?
+End Sub
+
+
+</script:module>

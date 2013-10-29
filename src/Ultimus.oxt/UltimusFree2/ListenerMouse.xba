@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenerMouse" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                              
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+REM Modulo alternativo per la cattura di un range selezionato in corsa dall&apos;utente
+REM Il codice è stato elaborato da Lido Bernardini
+
+
+Dim Sel As Boolean
+Dim oDocViewQ As Object
+Dim oMouseClickHandlerQ As Object &apos;*****
+Dim oSelect As Object
+Dim lcolorSRC As String
+
+
+sub proviamo_questo
+oCosa = getTheRange
+xray oCosa
+end sub
+
+
+function getTheRangeQ()
+    
+&apos;	DialogLibraries.LoadLibrary(&quot;Standard&quot; )
+&apos;	oDialogoSeleRange = CreateUnoDialog(DialogLibraries.Standard.Dialog1 ) &apos; Inizializza il dialogo
+&apos;	oDialogoSeleRange.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
+
+	oDocViewQ = ThisComponent.getCurrentController()
+	RegisterMouseClickHandlerQ &apos;*****
+	on error goto cleanExit
+	Sel=True
+	
+	do &apos; Inizia un ciclo infinito dal quale si esce  
+	wait 100           
+	loop Until Sel=False&apos; quando sel diventa False
+	getTheRangeQ=oSelect
+
+&apos;do 
+&apos;	oDialogoSeleRange.Execute() 
+&apos;wait 100
+&apos;oDialogoSeleRange.endExecute()
+&apos;loop Until Sel=False
+&apos;oDialogoSeleRange.endExecute()
+&apos;	getRange=oSelect
+&apos;loop
+	cleanExit:
+	UnregisterMouseClickHandlerQ &apos;*****
+end function
+
+&apos; Sotto si crea un listener per intercettare il mouse
+&apos; Agisce solo quando il pulsante viene rilasciato
+&apos; cioÃ¨ quando Ã¨ stato selezionato tutto il range
+&apos; nel caso si debbano selezionare piÃ¹ celle
+
+
+
+Sub RegisterMouseClickHandlerQ &apos;*****
+	oDocViewQ = ThisComponent.getCurrentController()
+	If Not IsNull(oMouseClickHandlerQ) Then &apos; *****
+		oDocViewQ.removeMouseClickHandler(oMouseClickHandlerQ) &apos;*****
+	end if	
+	oMouseClickHandlerQ=createUnoListener(&quot;MyAppQ_&quot;,&quot;com.sun.star.awt.XMouseClickHandler&quot;)&apos;*****
+	oDocViewQ.addMouseClickHandler(oMouseClickHandlerQ)&apos;*****
+
+END SUB
+
+
+Sub UnregisterMouseClickHandlerQ&apos;*****
+	on error resume next
+	oDocViewQ.removeMouseClickHandler(oMouseClickHandlerQ)&apos;*****
+END SUB
+
+
+Function MyAppQ_mousePressed(oEvento) As Boolean&apos;******
+End Function
+
+Function MyAppQ_mouseReleased(oEvento) As Boolean&apos;******
+	oSelect=ThisComponent.CurrentSelection
+	Sel=False
+End Function
+
+</script:module>

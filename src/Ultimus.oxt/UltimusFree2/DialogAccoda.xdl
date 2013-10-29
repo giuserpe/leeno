@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="0" dlg:id="DialogAccoda" dlg:left="57" dlg:top="11" dlg:width="272" dlg:height="273" dlg:closeable="true" dlg:moveable="true" dlg:title="        Accodamento di dati da un Doc di Contabilità Ad un altro">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-height="12"/>
+  <dlg:style dlg:style-id="1" dlg:font-height="11"/>
+  <dlg:style dlg:style-id="2" dlg:text-color="0xc0c0c0" dlg:font-height="11"/>
+  <dlg:style dlg:style-id="3" dlg:font-height="11" dlg:font-slant="oblique"/>
+  <dlg:style dlg:style-id="4" dlg:text-color="0xb3b3b3"/>
+  <dlg:style dlg:style-id="5" dlg:font-height="10" dlg:font-slant="oblique"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="135" dlg:top="169" dlg:width="115" dlg:height="20" dlg:value="Proseguo?   OK!">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Taxi.DlgAcChiudi?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="19" dlg:top="169" dlg:width="54" dlg:height="20" dlg:value="Annulla" dlg:button-type="cancel">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Taxi.DlgAcAnnulla?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox1" dlg:tab-index="2" dlg:left="146" dlg:top="24" dlg:width="73" dlg:height="13" dlg:printable="false" dlg:help-text="seleziona/deseleziona" dlg:value="Elenco Prezzi" dlg:multiline="true" dlg:checked="true"/>
+  <dlg:checkbox dlg:id="CheckBox2" dlg:tab-index="3" dlg:left="31" dlg:top="111" dlg:width="1" dlg:height="0" dlg:value="CheckBox2" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox3" dlg:tab-index="4" dlg:left="147" dlg:top="43" dlg:width="73" dlg:height="11" dlg:printable="false" dlg:help-text="seleziona/deseleziona" dlg:value="Analisi di Prezzo" dlg:checked="true"/>
+  <dlg:checkbox dlg:style-id="2" dlg:id="CheckBox4" dlg:tab-index="5" dlg:disabled="true" dlg:left="148" dlg:top="119" dlg:width="112" dlg:height="13" dlg:printable="false" dlg:help-text="DISATTIVATA" dlg:tabstop="false" dlg:value="Variabili Generali (DISATTIVATA)" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox5" dlg:tab-index="6" dlg:left="148" dlg:top="137" dlg:width="73" dlg:height="9" dlg:printable="false" dlg:help-text="Opzione temporanea, non è previsto l&apos;accodamento a Contabilità iniziata" dlg:value="CONTABILITA" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox6" dlg:tab-index="7" dlg:left="147" dlg:top="59" dlg:width="61" dlg:height="13" dlg:printable="false" dlg:help-text="seleziona/deseleziona" dlg:value="COMPUTO" dlg:checked="true"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox7" dlg:tab-index="8" dlg:left="148" dlg:top="104" dlg:width="97" dlg:height="9" dlg:printable="false" dlg:help-text="seleziona/deseleziona" dlg:value="Anagrafica Progetto" dlg:checked="false"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label4" dlg:tab-index="9" dlg:left="5" dlg:top="210" dlg:width="168" dlg:height="12" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="    Invece, per duplicare fogli singoli nel DCC:" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="10" dlg:left="-24" dlg:top="153" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
+  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="11" dlg:left="1" dlg:top="200" dlg:width="267" dlg:height="4"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label5" dlg:tab-index="12" dlg:left="6" dlg:top="234" dlg:width="165" dlg:height="10" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="  selezionare il foglio poi dal menu&apos; top " dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:fixedline dlg:id="FixedLine3" dlg:tab-index="13" dlg:left="1" dlg:top="196" dlg:width="267" dlg:height="4"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox8" dlg:tab-index="14" dlg:left="148" dlg:top="89" dlg:width="83" dlg:height="9" dlg:printable="false" dlg:help-text="seleziona/deseleziona" dlg:value="Dati del Computo" dlg:checked="false"/>
+  <dlg:fixedline dlg:id="FixedLine4" dlg:tab-index="15" dlg:left="136" dlg:top="22" dlg:width="7" dlg:height="54" dlg:printable="false" dlg:align="vertical"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label1" dlg:tab-index="16" dlg:left="18" dlg:top="37" dlg:width="117" dlg:height="24" dlg:printable="false" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="Accoda i dati di questi fogli" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:fixedline dlg:id="FixedLine5" dlg:tab-index="17" dlg:left="23" dlg:top="48" dlg:width="116" dlg:height="9" dlg:printable="false"/>
+  <dlg:fixedline dlg:id="FixedLine6" dlg:tab-index="18" dlg:left="135" dlg:top="89" dlg:width="7" dlg:height="60" dlg:printable="false" dlg:align="vertical"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label3" dlg:tab-index="19" dlg:left="14" dlg:top="104" dlg:width="120" dlg:height="15" dlg:printable="false" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="Questi dati non vengono realmente" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label7" dlg:tab-index="20" dlg:left="14" dlg:top="115" dlg:width="121" dlg:height="10" dlg:printable="false" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="accodati, ma SOVRASCRITTI" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:progressmeter dlg:id="ProgressBar1" dlg:tab-index="21" dlg:left="73" dlg:top="314" dlg:width="84" dlg:height="14"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label6" dlg:tab-index="22" dlg:left="6" dlg:top="244" dlg:width="165" dlg:height="12" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="  UTILITY &gt; Duplica il foglio attivo Nel DCC" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label8" dlg:tab-index="23" dlg:left="4" dlg:top="219" dlg:width="168" dlg:height="12" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="   (Documento Contabilità Corrente)" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:fixedline dlg:id="FixedLine7" dlg:tab-index="24" dlg:left="20" dlg:top="125" dlg:width="116" dlg:height="9" dlg:printable="false"/>
+  <dlg:fixedline dlg:id="FixedLine8" dlg:tab-index="25" dlg:left="136" dlg:top="132" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
+  <dlg:fixedline dlg:id="FixedLine9" dlg:tab-index="26" dlg:left="136" dlg:top="132" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
+  <dlg:fixedline dlg:style-id="4" dlg:id="FixedLine10" dlg:tab-index="27" dlg:left="50" dlg:top="134" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati" dlg:value="UUUUUUUUUUUUUU"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="28" dlg:left="151" dlg:top="146" dlg:width="109" dlg:height="9" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="  Attenzione, non accoda i Sommari" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label9" dlg:tab-index="29" dlg:left="151" dlg:top="155" dlg:width="109" dlg:height="9" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="  Ed occorre Rifarli (sono pochi minuti)" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:fixedline dlg:style-id="4" dlg:id="FixedLine11" dlg:tab-index="30" dlg:left="-47" dlg:top="254" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
+ </dlg:bulletinboard>
+</dlg:window>

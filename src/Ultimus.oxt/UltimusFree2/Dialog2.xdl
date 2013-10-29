@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog2" dlg:left="222" dlg:top="154" dlg:width="149" dlg:height="118" dlg:closeable="true" dlg:moveable="true">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-height="14"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:text dlg:id="Label2" dlg:tab-index="1" dlg:left="14" dlg:top="-6" dlg:width="34" dlg:height="0" dlg:value="Label2"/>
+  <dlg:text dlg:style-id="0" dlg:id="ASPETTA" dlg:tab-index="0" dlg:left="8" dlg:top="44" dlg:width="125" dlg:height="41" dlg:value="                      ATTENDI!!! elaborazione in corso..." dlg:multiline="true"/>
+ </dlg:bulletinboard>
+</dlg:window>

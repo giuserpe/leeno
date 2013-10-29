@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenersSelectRange" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                            
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+&apos;********************************************************
+&apos;********************************************************
+&apos;********************************************************
+REM MODULO CONTENETE SOLTANTO SelectionListener
+&apos; consente all&apos;utente di selezionare un range con il mouse
+&apos; durante l&apos;esecuzione di una macro 
+&apos; il modulo deriva da solido codice che Paolo Mantovani scrisse sulla lista 
+&apos; dev@it_openOffice.org a seguito di una mia richiesta
+&apos; Non ci capivo niente ed Emuanuele ha rielaborato il codice facendo si che io
+&apos; potessi utilizzarla... ma continuo a capirci poco... 
+
+&apos;inoltre, se si chiude la finestra del listener, questo non viene chiuso... e sarebbe
+&apos;da sistemare
+
+&apos;parecchie parti di codice sembrano non funzionare (in effetti non vengono richiamate)
+
+Global oRangeSelectionListener As Object
+Global sA as string
+
+function getRange(sTitolo as string) as string
+	on error goto cleanExit
+   sA = &quot;&quot;
+   TestRangeSelection(sTitolo)
+   iConta = 100
+   do while sA = &quot;&quot; 
+     wait iConta
+     iConta = iConta + iConta
+     if sA = &quot;ANNULLA&quot; then
+     	exit do
+     end if
+     &apos;print &quot;vediamo :&quot; &amp; sA
+	&apos; come è impostato annulla bene solo su Esc e su Enter
+	&apos; se si clicca sulla crocetta di annullo non c&apos;è modo di intercettare sA
+	&apos; ovvero non si riesce ad interrompere il loop
+     if iConta &gt; 30000 then
+     	exit do
+     end if
+   loop
+   &apos;print sSI
+  &apos; xray getRange
+   getRange = sA
+  cleanExit:
+  ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+  	sA = &quot;ANNULLA&quot; &apos; qui non credo si arrivi MAI
+	 &apos;oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)  &apos;&apos;
+end function
+
+Sub TestRangeSelection(sTitolo)&apos; as string)
+oDocView = ThisComponent.currentController 
+ oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+ 
+ If Not IsNull(oRangeSelectionListener) Then
+     oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+ End If
+Dim oEvent as new com.sun.star.script.ScriptEventDescriptor
+ oRangeSelectionListener = createUnoListener(&quot;oDocView_&quot; , _
+     &quot;com.sun.star.sheet.XRangeSelectionListener&quot;)
+ oDocView.addRangeSelectionListener (oRangeSelectionListener)
+&apos;xray oRangeSelectionListener
+
+ Dim mArgs(2) As New com.sun.star.beans.PropertyValue
+ mArgs(0).Name = &quot;InitialValue&quot;
+ mArgs(0).Value = &quot;ANNULLA&quot;  &apos; era &quot;A1&quot; proviamo se funziona&apos; ma occorre valutare la risposta
+ mArgs(1).Name = &quot;Title&quot;
+ mArgs(1).Value = sTitolo &apos;&quot;    Click sulla destinazione........................&quot; &apos;My Title&quot;
+ mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
+ mArgs(2).Value = True
+
+ oDocView.startRangeSelection(mArgs())
+ cleanExit:
+ &apos;oDocView_aborted(oRangeSelectionListener)
+&apos; xray oEvent&apos;.source
+&apos; oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)
+&apos; UnregisterMouseClickHandlerQ &apos;*****
+END SUB
+
+function getSheet (ByVal sAddress as string) as string&apos; by lupo
+&apos;   dim cellRange as object
+   dim currentSheet as object
+ &apos;  dim row as object
+   currentSheet = ThisComponent.CurrentSelection.getSpreadSheet()
+   cellRange = currentSheet.getCellRangeByName(sAddress)
+   getSheet = cellRange.RangeAddress.sheet   
+ &apos;  row = cellRange.getRows()
+   getSheet = cellRange.RangeAddress.sheet
+end function
+
+
+sub oDocView_done(oEvent)
+&apos;questa routine viene chiamata dal documento
+&apos;dopo che l&apos;utente ha finito di selezionare il range
+ sA = oEvent.RangeDescriptor
+ oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)
+END SUB
+
+sub oDocView_aborted(oEvent)
+&apos;questa routine viene chiamata dal documento
+&apos;se l&apos;utente non ha selezionato nessun range
+ oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)
+END SUB
+
+sub oDocView_disposing(oEvent)
+&apos;questa routine viene chiamata dal documento
+&apos;in caso di dipartita del compianto listener
+
+END SUB
+
+</script:module>

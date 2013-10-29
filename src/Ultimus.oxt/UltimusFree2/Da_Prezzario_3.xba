@@ -1,0 +1,560 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_Prezzario_3" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+SUB Accoda_Marche(livelli as long,  lrow as long) &apos; Questa non credo sia utilizzata... ma per il momento rimane
+print &quot;Dovrebbe esere disattivata... (Sub Accoda_Marche)&quot;
+exit sub
+	
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+  dim iIncMan as double
+  
+  	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+	end if
+
+    sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+    sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+   &apos; print sIncMan
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print sAlfaNum0
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+&apos;	print sAlfaNum1
+	lAlfa0 = Len (sAlfaNum0)
+	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oCell.string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+  
+  &apos;	print lAlfa0
+&apos;	print lAlfaA
+&apos;print livelli
+	Select Case livelli
+
+	Case  1 
+	
+	msgbox &quot;il livello in questo caso deve essere impostato a 2&quot;
+	exit sub
+	&apos;	lAlfaA = Len(sAlfaNum1)
+	&apos;	Do while lAlfa0 = lAlfaA 
+	&apos;			lrow = lrow-1
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+	&apos;			sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;			print &quot;AAA&quot;		
+	&apos;	loop 
+	&apos;	lrow = lrow+1
+	&apos;	sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+
+	Case 2 &apos; per Marche
+print lrow
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 2, lrow).string
+print sAlfac1
+&apos;print oSheet.GetCellByPosition( 2, lrow+1).string
+&apos;print oSheet.GetCellByPosition( 2, lrow).string
+			if oSheet.GetCellByPosition( 6, lrow-1).string = &quot;&quot; AND _
+			 	 sAlfac1 &lt;&gt; oSheet.GetCellByPosition( 2, lrow-1).string	then &apos;oSheet.GetCellByPosition( 2, lrow).string then
+		&apos;	print &quot;diretto&quot;
+				goto voce_completa
+			end if 
+			Do while sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+				if oSheet.GetCellByPosition( 6, lrow).string = &quot;&quot; then
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					print sDescr1
+					goto voce_completa
+				end if 
+				lrow = lrow-1	
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 2, lrow))&apos;debug	
+				print &quot;proseguo&quot;
+			loop 
+			print lrow &amp; &quot;  in uscita&quot;
+		&apos;	lrow = lrow +1
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+	print 	sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
+		&apos;	print &quot;MI&quot;
+					goto voce_completa
+			end if
+			goto voce_completa
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+		&apos;		goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos;
+	&apos;	msgbox &quot;il livello in questo caso deve essere impostato a 2&quot;
+	&apos;	exit sub
+&apos;	print &quot;sono in tip 3&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print &quot;1   &quot; &amp; sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;	print &quot;dove&quot;	
+		&apos;	lAlfa1 = lAlfaA
+			lAlfa1 =  Len( oCell.string)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaB = Len( oCell.string)
+			IF lAlfaB &gt; lAlfa1 then
+			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
+					Do while lAlfaB &gt;= lAlfa1
+						lrow = lrow-1
+						oCell = oSheet.GetCellByPosition( 2, lrow )
+						lAlfaB = Len( oCell.string)
+					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;3c&quot;
+					loop
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+				else
+				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;Altern&quot;
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			end if
+		
+			IF lAlfaA &gt; lAlfa0 then
+			
+		&apos;&apos;		goto voce_completa
+			end if
+		&apos;	sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	print &quot;2   &quot; &amp; sDescr2			
+			oCell = oSheet.GetCellByPosition( 0, 0 )
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+
+	End select
+	 
+
+	voce_completa:
+
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+	
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili procedo a ripulire e incollare
+	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheet)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheet.getCellRangeByPosition (1,2,7,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+&apos;print sCategoria
+	if sCategoria &lt;&gt; &quot;&quot; then
+&apos;		oSheet.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+&apos;	oSheet.getCellByPosition(1,2).string = SCompleta1
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+	
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheet.getCellByPosition(5,1).string
+	if oSheet.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheet.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+				oSheet.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+			end if		
+&apos;PRINT &quot;DDDDD&quot;&apos;
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheet.getCellByPosition(6,2).formula = SCompleta5
+		Else
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheet.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	
+	if oSheet.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then
+		if sSicur &lt;&gt; 0 then 
+			oSheet.getCellByPosition(7,2).value = sSicur
+		end if
+	end if
+	
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheet.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheet.getCellByPosition(3,2).string=SCompleta3 
+
+	SCompleta4 = Prezzo
+	oSheet.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero VERO (non stringa)
+
+    oCell=oSheet.getCellByPosition(2,2) 
+ &apos;   ThisComponent.CurrentController.Select(oCell)
+ &apos;   Adatta_Altezza_riga 	
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+       Adatta_Altezza_riga 	
+ &apos;   pRINT &quot;ACCODA NORMAL&quot;
+end sub
+
+
+
+Sub Voce_a_ElencoPrezzi_Alt (sQualeTipoCodice as string) &apos;versione 081220 (Da prezziario a Template)
+&apos;---------------------------------------------------------------------------
+  	Dim oSourceDoc As Object, oSourceSheet As Object
+  	Dim oTargetDoc As Object, oTargetSheet As Object
+  	Dim sUrl As String
+ 	dim sDesc as string
+ 	dim sUM as string
+	dim sCodOrigine as string
+ 	dim iPrezzo  
+ 	dim iIncMan 
+ 	dim iSic
+&apos;...print &quot;ecco&quot;
+&apos;xray oUltimo_indirizzo_conosciuto &apos;= &quot;&quot;  &apos;temp per debub
+&apos;xray sPrezzario_in_uso 
+&apos;print &quot;uff&quot;	
+on error resume next &apos;da tenere attivo escluso debug
+
+  	oSourceDoc=ThisComponent
+  	oSourceSheet= oSourceDoc.Sheets.getByName(&quot;Temp&quot;)&apos; Siamo su &quot;Temp&quot;
+
+	&apos;la frase che segue serve solo per confermare eventuali dati in sospeso (editing mode)
+	ThisComponent.CurrentController.Select(ThisComponent.currentController.activeSheet.getCellByPosition(0,0)) 
+  	
+  &apos;------------------	
+	oSheetTemp = ThisComponent.currentcontroller.activesheet &apos; FINALMENTE riferimento alla tabella attiva (senza nome ne numero)
+	sPrezzario_in_uso =  ConvertToUrl  (ThisComponent.getURL() ) &apos;oNome_P
+	sPrezzario_in_usoTT =  ConvertToUrl  (ThisComponent.getURL() ) 
+	&apos;-----------------------
+	sPrezzario_in_uso =  ConvertToUrl  (ThisComponent.getURL() )
+	&apos;imposta l&apos;ambaradan per andare o tornare qui
+	&apos; dopo l&apos;inserimento della voce
+	if IsNull(oSheetTemp) then
+			sFlag = &quot;&quot;
+		else	
+			sFlag =oSheetTemp.GetCellByPosition( 6, 22 ).string &apos;value
+	end if
+
+
+
+	oSheet = ThisComponent.currentController.activeSheet
+
+	 &apos; si prelevano i dati su &quot;Temp&quot;
+	sDesc = oSourceSheet.getCellByPosition(2,2).String &apos; si prelevano i dati su &quot;Temp&quot;
+	sUM = oSourceSheet.getCellByPosition(3,2).String   &apos; alle quattro variabili
+	iPrezzo = oSourceSheet.getCellByPosition(4,2).Value
+	sCodOrigine = oSourceSheet.getCellByPosition(6,2).String
+	iSic = oSourceSheet.getCellByPosition(7,2).value
+	iIncMan = oSourceSheet.getCellByPosition(5,2).value
+
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+ 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+	End If 
+
+
+	&apos; questa recupera il codice originale del prezziario	
+	if not isnull (UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto) then
+			lrow = UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto.RangeAddress.StartRow
+		&apos;	print &quot;la riga &quot; &amp; lrow
+			oSheetMbo = ThisComponent.Sheets.getByIndex(oUltimo_indirizzo_conosciuto.RangeAddress.Sheet) 
+			sCodOrigineNUDO = oSheetMbo.GetCellByPosition(2 , lrow ).string
+		&apos;		print &quot;indirizzo trovato &quot; &amp; sCodOrigineNUDO
+		else
+			&apos; nel caso abbia perso il puntamento al listino
+			&apos; tentiamo questo
+			sCodOrigineNUDO = oSourceSheet.getCellByPosition(6,2).Formula
+		  	BigString=sCodOrigineNUDO
+			PreString = &quot;;   &quot;
+			PostString = &quot;)&quot;
+			SearchPos = 10
+			sCodOrigineNUDO = FindPartString(BigString, PreString, PostString , SearchPos)
+			lstr= len(sCodOrigineNUDO)
+			sCodOrigineNUDO = left (sCodOrigineNUDO,lstr-1)
+			sCodOrigineNUDO = Right (sCodOrigineNUDO,lstr-2)
+		&apos;	print &quot;indirizzo NON trovato - tento recupero &quot; &amp; sCodOrigineNUDO
+	end if
+
+	
+	SpostaCursore_su_Prezzario &apos; questo accrocchio fa si che quando l&apos;utente
+	&apos;torna sul prezzario si ritrova nel listino alla voce che precedentemente
+	&apos; aveva selezionato (anzichè nella sheet di assemblaggio)
+	
+	
+	&apos;ora tutti i dati del prezzario dovrebbero essere &apos;in memoria&apos; vediamo il DCC
+	&apos;aggiorna_nome_CC  &apos; prima cosa azzerare eventuali &apos;fantasmi&quot;
+	ThisComponent.getCurrentController.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;).string = UltimusFree2.Lupo_0.sUltimus
+	If UltimusFree2.Lupo_0.sUltimus = &quot;&quot; then &apos; se non è definoto...
+		Select case msgbox (&quot;Non è stato definito il documento DCC, ovvero non so dove infilare la voce di prezzo!!&quot; &amp; CHR$(10)_
+					&amp; &quot;Carica il documento di Computo dal tuo HardDisk &quot; &amp; CHR$(10)_
+					&amp; &quot;(lo devi &apos;caricare&apos; nuovamente... anche se è già aperto)&quot; &amp; CHR$(10)_
+					&amp;&quot;         Carico il documento ?... &quot; &amp; CHR$(10) _
+   					&amp;  CHR$(10) &amp; &quot;&quot;,35, &quot;Carico il documento di Contabilità DCC ?&quot;) 
+   				
+				case 6 &apos;SI
+						sSourceURL = GetFileURL( _
+						&quot;CARICA IL TUO DOCUMENTO DI COMPUTO&quot;)
+						If sSourceURL &lt;&gt; &quot;&quot; Then 
+ 								Stardesktop.LoadComponentFromUrl(sSourceURL, &quot;_default&quot;, 1, Array())
+ 								wait 100 &apos; 
+ 							else
+								Print &quot;Non hai selezionato un file:. ANNULLO!&quot;
+								exit sub
+ 						end if
+				case 7
+	   				exit sub
+ 	  			case 2
+   					exit sub
+   		end select	
+		Scrivi_Globale &apos;registra il doc come DCC  
+		Sel_Elenco_Prezzi
+   	end if
+  
+  	SUrl = UltimusFree2.Lupo_0.sUltimus 
+  	sUrl2 = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus)
+
+
+
+	&apos; vado sul doc di Contabilità corrente
+	oTargetDoc= StarDesktop.LoadComponentFromUrl(sUrl2, &quot;_default&quot;, 0, Array())
+&apos;	oTargetSheet= oTargetDoc.getSheets.getByName(&quot;S1&quot;) &apos; Siamo su &quot;S1&quot;
+
+	iTemp = 200 &apos; tantra techniquespirlo
+		do while thisComponent.Sheets.hasByName(&quot;Listino&quot;)
+			iTemp = iTemp +Itemp
+			if iTemp &gt;3000 then
+				exit do
+			end if
+			wait iTemp
+		loop			
+
+&apos;	iCellAttr = com.sun.star.sheet.CellFlags.VALUE + com.sun.star.sheet.CellFlags.STRING
+&apos;	oRange = oTargetSheet.getCellRangeByPosition( 37,55,44,55)
+&apos;	oRange.ClearContents(iCellAttr)
+
+
+&apos;	oSheet = oTargetDoc.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+									&apos;						 &apos; i dati in oSRC
+	wait 100  
+
+	oSheet = oTargetDoc.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos; Ho cambiato ThisComponent con oTargetDoc che è
+														  &apos; la variabile che contiene gia l&apos; oggetto documento
+														  &apos; cioè Ultimus ( vedi sopra oTargetDoc = ...), così 
+														  &apos; non si ferma 
+
+	Thiscomponent.currentcontroller.setactivesheet(Osheet)
+	Osheet.isVisible = true	
+			
+	lcolbase = Colonna_giusta_EP(osheet) 										  
+	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+		print lcolbase
+		exit sub
+	end if
+	
+	&apos;stabiliamo la riga di inserimento in EP
+	lrowI = 2
+	oCell = oSheet.GetCellByPosition( lcolbase,lrowI) &apos; 3 ) 
+&apos;	oTargetDoc.CurrentController.Select(oCell) &apos;vediamo se serve
+	oSheet.unprotect(&quot;&quot;)
+	oSheet.getRows.insertByIndex(2, lrowI-1)
+	
+	&apos; sistemo gli stili nelle celle
+	oSheet.getCellByPosition(lcolbase+0,lrowI).CellStyle = &quot;EP-aS&quot;
+	oSheet.getCellByPosition(lcolbase+1,lrowI).CellStyle = &quot;EP-a&quot;
+	oSheet.getCellByPosition(lcolbase+2,lrowI).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+3,lrowI).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+4,lrowI).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+5,lrowI).CellStyle = &quot;EP-mezzo %&quot;
+	oSheet.getCellByPosition(lcolbase+6,lrowI).CellStyle = &quot;EP-mezzo&quot;
+	&apos; sCol= ColumnNameOf(lcolbase+11)
+	oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
+	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;)&quot; 
+	&apos; iScarto è per la versione 4 (questo pezzo non è stato ancora testato)
+&apos;	if iscarto &lt;&gt; 0 then
+&apos;		oSheet.getCellByPosition(lcolbase+iscarto+5,lrowI).CellStyle =  &quot;EP-mezzo %&quot;
+&apos;		oSheet.getCellByPosition(lcolbase+iscarto+6,lrowI).CellStyle =  &quot;EP-mezzo&quot;
+&apos;			oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
+&apos;			 &quot;=IF(E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp;&quot;)&quot; 
+			&apos; oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
+			&apos; &quot;=IF(E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp;&quot;)&quot;
+&apos;	end if
+	
+	oSheet.getCellByPosition(lcolbase+iscarto+7,lrowI).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+iscarto+8,lrowI).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+iscarto+9,lrowI).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+iscarto+10,lrowI).CellStyle = &quot;EP statistiche&quot;
+		
+
+	&apos; scrivo in EP i dati delle variabili prelevate dal listino,
+	
+	if sQualeTipoCodice = &quot;interno&quot; then
+		oSheet.getCellByPosition(lcolbase,lrowI).SetString(&quot;......&quot;)  
+	end if
+&apos;print sQualeTipoCodice
+&apos;print lcolbase  &amp; &quot;  &quot; &amp;lrowI
+	if sQualeTipoCodice = &quot;originale&quot; then
+&apos;		print &quot;prima &quot; &amp; &quot; - &quot; &amp; lcolbase &amp; &quot; - &quot; &amp; sCodOrigineNUDO
+		oSheet.getCellByPosition(lcolbase,lrowI).SetString(sCodOrigineNUDO)  
+&apos;		print &quot;dopo!&quot;
+	end if
+
+	oSheet.getCellByPosition(lcolbase+1,lrowI).SetString(sDesc) 
+	oSheet.getCellByPosition(lcolbase+2,lrowI).SetString(sUM)   
+	oSheet.getCellByPosition(lcolbase+3,lrowI).SetValue(iSic)
+	oSheet.getCellByPosition(lcolbase+4,lrowI).SetValue(iPrezzo)
+&apos;PRINT iIncMan
+	oSheet.getCellByPosition(lcolbase+5,lrowI).SetValue(iIncMan )
+	oSheet.getCellByPosition(lcolbase+6,lrowI)&apos;.SetValue(....)
+	oSheet.getCellByPosition(lcolbase+7,lrowI).setString(sCodOrigine)
+&apos;print &quot;guarda&quot;
+	
+	oSheet = ThisComponent.currentController.activeSheet
+	oMioRange=thisComponent.getCurrentSelection()
+	oMioRange.Rows.OptimalHeight = true
+
+&apos;xray sPrezzario_in_uso
+&apos;xray oUltimo_indirizzo_conosciuto
+&apos;	sFlag = &quot; &quot; &apos; 
+	if sQualeTipoCodice = &quot;originale&quot; then
+		If sFlag= &quot;A&quot; or sFlag= &quot;a&quot; then &apos;il flag è impostato nella sheet temp dei prezzari
+			&apos; torna automaticamente sul prezzario
+ 		 	sUrl0 = ConvertToUrl (sPrezzario_in_uso)
+ 		 	if isnull(oUltimo_indirizzo_conosciuto) then
+ 				if not isnull(sPrezzario_in_uso) then				
+ 				end if
+ 			end if
+ 		  else
+ 		    &apos; se non è flaggato con &quot;a&quot; annula il ritorno al listino
+ 		    exit sub
+ 		end if	
+ 		 &apos;	oPrezzario = StarDesktop.LoadComponentFromUrl(sUrl0, &quot;_default&quot;, 0, Array())
+ &apos;		 	xray sPrezzario_in_uso
+ &apos;		 	xray oUltimo_indirizzo_conosciuto
+ 			sTargetURL = sUrl0
+ 			ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; 
+			sFrName = &quot;Sorgente&quot;
+			Focus_su_altro_Doc (sTargetURL , sSheetTarget , sRangeTarget, &quot;1&quot;, sFrName)
+			iTemp = 200 &apos; tantra techniquespirlo
+			do while thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;)
+			iTemp = iTemp +Itemp
+			if iTemp &gt;3000 then
+				exit do
+			end if
+			wait iTemp
+			loop			
+			&apos;if ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; then
+		&apos;		i=0
+				&apos;print &quot;Uff! sono ancora sul sorgente....:-) &quot;	
+		&apos;		do while ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; 
+			&apos;		Focus_su_altro_Doc (sTargetURL , sSheetTarget , sRangeTarget, &quot;&quot;, sFrName)
+ 			&apos;		i=i+1
+ 			&apos;		if i&gt;=5 then
+ 			&apos;			exit do
+ 			&apos;		end if
+			&apos;	loop
+		&apos;	end if
+		&apos;	if ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; then
+		&apos;			print &quot;Ancora Errore nello spostamento - ultimo tentativo....&quot;
+ 		&apos;			sFrName = &quot;Sorgente&quot;
+ 		&apos;			Focus_su_altro_Doc (sTargetURL , sSheetTarget , sRangeTarget, &quot;&quot;, sFrName)
+		 &apos;	end if	
+
+	end if
+&apos;	Sel_Elenco_Prezzi
+	wait 500
+	if sQualeTipoCodice = &quot;interno&quot; then
+		Sel_Elenco_Prezzi
+		oSheet = ThisComponent.currentController.activeSheet		
+		thiscomponent.CurrentController.Select(oSheet.getCellByPosition(lcolbase,lrowI))
+		 msgbox &quot;!!!!!  Inserisci il TUO codice organizzativo (di comodo) per l&apos;Elenco Prezzi&quot;&amp; CHR(10) &amp; CHR(10)_
+    		&amp;&quot; (Vedi (e modifica eventualmente) la tabella &quot;&quot;Legenda&quot;&quot; come tuo promemoria... &quot;&amp; CHR(10)_
+    		&amp; &quot; &quot;&amp; CHR(10)_
+    		&amp; &quot;Ctrl shift Z oppure ALT -Z   per tornare sul prezzario...&quot; &amp; CHR(10)_
+    		&amp; &quot; &quot;
+    end if
+   
+   &apos;ora vorrei tanto rendere null la variabile
+   &apos; xray oUltimo_indirizzo_conosciuto
+    oUltimo_indirizzo_conosciuto = Nothing  &apos;.release() &apos; = &quot;null object&quot; 
+	
+&apos;	if isnull (UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto) then
+&apos;			print &quot;vuoto&quot;
+&apos;		else
+&apos;			print &quot;qualcos&apos;altro&quot;
+&apos;	end if
+ &apos;    xray oUltimo_indirizzo_conosciuto
+END SUB
+</script:module>

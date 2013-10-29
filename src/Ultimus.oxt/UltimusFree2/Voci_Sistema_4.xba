@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_4" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+&apos;_______________________________________________________________________________________
+Sub Copia_Formati_Su_Tutto_Computo_Val &apos; percorre Computo individuando le singole voci
+									&apos; e il campo validità della sigla (non tocca i valorigià inseriti)
+		&apos;Attenzione !! LAvora solo sulla colonna B -
+		
+		Print &quot;????????????????&quot;
+Dim iRrow as long
+Dim lrowE as long
+dim lastUrow as long
+dim oSheet, oEnd as object 
+dim oCell as object
+dim sString$, xA, sTag as string
+	if  msgbox (&quot;Questa è un&apos;operazione laboriosa... e ci metterò parecchio tempo...&quot;&amp; CHR$(10)_
+			&amp;&quot;Proseguo ?... &quot;_
+		&amp;&quot;&quot;,4, &quot;&quot;&amp; CHR$(10)) = 7 then
+
+		exit sub
+	end if
+
+	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+&apos;	ThisComponent.CurrentController.Select(oSheet)
+	iRrow = 3
+	oCell = oSheet.GetCellByPosition( 3 , iRrow)
+&apos;	ThisComponent.CurrentController.Select(oCell)
+	lastUrow = getLastUsedRow(oSheet)
+	sString$ = &quot;Fine Computo&quot;  &apos; DOPPIO CONTROLLO sulla fine della sheet
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI10! &quot;
+		exit sub
+	end if 
+	lRowE=oEnd.RangeAddress.EndRow 
+	iRrow = 3
+	oCell = oSheet.GetCellByPosition( 3 , iRrow)
+	xA = oCell.string
+
+	Do  while iRrow &lt; lastUrow And iRrow &lt; lRowE
+				Do  while xA &lt;&gt;  &quot;SOMMANO &quot; &apos;and  iRrow &lt; lastUrow
+						If lrowE &lt;= iRrow then
+						sTag = &quot;esci&quot;
+							exit do
+						end if		
+						iRrow = iRrow+1
+  						oCell = oSheet.GetCellByPosition( 3 , iRrow)
+ 						xA = oCell.string
+		&apos;			ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+	&apos;					print xA
+		 		Loop
+ 		 if sTag = &quot;esci&quot; then
+ 		 		exit do
+ 		 end if
+ 		 oCell = oSheet.GetCellByPosition( 3 , iRrow)
+ 	&apos;&apos;&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ &apos;		 print  &quot;prima   &quot; &amp; iRrow
+ 		 
+ 		&apos;Copia_Formule_Su_Computo_Sing_Voce (iRrow)
+ 	&apos;	iRrow = Riformatta_Voce_Computo_3 (iRrow)
+ 		iRrow =Riformatta_Voce_Computo_3_MOD (iRrow)
+ &apos;	print &quot;torna    &quot; &amp; iRrow
+ 		
+ 	&apos;	oCell = oSheet.GetCellByPosition( 3 , iRrow)
+ &apos;		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ &apos;		print &quot;dopo &quot; &amp; iRrow
+	&apos;	ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+	&apos;	print &quot; posizione dopo l&apos;azione singila voce  &quot; &amp; iRrow
+		iRrow = iRrow +2
+&apos;		print &quot;sommato &quot; &amp;iRrow
+  		oCell = oSheet.GetCellByPosition( 3 , iRrow)
+  		xA = oCell.string
+  	&apos;	ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ &apos;		print &quot;ciclo esterno&quot;
+  	loop
+  	msgbox &quot;La macchina ha modificato il campo della sigla del Computo aggiungendo la finestrella della &quot;&quot;validità&quot;&quot;...  è stata dura... :-)....!&quot;
+END SUB
+
+
+
+Function Riformatta_Voce_Computo_3_MOD (lrow)  &apos; copia i formati della colonna B
+print &quot;?????????&quot;
+dim	lSheetSRC as long
+dim	sRangeSRC as string
+dim	lSheetDest as long
+dim	sRangeDest as string
+
+oDoc = thisComponent
+oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+oSheets = odoc.Sheets
+
+
+
+	 lSheetSRC = SheetNameToNumber (&quot;S1&quot;) 
+	 lSheetDest = SheetNameToNumber (&quot;COMPUTO&quot;) 
+	 
+	 sRangeSRC = &quot;&apos;S1&apos;.$F$45:$F$46&quot;
+
+ &apos;	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+	lastUrow = getLastUsedRow(oSheet)
+ &apos;	 lRow=oCell.CellAddress.Row
+	 if lrow &gt; lastUrow-2 then
+ 			exit function
+	 end if
+
+	xA =oCell.String
+	do while xA = &quot;&quot; 
+		lrow = lrow -1
+		oCell = oSheet.GetCellByPosition( 0 , lrow)
+		xA =oCell.String
+	loop
+	
+
+	oRangeVC =  Circoscrive_Voce_Computo_B (lrow)
+	
+&apos;ThisComponent.CurrentController.Select(oRangeVC)
+&apos;print
+     lrow = oRangeVC.RangeAddress.StartRow
+	 lEndRow = oRangeVC.RangeAddress.EndRow-1
+	 oCell = oSheet.GetCellByPosition( 0 , lrow-1)
+  &apos;  ThisComponent.CurrentController.Select(oCell)
+
+	sRangeDest =  &quot;COMPUTO.B&quot;+ (lrow+1 ) &apos;
+	
+	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+
+ &apos;   oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 
+&apos;	lrow = oRangeVC.RangeAddress.EndRow -1
+&apos;&apos;	lrowE = lrow
+&apos;oCell = oSheet.GetCellByPosition( 1 , lrow )
+ &apos;	    ThisComponent.CurrentController.Select(oCell)	
+&apos;print &quot;appena copiato&quot;
+&apos;	sRangeSRC = &quot;&apos;S1&apos;.$E$48:$AI$48&quot;
+&apos;	sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+2 )
+&apos;	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+	&apos; ok! Sistemata anche la riga sommano
+	&apos; copiato tutto (formati, formule e contenuti) della riga sommano
+
+  &apos;  oCell = oSheet.GetCellByPosition( 1 , lrow-1)
+   &apos;  xA =oCell.String	
+  &apos;  ThisComponent.CurrentController.Select(oCell)
+  
+&apos;	Do while xA =  &quot;&quot; &apos; ciclo che copia i formati dei conti parziali
+&apos; 		sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+1 )
+ &apos;	    TargetCell = oSheetN+&quot;.A&quot;+ (lrow+1 )
+&apos; 		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$AI$47&quot;	  
+&apos; 		copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+&apos;   		lrow=lrow-1
+&apos; 	    oCell = oSheet.GetCellByPosition( 1 , lrow)
+  	 &apos;   ThisComponent.CurrentController.Select(oCell)
+ &apos;	    Print&quot; copiato&quot;
+&apos; 	    xA =oCell.String	    
+&apos;	loop
+	
+	&apos;oCell = oSheet.GetCellByPosition( 1 , lrowE+3)
+	
+	 Riformatta_Voce_Computo_3_MOD = lEndRow
+&apos;	 oCell = oSheet.GetCellByPosition( 1 , lEndRow)
+&apos;	 ThisComponent.CurrentController.Select(oCell)
+&apos;	 print 
+
+&apos; controllare anche le somme???	
+End function
+
+
+Function Riformatta_Voce_Computo_3 (lrow)  &apos; copia i formati della colonna B
+print &quot;?????????????????&quot;
+dim	lSheetSRC as long
+dim	sRangeSRC as string
+dim	lSheetDest as long
+dim	sRangeDest as string
+
+
+oDoc = thisComponent
+oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+oSheets = odoc.Sheets
+
+
+
+	 lSheetSRC = SheetNameToNumber (&quot;S1&quot;) 
+	 lSheetDest = SheetNameToNumber (&quot;COMPUTO&quot;) 
+	 
+	 sRangeSRC = &quot;&apos;S1&apos;.$E$45:$AI$47&quot;
+
+ &apos;	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+	lastUrow = getLastUsedRow(oSheet)
+ &apos;	 lRow=oCell.CellAddress.Row
+	 if lrow &gt; lastUrow-2 then
+ 			exit function
+	 end if
+
+	xA =oCell.String
+	do while xA = &quot;&quot; 
+		lrow = lrow -1
+		oCell = oSheet.GetCellByPosition( 0 , lrow)
+		xA =oCell.String
+	loop
+	
+
+	oRangeVC =  Circoscrive_Voce_Computo_B (lrow)
+	
+&apos;ThisComponent.CurrentController.Select(oRangeVC)
+&apos;print
+     lrow = oRangeVC.RangeAddress.StartRow
+
+	 oCell = oSheet.GetCellByPosition( 0 , lrow)
+  &apos;  ThisComponent.CurrentController.Select(oCell)
+
+	sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+1 ) &apos;
+	
+	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+
+    oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 
+	lrow = oRangeVC.RangeAddress.EndRow -1
+	lrowE = lrow
+oCell = oSheet.GetCellByPosition( 1 , lrow )
+ &apos;	    ThisComponent.CurrentController.Select(oCell)	
+
+	sRangeSRC = &quot;&apos;S1&apos;.$E$48:$AI$48&quot;
+	sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+2 )
+	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+	&apos; ok! Sistemata anche la riga sommano
+	&apos; copiato tutto (formati, formule e contenuti) della riga sommano
+
+    oCell = oSheet.GetCellByPosition( 1 , lrow-1)
+     xA =oCell.String	
+  &apos;  ThisComponent.CurrentController.Select(oCell)
+  
+	Do while xA =  &quot;&quot; &apos; ciclo che copia i formati dei conti parziali
+ 		sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+1 )
+ &apos;	    TargetCell = oSheetN+&quot;.A&quot;+ (lrow+1 )
+ 		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$AI$47&quot;	  
+ 		copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+   		lrow=lrow-1
+ 	    oCell = oSheet.GetCellByPosition( 1 , lrow)
+  	 &apos;   ThisComponent.CurrentController.Select(oCell)
+ &apos;	    Print&quot; copiato&quot;
+ 	    xA =oCell.String	    
+	loop
+	
+	oCell = oSheet.GetCellByPosition( 1 , lrowE+3)
+	 Riformatta_Voce_Computo_3 = lrowE+3
+&apos;	 ThisComponent.CurrentController.Select(oCell)
+
+&apos; controllare anche le somme???	
+End function
+</script:module>

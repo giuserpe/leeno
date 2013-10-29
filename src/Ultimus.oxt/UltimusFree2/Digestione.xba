@@ -1,0 +1,371 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Digestione" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+&apos;_______________________________________________________________________________________
+REM Questo modulo serve sostanzialmente per elaborare listini con prezzi in formato testo
+REM Il codice è stato elaborato da Emanuele e Lido Bernardini (utenti@openoffice.org) su mia &quot;sollecitazione&quot;.
+REM Intendo dire che ho continuato per un paio di mesi a rompere l&apos;anima cambiando le specifiche e
+REM lamentandomi... :-)
+REM ma adesso il risultato mi sembra molto buono!
+REM la macro può essere usata anche per convertire listini, prezzari ed estratti conto in 
+REM formato testo (in genere i dati provenienti da file csv hanno quel problema)
+REM Se Ultimus è installato la macro funziona su qualsiasi file di calc semplicemente selezionando 
+REM una serie (verticale) di celle e premendo Ctrl-Alt-S.
+
+REM Se pensate che un plugin autonomo possa essere utile fatemelo sapere.
+&apos;_______________________________________________________________________________________
+Global Dlg2 as Object
+Global bContinua as boolean
+Global a3 as integer
+
+
+&apos;Public Dlg2 as Object
+&apos;Public a3 as integer
+&apos;public bContinua as boolean
+
+
+sub Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri(optional oRange as object)
+	&apos; Converte da numeri in formato stringa
+	&apos; a nuneri &quot;veri&quot;
+	&apos; copiandoli su una nuova colonna a lato
+	&apos; versione del 13/06/06
+	&apos; da azionare dopo aver selezionato
+	&apos; il range di celle da convertire
+
+	Dim d As long
+	Dim e As long
+	Dim f As long
+	Dim g As long
+	Dim Tipo As Double
+	Dim Tipo2 As String
+	dim Tipo2_temp as string
+	dim oFoglio As Object
+	dim oSelections as object
+	Dim oMycell As Object
+	Dim oMyRange As Object
+	Dim NumCol As Integer
+	dim cell as object
+	Dim h As Integer
+	Dim i As Integer
+	Dim l As String
+	Dim iPosizionePrimoPunto as integer
+	Dim iPosizionePrimaVirgola as integer
+	dim tipo3 as double
+	Dim oBarra As Object
+
+	dim sPaginaRiferimento as string
+	dim oTextSearch as object
+	dim aSearchResult as object
+	dim iContieneDecimali as integer
+	dim iContieneMigliaia as integer
+	dim iContieneApici as integer
+	Dim aSrcOpt As New com.sun.star.util.SearchOptions
+	oTextSearch = CreateUnoService(&quot;com.sun.star.util.TextSearch&quot;)
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Verifica_chiudi_preview
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
+
+	Set oFoglio = ThisComponent.currentController.activeSheet
+	if isMissing (oRange) then
+			oSelections = ThisComponent.getCurrentSelection()
+		else
+			oSelections = oRange
+			a3 = 1
+	end if
+
+	select case a3
+		case -1
+			exit sub
+		case 0
+			decSep = &quot;,&quot;
+			migSep = &quot;.&quot;
+		case 1
+			decSep = &quot;.&quot;
+			migSep = &quot;,&quot;
+		case else
+			msgbox &quot;Qualcosa non va!!&quot;
+			exit sub
+	end select
+
+	oMyRange=oSelections.getRangeAddress()
+	d = oMyRange.StartColumn &apos;getColonnaIniziale(a)
+	e = oMyRange.StartRow &apos;getRigaIniziale(a)
+	f = oMyRange.EndRow &apos;getRigaFinale(a)
+	NumCol = oMyRange.StartColumn &apos; definisce il numero della colonna
+		oFoglio.unprotect(&quot;&quot;)
+	oFoglio.Columns.insertbyindex(d+1,1)
+
+	oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
+	oBarra.Start(&quot;  Conversione in corso...&quot;, Val(f))
+
+	For g = Val(e) to Val(f) &apos; Inizia il ciclo
+		oBarra.setValue(g)
+		Cell = oFoglio.getCellByPosition(NumCol, g)
+		oMycell = oFoglio.getCellByPosition(NumCol+1, g )
+&apos;xray oMycell
+		if (Cell.Type = com.sun.star.table.CellContentType.VALUE) then
+&apos;		print &quot;valore&quot;
+					Tipo = Cell.Value
+					oMycell.setValue(Tipo)
+					If oMycell.NumberFormat = 11 then
+						oMycell.NumberFormat = 11
+					  ELSE
+						oMycell.NumberFormat = 4 &apos;Valore ##.##0,00
+					END IF
+		  else
+		  
+			if (Cell.Type = com.sun.star.table.CellContentType.TEXT) then
+				Tipo2 = Cell.String
+				Tipo2_temp = Tipo2
+				
+				if Right (Tipo2,1) = &quot;%&quot; then &apos; aggiunto da Bart il 19/04/07
+					dim tipo5 as double
+					Tipo2 = join(split(Tipo2, &quot;%&quot;), &quot;&quot;)
+					Tipo2 = Trim(Tipo2)
+					Tipo2 = join(split(Tipo2, &quot; &quot;), &quot;&quot;)
+					Tipo2 = join(split(Tipo2, &quot;&apos;&quot;), &quot;&quot;)
+					Tipo2 = join(split(Tipo2, migSep), &quot;&quot;)
+					Tipo2 = join(split(Tipo2, decSep), getDefDecimaSeparator)
+					Tipo5 = CDbl(Tipo2)
+					Tipo5 = Tipo5 /100
+					oMycell.setValue(Tipo5)
+					goto Salta
+				end if
+				
+				if not contieneTesto(Tipo2) then
+					Tipo2 = Trim(Tipo2)
+					Tipo2 = join(split(Tipo2, &quot; &quot;), &quot;&quot;)
+					Tipo2 = join(split(Tipo2, &quot;&apos;&quot;), &quot;&quot;)
+					Tipo2 = join(split(Tipo2, migSep), &quot;&quot;)
+
+					iContieneDecimali = contieneSimboli(Tipo2, decSep)
+
+					if (iContieneDecimali &lt; 2) then
+							Tipo2 = join(split(Tipo2, decSep), getDefDecimaSeparator)
+							Copia_stringa(oMycell, Tipo2)
+			    		else
+							errore_stringa(oMycell, Tipo2_temp)
+					end if
+				else
+					errore_stringa(oMycell,Tipo2_temp)
+			end if
+		end if
+		end if
+		Salta:
+	Next
+
+	oBarra.End
+	if isMissing (oRange)  then
+		msgbox &quot;   La conversione in numeri è &quot;_
+		&amp; &quot;terminata... &quot;&amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;Ma ATTENZIONE: una errata indicazione del separatore decimale&quot;&amp; CHR$(10)_
+		&amp; &quot; restituisce inevitabilmente dei numeri errati! &quot;&amp; CHR$(10)&amp; CHR$(10)_
+		&amp; &quot;      Quindi CONTROLLA!!&quot;
+	end if
+
+end sub
+
+Sub errore_stringa(oMycell, Tipo2)
+	&apos;If MsgBox(&quot;Non riesco ad interpretare &quot;&amp; &quot;questa stringa...--&gt; &quot;&amp; _
+	&apos;&quot;&apos; &quot; &amp; Tipo2 &amp; &quot; &apos;&quot; &amp; CHR$(10) &amp; _
+	&apos;&quot;  Proseguo copiando il testo tal quale ?&quot; &amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
+	oMycell.setString(Tipo2)
+	oMycell.CellBackColor = RGB(255,0,0)
+	&apos;end if
+End Sub
+
+Sub Copia_Stringa(oMycell,Tipo2)
+on error goto gest_errore
+	oMycell.setValue(cDbl(Tipo2))
+&apos;	If sDec 
+&apos;xray oMycell
+	oMycell.NumberFormat = 4&apos;7&apos;2&apos;3 &apos;4
+	oMycell.CellBackColor = RGB(0,255,0)
+	exit sub
+gest_errore:
+errore_stringa(oMycell, Tipo2)
+End Sub
+
+function contieneTesto(sTesto as string) as boolean
+	dim sPaginaRiferimento as string
+	dim oTextSearch as object
+	
+	dim aSearchResult as object
+	Dim aSrcOpt As New com.sun.star.util.SearchOptions
+	
+	oTextSearch = CreateUnoService(&quot;com.sun.star.util.TextSearch&quot;)
+	
+	With aSrcOpt
+		.searchFlag = com.sun.star.util.SearchFlags.REG_EXTENDED
+		.algorithmType = com.sun.star.util.SearchAlgorithms.REGEXP
+		.searchString = &quot;.[A-Za-zéèòàçìù%&amp;]&quot;
+	End With
+	oTextSearch.setOptions(aSrcOpt)
+
+	&apos;L&apos;asterisco serve come trucco per evitare che se il testo è il primo carattere
+	&apos;il aSearchResult.subRegExpressions sia comunque uguale a zero
+	aSearchResult = oTextSearch.searchForward(&quot;*&quot; &amp; sTesto, 0,Len(sTesto)+1)
+	if aSearchResult.subRegExpressions &gt; 0 then
+		contieneTesto = true
+	end if
+end function
+
+function contieneSimboli(sTesto as string, sSimbolo as string) as integer
+	Dim sPaginaRiferimento as string
+	Dim iCount as integer
+	Dim oTextSearch as object
+	Dim aSearchResult as object
+	Dim aSrcOpt As New com.sun.star.util.SearchOptions
+	oTextSearch = CreateUnoService(&quot;com.sun.star.util.TextSearch&quot;)
+&apos;print sSimbolo
+	With aSrcOpt
+		.searchFlag = com.sun.star.util.SearchFlags.REG_EXTENDED
+		.algorithmType = com.sun.star.util.SearchAlgorithms.REGEXP
+		if sSimbolo = &quot;.&quot; then
+			.searchString = &quot;\&quot; &amp; sSimbolo
+			else
+				.searchString = sSimbolo
+		end if
+	End With
+	oTextSearch.setOptions(aSrcOpt)
+
+	&apos;L&apos;asterisco serve come trucco per evitare che se il testo è il primo carattere
+	&apos;il aSearchResult.subRegExpressions sia comunque uguale a zero
+	aSearchResult = oTextSearch.searchForward(&quot;*&quot; &amp; sTesto, 0,Len(sTesto)+1)
+	
+	if aSearchResult.subRegExpressions &gt; 0 then
+		iCount = iCount + 1
+	end if
+	contieneSimboli = iCount
+end function
+
+function getDefDecimaSeparator() as string
+   getDefDecimaSeparator = (Mid(cStr(1.2), 2, 1))
+End function
+
+
+&apos;++++++++++++++++ DIALOGHI +++++++++++++++++++++++++++++++++++
+
+&apos;sub dialogo2
+&apos;	DialogLibraries.LoadLibrary(&quot;Digest&quot;)
+&apos;	Dlg2=CreateUnoDialog(DialogLibraries.Digest.Dialog2)
+&apos;	Dlg2.execute()
+&apos;end sub
+
+sub dialogo_annulla
+
+	Dlg2.endExecute()
+	bContinua = false
+end sub
+
+sub dialogo_chiudi
+	a3=Dlg2.getControl(&quot;CheckBox3&quot;).State  
+
+	Dlg2.endExecute()
+	bContinua = true
+end sub
+
+sub setVirgola
+	a3 = 0
+end sub
+
+sub setPunto
+	a3 = 1
+end sub
+
+sub dialogo3
+	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
+	Dlg2=CreateUnoDialog(DialogLibraries.UltimusFree2.DialogDigest)
+	Dlg2.execute()
+end sub
+
+sub dialogo3_annulla
+	Dlg2.endExecute()
+	bContinua = false
+end sub
+
+&apos;	sDec=Dlg2&apos;.getControl(&quot;TextField1&quot;)
+&apos;	xray sDec
+    &apos;ldec= sDec.text
+   &apos;  print a
+   
+sub dialogo3_chiudi
+	if a3 = -1 then
+		if msgbox(&quot;Non hai selezionato il separatore dei decimali.&quot; &amp; chr(13) &amp; &quot;Vuoi uscire senza procedere?&quot;, 4) = 6 then
+			bContinua = false
+			Dlg2.endExecute()
+			exit sub
+		end if
+		else
+			bContinua = true
+			Dlg2.endExecute()
+	end if
+end sub
+
+sub starExecution
+&apos;	a3 = -1
+	dialogo3
+	if bContinua then
+		Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri
+	end if
+end sub
+
+
+sub Converti_stringhe
+	a3 = -1
+&apos;	print a3
+	dialogo3
+	if bContinua then
+		Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri
+	end if
+end sub
+
+sub accorpa_stringhe &apos;da eseguire a manina or aggiungendo un pulsante 
+&apos;serve per i prezzari Marche per accorpare i sottocodici della colo 3 insieme ai codici della 2
+	msgbox &quot;attendi pazientemente... sarai avvertito quando la macro finisce il suo lavoro...&quot;
+	oSheet = ThisComponent.currentController.activeSheet
+	lLastUrow = getLastUsedRow(oSheet)
+	&apos;	lLastUrow = 10
+  For i = 2  to lLastUrow
+ 	  		Osheet.GetCellByPosition(2, i).string = _
+ 	  		Osheet.GetCellByPosition(2, i).string &amp; &quot;.&quot; &amp; Osheet.GetCellByPosition(3, i).string
+   Next I 
+   msgbox &quot;Ok! Fatto&quot;
+end sub
+
+
+
+Sub fai_delle_cose &apos; per pasticciare sui listini
+	oSheet = ThisComponent.currentController.activeSheet
+	lLastUrow = getLastUsedRow(oSheet)
+	&apos;	lLastUrow = 30
+	For i = 2  to lLastUrow
+	
+		if oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot; or _
+			oSheet.GetCellByPosition(6, i).value &lt;&gt; 0 then
+			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 6  , i)) &apos;debug	
+		&apos;	print &quot; &quot;
+			oSheet.getrows.removebyindex(i,	1)
+			i = i-1
+			lLastUrow = lLastUrow -1
+		&apos;	print &quot;fatto&quot;
+		end if
+	Next I 
+	Print &quot;FATTO!!&quot;
+end sub
+
+
+
+</script:module>

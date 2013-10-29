@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="DialogDigest" dlg:left="147" dlg:top="49" dlg:width="251" dlg:height="191" dlg:closeable="true" dlg:moveable="true" dlg:title="CONVERTITORE  DA NUMERI in FORMATO STRINGA A NUMERI VERI (sommabili)">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-height="12"/>
+  <dlg:style dlg:style-id="1" dlg:background-color="0xc0c0c0" dlg:font-height="12"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Technic" dlg:font-height="12" dlg:font-stylename="Bold" dlg:font-charset="symbol" dlg:font-weight="150"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="95" dlg:top="164" dlg:width="125" dlg:height="20" dlg:value="Proseguo?   OK!">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Digestione.dialogo3_chiudi?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:text dlg:style-id="0" dlg:id="Label1" dlg:tab-index="1" dlg:left="11" dlg:top="99" dlg:width="220" dlg:height="30" dlg:help-text="L&apos;errata indicazione del separatore decimale genererà inevitabilmente degli errori!" dlg:value="Scegli il separatore di decimali che è utilizzato nelle celle da convertire   (cioè quelle selezionate)" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label2" dlg:tab-index="2" dlg:left="12" dlg:top="4" dlg:width="207" dlg:height="15" dlg:help-text="La macro agisce selezionando prima un range di celle da convertire!" dlg:value="CONVERTITORE  DA STRINGHE A NUMERI" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="3" dlg:left="12" dlg:top="55" dlg:width="235" dlg:height="15" dlg:help-text="Se già sono numeri verrano banalmente copiati tali e quali.." dlg:value="e su questa nuova col scrive i dati convertiti in formato numero " dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label4" dlg:tab-index="4" dlg:left="12" dlg:top="76" dlg:width="207" dlg:height="15" dlg:help-text="Se già sono numeri verrano banalmente copiati tali e quali.." dlg:value="(cerca di convertire le stringhe in numeri )" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="5" dlg:left="5" dlg:top="164" dlg:width="54" dlg:height="20" dlg:value="Annulla" dlg:button-type="cancel">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Digestione.dialogo3_annulla?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="optPunto" dlg:tab-index="6" dlg:left="139" dlg:top="136" dlg:width="67" dlg:height="20" dlg:value="Punto" dlg:align="center">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:UltimusFree2.Digestione.setPunto?language=Basic&amp;location=application" script:language="Script"/>
+    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Digestione.setPunto?language=Basic&amp;location=application" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="optVirgola" dlg:tab-index="7" dlg:left="25" dlg:top="136" dlg:width="71" dlg:height="20" dlg:value="Virgola" dlg:align="center">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:UltimusFree2.Digestione.setVirgola?language=Basic&amp;location=application" script:language="Script"/>
+    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Digestione.setVirgola?language=Basic&amp;location=application" script:language="Script"/>
+   </dlg:radio>
+  </dlg:radiogroup>
+  <dlg:text dlg:style-id="0" dlg:id="Label5" dlg:tab-index="8" dlg:left="11" dlg:top="26" dlg:width="219" dlg:height="15" dlg:help-text="Se già sono numeri verrano banalmente copiati tali e quali.." dlg:value="La macro legge la porzione di colonna selezionata," dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label6" dlg:tab-index="9" dlg:left="11" dlg:top="40" dlg:width="228" dlg:height="15" dlg:help-text="Se già sono numeri verrano banalmente copiati tali e quali.." dlg:value="crea una nuova colonna alla sua dx (cioè non sovrascrive)" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+ </dlg:bulletinboard>
+</dlg:window>

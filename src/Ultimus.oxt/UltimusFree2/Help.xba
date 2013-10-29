@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Help" script:language="StarBasic">REM  *****  BASIC  *****
+
+REM  *****  BASIC  *****
+global oSheetOrigine as object
+
+Sub Help_Scorciatoie
+
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Verifica_chiudi_preview
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
+ritorno:
+	If Constrolla_se_M1 = true then
+			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = 1 then 
+				Apri_sheet_Scorciatoie
+				exit sub
+			end if		
+	end if
+&apos;&apos; per attivare gli help sulle globali bisogna rivedere gli If qui sopra
+msgbox &quot;Spiacente non ho aggiornato le scorciatoie... quindi ripristino la modalità standard!&quot;
+&apos; modificando la variabile generale
+ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = 1
+goto ritorno  &apos; torna su
+
+&apos; presumibilmente da qui in poi non verrà mai eseguito
+	sNomeTab = ThisComponent.currentcontroller.activesheet.name
+	if sNomeTab &lt;&gt; &quot;COMPUTO&quot; and sNomeTab &lt;&gt; &quot;Analisi di Prezzo&quot; and sNomeTab &lt;&gt; &quot;Elenco Prezzi&quot; then
+		sNomeTab = &quot;Altro&quot;
+	end if
+	Select Case sNomeTab
+		Case &quot;COMPUTO&quot;
+		&apos;	print &quot;computo&quot;
+			Dialogo_help_tutte
+		Case &quot;Analisi di Prezzo&quot;
+		&apos;	msgbox &quot;analisi&quot;
+			Dialogo_help_tutte
+			&apos; Help_Scorciatoie_Analisi
+		Case &quot;Elenco Prezzi&quot;
+		&apos;	msgbox &quot;Elenco&quot;
+			Dialogo_help_tutte
+		&apos;	Help_Scorciatoie_ElencoP
+		Case &quot;Altro&quot;
+		&apos;	Dialogo_help_tutte
+			Help_Scorciatoie_global
+	End select
+end sub
+
+
+Sub Apri_sheet_Scorciatoie
+	If  ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;Scorciatoie&quot; then
+		oSheetOrigine = ThisComponent.currentController.activeSheet
+		Thiscomponent.currentcontroller.setactivesheet(ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;)
+	&apos;	print &quot;caso 1&quot;
+	end if
+
+	oSheet = ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;)
+&apos;	print &quot;1&quot;&apos;
+	If oSheet.isVisible = false  then
+&apos;	print &quot;2&quot;	
+	 		oSheet.isVisible = TRUE
+	 		Thiscomponent.currentcontroller.setactivesheet(oSheet)
+	 	else
+	 &apos;	print &quot;3&quot;
+	 		Chiudi_sheet_Scorciatoie
+	end if
+END SUB
+
+
+Sub Chiudi_sheet_Scorciatoie
+	oSheet = ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;)
+	If oSheet.isVisible = TRUE  then	
+	 		oSheet.isVisible = FALSE
+	 		Thiscomponent.currentcontroller.setactivesheet(oSheetOrigine)
+	 end if
+end sub
+
+
+
+Sub Dialogo_help_tutte()
+	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
+&apos;	print &quot;Eccoci&quot;
+	oDialogHelp1 = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogHelp1 ) &apos; Inizializza il dialogo
+	oDialogHelp1.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
+END SUB
+
+Sub Dialogo_help_tutte_chiudi()
+	oDialogHelp1.endExecute()
+END SUB
+
+Sub Dialogo_help_ElencoP()
+	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
+	oDialogHelp1 = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogHelp2 ) &apos; Inizializza il dialogo
+	oDialogHelp1.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
+END SUB
+
+Sub Dialogo_help_Analisi()
+	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
+	oDialogHelp1 = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogHelp3 ) &apos; Inizializza il dialogo
+	oDialogHelp1.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
+END SUB
+</script:module>

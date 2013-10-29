@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sposta_2_Att" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+Sub Sposta_Voce_Computo_Att &apos; &apos; sposta una Voce di Computo in nuova posizione...
+
+&apos; da sistemare la visualizzazione finale... funzia solo se si sposta verso il basso |||
+dim oSrow as long
+dim oErow as long
+dim StartRow as long
+&apos; ScreenUpdatingOn 
+
+  
+&apos;.......................................................................................................
+
+	lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lSrow = -1 then
+		 
+		exit sub
+	end if
+	
+
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0 , oSrow)&apos; errata selezione di un range
+	
+
+&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	sStRange = Circoscrive_Voce_Computo_Att (lSrow)
+	oOldSelection = sStRange
+	
+&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+
+	sTitolo = &quot;Click sulla riga dove vuoi spostare la voce  (ESC per Annullare, NO Click su X )  &quot;
+	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+ 	if SelectedRange = &quot;&quot; or _
+ 	 	SelectedRange = &quot;ANNULLA&quot; then
+ 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+ 	 	exit sub
+ 	end if
+
+	StartRow = getRigaIniziale(SelectedRange)
+	
+&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	StartRowM = Mettiti_esattamente_tra_due_VociC_Att (StartRow)
+	
+	if StartRowM = &quot;uscita forzata&quot; then exit sub
+
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+&apos;print &quot;Ritorna &quot; &amp; StartRowM
+ 	sString$ = &quot;Fine Computo&quot;
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI18! &quot;
+		exit sub
+	end if 
+	lrowF=oEnd.CellAddress.Row 
+
+	If lrowF &lt; StartRow-1 then
+		oCellK = oSheet.GetCellByPosition( 0 , StartRow)
+		ThisComponent.CurrentController.Select(oCellK)
+		msgbox &quot; Hai selezionato una destinazione ESTERNA all&apos;area &quot; &amp; CHR$(10)_
+		&amp; &quot; definita dalla riga rossa di chiusura...  &quot;&amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;                      e questo non è consentito!...&quot;
+		ThisComponent.CurrentController.Select(sStRange)
+		exit SUB
+	end if
+
+&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Sposta_range_buono_Att(StartRowM,sStRange)
+&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	
+END SUB
+
+
+&apos;_______________________________________________________________________________________++
+FUNCTION Mettiti_esattamente_tra_due_VociC_Att (ByVal lrow As Long)&apos; trova il punto di inserimanto
+&apos; nel caso l&apos;utente non si sia posizionato bene...   &apos; specifico per voci Computo
+&apos; (mai fidarsi dell&apos;utente...) ))
+&apos;--------------------------------------------------------------
+&apos;--------------------------------------------------------------
+dim xdocument   as object
+dim xdispatcher as object
+dim xA as string
+Dim oSheet as object
+Dim oCell as object
+&apos;print &quot;Mettiti_esattamente_tra_due_VociC_Att &quot;
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente    
+  oCell = oSheet.GetCellByPosition( 1, lrow )
+&apos;	xA =  oCell.string
+&apos; cocco
+
+	if lrow = 0 then
+		lrow = 1
+	end if
+ 	sString$ = &quot;Fine Computo&quot;
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI ! &quot;
+		exit FUNCTION
+	end if 
+	lrowF=oEnd.CellAddress.Row 
+
+
+	oCell=oSheet.GetCellbyPosition( 0, lrow)
+	if oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sopra&quot;_
+		 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;Livello-1-scritta&quot; then
+
+&apos;	print &quot;1  : &quot; &amp; lrow
+		 do while Trova_Attr_N (oSheet.GetCellbyPosition( 0, lrow ), oSheet) &lt;&gt; &quot;End_voce_COMPUTO&quot; and _
+		 			 lrow &gt;= 1  
+		 			lrow = lrow-1
+		 &apos;	print lrow &apos;pinzon
+		 loop
+		 Mettiti_esattamente_tra_due_VociC_Att = lrow+1
+		 goto fine
+	end if
+	if oSheet.GetCellbyPosition( 0, lrow ).CellStyle = &quot;livello-2-sotto_&quot;_
+			  or oSheet.GetCellbyPosition( 0, lrow ).CellStyle = &quot;livello2 valuta&quot;_
+			 or	oSheet.GetCellbyPosition( 0, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
+			do while Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+				lrow = lrow+1
+			 	Mettiti_esattamente_tra_due_VociC_Att = lrow-1
+
+			 loop
+	end if
+			
+	sAttributo_N = Trova_Attr_N (oCell, oSheet)
+	
+	if  sAttributo_N = &quot;Start_voce_COMPUTO&quot; then &apos; esattamente all&apos;inizio di una voce
+		Mettiti_esattamente_tra_due_VociC_Att = lrow&apos;+1
+		exit function
+
+	end if
+	
+
+	For nCurRow = lrow To lrowF
+		 oCell=oSheet.GetCellbyPosition( 0, nCurRow)&apos; lrow )
+		 ThisComponent.CurrentController.Select(oCell) &apos;debug 
+
+		 &apos;sAttributo_N = Trova_Attr_N (oCell, oSheet)
+			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;Start_voce_COMPUTO&quot; then &apos;OR _
+				&apos;	     (Trova_Attr_N (oSheet.GetCellbyPosition( 1, nCurRow), oSheet)) &lt;&gt; &quot;Capitolo&quot;  OR _
+				&apos;	     (Trova_Attr_N (oSheet.GetCellbyPosition( 1, nCurRow), oSheet)) &lt;&gt; &quot;SottoCapitolo&quot; then
+				lrow = ocell.celladdress.row
+				Mettiti_esattamente_tra_due_VociC_Att = lrow
+
+				exit function &apos;for
+			end if
+			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;End_voce_COMPUTO&quot;  then
+				lrow = ocell.celladdress.row
+				Mettiti_esattamente_tra_due_VociC_Att = lrow +1
+
+				exit function &apos;for
+			end if
+			if  nCurRow = lrowF then &apos; questa solo alla fine... allora torna su
+				Do while (Trova_Attr_N ((oSheet.GetCellbyPosition( 0, nCurRow)), oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;  OR _
+					     (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;Capitolo&quot;  OR _
+					     (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;SottoCapitolo&quot;
+					     if nCurRow &lt;=1 then
+					     	exit function
+					     end if
+					     
+						nCurRow = nCurRow-1
+						oCell=oSheet.GetCellbyPosition( 0, nCurRow)
+						&apos;&apos;&apos;ThisComponent.CurrentController.Select(oCell) &apos;debug 
+
+				loop
+				lrow = ocell.celladdress.row+1
+				Mettiti_esattamente_tra_due_VociC_Att = lrow
+				exit for
+			end if
+			
+ 	next
+ 	fine:
+End Function		
+
+Function Sposta_range_buono_Att (ByVal lnuovaPosRow As Long,o1RangeSelection as object ) &apos;preleva il range selezionato..
+&apos; ma NON è un difetto... almeno fino a quando non si riuscirà a trovare il modo di 
+&apos; evidenziare una bella clessidra e ignorare TUTTI gli imput utente
+
+dim lrdif as long
+dim L1RowS as long
+dim L1RowE as long
+dim L2RowS as long
+dim L2RowE as long
+dim L3RowS as long
+dim L3RowE as long
+dim L1RowSCount as long
+dim lrowDest as long
+
+Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+Dim CellAddress As New com.sun.star.table.CellAddress
+
+&apos;xray o1RangeSelection
+
+ &apos;dis_080212	o1RangeSelection = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE
+
+	lrowDest = lnuovaPosRow
+
+	&apos;1 sta per il range di origine (nella sua posizione di origine...)
+	i1sheet = o1RangeSelection.RangeAddress.Sheet 
+	o1ColoumnS = 0 &apos; nel nostro caso meglio settarla a 0
+	L1RowS =  o1RangeSelection.RangeAddress.StartRow
+	o1ColoumnE	= 255 &apos; ovvero l&apos;intera riga
+	L1RowE	=   o1RangeSelection.RangeAddress.EndRow
+	L1RowSCount = o1RangeSelection.Rows.Count &apos; mumero di righe del range
+
+	&apos; il 2 per l&apos;area vuota da inserire...
+	o2sheet = i1sheet &apos; per il momento è la medesima...
+	o2ColoumnS = o1ColoumnS
+	L2RowS =  lrowDest
+	o2ColoumnE	= o1ColoumnE
+	L2RowE	= L2RowS + L1RowSCount -1 &apos; si toglie uno per ragioni che mi sfuggono... 
+
+	&apos;inserisce righe vuote
+ &apos; 	CellRangeAddress.Sheet =  o2sheet
+ &apos;   CellRangeAddress.StartColumn = o2ColoumnS
+ &apos;   CellRangeAddress.StartRow =  L2RowS
+&apos;	CellRangeAddress.EndColumn = o2ColoumnE
+&apos;	CellRangeAddress.EndRow = L2RowE
+
+&apos;	Doc = StarDesktop.CurrentComponent
+&apos;	Sheet = Doc.Sheets(CellRangeAddress.Sheet) &apos; target sheet
+&apos;	Sheet.insertCells(CellRangeAddress, com.sun.star.sheet.CellInsertMode.DOWN)
+	oSheet = ThisComponent.currentController.activeSheet 
+	iSheet = ThisComponent.currentController.activeSheet.RangeAddress.sheet &apos; index della sheet
+
+	iRowCount = L2RowE - L2RowS+1
+	
+
+		ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1,L2RowS))
+&apos;	print L2RowS
+	oSheet.getRows.insertByIndex(L2RowS, iRowCount)
+
+&apos;print
+	&apos; recupera il vecchio range (che, a causa dell&apos;inserimento, ha cambiato coordinate..)	
+	&apos; il 3 sta per recupero del range di origine,,,
+	i3sheet = i1sheet &apos; per il momento è la medesima...
+	
+	L3ColoumnS = o1ColoumnS
+	L3ColoumnE	= o1ColoumnE
+	lrowT =	L1RowS
+	if L1RowS &gt; lrowDest then
+			L3RowS =  L1RowS + L1RowSCount
+	 	 else 
+			L3RowS =  L1RowS
+	end if
+	L3RowE	= L3RowS + L1RowSCount
+	CellRangeAddress.Sheet = i3sheet
+	CellRangeAddress.StartColumn = L3ColoumnS
+	CellRangeAddress.StartRow = L3RowS&apos;+1
+	CellRangeAddress.EndColumn = L3ColoumnE
+	CellRangeAddress.EndRow = L3RowE-1
+
+&apos; e lo muove nella nuova posizione	
+	CellAddress.Sheet = i3sheet
+	CellAddress.Column = o2ColoumnS
+	CellAddress.Row = L2RowS
+	
+
+oSheet.moveRange(CellAddress, CellRangeAddress) &apos; lo sposta nello spazio fatto prima
+oSheet.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.UP) &apos; rimuove le righe vuote
+
+
+lrdif =  L3RowE - L3RowS - 1
+
+if  lrowDest &gt; lrowT then &apos; questo pasticcetto per visualizzare la voce spostata adesso
+&apos;	print &quot;verso il basso&quot;
+	oRange = oSheet.getCellRangeByposition (L3ColoumnS, L2RowS-lrdif-1 , L3ColoumnE, L2RowS-1)	
+	else
+&apos;	print &quot;verso l&apos;alto?&quot;
+	oRange = oSheet.getCellRangeByposition (L3ColoumnS, L2RowS , L3ColoumnE, L2RowS+lrdif )
+end if
+ThisComponent.CurrentController.Select(oRange)
+END FUNCTION
+
+SUB SCEMO_____
+oSheet = ThisComponent.currentController.activeSheet
+ oSelezione = thisComponent.getCurrentSelection()
+&apos;checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
+&apos;if checkzelle then 
+		lrow = oSelezione.celladdress.row
+&apos;		lcol = oSelezione.celladdress.column		
+	oRange=Circoscrive_Voce_Computo_Att (lrow)
+&apos;	ThisComponent.CurrentController.Select(oRange)
+END SUB
+
+
+FUNCTION Circoscrive_Voce_Computo_Att(ByVal lrow As Long) &apos;individua un record di Computo
+&apos;---------------------------------------------------------------------------
+							&apos;restituisce il range&apos;
+&apos;print lrow
+dim lrowS as long
+dim lrowE as long
+	oSheet = ThisComponent.currentController.activeSheet 
+	lcol = 0
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	nCurRow = lrow
+	if templateTipo = &quot;ATT&quot; then lcol5 = 3
+	if templateTipo = &quot;5C&quot; then lcol5 = 2
+	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;_
+	and ((oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;&quot;)_
+			or	 (oSheet.GetCellByPosition( 0,nCurRow).string &lt;&gt;&quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 4,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 5,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 6,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 7,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 8,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or ((oSheet.GetCellByPosition( 1, nCurRow+1).string &lt;&gt; &quot;&quot;) = false)_
+			 or (oSheet.GetCellByPosition( 9,nCurRow).string &lt;&gt; &quot;&quot;))
+			 	if nCurRow &lt; 2 then
+			 		exit do
+			 	end if
+				nCurRow = nCurRow-1
+				oCell=oSheet.GetCellbyPosition(0 , nCurRow)
+			&apos;	 ThisComponent.CurrentController.Select(oCell) &apos;debug
+			&apos;	 print
+	loop
+&apos;print &quot;wow &quot; &amp; lrow	
+	lrowS = nCurRow
+	oCell = oSheet.GetCellByPosition( 0 , lrowS+1)
+	oCell2 = oSheet.GetCellByPosition( lcol5 , lrowS+1)
+	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;&apos;_
+		 &apos;And	oCell2.string &lt;&gt; &quot;SOMMANO &quot;
+				nCurRow = nCurRow+1
+				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
+				oCell2 = oSheet.GetCellByPosition( lcol5 , nCurRow)
+	loop
+	lrowE = nCurRow
+
+  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+
+	Circoscrive_Voce_Computo_Att= oRangeVoceC
+	
+ &apos; dis_080212   ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
+
+end Function
+&apos;=================================================================================  
+
+
+FUNCTION  Circoscrive_Voce_Computo_Att_________________________(ByVal lrow As Long) &apos;individua un record di Computo
+&apos;---------------------------------------------------------------------------
+							&apos;restituisce il range&apos;
+&apos;print lrow
+dim lrowS as long
+dim lrowE as long
+	 oSheet = ThisComponent.currentController.activeSheet 
+	lcol = 0
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	nCurRow = lrow
+	if templateTipo = &quot;ATT&quot; then lcol5 = 3
+	if templateTipo = &quot;5C&quot; then lcol5 = 2
+	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;_
+	and ((oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;&quot;)_
+			or	 (oSheet.GetCellByPosition( 0,nCurRow).string &lt;&gt;&quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 4,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 5,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 6,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 7,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or (oSheet.GetCellByPosition( 8,nCurRow).string &lt;&gt; &quot;&quot;)_
+			 or ((oSheet.GetCellByPosition( 1, nCurRow+1).string &lt;&gt; &quot;&quot;) = false)_
+			 or (oSheet.GetCellByPosition( 9,nCurRow).string &lt;&gt; &quot;&quot;))
+				nCurRow = nCurRow-1
+				oCell=oSheet.GetCellbyPosition(0 , nCurRow)
+			&apos;	 ThisComponent.CurrentController.Select(oCell) &apos;debug
+			&apos;	 print
+	loop
+&apos;print &quot;wow &quot; &amp; lrow	
+	lrowS = nCurRow
+	oCell = oSheet.GetCellByPosition( 0 , lrowS+1)
+	oCell2 = oSheet.GetCellByPosition( lcol5 , lrowS+1)
+	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;&apos;_
+		 &apos;And	oCell2.string &lt;&gt; &quot;SOMMANO &quot;
+				nCurRow = nCurRow+1
+				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
+				oCell2 = oSheet.GetCellByPosition( lcol5 , nCurRow)
+	loop
+	lrowE = nCurRow
+
+  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+
+	Circoscrive_Voce_Computo_Att= oRangeVoceC
+	
+ &apos; dis_080212   ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
+
+end Function
+&apos;=================================================================================  
+
+
+</script:module>

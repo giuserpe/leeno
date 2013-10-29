@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Cerca_Rior" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+Sub Riordina_ElencoPrezzi &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
+Riordina_ElencoPrezzi_D	
+end sub
+
+
+Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
+
+	&apos;_____________________
+	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	&apos;_____________________ &apos;perbacco
+	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then
+		exit sub
+	end if
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
+	
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;Riordino l&apos;Elenco Prezzi... ma se mi leggi vuol dire che è cosa lunga...&quot;, 25)
+ 	
+ 	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+ 			
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iScarto = 2  &apos;se vers. 4
+	endif 			
+ 	lcolbase = 	lcolbase + iScarto	
+ 	oCell = oSheet.GetCellByPosition(lcolbase, lrow)&apos; errata selezione di un range
+	oActiveCell1 = oCell.string &apos; registra la sigla dalla cella attiva 
+	&apos; ho qualche dubbio se rifarla solo se manca....
+
+	sString$ = &quot;Fine elenco&quot;
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then &apos;11111
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI20! &quot;
+		exit sub
+	end if 
+&apos;	xray oend
+&apos;	exit sub
+	lrowF=oEnd.RangeAddress.EndRow 
+	lcolF=12 + iScarto
+
+	if thisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;) then 
+		if isNull(ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).ReferredCells) then
+		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;     &apos; nel caso ci siano dei #REF! o analoghi
+			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
+			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+			goto una_volta_sola_prego	
+		end if
+	end if
+	If Not thisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;) then &apos; se manca proprio anche il nome
+			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
+			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+			goto una_volta_sola_prego	
+	end if
+	oRangeEP = ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells.RangeAddress
+	lrowEPI = oRangeEP.StartRow 
+	lrowEPF = oRangeEP.EndRow 
+	lcolEPI = oRangeEP.StartColumn
+	lcolEPF = oRangeEP.EndColumn
+	
+	if lcolEPF &lt;&gt; getLastUsedCol(oSheet) then &apos; se ci sono colonne in più o in meno
+			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
+			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+			goto una_volta_sola_prego	
+	end if
+
+	 
+	If lcolEPF &lt; 10 then  &apos; se template vecchio 
+			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
+			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+			goto una_volta_sola_prego	
+	end if
+	
+	If lcolEPI &lt;&gt; lcolbase + 0 then  &apos; se dopo +col
+			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
+			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+			goto una_volta_sola_prego		
+	end if
+
+	if (ThisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;))= false then &apos; a volte lo perde
+			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
+			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+			goto una_volta_sola_prego
+	end if
+	If  lrowEPI &lt; 1 then &apos; era If  lrowEPI &lt; 2  .... bo?
+		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+		RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
+		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+		goto una_volta_sola_prego
+	end if
+	if lrowEPF &lt;&gt; lrowF-1 or lrowEPI &lt;&gt; 1 then &apos;(anche qui era 2, l&apos;ho messo a 1)&apos; se l&apos;area &quot;elenco_prezzi non copre l&apos;intero elenco
+								&apos; ridefinisce l&apos;elenco prezzi
+		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+		RiDefinisci_Area_Elenco_prezzi
+		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+		goto una_volta_sola_prego
+	end if
+	una_volta_sola_prego:
+	sChiama = Riordina_0(lcolbase+0, TRUE) &apos; il numero è la colonna da riordinare
+	if sChiama = &quot;uscita forzata&quot; or _
+    	sChiama = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				exit sub
+	end if	
+	
+	Barra_chiudi_sempre_4
+	&apos;xray sritorno
+&apos;	if sRitorno (com.sun.star.awt.MouseEvent) then
+&apos;		print &quot;devo uscire ora&quot;
+&apos;		exit sub
+&apos;	end if
+&apos;	exit sub
+	If isNull(sRitorno) or isEmpty (sRitorno) or isMissing(sRitorno) or sRitorno = 0 or sRitorno = &quot;&quot; then
+		Barra_Apri_Chiudi_5(&quot;Riordino l&apos;Elenco Prezzi... ci siamo quasi......&quot;, 65)
+		&apos; cerca la sigla di partenza
+		sString$ = oActiveCell1
+		oOrigine=uFindString_1(sString$, oSheet,lcolbase  )
+		ThisComponent.CurrentController.Select(oOrigine) 
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+		&apos; toglie la selezione 
+		Barra_chiudi_sempre_4
+	end if
+  &apos;___________________
+  	suona
+END SUB
+
+
+
+
+Function Riordina_0 (ColdaRior, AscDesc as boolean  )as variant &apos; Riordina l&apos;elenco prezzi con criteri
+&apos;Ritorna la riga finale    										 a scelta... (si usa richiamata da altra sub)
+ &apos;                                      				
+ dim lrowF as long
+oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+&apos;circoscrive l&apos;elenco
+	sString$ = &quot;Fine elenco&quot;
+	oEnd=uFindString(sString$, oSheet) 
+	If isNull (oEnd) or isEmpty (oEnd)  then &apos;11111
+		msgbox &quot; Probabilmente manca la riga rossa di chiusura della tabella! Controlla e PROVVEDI21! (Ctrl-Alt-P) &quot;
+		ThisComponent.CurrentController.Select(oCell)
+		Riordina_0 = &quot;uscita forzata&quot;
+		exit FUNCTION
+	end if 
+	
+	lrowF=oEnd.RangeAddress.EndRow 
+	&apos;	lcolF=oEnd.RangeAddress.EndColumn
+	lcolbase = Colonna_giusta_EP(osheet)
+	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				Riordina_0 = lcolbase
+				exit function
+	end if
+		
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iScarto = 2  &apos;se vers. 4
+	endif 			
+ 	lcolbase = 	lcolbase + iScarto	
+	lcolF=lcolbase+12
+
+	oMioRange = osheet.getCellRangeByPosition (0,1,lcolF+1,lrowF-1)&apos;(lcolI,lrowI,lcolF,lrowF)
+&apos; e poi lo riordina 
+  Dim oSheetDSC,oDSCRange  As Object
+  Dim aSortFields(0) As New com.sun.star.util.SortField
+  Dim aSortDesc(0) As New com.sun.star.beans.PropertyValue
+ 
+  aSortFields(0).Field = ColdaRior &apos; 0
+  aSortFields(0).SortAscending =  AscDesc &apos;TRUE&apos;FALSE
+
+  aSortDesc(0).Name = &quot;SortFields&quot;
+  aSortDesc(0).Value = aSortFields()
+&apos; print &quot;intermedio&quot;
+  oMioRange.Sort(aSortDesc())
+	Riordina_0 = lrowF
+End Function 
+
+sub cella_cella()  &apos; passa cella per cella e copiando dati (o altro) da una sheet ad un&apos;altra 
+&apos; nome sheet sorgente: lo stesso con aggiunto un suffisso &quot;_2&quot;
+  Dim nCurCol As Integer
+  Dim nCurRow As Integer
+  Dim nEndCol As Integer
+  Dim nEndRow As Integer
+  Dim oCell As Object
+  Dim oCursor As Object
+  Dim aAddress As Variant
+  Dim sFind As String
+
+oSheetDest = ThisComponent.currentController.activeSheet
+oSheetsrc = ThisComponent.Sheets.getByName((ThisComponent.currentcontroller.activesheet.name &amp; &quot;_2&quot;)
+&apos;xray oSheetsrc
+&apos;exit sub
+  oCell = oSheetsrc.GetCellbyPosition( 0, 0 )
+  oCursor = oSheetsrc.createCursorByRange(oCell)
+  oCursor.GotoEndOfUsedArea(True)
+  aAddress = oCursor.RangeAddress
+  
+&apos;  nEndRow = aAddress.EndRow &apos;DEFINIRE QUI IL RANGE
+  nEndRow =  929					&apos;DEFINIRE QUI IL RANGE
+ &apos; nEndCol = aAddress.EndColumn   &apos;DEFINIRE QUI IL RANGE
+   nEndCol = 9					&apos;DEFINIRE QUI IL RANGE
+    Clessid_lock_Start
+&apos;Barra_Apri_Chiudi_4
+  For nCurCol = 0 To nEndCol       &apos;Go through the range column by column,
+    For nCurRow = 0 To nEndRow     &apos;row by row.
+      oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
+      lcolorSRC=oCellSRC.Cellbackcolor
+      lCharColorSRC=oCellSRC.CharColor
+ &apos;     xray oCellSRC
+      oCellDest = oSheetDest.GetCellByPosition( nCurCol, nCurRow )
+      oCellDest.Cellbackcolor = lcolorSRC 
+      oCellDest.CharColor = lCharColorSRC  
+     &apos; CharColor      
+     &apos; sFind = oCell.String          &apos;Get cell contents.
+    &apos;  If sFind = sString then
+    &apos;    uFindString = oCell
+    &apos;    Exit sub
+     &apos; End If
+    Next
+  Next
+ Clessid_lock_End
+ &apos; oProgressbar.End
+  msgbox &quot;Finito!&quot;
+End sub
+
+
+
+REM Return the cell that contains the text
+Function uFindString(sString$, oSheet )  As Variant &apos; richiamata da diverse cose
+&apos;uFindString(sString$, oSheet)
+&apos;exit function
+  Dim nCurCol As Integer
+  Dim nCurRow As Integer
+  Dim nEndCol As Integer
+  Dim nEndRow As Integer
+  Dim oCell As Object
+  Dim oCursor As Object
+  Dim aAddress As Variant
+  Dim sFind As String
+&apos;print sString$
+&apos;print &quot;vediamo&quot;
+&apos;xray osheet
+ 			
+  oCell = oSheet.GetCellbyPosition(0,0)
+  oCursor = oSheet.createCursorByRange(oCell)
+  oCursor.GotoEndOfUsedArea(True)
+  aAddress = oCursor.RangeAddress
+  nEndRow = aAddress.EndRow
+  nEndCol = aAddress.EndColumn
+&apos;print nEndRow
+  For nCurCol = 0 To nEndCol       &apos;Go through the range column by column,
+    For nCurRow = 0 To nEndRow     &apos;row by row.
+      oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+      sFind = oCell.String          &apos;Get cell contents.
+      If sFind = sString$ then
+       		 uFindString = oCell
+    	    Exit Function
+      &apos;  else 
+        &apos;	uFindString = &quot;nulla&quot;
+      End If
+    Next
+  Next
+End Function
+
+&apos;Function uFindString(sString$, oSheet) As Variant &apos; richiamata da diverse cose
+Function uFindString_1 (sString$ , oSheet , lcol)  As Variant &apos;
+  Dim nCurCol As Integer
+  Dim nCurRow As Integer
+  Dim nEndCol As Integer
+  Dim nEndRow As Integer
+  Dim oCell As Object
+  Dim oCursor As Object
+  Dim aAddress As Variant
+  Dim sFind As String
+&apos;print sString
+  if isMissing (lcol) then
+	 lcol = 0
+  end if
+
+ 			
+  oCell = oSheet.GetCellbyPosition( 0, 0 )
+  oCursor = oSheet.createCursorByRange(oCell)
+  oCursor.GotoEndOfUsedArea(True)
+  aAddress = oCursor.RangeAddress
+  nEndRow = aAddress.EndRow
+  nEndCol = lcol
+&apos;print nEndRow
+  For nCurCol = 0 To nEndCol       &apos;Go through the range column by column,
+    For nCurRow = 0 To nEndRow     &apos;row by row.
+      oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+      sFind = oCell.String          &apos;Get cell contents.
+      If sFind = sString then
+       		 uFindString_1 = oCell
+    	    Exit Function
+      &apos;  else 
+        &apos;	uFindString = &quot;nulla&quot;
+      End If
+    Next
+  Next
+End Function
+
+
+
+REM Return the cell that contains the text
+Sub SearchARange &apos; questa mi sembra meglio...
+  REM Author: Andrew Pitonyak
+	  Dim oSheet
+	  Dim oRange
+	  Dim oFoundCell
+	  oSheet = ThisComponent.getSheets().getByIndex(0)
+&apos;	  oRange = oSheet.getCellRangeByName(&quot;a2:a19&quot;)
+	  oRange = oSheet.getCellRangeByPosition(0,0,0,5000) 
+	  sString$ = &quot;E-1&quot;
+&apos;	  oFoundCell = SimpleSheetSearch(sString$, oRange, False)
+	  ThisComponent.CurrentController.Select(oFoundCell)
+END SUB
+
+&apos; questa ancora meglio_  Cerca nel range predefinito
+Function SimpleSheetSearch(sString$, oSheet, nStartCol, nStartRow, nEndCol, nEndRow, bWholeWord As Boolean) As Variant
+  Dim oDescriptor
+  Dim oFound
+  if isMissing ( bWholeWord) then
+ 	 bWholeWord = true
+  end if
+  REM Create a descriptor from a searchable document.
+  oDescriptor = oSheet.createSearchDescriptor()
+  REM Set the text for which to search and other 
+  REM http://api.openoffice.org/docs/common/ref/com/sun/star/util/SearchDescriptor.html 
+ &apos;xray oDescriptor
+  With oDescriptor
+    .SearchString = sString$
+    REM These all default to false
+    REM SearchWords forces the entire cell to contain only the search string
+    .SearchWords = bWholeWord
+&apos;    .SearchWords = true
+    .SearchCaseSensitive = False
+  End With
+ &apos; xray oDescriptor
+  REM Find the first one
+  oFound = oSheet.findFirst(oDescriptor)
+  SimpleSheetSearch = oFound
+  &apos;xray ofound
+  REM Do you really want to find more instances
+  REM You can continue the search using a cell if you want!
+  &apos;Do While Not IsNull(oFound)
+  &apos;  Print oFound.getString()
+  &apos;  oFound = oSheet.findNext( oFound, oDescriptor)
+  &apos;Loop
+End Function
+&apos;=================================================================================
+
+
+Sub RiDefinisci_Area_Elenco_prezzi () &apos; viene richiamata da Riordina l&apos;elenco Prezzi
+&apos; Nel Computo si è scelto di usare un namedRanges per il VlookUp... a false, eppure ci sono casi in cui 
+&apos; è necessario riordinare (???)
+&apos; IMPORTANTE ridefinisce anche il namedRanges che contiene la lista dei codici interni di comodo
+
+dim sMiaStringa as string
+dim lRow as long
+dim oSheet as object
+
+  Barra_chiudi_sempre_4
+  Barra_Apri_Chiudi_5(&quot;1 Pazienta... devo rifare il NamedRanges, e può essere cosa lunga...&quot;, 30)
+	
+ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
+ oRanges = ThisComponent.NamedRanges
+
+ If oRanges.hasByName(&quot;elenco_prezzi&quot;) Then
+   oRanges.getByName(&quot;elenco_prezzi&quot;)
+   oRanges.removeByName(&quot;elenco_prezzi&quot;)
+ End If
+ If oRanges.hasByName(&quot;elenco_prezzi_R&quot;) Then
+   oRanges.getByName(&quot;elenco_prezzi_R&quot;)
+   oRanges.removeByName(&quot;elenco_prezzi_R&quot;)
+ End If
+  Barra_chiudi_sempre_4
+  Barra_Apri_Chiudi_5(&quot;2 Pazienta... devo rifare il NamedRanges, e può essere cosa lunga...&quot;, 40)
+
+ If oRanges.hasByName(&quot;Lista&quot;) Then &apos; lista codici di validità dati
+   oRanges.getByName(&quot;Lista&quot;)
+   oRanges.removeByName(&quot;Lista&quot;)
+ End If
+ 
+  Barra_chiudi_sempre_4
+  Barra_Apri_Chiudi_5(&quot;3 Pazienta... devo rifare il NamedRanges, e può essere cosa lunga...&quot;, 50)
+
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+&apos;circoscrive l&apos;elenco
+	sString$ = &quot;Fine elenco&quot;
+	oEnd=uFindString(sString$, oSheet)
+	lRowE=oEnd.RangeAddress.EndRow 
+
+ oCellAddress = oSheet.getCellRangeByName(&quot;b10&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
+&apos; memo NB
+
+  lcolbase = Colonna_giusta_EP(osheet)
+  if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+		print lcolbase
+		exit sub
+  end if
+ 	
+  
+ &apos;sCol= ColumnNameOf(lcolbase+11) &apos;
+ 
+ &apos;sCol= ColumnNameOf(lcolbase+11)	
+ sCol_R= ColumnNameOf(lcolbase)	
+ 
+ sCol= ColumnNameOf(getLastUsedCol(oSheet))
+ 
+ sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$&quot; &amp; sCol_R &amp; &quot;$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE 
+&apos;  sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$L$&quot; &amp; lRowE 
+ oRanges.addNewByName(&quot;elenco_prezzi&quot;, sMiaStringa , oCellAddress, 0)
+&apos;print sMiaStringa
+ sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE 
+&apos;  sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$L$&quot; &amp; lRowE 
+
+&apos;mercato oRanges.addNewByName(&quot;elenco_prezzi_R&quot;, sMiaStringa , oCellAddress, 0)
+ 
+ &apos;sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$A$&quot; &amp; lRowE  
+ sCol= ColumnNameOf(lcolbase)
+ sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$&quot; &amp; sCol &amp; &quot;$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE  
+ 
+  Barra_chiudi_sempre_4
+  Barra_Apri_Chiudi_5(&quot;Ora tocca alle liste...Pazienta ancora... &quot;, 25)
+ 
+ oRanges.addNewByName(&quot;Lista&quot;, sMiaStringa , oCellAddress, 0) &apos; lista codici di validità dati
+  Barra_chiudi_sempre_4
+
+END SUB 
+
+
+
+Function Colonna_giusta_EP (oSheet as object)
+
+&apos; questa invece trova automaticamente la colonna giusta (+col)
+
+  if oSheet.getCellByPosition(1,0).string = &quot; Descrizione &quot; or _
+ 	oSheet.getCellByPosition(1,0).string = &quot;Descrizione &quot; or _
+ 	oSheet.getCellByPosition(1,0).string = &quot;Descrizione&quot; then
+ 	lcolbase = 0
+  end if
+  if oSheet.getCellByPosition(2,0).string = &quot; Descrizione &quot; or _
+ 	oSheet.getCellByPosition(2,0).string = &quot;Descrizione &quot; or _
+ 	oSheet.getCellByPosition(2,0).string = &quot;Descrizione&quot; then
+ 	lcolbase = 1
+  end if
+  if oSheet.getCellByPosition(3,0).string = &quot; Descrizione &quot; or _
+ 	oSheet.getCellByPosition(3,0).string = &quot;Descrizione &quot; or _
+ 	oSheet.getCellByPosition(3,0).string = &quot;Descrizione&quot; then
+ 	lcolbase = 2
+  end if
+  if oSheet.getCellByPosition(4,0).string = &quot; Descrizione &quot; or _
+ 	oSheet.getCellByPosition(4,0).string = &quot;Descrizione &quot; or _
+ 	oSheet.getCellByPosition(4,0).string = &quot;Descrizione&quot; then
+ 	lcolbase = 3
+  end if
+ &apos; print lcolbase
+  if lcolbase &lt;= 3 then
+ 			Colonna_giusta_EP = lcolbase
+ 		else
+ 		print &quot;questo?&quot;
+ 			Colonna_giusta_EP =	&quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; 
+ 	end if
+ 	if lcolbase = &quot;&quot; then
+ 	&apos;		Colonna_giusta_EP = lcolbase
+ 	&apos;	else
+ 	print &quot;oppure quest&apos;altro&quot;
+ 			Colonna_giusta_EP =	&quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; 
+ 			print &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; 
+ 	end if
+
+end function
+
+
+
+
+</script:module>

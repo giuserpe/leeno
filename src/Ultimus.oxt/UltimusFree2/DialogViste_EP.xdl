@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="4" dlg:id="DialogViste_EP" dlg:left="206" dlg:top="150" dlg:width="168" dlg:height="211" dlg:help-text="Scenari, Viste e Azioni di Elenco Prezzi" dlg:help-url="http://aimar.mrjive.it/files/MANUALE%20D%27USO%20di%20Ultimus-3.5-101130.pdf" dlg:closeable="true" dlg:moveable="true" dlg:title="   Scenari, Viste e Azioni di Elenco Prezzi   ">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="1" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="3" dlg:font-name="Arial" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="4" dlg:background-color="0xfcffc6"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="-154" dlg:top="38" dlg:width="63" dlg:height="15" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton10" dlg:tab-index="3" dlg:left="85" dlg:top="168" dlg:width="81" dlg:height="15" dlg:help-text="Visualizza gestione MANODOPERA" dlg:value="Gestione Manodopera  on/off" dlg:multiline="true">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.manodoperta_on_off?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton15" dlg:tab-index="5" dlg:left="-151" dlg:top="75" dlg:width="84" dlg:height="16" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton17" dlg:tab-index="7" dlg:left="2" dlg:top="57" dlg:width="77" dlg:height="14" dlg:help-text="Mostra/Nascondi la colonna del sommario COMPUTO" dlg:default="true" dlg:value="Sommario COMPUTO ON/OFF" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.Sommario_off?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton18" dlg:tab-index="8" dlg:left="2" dlg:top="29" dlg:width="75" dlg:height="23" dlg:printable="false" dlg:help-text="genera qui una colonna di Sommario degli importi a Computo" dlg:default="true" dlg:value="Ri-GENERA Sommario Computo" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Accessori_2.Rifa_AA_BB_Computo?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton24" dlg:tab-index="4" dlg:left="108" dlg:top="3" dlg:width="58" dlg:height="14" dlg:help-text="Crea una nuova Voce (in bianco) alla posizione corrente del cursore" dlg:value="Crea Nuova Voce" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.Nuova_Voce_scelta?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton29" dlg:tab-index="9" dlg:left="4" dlg:top="168" dlg:width="76" dlg:height="15" dlg:help-text="Non implementata (Prevista per la 4.xx.xx)" dlg:value="Gestione Sicurezza" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.SIC_EP_on_off?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton26" dlg:tab-index="6" dlg:left="1" dlg:top="4" dlg:width="45" dlg:height="14" dlg:help-text="forza il riordino (alfabetico) dell&apos;Elenco Prezzi" dlg:value="RIORDINA" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Cerca_Rior.Riordina_ElencoPrezzi?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton224" dlg:tab-index="2" dlg:left="33" dlg:top="79" dlg:width="107" dlg:height="16" dlg:help-text="Mostra/Nascondi  la colonna dei tag per le voci utilizzate in Computo o nelle Analisi" dlg:value="Visualizza On/Off - Voci USATE nel Computo " dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.tag_usata_on_off?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton223" dlg:tab-index="1" dlg:left="27" dlg:top="120" dlg:width="120" dlg:height="17" dlg:help-text="Pulisci (svuota) la colonna dei tag delle Voci di EP usate nel Computo (e/o nelle analisi)" dlg:value="PULISCI la colonna dei tag delle voci USATE " dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Pulizia_0.Pulisci_Colonne_tag?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton4" dlg:tab-index="10" dlg:left="51" dlg:top="3" dlg:width="52" dlg:height="14" dlg:help-text="Elimina le righe selezionate" dlg:value="ELIMINA RIGA/E" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton3" dlg:tab-index="11" dlg:left="5" dlg:top="148" dlg:width="76" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione Corta on/off">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="12" dlg:left="90" dlg:top="146" dlg:width="76" dlg:height="15" dlg:help-text="Altezza Ottimale delle righe" dlg:value="ADATTA RIGA/E" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.Adatta_Altezza_riga?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="13" dlg:left="43" dlg:top="193" dlg:width="84" dlg:height="16" dlg:help-text="Pui chiudere anche con ESC " dlg:value="OK   CHIUDI questa Finestra" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="14" dlg:left="35" dlg:top="100" dlg:width="105" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Vai al menù Voci Usate /NON Usate" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.Vai_submenu_segnaVoci_non_usate?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="15" dlg:left="85" dlg:top="57" dlg:width="80" dlg:height="14" dlg:help-text="Mostra/Nascondi la colonna del sommario CONTABILITA&apos;" dlg:default="true" dlg:value="Sommario CONTABILITA ON/OFF" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.Sommario_Contab_off?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton8" dlg:tab-index="16" dlg:left="88" dlg:top="29" dlg:width="75" dlg:height="23" dlg:printable="false" dlg:help-text="genera qui una colonna di Sommario degli importi acquisi in Contabilità" dlg:default="true" dlg:value="Ri-GENERA Sommario della Contabilità" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Accessori_2.Rifa_GG_G1G1_Contab?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+ </dlg:bulletinboard>
+</dlg:window>

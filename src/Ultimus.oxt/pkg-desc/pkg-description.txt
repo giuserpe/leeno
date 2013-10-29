@@ -1,0 +1,8 @@
+UltimusFree2-2.080223.0.oxt
+Copyright Bartolomeo Aimar (c) 2008 
+Licenza LGPL 
+
+UltimusFree (Ultimus is not ultimus) :-)
+ Il Computo Metrico Estimativo su OpenOffice.org Calc
+ Template assistito per la compilazione di Computi Metrici Estimativi per opere pubbliche (e non)
+

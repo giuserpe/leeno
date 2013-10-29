@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gestione_Var" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+REM  *****  BASIC  *****
+&apos;Private sTemp_major
+&apos;Private sTemp_minor
+
+sub salva_il_template &apos; per la pubblicazione del Template 
+&apos;versione presa dalla 4.xxx e un po&apos; adattata
+&apos; compila in automatico i campi e le info
+
+	sPassw = InputBox (&quot; Per evitare di fare casino questa è una macro che dovrebbe eseguire solo Bart!&quot;&amp; CHR$(10)_
+					&amp; &quot;             inserisci la password...&quot;&amp; CHR$(10)_
+   							&amp; &quot; &quot;,&quot;          Generazione di una nuova versione del template&quot;, &quot; &quot;)&apos; &amp; CHR$(10) 
+   	If sPassw = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
+   			exit sub		
+   	end if	
+   	if sPassw &lt;&gt; &quot;UUU&quot; then
+   		exit sub
+   	end if
+   	sVer_templ = InputBox (&quot;&quot; &amp; CHR$(10)_
+   						&amp; &quot; Scrivi qui sotto il numero seriale del nuovo template&quot; &amp; CHR$(10) &amp; CHR$(10)_
+	 					 , &quot;    Generazione di una nuova versione del template &quot;, SGenericoMemo)
+	&apos;sVer_templ è il numero seriale progressivo del template
+	SGenericoMemo = sVer_templ &apos;forse eliminare questo rif ad una variabile globale ?
+	&apos; ovviamente si tratta di eliminare anche la proposta in ImputBox lasciando il vuoto...
+    If sVer_templ = &quot;&quot; then
+    	exit sub
+    end if
+    &apos;versione major prevista per questo template
+    sTemp_major =  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value 
+    &apos;LA LEGGE NELLE VARIABILI GENERALI (quindi se c&apos;è un salto di versione devo corregere li)
+    
+    &apos;versione minor prevista per questo template
+    sTemp_minor =  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
+        &apos;LA LEGGE NELLE VARIABILI GENERALI
+        
+    &apos;In pratica Legge la versione installata, e poi qui sotto la scrive nel template
+    &apos;Quindi per i salti di versione bisogna prima scrivere nel Template la versione 
+    &apos; poi dare l&apos;udate source
+    
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).unprotect(&quot;&quot;)
+    ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value = sVer_templ 
+    ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).value = sTemp_major 
+    ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).value = sTemp_minor 
+    Setta_Var_Gen_Default
+    store_info (sVer_templ,  sTemp_major, sTemp_minor, 0 )
+    Salva_Doc_con_nome (sVer_templ,  sTemp_major, sTemp_minor )
+end sub
+
+sub info
+	xray	ThisComponent.DocumentProperties.UserDefinedProperties.AddProperty(&quot;chi sei?&quot;,0,&quot;lo scemo&quot;) &apos;(&quot;Template_Ultimus_Version&quot;).Has(&quot;Template_Ultimus_Version&quot;)
+&apos;	ThisComponent.DocumentProperties.Description = 
+end sub
+
+Sub store_info (sVer_templ as string,  sTemp_major as string , sTemp_minor as string, sPregessi)
+
+&apos;con documentinfo deprecato ed eliminato da libò 4 bisogna ora lavorare su:
+ &apos; ThisComponent.DocumentProperties.UserDefinedProperties.AddProperty(&quot;chi sei?&quot;,0,&quot;lo scemo&quot;)  &apos;o qualcosa del genere...
+
+&apos;	if not ThisComponent.DocumentInfo.PropertySetInfo.HasPropertyByName(&quot;Template_Ultimus_Version&quot;) then   	&apos;!!! documentinfo deprecato il libo 4, lavorare con DocumentProperties
+ &apos; 	  ThisComponent.DocumentInfo.AddProperty(&quot;Template_Ultimus_Version&quot;,0,&quot;&quot;)
+&apos;	endif 
+
+&apos;	ThisComponent.DocumentInfo.DocumentProperties.UserDefinedProperties.Template_Ultimus_Version  = &quot;versione del template:&quot; &amp; sVer_templ &amp; CHR(10)_
+&apos;							  &amp; &quot; - Questo Template è &quot;&quot;sincronizzato&quot;&quot; con la versione &quot; &amp; sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx di UltimusFree&quot;
+
+	 &apos; questo invece lo mandiamo a capo
+	ThisComponent.DocumentProperties.Description =   &quot;versione del template: &quot; &amp; sVer_templ &amp; CHR(10)_
+			&amp; &quot;Questo Template è &quot;&quot;sincronizzato&quot;&quot; con la versione&quot;  &amp;sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx di UltimusFree&quot; &amp; CHR(10)_
+			&amp; &quot;NB Consiglio sempre di archiviare (insieme al computo) una copia della libreria oxt usata per creare il computo&quot;
+
+	&apos;print sPregressi
+&apos;	If sPregressi = &quot;0&quot; then
+		&apos; rimuove il campo impostato se (e quando) il template era stato ottenuto con la procedura di aggiornamento
+&apos;		ThisComponent.DocumentInfo.removeProperty(&quot;Pregressi&quot;) 	
+&apos;	end if
+end sub
+
+
+
+Sub Salva_Doc_con_nome (sVer_templ as string,  sTemp_major as string , sTemp_minor as string )
+   oDoc = ThisComponent
+   &apos; Get the document&apos;s controller.
+   oDocCtrl = oDoc.getCurrentController()
+   &apos; Get the frame from the controller.
+   oDocFrame = oDocCtrl.getFrame()
+   oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+   Dim myProps(1) as New com.sun.star.beans.PropertyValue
+   &apos;il valore di questo array va impostato a 1
+    oSheet = ThisComponent.CurrentController.ActiveSheet
+    
+    dim sUrl2, sNameDest as string
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+ 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+	End If 
+
+	sCartella = ThisComponent.getURL() &apos; file sorgente
+   
+   	sNameDest2 = FileNameOutOfPath(ThisComponent.getURL() )
+&apos;	sNameDest2 = GetFileNameWithoutExtension(sNameDest2)
+
+   	sCartella = Folder()
+   sCartella = sCartella +  &quot;/&quot;
+   
+  sUrl= sCartella &amp; &quot;Esempio_&quot; &amp; sVer_templ &amp; &quot;_Ultimus-&quot; &amp; sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx&quot; &amp; &quot;.ods&quot;
+
+  &apos; salviamo comunque il doc corrente
+ &apos;  oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+  &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+ 	if msgbox ( sURL &amp; &quot;&quot; &amp; CHR$(10) &amp; CHR$(10)_
+ 				&amp; &quot;     Va bene? LO SALVO ? &quot; &amp; CHR$(10)_
+					&amp; &quot;?&quot; ,36, &quot;&quot;) = 7 then
+				exit sub
+		else
+	end if
+
+   &apos;print sURL 
+	&apos; get access to the document
+	oDocumentModel = ThisComponent
+	oDocumentView = oDocumentModel.getCurrentController()
+	oDocumentFrame = oDocumentView.Frame
+
+	&apos; the dispatcher service is used to send commands from the 
+	&apos; document frame to the underlaying office application
+	oDispatcher = CreateUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+	Dim mArgs2(2) As New com.sun.star.beans.PropertyValue
+	mArgs2(0).Name = &quot;URL&quot;
+	mArgs2(0).Value = sUrl
+	mArgs2(1).Name = &quot;FilterName&quot;
+	mArgs2(1).Value = &quot;calc8&quot;
+	mArgs2(2).Name = &quot;SelectionOnly&quot;
+	mArgs2(2).Value = True
+	oDispatcher.executeDispatch(oDocumentFrame, &quot;.uno:SaveAs&quot; ,&quot;&quot; ,0 ,mArgs2())
+
+End Sub 
+
+sub Setta_Var_Gen_Default &apos; (pubblicazione)
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value = 1 &apos; automatico per lo zoom in apertura
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,292).value = 81  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value = 0  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value = 2  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 1  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value = 2  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value = 0  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,301).value = 1  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 0  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,303).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 0 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = 2 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = 1.25  &apos; per inserire i decimali usare il punto
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = 0 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,315).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,318).value = 0.037
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,319).value = 0.143
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,320).value = 0.10
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,321).value = 0.243
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,322).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,323).value = -0.11
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,324).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,325).value = 0.10
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,326).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1
+end sub
+
+
+sub Setta_Var_Gen_Bart 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value = 1 &apos; automatico per lo zoom in apertura
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,292).value = 81  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value = 0  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value = 2  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 1  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value = 2  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value = 0  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,301).value = 1  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 0  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,303).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 0 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = 2
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = 1.25  &apos; per inserire i decimali usare il punto
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = 0 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).value = 1 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,315).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,324).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,326).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = 0
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 0
+end sub
+
+sub Carica_Var_Gen_Personali
+dim lriga as long
+	lriga = 150
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291+lriga).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,292).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,292+lriga).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297+lriga).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298+lriga).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299+lriga).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,301).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,301+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,303).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,303+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305+lriga).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306+lriga).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312+lriga).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,315).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,315+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,318).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,318+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,319).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,319+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,320).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,320+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,321).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,321+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,322).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,322+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,323).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,323+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,324).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,324+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,325).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,325+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,326).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,326+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334+lriga).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335+lriga).value
+end sub
+
+
+sub Salva_Var_Gen_Personali &apos;
+dim lriga as long
+	lriga = 150
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,292+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,292).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value  
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,301+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,301).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,303+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,303).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,315+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,315).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,318+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,318).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,319+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,319).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,320+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,320).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,321+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,321).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,322+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,322).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,323+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,323).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,324+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,324).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,325+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,325).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,326+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,326).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value
+end sub
+
+
+
+Function Folder() &apos; abbbiamo anche un altro picker efficiente e + recente (vedi Finale_2)
+        Dim oCartella   as Object
+        Dim iAccetta    as Integer
+        Dim sCartella   As String
+        Dim Barra       As String
+        oCartella = CreateUnoService(&quot;com.sun.star.ui.dialogs.FolderPicker&quot;)
+        iAccetta = oCartella.Execute()
+        If iAccetta = 1 Then sCartella = oCartella.GetDirectory()
+        Barra = Right(sCartella, 1) &apos;Viene passata alla variabile Barra 
+        &apos; l&apos; ultimo carattere di sCartella
+        If Barra &lt;&gt; &quot;/&quot; Then sCartella = sCartella + &quot;/&quot;
+        &apos; Viene controllato se c&apos; è questa benedetta barra
+        &apos; se non c&apos; è viene aggiunta  
+        &apos;print &quot;alfa&quot;
+        Folder = sCartella     
+End Function
+
+Function Folder2(spath) &apos;&quot;alfa&quot;
+&apos;print &quot;sono in folder&quot;
+        Dim oCartella   as Object
+        Dim iAccetta    as Integer
+        Dim sCartella   As String
+        Dim Barra       As String
+        oCartella = CreateUnoService(&quot;com.sun.star.ui.dialogs.FolderPicker&quot;)
+        iAccetta = oCartella.Execute(spath)
+        If iAccetta = 1 Then sCartella = oCartella.GetDirectory()
+        Barra = Right(sCartella, 1) &apos;Viene passata alla variabile Barra 
+        &apos; l&apos; ultimo carattere di sCartella
+        If Barra &lt;&gt; &quot;/&quot; Then sCartella = sCartella + &quot;/&quot;
+        &apos; Viene controllato se c&apos; è questa benedetta barra
+        &apos; se non c&apos; è viene aggiunta  
+        print &quot;alfa&quot;
+        Folder = sCartella     
+End Function
+
+
+Function Folder3(sTitle as string, cFolder as string)
+       With oFilePickerDlg
+                .setTitle(sTitle)
+                .SetDisplayDirectory (cFolder)
+				.SetValue(com.sun.star.ui.dialogs.ExtendedFilePickerElementIds.CHECKBOX_AUTOEXTENSION, 0, true) 
+				.SetValue(com.sun.star.ui.dialogs.ExtendedFilePickerElementIds.CHECKBOX_PASSWORD, 0, false)
+        End With
+        oUcb = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+        If Len( cFolder ) &gt; 0 Then
+                If oUcb.Exists(cFolder) Then
+                        oFilePickerDlg.setDisplayDirectory( ConvertToURL(cFolder ) )
+                End If
+        End If
+        Folder2() = &quot;uf&quot;
+end Function
+</script:module>

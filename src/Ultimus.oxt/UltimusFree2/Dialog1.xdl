@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="1" dlg:id="Dialog1" dlg:left="162" dlg:top="23" dlg:width="166" dlg:height="105" dlg:help-text="Seleziona con il mouse" dlg:closeable="true" dlg:moveable="true" dlg:title="Seleziona con iil mouse...">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-height="13" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:background-color="0xff" dlg:font-height="15" dlg:font-weight="150"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:textfield dlg:style-id="0" dlg:id="TextField1" dlg:tab-index="0" dlg:left="3" dlg:top="33" dlg:width="155" dlg:height="38" dlg:align="center" dlg:value="SELEZIONA CON IL MOUSE"/>
+  <dlg:textfield dlg:id="TextField2" dlg:tab-index="1" dlg:left="185" dlg:top="58" dlg:width="0" dlg:height="3"/>
+  <dlg:titledbox dlg:id="FrameControl1" dlg:tab-index="2" dlg:left="-1" dlg:top="83" dlg:width="46" dlg:height="44">
+   <dlg:title dlg:value="FrameControl1"/>
+  </dlg:titledbox>
+  <dlg:menulist dlg:id="ListBox1" dlg:tab-index="3" dlg:left="73" dlg:top="83" dlg:width="43" dlg:height="48"/>
+  <dlg:treecontrol dlg:id="TreeControl1" dlg:tab-index="4" dlg:left="139" dlg:top="79" dlg:width="29" dlg:height="44"/>
+ </dlg:bulletinboard>
+</dlg:window>

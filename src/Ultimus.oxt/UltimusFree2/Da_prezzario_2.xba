@@ -1,0 +1,2004 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_prezzario_2" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                            
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+SUB D_Accoda_CN(livelli as long, lRow as long)	
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	lAlfa0 = Len (sAlfaNum0)
+	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oCell.string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+	
+	Select Case livelli
+	
+	Case  1 &apos;&quot;CN&quot; 
+		Do while sAlfaNum0 = sAlfaNum1 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+				sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string			
+		loop 
+		lrow = lrow+1
+		If  oSheet.GetCellByPosition( 7, lrow).getvalue = 0 then 
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			else
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+		end if
+
+	Case 2 &apos; per Milano e Piemonte (se cella B9 è vuota Tipologia = 0)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+	
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+				goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
+	
+&apos;	print &quot;sono in tip 3&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print &quot;3a&quot;
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print &quot;1   &quot; &amp; sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfa1 =  Len( oCell.string)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaB = Len( oCell.string)
+			IF lAlfaB &gt; lAlfa1 then
+					print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
+					Do while lAlfaB &gt;= lAlfa1
+						lrow = lrow-1
+						oCell = oSheet.GetCellByPosition( 2, lrow )
+						lAlfaB = Len( oCell.string)
+					loop
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+				else
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			end if
+		
+			IF lAlfaA &gt; lAlfa0 then
+			
+		&apos;&apos;		goto voce_completa
+			end if
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+
+	End select
+	 
+
+	voce_completa:
+
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+	
+	
+	 oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili
+	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheet)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+
+	oRange = oSheet.getCellRangeByPosition (1,2,5,2)
+  	oRange.clearContents(Flags)
+
+
+	if sCategoria &lt;&gt; &quot;&quot; then
+		oSheet.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheet.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheet.getCellByPosition(3,2).string=SCompleta3 
+	
+	SCompleta4 = Prezzo
+	oSheet.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero VERO (non stringa)
+&apos;	print &quot;PIPPO&quot;
+&apos;	SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+	SCompleta5 = &quot;=CONCATENAte(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+&apos;	print SCompleta5
+	oSheet.getCellByPosition(5,2).formula = SCompleta5
+	
+	
+    oCell=oSheet.getCellByPosition(2,2) 
+    ThisComponent.CurrentController.Select(oCell)
+    Adatta_Altezza_riga 	
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+    
+ &apos;   print &quot;ACCODA cUNEO&quot;
+
+END SUB
+
+&apos;_______________________________________________________________________________
+SUB Accoda_DEA(livelli as long, lRow as long)	
+	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	lAlfa0 = Len (sAlfaNum0)
+	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oCell.string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+	if livelli = 2 then
+		livelli = 3
+	end if
+	Select Case livelli
+	
+	Case  1 &apos;&quot;CN&quot; 
+		Do while sAlfaNum0 = sAlfaNum1 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+				sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string			
+		loop 
+		lrow = lrow+1
+		If  oSheet.GetCellByPosition( 7, lrow).getvalue = 0 then 
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			else
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+		end if
+
+	Case 2 
+	PRINT sDescr1 
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+	
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+				goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
+	
+&apos;	print sDescr0
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+	&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;			print &quot;3a&quot;
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+
+		&apos;	do while left &apos;
+&apos;		PRINT &quot;SECONDO&quot;
+
+			Do while Left(  oSheet.GetCellByPosition( 2, lrow).string,3) &lt;&gt; &quot;CAP&quot; &apos; 
+				lrow = lrow-1
+			loop 
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			goto voce_completa
+&apos; FINISH QUI			
+
+
+
+	End select
+	 
+
+	voce_completa:
+	
+print sDescr1
+print sDescr2
+print sDescr3
+	If sDescr2 = sDescr3 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr3 = &quot;&quot;  &apos;
+	end if
+
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+	
+	
+	 oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili
+	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheet)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+
+	oRange = oSheet.getCellRangeByPosition (1,2,5,2)
+  	oRange.clearContents(Flags)
+
+
+	if sCategoria &lt;&gt; &quot;&quot; then
+		oSheet.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+				oSheetTemp.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+			end if		
+&apos;PRINT &quot;DDDDD&quot;&apos;
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(6,2).formula = SCompleta5
+		Else
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	
+	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then
+		if sSicur &lt;&gt; 0 then 
+			oSheetTemp.getCellByPosition(7,2).value = sSicur
+		end if
+	end if
+	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then
+		if sSicur &lt;&gt; 0 then 
+			oSheetTemp.getCellByPosition(7,2).value = sSicur
+		end if
+	end if	
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheet.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheet.getCellByPosition(3,2).string=SCompleta3 
+	
+	SCompleta4 = Prezzo
+	oSheet.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	IF oSheetTemp.getCellByPosition(4,2).value = isNotANumber then
+	    oSheetTemp.getCellByPosition(4,2).string = &quot;&quot; 	    
+	    SpostaCursore_su_Prezzario
+	   &apos; ThisComponent.CurrentSelection
+	    lrow=ThisComponent.CurrentSelection.RangeAddress.StartRow   
+	    ThisComponent.CurrentController.Select(oSheet.getCellByPosition(7,lrow))
+		MSGBOX &quot;Il formato del prezzo del listino è una stringa&quot; &amp; CHR$(10)_
+				&amp; &quot;e non posso utilizzarlo per i conteggi!&quot;&amp;  CHR$(10)&amp; CHR$(10)_
+				&amp; &quot;Errore!! Il listino non è stato ben adattato. &quot;&amp; CHR$(10)_
+				&amp; &quot;La colonna dei Prezzi deve contenere dei Numeri (e non stringhe di testo)&quot;_
+				&amp; &quot;&quot;,16, &quot;Errore!&quot;
+		exit sub				
+	END IF
+	
+    oCell=oSheet.getCellByPosition(2,2) 
+    ThisComponent.CurrentController.Select(oCell)
+    Adatta_Altezza_riga 	
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+    
+END SUB
+
+SUB Accoda_SCNVA(livelli as long,  lrow as long)
+
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+
+    If oSheet.GetCellByPosition( 8, lrow).getvalue = &quot;&quot; or _
+     	oSheet.GetCellByPosition( 8, lrow).getvalue = 0 then &apos;serve per acchiappare il dato anche se stringa
+    		sIncMan = oSheet.GetCellByPosition( 8, lrow).getstring
+    	else
+    		sIncMan =oSheet.GetCellByPosition( 8, lrow).getvalue
+    end if
+    sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+	&apos; dovremmo aver acchiappato i dati della riga prezzo
+	Do while oSheet.GetCellByPosition( 2, lrow).string &lt;&gt; &quot;&quot;
+		lrow = lrow-1
+	loop
+	&apos;adesso va su fino alla fine delle descrizioni 
+	Do while oSheet.GetCellByPosition( 2, lrow).string = &quot;&quot; and oSheet.GetCellByPosition( 4, lrow).string &lt;&gt; &quot;&quot;
+			lrow = lrow-1
+	loop
+	if livelli = 2 or livelli = 3 then
+		lrow = lrow + 1
+	end if
+	if livelli = 1 then
+			lrow = lrow + 2
+	end if
+	sDescr3 =  oSheet.GetCellByPosition( 4, lrow).string
+	lrow = lrow + 1
+	
+	&apos;adesso torna giù accorpando le descrizioni
+	Do while oSheet.GetCellByPosition( 2, lrow).string = &quot;&quot; and oSheet.GetCellByPosition( 4, lrow).string &lt;&gt; &quot;&quot;
+		
+		sDescrA =  oSheet.GetCellByPosition( 4, lrow).string
+		if sDescr3 &lt;&gt; &quot;&quot;  then
+			&apos; sDescr3 =  sDescr3  &amp;  CHR(13) &amp; sDescrA
+			 sDescr3 =  sDescr3 &amp; &quot; &quot;  &amp; sDescrA
+		end if
+		lrow = lrow + 1
+	loop
+
+	
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+	&apos; tutti i dati sono adesso stivati nelle variabili procedo a ripulire e incollare
+	&apos;	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheetTemp)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheetTemp.getCellRangeByPosition (1,2,7,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+	&apos;print sCategoria
+	if sCategoria &lt;&gt; &quot;&quot; then
+	&apos;		oSheetTemp.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheetTemp.getCellByPosition(5,1).string
+	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+				oSheetTemp.getCellByPosition(5,2).value = sIncMan 
+			end if		
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(6,2).formula = SCompleta5
+		Else
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	
+	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then
+		if sSicur &lt;&gt; 0 then 
+			oSheetTemp.getCellByPosition(7,2).value = sSicur
+		end if
+	end if
+	
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp;  CHR(13) &amp; sDescr0
+ 	oSheetTemp.getCellByPosition(2,2).string=SCompleta2
+	SCompleta3 = sUM
+	oSheetTemp.getCellByPosition(3,2).string=SCompleta3 
+
+	SCompleta4 = Prezzo
+	oSheetTemp.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero (non stringa)
+	&apos; se era una stringa senza testo aggiunto è già stata convertita
+	&apos; altrimenti restituisce un errore ben commentato:
+	IF oSheetTemp.getCellByPosition(4,2).value = isNotANumber and _
+		oSheetTemp.getCellByPosition(4,2).value &lt;&gt; 0 then
+	    oSheetTemp.getCellByPosition(4,2).string = &quot;&quot; 	    
+	    SpostaCursore_su_Prezzario
+	   &apos; ThisComponent.CurrentSelection
+	    lrow=ThisComponent.CurrentSelection.RangeAddress.StartRow   
+	    ThisComponent.CurrentController.Select(oSheet.getCellByPosition(7,lrow))
+		MSGBOX &quot;Il formato del prezzo del listino è una stringa&quot; &amp; CHR$(10)_
+				&amp; &quot;e non posso utilizzarlo per i conteggi!&quot;&amp;  CHR$(10)&amp; CHR$(10)_
+				&amp; &quot;Errore!! Il listino non è stato ben adattato. &quot;&amp; CHR$(10)_
+				&amp; &quot;La colonna dei Prezzi deve contenere dei Numeri (e non stringhe di testo)&quot;_
+				&amp; &quot;&quot;,16, &quot;Errore!&quot;
+		exit sub				
+	END IF
+    oCell=oSheetTemp.getCellByPosition(2,2) 
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+      Adatta_Altezza_riga 	
+end sub
+
+&apos;__________________________________________________________________________________________
+SUB Accoda_Normale(livelli as long,  lrow as long) &apos;
+
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ &apos; dim sIncMan as double
+  
+ &apos;&apos; 	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+&apos;  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+&apos;	end if
+   
+  &apos;  sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+ &apos;   sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+
+ &apos;   If oSheet.GetCellByPosition( 8, lrow).getstring = &quot;&quot; then 
+ &apos;   	sIncMan = &quot;&quot;
+ &apos;   end if
+    
+	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
+		sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+	&apos;	print sIncman
+	end if	 
+	 
+	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.TEXT) then    
+		sIncMan = oSheet.GetCellByPosition( 8, lrow).getstring
+	&apos;	print sIncman
+	end if
+	
+
+	if (oSheet.GetCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.VALUE) then
+			sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+		else   	
+			sSicur = oSheet.GetCellByPosition( 9, lrow).getstring
+	end if
+
+	if 	oSheet.GetCellByPosition( 9, lrow).value = 0  and  oSheet.GetCellByPosition( 10, lrow).value &lt;&gt; 0 then
+	&apos;se la 9 è vuota e la 10 contiene una percentuale...
+		Sic_perc = oSheet.GetCellByPosition( 10, lrow).value 
+		&apos;	print &quot;abbiamo un %&quot;
+	end if
+	
+		
+ &apos; 	if oSheet.GetCellByPosition( 9, lrow).string = &quot;&quot; then 
+  &apos;			sSicur = &quot;&quot;
+&apos;	     else
+&apos;	     	sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+&apos;	end if
+&apos;xray sSicur
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print &quot;sAlfaNum0 &quot; &amp; sAlfaNum0
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+&apos;	print &quot;sAlfaNum1 &quot; &amp;  sAlfaNum1
+	lAlfa0 = Len (sAlfaNum0)
+&apos;	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+  
+	  &apos;	print lAlfa0
+	&apos;	print lAlfaA
+	&apos;print livelli
+	Select Case livelli
+
+	Case  1 
+	&apos;	lAlfaA = Len(sAlfaNum1)
+	&apos;	Do while lAlfa0 = lAlfaA 
+	&apos;			lrow = lrow-1
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+	&apos;			sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;			print &quot;AAA&quot;		
+	&apos;	loop 
+	&apos;	lrow = lrow+1
+	&apos;	sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+
+	Case 2 &apos; per Milano e Piemonte 
+&apos;	print &quot;2&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
+
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+&apos;print &quot;ecco &quot; &amp; oSheet.GetCellByPosition( 2, lrow ).string
+			if lalfa0 = 0 then
+				lalfa0 =100
+			end if
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; or oSheet.GetCellByPosition( 6, lrow ).string &lt;&gt; &quot;&quot;
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print &quot;1    &quot; &amp; &quot;AAA&quot;
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+			if sAlfaNum0 =  &quot;&quot; then
+				 sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow ).string
+			end if
+			&apos;print sAlfaNum0 
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
+		&apos;	print &quot;MI&quot;
+					goto voce_completa
+			end if
+			goto voce_completa
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+		&apos;		goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
+	
+&apos;	print &quot;sono in tip 3&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;print sAlfac1
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print &quot;1   &quot; &amp; sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;	print &quot;dove&quot;	
+		&apos;	lAlfa1 = lAlfaA
+			lAlfa1 =  Len( oCell.string)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaB = Len( oCell.string)
+			IF lAlfaB &gt; lAlfa1 then
+			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
+					Do while lAlfaB &gt;= lAlfa1
+						lrow = lrow-1
+						oCell = oSheet.GetCellByPosition( 2, lrow )
+						lAlfaB = Len( oCell.string)
+					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;3c&quot;
+					loop
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+				else
+				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;Altern&quot;
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			end if
+		
+			IF lAlfaA &gt; lAlfa0 then
+			
+		&apos;&apos;		goto voce_completa
+			end if
+		&apos;	sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	print &quot;2   &quot; &amp; sDescr2			
+			oCell = oSheet.GetCellByPosition( 0, 0 )
+			&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+	End select
+	 
+
+	voce_completa:
+&apos;	print sDescr0
+&apos;print sDescr1
+&apos;print sDescr2
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+&apos;	print sDescr0
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili procedo a ripulire e incollare
+&apos;	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheetTemp)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheetTemp.getCellRangeByPosition (1,2,9,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+
+	if sCategoria &lt;&gt; &quot;&quot; then
+&apos;		oSheetTemp.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+
+&apos;	oSheetTemp.getCellByPosition(1,2).string = SCompleta1
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+	
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheetTemp.getCellByPosition(5,1).string
+	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+&apos;			print sincman
+			&apos;	oSheetTemp.getCellByPosition(5,2).string = sIncMan
+				oSheetTemp.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+			end if		
+			&apos;PRINT &quot;DDDDD&quot; &amp; sAlfaNum0 
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(6,2).formula = SCompleta5
+		Else
+			
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	&apos;xray sSicur
+&apos;	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then 
+&apos;	if sSicur &lt;&gt; 0 or sSicur &lt;&gt; &quot;&quot; then  &apos; se abbiamo l&apos;importo lo scriviamo direttamente
+	if sSicur &lt;&gt; &quot;&quot; then  &apos; se abbiamo l&apos;importo lo scriviamo direttamente
+				oSheetTemp.getCellByPosition(7,2).value = sSicur
+				&apos;print &quot;casco qui&quot;
+				oSheetTemp.getCellByPosition(7,2).cellstyle = &quot;Temp_€&quot;
+			else &apos;altrimenti
+				if Sic_perc &lt;&gt; 0 then
+					sSicur = Sic_perc * Prezzo
+					oSheetTemp.getCellByPosition(7,2).value = sSicur
+					oSheetTemp.getCellByPosition(7,2).cellstyle = &quot;Temp_€&quot;
+				end if
+	end if
+
+	
+	
+	iF Sic_perc &lt;&gt; 0 then 
+		oSheetTemp.GetCellByPosition( 8, 2).value     = Sic_perc 
+		oSheetTemp.GetCellByPosition( 8, 2).cellstyle = Temp_%
+	end if
+	
+	sSicur = &quot;&quot;  &apos; azzeriamole... non si sa mai... :)
+	Sic_perc = &quot;&quot;
+
+
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheetTemp.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheetTemp.getCellByPosition(3,2).string=SCompleta3 
+
+	SCompleta4 = Prezzo
+	oSheetTemp.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero (non stringa)
+	&apos; se era una stringa senza testo aggiunto è già stata convertita
+	&apos; altrimenti restituisce un errore ben commentato:
+	IF oSheetTemp.getCellByPosition(4,2).value = isNotANumber and _
+		oSheetTemp.getCellByPosition(4,2).value &lt;&gt; 0 then
+	    oSheetTemp.getCellByPosition(4,2).string = &quot;&quot; 	    
+	    SpostaCursore_su_Prezzario
+	   &apos; ThisComponent.CurrentSelection
+	    lrow=ThisComponent.CurrentSelection.RangeAddress.StartRow   
+	    ThisComponent.CurrentController.Select(oSheet.getCellByPosition(7,lrow))
+		MSGBOX &quot;Il formato del prezzo del listino è una stringa&quot; &amp; CHR$(10)_
+				&amp; &quot;e non posso utilizzarlo per i conteggi!&quot;&amp;  CHR$(10)&amp; CHR$(10)_
+				&amp; &quot;Errore!! Il listino non è stato ben adattato. &quot;&amp; CHR$(10)_
+				&amp; &quot;La colonna dei Prezzi deve contenere dei Numeri (e non stringhe di testo)&quot;_
+				&amp; &quot;&quot;,16, &quot;Errore!&quot;
+		exit sub				
+	END IF
+    oCell=oSheetTemp.getCellByPosition(2,2) 
+
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+    Adatta_Altezza_riga 	
+end sub
+
+
+&apos;_______________________________________________________________________________________+++++++
+
+SUB Accoda_Normale_4(livelli as long,  lrow as long) &apos;ovvero quello con le 4 colonne Manodop Imp e %, Sicurezza imp e %
+&apos;print &quot;accoda 4&quot;
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ &apos; dim sIncMan as double
+  
+ 	sIncMan = &quot;&quot;
+    perc_IncMan  = &quot;&quot;
+    sDiverse = &quot; &quot;
+ &apos;&apos; 	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+&apos;  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+&apos;	end if
+   
+  &apos;  sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+ &apos;   sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+
+ &apos;   If oSheet.GetCellByPosition( 8, lrow).getstring = &quot;&quot; then 
+ &apos;   	sIncMan = &quot;&quot;
+ &apos;   end if
+ 
+
+&apos;print &quot;Sic_perc   &quot; &amp;	Sic_perc
+		
+ &apos; 	if oSheet.GetCellByPosition( 9, lrow).string = &quot;&quot; then 
+  &apos;			sSicur = &quot;&quot;
+&apos;	     else
+&apos;	     	sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+&apos;	end if	
+&apos;xray sSicur
+
+	&apos;Prezzo
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+
+    &apos;manodopera
+    goto saltalo
+	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
+		sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+	&apos;	print sIncman
+	end if	 
+	 
+	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.TEXT) then    
+		sIncMan = oSheet.GetCellByPosition( 8, lrow).getstring
+	&apos;	print sIncman
+	end if
+	saltalo:
+	
+	if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0  and  oSheet.GetCellByPosition( 9, lrow).value &lt;&gt; 0 then
+		if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; oSheet.GetCellByPosition( 9, lrow).value then &apos; e se non sono memmeno equivalenti
+		 	sDiverse = &quot;(Inoltre - dato sconcertante - non sembrano nemmeno corrispondere...) &quot;
+		end if
+		ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition (8,lrow,9,lrow) 		
+		msgbox &quot;mmm... l&apos;Incidenza Manodopera è espressa in troppi modi&quot; &amp; CHR$(10)_
+				&amp; &quot;( la trovo sia come %   che come importo in € )&quot;  &amp; CHR$(10)_
+				&amp;  sDiverse &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;In ogni caso posso usarne solo una e  dovresti scegliere&quot;  &amp; CHR$(10)_
+				&amp; &quot; quale  cancellando dal listino quella ridondante&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;....intanto annullo l&apos;iniziativa e l&apos;accodamento della voce!&quot; &amp; CHR$(10)_
+				&amp; &quot;&quot;,16, &quot;Problema con l&apos;incidenza Manodopera&quot;
+		exit sub
+	end if
+ 
+	if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0  then &apos;and  oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0 then	 
+			perc_IncMan = oSheet.GetCellByPosition( 8, lrow).value 
+		&apos;	print &quot;se c&apos;è una % &quot;
+		else 
+			if oSheet.GetCellByPosition( 9, lrow).value &lt;&gt; 0 or oSheet.GetCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot;  then
+				if (oSheet.GetCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
+					sIncMan = oSheet.GetCellByPosition(9, lrow).getvalue
+				end if
+			if (oSheet.GetCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.TEXT) then    
+				sIncMan = oSheet.GetCellByPosition( 9, lrow).getstring
+			end if	
+		end if	 
+	end if	
+
+	&apos;sicurezza
+	if (oSheet.GetCellByPosition( 11, lrow).Type = com.sun.star.table.CellContentType.VALUE) then &apos;9
+			sSicur = oSheet.GetCellByPosition( 11, lrow).getvalue
+		else   	
+			sSicur = oSheet.GetCellByPosition( 11, lrow).getstring
+	end if	
+
+	dim percent as string
+	percent = oSheet.GetCellByPosition( 10, lrow).formula
+&apos;	percent = oSheet.GetCellByPosition( 10, lrow).string
+	dim percent2 as long
+	percent2 = percent
+	
+&apos;	percent2 = oSheet.GetCellByPosition( 10, lrow).formula
+	
+&apos;/100
+&apos;xray oSheet.GetCellByPosition( 10, lrow)
+
+&apos;dim p1 as double
+pp1 = oSheet.GetCellByPosition( 10, lrow).formula
+
+
+
+&apos;print pp1 &apos; +100
+&apos;xray pp1
+dim pp2 as  single &apos;integer &apos;long
+
+
+pp2 = pp1
+
+percent2 = pp2
+
+&apos; print pp2 /100
+&apos;	print oops2
+&apos;oops2 =oops2/100 &apos;
+&apos;exit sub
+&apos;&apos;&apos;		print &quot;Ecco &quot; &amp; percent2 
+		
+&apos;print oops
+&apos;exit sub
+&apos;print oSheet.GetCellByPosition( 11, lrow).value
+	if 	oSheet.GetCellByPosition( 11, lrow).value &lt;&gt; 0  and  oSheet.GetCellByPosition( 10, lrow).value &lt;&gt; 0 then
+		&apos;print &quot;1   &quot; &amp;  percent2*Prezzo
+		&apos;xray percent2
+	&apos;	print &quot;2    &quot; &amp; oSheet.GetCellByPosition( 11, lrow).value
+	&apos;	xray oSheet.GetCellByPosition( 11, lrow).value
+		if 	Prezzo*percent2 &lt;&gt; oSheet.GetCellByPosition( 11, lrow).value then &apos; e se non sono memmeno equivalenti
+		 	sDiverse = &quot;(Inoltre - dato sconcertante - non sembrano nemmeno corrispondere tra loro...) &quot;
+		end if	
+		
+		sDiverse = &quot;&quot; &apos; per il mometo annullo sta roba... perché non riesco a trattare il % come un numero  (e quindi non riesco a paragonarlo)
+		
+		ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition (10,lrow,11,lrow) 		
+		msgbox &quot;mmm... la Sicurezza è espressa in troppi modi diversi&quot;  &amp; CHR$(10)_
+				&amp; &quot;( la trovo sia come %   che come importo in € )&quot;  &amp; CHR$(10)_
+				&amp;  sDiverse &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;In ogni caso posso usarne solo una e  dovresti scegliere&quot;  &amp; CHR$(10)_
+				&amp; &quot; quale   cancellando dal listino quella ridondante&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;....intanto annullo l&apos;iniziativa (ovvero l&apos;accodamento della voce!)&quot; &amp; CHR$(10)_
+				&amp; &quot;&quot;,16, &quot;Problema con la Sicurezza Inclusa&quot;			
+		exit sub
+	end if
+	if 	oSheet.GetCellByPosition( 11, lrow).value = 0  and  oSheet.GetCellByPosition( 10, lrow).value &lt;&gt; 0 then
+	&apos;se la 10 è vuota e la 11 contiene una percentuale...
+		Sic_perc = oSheet.GetCellByPosition( 10, lrow).value 
+		&apos;	print &quot;abbiamo un %&quot;
+	end if
+
+
+
+	
+
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print &quot;sAlfaNum0 &quot; &amp; sAlfaNum0
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+&apos;	print &quot;sAlfaNum1 &quot; &amp;  sAlfaNum1
+	lAlfa0 = Len (sAlfaNum0)
+&apos;	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+  
+	  &apos;	print lAlfa0
+	&apos;	print lAlfaA
+	&apos;print livelli
+	Select Case livelli
+
+	Case  1 
+	&apos;	lAlfaA = Len(sAlfaNum1)
+	&apos;	Do while lAlfa0 = lAlfaA 
+	&apos;			lrow = lrow-1
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+	&apos;			sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;			print &quot;AAA&quot;		
+	&apos;	loop 
+	&apos;	lrow = lrow+1
+	&apos;	sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+
+	Case 2 &apos; per Milano e Piemonte 
+&apos;	print &quot;2&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
+
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+&apos;print &quot;ecco &quot; &amp; oSheet.GetCellByPosition( 2, lrow ).string
+			if lalfa0 = 0 then
+				lalfa0 =100
+			end if
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; or oSheet.GetCellByPosition( 6, lrow ).string &lt;&gt; &quot;&quot;
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print &quot;1    &quot; &amp; &quot;AAA&quot;
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+			if sAlfaNum0 =  &quot;&quot; then
+				 sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow ).string
+			end if
+			&apos;print sAlfaNum0 
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
+		&apos;	print &quot;MI&quot;
+					goto voce_completa
+			end if
+			goto voce_completa
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+		&apos;		goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
+	
+&apos;	print &quot;sono in tip 3&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;print sAlfac1
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print &quot;1   &quot; &amp; sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;	print &quot;dove&quot;	
+		&apos;	lAlfa1 = lAlfaA
+			lAlfa1 =  Len( oCell.string)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaB = Len( oCell.string)
+			IF lAlfaB &gt; lAlfa1 then
+			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
+					Do while lAlfaB &gt;= lAlfa1
+						lrow = lrow-1
+						oCell = oSheet.GetCellByPosition( 2, lrow )
+						lAlfaB = Len( oCell.string)
+					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;3c&quot;
+					loop
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+				else
+				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;Altern&quot;
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			end if
+		
+			IF lAlfaA &gt; lAlfa0 then
+			
+		&apos;&apos;		goto voce_completa
+			end if
+		&apos;	sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	print &quot;2   &quot; &amp; sDescr2			
+			oCell = oSheet.GetCellByPosition( 0, 0 )
+			&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+	End select
+	 
+
+	voce_completa:
+&apos;	print sDescr0
+&apos;print sDescr1
+&apos;print sDescr2
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+&apos;	print sDescr0
+
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili procedo a ripulire e incollare
+&apos;	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheetTemp)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheetTemp.getCellRangeByPosition (1,2,9,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+
+	if sCategoria &lt;&gt; &quot;&quot; then
+&apos;		oSheetTemp.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+
+&apos;	oSheetTemp.getCellByPosition(1,2).string = SCompleta1
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+	
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheetTemp.getCellByPosition(5,1).string
+	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+		&apos;&apos;&apos;	if sIncMan&lt;&gt; 0 then
+&apos;			print sincman
+			&apos;	oSheetTemp.getCellByPosition(5,2).string = sIncMan
+		&apos;&apos;&apos;		oSheetTemp.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+		&apos;&apos;&apos;	end if		
+			&apos;PRINT &quot;DDDDD&quot; &amp; sAlfaNum0 
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(6,2).formula = SCompleta5
+		Else
+			
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	&apos;xray sSicur
+&apos;	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then 
+&apos;	if sSicur &lt;&gt; 0 or sSicur &lt;&gt; &quot;&quot; then  &apos; se abbiamo l&apos;importo lo scriviamo direttamente
+	if sSicur &lt;&gt; &quot;&quot; then  &apos; se abbiamo l&apos;importo lo scriviamo direttamente
+				oSheetTemp.getCellByPosition(7,2).value = sSicur
+				&apos;print &quot;casco qui&quot;
+				oSheetTemp.getCellByPosition(7,2).cellstyle = &quot;Temp_€&quot;
+			else &apos;altrimenti
+				if Sic_perc &lt;&gt; 0 then
+					sSicur = Sic_perc * Prezzo
+					oSheetTemp.getCellByPosition(7,2).value = sSicur
+					oSheetTemp.getCellByPosition(7,2).cellstyle = &quot;Temp_€&quot;
+				end if
+	end if
+	
+	iF Sic_perc &lt;&gt; 0 then 
+		oSheetTemp.GetCellByPosition( 8, 2).value     = Sic_perc 
+		oSheetTemp.GetCellByPosition( 8, 2).cellstyle = Temp_%
+	end if
+	
+	
+&apos;____
+&apos;	if sSicur &lt;&gt; &quot;&quot; then  &apos; se abbiamo l&apos;importo lo scriviamo direttamente
+&apos;print &quot;perc_IncMan  &quot; &amp; perc_IncMan &amp; &quot; -&quot;		
+&apos;print &quot;2 sIncMan  &quot; &amp; sIncMan
+	if perc_IncMan &lt;&gt; &quot;&quot; then  &apos; se abbiamo la percentuale la scriviamo direttamente
+				oSheetTemp.getCellByPosition(5,2).value = perc_IncMan
+				oSheetTemp.getCellByPosition(5,2).cellstyle = &quot;Temp_%&quot;
+				&apos;print &quot;perc_IncMan mm &quot; &amp; perc_IncMan
+			else &apos;altrimenti
+			&apos;	print &quot;dentro sIncMan  &quot; &amp; sIncMan
+				if sIncMan &lt;&gt; &quot;&quot; then
+			&apos;	print &quot;alla fine   &quot; &amp; Prezzo
+			&apos;	print sIncMan
+					perc_IncMan = sIncMan / Prezzo
+				&apos;	perc_IncMan = sIncMan * 100/Prezzo					
+				&apos;	sSicur = Sic_perc * Prezzo
+					oSheetTemp.getCellByPosition(5,2).value = perc_IncMan
+					oSheetTemp.getCellByPosition(5,2).cellstyle = &quot;Temp_€&quot;
+				end if
+	end if
+	
+	iF Sic_perc &lt;&gt; 0 then 
+		oSheetTemp.GetCellByPosition( 8, 2).value     = Sic_perc 
+		oSheetTemp.GetCellByPosition( 8, 2).cellstyle = &quot;Temp_%&quot;
+	end if
+&apos;____	
+	
+	sSicur = &quot;&quot;  &apos; azzeriamole... non si sa mai... :)
+	Sic_perc = &quot;&quot;
+
+
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheetTemp.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheetTemp.getCellByPosition(3,2).string=SCompleta3 
+
+	SCompleta4 = Prezzo
+	oSheetTemp.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero (non stringa)
+	&apos; se era una stringa senza testo aggiunto è già stata convertita
+	&apos; altrimenti restituisce un errore ben commentato:
+	IF oSheetTemp.getCellByPosition(4,2).value = isNotANumber and _
+		oSheetTemp.getCellByPosition(4,2).value &lt;&gt; 0 then
+	    oSheetTemp.getCellByPosition(4,2).string = &quot;&quot; 	    
+	    SpostaCursore_su_Prezzario
+	   &apos; ThisComponent.CurrentSelection
+	    lrow=ThisComponent.CurrentSelection.RangeAddress.StartRow   
+	    ThisComponent.CurrentController.Select(oSheet.getCellByPosition(7,lrow))
+		MSGBOX &quot;Il formato del prezzo del listino è una stringa&quot; &amp; CHR$(10)_
+				&amp; &quot;e non posso utilizzarlo per i conteggi!&quot;&amp;  CHR$(10)&amp; CHR$(10)_
+				&amp; &quot;Errore!! Il listino non è stato ben adattato. &quot;&amp; CHR$(10)_
+				&amp; &quot;La colonna dei Prezzi deve contenere dei Numeri (e non stringhe di testo)&quot;_
+				&amp; &quot;&quot;,16, &quot;Errore!&quot;
+		exit sub				
+	END IF
+    oCell=oSheetTemp.getCellByPosition(2,2) 
+
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+    Adatta_Altezza_riga 	
+end sub
+
+
+SUB Accoda_Normale_________________(livelli as long,  lrow as long)
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+  dim sIncMan as double
+  
+ &apos;&apos; 	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+&apos;  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+&apos;	end if
+
+    sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+    sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+   &apos; print sIncMan
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print sAlfaNum0
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+&apos;	print sAlfaNum1
+	lAlfa0 = Len (sAlfaNum0)
+	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oCell.string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+  
+  &apos;	print lAlfa0
+&apos;	print lAlfaA
+&apos;print livelli
+	Select Case livelli
+
+	Case  1 
+	&apos;	lAlfaA = Len(sAlfaNum1)
+	&apos;	Do while lAlfa0 = lAlfaA 
+	&apos;			lrow = lrow-1
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+	&apos;			sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;			print &quot;AAA&quot;		
+	&apos;	loop 
+	&apos;	lrow = lrow+1
+	&apos;	sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+
+	Case 2 &apos; per Milano e Piemonte 
+&apos;	print &quot;2&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print &quot;AAA&quot;
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+	
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
+		&apos;	print &quot;MI&quot;
+					goto voce_completa
+			end if
+			goto voce_completa
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+		&apos;		goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
+	
+&apos;	print &quot;sono in tip 3&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print &quot;1   &quot; &amp; sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;	print &quot;dove&quot;	
+		&apos;	lAlfa1 = lAlfaA
+			lAlfa1 =  Len( oCell.string)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaB = Len( oCell.string)
+			IF lAlfaB &gt; lAlfa1 then
+			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
+					Do while lAlfaB &gt;= lAlfa1
+						lrow = lrow-1
+						oCell = oSheet.GetCellByPosition( 2, lrow )
+						lAlfaB = Len( oCell.string)
+					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;3c&quot;
+					loop
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+				else
+				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;Altern&quot;
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			end if
+		
+			IF lAlfaA &gt; lAlfa0 then
+			
+		&apos;&apos;		goto voce_completa
+			end if
+		&apos;	sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	print &quot;2   &quot; &amp; sDescr2			
+			oCell = oSheet.GetCellByPosition( 0, 0 )
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+
+	End select
+	 
+
+	voce_completa:
+
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+	
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili procedo a ripulire e incollare
+&apos;	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheetTemp)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheetTemp.getCellRangeByPosition (1,2,7,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+&apos;print sCategoria
+	if sCategoria &lt;&gt; &quot;&quot; then
+&apos;		oSheetTemp.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+&apos;	oSheetTemp.getCellByPosition(1,2).string = SCompleta1
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+	
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheetTemp.getCellByPosition(5,1).string
+	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+				oSheetTemp.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+			end if		
+&apos;PRINT &quot;DDDDD&quot;&apos;
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(6,2).formula = SCompleta5
+		Else
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	
+	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then
+		if sSicur &lt;&gt; 0 then 
+			oSheetTemp.getCellByPosition(7,2).value = sSicur
+		end if
+	end if
+	
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheetTemp.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheetTemp.getCellByPosition(3,2).string=SCompleta3 
+
+	SCompleta4 = Prezzo
+	oSheetTemp.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero (non stringa)
+	&apos; se era una stringa senza testo aggiunto è già stata convertita
+	&apos; altrimenti restituisce un errore ben commentato:
+	IF oSheetTemp.getCellByPosition(4,2).value = isNotANumber then
+	    oSheetTemp.getCellByPosition(4,2).string = &quot;&quot; 	    
+	    SpostaCursore_su_Prezzario
+	   &apos; ThisComponent.CurrentSelection
+	    lrow=ThisComponent.CurrentSelection.RangeAddress.StartRow   
+	    ThisComponent.CurrentController.Select(oSheet.getCellByPosition(7,lrow))
+		MSGBOX &quot;Il formato del prezzo del listino è una stringa&quot; &amp; CHR$(10)_
+				&amp; &quot;e non posso utilizzarlo per i conteggi!&quot;&amp;  CHR$(10)&amp; CHR$(10)_
+				&amp; &quot;Errore!! Il listino non è stato ben adattato. &quot;&amp; CHR$(10)_
+				&amp; &quot;La colonna dei Prezzi deve contenere dei Numeri (e non stringhe di testo)&quot;_
+				&amp; &quot;&quot;,16, &quot;Errore!&quot;
+		exit sub				
+	END IF
+    oCell=oSheetTemp.getCellByPosition(2,2) 
+
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+      Adatta_Altezza_riga 	
+end sub
+
+SUB Accoda_CN08(livelli as long,  lrow as long)
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+  dim sIncMan as double
+  
+  	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+	end if
+
+    sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+    sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+   &apos; print sIncMan
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print sAlfaNum0
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+&apos;	print sAlfaNum1
+	lAlfa0 = Len (sAlfaNum0)
+	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oCell.string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+  
+	Select Case livelli
+
+	Case  1 
+			
+		
+	Case 2 
+			If oSheet.GetCellByPosition( 3, lrow).string = &quot;4&quot; then  &apos; per Milano era &quot;p&quot;
+					goto voce_completa
+			end if
+			lrow = lrow-1
+			Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;4&quot; &apos;  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+			loop 
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			goto voce_completa
+			
+	Case 3 &apos; 	
+			If oSheet.GetCellByPosition( 3, lrow).string = &quot;4&quot; then 
+				lrow = lrow-1
+				Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;3&quot; &apos; 
+					lrow = lrow-1
+				loop 
+				sDescr3 =  oSheet.GetCellByPosition( 4, lrow).string
+				goto voce_completa
+			end if
+			lrow = lrow-1
+			Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;4&quot; &apos;  
+				lrow = lrow-1
+			loop 
+			vai3:
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;3&quot; &apos; 
+				lrow = lrow-1
+			loop 
+			sDescr3 =  oSheet.GetCellByPosition( 4, lrow).string
+			goto voce_completa
+			
+	End select
+	
+
+	 
+	voce_completa:
+
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if		
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili procedo a ripulire e incollare
+&apos;	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheetTemp)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheetTemp.getCellRangeByPosition (1,2,7,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+&apos;print sCategoria
+	if sCategoria &lt;&gt; &quot;&quot; then
+&apos;		oSheetTemp.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+&apos;	oSheetTemp.getCellByPosition(1,2).string = SCompleta1
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+	
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheetTemp.getCellByPosition(5,1).string
+	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+				oSheetTemp.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+			end if		
+&apos;PRINT &quot;DDDDD&quot;&apos;
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(6,2).formula = SCompleta5
+		Else
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheetTemp.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	
+	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then
+		if sSicur &lt;&gt; 0 then 
+			oSheetTemp.getCellByPosition(7,2).value = sSicur
+		end if
+	end if
+	
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheetTemp.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheetTemp.getCellByPosition(3,2).string=SCompleta3 
+
+	SCompleta4 = Prezzo
+	oSheetTemp.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero (non stringa)
+	&apos; se era una stringa senza testo aggiunto è già stata convertita
+	&apos; altrimenti restituisce un errore ben commentato:
+	IF oSheetTemp.getCellByPosition(4,2).value = isNotANumber then
+	    oSheetTemp.getCellByPosition(4,2).string = &quot;&quot; 	    
+	    SpostaCursore_su_Prezzario
+	   &apos; ThisComponent.CurrentSelection
+	    lrow=ThisComponent.CurrentSelection.RangeAddress.StartRow   
+	    ThisComponent.CurrentController.Select(oSheet.getCellByPosition(7,lrow))
+		MSGBOX &quot;Il formato del prezzo del listino è una stringa&quot; &amp; CHR$(10)_
+				&amp; &quot;e non posso utilizzarlo per i conteggi!&quot;&amp;  CHR$(10)&amp; CHR$(10)_
+				&amp; &quot;Errore!! Il listino non è stato ben adattato. &quot;&amp; CHR$(10)_
+				&amp; &quot;La colonna dei Prezzi deve contenere dei Numeri (e non stringhe di testo)&quot;_
+				&amp; &quot;&quot;,16, &quot;Errore!&quot;
+		exit sub				
+	END IF
+    oCell=oSheetTemp.getCellByPosition(2,2) 
+
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+      Adatta_Altezza_riga 	
+end sub
+
+
+SUB Accoda_MS(livelli as long,  lrow as long)
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+  dim sIncMan as double
+  
+  	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+	end if
+
+    sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+   &apos; print sIncMan
+ 	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print sAlfaNum0
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+&apos;	print sAlfaNum1
+	lAlfa0 = Len (sAlfaNum0)
+	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oCell.string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+  
+  &apos;	print lAlfa0
+&apos;	print lAlfaA
+&apos;print livelli
+	IF  oSheet.GetCellByPosition( 3, lrow).string = &quot;P&quot; And _
+		 oSheet.GetCellByPosition( 3, lrow-1).string = &quot;P&quot; THEN 
+		goto voce_completa
+	end if
+	
+	Select Case livelli
+
+	Case  1 
+	&apos;	lAlfaA = Len(sAlfaNum1)
+	&apos;	Do while lAlfa0 = lAlfaA 
+	&apos;			lrow = lrow-1
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+	&apos;			sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;			print &quot;AAA&quot;		
+	&apos;	loop 
+	&apos;	lrow = lrow+1
+	&apos;	sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+
+	Case 2 &apos; per Milano e Piemonte 
+&apos;	print &quot;2&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print &quot;AAA&quot;
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
+		&apos;	print &quot;MI&quot;
+		&apos;	PRINT oSheet.GetCellByPosition( 3, lrow-1).string
+			&apos;	Do while oSheet.GetCellByPosition( 7, lrow).string &lt;&gt; &quot;&quot;
+				
+					&apos;IF oSheet.GetCellByPosition( 3, lrow-1).string = &quot;V&quot; THEN 
+						&apos;	sDescr1 = &quot;&quot;
+					&apos;	ELSE
+							sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+						&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 4, lrow))&apos;debug	
+						&apos;	print oSheet.GetCellByPosition( 4, lrow).string
+					&apos;END if
+					goto voce_completa
+			end if
+			goto voce_completa
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+		&apos;		goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
+	
+&apos;	print &quot;sono in tip 3&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print &quot;1   &quot; &amp; sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;	print &quot;dove&quot;	
+		&apos;	lAlfa1 = lAlfaA
+			lAlfa1 =  Len( oCell.string)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaB = Len( oCell.string)
+			IF lAlfaB &gt; lAlfa1 then
+			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
+					Do while lAlfaB &gt;= lAlfa1
+						lrow = lrow-1
+						oCell = oSheet.GetCellByPosition( 2, lrow )
+						lAlfaB = Len( oCell.string)
+					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;3c&quot;
+					loop
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+				else
+				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;Altern&quot;
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			end if
+		
+			IF lAlfaA &gt; lAlfa0 then
+			
+		&apos;&apos;		goto voce_completa
+			end if
+		&apos;	sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	print &quot;2   &quot; &amp; sDescr2			
+			oCell = oSheet.GetCellByPosition( 0, 0 )
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+
+	End select
+	 
+
+	voce_completa:
+
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+	
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili
+	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheet)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheet.getCellRangeByPosition (1,2,6,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+&apos;print sCategoria
+	if sCategoria &lt;&gt; &quot;&quot; then
+&apos;		oSheet.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+&apos;	oSheet.getCellByPosition(1,2).string = SCompleta1
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+	
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheet.getCellByPosition(5,1).string
+	if oSheet.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheet.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+				oSheet.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+			end if		
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+&apos;PRINT &quot;A&gt;&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheet.getCellByPosition(6,2).formula = SCompleta5
+		Else
+&apos;PRINT &quot;&gt;&gt;&quot;
+&apos;			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheet.getCellByPosition(5,2).formula = SCompleta5
+	end if
+
+	
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheet.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheet.getCellByPosition(3,2).string=SCompleta3 
+&apos;	print prezzo
+	SCompleta4 = Prezzo
+	oSheet.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero VERO (non stringa)
+
+    oCell=oSheet.getCellByPosition(2,2) 
+ &apos;   ThisComponent.CurrentController.Select(oCell)
+ &apos;   Adatta_Altezza_riga 	
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+       Adatta_Altezza_riga 	
+ &apos;   pRINT &quot;ACCODA NORMAL&quot;
+end sub
+</script:module>

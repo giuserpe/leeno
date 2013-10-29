@@ -1,0 +1,1323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_0" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                           3.0.16               
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+&apos;********************************************************
+Global sUltimus as string
+Global sUltimus2 as string
+Global sLib As string &apos; libreria Ultimus settata dal documento in apertura
+global oProgressBar as object
+Global sTemp as string
+&apos;global sVer2 as string &apos;versione della libreria installata
+
+
+
+sub mostra
+xray ThisComponent.DocumentProperties
+	sFrame = ThisComponent.CurrentController.Frame.title
+	sFrame = RTrimStr (sFrame, &quot; - OpenOffice.org Calc&quot;)
+	&apos;sTitle = ThisComponent.DocumentInfo.Title
+	sTitle = ThisComponent.DocumentProperties.Title
+Msgbox  &quot;sUltimus:  &quot; &amp; sUltimus &amp;  CHR$(10)_
+		&amp; &quot;sUltimus2:  &quot; &amp;  sUltimus2 &amp;  CHR$(10)_
+			 &amp; &quot; Frame  &quot; &amp; sFrame  &amp;  CHR$(10)_
+			 &amp; &quot;Title  &quot; &amp; sTitle
+	print sUltimus		 
+END SUB
+
+
+
+
+Function IsDocumentDiUnCertoTipo(oDoc) As Boolean
+Dim bResult As Boolean
+   bResult = False
+   On Error GoTo ErrH
+
+   &apos;controlla se è un documento calc
+   if oDoc.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;) Then
+		  bresult = True
+    End If
+
+ErrH:
+    IsDocumentDiUnCertoTipo = bresult
+End Function
+
+Sub Su_nuovo_doc &apos;da template
+
+dim sVer1doc as string
+dim sLib as string
+
+&apos; tenerlo per le palle? proviamo...
+ sURL = ConvertToUrl(ThisComponent.getURL()) 
+ StarDesktop.loadComponentFromURL(sURL, &quot;_default&quot;,0 , Array())
+ &apos;spippe = &quot;queste sono VERE PIPPE&quot;
+&apos;print &quot;111111111 vediamo&quot;
+&apos;		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+&apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;)(getCellByPosition (3,15).string)
+	osheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
+&apos;	oSheet.isVisible = TRUE
+&apos;	print
+&apos;	sVer1doc = oSheet.getCellByPosition (1,29).string
+&apos;	print &quot;oooooo &quot; &amp; sVer1doc &amp; &quot;=&quot; &amp; &quot;UF2&quot; 
+&apos;	If sVer1doc = &quot;UF2&quot; then
+&apos;		print &quot;risultano uguali&quot;
+	    sLib = &quot;UltimusFree2&quot;
+&apos;	   print sLib
+&apos;	   else
+	 &apos;  	print &quot;NON risultano uguali -&quot; &amp; sVer1doc &amp; &quot; = &quot; &amp; &quot;UF2&quot; &apos;&amp; &quot;-&quot;
+&apos;	end if
+	&apos;	sLib=&quot;UltimusFree2&quot; &apos; la libreria di ultimus da usare con questo Template
+		oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
+&apos;xray 	oLibCont	
+&apos;exit sub
+    If oLibCont.hasByName(sLib) Then
+   &apos; print &quot;ok&quot;
+    	GlobalScope.Basiclibraries.LoadLibrary(sLib)
+    	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+		UltimusFree2.Lupo_0.Su_Apertura_Doc 
+	end if
+End sub
+
+sub Procedura_di_Controllo  &apos; eseguita da menu con il doc già aperto
+	If not thisComponent.Sheets.hasByName(&quot;S1&quot;) and _
+		not thisComponent.Sheets.hasByName(&quot;S2&quot;)and _
+		not thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)Then &apos; se non è un doc di Ultimus
+		exit sub
+	end if
+	sSMS = &quot;&quot; &apos; banalmente non scrive una riga della prompt
+	Su_Apertura_Doc(sSMS)
+
+end sub
+
+
+&apos;_____________________________________________________________
+
+Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste routine
+
+	Barra_chiudi_sempre_4 
+	Barra_apri_chiudi_4 
+	dim sVerMinorDoc as long &apos;as string	&apos;Non mettere MAI queste dischiarazioni insieme sulla stessa riga
+	dim sURLOO as string &apos;Non mettere MAI queste dischiarazioni insieme sulla stessa riga
+	dim iCasuale as long
+	
+	sURLOO = ConvertToUrl(ThisComponent.getURL()) 
+&apos;print sURLOO &apos;dbgbart
+
+
+	
+	iCasuale = Int((10000 * Rnd) -2)&apos; genera numero random
+	ThisComponent.CurrentController.Frame.Name = iCasuale &apos; per il momento non lo sto usando
+	&apos; ma forse l&apos;unico modo per tenere il doc per palle
+	&apos; iterando tra i frame si verca quello giusto (prima di proseguire)
+	 &apos;StarDesktop.loadComponentFromURL(sURL, &quot;_default&quot;,0 , Array())
+&apos;&apos;&apos;&apos;	on error goto ErrorHandler:
+&apos;	on error goto next
+	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
+		&apos;	sDoc =
+	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	ThisComponent.unlockControllers 
+	 
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+			on error goto ErrorHandler 
+	&apos;	Altro_Detentore_generale_errore
+		end if 
+	END IF
+&apos;print	SGenericoMemo
+on error goto ErrorHandler 
+
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Verifica_chiudi_preview
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;1........&quot;, 50)
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	Logo_Avvio
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	if SGenericoMemo = &quot;Interrompi&quot; then &apos; la variabile globale viene impostata da accrocchi vari
+			&apos; tipo quello che apre un template per acccodare delle sheet (aggiorna_template )
+		exit sub
+	end if 
+	Barra_chiudi_sempre_4
+	Barra_apri_chiudi_4 
+	
+	If thisComponent.Sheets.hasByName(&quot;S5&quot;) Then
+		Logo_Avvio
+		thisComponent.Sheets.GetByName(&quot;S1&quot;).GetCellByPosition(2,410).rows.OptimalHeight  = true 
+	end if
+&apos;print &quot;!111111111&quot;
+	&apos;	sVer2 = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion  &apos; versione di questo codice
+	&apos;print sVer2
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+		oSheet.unprotect(&quot;&quot;)
+        versioneUF_major= 3                                                                                                                                                                                                                                                                                                                                                                                                                        
+        versioneUF_minor= 8                                                                                                                                                                                                                                                                                                                                                                                                             
+        versioneUF_subversion= 62                                                                                                                                                                                                                                                                                                                                                                         
+		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
+		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
+		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion
+		If thisComponent.Sheets.hasByName(&quot;Scorciatoie&quot;) Then
+			ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).GetCellByPosition(1,0).string =  versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion 
+		end if
+		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+		oSheet.protect(&quot;&quot;)
+		&apos; scrive la versione di questo codice nel template che viene aperto...
+	end if	
+
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value &lt;&gt; 0 then
+			massimizza &apos; a schermo intero
+		end if
+	end if	
+
+	&apos;Versione del template
+	sVerMajorDoc = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,294).string	
+	sVerMinorDoc = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,294).string
+	
+	&apos; versione di UltimusFree installata
+	sVerMaiorInstallata = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string		
+	sVerMinorInstallata = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).string
+&apos;	print &quot;sVerMajorDoc  &quot; &amp; sVerMajorDoc
+&apos;	print &quot;sVerMinorDoc    &quot; &amp; sVerMinorDoc
+&apos;	print &quot;sVerMinorInstallata   &quot; &amp; sVerMinorInstallata
+	if sVerMajorDoc &lt;&gt;  sVerMaiorInstallata then
+			if sVerMajorDoc = &quot;UF2&quot; then 
+			  if sVerMinorDoc &gt; &quot;070701&quot;  then	
+				Select Case msgbox (&quot;(5)  &quot; &amp; CHR$(10)  &amp; CHR$(10)_
+					  &amp; &quot; Questo documento è stato elaborato con una versione di UltimusFree più vecchia di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
+	  				  &amp; &quot;  &quot; &amp; CHR$(10) &amp; CHR$(10)_
+					  &amp; &quot;Sussistono problemi di incompatibilità del Doc con la versione di libreria installata. &quot;  &amp; CHR$(10) &amp; CHR$(10)_
+					  &amp; &quot;Vuoi tentare la PROCEDURA AUTOMATICA DI ADATTAMENTO di questo documento?&quot;  &amp; CHR$(10)_
+					  &amp; &quot;(verrà eseguita su un duplicato di questo doc e non corri nessun rischio)&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+					  &amp; &quot; (se rispondi NO procedo CON Il normale caricamento)&quot; &amp; CHR$(10)_
+					  &amp; &quot; &quot;, 35, &quot;Lieve Incompatibilità tra il Doc e la Libreria&quot;) 
+					Case 6
+						AGGIORNA_TEMPLATE
+						Barra_chiudi_sempre_4 
+						&apos;Ripristina_statusLine
+						exit sub	
+					Case 2 
+						exit sub
+				end select
+			   end if	
+			  if sVerMinorDoc &lt; &quot;070701&quot;  then
+			&apos;		print &quot;teta  &quot; &amp; sVerMajorDoc
+					sCaso = 1
+					goto fine_defCaso
+			  end if						
+			end if	
+		
+			if sVerMinorDoc = &quot;&quot; and sVerMajorDoc = &quot;&quot; then 
+			&apos;	print &quot;vuote  &quot; &amp; sVerMajorDoc
+				sVerMajorDoc = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(3,15).string	
+				sVerMinorDoc = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(4,15).string
+		
+				sNoNonVER = &quot;(in tal caso prova con la versione &quot; &amp; sVerMajorDoc &amp; &quot;-&quot; &amp; sVerMinorDoc &amp; &quot; o li intorno...)&quot;
+				sCaso = 1
+				goto fine_defCaso
+			end if
+			
+			if  sVerMajorDoc &lt;  sVerMaiorInstallata then 
+		&apos;		print &quot;caso alpha&quot;
+				sCaso = 1
+			end if
+		
+			if sVerMajorDoc &gt;  sVerMaiorInstallata then
+		&apos;		print &quot;beta&quot;
+				sCaso= 2
+			end if
+	
+
+	
+		
+		fine_defCaso:
+				
+		select case sCaso
+		Case 3
+		msgbox &quot;(3) Questo documento è stato elaborato con una versione molto datata di Ultimus &quot; &amp;CHR$(10)_
+		&amp; &quot; e sussistono gravi problemi di incompatibilità con la Versione di Ultimus attiva su questo PC. &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Il trasferimento dei dati di questo Doc ad un Template adatto è complicato ma non impossibile... se hai problemi contattami &quot;  &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Oppure installa una versione di Ultimus datata e coerente con il tuo documento  &quot;  &amp; CHR$(10) &amp; CHR$(10)	
+
+		Case 2
+		msgbox &quot;(2) Questo documento è stato elaborato con una versione Ultimus più recente di&quot; &amp;CHR$(10)_
+		&amp; &quot; quella installata e/o attiva su questo PC. &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Sussistono gravi problemi di incompatibilità tra il documento e la Versione di Ultimus. &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Il trasferimento dei dati di questo Doc in un Template adatto è complicato ma non impossibile... se hai problemi contattami &quot;  &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Installa una versione di Ultimus pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot;  &amp; CHR$(10) &amp; CHR$(10)		
+&apos;		&amp; &quot; Installa una versione di Ultimus pari o superiore alla &quot; &amp;  CHR$(10) &amp; CHR$(10)	
+		Osheet = thisComponent.sheets.getbyname(&quot;computo&quot;)
+		Thiscomponent.currentcontroller.setactivesheet(Osheet)
+		Barra_chiudi_sempre_4
+		goto No_Procedura
+
+		Case 1
+		msgbox &quot;(1)   &quot; &amp; CHR$(10)  &amp; CHR$(10)_
+		&amp; &quot;1  Questo documento è stato elaborato con una versione di Ultimus più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		&amp; &quot;       &quot;  &amp; CHR$(10)_
+		&amp; &quot;       Sussistono gravi problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Ultimus è comunque attivo, ma usare le macro su questo documento potrebbe compromettere i dati!&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Se devi solo leggere o fare qualche correzione puoi comunque usare tranquillamente tutti i comandi standard di OOo &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Se invece devi lavorare ancora sul computo dovresti riversare i sui dati in un template aggiornato !&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Il trasferimento dei dati di questo Doc in un Template aggiornato è po&apos; complicato ma fattibile...&quot;   &amp; CHR$(10)_
+		&amp; &quot; C&apos;è in giro della documentazione specifica su questo argomento... ma se incontri problemi contattami &quot;  &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Oppure e in altrenativa installa una versione di Ultimus &quot;&quot;datata&quot;&quot; e coerente con il tuo documento &quot;&amp; CHR$(10)_
+		&amp; &quot;   &quot; &amp; sNoNonVER &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;  &quot; &amp; CHR$(10)
+		Ripristina_statusLine
+		exit sub
+	
+		Case 8
+		msgbox &quot;(8)   &quot; &amp; CHR$(10)  &amp; CHR$(10)_
+		&amp; &quot;  Questo documento è stato elaborato con una versione di Ultimus più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		&amp; &quot;       &quot;  &amp; CHR$(10)_
+		&amp; &quot;     Probabilmente non ci sono seri problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;Ma in quel periodo ho i rilasciato versioni in modo un po&apos; confuso! Consiglio quindi caldamente il trasferimento/riversamento dei dati di questo Doc in un Template aggiornato!&quot; &amp; CHR$(10) &amp; CHR$(10)	
+
+		End select	
+    else
+		if sVerMinorDoc &lt;  sVerMinorInstallata then
+			Select Case msgbox (&quot;(5)  &quot; &amp; CHR$(10)  &amp; CHR$(10)_
+				  &amp; &quot; Questo documento è stato elaborato con una versione di UltimusFree più vecchia di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
+	  			  &amp; &quot;  &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				  &amp; &quot;Sussistono problemi di incompatibilità del Doc con la versione di libreria installata. &quot;  &amp; CHR$(10) &amp; CHR$(10)_
+				  &amp; &quot;Vuoi tentare la PROCEDURA AUTOMATICA DI ADATTAMENTO di questo documento?&quot;  &amp; CHR$(10)_
+				  &amp; &quot;(verrà eseguita su un duplicato di questo doc e non corri nessun rischio)&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+				  &amp; &quot; (se rispondi NO procedo CON Il normale caricamento)&quot; &amp; CHR$(10)_
+				  &amp; &quot; &quot;, 35, &quot;Lieve Incompatibilità tra il Doc e la Libreria&quot;) 
+				Case 6
+					AGGIORNA_TEMPLATE
+					Barra_chiudi_sempre_4 
+					&apos;Ripristina_statusLine
+					exit sub	
+				Case 2 
+					exit sub
+			end select
+ 	    end if    &apos; cleo
+ 	   		
+		if sVerMinorDoc &gt; sVerMinorInstallata then 
+			msgbox &quot;(6)  &quot; &amp; CHR$(10)  &amp; CHR$(10)_
+			&amp; &quot;  Questo documento è stato elaborato con una versione di UltimusFree più recente di quella installata e/o attiva su questo PC. &quot; &amp;CHR$(10)_
+			&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Sussistono problemi di incompatibilità tra questo documento e la Versione di Ultimus. &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Installa una versione di UltimusFree pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot;  &amp; CHR$(10) &amp; CHR$(10)	
+		end if
+    end if
+
+
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;UltimusFree2&quot; ) Then 
+	 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;UltimusFree2&quot; ) 
+	End If 
+	If NOT GlobalScope.DialogLibraries.isLibraryLoaded( &quot;UltimusFree2&quot; ) Then 
+	 	 GlobalScope.	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;) 
+	End If 
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+	 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+	End If 
+
+	&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	&apos;sezione riservata per aggiornamenti agli stili di celle
+	&apos;ricordarsi ogni tanto di controllare
+&apos;	modifiche_al_template disattivata rimandando alla &quot;scelta sopra&quot;
+	 &apos;Aggiorna_stile &apos;(questa sub ha dei comportamenti strani ed è inaffidabile)
+
+&apos;	 iTempo=400
+&apos;	 do while ConvertToUrl(ThisComponent.getURL()) &lt;&gt; sURLOO	
+&apos;	  	itempo = iTempo+iTempo
+ &apos;	 	if iTempo &gt;15000 then
+&apos;				exit do
+&apos;		end if
+ &apos;		wait iTempo
+&apos;	 loop	    
+	&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+&apos;&apos;	StarDesktop.loadComponentFromURL(sURLOO, &quot;_default&quot;,0 , Array())
+	
+&apos;	oEnum = StarDesktop.Components.createEnumeration
+&apos;	While oEnum.hasMoreElements
+
+&apos;	    oDoc = oEnum.NextElement
+	 &apos;   If thiscomponent.oDoc.sURLOO Then
+&apos;print &quot;2222222222222&quot;
+
+	&apos; se non è il documento giusto, ovvero in caso di 
+	&apos; ripristino o di apertura simultanea di diversi doc
+	&apos; &quot;d&apos;ufficio&quot;  salta la procedura di apertura
+	oEnum = StarDesktop.Components.createEnumeration
+	While oEnum.hasMoreElements
+ 	   oDoc = oEnum.NextElement
+  	   If IsDocumentDiUnCertoTipo(oDoc) Then
+  	   		&apos;print ConvertToUrl(ThisComponent.getURL()) &apos; dbgbart
+  		    if ConvertToUrl(ThisComponent.getURL()) &lt;&gt; sURLOO then 
+				Vai_a_M1
+				Barra_chiudi_sempre_4 
+				exit sub   
+			End If 
+       End If 
+	Wend
+&apos;	if ThisComponent.supportService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;) Then
+ &apos;		if not ConvertToUrl(ThisComponent.getURL()) = sURLOO then 
+&apos;				Vai_a_M1
+&apos;				Barra_chiudi_sempre_4 
+&apos;				exit sub   
+&apos;		End If 
+&apos;	end if
+&apos;	Wend
+
+    Barra_chiudi_sempre_4    
+  
+ 	if ismissing(sSMS) or isNull(sSMS) then 
+ 		sSMS = &quot;Se invece rispondi NO verranno saltati i controlli e il doc si aprirà normalmente)    Proseguo con i controlli? &quot;
+	end if
+
+  &apos;	If MsgBox  (&quot; Sto per eseguire la procedura di controllo su questo doc &quot;&amp; CHR$(10)_
+  	Select case MsgBox (  &quot; Sto per eseguire la procedura di controllo su questo doc: &quot; &amp; CHR$(10) &amp; CHR$(10)_
+  		&amp; &quot;   &quot; &amp; ConvertFromUrl(sURLOO) &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Se rispondi Sì e prosegui dovrai attendere il caricamento senza toccare il mouse o la tastiera!&quot;  &amp; CHR$(10)_
+		&amp; sSMS , 35, &quot;Procedura di Controllo del doc&quot; ) &apos; = 7 then
+		Case 7
+			Clessid_lock_End
+			&apos;Barra_apri_chiudi_4 
+			Vai_a_M1
+			Barra_chiudi_sempre_4 
+			exit sub
+		Case 2
+			exit sub
+	end select				
+	&apos;end if
+&apos;	Clessid_lock_Start&apos;
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;2........&quot;, 30)
+	StarDesktop.loadComponentFromURL(sURLOO, &quot;_default&quot;,0 , Array())
+	
+    &apos; mettere qui le leggere modifiche al template
+    &apos; si fanno e si rifanno senza dire niente a nessuno
+	sproteggi_sheet_TUTTE
+    oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+	sFormula = &quot;=sumif(AA;&quot; &amp; 47 &amp; 55 &amp; &quot;;BB)&quot;
+	oSheet.GetCellByPosition(47 , 55).setformula(sFormula)
+  	
+	crea_stile_cella_1 &apos; inserisce uno stile di cella per distingere le voci che sono in contab direttamente dall&apos;EP
+	crea_stile_cella_2 &apos; modifica lo stile &quot;data_bianca&quot; da 01/01/2011 a 01/01/11
+	crea_stile_cella_3 &apos; nuovo stile creato per evidenziare importi in eccesso rispetto al Computo 01/06/2013
+	
+	&apos;assegna una macro ad un evento (chiusura file)
+	setDocEventOnClose  &apos;
+
+    Bozza_OFF
+    
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;3........&quot;, 40)
+
+	&apos; spostata nella procedura di aggiornamento
+&apos;	rimuovi_SC_Doc &apos;se c&apos;è un errore su questa riga disattivarla con un apostrofo
+	&apos; poi chiudere e riaprire il documento
+	
+
+	Registra_Tasti_Global
+	Registra_Tasti_inDoc &apos; non so se è una buona idea...
+	&apos;Registra_Variabili  AL MOMENTO SEMBRA PREFERIBILE UN RIFERIMENTO DIRETTO!
+
+	Attiva_Sheets_di_Servizio
+	sproteggi_sheet_TUTTE  
+
+
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;4........&quot;, 50)
+
+
+	Colora_Tabs
+  &apos;_______________________________________________
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
+
+	Controlla_Somme_Componenti
+	
+	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
+		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+		ThisComponent.CurrentController.Select(oSheet)
+
+		&apos; questa è lunga da eseguire...
+		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+		Tutti_Subtotali (oSheet)
+		
+		&apos;Numera_Voci_Computo (&quot;niente prompt&quot;) &apos;meglio non eseguire in automatico
+		Barra_chiudi_sempre_4
+		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)
+		
+		oDpage = oSheet.DrawPage
+ 		oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
+ 		oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
+		oCtrlModel.Enabled = true	
+		aggiorniamoli
+		Visualizza_normale
+	end if
+	
+	If thisComponent.Sheets.hasByName(&quot;S5&quot;) Then
+		Logo_Avvio
+	end if
+
+	If Constrolla_se_M1 = true then
+			Vai_a_M1
+								
+			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+			Trova_ZOOM
+			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	
+	 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 		APPROSSIMA_ZOOM
+	 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
+			oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+			oSheet.protect(&quot;&quot;)
+			IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &lt;&gt; 0 then
+					&apos; se &quot;livello difficoltà&quot; non è &quot;primo Approccio&quot;
+					
+					Select case ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).string
+
+						Case &quot;0&quot;
+							Clessid_lock_End
+							&apos;disatt 080604 barra_chiudi
+							exit sub
+						Case &quot;1&quot;
+							Sel_Computo
+						Case &quot;2&quot;
+							Vai_a_M1
+						Case &quot;3&quot;
+							Sel_Altre_Opz
+							
+					End select
+				else
+					&apos; PRIMO APPROCCIO&quot;
+					
+					Computo_Normale_terra_terraDIRETTO
+					If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
+						oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+					end if
+				&apos;	oSheet = ThisComponent.currentController.activeSheet
+					oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
+					oPrimaCella.Rows.Height = 2200
+					ThisComponent.CurrentController.Select(oPrimaCella)
+					oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+					oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
+					oSpalte1.isVisible = false
+				&apos;	Sel_Computo
+				&apos;	Computo_Normale_terra_terra
+					Sel_Altre_Opz
+			end if		
+	 	else
+	 		Sel_Altre_Opz
+	end if
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;6... Attendi ancora&quot;, 70)
+&apos;print &quot;uffa_3&quot;	
+	Rimetti_in_ordine_tab
+
+  	&apos;Select case MsgBox (  &quot;Controllo le finestrelle a discesa? &quot;&amp; CHR$(10)_
+ 	&apos;	&amp; &quot;&quot; , 35, &quot;Fimestrelle a discesa&quot; )
+	&apos;	Case 6	
+
+&apos;print &quot;uffa_4&quot;	
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value = 1 then 
+&apos;					&apos;And ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &lt;&gt; 0 then 
+			Barra_chiudi_sempre_4
+			Barra_Apri_Chiudi_5(&quot;Controllo le finestrelle a discesa!&quot;, 80)
+			Controlla_Validita_Lista	
+		end if
+	end if	
+
+		
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;1 ok proseguo!&quot;, 80)	
+
+	Chiudi_o_elimina_tabelle_inutili
+	
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 and _
+		thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) then
+		Nascondi_tabs_contabilita
+	end if
+
+	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).string = 1 then
+		Rifa_Somme_TOT_Computo
+		&apos;Tutti_Subtotali
+	end if
+
+	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &lt;&gt; &quot;0&quot; then
+		Nascondi_tabs_COMPUTO_soltanto
+	end if
+
+	&apos; questa è lunghetta
+	modifiche_risibili
+	&apos;fare qualcosa
+	
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;2 ok proseguo!&quot;, 60)	
+
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(6,335).value = 1 then
+&apos;			ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(7,327).
+&apos;		else
+			&apos; rimetti le cose come stavano	
+&apos;	end if
+
+	Protect_alcune_tabelle
+&apos; disatt 080604	Clessid_lock_End
+
+		&apos; elimina eventuali filtri su queste tabelle  
+&apos;		disativata perché fa casino... non sa su quale frame s trova...
+&apos;	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
+		&apos;Osheet = thisComponent.sheets.getbyname(&quot;computo&quot;)
+	&apos;	ThisComponent.CurrentController.Select(thisComponent.sheets.getbyname(&quot;computo&quot;)
+	&apos;	Filtro &apos;(ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;))
+&apos;	end if
+
+&apos;	If thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) Then	
+	&apos;	Osheet = thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;)
+	&apos;	ThisComponent.CurrentController.Select(thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;))
+	&apos;	Filtro &apos;(ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;))
+&apos;	end if	
+	
+&apos;	suona_1_2 
+	SetDesignModeON &apos; superflua... già messo all&apos;inizio
+
+&apos;	ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; azzero il nome (SunRise) che
+	&apos; serviva solo per la procedura di avvio
+	Barra_chiudi_sempre_4	
+	
+	sVers= ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string &amp; &quot;.&quot; &amp;_
+			 ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).string &amp; &quot;.&quot; &amp;_
+			 ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string &amp; &quot;.&quot; 
+			 
+
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).string = 1 then
+			sContab = &quot;  Si sta lavorando sulla Contabilità&quot;	
+		else
+			sContab = &quot;  Si sta lavorando sul Computo&quot;
+	end if
+	
+	sNome_lavoro = ThisComponent.Sheets.getByName(&quot;M1&quot;).GetCellByPosition(2,3).string
+		
+&apos;	Msgbox &quot;Versione di UltimusFree installata: &quot; &amp;  sVers &amp; CHR$(10)_
+&apos;			&amp; &quot;Template: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).string
+
+	Msgbox  &quot;  ll livello di esperienza è impostato su:  &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string  &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; sContab &amp; CHR$(10)_
+			&amp; &quot;  per:  &quot; &amp; sNome_lavoro &amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;        LA PROCEDURA DI CONTROLLO E&apos; CONCLUSA!     &quot;  &amp; CHR$(10)_
+			&amp; &quot;              Buon lavoro!&quot; &amp; CHR$(10)_
+				&amp; &quot;&quot; , , &quot;UltimusFree: &quot; &amp;  sVers  &amp; &quot; - &quot; &amp; &quot;Template: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).string
+	
+&apos;	Msgbox &quot; &quot; &amp; CHR$(10)_
+&apos;		&amp;&quot;     La procedura di Controllo pare essersi conclusa con successo!   &quot; &amp; CHR$(10) &amp; CHR$(10)_
+	
+	No_Procedura:
+	
+&apos;	print &quot;fine&quot;&apos;&apos;
+&apos;	xray oProgressBar
+&apos;	If not isNull (oProgressBar) or not isEmpty (oProgressBar) then
+&apos;		oProgressBar.end
+&apos;	end if
+	exit sub
+	ErrorHandler:
+	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	ThisComponent.unlockControllers 
+	Barra_chiudi_sempre_4
+	&apos;Barra_apri_chiudi_4 	
+&apos;	Clessid_lock_End
+	Msgbox &quot; Non ho potuto completare la procedura di Controllo in apertura!&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Prova a salvare il documento e poi ripetere la procedura dal menu to Ultimus_3 &gt; Esegui Procedura di Controllo (Doc attivo)&quot;   ,16
+&apos;	msgbox &quot;Si è verificato un errore in  &quot;&quot;Su_Apertura_Doc&quot;&quot;&quot; &amp; CHR$(10)_
+&apos;	&amp; &quot; Se hai &quot;&quot;disturbato&quot;&quot; l&apos;apertura del documento pasticciando con il mouse o la tastiera c&apos;era da aspettarselo...&quot; &amp; CHR$(10)_
+&apos;	&amp; &quot; Prova a chiudere e riaprire il documento!&quot;
+&apos;	Altro_Detentore_generale_errore
+	exit sub
+END SUB
+
+
+
+
+Sub Attiva_Sheets_di_Servizio
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+    	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+    	oSheet.isVisible = TRUE
+    end if
+    If thisComponent.Sheets.hasByName(&quot;S2&quot;) Then
+    	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
+    	oSheet.isVisible = TRUE
+    end if
+   	If thisComponent.Sheets.hasByName(&quot;S3&quot;) Then
+    	oSheet = ThisComponent.Sheets.getByName(&quot;S3&quot;)
+    	oSheet.isVisible = TRUE
+	end if
+    &apos;	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
+    &apos;	oSheet.isVisible = TRUE 
+    If thisComponent.Sheets.hasByName(&quot;FiltroTMP&quot;) Then
+    	oSheet = ThisComponent.Sheets.getByName(&quot;FiltroTMP&quot;)
+    	oSheet.isVisible = TRUE
+    end if
+   	If Constrolla_se_M1 = true then
+    	    	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
+    			oSheet.isVisible = TRUE
+   	end if
+END SUB
+
+
+
+
+sub Aggiorniamoli   &apos;*** aggiorna la cella con il nome del file di Contabilità Corrente
+&apos;    viene eseguita con &quot;mouse dentro&quot; su una serie di pulsanti, compreso quello
+&apos;	del rendi questo file il file di CC... (come ci vai sopra la cella si aggiorna)
+&apos;On Error goto gest_errore &apos;resume next
+dim sUltimus as string
+dim oSheet as object
+dim Esiste as boolean
+	&apos;On Error  resume next 
+	on error goto gest_errore &apos;preso dalla 4 ed è in prova
+	&apos;in questo caso fa il riesume nella gestione errore
+&apos;print &quot;sono dentro aggiorna&quot;
+&apos;On Error Goto ErrorHandler 
+&apos;xray thiscomponent.URL
+ &apos;   GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa
+   &apos; GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	sLib = &quot;UltimusFree2&quot;  
+	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
+&apos;	print &quot;libcontain &quot; &amp; oLibCont.hasByName(sLib)
+    If oLibCont.hasByName(sLib)= false Then
+    print &quot;perso slib ?(&quot; &amp; sLib &amp; &quot;)&quot;
+       	exit sub
+    end if
+	&apos;print &quot;1 &quot; &amp; thisComponent.sheets.getbyname(&quot;M1&quot;).isprotected
+	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+	oSheet.unprotect(&quot;&quot;)
+	&apos;xray oSheet
+	
+        versioneUF_major= 3                                                                                                                                                                                                                                                                                                                                                                                                                      
+        versioneUF_minor= 8                                                                                                                                                                                                                                                                                                                                                                                                        
+        versioneUF_subversion= 62                                                                                                                   
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion
+&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion   
+	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+	oSheet.protect(&quot;&quot;)
+&apos;    print versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion
+
+&apos;print &quot;non posso non sapere...&quot; &amp; sUltimus 
+&apos;wait 300	
+
+
+
+&apos;&apos;&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
+&apos;&apos;&apos;	lcolS = oNomeRange.Column
+&apos;&apos;&apos;	lrowS = oNomeRange.Row
+&apos;&apos;&apos;	xray oNomeRange
+&apos;print &quot;1 ooobbb&quot;
+ 	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
+
+	oMycell2 = oSheet.getCellByPosition (2,27)&apos;(lcolS ,lrowS)
+	oMycell2.string = &quot;&quot;
+&apos;	print oMycell2.string
+	oMycell2.string = sUltimus
+&apos;	print oMycell2.string
+&apos;	oMycell2.string = UltimusFree2.Lupo_0.sUltimus	
+    Dim sURLStr as String
+    Dim sFileName as String
+&apos;print &quot;2 ooobbb&quot;    
+	sUltimus = UltimusFree2.Lupo_0.sUltimus
+	
+    sURLStr0 = ThisComponent.getURL()
+
+    sURLStr = ReplaceString(sURLStr0, &quot; &quot;, &quot;%20&quot;)&apos; altrimenti la prossima non digerisce i %20
+    sFileName = FileNameOutOfPath(sURLStr)
+    
+   
+    ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,24).string = ConvertFromUrl (sURLStr)
+	&apos; aggiorna contemporaneamente header e footer sulla scorta dei dati in Anagrafica
+	Agg_Dati_Comp	
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Colora_M1(sURLStr)
+	&apos;----------------------
+		
+ 	Exit Sub
+	gest_errore: 
+	Print &quot;Errore in: &apos;sub Aggiorniamoli&apos; - &quot; &amp; error
+	msgbox &quot;C&apos;é qualche problema...!&quot;&amp; CHR$(10)_
+	&amp; &quot;SALVA, poi Chiudi questo Documento e riaprilo...&quot;
+&apos;	resume next
+END SUB
+
+Sub Colora_M1(sURLStr as string)
+
+	oSheets = ThisComponent.getSheets()
+	aSheetNames = oSheets.getElementNames()
+    For i = LBound( aSheetNames ) To UBound( aSheetNames )
+      cSheetName2 = aSheetNames( i ) &apos; get string from array   
+    &apos;  PRINT cSheetName2 
+      If cSheetName2 = &quot;M1&quot; Then
+         goto M1_esiste
+         Exit Sub
+      EndIf
+    Next
+	exit sub
+	M1_esiste:
+	sNome_File = ConvertFromUrl  (sURLStr)
+	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
+	oRangeM1 = oSheet.getCellRangeByPosition(1, 26, 4, 26) 
+	oRangeM2 = oSheet.getCellRangeByPosition(1, 27, 1, 27) 
+	oRangeM3 = oSheet.getCellRangeByPosition(1, 28, 4, 28)
+&apos;	oRangeM4 = oSheet.getCellRangeByPosition(1, 29, 4, 29)
+	oMycellM1 = oSheet.getCellByPosition(2, 28 ) 
+	oSheet.getCellByPosition(2,27).string = sUltimus &apos;sNome_File
+	If sUltimus =  sNome_File then			
+			oRangeM1.CellBackColor= RGB(255,0,0)&apos;255;235;205
+		&apos;	oRangeM2.CellBackColor= RGB(255,0,0)
+		&apos;	oRangeM2.CellStyle = (&quot;M1 D&quot;)&apos;(&quot;M1 scritte dx&quot;)
+		&apos;	oRangeM2.CellBackColor= RGB(255,0,0)
+		&apos;	oRangeM2.CharColor = 10079487
+			oRangeM3.CellBackColor= RGB(255,0,0)
+		&apos;	oRangeM4.CellBackColor= RGB(255,0,0)
+			oMycellM1.string = (&quot;Questo documento coincide con il documento di Contabilità  Corrente !&quot;)
+			oMycellM1.CellStyle = (&quot;M1 colorata&quot;)
+		&apos;	oSheet.getCellByPosition(2, 27).string = &quot;&quot;
+		Else
+		&apos;	Flags = _
+		&apos;	com.sun.star.sheet.CellFlags.VALUE + _
+		&apos;	com.sun.star.sheet.CellFlags.STRING + _
+		&apos;	com.sun.star.sheet.CellFlags.FORMULA + _
+ 		 &apos;  	com.sun.star.sheet.CellFlags.STYLES &apos;+ _
+&apos;			com.sun.star.sheet.CellFlags.OBJECTS
+			&apos;oRangeM1.clearContents(Flags)
+		&apos;	oRangeM2.clearContents(Flags)
+			oMycellM1.string = &quot;&quot;
+			oRangeM1.CellStyle = (&quot;M1 scritte noP&quot;)
+		&apos;	oRangeM2.CellStyle = (&quot;M1 D&quot;)
+			oRangeM3.CellStyle = (&quot;M1 scritte noP10&quot;)
+		&apos;	oRangeM4.CellStyle = (&quot;M1 scritte noP&quot;)
+	
+	end if
+&apos;print
+end sub
+
+
+
+
+
+&apos; originale funzionante...
+Sub Scrivi_Globale  &apos; versione semplice
+&apos;Il file attivo diventa il &quot;Computo Corrente&quot;
+&apos; ovvero il file dove dei prezzari andranno a scrivere le voci selezionate 
+&apos; Ovvero quando dal file prezzario si è individuata una voce da scrivere 
+&apos; sull&apos;elenco prezzi, la macro del file prezziario andrà a leggersi la 
+&apos; variabile globale  &quot;sUltimus&quot; per sapere dove scriverlo.
+&apos;+++++++++++FUNZIONA
+&apos;ThisComponent.unlockControllers()
+&apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
+&apos; dove è scritta la variabile globale
+&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+dim xA as string
+&apos; print sUltimus
+
+If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+  GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+End If 
+
+
+&apos;azzera il nome del frame
+&apos;dis 2/01/09 &apos; ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; serve? mmm. pare di no
+
+oDoc = ThisComponent  
+if not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) then
+		exit sub
+end if
+
+setDocEventOnClose
+
+URLStr = ThisComponent.getURL()   &apos; con queste 2 righe si preleva il nome del file
+
+oSheet = ThisComponent.currentcontroller.activesheet 
+
+&apos;xA=oNome
+
+ UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl  (URLStr) &apos;xA  &apos; variabile globale registrata
+
+ &apos; adesso scrive il nome della variabile globale nella ???cella???
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
+
+&apos;xray omycell
+&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
+ &apos;	lcolS = oNomeRange.Column
+&apos;	lrowS = oNomeRange.Row 
+	if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
+		exit sub
+	end if
+	&apos;oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(4,11)
+	oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27)
+	oMycell2.string = sUltimus
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Scrivi_Globale2 
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	Colora_M1(URLStr)
+END SUB 
+
+Sub Scrivi_Globale______________ &apos;(optional URLStr as string) &apos; versione semplice
+&apos;Il file attivo diventa il &quot;Computo Corrente&quot;
+&apos; ovvero il file dove dei prezzari andranno a scrivere le voci selezionate 
+&apos; Ovvero quando dal file prezzario si è individuata una voce da scrivere 
+&apos; sull&apos;elenco prezzi, la macro del file prezziario andrà a leggersi la 
+&apos; variabile globale  &quot;sUltimus&quot; per sapere dove scriverlo.
+&apos;+++++++++++FUNZIONA
+&apos;ThisComponent.unlockControllers()
+&apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
+&apos; dove è scritta la variabile globale
+&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+dim xA as string
+&apos; print sUltimus
+&apos;xray URLStr
+If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+  GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+End If 
+
+
+&apos;azzera il nome del frame
+&apos;dis 2/01/09 &apos; ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; serve? mmm. pare di no
+
+&apos; se arriva da un file picher...
+&apos;if isnull(URLStr) or isMissing(URLO) then
+&apos;	URLStr = ThisComponent.getURL()   
+&apos;end if
+xray URLStr
+URLStr = ThisComponent.getURL() 
+&apos; regista la variabile globale sUltimus
+UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl  (URLStr)  
+
+ &apos; adesso scrive il nome della variabile globale nella ???cella???
+&apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
+
+&apos;xray omycell
+&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
+ &apos;	lcolS = oNomeRange.Column
+&apos;	lrowS = oNomeRange.Row 
+
+	oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27)
+	oMycell2.string = sUltimus
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Scrivi_Globale2 
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	Colora_M1(URLStr)
+END SUB 
+
+
+Sub Scrivi_Globale2 &apos; serve veramente? sembra dis-utile...
+
+	exit sub &apos; Documentinfo buggata su Libò 4
+	
+	sUltimus2 = ThisComponent.CurrentController.Frame.title
+	sUltimus2 = RTrimStr (sUltimus2, &quot; - OpenOffice.org Calc&quot;)
+	If ThisComponent.DocumentInfo.Title &lt;&gt; &quot;&quot; then
+			sUltimus2= ThisComponent.DocumentInfo.Title
+	end if
+&apos;	sUltimus2 = sUltimus2 &amp; &quot;.ods&quot;
+End sub
+
+sub su_salva_0  &apos; tentativi per portare su doc salvato il proivilegio di DCC
+&apos; ma non funziona... perché quando comicia a salvare e viene intercettato l&apos;evento la usrl del doc non è più recuperabile
+if convertFromUrl(ThisComponent.getURL()) = sUltimus then
+sTemp = true
+end if
+print sTemp
+end sub
+
+   &apos;
+Sub Su_salva
+if sTemp = true then
+	Scrivi_Globale
+	Aggiorniamoli
+	&apos;sTemp = true 
+end if
+
+&apos;Scrivi_Globale
+end sub
+
+
+
+
+
+
+
+
+Sub Svuota_Globale &apos; svuota la variabile globale con file DCC
+&apos; attivata all&apos;uscita del file... altrimenti se si tenta di inviare dei prezzi al DCC
+&apos; riapre il file gia chiuso...
+
+&apos;print &quot;svuota 260211 ooaaee&quot; 
+
+On Error  resume next&apos; Goto ErrorHandler 
+
+	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
+     If oLibCont.hasByName(sLib)= false Then
+   			exit sub
+    end if
+
+
+
+
+oDoc = ThisComponent&apos;.URL
+URLStr = ThisComponent.getURL()   &apos; con queste 2 righe si preleva il nome del file
+oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
+
+
+If not oLibCont.hasByName(sLib)= true Then
+	exit sub
+end if     
+   		
+
+&apos;
+sNome =  ConvertFromUrl  (URLStr)
+&apos;oNome = FileNameOutOfPath(URLStr) &apos;&apos;&apos;
+
+oSheet = oDoc.currentcontroller.activesheet 
+&apos;print &quot;sultimus  &quot; &amp; sUltimus &amp;  &quot;onome  &quot; &amp; oNome
+	if UltimusFree2.Lupo_0.sUltimus = sNome then
+
+ 		UltimusFree2.Lupo_0.sUltimus = &quot;&quot;  &apos; variabile svuotata
+ 		Colora_M1(sURLStr)
+ &apos;	print &quot;fatto   ooaaee&quot;
+ 		&apos;oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+	&apos;	oMycell2 = oSheet.getCellByPosition(4,11) &apos;(lcolS ,lrowS)
+	&apos;	oMycell2.string = &quot;&quot;	
+		&apos;oMycell2.string = UltimusFree2.Lupo_0.sUltimus
+		&apos; ma non basterà svuotarla
+	end if
+	
+	sUltimus2 = &quot;&quot;
+	Colora_M1(URLStr)
+	&apos;print
+	exit sub
+	
+&apos;ErrorHandler:	
+&apos;msgbox &quot;Si è verificato un errore in  &quot;&quot;Svuota_Globale&quot;&quot;&quot;
+&apos;exit sub
+END SUB
+
+
+&apos;sub ScreenUpdatingOn 
+&apos;   ThisComponent.UnlockControllers
+&apos;   ThisComponent.removeActionLock
+&apos;END SUB
+
+&apos;sub ScreenUpdatingOff 
+ &apos;  ThisComponent.addActionLock
+&apos;   ThisComponent.LockControllers
+&apos;END SUB 
+
+
+
+
+
+
+Function OpenDocument(DocPath as String, Args(), Optional bDisposable as Boolean)
+Dim oComponents as Object
+Dim oComponent as Object
+	&apos; Search if one of the active Components ist the one that you search for
+	oComponents = StarDesktop.Components.CreateEnumeration
+	While oComponents.HasmoreElements
+		oComponent = oComponents.NextElement
+		If hasUnoInterfaces(oComponent,&quot;com.sun.star.frame.XModel&quot;) then
+			If UCase(oComponent.URL) = UCase(DocPath) then
+				OpenDocument() = oComponent
+				If Not IsMissing(bDisposable) Then
+					bDisposable = False
+				End If
+				Exit Function
+			End If
+		End If
+	Wend
+	If Not IsMissing(bDisposable) Then
+		bDisposable = True
+	End If
+	OpenDocument() = StarDesktop.LoadComponentFromURL(DocPath,&quot;_default&quot;,0,Args())
+End Function
+
+sub CutPathView &apos;(sDocUrl as String, Optional PathLen as Integer)
+&apos;Function CutPathView(sDocUrl as String, Optional PathLen as Integer)
+Dim sViewPath as String
+Dim FileName as String
+Dim iFileLen as Integer
+sDocUrl= &quot;file:///C:/UltimusFree/UltimusFreeUltimusFree/UltimusFreeUltimusFree/vuoto-OO_0&quot;
+	sViewPath = ConvertfromURL(sDocURL)
+print	sViewPath
+	iViewPathLen = Len(sViewPath)
+print	iViewPathLen
+	If iViewPathLen &gt; 60 Then
+		FileName = FileNameoutofPath(sViewPath, &quot;/&quot;)
+		iFileLen = Len(FileName)
+		If iFileLen &lt; 44 Then
+			sViewPath = Left(sViewPath,57-iFileLen-10) &amp; &quot;...&quot; &amp; Right(sViewPath,iFileLen + 10)
+		Else
+			sViewPath = Left(sViewPath,27) &amp; &quot; ... &quot; &amp; Right(sViewPath,28)
+		End If
+	End If
+	print sViewPath
+	CutPathView = sViewPath
+	print CutPathView
+END SUB
+
+
+
+Sub CommitLastDocumentChanges____________________________________________&apos;(sTargetPath as String)
+Dim i as Integer
+Dim sBookmarkName as String
+Dim oDBBookmarks as Object
+Dim bLinkExists as Boolean
+Dim sBaseBookmarkName as String
+	sBookmarkName = GetFileNamewithoutExtension&apos;(FileNameoutofPath(sTargetPath))
+&apos;	sBaseBookmarkName = sBookmarkName
+&apos;	oDBBookmarks = oDataSource.GetBookmarks()
+&apos;	i = 1
+&apos;	Do
+&apos;		bLinkExists = oDBBookmarks.HasbyName(sBookmarkName)
+&apos;		If bLinkExists Then
+&apos;			i = i + 1
+&apos;			sBookmarkName = sBaseBookmarkName &amp; &quot;_&quot; &amp; i
+&apos;		Else
+&apos;			oDBBookmarks.insertByName(sBookmarkName, sTargetPath)
+&apos;		End If
+&apos;	Loop Until Not bLinkExists
+&apos;	bDisposeDoc = False
+&apos;&apos;	GroupShapesTogether()
+&apos;	ToggleDesignMode(oDocument)
+&apos;	oDBForm.Reload()
+print sBookmarkName
+END SUB
+
+sub sListDocs_______________________________ &apos; va in giro su tutti i documenti aperti
+&apos; se sono calc controlla se c&apos;è la sheet S1
+&apos; e in tal caso va a raccontare aquale è il computo corrente
+&apos; IN LAVORAZIONE
+  Dim oDocs As Object, oDoc As Object
+  REM Load the included &quot;Tools&quot; library
+&apos;  GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+  oDocs = StarDesktop.getComponents().createEnumeration()
+  Do While oDocs.hasMoreElements()
+    oDoc = oDocs.nextElement()
+    REM Ignore any component that is not a document.
+    REM The IDE, for example
+    If HasUnoInterfaces(oDoc, &quot;com.sun.star.frame.XModel&quot;) Then
+      REM If there is no URL, then do not try to find it
+      If oDoc.hasLocation() Then
+        REM Use the FileNameOutOfPath routine included with OOo
+        &apos;MsgBox FileNameOutOfPath(oDoc.getURL()) &amp;_
+        &apos;    &quot; is of type &quot; &amp; GetDocumentType(oDoc)
+        FileNameOutOfPath(oDoc.getURL())
+        If GetDocumentType(oDoc) = &quot;scalc&quot; then
+        print &quot; è una calc&quot; &apos; per adesso abbiamo trovato le tabelle
+        	&apos; adesso bisogna andarci dentro e controllare se c&apos;è 
+        	&apos; la sheet S1...
+        oNome=FileNameOutOfPath(oDoc.getURL())
+        print oNome
+        oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+    	ThisComponent.CurrentController.setActiveSheet(oSheet)
+    	oTempView = oDoc.getCurrentController() &apos; questa invece trova la cella usando il nome di area
+		mycell = otempview.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;)
+        end if
+      End If
+    End If
+  Loop
+END SUB
+
+
+
+
+
+
+
+
+
+
+
+Sub ExampleSetValue
+  Dim oDocument As Object, oSheet As Object, oCell As Object
+  oDocument=ThisComponent
+  oSheet=oDocument.Sheets.getByName(&quot;S1&quot;)
+  oCell=oSheet.getCellByPosition(0,0) 
+ &apos; oCell.setValue(23658)
+ &apos; oCell.NumberFormat=2   &apos;23658.00
+  oCell.SetString(&quot;oops&quot;)
+&apos;  oCell.setFormula(&quot;=FUNCTION()&quot;)
+&apos;  oCell.IsCellBackgroundTransparent = TRUE
+&apos; oCell.CellBackColor = RGB(255,141,56)
+END SUB
+
+
+
+
+
+sub Numera_Voci_Computo__vecia &apos; assegnato a Ctrl-N 
+&apos;______________________________________________________________-
+&apos; funziona bene, ma è migliorabile... 
+&apos; magari garantirne il funzionamento anche senza la riga di chiusura...
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
+  oCelle=thisComponent.getCurrentSelection().getCellAddress()   
+  lrow=oCelle.Row        
+  oCell = oSheet.GetCellByPosition( 0, lrow )      
+  ThisComponent.CurrentController.Select(oCell)&apos; spostamento tutto a sin (mai fidarsi dell&apos;utente...)
+  	if thisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; then
+  		msgbox &quot;questa macro si può usare solo sulla Tabella  Computo...  &quot;
+  		exit sub
+ 	 end if
+ 
+  Dim NumC, numV
+  numV = oCell.value
+&apos;  print numV
+  if numV = 0 then
+ 	 msgbox &quot;Errore!!!! .... non so da che Numero incominciare (a numerare...) !!!    DEVI posizionarti su un numero buono!&quot;
+ 	 exit sub
+   end if
+ 	 oCelle=thisComponent.getCurrentSelection().getCellAddress()    
+ 	 lrow=oCelle.Row        
+ 	 oCell = oSheet.GetCellByPosition( 0, lrow+1 )   
+	  ThisComponent.CurrentController.Select(oCell)&apos;@@@@
+ 	  numC = oCell.string &apos;formula&apos;.value
+ 	  lLastUrow = getLastUsedRow(oSheet)
+ &apos;	  numMax = 15 &apos; controllo per non finire in culo a giove in caso di errore
+ 	
+  Do While numC = &quot;&quot; 
+ 	lrow = lrow+1
+  	 oCell = oSheet.GetCellByPosition( 0, lrow)   
+  	 numC = oCell.string
+ &apos; 	 numMax = numMax-1 &apos; controllo per non finire in culo a giove in caso di errore
+  	 If lrow &gt; lLastUrow then
+  	 	msgbox &quot;mi sembra di essere finito fuori dal seminato...&quot;_
+  	 	&amp;  &quot; Probabilmente ti manca la riga rossa di fine tabella o c&apos;è qualche altro errore non meglio identificato...&quot;
+  	 	exit sub
+  	 end if
+  loop
+  	ThisComponent.CurrentController.Select(oCell)
+   If NumC = &quot;Fine Computo&quot; Or NumC = &quot;Questa riga NON deve essere cancellata, MAI!!!  (ma può rmanere tranquillamente NASCOSTA!)&quot; or lrow &gt; lLastUrow Then 
+               &apos; Selection.Offset(-2, 0).Select
+        MsgBox &quot;Finito!!!&quot;
+        Exit Sub
+   Else                         
+  		numV = numV + 1
+  		oCell.value = numV
+  End If
+END SUB
+
+
+
+Function OOoVersion() As String
+  &apos;Retreives the running OOO version
+  Dim aSettings, aConfigProvider
+  Dim aParams2(0) As new com.sun.star.beans.PropertyValue
+  Dim sProvider$, sAccess$
+  sProvider = &quot;com.sun.star.configuration.ConfigurationProvider&quot;
+  sAccess   = &quot;com.sun.star.configuration.ConfigurationAccess&quot;
+  aConfigProvider = createUnoService(sProvider)
+  aParams2(0).Name = &quot;nodepath&quot;
+  aParams2(0).Value = &quot;/org.openoffice.Setup/Product&quot;
+  aSettings = aConfigProvider.createInstanceWithArguments(sAccess, aParams2())
+  OOOVersion=aSettings.getbyname(&quot;ooSetupVersion&quot;)
+End Function
+
+
+&apos;Function TabellenName as String &apos; RECUPERA E RESTITUISCE IL NOME DELLA TABELLA
+&apos;odoc=thisComponent
+&apos;Tabellenname=odoc.currentcontroller.activesheet.name
+&apos;end Function
+
+
+
+&apos;***************************************************************+
+Sub crea_stile_cella_1
+	&apos; crea uno stile di cella, (e se c&apos;è già lo modifica) &gt; Non in questo caso specifico.
+
+	dim sStileCella as string
+	&apos;dim ostileCella as object
+	sStileCella = &quot;Comp-Bianche in mezzo Descr_R_ep&quot; &apos;num_centro_bianco_ep
+	if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(sStileCella)= false then
+			&apos;se non esiste creo lo stile di cella
+			Set ostileCella = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)
+					Call Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(sStileCella, ostileCella )
+						ostileCella.ParentStyle = &quot;Comp-Bianche in mezzo Descr_R&quot;
+					&apos;	ostileCella.IsCellBackgroundTransparent = False
+						ostileCella.CellBackColor = RGB(255,204,153)
+					&apos;	ostileCella.CharFontName = &quot;Arial&quot;
+					&apos;	ostileCella.CharHeight = 10
+					&apos;	ostileCella.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
+					&apos;	ostileCella.VertJustify = com.sun.star.table.CellVertJustify.CENTER 
+					
+		ELSE
+			&apos; se c&apos;è lo modifico
+		&apos;		oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sStileCella)
+		&apos;		oStile.IsCellBackgroundTransparent = False
+		&apos;		oStile.CellBackColor = RGB(255,204,153)
+	end if
+	sStileCella = &quot;num_centro_bianco_ep&quot;
+	if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(sStileCella)= false then
+			&apos;se non esiste creo lo stile di cella
+			Set ostileCella = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)
+					Call Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(sStileCella, ostileCella )
+						ostileCella.IsCellBackgroundTransparent = False
+						ostileCella.CellBackColor = RGB(255,204,153)
+	end if
+End Sub
+
+
+
+Sub crea_stile_cella_2
+	&apos; verifica l&apos;esistenza di uno stile di cella, (e se c&apos;è già lo modifica)
+	&apos; Modifica lo stile &quot;data&quot; rendendo il formato più corto (2011 &gt; 11)
+	dim sStileCella as string
+	sStileCella = &quot;Data&quot; 
+	if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(sStileCella)= True then
+				oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sStileCella)
+				oStile.NumberFormat = 37
+	end if
+
+End Sub
+
+
+Sub crea_stile_cella_3
+	&apos; crea uno stile di cella, (e se c&apos;è già lo modifica) &gt; Non in questo caso specifico.
+
+	dim sStileCella as string
+	&apos;dim ostileCella as object
+	sStileCella = &quot;comp_sotto_E_cond&quot; &apos;
+	if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(sStileCella)= false then
+			&apos;se non esiste creo lo stile di cella
+			Set ostileCella = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)
+					Call Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(sStileCella, ostileCella )
+						ostileCella.ParentStyle = &quot;comp sotto Euro 3_R&quot;
+					&apos;	ostileCella.IsCellBackgroundTransparent = False
+						ostileCella.CellBackColor = RGB(247,99,99)
+					&apos;	ostileCella.CharFontName = &quot;Arial&quot;
+					&apos;	ostileCella.CharHeight = 10
+					&apos;	ostileCella.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
+					&apos;	ostileCella.VertJustify = com.sun.star.table.CellVertJustify.CENTER 
+					
+		ELSE
+			&apos; se c&apos;è lo modifico
+		&apos;		oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sStileCella)
+		&apos;		oStile.IsCellBackgroundTransparent = False
+		&apos;		oStile.CellBackColor = RGB(255,204,153)
+	end if
+
+End Sub
+
+
+</script:module>

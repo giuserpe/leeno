@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Attesa" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                              
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+REM Questo modulo contiene il codice per segnalare all&apos;utente che la macro sta lavorando
+REM e bloccare la tastiera
+REM Per il blocco della tastiera i crediti vanno a Lorent Godard 
+REM Il resto de modulo è stato integralmente elaborato da Lido Bernardini 
+REM Se ritenete di riutilizzare questo codice sarebbe carino mantenere il suo nome in evidenza
+
+Global oKeyHandler  As Object
+Global oMouseClickHandler As Object
+Global oProgressBar As Object
+Global oProgressBar222 As Object
+Global sPG1 as long 
+Global sPG222 as long
+       
+&apos;Global oDoc As Object
+Global oDocView As Object
+
+&apos;Dim oDoc As Object
+&apos;Dim oDocView As Object
+&apos;Dim oKeyHandler As Object
+&apos;Dim oMouseClickHandler As Object
+
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+Function Clessid_lock_Start_() &apos;OOOO&apos; Completa e gravosa ( alternativa a Clessidra)
+&apos; disattiva tutto... ecccetto i pulsanti
+
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value
+If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+		on error goto cleanExit
+	end if
+END IF
+If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 9 then &apos;
+	&apos;	exit function
+		goto saltarello
+	end if
+END IF
+	Dim c As Double
+&apos;wait 2000
+	oDoc = ThisComponent
+	oDocView = ThisComponent.getCurrentController()
+	if thiscomponent.isActionLocked = true then 
+			ScreenUpdatingOn
+			ScreenUpdatingOff
+		&apos;	msgbox &quot; mm ...Scusa... era distratto... &quot;&amp; CHR(10)_
+		&apos;	&amp; &quot; potresti ripetere il comando... ? &quot;
+		&apos;	Clessid_lock_Start = &quot;fallito&quot;
+	&apos;	exit function
+	end if
+&apos;	dialogoProva
+	Barra_Apri_Chiudi_4ON_OFF	
+saltarello:	
+	RegisterKeyHandler
+	RegisterMouseClickHandler
+	ScreenUpdatingOff
+
+exit function
+cleanExit:
+Clessid_lock_End
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END FUNCTION
+
+
+Function Clessid_lock_Start() &apos;pppp &apos; nuova
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value
+	on error goto cleanExit
+
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+			on error goto cleanExit
+		end if
+	END IF
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 9 then &apos;
+			&apos;	goto saltarello
+			on error goto cleanExit
+		end if
+	END IF
+	saltarello:
+	 ThisComponent.lockControllers 
+	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = False 
+
+exit function
+cleanExit:
+	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	 ThisComponent.unlockControllers 
+
+&apos;Clessid_lock_End
+	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END FUNCTION
+
+Function Clessid_lock_Start_D ()
+Clessid_lock_Start
+end Function
+
+Function Clessid_lock_Start_D_() &apos; solo barra (senza &apos;senza controllo di actionloched)alternativa a Clessidra
+
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value
+If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+		on error goto cleanExit
+	end if
+END IF
+If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 5 then &apos;
+		exit function
+	end if
+END IF
+
+       &apos; e senza listeners  LEGGERISSIMA
+	Dim c As Double
+	oDoc = ThisComponent
+	oDocView = ThisComponent.getCurrentController()&apos;
+&apos;dialogoProva
+	Barra_Apri_leggera
+
+&apos;	ScreenUpdatingOff
+exit function
+cleanExit:
+Clessid_lock_End
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END FUNCTION
+
+Function Clessid_lock_Start_C
+Clessid_lock_Start
+end Function
+
+Function Clessid_lock_Start_C_() &apos;senza controllo di actionloched
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value
+If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+		on error goto cleanExit
+	end if
+END IF
+If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 2 then &apos;
+		&apos;exit function
+		goto saltarello
+	end if
+END IF
+
+	Dim c As Double
+
+&apos;dialogoProva
+	Barra_Apri_Chiudi_4
+saltarello:
+	oDoc = ThisComponent
+	oDocView = ThisComponent.getCurrentController()
+	ScreenUpdatingOff
+	RegisterKeyHandler
+	RegisterMouseClickHandler
+exit function
+cleanExit:
+Clessid_lock_End
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END FUNCTION
+
+
+Sub Clessid_lock_End
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+				on error resume next	
+			end if
+		else
+			on error resume next
+	End if
+	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	 ThisComponent.unlockControllers 	
+	
+END SUB
+
+
+Sub	Clessid_lock_End_
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+				on error resume next	
+			end if
+		else
+			on error resume next
+	End if
+&apos;oDocView.removeKeyHandler(oKeyHandler)
+		&apos;	oDocView = ThisComponent.getCurrentController()&apos;aaa
+		&apos;	oDocView.unRegisterKeyHandler(oKeyHandler)
+	unRegisterKeyHandler(oKeyHandler)
+	UnregisterMouseClickHandler(oMouseClickHandler)
+	while thiscomponent.isActionLocked = true 
+	 	ScreenUpdatingOn
+	wend 
+	ScreenUpdatingOn
+	barra_chiudi
+
+END SUB
+
+
+
+Sub ScreenUpdatingOn
+	ThisComponent.UnlockControllers
+	do while thiscomponent.isActionLocked = true
+ 	ThisComponent.removeActionLock
+ 	&apos;	print &quot;1&quot;
+	loop
+End Sub
+
+Sub ScreenUpdatingOff
+   ThisComponent.addActionLock
+   ThisComponent.LockControllers
+End Sub
+
+&apos;_______________________________________________________________________________________++
+
+Sub Clessidra()
+&apos;on error goto cleanExit
+	Dim c As Double
+
+	oDoc = ThisComponent
+	oDocView = ThisComponent.getCurrentController()
+
+	RegisterKeyHandler
+	RegisterMouseClickHandler
+
+	oSheet = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
+
+	iNumSheet = oSheet.RangeAddress.sheet
+	&apos;	sName = &quot;Elenco Prezzi&quot; &apos;oSheet.Name
+	Barra_Apri_Chiudi_4
+
+	
+END SUB&apos;
+
+Sub	Clessidra_chiudi
+on error resume next
+&apos;	Page.remove(RectangleShape2) &apos;---|
+&apos;	Page.remove(RectangleShape) &apos;----| Chiude i due rettangoli
+	unRegisterKeyHandler
+	UnregisterMouseClickHandler
+	barra_chiudi
+&apos;	print &quot;clessidra chiusa!&quot;
+END SUB
+
+
+Sub RegisterKeyHandler &apos;1
+	oDocView = ThisComponent.getCurrentController
+
+&apos;xray oDocView
+	If Not IsNull(oKeyHandler) Then
+     	oDocView.removeKeyHandler(oKeyHandler)
+	End If
+
+	oKeyHandler = createUnoListener(&quot;keyHandler_&quot;, &quot;com.sun.star.awt.XKeyHandler&quot;)
+	oDocView.addKeyHandler(oKeyHandler)
+&apos;	xray oKeyHandler
+END SUB
+&apos;-------------------------------
+Sub UnregisterKeyHandler()
+&apos;	on error resume next
+&apos;&apos;xray oKeyHandler
+&apos;&apos;xray oDocView
+	if isnull(oDocView)then
+		exit sub
+	end if
+	if isnull(oKeyHandler)then
+		exit sub
+	end if
+	oDocView.removeKeyHandler(oKeyHandler)
+END SUB
+
+Function keyHandler_KeyPressed(oEvt)
+	keyHandler_KeyPressed=True
+End Function
+
+Function keyHandler_KeyReleased(oEvt)
+	keyHandler_KeyReleased = False
+End Function
+
+Function keyHandler_disposing()
+end function
+
+Sub RegisterMouseClickHandler
+	oDocView = ThisComponent.getCurrentController
+	If Not IsNull(oMouseClickHandler) Then
+    	oDocView.removeMouseClickHandler(oMouseClickHandler)	
+ 	End If
+  	oMouseClickHandler = createUnoListener(&quot;MyApp_&quot;, &quot;com.sun.star.awt.XMouseClickHandler&quot;) 
+  	oDocView.addMouseClickHandler(oMouseClickHandler)
+END SUB
+
+Sub UnregisterMouseClickHandler
+ on error resume next
+   oDocView.removeMouseClickHandler(oMouseClickHandler)
+END SUB
+
+Function MyApp_disposing(oEvt)
+End Function
+
+Function MyApp_mousePressed(oEvt) As Boolean
+  MyApp_mousePressed = True
+End Function
+
+Function MyApp_mouseReleased(oEvt) As Boolean 
+  MyApp_mouseReleased = False
+End Function
+
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Sub B_Apri ()
+&apos;print oProgressBar&apos;&apos;&apos;
+  oProgressBar = _
+     ThisComponent.CurrentController.Frame.CreateStatusIndicator
+    oProgressBar.Start(&quot;&quot;,100)&apos;
+    oProgressBar.Value = 100
+    oProgressBar.Text = &quot;   B_APRI!  &quot;
+&apos;xray ThisComponent.CurrentController.Frame
+&apos;print oProgressBar
+End Sub
+
+Sub B_Chiudi
+	oProgressBar.reset()
+	oProgressBar.End 
+end sub
+
+sub guarda
+	xray oProgressBar
+end sub
+
+&apos;+++++++++++++++++++++++++++++++++
+
+
+Sub Barra_Apri_leggera ()
+Barra_Apri_Chiudi_4
+exit sub
+	if isNull (oProgressBar) or isEmpty (oProgressBar) then
+			print &quot;null&quot;
+		   oProgressBar = ThisComponent.CurrentController.Frame.CreateStatusIndicator
+		   oProgressBar.Start(&quot;&quot;,100)&apos;
+		   oProgressBar.Value = 100
+ 		  oProgressBar.Text =  &quot;     ....ELABORAZIONE IN CORSO.....   ATTENDERE!  &quot;
+		else
+			print &quot;not null&quot;
+			oProgressBar.end
+ 			on error goto errorhandler
+	end if
+	errorhandler:
+End Sub
+
+Sub Barra_Apri_Chiudi_4
+if sPG1 = 0 or isEmpty (sPG1) then
+ &apos; print &quot;nessuna barra  (la creo!)&quot;
+  oProgressBar = _
+   ThisComponent.CurrentController.Frame.CreateStatusIndicator
+&apos;  oProgressBar.Start(&quot;&quot;,100)&apos;
+ &apos; oProgressBar.Value = 100
+  oProgressBar.Start(&quot;&quot;,100)&apos;
+  oProgressBar.Value = 60
+
+  oProgressBar.Text = &quot; 4   Attendi pazientemente!&quot;
+  sPG1 = 1
+ else
+ &apos; print &quot;barra aperta! (la elimino)&quot;
+	if not isNull (oProgressBar) then
+ 		 oProgressBar.end
+ 		 oProgressBar = nothing
+		  spg1=0
+	end if
+end if
+End sub 
+
+sub prova 
+ Barra_chiudi_sempre_4 
+ Barra_Apri_Chiudi_5(&quot;.. Sto lavorando....&quot;, 30)
+ wait 3000
+&apos; print sPG1
+  Barra_chiudi_sempre_4 
+  wait 3000
+   Barra_chiudi_sempre_4   
+   wait 3000
+   Barra_chiudi_sempre_4 
+end sub
+
+
+Sub Barra_chiudi_sempre_4    
+&apos;if sPG1 = 1 then
+if not isNull (oProgressBar) then 
+ &apos; print &quot;nessuna barra  (la creo!)&quot;
+&apos;  oProgressBar = _
+&apos;   ThisComponent.CurrentController.Frame.CreateStatusIndicator
+  oProgressBar.end
+  oProgressBar = nothing
+  sPG1 = 0
+end if
+End sub 
+
+Sub Barra222_Apri_Chiudi_4  
+&apos;print sPG222
+if sPG222 = 0 or isEmpty (sPG222) then
+&apos; 	 print &quot;nessuna barra  (la creo!)&quot;
+	  oProgressBar222 = _
+	   ThisComponent.CurrentController.Frame.CreateStatusIndicator
+ 	 oProgressBar222.Start(&quot;&quot;,100)&apos;
+ 	 oProgressBar222.Value = 60
+
+ 	 oProgressBar222.Text = &quot;Uff... pare cosa lunga...Pazienta!&quot;
+	  sPG222 = 1
+&apos;print sPG222
+ else
+ &apos; print &quot;barra aperta! (la elimino)&quot;
+&apos;xray oProgressBar222
+	if not isNull (oProgressBar222) then
+ 		 oProgressBar222.end
+ 		 oProgressBar222 = nothing
+		  spg222=0
+&apos; print sPG222
+	end if
+end if
+End sub 
+
+
+Sub Barra222_chiudi_sempre_4    
+&apos;print sPG222
+&apos;xray oProgressBar222
+	if not isNull (oProgressBar222) then &apos;or not isEmpty(oProgressBar222)  then
+&apos;		  print &quot;barra aperta: la chiudo&quot;
+		  oProgressBar222.end
+		  oProgressBar222 = nothing
+	end if
+	if sPG222 = 1 then
+	  	sPG222 = 0
+	end if
+End sub 
+
+Sub Barra_ON_OFF ()
+&apos;print &quot;rieseguo barra apri/chiudi&quot;
+	if isNull (oProgressBar) or isEmpty (oProgressBar) then
+			print &quot;null&quot;
+		   oProgressBar = ThisComponent.CurrentController.Frame.CreateStatusIndicator
+		   oProgressBar.Start(&quot;&quot;,100)&apos;
+		   oProgressBar.Value = 100
+   		   oProgressBar.Text = &quot;     ....ELABORAZIONE IN CORSO.....   ATTENDERE SENZA PASTICCIARE CON IL MOUSE O LA TASTIERA!  &quot;
+		else
+		&apos;	print &quot;not null&quot;
+			oProgressBar.end
+ 			on error goto errorhandler
+	end if
+	errorhandler:
+	oProgressBar = Nothing 
+End Sub
+
+Sub Barra_Chiudi
+	 Barra_Apri_Chiudi_4
+	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	 ThisComponent.unlockControllers 
+
+end sub
+
+Sub Barra_Chiudi_ ()
+ &apos; oProgressBar = _
+&apos;        ThisComponent.CurrentController.Frame.CreateStatusIndicator
+ 
+    if isnull(oProgressBar)then
+    print &quot;nulla&quot;
+    	exit sub
+    end if
+    oProgressBar.End 
+  &apos;  oProgressBar.reset() 
+  &apos;  oProgressBar.setvalue(0)
+  &apos;  oProgressBar.setText(&quot;&quot;)
+End Sub
+
+
+
+SUB macromagica1 &apos;eseguendo questa &quot;magicamente&quot; si ripristina 
+				&apos; la riga di status
+	oSheet = ThisComponent.currentController.activeSheet			
+	&apos;oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
+	oMioRange = osheet.getCellRangeByPosition (0,390,2,400)
+	Dim oSheetDSC,oDSCRange  As Object
+	Dim aSortFields(0) As New com.sun.star.util.SortField
+	Dim aSortDesc(0) As New com.sun.star.beans.PropertyValue
+	aSortFields(0).Field =  0
+	aSortFields(0).SortAscending =  TRUE &apos;FALSE
+	aSortDesc(0).Name = &quot;SortFields&quot;
+	aSortDesc(0).Value = aSortFields()
+	&apos;&apos;&apos;&apos;print &quot;1&quot;
+	oMioRange.Sort(aSortDesc())
+End SUB
+
+Sub Barra_Apri_Chiudi_5(sTxt as string, lvalore as long)
+if sPG1 = 0 or isEmpty (sPG1) then
+ &apos; print &quot;nessuna barra  (la creo!)&quot;
+  if isnull(lvalore) then 
+  	lvalore =40
+  	print lvalore
+  end if
+  oProgressBar = _
+   ThisComponent.CurrentController.Frame.CreateStatusIndicator
+&apos;  oProgressBar.Start(&quot;&quot;,100)&apos;
+ &apos; oProgressBar.Value = 100
+  oProgressBar.Start(&quot;&quot;,100)&apos;
+  oProgressBar.Value = lvalore
+
+  oProgressBar.Text = sTxt
+  sPG1 = 1
+ else
+ &apos; print &quot;barra aperta! (la elimino)&quot;
+	if not isNull (oProgressBar) then
+ 		 oProgressBar.end
+ 		 oProgressBar = nothing
+		  spg1=0
+	end if
+end if
+End sub 
+
+SUB Ripristina_statusLine &apos;(mod &gt;)
+
+&apos;forse basta questo (in prova)
+&apos;	if sPG1 &lt;&gt; 0 or not isEmpty (sPG1) then
+		if not isNull (oProgressBar) then
+ 		 oProgressBar.end
+ 		 oProgressBar = nothing
+		  spg1=0
+		end if
+&apos;	end if
+End sub
+
+
+
+SUB Ripristina_statusLine_______________ &apos;eseguendo questa &quot;magicamente&quot; si ripristina 
+				&apos; la riga di status
+	&apos; l&apos;ho copiata da qualche parte... ma non ricordo dove...
+	&apos;non capisco come funzioni ed ho il sospetto che si tratti di un funzionamento
+	&apos; non voluto ne documentato...
+	&apos; potrebbe rivelasi inefficace in qualsiasi upgrade dei OOo
+
+	oSheet = ThisComponent.currentController.activeSheet			
+&apos;	oMioRange = osheet.getCellRangeByPosition (0,390,2,400)
+	oMioRange = osheet.getCellRangeByPosition (0,0,1,1)
+	Dim oSheetDSC,oDSCRange  As Object
+	Dim aSortFields(0) As New com.sun.star.util.SortField
+	Dim aSortDesc(0) As New com.sun.star.beans.PropertyValue
+	aSortFields(0).Field =  0
+	aSortFields(0).SortAscending =  TRUE &apos;FALSE
+	aSortDesc(0).Name = &quot;SortFields&quot;
+	aSortDesc(0).Value = aSortFields()
+	oMioRange.Sort(aSortDesc())
+End SUB	
+
+sub provala
+	Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
+	  wait 4000	
+		Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
+
+end sub
+
+Sub Main23456 
+&apos;	 fenDoc = ThisComponent.CurrentController.Frame.ContainerWindow 
+	 ThisComponent.lockControllers 
+	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = False 
+	  wait 10000  &apos;
+&apos;	 on error Resume Next 
+&apos;	 progress.End 
+	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	 ThisComponent.unlockControllers 
+
+ End Sub
+</script:module>

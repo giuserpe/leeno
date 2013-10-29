@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_sistema_Analisi" script:language="StarBasic">&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                             
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+REM ______________________________________________________
+
+Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette 
+							&apos; e lo riformatta decondo la maschera in S5
+
+			Adomanda = msgbox ( &quot;Sto per riformattare le voci di Analisi!&quot;&amp; CHR$(10)_
+		        	&amp;&quot;           (Si consiglia di salvare prima il doc)&quot;&amp; CHR$(10)_
+		        	&amp;&quot;Eseguo la riformattazione?&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+							&apos;dovrebbe proseguire...
+						Case 2
+							exit sub
+						Case 7
+							goto passa_oltre &apos; cioè salta la procedura
+					end select	
+			sproteggi_sheet_TUTTE
+			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) 
+			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+			lLastUrow = getLastUsedRow(oSheet)
+			lrowInizio = 3
+			&apos;lLastUrow = 15 &apos;
+			For i = lrowinizio To lLastUrow Step 1
+	&apos;			print i
+				if	oSheet.GetCellByPosition(1 , i).Cellstyle = &quot;Comp TOTALI&quot; then
+					exit for
+				end if
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i+1).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i+1).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i+1).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i+1).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i+1).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Livello-1-scritta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sotto_&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Default&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 valuta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-2-sotto_&quot; then
+					
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+				&apos;	Print  &quot; i è la prima riga della voce...&quot;
+		
+					&apos; scrive (o sovrascrive) i segnalini per le somme	
+					oSheet.GetCellByPosition(9 , i+1).string = &quot;-&quot;
+					oSheet.GetCellByPosition(10 , i+1).string = &quot;-&quot;
+					oSheet.GetCellByPosition(12 , i+1).string = &quot;-&quot;
+					oSheet.GetCellByPosition(13 , i+1).string = &quot;-&quot;
+					oSheet.GetCellByPosition(14 , i+1).string = &quot;-&quot;
+					oSheet.GetCellByPosition(15 , i+1).string = &quot;-&quot;
+					oSheet.GetCellByPosition(16 , i+1).string = &quot;-&quot;
+					oSheet.GetCellByPosition(17 , i+1).string = &quot;-&quot;
+					
+					&apos;formatta applicando lo stile della maschera 4,44,42,45 prime due righe
+					oSrc = oSheetSRC.getCellRangeByPosition(0,8,42,9).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(0,8,42,9)
+					
+					oRange = oSheet.getCellRangeByPosition (0,i,42,i+1)
+ 					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+   					&apos; applicando gli stili		  
+ 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   
+
+				end if 
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(9 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(11 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(18 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;SOMMANO &quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Livello-1-scritta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Default&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sotto_&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 valuta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-2-sotto_&quot; then
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+			&apos;		print &quot;i la riga intermedia&quot;
+					
+					&apos;formatta applicando lo stile della maschera_ la riga con i dettagli quantità
+					oSrc = oSheetSRC.getCellRangeByPosition(0,10,42,10).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(0,10,42,10)
+					
+					oRange = oSheet.getCellRangeByPosition (0,i,42,i)
+ 					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+   					&apos; applicando gli stili		  
+ 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   		
+				end if
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(5 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(7 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(8 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(9 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(11 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(18 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Livello-1-scritta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sotto_&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Default&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 valuta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-2-sotto_&quot; then				
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+				&apos;	print &quot;i è l&apos;ultima riga della voce&quot;
+					
+					&apos;formatta applicando lo stile della maschera_ la riga in fondo alla voce
+					oSrc = oSheetSRC.getCellRangeByPosition(0,11,42,11).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(0,11,42,11)
+					
+					oRange = oSheet.getCellRangeByPosition (0,i,42,i)
+ 					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+   					&apos; applicando gli stili		  
+ 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   
+				end if
+			 		lrowFin = i &apos;serve??	 		
+			Next i 	
+			passa_oltre:
+		&apos;	Adomanda = msgbox ( &quot;I Formati sono stati applicati!&quot;&amp; CHR$(10)_
+			Adomanda = msgbox ( &quot;Sistemo i TAG?&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+							&apos;questa dovrebbe costruire i tag
+							compila_tag_con_codice_voce (0)
+							Ripara_tag_corrotti (0)
+						Case 2
+							exit sub
+					end select		
+
+			Adomanda = msgbox( &quot;Proseguo con il controllo delle somme ? &quot; ,35, &quot;&quot;)
+	        	Select Case Adomanda
+		        	Case 6		
+						Controlla_Somme_Su_Tutto_Computo (0)
+					Case 2
+							exit sub
+					end select		
+			Adomanda =msgbox(&quot;Proseguo con la riscrittura delle formule ? &quot; ,35, &quot;&quot;)			
+	        	Select Case Adomanda
+		        	Case 6				&apos; questa rimette le moltiplicazioni (perchè quelle sopra le ha cancellate..)
+								&apos;rivedere il codice sopra...
+						Rifa_Formule_Orizzontali
+			
+					Case 2
+							exit sub
+				end select		
+
+			msgbox &quot;Adesso ho veramente finito!&quot;
+End Sub
+
+</script:module>

@@ -1,0 +1,578 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_7" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                          
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+sub FromATT_2_5C
+
+&apos;da fare accrochio che riconosce la tipologia della sheet 
+  
+	if templateTipo = &quot;5C&quot; then 
+	 msgbox &quot;Questo è già un template-5C.... !&quot;
+		exit sub 
+	end if
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+	&apos;		
+	oSheet.getColumns.insertByIndex(2, 1)
+	oSheet.getColumns.insertByIndex(9, 1)	
+	oSheet.getColumns.removeByIndex(2, 2)
+&apos;	exit sub
+	oSrc = oSheet.getCellRangeByPosition(8,0,8,15000).RangeAddress
+    oDest = oSheet.GetCellByPosition(7,0 ).CellAddress
+    oSheet.copyRange(oDest, oSrc)
+    iCellAttr = com.sun.star.sheet.CellFlags.VALUE + com.sun.star.sheet.CellFlags.STRING
+	oSheet.getCellRangeByPosition(8,0,8,15000).ClearContents(iCellAttr)
+	
+	oSheet.getcellbyposition(8,0).string = &quot;Coefficiente&quot;
+end sub
+
+
+sub cella_cella_cella(oSheetSRC as object, oSheetDest as object, oRangeSRC as object,  oRangeDest  as object, mantieni_colori as long)  
+&apos;sembra buona (e recente)
+
+
+  Dim nCurCol As Integer
+  Dim nCurRow As Integer
+  Dim nEndCol As Integer
+  Dim nEndRow As Integer
+  Dim oCell As Object
+  Dim oCursor As Object
+  Dim aAddress As Variant
+  Dim sFind As String
+ &apos; dim mantieni_colori 
+ 
+ if isnull (mantieni_colori) then
+   	mantieni_colori =1
+  end if
+  
+ 
+&apos;____________________________  
+&apos;	mantieni_colori = 1  &apos; se settata a 1 li mantiene
+	&apos; a 0 sovrascive
+&apos;----------------------------
+&apos;PRINT mantieni_colori
+  aAddress = oRangeSRC.RangeAddress
+  nEndRow = aAddress.EndRow
+  nStartRow = aAddress.StartRow			
+  nEndCol =  aAddress.EndColumn 
+  nStartCol =  aAddress.StartColumn 
+ 
+   BAddress = oRangeDest.RangeAddress
+  BEndRow = BAddress.EndRow
+  BStartRow = BAddress.StartRow			
+  BEndCol =  BAddress.EndColumn 
+  BStartCol =  BAddress.StartColumn 
+ 
+ difRow = BStartRow - nStartRow
+ difCol = BStartCol - nStartCol
+&apos; print difRow
+&apos;print difCol
+ &apos;   Clessid_lock_Start
+  &apos; ciclo di for nelle due direzioni
+  For nCurCol = nStartCol To nEndCol       &apos;Go through the range column by column,
+    For nCurRow = nStartRow To nEndRow     &apos;row by row. 
+      
+      oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
+      sCellStyle = oCellSRC.CellStyle
+	if mantieni_colori = 0	then
+				oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
+				oCellDest = oSheetDest.GetCellByPosition( nCurCol+difCol, nCurRow+difRow )
+      			oValidation = oCellSRC.ValidationLocal
+      			sCellStyle = oCellSRC.CellStyle
+      			oCellDest.CellStyle = sCellStyle
+      			oCellDest.ValidationLocal = oValidation
+ 		else
+  			    oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
+ 			 	oCellDest = oSheetDest.GetCellByPosition( nCurCol+difCol, nCurRow+difRow )
+				oValidation = oCellSRC.ValidationLocal
+ 			    sCellStyle    = oCellSRC.CellStyle
+			    lcolorSRC     =oCellDest.Cellbackcolor
+      			lCharColorSRC =oCellDest.CharColor
+ 
+ 			&apos;	oCellDest = oSheetDest.GetCellByPosition( nCurCol+difCol, nCurRow+difRow )
+ 				oCellDest.CellStyle = sCellStyle
+ 				oCellDest.ValidationLocal = oValidation 
+      			oCellDest.Cellbackcolor = lcolorSRC 
+      			oCellDest.CharColor = lCharColorSRC 
+      			
+      end if
+   &apos;   ThisComponent.CurrentController.Select(oCellDest)
+  &apos;    print &quot;a&quot;
+    Next
+  Next
+ &apos; Clessid_lock_End
+ &apos; oProgressbar.End
+ &apos; msgbox &quot;Finito!&quot;
+End sub
+
+Sub Uniforma_Formati_Computo_sing_voce
+ 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then	 
+		exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
+	
+ 	VarScelta = InputBox(&quot;Sovrascrivo colori e altre formattazioni forzate applicate localmente?&quot;&amp; CHR$(10)_
+ 	      &amp; &quot; 1 per mantenere   ---   0 per sovrascrivere&quot; , &quot;SCEGLI 1 PER MANTENERE I FORMATI FORZATI&quot; _
+ 	      &amp; &quot; - 0 PER SOVRASCRIVE CON GLI STILI&quot;, &quot;1&quot;)
+	If VarScelta = &quot;&quot; then
+			exit sub
+	end if	
+&apos;	VarScelta= CDbl(VarScelta)
+&apos;	print varscelta+10
+&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+	lrow = Riformatta_Voce_Computo_Q2 (lrow, VarScelta)
+	
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	ThisComponent.CurrentController.Select(oCell)
+	Clessid_lock_End
+end sub
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Sub Uniforma_Formati_ANALISI_sing_voce
+ 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then
+		 
+		exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
+
+ 	VarScelta = InputBox(&quot;Sovrascrivo colori e altre formattazioni forzate applicate localmente?&quot;&amp; CHR$(10)_
+ 	      &amp; &quot; 1 per mantenere   ---   0 per sovrascrivere&quot; , &quot;SCEGLI 1 PER MANTENERE I FORMATI FORZATI - 0 PER SOVRASCRIVE CON GLI STILI&quot;, &quot;1&quot;)
+	If VarScelta = &quot;&quot; then
+			exit sub
+	end if	
+&apos;	VarScelta= CDbl(VarScelta)
+
+&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	lrow = Riformatta_Voce_Analisi(lrow, VarScelta)
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	ThisComponent.CurrentController.Select(oCell)
+&apos;	Clessid_lock_End
+end sub
+
+
+&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+&apos;_______________________________________________________________________________________+++++++++++++++++++++++++++
+Function Riformatta_Voce_Computo_Q2 (lrow as long, mantieni_colori as long) &apos;sing voce
+
+&apos;dim lrow as long
+&apos;dim	lSheetSRC as long
+&apos;dim	sRangeSRC as string
+&apos;dim	lSheetDest as long
+&apos;dim	sRangeDest as string
+&apos;Clessid_lock_Start &apos;_C
+&apos;ThisComponent.lockControllers()
+oDoc = thisComponent
+oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+oSheets = odoc.Sheets
+
+ 
+
+oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;) &apos; era S1
+&apos;ugone2
+&apos;print &quot;prima di circ  &quot; &amp; lrow  &apos; topa
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	oRangeVC =  Circoscrive_Voce_Computo_Att  (lrow)
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ ThisComponent.CurrentController.Select(oRangeVC)&apos;debug
+ print &quot;range&quot;&apos;debug
+	 lEndE = oRangeVC.RangeAddress.EndRow&apos;+1
+	 lEndRowDest = lEndE 
+&apos;print &quot;ritornato &quot; &amp; lEndRowDest
+     lrow = oRangeVC.RangeAddress.StartRow
+
+&apos;	oRangeSRC = oSheetSRC.getCellRangeByPosition (4, 44, 41, 46)
+	oRangeSRC = oSheetSRC.getCellRangeByPosition (0, 8, 41, 10)
+&apos;	ThisComponent.CurrentController.Select(oRangeSRC)
+&apos;		print 
+&apos;	oRangeDest = oSheetDest.getCellRangeByPosition (0, lrow, 37, lrow+2)
+	oRangeDest = oSheetDest.getCellRangeByPosition (0, lrow, 41, lrow+2)
+&apos;	ThisComponent.CurrentController.Select(oRangeDest)
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 cella_cella_cella(oSheetsrc, oSheetDest, oRangeSRC, oRangeDest,mantieni_colori) 
+	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+&apos; ThisComponent.CurrentController.Select(oRangeDest)
+&apos;  print 
+   
+&apos;	oRangeSRC = oSheetSRC.getCellRangeByPosition (4, 47, 41, 47)
+	oRangeSRC = oSheetSRC.getCellRangeByPosition (0, 11, 41, 11)
+	oRangeDest = oSheetDest.getCellRangeByPosition (0, lEndRowDest, 41, lEndRowDest)&apos;inghippo
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 cella_cella_cella(oSheetsrc, oSheetDest, oRangeSRC, oRangeDest, mantieni_colori) 
+	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+&apos; thisComponent.CurrentController.Select(oRangeDest)
+ &apos;   print 
+   
+  lEndRowDest = lEndRowDest-1
+  oCell = oSheetDest.GetCellByPosition( 1 , lEndRowDest)
+
+	Do while oSheetDest.GetCellByPosition( 1 , lEndRowDest-1).string =  &quot;&quot; &apos; ciclo che copia i formati dei conti parziali
+		&apos;oRangeSRC = oSheetSRC.getCellRangeByPosition (4, 46, 41, 46)
+		oRangeSRC = oSheetSRC.getCellRangeByPosition (0, 11, 41, 11)
+		oRangeDest = oSheetDest.getCellRangeByPosition (0, lEndRowDest, 41, lEndRowDest)
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 cella_cella_cella(oSheetsrc, oSheetDest, oRangeSRC, oRangeDest, mantieni_colori) 
+	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
+ 	&apos;	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+   		lEndRowDest=lEndRowDest-1
+ 	    oCell = oSheetDest.GetCellByPosition( 1 , lEndRowDest)
+  	   &apos; ThisComponent.CurrentController.Select(oCell)
+ 	  &apos;  Print &quot; copiato&quot;
+	loop
+	
+	oCell = oSheetDest.GetCellByPosition( 1 , lEndE +1)
+&apos;	 ThisComponent.CurrentController.Select(oCell)
+&apos;	 print &quot; e un&apos;altra&quot;
+	 &apos;	 Riformatta_Voce_Computo_3_MOD = lEndRow
+	 Riformatta_Voce_Computo_Q2 = lEndE +1
+&apos;	ThisComponent.unlockControllers()
+&apos;Clessid_lock_End
+End Function
+
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+&apos;_______________________________________________________________________________________+++++++++++++++++++++++++++
+Function Riformatta_Voce_Analisi (lrow as long, mantieni_colori as long) &apos;sing voce
+&apos;print &quot;0&quot;
+&apos;dim lrow as long
+&apos;dim	lSheetSRC as long
+&apos;dim	sRangeSRC as string
+&apos;dim	lSheetDest as long
+&apos;dim	sRangeDest as string
+&apos;Clessid_lock_Start &apos;_C
+&apos;ThisComponent.lockControllers()
+oDoc = thisComponent
+oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+oSheets = odoc.Sheets
+
+&apos;print &quot;riga: &quot; &amp; lrow
+&apos;print &quot;colore: &quot; &amp; mantieni_colori
+ 
+
+oSheetDest = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) 
+oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;) 
+
+&apos;print &quot;prima di circ  &quot; &amp; lrow
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	oRangeVC =  CircoscrivileAnalisi_7_ATT  (lrow)
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ ThisComponent.CurrentController.Select(oRangeVC)
+&apos; print &quot;range&quot;
+	 lEndE = oRangeVC.RangeAddress.EndRow&apos;+1
+	 lEndRowDest = lEndE -1
+	 lStartRowDest = oRangeVC.RangeAddress.StartRow
+	 
+	 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+    	Rifa_Somma_Analisi (6, lStartRowDest)
+
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Rifa_Sum_Ana_sing(lStartRowDest,lEndRowDest)
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+    	
+     lrow = oRangeVC.RangeAddress.StartRow 
+&apos;print &quot;ritornato &quot; &amp; lrow
+&apos;print &quot;ritornato &quot; &amp; lEndRowDest
+	oRangeSRC = oSheetSRC.getCellRangeByPosition (45, 42, 52, 44)
+&apos;	oRangeSRC = oSheetSRC.getCellRangeByPosition (39, 42, 46, 44)
+&apos;	ThisComponent.CurrentController.Select(oRangeSRC)
+&apos;		print 
+	oRangeDest = oSheetDest.getCellRangeByPosition (0, lrow, 7, lrow+2)
+&apos;	ThisComponent.CurrentController.Select(oRangeDest)
+&apos;	print
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 cella_cella_cella(oSheetsrc, oSheetDest, oRangeSRC, oRangeDest, mantieni_colori) 
+	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+   &apos; finite prime tre righe
+   
+	oRangeSRC = oSheetSRC.getCellRangeByPosition (45, 47, 52, 47)
+&apos;	oRangeSRC = oSheetSRC.getCellRangeByPosition (39, 47, 46, 47)
+	oRangeDest = oSheetDest.getCellRangeByPosition (0, lEndRowDest, 7, lEndRowDest)
+	&apos;	ThisComponent.CurrentController.Select(oRangeSRC)
+	&apos;	print 
+&apos;	 ThisComponent.CurrentController.Select(oRangeDest)
+  	&apos;	print 
+
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 cella_cella_cella(oSheetsrc, oSheetDest, oRangeSRC, oRangeDest, mantieni_colori) 
+	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	&apos; ultima riga fatta!
+   
+  lEndRowDest = lEndRowDest-1
+  oCell = oSheetDest.GetCellByPosition( 1 , lEndRowDest)
+&apos; print lEndRowDest
+	Do while oSheetDest.GetCellByPosition( 0 , lEndRowDest-1).string =  &quot;&quot;  &apos; ciclo che copia i formati dei conti parziali
+		If  oSheetDest.GetCellByPosition( 4 , lEndRowDest).string = &quot;&quot;_
+		 	or oSheetDest.GetCellByPosition( 5 , lEndRowDest).string = &quot;&quot;Then
+					oRangeSRC = oSheetSRC.getCellRangeByPosition (45, 48, 52, 48)
+		&apos;			oRangeSRC = oSheetSRC.getCellRangeByPosition (39, 48, 46, 48)
+				else
+					oRangeSRC = oSheetSRC.getCellRangeByPosition (45, 46, 52, 46)
+		end if
+		oRangeDest = oSheetDest.getCellRangeByPosition (0, lEndRowDest, 7, lEndRowDest)
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 cella_cella_cella(oSheetsrc, oSheetDest, oRangeSRC, oRangeDest, mantieni_colori) 
+	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
+ 	&apos;	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
+   		lEndRowDest=lEndRowDest-1
+ 	    oCell = oSheetDest.GetCellByPosition( 0 , lEndRowDest)
+  	   &apos; ThisComponent.CurrentController.Select(oCell)
+ 	  &apos;  Print &quot; copiato&quot;
+	loop
+
+	oCell = oSheetDest.GetCellByPosition( 1 , lEndE +1)
+&apos;	 ThisComponent.CurrentController.Select(oCell)
+&apos;	 print &quot; e un&apos;altra&quot;
+	 &apos;	 Riformatta_Voce_Computo_3_MOD = lEndRow
+	 Riformatta_Voce_Analisi = lEndE +1
+&apos;	ThisComponent.unlockControllers()
+&apos;Clessid_lock_End
+End Function
+
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Sub Uniforma_Formati_Su_Tutte_ANALISI_PREZZO
+&apos; inizia dalla riga corrente
+Dim lrow as long
+Dim lrowE as long
+dim lastUrow as long
+&apos;if msgbox (&quot;Attento!  la macro ri-registra le analisi in Elenco Prezzi... è meglio prima riplulirlo  ANNULLO? &quot;, 4) = 6 then
+&apos;	exit sub
+&apos;end if
+
+
+	oSheet = thiscomponent.Sheets.getByName (&quot;Analisi di Prezzo&quot;)
+	&apos;----------------------------------------
+	if  msgbox (&quot;   La macchina sta per riformattare la tabella &quot;&quot;Analisi di Prezzo&quot;&quot; &quot;_
+				&amp; &quot;uniformando gli stili di cella a quelli della maschera in S1!&quot;&amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;  ATTENZIONE: Sarà IMPOSSIBILE annulare...  &quot;&amp; CHR$(10)_
+				&amp; &quot;  Consiglio di salvare prima il documento!&quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;                         ANNULLO? &quot;, 4,&quot;&quot;&amp; CHR$(10 &amp; CHR$(10))) = 6 then
+		&apos;	&amp;&quot;&quot;,4, &quot;&quot;&amp; CHR$(10)) = 7 then
+
+		exit sub
+	end if
+
+	ThisComponent.CurrentController.Select(oSheet)
+&apos;&apos;
+	Var = InputBox(&quot;Formattazione di tutte le ANALISI DI PREZZO: &quot;&amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;          Da quale numero di riga vuoi iniziare?&quot;, &quot;Inserisci il numero di riga da cui vuoi iniziare a Formattare&quot;, &quot;1&quot;)
+	If var = &quot;&quot; then
+		exit sub
+	end if
+	lrow = CDbl(Var)
+ 	VarScelta = InputBox(&quot;Sovrascrivo colori e altre formattazioni forzate applicate localmente?&quot;&amp; CHR$(10)_
+ 	      &amp; &quot; 1 per mantenere   ---   0 per sovrascrivere&quot; , &quot;SCEGLI 1 PER MANTENERE I FORMATI FORZATI - 0 PER SOVRASCRIVE CON GLI STILI&quot;, &quot;1&quot;)
+	If VarScelta = &quot;&quot; then
+			exit sub
+	end if	
+	VarScelta= CDbl(VarScelta)
+&apos;Clessid_lock_Start	
+
+	&apos;-------------------
+&apos;	ThisComponent.CurrentController.Select(oSheet)
+&apos;	lrow = 2
+&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
+&apos;	ThisComponent.CurrentController.Select(oCell)
+	lastUrow = getLastUsedRow(oSheet)
+	sString$ = &quot;Fine ANALISI&quot;  &apos; DOPPIO CONTROLLO sulla fine della sheet
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI12! &quot;
+		exit sub
+	end if 
+	lRowE=oEnd.RangeAddress.EndRow 
+&apos;	oCell = ThisComponent.CurrentSelection
+ &apos;   lrow = oCell.CellAddress.row
+&apos; print lrow
+ 	nCurRow =lrow
+	oCell = oSheet.GetCellByPosition( 3 , lrow)
+&apos;	xA = oCell.string
+
+	Do  while lrow &lt; lastUrow-5 And lrow &lt; lRowE-5
+	ThisComponent.CurrentController.Select(oCell)
+&apos;	print &quot;continuo &quot; &amp; lrow &apos;&amp; &quot; - &quot; &amp; lastUrow &amp; &quot; - &quot; &amp; lRowE
+		Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;_
+						and ((oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;)_
+							or (oSheet.GetCellByPosition( 0,lrow).string =&quot;&quot;)_
+							or (oSheet.GetCellByPosition( 1,lrow).string = &quot;&quot;)_
+			 				or (oSheet.GetCellByPosition( 2,lrow).string = &quot;&quot;)_
+			 				or (oSheet.GetCellByPosition( 3,lrow).string = &quot;&quot;)_
+							or (oSheet.GetCellByPosition( 4,lrow).string = &quot;&quot;)_
+			 				or (oSheet.GetCellByPosition( 5,lrow).string = &quot;&quot;)_
+			 				or (oSheet.GetCellByPosition( 6,lrow).string = &quot;&quot;))_
+						and (oSheet.GetCellByPosition( 4, lrow).string &lt;&gt; &quot;TOTALE&quot;)
+					
+							if lrow &lt; lRowE-5 then 
+									Msgbox &quot;Finito !!!&quot;
+									exit sub
+							end if
+					 		lrow = lrow+1
+					 		oCell = oSheet.GetCellByPosition( 3 ,lrow) 
+					 	&apos;	print &quot;dentro  -&quot; &amp; lrow
+			loop
+
+ 						&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 					lrow = Riformatta_Voce_Analisi (lrow ,VarScelta)
+	 					&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	
+	 						ThisComponent.CurrentController.Select(osheet)
+			
+		oCell = oSheet.GetCellByPosition( 0 , lrow)	
+		ThisComponent.CurrentController.Select(oCell)
+	&apos;	print lrow &amp; &quot;  &quot; &amp; lastUrow-5
+		if lrow &gt; lRowE-5 then 
+			Msgbox &quot;Finito&quot;
+			exit sub
+		end if
+  &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+&apos;print
+  	loop
+  &apos;	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo!   Sembra tutto a posto, ma non è detto...&quot;
+END SUB
+&apos;__________________________________________________________________________
+
+
+Sub Uniforma_Formati_Su_Tutto_Computo_Q2 &apos; percorre Computo individuando le singole voci
+								&apos;	&apos; e copiando le formule (non tocca i valorigià inseriti)
+								
+Dim lRrow as long
+Dim lrowE as long
+dim lastUrow as long
+dim oSheet, oEnd as object 
+dim oCell as object
+dim sString$, xA, sTag as string
+	if  msgbox (&quot;   La macchina sta per riformattare la tabella &quot;&quot;Computo&quot;&quot; uniformando gli stili di cella a quelli della maschera in S1!&quot;&amp; CHR$(10)_
+				&amp; &quot; Se hai molte voci l&apos;operazione potrebbe essere lunghetta... &quot;&amp; CHR$(10)_
+				&amp; &quot; ATTENZIONE: Sarà IMPOSSIBILE annulare... &quot;&amp; CHR$(10)_
+				&amp; &quot;    Consiglio di salvare prima il documento!&quot;&amp; CHR$(10)_
+				&amp; &quot;                         ANNULLO? &quot;, 4,&quot;&quot;&amp; CHR$(10 &amp; CHR$(10))) = 6 then
+	&apos;	&amp;&quot;&quot;,4, &quot;&quot;&amp; CHR$(10)) = 7 then
+
+		exit sub
+	end if
+
+
+	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+	
+	
+&apos;&apos;
+	Var = InputBox(&quot;Formattazione delle voci di Computo:&quot; &amp; CHR$(10)&amp; CHR$(10)_
+			&amp;&quot;	 Da quale numero di riga vuoi iniziare?&quot;, &quot;Inserisci il numero di riga da cui vuoi iniziare a Formattare&quot;, &quot;1&quot;)
+	If var = &quot;&quot; then
+		exit sub
+	end if
+	If var = &quot;0&quot; then
+		var = &quot;1&quot;
+	end if
+	lrow = CDbl(Var)
+	
+ 	VarScelta = InputBox(&quot;Sovrascrivo colori e altre formattazioni forzate applicate localmente?&quot;&amp; CHR$(10)_
+ 	      &amp; &quot; 1 per mantenere   ---   0 per sovrascrivere&quot; , &quot;SCEGLI 1 PER MANTENERE I FORMATI FORZATI - 0 PER SOVRASCRIVE CON GLI STILI&quot;, &quot;1&quot;)
+	If VarScelta = &quot;&quot; then
+			exit sub
+	end if	
+	VarScelta= CDbl(VarScelta)
+Clessid_lock_Start	
+
+	oCell = oSheet.GetCellByPosition( lcol5 , lRow)
+&apos;	ThisComponent.CurrentController.Select(ocell)
+&apos;	print lrow
+
+	if templateTipo = &quot;ATT&quot; then lcol5 = 3
+	if templateTipo = &quot;5C&quot; then lcol5 = 2
+	
+	Do while oSheet.GetCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;_
+		 And	(Trova_Attr_N (oSheet.GetCellByPosition( lcol5, lrow), oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;
+		 			lrow = lrow+1
+		 			oCell = oSheet.GetCellByPosition( lcol5 , lRow)
+		 	&apos;		ThisComponent.CurrentController.Select(ocell)
+		 	&apos;		print lrow
+	loop
+
+	oCell = oSheet.GetCellByPosition( lcol5 , lRow)
+	ThisComponent.CurrentController.Select(oCell)
+	lastUrow = getLastUsedRow(oSheet)
+	sString$ = &quot;Fine Computo&quot;  &apos; DOPPIO CONTROLLO sulla fine della sheet
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI13! &quot;
+		exit sub
+	end if 
+	lRowE=oEnd.RangeAddress.EndRow 
+&apos;	lRow = lcol5
+	oCell = oSheet.GetCellByPosition( lcol5 , lRow)
+	xA = oCell.string
+	
+	Do  while lRow &lt; lastUrow And lRow &lt; lRowE
+				Do  while xA &lt;&gt;  &quot;SOMMANO &quot;&apos; _
+	&apos;	 And	(Trova_Attr_N (oSheet.GetCellByPosition( lcol5, lrow), oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;
+						If lrowE &lt;= lRow then
+						sTag = &quot;esci&quot;
+					&apos;	print lrowE &amp; &quot; &quot; &amp; lrow
+							exit do
+						end if		
+						lRow = lRow+1
+  						oCell = oSheet.GetCellByPosition( lcol5 , lRow)
+ 						xA = oCell.string
+			&apos;		ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+			&apos;			print xA
+		 		Loop
+ 		 if sTag = &quot;esci&quot; then
+ 		 		exit do
+ 		 end if
+ 		 oCell = oSheet.GetCellByPosition( lcol5 , lRow)
+ 	&apos;&apos;&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ 	&apos;	 print  &quot;prima   &quot; &amp; lRow
+ 		 
+ 		&apos;Copia_Formule_Su_Computo_Sing_Voce (lRow)
+ 	&apos;	lRow = Riformatta_Voce_Computo_3 (lRow)
+ 	&apos;	lRow =Riformatta_Voce_Computo_3_MOD (lRow)
+ 	&apos;	lRow = Riformatta_Voce_Computo_Q (lRow)
+&apos;	print &quot;invio &quot; &amp; lrow
+ 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 		lRow = Riformatta_Voce_Computo_Q2 (lRow, VarScelta)
+ 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ 		
+&apos;print lrow
+ 		if lrow = &quot;-200&quot;  then
+   		   exit sub
+ 		end if
+ 	&apos;	oCell = oSheet.GetCellByPosition( 3 , lRow)
+ &apos;		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ &apos;		print &quot;dopo &quot; &amp; lRow
+	&apos;	ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+	&apos;	print &quot; posizione dopo l&apos;azione singola voce  &quot; &amp; lRow
+		lRow = lRow +2
+&apos;		print &quot;sommato &quot; &amp;lRow
+  		oCell = oSheet.GetCellByPosition( lcol5 , lRow)
+  		xA = oCell.string
+  	&apos;	ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ 	&apos;	print &quot;ciclo esterno&quot;
+  	loop
+  	Clessid_lock_End
+  	msgbox &quot;La macchina ha riformattato la tabella &quot;&quot;Computo&quot;&quot;!&quot;
+  	Clessid_lock_End
+  	exit sub
+  	
+  	errore:
+  	  	Clessid_lock_End
+  	
+END SUB
+
+</script:module>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ShortC_temp" script:language="StarBasic">REM  *****  BASIC  *****
+
+Dim oShortCutMgr As Object
+
+Sub rimmel
+  oDoc = ThisComponent
+  oUICfgMgr = oDoc.UIConfigurationManager
+  If NOT IsNull(oUICfgMgr) Then
+    oShortCutMgr = oUICfgMgr.getShortCutManager()
+   
+    &apos;RemoveKeyEvent(771,True,True) &apos; 771: F4
+    &apos; About command is assigned to F4 + Shift + Ctrl
+    SetKeyEvent(771,&quot;.uno:About&quot;,True,True)
+   
+     &apos; store the configuration to the document
+    oShortCutMgr.store()
+  End If
+End Sub
+
+&apos; nKeyCode: com.sun.star.awt.KeyCode
+&apos; sCommand: CommandURL
+&apos; bShift: with Shift key, bCtrl: with Ctrl key
+Sub SetKeyEvent( nKeyCode As Long, sCommand As String, _
+        Optional bShift As Boolean, Optional bCtrl As Boolean )
+  If IsMissing(bShift) Then bShift = False
+  If IsMissing(bCtrl) Then bCtrl = False
+  nModifire = 0
+  KeyModifier = com.sun.star.awt.KeyModifier
+  If bShift Then nModifire = nModifire + KeyModifier.SHIFT
+  If bCtrl  Then nModifire = nModifire + KeyModifier.MOD1
+ 
+  aKeyEvent = CreateUnoStruct(&quot;com.sun.star.awt.KeyEvent&quot;)
+  aKeyEvent.KeyCode = nKeyCode
+  aKeyEvent.Modifiers = nModifire
+  oShortCutMgr.setKeyEvent(aKeyEvent,sCommand)
+End Sub
+
+&apos; nKeyCode: com.sun.star.awt.KeyCode
+&apos; bShift: with Shift key, bCtrl: with Ctrl key
+Sub RemoveKeyEvent( nKeyCode As Long, _
+           Optional bShift As Boolean, Optional bCtrl As Boolean )
+  If IsMissing(bShift) Then bShift = False
+  If IsMissing(bCtrl) Then bCtrl = False
+  nModifire = 0
+  KeyModifier = com.sun.star.awt.KeyModifier
+  If bShift Then nModifire = nModifire + KeyModifier.SHIFT
+  If bCtrl  Then nModifire = nModifire + KeyModifier.MOD1
+ 
+  aKeyEvent = CreateUnoStruct(&quot;com.sun.star.awt.KeyEvent&quot;)
+  aKeyEvent.KeyCode = nKeyCode
+  aKeyEvent.Modifiers = nModifire
+  oShortCutMgr.removeKeyEvent(aKeyEvent)
+End Sub 
+</script:module>

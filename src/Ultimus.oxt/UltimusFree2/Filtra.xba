@@ -1,0 +1,417 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Filtra" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                              
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segncompalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+Sub Filtro_Comune(sCol as  string, lColTagga as long, xTag as string) &apos;ovvero la parte di codice comune a tutti questi filtri
+&apos; nuova versione per template ATT, 5C e capitoli
+
+	&apos; ripulisce la tabella
+	oSheetRif = ThisComponent.Sheets.getByName(&quot;S3&quot;) 
+
+
+	&apos;stefania ok
+
+	nome_t_c= sCol &amp; &quot;_&quot; &amp; xTag
+	sNuovoNome=	DuplicaSheetFiltroTMP(nome_t_c,4) &apos; il num indica la posizione della nuova tabella
+	&apos; e torna con il nome della tabella modificata
+
+	oSheetDest = ThisComponent.Sheets.getByName(sNuovoNome)
+	 
+	lrowDest = 3
+	
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+&apos;	lLastUrow = getLastUsedRow(oSheet)
+	sString$ = &quot;Fine Computo&quot;
+	oEnd=uFindString(sString$, oSheetDest)
+	If isNull (oEnd) or isEmpty (oEnd)  then &apos;11111
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI! &quot;
+		exit sub
+	end if 			
+	lLastUrowDest=oEnd.CellAddress.Row 			
+
+	nurighe_da_eliminare=lLastUrowDest-lrowDest -1
+
+	If lLastUrowDest-1 &gt; lrowDest then
+			myrows = oSheetDest.getrows
+&apos;				xray myrows
+			myrows.removebyindex(3,	nurighe_da_eliminare)
+	end if
+
+	&apos; filtroTMP ripulita
+
+&apos;	lcol = 27 &apos; colonna del tag A
+	oCell = oSheetDest.GetCellByPosition(39,0)
+	ocell.string = nome_t_c &apos; scrive in alto a sinistra quale tag è stato filtrato
+	
+	oCell = oSheetDest.GetCellByPosition(36,0)
+	sFormula = &quot;=SUM(AK2:AK2500)&quot; 
+	oCell.setformula(sFormula)
+	
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+&apos;	lLastUrow = getLastUsedRow(oSheet)
+	sString$ = &quot;Fine Computo&quot;
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then &apos;11111
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI! &quot;
+		exit sub
+	end if 			
+	lLastUrow=oEnd.CellAddress.Row 			
+	lcol = lcolTagga &apos; colonna del tag (aggiungere 2) 
+	lrow = 1
+	oCell = Osheet.GetCellByPosition(lcol, lrow)
+	ThisComponent.CurrentController.Select(oSheet) &apos;(CellBackColoroCell)
+&apos;	ThisComponent.CurrentController.Select(oCell)
+&apos;	print
+	xA = oCell.string
+	xA = replace1(xA, &quot; &quot;, &quot;&quot;)&apos; la function replace1 elimina gli
+							&apos; spazi vuoti dalla stringa
+	Do while  lrow &lt; lLastUrow-2
+		oCell = Osheet.GetCellByPosition(lcol, lrow)
+		xA = oCell.string
+		xA= replace1(xA, &quot; &quot;, &quot;&quot;)&apos; la function replace1 elimina gli
+							&apos; spazi vuoti dalla stringa
+
+		if lrow &gt; lLastUrow-2 then
+		&apos;	print &quot;caso strano00000&quot;
+			goto Vai_alla_fine
+		end if
+
+		oCell=oSheet.GetCellbyPosition( 0, lrow)&apos; lrow )
+	&apos;	sAttributo_N = Trova_Attr_N (oCell, oSheet)
+		do while Trova_Attr_N (oCell, oSheet) &lt;&gt; &quot;End_voce_COMPUTO&quot;&apos; or oCell.string &lt;&gt; &quot;SOMMANO &quot;
+			lrow = lrow+1
+			oCell=oSheet.GetCellbyPosition( 0, lrow)&apos; lrow )
+			if lrow &gt; lLastUrow-1 then
+				&apos;	print &quot;fine&quot;
+				goto Vai_alla_fine
+			end if
+		&apos;	sAttributo_N = Trova_Attr_N (oCell, oSheet)
+		loop
+
+	if oSheet.GetCellbyPosition( lcol, lrow).string &lt;&gt; xTag then 
+		lrow = lrow+2
+		goto saltarello
+	end if
+
+	&apos;	oRangeVoce = Circoscrive_Voce_Computo_B ( lrow)
+
+		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+		oRangeVoce =  Circoscrive_Voce_Computo_Att ( lrow)
+		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	&apos;	print
+		lcount = oRangeVoce.Rows.count
+		lsC = oRangeVoce.RangeAddress.StartColumn
+		lsR = oRangeVoce.RangeAddress.StartRow
+		leC = oRangeVoce.RangeAddress.EndColumn
+		leR = oRangeVoce.RangeAddress.EndRow
+		 oSheetSRC = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	 	 oSheetDest = ThisComponent.Sheets.getByName(sNuovoNome)
+		 oSrc = oSheetSRC.getCellRangeByPosition(lsC,lsR,leC,leR).RangeAddress
+	   	 oDest = oSheetDest.GetCellByPosition( 0, lrowDest ).CellAddress
+	   &apos;	oFoglio  &apos;problll
+	   	 oSheetDest.getRows.insertByIndex(lrowDest, lcount ) 
+ 	 	 oSheetDest.copyRange(oDest, oSrc)
+	  	 lrow = lrow+2
+	  	 lrowDest = lrowDest + oRangeVoce.Rows.Count
+ 	 	 saltarello:  	 
+	 loop
+	 Vai_alla_fine:
+ 
+ 	oSheetDest = ThisComponent.Sheets.getByName(sNuovoNome)
+	lLastUrowDest = getLastUsedRow(oSheetDest)
+&apos;	oRange = oSheetDest.getCellRangeByposition(lcol,0,lcol,lLastUrowDest)
+&apos; 	oRange.CellBackColor = RGB(255,0,0)
+ &apos;	oRange = oSheetDest.getCellRangeByposition(0,0,0,lLastUrowDest)
+ 	
+	oRange = oSheetDest.getCellRangeByposition(1,1,3,1)
+ 	oRange.CellBackColor = RGB(255,0,0) 
+ 	ThisComponent.Sheets.getByName(sNuovoNome).GetCellByPosition(2,1).string =  &quot;FILTRO_TAG &quot; &amp; nome_t_c
+ 
+ &apos;	oRange.CellBackColor = RGB(255,255,255)
+	 oCell = oSheetDest.GetCellByPosition(0, 4)
+  	ThisComponent.CurrentController.Select(oCell)
+  	
+	messaggio12 (xTag, sCol)
+END SUB			
+
+
+
+
+
+
+
+
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ NON USATA???
+Sub Filtra_Computo_Cap &apos; filtra sulla colonna del Tag C e copia le voci di computo 
+					  &apos; segnate con una stringa corrispondente
+&apos; ver. del 01/06/06 : aggiunta l&apos;eliminazione automatica degli spazi vuoti
+&apos; cioè adesso ignora qualsiasi carattere &quot;spazio&quot; prima, dopo e nella stringa del tag
+&apos;&apos;print &quot; se leggi questo messaggio informami specificando: Filtra.Filtra_Computo_Cap | grazie!  (Bart)&quot;
+dim oCellStart as object
+&apos;dim lrowE as long
+&apos;dim sString$ as string	
+dim oCell as object
+dim lrow as long
+dim lrowDest as long
+dim lLastUrow as long
+dim lLastUrowDest as long
+dim lcol as long
+dim xA as string
+dim sFormula as string
+ 
+	oSheetRif = ThisComponent.Sheets.getByName(&quot;S3&quot;) 
+
+	&apos; trucchetto per far confermare automaticamente i Dati immessi
+	ThisComponent.CurrentController.Select(OsheetRif.GetCellByPosition(8,16))
+	&apos; ovviamente nel caso l&apos;utente non abbia confermato...
+	&apos;metterlo appena prima che venga prelevato il dato...
+	
+	oCell = OsheetRif.GetCellByPosition(7,10) &apos; tag Cap
+	xTag = oCell.string
+	If xTAG = &quot;&quot; then
+		msgbox &quot;Hai scelto di cercare una stringa vuota...&quot;&amp; CHR(10)_
+			&amp; &quot; al momento una simile eventualità non è prevista!&quot; &amp; CHR(10)&amp; &quot;&quot;&amp; CHR(10)
+			exit sub
+	end if
+&apos;	lrowDest = 3
+	sCol = &quot;Cap&quot;
+	lcolTagga = 31
+	Filtro_Comune(sCol, lColTagga, xTag)
+	
+end sub
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+		
+
+&apos;***************************************************************************************************
+Sub Filtra_Computo_SottCap &apos; filtra sulla colonna del Tag SottCap e copia le voci di computo 
+					  &apos; segnate con una stringa corrispondente
+&apos; ver. del 10/05/10 : aggiunta l&apos;eliminazione automatica degli spazi vuoti
+&apos; cioè adesso ignora qualsiasi carattere &quot;spazio&quot; prima, dopo e nella stringa del tag
+&apos;print &quot; se leggi questo messaggio informami specificando: Filtra.Filtra_Computo_SottCap | grazie! (Bart)&quot;
+dim oCellStart as object
+&apos;dim lrowE as long
+&apos;dim sString$ as string	
+dim oCell as object
+dim lrow as long
+dim lrowDest as long
+dim lLastUrow as long
+dim lLastUrowDest as long
+dim lcol as long
+dim xA as string
+dim sFormula as string
+ 
+	oSheetRif = ThisComponent.Sheets.getByName(&quot;S3&quot;) 
+	
+	&apos; trucchetto per far confermare automaticamente i Dati immessi
+	ThisComponent.CurrentController.Select(OsheetRif.GetCellByPosition(8,12))
+	&apos; ovviamente nel caso l&apos;utente non abbia confermato...
+	&apos;metterlo appena prima che venga prelevato il dato...
+
+	oCell = OsheetRif.GetCellByPosition(7,12) &apos; tag SottoCap
+	xTag = oCell.string
+	If xTAG = &quot;&quot; then
+		msgbox &quot;Hai scelto di cercare una stringa vuota...&quot;&amp; CHR(10)_
+			&amp; &quot; al momento una simile eventualità non è prevista!&quot; &amp; CHR(10)&amp; &quot;&quot;&amp; CHR(10)
+			exit sub
+	end if
+&apos;	lrowDest = 3
+	sCol = &quot;SottCap&quot;
+	lcolTagga = 32
+	Filtro_Comune(sCol, lColTagga, xTag)
+	
+end sub
+
+Sub Filtra_Computo_A &apos; filtra sulla colonna del Tag A e copia le voci di computo 
+					  &apos; segnate con una stringa corrispondente
+&apos; ver. del 01/06/06 : aggiunta l&apos;eliminazione automatica degli spazi vuoti
+&apos; cioè adesso ignora qualsiasi carattere &quot;spazio&quot; prima, dopo e nella stringa del tag
+
+dim oCellStart as object
+&apos;dim lrowE as long
+&apos;dim sString$ as string	
+dim oCell as object
+dim lrow as long
+dim lrowDest as long
+dim lLastUrow as long
+dim lLastUrowDest as long
+dim lcol as long
+dim xA as string
+dim sFormula as string
+
+	oSheetRif = ThisComponent.Sheets.getByName(&quot;S3&quot;)
+	
+	&apos; trucchetto per far confermare automaticamente i Dati immessi
+	ThisComponent.CurrentController.Select(OsheetRif.GetCellByPosition(8,14))
+	&apos; ovviamente nel caso l&apos;utente non abbia confermato...
+	 
+	oCell = OsheetRif.GetCellByPosition(7,14) &apos; tag A
+
+	
+	xTag = oCell.string
+&apos;	print xtag
+	If xTAG = &quot;&quot; then
+		msgbox &quot;Hai scelto di cercare una stringa vuota...&quot;&amp; CHR(10)_
+			&amp; &quot; al momento una simile eventualità non è prevista!&quot; &amp; CHR(10)&amp; &quot;&quot;&amp; CHR(10)
+			exit sub
+	end if
+&apos;	lrowDest = 3
+	sCol = &quot;A&quot;
+	lcolTagga = 33 &apos; la colonna da filtrare
+	Filtro_Comune(sCol, lColTagga, xTag)
+	
+end sub
+
+		
+
+&apos;***************************************************************************************************
+
+Sub Filtra_Computo_B &apos; filtra sulla colonna del Tag B e copia le voci di computo 
+					  &apos; segnate con una stringa corrispondente
+&apos; ver. del 01/06/06 : aggiunta l&apos;eliminazione automatica degli spazi vuoti
+&apos; cioè adesso ignora qualsiasi carattere &quot;spazio&quot; prima, dopo e nella stringa del tag
+
+dim oCellStart as object
+&apos;dim lrowE as long
+&apos;dim sString$ as string	
+dim oCell as object
+dim lrow as long
+dim lrowDest as long
+dim lLastUrow as long
+dim lLastUrowDest as long
+dim lcol as long
+dim xA as string
+dim sFormula as string
+&apos;  sEsco = ControlloConfermaDati &apos;controlla se si è modo Editazione
+&apos;  If sEsco = &quot;Esci&quot; then
+&apos;  msgbox &quot;Non hai confermato l&apos;immisione di dati...&quot;&amp; CHR(10)_
+&apos;&apos;    	&amp;	 &quot;Conferma prima i dati immessi e poi riprova...&quot;&amp; CHR(10)
+&apos; 	   exit sub
+&apos;  end if &apos; fine controllo
+
+	oSheetRif = ThisComponent.Sheets.getByName(&quot;S3&quot;) 
+	
+	&apos; trucchetto per far confermare automaticamente i Dati immessi
+	ThisComponent.CurrentController.Select(OsheetRif.GetCellByPosition(8,16))
+	&apos; ovviamente nel caso l&apos;utente non abbia confermato...
+	&apos;metterlo appena prima che venga prelevato il dato...
+	
+	oCell = OsheetRif.GetCellByPosition(7,16) &apos; tag B
+	xTag = oCell.string
+&apos;	print xtag
+	If xTAG = &quot;&quot; then
+		msgbox &quot;Hai scelto di cercare una stringa vuota...&quot;&amp; CHR(10)_
+			&amp; &quot; al momento una simile eventualità non è prevista!&quot; &amp; CHR(10)&amp; &quot;&quot;&amp; CHR(10)
+			exit sub
+	end if
+&apos;	lrowDest = 3
+	sCol = &quot;B&quot;
+	lcolTagga = 34 &apos; la colonna da filtrare
+	Filtro_Comune(sCol, lColTagga, xTag)
+	
+end sub
+
+		
+
+&apos;***************************************************************************************************
+		&apos;NB  Inserire una finestrella a discesa?
+Sub Filtra_Computo_C &apos; filtra sulla colonna del Tag C e copia le voci di computo 
+
+&apos;INUTILIZZATA!  Perché il tag C corrisponde al rinvio al codice Voce
+
+					  &apos; segnate con una stringa corrispondente
+&apos; ver. del 01/06/06 : aggiunta l&apos;eliminazione automatica degli spazi vuoti
+&apos; cioè adesso ignora qualsiasi carattere &quot;spazio&quot; prima, dopo e nella stringa del tag
+
+dim oCellStart as object
+&apos;dim lrowE as long
+&apos;dim sString$ as string	
+dim oCell as object
+dim lrow as long
+dim lrowDest as long
+dim lLastUrow as long
+dim lLastUrowDest as long
+dim lcol as long
+dim xA as string
+dim sFormula as string
+&apos;  sEsco = ControlloConfermaDati &apos;controlla se si è modo Editazione
+&apos;  If sEsco = &quot;Esci&quot; then
+&apos;  msgbox &quot;Non hai confermato l&apos;immisione di dati...&quot;&amp; CHR(10)_
+&apos;    	&amp;	 &quot;Conferma prima i dati immessi e poi riprova...&quot;&amp; CHR(10)
+&apos; 	   exit sub
+&apos;  end if &apos; fine controllo
+	oSheetRif = ThisComponent.Sheets.getByName(&quot;S3&quot;) 
+	
+	
+	&apos; trucchetto per far confermare automaticamente i Dati immessi
+	ThisComponent.CurrentController.Select(OsheetRif.GetCellByPosition(8,16))
+	&apos; ovviamente nel caso l&apos;utente non abbia confermato...
+	&apos;metterlo appena prima che venga prelevato il dato...
+	
+	oCell = OsheetRif.GetCellByPosition(7,20) &apos; tag C
+	xTag = oCell.string
+&apos;	print xtag
+	If xTAG = &quot;&quot; then
+		msgbox &quot;Hai scelto di cercare una stringa vuota...&quot;&amp; CHR(10)_
+			&amp; &quot; al momento una simile eventualità non è prevista!&quot; &amp; CHR(10)&amp; &quot;&quot;&amp; CHR(10)
+			exit sub
+	end if
+&apos;	lrowDest = 3
+	sCol = &quot;C&quot;
+	lcolTagga = 35 &apos; la colonna da filtrare
+	Filtro_Comune(sCol, lColTagga, xTag)
+	
+end sub
+
+		
+
+&apos;******************************************
+&apos;***************************************************************************************************
+&apos; cerca e sostituisce una substringa all&apos;interno di una stringa
+&apos; usata sopratutto dai filtri tag per eliminare gli spazi che facevano confusione...
+&apos;copiata pari pari da Guida alla programmazione in BASIC in StarOffice 8
+Function replace1 (Source As String, Search As String, NewPart As String)
+Dim Result As String
+Dim StartPos As Long
+Dim CurrentPos As Long
+Result = &quot;&quot;
+StartPos = 1
+CurrentPos = 1
+If Search = &quot;&quot; Then
+Result = Source
+Else
+Do While CurrentPos &lt;&gt; 0
+CurrentPos = InStr(StartPos, Source, Search)
+If CurrentPos &lt;&gt; 0 Then
+Result = Result + Mid(Source, StartPos, _
+CurrentPos - StartPos)
+Result = Result + NewPart
+StartPos = CurrentPos + Len(Search)
+Else
+Result = Result + Mid(Source, StartPos, Len(Source))
+End If &apos; Position &lt;&gt; 0
+Loop
+End If
+replace1 = Result
+End Function
+&apos;***************************************************************************************************
+
+
+Sub messaggio12 (xTag, sCol) &apos; as string)
+ msgbox &quot;Le voci marcate nella colonna del &quot;&amp; CHR(10)_
+ 		&amp;&quot;Tag &quot; &amp; sCol &amp; &quot; con la sigla &lt; &quot; &amp; xTag &amp; &quot; &gt;&quot;&amp; CHR(10)_
+ 		&amp;&quot; sono state copiate su questa tabella! &quot; &amp; CHR(10) &amp; CHR(10) &amp;_
+ 		&quot; Questa tabella può funzionare come foglio di COMPUTO, ma nel caso dovrà essere rinominata come COMPUTO &quot;&amp; CHR(10)_
+ 		 &amp; &quot;(Per poterlo fare dovrai ovviamente rinominare prima la Tab COMPUTO con altro nome...)&quot;_
+ 		&amp; CHR(10) &amp; &quot; &quot; &apos; questo solo per spaziare
+END SUB
+</script:module>

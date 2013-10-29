@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gest_contab" script:language="StarBasic">REM  *****  BASIC  *****
+
+&apos; gestione visibilità tabelle contabilità
+
+Sub Mostra_tabs_contabilita_soltanto  &apos; visualizza tutte le tabs della Contabilità
+							&apos; e nasconde alcune del Computo
+dim oSheets as object
+dim oSheet  as object
+dim aSheetNames as object
+dim cSheetName2 as string
+	oSheets = ThisComponent.getSheets()
+	aSheetNames = oSheets.getElementNames()
+	&apos; visualizza tutte le tabs della Contabilità
+	For i = LBound( aSheetNames ) To UBound( aSheetNames )
+      cSheetName2 = aSheetNames( i ) &apos; get string from array  
+      If left(cSheetName2,3) = &quot;cT_&quot; Then
+      		oSheet = ThisComponent.Sheets.getByIndex(i)
+      		thisComponent.Sheets.moveByName(cSheetName2 ,4)
+			oSheet.isVisible = true &apos;false &apos;true
+			Thiscomponent.currentcontroller.setactivesheet(Osheet
+      EndIf
+	Next  
+	
+	thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
+	thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
+	Visualizza_PageBreak
+End Sub
+
+
+Sub Abilita_contabilita  
+	dim oSheet  as object
+	&apos;	Mostra_tabs_contabilita_soltanto
+	Nascondi_tabs_COMPUTO_soltanto
+	Osheet = thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
+	oSheet.isVisible = true
+	thisComponent.Sheets.moveByName(&quot;CONTABILITA&quot; ,4)
+	&apos;print &quot;la scrive&quot;
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 	
+	Thiscomponent.currentcontroller.setactivesheet(Osheet)
+	
+	&apos;queste che seguono per 
+	sVerT = 146
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &lt; sVerT	then
+			msgbox &quot;Se vuoi Usare o anche solo testare la Contabilità Avanzata dovresti farlo su un template uguale o superiore al &quot; &amp; _
+			sVerT &amp; &quot; (&quot; &amp; sVerT &amp; &quot;.3.5)&quot;
+		&apos;	exit sub
+	end if
+	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 1 THEN 
+		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt; 0  THEN 
+			msgbox &quot; La Contabilità lavori è stata abilitata! Questo presuppone che il Computo sia finito ed i lavori già appaltati!&quot;  &amp; CHR$(10)_
+				&amp; &quot;          (NB Alcune modalità avranno comportamenti diversi ed altre saranno inibite)&quot; 
+		end if
+	END IF
+	
+&apos;Aggiorna_stile_1 
+End Sub
+
+
+Sub Nascondi_tabs_contabilita  
+dim oSheets as object
+dim oSheet  as object
+dim aSheetNames as object
+dim cSheetName2 as string
+	oSheets = ThisComponent.getSheets()
+	Nascondi_tabs_contabilita_soltanto
+	
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string = 0 then
+		Mostra_tabs_COMPUTO 
+	end if
+	
+	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).isVisible = false 
+	thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
+	thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
+    Sel_Altre_Opz
+End Sub
+
+
+
+sub Nascondi_tutte_secondarie 
+	oSheets = ThisComponent.getSheets()
+	aSheetNames = oSheets.getElementNames()
+	&apos;nasconde i documenti di contabilità
+	For i = LBound( aSheetNames ) To UBound( aSheetNames )
+      cSheetName2 = aSheetNames( i ) &apos; get string from array  
+     &apos; print cSheetName2
+      If left(cSheetName2,3) = &quot;cT_&quot; Then
+      &apos;	 left(cSheetName2,5) = &quot;CONTA&quot;	Then
+      		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
+      	&apos;	thisComponent.Sheets.moveByName(cSheetName2 ,4)
+			oSheet.isVisible = false &apos;true
+      EndIf
+	Next
+	&apos;nasconde le copertine
+	For i = LBound( aSheetNames ) To UBound( aSheetNames )
+      cSheetName2 = aSheetNames( i ) &apos; get string from array  
+     &apos; print cSheetName2
+      If left(cSheetName2,3) = &quot;cP_&quot; Then
+      		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
+      	&apos;	thisComponent.Sheets.moveByName(cSheetName2 ,4)
+			oSheet.isVisible = false &apos;true
+      EndIf
+	Next
+	ThisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;).isVisible = false 
+end sub
+
+
+Sub Nascondi_tabs_contabilita_soltanto
+dim oSheets as object
+dim oSheet  as object
+dim aSheetNames as object
+dim cSheetName2 as string
+	oSheets = ThisComponent.getSheets()
+	aSheetNames = oSheets.getElementNames()
+	For i = LBound( aSheetNames ) To UBound( aSheetNames )
+      cSheetName2 = aSheetNames( i ) &apos; get string from array  
+     &apos; print cSheetName2
+      If left(cSheetName2,3) = &quot;cT_&quot; Then
+      &apos;	 left(cSheetName2,5) = &quot;CONTA&quot;	Then
+      		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
+      		thisComponent.Sheets.moveByName(cSheetName2 ,4)
+			oSheet.isVisible = false &apos;true
+		 		 	
+      EndIf
+	Next
+	
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
+		thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
+	end if
+	If thisComponent.Sheets.hasByName(&quot;S2&quot;) then
+		thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
+	end if
+End Sub
+
+
+Sub Mostra_tabs_COMPUTO &apos; parliamo sempre di tabs accesorie: docs e Copertine
+	dim oSheets as object
+	dim oSheet  as object
+	dim aSheetNames as object
+	dim cSheetName2 as string
+
+	oSheets = ThisComponent.getSheets()
+	aSheetNames = oSheets.getElementNames()&apos; pare vada ri-letta
+	For i = LBound( aSheetNames ) To UBound( aSheetNames )
+      cSheetName2 = aSheetNames( i ) &apos; get string from array  
+      If left(cSheetName2,3) = &quot;cP_&quot; Then
+      		oSheet = ThisComponent.Sheets.getByIndex(i)
+      		thisComponent.Sheets.moveByName(cSheetName2 ,7)
+			oSheet.isVisible = true
+			Thiscomponent.currentcontroller.setactivesheet(Osheet)
+      EndIf
+	Next 
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
+		thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
+	end if
+	If thisComponent.Sheets.hasByName(&quot;S2&quot;) then
+		thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
+	end if
+	Visualizza_PageBreak
+End Sub
+
+
+Sub Nascondi_tabs_COMPUTO_soltanto &apos; parliamo sempre di tabs accesorie: docs e Copertine
+dim oSheets as object
+dim oSheet  as object
+dim aSheetNames as object
+dim cSheetName2 as string
+	oSheets = ThisComponent.getSheets()
+	aSheetNames = oSheets.getElementNames()&apos; pare vada ri-letta
+	For i = LBound( aSheetNames ) To UBound( aSheetNames )
+      cSheetName2 = aSheetNames( i ) &apos; get string from array  
+      If left(cSheetName2,3) = &quot;cP_&quot; Then
+      		oSheet = ThisComponent.Sheets.getByIndex(i)
+      		thisComponent.Sheets.moveByName(cSheetName2 ,7)
+			oSheet.isVisible = False
+			&apos;Thiscomponent.currentcontroller.setactivesheet(Osheet)
+      EndIf
+	Next 
+
+End Sub
+
+
+Sub Nascondi_TUTTI_docs_e_Copertine
+	ThisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;).isVisible = false 
+	Nascondi_tabs_COMPUTO_soltanto
+	Nascondi_tabs_contabilita_soltanto
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
+		thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
+	end if
+	If thisComponent.Sheets.hasByName(&quot;S2&quot;) then
+		thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
+	end if
+ 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	Chiudi_o_elimina_tabelle_inutili
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+
+	Visualizza_normale
+end sub
+
+Sub Svuota_CONTABILITA &apos;main
+	&apos;_____________________
+	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	&apos;_____________________
+		if msgbox (&quot;1 Sto per eliminare TUTTI i dati da questa tabella di CONTABILITA&apos; ed i relativi Sommari in computo&quot; &amp; CHR$(10)_
+				&amp;&quot;         PROSEGUO ?... &quot; &amp; CHR$(10) _
+   				&amp;  CHR$(10) &amp; &quot;&quot;,36, &quot;Attento!!!&quot;) = 7 then
+   				
+   				exit sub
+  	 	end if
+  	 	Svuota_CONTABILITA_esegui
+end sub
+
+
+
+Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
+	&apos;ATTENZIONE, se arriva da dialog il parametro non è mai NULL
+	&apos; perché intercetta il clic del mouse o cose del genere...
+
+
+	if thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) then
+		oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+		if osheet.isVisible = false then
+			osheet.isVisible = TRUE
+			sState = &quot;chiusa&quot;
+		end if
+		sString$ = &quot;Fine Computo&quot;
+		oEnd=uFindString(sString$, oSheet) 
+		lrowFine =oEnd.RangeAddress.EndRow-1
+		&apos;L&apos;ULTIMA (PRIMA DELLA RIGA ROSSA LA SVUOTO  SOLTANTO)
+		iCellAttr = _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.DATETIME + _
+			com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.ANNOTATION + _
+			com.sun.star.sheet.CellFlags.FORMULA + _
+			com.sun.star.sheet.CellFlags.OBJECTS + _
+			com.sun.star.sheet.CellFlags.HARDATTR + _
+			com.sun.star.sheet.CellFlags.EDITATTR &apos;+ _
+			com.sun.star.sheet.CellFlags.STYLES 
+		osheet.getCellRangeByPosition (0,lrowfine,49,lrowfine).ClearContents(iCellAttr)
+		osheet.getCellRangeByPosition (0,lrowfine,49,lrowfine).CellStyle = &quot;Reg_prog&quot;	
+
+		lrowFine = lrowFine-1 &apos; &apos;oEnd.RangeAddress.EndRow-2 
+
+		If lrowFine &gt;= 2 then
+			oSheet.rows.removeByIndex (2, lrowFine)
+		&apos;	oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
+		&apos;	ThisComponent.CurrentController.Select(oRange)
+		&apos;	elimina_riga 
+		end if	
+	end if
+	
+	&apos;aggiunge una riga vuota &quot;quasi&quot; in testa e la formatta... NON è importante per il codice... ma pare ergonomico
+	oSheet.getRows.insertByIndex(2, 1)&apos;
+	oSheet.getCellRangeByPosition(0, 2, 49 , 2).cellstyle =  &quot;Reg_prog&quot;
+	
+	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
+	Adatta_h_riga_intera_tabella(&quot;CONTABILITA&quot;)
+	if	sState = &quot;chiusa&quot; then
+		osheet.isVisible = false
+	end if &apos;
+
+	if sSommari = &quot;true&quot; then
+		&apos; pulisce anche i sommari in Computo
+		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+		iColEnd = getLastUsedCol(oSheet)
+		iColStart = 44
+		if iColEnd-iColStart+1 &gt; 0 then
+			oSheet.Columns.removeByindex(iColStart,iColEnd-iColStart+1)	
+		end if
+	end if
+	&apos;	ThisComponent.CurrentController.setFirstVisibleColumn (iColStart)
+end sub
+</script:module>

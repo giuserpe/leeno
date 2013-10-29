@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_crea" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                            
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++
+SUB CREA_VOCE_ANALISI &apos; sceglie se usare la macro vecchia o nuova (ovvero cerca la presenza di attributi di cella)
+													&apos; TEMO SIA INUTILIZZATA
+oSheet = ThisComponent.currentController.activeSheet
+
+	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then
+			 
+			exit sub
+	end if
+
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 0, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos; debug
+		&apos;	print &quot;ecco&quot;
+	Loop
+ &apos;  	end if
+   	oCell = oSheet.GetCellByPosition( 3 , lrow)
+   oCustomXmlAttributes = oCell.UserDefinedAttributes
+&apos;     xray oCustomXmlAttributes
+   If oCustomXmlAttributes.hasElements = false then
+print 1
+				NuovaAnalisi
+		else
+print 2
+			NuovaAnalisi_Att
+	end if
+END SUB
+
+
+SUB CREA_VOCE_COMPUTO &apos; sceglie se usare la macro vecchia o nuova (ovvero cerca la presenza di attributi di cella)
+oSheet = ThisComponent.currentController.activeSheet
+&apos;print &quot;CREA_VOCE_COMPUTO&quot;
+	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then
+			 
+			exit sub
+	end if
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 0, lrow )
+			ThisComponent.CurrentController.Select(oCell)&apos; debug
+		&apos;	print &quot;ecco&quot;
+	Loop
+ &apos;  	end if
+   	oCell = oSheet.GetCellByPosition( 0 , lrow-1)
+   &apos;	xray oCell.UserDefinedAttributes
+   oCustomXmlAttributes = oCell.UserDefinedAttributes
+   &apos;  xray oCustomXmlAttributes
+   If oCustomXmlAttributes.hasElements = false then
+&apos;print 1
+				Nuova_Voce_Computo_vecchia
+		else
+&apos;print 2
+			Nuova_Voce_Computo_Att
+	end if
+END SUB
+
+sub Nuova_Voce_Computo
+ CREA_VOCE_COMPUTO 
+end sub
+
+sub Nuova_Voce_Computo_vecchia  &apos; versione de 060825
+&apos;  se è sulla voce inserisce sotto
+dim lrow as long
+dim lrowV as long
+dim xA as string
+dim oSheet as object
+dim oSheetSRC as object
+	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then
+			 
+			exit sub
+	end if
+&apos;	print &quot;Nuova_Voce_Computo_vecchia&quot;
+	oSheet = ThisComponent.currentController.activeSheet
+	sAttributo = Trova_Attr_Sheet
+    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
+ 			 msgbox &quot;Questa macro si può usare solo nella tabella di COMPUTO!&quot;
+			exit sub
+	end if
+	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+	sString$ = &quot;Fine Computo&quot;
+	oEnd=uFindString(sString$, oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow 
+
+&apos;-------------_________elimino righe vuote in eccesso a l fondo
+&apos; ambaradan per togliere righe in eccesso inbasso
+  	lrowT = lrowFine
+  	oCellT = oSheet.GetCellByPosition( 3 , lrowT)
+  	Do while oSheet.GetCellByPosition( 3, lrowT).string &lt;&gt;  &quot;SOMMANO &quot;
+	 		lRowT = lrowT-1
+	 		conta = conta+1
+	 		oSheet.GetCellByPosition( 3, lrowT)
+	 	&apos;	ThisComponent.CurrentController.Select(oCellT)&apos; debug
+	 	&apos;	print lrowT &amp; &quot; &quot; &amp; conta
+	loop
+	
+	if conta &gt; 3 then
+	 		myrows = oSheet.getrows
+	 		conta = conta-3
+&apos;	 		print conta
+	 	&apos;	myrows.removebyindex(2,Conta)
+&apos;	 	print lrowfine
+	 		myrows.removebyindex(lrowFine-Conta-1,Conta)
+	 	else
+	 		conta = 0 
+	end if
+	&apos; fine eliminazione righe in alto
+	
+	&apos;print lrowfine &amp; &quot; &quot; &amp; lrow
+	
+&apos;	if conta &lt;&gt; 0 then
+&apos;		Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;SOMMANO &quot;
+&apos;			lrow = lrow-1
+	&apos;		oCell = oSheet.GetCellByPosition( 3, lrow )
+	&apos;		ThisComponent.CurrentController.Select(oCell)&apos; debug
+	&apos;		print
+&apos;		loop
+  &apos;lrow = lrow-Conta-1 &apos; ripareggio di eventuali righe eliminate
+  lrowFine = lrowFine - Conta
+ &apos; end if
+  &apos;-------------------------------
+&apos;print lrowfine &amp; &quot; &quot; &amp; lrow
+
+
+	If lrow &gt; lrowFine-1 then
+		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
+		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+		exit sub
+	end if
+	&apos;--------------- Sopra prima voce
+	if lrow &lt; 5 then &apos;se sopra la prima Voce
+	&apos;	print &quot;se sopra la prima Voce&quot;
+		lrow = 1
+		Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;
+	 		lRow = lrow+1
+	 		oCell = oSheet.GetCellByPosition( 0, lrow )
+	 		ThisComponent.CurrentController.Select(oCell)&apos; debug
+	 	&apos;	print
+		loop
+		lrow = lrow -1
+		oCell = oSheet.GetCellByPosition( 0, lrow )
+	&apos;	ThisComponent.CurrentController.Select(oCell)&apos; debug
+		goto Pronto_ad_inserire
+	end if
+	
+&apos;----------------zona critica di fondo tabella
+&apos;print lrowFine - lrow
+&apos;	If (lrowFine - lrow)&lt; 3  then &apos;  zona critica di fondo tabella
+	If (lrowFine - lrow)&lt; 2  then &apos;  zona critica di fondo tabella
+	&apos;	print &quot;zona critica di fondo tabella&quot;
+		if oSheet.GetCellByPosition( 3, lrow).string = &quot;SOMMANO &quot; then
+			lrow = lrow+1
+			goto Pronto_ad_inserire
+		end if
+		lrowS = lrow 
+		lconta = 0
+		
+		Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;
+			lrow = lrow+1
+			oCell = oSheet.GetCellByPosition( 0, lrow )
+			ThisComponent.CurrentController.Select(oCell)&apos; debug
+		&apos;	print &quot;ecco&quot;
+		Loop
+		&apos; controlla se ci sono troppe righe vuote
+		Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;SOMMANO &quot;
+			lrow = lrow-1
+			lconta = lconta-1
+			oCell = oSheet.GetCellByPosition( 3, lrow )
+			ThisComponent.CurrentController.Select(oCell)&apos; debug
+			print
+		loop
+		lrow = lrow+1
+	&apos;	print &quot;ci siamo&quot;
+			goto Pronto_ad_inserire
+
+	end if  &apos; fine zona critica del fondo
+&apos;-----------------------------------------------
+	
+	oCell = oSheet.GetCellByPosition( 3, lrow )
+
+&apos;	print oSheet.GetCellByPosition( 0, lrow+1).string
+	
+	if  oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;&quot; and oSheet.GetCellByPosition( 1, lrow).string&lt;&gt;&quot;&quot; and _
+			oSheet.GetCellByPosition( 9, lrow).string&lt;&gt;&quot;&quot;	 then
+	&apos;	Print &quot;caso per : esattamente ad inizio voce!&quot;
+		lrow = lrow -1
+		goto Pronto_ad_inserire
+	end if
+	
+	if  oSheet.GetCellByPosition( 0, lrow+1).string &lt;&gt; &quot;&quot; and oSheet.GetCellByPosition( 1, lrow+1).string&lt;&gt;&quot;&quot; then
+	&apos;	Print &quot;&apos;caso per : la riga sopra l&apos;inizio voce!&quot;
+			goto Pronto_ad_inserire
+	end if
+	
+
+	Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;SOMMANO &quot; 
+			if oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;&quot;  and oSheet.GetCellByPosition( 1, lrow).string&lt;&gt;&quot;&quot; then
+					lrow =lrow -1
+		&apos;			print &quot;accrocchio&quot;
+					goto Pronto_ad_inserire
+			end if
+			lrow = lrow +1
+	&apos;		oCell = oSheet.GetCellByPosition( 3, lrow )
+	&apos;		ThisComponent.CurrentController.Select(oCell)&apos; debug
+		&apos;	print &quot;1&quot;
+	loop
+&apos;	print &quot;ins con &quot; &amp; lrow
+	lrow = lrow+1
+	oCell = oSheet.GetCellByPosition( 3, lrow )
+
+	goto Pronto_ad_inserire
+
+&apos;++++++++++++++++++++++++++++++++++++++	
+	Pronto_ad_inserire:
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+  	ThisComponent.CurrentController.Select(oCell)
+ &apos; 	print lrow
+lRowNum= 4 &apos; numero di righe da inserire
+oSheet.getRows.insertByIndex(lrow, lRowNum)
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+&apos;inserisci_rows (lrow, lrowNum ) &apos; Altrenativa di inserimento
+
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia il blocco delle voce (formati + formule + numeri)
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheetSRC=oDoc.NamedRanges.Serv_gen1_8.ReferredCells &apos; Serv_gen1_8 è il nome del range
+&apos;	oCell=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oCell=oSheet.getCellByPosition(0, lrow).CellAddress
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+
+	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
+    oSheet2.copyRange(oCell,oQuellRangeAddresse)
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+  oCelle=thisComponent.getCurrentSelection().getCellAddress()    
+  lrow=oCelle.Row
+  lcol=oCelle.Column
+  oCell = oSheet.GetCellByPosition( lcol +1 , lrow +1 )
+   ThisComponent.CurrentController.Select(oCell)
+&apos;ScreenUpdatingOn
+END SUB
+
+
+
+
+
+&apos;########################################################################
+sub NuovaAnalisi &apos; Inserisce una Nuova analisi di prezzo VERSIONE che usa il circoscrivi
+			&apos; sotto l&apos;analisi su cui si è posizionati
+dim xdocument   as object
+dim xdispatcher as object
+dim xA as string
+Dim lrow as long
+Dim lcont as long
+dim lLastUrow as long
+Dim oSheet
+Dim oCell
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+  	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+ 		if lrow = -1 then
+			 
+			exit sub
+		end if
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+  
+&apos; ambaradan per togliere righe in eccesso in alto
+  	lrowT =1 
+  	oCellT = oSheet.GetCellByPosition( 0 , lrowT)
+  	Do while oSheet.GetCellByPosition( 0, lrowT).string = &quot;&quot;
+	 		lRowT = lrowT+1
+	 		conta = conta+1
+	loop
+	if conta &gt; 3 then
+	 		myrows = oSheet.getrows
+	 		conta = conta-2
+	 		myrows.removebyindex(2,Conta)
+	 	else
+	 		conta = 0 
+	end if
+	&apos; fine eliminazione righe in alto
+
+  lrow = lrow-Conta &apos; ripareggio di eventuali righe eliminate
+  
+	xA = oCell.string
+	
+	sString$ = &quot;Fine ANALISI&quot;
+	oEnd=uFindString(sString$, oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow 
+	If lrow &gt; lrowFine then
+		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
+		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+		exit sub
+	end if
+  	ThisComponent.CurrentController.Select(oCell)&apos; debug
+&apos;	print
+ 	&apos; se lrow è inferiore a 5? (5 sembra un buon compromesso...)
+ 	If lrow &lt; 5 then
+ 			do while xA &lt;&gt; &quot;inizio analisi&quot;
+ 				lrow = lrow -1 
+ 				oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 				xA = oCell.string
+ 			loop
+ 				lrow = lrow +1 
+ 				oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 				xA = oCell.string 			
+ 			do while xA = &quot;&quot;
+ 				lrow = lrow +1 
+ 				oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 				xA = oCell.string 
+ 			loop
+ 		&apos;	print lcont &amp;&quot; fuori  &quot; &amp; lrow
+ 			if lrow &lt; 3 then 
+ 					oSheet.getRows.insertByIndex(lrow, 1)
+ 					lrow = lrow &apos;-1
+ 				else
+ 					lrow = lrow -1
+ 			end if
+ 			oCell = oSheet.GetCellByPosition( 0 , lrow)
+	&apos; 		ThisComponent.CurrentController.Select(oCell)&apos;debug
+ 			goto proprio_in_mezzo	
+ 		else
+ 			do while xA = &quot;&quot;
+ 				lrow = lrow +1 
+ 				oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 				xA = oCell.string
+ 			loop
+ 		&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 	&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug
+ 	&apos;	print xa
+ 			if xA &lt;&gt;  &quot;----&quot; then	&apos; se non è ---- torna giù fino a trovarla
+ 				
+ 				lrow = lrow -1 
+ 				oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 				xA = oCell.string
+ 		&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug
+ 		&apos;		print &quot;1&quot; &amp; xa
+ 				do while xA = &quot;&quot;
+ 					lrow = lrow -1 
+ 					oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 					xA = oCell.string
+ 			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug
+ 			&apos;		print xa
+ 				loop
+ 				If xA = &quot;inizio analisi&quot; then 
+ 					lrow = lrow +1 
+ 					oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 					xA = oCell.string
+ 					do while xA = &quot;&quot;
+ 						lrow = lrow +1 
+ 						oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 						xA = oCell.string
+ 				&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug
+ 				&apos;		print &quot;2&quot; &amp; xa
+ 					loop
+ 					lrow = lrow -1
+ 					oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug
+ 			&apos;	print &quot;pronto &quot; &amp; lrow
+ 					goto salta
+ 					&apos;oCell = oSheet.GetCellByPosition( 0 , lrow)
+ 				end if
+ 		&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug
+ 		&apos;		print xa
+ 			 			end if
+	 end if		
+ 	&apos; loop vai su finchè ne trovi una piena
+ 	&apos; se non è ---- torna giù fino a trovarla
+ 	&apos; Aggiungi una riga e sei pronto ad inserire
+ 
+ 	oVoce = CircoscrivileAnalisi_6 (lrow)
+	lrowS = oVoce.RangeAddress.Startrow &apos;+1
+	lrowE = oVoce.RangeAddress.Endrow
+	lrow =lrowE+1
+		oCell = oSheet.GetCellByPosition( 0 , lrow)
+		proprio_in_mezzo:
+			ThisComponent.CurrentController.Select(oCell)
+salta:			
+lrowNum= 7 &apos; numero di righe da inserire
+
+ oSheet.getRows.insertByIndex(lrow, lrowNum) 
+
+&apos;print &quot;fatto spazio&quot;
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S1
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheet1=oDoc.NamedRanges.blocco_analisi.ReferredCells &apos; blocco_analisi è il nome del range
+	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+&apos;print oshhet2
+	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
+&apos;xray oCelle 
+&apos;xray oQuellRangeAddresse
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+oCelle=thisComponent.getCurrentSelection().getCellAddress()    
+    lrow=oCelle.Row
+oCell = oSheet.GetCellByPosition( 0 , lrow +1)
+    ThisComponent.CurrentController.Select(oCell)
+	
+END SUB
+
+
+
+
+&apos;########################################################################
+sub inserisci_rows (lrow as long, lrowNum as long )&apos; funzione per sostituire il metodo insertByIndex (che non aggiorna i riferimenti)
+&apos; con CellInsertMode Creata in seguito ad una cantonata NON è usata.. (credo  !!)
+dim iSheet_num  as integer
+Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+Dim CellAddress As New com.sun.star.table.CellAddress
+
+	oDoc=thisComponent
+	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+	oSheets = odoc.Sheets
+    nome_sheet = thisComponent.currentcontroller.activesheet.name
+     &apos;  oSheetN = odoc.currentcontroller.activesheet.name
+    iSheet_num = SheetNameToNumber( nome_sheet)
+&apos;    print isheet_num
+    print lrow
+   &apos; oSheets = oDoc.Sheets (oSheet_num)
+	oSheets = oDoc.Sheets (iSheet_num)
+	
+	CellRangeAddress.Sheet = iSheet_num    
+	CellRangeAddress.StartColumn = 0
+	CellRangeAddress.StartRow = lrow
+	CellRangeAddress.EndColumn = 250 
+	CellRangeAddress.EndRow = lrow+lrowNum
+	oSheets.insertCells(CellRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)
+
+
+END SUB
+
+</script:module>

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_0" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                           
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+Sub manodopera_Analisi_on_off &apos; chiude le col della manodopera su Analisi
+
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+
+
+	oRange = oSheet.getCellRangeByposition(7,0,8,0)
+	if oRange.Columns.IsVisible=False Then
+			oRange.Columns.IsVisible=true
+		else
+			oRange.Columns.IsVisible=False
+	end if
+	
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController().freezeAtPosition(11,1)
+	ThisComponent.CurrentController.Select( oPos )
+End Sub
+
+
+Sub sicurezza_Analisi_on_off &apos; chiude le col della manodopera su Analisi
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	
+	&apos; la routine che segue serve a agire in modo diverso sulle analisi se si una un tempalte capace di gestire la sicurezza
+	if  getLastUsedCol(oSheet)&gt; 9 and _
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
+				 	aggiungi=2
+				 else
+				 	aggiungi=0
+				 	msgbox &quot;Questo template è inferiore al 178. E la gestione della Sicurezza NON è gestibile su questa versione del template!&quot;&amp; CHR$(10)_
+					&amp; &quot;Se vuoi gestire la sicurezza devi usare un template più recente (178 o superiore) &quot;&amp; CHR$(10)_
+					&amp; &quot;oppure aggiornare il tuo template.&quot;
+				 	goto fissala			 	
+	end if	
+		
+	oRange = oSheet.getCellRangeByposition(9,0,9,0)
+	if oRange.Columns.IsVisible=False Then
+			oRange.Columns.IsVisible=true
+		else
+			oRange.Columns.IsVisible=False
+			oSheet.getColumns.getByIndex(10).isVisible = false
+	end if
+	
+	fissala:
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController().freezeAtPosition(10,1)
+	ThisComponent.CurrentController.Select( oPos )
+End Sub
+
+
+Sub tag_usata_on_off
+
+	If Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; Then 
+		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
+				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;
+				exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	oPos = ThisComponent.getCurrentSelection()
+	
+	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iscarto = 2  &apos;se vers. 4
+	endif
+	If oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = false then
+		oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
+	  else	 
+		oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = false			
+	end if
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController().freezeAtPosition(lcolbase+11,1)
+	ThisComponent.CurrentController.Select( oPos )
+End Sub
+
+
+
+Sub  Sommario_off &apos; chiude/apre la col del sommario del Computo
+
+	If Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; Then 
+		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
+				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;
+				exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+
+	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+	oPos = ThisComponent.getCurrentSelection()
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iscarto = 2  &apos;se vers. 4
+	endif
+
+	If oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = false or _
+		oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true
+			oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = true
+			Adomanda = msgbox ( &quot;Rigenero il sommario?&quot;&amp; CHR$(10)_
+		        	&amp;&quot;rigenero?&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+		        			wait 100 &apos; per chiudere subito msgbox	
+		        			chiudi_dialoghi	  
+							Rifa_AA_BB_Computo  &apos; Rifa_GG_G1G1_Contab
+						Case 2
+						&apos;	exit sub
+						Case 7
+						&apos;&apos;&apos;
+					end select	
+	   else	 
+			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = false			
+	end if
+	If oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true and _
+		oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false then 
+			ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+			ThisComponent.CurrentController().freezeAtPosition(lcolbase+11,1)
+			ThisComponent.CurrentController.Select( oPos )
+	end if
+End Sub
+
+
+Sub  Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
+				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;
+				exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+
+	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+	oPos = ThisComponent.getCurrentSelection()
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iscarto = 2  &apos;se vers. 4
+	endif
+	If oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false or _
+		oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
+			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = true
+			Adomanda = msgbox ( &quot;Rigenero il sommario?&quot;&amp; CHR$(10)_
+		        	&amp;&quot;rigenero?&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+		        			wait 100 &apos; per chiudere subito msgbox	
+		        			chiudi_dialoghi	  
+							Rifa_GG_G1G1_Contab
+						Case 2
+						&apos;	exit sub
+						Case 7
+						&apos;&apos;&apos;
+					end select	
+	   else	 
+			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false	
+	end if
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController().freezeAtPosition(lcolbase+15,1)
+	ThisComponent.CurrentController.Select( oPos )
+End Sub
+
+
+Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
+				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;
+				exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+
+	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+	oPos = ThisComponent.getCurrentSelection()
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iscarto = 2  &apos;se vers. 4
+	endif
+
+	If oSheet.getColumns.getByIndex(lcolbase+5+iScarto).isVisible = false and _
+		oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+5+iScarto).isVisible = true
+			oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = true
+	  else	 
+			oSheet.getColumns.getByIndex(lcolbase+5+iScarto).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = false			
+	end if
+	
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController().freezeAtPosition(lcolbase+11,1)
+	ThisComponent.CurrentController.Select( oPos )
+End Sub
+
+
+
+
+Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
+				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;
+				exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+	oPos = ThisComponent.getCurrentSelection()
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iscarto = 2  &apos;se vers. 4
+	endif
+
+
+	&apos; la routine che segue serve a agire in modo diverso sulle analisi se si una un tempalte capace di gestire la sicurezza
+	if  getLastUsedCol(oSheet)&gt; 9 and _
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
+				 	aggiungi=2
+				 else
+				 	aggiungi=0
+				 	&apos;goto fissala			 	
+	end if	
+
+	If oSheet.getColumns.getByIndex(lcolbase +3+iScarto).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+3+iScarto).isVisible = true
+			if aggiungi=0 then &apos; il num delle le colonne da aggiungere è usato solo come tag
+				msgbox &quot;Questo template è inferiore al 178. E la gestione della Sicurezza NON è gestibile su questa versione del template!&quot;&amp; CHR$(10)_
+					&amp; &quot;Se vuoi gestire la sicurezza devi usare un template più recente (178 o superiore) &quot;&amp; CHR$(10)_
+					&amp; &quot;oppure usare la procedura di aggiornarnamento del tuo template.&quot;
+			end if
+	  else	 
+			oSheet.getColumns.getByIndex(lcolbase+3+iScarto).isVisible = false				
+	end if
+
+
+	
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController().freezeAtPosition(lcolbase+9+aggiungi,1)
+	ThisComponent.CurrentController.Select( oPos )
+End Sub
+
+
+Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
+
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
+				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;
+				exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+	&apos;_____________________
+	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	&apos;_____________________
+	
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+			iScarto = 0  &apos;se ver. 3
+		else
+			iscarto = 2  &apos;se vers. 4
+	endif
+	lrow= Range2Cell 
+	if lrow = -1 then			 
+			exit sub
+	end if
+	oSheet.unprotect(&quot;&quot;) &apos;non si sa mai..
+	
+	if lrow = 0 then &apos; se è la prima...
+		lrow = 1
+	end if
+	
+	oSheet.getRows.insertByIndex(lrow,1)
+	oSheet.getCellByPosition(lcolbase+0,lrow).CellStyle = &quot;EP-aS&quot;
+	oSheet.getCellByPosition(lcolbase+1,lrow).CellStyle = &quot;EP-a&quot;
+	oSheet.getCellByPosition(lcolbase+2,lrow).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+3,lrow).CellStyle = &quot;EP-mezzo&quot;	
+	oSheet.getCellByPosition(lcolbase+4,lrow).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+5,lrow).CellStyle = &quot;EP-mezzo %&quot;
+	oSheet.getCellByPosition(lcolbase+6,lrow).CellStyle = &quot;EP-mezzo&quot;
+&apos;	oSheet.getCellByPosition(lcolbase+6,lrow).formula = &quot;=IF(E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp;&quot;)&quot;  &apos;giovanna ColumnNameOf(lcolbase+
+	oSheet.getCellByPosition(lcolbase+6,lrow).formula = _
+	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;)&quot; 
+	&apos;&apos;	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+3) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+3) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+4) &amp; &quot;)&quot; 
+&apos;print &quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; &quot;)&quot;
+
+	&apos; iScarto è per la versione 4 (questo pezzo non è stato ancora testato)
+&apos;	if iscarto &lt;&gt; 0 then
+&apos;		oSheet.getCellByPosition(lcolbase+iscarto+5,lrow).CellStyle =  &quot;EP-mezzo %&quot;
+&apos;		oSheet.getCellByPosition(lcolbase+iscarto+6,lrow).CellStyle =  &quot;EP-mezzo&quot;
+&apos;			oSheet.getCellByPosition(lcolbase+6,lrow).formula = _
+&apos;			 &quot;=IF(E&quot; &amp; lrow+1 &amp; &quot;*H&quot; &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrow+1 &amp; &quot;*H&quot; &amp; lrow+1 &amp;&quot;)&quot;
+&apos;	end if &apos;=IF(E8*F8=0;&quot;&quot;;E8*F8)
+	
+	oSheet.getCellByPosition(lcolbase+iscarto+7,lrow).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+iscarto+8,lrow).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+iscarto+9,lrow).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+iscarto+10,lrow).CellStyle = &quot;EP statistiche&quot;
+	oMioRange=thisComponent.getCurrentSelection()
+	oMioRange.Rows.OptimalHeight = true
+&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)
+	ThisComponent.CurrentController.Select (oSheet.getCellByPosition(lcolbase+iscarto,lrow)
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then	
+		msgbox &quot;In questo modo il &apos;prezzo&apos; lo devi compilare a mano!&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;Se invece vuoi acquisire dei prezzi da un Prezzario devi aprire un file prezziario e da quello inviare qui la voce...&quot; &amp; CHR$(10)_
+				&amp; &quot; (Eventualmente consulta il &apos;Tutorial per iniziare&apos; al cap. &apos;5.6 Inserire un nuovo prezzo in “Elenco Prezzi&apos;)  &quot;
+	end if
+END SUB
+
+
+
+SUB chiudi_dialoghi  &apos; chiude tutte le dialog
+			&apos; modificare qui se si aggiungono delle dialog
+	if Not isNull (oDialogScenari) then 
+		oDialogScenari.endExecute() 
+	end if
+	if Not isNull (oDialogScenari_A) then 
+		oDialogScenari_A.endExecute() 
+	end if
+	if Not isNull (oDialogScenari_EP) then 
+		oDialogScenari_EP.endExecute() 
+	end if
+	if Not isNull (oDialogScenari_AN) then 
+		oDialogScenari_AN.endExecute() 
+	end if
+	if Not isNull (oDialogScenari_2) then &apos;birra
+		oDialogScenari_2.endExecute() 
+	end if&apos;			
+END SUB
+
+
+
+
+</script:module>

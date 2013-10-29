@@ -1,0 +1,613 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_8" script:language="StarBasic">REM  *****  BASIC  *****
+
+SUB Rifa_Tutte_Analisi  &apos; di Computo MOLTO vecchio
+			Adomanda = msgbox ( &quot;Sto per rifare (non solo riformattare) tutte le voci di Analisi!&quot;&amp; CHR$(10)_
+		        	&amp;&quot;           (Si consiglia di salvare prima il doc)&quot;&amp; CHR$(10)_
+		        	&amp;&quot;Eseguo ?&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+							&apos;dovrebbe proseguire...
+						Case 2
+							exit sub
+						Case 7
+							goto passa_oltre &apos; cioè salta la procedura
+					end select	
+			sproteggi_sheet_TUTTE
+			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)&apos; 
+			lLastUrow = getLastUsedRow(oSheet)
+			lrowInizio = 3
+			&apos;lLastUrow = 15&apos;
+			For i = lrowinizio To lLastUrow Step 1
+				if  oSheet.GetCellByPosition(0 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(5 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(0 , i).string &lt;&gt; &quot;----&quot; then
+					&apos; è la prima riga
+					lRowS = i
+				end if
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;----&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i).string = &quot;&quot; then
+					&apos; è l&apos;ultima riga
+					lRowE = i
+					oVoce = oSheet.getCellRangeByPosition(0,lRowS,9,lRowE)
+					ldif = Rifa_AnalisiS (oVoce)
+					&apos;print i &amp; &quot; - &quot; &amp; ldif
+					i = i+2
+					lLastUrow = lLastUrow+2
+				end if				
+				
+			next i
+			passa_oltre:
+end sub
+
+
+
+Sub Rifa_Analisi &apos; da eseguire direttamente su una analisi (di Computo MOLTO vecchio)
+				&apos; selezionando PRIMA le righe della voce
+	 Rifa_AnalisiS
+end sub
+
+Function Rifa_AnalisiS (optional oVoce) &apos;as object) &apos; agisce su singola Analisi di Computo MOLTO vecchio
+			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)&apos; 
+			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+			
+			if ismissing(oVoce) or isnull(oVoce) then 
+				oVoce=thisComponent.getCurrentSelection()
+				xray oVoce
+			end if
+			lLastUrow = oVoce.RangeAddress.endRow  
+			lrowInizio = oVoce.RangeAddress.startRow  
+			lquante = lLastUrow-lrowinizio+2
+			
+			oSheet.getRows.insertByIndex(lLastUrow+1,lquante) 
+			
+			&apos;oSrc = oSheetSRC.getCellRangeByPosition(45,41,54,43).RangeAddress
+			oSrc = oSheetSRC.getCellRangeByPosition(1,44,9,47).RangeAddress
+			oRangeSRC = oSheetSRC.getCellRangeByPosition(1,44,9,47)	
+			oDest = oSheet.GetCellByPosition(0 ,lLastUrow+1).CellAddress
+   			oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera				
+			
+		&apos;	oSrc = oSheetSRC.getCellRangeByPosition(45,47,54,47).RangeAddress
+			oSrc = oSheetSRC.getCellRangeByPosition(1,50,9,50).RangeAddress
+			oRangeSRC = oSheetSRC.getCellRangeByPosition(1,50,9,50)		
+			oDest = oSheet.GetCellByPosition(0 ,lLastUrow+lquante).CellAddress
+   			oSheet.copyRange(oDest, oSrc) 
+   		&apos;	print lLastUrow+1
+   			oSheet.GetCellbyPosition(6, lLastUrow+2).setformula(&quot;=Sum(G&quot; &amp; lLastUrow+4 &amp; &quot;:G&quot; &amp; lLastUrow+lquante+1 &amp; &quot;)&quot;)
+   			oSheet.GetCellbyPosition(8, lLastUrow+2).setformula(&quot;=Sum(I&quot; &amp; lLastUrow+4 &amp; &quot;:I&quot; &amp; lLastUrow+lquante+1 &amp; &quot;)&quot;)
+   		&apos;	print (&quot;=Sum(G&quot; &amp; lLastUrow+4 &amp; &quot;:G&quot; &amp; lLastUrow+lquante+1 &amp; &quot;)&quot;)
+	&apos;		lrowInizio = 6 &apos;3
+			&apos;print lrowInizio&apos;&apos;
+			&apos;print lLastUrow 
+
+			For i = lrowinizio To lLastUrow Step 1
+			&apos;	print i
+				if  oSheet.GetCellByPosition(0 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(5 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(7 , i).string &lt;&gt; &quot;&quot;    then
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+				&apos;	Print  &quot; i è la prima riga della voce...&quot;
+			&apos;		oSheet.getRows.insertByIndex(lLastUrow+1,lquante) 
+		
+   					oRange = oSheet.getCellRangeByPosition (0,i,2,i)
+ 					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)	
+ 					oRangeSRC =	oSheet.getCellRangeByPosition (0,lLastUrow+2,2,lLastUrow+2)			
+ 				  	oRangeSRC.setDataArray( aSaveData )&apos; 
+				end if 
+
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(5 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(7 , i).string = &quot;&quot; then
+					&apos; seconda riga... non fare nulla
+				end if
+
+				if oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(7 , i).string = &quot;&quot; then
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+		&apos;&apos;			print &quot; riga di &quot;componente&quot;
+					lcountDown = i+lquante
+					
+				&apos;	oSrc = oSheetSRC.getCellRangeByPosition(45,44,54,44).RangeAddress
+					oSrc = oSheetSRC.getCellRangeByPosition(1,47,9,47).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(1,47,9,47)		
+					oDest = oSheet.GetCellByPosition(0 ,lcountDown).CellAddress
+   					oSheet.copyRange(oDest, oSrc) 
+
+					If Left (oSheet.GetCellByPosition(1 , i).getFormula, 8) = &quot;=CONCATE&quot; then	
+							oRange = oSheet.getCellRangeByPosition (1,i,4,i)
+ 							aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  							oRangeSRC =	oSheet.getCellRangeByPosition(1 ,lcountDown, 4,lcountDown)
+   				 		 	oRangeSRC.setDataArray( aSaveData )  
+   				 		 else
+							oRange = oSheet.getCellRangeByPosition (1,i,5,i)
+ 							aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  							oRangeSRC =	oSheet.getCellRangeByPosition(1 ,lcountDown, 5, lcountDown)
+   				 		 	oRangeSRC.setDataArray( aSaveData )  
+ 							oRange = oSheet.getCellRangeByPosition (7,i,8,i)
+ 							aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  							oRangeSRC =	oSheet.getCellRangeByPosition(7 ,lcountDown, 8, lcountDown)
+   				 		 	oRangeSRC.setDataArray( aSaveData )  
+  				 		 	
+   				 		 &apos;	oSheet.GetCellByPosition(7 ,lcountDown).string 	= &quot;&quot;
+   					end if
+
+				end if
+			Next i 	
+		
+		&apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,lrowInizio-1,0,lLastUrow))
+		&apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,lrowInizio,0,lrowInizio+lLastUrow-lrowInizio))
+		&apos;	print &quot;Elimino queste &quot; &amp; lLastUrow-lrowInizio
+			&apos;exit sub
+			myrows = oSheet.getrows
+			myrows.removebyindex(lrowInizio,lLastUrow-lrowInizio+1)
+			Rifa_AnalisiS = lLastUrow-lrowInizio+1
+End Function
+
+
+Sub Tempo &apos; &apos; mette formule di Vlookup per le desc... serve per pet 05
+
+			Adomanda = msgbox ( &quot;Sto per riformattare le voci di computo!&quot;&amp; CHR$(10)_
+		        	&amp;&quot;           (Si consiglia di salvare prima il doc)&quot;&amp; CHR$(10)_
+		        	&amp;&quot;Eseguo la riformattazione?&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+							&apos;dovrebbe proseguire...
+						Case 2
+							exit sub
+						Case 7
+								exit sub
+					end select	
+			sproteggi_sheet_TUTTE
+			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+			lLastUrow = getLastUsedRow(oSheet)
+			lrowInizio = 3
+			&apos;lLastUrow = 17&apos;
+			For i = lrowinizio To lLastUrow Step 1
+				&apos;print i
+				if	oSheet.GetCellByPosition(1 , i).Cellstyle = &quot;Comp TOTALI&quot; then
+					exit for
+				end if
+			&apos;	print &quot;eccomi 1    &quot; &amp; i
+				if  oSheet.GetCellByPosition(1 , i).Cellstyle = &quot;comp Art-EP&quot; and _
+					oSheet.GetCellByPosition(1 , i).string &lt;&gt; &quot;xxBeta&quot;  then
+					oSheet.GetCellByPosition(2 , i).formula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;&quot; &amp; &quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
+				
+				&apos;	oSheet.GetCellByPosition(2 , i).formula = &quot; =CONCATENATE(&quot;&quot; &quot; &amp; &quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()); &quot;&quot; &quot;&quot;)&quot;
+				&apos;	=CONCATENATE(&quot; &quot;;VLOOKUP(B14;elenco_prezzi;2;FALSE());&quot; &quot;)
+			&apos;	sFormula = &quot;=VLOOKUP(B&quot; &amp; lrowE &amp; &quot;;elenco_prezzi;5;FALSE())&quot;
+			
+				end if
+				if oSheet.GetCellByPosition(0 , i).Cellstyle = &quot;Comp End Attributo&quot; then
+					lrow = i
+					do while oSheet.GetCellByPosition(1 , lrow).string = &quot;&quot;
+						lrow = lrow -1
+					loop
+					if oSheet.GetCellByPosition(1 , lrow).string &lt;&gt; &quot;xxBeta&quot;  then
+							&apos;=VLOOKUP(B10;elenco_prezzi;5;FALSE())
+						oSheet.GetCellByPosition(11 , i).formula = &quot;=VLOOKUP(B&quot; &amp; lrow+1 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;	
+					end if 
+				end if
+			next i
+end SUB
+
+
+
+								&apos; fatta nel luglio 2008;: ottima e pulita... Aggiornata gen 2011&apos;
+Sub Riformatta_Voci_computo &apos; &apos; mette gli attributi voce anche a un computo vecchio (ma non troppo vecchio)
+							&apos; e lo riformatta secondo la maschera in S5
+
+			Adomanda = msgbox ( &quot;Sto per riformattare le voci di computo!&quot;&amp; CHR$(10)_
+		        	&amp;&quot;           (Si consiglia di salvare prima il doc)&quot;&amp; CHR$(10)_
+		        	&amp;&quot;Eseguo la riformattazione? (Se rispondi NO, ti proporrò altre azioni)&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+							&apos;dovrebbe proseguire...
+						Case 2
+							exit sub
+						Case 7
+							goto passa_oltre &apos; cioè salta la procedura
+					end select	
+			sproteggi_sheet_TUTTE
+			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+			lLastUrow = getLastUsedRow(oSheet)
+			lrowInizio = 3
+			&apos;lLastUrow = 15&apos;
+			For i = lrowinizio To lLastUrow Step 1
+				&apos;print i
+				if	oSheet.GetCellByPosition(1 , i).Cellstyle = &quot;Comp TOTALI&quot; then
+					exit for
+				end if
+			&apos;	print &quot;eccomi 1    &quot; &amp; i
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i+1).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i+1).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i+1).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i+1).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i+1).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Livello-1-scritta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sotto_&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 valuta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-2-sotto_&quot; then
+					&apos;oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Default&quot; &apos; tolto il 23 gen 2011 per favorire computi MOLTO vecchi
+					
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+					&apos;Print  &quot; i è la prima riga della voce...&quot;
+
+					&apos;formatta applicando lo stile della maschera 4,44,42,45 prime due righe
+					oSrc = oSheetSRC.getCellRangeByPosition(0,8,42,9).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(0,8,42,9)
+					
+					oRange = oSheet.getCellRangeByPosition (0,i,42,i+1)
+ 					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+   					&apos; applicando gli stili		  
+ 				  	&apos; poi rimette solo i dati
+ 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   
+ 				  	
+ 				  	&apos;rimette la formula di cerca verticale
+ 					oSrc = oSheetSRC.getCellRangeByPosition(2,9,9,9).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(2,9,9,9)
+  					oDest = oSheet.GetCellByPosition(2 , i).CellAddress
+   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+ 				  	
+				end if 
+				
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(3 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(9 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(11 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(18 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;SOMMANO &quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Livello-1-scritta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sotto_&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 valuta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-2-sotto_&quot; then
+					&apos;oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Default&quot; &apos; tolto il 23 gen 2011 per favorire computi MOLTO vecchi
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+			&apos;		print &quot;i la riga intermedia&quot;
+					
+					&apos;formatta applicando lo stile della maschera_ la riga con i dettagli quantità
+					oSrc = oSheetSRC.getCellRangeByPosition(0,10,42,10).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(0,10,42,10)
+					
+					oRange = oSheet.getCellRangeByPosition (0,i,42,i)
+ 					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+   					&apos; applicando gli stili		  
+ 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   		
+				end if
+				
+				
+				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(4 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(5 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(6 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(7 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(8 , i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(9 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(11 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(18 , i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Livello-1-scritta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-1-sotto_&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 sopra&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello2 valuta&quot; and _
+					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-2-sotto_&quot; or _
+					oSheet.GetCellByPosition(2 , i).string = &quot;SOMMANO&quot; or _
+					oSheet.GetCellByPosition(2 , i).string = &quot;SOMMANO &quot;	then				
+					&apos;oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;Default&quot; &apos; tolto il 23 gen 2011 per favorire computi MOLTO vecchi
+					&apos;oSheet.GetCellByPosition(3 , i).string &lt;&gt; &quot;&quot; &apos; tolto il 23 gen 2011 per favorire computi MOLTO vecchi
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
+				&apos;	print &quot;i è l&apos;ultima riga della voce&quot;
+					
+					&apos;formatta applicando lo stile della maschera_ la riga in fondo alla voce
+					oSrc = oSheetSRC.getCellRangeByPosition(0,11,42,11).RangeAddress
+					oRangeSRC = oSheetSRC.getCellRangeByPosition(0,11,42,11)
+					
+					oRange = oSheet.getCellRangeByPosition (0,i,42,i)
+ 					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
+  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+   					&apos; applicando gli stili		  
+ 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   
+				end if
+			 		lrowFin = i &apos;serve??	 		
+			Next i 	
+			passa_oltre:
+		&apos;	Adomanda = msgbox ( &quot;I Formati sono stati applicati!&quot;&amp; CHR$(10)_
+			Adomanda = msgbox ( &quot;Sistemo i TAG?&quot; ,35, &quot;&quot;)	
+		        	Select Case Adomanda
+		        		Case 6
+							&apos;questa dovrebbe costruire i tag
+							compila_tag_con_codice_voce (0)
+							Ripara_tag_corrotti (0)
+						Case 2
+							exit sub
+					end select		
+
+			Adomanda = msgbox( &quot;Proseguo con il controllo delle somme ? &quot; ,35, &quot;&quot;)
+	        	Select Case Adomanda
+		        	Case 6		
+						Controlla_Somme_Su_Tutto_Computo (0)
+					Case 2
+							exit sub
+					end select		
+			Adomanda =msgbox(&quot;Proseguo con la riscrittura delle formule ? &quot; ,35, &quot;&quot;)			
+	        	Select Case Adomanda
+		        	Case 6				&apos; questa rimette le moltiplicazioni (perchè quelle sopra le ha cancellate..)
+								&apos;rivedere il codice sopra...
+						Rifa_Formule_Orizzontali
+			
+					Case 2
+							exit sub
+				end select		
+
+			msgbox &quot;Adesso ho veramente finito!&quot;
+End Sub
+
+sub Rifa_Formule_Orizzontali  &apos;riscrive le formule sull&apos;ultima riga della voce di computo
+	&apos; con la formula scritta in questo codice
+  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+  oCell = oSheet.GetCellbyPosition( 0, 0 )
+  oCursor = oSheet.createCursorByRange(oCell)
+  oCursor.GotoEndOfUsedArea(True)
+  aAddress = oCursor.RangeAddress
+  nEndRow = aAddress.EndRow
+	 lRow = 3	
+&apos; lRow = 10  &apos;tempor per prova	 
+&apos;nEndRow =20 &apos;tempor per prova
+  For i = lrow To nEndRow     &apos;row by row.
+  ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i))
+&apos;  print &quot;ciccia&quot;
+
+
+		If oSheet.GetCellByPosition( 0, i ).CellStyle = &quot;comp 10 s&quot; then &apos;	  	
+ 			&apos;rimette le moltiplicazioni dei componenti&quot;
+ 				  	lRiga = i+1
+ 				  	oSheet.getCellByPosition(9 , i).formula = &quot;=PRODUCT(E&quot; &amp; lriga &amp; &quot;:I&quot; &amp; lriga &amp; &quot;)&quot;
+ 				  	oSheet.getCellByPosition(10 , i).formula = &quot;=PRODUCT(E&quot; &amp; lriga &amp; &quot;:I&quot; &amp; lriga &amp; &quot;)&quot;
+ 		end if		  	
+ 		
+      	If oSheet.GetCellByPosition( 0, i ).CellStyle = &quot;Comp End Attributo&quot; then &apos; or  oCellB.CellStyle = &quot;livello2 valuta&quot;
+      				  	
+ 				  	&apos;rimette le moltiplicazioni dell&apos;ultima riga
+ 				  	lRiga = i+1
+ 				  	
+ 				  	lTriga = i
+ 				  	do while oSheet.GetCellByPosition( 1, lTriga ).CellStyle &lt;&gt; &quot;comp Art-EP&quot;
+ 				 &apos; 	print lTriga &amp; &quot;  dentro&quot;
+ 				  		lTriga = lTriga -1
+ 				  		
+ 				  	
+ 				  	loop
+ 				  &apos;	print lTriga &amp; &quot;  fuori&quot;
+ 				  
+ 				  	oSheet.getCellByPosition(18 , i).formula = &quot;=J&quot; &amp; lriga &amp; &quot;*L&quot; &amp; lriga
+ 				  	oSheet.getCellByPosition(19 , i).formula = &quot;=L&quot; &amp; lriga &amp; &quot;*K&quot; &amp; lriga  				  											
+ 				  &apos;	oSheet.getCellByPosition(20 , i).formula = &quot;=SE((T&quot; &amp; lriga &amp; &quot;+S&quot; &amp; lriga &amp; &quot;)&gt;0;T&quot; &amp; lriga &amp; &quot;-S&quot; &amp; lriga &amp; &quot;;0)&quot;
+ 				  	oSheet.getCellByPosition(20 , i).formula = &quot;=IF((T&quot; &amp; lRiga &amp; &quot;-S&quot; &amp; lRiga &amp; &quot;)&gt;0;T&quot; &amp; lRiga &amp; &quot;-S&quot; &amp; lRiga &amp; &quot;;0)&quot;
+ 				  	
+ 				  	oSheet.getCellByPosition(21 , i).formula = &quot;=IF((T&quot; &amp; lriga &amp; &quot;-S&quot; &amp; lriga &amp; &quot;)&lt;0;-(T&quot; &amp; lriga &amp; &quot;-S&quot; &amp; lriga &amp; &quot;);0)&quot;
+ 				  	oSheet.getCellByPosition(22 , i).formula =&quot;=PRODUCT($L&quot; &amp; lriga &amp; &quot;;M&quot; &amp; lriga &amp; &quot;)&quot;
+ 				  	oSheet.getCellByPosition(23 , i).formula =&quot;=PRODUCT($L&quot; &amp; lriga &amp; &quot;;N&quot; &amp; lriga &amp; &quot;)&quot;
+ 				  	oSheet.getCellByPosition(24 , i).formula =&quot;=PRODUCT($L&quot; &amp; lriga &amp; &quot;;O&quot; &amp; lriga &amp; &quot;)&quot;
+ 				  	oSheet.getCellByPosition(25 , i).formula =&quot;=PRODUCT($L&quot; &amp; lriga &amp; &quot;;P&quot; &amp; lriga &amp; &quot;)&quot;
+ 				  	oSheet.getCellByPosition(26 , i).formula =&quot;=PRODUCT($L&quot; &amp; lriga &amp; &quot;;Q&quot; &amp; lriga &amp; &quot;)&quot;
+ 				  	oSheet.getCellByPosition(27 , i).formula =&quot;=PRODUCT($L&quot; &amp; lriga &amp; &quot;;R&quot; &amp; lriga &amp; &quot;)&quot;
+ 				  	oSheet.getCellByPosition(28 , i).formula = &quot;=S&quot; &amp; lriga &amp; &quot;-(SUM(W&quot; &amp; lriga &amp; &quot;:AB&quot; &amp; lriga &amp; &quot;))&quot;
+ 				  	oSheet.getCellByPosition(29 , i).formula = &quot;=VLOOKUP(B&quot; &amp; lTriga+1 &amp; &quot;;elenco_prezzi;6;FALSE())&quot;
+ 				  	oSheet.getCellByPosition(30 , i).formula = &quot;=IF(AD&quot; &amp; lriga &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;; PRODUCT(AD&quot; &amp; lriga &amp; &quot;*S&quot; &amp; lriga &amp; &quot;))&quot;      	
+ 				  	oSheet.getCellByPosition(36 , i).formula = &quot;=IF(ISERROR(S&quot; &amp; lriga &amp; &quot;);&quot;&quot;&quot;&quot;&quot; &amp; &quot;;IF(S&quot; &amp; lriga &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;;S&quot; &amp; lriga &amp; &quot;;&quot;&quot;&quot;&quot;))&quot;        	
+      	end if
+
+  Next i
+end sub
+
+
+
+&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+sub Ripara_tag_corrotti (msg As Boolean)
+&apos; cioè i tag dei componenti che hanno perso il link alla riga sotto (quella di sommano)&apos;
+  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+ &apos; oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)&apos;pirlicchio
+  oCell = oSheet.GetCellbyPosition( 0, 0 )
+  oCursor = oSheet.createCursorByRange(oCell)
+  oCursor.GotoEndOfUsedArea(True)
+  aAddress = oCursor.RangeAddress
+  nEndRow = aAddress.EndRow
+	 lRow = 3	
+
+
+  For nCurRow = lrow To nEndRow     &apos;row by row.
+  ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, nCurRow))
+
+      	If oSheet.GetCellByPosition( 0, nCurRow ).CellStyle = &quot;Comp Start Attributo&quot; then &apos; or  oCellB.CellStyle = &quot;livello2 valuta&quot;
+      		lrow = nCurRow
+      		
+ 			do while oSheet.GetCellByPosition( 1, lrow ).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot; or _
+ 					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
+ 				&apos;	  print &quot;ciccia &quot; &amp; lrow
+ 				lrow=lrow+1	
+ 			loop
+ 			sFormula1 = &quot;=AF$&quot; &amp; lRow+1
+ 			sFormula2 = &quot;=AG$&quot; &amp; lRow+1
+ 			sFormulaC = &quot;=AJ$&quot; &amp; lRow+1
+ 			sFormulaB = &quot;=AI$&quot; &amp; lRow+1
+ 			sFormulaA = &quot;=AH$&quot; &amp; lRow+1
+ &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, lrow+1))
+ 			sFormulaNew = &quot;=A$&quot; &amp; lRow+1
+ 	&apos;	print sFormulaNew
+ 		&apos;	sFormula1 = &quot;=AF&quot; &amp; lRow+1 &apos; tentativo di eliminare il rif $
+ 		&apos;	sFormula2 = &quot;=AG&quot; &amp; lRow+1 &apos; fallito perché aggiungi riga si limita a copiare
+ 		&apos;	sFormulaC = &quot;=AJ&quot; &amp; lRow+1 &apos; e poi prob non serve...
+ 		&apos;	sFormulaB = &quot;=AI&quot; &amp; lRow+1
+ 		&apos;	sFormulaA = &quot;=AH&quot; &amp; lRow+1 			
+ 			lRow  = nCurRow
+ 			do while oSheet.GetCellByPosition( 1, lrow ).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot;  or _
+ 					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
+ 				oSheet.GetCellByPosition(31 , lrow).Formula = sFormula1
+ 				oSheet.GetCellByPosition(32 , lrow).Formula = sFormula2
+ 				oSheet.GetCellByPosition(33 , lrow).Formula = sFormulaA
+ 				oSheet.GetCellByPosition(34 , lrow).Formula = sFormulaB
+				oSheet.GetCellByPosition(35 , lrow).Formula = sFormulaC
+				oSheet.GetCellByPosition(43 , lrow).Formula = sFormulaNew	
+		&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, lrow))
+		&apos;		print sFormulaNew
+				lrow = lrow + 1
+ 			loop&apos;		
+		end if
+  Next nCurRow
+  suona_2
+  &apos;suona_lungo
+    if msg = 1 then
+		print &quot;fine riparazione degli eventuali tag corrotti...&quot;
+	end if
+end sub
+
+
+&apos;ATTENZIONE NON FUNZIONA:::
+sub ricostruisci_tag &apos;mette insieme compila_tag_con_codice_voce e Ripara_tag_corrotti
+&apos;NON FUNZIONA E INCASUNA TUTTO
+  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+  oCell = oSheet.GetCellbyPosition( 0, 0 )
+  oCursor = oSheet.createCursorByRange(oCell)
+  oCursor.GotoEndOfUsedArea(True)
+  aAddress = oCursor.RangeAddress
+  nEndRow = aAddress.EndRow
+	 lRow = 10	
+
+lrow = 200
+
+  For nCurRow = lrow To nEndRow     &apos;row by row.
+  ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, nCurRow))
+
+      	If oSheet.GetCellByPosition( 0, nCurRow ).CellStyle = &quot;Comp Start Attributo&quot; then &apos; or  oCellB.CellStyle = &quot;livello2 valuta&quot;
+      		lrow = nCurRow
+      		
+ 			do while oSheet.GetCellByPosition( 1, lrow ).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot; or _
+ 					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
+ 				&apos;	  print &quot;ciccia &quot; &amp; lrow
+ 				lrow=lrow+1	
+ 			loop
+ 			sFormula1 = &quot;=AF$&quot; &amp; lRow+1
+ 			sFormula2 = &quot;=AG$&quot; &amp; lRow+1
+ 			sFormulaC = &quot;=AJ$&quot; &amp; lRow+1
+ 			sFormulaB = &quot;=AI$&quot; &amp; lRow+1
+ 			sFormulaA = &quot;=AH$&quot; &amp; lRow+1
+ 			sFormula = &quot;=B&quot; &amp; nCurRow+1 			
+ 			lRow  = nCurRow
+ 			oSheet.GetCellByPosition(35 , lrow).Formula = sFormula
+ 			oSheet.GetCellByPosition(31 , lrow).Cellstyle = &quot;compTagRiservato&quot;					
+			oSheet.GetCellByPosition(32 , lrow).Cellstyle=&quot;compTagRiservato&quot;
+			oSheet.GetCellByPosition(35 , lrow).Cellstyle=&quot;compTagRiservato&quot;
+ 			do while oSheet.GetCellByPosition( 1, lrow ).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot;  or _
+ 					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
+ 				oSheet.GetCellByPosition(31 , lrow).Formula = sFormula1
+ 				oSheet.GetCellByPosition(32 , lrow).Formula = sFormula2
+ 				oSheet.GetCellByPosition(33 , lrow).Formula = sFormulaA
+ 				oSheet.GetCellByPosition(34 , lrow).Formula = sFormulaB
+				oSheet.GetCellByPosition(35 , lrow).Formula = sFormulaC
+				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, lrow))
+				lrow = lrow + 1
+ 			loop&apos;		
+		end if
+  Next nCurRow
+  suona_2
+  &apos;suona_lungo
+	print &quot;fine riparazione degli eventuali tag corrotti...&quot;
+end sub
+
+
+sub compila_tag_con_codice_voce (msg As Boolean)
+
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+  oCell = oSheet.GetCellbyPosition( 0, 0 )
+  oCursor = oSheet.createCursorByRange(oCell)
+  oCursor.GotoEndOfUsedArea(True)
+  aAddress = oCursor.RangeAddress
+  nEndRow = aAddress.EndRow
+	 lRow = 2
+&apos;xray oSheet.GetCellByPosition(31 , 7)&apos;.getPropertyStates
+  For nCurRow = lrow To nEndRow     &apos;row by row.
+      	If oSheet.GetCellByPosition( 1, nCurRow ).CellStyle = &quot;comp Art-EP&quot; or _
+      		oSheet.GetCellByPosition( 0, nCurRow ).CellStyle = &quot;comp progress&quot; then 
+      		lrow = nCurRow
+ 			do while oSheet.GetCellByPosition( 1, lrow ).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot; or _
+ 					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
+ 					if lrow &gt;= nEndRow then
+ 						exit do
+ 					end if
+ 				lrow=lrow+1
+ 			loop	
+ 			sFormula = &quot;=B&quot; &amp; nCurRow+1
+  			sFormulanew = &quot;=A&quot; &amp; nCurRow+1
+ 		&apos;	print sFormula  
+			oSheet.GetCellByPosition(35 , lrow).Formula = sFormula
+			oSheet.GetCellByPosition(43 , lrow).Formula = sFormulanew
+			oSheet.GetCellByPosition( 43 , lRowMod).cellstyle = &quot;noprint_2&quot;	
+			oSheet.GetCellByPosition(31 , lrow).Cellstyle = &quot;compTagRiservato&quot;					
+			oSheet.GetCellByPosition(32 , lrow).Cellstyle=&quot;compTagRiservato&quot;
+			oSheet.GetCellByPosition(35 , lrow).Cellstyle=&quot;compTagRiservato&quot;				
+			nCurRow = lrow+1
+		end if
+  Next
+  suona_2
+  if msg = 1 then
+	print &quot;fine compilazione dei tag&quot;
+  end if
+
+end sub
+
+
+
+function riproduci_colori (nCurCol, nCurRow, nEndcol, nEndRow as long) &apos; in lavorazione e non usata
+oSheet = ThisComponent.currentController.activeSheet
+&apos;  For nCurCol To nEndCol       &apos;Go through the range column by column,
+&apos;&apos;    For nCurRow = 0 To nEndRow     &apos;row by row.
+&apos;      oCellSRC = oSheet.GetCellByPosition( nCurCol, nCurRow )
+&apos;      lcolorSRC=oCellSRC.Cellbackcolor
+ &apos;     lCharColorSRC=oCellSRC.CharColor
+ &apos;     xray oCellSRC
+&apos;      oCellDest = oSheetDest.GetCellByPosition( nCurCol, nCurRow )
+&apos;      oCellDest.Cellbackcolor = lcolorSRC 
+ &apos;     oCellDest.CharColor = lCharColorSRC  
+    
+  &apos;    xray oCellDest
+&apos;    Next
+&apos;  Next
+End function
+
+</script:module>

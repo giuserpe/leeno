@@ -1,0 +1,992 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ShortCut" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                  
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+REM Il codice contenuto in questo modulo è parte integrante del pacchettFo UltimusFree					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+Sub Registra_Tasti_inDoc &apos; a livello del documento
+
+on error resume next
+
+Dim aKeyEvent As New com.sun.star.awt.KeyEvent
+
+
+&apos;____________________________Ctrl 0
+with  aKeyEvent  
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 
+	. KeyCode = com.sun.star.awt.Key.NUM0
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Alt 0
+with  aKeyEvent  
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2 
+	. KeyCode = com.sun.star.awt.Key.NUM0
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Ctrl shift P
+with  aKeyEvent  
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1+ com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.P
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Finale.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+&apos;____________________________Ctrl 1
+with  aKeyEvent  
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 
+	. KeyCode = com.sun.star.awt.Key.NUM1
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Elenco_Prezzi?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Alt 1
+with  aKeyEvent  
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2 
+	. KeyCode = com.sun.star.awt.Key.NUM1
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Elenco_Prezzi?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Ctrl 2
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.NUM2
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+&apos;xray shortCuts
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.setKeyEvent( aKeyEvent, &quot;macro:///UltimusFree2.Voci_Sistema.Riformatta_VCA&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+&apos;____________________________Alt 2
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.NUM2
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.setKeyEvent( aKeyEvent, &quot;macro:///UltimusFree2.Voci_Sistema.Riformatta_VCA&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Ctrl 3 
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.NUM3
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Computo?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Alt 3 
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.NUM3
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Computo?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Ctrl 4
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.NUM4
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Focus.Vai_Dati_Computo?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Alt 4
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.NUM4
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Focus.Vai_Dati_Computo?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+&apos;____________________________Ctrl 5
+&apos;sCommand = &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application&quot;
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.NUM5
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent ( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application&quot; )
+shortCuts.store
+ 
+&apos;(&quot;com.sun.star.calc.Spreadsheet&quot;)
+&apos;oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.calc.Spreadsheet&quot;)
+
+&apos;sCommand = &quot;vnd.sun.star.script:Standard.Module1.Main?language=Basic&amp;location=application&quot;
+&apos;oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.TextDocument&quot;)
+&apos;oWriterShortCutMgr = oModuleCfgMgr.getShortCutManager
+&apos;oWriterShortCutMgr.removeKeyEvent( aKeyEvent)
+&apos;oWriterShortCutMgr.setKeyEvent( aKeyEvent, sCommand )
+&apos;oWriterShortCutMgr.store
+
+&apos;exit sub
+&apos;____________________________Alt 5
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.NUM5
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+&apos;shortCuts.store(aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application&quot;) 
+
+
+
+&apos;____________________________Ctrl 6 
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.NUM6
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;exit sub
+&apos;____________________________Alt 6 
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.NUM6
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+
+&apos;____________________________Ctrl 8 
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.NUM8
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager    &apos;baldracca
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() &apos; cancellata alla 3,5,181  (prima o poi sbiancare tutto)
+
+
+&apos;____________________________Ctrl 9 
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.NUM9
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Magic.Formula_magica_aggiorna?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store()  &apos; cancellata alla 3,5,181  (prima o poi sbiancare tutto)
+
+
+&apos;____________________________Ctrl Shift 8
+&apos;with  aKeyEvent
+&apos;	. modifiers = com.sun.star.awt.KeyModifier.MOD1+ com.sun.star.awt.KeyModifier.SHIFT
+&apos;	. KeyCode = com.sun.star.awt.Key.NUM8
+&apos;End with
+&apos;UIcfgMgr = thisComponent.UIConfigurationManager 
+&apos;shortCuts = UicfgMgr.ShortCutManager
+&apos;shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Pesca_mi_reg_A.Pesca_cod_per_reg_A?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+&apos; shortCuts.store() &apos; cancellata alla 3,5,181  (prima o poi sbiancare tutto)
+
+&apos;____________________________Ctrl Shift B
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1+ com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.B
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+&apos;
+&apos;exit sub
+
+&apos;____________________________Ctrl Alt K
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.K
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________ Alt P
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.P
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Finale.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;shortCuts.store() 
+
+
+&apos;____________________________Ctrl Ins
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.INSERT
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Ctrl 6
+&apos;with  aKeyEvent
+&apos;	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+&apos;	. KeyCode = com.sun.star.awt.Key.NUM6
+&apos;End with
+&apos;UIcfgMgr = thisComponent.UIConfigurationManager 
+&apos;shortCuts = UicfgMgr.ShortCutManager
+&apos;shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+&apos;shortCuts.store() 
+
+
+&apos;____________________________Ctrl Alt R
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.R
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Voci_Sistema.Riformatta_VCA?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+
+
+&apos;____________________________Ctrl Alt F
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.F
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Strutture.Autofilter_On_Off?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+
+
+&apos;____________________________Maiusc Alt F8  (Alt Shift 8 ??)
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD2 + com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.F8
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+&apos;shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Strutture.Sincronizza_SottoCap_Tag_interoCapitolo?language=Basic&amp;location=application&quot; )
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Strutture.Rinumera_TUTTI_Capitoli2?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+
+
+with  aKeyEvent &apos;____________________________Ctrl TAB
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.TAB
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Pulizia_0.SegnaManinaVociUsate?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+with  aKeyEvent  &apos;______________ Ctrl Shift U __________Ctrl maiusc U
+	. modifiers =  com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.SHIFT 
+	. KeyCode = com.sun.star.awt.Key.U 
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;shortCuts.store() 
+
+with  aKeyEvent &apos;___________________________________Cntrl Shift D
+	. modifiers =   com.sun.star.awt.KeyModifier.SHIFT + com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.D  &apos;NUM1
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_in_Doc?language=Basic&amp;location=application&quot; )
+shortCuts.store() 
+
+with  aKeyEvent &apos;____________________________ Ctrl D
+	. modifiers =  com.sun.star.awt.KeyModifier.MOD1 
+	. KeyCode = com.sun.star.awt.Key.D
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_new_doc?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;shortCuts.store() 
+
+with  aKeyEvent &apos;&apos;____________________________________Ctrl shift Q
+	. modifiers =   com.sun.star.awt.KeyModifier.SHIFT + com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = com.sun.star.awt.Key.Q 
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Header_Footer.Set_Header_Footer?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+with  aKeyEvent &apos;Alt + (segno più)
+	. modifiers =  com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.ADD 
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+with  aKeyEvent &apos;Alt - (segno meno)
+	. modifiers =  com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.SUBTRACT 
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+with  aKeyEvent &apos;____________________________Alt Z  &apos; spostati su global accel
+	. modifiers =  com.sun.star.awt.KeyModifier.MOD2
+	. KeyCode = com.sun.star.awt.Key.Z
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;shortCuts.store() 
+
+with  aKeyEvent &apos;____________________________Ctrl Shift Z  &apos; spostati su global accel
+	. modifiers =  com.sun.star.awt.KeyModifier.MOD1 
+	. modifiers =  com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.Z
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;shortCuts.store() 
+
+&apos;____________________________ Shift F1
+with  aKeyEvent &apos;Shift F1
+	. modifiers =  com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.F1
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Help.Help_scorciatoie?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________ Shift  F10
+with  aKeyEvent 
+	. modifiers =  com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.F10
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager 
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Viste.Scelta_Viste?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+&apos;____________________________Ctrl Shift N
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.N
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.Nuova_Voce_scelta?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Ctrl Shift L
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.L
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________Ctrl Shift A 
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.A
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager 
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Varie.copia_riga_Ent?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+&apos;____________________________Shift F9 spefica  per giuserpe
+with  aKeyEvent
+	. modifiers =  com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.F9
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili_giuserpe?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+
+&apos;____________________________Ctrl Shift % ( che esattamente sarebbe Ctrl Shift 5)
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.NUM5
+&apos;	. modifiers =  com.sun.star.awt.KeyModifier.SHIFT
+&apos;	. modifiers =  com.sun.star.awt.KeyModifier.MOD1 
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+
+&apos;____________________________ F3
+with  aKeyEvent
+	. modifiers = &quot;&quot;   &apos;IMPORTANTE: vuole un modifier altrimenti non funziona
+	. KeyCode = com.sun.star.awt.Key.F3
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store() 
+
+&apos;____________________________ Ctrl Shift E
+with  aKeyEvent
+	. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.SHIFT
+	. KeyCode = com.sun.star.awt.Key.E
+End with
+UIcfgMgr = thisComponent.UIConfigurationManager
+shortCuts = UicfgMgr.ShortCutManager
+shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Pulizia_0.DOPPIONI_TROVA_manuale?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;shortCuts.store() 
+
+END SUB
+
+
+
+
+
+
+
+
+
+
+&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+Sub Registra_Tasti_Global &apos; registra i tasti a livello globale (utente)
+&apos;by Carsten Driesner - carsten.driesner@sun.com
+
+
+&apos;on error resume next
+
+    REM *** Initialize constants. See IDL file
+    REM com.sun.star.awt.KeyEvent
+    REM com.sun.star.awt.KeyModifier
+    REM com.sun.star.awt.Key
+    MODIFIER_SHIFT = 1  &apos;refers to both shift keys
+    MODIFIER_MOD1  = 2  &apos;refers in the most cases to the &apos;Ctrl&apos; key
+    MODIFIER_MOD2  = 4  &apos;refers in the most cases to the &apos;Alt&apos; key
+
+  	KEY_X 		 = 535
+	KEY_A 		 = 512
+	KEY_I        = 520
+	KEY_C        = 514
+	KEY_Q 		 = 528
+  &apos;  KEY_F10      = 777
+    KEY_F11      = 778
+    KEY_F12      = 779
+    KEY_ZERO     = 256
+    KEY_1 		 = 257
+    KEY_2 		 = 258
+    KEY_3 		 = 259 
+    KEY_4		 = 260
+    KEY_5		 = 261
+    KEY_6		 = 262
+    KEY_7		 = 263
+    KEY_F6       = 773
+    DELETE		 = 1286
+
+    
+    REM *** Retrieve the global accelerator configuration manager
+    oGlobalAccelCfgMgr = createUnoService(&quot;com.sun.star.ui.GlobalAcceleratorConfiguration&quot;)
+
+    REM *** Retrieve the module configuration manager from central module configuration manager supplier
+    oModuleCfgMgrSupplier = createUnoService(&quot;com.sun.star.ui.ModuleUIConfigurationManagerSupplier&quot;)
+
+    REM *** Retrieve the module configuration manager with module identifier
+    REM *** See com.sun.star.frame.ModuleManager for more information
+   oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager( &quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) &apos;per calc
+   &apos; oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.TextDocument&quot; )&apos; per write
+    REM *** Retrieve the writer accelerator configuration manager
+    oWriterAccelCfgmgr = oModuleCfgMgr.getShortCutManager()
+	Dim aKeyEvent as new com.sun.star.awt.KeyEvent
+	
+ 
+    &apos;________________________________________________________________________Ctrl Shift O (come Oscar)
+     aKeyEvent.Modifiers = MODIFIER_MOD1 + com.sun.star.awt.KeyModifier.SHIFT 
+	aKeyEvent.KeyCode   = com.sun.star.awt.Key.O
+    REM *** Set our short cut at the Writer accelerator manager
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application&quot; )
+	&apos;oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+    
+   &apos;_____ Ctrl shitf H
+      aKeyEvent.Modifiers = MODIFIER_MOD1 + com.sun.star.awt.KeyModifier.SHIFT
+    aKeyEvent.KeyCode   = com.sun.star.awt.KEY.H
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Varie.Adatta_Altezza_riga?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+
+      aKeyEvent.Modifiers = 4 &apos; &apos;_____ Alt DELITE (CAnc)
+    aKeyEvent.KeyCode   = 1286
+    REM *** Set our short cut at the Writer accelerator manager
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+    
+ 
+    
+	&apos;________&apos;____________________Ctrl shift DELITE (CAnc)
+	with  aKeyEvent
+	. modifiers =  com.sun.star.awt.KeyModifier.SHIFT +com.sun.star.awt.KeyModifier.MOD1
+	. KeyCode = DELETE
+	End with
+	UIcfgMgr = thisComponent.UIConfigurationManager 
+	shortCuts = UicfgMgr.ShortCutManager
+	shortCuts.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+
+	&apos;________&apos;____________________Ctrl shift BarraSpazio
+
+	aKeyEvent.Modifiers =  com.sun.star.awt.KeyModifier.SHIFT +com.sun.star.awt.KeyModifier.MOD1
+	aKeyEvent.KeyCode = com.sun.star.awt.Key.SPACE
+	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,  &quot;.uno:ResetAttributes?language=Basic&amp;location=application&quot; )
+	&apos;shortCuts.removeKeyEvent(aKeyEvent)
+	oWriterAccelCfgMgr.store()
+
+&apos;  Dim aKeyEvent as new com.sun.star.awt.KeyEvent&apos; &apos;____Ctrl Alt 8 &apos; disattivata... serviva per un baco forse superato
+ &apos;   aKeyEvent.Modifiers = MODIFIER_MOD1 + MODIFIER_MOD2
+ &apos;   aKeyEvent.KeyCode   =  com.sun.star.awt.Key.NUM8
+ &apos;   oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,  &quot;vnd.sun.star.script:UltimusFree2.X_TMP.BackGround_2_default?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+&apos;    oWriterAccelCfgMgr.store()
+
+&apos;  Dim aKeyEvent as new com.sun.star.awt.KeyEvent&apos; &apos;____Ctrl Shit I &apos;
+    aKeyEvent.Modifiers = MODIFIER_MOD1 + com.sun.star.awt.KeyModifier.SHIFT
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.I
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.Sistema_diverse_cose?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+
+&apos;  ____________________________________Ctrl shitf G
+    aKeyEvent.Modifiers =com.sun.star.awt.KeyModifier.SHIFT + MODIFIER_MOD1
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.K
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori_2.refreshAllSheetLinks?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+
+	&apos;_______________________________________Ctrl 7 
+	aKeyEvent.Modifiers = MODIFIER_MOD1
+	aKeyEvent.KeyCode   = com.sun.star.awt.Key.NUM7
+	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Taxi.gina?language=Basic&amp;location=application&quot;)
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+
+
+	&apos;_______________________________________Ctrl Shift X 
+    aKeyEvent.Modifiers = MODIFIER_MOD1 + com.sun.star.awt.KeyModifier.SHIFT &apos;  CTRL Shift X
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.X   
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.Sposta_Righe_Anche_in_tabelle_diverse?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()   
+
+    
+	&apos;_______________________________________Ctrl Shift C
+    aKeyEvent.Modifiers = MODIFIER_MOD1 + com.sun.star.awt.KeyModifier.SHIFT &apos;  CTRL shift C
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.C
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.Copia_Righe_Inserisci_Anche_in_tabelle_diverse?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+    
+    
+    &apos;------						Ctrl Shift W
+       aKeyEvent.Modifiers =  com.sun.star.awt.KeyModifier.SHIFT + MODIFIER_MOD1 
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.W
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Finale.Set_Area_Stampa_N?language=Basic&amp;location=application&quot; )
+    oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    &apos;oWriterAccelCfgMgr.store()
+    
+  
+    &apos;------Ctrl Shift Y
+    aKeyEvent.Modifiers = com.sun.star.awt.KeyModifier.SHIFT + MODIFIER_MOD1
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.Y
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Finale.Impagina_N?language=Basic&amp;location=application&quot; )
+	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    &apos;oWriterAccelCfgMgr.store()  	
+
+		&apos; Ctrl G
+    aKeyEvent.Modifiers = MODIFIER_MOD1
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.G
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.ToggleGrid?language=Basic&amp;location=application&quot; )
+&apos;&apos;&apos;&apos;oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    oWriterAccelCfgMgr.store()
+   
+    				&apos;&apos;Ctrl Shift E (sbianca la sheet per la stampa)&apos;
+    aKeyEvent.Modifiers = com.sun.star.awt.KeyModifier.SHIFT + MODIFIER_MOD1
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.E
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Finale.Pulisci_Tabella_Tutta?language=Basic&amp;location=application&quot; )
+    oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+    &apos;oWriterAccelCfgMgr.store()
+   
+
+ 
+	&apos; ________Ctrl T
+ 	aKeyEvent.Modifiers = com.sun.star.awt.KeyModifier.MOD1
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.T
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.copia_solo_colore_Sfondo?language=Basic&amp;location=application&quot;)
+    oWriterAccelCfgMgr.store()
+   &apos; oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+
+
+
+    aKeyEvent.Modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2 &apos; Ctrl Alt T da rimuovere
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.T
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.copia_solo_colore_Sfondo?language=Basic&amp;location=application&quot;)
+  &apos;  oWriterAccelCfgMgr.store()
+    oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+ 
+   
+    
+    &apos;________________________________________________________non assegnato
+ &apos;   aKeyEvent.Modifiers = MODIFIER_MOD1 + MODIFIER_MOD2
+ &apos;   aKeyEvent.KeyCode   = com.sun.star.awt.Key.R
+   &apos; oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Import_acc.Main_Conversione?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+ &apos;   oWriterAccelCfgMgr.store()
+    
+    
+
+ 
+  &apos;  aKeyEvent.Modifiers = MODIFIER_SHIFT + MODIFIER_MOD1 + MODIFIER_MOD2 &apos;non assegnato
+   &apos; aKeyEvent.KeyCode   = com.sun.star.awt.Key.P
+     oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Voci_Sistema_7.FromATT_2_5C?language=Basic&amp;location=application&quot; )
+	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+&apos;    oWriterAccelCfgMgr.store()
+    
+
+ 
+ &apos;        					 __________ ALT + (più)
+    aKeyEvent.Modifiers = MODIFIER_MOD2
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.ADD
+      oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+  oWriterAccelCfgMgr.store()
+  
+   &apos;      				  __________ Ctrl M
+    aKeyEvent.Modifiers = MODIFIER_MOD1
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.M
+      oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+  oWriterAccelCfgMgr.store()
+ 
+
+ &apos;        Dim aKeyEvent as new com.sun.star.awt.KeyEvent __________ ALT - (meno)
+    aKeyEvent.Modifiers = MODIFIER_MOD2
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.SUBTRACT 
+      oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+  oWriterAccelCfgMgr.store()
+
+ &apos;       						 __________Ctrl shift M      Ctrl maiusc M
+    aKeyEvent.Modifiers = MODIFIER_SHIFT + MODIFIER_MOD1 
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.M
+      oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+  oWriterAccelCfgMgr.store()
+
+ &apos;        Dim aKeyEvent as new com.sun.star.awt.KeyEvent __________Ctrl Shift K
+    aKeyEvent.Modifiers =  MODIFIER_MOD1 +MODIFIER_SHIFT
+        aKeyEvent.KeyCode   = com.sun.star.awt.Key.K
+      oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Accessori_2.sproteggi_sheet_TUTTE?language=Basic&amp;location=application&quot; )
+&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+  oWriterAccelCfgMgr.store()
+
+ &apos;        Dim aKeyEvent as new com.sun.star.awt.KeyEvent______ Shift F3 
+    aKeyEvent.Modifiers =  MODIFIER_SHIFT
+        aKeyEvent.KeyCode  = com.sun.star.awt.Key.F3
+      oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application&quot; )
+&apos;  oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+  oWriterAccelCfgMgr.store()
+
+ 
+&apos;____________________________  Ctrl , (virgola)
+
+    aKeyEvent.Modifiers = MODIFIER_MOD1
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.COMMA
+      oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application&quot; )
+  oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+&apos;  oWriterAccelCfgMgr.store()
+
+
+	&apos;__________________ Ctrl ,  (virgola)
+ 	aKeyEvent.Modifiers = MODIFIER_MOD1 
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.COMMA
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.MINUSCOLO?language=Basic&amp;location=application&quot; )
+    oWriterAccelCfgMgr.store()
+ &apos;   oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)&apos;
+ 
+ 
+ &apos;       						 __________Ctrl shift Z      Ctrl maiusc Z
+    aKeyEvent.Modifiers = MODIFIER_SHIFT + MODIFIER_MOD1 
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.Z
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application&quot;)
+    oWriterAccelCfgMgr.store()
+    
+ &apos;       						 __________Alt Z      
+    aKeyEvent.Modifiers = MODIFIER_MOD2
+    aKeyEvent.KeyCode   = com.sun.star.awt.Key.Z
+    oWriterAccelCfgMgr.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application&quot;)
+    oWriterAccelCfgMgr.store() 
+       
+END SUB
+
+
+
+
+&apos; remove key configuration file
+&apos;___________________________________________________________________________________________________________________________________________________________
+&apos; gruppo di macro per ripulire (rimuovere?) il file di conf delle SC a livello di documento
+
+sub rimuovi_SC_Doc &apos; svuota il file Current .xml del documento Corrente
+	RemoveKeyConfigurationFromDoc(ConvertToUrl(ThisComponent.getURL()) 
+end sub
+
+
+
+&apos; svuota il file Current .xml di un documento (file picker)
+Sub RemoveKeyConfigurationFromDoc(optional sFileURL as string)
+	&apos;rimuove 
+&apos;exit sub
+  if isnull(sFileURL) or isEmpty(sFileURL) Then
+  		sFileURL = GetFileURL( _
+    	&quot;Select a file you want to remove the key configuration.&quot;)
+      else
+       	sMs = 0
+   end if
+
+  If sFileURL = &quot;&quot; Then Exit Sub
+  oSFAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+  If oSFAccess.exists(sFileURL) Then
+    If RemoveZipFileContent(sFileURL,sKeyConfigFile) Then
+    	if sMs &lt;&gt; 0 then
+		   msgbox &quot;Removed.&quot;
+		end if
+    End If
+  End If
+End Sub
+
+&apos; remove the key configuration file from zip
+Function RemoveZipFileContent( sZipURL As String, _
+  sContentName As String )
+  &apos;On Error GoTo Handler: 
+  on error resume next
+  If NOT IsNull(oInputStream) Then
+    Dim oZipPkg As Object, oSFA As Object
+    Dim oContentStream As Object, oZipFolder As Object
+    sSettingFile = &quot;current.xml&quot;
+    sSettingDir = &quot;Configurations2/accelerator&quot;
+    oZipPkg = CreateUnoService(&quot;com.sun.star.packages.Package&quot;)
+    oZipPkg.initialize(array(sZipURL))
+    If NOT oZipPkg.hasByHierarchicalName(sSettingDir) Then
+      PutZipContentStream = False
+      Exit Function
+    End If
+    oZipFolder = oZipPkg.getByHierarchicalName(sSettingDir)
+    oContentStream = oZipPkg.createInstanceWithArguments(array(false))
+    oPipe = CreateUnoService(&quot;com.sun.star.io.Pipe&quot;)
+    oPipe.writeBytes(Array())
+    oPipe.flush()
+    oPipe.closeOutput()
+    oContentStream.setInputStream(oPipe)
+   
+    If oZipFolder.hasByName(sSettingFile) Then
+      oZipFolder.replaceByName(sSettingFile,oContentStream)
+      oZipPkg.commitChanges()
+    End If
+    oPipe.closeInput()
+  End If
+  RemoveZipFileContent = True
+  Exit Function
+  Handler:
+  msgbox &quot;Please close the file.&quot;
+  RemoveZipFileContent = False
+End Function
+
+&apos; select a file
+Function GetFileURL( sTitle As String )
+  Dim oFilePicker As Object
+  Dim sFileURL As String
+  oFilePicker = CreateUnoService( _
+      &quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+  oFilePicker.setTitle(sTitle)
+  If oFilePicker.execute() = 1 Then
+    sFileNames = oFilePicker.getFiles()
+    sFileURL = sFileNames(0)
+  End Function
+  GetFileURL = sFileURL
+End Function 
+
+
+Sub SetUpKeyBinding&apos;(sModifier as string, sChiave as string, sAzione as string)
+&apos; copyright Paolo Mantovani
+
+Dim oModuleCfgMgrSupplier As Object
+Dim oModuleCfgMgr As Object
+Dim oWriterShortCutMgr As Object
+
+Dim sCommand As String
+Dim sLocCommand As String
+Dim sMsg As String
+Dim iMsgResult As Integer
+print sModifier
+	 &apos; Initialize strings
+&apos;	 sCommand = &quot;vnd.sun.star.script:Standard.Module1.Main?language=Basic&amp;location=application&quot;
+ 	 sCommand = &quot;vnd.sun.star.script:UltimusFree2.AAA_TO_DO.Ciao_Mondo?language=Basic&amp;location=application&quot;
+	&apos; Retrieve the module configuration manager from central module configuration manager supplier
+&apos;	oModuleCfgMgrSupplier = createUnoService(&quot;com.sun.star.ui.ModuleUIConfigurationManagerSupplier&quot;)
+&apos;xray thiscomponent
+&apos;ThisComponent.getUIConfigurationManager()
+	&apos; Retrieve the module configuration manager with module identifier
+&apos;	oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.TextDocument&quot;)
+&apos;	oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.TextDocument&quot;)
+	oModuleCfgMgr = ThisComponent.getUIConfigurationManager()&apos;.getUIConfigurationManager()
+	oWriterShortCutMgr = oModuleCfgMgr.getShortCutManager
+	
+	Dim aKeyEvent As New com.sun.star.awt.KeyEvent
+&apos;	With aKeyEvent
+&apos;		.Modifiers = sModifier
+&apos;		.KeyCode = sChiave
+&apos;	End With
+&apos;print sModifier
+	With aKeyEvent
+		.Modifiers =  com.sun.star.awt.KeyModifier.MOD1 &apos;cioè API const for the CTRL key = 2
+		.KeyCode = com.sun.star.awt.Key.NUM0
+	End With
+&apos;	xray aKeyEvent
+&apos;	print sCommand 
+&apos;xray oWriterShortCutMgr
+	On Error Resume Next
+	sLocCommand = oWriterShortCutMgr.getCommandByKeyEvent(aKeyEvent)
+	On Error GoTo 0 &apos;restore the error handler
+
+	Select Case sLocCommand
+	
+		Case = &quot;&quot; &apos;no previous bindings
+			oWriterShortCutMgr.setKeyEvent( aKeyEvent, sCommand )
+			oWriterShortCutMgr.store
+			
+		Case = sCommand &apos;ok the key event is already used by our command
+			&apos;nothing to do
+			
+		Case Else &apos;the key event is already used by another command
+		
+			sMsg = &quot;La combinazione di tasti &quot;&quot;CTRL+T&quot;&quot; è già usata per il comando:&quot; &amp; Chr(10)
+			sMsg = sMsg &amp; sLocCommand &amp; &quot;&quot;&quot;.&quot; &amp; Chr(10) &amp; Chr(10)
+			sMsg = sMsg &amp; &quot;Si desidera ugualmente usare questa combinazione per lanciare Standard.Module1.Main?&quot;
+					   
+			iMsgResult = MsgBox( sMsg, 1)
+			If iMsgResult = 1 Then
+				oWriterShortCutMgr.removeKeyEvent( aKeyEvent)
+				oWriterShortCutMgr.setKeyEvent( aKeyEvent, sCommand )
+				oWriterShortCutMgr.store
+			End If
+			
+	End Select
+	
+End Sub
+</script:module>

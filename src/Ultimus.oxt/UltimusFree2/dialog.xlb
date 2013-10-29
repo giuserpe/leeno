@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
+<library:library xmlns:library="http://openoffice.org/2000/library" library:name="UltimusFree2" library:readonly="false" library:passwordprotected="false">
+ <library:element library:name="DialogViste"/>
+ <library:element library:name="Dialog1"/>
+ <library:element library:name="DialogDigest"/>
+ <library:element library:name="DialogViste_A"/>
+ <library:element library:name="Dialog2"/>
+ <library:element library:name="Dialog_Filtro"/>
+ <library:element library:name="DialogAccoda"/>
+ <library:element library:name="Dialog3"/>
+ <library:element library:name="Dialogviste_N_"/>
+ <library:element library:name="Dialogviste_N"/>
+ <library:element library:name="DialogViste_EP"/>
+ <library:element library:name="Dialog_AN"/>
+ <library:element library:name="DialogViste_AN"/>
+ <library:element library:name="DialogViste_A2"/>
+</library:library>

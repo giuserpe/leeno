@@ -1,0 +1,436 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Header_Footer" script:language="StarBasic">
+REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                          
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+
+Sub info2 &apos;
+oSheet = ThisComponent.currentController.activeSheet
+oCell=thisComponent.getCurrentSelection()
+&apos;xray oSheet&apos;
+oRangeVA = ThisComponent.CurrentSelection
+orows = ThisComponent.CurrentSelection.rows
+&apos;xray orows
+END SUB
+
+Sub info
+oSheet = ThisComponent.currentController.activeSheet
+&apos;xray oSheet
+oMieiSalti = oSheet.RowPageBreaks 
+&apos;xray oMieiSalti 
+
+oRighe = oSheet.rows.IsStartOfNewPage
+&apos;xray oRighe
+
+oCell=thisComponent.getCurrentSelection()
+
+&apos;xray oCell
+END SUB
+
+
+&apos;++++++++++++++++++++++++++++++++
+ 
+SUB Set_Header_Footer (optional sMessaggio as string)
+
+&apos; initialize &apos;
+&apos;On Error Goto ErrorHandler
+&apos;Call SetModuleVars 
+If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+			on error goto Errore 
+		end if 
+END IF
+
+If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
+	msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot;
+	exit sub
+END IF
+Aggiorniamoli
+oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
+
+if osheet.isvisible=false then
+	osheet.isvisible=true
+	sHide=&quot;Nascosta&quot;
+end if
+
+oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
+DX = oCell.String
+
+oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
+oProgetto_8 = oCell.String
+
+oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
+oData= oCell.String
+
+oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
+oBozza_8 = oCell.String
+&apos;print  oBozza_8
+If oBozza_8 &lt;&gt; &quot;&quot; Then
+      Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
+ End If
+
+oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
+oCentro = oCell.String
+
+&apos;.....................
+
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+sPrima = Verifica_chiudi_preview
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+if sPrima =&quot;Attiva&quot; then
+	wait 1000
+end if	
+oSheetCur = ThisComponent.Sheets.getByName(_
+ThisComponent.currentcontroller.activesheet.name)
+
+sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
+
+oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
+oController = oDesktop.CurrentFrame.Controller
+oDocument = oController.Model
+
+	oStyleFam = oDocument.StyleFamilies
+
+	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
+	oAktPage = oTablePageStyles.getByname(sStile_Pag)
+
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+
+	oHLText = oHeader.LeftText.text       
+	oHLText.String = DX 
+
+	
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza 
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+	oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent= oFooter
+	
+
+	
+	if not ismissing (sMessaggio) then
+		if sMessaggio &lt;&gt; &quot;no messaggio&quot; then
+			Msgbox 	&quot;Lo stile di pagina (attivo al momento in QUESTA tabella) è stato aggiornato!&quot;_
+			&amp; &quot; inserendo nelle intestazioni e nei pié di pagina i testi come visibili nella schermata &quot;&quot;DATI DEL DOCUMENTO&quot;&quot; !&quot;
+		end if
+	end if
+&apos;	&quot;I testi delle intestazioni e dei pié di pagina di questa Tabella sono stati aggiornati!&quot;_
+&apos;	&amp; &quot; in base dei dati scritti in S2...&quot;
+
+if sPrima = &quot;Attiva&quot; then &apos; se all&apos;inizio ha rilevato una Anteprima di pagina ora la riattiva
+	dim document as object
+	dim dispatcher as object
+    document = ThisComponent.CurrentController.Frame  
+    dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)  
+ 	dispatcher.executeDispatch(document, &quot;.uno:PrintPreview&quot;, &quot;&quot;, 0, Array()) 
+end if
+if sHide=&quot;Nascosta&quot;  then &apos; la rimette come l&apos;ha trovata
+	osheet.isvisible=false
+end if
+Exit Sub
+Errore:
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END SUB
+
+Sub Set_Header_Footer_Tutti__ &apos; ovvero va a modificare il testi 
+&apos; su una serie di Stili predefiniti  - SOSPETTO DI INUTILITA&apos;
+sModulSubName = &quot;Set_Header_Footer_Tutti&quot;
+If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+	 on error goto Errore
+ end if
+
+oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;punto alla tabella in base al nome
+
+oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
+DX = oCell.String
+
+oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
+oProgetto_8 = oCell.String
+
+oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
+oData= oCell.String
+
+oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
+oBozza_8 = oCell.String
+&apos;print  oBozza_8
+If oBozza_8 &lt;&gt; &quot;&quot; Then
+      Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
+ End If
+
+oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
+oCentro = oCell.String
+
+&apos;==================================================
+oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
+oController = oDesktop.CurrentFrame.Controller
+oDocument = oController.Model
+
+	oStyleFam = oDocument.StyleFamilies
+	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
+	oAktPage = oTablePageStyles.getByname(&quot;PageStyle_COMPUTO_A4&quot;)
+&apos;xray	oAktPage
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+	oHLText = oHeader.LeftText.text            
+	oHLText.String = DX 
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza 
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+	oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent = oFooter
+
+	oAktPage = oTablePageStyles.getByname(&quot;PageStyle_Elenco Prezzi&quot;)
+	
+	oAktPage = oTablePageStyles.getByname(&quot;PageStyle_COMPUTO_A3&quot;)
+&apos;xray	oAktPage
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+	oHLText = oHeader.LeftText.text            
+	oHLText.String = DX 
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza 
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+	oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent = oFooter
+
+	oAktPage = oTablePageStyles.getByname(&quot;PageStyle_Elenco Prezzi&quot;)
+
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+	oHLText = oHeader.LeftText.text            
+	oHLText.String = DX 
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+		oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent = oFooter
+	
+	oAktPage = oTablePageStyles.getByname(&quot;PageStyle_Analisi di Prezzo&quot;)
+
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+	oHLText = oHeader.LeftText.text            
+	oHLText.String = DX 
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+		oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent = oFooter		
+
+
+	oAktPage = oTablePageStyles.getByname(&quot;PageStyle_Quadro&quot;)
+
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+	oHLText = oHeader.LeftText.text            
+	oHLText.String = DX 
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+		oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent = oFooter		
+
+	oAktPage = oTablePageStyles.getByname(&quot;PageStyle_FiltroTMP_A3&quot;)
+
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+	oHLText = oHeader.LeftText.text            
+	oHLText.String = DX 
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+		oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent = oFooter		
+	
+		oAktPage = oTablePageStyles.getByname(&quot;PageStyle_FiltroTMP_A4&quot;)
+
+	oAktPage.HeaderIsOn = True 
+	oHeader = oAktPage.RightPageHeaderContent
+	oHLText = oHeader.LeftText.text            
+	oHLText.String = DX 
+	oHCText = oHeader.CenterText.Text
+	oHCText.String = oProgetto_8
+	oHRText = oHeader.RightText
+	oHRText.String = Bozza
+	&apos; update header
+	oAktPage.RightPageHeaderContent = oHeader
+	
+		oAktPage.FooterIsOn = True 
+	oFooter = oAktPage.RightPageFooterContent
+	oHLText = oFooter.CenterText.text
+	oHLText.String = oCentro
+	&apos; update footer
+	oAktPage.RightPageFooterContent = oFooter		
+
+oAktPage = oTablePageStyles.getByname(&quot;PageStyle_CronoP&quot;)
+	oAktPage.RightPageHeaderContent = oHeader
+	oAktPage.RightPageFooterContent = oFooter
+
+Msgbox &quot;Alcuni stli di pagina (quelli predefiniti) sono stati aggiornati!&quot;_
+	&amp; &quot; inserendo nelle intestazioni e nei pié di pagina i dati a disposizione!&quot;
+&apos;	&quot;Lo stile di pagina (attivo al momento in questa tabella) è stato aggiornato!&quot;_
+&apos;	&amp; &quot; inserendo nelle intestazioni e nei pié di pagina i testi impostati in S2!&quot;
+Exit Sub
+&apos; ------------------------------------------------------------------------
+Errore:
+&apos;SubErrHandler(sModulSubName)
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END SUB
+&apos; ========================================================================
+
+Sub SubErrHandler(sModulSubName as string)
+MsgBox _
+	&quot; Nella SUB: &quot; &amp; sModulSubName &amp; &quot;&quot; &amp; CHR(10)_
+	 &amp; &quot;Colonna nr.: &quot; &amp; Erl &amp; &quot;-      Riga nr. &quot; &amp;CHR(10)_
+	 &amp; &quot;Si è verificato questo errore: &quot;&amp;CHR(10)_
+	 &amp;  Err &amp; &quot;: &quot; &amp; Error$ 
+	 &apos; &quot; Fehler in &quot; &amp; sModulName &amp; sModulVersion
+END SUB
+&apos; ========================================================================
+
+
+Sub Duplica_PageStyle &apos; duplica lo stile di pagina attivo (nella sheet attiva)
+&apos; una birra sd Oliver Brinzing per il codice originale da cui ho derivato questa macro
+&apos; questa macro può essere usata fuori da Ultimus tale e quale
+        On Local Error Goto ErrorHandler
+        
+        Dim oDocument as Object
+        Dim oSheet as Object
+        Dim oPStyle as Object
+        Dim oStyles as Object
+        Dim oCpyStyle as Object
+        Dim aProperties as Object
+        Dim vTmp as Variant
+        Dim sCopy as String
+        Dim sX as String
+        Dim i as Integer
+        Dim sStile_Pag as string
+        Dim sNewNome as string
+        Dim iCaso as long
+        
+        
+        ThisComponent = ThisComponent
+    	oStyles = ThisComponent.StyleFamilies.getByName(&quot;PageStyles&quot;)	
+		oSheet = ThisComponent.currentController.activeSheet
+		sStile_Pag = oSheet.PageStyle &apos;registra il nome dello stile corrente della Sheet    		
+        oPStyle = oStyles.getByName(sStile_Pag)
+		
+		sNewNome = &quot;PageStyle_&quot; &apos; prefisso comodo per capire quando (da F11) si è dentro
+		&apos; la finestra degli stili PAGINA
+		
+        Riprova:
+         sCopy = InputBox (&quot;&quot; &amp; CHR$(10)_
+   						&amp; &quot; Scrivi il nome del nuovo stile di pagina&quot; &amp; CHR$(10) &amp; CHR$(10)_
+   						 , &quot;Nuovo stile Pagina da quello corrente&quot;, sNewNome)
+   		if sCopy = &quot;&quot; then 
+   			sCopy = &quot;PageStyle_&quot; &amp; Int((10000 * Rnd) -2)&apos; che genera numero random
+        end if
+        if  sCopy = &quot;PageStyle_&quot; then
+        	sCopy = sCopy &amp; Int((10000 * Rnd) -2)&apos; che genera numero random
+        end if
+
+        oCpyStyle = ThisComponent.createInstance(&quot;com.sun.star.style.PageStyle&quot;)
+
+        If oStyles.hasByName(sCopy) Then
+        	iCaso = msgbox ( &quot;Uno stile di pagina connome &apos;&quot; &amp; sCopy &amp; &quot;&apos; esiste gà&quot; &amp; CHR$(10)_
+		        		&amp;&quot; cosa faccio: sosvrascrivo lo stile?&quot; &amp; CHR$(10)_
+							&amp; &quot;&quot; ,19, &quot;Nome esistente... Sovrascrivo?&quot;)&apos; = 7 then  &apos; se la risposta è NO
+			 Select Case iCaso
+					Case 7
+						sNewNome = sCopy &apos; tornando su propone il nome incriminato
+						goto Riprova
+					Case 2
+						exit sub
+					Case 6
+                		oStyles.removeByName(sCopy)
+             End select
+        EndIf
+        oStyles.insertByName(sCopy, oCpyStyle)          
+        oSheet.PageStyle = oCpyStyle.Name               
+        aProperties = oPStyle.PropertySetInfo.Properties
+        For i = LBound(aProperties) to UBound(aProperties)
+                sX = aProperties(i).Name
+                If Not IsNull(sX) Then
+                        If sX &lt;&gt; &quot;&quot; Then
+                                If oPStyle.getPropertyState(sX) = com.sun.star.beans.PropertyState.DIRECT_VALUE Then
+                                        vTmp = oPStyle.getPropertyValue(sX)
+                                        oCpyStyle.setPropertyValue(sX, vTmp)
+                                EndIf
+                        EndIf
+                EndIf
+        Next i
+        Exit Sub
+        
+ErrorHandler:
+                msgbox Erl &amp; &quot; &quot; &amp; Error &amp; &quot; &quot; &amp; Err        
+                Resume Next
+End Sub
+
+</script:module>

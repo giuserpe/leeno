@@ -1,0 +1,1024 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Crea_Att" script:language="StarBasic">REM  *****  BASIC  *****
+&apos;_______________________________________________________________________________________  		
+&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                          
+&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
+&apos; creata per lo shortcut
+    Dim nome_sheet as string
+
+	nome_sheet = thisComponent.currentcontroller.activesheet.name
+	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot;  then
+		exit sub
+	end if
+	&apos;_____________________
+	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	&apos;_____________________
+
+
+
+	Select Case thisComponent.currentcontroller.activesheet.name
+		Case = &quot;COMPUTO&quot;
+       		Nuova_Voce_Computo_Att
+       	Case = 	&quot;Analisi di Prezzo&quot; 
+          	NuovaAnalisi_Att
+       	Case = 	&quot;CONTABILITA&quot; 
+			nuova_voce_contab
+		&apos;	msgbox &quot;L&apos;inserimento di una Nuova Voce non è prevista su questa tabella!&quot; &amp; CHR$(10)_
+ 		&apos;		&amp; &quot;Ma se proprio vuoi puoi facilmente copiare una voce analoga e poi modificarla a mano&quot; &amp; CHR$(10)_
+ 		&apos;		&amp; &quot; - Seleziona le righe della Voce da copiare&quot; &amp; CHR$(10)_
+ 		&apos;		&amp; &quot; - Ctrl Shift C&quot; &amp; CHR$(10)_
+ 		&apos;		&amp; &quot; - Clicca per inserirla...&quot;
+      	Case = 	&quot;Elenco Prezzi&quot; 
+          	Voce_EP_in_bianco        	
+	end select
+END SUB
+
+sub nuova_voce_contab &apos;da finire... 
+&apos;normalmente in Contabilità non vengono create nuove voci ma si &quot;oesca&quot; semplicemente una voce del computo di cui si vuole contabilizzare.
+&apos; si crea una voce vuota, poi si aziona automatico il pesca sull&apos;EP
+&apos; ricordarsi di svuotare il rif al computo col 44
+&apos;(anziché inserire direttamente la voce pescata sul computo)
+&apos; Si usa quando ci sono nuovi prezzi
+goto prova
+	msgbox &quot;Questa voce non è ancora pronta, ed è da usare per inserire Nuovi Prezzi direttamente in contabilità&quot; &amp; CHR$(10)_
+	&amp; &quot;Per il momento devi copiare una voce analoga e poi modificarla a mano&quot; &amp; CHR$(10)_
+ 				&amp; &quot; - Seleziona le righe della Voce da copiare&quot; &amp; CHR$(10)_
+ 				&amp; &quot; - Ctrl Shift C&quot; &amp; CHR$(10)_
+ 				&amp; &quot; - Clicca per inserirla...&quot;&amp; CHR$(10)_
+ 			&amp; &quot;e alla fine scrivere il codice del nuovo prezzo&quot;
+
+	&apos;	exit sub
+prova:
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+		on error goto Errore
+	end if
+	&apos;individua la riga corrente
+	oCell=thisComponent.getCurrentSelection()
+	lrow=oCell.RangeAddress.StartRow 
+	oSheet = ThisComponent.currentController.activeSheet
+&apos;print &quot;parto con &quot; &amp; lrow	
+	&apos;verifiche varie sulla posizione di inserimento
+	iEndRow = getLastUsedRow(oSheet)
+	if lrow &gt; iEndRow then
+		 MsgBox  (&quot;La riga selezionata e&apos; fuori dall&apos;area di lavoro!&quot; 
+		exit sub
+	end if
+	if lRow &lt; 2 then
+		 MsgBox  (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
+							&amp;	&quot;   Selezionane un&apos;altra più in basso....&quot;)
+		exit sub
+	end if
+	if lRow = 2 then
+		oSheet.getRows.insertByIndex(lRow, 1)
+		oSheet.getCellRangeByPosition(0, lRow, 49 , lRow).cellstyle =  &quot;Reg_prog&quot;
+	end if
+	
+	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
+			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
+				&apos;lrow = lrow-1
+			&apos;print &quot;wow&quot;
+			goto 	fai_e_basta
+	end if
+	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
+		lRow = lRow + 1
+		goto fai_e_basta &apos; FAI
+	end if
+	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; then
+		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
+			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) = &quot;Reg-SAL&quot;then
+			do while left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot;
+				lrow = lrow+1
+			loop
+		&apos;	print lrow
+			goto FAI
+		end if
+		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
+			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
+			goto 	fai_e_basta
+		end if
+		if oSheet.GetCellByPosition( 0 , lRow-1).cellstyle = &quot;Comp End Attributo_R&quot; then
+				goto FAI
+		end if
+
+		if oSheet.GetCellByPosition( 0 , lRow+1).cellstyle = &quot;Comp Start Attributo_R&quot; then
+				lRow = lRow
+			&apos;	print &quot;2 - &quot; &amp; lrow
+				goto FAI
+		end if		
+		&apos;lrow = lrow+1		
+	end if	
+
+	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; then
+		goto FAI
+	end if
+	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
+		lRow = lRow + 1
+		goto FAI
+	end if
+	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;comp 10 s_R&quot; or _
+		oSheet.GetCellByPosition( 0 ,lRow).cellstyle = &quot;comp 10 s_R&quot; then
+		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
+			lRow = lRow-1
+		loop &apos;
+	end if
+
+	FAI:
+	fai_e_basta:
+
+	&apos; sarebbe pronto ad inserire ma meglio chiedere conferma
+	&apos; verifica se stai inserendo in mezzo alle altre
+	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; then
+	 		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
+		 &apos;	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1  or _
+ 		&apos;	if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then &apos;melissa
+ 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 THEN 
+				sDomanda = MsgBox  (&quot;Creare una Nuova voce è utile solo per l&apos;inserimento diretto di un nuovo Prezzo!&quot;&amp; CHR$(10)_
+							&amp; &quot;Sei certo di voler aggiungere un Nuovo Prezzo in questa posizione?&quot; &amp; CHR$(10)_
+							&amp; &quot; Se qui sotto c&apos;è un già SAL &apos;chiuso&apos;, il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
+							&amp;	&quot;   &quot;, 36, &quot;&quot;)
+							if sDomanda = 7 then
+								exit sub 
+							end if
+			end if
+ 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 1  THEN 
+				sDomanda = MsgBox  (&quot;Sei certo di voler aggiungere un Nuovo Prezzo in questa posizione?&quot; &amp; CHR$(10)_
+							&amp; &quot; Se qui sotto c&apos;è un già SAL &apos;chiuso&apos;, il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
+							&amp;	&quot;   &quot;, 36, &quot;&quot;)
+							if sDomanda = 7 then
+								exit sub 
+							end if
+			end if
+			&apos;else
+			&apos;	Pesca_cod_1		&apos;	print &quot;sarà questo che rompe?&quot;
+		  goto saltaO &apos;proviamo a disattivarlo
+			&apos;			do while left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Default&quot; or _
+			do while oSheet.GetCellByPosition( 2 , lRow).string = &quot;&quot; and _
+					left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;
+				if 	lRow &lt;=3 then
+					exit do
+				end if
+				lRow = lRow - 1		
+			loop
+			lRow = lrow + 1						
+		  saltaO:
+	end if
+
+
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+&apos;print
+&apos;	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; And _
+&apos;		oSheet.GetCellByPosition( 1, lrow-1).cellstyle = &quot;comp sotto Bianche&quot; then
+&apos;			oSheet.getRows.insertByIndex(lrow, 1) 
+&apos;			osheet.getCellRangeByPosition (0,lrow,45,lrow).CellStyle = &quot;Default&quot;
+&apos;	end if	
+
+	lRowNum= 4 &apos; numero di righe da inserire
+	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+
+
+	&apos; eventualmente rifa il nome di area
+&apos;	xray ThisComponent.NamedRanges
+&apos;	if isNull (ThisComponent.NamedRanges.Serv_gen_cont.ReferredCells) then
+	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen_cont&quot;) then
+		rifa_nomearea (&quot;S5&quot;, &quot;$A$23:$AW$26&quot; , &quot;Serv_gen_cont&quot;)		
+	end if
+
+
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia il blocco delle voce (formati + formule + numeri)
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheetSRC=oDoc.NamedRanges.Serv_gen_cont.ReferredCells &apos; Serv_gen_cont è il nome del range
+
+	oCell=oSheet.getCellByPosition(0, lrow).CellAddress
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+
+	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
+    oSheet2.copyRange(oCell,oQuellRangeAddresse)
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+
+	oSheet2.getCellByPosition(44, lrow+1).string = &quot;&quot;
+	osheet2.getCellByPosition(2,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(3,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(4,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(5,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(6,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(7,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(8,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(9,lrow+2).string = &quot;&quot;
+	osheet2.getCellByPosition(9,lrow+3).string = &quot;&quot;
+	osheet2.getCellByPosition(12,lrow+3).string = &quot;&quot;
+	osheet2.getCellByPosition(13,lrow+1).string = &quot;&quot;	
+	osheet2.getCellByPosition(18,lrow+3).string = &quot;&quot;
+	osheet2.getCellByPosition(19,lrow+3).string = &quot;&quot;	
+	osheet2.getCellByPosition(20,lrow+3).string = &quot;&quot;
+	osheet2.getCellByPosition(21,lrow+3).string = &quot;&quot;
+	osheet2.getCellByPosition(36,lrow+3).string = &quot;&quot;
+	osheet2.getCellByPosition(37,lrow+3).string = &quot;&quot;
+	
+	&apos;rende ricoscibile la voce come diretta all&apos;EP
+	&apos;ovvero la voce non viene dal Computo
+	osheet2.getCellByPosition(44,lrow+1).cellstyle = &quot;num_centro_bianco_ep&quot;
+	osheet2.getCellByPosition(2,lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R_ep&quot;
+
+
+	&apos;cerco il sal sotto, se c&apos;è
+	dim iSALpost as integer
+	iLastRow = getLastUsedRow(oSheet2)
+	for i = lrow to iLastRow
+		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Reg-SAL-chiudi_N&quot; then
+			sNumSalPost = right(oSheet.GetCellByPosition( 2, i).string, 2)
+			iSALpost = sNumSalPost
+			exit for
+		end if
+		iSALpost = 1000  &apos; mi serve un numero per inpostare a false	
+	next 
+
+	&apos; se sotto c&apos;è un sal chiuso, annota il numero nella voce
+	oSheet.GetCellByPosition( 13 , lrow+1).cellstyle = &quot;Sal&quot;
+	if iSALpost &lt;&gt; 1000 then
+		oSheet.GetCellByPosition( 13 , lrow+1).value = iSALpost
+	end if
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+&apos;	 oCelle=thisComponent.getCurrentSelection().getCellAddress()   &apos;&apos;gipeto 
+&apos;	 lrow=oCelle.Row
+
+ &apos;	oCell=oSheet.getCellByPosition(0, lrow).CellAddress
+
+ 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+ 	if lrow = -1 then
+		 
+		exit sub
+	end if
+	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+	&apos; registra la posizione
+	oPartenza_A =  ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow, 2, lrow )
+	&apos;ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow+1, 2, lrow+1
+
+	Numera_Voci_Computo (&quot;niente prompt&quot;)	
+goto opla
+		exit sub
+	
+	
+
+		 Do while (Trova_Attr_N (oSheet.GetCellByPosition( 0, lrow ), oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+			lRow = lRow +1 
+				oCell=oSheet.GetCellbyPosition( 0, lRow)
+  		 Loop
+&apos; print &quot;-2-&quot; 		 
+ 
+  	&apos; modulo che sistema i LINK DAI tagG nelle righe sopra al tag vero e prorio...
+	oSheet.getCellByPosition(31, lrow+2).setformula(&quot;=AF$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(32, lrow+2).setformula(&quot;=AG$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(33, lrow+2).setformula(&quot;=AH$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(34, lrow+2).setformula(&quot;=AI$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(35, lrow+2).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(31, lrow+1).setformula(&quot;=AF$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(32, lrow+1).setformula(&quot;=AG$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(33, lrow+1).setformula(&quot;=AH$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(34, lrow+1).setformula(&quot;=AI$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(35, lrow+1).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+
+	oCell=oSheet.getCellByPosition(1, lrow+1)
+	ThisComponent.CurrentController.Select(oCell)&apos;
+
+ 	Numera_Voci_Computo (&quot;niente prompt&quot;)
+	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
+ 	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _
+ 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 ) and _
+ 		sAttributo = &quot;Tipo_computo&quot; then    
+ 		Osheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
+ 	endif 	
+ 	oCtrlModel.Enabled = True
+ 
+&apos;+++++++++++ Queste invece paiono togliere il focus dal pulsante... (come un flipper...)
+	ThisComponent.CurrentController.Select(ThisComponent.CurrentController.getActiveSheet.getCellByPosition(0 ,0))
+	oAreaR = Osheet.GetCellByPosition( 1 , lrow +1)
+  	Thiscomponent.currentcontroller.select(oAreaR)
+&apos;+++++++++++++++++++++++++++ ma si rimane comunque incastrati nella cella selezionata
+&apos; ovvero solo con enter o tab non si esce... (occorre usare il mouse)
+	&apos; ma aggiungendo questo viene tolta la selezione...
+   thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	&apos; toglie la selezione 	
+
+&apos; temporaneo per gambetta	
+ &apos;	Osheet.GetCellByPosition( 1 , lrow +1).string = Osheet.GetCellByPosition( 0 , lrow +1).string
+ &apos;	oAreaR = Osheet.GetCellByPosition( 1 , lrow +3)
+ 	&apos; 	Thiscomponent.currentcontroller.select(oAreaR)	
+	&apos;   thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+opla:
+ 	
+ 	&apos; dati del libretto
+	&apos;copio (mi annoto) il range degli estremi del libretto della voce precedente
+	lrowmod1 = lrow
+
+	do while oSheet.GetCellByPosition( 19  , lRowMod1).string = &quot;&quot;
+		if oSheet.GetCellByPosition( 19  , lRowMod1).string = &quot;Libretto numero&quot; or _
+			oSheet.GetCellByPosition( 19  , lRowMod1).string = &quot;Lib. Num.&quot; or _
+				lRowMod1 &lt;= 1 then 		
+				lRowMod1 = lRow
+				dim oRangeData as object
+				exit do
+		end if
+		lRowMod1 = lRowMod1-1		
+	loop
+					
+	If  lRowMod1 &gt; 1 then &apos; se NON è la prima voce (cioè ci sono voci sopra)
+			&apos; oRangeData è il range dei dati libretto della voce sovrastante	
+			oRangeData = oSheet.getCellRangeByPosition(19 ,lRowMod1, 21, lRowMod1).RangeAddress
+	end if
+
+	Barra_chiudi_sempre_4
+		&apos;Barra_Apri_Chiudi_5(&quot;... Ufffaaaaaaaaaaaaaaaaaaaaaaaaaaaaa...&quot;, 20) &apos; va ripetuta perchè è uno swicth
+	Barra_Apri_Chiudi_5(&quot;... Pazienta ancora 4...&quot;, 60)
+
+
+    &apos;sbianco il range soprastante (le righe dei componenti)
+    &apos; si suppone che, se si passa sotto, quella sopra sia FINITA! 
+    &apos;occhio sto lavorando sulla voce precedente...
+   &apos; print lRowMod1
+    If  lRowMod1 &gt;=3 then
+	    do while oSheet.GetCellByPosition( 19  , lRowMod1).string &lt;&gt; &quot;&quot;
+	    ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 19  , lRowMod1) &apos;debug
+			oSheet.getCellRangeByPosition(19, lRowMod1, 20 , lRowMod1).cellstyle =  &quot;num centro bianco&quot; &apos;&quot;comp sotto centro_R&quot;
+  			oSheet.GetCellByPosition( 21 , lRowMod1).cellstyle = &quot;Data_bianca&quot;
+			lRowMod1 = lRowMod1-1
+		loop
+	end if
+ 
+ &apos;++++++++++++++++++++++++
+ 	&apos; attenzione: se da problemi provare ismissing
+	if not isnull (oRangeData)  then &apos; se andando su ha trovato date e/o numeri
+			&apos;li trascrive incollando orange
+			oDest = oSheet.GetCellByPosition( 19 , lRow+3).CellAddress
+			oSheet.copyRange(oDest, oRangeData)
+		else
+			&apos; se ha trovato la riga di intestazione							
+			oSheet.GetCellByPosition(19, lRow+3).string= &quot;1&quot;
+			oSheet.GetCellByPosition(20, lRow+3).string= &quot;1&quot;
+			oSheet.GetCellByPosition(21, lRow+3).string= &quot;&quot;
+	end if	
+
+	
+	
+	oSheet.getCellRangeByPosition(19, lRow+3, 21, lRow+3).cellstyle = &quot;num centro&quot;
+	oSheet.GetCellByPosition( 21 ,lRow+3).cellstyle = &quot;Data&quot;	
+ &apos;++++++++++++++++++++++++
+ 		
+ 	
+ 	
+    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	sGDove = &quot;Elenco Prezzi&quot;
+	sGVV = &quot;va&quot;	
+	sGorigine = &quot;CONTABILITA&quot;				
+	&apos;porta su EP
+	&apos;Pesca_cod_1
+	
+	Sel_Elenco_Prezzi
+	
+	Barra_chiudi_sempre_4	
+	
+	msgbox &quot;Sei sull&apos;Elenco Prezzi!   Cerca il Nuovo Prezzo che ti serve.... &quot; &amp; CHR$(10)_
+			&amp; &quot;(puoi usare Shit F3, oppure Ctrl-F, ...),&quot; &amp; CHR$(10)_
+			&amp; &quot;Un click sulla riga della voce e poi ri-aziona in qualche modo la macro &apos;Pesca va e vieni&apos; !&quot;  
+
+
+ 	exit sub
+errore:
+Barra_chiudi_sempre_4
+oCtrlModel.Enabled = True
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+
+	
+end sub
+
+
+FUNCTION SE_contabilita
+
+	If thisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; Then 
+		SE_contabilita = 0
+		exit function
+	end if
+	If not thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
+		SE_contabilita = 1
+		exit function
+	end if
+	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt;= 2 then
+		SE_contabilita = 1
+		exit function
+	end if	
+	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 then
+			if  msgbox ( &quot;Mi risulta che questo computo sia già chiuso e completato!&quot; &amp; CHR$(10)_
+					&amp; &quot;Si sta infatti lavorando sulla contabilità, e per questo mi pare una richiesta strana...&quot;&amp; CHR$(10)_
+					&amp; &quot;Se Prosegui vai ad alterare i dati del Computo!&quot;&amp; CHR$(10)_
+					&amp; &quot;    PROSEGUO comunque? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
+					SE_contabilita = 0
+					exit function
+				ELSE
+				  	SE_contabilita = 1
+				  	exit function
+			end if
+		else
+			SE_contabilita = 1
+	end if
+end FUNCTION
+
+
+Function Disattiva_button  &apos;viene richiamata dopo l&apos;esecuzione 
+print &quot;oops... non credevo venisse usata&quot;
+	oSheet = ThisComponent.currentController.activeSheet
+	oDpage = oSheet.DrawPage
+ 	oform = oDpage.Forms.getbyname(&quot;WW-Standard&quot;)
+ 	oCtrlModel = oform.getbyname(&quot;PushButton2&quot;)
+ 	msgbox oCtrlModel.Enabled
+ 	oCtrlModel.Enabled = False
+&apos; msgbox oCtrlModel.Enabled	
+ &apos;	Wait 3000
+end Function 
+
+SUB tante_voci_insieme
+	dim quante as long
+	dim i as long
+	
+
+    nome_sheet = thisComponent.currentcontroller.activesheet.name
+    If nome_sheet &lt;&gt; &quot;COMPUTO&quot; And nome_sheet &lt;&gt; &quot;Analisi di Prezzo&quot; Then
+       	 	msgbox &quot;Questa macro va eseguita sulla tabella di Computo o di Analisi&quot;
+    	 	exit sub
+    end if	
+  	quante = InputBox(&quot;quante voci vuoi inserire?&quot;, &quot;1&quot;)
+ 	If quante = 0 then
+		exit sub
+	end if
+
+	msgbox  &quot;adesso inserisco &quot; &amp; quante &amp; &quot; voci&quot;
+    For i = 1  To quante 
+    If nome_sheet = &quot;COMPUTO&quot; Then
+       			Nuova_Voce_Computo_Att
+       Else
+       	 If nome_sheet = &quot;Analisi di Prezzo&quot; Then
+          		 NuovaAnalisi_Att
+          		&apos;la seguente inserisce le tre maggiorazioni in blocco
+			 	Inserisci_Utili_giuserpe_2 &apos;
+				&apos; se non serve disattivare la riga 
+         End If
+     End If
+    
+&apos;		Nuova_Voce_scelta
+		
+		&apos;la seguente inserisce le tre maggiorazioni in blocco
+&apos;		Inserisci_Utili_giuserpe_2 &apos;
+		&apos; se non serve disattivare la riga 
+    next i
+end sub
+
+&apos;___________________________________________________________________________________________
+SUB Nuova_Voce_Computo_Att  &apos;
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+		on error goto Errore
+	end if
+
+	dim lrow as long
+	dim lrowV as long
+	dim xA as string
+	dim oSheet as object
+	dim oSheetSRC as object
+
+		&apos;on error resume next
+	oSheet = ThisComponent.currentController.activeSheet
+
+&apos;--------------------------------------------
+	oDpage = oSheet.DrawPage
+ 	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
+		&apos;	xray oform
+ 	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
+		 &apos;	xray oCtrlModel.Enabled
+		&apos; msgbox oCtrlModel.Enabled
+	oCtrlModel.Enabled = true
+ &apos;	oCtrlModel.Enabled = False
+ 	&apos;	msgbox oCtrlModel.Enabled
+ &apos;-------------------------------------------------	
+	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then		 
+		exit sub
+	end if
+	
+	sAttributo = Trova_Attr_Sheet
+    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+ 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+			exit sub
+	end if
+	&apos;__________________________
+
+	sString$ = &quot;Fine Computo&quot;
+	oEnd=uFindString(sString$, oSheet) &apos;piviere
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI4! &quot;
+		oCtrlModel.Enabled = True
+		exit sub
+	end if 
+	lrowFine=oEnd.RangeAddress.EndRow
+	
+	if lrow &lt; 3 then
+		lrow = 3
+	end if 
+
+	If Constrolla_se_M1 = true then
+		if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 0 then
+			goto inserisci_voce
+		end if
+	end if	
+
+&apos;	Select case lrow
+	
+
+&apos;	end select
+	
+		
+	If lrowfine=3 then
+		oSheet.getRows.insertByIndex(2, 2)
+		osheet.getCellRangeByPosition (0,2,45,3).CellStyle = &quot;Default&quot;
+		lrowfine = lrowfine+2
+		lrow = 3
+		goto Inserisci_voce
+	end if
+
+	If lrowfine=4 then
+		oSheet.getRows.insertByIndex(2, 1)
+		osheet.getCellRangeByPosition (0,2,45,2).CellStyle = &quot;Default&quot;
+		lrowfine = lrowfine+1
+		lrow = 3
+		goto Inserisci_voce
+	end if
+
+&apos;	If lrow=0 Or lrow=1 Or lrow=2 or lrow=3 or lrow=4 or lrow=5 And _
+	If lrow=0 Or lrow=1 Or lrow=2 or lrow=3 or lrow=4  And _
+		oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Default&quot;  then
+	&apos;	print &quot;pippo&quot;
+		lrow = 3
+		goto Inserisci_voce
+	end if
+
+	If lrow &gt;= lrowFine then
+		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
+		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+		oCtrlModel.Enabled = True
+		exit sub
+	end if
+	If lrowFine = lrow+1 then
+		if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; then
+			oSheet.getRows.insertByIndex(lrow, 1) 
+			osheet.getCellRangeByPosition (0,lrow,45,lrow).CellStyle = &quot;Default&quot;
+			goto Inserisci_voce
+		end if
+	end if
+
+	if oSheet.GetCellByPosition( 1, lrow+1).cellstyle = &quot;Comp TOTALI&quot; And _
+		oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp sotto Bianche&quot; then
+			oSheet.getRows.insertByIndex(lrow+1, 1) 
+			osheet.getCellRangeByPosition (0,lrow+1,45,lrow+1).CellStyle = &quot;Default&quot;
+			lrow = lrow+1
+			goto Inserisci_voce
+	end if
+
+	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Default&quot; And _
+		oSheet.GetCellByPosition( 1, lrow+1).cellstyle = &quot;Default&quot; then
+		if oSheet.GetCellByPosition( 1, lrow+2).cellstyle &lt;&gt; &quot;Comp TOTALI&quot; then
+				msgbox &quot;ci sono delle righe bianche di troppo... sarebbe meglio eliminarle!&quot;
+			   goto Inserisci_voce
+			else
+				goto Inserisci_voce
+		end if
+	end if
+	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Default&quot;	And _
+		oSheet.GetCellByPosition( 1, lrow+1).cellstyle = &quot;Comp TOTALI&quot; then
+		if oSheet.GetCellByPosition( 1, lrow-1).cellstyle = &quot;Default&quot; then
+				lrow = lrow-1
+				goto Inserisci_voce
+			else
+				lrow = lrow&apos;-1 
+				goto Inserisci_voce
+		end if
+	end if
+&apos;print &quot;2&quot;	
+   nCurRow = lrow
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-1-sotto_&quot; and _
+		oSheet.GetCellByPosition( 1, nCurRow+1).cellstyle = &quot;Comp-Bianche sopra&quot; then &apos; or _
+			lrow = nCurRow +1
+			goto Inserisci_voce
+	end if		
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello2 sopra&quot; then
+			lrow = nCurRow 
+			goto Inserisci_voce
+	end if
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-1-sotto_&quot; then
+			lrow = nCurRow +1
+			goto Inserisci_voce
+	end if
+&apos;print &quot;5&quot;
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;Livello-1-scritta&quot; then
+			lrow = nCurRow +2
+			goto Inserisci_voce
+	end if
+
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;comp sotto Bianche&quot; then
+			lrow = nCurRow +1
+			goto Inserisci_voce
+	end if
+
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;Comp-Bianche in mezzo&quot; then
+		&apos;oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;comp sotto Bianche&quot; then				
+				do while Trova_Attr_N (oSheet.GetCellByPosition( 0, nCurRow), oSheet) &lt;&gt; &quot;End_voce_COMPUTO&quot; 
+					if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;comp sotto Bianche&quot; then
+						nCurRow = nCurRow+1
+						exit do
+					end if
+					if oSheet.GetCellByPosition( 2, nCurRow).string &lt;&gt; &quot;SOMMANO &quot; then
+						nCurRow = nCurRow+1
+						exit do
+					end if
+
+				&apos;	and oSheet.GetCellByPosition( 3, nCurRow).cellstyle = &quot;comp sotto centro&quot; 
+			&apos;	print &quot;ncurrow  &quot; &amp;  ncurrow
+							nCurRow = nCurRow+1
+					&apos; msgbox Trova_Attr_N (oSheet.GetCellByPosition( 0, nCurRow), oSheet)		
+				loop
+
+		lrow = nCurRow +1
+		goto Inserisci_voce
+	end if
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-1-sopra&quot; then				
+				do while Trova_Attr_N (oSheet.GetCellByPosition( 0, nCurRow), oSheet) &lt;&gt; &quot;End_voce_COMPUTO&quot; _
+					and oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;comp sotto Bianche&quot; _
+					and oSheet.GetCellByPosition( 2, nCurRow).string &lt;&gt; &quot;SOMMANO &quot; _
+					and oSheet.GetCellByPosition( 3, nCurRow).cellstyle = &quot;comp sotto centro&quot; 
+							nCurRow = nCurRow-1
+				loop
+
+		lrow = nCurRow &apos;+1
+		goto Inserisci_voce
+	end if
+	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-2-sotto_&quot; then &apos; or _
+			lrow = nCurRow +1
+			goto Inserisci_voce
+	end if				
+
+&apos;print &quot;9&quot;
+&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	lRow = Mettiti_esattamente_tra_due_VociC_Att (lRow)
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ &apos;	print lrow 
+ 	inserisci_voce:
+
+ 	&apos;++++++++++++++++++++++++++++++++++++++	
+
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+
+	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; And _
+		oSheet.GetCellByPosition( 1, lrow-1).cellstyle = &quot;comp sotto Bianche&quot; then
+			oSheet.getRows.insertByIndex(lrow, 1) 
+			osheet.getCellRangeByPosition (0,lrow,45,lrow).CellStyle = &quot;Default&quot;
+	end if	
+
+	lRowNum= 4 &apos; numero di righe da inserire
+	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+
+
+	&apos; eventualmente rifa il nome di area
+	&apos;if isNull (ThisComponent.NamedRanges.blocco_analisi.ReferredCells) then
+	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
+		rifa_nomearea (&quot;S5&quot;, &quot;$A$9:$AP$12&quot; , &quot;Serv_gen1_8&quot;)
+	end if
+
+
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia il blocco delle voce (formati + formule + numeri)
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheetSRC=oDoc.NamedRanges.Serv_gen1_8.ReferredCells &apos; Serv_gen1_8 è il nome del range
+&apos;xray oSheetSRC
+	oCell=oSheet.getCellByPosition(0, lrow).CellAddress
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+
+	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
+    oSheet2.copyRange(oCell,oQuellRangeAddresse)
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+	osheet2.getCellRangeByPosition (39,lrow,41,lrow+lrownum).CellStyle =  &quot;Default&quot;
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+&apos;	 oCelle=thisComponent.getCurrentSelection().getCellAddress()   &apos;&apos;gipeto 
+&apos;	 lrow=oCelle.Row
+
+ &apos;	oCell=oSheet.getCellByPosition(0, lrow).CellAddress
+
+ 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+ 	if lrow = -1 then		 
+		exit sub
+	end if
+	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+
+
+		 Do while (Trova_Attr_N (oSheet.GetCellByPosition( 0, lrow ), oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+			lRow = lRow +1 
+				oCell=oSheet.GetCellbyPosition( 0, lRow)
+  		 Loop
+&apos; print &quot;-2-&quot; 		 
+ 
+  	&apos; modulo che sistema i LINK DAI tagG nelle righe sopra al tag vero e prorio...
+	oSheet.getCellByPosition(31, lrow+2).setformula(&quot;=AF$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(32, lrow+2).setformula(&quot;=AG$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(33, lrow+2).setformula(&quot;=AH$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(34, lrow+2).setformula(&quot;=AI$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(35, lrow+2).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(31, lrow+1).setformula(&quot;=AF$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(32, lrow+1).setformula(&quot;=AG$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(33, lrow+1).setformula(&quot;=AH$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(34, lrow+1).setformula(&quot;=AI$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(35, lrow+1).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+
+	oCell=oSheet.getCellByPosition(1, lrow+1)
+	ThisComponent.CurrentController.Select(oCell)&apos;
+
+ 	Numera_Voci_Computo (&quot;niente prompt&quot;)
+	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
+ 	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _
+ 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 ) and _
+ 		sAttributo = &quot;Tipo_computo&quot; then    
+ 		Osheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
+ 	endif 	
+ 	oCtrlModel.Enabled = True
+ 	
+&apos;+++++++++++ Queste invece paiono togliere il focus dal pulsante... (come un flipper...)
+	ThisComponent.CurrentController.Select(ThisComponent.CurrentController.getActiveSheet.getCellByPosition(0 ,0))
+	oAreaR = Osheet.GetCellByPosition( 1 , lrow +1)
+  	Thiscomponent.currentcontroller.select(oAreaR)
+&apos;+++++++++++++++++++++++++++ ma si rimane comunque incastrati nella cella selezionata
+&apos; ovvero solo con enter o tab non si esce... (occorre usare il mouse)
+	&apos; ma aggiungendo questo viene tolta la selezione...
+   thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	&apos; toglie la selezione 	
+
+&apos; temporaneo per gambetta	
+ &apos;	Osheet.GetCellByPosition( 1 , lrow +1).string = Osheet.GetCellByPosition( 0 , lrow +1).string
+ &apos;	oAreaR = Osheet.GetCellByPosition( 1 , lrow +3)
+ &apos; 	Thiscomponent.currentcontroller.select(oAreaR)	
+&apos;   thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+ 	
+ 	exit sub
+errore:
+
+oCtrlModel.Enabled = True
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END SUB
+&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+Function maledetto
+Dim Doc As Object
+Dim Forms As Object
+Dim Form As Object
+Dim Ctl As Object
+Dim I as Integer
+ 	oSheet = ThisComponent.currentController.activeSheet
+Doc = StarDesktop.CurrentComponent
+&apos;xray oSheet.Drawpage
+oForms1 = oSheet.Drawpage.Forms
+ &apos;xray oforms1
+ &apos;xray oForms.GetbyIndex(1)
+For I = 0 To oForms1.Count - 1
+	print oForms1.GetbyIndex(I).name
+	oFFF= oForms1.GetbyIndex(I)
+&apos;	oSheet.Drawpage.Forms.GetbyIndex(I)
+	for r = 0 to oFFF.Count - 1
+	 	&apos;oFFF.GetbyIndex(r).Enabled = true
+	 		print oFFF.GetbyIndex(r).name
+	 &apos;xray oFFF&apos;.ElementNames
+	next r
+ &apos; Form = oForms.GetbyIndex(I)
+ &apos; If Form.HasByName(&quot;alfa&quot;) Then
+ &apos;   Ctl = Form.GetbyName(&quot;alfa&quot;)
+ &apos;   Exit Function
+ &apos; End If
+Next I
+end function
+
+function mal
+Dim Doc As Object
+Dim Sheet As Object
+Dim DrawPage As Object
+Dim Form As Object
+ 
+Doc = StarDesktop.CurrentComponent
+Sheet = Doc.Sheets.GetByIndex(0)
+DrawPage = Sheet.DrawPage
+Form = DrawPage.Forms.GetByIndex(0)
+end function
+
+
+
+SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
+	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then	 
+		exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+
+
+
+goto oltre
+&apos;--------------------------------------------
+	oDpage = oSheet.DrawPage
+ 	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
+		&apos;	xray oform
+		&apos;	exit sub
+ 	oCtrlModel = oform.getbyname(&quot;alfa&quot;)&apos;(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
+		 	xray oCtrlModel.Enabled
+		&apos; msgbox oCtrlModel.Enabled
+	oCtrlModel.Enabled = true
+ 	oCtrlModel.Enabled = False
+ 	&apos;	msgbox oCtrlModel.Enabled
+ &apos;-------------------------------------------------		
+oltre:	
+	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+	If Constrolla_se_M1 = true then
+		if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 0 then
+			goto inserisci
+		end if
+	end if
+
+	sString$ = &quot;Fine ANALISI&quot;
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI5! &quot;
+		exit sub
+	end if 
+	lrowFine=oEnd.RangeAddress.EndRow 
+	If lrow &gt; lrowFine then
+		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
+		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+		exit sub
+	end if
+	if lrow = 0 then
+		lrow = lrow+1&apos;+2
+	end if	
+goto salta	&apos; riattivare in occasione di un salto di minorversion (sempre serva realmente a qualcosa)
+&apos;--------------------------------------------
+	oDpage = oSheet.DrawPage
+
+ 	oform = oDpage.Forms.getbyname (&quot;Standard_A&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
+			xray oDpage.Forms
+		xray oform
+
+ 	oCtrlModel = oform.getbyname(&quot;PB1&quot;)&apos;(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;) &quot;PushButton4&quot;
+		 &apos;	xray oCtrlModel.Enabled
+		&apos; msgbox oCtrlModel.Enabled
+	oCtrlModel.Enabled = true
+ 	oCtrlModel.Enabled = False
+ 	&apos;	msgbox oCtrlModel.Enabled
+ &apos;-------------------------------------------------	
+salta:
+	&apos; se sono sul grigio inserisco
+	if oSheet.GetCellbyPosition( 0, lrow).CellStyle= &quot;Analisi_Sfondo&quot; then 
+	&apos;print &quot;ok&quot;
+			goto Inserisci
+		else
+			&apos; circoscrivo la voce trovando: inizio, fine e il punto critico
+			for i = lrow to lrowFine
+				if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-sfondo-basso Att End&quot; then
+					iEnd = i
+					exit for
+				end if 
+			next	
+			for i = lrow to 2 step -1
+		&apos;	print i
+				if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-1_sigla&quot; then
+					iStart = i
+					exit for
+				end if 
+			next	
+			iCrit = iStart+2
+	end if
+	&apos; in base al punto critico decido se inserire sopra o sotto
+	if lrow &lt; iCrit then
+			lrow = iStart -1
+		else
+			lrow = iEnd + 1
+	end if
+&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
+&apos;print &quot;1 -  &quot; &amp; lrow
+	&apos; verifico che dove inserisco ci sia una riga vuota
+	if oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot; then 
+&apos;		print &quot;&apos; se non c&apos;è la metto&quot;
+		if oSheet.GetCellbyPosition( 0, lrow).CellStyle= &quot;An-sfondo-basso Att End&quot; then
+			lrow = lrow +1
+&apos;			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
+&apos;			print &quot;eeee &quot; &amp; lrow
+		end if
+		if oSheet.GetCellbyPosition( 0, lrow).CellStyle=&quot;An-1_sigla&quot; then
+&apos;				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
+&apos;		print &quot;ecco&quot;
+			lrow = lrow -1
+
+		end if
+&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
+&apos;		print &quot;2 -  &quot; &amp; lrow		
+		
+		oSheet.getRows.insertByIndex(lrow+1, 1) 
+	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
+	&apos;	print &quot;3 -  &quot; &amp; lrow
+
+		oCellN = oSheet.GetCellbyPosition( 0, lrow+1)
+		oCelleN= oCellN.getCellAddress()
+		oSheetO = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+		oRangeO =  osheetO.getCellRangeByPosition (45,41,54,41 )
+		oRangeO = oRangeO.RangeAddress
+		oSheet.copyRange(oCelleN,oRangeO)
+		&apos;ritaro lrow
+		lrow = lrow +1
+	end if
+	inserisci:
+&apos;print &quot;1,2&quot;
+	lrowNum= 7 &apos; numero di righe da inserire per una nuova Analisi
+
+	 oSheet.getRows.insertByIndex(lrow, 7) &apos;7 è ilnumero di righe da inserire per una nuova Analisi
+
+	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
+	
+	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	&apos; ritarato la posizione di inserimento
+
+	&apos; eventualmente rifa il nome di area
+	&apos;if isNull (ThisComponent.NamedRanges.blocco_analisi.ReferredCells) then
+	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
+		rifa_nomearea (&quot;S1&quot;, &quot;$AT$42:$BC$48&quot; , &quot;blocco_analisi&quot;)
+	end if
+	
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S1
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oRangeOrigine=oDoc.NamedRanges.blocco_analisi.ReferredCells &apos; blocco_analisi è il nome del range
+
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+	oCelle= oCell.getCellAddress()  &apos; indirizzo cella attiva (qui)
+
+	oQuellRangeAddresse = oRangeOrigine.RangeAddress &apos;CellRangeAddress
+
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+	&apos; riattivare in occasione di un salto di minorversion (sempre serva realmente a qualcosa)
+&apos;	oCtrlModel.Enabled = true
+
+&apos;+++++++++++ Queste invece paiono togliere il focus dal pulsante... (come un flipper...)
+	ThisComponent.CurrentController.Select(ThisComponent.CurrentController.getActiveSheet.getCellByPosition(0 , 0))
+	oAreaR = Osheet.GetCellByPosition( 0 , lrow +1)
+  	Thiscomponent.currentcontroller.select(oAreaR)
+&apos;+++++++++++++++++++++++++++ ma si rimane comunque incastrati nella cella selezionata
+&apos; ovvero solo con enter o tab non si esce... (occorre usare il mouse)
+	&apos; ma aggiungendo questo viene tolta la selezione...
+   thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	&apos; togle la selezione
+	
+ 	exit sub
+errore:
+oCtrlModel.Enabled = True
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+END SUB
+
+sub test &apos; provare le selezioni
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 1,10)
+	ThisComponent.CurrentController.Select(oCell,false)
+	ThisComponent.CurrentController.Select(oCell(FALSE))
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+		
+end sub
+
+
+
+
+
+</script:module>

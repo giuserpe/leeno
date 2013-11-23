@@ -2,9 +2,9 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_prezzario" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                             
+&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                             
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
@@ -16,7 +16,38 @@ Global oUltimo_indirizzo_conosciuto as object
 Global sUltimo_indirizzo_conosciuto as string
 Global sPrezzario_in_uso as string
 &apos;Global sFlag as string&apos;
-
+sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello
+	on error goto errore_apri
+	Dim mArgs()
+	Dim sUrl As String
+	Dim lFlags As Long
+	Dim oDoc as Object
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+		GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+	End If 
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Gimmicks&quot; ) Then 
+		GlobalScope.BasicLibraries.LoadLibrary( &quot;Gimmicks&quot; ) 
+	End If
+	oDoc = ThisComponent
+	If (oDoc.hasLocation()) Then
+		sDocURL = oDoc.getURL() &apos;url
+		sUrl = DirectoryNameoutofPath(sDocURL, &quot;/&quot;) &apos;path
+		sFileName = GetFileNameWithoutExtension(sDocURL, &quot;/&quot;) &apos;file
+	End If
+&apos; sDir = ThisComponent.getURL()
+&apos;sPath =  oDoc.Sheets.getByName(&quot;Listino&quot;).getCellByPosition(0,0).setstring(sUrl)
+	sName = oDoc.CurrentSelection.getString()
+	sFile = sUrl + &quot;/&quot; + sName + &quot;.ods&quot;
+	lFlags = com.sun.star.frame.FrameSearchFlag.CREATE + _
+	com.sun.star.frame.FrameSearchFlag.ALL
+&apos;	sFile =&quot;file:///&quot; + sPath + sUrl
+&apos;	MsgBox sFile
+	oDocument = StarDesktop.loadComponentFromURL( sFile, &quot;_blank&quot;, lFlags, mArgs())
+	goto fine
+	errore_apri:
+	msgbox &quot;Devi selezionare il nome file del Capitolo, oppure il file è inesistente!&quot;
+	fine:
+End Sub
 Sub Vai_a_Contabilita
 
 &apos;	ThisComponent.getCurrentController.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;).string = UltimusFree2.Lupo_0.sUltimus

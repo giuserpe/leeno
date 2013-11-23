@@ -2,9 +2,9 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sposta_2" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                              
+&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                              
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)

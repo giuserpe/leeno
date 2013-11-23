@@ -2,9 +2,9 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________	
-&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                                            
+&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                            
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
@@ -21,48 +21,48 @@ Global sMS_error
 Function Constrolla_se_M1
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()
-    For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array    
-      If cSheetName2 = &quot;M1&quot; Then
-         Constrolla_se_M1 = true
-         Exit Function 
-      EndIf
-    Next
-	Constrolla_se_M1 = false
-end Function 
-
-
-Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
+	For i = LBound( aSheetNames ) To UBound( aSheetNames )
+		cSheetName2 = aSheetNames( i ) &apos; get string from array    
+		If cSheetName2 = &quot;M1&quot; Then
+			Constrolla_se_M1 = true
+			Exit Function 
+			EndIf
+		Next
+		Constrolla_se_M1 = false
+	end Function 
+	
+	
+	Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
 &apos; con licenza e disclaimer
-
-	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;)
-	If oSheet.isVisible = false  then
+		
+		oSheet = ThisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;)
+		If oSheet.isVisible = false  then
 &apos;			If msgbox (&quot;Sei proprio certo di voler leggere la licenza?&quot; ,36, &quot;&quot;&amp; CHR$(10)) = 7 then
 &apos;					exit sub		
 &apos;			end if
-	 		oSheet.isVisible = TRUE
-	 		Thiscomponent.currentcontroller.setactivesheet(oSheet)
-	 	else
-	 		oSheet.isVisible = false
-	 		If Constrolla_se_M1 = true then
-	 				Vai_a_M1
-	 				&apos;print &quot;c&apos;è M1&quot;
-	 			else
-	 				Sel_Altre_Opz
-	 		end if
-	 end if
-
-END SUB
-
-
-
+					oSheet.isVisible = TRUE
+					Thiscomponent.currentcontroller.setactivesheet(oSheet)
+			else
+					oSheet.isVisible = false
+					If Constrolla_se_M1 = true then
+								Vai_a_M1
+								&apos;print &quot;c&apos;è M1&quot;
+						else
+								Sel_Altre_Opz
+					end if
+		end if
+		
+	END SUB
+	
+	
+	
 &apos; In questa tabella una serie di macro accessorie e non specifiche per Ultimus ma
 &apos;  possono essere usate dentro Ultimus... ed alcune sono richiamate direttamente da Ultimus
-
-
+	
+	
 &apos;_______________________________________________________________________________________++++++++++++++++++++
 &apos;NON FUNZIONA! Bisognerà farla a manina....
-sub Consolida_perizia  &apos; Consolida una perizia di variante (approvata) &apos; (tasto NON ASSEGNATA)
+	sub Consolida_perizia  &apos; Consolida una perizia di variante (approvata) &apos; (tasto NON ASSEGNATA)
 &apos; quindi da passare solo DOPO aver finito la perizia
 &apos; copia la colonna di &quot;prezzi totali variante&quot; su &quot;prezzi totali computo&quot;
 &apos; in questo modo i Sal (già presenti) si riferiscono adesso alla perizia
@@ -71,235 +71,235 @@ sub Consolida_perizia  &apos; Consolida una perizia di variante (approvata) &apo
 &apos; poi avremo &quot;Computo_pincoPallo_Perizia&quot; che contiene la situazione della Perizia vera e propria
 &apos; Dopo aver passato questa macro i nomi successivi saranno:
 &apos; &quot;Computo_pincoPallo_Perizia_SAL4&quot;... &quot;Computo_pincoPallo_Perizia_SALfinale&quot;
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem ----------------------------------------------------------------------
-dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
-
-rem ----------------------------------------------------------------------
-dim args2(5) as new com.sun.star.beans.PropertyValue
-args2(0).Name = &quot;Flags&quot;
-args2(0).Value = &quot;SVDFN&quot;
-args2(1).Name = &quot;FormulaCommand&quot;
-args2(1).Value = 0
-args2(2).Name = &quot;SkipEmptyCells&quot;
-args2(2).Value = false
-args2(3).Name = &quot;Transpose&quot;
-args2(3).Value = false
-args2(4).Name = &quot;AsLink&quot;
-args2(4).Value = false
-args2(5).Name = &quot;MoveMode&quot;
-args2(5).Value = 4
-
-dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args2())
-
-rem ----------------------------------------------------------------------
-dim args3(0) as new com.sun.star.beans.PropertyValue
-args3(0).Name = &quot;ToPoint&quot;
-args3(0).Value = &quot;$K$4&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args3())
-
-rem ----------------------------------------------------------------------
-dim args4(0) as new com.sun.star.beans.PropertyValue
-args4(0).Name = &quot;StringName&quot;
-args4(0).Value = &quot;Vuoi proprio fare una seconda perizia?&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:EnterString&quot;, &quot;&quot;, 0, args4())
-
-rem ----------------------------------------------------------------------
-dispatcher.executeDispatch(document, &quot;.uno:JumpToNextCell&quot;, &quot;&quot;, 0, Array())
-
-rem ----------------------------------------------------------------------
-dim args6(0) as new com.sun.star.beans.PropertyValue
-args6(0).Name = &quot;ToPoint&quot;
-args6(0).Value = &quot;$K$4&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args6())
-
-rem ----------------------------------------------------------------------
-dim args7(0) as new com.sun.star.beans.PropertyValue
-args7(0).Name = &quot;VerticalJustification&quot;
-args7(0).Value = com.sun.star.table.CellVertJustify.CENTER
-
-dispatcher.executeDispatch(document, &quot;.uno:VerticalJustification&quot;, &quot;&quot;, 0, args7())
-
-rem ----------------------------------------------------------------------
-dim args8(0) as new com.sun.star.beans.PropertyValue
-args8(0).Name = &quot;HorizontalJustification&quot;
-args8(0).Value = com.sun.star.table.CellHoriJustify.CENTER
-
-dispatcher.executeDispatch(document, &quot;.uno:HorizontalJustification&quot;, &quot;&quot;, 0, args8())
-
-END SUB
-
-
-
+		rem ----------------------------------------------------------------------
+		rem define variables
+		dim document   as object
+		dim dispatcher as object
+		rem ----------------------------------------------------------------------
+		rem get access to the document
+		document   = ThisComponent.CurrentController.Frame
+		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+		
+		rem ----------------------------------------------------------------------
+		dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
+		
+		rem ----------------------------------------------------------------------
+		dim args2(5) as new com.sun.star.beans.PropertyValue
+		args2(0).Name = &quot;Flags&quot;
+		args2(0).Value = &quot;SVDFN&quot;
+		args2(1).Name = &quot;FormulaCommand&quot;
+		args2(1).Value = 0
+		args2(2).Name = &quot;SkipEmptyCells&quot;
+		args2(2).Value = false
+		args2(3).Name = &quot;Transpose&quot;
+		args2(3).Value = false
+		args2(4).Name = &quot;AsLink&quot;
+		args2(4).Value = false
+		args2(5).Name = &quot;MoveMode&quot;
+		args2(5).Value = 4
+		
+		dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args2())
+		
+		rem ----------------------------------------------------------------------
+		dim args3(0) as new com.sun.star.beans.PropertyValue
+		args3(0).Name = &quot;ToPoint&quot;
+		args3(0).Value = &quot;$K$4&quot;
+		
+		dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args3())
+		
+		rem ----------------------------------------------------------------------
+		dim args4(0) as new com.sun.star.beans.PropertyValue
+		args4(0).Name = &quot;StringName&quot;
+		args4(0).Value = &quot;Vuoi proprio fare una seconda perizia?&quot;
+		
+		dispatcher.executeDispatch(document, &quot;.uno:EnterString&quot;, &quot;&quot;, 0, args4())
+		
+		rem ----------------------------------------------------------------------
+		dispatcher.executeDispatch(document, &quot;.uno:JumpToNextCell&quot;, &quot;&quot;, 0, Array())
+		
+		rem ----------------------------------------------------------------------
+		dim args6(0) as new com.sun.star.beans.PropertyValue
+		args6(0).Name = &quot;ToPoint&quot;
+		args6(0).Value = &quot;$K$4&quot;
+		
+		dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args6())
+		
+		rem ----------------------------------------------------------------------
+		dim args7(0) as new com.sun.star.beans.PropertyValue
+		args7(0).Name = &quot;VerticalJustification&quot;
+		args7(0).Value = com.sun.star.table.CellVertJustify.CENTER
+		
+		dispatcher.executeDispatch(document, &quot;.uno:VerticalJustification&quot;, &quot;&quot;, 0, args7())
+		
+		rem ----------------------------------------------------------------------
+		dim args8(0) as new com.sun.star.beans.PropertyValue
+		args8(0).Name = &quot;HorizontalJustification&quot;
+		args8(0).Value = com.sun.star.table.CellHoriJustify.CENTER
+		
+		dispatcher.executeDispatch(document, &quot;.uno:HorizontalJustification&quot;, &quot;&quot;, 0, args8())
+		
+	END SUB
+	
+	
+	
 &apos;&apos;***************************************************************+
-Sub Sposta_Righe_Anche_in_tabelle_diverse
-dim iStartCol as long
-dim iStartRow as long
-dim iEndCol as long
-dim iEndRow as long
-dim l3RowS as long
-dim l3RowE as long
-dim iRowCountSRC as long
-dim lrowDest as long
-dim lSheetSRC as long
-
-	 oDoc = thisComponent
-	 oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
-	 oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
-	 lSheetSRC = oRangeSRC.RangeAddress.sheet
-	 iRowCountSRC = oRangeSRC.Rows.Count &apos; mumero di righe del range
- 	 With oRangeSRC.RangeAddress
-		iStartCol = .StartColumn
-		iStartRow =.StartRow
-		iEndCol = .EndColumn
-		iEndRow = .EndRow
-	 End With
-	 
-   	orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
-	ThisComponent.CurrentController.Select(orange_t)
-	sTitolo = &quot;Click sulla riga dove SPOSTARE la selezione  (ESC per Annullare, NO Click su X ) &quot;
- 	 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
- 	 if SelectedRange = &quot;&quot; or _
- 	 	SelectedRange = &quot;ANNULLA&quot; or _
- 	 	SelectedRange = &quot;GNente&quot; then
- 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
- 	 	exit sub
- 	 end if
-
-	 lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
+	Sub Sposta_Righe_Anche_in_tabelle_diverse
+		dim iStartCol as long
+		dim iStartRow as long
+		dim iEndCol as long
+		dim iEndRow as long
+		dim l3RowS as long
+		dim l3RowE as long
+		dim iRowCountSRC as long
+		dim lrowDest as long
+		dim lSheetSRC as long
+		
+		oDoc = thisComponent
+		oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
+		oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
+		lSheetSRC = oRangeSRC.RangeAddress.sheet
+		iRowCountSRC = oRangeSRC.Rows.Count &apos; mumero di righe del range
+			 With oRangeSRC.RangeAddress
+			iStartCol = .StartColumn
+			iStartRow =.StartRow
+			iEndCol = .EndColumn
+			iEndRow = .EndRow
+		End With
+		
+			orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
+		ThisComponent.CurrentController.Select(orange_t)
+		sTitolo = &quot;Click sulla riga dove SPOSTARE la selezione  (ESC per Annullare, NO Click su X ) &quot;
+			 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+			 if SelectedRange = &quot;&quot; or _
+			 	SelectedRange = &quot;ANNULLA&quot; or _
+			 	SelectedRange = &quot;GNente&quot; then
+			 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+			 	exit sub
+		 end if
+	
+	lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
 &apos;	 lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
- 	 lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet 
- 	 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
-
-
-	&apos; inserisci le righe
+		 lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet 
+		 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
+	
+	
+&apos; inserisci le righe
 	oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
-	&apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
+&apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
 	oSheetDest.unprotect(&quot;&quot;)
 	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
-
+	
 	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  si sposta sopra,,,
 		if lrowDest &lt;  iStartRow then
-			 iStartRow = iStartRow + iRowCountSRC
-			 iEndRow   = iEndRow   + iRowCountSRC
-			 K = +1
-		&apos;	 print &quot;Su +1&quot;
+			iStartRow = iStartRow + iRowCountSRC
+			iEndRow   = iEndRow   + iRowCountSRC
+			K = +1
+&apos;	 print &quot;Su +1&quot;
 		end if
 	end if
 	k= -1
 	
-	&apos; copia
+&apos; copia
 	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
-    oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
-    oSheetDest.copyRange(oDest, oSrc)
-
-
-	&apos; rimuove il range sorgente ... commmentare se non serve
-	&apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
-	 myrows = oSheetDest.getrows
-	 	oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
-	&apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
- 	 myrows.removebyindex(iStartRow,iRowCountSRC)
-
- &apos;	 print lrowDest-iRowCountSRC
- &apos;	 print lrowDest-iRowCountSRC+k
- &apos;	 print lrowDest
- 	if oSheetDest.name = oSheetSRC.name then
-	 	if lrowDest &lt;  iStartRow then
+	oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+	oSheetDest.copyRange(oDest, oSrc)
+	
+	
+&apos; rimuove il range sorgente ... commmentare se non serve
+&apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
+	myrows = oSheetDest.getrows
+		oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
+&apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
+		 myrows.removebyindex(iStartRow,iRowCountSRC)
+	
+&apos;	 print lrowDest-iRowCountSRC
+&apos;	 print lrowDest-iRowCountSRC+k
+&apos;	 print lrowDest
+		if oSheetDest.name = oSheetSRC.name then
+			if lrowDest &lt;  iStartRow then
 			orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest+k+1,250,lrowDest+iRowCountSRC+k)
-		  else
-   			orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest-iRowCountSRC+k+1,250,lrowDest+k)
+		else
+						orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest-iRowCountSRC+k+1,250,lrowDest+k)
 		end if
 		ThisComponent.CurrentController.Select(orange_t) 
 	end if
 &apos;	ThisComponent.CurrentController.Select(orange_t)    	 
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-	&apos; toglie la selezione 	
+&apos; toglie la selezione 	
 END SUB
 
 
 
 Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
-dim iStartCol as long
-dim iStartRow as long
-dim iEndCol as long
-dim iEndRow as long
-
-dim l3RowS as long
-dim l3RowE as long
-
-dim iRowCountSRC as long
-dim lrowDest as long
-dim lSheetSRC as long
-	 oDoc = thisComponent
-	 oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
-	 oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
-	 lSheetSRC = oRangeSRC.RangeAddress.sheet
-	 iRowCountSRC = oRangeSRC.Rows.Count &apos; mumero di righe del range
- 	 With oRangeSRC.RangeAddress
+	dim iStartCol as long
+	dim iStartRow as long
+	dim iEndCol as long
+	dim iEndRow as long
+	
+	dim l3RowS as long
+	dim l3RowE as long
+	
+	dim iRowCountSRC as long
+	dim lrowDest as long
+	dim lSheetSRC as long
+	oDoc = thisComponent
+	oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
+	oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
+	lSheetSRC = oRangeSRC.RangeAddress.sheet
+	iRowCountSRC = oRangeSRC.Rows.Count &apos; mumero di righe del range
+		 With oRangeSRC.RangeAddress
 		iStartCol = .StartColumn
 		iStartRow =.StartRow
 		iEndCol = .EndColumn
 		iEndRow = .EndRow
-	 End With
-	 orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
-	 ThisComponent.CurrentController.Select(orange_t) 
-
-	 sTitolo = &quot;Click sulla riga dove COPIARE la selezione   (ESC per Annullare, NO Click su X ) &quot;
- 	 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
- 	 if SelectedRange = &quot;&quot; or _
- 	 	SelectedRange = &quot;ANNULLA&quot; or _
- 	 	SelectedRange = &quot;GNente&quot; then
- 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
- 	 	exit sub
- 	 end if
+	End With
+	orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
+	ThisComponent.CurrentController.Select(orange_t) 
+	
+	sTitolo = &quot;Click sulla riga dove COPIARE la selezione   (ESC per Annullare, NO Click su X ) &quot;
+		 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+		 if SelectedRange = &quot;&quot; or _
+		 	SelectedRange = &quot;ANNULLA&quot; or _
+		 	SelectedRange = &quot;GNente&quot; then
+		 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+		 	exit sub
+	 end if
 
 &apos; xray SelectedRange  &apos;debug 11/01/11
-	 lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
+lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
 
- 	 lSheetDest =  getSheet(SelectedRange) &apos;numero della sheet 
- 	 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
+	 lSheetDest =  getSheet(SelectedRange) &apos;numero della sheet 
+	 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
 
-	&apos; inserisci le righe
-		oSheetDest.unprotect(&quot;&quot;)
-	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
+&apos; inserisci le righe
+oSheetDest.unprotect(&quot;&quot;)
+oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
 
-	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  ci sposta sopra,,,
-		if lrowDest &lt;  iStartRow then
-			 iStartRow = iStartRow + iRowCountSRC
-			 iEndRow   = iEndRow   + iRowCountSRC
-		end if
+If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  ci sposta sopra,,,
+	if lrowDest &lt;  iStartRow then
+		iStartRow = iStartRow + iRowCountSRC
+		iEndRow   = iEndRow   + iRowCountSRC
 	end if
-	
-	&apos; copia
-	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
-    oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
-    oSheetDest.copyRange(oDest, oSrc)
-   	orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest,250,lrowDest+iRowCountSRC-1)
-	ThisComponent.CurrentController.Select(orange_t)   
-	&apos; rimuove il range sorgente ... commmentare se non serve
-	&apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
+end if
+
+&apos; copia
+oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
+oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+oSheetDest.copyRange(oDest, oSrc)
+	orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest,250,lrowDest+iRowCountSRC-1)
+ThisComponent.CurrentController.Select(orange_t)   
+&apos; rimuove il range sorgente ... commmentare se non serve
+&apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
 &apos;	 myrows = oSheetSRC.getrows
- &apos;	 myrows.removebyindex(iStartRow,iRowCountSRC)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-	&apos; toglie la selezione 	
+&apos;	 myrows.removebyindex(iStartRow,iRowCountSRC)
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+&apos; toglie la selezione 	
 END SUB
 
 
 Sub ToggleGrid &apos; Attiva/disattiva griglia
-  ThisComponent.CurrentController.ShowGrid = _
-  Not ThisComponent.CurrentController.ShowGrid
+ThisComponent.CurrentController.ShowGrid = _
+Not ThisComponent.CurrentController.ShowGrid
 END SUB 
 
 Sub Copia colori_cella_cella &apos;SU RANGE ESTESI
@@ -316,74 +316,74 @@ Dim oCellSRC as object
 Dim lSheetDest as long
 Dim lcolorSRC as long
 &apos;print &quot;eccolo&quot;
- 		oSheetSRC = ThisComponent.currentController.activeSheet
- 		oCellSRC=ThisComponent.getCurrentSelection()
- 		lcolorSRC = oCellSRC.Cellbackcolor
- &apos;		xray lcolorSRC
- 		sTitolo = &quot; COLORE Prelevato: seleziona destinazione   (ESC per Annullare, NO Click su X )  &quot;
- 	&apos;	SelectedRange = getRange_colore(sTitolo) &apos; richiama il listeners (specifico)&apos;
- 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners generico
- 		&apos; che restuisce un address come stringa	
- 		if SelectedRange = &quot;&quot; or _
- 	 		SelectedRange = &quot;ANNULLA&quot; then
- 	 		&apos;oRangeSelectionListener.release()
- 	 		&apos;xray oRangeSelectionListener
- 		 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
- 		 	exit sub
- 	 	end if 	
- 	 	lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet (anche un&apos;altra da SRC)
- 		oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet
-   		oRangeDest = oSheetDest.getCellRangeByName(SelectedRange) &apos; oggetto range di destinazione
-   	 	oRangeDest.Cellbackcolor = lcolorSRC
-	    Thiscomponent.currentcontroller.setactivesheet(oSheetDest)
+		oSheetSRC = ThisComponent.currentController.activeSheet
+		oCellSRC=ThisComponent.getCurrentSelection()
+		lcolorSRC = oCellSRC.Cellbackcolor
+&apos;		xray lcolorSRC
+		sTitolo = &quot; COLORE Prelevato: seleziona destinazione   (ESC per Annullare, NO Click su X )  &quot;
+	&apos;	SelectedRange = getRange_colore(sTitolo) &apos; richiama il listeners (specifico)&apos;
+		SelectedRange = getRange(sTitolo) &apos; richiama il listeners generico
+		&apos; che restuisce un address come stringa	
+		if SelectedRange = &quot;&quot; or _
+	 		SelectedRange = &quot;ANNULLA&quot; then
+	 		&apos;oRangeSelectionListener.release()
+	 		&apos;xray oRangeSelectionListener
+		 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+		 	exit sub
+	 	end if 	
+	 	lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet (anche un&apos;altra da SRC)
+		oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet
+		oRangeDest = oSheetDest.getCellRangeByName(SelectedRange) &apos; oggetto range di destinazione
+	 	oRangeDest.Cellbackcolor = lcolorSRC
+Thiscomponent.currentcontroller.setactivesheet(oSheetDest)
 END SUB
- 
+
 function getRange_Colore(sTitolo as string) as string &apos;listener specifico per copiare il colore...
-   sA = &quot;&quot;
-   TestRangeSelection_colore(sTitolo)
-   do
-       wait 100
-   loop while sA = &quot;&quot;
-   getRange_colore = sA
+sA = &quot;&quot;
+TestRangeSelection_colore(sTitolo)
+do
+	wait 100
+loop while sA = &quot;&quot;
+getRange_colore = sA
 end function
 
 
 Sub TestRangeSelection_Colore(sTitolo as string) &apos;listener specifico per copiare il colore...
-	oDocView = ThisComponent.currentController 
-	oDocView.removeRangeSelectionListener(oRangeSelectionListener)
-	If Not IsNull(oRangeSelectionListener) Then
-   		 oDocView.removeRangeSelectionListener(oRangeSelectionListener)
-	End If
-	oRangeSelectionListener = createUnoListener(&quot;oDocView_&quot; , _
-     &quot;com.sun.star.sheet.XRangeSelectionListener&quot;)
-	oDocView.addRangeSelectionListener (oRangeSelectionListener)
-	Dim mArgs(2) As New com.sun.star.beans.PropertyValue
- mArgs(0).Name = &quot;InitialValue&quot;
- mArgs(0).Value = &quot;ANNULLA&quot;
- mArgs(1).Name = &quot;Title&quot;
- mArgs(1).Value = sTitolo &apos;&quot;  Copia il COLORE di SFONDO... fai Click sulla destinazione........................&quot; &apos;My Title&quot;
- mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
- mArgs(2).Value = True
- oDocView.startRangeSelection(mArgs())
+oDocView = ThisComponent.currentController 
+oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+If Not IsNull(oRangeSelectionListener) Then
+			 oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+End If
+oRangeSelectionListener = createUnoListener(&quot;oDocView_&quot; , _
+&quot;com.sun.star.sheet.XRangeSelectionListener&quot;)
+oDocView.addRangeSelectionListener (oRangeSelectionListener)
+Dim mArgs(2) As New com.sun.star.beans.PropertyValue
+mArgs(0).Name = &quot;InitialValue&quot;
+mArgs(0).Value = &quot;ANNULLA&quot;
+mArgs(1).Name = &quot;Title&quot;
+mArgs(1).Value = sTitolo &apos;&quot;  Copia il COLORE di SFONDO... fai Click sulla destinazione........................&quot; &apos;My Title&quot;
+mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
+mArgs(2).Value = True
+oDocView.startRangeSelection(mArgs())
 END SUB
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sub copia_solo_colore_Sfondo333
-	oCellSRC=ThisComponent.getCurrentSelection()
-	lcolorSRC=oCellSRC.Cellbackcolor &apos;-- Cattura il
-		&apos; colore della prima cella selezionata 
-	a = MsgBox(&quot;Se vuoi applicare il colore della cella selezionata ad altre celle premi oK,  e poi seleziona la destinazione con il mouse ...  &quot;_
-	 , 128 + 32 + 1 , &quot; Click sulla destinazione&quot;)
-	 &apos;Qui ho aggiunto un box con tanto di pulsanti OK Annulla
-	 &apos;Annulla serve nel caso l&apos; utente dia inizio al processo 
-	 &apos;per errore, il pulsante OK Ã¨ quello attivo percio basta
-	 &apos; premere invio per dare inizio al processo
-  If a = 2 Then Exit Sub
-	
-	Sel_Range=getTheRange()
-	If IsNull(Sel_Range) Then Exit Sub &apos;Se, malauguratamente
-		&apos; non dovesse tornare niente da getTheRange, si esce                       
-	Sel_Range.Cellbackcolor = lcolorSRC
+oCellSRC=ThisComponent.getCurrentSelection()
+lcolorSRC=oCellSRC.Cellbackcolor &apos;-- Cattura il
+&apos; colore della prima cella selezionata 
+a = MsgBox(&quot;Se vuoi applicare il colore della cella selezionata ad altre celle premi oK,  e poi seleziona la destinazione con il mouse ...  &quot;_
+, 128 + 32 + 1 , &quot; Click sulla destinazione&quot;)
+&apos;Qui ho aggiunto un box con tanto di pulsanti OK Annulla
+&apos;Annulla serve nel caso l&apos; utente dia inizio al processo 
+&apos;per errore, il pulsante OK Ã¨ quello attivo percio basta
+&apos; premere invio per dare inizio al processo
+If a = 2 Then Exit Sub
+
+Sel_Range=getTheRange()
+If IsNull(Sel_Range) Then Exit Sub &apos;Se, malauguratamente
+&apos; non dovesse tornare niente da getTheRange, si esce                       
+Sel_Range.Cellbackcolor = lcolorSRC
 END SUB
 
 
@@ -393,143 +393,143 @@ Sub cerca_errori &apos; trova gli errori (valori #N/D) in una tabella Calc
 dim lrow as long
 dim lcol as long 
 
-	oSheet = ThisComponent.currentController.activeSheet
+oSheet = ThisComponent.currentController.activeSheet
 &apos;	xray osheet
-	oSelezione = ThisComponent.getCurrentSelection()
-	checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
-	if checkzelle then 
-		lrow = oSelezione.celladdress.row
-		lcol = oSelezione.celladdress.column
-			else
-		lrow= oSelezione.RangeAddress.startRow 
-		lCol= oSelezione.RangeAddress.startColumn
-	end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
-	&apos;selezione di un range anzichè di una cella
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(lcol,lrow)) 
+oSelezione = ThisComponent.getCurrentSelection()
+checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
+if checkzelle then 
+	lrow = oSelezione.celladdress.row
+	lcol = oSelezione.celladdress.column
+else
+	lrow= oSelezione.RangeAddress.startRow 
+	lCol= oSelezione.RangeAddress.startColumn
+end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
+&apos;selezione di un range anzichè di una cella
+ThisComponent.CurrentController.Select((oSheet.getCellByPosition(lcol,lrow)) 
 
-	if not ismissing(sSMS) or not isNull(sSMS) then 
-		if sMS_error = 0 then
-			  msgbox (&quot;&quot; &amp; CHR$(10)_
-   						&amp; &quot;Questa macro cerca i valori #N/D, #N/A, #DIV/0 (etc.) SOLO NELLE COLONNE VISIBILI in questa tabella.&quot; 
-   					sMS_error = 1
-   		end if	
-	end if
+if not ismissing(sSMS) or not isNull(sSMS) then 
+	if sMS_error = 0 then
+		msgbox (&quot;&quot; &amp; CHR$(10)_
+								&amp; &quot;Questa macro cerca i valori #N/D, #N/A, #DIV/0 (etc.) SOLO NELLE COLONNE VISIBILI in questa tabella.&quot; 
+							sMS_error = 1
+			end if	
+end if
 
-	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;.. cerca...cerca... cerca....&quot;, 50)
+Barra_chiudi_sempre_4
+Barra_Apri_Chiudi_5(&quot;.. cerca...cerca... cerca....&quot;, 50)
+If lRow &lt;&gt; 0 then
+	lrow = lrow +1&apos;		
+end if
+
+If lcol &lt;&gt; 0 and lcol &lt; 34 then
+	lcol = lcol +1
+else
+	lcol = 0
 	If lRow &lt;&gt; 0 then
-		lrow = lrow +1&apos;		
+		lrow = lrow +1
 	end if
-	
-	If lcol &lt;&gt; 0 and lcol &lt; 34 then
-		lcol = lcol +1
-		else
-		lcol = 0
-		If lRow &lt;&gt; 0 then
-			lrow = lrow +1
-		end if
-		lrow = lrow + 1
-	end if
+	lrow = lrow + 1
+end if
 
-	
-	lcol = 0 &apos; in Ultimus lo pongo = 0 perchè nella tabella di Computo di Ultimus
-			&apos; è utile trovare solo la riga....
-			&apos;(Altrimenti le va a cercare nelle colonne nascoste... )
-	
-	ripeti:
+
+lcol = 0 &apos; in Ultimus lo pongo = 0 perchè nella tabella di Computo di Ultimus
+&apos; è utile trovare solo la riga....
+&apos;(Altrimenti le va a cercare nelle colonne nascoste... )
+
+ripeti:
 &apos;	print &quot;lrow prima di ripetere &quot; &amp; lcol &amp; &quot;  &amp;  &quot; &amp; lrow
-	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;.. cerca...cerca... cerca....&quot;, 50)
-	oOrigine=uFindError(oSheet,lrow, lcol)
+Barra_chiudi_sempre_4
+Barra_Apri_Chiudi_5(&quot;.. cerca...cerca... cerca....&quot;, 50)
+oOrigine=uFindError(oSheet,lrow, lcol)
 &apos;exit sub
-	if IsNull (oOrigine)  then &apos; se non trova valori di errore
-		if msgbox (CHR$(10) &amp;&quot;Non trovo più valori con Errore...&quot; &amp; CHR$(10)&amp; CHR$(10)_
-				&amp; &quot; Vuoi effettuare la ricerca dall&apos;inizio del foglio? &quot;&amp; CHR$(10)&amp; CHR$(10)_
-				&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-				lrow = 0
-				lcol = 0
-				  Barra_Chiudi_sempre_4
-			
-				goto ripeti
-			else
-			  Barra_Chiudi_sempre_4
-			 &apos; sMS_error = 0
-			exit sub
-			
-		end if
-	end if
-	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;2 .. cerca...cerca... cerca....&quot;, 50)
-	ThisComponent.CurrentController.Select(oOrigine)
+if IsNull (oOrigine)  then &apos; se non trova valori di errore
+	if msgbox (CHR$(10) &amp;&quot;Non trovo più valori con Errore...&quot; &amp; CHR$(10)&amp; CHR$(10)_
+	&amp; &quot; Vuoi effettuare la ricerca dall&apos;inizio del foglio? &quot;&amp; CHR$(10)&amp; CHR$(10)_
+	&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
+	lrow = 0
+	lcol = 0
+	Barra_Chiudi_sempre_4
 	
+	goto ripeti
+else
+	Barra_Chiudi_sempre_4
+&apos; sMS_error = 0
+	exit sub
+	
+end if
+end if
+Barra_chiudi_sempre_4
+Barra_Apri_Chiudi_5(&quot;2 .. cerca...cerca... cerca....&quot;, 50)
+ThisComponent.CurrentController.Select(oOrigine)
+
 &apos;forse questo si può/deve eliminare
-	if oOrigine.rows.isvisible = false then
-		msgbox &quot;Il valore di errore è in una riga nascosta... (vedi le coordinate nella finestrella in alto a sinistra!)&quot;
-		lcol = lcol + 1
-	&apos;	print lcol
-		if lcol &gt; 34 then		
-			lrow = lrow + 1
-			lcol = 0
-		end if
-	&apos;	goto ripeti
-	end if
-    Barra_Chiudi_sempre_4
-    &apos;sMS_error = 0&apos;
+if oOrigine.rows.isvisible = false then
+msgbox &quot;Il valore di errore è in una riga nascosta... (vedi le coordinate nella finestrella in alto a sinistra!)&quot;
+lcol = lcol + 1
+&apos;	print lcol
+if lcol &gt; 34 then		
+	lrow = lrow + 1
+	lcol = 0
+end if
+&apos;	goto ripeti
+end if
+Barra_Chiudi_sempre_4
+&apos;sMS_error = 0&apos;
 END SUB
 
 Function uFindError(oSheet,lrow, lcol) As Object &apos;As Variant 
-  Dim nCurCol As Integer
-  Dim nCurRow As Integer
-  Dim nEndCol As Integer
-  Dim nEndRow As Integer
-  Dim oCell As Object
-  Dim oCursor As Object
-  Dim aAddress As Variant
-  Dim sFind As String
+Dim nCurCol As Integer
+Dim nCurRow As Integer
+Dim nEndCol As Integer
+Dim nEndRow As Integer
+Dim oCell As Object
+Dim oCursor As Object
+Dim aAddress As Variant
+Dim sFind As String
 
-  oCell = oSheet.GetCellbyPosition( 0, 0 )
-  oCursor = oSheet.createCursorByRange(oCell)
-  oCursor.GotoEndOfUsedArea(True)
-  aAddress = oCursor.RangeAddress
-  nEndRow = aAddress.EndRow
-  nEndCol = aAddress.EndColumn
- &apos; print &quot;cerco in &quot; &amp; nCurRow &amp; &quot; - &quot; &amp; nEndRow
- 
-  For nCurRow = lrow To nEndRow     &apos;row by row.
-    For nCurCol = lcol To nEndCol       &apos;Go through the range column by column, col by col
-      oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
-      lFind = oCell.Error       
-      If lFind &lt;&gt; 0 and _
-      	 oSheet.getColumns().getByIndex(nCurCol).isVisible=true  then
-      	 
-    &apos;  PRINT &quot;RQNGE  &quot; &amp; nEndRow &amp; &quot;  &quot; &amp; nCurRow
-    
-        uFindError = oCell
-  &apos;     ThisComponent.CurrentController.Select(oCell)
-    &apos;    print
-        Exit Function
-      End If
-    Next
-  Next
-  Barra_Chiudi_sempre_4
-  msgbox &quot;finito... non trovo valori N/D...&quot;
+oCell = oSheet.GetCellbyPosition( 0, 0 )
+oCursor = oSheet.createCursorByRange(oCell)
+oCursor.GotoEndOfUsedArea(True)
+aAddress = oCursor.RangeAddress
+nEndRow = aAddress.EndRow
+nEndCol = aAddress.EndColumn
+&apos; print &quot;cerco in &quot; &amp; nCurRow &amp; &quot; - &quot; &amp; nEndRow
+
+For nCurRow = lrow To nEndRow     &apos;row by row.
+For nCurCol = lcol To nEndCol       &apos;Go through the range column by column, col by col
+	oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+	lFind = oCell.Error       
+	If lFind &lt;&gt; 0 and _
+		 oSheet.getColumns().getByIndex(nCurCol).isVisible=true  then
+		 
+&apos;  PRINT &quot;RQNGE  &quot; &amp; nEndRow &amp; &quot;  &quot; &amp; nCurRow
+	
+	uFindError = oCell
+&apos;     ThisComponent.CurrentController.Select(oCell)
+&apos;    print
+	Exit Function
+End If
+Next
+Next
+Barra_Chiudi_sempre_4
+msgbox &quot;finito... non trovo valori N/D...&quot;
 End Function
 
 Sub MINUSCOLO &apos; cTRL -Alt - M  Lavora solo su una cella e se è selezionato
 &apos;un range avverte che ha &quot;lavorato solo la prima.
 &apos; ààà-4
 oSheet = ThisComponent.currentController.activeSheet
- oSelezione = thisComponent.getCurrentSelection()
+oSelezione = thisComponent.getCurrentSelection()
 checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
 if checkzelle then 
-		lrow = oSelezione.celladdress.row
-		lcol = oSelezione.celladdress.column
-			else
-		lrow= oSelezione.RangeAddress.startRow 
-		lCol= oSelezione.RangeAddress.startColumn
-		print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
+lrow = oSelezione.celladdress.row
+lcol = oSelezione.celladdress.column
+else
+lrow= oSelezione.RangeAddress.startRow 
+lCol= oSelezione.RangeAddress.startColumn
+print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
 end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
-	&apos;selezione di un range anzichè di una cella
+&apos;selezione di un range anzichè di una cella
 oCell = oSheet.GetCellByPosition(lcol , lrow)
 strTemp = oCell.string
 strTemp = LCase(strTemp)
@@ -554,30 +554,30 @@ oSRC = oSheetSRC.GetCellByPosition(9,54,9,54).RangeAddress
 &apos;	oDest = oSheet.GetCellByPosition( 0, 3 ).CellAddress
 
 &apos;		oSheet.copyRange(oCellDest,oSRC)
-	
+
 &apos;	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
- &apos;   oSheet2.copyRange(oCell,oQuellRangeAddresse)
- 
- &apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
- &apos;   oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
- &apos;   oSheetDest.copyRange(oDest, oSrc)
+&apos;   oSheet2.copyRange(oCell,oQuellRangeAddresse)
+
+&apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
+&apos;   oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+&apos;   oSheetDest.copyRange(oDest, oSrc)
 
 End Sub
 
 Sub Sistema_diverse_cose &apos; tipo: toglie gli a capo, gli spazi ridondanti, i tab (forse)
 &apos;print &quot;sistema&quot;
 oSheet = ThisComponent.currentController.activeSheet
- oSelezione = thisComponent.getCurrentSelection()
+oSelezione = thisComponent.getCurrentSelection()
 checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
 if checkzelle then 
-		lrow = oSelezione.celladdress.row
-		lcol = oSelezione.celladdress.column
-			else
-		lrow= oSelezione.RangeAddress.startRow 
-		lCol= oSelezione.RangeAddress.startColumn
-		print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
+lrow = oSelezione.celladdress.row
+lcol = oSelezione.celladdress.column
+else
+lrow= oSelezione.RangeAddress.startRow 
+lCol= oSelezione.RangeAddress.startColumn
+print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
 end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
-	&apos;selezione di un range anzichè di una cella
+&apos;selezione di un range anzichè di una cella
 oCell = oSheet.GetCellByPosition(lcol , lrow)
 strTemp = oCell.string
 strTemp = LCase(strTemp)
@@ -595,87 +595,87 @@ Thiscomponent.CurrentController.Select(oCell)
 End Sub
 
 sub suona
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
-		beep
-	end if
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+beep
+end if
 end sub
 
 sub suona_medio
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-	end if
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+end if
 end sub
 
 sub suona_lungo
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep	
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-		wait 100
-		beep
-	end if
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep	
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+wait 100
+beep
+end if
 end sub
 
 sub suona_2
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
-		beep
-		wait 300
-		beep
-	end if
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+beep
+wait 300
+beep
+end if
 end sub
 
 sub suona_2_1
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
-		beep
-		wait 200
-		beep
-		wait 700
-		beep	
-	end if
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+beep
+wait 200
+beep
+wait 700
+beep	
+end if
 end sub
 
 sub suona_1_2
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
-		beep
-		wait 700
-		beep
-		wait 300
-		beep	
-	end if
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+beep
+wait 700
+beep
+wait 300
+beep	
+end if
 end sub
 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -705,6 +705,7 @@ end sub
 
 &apos; BLOCCARE I COMANDI DURANTE L&apos;ESECUZIONE DI UNA MACRO!!!!! 
 &apos; fatto... ma non sono soddisfatto!
+
 
 
 

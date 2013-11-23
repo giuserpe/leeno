@@ -2,9 +2,9 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_0" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.62                                                                                                                                                                                                                                                                                                                                           3.0.16               
+&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                           3.0.16               
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - bart.aimar@gmail.com
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
@@ -165,7 +165,7 @@ on error goto ErrorHandler
 		oSheet.unprotect(&quot;&quot;)
         versioneUF_major= 3                                                                                                                                                                                                                                                                                                                                                                                                                        
         versioneUF_minor= 8                                                                                                                                                                                                                                                                                                                                                                                                             
-        versioneUF_subversion= 62                                                                                                                                                                                                                                                                                                                                                                         
+        versioneUF_subversion= 63                                                                                                                                                                                                                                                                                                                                                                         
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion
@@ -706,7 +706,7 @@ dim Esiste as boolean
 	
         versioneUF_major= 3                                                                                                                                                                                                                                                                                                                                                                                                                      
         versioneUF_minor= 8                                                                                                                                                                                                                                                                                                                                                                                                        
-        versioneUF_subversion= 62                                                                                                                   
+        versioneUF_subversion= 63                                                                                                                   
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion

@@ -69,4 +69,6 @@
  <library:element library:name="Finale"/>
  <library:element library:name="Help"/>
  <library:element library:name="Da_prezzario_2"/>
+ <library:element library:name="Computo"/>
+ <library:element library:name="Analisi"/>
 </library:library>

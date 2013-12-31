@@ -19,6 +19,7 @@
 
 sub Note_di_Versione
 &apos; uff
+xray thiscomponent
 End Sub
 
 sub Ciao_Mondo

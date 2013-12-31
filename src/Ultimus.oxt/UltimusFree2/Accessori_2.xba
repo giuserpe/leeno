@@ -605,7 +605,10 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			oSheet.getCellRangeByPosition(0,lrowFin,17,lrowFin).cellstyle = &quot;Comp TOTALI&quot;
 			oSheet.getCellRangeByPosition(18,lrowFin,41,lrowFin).cellstyle = &quot;Comp TOTALI num&quot;
 			oSheet.GetCellbyPosition(2, lrowFin ).setformula(&quot;TOTALI COMPUTO&quot;)
-			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
+&apos;			provo a sostituire la riga di Bart utilizzando il nome di area_dati - verificare compatibilità con altre versioni
+&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(importo_totale)&quot;) REM NON VALE LA PENA
+&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
+			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin &amp; &quot;)&quot;)			
 			oSheet.GetCellbyPosition(19, lrowFin ).setformula(&quot;=Sum(T&quot; &amp; lrowInizio &amp; &quot;:T&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(20, lrowFin ).setformula(&quot;=Sum(U&quot; &amp; lrowInizio &amp; &quot;:U&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(21, lrowFin ).setformula(&quot;=Sum(V&quot; &amp; lrowInizio &amp; &quot;:V&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
@@ -619,8 +622,10 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			oSheet.GetCellbyPosition(29, lrowFin ).setformula(&quot;=AE&quot; &amp; lrowFin-1 &amp; &quot;/S&quot; &amp; lrowFin-1)
 			oSheet.GetCellbyPosition(30, lrowFin ).setformula(&quot;=Sum(AE&quot; &amp; lrowInizio &amp; &quot;:AE&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(36, lrowFin ).setformula(&quot;=Sum(AK&quot; &amp; lrowInizio &amp; &quot;:AK&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(39, lrowFin ).setformula(&quot;=Sum(AN&quot; &amp; lrowInizio &amp; &quot;:AN&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(40, lrowFin ).setformula(&quot;=Sum(AO&quot; &amp; lrowInizio &amp; &quot;:AO&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
+&apos;			oSheet.GetCellbyPosition(39, lrowFin ).setformula(&quot;=Sum(AN&quot; &amp; lrowInizio &amp; &quot;:AN&quot; &amp; lrowFin-1 &amp; &quot;)&quot;) &apos;rigabart
+			oSheet.GetCellbyPosition(39, lrowFin ).setformula(&quot;=Sum(AN&quot; &amp; lrowInizio &amp; &quot;:AN&quot; &amp; lrowFin &amp; &quot;)&quot;)			
+&apos;			oSheet.GetCellbyPosition(40, lrowFin ).setformula(&quot;=Sum(AO&quot; &amp; lrowInizio &amp; &quot;:AO&quot; &amp; lrowFin-1 &amp; &quot;)&quot;) &apos;rigabart
+			oSheet.GetCellbyPosition(40, lrowFin ).setformula(&quot;=Sum(AO&quot; &amp; lrowInizio &amp; &quot;:AO&quot; &amp; lrowFin &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(41, lrowFin ).setformula(&quot;=Sum(AP&quot; &amp; lrowInizio &amp; &quot;:AP&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(29, lrowFin ).CellStyle = &quot;Comp TOTALI %&quot;
 

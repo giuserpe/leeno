@@ -130,7 +130,7 @@ Dim sInputFilePath as string
 Dim sOutputFilePath as string
 &apos;dim sSuperC1 as string
 &apos;Dim oUcb as Object
-sInputFilePath   = BrowseForFile(&quot;Browse for File.pwe to be imported as CSV&quot;, &quot;.pwe&quot;, &quot;C:\windows\desktop&quot;, &quot;*.*&quot;)
+sInputFilePath   = BrowseForFile(&quot;Browse for File.pwe to be imported as CSV&quot;, &quot;&quot;, &quot;C:\windows\desktop&quot;, &quot;*.pwe&quot;)
 sInputFilePath   = converttourl(sInputFilePath) 
   &apos;  sInputFilePath = converttourl(&quot;c:\restauri.pwe&quot;)
     sOutputFilePath = converttourl(&quot;c:\tempo_csv.txt&quot;)
@@ -457,7 +457,7 @@ Sub Conversione_2&apos;(sOutputFilePath)
 &apos;print	thiscomponent.getURL()	
 
 &apos;	print &quot;sorgente...: &quot; &amp; sSorgente
-	sInputFilePath   = BrowseForFile(&quot;CERCA IL FILE Template_Prezzario.ods  E APRILO... &quot;, &quot;ods&quot;, &quot;C:\windows\desktop&quot;, &quot;*.*&quot;)
+	sInputFilePath   = BrowseForFile(&quot;CERCA IL FILE Template_Prezzario.ods  E APRILO... &quot;, &quot;&quot;, &quot;C:\windows\desktop&quot;, &quot;*.ods&quot;)
 &apos;
 	sDestinazione = sInputFilePath 
 

@@ -26,6 +26,19 @@ Sub Prepara_un_Doc_per_la_stampa(optional sCosa as long)
 	Set_Header_Footer (&quot;no messaggio&quot;)
 	Sbianca_e_o_consolida(6)
 	&apos;Pulisci_Tabella_Tutta  &apos;_new
+oSheet = ThisComponent.currentController.activeSheet
+REM NASCONDI RIGHE
+	oRange = oSheet.getCellRangeByposition(0,1,0,1)
+	oRange.Rows.IsVisible=false
+REM cancelliamo i pulsantoni
+	iCellAttr =	com.sun.star.sheet.CellFlags.OBJECTS
+	osheet.getCellRangeByPosition (0,0,21,1).ClearContents(iCellAttr)
+REM RIDUCI ALTEZZA PRIMA RIGA
+	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
+	oPrimaCella.Rows.Height = 1000
+
+	
+	
 	Set_Area_Stampa_N
 	
 end sub
@@ -771,18 +784,23 @@ end if
 &apos; se è impostato in quel modo chiede se modificarlo
 	oSheet = ThisComponent.Sheets.getByName(_
 	ThisComponent.currentcontroller.activesheet.name)
-	sStile_Pag = oSheet.PageStyle &apos;registra il nome dello stile corrente della Sheet 
+&apos;	xray oSheet
+	sStile_Pag = oSheet.PageStyle &apos;registra il nome dello stile corrente della Sheet
+&apos;	print sStile_Pag 
 	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
 	oController = oDesktop.CurrentFrame.Controller
 	oDocument = oController.Model
+&apos;	xray oDocument
 	oStyleFam = oDocument.StyleFamilies
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
 	oAktPage = oTablePageStyles.getByname(sStile_Pag)
+&apos;	xray oAktPage
 		
 &apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
 &apos; 	   BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
 &apos;	End If 
 	sNomeStyle=oAktPage.DisplayName
+
 	if oAktPage.ScaleToPagesY&lt;&gt;0 then
 		if msgbox ( &quot;Le attuali impostazioni di stampa contenute nello stile di pagina (&quot; &amp; sNomeStyle &amp;&quot;) non sono compatibili con questa macro&quot;&amp; CHR$(10)&amp; CHR$(10)_
 		   	&amp;&quot;Modifico d&apos;ufficio lo stile di stampa ?&quot; &amp; CHR$(10)_
@@ -1189,12 +1207,6 @@ END SUB
 
 &apos;------------------------------------------------------------------------
 
-
-
-
-
-
-
 SUB Impagina_Analisi_N
 
 dim lLastUrow as long
@@ -1247,19 +1259,29 @@ dim I as long
 	&apos; elimina tutti pagebreak , mentre nell&apos;analisi chiede se ripartire... ?!
 	Visualizza_PageBreak
 	oSheet.removeAllManualPageBreaks
-	
-
-	oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
-	&apos; ma sarà il caso? dovrebbe adattarle su scelta all&apos;inizio... 
+	 
 
 	lLastUrow = getLastUsedRow(oSheet)
+&apos;	print lLastUrow
 	lrow =  5 &apos;
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
+&apos;	xray oCell
 &apos;	ThisComponent.CurrentController.Select(oCell)
 
+	for i = 1 to lLastUrow
+	oCell = oSheet.GetCellByPosition( 0 , i)
+	   If oCell.string = &quot;----&quot; then
+	   	i =i+1
+	   		oCell = oSheet.GetCellByPosition( 0 , i)
+         oCell.rows.IsStartOfNewPage = &quot;true&quot;
+      end if
+      next
 
 &apos;possibile che non ci sia il metodo removemanualpage... CONTROLLARE
 &apos;eccome se c&apos;è... vedi alcune righe sopra,,, ma per il momento lascio ancora la rimozione qui sotto
+
+
+goto fine REM DA QUI FINO A fine: SEMBRA TUTTO INUTILE PER LE ANALISI_AVCP 
 	For I = 1 To lLastUrow Step 1 &apos; ciclo di for riga per riga  
 		oCell = oSheet.GetCellByPosition( 0 , lrow)
 		if ocell.rows.IsManualPageBreak = true then
@@ -1270,9 +1292,10 @@ dim I as long
 		end if&apos;
 		if  oCell.rows.IsStartOfNewPage = True then &apos; se c&apos;è un salto
 			xA = oCell.string
-		    if oSheet.GetCellByPosition( 0, lrow-1).string = &quot;----&quot; then
+		    if oSheet.GetCellByPosition( 0, lrow-1).string = &quot;----&quot; then REM RIGA SALTO PAGINA ANALISI_BART
 		    		oCell.rows.IsStartOfNewPage = &quot;true&quot;
 		    		lrow = lrow+4
+   			&apos;		print lrow
 		    		goto saltarello
 		    end if
 		        
@@ -1292,7 +1315,7 @@ dim I as long
 		lrow = I+1
 		oCell = oSheet.GetCellByPosition( 0 , lrow)
 	Next I
-	
+fine:	
 	&apos; questa  serve per trovare e chiudere la riga rossa
 	sString$ = &quot;Fine ANALISI&quot;
 	oEnd=uFindString(sString$, oSheet)
@@ -1303,8 +1326,9 @@ dim I as long
 	lRowE=oEnd.CellAddress.Row 
 	oRigaNascosta = oSheet.getRows().getByIndex (lrowE) 
 	oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine ANALISI	
-	msgbox &quot; Ho sistemato in automatico i Salti Pagina di questa tabella di Analisi!&quot;&amp; CHR$(10)_
-		&amp; &quot; ...     in ogni caso controlla il risultato con l&apos;Anteprima di Stampa&quot;
+	msgbox &quot;Ho sistemato in automatico i Salti Pagina di questa tabella di Analisi!&quot;&amp; CHR$(10)_
+		&amp; &quot;in ogni caso controlla il risultato con Anteprima di Stampa&quot;
+
 END SUB
 
 

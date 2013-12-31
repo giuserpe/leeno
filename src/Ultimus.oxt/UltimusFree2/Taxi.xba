@@ -2023,6 +2023,11 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oLumAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
+	
+ 	oCelle = oSheet.GetCellByPosition( 9, lrow ) &apos; rigagiuserpe
+	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+	oConv.Address = oCelle.getCellAddress
+	oLsicAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
    	
 	oCelle = oSheet.GetCellByPosition( 6, lrow ) &apos; iflag è la colonna del prezzo
    &apos; diversa dopo la mofùdifica della struttura della voce di analisi
@@ -2079,6 +2084,147 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +2 , lrow)
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
    	oCell.formula =  oLumAnalisi
+   	
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +3 , lrow)&apos; rigagiuserpe
+	oCell.CellStyle=&quot;EP-C mezzo&quot;
+   	oCell.formula =  oLsicAnalisi
+   	
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 4 , lrow)
+  	 oCell.CellStyle=&quot;EP-C mezzo&quot;
+  	 oCell.formula = oLprezzoAnalisi   
+
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 5 , lrow)&apos;@@@@
+	 oCell.formula = oIncidAnalisi
+	 oCell.CellStyle=&quot;EP-C mezzo %&quot;
+	  					   
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 6 , lrow)&apos;@@@@
+	 oCell.formula = &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp;  lrow+1
+	 oCell.CellStyle=&quot;EP-C mezzo&quot;
+	 		  					   
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 7 , lrow)
+	 oCell.formula = oLOrigPAnalisi
+	 oCell.CellStyle=&quot;EP-C mezzo&quot;
+	 
+   oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 8 , lrow)
+    oCell.string = oAP  
+	oCell.CellStyle=&quot;EP-C mezzo&quot;
+	
+   oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 9 , lrow)
+  	&apos; oCell.CellBackColor = RGB(0,0,139)
+    oCell.CellStyle=&quot;EP-sfondo&quot;
+
+
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+&apos;	Clessid_lock_End
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+END SUB 
+Sub ANALISI_IN_ELENCOPREZZI_AVCP (lrow as long) &apos; copia l&apos;analisi e la inserisce in Elenco Prezzi come nuovo prezzo
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	 &apos;&apos;	 &apos;Clessid_lock_Start_D
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;  
+	&apos;print &quot;parto da &quot;	 &amp; lrow
+	If lrow = 0 then
+		lrow = 2
+	end if
+	&apos;oSheet = ThisComponent.currentController.activeSheet
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+
+	oCell = oSheet.GetCellByPosition( 5 , lrow) &apos;???????
+	oCell1 = oSheet.GetCellByPosition( 3 , lrow) &apos;??????
+
+	&apos;@ ThisComponent.CurrentController.Select(oCell)
+ 	if oCell.string = &quot;TOTALE&quot; OR (Trova_Attr_N (oCell1, oSheet)) = &quot;End_voce_ANALISI&quot; then
+ 		goto saltarello			
+	end if
+	
+	&apos; trovo l&apos;inizio voce Analisi
+	Do While (oCell.string &lt;&gt; &quot;TOTALE&quot;) and ((Trova_Attr_N (oCell1, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
+		  lrow = lrow - 1
+  		  oCell = oSheet.GetCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
+		  oCell1 = oSheet.GetCellByPosition( 3 , lrow)
+	loop
+
+	saltarello:
+	lrowRisel = lrow
+	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ) )&apos;debug
+		 &apos; print &quot;voilà&quot;		   
+	oCodAnalisi = oSheet.GetCellByPosition( 0, lrow ).string &apos; CODICE
+	&apos;	xA = oCell.string
+    oCelle = oSheet.GetCellByPosition( 1, lrow ) 
+	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+	oConv.Address = oCelle.getCellAddress
+	oLdescAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;DESCRIZIONE
+  	&apos; print oLdescAnalisi
+   
+ 	oCelle = oSheet.GetCellByPosition( 2, lrow ) 
+	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+	oConv.Address = oCelle.getCellAddress
+	oLumAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;UNITA&apos; DI MISURA
+	
+ 	oCelle = oSheet.GetCellByPosition( 10, lrow ) 
+	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+	oConv.Address = oCelle.getCellAddress
+	oLsicAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;SICUREZZA
+   	
+	oCelle = oSheet.GetCellByPosition( 6, lrow ) &apos; iflag è la colonna del prezzo
+   &apos; diversa dopo la mofùdifica della struttura della voce di analisi
+   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+   oConv.Address = oCelle.getCellAddress
+   oLprezzoAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;PREZZO
+ 
+  
+    oCelle = oSheet.GetCellByPosition( 8, lrow ) 
+   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+   oConv.Address = oCelle.getCellAddress
+   oIncidAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;INCIDENZA
+	
+   oCelle = oSheet.GetCellByPosition( 0, lrow )      
+   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+   oConv.Address = oCelle.getCellAddress
+   oLOrigPAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;CODICE
+
+   oAP = &quot;(AP)&quot;
+  
+  &apos;........ rimando di selezione sulla tab Analisi di prezzo
+   oCella = oSheet.GetCellByPosition( 1, lrowRisel )      
+   ThisComponent.CurrentController.Select(oCella)
+  &apos; .... per quando si torna sulla tab 
+  
+
+   oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
+ &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; oCell=thisComponent.getCurrentSelection()&apos;
+ 
+	lcolbase = Colonna_giusta_EP (oSheet)
+ 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+				print lcolbase
+				exit sub
+	end if
+ 	
+	
+   oCell = oSheet.GetCellByPosition( lcolbase+0,3 )   
+   ThisComponent.CurrentController.Select(oCell)&apos;@
+   
+	lrow = 3
+	oSheet.unprotect(&quot;&quot;)
+	oSheet.getRows.insertByIndex(lrow,1)
+	oCell = oSheet.GetCellByPosition( lcolbase+0 , lrow)
+	oCell.CellStyle=&quot;EP-Cs&quot;
+					
+	oCell.string= oCodAnalisi
+
+	lscarto	= 0 &apos; dA USARE PER LA vER. 4
+
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +1 , lrow)  
+    oCell.formula =  oLdescAnalisi
+	oCell.CellStyle=&quot;EP-C&quot;
+ 					
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +2 , lrow)
+	oCell.CellStyle=&quot;EP-C mezzo&quot;
+   	oCell.formula =  oLumAnalisi
+   	
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +3 , lrow)&apos; rigagiuserpe
+	oCell.CellStyle=&quot;EP-C mezzo&quot;
+   	oCell.formula =  oLsicAnalisi
    	
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 4 , lrow)
   	 oCell.CellStyle=&quot;EP-C mezzo&quot;

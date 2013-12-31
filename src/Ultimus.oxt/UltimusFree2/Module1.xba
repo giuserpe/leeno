@@ -15,7 +15,7 @@
 Sub SalvaCodice
   oFactory = createUnoService(&quot;com.sun.star.comp.deployment.PackageManagerFactory&quot;)
   oPkgMgr = oFactory.getPackageManager(&quot;user&quot;)
-  sID = &quot;vnd.bartaimar.ultimusfree4&quot;
+  sID = &quot;vnd.bartaimar.UltimusFree4&quot;
  &apos; xray oPkgMgr.getDeployedPackage(sID,null)
  &apos;Ultimus-3.2.135.oxt
 mPkgs() = oPkgMgr.getDeployedPackages(Null, Null)

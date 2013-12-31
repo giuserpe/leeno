@@ -473,7 +473,7 @@ SUB tante_voci_insieme
        	 If nome_sheet = &quot;Analisi di Prezzo&quot; Then
           		 NuovaAnalisi_Att
           		&apos;la seguente inserisce le tre maggiorazioni in blocco
-			 	Inserisci_Utili_giuserpe_2 &apos;
+			 	&apos;Inserisci_Utili_giuserpe_2 &apos;
 				&apos; se non serve disattivare la riga 
          End If
      End If
@@ -487,6 +487,7 @@ SUB tante_voci_insieme
 end sub
 
 &apos;___________________________________________________________________________________________
+
 SUB Nuova_Voce_Computo_Att  &apos;
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
 		on error goto Errore
@@ -841,6 +842,7 @@ end function
 SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
 	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	oContr = ThisComponent.CurrentController
 	if lrow = -1 then	 
 		exit sub
 	end if
@@ -876,7 +878,7 @@ oltre:
 		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI5! &quot;
 		exit sub
 	end if 
-	lrowFine=oEnd.RangeAddress.EndRow 
+	lrowFine=oEnd.RangeAddress.EndRow
 	If lrow &gt; lrowFine then
 		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
 		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
@@ -962,9 +964,10 @@ salta:
 	end if
 	inserisci:
 &apos;print &quot;1,2&quot;
-	lrowNum= 7 &apos; numero di righe da inserire per una nuova Analisi
+&apos;	lrowNum= 7 &apos; numero di righe da inserire per una nuova Analisi
 
-	 oSheet.getRows.insertByIndex(lrow, 7) &apos;7 è ilnumero di righe da inserire per una nuova Analisi
+&apos;	 oSheet.getRows.insertByIndex(lrow, 7) &apos;7 è ilnumero di righe da inserire per una nuova Analisi
+ 	 oSheet.getRows.insertByIndex(lrow, 26) &apos;rigagiuserpe INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
 
 	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
 	
@@ -1001,7 +1004,7 @@ salta:
 	&apos; ma aggiungendo questo viene tolta la selezione...
    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; togle la selezione
-	
+	oContr.setFirstVisibleRow(lrowFine)
  	exit sub
 errore:
 oCtrlModel.Enabled = True
@@ -1014,7 +1017,7 @@ sub test &apos; provare le selezioni
 	ThisComponent.CurrentController.Select(oCell,false)
 	ThisComponent.CurrentController.Select(oCell(FALSE))
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
-		
+
 end sub
 
 

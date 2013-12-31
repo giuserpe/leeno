@@ -757,7 +757,8 @@ Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 		
 	next i
 	&apos;importo lavori
-	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;S&quot; &amp; lRowU-1 &amp; &quot;)&quot;
+&apos;	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU-1 &amp; &quot;)&quot; rigabart
+	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot;
 	oSheet.GetCellByPosition(40 , lrowStart1).Formula = sFormula
 	
 		&apos;importo manodopera
@@ -820,7 +821,8 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 		end if
 		
 	next i
-	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;S&quot; &amp; lRowU-1 &amp; &quot;)&quot;
+	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;S&quot; &amp; lRowU-1 &amp; &quot;)&quot; &apos;rigabart
+	sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot;
 	oSheet.GetCellByPosition(39 , lrowStart1).Formula = sFormula
 	
 		&apos;importo manodopera in col AP
@@ -1114,6 +1116,7 @@ Sub Struttura_Analisi ()
 			exit sub
 	end if
 	oCelle=ThisComponent.CurrentSelection
+
 &apos;	oCelle=
 &apos;	lcS = 0 &apos;oCelle.RangeAddress.StartColumn
 &apos;	lrS = lrow
@@ -1123,13 +1126,16 @@ Sub Struttura_Analisi ()
 	lastUrow = getLastUsedRow(oSheet)
 	oRange = osheet.getCellRangeByPosition (6,2,6,lastUrow )
 
-	ThisComponent.CurrentController.Select(oRange)
-&apos;	print lrowFine
+
+	xxx= ThisComponent.CurrentController.Select(oRange)
+	xray xxx
 	dim document   as object
 	dim dispatcher as object
 	document   = ThisComponent.CurrentController.Frame
+xray document
 	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	dispatcher.executeDispatch(document, &quot;.uno:AutoOutline&quot;, &quot;&quot;, 0, Array())
+	
 	ThisComponent.CurrentController.Select(oSheet)
 
 	&apos;definische cosa vedi... magari mettere i parametri tra le variabili generali?
@@ -1778,7 +1784,7 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
     end if 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then      
 		if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
-	   		MsgBox &quot;1 L&apos;opzione non è prevista su questo foglio!!&quot;
+	   		MsgBox &quot;1 L&apos;opzione non è prevista su questo foglio!!!&quot;
 		end if
 	end if
 end sub

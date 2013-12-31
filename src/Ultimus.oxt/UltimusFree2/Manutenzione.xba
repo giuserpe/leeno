@@ -579,15 +579,13 @@ Sub Controlla_Somme_Componenti
 		exit sub
 	end if 
 	lRowE=oEnd.RangeAddress.EndRow 
-	
-	
 	for i =3 to lRowE
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
 			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; then
 				goto salta:
 				if (oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
-							oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;) and _
-					(oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
+					oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;) and _
+				 (oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
 					oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;)then
 					ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , i))
 					msgbox &quot;1  in questa riga c&apos;è qualcosa che non va (non trovo gli stili previsti)&quot;
@@ -599,7 +597,9 @@ Sub Controlla_Somme_Componenti
 						lRow = lRow+1
 				loop 
 				
-				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot;                                                                                                                                                              
+				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
+				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
+
 
 				i = lRow &apos;+ 1
 		end if

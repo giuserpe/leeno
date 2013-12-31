@@ -41,17 +41,14 @@ do while oSheetANAP.GetCellByPosition( 0,lrow ).string &lt;&gt; &quot;Fine ANALI
 		if lrow &gt; lUltimaRiga then
 &apos;		print &quot;adesso esco1&quot;
 			exit do
-		end if
-	&apos;	ThisComponent.CurrentController.Select(oSheetANAP.GetCellbyPosition( 0, lrow ))
-&apos;		print &quot;a dopo &quot; &amp; lrow	
+		end if	
 	loop
-&apos;	ThisComponent.CurrentController.Select(oSheetANAP.GetCellbyPosition( 0, lrow ))
-&apos;	print &quot;b &quot; &amp; lrow
 		if lrow &gt; lUltimaRiga then
 &apos;		print &quot;adesso esco2&quot;
 			exit do
 		end if
-		ANALISI_IN_ELENCOPREZZI_Taxi (lrow)
+		ANALISI_IN_ELENCOPREZZI_AVCP (lrow)
+&apos;		ANALISI_IN_ELENCOPREZZI_Taxi (lrow)
 &apos;		ThisComponent.CurrentController.Select(oSheetANAP.GetCellbyPosition( 0, lrow ))
 &apos;	print &quot;c &quot; &amp; lrow
 	lrow = lrow+1
@@ -506,7 +503,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
  	end if
    oCodAnalisi = xA
 
-   oCelle = oSheet.GetCellByPosition( 1, lrow ) 
+   oCelle = oSheet.GetCellByPosition( 1, lrow )  &apos;rem descrizione
    xA = oCell.string
 	dim oLdescAnalisi as string
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
@@ -514,7 +511,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
    oLdescAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
   &apos; print oLdescAnalisi
    
-   oCelle = oSheet.GetCellByPosition( 2, lrow ) 
+   oCelle = oSheet.GetCellByPosition( 2, lrow ) &apos; unità di misura
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oLumAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
@@ -529,18 +526,19 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
   
   
   
-    oCelle = oSheet.GetCellByPosition( 7, lrow ) 
+    oCelle = oSheet.GetCellByPosition( 8, lrow ) 
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oIncidAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
 
-    oCelle = oSheet.GetCellByPosition( 8 , lrow ) 
+    oCelle = oSheet.GetCellByPosition( 9 , lrow ) &apos; importo manodopera
+     
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oImpManAn = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
 
 
-   oCelle = oSheet.GetCellByPosition( 9 , lrow ) 
+   oCelle = oSheet.GetCellByPosition( 10 , lrow ) 
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
  &apos;  dim oImpSicur as string
@@ -744,7 +742,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der(optional flag_rior as string)
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oLumAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation 
-  	
+  	print iflag
    oCelle = oSheet.GetCellByPosition( iflag, lrow ) &apos; iflag è la colonna del prezzo
    &apos; diversa dopo la modifica della struttura della voce di analisi
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
@@ -973,7 +971,6 @@ dim sFlag as string
 			exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
-
 	nome_sheet = oSheet.name
 
 	if oSheet.GetCellByPosition(5 , 1).getCOLUMNS.IsVisible=false then
@@ -1162,15 +1159,16 @@ Dim iflag
    &apos; lettura var generale in S1
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 0 then 
 
-		oCellN = oSheet.GetCellbyPosition( 1, lrow)&apos;morgana
+		oCellN = oSheet.GetCellbyPosition( 0, lrow)&apos;morgana
 		oCelleN= oCellN.getCellAddress()
 		oSheetO = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-		oRangeO =  osheetO.getCellRangeByPosition (46,44,54,44 ) &apos; bloccarlo in un namedranges?	
-		oRangeO =  osheetO.getCellRangeByPosition (2,47,10,47 )
+&apos;		oRangeO =  osheetO.getCellRangeByPosition (2,47,10,47 ) &apos; SINGOLA RIGA ANALISI bloccarlo in un namedranges?
+		oRangeO =  osheetO.getCellRangeByPosition (1, 114, 15, 114) &apos; SINGOLA RIGA ANALISI bloccarlo in un namedranges?
 		oRangeO = oRangeO.RangeAddress
 		oSheet.copyRange(oCelleN,oRangeO)
 
-		oCellFinale = oSheets.GetCellByPosition( 4 , lrow)			
+&apos;		oCellFinale = oSheets.GetCellByPosition( 4 , lrow) 
+		oCellFinale = oSheets.GetCellByPosition( 0 , lrow) &apos;nuova riga analisi_AVCP			
 		ThisComponent.CurrentController.Select(oCellFinale)
 	  else 
 	 	oCellFinale = oSheets.GetCellByPosition( 3 , lrow)	

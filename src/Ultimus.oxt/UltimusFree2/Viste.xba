@@ -1092,7 +1092,6 @@ dim iNumInser as integer
 	oDoc = thisComponent
 	
 	&apos;duplica la tabella del filtro se c&apos;è (versioni vecchie)
-	&apos;minchia
 	If thisComponent.Sheets.hasByName(&quot;FiltroTMP&quot;) Then
 			sNomeSheet = &quot;FiltroTMP&quot;
 		else
@@ -1279,55 +1278,48 @@ sub Computo_Normale_terra_terraDIRETTO &apos; chiamato/usato in aperura solo per
 &apos;	fissa&apos;(,   as long, optional icol as long, optional irow as long)
 
 END SUB
-
-
-
-
-
-
-
-
 Sub Registra_conf_colonne &apos;scrive la configurazione con una stringa su una sheet 
 &apos; la configurazione nascondi/mostra di 30 colonne
-dim iNumCol as integer
-dim bValue as boolean
-dim sValue as string
-dim sList as string
-sList = &quot;&quot;
-oSheet = ThisComponent.currentController.activeSheet
-iNumCol = -1
-For i = 0 to 39
-	iNumCol = iNumCol +1
-
-	oCell = oSheet.GetCellByPosition(iNumCol, 2 )
+	dim iNumCol as integer
+	dim bValue as boolean
+	dim sValue as string
+	dim sList as string
+	sList = &quot;&quot;
+	oSheet = ThisComponent.currentController.activeSheet
+	iNumCol = -1
+	For i = 0 to 39
+		iNumCol = iNumCol +1
+		
+		oCell = oSheet.GetCellByPosition(iNumCol, 2 )
 &apos;	ThisComponent.CurrentController.Select(oCell) 
-	bValue = oCell.Columns.IsVisible
-	sValue =  bValue
-	sList = sList + left(sValue, 1)
-next
+		bValue = oCell.Columns.IsVisible
+		sValue =  bValue
+		sList = sList + left(sValue, 1)
+	next
 &apos;print sList
-sNomeConf = inputbox (&quot;scrivi il nome della configurazione&quot;,,&quot;Temp&quot;)
-
-oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
-iRow = 100
+	sNomeConf = inputbox (&quot;scrivi il nome della configurazione&quot;,,&quot;Temp&quot;)
+	
+	oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
+	iRow = 100
 &apos;print oCell.string
-oCell = oSheet.GetCellByPosition(1 , iRow )
-Do while oCell.string &lt;&gt; &quot;&quot;
-	iRow = iRow + 1
 	oCell = oSheet.GetCellByPosition(1 , iRow )
-loop
+	Do while oCell.string &lt;&gt; &quot;&quot;
+		iRow = iRow + 1
+		oCell = oSheet.GetCellByPosition(1 , iRow )
+	loop
 &apos;iRow = iRow + 1
 &apos;oCell = oSheet.GetCellByPosition(1 , iRow )	
-oCell.string = sList
-oCell = oSheet.GetCellByPosition(0 , iRow )
-oCell.string = sNomeConf
-oCell = oSheet.GetCellByPosition(1 , iRow )
-ThisComponent.CurrentController.Select(oCell) 
-msgbox &quot;La configurazione On/Off delle colonne è stata &quot;&quot;sintetizzata&quot;&quot; in questa stringa&quot;&amp; CHR$(10)_
+	oCell.string = sList
+	oCell = oSheet.GetCellByPosition(0 , iRow )
+	oCell.string = sNomeConf
+	oCell = oSheet.GetCellByPosition(1 , iRow )
+	ThisComponent.CurrentController.Select(oCell) 
+	msgbox &quot;La configurazione On/Off delle colonne è stata &quot;&quot;sintetizzata&quot;&quot; in questa stringa&quot;&amp; CHR$(10)_
 	&amp;&quot; Usandola come parametro della funzione Viste_nuove puoi creare una nuova Configurazione o modificarne una esistente...&quot;&amp; CHR$(10)_
 	&amp; &quot;Vedi il modulo &quot;&quot;Viste&quot;&quot; della libreiria UltimusFree2...&quot;
-
+	
 END SUB
+
 
 SUB Prova_Scrittura &apos; scrive la configurazione leggendo 
 					&apos;la stringa da una sheet (S4) nel doc corrente

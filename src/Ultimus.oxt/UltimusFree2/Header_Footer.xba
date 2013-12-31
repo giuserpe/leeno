@@ -39,93 +39,96 @@ END SUB
 
 
 &apos;++++++++++++++++++++++++++++++++
+
  
 SUB Set_Header_Footer (optional sMessaggio as string)
-
+	
 &apos; initialize &apos;
 &apos;On Error Goto ErrorHandler
 &apos;Call SetModuleVars 
-If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
 			on error goto Errore 
 		end if 
-END IF
-
-If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
-	msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot;
-	exit sub
-END IF
-Aggiorniamoli
-oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
-
-if osheet.isvisible=false then
-	osheet.isvisible=true
-	sHide=&quot;Nascosta&quot;
-end if
-
-oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
-DX = oCell.String
-
-oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
-oProgetto_8 = oCell.String
-
-oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
-oData= oCell.String
-
-oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
-oBozza_8 = oCell.String
+	END IF
+	
+	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
+		msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot;
+		exit sub
+	END IF
+	Aggiorniamoli
+	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
+	
+	if osheet.isvisible=false then
+		osheet.isvisible=true
+		sHide=&quot;Nascosta&quot;
+	end if
+	
+	oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
+	DX = oCell.String
+	
+	oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
+	oProgetto_8 = oCell.String
+	
+	oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
+	oData= oCell.String
+	
+	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
+	oBozza_8 = oCell.String
 &apos;print  oBozza_8
-If oBozza_8 &lt;&gt; &quot;&quot; Then
-      Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
- End If
-
-oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
-oCentro = oCell.String
-
+	If oBozza_8 &lt;&gt; &quot;&quot; Then
+		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
+	End If
+	
+	oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
+	oCentro = oCell.String
+	
 &apos;.....................
-
+	
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-sPrima = Verifica_chiudi_preview
+	sPrima = Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-if sPrima =&quot;Attiva&quot; then
-	wait 1000
-end if	
-oSheetCur = ThisComponent.Sheets.getByName(_
-ThisComponent.currentcontroller.activesheet.name)
-
-sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
-
-oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
-oController = oDesktop.CurrentFrame.Controller
-oDocument = oController.Model
-
+	if sPrima =&quot;Attiva&quot; then
+		wait 1000
+	end if	
+	oSheetCur = ThisComponent.Sheets.getByName(_
+	ThisComponent.currentcontroller.activesheet.name)
+&apos;	xray osheetcur
+&apos;	oSheetpippi = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+&apos;	xray oSheetpippi
+	sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
+	
+	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
+	oController = oDesktop.CurrentFrame.Controller
+	oDocument = oController.Model
+	
 	oStyleFam = oDocument.StyleFamilies
-
+	
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
 	oAktPage = oTablePageStyles.getByname(sStile_Pag)
-
+&apos;	xray oTablePageStyles
 	oAktPage.HeaderIsOn = True 
 	oHeader = oAktPage.RightPageHeaderContent
-
+	
 	oHLText = oHeader.LeftText.text       
 	oHLText.String = DX 
-
+	
 	
 	oHCText = oHeader.CenterText.Text
 	oHCText.String = oProgetto_8
 	oHRText = oHeader.RightText
 	oHRText.String = Bozza 
-	&apos; update header
+&apos; update header
 	oAktPage.RightPageHeaderContent = oHeader
 	
 	oAktPage.FooterIsOn = True 
 	oFooter = oAktPage.RightPageFooterContent
 	oHLText = oFooter.CenterText.text
 	oHLText.String = oCentro
-	&apos; update footer
+&apos; update footer
 	oAktPage.RightPageFooterContent= oFooter
 	
-
+	
 	
 	if not ismissing (sMessaggio) then
 		if sMessaggio &lt;&gt; &quot;no messaggio&quot; then
@@ -135,21 +138,22 @@ oDocument = oController.Model
 	end if
 &apos;	&quot;I testi delle intestazioni e dei pié di pagina di questa Tabella sono stati aggiornati!&quot;_
 &apos;	&amp; &quot; in base dei dati scritti in S2...&quot;
-
-if sPrima = &quot;Attiva&quot; then &apos; se all&apos;inizio ha rilevato una Anteprima di pagina ora la riattiva
-	dim document as object
-	dim dispatcher as object
-    document = ThisComponent.CurrentController.Frame  
-    dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)  
- 	dispatcher.executeDispatch(document, &quot;.uno:PrintPreview&quot;, &quot;&quot;, 0, Array()) 
-end if
-if sHide=&quot;Nascosta&quot;  then &apos; la rimette come l&apos;ha trovata
-	osheet.isvisible=false
-end if
-Exit Sub
-Errore:
-DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	
+	if sPrima = &quot;Attiva&quot; then &apos; se all&apos;inizio ha rilevato una Anteprima di pagina ora la riattiva
+		dim document as object
+		dim dispatcher as object
+		document = ThisComponent.CurrentController.Frame  
+		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)  
+			dispatcher.executeDispatch(document, &quot;.uno:PrintPreview&quot;, &quot;&quot;, 0, Array()) 
+	end if
+	if sHide=&quot;Nascosta&quot;  then &apos; la rimette come l&apos;ha trovata
+		osheet.isvisible=false
+	end if
+	Exit Sub
+	Errore:
+	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
 END SUB
+
 
 Sub Set_Header_Footer_Tutti__ &apos; ovvero va a modificare il testi 
 &apos; su una serie di Stili predefiniti  - SOSPETTO DI INUTILITA&apos;
@@ -432,5 +436,128 @@ ErrorHandler:
                 msgbox Erl &amp; &quot; &quot; &amp; Error &amp; &quot; &quot; &amp; Err        
                 Resume Next
 End Sub
+SUB Set_HF_turbo (optional sMessaggio as string)
+	
+&apos; initialize &apos;
+&apos;On Error Goto ErrorHandler
+&apos;Call SetModuleVars 
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+			on error goto Errore 
+		end if 
+	END IF
+	
+	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
+		msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot;
+		exit sub
+	END IF
+	Aggiorniamoli
+	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
+	
+	if osheet.isvisible=false then
+		osheet.isvisible=true
+		sHide=&quot;Nascosta&quot;
+	end if
+	
+	oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
+	DX = oCell.String
+	
+	oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
+	oProgetto_8 = oCell.String
+	
+	oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
+	oData= oCell.String
+	
+	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
+	oBozza_8 = oCell.String
+	If oBozza_8 &lt;&gt; &quot;&quot; Then
+		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
+	End If
+	
+	oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
+	oCentro = oCell.String
+	
+&apos;.....................
+	
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	sPrima = Verifica_chiudi_preview
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	if sPrima =&quot;Attiva&quot; then
+		wait 1000
+	end if	
+	oSheetCur = ThisComponent.Sheets.getByName(_
+	ThisComponent.currentcontroller.activesheet.name)
+&apos;	xray osheetcur
+&apos;	oSheetpippi = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+&apos;	xray oSheetpippi
+	sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
+	
+	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
+	oController = oDesktop.CurrentFrame.Controller
+	oDocument = oController.Model
+	oStyleFam = oDocument.StyleFamilies
+	
+	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
+	REM CONTO IL NUMERO DEGLI STILI DI PAGINA
+	dim i as integer
+	n_sty = oTablePageStyles.count
+&apos;	print n_sty
+&apos;	xray oTablePageStyles
+&apos;	oAktPage = oTablePageStyles.getByname(sStile_Pag)
+	for i = 0 to n_sty-1
+&apos;	print i
+		oAktPage = oTablePageStyles.getByIndex(i)
+		oAktPage.HeaderIsOn = True 
+		oHeader = oAktPage.RightPageHeaderContent
+		
+		oHLText = oHeader.LeftText.text       
+		oHLText.String = DX 
+		
+		
+		oHCText = oHeader.CenterText.Text
+		oHCText.String = oProgetto_8
+		oHRText = oHeader.RightText
+		oHRText.String = Bozza 
+&apos; update header
+		oAktPage.RightPageHeaderContent = oHeader
+		
+		oAktPage.FooterIsOn = True 
+		oFooter = oAktPage.RightPageFooterContent
+		oHLText = oFooter.CenterText.text
+		oHLText.String = oCentro
+&apos; update footer
+		oAktPage.RightPageFooterContent= oFooter
+	next i
+		
+		
+		if not ismissing (sMessaggio) then
+			if sMessaggio &lt;&gt; &quot;no messaggio&quot; then
+				Msgbox 	&quot;Lo stile di pagina (attivo al momento in QUESTA tabella) è stato aggiornato!&quot;_
+				&amp; &quot; inserendo nelle intestazioni e nei pié di pagina i testi come visibili nella schermata &quot;&quot;DATI DEL DOCUMENTO&quot;&quot; !&quot;
+			end if
+		end if
+&apos;	&quot;I testi delle intestazioni e dei pié di pagina di questa Tabella sono stati aggiornati!&quot;_
+&apos;	&amp; &quot; in base dei dati scritti in S2...&quot;
+		
+		if sPrima = &quot;Attiva&quot; then &apos; se all&apos;inizio ha rilevato una Anteprima di pagina ora la riattiva
+			dim document as object
+			dim dispatcher as object
+			document = ThisComponent.CurrentController.Frame  
+			dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)  
+			dispatcher.executeDispatch(document, &quot;.uno:PrintPreview&quot;, &quot;&quot;, 0, Array()) 
+		end if
+		if sHide=&quot;Nascosta&quot;  then &apos; la rimette come l&apos;ha trovata
+			osheet.isvisible=false
+		end if
+		Exit Sub
 
+		Errore:
+		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	END SUB
+
+REM su &quot;S2&quot; ho inserito dei pulsanti nascosti che aggiornano tutti gli stili
+SUB set_header_auto
+
+	Set_HF_turbo (&quot;no messaggio&quot;)
+end sub
 </script:module>

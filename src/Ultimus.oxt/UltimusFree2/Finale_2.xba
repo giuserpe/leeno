@@ -368,6 +368,7 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
 	Sbianca_e_o_consolida(1) &apos;NIETE PAURA, CON PARAMETRO 1 SBIANCA SOLTANTO
 	
 	&apos; cancelliamo i pulsantoni
+	
 	iCellAttr =	com.sun.star.sheet.CellFlags.OBJECTS
 	osheet.getCellRangeByPosition (0,0,21,1).ClearContents(iCellAttr)
 	

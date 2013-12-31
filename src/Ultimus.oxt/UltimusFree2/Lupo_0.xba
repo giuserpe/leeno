@@ -129,6 +129,9 @@ Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste ro
 	ThisComponent.unlockControllers 
 	 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+		osheet = ThisComponent.Sheets.getByName(&quot;S1&quot;) &apos; rigagiuserpe
+		oRange = oSheet.getCellRangeByposition(0,0,0,189)
+		oRange.Rows.IsVisible=false
 		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
 			on error goto ErrorHandler 
 	&apos;	Altro_Detentore_generale_errore
@@ -380,14 +383,15 @@ on error goto ErrorHandler
     Barra_chiudi_sempre_4    
   
  	if ismissing(sSMS) or isNull(sSMS) then 
- 		sSMS = &quot;Se invece rispondi NO verranno saltati i controlli e il doc si aprirà normalmente)    Proseguo con i controlli? &quot;
+ 		sSMS = &quot;Se invece rispondi NO verranno saltati i controlli e il doc si aprirà normalmente. Proseguo con i controlli? &quot;
 	end if
 
   &apos;	If MsgBox  (&quot; Sto per eseguire la procedura di controllo su questo doc &quot;&amp; CHR$(10)_
-  	Select case MsgBox (  &quot; Sto per eseguire la procedura di controllo su questo doc: &quot; &amp; CHR$(10) &amp; CHR$(10)_
-  		&amp; &quot;   &quot; &amp; ConvertFromUrl(sURLOO) &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Se rispondi Sì e prosegui dovrai attendere il caricamento senza toccare il mouse o la tastiera!&quot;  &amp; CHR$(10)_
-		&amp; sSMS , 35, &quot;Procedura di Controllo del doc&quot; ) &apos; = 7 then
+  	Select case MsgBox (  &quot;Sto per eseguire la procedura di controllo su questo doc: &quot; &amp; CHR$(10) &amp; CHR$(10)_
+  		&amp; ConvertFromUrl(sURLOO) &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;Se rispondi Sì e prosegui dovrai attendere il caricamento&quot;  &amp; CHR$(10)_
+		&amp; &quot;senza toccare il mouse o la tastiera!&quot;  &amp; CHR$(10)_
+		&amp; sSMS , 35, &quot;Controllo del documento&quot;) &apos; = 7 then
 		Case 7
 			Clessid_lock_End
 			&apos;Barra_apri_chiudi_4 
@@ -603,22 +607,24 @@ on error goto ErrorHandler
 			 
 
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).string = 1 then
-			sContab = &quot;  Si sta lavorando sulla Contabilità&quot;	
+			sContab = &quot;Si sta lavorando sulla Contabilità:&quot;	
 		else
-			sContab = &quot;  Si sta lavorando sul Computo&quot;
+			sContab = &quot;Si sta lavorando sul Computo:&quot;
 	end if
 	
 	sNome_lavoro = ThisComponent.Sheets.getByName(&quot;M1&quot;).GetCellByPosition(2,3).string
 		
 &apos;	Msgbox &quot;Versione di UltimusFree installata: &quot; &amp;  sVers &amp; CHR$(10)_
 &apos;			&amp; &quot;Template: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).string
+&apos;NOMEFILE = ThisComponent.oDoc.CurrentSelection.title
+&apos;MSGBOX NOMEFILE
 
-	Msgbox  &quot;  ll livello di esperienza è impostato su:  &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string  &amp; CHR$(10) &amp; CHR$(10)_
+	Msgbox  &quot;Il livello di esperienza è impostato su:  &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string  &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; sContab &amp; CHR$(10)_
-			&amp; &quot;  per:  &quot; &amp; sNome_lavoro &amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;        LA PROCEDURA DI CONTROLLO E&apos; CONCLUSA!     &quot;  &amp; CHR$(10)_
+			&amp; sNome_lavoro &amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;PROCEDURA DI CONTROLLO CONCLUSA!&quot;  &amp; CHR$(10)_
 			&amp; &quot;              Buon lavoro!&quot; &amp; CHR$(10)_
-				&amp; &quot;&quot; , , &quot;UltimusFree: &quot; &amp;  sVers  &amp; &quot; - &quot; &amp; &quot;Template: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).string
+				&amp; &quot;&quot; , , &quot;LeenO: &quot; &amp;  sVers  &amp; &quot; - Template: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).string
 	
 &apos;	Msgbox &quot; &quot; &amp; CHR$(10)_
 &apos;		&amp;&quot;     La procedura di Controllo pare essersi conclusa con successo!   &quot; &amp; CHR$(10) &amp; CHR$(10)_
@@ -753,9 +759,9 @@ dim Esiste as boolean
 		
  	Exit Sub
 	gest_errore: 
-	Print &quot;Errore in: &apos;sub Aggiorniamoli&apos; - &quot; &amp; error
-	msgbox &quot;C&apos;é qualche problema...!&quot;&amp; CHR$(10)_
-	&amp; &quot;SALVA, poi Chiudi questo Documento e riaprilo...&quot;
+&apos;	Print &quot;Errore in: &apos;sub Aggiorniamoli&apos; - &quot; &amp; error
+&apos;	msgbox &quot;C&apos;é qualche problema...!&quot;&amp; CHR$(10)_
+&apos;	&amp; &quot;SALVA, poi Chiudi questo Documento e riaprilo...&quot;
 &apos;	resume next
 END SUB
 
@@ -1256,7 +1262,7 @@ Sub crea_stile_cella_1
 						ostileCella.ParentStyle = &quot;Comp-Bianche in mezzo Descr_R&quot;
 					&apos;	ostileCella.IsCellBackgroundTransparent = False
 						ostileCella.CellBackColor = RGB(255,204,153)
-					&apos;	ostileCella.CharFontName = &quot;Arial&quot;
+					&apos;	ostileCella.CharFontName = &quot;Arial&quot; 
 					&apos;	ostileCella.CharHeight = 10
 					&apos;	ostileCella.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
 					&apos;	ostileCella.VertJustify = com.sun.star.table.CellVertJustify.CENTER 

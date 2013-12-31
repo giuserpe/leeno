@@ -252,41 +252,53 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 	lLastUrow = getLastUsedRow(oSheet)
 &apos;	lrow = 3
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;2 Sto ripristinando le finestre a discesa... pazienta........&quot;, 40)
-
+	Barra_Apri_Chiudi_5(&quot;2 Sto ripristinando le finestre a discesa delle maggiorazioni...&quot;, 40)
+	if oSheet.GetCellbyPosition(0,0).string = &quot;inizio analisi AVCP&quot; then &apos;CONTROLLO SULLE ANALISI AVCP maggiorazioni utili
+			col =3 &apos;analisi AVCP
+		else		 
+		col =1 &apos;analisi BART
+	end if
  For lrow=3 To lLastUrow
-	 oCell=oSheet.GetCellbyPosition( 1, lrow )
+ &apos;	Barra_Apri_Chiudi_5(&quot;2 Sto ripristinando le finestre a discesa... pazienta...&quot;, 40)
+	 oCell=oSheet.GetCellbyPosition(col, lrow)
 	&apos;if oCell.validation.operator=1 And _
- 	if	oCell.cellStyle= &quot;An-lavoraz-Utili desc&quot; then
+	if	oCell.cellStyle= &quot;An-lavoraz-Utili desc&quot; then
+	ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
  			Cambia_d3 (oCell)
 	end if
  next	
  
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;3 Sto ripristinando le finestre a discesa... pazienta........&quot;, 50)
+	Barra_Apri_Chiudi_5(&quot;3 Sto ripristinando le finestre a discesa delle unità di misura...&quot;, 50)
 	
  For lrow=3 To lLastUrow
 	 oCell=oSheet.GetCellbyPosition( 2, lrow )
 	 sAttributo_N = Trova_Attr_N (oCell, oSheet)
 			if sAttributo_N = &quot;UM_scelta&quot; or _
 				oCell.cellStyle  = &quot;An-1um&quot; then
+					ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
 					Cambia_d2 (oCell)
 			end if
  next
-
+if oSheet.GetCellbyPosition(0,0).string = &quot;inizio analisi AVCP&quot; then &apos;CONTROLLO SULLE ANALISI AVCP codice articolo
+			col =0 &apos;analisi AVCP
+		else
+		col =4 &apos;analisi BART
+	end if
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;4 Sto ripristinando le finestre a discesa... pazienta........&quot;, 60)
+	Barra_Apri_Chiudi_5(&quot;4 Sto ripristinando le finestre a discesa del codice articolo...&quot;, 60)
 
 
  For lrow=3 To lLastUrow &apos; ciclo in colonna E
-	 oCell=oSheet.GetCellbyPosition( 4, lrow )
+	 oCell=oSheet.GetCellbyPosition( col, lrow )
 	 sAttributo_N = Trova_Attr_N (oCell, oSheet)
 	if sAttributo_N = &quot;Cod_Prezzo_scelta&quot; then
+		ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
 			Cambia_d1 (oCell)
 	end if
 
  next
-
+	ThisComponent.CurrentController.setFirstVisibleRow(0) &apos;focus
 
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Sto ripristinando le finestre a discesa... pazienta........&quot;, 70)	
@@ -304,10 +316,11 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 	 sAttributo_N = Trova_Attr_N (oCell, oSheet)
  	&apos;if oCell.validation.operator=1 And 
  	if sAttributo_N = &quot;Cod_Prezzo_scelta&quot; then
+ 			ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
 			Cambia_d1 (oCell)
 	end if
  next
-
+	ThisComponent.CurrentController.setFirstVisibleRow(0)
 End sub
 
 
@@ -362,19 +375,35 @@ Function Cambia_d3 (oCell as object) &apos;
 	oTabVal.setPropertyValue(&quot;ErrorTitle&quot;, &quot;Finestrella_Percentuali&quot;)   
 	&apos;oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, bValue)
 	oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, false)
-    oTabVal.setPropertyValue(&quot;ShowInputMessage&quot;, true) 
+    oTabVal.setPropertyValue(&quot;ShowInputMessage&quot;, false)&apos;true) 
     oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;(o scrivi quel che ti pare, impostando poi il  % a mano)&quot; )   
     oTabVal.setPropertyValue(&quot;InputTitle&quot;, &quot;Scegli una percentuale % predefinita&quot;)
     oTabVal.setPropertyValue(&quot;ErrorMessage&quot;, &quot;Finestrella_Percentuali&quot;)
     oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;, com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
    &apos; oTabVal.setPropertyValue(&quot;Type&quot;,  6  enum: com.sun.star.sheet.ValidationType.LIST)
     oTabVal.setPropertyValue(&quot;Type&quot;,  com.sun.star.sheet.ValidationType.LIST)
-    
-	sListUM =  &quot; &quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;&quot;&quot;Spese Generali&quot;&quot;;&quot;&quot;Utili d&apos;Impresa&quot;&quot;;&quot;&quot;Oneri di Sicurezza&quot;&quot;;&quot;&quot;Maggiorazione&quot;&quot;;&quot;&quot;Sconto&quot;&quot; &quot;
+&apos;    Spese Generali (calcolate su F)
+&apos;	Utili d&apos;Impresa (calcolata su F+G)
+rem	sListUM =  &quot; &quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;&quot;&quot;Spese Generali&quot;&quot;;&quot;&quot;Utili d&apos;Impresa&quot;&quot;;&quot;&quot;Oneri di Sicurezza&quot;&quot;;&quot;&quot;Maggiorazione&quot;&quot;;&quot;&quot;Sconto&quot;&quot; &quot;
+rem SU ANALISI AVCP
+	sListUM =  &quot; &quot;&quot;Spese Generali (calcolate su F)&quot;&quot;;&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot; &quot;
  	oTabVal.setFormula1(sListUM)
  	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)&apos;
 end Function
+sub qui REM SOLO PER CAPIRE 
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	for lrow = 0 to 14482
+  	if oSheet.GetCellbyPosition(3,lrow).string = &quot;Spese Generali (calcolate su F)&quot; OR _
+	  	oSheet.GetCellbyPosition(3,lrow).string = &quot;Utili d&apos;Impresa (calcolata su F+G)&quot; then
+  	osheet.getCellRangeByPosition (3,lrow,3,lrow).CellStyle =  &quot;An-lavoraz-Utili desc&quot;
+  	osheet.getCellRangeByPosition (1,lrow,2,lrow).CellStyle =  &quot;An-lavoraz-Utili&quot;
+ 	end if
+&apos;		 oCell=oSheet.GetCellbyPosition( 1, lrow )
+&apos;		 xray oCell
+&apos;	  	Cambia_d3 (oCell)
+	next
 
+end sub
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 sub Ripristina_controlli_con_nuovaFinestra

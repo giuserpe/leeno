@@ -121,7 +121,7 @@ Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste ro
 	&apos; ma forse l&apos;unico modo per tenere il doc per palle
 	&apos; iterando tra i frame si verca quello giusto (prima di proseguire)
 	 &apos;StarDesktop.loadComponentFromURL(sURL, &quot;_default&quot;,0 , Array())
-&apos;&apos;&apos;&apos;	on error goto ErrorHandler:
+
 &apos;	on error goto next
 	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 		&apos;	sDoc =
@@ -138,7 +138,8 @@ Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste ro
 		end if 
 	END IF
 &apos;print	SGenericoMemo
-on error goto ErrorHandler 
+
+REM on error goto ErrorHandler 
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Verifica_chiudi_preview
@@ -539,12 +540,11 @@ on error goto ErrorHandler
 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value = 1 then 
 &apos;					&apos;And ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &lt;&gt; 0 then 
 			Barra_chiudi_sempre_4
-			Barra_Apri_Chiudi_5(&quot;Controllo le finestrelle a discesa!&quot;, 80)
+			Barra_Apri_Chiudi_5(&quot;Controllo le finestrelle a discesa!&quot;, 20)
 			Controlla_Validita_Lista	
 		end if
 	end if	
 
-		
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;1 ok proseguo!&quot;, 80)	
 
@@ -972,7 +972,7 @@ Sub Svuota_Globale &apos; svuota la variabile globale con file DCC
 
 &apos;print &quot;svuota 260211 ooaaee&quot; 
 
-On Error  resume next&apos; Goto ErrorHandler 
+On Error  resume next
 
 	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
      If oLibCont.hasByName(sLib)= false Then

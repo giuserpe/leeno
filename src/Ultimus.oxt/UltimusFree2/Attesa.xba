@@ -558,9 +558,13 @@ SUB Ripristina_statusLine_______________ &apos;eseguendo questa &quot;magicament
 End SUB	
 
 sub provala
-	Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
-	  wait 4000	
-		Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
+&apos;i as string
+for i = 0 to 1000
+
+	Barra_Apri_Chiudi_5( &quot; Attendi... Pazienta...&quot;, 0)
+	next
+&apos;	  wait 4000	
+&apos;	Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
 
 end sub
 

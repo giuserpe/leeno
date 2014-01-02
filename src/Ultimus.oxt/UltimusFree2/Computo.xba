@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM  *****  BASIC  *****
+sub vedi_voce REM  leeno 3.8.64
+	Dim test As String
+	Dim riga_selezione As Integer
+	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+	oAddress = thisComponent.getCurrentSelection.celladdress
+	oContr = ThisComponent.CurrentController
+	focus = oContr.getFirstVisibleRow
+	riga_corrente = oAddress.row
+	if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
+		msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
+		&amp; &quot;Devi selezionare una riga di editing.&quot;, 0,&quot;ERRORE!&quot;)
+		goto fine
+	end if
+	sTitolo = &quot;Selezionare una voce precedente...&quot;
+	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+	if SelectedRange = &quot;&quot; or _
+	SelectedRange = &quot;ANNULLA&quot; or _
+	SelectedRange = &quot;GNente&quot; then
+	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+	exit sub
+end if
+riga_selezione = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di vedi voce da riportare
+if riga_corrente &lt; riga_selezione or _
+	riga_corrente = riga_selezione then
+	msgbox (&quot;Devi selezioanre una voce precendente alla attuale.&quot;, 0,&quot;ERRORE!&quot;
+	goto niente:
+end if
+test = &quot;style_cella&quot;
+i = 0 
+for i = 0 to 1000
+	test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
+	if test = &quot;comp progress&quot; then
+		art = oSheet.GetCellByPosition(1,riga_selezione).AbsoluteName
+		id = oSheet.GetCellByPosition(0,riga_selezione).AbsoluteName
+		um = oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
+		i = i+10000
+	else
+		riga_selezione = riga_selezione-1
+		i = i+1
+	end if
+next
+i = 0 
+for i = 0 to 1000
+	test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
+	if test = &quot;Comp End Attributo&quot; then
+		quantity= oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
+		i = i+10000
+	else
+		riga_selezione = riga_selezione+1
+		i = i+1
+	end if
+next
+oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art.&quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; (&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;)&quot;&quot;&quot;
+oSheet.GetCellByPosition(4 , riga_corrente).setformula(&quot;=&quot; &amp; quantity)
+oContr.setFirstVisibleRow(focus)
+fine:
+niente:
+end sub
+ Sub Firme_in_calce
+osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
+&apos;xray osheet
+ 	if oSheet.name = &quot;COMPUTO&quot; Or _
+ 	 oSheet.name = &quot;CONTABILITA&quot; then
+ 		sString$ = &quot;Fine Computo&quot;
+ 	end if
+ 	if oSheet.name = &quot;Elenco Prezzi&quot; then
+ 		sString$ = &quot;Fine elenco&quot;
+ 	end if
+ 	if oSheet.name = &quot;Analisi di Prezzo&quot; then
+ 		sString$ = &quot;Fine ANALISI&quot;
+ 	end if
+&apos; 	print sString
+	oEnd=uFindString(sString$, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd)  then
+		msgbox &quot;Manca la riga rossa di chiusura della tabella!   PROVVEDI 25! &quot;
+		exit sub
+	end if
+	lRowE = oEnd.CellAddress.Row	REM TROVA LA POSIZIONE DELLA RIGA ROSSA
+	ThisComponent.CurrentController.setFirstVisibleRow(lRowE)
+&apos;	print lRowE
+&apos;	PRINT Trova_Attr_Sheet
+&apos;	goto fine
+&apos;	xray osheet
+REM SE ANALISI PREZZI
+	If Trova_Attr_Sheet = &quot;Tipo_Analisi&quot; Then
+&apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
+		i = 0
+		For i = 0 to 1000
+			if oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Riga_rossa_Chiudi&quot; then
+				iserisco_qui = lRowE
+				i = 10000
+			else
+				lRowE=lRowE-1
+			end if
+		Next i
+		inserisco_qui = lRowE
+		oContr = ThisComponent.CurrentController
+		oContr.setFirstVisibleColumn (0)
+		oContr.setFirstVisibleRow(lRowE-2)		
+		oSheet.getRows.insertByIndex(inserisco_qui,15)
+		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
+		riga_corrente = lRowE+5
+	REM INSERISCI LA DATA E IL PROGETTISTA
+		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle =  &quot;Ultimus&quot;
+		oSheet.GetCellByPosition(5 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
+		oSheet.GetCellByPosition(5 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
+&apos;		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
+	REM CONSOLIDA LA DATA	
+		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
+		Flags = com.sun.star.sheet.CellFlags.FORMULA
+		aSaveData = oRange.getDataArray()
+   		oRange.setDataArray( aSaveData )
+		end if
+REM SE ELENCO PREZZI
+	If Trova_Attr_Sheet = &quot;Tipo_EP&quot; Then
+&apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
+		i = 0
+		For i = 0 to 1000
+			if oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Riga_rossa_Chiudi&quot; then
+				iserisco_qui = lRowE
+				i = 10000
+			else
+				lRowE=lRowE-1
+			end if
+		Next i
+		inserisco_qui = lRowE
+		oContr = ThisComponent.CurrentController
+		oContr.setFirstVisibleColumn (0)
+		oContr.setFirstVisibleRow(lRowE-2)		
+		oSheet.getRows.insertByIndex(inserisco_qui,15)
+		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
+		riga_corrente = lRowE+5
+	REM INSERISCI LA DATA E IL PROGETTISTA
+		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle =  &quot;Ultimus&quot;
+		oSheet.GetCellByPosition(2 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
+		oSheet.GetCellByPosition(2 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
+&apos;		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
+	REM CONSOLIDA LA DATA	
+		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
+		Flags = com.sun.star.sheet.CellFlags.FORMULA
+		aSaveData = oRange.getDataArray()
+   		oRange.setDataArray( aSaveData )
+
+		end if
+&apos;	goto fine
+REM SE COMPUTO
+	If Trova_Attr_Sheet = &quot;Tipo_computo&quot; OR _
+		Trova_Attr_Sheet = &quot;Tipo_CONTABILITA&quot; Then
+&apos;		msgbox (&quot;Il Riepilo Capitoli verrà inserito dopo la riga dei TOTALI COPUTO&quot;, 0, &quot;Avviso&quot;)
+		lRowE = oEnd.CellAddress.Row
+	&apos;	traccia =lRowE
+&apos;	print &quot;gfds&quot;
+&apos;	goto fine
+		i = 0
+		For i = 0 to 1000
+			if oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Comp TOTALI&quot; OR _
+				oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Reg_prog&quot; Then
+				iserisco_qui = lRowE
+				i = 10000
+			else
+				lRowE=lRowE-1
+			end if
+		Next i
+		inserisco_qui = lRowE+1
+		oContr = ThisComponent.CurrentController
+		oContr.setFirstVisibleColumn (0)
+		oContr.setFirstVisibleRow(lRowE-2)		
+		oSheet.getRows.insertByIndex(inserisco_qui,15)
+		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
+		riga_corrente = lRowE+5
+	REM INSERIMENTO TITOLO
+		oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;Riepilogo Capitoli&quot;)
+		osheet.getCellRangeByPosition (1,riga_corrente,19,riga_corrente).CellStyle =  &quot;Riepilogo_Cap_titolo&quot;
+	inizio_gruppo = riga_corrente
+		For i =3 to lRowE
+	REM CAPITOLI
+			if oSheet.GetCellByPosition(1 , i).CellStyle =  &quot;Livello-1-scritta&quot; then
+				id_cap  = oSheet.GetCellByPosition(1,i).AbsoluteName
+				str_cap  = oSheet.GetCellByPosition(2,i).AbsoluteName
+				tot_cap  = oSheet.GetCellByPosition(40,i).AbsoluteName
+				riga_corrente =	riga_corrente +1
+&apos;				If Not gr_CAP_start then
+&apos;					gr_CAP_start = riga_corrente 
+&apos;				End If
+				oSheet.getRows.insertByIndex(riga_corrente,1)
+				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=TEXT(&quot; &amp; id_cap &amp;&quot;;&quot;&quot;@&quot;&quot;)&quot;)
+				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_Cap&quot;
+				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap)
+				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
+			end if
+	REM SOTTOCAPITOLI
+&apos;			riga_corrente =	riga_corrente +1
+			if oSheet.GetCellByPosition(1 , i).CellStyle =  &quot;livello2 valuta&quot; then
+				id_cap  = oSheet.GetCellByPosition(1,i).AbsoluteName
+				str_cap  = oSheet.GetCellByPosition(2,i).AbsoluteName
+				tot_cap  = oSheet.GetCellByPosition(39,i).AbsoluteName
+				riga_corrente =	riga_corrente +1
+				oSheet.getRows.insertByIndex(riga_corrente, 1)
+				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_SubCap&quot;
+				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=&quot; &amp; id_cap)
+				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap)
+				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
+			end if
+	REM TOTALE
+			if oSheet.GetCellByPosition(1 , i).CellStyle =  &quot;Comp TOTALI&quot; then
+				tot_cap  = oSheet.GetCellByPosition(18,i).AbsoluteName
+				riga_corrente =	riga_corrente +1
+				oSheet.getRows.insertByIndex(riga_corrente, 1)
+				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
+				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
+				oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;TOTALE&quot;)
+				osheet.getCellRangeByPosition (1,riga_corrente,17,riga_corrente).CellStyle =  &quot;Riepilogo_Cap_bold_tot&quot;
+				osheet.getCellRangeByPosition (11,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_Cap_bold_tot_valuta&quot;
+			end if
+		fine_gruppo = riga_corrente
+		next i
+
+	REM INSERISCI LA DATA
+		oSheet.GetCellByPosition(2 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+		oSheet.GetCellByPosition(8 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
+		oSheet.GetCellByPosition(8 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
+		osheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
+	REM CONSOLIDA LA DATA	
+		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
+		Flags = com.sun.star.sheet.CellFlags.FORMULA
+		aSaveData = oRange.getDataArray()
+   		oRange.setDataArray( aSaveData )
+	REM RAGGRUPPA 
+		oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
+		iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
+		Dim oCRA As New com.sun.star.table.CellRangeAddress
+			oCRA.Sheet =iSheet
+&apos;			oCRA.StartColumn = 	1
+			oCRA.StartRow = inizio_gruppo
+&apos;			oCRA.EndColumn =  19
+			oCRA.EndRow = fine_gruppo
+			oSheet.group(oCRA,1)
+			&apos;oSheet = ThisComponent.currentController.activeSheet
+REM NASCONDE RIGHE
+&apos;	oRange = oSheet.getCellRangeByposition(0,inizio_gruppo,0,fine_gruppo)
+&apos;	oRange.Rows.IsVisible=false
+	END IF
+	fine:
+end sub
+</script:module>

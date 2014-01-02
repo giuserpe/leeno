@@ -2139,12 +2139,13 @@ Sub ANALISI_IN_ELENCOPREZZI_AVCP (lrow as long) &apos; copia l&apos;analisi e la
 	
 	&apos; trovo l&apos;inizio voce Analisi
 	Do While (oCell.string &lt;&gt; &quot;TOTALE&quot;) and ((Trova_Attr_N (oCell1, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		  lrow = lrow - 1
+		  lrow = lrow  - 1
   		  oCell = oSheet.GetCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
 		  oCell1 = oSheet.GetCellByPosition( 3 , lrow)
 	loop
 
 	saltarello:
+	lrow = lrow+1
 	lrowRisel = lrow
 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ) )&apos;debug
 		 &apos; print &quot;voilà&quot;		   

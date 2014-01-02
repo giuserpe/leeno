@@ -371,7 +371,7 @@ Function Cambia_d3 (oCell as object) &apos;
 	&apos;print &quot;si&quot;
 	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
     &apos;oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, False)
-	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
+	oTabVal.setPropertyValue(&quot;ShowList&quot;,0)
 	oTabVal.setPropertyValue(&quot;ErrorTitle&quot;, &quot;Finestrella_Percentuali&quot;)   
 	&apos;oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, bValue)
 	oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, false)
@@ -382,25 +382,24 @@ Function Cambia_d3 (oCell as object) &apos;
     oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;, com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
    &apos; oTabVal.setPropertyValue(&quot;Type&quot;,  6  enum: com.sun.star.sheet.ValidationType.LIST)
     oTabVal.setPropertyValue(&quot;Type&quot;,  com.sun.star.sheet.ValidationType.LIST)
-&apos;    Spese Generali (calcolate su F)
-&apos;	Utili d&apos;Impresa (calcolata su F+G)
 rem	sListUM =  &quot; &quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;&quot;&quot;Spese Generali&quot;&quot;;&quot;&quot;Utili d&apos;Impresa&quot;&quot;;&quot;&quot;Oneri di Sicurezza&quot;&quot;;&quot;&quot;Maggiorazione&quot;&quot;;&quot;&quot;Sconto&quot;&quot; &quot;
 rem SU ANALISI AVCP
-	sListUM =  &quot; &quot;&quot;Spese Generali (calcolate su F)&quot;&quot;;&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot; &quot;
+	sListUM =  &quot; &quot;&quot;Spese Generali (calcolate su F)&quot;&quot;;&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot;;&quot;&quot;Di cui sicurezza afferenti l&apos;impresa&quot;&quot; &quot;
  	oTabVal.setFormula1(sListUM)
  	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)&apos;
 end Function
+
 sub qui REM SOLO PER CAPIRE 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	for lrow = 0 to 14482
-  	if oSheet.GetCellbyPosition(3,lrow).string = &quot;Spese Generali (calcolate su F)&quot; OR _
-	  	oSheet.GetCellbyPosition(3,lrow).string = &quot;Utili d&apos;Impresa (calcolata su F+G)&quot; then
-  	osheet.getCellRangeByPosition (3,lrow,3,lrow).CellStyle =  &quot;An-lavoraz-Utili desc&quot;
-  	osheet.getCellRangeByPosition (1,lrow,2,lrow).CellStyle =  &quot;An-lavoraz-Utili&quot;
- 	end if
-&apos;		 oCell=oSheet.GetCellbyPosition( 1, lrow )
+	for lrow = 0 to 140
+&apos;  	if oSheet.GetCellbyPosition(3,lrow).string = &quot;Spese Generali (calcolate su F)&quot; OR _
+&apos;	  	oSheet.GetCellbyPosition(3,lrow).string = &quot;Utili d&apos;Impresa (calcolata su F+G)&quot; then
+&apos;  	osheet.getCellRangeByPosition (3,lrow,3,lrow).CellStyle =  &quot;An-lavoraz-Utili desc&quot;
+&apos;  	osheet.getCellRangeByPosition (1,lrow,2,lrow).CellStyle =  &quot;An-lavoraz-Utili&quot;
+&apos; 	end if
+		 oCell=oSheet.GetCellbyPosition( 1, lrow )
 &apos;		 xray oCell
-&apos;	  	Cambia_d3 (oCell)
+	  	Cambia_d3 (oCell)
 	next
 
 end sub

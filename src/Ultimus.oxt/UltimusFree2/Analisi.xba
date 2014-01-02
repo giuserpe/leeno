@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Analisi" script:language="StarBasic">SUB DOLO REM SOLO MANUTENZIONE
+	&apos;if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$88:$L$88&quot; , &quot;manodopera&quot;)
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$89:$L$89&quot; , &quot;materiali&quot;)
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$90:$L$90&quot; , &quot;noli&quot;)
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$91:$L$91&quot; , &quot;trasporti&quot;)
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$92:$L$92&quot; , &quot;altre_forniture&quot;)
+		REM VECCHIO BLOCCO ANALISI_BART
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$45:$N$51&quot; , &quot;blocco_analisi&quot;)
+		REM BLOCCO ANALISI AVCP
+		rifa_nomearea (&quot;S5&quot;, &quot;$B$106:$P$131&quot; , &quot;blocco_analisi&quot;)
+		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
+
+
+	&apos;end if
+END SUB
+Sub titolo_Monodopera &apos; MODIFICATA PER GIUSERPE o Oneri di sicurezza o Maggiorazione %							&apos; Ctrl F9  oppure Alt F9
+dim nome as string
+Dim oDoc As Object
+Dim oSheets As Object
+dim oCelle As Object
+Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+Dim CellAddress As New com.sun.star.table.CellAddress
+dim lrow as integer
+dim lcol as integer
+dim lrow2 as integer
+Dim oView As Object
+Dim nome_sheet as string
+Dim OcalcSheet as Object
+Dim I as long
+Dim oSheet_num as integer
+Dim iflag
+	oDoc=thisComponent
+	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+	lrow= Range2Cell
+&apos;	lrow=lrow+4
+
+	ThisComponent.CurrentController.Select(oCell)&apos; debug
+	oSheets = odoc.Sheets
+	
+	oView = ThisComponent.CurrentController
+	nome_sheet = oView.GetActiveSheet.Name
+	
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	iflag =	CNTR_Analisi (lrow)&apos; controlla se la riga Ã¨ buona
+	sFlag = &quot;A&quot;
+&apos;print iflag
+	if iflag = 1 then
+		exit sub
+	end if
+	oCalcSheet = oSheets.GetByIndex(0)
+	For I = 0 to oSheets.Count -1 
+		oCalcSheet = oSheets(I) &apos;recuperiamo la tabella
+		if oCalcSheet.Name = nome_sheet Then
+			oSheet_num = I
+		end if
+	Next I
+&apos;	lrow = lrow+1
+	lRowNum= 1 &apos; numero di righe da inserire
+	oSheet.getRows.insertByIndex(lrow, lRowNum)
+
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
+
+	if sflag = &quot;A&quot; then &apos; ????
+			lcol = 1
+		else
+			lcol = 3
+	end if
+	
+
+	oCell = oSheet.GetCellByPosition( lcol , lrow+1)	
+	ThisComponent.CurrentController.Select(oCell)
+
+   oCell = oSheet.GetCellByPosition(0,lrow )      
+   ThisComponent.CurrentController.Select(oCell)
+
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheet1=oDoc.NamedRanges.manodopera.ReferredCells &apos; utili Ã¨ il nome del range
+	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+
+    	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+	ThisComponent.CurrentController.Select(oCell)
+&apos;	lrow = lrow-1			
+END SUB
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+Sub titolo_Materiali &apos; MODIFICATA PER GIUSERPE o Oneri di sicurezza o Maggiorazione %							&apos; Ctrl F9  oppure Alt F9
+dim nome as string
+Dim oDoc As Object
+Dim oSheets As Object
+dim oCelle As Object
+Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+Dim CellAddress As New com.sun.star.table.CellAddress
+dim lrow as integer
+dim lcol as integer
+dim lrow2 as integer
+Dim oView As Object
+Dim nome_sheet as string
+Dim OcalcSheet as Object
+Dim I as long
+Dim oSheet_num as integer
+Dim iflag
+	oDoc=thisComponent
+	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+	lrow= Range2Cell
+&apos;	lrow=lrow+4
+
+	ThisComponent.CurrentController.Select(oCell)&apos; debug
+	oSheets = odoc.Sheets
+	
+	oView = ThisComponent.CurrentController
+	nome_sheet = oView.GetActiveSheet.Name
+	
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	iflag =	CNTR_Analisi (lrow)&apos; controlla se la riga Ã¨ buona
+	sFlag = &quot;A&quot;
+&apos;print iflag
+	if iflag = 1 then
+		exit sub
+	end if
+	oCalcSheet = oSheets.GetByIndex(0)
+	For I = 0 to oSheets.Count -1 
+		oCalcSheet = oSheets(I) &apos;recuperiamo la tabella
+		if oCalcSheet.Name = nome_sheet Then
+			oSheet_num = I
+		end if
+	Next I
+&apos;	lrow = lrow+1
+	lRowNum= 1 &apos; numero di righe da inserire
+	oSheet.getRows.insertByIndex(lrow, lRowNum)
+
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
+
+	if sflag = &quot;A&quot; then &apos; ????
+			lcol = 1
+		else
+			lcol = 3
+	end if
+	
+
+	oCell = oSheet.GetCellByPosition( lcol , lrow+1)	
+	ThisComponent.CurrentController.Select(oCell)
+
+   oCell = oSheet.GetCellByPosition(0,lrow )      
+   ThisComponent.CurrentController.Select(oCell)
+
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheet1=oDoc.NamedRanges.materiali.ReferredCells &apos; utili Ã¨ il nome del range
+	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+
+    	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+	ThisComponent.CurrentController.Select(oCell)
+&apos;	lrow = lrow-1			
+END SUB
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+Sub titolo_Noli &apos; MODIFICATA PER GIUSERPE o Oneri di sicurezza o Maggiorazione %							&apos; Ctrl F9  oppure Alt F9
+Dim oDoc As Object
+Dim oSheets As Object
+dim oCelle As Object
+Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+Dim CellAddress As New com.sun.star.table.CellAddress
+dim lrow as integer
+dim lcol as integer
+dim lrow2 as integer
+Dim oView As Object
+Dim nome_sheet as string
+Dim OcalcSheet as Object
+Dim I as long
+Dim oSheet_num as integer
+Dim iflag
+	oDoc=thisComponent
+	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+	lrow= Range2Cell
+	ThisComponent.CurrentController.Select(oCell)&apos; debug
+	oSheets = odoc.Sheets
+	oView = ThisComponent.CurrentController
+	nome_sheet = oView.GetActiveSheet.Name
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+	sFlag = &quot;A&quot;
+	if iflag = 1 then
+		exit sub
+	end if
+	oCalcSheet = oSheets.GetByIndex(0)
+	For I = 0 to oSheets.Count -1 
+		oCalcSheet = oSheets(I) &apos;recuperiamo la tabella
+		if oCalcSheet.Name = nome_sheet Then
+			oSheet_num = I
+		end if
+	Next I
+	lRowNum= 1 &apos; numero di righe da inserire
+	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
+	if sflag = &quot;A&quot; then &apos; ????
+			lcol = 1
+		else
+			lcol = 3
+	end if
+	oCell = oSheet.GetCellByPosition( lcol , lrow+1)	
+	ThisComponent.CurrentController.Select(oCell)
+   oCell = oSheet.GetCellByPosition(0,lrow )      
+   ThisComponent.CurrentController.Select(oCell)
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheet1=oDoc.NamedRanges.noli.ReferredCells &apos; nome del range
+	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+   	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+	ThisComponent.CurrentController.Select(oCell)
+&apos;	lrow = lrow-1			
+END SUB
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+Sub titolo_Altre_forniture &apos; MODIFICATA PER GIUSERPE o Oneri di sicurezza o Maggiorazione %							&apos; Ctrl F9  oppure Alt F9
+dim nome as string
+Dim oDoc As Object
+Dim oSheets As Object
+dim oCelle As Object
+Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+Dim CellAddress As New com.sun.star.table.CellAddress
+dim lrow as integer
+dim lcol as integer
+dim lrow2 as integer
+Dim oView As Object
+Dim nome_sheet as string
+Dim OcalcSheet as Object
+Dim I as long
+Dim oSheet_num as integer
+Dim iflag
+	oDoc=thisComponent
+	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+	lrow= Range2Cell
+&apos;	lrow=lrow+4
+
+	ThisComponent.CurrentController.Select(oCell)&apos; debug
+	oSheets = odoc.Sheets
+	
+	oView = ThisComponent.CurrentController
+	nome_sheet = oView.GetActiveSheet.Name
+	
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	iflag =	CNTR_Analisi (lrow)&apos; controlla se la riga Ã¨ buona
+	sFlag = &quot;A&quot;
+&apos;print iflag
+	if iflag = 1 then
+		exit sub
+	end if
+	oCalcSheet = oSheets.GetByIndex(0)
+	For I = 0 to oSheets.Count -1 
+		oCalcSheet = oSheets(I) &apos;recuperiamo la tabella
+		if oCalcSheet.Name = nome_sheet Then
+			oSheet_num = I
+		end if
+	Next I
+&apos;	lrow = lrow+1
+	lRowNum= 1 &apos; numero di righe da inserire
+	oSheet.getRows.insertByIndex(lrow, lRowNum)
+
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
+
+	if sflag = &quot;A&quot; then &apos; ????
+			lcol = 1
+		else
+			lcol = 3
+	end if
+	
+
+	oCell = oSheet.GetCellByPosition( lcol , lrow+1)	
+	ThisComponent.CurrentController.Select(oCell)
+
+   oCell = oSheet.GetCellByPosition(0,lrow )      
+   ThisComponent.CurrentController.Select(oCell)
+
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheet1=oDoc.NamedRanges.altre_forniture.ReferredCells &apos; utili Ã¨ il nome del range
+	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+
+    	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+	ThisComponent.CurrentController.Select(oCell)
+&apos;	lrow = lrow-1			
+END SUB
+Sub titolo_Trasporti &apos; MODIFICATA PER GIUSERPE o Oneri di sicurezza o Maggiorazione %							&apos; Ctrl F9  oppure Alt F9
+dim nome as string
+Dim oDoc As Object
+Dim oSheets As Object
+dim oCelle As Object
+Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+Dim CellAddress As New com.sun.star.table.CellAddress
+dim lrow as integer
+dim lcol as integer
+dim lrow2 as integer
+Dim oView As Object
+Dim nome_sheet as string
+Dim OcalcSheet as Object
+Dim I as long
+Dim oSheet_num as integer
+Dim iflag
+	oDoc=thisComponent
+	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+	lrow= Range2Cell
+&apos;	lrow=lrow+4
+
+	ThisComponent.CurrentController.Select(oCell)&apos; debug
+	oSheets = odoc.Sheets
+	
+	oView = ThisComponent.CurrentController
+	nome_sheet = oView.GetActiveSheet.Name
+	
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0, lrow )
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	iflag =	CNTR_Analisi (lrow)&apos; controlla se la riga Ã¨ buona
+	sFlag = &quot;A&quot;
+&apos;print iflag
+	if iflag = 1 then
+		exit sub
+	end if
+	oCalcSheet = oSheets.GetByIndex(0)
+	For I = 0 to oSheets.Count -1 
+		oCalcSheet = oSheets(I) &apos;recuperiamo la tabella
+		if oCalcSheet.Name = nome_sheet Then
+			oSheet_num = I
+		end if
+	Next I
+&apos;	lrow = lrow+1
+	lRowNum= 1 &apos; numero di righe da inserire
+	oSheet.getRows.insertByIndex(lrow, lRowNum)
+
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
+
+	if sflag = &quot;A&quot; then &apos; ????
+			lcol = 1
+		else
+			lcol = 3
+	end if
+	
+
+	oCell = oSheet.GetCellByPosition( lcol , lrow+1)	
+	ThisComponent.CurrentController.Select(oCell)
+
+   oCell = oSheet.GetCellByPosition(0,lrow )      
+   ThisComponent.CurrentController.Select(oCell)
+
+	oDoc = ThisComponent
+	DocView=oDoc.getCurrentController()
+	oSheet1=oDoc.NamedRanges.trasporti.ReferredCells &apos; utili Ã¨ il nome del range
+	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
+	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+
+    	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+	ThisComponent.CurrentController.Select(oCell)
+&apos;	lrow = lrow-1			
+END SUB
+</script:module>

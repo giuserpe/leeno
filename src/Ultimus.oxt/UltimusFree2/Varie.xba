@@ -63,13 +63,8 @@ Sub ANALISI_IN_ELENCOPREZZI
 	if Trova_Attr_Sheet &lt;&gt; &quot;Tipo_Analisi&quot; then
 		exit sub
 	end if
-
-	&apos;_____________________
 	chiudi_dialoghi  &apos; chiude tutti i dialoghi
-	&apos;_____________________
-
 	range2Cell &apos; per uscire dal modo editazione
-
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 1 then
 		Quale = 1
 	end if
@@ -77,7 +72,6 @@ Sub ANALISI_IN_ELENCOPREZZI
 				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).string = &quot;&quot; then
 		Quale = 2
 	end if
-
 	Select Case Quale
 		Case 1
 			Elimina_doppione &apos; primus like ma solo se quella già in EP non e (AP)
@@ -90,7 +84,7 @@ END SUB
 
 
 
-Sub ANALISI_IN_ELENCOPREZZI_classica &apos;
+Sub ANALISI_IN_ELENCOPREZZI_classica
 
 	oSheet = thiscomponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	sflag = &quot;no&quot; &apos; temporaneo per importare 
@@ -412,7 +406,7 @@ end sub
 
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string) 
+Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string) &apos;adattato analisi_AVCP
 &apos;print &quot;der TV&quot;
  &apos; copia l&apos;analisi e la inserisce in Elenco Prezzi come nuovo prezzo
 
@@ -420,8 +414,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
 		flag_rior = &quot;&quot;
 	end if
 &apos;	print flag_rior
-	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	&apos; errata selezione di un range
+	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale errata selezione di un range
 	if lrow = -1 then
 			 
 			exit function
@@ -471,15 +464,14 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
 		((Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
 		  lrow = lrow - 1
 	loop
-	&apos;print lrow
+
 	oCell1 = oSheet.GetCellByPosition( 3 , lrow)
 	
 	
 	saltarello:
 	lrowRisel = lrow
 	   &apos;print &quot;333 &quot;  &amp; lrow
-	oCell = oSheet.GetCellByPosition( 0, lrow )   
-   
+	oCell = oSheet.GetCellByPosition( 0, lrow+1 )   &apos;codice AVCP
 	&apos; ..................vede se analisi vechia o nuova...
 	oCell1 = oSheet.GetCellByPosition( 3 , lrow)
 	if    Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet) = &quot;Start_voce_ANALISI&quot; then
@@ -490,8 +482,9 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
 			iflag = 7
 	end if
 	&apos;......................................
-		codice = oSheet.GetCellByPosition( 0 , lrow).string
+		codice = oSheet.GetCellByPosition( 0 , lrow+1).string 
  	xA = oCell.string
+ &apos;	print xA
  	if flag_rior = &quot;&quot; then &apos; se arriva da concatena salta...
   		 	If xA = &quot;AP&quot; OR xA = &quot;&quot; Then
    				 ThisComponent.CurrentController.Select(oCell)
@@ -503,7 +496,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
  	end if
    oCodAnalisi = xA
 
-   oCelle = oSheet.GetCellByPosition( 1, lrow )  &apos;rem descrizione
+   oCelle = oSheet.GetCellByPosition( 1, lrow+1 )  &apos;rem descrizione avcp
    xA = oCell.string
 	dim oLdescAnalisi as string
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
@@ -511,13 +504,13 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
    oLdescAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
   &apos; print oLdescAnalisi
    
-   oCelle = oSheet.GetCellByPosition( 2, lrow ) &apos; unità di misura
+   oCelle = oSheet.GetCellByPosition( 2, lrow+1 ) &apos; unità di misura avcp
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oLumAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
   
   	
-   oCelle = oSheet.GetCellByPosition( iflag, lrow ) &apos; iflag è la colonna del prezzo
+   oCelle = oSheet.GetCellByPosition( iflag, lrow+1 ) &apos; iflag è la colonna del prezzo
    &apos; diversa dopo la mofùdifica della struttura della voce di analisi
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
@@ -526,19 +519,19 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
   
   
   
-    oCelle = oSheet.GetCellByPosition( 8, lrow ) 
+    oCelle = oSheet.GetCellByPosition( 8, lrow+1 ) &apos; inciednza manodopera AVCP
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oIncidAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
 
-    oCelle = oSheet.GetCellByPosition( 9 , lrow ) &apos; importo manodopera
+    oCelle = oSheet.GetCellByPosition( 9 , lrow+1 ) &apos; importo manodopera AVCP
      
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oImpManAn = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
 
 
-   oCelle = oSheet.GetCellByPosition( 10 , lrow ) 
+   oCelle = oSheet.GetCellByPosition( 10 , lrow+1 ) &apos; sicurezza AVCP
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
  &apos;  dim oImpSicur as string
@@ -546,7 +539,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string)
 	
 
 	
-   oCelle = oSheet.GetCellByPosition( 0, lrow )      
+   oCelle = oSheet.GetCellByPosition( 0, lrow+1 ) &apos;codice AVCP     
    oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
    oConv.Address = oCelle.getCellAddress
    oLOrigPAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
@@ -1143,7 +1136,7 @@ Dim iflag
 	CellRangeAddress.Sheet = oSheet_num    
 	CellRangeAddress.StartColumn = 0
 	CellRangeAddress.StartRow = lrow	
-	CellRangeAddress.EndColumn = 8 &apos;250
+	CellRangeAddress.EndColumn = 15 &apos;250 
 
 	oSheet.getRows.insertByIndex(lrow, 1)
 &apos;exit sub
@@ -1157,21 +1150,18 @@ Dim iflag
 	lrow =lrow+1
 
    &apos; lettura var generale in S1
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 0 then 
-
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 0 then &apos;Copia il testo sovrastante 1=sì
 		oCellN = oSheet.GetCellbyPosition( 0, lrow)&apos;morgana
 		oCelleN= oCellN.getCellAddress()
 		oSheetO = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-&apos;		oRangeO =  osheetO.getCellRangeByPosition (2,47,10,47 ) &apos; SINGOLA RIGA ANALISI bloccarlo in un namedranges?
 		oRangeO =  osheetO.getCellRangeByPosition (1, 114, 15, 114) &apos; SINGOLA RIGA ANALISI bloccarlo in un namedranges?
+														&apos;&quot;riga_analisi&quot;
 		oRangeO = oRangeO.RangeAddress
 		oSheet.copyRange(oCelleN,oRangeO)
-
-&apos;		oCellFinale = oSheets.GetCellByPosition( 4 , lrow) 
-		oCellFinale = oSheets.GetCellByPosition( 0 , lrow) &apos;nuova riga analisi_AVCP			
+		oCellFinale = oSheets.GetCellByPosition( 0 , lrow) &apos;focus su nuova riga analisi_AVCP			
 		ThisComponent.CurrentController.Select(oCellFinale)
 	  else 
-	 	oCellFinale = oSheets.GetCellByPosition( 3 , lrow)	
+	 	oCellFinale = oSheets.GetCellByPosition( 3 , lrow)
 		ThisComponent.CurrentController.Select(oCellFinale)
 	end if
 	sFormula_1 = &quot;=SUM(G&quot; &amp; lrow+1 &amp; &quot;)*D&quot; &amp; lrow+2  &apos; /SUM(&quot; &amp; sCol &amp; lrowS &amp; &quot;:&quot; &amp; sCol &amp; lrowF &amp; &quot;)&quot;&apos;  &amp; lrowE+1

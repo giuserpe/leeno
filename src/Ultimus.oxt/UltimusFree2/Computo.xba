@@ -116,7 +116,7 @@ REM SE ANALISI PREZZI
    		oRange.setDataArray( aSaveData )
 		end if
 REM SE ELENCO PREZZI
-	If Trova_Attr_Sheet = &quot;Tipo_EP&quot; Then
+	If Trova_Attr_Sheet = &quot;Tipo_EP&quot; OR Trova_Attr_Sheet = &quot;Tipo_ElencoP&quot; Then
 &apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
 		i = 0
 		For i = 0 to 1000
@@ -152,7 +152,14 @@ REM SE COMPUTO
 	If Trova_Attr_Sheet = &quot;Tipo_computo&quot; OR _
 		Trova_Attr_Sheet = &quot;Tipo_CONTABILITA&quot; Then
 &apos;		msgbox (&quot;Il Riepilo Capitoli verrà inserito dopo la riga dei TOTALI COPUTO&quot;, 0, &quot;Avviso&quot;)
-		lRowE = oEnd.CellAddress.Row
+		sString$ = &quot;TOTALI COMPUTO&quot;
+		oInizioFirme=uFindString(sString$, oSheet)
+		lRowF=oInizioFirme.CellAddress.Row+1 REM INIZIO FIRME
+		lRowE=oEnd.CellAddress.Row
+&apos;		osheet = thisComponent.CurrentController.ActiveSheet
+		If lRowE &gt;lRowF+1 then
+				oSheet.getrows.removebyindex(lRowF,	lRowE-lRowF)
+		end if
 	&apos;	traccia =lRowE
 &apos;	print &quot;gfds&quot;
 &apos;	goto fine
@@ -244,6 +251,7 @@ REM SE COMPUTO
 REM NASCONDE RIGHE
 &apos;	oRange = oSheet.getCellRangeByposition(0,inizio_gruppo,0,fine_gruppo)
 &apos;	oRange.Rows.IsVisible=false
+Set_Area_Stampa_N
 	END IF
 	fine:
 end sub

@@ -219,8 +219,11 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 	Cambia_d1 (oCell)	
 						 
 &apos;	oCell=oSheet.GetCellbyPosition( 47, 42 ) &apos;um
-	oCell=oSheet.GetCellbyPosition( 3, 45) &apos;um (in analisi)
+
 	oCell.string = &quot;U.M. ??&quot;
+	oCell=oSheet.GetCellbyPosition( 3, 45) &apos;um (in analisi)
+	Cambia_d2 (oCell)
+	oCell=oSheet.GetCellbyPosition( 3, 107) &apos;um (in analisi avcp
 	Cambia_d2 (oCell)
 
 &apos;	oCell=oSheet.GetCellbyPosition( 49, 44 )
@@ -244,6 +247,11 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 	Cambia_d3 (oCell)
 
 	oCell=oSheet.GetCellbyPosition( 2, 53 ) &apos;maggiorazioni in analisi 3
+	Cambia_d3 (oCell)
+	
+	oCell=oSheet.GetCellbyPosition( 4, 127 ) &apos;maggiorazioni in analisi AVCP
+	Cambia_d3 (oCell)
+	oCell=oSheet.GetCellbyPosition( 4, 128 ) &apos;maggiorazioni in analisi AVCP
 	Cambia_d3 (oCell)
 
 
@@ -341,8 +349,10 @@ Function Cambia_d1 (oCell as object) &apos; finestra validation per cod. prezzo
    ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)
 end Function
    
-Function Cambia_d2 (oCell as object)
+Function Cambia_d2_old (oCell as object) REM QUESTA NON VA - è riscritta sotto
+REM quanto segue sembra non funzionare
 	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
+	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
    oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, False)
 &apos;	oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, True)
 	oTabVal.setPropertyValue(&quot;IgnoreBlankCells&quot;, True) 
@@ -350,8 +360,8 @@ Function Cambia_d2 (oCell as object)
     oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;,2) &apos; com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
     oTabVal.setPropertyValue(&quot;Type&quot;,6)
     oTabVal.setPropertyValue(&quot;Operator&quot;,0) &apos;com.sun.star.sheet.ConditionOperator.NONE
-	oTabVal.setPropertyValue(&quot;ShowInputMessage&quot;, true)   
-	oTabVal.setPropertyValue(&quot;InputTitle&quot;,&quot;U.Mis.&quot;)
+	oTabVal.setPropertyValue(&quot;ShowInputMessage&quot;, true)
+	oTabVal.setPropertyValue(&quot;InputTitle&quot;,&quot;U. M.&quot;)
 	oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;Click sulla freccetta e &quot; &amp; CHR(10)_
 											&amp;&quot;seleziona l&apos;unità di misura&quot;)
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).string = &quot;&quot; then 
@@ -360,18 +370,30 @@ Function Cambia_d2 (oCell as object)
  		sListUM = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).string
 	end if 
   &apos;   sListUM =  &quot; &quot;&quot;dmq&quot;&quot;;&quot;&quot;dmc&quot;&quot;;&quot;&quot;mq&quot;&quot;;&quot;&quot;mc&quot;&quot;; &quot;&quot;m²&quot;&quot;;&quot;&quot;m³&quot;&quot;;&quot;&quot;corpo&quot;&quot;;&quot;&quot;m&quot;&quot;;&quot;&quot;Cad&quot;&quot;;&quot;&quot;kg&quot;&quot;;&quot;&quot;t&quot;&quot;;&quot;&quot;lt&quot;&quot;;&quot;&quot;dm&quot;&quot;;&quot;&quot;dm²&quot;&quot;;&quot;&quot;dm³&quot;&quot; &quot;
- 	oTabVal.setFormula1(sListUM)
- 	
+ 	oTabVal.setFormula1(sListUM) 	
  	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)
 end Function
-
+Function Cambia_d2 (oCell as object) &apos;
+	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
+	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
+	oTabVal.setPropertyValue(&quot;InputTitle&quot;,&quot;U. M.&quot;)
+	oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;Click sulla freccetta e &quot; &amp; CHR(10)_
+											&amp;&quot;seleziona l&apos;unità di misura&quot;)
+    oTabVal.setPropertyValue(&quot;ErrorMessage&quot;, &quot;Finestrella_Percentuali&quot;)
+    oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;, com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
+    oTabVal.setPropertyValue(&quot;Type&quot;,  com.sun.star.sheet.ValidationType.LIST)
+rem SU ANALISI AVCP
+    sListUM =  &quot; &quot;&quot;m²&quot;&quot;;&quot;&quot;m³&quot;&quot;;&quot;&quot;corpo&quot;&quot;;&quot;&quot;cad&quot;&quot;;&quot;&quot;m&quot;&quot;;&quot;&quot;kg&quot;&quot;;&quot;&quot;t&quot;&quot;;&quot;&quot;lt&quot;&quot;;&quot;&quot;dm&quot;&quot;;&quot;&quot;dm²&quot;&quot;;&quot;&quot;dm³&quot;&quot; &quot;
+ 	oTabVal.setFormula1(sListUM)
+ 	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)&apos;
+end Function
 
 Function Cambia_d3 (oCell as object) &apos;
 	&apos;ThisComponent.CurrentController.Select(oCell)
 	&apos;print &quot;si&quot;
 	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
     &apos;oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, False)
-	oTabVal.setPropertyValue(&quot;ShowList&quot;,0)
+	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
 	oTabVal.setPropertyValue(&quot;ErrorTitle&quot;, &quot;Finestrella_Percentuali&quot;)   
 	&apos;oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, bValue)
 	oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, false)
@@ -392,14 +414,15 @@ end Function
 sub qui REM SOLO PER CAPIRE 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	for lrow = 0 to 140
-&apos;  	if oSheet.GetCellbyPosition(3,lrow).string = &quot;Spese Generali (calcolate su F)&quot; OR _
-&apos;	  	oSheet.GetCellbyPosition(3,lrow).string = &quot;Utili d&apos;Impresa (calcolata su F+G)&quot; then
+  	if oSheet.GetCellbyPosition(3,lrow).string = &quot;Spese Generali (calcolate su F)&quot; OR _
+	  	oSheet.GetCellbyPosition(3,lrow).string = &quot;Utili d&apos;Impresa (calcolata su F+G)&quot; then
 &apos;  	osheet.getCellRangeByPosition (3,lrow,3,lrow).CellStyle =  &quot;An-lavoraz-Utili desc&quot;
 &apos;  	osheet.getCellRangeByPosition (1,lrow,2,lrow).CellStyle =  &quot;An-lavoraz-Utili&quot;
-&apos; 	end if
-		 oCell=oSheet.GetCellbyPosition( 1, lrow )
+
+		 oCell=oSheet.GetCellbyPosition( 3, lrow )
 &apos;		 xray oCell
 	  	Cambia_d3 (oCell)
+	  	 	end if
 	next
 
 end sub

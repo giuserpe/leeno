@@ -840,7 +840,7 @@ end function
 
 
 SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
-	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+&apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	oContr = ThisComponent.CurrentController
 	if lrow = -1 then	 

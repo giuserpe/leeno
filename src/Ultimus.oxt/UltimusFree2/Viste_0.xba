@@ -63,7 +63,7 @@ End Sub
 
 Sub tag_usata_on_off
 
-	If Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If  Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_ElencoP&quot; Then 
 		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
 				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
 				&amp; &quot;ANNULLO!&quot;
@@ -99,7 +99,7 @@ End Sub
 
 Sub  Sommario_off &apos; chiude/apre la col del sommario del Computo
 
-	If Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If  Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_ElencoP&quot; Then
 		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
 				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
 				&amp; &quot;ANNULLO!&quot;
@@ -151,7 +151,7 @@ End Sub
 
 
 Sub  Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If  Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_ElencoP&quot; Then
 		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
 				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
 				&amp; &quot;ANNULLO!&quot;
@@ -199,7 +199,7 @@ End Sub
 
 
 Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If  Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_ElencoP&quot; Then
 		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
 				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
 				&amp; &quot;ANNULLO!&quot;
@@ -239,7 +239,7 @@ End Sub
 
 
 Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If  Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_ElencoP&quot; Then
 		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
 				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
 				&amp; &quot;ANNULLO!&quot;
@@ -289,9 +289,11 @@ End Sub
 
 
 Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
-
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
-		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
+DIM test as string
+	test = Trova_Attr_Sheet
+If  test &lt;&gt; &quot;Tipo_EP&quot; AND _
+	test &lt;&gt; &quot;Tipo_ElencoP&quot; Then
+		msgbox &quot;Questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
 				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
 				&amp; &quot;ANNULLO!&quot;
 				exit sub

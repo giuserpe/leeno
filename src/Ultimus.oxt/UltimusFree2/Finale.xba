@@ -26,20 +26,23 @@ Sub Prepara_un_Doc_per_la_stampa(optional sCosa as long)
 	Set_Header_Footer (&quot;no messaggio&quot;)
 	Sbianca_e_o_consolida(6)
 	&apos;Pulisci_Tabella_Tutta  &apos;_new
-oSheet = ThisComponent.currentController.activeSheet
+	oSheet = ThisComponent.currentController.activeSheet
+	sSheetName=oSheet.name
+
+	If sSheetName=&quot;COMPUTO_print&quot; then &apos; or sSheetName=&quot;Analisi di Prezzo_print&quot; then
+	&apos;	print sSheetName
 REM NASCONDI RIGHE
-	oRange = oSheet.getCellRangeByposition(0,1,0,1)
-	oRange.Rows.IsVisible=false
+		oRange = oSheet.getCellRangeByposition(0,1,0,1)
+		oRange.Rows.IsVisible=false
+	end if
 REM cancelliamo i pulsantoni
 	iCellAttr =	com.sun.star.sheet.CellFlags.OBJECTS
 	osheet.getCellRangeByPosition (0,0,21,1).ClearContents(iCellAttr)
 REM RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
-	oPrimaCella.Rows.Height = 1000
-
-	
-	
+	oPrimaCella.Rows.Height = 1200
 	Set_Area_Stampa_N
+	Impagina_N
 	
 end sub
 
@@ -1376,7 +1379,7 @@ SUB Set_solo_Righe_ripet
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 0&apos; headstart - 1
-		oTitles.EndRow = 1 &apos;headend - 1
+		oTitles.EndRow = 0 &apos;headend - 1
 		oTitles.startColumn = 0
 		oTitles.EndColumn = 35
 		oSheet.setPrintTitleRows(true)
@@ -1434,7 +1437,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 				exit sub
 		end if
 		lRowE=oEnd.CellAddress.Row 			
-		lLastUrow = getLastUsedRow(oSheet)
+&apos;		lLastUrow = getLastUsedRow(oSheet)
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 0
 		sNomePart = Left (ThisComponent.currentcontroller.activesheet.name,5)
@@ -1458,8 +1461,8 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	&apos;	end if	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	
 
-		selArea(0).EndRow = lLastUrow 
-		selArea(0).EndRow = lRowE
+&apos;		selArea(0).EndRow = lLastUrow
+		selArea(0).EndRow = lRowE-1
 	
 		oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1482,8 +1485,8 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		&apos;e viene chiamata la sub Pulisci_Tabella()
 		  
 		&apos; nasconde la riga di Fine Elenco
-		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
-		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
+&apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
+&apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 		
 	  Case &quot;Tipo_Analisi&quot;
 		oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
@@ -1492,9 +1495,9 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		lRowE=oEnd.CellAddress.Row
 	
 		selArea(0).StartColumn = 0
-		selArea(0).StartRow = 1 &apos;1
-		selArea(0).EndColumn = 8
-		selArea(0).EndRow = lRowE-1 
+		selArea(0).StartRow = 2
+		selArea(0).EndColumn = 7
+		selArea(0).EndRow = lRowE-2 
 		&apos;xray selarea
 		oSheet.setPrintTitleRows(False)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1506,9 +1509,9 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		&apos;oSheet.setTitleRows(oTitles)
 		oSheet.setPrintareas(selArea())
 	&apos; osheet.getPrintAreas		
-		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
-		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
-
+&apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
+&apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
+&apos;		Impagina_N REM TANTO è DA FARE
 	  Case &quot;Tipo_CONTABILITA&quot;
 		lLastUrow = getLastUsedRow(oSheet)
 		if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
@@ -1537,22 +1540,24 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 			
 		oSheet.setPrintareas(selArea())
 
-	  Case &quot;Tipo_EP&quot; 
+	  Case &quot;Tipo_ElencoP&quot; &apos;&quot;Tipo_EP&quot;
+&apos;	  print &quot;Tipo_ElencoP&quot;
 		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe	
 		sString$ = &quot;Fine elenco&quot;
 		oEnd=uFindString(sString$, oSheet)			
 		lRowE=oEnd.CellAddress.Row
-		lLastUrow = getLastUsedRow(oSheet)
+&apos;		lLastUrow = getLastUsedRow(oSheet) &apos;REM rigabart
+		lLastUrow = lRowE
 		&apos;lLastUrow = lRowE+10
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 0
 		selArea(0).EndColumn = 8 &apos;7 &apos;6
-		selArea(0).EndRow = lLastUrow &apos;lRowE+10
+		selArea(0).EndRow = lLastUrow-1 &apos;lRowE+10
 		
 		oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 0&apos; headstart - 1
-		oTitles.EndRow = 1 &apos;headend - 1
+		oTitles.EndRow = 0&apos;headend - 1
 		oTitles.startColumn = 0
 		oTitles.EndColumn = 35
 		oSheet.setPrintTitleRows(true)
@@ -1562,9 +1567,12 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 				
 	&apos;&apos;&apos;	oRange = oSheet.getCellRangeByName(&quot;A1:Q&quot; &amp; lRowE + 20)
 	&apos;&apos;&apos;	Pulisci_Tabella(oRange)
-				
-			oRigaNascosta = oSheet.getRows().getByIndex (lrowE) 
-			oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine computo	
+
+	&apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE) 
+	&apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine computo	
+	REM RIDUCI ALTEZZA PRIMA RIGA
+	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
+	oPrimaCella.Rows.Height = 1200
 	  Case &quot;&quot;
 		msgbox &quot;Non riconosco questo tipo di documento... &quot; &amp; CHR$(10)_
 		&amp;&quot;Pertanto ho approssimato l&apos;area di stampa come pare a me! &quot; &amp; CHR$(10)_

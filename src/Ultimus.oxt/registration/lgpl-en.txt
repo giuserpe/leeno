@@ -1,6 +1,22 @@
-UltimusFree2-2.080223.0.oxt
-Copyright Bartolomeo Aimar (c) 2008 
-License LGPL 
+	LeenO Ultimus Copyright (C) 2001-2013 Bartolomeo Aimar
+		      Copyright (C) 2014 Giuseppe Vizziello
+
+    This program comes with ABSOLUTELY NO WARRANTY.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions.
+
+    Questo programma è software libero: è possibile ridistribuirlo e/o modificarlo 
+    secondo i termini della GNU General Public License come pubblicata dalla 
+    Free Software Foundation, sia la versione 3 della licenza, o
+    (a propria scelta) una versione successiva 
+
+    Questo programma è distribuito nella speranza che sia utile, 
+    ma SENZA ALCUNA GARANZIA, nemmeno la garanzia implicita di 
+    COMMERCIABILITA' o IDONEITA' PER UN PARTICOLARE SCOPO. Vedere la 
+    GNU General Public License per ulteriori dettagli. 
+
+    Dovreste aver ricevuto una copia della GNU General Public License 
+    insieme a questo programma. In caso contrario, vedere la pagina http://www.gnu.org/licenses/. 
 
 
 		  GNU LESSER GENERAL PUBLIC LICENSE

@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                     
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                     
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -617,7 +617,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		ThisComponent.CurrentController.Select(oRange)&apos;per ritrovarsi li quando finito
 		&apos;oRange.CellStyle=&quot;Default&quot; neglio lasciare il suo sfondo grigio
 		oRange.isTextWrapped = false
-		oCellS = oSheet.GetCellByPosition( 2, lrowEnd_AP)
+		oCellS = oSheet.GetCellByPosition( 1, lrowEnd_AP)
 		sRange_scritta = &quot;INIZIO VOCI ACCODATE il &quot; &amp; now _
 		    &amp; &quot; ... (questa scritta è solo per orientarsi; al codice non serve e puoi cancellarla quando vuoi)&quot; 
 		oCellS.string = sRange_scritta

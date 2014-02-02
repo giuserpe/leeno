@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori_2" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                       
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                       
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -608,7 +608,11 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 &apos;			provo a sostituire la riga di Bart utilizzando il nome di area_dati - verificare compatibilità con altre versioni
 &apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(importo_totale)&quot;) REM NON VALE LA PENA
 &apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin &amp; &quot;)&quot;)			
+&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin &amp; &quot;)&quot;)
+
+			sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin &amp; &quot;)&quot;		&apos;totali computo
+			oSheet.GetCellByPosition(18 , lrowFin).Formula = sFormula
+			oSheet.GetCellbyPosition(17, lrowFin ).setformula(&quot;=SUBTOTAL(9;R&quot; &amp; lrowInizio &amp; &quot;:R&quot; &amp; lrowFin &amp; &quot;)&quot;)			
 			oSheet.GetCellbyPosition(19, lrowFin ).setformula(&quot;=Sum(T&quot; &amp; lrowInizio &amp; &quot;:T&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(20, lrowFin ).setformula(&quot;=Sum(U&quot; &amp; lrowInizio &amp; &quot;:U&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(21, lrowFin ).setformula(&quot;=Sum(V&quot; &amp; lrowInizio &amp; &quot;:V&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
@@ -619,8 +623,8 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			oSheet.GetCellbyPosition(26, lrowFin ).setformula(&quot;=Sum(AA&quot; &amp; lrowInizio &amp; &quot;:AA&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(27, lrowFin ).setformula(&quot;=Sum(AB&quot; &amp; lrowInizio &amp; &quot;:AB&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(28, lrowFin ).setformula(&quot;=Sum(AC&quot; &amp; lrowInizio &amp; &quot;:AC&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(29, lrowFin ).setformula(&quot;=AE&quot; &amp; lrowFin-1 &amp; &quot;/S&quot; &amp; lrowFin-1)
-			oSheet.GetCellbyPosition(30, lrowFin ).setformula(&quot;=Sum(AE&quot; &amp; lrowInizio &amp; &quot;:AE&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
+			oSheet.GetCellbyPosition(29, lrowFin ).setformula(&quot;=AE&quot; &amp; lrowFin+1 &amp; &quot;/S&quot; &amp; lrowFin+1)
+			oSheet.GetCellbyPosition(30, lrowFin ).setformula(&quot;=SUBTOTAL(9;AE&quot; &amp; lrowInizio &amp; &quot;:AE&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(36, lrowFin ).setformula(&quot;=Sum(AK&quot; &amp; lrowInizio &amp; &quot;:AK&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 &apos;			oSheet.GetCellbyPosition(39, lrowFin ).setformula(&quot;=Sum(AN&quot; &amp; lrowInizio &amp; &quot;:AN&quot; &amp; lrowFin-1 &amp; &quot;)&quot;) &apos;rigabart
 			oSheet.GetCellbyPosition(39, lrowFin ).setformula(&quot;=Sum(AN&quot; &amp; lrowInizio &amp; &quot;:AN&quot; &amp; lrowFin &amp; &quot;)&quot;)			
@@ -644,32 +648,33 @@ SUB Rifa_GG_G1G1_Contab  &apos; RIFA ANCHE le formule di somma.se
 &apos; È MOLTO LUNGA... SIA A CANCELLARLI PRIMA CHE A RIFARLI DOPO&quot;
 
 			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot;, 30)
+			Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot;, 0)
 			oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) &apos; da sostituire o integrare
 			oRanges = ThisComponent.NamedRanges
 			&apos; con qualcosa che esegua sia se nome sia se Attributo ???
+			sString$ = &quot;T O T A L E&quot;
+			oEnd=uFindString(sString$, oSheet)
+			lLastUrow=oEnd.RangeAddress.EndRow
 			
-			
-			lLastUrow = getLastUsedRow(oSheet)		
 			lrowInizio = 2	
 			If oRanges.hasByName(&quot;GG&quot;) Then
-				oRanges.getByName(&quot;GG&quot;)
+			&apos;	oRanges.getByName(&quot;GG&quot;)
 				oRanges.removeByName(&quot;GG&quot;)
 			End If
 			If oRanges.hasByName(&quot;G1G1&quot;) Then
-				oRanges.getByName(&quot;G1G1&quot;)
+			&apos;	oRanges.getByName(&quot;G1G1&quot;)
 				oRanges.removeByName(&quot;G1G1&quot;)
 			End If 
 			&apos;_____________________
 			chiudi_dialoghi  
 			&apos;_____________________
-			oCellAddress = oSheet.getCellRangeByName(&quot;Aj1&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
+			oCellAddress = oSheet.getCellRangeByName(&quot;AJ1&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
 &apos;			$CONTABILITA.$AJ$2:$AJ$540
 		&apos;	 sMiaStringa=  &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
-			 sMiaStringa=  &quot;$CONTABILITA.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
-			oRanges.addNewByName(&quot;GG&quot;, sMiaStringa , oCellAddress, 0)
-			 sMiaStringa=  &quot;$CONTABILITA.$Z$&quot; &amp; lrowInizio &amp; &quot;:$Z$&quot; &amp; lLastUrow
-			oRanges.addNewByName(&quot;G1G1&quot;, sMiaStringa , oCellAddress, 0)			
+			 sMiaStringa=  &quot;$CONTABILITA.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow+1
+			oRanges.addNewByName(&quot;GG&quot;, sMiaStringa , oCellAddress, 0) rem SETTA LA COLONNA DEL SOMME.SE
+			sMiaStringa =  &quot;$CONTABILITA.$Z$&quot; &amp; lrowInizio &amp; &quot;:$Z$&quot; &amp; lLastUrow+1
+			oRanges.addNewByName(&quot;G1G1&quot;, sMiaStringa , oCellAddress, 0)	REM SETTA LA COLONNA DEGLI IMPORTI
 
 		&apos;POPOLARE L&apos;EP CON LE FORMULE DI SOMMA.SE
 		&apos;SE NON SI FA QUELLO NON VALE LA PENA FARE LE AREE AA ed BB
@@ -719,8 +724,10 @@ SUB Rifa_GG_G1G1_Contab  &apos; RIFA ANCHE le formule di somma.se
 					
 					exit for
 				end if 		
-				Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot; &amp; i, 50)
-				sFormula = &quot;=sumif(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
+REM				Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot; &amp; i, 50)
+				Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; i &amp; &quot; di &quot; &amp; lrowF, 0)
+				
+				sFormula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
 				oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
 				oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
 				&apos;=L2/E2  =O2/E2
@@ -735,7 +742,7 @@ SUB Rifa_GG_G1G1_Contab  &apos; RIFA ANCHE le formule di somma.se
 					
 		&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
 		&apos;	oSpalte1.isVisible = TRUE 
-			Sel_Elenco_Prezzi
+		&apos;	Sel_Elenco_Prezzi
 			Ripristina_statusLine
 			suona_1_2
 END SUB
@@ -838,9 +845,9 @@ SUB Rifa_AA_BB_Computo  &apos; RIFA ANCHE le formule di somma.se
 			oSheet.GetCellByPosition(lcolbase+11 , lrowF).setformula(sFormula1)			
 		&apos;&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
 	&apos;		oSpalte1.isVisible = TRUE 
-			Sel_Elenco_Prezzi
+		&apos;	Sel_Elenco_Prezzi
 			Ripristina_statusLine
-			suona_1_2		
+		&apos;	suona_1_2		
 		&apos;	Rifa_GG_G1G1_Contab
 END SUB
 

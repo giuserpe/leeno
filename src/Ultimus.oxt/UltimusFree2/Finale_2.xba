@@ -37,18 +37,19 @@ Sub esporta_PDF_Foglio_Attivo
 					exit sub
 			end select	
 	end if
-   	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-		iCaso = msgbox (&quot; Aggiorno in automatico le Intestazioni ed i Piè di Pagina?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot; (...prelevandoli dalla schermata dei “Dati dl Documento”) &quot; &amp; CHR$(10)&amp; CHR$(10)_
-				&amp; &quot; &quot;&amp; CHR$(10)&amp; CHR$(10)_
-				&amp; &quot;&quot; ,35, &quot;&quot;)
-			select case iCaso
-				case 6
-					Set_Header_Footer (&quot;no messaggio&quot;)
-				case 2
-					exit sub	
-			end select
-	end if	
+	REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&apos;ANAGRAFICA
+&apos;   	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
+&apos;		iCaso = msgbox (&quot; Aggiorno in automatico le Intestazioni ed i Piè di Pagina?&quot; &amp; CHR$(10) &amp; CHR$(10)_
+&apos;				&amp; &quot; (...prelevandoli dalla schermata dei “Dati dl Documento”) &quot; &amp; CHR$(10)&amp; CHR$(10)_
+&apos;				&amp; &quot; &quot;&amp; CHR$(10)&amp; CHR$(10)_
+&apos;				&amp; &quot;&quot; ,35, &quot;&quot;)
+&apos;			select case iCaso
+&apos;				case 6
+&apos;					Set_Header_Footer (&quot;no messaggio&quot;)
+&apos;				case 2
+&apos;					exit sub	
+&apos;			end select
+&apos;	end if	
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 		iCaso = msgbox (&quot; Esporto IGNORANDO i COLORI?&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot; (otterrai un pdf in bianco/nero senza sfumature di grigio) &quot; &amp; CHR$(10)&amp; CHR$(10)_
@@ -363,7 +364,8 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
 &apos;	oSheet.Columns.removeByindex(19, 100)		
 	&apos;Imposto lo stile di pagina
 
-	osheet.PageStyle = &quot;PageStyle_CompuM_NoP&quot;
+&apos;	osheet.PageStyle = &quot;PageStyle_CompuM_NoP&quot;
+	osheet.PageStyle = &quot;PageStyle_COMPUTO_A4&quot; REM PREFERISCO...
 	Scrivi_header_moduli
 	Sbianca_e_o_consolida(1) &apos;NIETE PAURA, CON PARAMETRO 1 SBIANCA SOLTANTO
 	
@@ -593,8 +595,8 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 
 
 	oSheet.GetCellByPosition(3 , 0).string =	&quot;Quantità&quot; &amp; CHR$(10) &amp; &quot;a Computo&quot;
-	oSheet.GetCellByPosition(4 , 0).string =	&quot;prezzo unitario €&quot;
-	oSheet.GetCellByPosition(5 , 0).string =	&quot;prezzo unitario €&quot; &amp; CHR$(10) &amp; &quot;IN  LETTERE&quot;
+	oSheet.GetCellByPosition(4 , 0).string =	&quot;Prezzo Unitario €&quot;
+	oSheet.GetCellByPosition(5 , 0).string =	&quot;Prezzo Unitario €&quot; &amp; CHR$(10) &amp; &quot;IN  LETTERE&quot;
 	oSheet.GetCellByPosition(11 , 0).string =	&quot;TOTALE €&quot;
 	
 	oSheet.getColumns().getByName(&quot;D&quot;).isVisible = True
@@ -615,7 +617,8 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 
 	
 		&apos;impostare la Pagestyle
-	osheet.PageStyle = &quot;PageStyle_EP_LISTA&quot;
+&apos;	osheet.PageStyle = &quot;PageStyle_EP_LISTA&quot;
+	osheet.PageStyle = &quot;PageStyle_COMPUTO_A4&quot; REM PREFERISCO...
 
 	&apos;impostare l&apos;area di stampa
 	Dim selArea(0) as new com.sun.star.table.CellRangeAddress

@@ -43,17 +43,20 @@ Sub Abilita_contabilita
 	&apos;queste che seguono per 
 	sVerT = 146
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &lt; sVerT	then
-			msgbox &quot;Se vuoi Usare o anche solo testare la Contabilità Avanzata dovresti farlo su un template uguale o superiore al &quot; &amp; _
+			msgbox &quot;Se vuoi usare o anche solo testare la Contabilità Avanzata dovresti farlo su un template uguale o superiore al &quot; &amp; _
 			sVerT &amp; &quot; (&quot; &amp; sVerT &amp; &quot;.3.5)&quot;
 		&apos;	exit sub
 	end if
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 1 THEN 
 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt; 0  THEN 
-			msgbox &quot; La Contabilità lavori è stata abilitata! Questo presuppone che il Computo sia finito ed i lavori già appaltati!&quot;  &amp; CHR$(10)_
-				&amp; &quot;          (NB Alcune modalità avranno comportamenti diversi ed altre saranno inibite)&quot; 
+			msgbox &quot;La Contabilità lavori è stata abilitata! Questo presuppone che il Computo sia finito ed i lavori già appaltati!&quot;  &amp; CHR$(10)_
+				&amp; &quot;(NB: Alcune modalità avranno comportamenti diversi ed altre saranno inibite)&quot; 
 		end if
 	END IF
-	
+	msgbox &quot;Impostare SUBITO la modalità desiderata di gestione del Libretto!&quot; &amp; CHR$(10)_
+	&amp;&quot;&quot; &amp; CHR$(10)_
+	&amp; &quot;man: Libretto delle misure cartaceo o elettronico&quot;, 0 , &quot;ATTENZIONE!&quot;
+	Scelta_Viste
 &apos;Aggiorna_stile_1 
 End Sub
 
@@ -224,7 +227,7 @@ Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
 			osheet.isVisible = TRUE
 			sState = &quot;chiusa&quot;
 		end if
-		sString$ = &quot;Fine Computo&quot;
+		sString$ = &quot;T O T A L E&quot;
 		oEnd=uFindString(sString$, oSheet) 
 		lrowFine =oEnd.RangeAddress.EndRow-1
 		&apos;L&apos;ULTIMA (PRIMA DELLA RIGA ROSSA LA SVUOTO  SOLTANTO)

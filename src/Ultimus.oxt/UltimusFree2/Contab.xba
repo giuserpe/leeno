@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Contab" script:language="StarBasic">REM  *****  BASIC  *****
+Sub partita (testo as string)
+
+	Dim test As String
+	Dim riga_selezione As Integer
+	Dim focus as integer
+	
+	osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
+&apos;xray osheet
+ 	if oSheet.name = &quot;CONTABILITA&quot; then
+ 	 goto procedi
+ 	 else
+ 	 	msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
+		&amp; &quot;Devi trovarti in CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
+		goto fine
+ 	end if
+ 	procedi:
+
+	riga_corrente = thisComponent.getCurrentSelection.celladdress.row
+	if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
+		msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
+		&amp; &quot;Devi selezionare una riga di editing.&quot;, 0,&quot;ERRORE!&quot;)
+		goto fine
+	end if
+		oSheet.GetCellByPosition(2 , riga_corrente).setstring(testo)
+		oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
+		oRange.CellBackColor = RGB(255, 255, 153)
+   				&apos;	oRange.CharFontStyleName = &quot;Arial Narrow&quot;
+   					&apos;oRange.Charweight = 500
+   					
+   				&apos;	oRange.CharColor = RGB(0,0,0)
+	&apos;	oCellS.CharColor = 16711680 
+	&apos;	oCellS.CharFontName  =  &quot;Bitstream Vera Sans&quot; 
+	&apos;	oCellS.CharHeight = 13
+ 	fine:
+end sub
+sub partita_provvisoria
+dim testo as string
+testo = &quot;PARTITA PROVVISORIA&quot;
+partita (testo)
+end sub
+sub detrai_partita_provvisoria
+dim testo as string
+testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
+partita (testo)
+end sub
+
+</script:module>

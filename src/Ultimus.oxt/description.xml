@@ -8,6 +8,15 @@
 	<!-- <dependencies>
 		<OpenOffice.org-minimal-version value="2.2" dep:name="OpenOffice.org 2.2"/>
 	</dependencies> -->
+	<publisher>
+		<name xlink:href="http://leeno.org">LeenO</name>
+	</publisher>
+	<display-name>
+		<name lang="it">LeenO</name>
+	</display-name>
+	<icon>
+		<default xlink:href="icon.png" />
+	</icon>
 	<registration>
 		<simple-license  accept-by="admin" default-license-id="en" suppress-on-update="true" >
 			<license-text xlink:href="registration/lgpl-en.txt" lang="en" license-id="en" />

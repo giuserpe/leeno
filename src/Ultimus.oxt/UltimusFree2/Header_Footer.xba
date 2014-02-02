@@ -3,7 +3,7 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Header_Footer" script:language="StarBasic">
 REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                          
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                          
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -53,7 +53,7 @@ SUB Set_Header_Footer (optional sMessaggio as string)
 	END IF
 	
 	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
-		msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot;
+		&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; REM DISATTIVATA GIUSERPE
 		exit sub
 	END IF
 	Aggiorniamoli
@@ -448,7 +448,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	END IF
 	
 	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
-		msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot;
+	&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; REM DISATTIVATA GIUSERPE
 		exit sub
 	END IF
 	Aggiorniamoli
@@ -474,11 +474,8 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
 	End If
 	
-	oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
-	oCentro = oCell.String
-	
-&apos;.....................
-	
+&apos;	oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
+&apos;	oCentro = oCell.String
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	sPrima = Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -487,44 +484,47 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	end if	
 	oSheetCur = ThisComponent.Sheets.getByName(_
 	ThisComponent.currentcontroller.activesheet.name)
-&apos;	xray osheetcur
-&apos;	oSheetpippi = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
-&apos;	xray oSheetpippi
 	sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
-	
 	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
 	oController = oDesktop.CurrentFrame.Controller
 	oDocument = oController.Model
 	oStyleFam = oDocument.StyleFamilies
-	
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
 	REM CONTO IL NUMERO DEGLI STILI DI PAGINA
 	dim i as integer
 	n_sty = oTablePageStyles.count
-&apos;	print n_sty
-&apos;	xray oTablePageStyles
-&apos;	oAktPage = oTablePageStyles.getByname(sStile_Pag)
 	for i = 0 to n_sty-1
 &apos;	print i
 		oAktPage = oTablePageStyles.getByIndex(i)
+		If oAktPage.DisplayName = &quot;Page_Style_COPERTINE&quot; then
+	goto salta
+		&apos;print oAktPage.DisplayName
+		end if
+		
 		oAktPage.HeaderIsOn = True 
 		oHeader = oAktPage.RightPageHeaderContent
 		
 		oHLText = oHeader.LeftText.text       
 		oHLText.String = DX 
-		
-		
 		oHCText = oHeader.CenterText.Text
 		oHCText.String = oProgetto_8
 		oHRText = oHeader.RightText
 		oHRText.String = Bozza 
 &apos; update header
 		oAktPage.RightPageHeaderContent = oHeader
-		
+	salta:
+		If oAktPage.DisplayName = &quot;Page_Style_Libretto_Misure2&quot; then
+			oCentro = &quot;L&apos;IMPRESA						IL DIRETTORE DEI LAVORI&quot; &amp; CHR$(10)_
+			&amp; CHR$(10)			&amp; CHR$(10)			&amp; CHR$(10) else 
+			oCentro = &quot;&quot;
+			&apos;print oCentro
+		END IF
 		oAktPage.FooterIsOn = True 
 		oFooter = oAktPage.RightPageFooterContent
 		oHLText = oFooter.CenterText.text
 		oHLText.String = oCentro
+	&apos;	oHLText = oFooter.LeftText.text
+	&apos;	oHLText.String = &quot;LeenO.org&quot;
 &apos; update footer
 		oAktPage.RightPageFooterContent= oFooter
 	next i
@@ -555,7 +555,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
 	END SUB
 
-REM su &quot;S2&quot; ho inserito dei pulsanti nascosti che aggiornano tutti gli stili
+REM uscendo da S2 vengono aggiornati tutti gli stili esistenti
 SUB set_header_auto
 
 	Set_HF_turbo (&quot;no messaggio&quot;)

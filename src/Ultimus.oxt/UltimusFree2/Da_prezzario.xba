@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_prezzario" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                             
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                             
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -16,12 +16,33 @@ Global oUltimo_indirizzo_conosciuto as object
 Global sUltimo_indirizzo_conosciuto as string
 Global sPrezzario_in_uso as string
 &apos;Global sFlag as string&apos;
+
+sub aggiorna_nome_CC  &apos;  aggiorna la cella con il nome del file di Contabilità Corrente
+&apos;    viene eseguita con &quot;mouse dentro&quot; su una serie di pulsanti, compreso quello
+&apos;	del rendi questo file il file di CC... (come ci vai sopra la cella si aggiorna)
+	&apos;If NOT DialogLibraries.hasByName(&quot;UltimusFree2&quot;) Then 
+	&apos;	exit sub
+	&apos;end if
+&apos;	on error resume next
+	rifa_nomearea (&quot;Temp&quot;, &quot;$C$18:$C$18&quot; , &quot;nome_CC2&quot;)
+	oDoc = ThisComponent  
+	omycell = UltimusFree2.Lupo_0.sUltimus
+	if omycell = &quot;&quot; then
+		omycell = &quot;Non è definito alcun DCC!&quot;
+	end if
+	oTempView = oDoc.getCurrentController() &apos; questa invece trova la cella usando il nome di area
+	mycell = otempview.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;) &apos; ATTENZIONE: l&apos;area deve essere sul foglio attivo
+	mycell.string = omycell
+End Sub
+
 sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello
-	on error goto errore_apri
+&apos;	on error goto errore_apri
 	Dim mArgs()
 	Dim sUrl As String
+	Dim sName As String
 	Dim lFlags As Long
 	Dim oDoc as Object
+	Dim oDocOld as Object
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
 		GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
@@ -34,19 +55,29 @@ sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello
 		sUrl = DirectoryNameoutofPath(sDocURL, &quot;/&quot;) &apos;path
 		sFileName = GetFileNameWithoutExtension(sDocURL, &quot;/&quot;) &apos;file
 	End If
-&apos; sDir = ThisComponent.getURL()
-&apos;sPath =  oDoc.Sheets.getByName(&quot;Listino&quot;).getCellByPosition(0,0).setstring(sUrl)
-	sName = oDoc.CurrentSelection.getString()
+	&apos;oSheet.GetCellbyPosition( 0, i ).string
+	&apos;sName = oDoc.CurrentSelection.getString()
+	Dim oSelezione as Object
+	oSelezione = ThisComponent.getCurrentSelection()
+	oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
+	lrow= oSelezione.CellAddress.Row
+	sName = oSheet.GetCellbyPosition( 4, lrow ).string
 	sFile = sUrl + &quot;/&quot; + sName + &quot;.ods&quot;
 	lFlags = com.sun.star.frame.FrameSearchFlag.CREATE + _
 	com.sun.star.frame.FrameSearchFlag.ALL
 &apos;	sFile =&quot;file:///&quot; + sPath + sUrl
 &apos;	MsgBox sFile
 	oDocument = StarDesktop.loadComponentFromURL( sFile, &quot;_blank&quot;, lFlags, mArgs())
+ 	oSheet = ThisComponent.Sheets.getByName(&quot;listino&quot;)
+	oCell = oSheet.GetCellByPosition( 0, 4 )      
+    ThisComponent.CurrentController.Select(oCell)
+	oDoc.close(true)
 	goto fine
 	errore_apri:
 	msgbox &quot;Devi selezionare il nome file del Capitolo, oppure il file è inesistente!&quot;
+	exit sub
 	fine:
+	&apos;Close sDocURL
 End Sub
 Sub Vai_a_Contabilita
 

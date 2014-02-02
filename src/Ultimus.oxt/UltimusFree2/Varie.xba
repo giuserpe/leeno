@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                        
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                        
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -984,8 +984,6 @@ dim sFlag as string
 	&apos;	print &quot;altro...&quot;
 	end if	
 	
-	
-	
 	if nome_sheet = &quot;COMPUTO&quot; or nome_sheet = &quot;CONTABILITA&quot; then
 			if oSheet.GetCellByPosition( 2 , lrow).CellStyle = &quot;comp 1-a&quot; then
 					iflag = 0
@@ -995,7 +993,7 @@ dim sFlag as string
 		      				&amp; &quot;    Controlla e Riprova...&quot;
 					exit sub
 			end if
-			if nome_sheet = &quot;COMPUTO&quot;  then&apos; sflag = &quot;C2&quot; 
+			if nome_sheet = &quot;COMPUTO&quot;  then
 				sFlag = &quot;C&quot;
 			end if
 			if nome_sheet = &quot;CONTABILITA&quot; then
@@ -1020,11 +1018,15 @@ dim sFlag as string
 		exit sub
 	end if
 
-	oSheet.getRows.insertByIndex(lrow + 1, 1)
-	oSRC = oSheet.getCellRangeByPosition (2,lrow,250,lrow ).RangeAddress
-	oDest = oSheet.GetCellByPosition(2, lrow+1).CellAddress
-	
-	oSheet.copyRange(oDest,oSRC)&apos;
+	oSheet.getRows.insertByIndex(lrow + 1,1) &apos; inserisci 1 riga sotto
+	oSRC = oSheet.getCellRangeByPosition (2,lrow,250,lrow ).RangeAddress &apos; seleziona la riga sorgente
+	oDest = oSheet.GetCellByPosition(2, lrow+1).CellAddress &apos;stabilisce la destinazione
+	oSheet.copyRange(oDest,oSRC)&apos;copia sorgente su destinazione
+&apos;	print &quot;arrosto&quot;
+	lrow=lrow+1
+	oSheet.getCellRangeByPosition (2,lrow,8,lrow).CellStyle =  &quot;comp 1-a&quot; &apos; imposta lo stile
+&apos;	print &quot;arrosto&quot;
+	lrow=lrow-1
 	oRange = oSheet.getCellRangeByPosition (2,lrow+1,150,lrow+1)
 	oRange.Rows.OptimalHeight = true
 	
@@ -1053,10 +1055,8 @@ dim sFlag as string
 &apos;cioè tornava inspiegabilmente come &quot;elenco Prezzi&quot; ....
  &apos;	oSheet = ThisComponent.currentController.activeSheet
  &apos; cos&apos; funziona... occhio potrebbe succedere ancora
-
  &apos; frase magica per togliere il focus dal pulsante...!
-	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE) 
-
+	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow+1))
 &apos;	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 exit sub

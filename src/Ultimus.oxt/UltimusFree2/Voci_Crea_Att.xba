@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Crea_Att" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                          
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                          
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -43,9 +43,10 @@ Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 END SUB
 
 sub nuova_voce_contab &apos;da finire... 
-&apos;normalmente in Contabilità non vengono create nuove voci ma si &quot;oesca&quot; semplicemente una voce del computo di cui si vuole contabilizzare.
-&apos; si crea una voce vuota, poi si aziona automatico il pesca sull&apos;EP
-&apos; ricordarsi di svuotare il rif al computo col 44
+&apos;normalmente in Contabilità non vengono create nuove voci ma si &quot;pesca&quot;
+&apos;semplicemente una voce del computo di cui si vuole contabilizzare.
+&apos;si crea una voce vuota, poi si aziona automatico il pesca sull&apos;EP
+&apos;ricordarsi di svuotare il rif al computo col 44
 &apos;(anziché inserire direttamente la voce pescata sul computo)
 &apos; Si usa quando ci sono nuovi prezzi
 goto prova
@@ -81,7 +82,6 @@ prova:
 		oSheet.getRows.insertByIndex(lRow, 1)
 		oSheet.getCellRangeByPosition(0, lRow, 49 , lRow).cellstyle =  &quot;Reg_prog&quot;
 	end if
-	
 	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
 			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
 				&apos;lrow = lrow-1
@@ -92,6 +92,7 @@ prova:
 		lRow = lRow + 1
 		goto fai_e_basta &apos; FAI
 	end if
+
 	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; then
 		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
 			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) = &quot;Reg-SAL&quot;then
@@ -106,7 +107,7 @@ prova:
 			goto 	fai_e_basta
 		end if
 		if oSheet.GetCellByPosition( 0 , lRow-1).cellstyle = &quot;Comp End Attributo_R&quot; then
-				goto FAI
+			goto FAI
 		end if
 
 		if oSheet.GetCellByPosition( 0 , lRow+1).cellstyle = &quot;Comp Start Attributo_R&quot; then
@@ -190,11 +191,9 @@ prova:
 &apos;	xray ThisComponent.NamedRanges
 &apos;	if isNull (ThisComponent.NamedRanges.Serv_gen_cont.ReferredCells) then
 	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen_cont&quot;) then
-		rifa_nomearea (&quot;S5&quot;, &quot;$A$23:$AW$26&quot; , &quot;Serv_gen_cont&quot;)		
+		rifa_nomearea (&quot;S5&quot;, &quot;$A$23:$AW$26&quot; , &quot;Serv_gen_cont&quot;) &apos;blocco_contabilità
 	end if
-
-
-	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia il blocco delle voce (formati + formule + numeri)
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia il blocco delle voce (formati + formule + numeri)
 	oDoc = ThisComponent
 	DocView=oDoc.getCurrentController()
 	oSheetSRC=oDoc.NamedRanges.Serv_gen_cont.ReferredCells &apos; Serv_gen_cont è il nome del range
@@ -228,7 +227,7 @@ prova:
 	&apos;rende ricoscibile la voce come diretta all&apos;EP
 	&apos;ovvero la voce non viene dal Computo
 	osheet2.getCellByPosition(44,lrow+1).cellstyle = &quot;num_centro_bianco_ep&quot;
-	osheet2.getCellByPosition(2,lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R_ep&quot;
+	osheet2.getCellByPosition(2,lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;&apos;_ep&quot;&apos; ci metterei &quot;Comp-Bianche in mezzo Descr_R&quot;
 
 
 	&apos;cerco il sal sotto, se c&apos;è
@@ -391,11 +390,11 @@ opla:
 	Sel_Elenco_Prezzi
 	
 	Barra_chiudi_sempre_4	
-	
+	goto salta_messaggio
 	msgbox &quot;Sei sull&apos;Elenco Prezzi!   Cerca il Nuovo Prezzo che ti serve.... &quot; &amp; CHR$(10)_
 			&amp; &quot;(puoi usare Shit F3, oppure Ctrl-F, ...),&quot; &amp; CHR$(10)_
 			&amp; &quot;Un click sulla riga della voce e poi ri-aziona in qualche modo la macro &apos;Pesca va e vieni&apos; !&quot;  
-
+	salta_messaggio:
 
  	exit sub
 errore:

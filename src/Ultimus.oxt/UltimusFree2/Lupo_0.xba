@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_0" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                           3.0.16               
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                           3.0.16               
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -166,10 +166,11 @@ REM on error goto ErrorHandler
 	&apos;print sVer2
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+		REM NUOVO NUMERO VERSIONE GIUSERPE
 		oSheet.unprotect(&quot;&quot;)
-        versioneUF_major= 3                                                                                                                                                                                                                                                                                                                                                                                                                        
-        versioneUF_minor= 8                                                                                                                                                                                                                                                                                                                                                                                                             
-        versioneUF_subversion= 63                                                                                                                                                                                                                                                                                                                                                                         
+        versioneUF_major= 3
+        versioneUF_minor= 9
+        versioneUF_subversion= 0
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion
@@ -394,6 +395,7 @@ REM on error goto ErrorHandler
 		&amp; &quot;senza toccare il mouse o la tastiera!&quot;  &amp; CHR$(10)_
 		&amp; sSMS , 35, &quot;Controllo del documento&quot;) &apos; = 7 then
 		Case 7
+
 			Clessid_lock_End
 			&apos;Barra_apri_chiudi_4 
 			Vai_a_M1
@@ -454,7 +456,6 @@ REM on error goto ErrorHandler
 	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
 		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 		ThisComponent.CurrentController.Select(oSheet)
-
 		&apos; questa è lunga da eseguire...
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 		Tutti_Subtotali (oSheet)
@@ -710,9 +711,9 @@ dim Esiste as boolean
 	oSheet.unprotect(&quot;&quot;)
 	&apos;xray oSheet
 	
-        versioneUF_major= 3                                                                                                                                                                                                                                                                                                                                                                                                                      
-        versioneUF_minor= 8                                                                                                                                                                                                                                                                                                                                                                                                        
-        versioneUF_subversion= 63                                                                                                                   
+        versioneUF_major= 3
+        versioneUF_minor= 9
+        versioneUF_subversion= 0
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion

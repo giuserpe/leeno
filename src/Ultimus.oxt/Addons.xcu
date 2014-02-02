@@ -270,7 +270,7 @@ oor:package="org.openoffice.Office">
 						<value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application</value>
 					</prop>
 					<prop oor:name="ImageIdentifier" oor:type="xs:string">
-						<value>%origin%/icons/image27</value>
+						<value>%origin%/icons/pesca</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
 						<value>Pesca Codice Va e Vieni</value>
@@ -853,7 +853,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/image19</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Inserisci Capitolo</value>
+						<value>Inserisci Categoria</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
@@ -870,7 +870,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/image20</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Inserisci SottoCapitolo</value>
+						<value>Inserisci SottoCategoria</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
@@ -1018,7 +1018,7 @@ oor:package="org.openoffice.Office">
 						<value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application</value>
 					</prop>
 					<prop oor:name="ImageIdentifier" oor:type="xs:string">
-						<value>%origin%/icons/image27</value>
+						<value>%origin%/icons/pesca</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
 						<value>Pesca Va e Vieni</value>
@@ -1160,9 +1160,6 @@ oor:package="org.openoffice.Office">
 					<prop oor:name="URL" oor:type="xs:string">
 						<value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
 					</prop>
-					<prop oor:name="ImageIdentifier" oor:type="xs:string">
-						<value>%origin%/icons/Corta</value>
-					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
 						<value>Vista Corta (abbreviata) ON/OFF  </value>
 					</prop>
@@ -1192,24 +1189,7 @@ oor:package="org.openoffice.Office">
 								<value>%origin%/icons/image36</value>
 							</prop>
 							<prop oor:name="Title" oor:type="xs:string">
-								<value>    (Duplica il foglio attivo in questo stesso Documento ) </value>
-							</prop>
-							<prop oor:name="Target" oor:type="xs:string">
-								<value>_self</value>
-							</prop>
-						</node>
-						<node oor:name="m13S2" oor:op="replace">
-							<prop oor:name="Context" oor:type="xs:string">
-								<value>com.sun.star.sheet.SpreadsheetDocument</value>
-							</prop>
-							<prop oor:name="URL" oor:type="xs:string">
-								<value>vnd.sun.star.script:UltimusFree2.Header_Footer.Set_Header_Footer?language=Basic&amp;location=application</value>
-							</prop>
-							<prop oor:name="ImageIdentifier" oor:type="xs:string">
-								<value>%origin%/icons/image36</value>
-							</prop>
-							<prop oor:name="Title" oor:type="xs:string">
-								<value>    (Aggiorna header e Footer (del foglio attivo) )  </value>
+								<value>	Duplica il foglio attivo...</value>
 							</prop>
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
@@ -1226,7 +1206,7 @@ oor:package="org.openoffice.Office">
 								<value>%origin%/icons/image36</value>
 							</prop>
 							<prop oor:name="Title" oor:type="xs:string">
-								<value>    (Approssima Area stampa (automatica))  </value>
+								<value>	Approssima area stampa...</value>
 							</prop>
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
@@ -1243,7 +1223,7 @@ oor:package="org.openoffice.Office">
 								<value>%origin%/icons/image36</value>
 							</prop>
 							<prop oor:name="Title" oor:type="xs:string">
-								<value>    (Sbianca il foglio (nasconde i colori))</value>
+								<value>	Sbianca il foglio (nasconde i colori)</value>
 							</prop>
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
@@ -1265,7 +1245,7 @@ oor:package="org.openoffice.Office">
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
 							</prop>
-						</node>						
+						</node>
 						<node oor:name="m13S6" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1282,8 +1262,23 @@ oor:package="org.openoffice.Office">
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
 							</prop>
-						</node>			
+						</node>
 						<node oor:name="m13S7" oor:op="replace">
+							<prop oor:name="Context" oor:type="xs:string">
+								<value>com.sun.star.sheet.SpreadsheetDocument</value>
+							</prop>
+							<prop oor:name="URL" oor:type="xs:string">
+								<value>vnd.sun.star.script:UltimusFree2.Finale.togli_salti_pagina?language=Basic&amp;location=application</value>
+							</prop>
+							<prop oor:name="Title" oor:type="xs:string">
+								<value>--- ELIMINA tutti i salti pagina!</value>
+							</prop>
+							<prop oor:name="Target" oor:type="xs:string">
+								<value>_self</value>
+							</prop>
+						</node>
+
+						<node oor:name="m13S8" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>
 							</prop>

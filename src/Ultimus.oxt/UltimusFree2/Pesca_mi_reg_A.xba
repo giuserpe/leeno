@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi_reg_A" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                           
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -230,15 +230,11 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 	
 	sStRange1 = oSheet.getCellRangeByPosition(1, lRowStart_A, 45, lRowEnd_A) &apos; controlla che fa sta roba...
 	sStRange2 = oSheet.getCellRangeByPosition(0, lRowStart_A, 0, lRowEnd_A) &apos;controlla che fa sta roba...
-	
-
-
 
 	&apos; Eliminazione degli eventuali links
 	&apos;goto salta
-	oRangeMisure = oSheet.getCellRangeByPosition(3, lRowStart_A+2, 8, lRowEnd_A-1)
+	oRangeMisure = oSheet.getCellRangeByPosition(2, lRowStart_A+2, 8, lRowEnd_A-1)
 	For i = lRowStart_A+2 to lRowEnd_A-1 
-
 		if sBreak = &quot;break&quot; then
 			exit for
 		end if	
@@ -253,15 +249,15 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 				If  stmp &lt;&gt; iTmp then &apos; se diversi è perché contiene lettere (quindi è link)
 					ThisComponent.CurrentController.Select(ocell)
 					dim sD as string
-					sD = msgbox (&quot;Nella cella selezionata potrebbe esserci un link ovvero COLLEGAMENTO ad un&apos;altra cella!&quot; &amp; CHR$(10)_
+					sD = msgbox (&quot;Ho trovato link ovvero COLLEGAMENTO ad un&apos;altra cella!&quot; &amp; CHR$(10)_
 						&amp; &quot;Nel caso si tratti veramente di un link e che questo collegamento punti ad una cella esterna a questa voce, portandolo sulla contabilità tale e quale le misure saranno falsate &quot; &amp;  CHR$(10) &amp;  CHR$(10)_
 						&amp; &quot;Se ritieni puoi annullare l&apos;operazione in corso e controllare.&quot; &amp; CHR$(10)_
 						&amp; &quot;Se si tratta solo di una formula con riferimenti alla cella non ci sono problemi.&quot; &amp;  CHR$(10)&amp; CHR$(10)_
-						&amp; &quot;Se Rispondi NO proseguo... ma probabilmente ti ritroverai con dei valori nulli (o dei #RIF!) anziche i link...&quot; &amp;  CHR$(10) &amp; CHR$(10)_
-						&amp; &quot;oppure (consigliato) consolido i dati qui sulla tabella di Computo e proseguo? &quot; &amp; CHR$(10)_
-						&amp; &quot;      				    CONSOLIDO ?&quot;  &amp; CHR$(10)_
-						&amp; &quot;&quot;,35, &quot;Attenzione: link nei dettagli delle misure di computo&quot;)
-						sBreak = &quot;break&quot;		
+						&amp; &quot;Se Rispondi NO proseguo, ma ti ritroverai con dei valori nulli (o #RIF!)&quot; &amp;  CHR$(10) &amp; CHR$(10)_
+						&amp; &quot;Oppure (consigliato) consolido i dati qui sulla tabella di Computo e proseguo. &quot; &amp; CHR$(10)_
+						&amp; &quot;      				    CONSOLIDO?&quot;  &amp; CHR$(10)_
+						&amp; &quot;&quot;,35, &quot;ATTENZIONE: link nei dettagli delle misure di COMPUTO&quot;)
+						sBreak = &quot;break&quot;
    						exit for
    				end if
    			end if
@@ -314,10 +310,13 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 	&apos; iserisco il blocco
 	lRowInsert = lRowInsert+1 &apos;ma perché funzionava ed ora non più??
 	oSheet.getRows.insertByIndex(lRowInsert, lRowEnd-lRowStart+1)
-
 	&apos; questa porta a default lo stile di tutte le righe inserite
 	&apos; perché succede che venga agganciato lo stile Reg-Sal
-	oSheet.getCellRangeByPosition(0, lRowInsert, 49 , lRowInsert + lRowEnd-lRowStart).cellstyle =  &quot;Default&quot;	
+	REM questa sotto sembra ininfluente
+	oSheet.getCellRangeByPosition(0, lRowInsert, 49 , lRowInsert + lRowEnd-lRowStart).cellstyle =  &quot;Default&quot;
+	&apos;oSheet.getCellRangeByPosition(0, lRowInsert, 49 , lRowInsert + lRowEnd-lRowStart).CellBackColor = RGB(0,0,0)
+	
+	
 	
 	ThisComponent.CurrentController.Select(oSheet)	
 
@@ -340,12 +339,14 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 		oSheet.getRows.insertByIndex(lRowInsert, 1)
 		lRowInsert =lRowInsert+1
 	end if
-		oSheet.getCellRangeByPosition(0, 3, 49 , 3).cellstyle =  &quot;Reg_prog&quot; &apos;
- 		oSheet.GetCellByPosition(2,3).string  =  &quot;  Inizio SAL 1&quot;
- 		oSheet.getCellRangeByPosition(0, 3, 1 , 3).cellstyle =  &quot;Reg-SAL-chiudi_Sotto&quot;
- 		oSheet.GetCellByPosition(2,3).cellstyle = &quot;Reg-SAL-chiudi_Sotto&quot;
-		oSheet.getCellRangeByPosition(9, 3, 47 , 3).cellstyle =  &quot;Reg-SAL-chiudi_Sotto&quot; 
-
+&apos;	fissa (0,2)
+ 		oSheet.getCellRangeByPosition(0, 2, 49 , 2).cellstyle =  &quot;Reg_prog&quot; &apos;
+&apos; 		Print &quot;ciccio2&quot;
+ 		oSheet.GetCellByPosition(2,2).string  =  &quot;  Inizio S.A.L. 1&quot;
+&apos;	oSheet.getRows.insertByIndex(4, 1)
+ 		oSheet.getCellRangeByPosition(0, 2, 1 , 2).cellstyle =  &quot;Reg-SAL-chiudi_Sotto&quot;
+ 		oSheet.GetCellByPosition(2,2).cellstyle = &quot;Reg-SAL-chiudi_Sotto&quot;
+		oSheet.getCellRangeByPosition(1, 2, 47 , 2).cellstyle =  &quot;Reg-SAL-chiudi_Sotto&quot; 
 	&apos; adesso adatto la tabella ad uso Registro
 	oSheet.getCellRangeByPosition(47, lRowInsert, 49 , lRowInsert + lRowEnd-lRowStart).cellstyle =  &quot;Default&quot;	
 
@@ -521,7 +522,7 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 			&apos;sFormula2=Replace1(sFormula2, &quot;=H&quot; , &quot;=J&quot;)
 			&apos; se c&apos;era un errore sulla colonna  in computo faceva disastri
 			&apos;meglio riscrivere
-			sFormula2 = &quot;=PRODUCT(E&quot; &amp; lRowMod+1 &amp; &quot;:I&quot; &amp; lRowMod+1 
+			sFormula2 = &quot;=IF(PRODUCT(E&quot; &amp; lRowMod+1 &amp; &quot;:I&quot; &amp; lRowMod+1 &amp; &quot;)=0;&quot;&amp;&quot;&quot;&quot;&quot;&quot;&quot;&amp;&quot;;PRODUCT(E&quot; &amp; lRowMod+1 &amp; &quot;:I&quot; &amp; lRowMod+1 &amp; &quot;))&quot;
 			&apos; il +1  alla riga è perché lo vuole by name (che sarebbe byPorition +1) 
 			oSheet.GetCellByPosition( 10 , lRowMod).formula = sFormula2
 		end if

@@ -1,29 +1,23 @@
-UltimusFree - Applicativo per Computi Metrici su tabelle Calc
+LeenO Ultimus - Applicativo per Computi Metrici su tabelle Calc
 
- Version:3.0.xx	
+	Version:3.9.xx	
 
- Copyright 2001,2008 Bartolomeo Aimar				
+	Copyright 2001-2013 Bartolomeo Aimar
+		  2014 - Giuseppe Vizziello
 				
- E-Mail: b.aimar@awn.it				
-				
+ E-Mail: supporto@leeno.org
 
-UltimusFree √® propriet√†  di Bartolomeo Aimar ed √® rilasciato alle 
+
+UltimusFree e' proprieta'†  di Bartolomeo Aimar ed e' rilasciato alle 
 condizioni previste dalla licenca pubblica LPGL.
-
-    Questa √® una traduzione  italiana non ufficiale della  Licenza
-    Pubblica Generica  Attenuata  GNU (LPGL).   Non  √®  pubblicata
-    dalla  Free Software Foundation  e  non  ha  valore legale nel-
-    l'esprimere i termini di distribuzione del software che usa la
-    licenza LGPL. 
-    Solo la versione originale in inglese della licenza ha valore
-    legale.
-    Lo scopo di questa traduzione √® quello di  aiutare  le persone
-    di lingua italiana a capire meglio il significato della licenza
-    LGPL.
-
-     La versione originale della licenza √® reperibile qui:				
-        http://www.gnu.org/licenses/lgpl.html				
-
+    Questa Ë una traduzione  italiana non ufficiale della  Licenza
+    Pubblica Generica  Attenuata  GNU.   Non   Ë  pubblicata dalla
+    Free    Software   Foundation    e   non   ha  valore   legale
+    nell'esprimere  i  termini  di distribuzione del software  che
+    usa la licenza LGPL.   Solo  la versione originale  in inglese
+    della  licenza   ha   valore  legale.   Lo   scopo  di  questa
+    traduzione Ë quello di aiutare le persone di lingua italiana a
+    capire meglio il significato della licenza LGPL.
 
     This is  an unofficial translation  of  the GNU Lesser General
     Public License into Italian. It was not published by the  Free
@@ -36,37 +30,37 @@ condizioni previste dalla licenca pubblica LPGL.
 Licenza Pubblica Generica Attenuata (LGPL) del progetto GNU
 
 Versione 2.1, Febbraio 1999
-Copyright ¬© 1991, 1999 Free Software Foundation, Inc.
+Copyright © 1991, 1999 Free Software Foundation, Inc.
 51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA
 
-Chiunque pu√≤ copiare e distribuire copie letterali di questo documento
-di licenza, ma non ne √® permessa la modifica.
+Chiunque puÚ copiare e distribuire copie letterali di questo documento
+di licenza, ma non ne Ë permessa la modifica.
 
-[Questa √® la prima versione rilasciata della Licenza Pubblica Generica
-Attenuata, ed √® intesa come successore della Licenza Pubblica Generica
-per  Librerie  del Progetto  GNU,  versione  2,  perci√≤ il  numero  di
-versione √® 2.1]
+[Questa Ë la prima versione rilasciata della Licenza Pubblica Generica
+Attenuata, ed Ë intesa come successore della Licenza Pubblica Generica
+per  Librerie  del Progetto  GNU,  versione  2,  perciÚ il  numero  di
+versione Ë 2.1]
 
 Preambolo
 
 Le  licenze  della maggior  parte  dei  programmi  hanno lo  scopo  di
-togliere  all'utente  la  libert√†   di  condividere  e  modificare  il
+togliere  all'utente  la  libert‡   di  condividere  e  modificare  il
 programma stesso.  Viceversa, le  Licenze Pubbliche Generiche GNU sono
-intese a garantire la libert√†  di condividere e modificare il software
+intese a garantire la libert‡  di condividere e modificare il software
 libero, al fine di assicurare che i programmi siano liberi per tutti i
 loro utenti.
 
 Questa  Licenza, la  Licenza  Pubblica Generica  Attenuata (LGPL),  si
 applica  a specifici pacchetti  software, tipicamente  librerie, della
 Free  Software Foundation  e di  altri  autori che  decidono di  usare
-questa Licenza.   Chiunque pu√≤ usare questa licenza,  ma suggeriamo di
+questa Licenza.   Chiunque puÚ usare questa licenza,  ma suggeriamo di
 valutare  prima  attentamente  se  questa licenza,  piuttosto  che  la
 normale Licenza Pubblica Generica,  sia la migliore strategia da usare
 per ogni specifico caso, sulla base delle seguenti spiegazioni.
 
 Quando si  parla di software  libero (free software), ci  si riferisce
-alla libert√†,  non al prezzo.   Le nostre Licenze  Pubbliche Generiche
-sono  progettate per  assicurarsi  che ciascuno  abbia  la libert√†  di
+alla libert‡,  non al prezzo.   Le nostre Licenze  Pubbliche Generiche
+sono  progettate per  assicurarsi  che ciascuno  abbia  la libert‡  di
 distribuire copie del  software libero (e farsi pagare  per questo, se
 vuole); che ciascuno riceva il  codice sorgente o che, se vuole, possa
 ottenerlo; che  ciascuno possa modificare il programma  o usarne delle
@@ -76,7 +70,7 @@ queste cose.
 Per  proteggere  i diritti  dell'utente,  abbiamo  bisogno di  imporre
 restrizioni che  vietino ai distributori  di negare tali diritti  o di
 chiedere   di  rinunciarvi.   Queste  restrizioni   si   traducono  in
-determinate  responsabilit√† a  carico  di chi  distribuisce copie  del
+determinate  responsabilit‡ a  carico  di chi  distribuisce copie  del
 software o di chi lo modifica.
 
 Ad esempio, chi distribuisce copie di una libreria LGPL, gratuitamente
@@ -95,37 +89,37 @@ il permesso legale di copiare, distribuire e modificare la libreria.
 Per  proteggere  ogni  distributore,  vogliamo  rendere  assolutamente
 chiaro che non esistono  garanzie per questa libreria libera. Inoltre,
 se la libreria viene modificata  da qualcun altro e ridistribuita, chi
-la riceve dovrebbe essere informato  che quanto in  suo possesso non √®
+la riceve dovrebbe essere informato  che quanto in  suo possesso non Ë
 la  versione  originale,  in  modo  che  ogni  problema  eventualmente
 introdotto   da  altri   non  danneggi   la   reputazione  dell'autore
 originario.
 
-Infine, l'esistenza di ogni  programma libero √® costantemente sotto la
+Infine, l'esistenza di ogni  programma libero Ë costantemente sotto la
 minaccia  dei brevetti  sul  software. Vogliamo  esser  certi che  una
 azienda non possa effettivamente  porre restrizioni sugli utenti di un
 programma libero ottenendo una  licenza restrittiva da un proprietario
-di  brevetto.  Perci√≤ insistiamo  sul fatto  che qualsiasi  licenza di
+di  brevetto.  PerciÚ insistiamo  sul fatto  che qualsiasi  licenza di
 brevetto  ottenuta per  una  versione della  libreria debba  risultare
-coerente con la piena libert√† d'uso specificata in questa licenza.
+coerente con la piena libert‡ d'uso specificata in questa licenza.
 
-La maggior parte del software  GNU, incluse alcune librerie, √® coperto
+La maggior parte del software  GNU, incluse alcune librerie, Ë coperto
 dalla normale Licenza Pubblica Generica (GPL) del Progetto GNU. Questa
 licenza, la  Licenza Pubblica Generica Attenuata (LGPL),  si applica a
-certe librerie  specifiche ed √®  assai diversa dalla  Licenza Pubblica
+certe librerie  specifiche ed Ë  assai diversa dalla  Licenza Pubblica
 Generica normale. Questa licenza  viene usata per determinate librerie
 in modo da permettere il collegamento di tali librerie a programmi non
 liberi.
 
-Quando un programma √® collegato con una libreria, sia staticamente sia
+Quando un programma Ë collegato con una libreria, sia staticamente sia
 usando una libreria condivisa, legalmente parlando la combinazione dei
-due  elementi  √®  un  lavoro  combinato, un  derivato  della  libreria
-originale.  Perci√≤ la normale  Licenza Pubblica Generica permette tale
+due  elementi  Ë  un  lavoro  combinato, un  derivato  della  libreria
+originale.  PerciÚ la normale  Licenza Pubblica Generica permette tale
 collegamento solo se l'intera  combinazione risulta conforme ai propri
-criteri di  libert√†.  La Licenza Pubblica  Generica Attenuata consente
-criteri pi√π permissivi per collegare altro codice alla libreria.
+criteri di  libert‡.  La Licenza Pubblica  Generica Attenuata consente
+criteri pi˘ permissivi per collegare altro codice alla libreria.
 
-Questa licenza viene definita la Licenza Pubblica Generica ¬´Attenuata¬ª
-perch√©  fa meno per  proteggere la  libert√† dell'utente  rispetto alla
+Questa licenza viene definita la Licenza Pubblica Generica ´Attenuataª
+perchÈ  fa meno per  proteggere la  libert‡ dell'utente  rispetto alla
 normale  Licenza  Pubblica  Generica.  Essa  fornisce  inoltre  minori
 vantaggi agli  sviluppatori di software libero  nella competizione con
 programmi non liberi. Questi svantaggi  sono la ragione per cui usiamo
@@ -133,11 +127,11 @@ la Licenza Pubblica Generica  per molte librerie. Tuttavia, la Licenza
 Pubblica   Generica  Attenuata   fornisce  dei   vantaggi   per  certe
 circostanze speciali.
 
-Ad  esempio,   in  rare   occasioni,  pu√≤  presentarsi   la  necessit√†
-particolare  di   incoraggiare  l'uso  pi√π  ampio   possibile  di  una
+Ad  esempio,   in  rare   occasioni,  puÚ  presentarsi   la  necessit‡
+particolare  di   incoraggiare  l'uso  pi˘  ampio   possibile  di  una
 determinata libreria, in modo che divenga uno standard de facto.  Onde
 raggiungere quest'obiettivo,  i programmi non liberi  devono essere in
-grado di  utilizzare la libreria.  Un  caso pi√π frequente  √® quello di
+grado di  utilizzare la libreria.  Un  caso pi˘ frequente  Ë quello di
 una libreria libera  che svolga lo stesso compito  di una libreria non
 libera largamente utilizzata.
 
@@ -147,15 +141,15 @@ Attenuata.
 
 In  altri  casi,  il  permesso  di usare  una  specifica  libreria  in
 programmi non liberi consente a  un maggior numero di persone l'uso di
-un'ampia  quantit√† di programmi  liberi. Per  esempio, il  permesso di
+un'ampia  quantit‡ di programmi  liberi. Per  esempio, il  permesso di
 utilizzare  la libreria  C del  Progetto GNU  in programmi  non liberi
-consente a molte pi√π persone  di usare l'intero sistema operativo GNU,
-come  pure  della  sua  variante  pi√π  comune,  il  sistema  operativo
+consente a molte pi˘ persone  di usare l'intero sistema operativo GNU,
+come  pure  della  sua  variante  pi˘  comune,  il  sistema  operativo
 GNU/Linux.
 
-Sebbene la Licenza Pubblica Generica Attenuata tuteli la libert√† degli
+Sebbene la Licenza Pubblica Generica Attenuata tuteli la libert‡ degli
 utenti  in  misura  minore,  garantisce  all'utente  di  un  programma
-collegato  alla  Libreria la  libert√†  e  i  mezzi per  eseguire  tale
+collegato  alla  Libreria la  libert‡  e  i  mezzi per  eseguire  tale
 programma usando una versione modificata della Libreria.
 
 Seguono  i  termini   e  le  condizioni  precise  per   la  copia,  la
@@ -174,7 +168,7 @@ Generica Attenuata (definita anche "questa Licenza").
 
 Per "libreria"  s'intende una raccolta  di funzioni software  e/o dati
 predisposti in modo da poter essere facilmente collegati con programmi
-applicativi (che utilizzano alcune di  queste funzioni e dati) cos√¨ da
+applicativi (che utilizzano alcune di  queste funzioni e dati) cosÏ da
 formare degli eseguibili.
 
 Il termine "Libreria" usato da qui  in poi si riferisce a ogni tipo di
@@ -188,37 +182,37 @@ senza limitazioni nel termine "modifica".)
 
 Per "codice sorgente"  di un'opera s'intende la forma  di codice usato
 di  preferenza per apportare  modifiche. Per  una libreria,  il codice
-sorgente completo  √® il codice  sorgente di tutti i  moduli contenuti,
-pi√π ogni file  associato per la definizione delle  interfacce, pi√π gli
+sorgente completo  Ë il codice  sorgente di tutti i  moduli contenuti,
+pi˘ ogni file  associato per la definizione delle  interfacce, pi˘ gli
 script  utilizzati per controllare  la compilazione  e l'installazione
 della libreria.
 
-Attivit√† diverse  dalla copiatura,  distribuzione e modifica  non sono
+Attivit‡ diverse  dalla copiatura,  distribuzione e modifica  non sono
 coperte   da  questa   Licenza  e   sono   al  di   fuori  della   sua
 influenza.  L'atto di  eseguire  il Programma  non  viene limitato,  e
-l'output  del programma √®  coperto da  questa Licenza  solo se  il suo
+l'output  del programma Ë  coperto da  questa Licenza  solo se  il suo
 contenuto     costituisce    un'opera     basata     sulla    Libreria
 (indipendentemente dal  fatto che sia  stato creato con  strumenti che
 usino la Libreria). In base alla natura della Libreria e del programma
-che usa la Libreria il suo  output pu√≤ essere o meno coperto da questa
+che usa la Libreria il suo  output puÚ essere o meno coperto da questa
 Licenza.
 
-1. Il  Licenziatario pu√≤  copiare  e distribuire  copie letterali  del
-codice sorgente completo della  Libreria cos√¨ come viene ricevuto, con
+1. Il  Licenziatario puÚ  copiare  e distribuire  copie letterali  del
+codice sorgente completo della  Libreria cosÏ come viene ricevuto, con
 qualsiasi mezzo, a condizione  che riproduca chiaramente su ogni copia
 un'appropriata nota  per il copyright  e per la mancanza  di garanzia;
 che  mantenga   intatti  tutti  i  riferimenti  a   questa  Licenza  e
 all'assenza di ogni  garanzia; e che distribuisca una  copia di questa
 Licenza insieme alla Libreria.
 
-Il  Licenziatario pu√≤  richiedere  un pagamento  per il  trasferimento
-fisico di  una copia,  e pu√≤ anche,  a propria discrezione,  offrire a
+Il  Licenziatario puÚ  richiedere  un pagamento  per il  trasferimento
+fisico di  una copia,  e puÚ anche,  a propria discrezione,  offrire a
 pagamento una garanzia aggiuntiva.
 
-2. Il Licenziatario pu√≤  modificare la propria copia o  le copie della
+2. Il Licenziatario puÚ  modificare la propria copia o  le copie della
 Libreria o qualsiasi sua parte, creando in questo modo un'opera basata
 sulla Libreria,  e copiare o  distribuire tali modifiche o  tale opera
-secondo  i  termini del  precedente  articolo  1,  purch√© soddisfi  in
+secondo  i  termini del  precedente  articolo  1,  purchÈ soddisfi  in
 aggiunta tutte le seguenti condizioni:
 
 a) L'opera modificata deve essere a sua volta una libreria software.
@@ -230,13 +224,13 @@ modifica.
 c)  Il Licenziatario conceda  in licenza  l'opera nella  sua interezza
 senza oneri ad ogni terza parte sotto i termini di questa Licenza.
 
-d)  Se una  funzionalit√†  della Libreria  modificata  implica che  una
+d)  Se una  funzionalit‡  della Libreria  modificata  implica che  una
 funzione  o   una  tabella  dati  vengano  forniti   da  un  programma
-applicativo che  usa tale funzionalit√†, in casi  diversi dal passaggio
-di  argomenti  quando  la   funzionalit√†  viene  invocata,  allora  il
-Licenziatario deve accertarsi al meglio delle proprie possibilit√† che,
+applicativo che  usa tale funzionalit‡, in casi  diversi dal passaggio
+di  argomenti  quando  la   funzionalit‡  viene  invocata,  allora  il
+Licenziatario deve accertarsi al meglio delle proprie possibilit‡ che,
 nel  caso l'applicazione  non  fornisca tale  funzione  o tabella,  la
-funzionalit√† possa  operare comunque  ed esegua qualsiasi  parte della
+funzionalit‡ possa  operare comunque  ed esegua qualsiasi  parte della
 propria funzione abbia ancora senso.
 
 Ad esempio,  la funzione di una  libreria per il  calcolo delle radici
@@ -258,9 +252,9 @@ termini di questa Licenza,  i cui permessi per successivi licenziatari
 si  estendono  all'opera  completa,   e  quindi  ad  ogni  sua  parte,
 indipendentemente da chi l'abbia scritta.
 
-Cos√¨  l'intento  di  questa  sezione  non  √®  quello  di  accampare  o
+CosÏ  l'intento  di  questa  sezione  non  Ë  quello  di  accampare  o
 contestare   alcun   diritto   su   opere  scritte   interamente   dal
-Licenziatario; piuttosto, l'intento √®  quello di esercitare il diritto
+Licenziatario; piuttosto, l'intento Ë  quello di esercitare il diritto
 al  controllo  della distribuzione  di  lavori  derivati o  collettivi
 basati sulla Libreria in questione.
 
@@ -269,13 +263,13 @@ opera non  basata sulla  Libreria (o anche  con un'opera  basata sulla
 Libreria) su  un mezzo di memorizzazione o  distribuzione  non implica
 che l'altra opera ricada nell'ambito di questa Licenza.
 
-3. Il  Licenziatario  pu√≤ decidere  di  applicare  a  una copia  della
+3. Il  Licenziatario  puÚ decidere  di  applicare  a  una copia  della
 Libreria i  termini dell'ordinaria Licenza Pubblica  Generica GNU (GNU
 GPL)  al posto di  questa Licenza.  Per farlo,  deve cambiare  tutti i
 riferimenti a questa Licenza, in modo che si riferiscano all'ordinaria
-Licenza Pubblica Generica GNU versione 2, anzich√© a questa Licenza. Se
+Licenza Pubblica Generica GNU versione 2, anzichÈ a questa Licenza. Se
 dovesse essere pubblicata una versione della Licenza Pubblica Generica
-GNU  successiva  alla  2,  volendo  si pu√≤  specificare  questa  nuova
+GNU  successiva  alla  2,  volendo  si puÚ  specificare  questa  nuova
 versione.  Il Licenziatario non deve apporre alcun altro cambiamento a
 queste note.
 
@@ -285,10 +279,10 @@ GNU si applica  a tutte le successive copie e  opere derivate create a
 partire da tale copia.
 
 Questa opzione  torna utile  qualora il Licenziatario  intenda copiare
-parte  del  codice  della Libreria  in  un  programma  che non  √®  una
+parte  del  codice  della Libreria  in  un  programma  che non  Ë  una
 libreria.
 
-4. Il Licenziatario pu√≤  copiare e distribuire la Libreria  (o parti o
+4. Il Licenziatario puÚ  copiare e distribuire la Libreria  (o parti o
 derivati di essa, come espresso dall'articolo 2) sotto forma di codice
 oggetto o eseguibile secondo i  termini dei precedenti articoli 1 e 2,
 a  condizione che  il Licenziatario  alleghi il  corrispondente codice
@@ -304,23 +298,23 @@ terze parti non sono obbligate a copiare il sorgente insieme al codice
 oggetto.
 
 5.  Un programma  che non contenga alcun derivato  di nessuna porzione
-della  Libreria,  ma  √®   progettato  per  lavorare  con  la  Libreria
+della  Libreria,  ma  Ë   progettato  per  lavorare  con  la  Libreria
 attraverso  compilazione  o collegamento  con  questa, viene  definito
-"un'opera che  usa la Libreria".  Tale opera, isolata, non  √® derivata
+"un'opera che  usa la Libreria".  Tale opera, isolata, non  Ë derivata
 dalla Libreria,  e pertanto ricade  al di fuori dell'ambito  di questa
 Licenza.
 
 Tuttavia, collegando  "un'opera che usa la  Libreria" con quest'ultima
-si crea un eseguibile che  √® derivato dalla Libreria stessa (poich√© ne
+si crea un eseguibile che  Ë derivato dalla Libreria stessa (poichÈ ne
 contiene   delle  parti),   piuttosto   che  "un'opera   che  usa   la
-Libreria". Di  conseguenza, il codice  eseguibile √® coperto  da questa
+Libreria". Di  conseguenza, il codice  eseguibile Ë coperto  da questa
 Licenza.  L'articolo 6  illustra  i termini  per  la distribuzione  di
 questo tipo di eseguibili.
 
 Quando "un'opera che usa la Libreria" utilizza materiale da un file di
-header che fa  parte della Libreria, il codice  oggetto dell'opera pu√≤
+header che fa  parte della Libreria, il codice  oggetto dell'opera puÚ
 essere un'opera  derivata dalla Libreria  anche se il  codice sorgente
-non  lo √®.  Il fatto  che  questo sia  vero o  meno √®  particolarmente
+non  lo Ë.  Il fatto  che  questo sia  vero o  meno Ë  particolarmente
 importante nel  caso in  cui l'opera possa  essere collegata  senza la
 libreria,  o  che  sia  una   libreria  essa  stessa.  La  soglia  per
 determinare  questa distinzione  non viene  stabilita in  modo preciso
@@ -329,21 +323,21 @@ dalla legge.
 Se  tale file  oggetto  utilizza solo  parametri  numerici, schemi  di
 strutture  dati e  accessori, e  piccole macro  o piccole  funzioni in
 linea (lunghe al massimo 10  righe), allora l'uso del file oggetto non
-√®  sottoposto  a  restrizioni,  indipendentemente dal  fatto  che  sia
+Ë  sottoposto  a  restrizioni,  indipendentemente dal  fatto  che  sia
 legalmente da considerare un'opera derivata. Eseguibili che contengano
 tale  codice  oggetto  in  aggiunta  a porzioni  della  Libreria  sono
 comunque regolati dall'articolo 6.
 
 Altrimenti,  nel   caso  l'opera  sia  derivata   dalla  Libreria,  il
-Licenziatario pu√≤ distribuire il  codice oggetto dell'opera in base ai
+Licenziatario puÚ distribuire il  codice oggetto dell'opera in base ai
 termini  dell'articolo  6.   Ogni  eseguibile  contenente  quell'opera
 ricade  comunque sotto  i  termini dell'articolo  6, prescindendo  dal
 fatto che sia direttamente collegato o meno alla Libreria stessa.
 
-6.  Come  eccezione  all'articolo  precedente,  il  Licenziatario  pu√≤
+6.  Come  eccezione  all'articolo  precedente,  il  Licenziatario  puÚ
 combinare o collegare "un'opera  che usa la Libreria" con quest'ultima
 onde  creare   un'opera  che  contenga  porzioni   della  Libreria,  e
-distribuire  tale  opera secondo  termini  di  propria scelta,  purch√©
+distribuire  tale  opera secondo  termini  di  propria scelta,  purchÈ
 questi termini consentano  la modifica dell'opera ad uso  privato e la
 decompilazione limitatamente  al fine di  effettuare il debug  di tali
 modifiche.
@@ -365,19 +359,19 @@ previsti dagli articoli 1 e 2);  e, nel caso l'opera sia un eseguibile
 collegato con la  Libreria, fornire "l'opera che usa  la Libreria" con
 il codice  oggetto e/o sorgente  completo, in modo che  l'utente possa
 modificare la  Libreria e  poi ricollegare il  tutto onde  produrre un
-eseguibile modificato contenente la Libreria modificata.  √à inteso che
+eseguibile modificato contenente la Libreria modificata.  » inteso che
 l'utente  che dovesse cambiare  il contenuto  dei file  di definizione
-della  Libreria  non  sar√†  necessariamente in  grado  di  ricompilare
+della  Libreria  non  sar‡  necessariamente in  grado  di  ricompilare
 l'applicazione per usare tali definizioni modificate.
 
 b) Usare un appropriato  meccanismo di condivisione delle librerie per
-collegare  la Libreria.  Un meccanismo  appropriato √®  quello  che (1)
-durante l'esecuzione  utilizza una  copia della libreria  gi√† presente
-nel computer  dell'utente, anzich√© copiare le  funzioni della libreria
-nell'eseguibile,  e  (2)  funzioner√†  correttamente con  una  versione
-modificata  della libreria,  se l'utente  ne installa  una,  purch√© la
+collegare  la Libreria.  Un meccanismo  appropriato Ë  quello  che (1)
+durante l'esecuzione  utilizza una  copia della libreria  gi‡ presente
+nel computer  dell'utente, anzichÈ copiare le  funzioni della libreria
+nell'eseguibile,  e  (2)  funzioner‡  correttamente con  una  versione
+modificata  della libreria,  se l'utente  ne installa  una,  purchÈ la
 versione modificata  sia compatibile a  livello di interfaccia  con la
-versione con la quale √® stata creata l'opera.
+versione con la quale Ë stata creata l'opera.
 
 c) Allegare  all'opera un'offerta scritta,  valida per almeno  3 anni,
 per  la fornitura  allo stesso  utente dei  materiali  specificati nel
@@ -388,54 +382,54 @@ d)  Se la  distribuzione dell'opera  viene effettuata  tramite accesso
 alla  copia da  un luogo  specifico, va  offerto analogo  accesso alla
 copia dei materiali sopra specificati dallo stesso luogo.
 
-e)  Verificare che  l'utente abbia  gi√† ricevuto  una copia  di questi
-materiali o che il Licenziatario gliene abbia gi√† inviata una.
+e)  Verificare che  l'utente abbia  gi‡ ricevuto  una copia  di questi
+materiali o che il Licenziatario gliene abbia gi‡ inviata una.
 
 Per  un  eseguibile, la  forma  richiesta per  l'  "opera  che usa  la
 Libreria"  comprende  ogni  dato  o  programma  di  servizio  che  sia
 necessario  per ricreare  l'eseguibile.  Tuttavia si  fa una  speciale
 eccezione:  il  materiale  da  distribuire  non  deve  necessariamente
 includere tutto  quanto normalmente  distribuito (in forma  sorgente o
-binaria) con i principali  componenti (compilatore, kernel e cos√¨ via)
+binaria) con i principali  componenti (compilatore, kernel e cosÏ via)
 del sistema operativo sul quale funziona l'eseguibile, a meno che tali
 componenti non siano distribuiti insieme all'eseguibile.
 
-Pu√≤ accadere  che questo requisito contraddica  le restrizioni dettate
+PuÚ accadere  che questo requisito contraddica  le restrizioni dettate
 da licenze di altre  librerie proprietarie normalmente non fornite con
 il sistema operativo.
 
-Queste contraddizioni comportano l'impossibilit√† di utilizzare insieme
+Queste contraddizioni comportano l'impossibilit‡ di utilizzare insieme
 tali librerie e la Libreria in un eseguibile da distribuire.
 
-7. Il Licenziatario pu√≤ inserire  in una singola libreria funzionalit√†
-che siano un'opera basata sulla Libreria insieme ad altre funzionalit√†
+7. Il Licenziatario puÚ inserire  in una singola libreria funzionalit‡
+che siano un'opera basata sulla Libreria insieme ad altre funzionalit‡
 di  libreria non  regolate  da questa  Licenza,  e distribuire  questa
-libreria combinata, purch√©  venga comunque consentita la distribuzione
-separata dell'opera  basata sulla Libreria e  delle altre funzionalit√†
+libreria combinata, purchÈ  venga comunque consentita la distribuzione
+separata dell'opera  basata sulla Libreria e  delle altre funzionalit‡
 di libreria,  e posto  che il Licenziatario  rispetti le  seguenti due
 condizioni:
 
 a) Insieme  alla libreria combinata,  fornisca una copia  della stessa
 opera   basata  sulla   Libreria,  non   combinata   con  nessun'altra
-funzionalit√† di libreria. Questa deve essere distribuita rispettando i
+funzionalit‡ di libreria. Questa deve essere distribuita rispettando i
 termini enunciati sopra.
 
 b)  Apponga alla  libreria  combinata  una chiara  nota  in cui  viene
-specificato  che  parte di  essa  √®  un'opera  basata sulla  Libreria,
-spiegando altres√¨ dove trovare  la versione non combinata della stessa
+specificato  che  parte di  essa  Ë  un'opera  basata sulla  Libreria,
+spiegando altresÏ dove trovare  la versione non combinata della stessa
 opera.
 
-8. Il  Licenziatario   non  pu√≤  copiare,   modificare,  rilicenziare,
+8. Il  Licenziatario   non  puÚ  copiare,   modificare,  rilicenziare,
 collegare o  distribuire la Libreria se non  nei termini espressamente
 enunciati  in   questa  Licenza.   Qualsiasi   tentativo  di  copiare,
 modificare,  rilicenziare, collegare o  distribuire la  Libreria sotto
-altri  termini non  √®  valido e  annuller√†  automaticamente i  diritti
+altri  termini non  Ë  valido e  annuller‡  automaticamente i  diritti
 ricevuti con questa Licenza.  Tuttavia, gli altri soggetti che abbiano
 ricevuto copie o diritti dal Licenziatario secondo i termini di questa
 Licenza non vedranno revocate le loro licenze fino a che tali soggetti
 ne rispettino i termini.
 
-9. Il Licenziatario  non √® tenuto ad accettare  questa Licenza, poich√©
+9. Il Licenziatario  non Ë tenuto ad accettare  questa Licenza, poichÈ
 non l'ha firmata. In ogni caso, nient'altro gli garantisce il permesso
 di  modificare  o   distribuire  la  Libreria  o  le   opere  da  essa
 derivate. Queste azioni sono proibite  dalla legge per chi non accetta
@@ -449,9 +443,9 @@ modifica della Libreria o di opere basate su questa.
 un'opera basata  su di essa, il ricevente  ottiene automaticamente una
 licenza dal Licenziatario originale di copiare, distribuire, collegare
 o modificare  la Libreria secondo questi termini  e queste condizioni.
-Il  Licenziatario  non pu√≤  imporre  alcuna  ulteriore restrizione  al
+Il  Licenziatario  non puÚ  imporre  alcuna  ulteriore restrizione  al
 ricevente   nel  suo   esercizio  dei   diritti  qui   garantiti.   Il
-Licenziatario non  √® comunque tenuto  a imporre il rispetto  di questa
+Licenziatario non  Ë comunque tenuto  a imporre il rispetto  di questa
 Licenza a terzi.
 
 11. Se, a seguito di una  sentenza di un tribunale, di una imputazione
@@ -462,37 +456,37 @@ delle condizioni in contrasto  con quanto stabilito da questa Licenza,
 tali  condizioni non esimono  nessun soggetto  dal rispetto  di questa
 Licenza. Nel caso il  Licenziatario non possa distribuire un programma
 in  un modo  da  soddisfare simultaneamente  gli  obblighi dettati  da
-questa  Licenza e  altri obblighi  ad  essa pertinenti,  non si  potr√†
+questa  Licenza e  altri obblighi  ad  essa pertinenti,  non si  potr‡
 procedere  ad  alcuna  distribuzione.  Se,  ad  esempio,  un  brevetto
 vietasse a tutti quelli  che ricevono direttamente o indirettamente la
 Libreria  la  sua ridistribuzione  senza pagamento di  diritti, allora
 l'unico modo per rispettare  contemporaneamente tale brevetto e questa
-Licenza √® quello di non distribuire affatto la Libreria.
+Licenza Ë quello di non distribuire affatto la Libreria.
 
-Se una parte di questo articolo √® ritenuta non valida od inapplicabile
+Se una parte di questo articolo Ë ritenuta non valida od inapplicabile
 sotto  qualsiasi particolare  circostanza, il  resto  dell'articolo si
 intende  applicabile   e  l'articolo   nel  suo  insieme   si  intende
 applicabile in altre circostanze.
 
 Non rientra negli intenti  di questo articolo indurre il Licenziatario
-ad infrangere  alcun brevetto n√©  altre  rivendicazioni di  diritto di
-propriet√†,  n√©  di  contestare  la validit√†  di  tali  rivendicazioni.
-L'obiettivo  di  questo articolo  √®  unicamente  quello di  proteggere
-l'integrit√†  del   sistema  di  distribuzione   dei  programmi  liberi
+ad infrangere  alcun brevetto nÈ  altre  rivendicazioni di  diritto di
+propriet‡,  nÈ  di  contestare  la validit‡  di  tali  rivendicazioni.
+L'obiettivo  di  questo articolo  Ë  unicamente  quello di  proteggere
+l'integrit‡  del   sistema  di  distribuzione   dei  programmi  liberi
 implementato  tramite l'utilizzo di  licenze pubbliche.  Molte persone
 hanno  generosamente   contribuito  alla  vasta   gamma  di  programmi
 distribuiti  attraverso  questo   sistema,  basandosi  sulla  coerente
 applicazione  di tale  sistema.   Spetta soltanto  all'autore/donatore
 decidere se  preferisca o meno  distribuire il software  tramite altri
-sistemi, e il Licenziatario non pu√≤ imporre tale scelta.
+sistemi, e il Licenziatario non puÚ imporre tale scelta.
 
-Questo articolo  punta a chiarire fino  in fondo ci√≤  che crediamo sia
+Questo articolo  punta a chiarire fino  in fondo ciÚ  che crediamo sia
 una conseguenza del resto di questa Licenza.
 
 12. Se  in alcuni paesi  la distribuzione  o l'impiego  della Libreria
 sono limitati  da brevetti  o da interfacce  coperte da  copyright, il
 detentore del  copyright originario che pone la  Libreria sotto questa
-Licenza   pu√≤  aggiungere   esplicite  limitazioni   geografiche  alla
+Licenza   puÚ  aggiungere   esplicite  limitazioni   geografiche  alla
 distribuzione  onde escluderne tali  paesi, in  modo da  consentire la
 distribuzione   soltanto  in   quei  paesi   non  inclusi   in  queste
 restrizioni.   In   tal  caso,  le   limitazioni  geografiche  vengono
@@ -507,46 +501,101 @@ situazioni nuove.
 A ciascuna  versione viene assegnato un numero  identificativo.  Se la
 Libreria specifica  di essere coperta  da una particolare  versione di
 questa Licenza  e "da qualsiasi versione  successiva" il Licenziatario
-pu√≤ scegliere di aderire  alle condizioni della versione specificata o
+puÚ scegliere di aderire  alle condizioni della versione specificata o
 a quelle  di una  successiva. Se la  Libreria non specifica  il numero
-della versione, il Licenziatario pu√≤ optare per una versione qualsiasi
+della versione, il Licenziatario puÚ optare per una versione qualsiasi
 tra quelle pubblicate dalla Free Software Foundation.
 
 14.  Nel caso il Licenziatario voglia incorporare parti della Libreria
 in  altri programmi liberi  le cui  condizioni di  distribuzione siano
-incompatibili  con  queste,  pu√≤  scrivere  all'autore  per  chiederne
+incompatibili  con  queste,  puÚ  scrivere  all'autore  per  chiederne
 l'autorizzazione.  Per  il  software  sotto il  copyright  della  Free
 Software   Foundation,  occorre   contattare   quest'ultima;  talvolta
-facciamo  delle eccezioni a  queste regole.  La nostra  decisione sar√†
-guidata da  due finalit√†:  preservare la libert√†  di tutti  i prodotti
+facciamo  delle eccezioni a  queste regole.  La nostra  decisione sar‡
+guidata da  due finalit‡:  preservare la libert‡  di tutti  i prodotti
 derivati dal nostro software libero  e promuovere la condivisione e il
 riutilizzo del software in generale.
 
 NESSUNA GARANZIA
 
 
-15. POICH√â LA LIBRERIA VIENE CONCESSA CON LICENZA GRATUITA, NON ESISTE
+15. POICH… LA LIBRERIA VIENE CONCESSA CON LICENZA GRATUITA, NON ESISTE
 ALCUNA GARANZIA  PER LA LIBRERIA, NEI LIMITI  CONSENTITI DALLE VIGENTI
 LEGGI.  SE  NON INDICATO DIVERSAMENTE  PER ISCRITTO, IL  DETENTORE DEL
-COPYRIGHT E LE ALTRE PARTI FORNISCONO IL PROGRAMMA "COS√å COM'√à", SENZA
-ALCUN TIPO DI GARANZIA, N√â  ESPLICITA N√â IMPLICITA; CI√í INCLUDE, SENZA
-LIMITARSI  A  QUESTO,  LA  GARANZIA  IMPLICITA  DI  COMMERCIABILIT√Ä  E
-UTILIZZABILIT√Ä PER UNO SCOPO PARTICOLARE.  TUTTI I RISCHI SU QUALIT√Ä E
+COPYRIGHT E LE ALTRE PARTI FORNISCONO IL PROGRAMMA "COSÃ COM'»", SENZA
+ALCUN TIPO DI GARANZIA, N…  ESPLICITA N… IMPLICITA; CI“ INCLUDE, SENZA
+LIMITARSI  A  QUESTO,  LA  GARANZIA  IMPLICITA  DI  COMMERCIABILIT¿  E
+UTILIZZABILIT¿ PER UNO SCOPO PARTICOLARE.  TUTTI I RISCHI SU QUALIT¿ E
 PRESTAZIONI  DELLA LIBRERIA  SONO A  CARICO DEL  LICENZIATARIO.  SE LA
 LIBRERIA  DOVESSE  RIVELARSI  DIFETTOSA,  IL LICENZIATARIO  SI  ASSUME
 L'ONERE DI OGNI MANUTENZIONE, RIPARAZIONE O CORREZIONE NECESSARIA.
 
-16.  N√â  IL DETENTORE  DEL  COPYRIGHT, N√â  ALTRE  PARTI AUTORIZZATE  A
+16.  N…  IL DETENTORE  DEL  COPYRIGHT, N…  ALTRE  PARTI AUTORIZZATE  A
 MODIFICARE E/O  RIDISTRIBUIRE LA LIBRERIA SECONDO  QUANTO STABILITO IN
 QUESTA LICENZA,  SONO RESPONSABILI IN  ALCUN MODO PER  EVENTUALI DANNI
-NEI  CONFRONTI DEL  LICENZIATARIO, A  MENO CHE  CI√í NON  SIA RICHIESTO
+NEI  CONFRONTI DEL  LICENZIATARIO, A  MENO CHE  CI“ NON  SIA RICHIESTO
 DALLE  LEGGI VIGENTI  O SIA  SPECIFICATO IN  UN ACCORDO  SCRITTO. SONO
 INCLUSI  DANNI GENERICI,  SPECIALI O  INCIDENTALI, COME  PURE  I DANNI
-CONSEGUENTI  DALL'USO  O   DALL'IMPOSSIBILIT√Ä  DI  USARE  LA  LIBRERIA
+CONSEGUENTI  DALL'USO  O   DALL'IMPOSSIBILIT¿  DI  USARE  LA  LIBRERIA
 (INCLUSO, MA SENZA LIMITARSI A  QUESTO, LA PERDITA E LA CORRUZIONE DEI
 DATI,  LE PERDITE  SOSTENUTE  DAL  LICENZIATARIO O  DA  TERZE PARTI  E
-L'INCAPACIT√Ä  DA   PARTE  DELLA  LIBRERIA  DI   INTERAGIRE  CON  ALTRO
+L'INCAPACIT¿  DA   PARTE  DELLA  LIBRERIA  DI   INTERAGIRE  CON  ALTRO
 SOFTWARE), ANCHE  NEL CASO IL DETENTORE  O LE ALTRE  PARTI SIANO STATE
-AVVISATE DELL'EVENTUALIT√Ä DI TALI DANNI.
+AVVISATE DELL'EVENTUALIT¿ DI TALI DANNI.
 
 FINE DEI TERMINI E DELLE CONDIZIONI
+
+Come applicare questi termini a nuove librerie
+
+Se  si  sviluppa una  nuova  libreria, e  la  si  vuole rendere  della
+maggiore  utilit‡ possibile  per tutti,  la cosa  migliore  Ë renderla
+libera, in modo che  chiunque possa ridistribuirla e modificarla sotto
+questi  termini (o,  alternativamente, sotto  i termini  della normale
+Licenza Pubblica Generica).
+
+Per  applicare  questi  termini,  basta  inserire  nella  libreria  le
+seguenti note.   La procedura migliore Ë inserirle  all'inizio di ogni
+file sorgente, per chiarire  nel modo pi˘ efficace possibile l'assenza
+di  garanzie; e  ciascun file  dovrebbe  contenere almeno  la nota  di
+copyright e l'indicazione di dove poter reperire la nota per esteso.
+
+una riga  per indicare il nome  della libreria e dare  un'idea di cosa
+faccia.
+
+Copyright (C) anno nome dell'autore
+
+Questa libreria Ë software libero;  ne Ë concessa la ridistribuzione o
+la  modifica  secondo  i   termini  della  Licenza  Pubblica  Generica
+Attenuata GNU  come pubblicata dalla Free Software  Foundation; si puÚ
+scegliere  a  piacimento la  versione  2.1  della  Licenza oppure  una
+qualsiasi versione successiva.
+
+Questa libreria Ë distribuita nella speranza possa mostrarsi utile, ma
+SENZA  ALCUNA  GARANZIA;  senza   neppure  la  garanzia  implicita  di
+COMMERCIABILIT¿ o APPLICABILIT¿ PER UN PARTICOLARE SCOPO. Per maggiori
+dettagli si veda la Licenza Pubblica Generica Attenuata GNU.
+
+Insieme a questa libreria, l'utente dovrebbe aver ricevuto copia della
+Licenza  Pubblica Generica Attenuata  GNU; in  caso contrario,  si puÚ
+contattare la  Free Software Foundation,  Inc., 51 Franklin  St, Fifth
+Floor, Boston, MA 02110-1301, USA
+
+»  inoltre  il  caso  di  aggiungere  informazioni  per  poter  essere
+contattati tramite posta elettronica e cartacea.
+
+Se necessario,  occorre far firmare  al proprio datore di  lavoro (per
+chi  lavora  come  programmatore)  o  al  proprio  istituto,  per  gli
+studenti, una "rinuncia al copyright" per la Libreria. Ecco un esempio
+contenente nomi fittizi:
+
+Yoyodinamica SPA rinuncia con questo documento ad ogni diritto sul
+
+copyright  della  libreria  'Orcaloca'  (una libreria  per  girarsi  i
+pollici) scritto da Giovanni Smanettone.
+
+firma di Pinco Pallino, 1 Aprile 1990
+
+Pinco Pallino, Presidente
+
+E questo Ë tutto!
+

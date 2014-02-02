@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Retr_store_Att" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                           
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -22,7 +22,7 @@ if sAttributo = &quot;Tipo_computo&quot; then
 	if sAttributo = &quot;Tipo_analisi&quot; then
 		print &quot;tipo Analisi&quot;
 		else
-		if sAttributo = &quot;Tipo_EP&quot; then
+		if sAttributo = &quot;Tipo_ElencoP&quot; then
 				print &quot;tipo Analisi&quot;
 			else
 				exit sub

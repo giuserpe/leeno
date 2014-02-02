@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM  *****  BASIC  *****
+sub che_sheet
+	print Trova_Attr_Sheet
+end sub
+
+sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	lLastUrow = getLastUsedRow(oSheet)
+	&apos;print lLastUrow
+	Dim Ancelo as long
+
+	conta_a = 0
+	for i = 10184 to lLastUrow
+		if oSheet.GetCellbyPosition( 0, i ).string = &quot;A&quot; then 
+&apos;			inizio =i+2
+			inizio =i
+	&apos;	print inizio
+		&apos;	conta_a = conta_a +1
+		end if
+		if oSheet.GetCellbyPosition( 0, i ).string = &quot;F&quot; then 
+			fine =i
+			&apos;print fine
+			Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; inizio &amp; &quot; di &quot; &amp; lLastUrow, 0)
+			print oSheet.GetCellByPosition(3 , inizio-3).value()*1.2
+			Print oSheet.GetCellByPosition(3 , inizio-2).value()
+			print oSheet.GetCellByPosition(3 , inizio-1).value()
+								
+&apos;			oSheet.GetCellByPosition(5 , fine+1).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine &amp;&quot;)*E&quot;&amp; fine+2 REM SPESE GENERALI
+&apos;			oSheet.GetCellByPosition(5 , fine+2).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine+2 &amp;&quot;)*E&quot;&amp; fine+3 REM UTILI D&apos;IMPRESA
+&apos;		oSheet.GetCellByPosition(11 , inizio-7).setformula(conta_a)
+&apos;		oSheet.GetCellByPosition(12 , inizio-7).setformula(&quot;=vlookup(A&quot;&amp; inizio-6 &amp;&quot;;base;3;)&quot;
+&apos;		oSheet.GetCellByPosition(13 , inizio-7).setformula(&quot;=(G&quot;&amp; inizio-6 &amp;&quot;-M&quot;&amp; inizio-6 &amp;&quot;)/M&quot;&amp; inizio-6
+&apos;		oSheet.GetCellByPosition(14 , inizio-7).setformula(&quot;=G&quot;&amp; inizio-1 &amp; &quot;/M&quot;&amp; inizio-6 &apos;ribasso vecchio
+&apos;		oSheet.GetCellByPosition(15 , inizio-7).setformula(&quot;=vlookup(A&quot;&amp; inizio-6 &amp;&quot;;base;4;)&quot;
+&apos;		oSheet.GetCellByPosition(16 , inizio-7).setformula(&quot;=P&quot;&amp; inizio-6 &amp;&quot;*G&quot;&amp; inizio-6
+&apos;		oSheet.GetCellByPosition(17 , inizio-7).setformula(&quot;=P&quot;&amp; inizio-6 &amp;&quot;*M&quot;&amp; inizio-6
+&apos;		oSheet.GetCellByPosition(18 , inizio-7).setformula(&quot;=A&quot; &amp; inizio-6)
+&apos;	oSheet.GetCellByPosition(19 , inizio-7).setformula(&quot;=M&quot; &amp; inizio-6 &amp;&quot;*U&quot; &amp; inizio-6
+&apos;	oSheet.GetCellByPosition(20 , inizio-7).setvalue(&quot;0.00327696945864465&quot;)
+	
+
+			
+		end if
+	next
+	Barra_chiudi_sempre_4
+&apos;	fine:
+end sub
+sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazioni
+
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	lLastUrow = getLastUsedRow(oSheet)
+	&apos;print lLastUrow
+&apos;	goto fine
+	i = 0
+	for i = 1 to lLastUrow
+	if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An-lavoraz-Cod-sx&quot; and 	oSheet.GetCellbyPosition( 0, i ).string = &quot;&quot; then 
+				&apos;print fine
+			Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrow, 0)
+					oSheet.GetCellByPosition(0 , i).setstring(&quot; &quot;)
+			
+	end if
+	next
+	Barra_chiudi_sempre_4
+	fine:
+end sub
+
+</script:module>

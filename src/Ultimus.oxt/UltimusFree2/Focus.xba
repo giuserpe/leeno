@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Focus" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                              
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                              
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -319,13 +319,15 @@ END SUB
 
 &apos;##############################################################
 Sub Sel_Elenco_Prezzi() &apos; vai al 
-	dim osheet as object
-&apos;	oSheetCurrent = ThisComponent.currentController.activeSheet
+	dim Osheet as object
+	Osheet = thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;)
+	Osheet.isVisible = true
+&apos;	oSheet= ThisComponent.currentController.activeSheet
 &apos;	sNomesheet = ThisComponent.currentController.activeSheet.name
 &apos;	print sNomesheet
 &apos;xray thisComponent
 &apos;	wait 1000
-	Osheet = thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;)
+	
 	Thiscomponent.currentcontroller.setactivesheet(Osheet)
 	Osheet.isVisible = true
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;

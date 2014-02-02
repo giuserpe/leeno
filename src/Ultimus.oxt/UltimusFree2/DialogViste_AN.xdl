@@ -1,22 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="14" dlg:id="DialogViste_AN" dlg:left="206" dlg:top="151" dlg:width="168" dlg:height="179" dlg:help-text="   Scenari, Viste e Azioni Delle ANALISI DI PREZZO" dlg:help-url="http://aimar.mrjive.it/files/MANUALE%20D%27USO%20di%20Ultimus-3.5-101130.pdf" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni Delle ANALISI DI PREZZO">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="DialogViste_AN" dlg:left="206" dlg:top="151" dlg:width="168" dlg:height="179" dlg:help-text="   Scenari, Viste e Azioni Delle ANALISI DI PREZZO" dlg:help-url="http://aimar.mrjive.it/files/MANUALE%20D%27USO%20di%20Ultimus-3.5-101130.pdf" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni Delle ANALISI DI PREZZO">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="2" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="3" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="4" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="5" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="6" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="8" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="9" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="10" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="11" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="12" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="13" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="14" dlg:background-color="0x55ff42"/>
+  <dlg:style dlg:style-id="2" dlg:background-color="0x55ff42"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="0" dlg:left="2" dlg:top="93" dlg:width="76" dlg:height="16" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Descrizione Corta on/off" dlg:multiline="true">
@@ -25,40 +13,40 @@
   <dlg:button dlg:style-id="1" dlg:id="CommandButton10" dlg:tab-index="1" dlg:left="89" dlg:top="115" dlg:width="76" dlg:height="15" dlg:help-text="Visualizza/Nascondi  gestione MANODOPERA" dlg:value="Gestione Manodopera  on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.manodopera_Analisi_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton21" dlg:tab-index="4" dlg:left="88" dlg:top="93" dlg:width="76" dlg:height="17" dlg:help-text="Altezza Ottimale delle righe" dlg:value="ADATTA RIGA/E" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton21" dlg:tab-index="4" dlg:left="88" dlg:top="93" dlg:width="76" dlg:height="17" dlg:help-text="Altezza Ottimale delle righe" dlg:value="ADATTA RIGA/E" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.Adatta_Altezza_riga?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton24" dlg:tab-index="2" dlg:left="85" dlg:top="2" dlg:width="81" dlg:height="14" dlg:help-text="Crea una nuova Voce di Analisi" dlg:value="Crea Nuova Voce" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton24" dlg:tab-index="2" dlg:left="85" dlg:top="2" dlg:width="81" dlg:height="14" dlg:help-text="Crea una nuova Voce di Analisi" dlg:value="Crea Nuova Voce" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.Nuova_Voce_scelta?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton29" dlg:tab-index="3" dlg:left="5" dlg:top="68" dlg:width="97" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Vai al menu Voci Usate /NON Usate" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton29" dlg:tab-index="3" dlg:left="5" dlg:top="68" dlg:width="97" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Vai al menu Voci Usate /NON Usate" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.Vai_submenu_segnaVoci_non_usate?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton2" dlg:tab-index="5" dlg:left="36" dlg:top="159" dlg:width="84" dlg:height="16" dlg:help-text="Pui chiudere anche con ESC " dlg:value="OK   CHIUDI questa Finestra" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="5" dlg:left="36" dlg:top="159" dlg:width="84" dlg:height="16" dlg:help-text="Pui chiudere anche con ESC " dlg:value="OK   CHIUDI questa Finestra" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton4" dlg:tab-index="6" dlg:left="7" dlg:top="3" dlg:width="52" dlg:height="14" dlg:help-text="Elimina le righe selezionate" dlg:value="ELIMINA RIGA/E" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="6" dlg:left="7" dlg:top="3" dlg:width="52" dlg:height="14" dlg:help-text="Elimina le righe selezionate" dlg:value="ELIMINA RIGA/E" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton5" dlg:tab-index="7" dlg:left="85" dlg:top="23" dlg:width="81" dlg:height="35" dlg:help-text="Registra l&apos;analisi corrente come Nuovo prezzo In El. Prezzi" dlg:value="Crea Nuovo Prezzo dall&apos;Analisi" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="7" dlg:left="85" dlg:top="23" dlg:width="81" dlg:height="35" dlg:help-text="Registra l&apos;analisi corrente come Nuovo prezzo In El. Prezzi" dlg:value="Crea Nuovo Prezzo dall&apos;Analisi" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.ANALISI_IN_ELENCOPREZZI?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="8" dlg:id="CommandButton7" dlg:tab-index="8" dlg:left="7" dlg:top="23" dlg:width="71" dlg:height="14" dlg:help-text="Aggiungi un Componente di dettaglio all&apos;Analisi" dlg:value="Agg. Componente" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="8" dlg:left="7" dlg:top="23" dlg:width="71" dlg:height="14" dlg:help-text="Aggiungi un Componente di dettaglio all&apos;Analisi" dlg:value="Agg. Componente" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.copia_riga_A?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="9" dlg:id="CommandButton8" dlg:tab-index="9" dlg:left="5" dlg:top="45" dlg:width="73" dlg:height="14" dlg:help-text="Inserisci una maggiorazione % (Utili / Sconti / Sicurezza)" dlg:value="Inserisci Utili Maggoraz. %" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="9" dlg:left="5" dlg:top="45" dlg:width="73" dlg:height="14" dlg:help-text="Inserisci una maggiorazione % (Utili / Sconti / Sicurezza)" dlg:value="Inserisci Utili Maggoraz. %" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="10" dlg:id="CommandButton6" dlg:tab-index="10" dlg:left="2" dlg:top="115" dlg:width="76" dlg:height="14" dlg:help-text="Non Attiva (Prevista per la versione 4.xx.xx)" dlg:value="SICUREZZA on/off" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton6" dlg:tab-index="10" dlg:left="2" dlg:top="115" dlg:width="76" dlg:height="14" dlg:help-text="Non Attiva (Prevista per la versione 4.xx.xx)" dlg:value="SICUREZZA on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.sicurezza_Analisi_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="11" dlg:id="CommandButton3" dlg:tab-index="11" dlg:left="2" dlg:top="136" dlg:width="76" dlg:height="17" dlg:value="metti in struttura (ctrl M)" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="11" dlg:left="2" dlg:top="136" dlg:width="76" dlg:height="17" dlg:value="metti in struttura (ctrl M)" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="12" dlg:id="CommandButton11" dlg:tab-index="12" dlg:left="89" dlg:top="136" dlg:width="76" dlg:height="17" dlg:value="Togli struttura (Ctrl Shift M)" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton11" dlg:tab-index="12" dlg:left="89" dlg:top="136" dlg:width="76" dlg:height="17" dlg:value="Togli struttura (Ctrl Shift M)" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="13" dlg:id="CommandButton12" dlg:tab-index="13" dlg:left="108" dlg:top="68" dlg:width="57" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Apri tutto" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton12" dlg:tab-index="13" dlg:left="108" dlg:top="68" dlg:width="57" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Apri tutto" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Mostra_Tutto?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

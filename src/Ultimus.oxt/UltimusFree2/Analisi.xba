@@ -10,8 +10,9 @@
 		REM VECCHIO BLOCCO ANALISI_BART
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$45:$N$51&quot; , &quot;blocco_analisi&quot;)
 		REM BLOCCO ANALISI AVCP
-		rifa_nomearea (&quot;S5&quot;, &quot;$B$106:$P$131&quot; , &quot;blocco_analisi&quot;)
-		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$106:$P$131&quot; , &quot;blocco_analisi&quot;)
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
+		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
 
 
 	&apos;end if

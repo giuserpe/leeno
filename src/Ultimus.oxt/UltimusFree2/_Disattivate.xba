@@ -1,0 +1,435 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">REM  *****  BASIC  *****
+sub Struttura_ComputoCONT &apos;PROVA  PROVA per il foglio contabilita  NON USATA
+print &quot;questo&quot;  
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; per evitare che duplichi la struttura
+	 Togli_Struttura
+	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	Ripristina_statusLine
+	Barra_Apri_Chiudi_5(&quot;1C  Sto creando le strutture... Pazienta...&quot;, 10)
+	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
+	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
+	sAttributo = Trova_Attr_Sheet
+    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+ 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+			exit sub
+	end if
+   	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
+		s_R = &quot;&quot;
+	end if
+	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
+		s_R = &quot;_R&quot;
+	end if		
+	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
+				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
+				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
+				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
+				s_R = &quot;_R&quot;	
+	end if	
+
+	
+	lStartRow = oSheet.GetCellByPosition( 0 , 0)
+&apos;	lLastUrowNN = getLastUsedRow(oSheet)
+	
+	sString$ = &quot;Fine Computo&quot;
+	
+	oEnd=uFindString(sString$, oSheet) 
+	If isNull (oEnd) or isEmpty (oEnd)  then 
+						lLastUrowNN = getLastUsedRow(oSheet)-1
+					else
+						lLastUrowNN=oEnd.RangeAddress.EndRow -1
+	end if
+	IF lLastUrowNN	&gt;= 600 and lLastUrowNN	&lt;= 1000 then
+		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo! &quot; &amp; CHR$(10)_
+		 	&amp; &quot;   (alcuni minuti...)  &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp;&quot;         PROSEGUO ?... &quot; &amp; CHR$(10) _
+   			&amp;  CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
+   			exit sub
+    	end if
+	end if
+	IF lLastUrowNN	&gt; 1001 then
+		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo! &quot; &amp; CHR$(10)_
+			&amp; &quot;   ( Parecchi  minuti...)  &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp;&quot;         PROSEGUO ?... &quot; &amp; CHR$(10) _
+   			&amp;  CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
+   			exit sub
+    	end if
+	end if
+	&apos;lLastUrowNN=oEnd.RangeAddress.EndRow-1
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,280).string = NOW &apos;debug
+	Ripristina_statusLine
+	Barra_Apri_Chiudi_5(&quot;2  Sto creando le strutture... Pazienta...&quot;, 15)
+	iLivelliVisibili = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value 
+	if iLivelliVisibili=0 then &apos;per avere comunque un valore di default nel caso il riferimento sia vuoto
+			iLivelliVisibili = 2
+	end if
+For I = 3  to lLastUrowNN
+Dim oCRA As New com.sun.star.table.CellRangeAddress
+	iRiga = i
+&apos;	do while oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Livello-1-scritta&quot; &amp; s_R
+			
+		&apos;		print left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) &apos;debug
+		&apos; se è dentro una intestazione di capito o sottoCap
+		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp Start Attributo_R&quot; &amp; s_R or _
+		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Livello-1-scritta&quot; &amp; s_R or _
+		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-1-sotto_&quot; &amp; s_R  or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 valuta&quot;  &amp; s_R   or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-2-sotto_&quot;  &amp; s_R   or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 sopra&quot;  &amp; s_R  or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Default&quot;  or _
+			 	left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) = &quot;Reg-SAL&quot; then	 &apos;questa per usare stile gerarchico
+	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
+	&apos;	print &quot;cap &quot; &amp;  oSheet.GetCellByPosition(1 ,I ).CellStyle
+				goto prossima &apos; passa alla riga dopo
+			else 
+				iRI=I
+				Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche sopra&quot; &amp; s_R OR  _
+						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot;  &amp; s_R OR  _
+						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot;  &amp; s_R OR  _
+						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp sotto Bianche&quot;  &amp; s_R &apos; &apos; prima avevo OR
+				&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
+				&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
+						if oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R  then
+							iRIs = I
+							Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R 
+							&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug
+							&apos;	print &apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )).CellStyle&apos;debug
+								I = I + 1 &apos;genni
+							loop
+							if iRIs &gt; I-1 then
+									ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
+									beep
+									oCRA.EndRow = iRIs
+									msgbox &quot;1 Da queste parti lo stile delle righe non sembra ordinato! &quot; &amp; I-1 &amp; CHR$(10)_
+											&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;	
+								else
+									oCRA.EndRow = I-1	
+							end if
+							oCRA.Sheet =iSheet
+							oCRA.StartColumn = 	4
+							oCRA.StartRow = iRIs
+							oCRA.EndColumn =  9
+							oSheet.group(oCRA,1,1)
+							oSheet.showLevel(iLivelliVisibili-1,1)
+							&apos;oSheet.hideDetail(oCRA)
+						end if
+						I=I+1
+				loop
+				&apos;print &quot;michiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;
+				if iRI &gt; I-1 then
+						ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
+						beep
+						oCRA.EndRow = iRi
+						msgbox &quot;In questo punto lo stile delle righe non sembra ordinato! &quot;&amp; CHR$(10)_
+								&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;	
+					else
+						oCRA.EndRow = I-1	
+				end if
+				oCRA.Sheet =iSheet
+				oCRA.StartColumn = 	5
+				oCRA.StartRow = iRI
+				oCRA.EndColumn =  5
+				&apos;oCRA.EndRow = I-1
+				oSheet.group(oCRA,1)
+			&apos;	oSheet.hideDetail(oCRA)
+				oSheet.showLevel(iLivelliVisibili-1,1)
+			&apos;	oSheet.showLevel(1,1)
+
+				I = I+1 
+		end if
+		prossima:
+	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
+	&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
+	&apos;	if i = 10 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
+		&apos;	Ripristina_statusLine
+			sTxt = &quot;Sto creando le strutture e sono alla riga &quot; &amp; i
+		&apos;	Barra_Apri_Chiudi_5( stxt, 50)
+	&apos;	end if
+		goto salta_debug
+
+		Ripristina_statusLine
+		Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/5*100/lLastUrowNN)
+		if i &gt;= lLastUrowNN / 4 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
+			Ripristina_statusLine
+			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*100/lLastUrowNN)
+		end if
+		if i &gt;= lLastUrowNN/4*2 then &apos;and i &lt;= lLastUrowNN/4*2 + 1 then
+			Ripristina_statusLine
+			Barra_Apri_Chiudi_5(sTxt , lLastUrowNN/4*2*100/lLastUrowNN)
+		end if
+		if i &gt;= lLastUrowNN/4*3 then &apos;and i &lt;= lLastUrowNN/4*3 + 1 then
+			Ripristina_statusLine
+			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*3*100/lLastUrowNN)
+		end if
+
+		salta_debug:
+next I
+
+	oCRA.Sheet =iSheet
+	oCRA.StartColumn = 	4
+	oCRA.StartRow = 1
+	oCRA.EndColumn =  8
+	oCRA.EndRow = 100
+	oSheet.group(oCRA,0)
+	Ripristina_statusLine
+	&apos;ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,281).string = NOW &apos;debug
+end sub
+SUB Accoda_Marche(livelli as long,  lrow as long) &apos; Questa non credo sia utilizzata... ma per il momento rimane
+&apos;print &quot;Dovrebbe esere disattivata... (Sub Accoda_Marche)&quot;
+&apos;exit sub
+	
+  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ 
+  oCell = oSheet.GetCellByPosition( 2, lrow-1 )   
+ &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
+  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+  dim iIncMan as double
+  
+  	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+	end if
+
+    sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+    sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+   &apos; print sIncMan
+ 
+	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+				else
+			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+	end if
+	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+&apos;	print sAlfaNum0
+	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+&apos;	print sAlfaNum1
+	lAlfa0 = Len (sAlfaNum0)
+	oCell = oSheet.GetCellByPosition( 2, lrow )
+	lAlfaA = Len(oCell.string)
+	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
+  
+  &apos;	print lAlfa0
+&apos;	print lAlfaA
+&apos;print livelli
+	Select Case livelli
+
+	Case  1 
+	
+	msgbox &quot;il livello in questo caso deve essere impostato a 2&quot;
+	exit sub
+	&apos;	lAlfaA = Len(sAlfaNum1)
+	&apos;	Do while lAlfa0 = lAlfaA 
+	&apos;			lrow = lrow-1
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+				&apos;lAlfaA = Len( oCell.string)
+	&apos;			sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;			print &quot;AAA&quot;		
+	&apos;	loop 
+	&apos;	lrow = lrow+1
+	&apos;	sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+
+	Case 2 &apos; per Marche
+print lrow
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 2, lrow).string
+print sAlfac1
+&apos;print oSheet.GetCellByPosition( 2, lrow+1).string
+&apos;print oSheet.GetCellByPosition( 2, lrow).string
+			if oSheet.GetCellByPosition( 6, lrow-1).string = &quot;&quot; AND _
+			 	 sAlfac1 &lt;&gt; oSheet.GetCellByPosition( 2, lrow-1).string	then &apos;oSheet.GetCellByPosition( 2, lrow).string then
+		&apos;	print &quot;diretto&quot;
+				goto voce_completa
+			end if 
+			Do while sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
+				if oSheet.GetCellByPosition( 6, lrow).string = &quot;&quot; then
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					print sDescr1
+					goto voce_completa
+				end if 
+				lrow = lrow-1	
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 2, lrow))&apos;debug	
+				print &quot;proseguo&quot;
+			loop 
+			print lrow &amp; &quot;  in uscita&quot;
+		&apos;	lrow = lrow +1
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+	print 	sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
+		&apos;	print &quot;MI&quot;
+					goto voce_completa
+			end if
+			goto voce_completa
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfa0 = lAlfaA
+			lAlfaA = Len( oCell.string)
+	
+			Do while lAlfaA = lAlfa0 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+
+			loop
+			IF lAlfaA &gt; lAlfa0 then
+		&apos;		goto voce_completa
+			end if
+			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+	Case 3 &apos;
+	&apos;	msgbox &quot;il livello in questo caso deve essere impostato a 2&quot;
+	&apos;	exit sub
+&apos;	print &quot;sono in tip 3&quot;
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaA = Len( oCell.string)
+			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+
+			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+				lrow = lrow-1
+				oCell = oSheet.GetCellByPosition( 2, lrow )
+				lAlfaA = Len( oCell.string)
+				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+			&apos;	print sAlfac1
+			loop 
+			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+&apos;	print &quot;1   &quot; &amp; sDescr1
+			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
+	
+					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					goto voce_completa
+			end if
+			
+&apos;		PRINT &quot;SECONDO&quot;
+			&apos;lrow = lrow+1 
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+	&apos;	print &quot;dove&quot;	
+		&apos;	lAlfa1 = lAlfaA
+			lAlfa1 =  Len( oCell.string)
+			lrow = lrow-1
+			oCell = oSheet.GetCellByPosition( 2, lrow )
+			lAlfaB = Len( oCell.string)
+			IF lAlfaB &gt; lAlfa1 then
+			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
+					Do while lAlfaB &gt;= lAlfa1
+						lrow = lrow-1
+						oCell = oSheet.GetCellByPosition( 2, lrow )
+						lAlfaB = Len( oCell.string)
+					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;3c&quot;
+					loop
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+				else
+				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
+				&apos;		print &quot;Altern&quot;
+					sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+			end if
+		
+			IF lAlfaA &gt; lAlfa0 then
+			
+		&apos;&apos;		goto voce_completa
+			end if
+		&apos;	sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	print &quot;2   &quot; &amp; sDescr2			
+			oCell = oSheet.GetCellByPosition( 0, 0 )
+	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+
+
+	End select
+	 
+
+	voce_completa:
+
+	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
+	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
+		sDescr2 = &quot;&quot;  &apos;
+	end if
+	If sDescr0 = sDescr1 then
+		sDescr1 = &quot;&quot;
+	end if	
+	
+	oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
+
+&apos; tutti i dati sono adesso stivati nelle variabili procedo a ripulire e incollare
+	oSheet = oSheetTemp
+	Thiscomponent.currentcontroller.setactivesheet(oSheet)
+
+
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oRange = oSheet.getCellRangeByPosition (1,2,7,2)
+  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
+&apos;print sCategoria
+	if sCategoria &lt;&gt; &quot;&quot; then
+&apos;		oSheet.getCellByPosition(5,5).string = sCategoria 
+	end if
+
+	SCompleta1 = sAlfaNum0
+&apos;	oSheet.getCellByPosition(1,2).string = SCompleta1
+
+	if Len( sDescr3) &lt;&gt; 0  then
+		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	end if
+	if Len( sDescr2) &lt;&gt; 0 then
+		 sDescr2 =  sDescr2  &amp;  CHR(13)
+	end if
+	if Len( sDescr1) &lt;&gt; 0 then
+		 sDescr1 =  sDescr1  &amp;  CHR(13)
+	end if
+	
+	&apos; introdotto con TV
+	&apos; azioni diverse per TV e T3
+&apos;	print oSheet.getCellByPosition(5,1).string
+	if oSheet.getCellByPosition(5,1).string = &quot;incid. manodopera&quot;  or _
+		oSheet.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
+			if sIncMan&lt;&gt; 0 then
+				oSheet.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
+			end if		
+&apos;PRINT &quot;DDDDD&quot;&apos;
+&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheet.getCellByPosition(6,2).formula = SCompleta5
+		Else
+	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			oSheet.getCellByPosition(5,2).formula = SCompleta5
+	end if
+	
+	if oSheet.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then
+		if sSicur &lt;&gt; 0 then 
+			oSheet.getCellByPosition(7,2).value = sSicur
+		end if
+	end if
+	
+	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
+ 	oSheet.getCellByPosition(2,2).string=SCompleta2
+
+	SCompleta3 = sUM
+	oSheet.getCellByPosition(3,2).string=SCompleta3 
+
+	SCompleta4 = Prezzo
+	oSheet.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	&apos; il prezzo DEVE essere un numero VERO (non stringa)
+
+    oCell=oSheet.getCellByPosition(2,2) 
+ &apos;   ThisComponent.CurrentController.Select(oCell)
+ &apos;   Adatta_Altezza_riga 	
+    sQualeCella = &quot;$C$3&quot;
+    Seleziona_Cella (sQualeCella)
+       Adatta_Altezza_riga 	
+ &apos;   pRINT &quot;ACCODA NORMAL&quot;
+end sub
+</script:module>

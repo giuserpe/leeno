@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                           
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -96,7 +96,7 @@ Sub Scelta_Viste____() &apos;nuova versione universale
     	sAttributo &lt;&gt; &quot;Tipo_CONTABILITA&quot; and _
     	sAttributo &lt;&gt; &quot;Tipo_Analisi&quot; and _
     	sAttributo &lt;&gt; &quot;TFiltroTMP&quot; and _
-    	sAttributo &lt;&gt; &quot;Tipo_EP&quot; Then
+    	sAttributo &lt;&gt; &quot;Tipo_ElencoP&quot; Then
          	msgbox &quot;1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
 		 			&amp; &quot;&quot;
 		 	exit sub
@@ -124,7 +124,7 @@ Sub Scelta_Viste____() &apos;nuova versione universale
 			oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.Dialogviste_N) &apos; Inizializza il dialogo
 			oDialogScenari_2.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 	
 			
-		case &quot;Tipo_EP&quot;
+		case &quot;Tipo_ElencoP&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_EP = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
 			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
@@ -788,7 +788,7 @@ sub Incidenza_manod_toggle &apos; accendi spegni incidenza manodopera su COMPUTO
 			oSpalte2.isVisible = TRUE
 	&apos;		oSpalte2 = oSheet.getColumns().getByName(&quot;AP&quot;) 
 	&apos;		oSpalte2.isVisible = TRUE
-			oSheet.getColumns().getByName(&quot;AP&quot;).isVisible = TRUE
+			oSheet.getColumns().getByName(&quot;AP&quot;).isVisible = false
 
 
 		  else
@@ -864,11 +864,6 @@ Sub fissa(lColFix as long, lrowFix  as long, optional lcol as long, optional lro
 
 	&apos; spostarsi un poll position prima del &quot;fissa&quot;
 	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))
-&apos;	lrow= Range2Cell(1)
-&apos;	if lrow = -1 then		 
-&apos;			exit sub
-&apos;	end if
-
 	ThisComponent.CurrentController().freezeAtPosition(lcolFix,lrowFix)
 	ThisComponent.CurrentController.Select(oPos)
 end sub
@@ -968,6 +963,8 @@ SUB Mostra_Tutto
 &apos;print &quot;quesrto?&quot;
 oSheetD = ThisComponent.currentController.activeSheet
 oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),10,).Columns.IsVisible=true
+oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),getLastUsedRow(oSheetD),).Rows.IsVisible=true
+
 
 END SUB
 

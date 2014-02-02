@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gestione_Var" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                           
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -21,8 +21,9 @@ sub salva_il_template &apos; per la pubblicazione del Template
 &apos;versione presa dalla 4.xxx e un po&apos; adattata
 &apos; compila in automatico i campi e le info
 
-	sPassw = InputBox (&quot; Per evitare di fare casino questa è una macro che dovrebbe eseguire solo Bart!&quot;&amp; CHR$(10)_
-					&amp; &quot;             inserisci la password...&quot;&amp; CHR$(10)_
+	sPassw = InputBox (&quot;Per evitare di fare casino questa è una macro che&quot;&amp; CHR$(10)_
+						&amp; &quot;che dovrebbe eseguire solo giuSerpe!&quot;&amp; CHR$(10)_
+						&amp; &quot;Inserisci la password...&quot;&amp; CHR$(10)_
    							&amp; &quot; &quot;,&quot;          Generazione di una nuova versione del template&quot;, &quot; &quot;)&apos; &amp; CHR$(10) 
    	If sPassw = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
    			exit sub		

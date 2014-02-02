@@ -1,80 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="18" dlg:id="DialogViste_A2" dlg:left="237" dlg:top="99" dlg:width="220" dlg:height="216" dlg:help-text="Questo Dialogo appare" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, VISTE ed azioni sul foglio COMPUTO (in fase di Contabilità )">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="DialogViste_A2" dlg:left="237" dlg:top="99" dlg:width="220" dlg:height="219" dlg:help-text="Questo Dialogo appare" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, VISTE ed azioni sul foglio COMPUTO (in fase di Contabilità )">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="1" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="2" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="3" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="4" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="5" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="6" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="7" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="8" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="9" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="10" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="11" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="12" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="13" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="14" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="15" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="16" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="17" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="18" dlg:background-color="0xffbebd"/>
+  <dlg:style dlg:style-id="1" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="2" dlg:background-color="0xc0c0c0" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0xffbebd"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="5" dlg:top="13" dlg:width="93" dlg:height="13" dlg:help-text="Mostra TUTTE le colone" dlg:value="Apri tutto">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="5" dlg:top="10" dlg:width="100" dlg:height="20" dlg:help-text="Mostra TUTTE le colone" dlg:value="Apri tutto">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Mostra_Tutto?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="141" dlg:top="11" dlg:width="65" dlg:height="13" dlg:help-text="Imposta lo scenario per una perizia di Variante" dlg:value="Perizia di Variante">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="115" dlg:top="10" dlg:width="100" dlg:height="20" dlg:help-text="Imposta lo scenario per una perizia di Variante" dlg:value="Perizia di Variante">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Perizia_toggle?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton3" dlg:tab-index="2" dlg:left="110" dlg:top="32" dlg:width="96" dlg:height="17" dlg:help-text="Scenario base Semplificato per il Computo" dlg:value="Computo Terra_Terra">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="2" dlg:left="115" dlg:top="40" dlg:width="100" dlg:height="20" dlg:help-text="Scenario base Semplificato per il Computo" dlg:value="Computo Terra_Terra">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Computo_Normale_terra_terra?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="5" dlg:top="31" dlg:width="93" dlg:height="18" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="Computo Normale">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="-103" dlg:top="74" dlg:width="100" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="Computo Normale">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Computo_Normale_b?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="3" dlg:top="104" dlg:width="94" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione Corta on/off">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="5" dlg:top="70" dlg:width="100" dlg:height="20" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione Corta on/off">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton6" dlg:tab-index="5" dlg:left="3" dlg:top="58" dlg:width="95" dlg:height="14" dlg:help-text="Apri TUTTI i Sommari del Registro di Contabilità" dlg:value="Apri tutti i Sommari" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="5" dlg:left="-99" dlg:top="55" dlg:width="95" dlg:height="14" dlg:help-text="Apri TUTTI i Sommari del Registro di Contabilità" dlg:value="Apri tutti i Sommari" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Sommario_da_dialog?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton7" dlg:tab-index="6" dlg:left="2" dlg:top="163" dlg:width="94" dlg:height="17" dlg:help-text="Mette in struttura" dlg:value="metti in struttura (ctrl +)">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton7" dlg:tab-index="6" dlg:left="5" dlg:top="160" dlg:width="100" dlg:height="20" dlg:help-text="Mette in struttura" dlg:value="metti in struttura (ctrl +)">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton8" dlg:tab-index="7" dlg:left="110" dlg:top="163" dlg:width="96" dlg:height="17" dlg:help-text="Togli la strutturazione" dlg:value="Togli struttura (Ctrl -)">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton8" dlg:tab-index="7" dlg:left="115" dlg:top="160" dlg:width="100" dlg:height="20" dlg:help-text="Togli la strutturazione" dlg:value="Togli struttura (Ctrl -)">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="8" dlg:id="CommandButton9" dlg:tab-index="8" dlg:left="3" dlg:top="122" dlg:width="94" dlg:height="14" dlg:help-text="Mostra/Nasconde le colonne dei Tag" dlg:value="TAG on/off">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton9" dlg:tab-index="8" dlg:left="5" dlg:top="100" dlg:width="100" dlg:height="20" dlg:help-text="Mostra/Nasconde le colonne dei Tag" dlg:value="TAG on/off">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.TAG_toggle?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="9" dlg:id="CommandButton10" dlg:tab-index="9" dlg:left="110" dlg:top="143" dlg:width="96" dlg:height="14" dlg:help-text="Mostra/nasconde le colonne relative alla Manodopera" dlg:value="Gestione Manodopera on/off" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton10" dlg:tab-index="9" dlg:left="115" dlg:top="130" dlg:width="100" dlg:height="20" dlg:help-text="Mostra/nasconde le colonne relative alla Manodopera" dlg:value="Gestione Manodopera on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Incidenza_manod_toggle?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="10" dlg:id="CommandButton11" dlg:tab-index="10" dlg:left="112" dlg:top="58" dlg:width="96" dlg:height="14" dlg:help-text="Apri uno SPECIFICO Sommario del Registro di Contabilità" dlg:value="Apri Sommario Specifico" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton11" dlg:tab-index="10" dlg:left="230" dlg:top="55" dlg:width="96" dlg:height="14" dlg:help-text="Apri uno SPECIFICO Sommario del Registro di Contabilità" dlg:value="Apri Sommario Specifico" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Sommario_specifico?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="11" dlg:id="CommandButton12" dlg:tab-index="11" dlg:left="112" dlg:top="122" dlg:width="95" dlg:height="14" dlg:help-text="Mostra/Nasconde i dettagli di misura delle quantità" dlg:value="Dettagli Quantità on/off" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton12" dlg:tab-index="11" dlg:left="115" dlg:top="100" dlg:width="100" dlg:height="20" dlg:help-text="Mostra/Nasconde i dettagli di misura delle quantità" dlg:value="Dettagli Quantità on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Det_quantita_toggle?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="12" dlg:id="CommandButton13" dlg:tab-index="12" dlg:left="3" dlg:top="83" dlg:width="93" dlg:height="14" dlg:value="Importi Computo on/off" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton13" dlg:tab-index="12" dlg:left="5" dlg:top="40" dlg:width="100" dlg:height="20" dlg:value="Importi Computo on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Importi_Computo_su_Computo?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="13" dlg:id="CommandButton14" dlg:tab-index="13" dlg:left="5" dlg:top="188" dlg:width="99" dlg:height="21" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton14" dlg:tab-index="13" dlg:left="5" dlg:top="190" dlg:width="210" dlg:height="20" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="14" dlg:id="CommandButton15" dlg:tab-index="14" dlg:left="112" dlg:top="102" dlg:width="95" dlg:height="14" dlg:help-text="Visualizza la colonna delle figure/annotazioni" dlg:value="Figure/Annotazioni on/off">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton15" dlg:tab-index="14" dlg:left="115" dlg:top="70" dlg:width="100" dlg:height="20" dlg:help-text="Visualizza la colonna delle figure/annotazioni" dlg:value="Figure/Annotazioni on/off">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.figure_annotazioni_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="15" dlg:id="CommandButton16" dlg:tab-index="15" dlg:left="112" dlg:top="83" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne dei SubTot dei Capitoli e Sottocapitoli" dlg:value="Colonne Cap e sottoCap on/off">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton16" dlg:tab-index="15" dlg:left="228" dlg:top="29" dlg:width="100" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne dei SubTot dei Capitoli e Sottocapitoli" dlg:value="Colonne Cap e sottoCap on/off">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Col_Cap_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="16" dlg:id="CommandButton17" dlg:tab-index="16" dlg:left="104" dlg:top="188" dlg:width="104" dlg:height="21" dlg:help-text="Pui chiudere anche con ESC " dlg:default="true" dlg:value="CHIUDI questa Finestra" dlg:multiline="true">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton17" dlg:tab-index="16" dlg:left="236" dlg:top="187" dlg:width="100" dlg:height="20" dlg:help-text="Pui chiudere anche con ESC " dlg:default="true" dlg:value="CHIUDI questa Finestra" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="17" dlg:id="CommandButton18" dlg:tab-index="17" dlg:left="3" dlg:top="143" dlg:width="94" dlg:height="14" dlg:help-text="Mostra/nasconde le colonne relative alla Manodopera" dlg:tabstop="false" dlg:value="Gestione sicurezza on/off" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton18" dlg:tab-index="17" dlg:left="5" dlg:top="130" dlg:width="100" dlg:height="20" dlg:help-text="Mostra/nasconde le colonne relative alla Manodopera" dlg:tabstop="false" dlg:value="Gestione sicurezza on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Computo_Sicur?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

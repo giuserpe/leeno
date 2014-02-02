@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Strutture" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                       
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                       
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -148,8 +148,8 @@ Sub Inser_Capitolo
 		&apos;	lrow= Range2Cell  	
 		
 
-			sTesto = InputBox (&quot;   (Scrivi il Titolo del Capitolo o della categoria)...&quot;&amp; CHR$(10)_
-   							&amp; &quot; &quot;,&quot;          Inserimento Capitolo&quot;, &quot;CAPITOLO ??&quot;)&apos; &amp; CHR$(10) 
+			sTesto = InputBox (&quot;   (Scrivi il titolo della Categoria)...&quot;&amp; CHR$(10)_
+   							&amp; &quot; &quot;,&quot;          Inserimento Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
    			If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
    				exit sub		
    			end if	
@@ -215,7 +215,7 @@ Sub Inser_Capitolo
 				If lrowAlT &gt; 1 then
 						lrowAlT = lrowAlT-1
 					else
-						MSGBOX &quot;1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CAPITOLO A CUI RIFERIRMI...&quot;
+						MSGBOX &quot;1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CATEGORIA A CUI RIFERIRMI...&quot;
 						 iCapitolo = 1
 					exit do
 				end if
@@ -224,9 +224,9 @@ Sub Inser_Capitolo
 			iCapitoloProposta =	oSheet.GetCellByPosition(31 , lrowAlT).value
 			iCapitoloProposta = iCapitoloProposta + 1
 			print iCapitoloProposta
-			sTesto2 = InputBox (&quot;   (Scrivi il Numero del Capitolo)...&quot; &amp;  CHR$(10) &amp; CHR$(10)_
-							&amp; &quot;Gli altri Capitoli non saranno rinumerati, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
-   						&amp; &quot; &quot;,&quot;          Numerazione Manuale Capitolo&quot;, iCapitoloProposta)&apos; &amp; CHR$(10) 
+			sTesto2 = InputBox (&quot;   (Scrivi il Numero della Categoria)...&quot; &amp;  CHR$(10) &amp; CHR$(10)_
+							&amp; &quot;Le altre Categorie non saranno rinumerate, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
+   						&amp; &quot; &quot;,&quot;          Numerazione Manuale Categorie&quot;, iCapitoloProposta)&apos; &amp; CHR$(10) 
    			If sTesto2 = &quot;&quot; then &apos; se si preme annulla Inputbox restituisce una stringa vuota
    				exit sub		
  			end if
@@ -494,8 +494,8 @@ Sub Inser_SottoCapitolo
 		if	oSheet.GetCellbyPosition( 5, lrow-1).cellstyle = &quot;Comp TOTALI&quot; then
 			lrow = lrow - 1
 		end if
-		sTesto = InputBox (&quot;11   (Scrivi il Titolo del SottoCapitolo (o della SottoCategoria)...&quot;&amp; CHR$(10)_
-   					&amp; &quot; &quot;,&quot;          Inserimento SottoCapitolo&quot;, &quot;SottoCapitolo ??&quot;)&apos; &amp; CHR$(10) 
+		sTesto = InputBox (&quot;11   (Scrivi il Titolo della SottoCategoria)...&quot;&amp; CHR$(10)_
+   					&amp; &quot; &quot;,&quot;          Inserimento SottoCategoria&quot;, &quot;SottoCategoria ??&quot;)&apos; &amp; CHR$(10) 
    
    		If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
    				exit sub		
@@ -529,9 +529,9 @@ Sub Inser_SottoCapitolo
 
 	  	ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1, lRow+1))
 
-		sTesto2 = InputBox (&quot;   (Scrivi il Numero del SottCapitolo)...&quot; &amp;  CHR$(10) &amp; CHR$(10)_
-							&amp; &quot;Gli altri Sottocapitoli non saranno rinumerati, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
-   						&amp; &quot; &quot;,&quot;          Numerazione MANUALE SottoCap&quot;, &quot;Numero ??&quot;)&apos; &amp; CHR$(10) 
+		sTesto2 = InputBox (&quot;   (Scrivi il Numero del SottoCategoria)...&quot; &amp;  CHR$(10) &amp; CHR$(10)_
+							&amp; &quot;Le altre SottoCategorie non saranno rinumerate, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
+   						&amp; &quot; &quot;,&quot;          Numerazione MANUALE SottoCat&quot;, &quot;Numero ??&quot;)&apos; &amp; CHR$(10) 
    			If sTesto2 = &quot;&quot; then &apos; se si preme annulla Inputbox restituisce una stringa vuota
    				exit sub		
  			end if
@@ -542,7 +542,7 @@ Sub Inser_SottoCapitolo
 			If lrowAlT &gt; 1 then
 						lrowAlT = lrowAlT-1
 					else
-				MSGBOX &quot;1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CAPITOLO A CUI RIFERIRMI...&quot;
+				MSGBOX &quot;1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CATEGORIA A CUI RIFERIRMI...&quot;
 				 iCapitolo = 1
 					exit do
 			end if
@@ -551,9 +551,9 @@ Sub Inser_SottoCapitolo
 		dim iCapitoloProposta as long
 		iCapitoloProposta = SCapitoloProposta
 		iCapitoloProposta = iCapitoloProposta + 1
-		sTesto2 = InputBox (&quot;   (Scrivi il Numero del Capitolo)...&quot; &amp;  CHR$(10) &amp; CHR$(10)_
-							&amp; &quot;Gli altri Capitoli non saranno rinumerati, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
-   						&amp; &quot; &quot;,&quot;          Numerazione Manuale Capitolo&quot;, iCapitoloProposta)&apos; &amp; CHR$(10) 
+		sTesto2 = InputBox (&quot;   (Scrivi il Numero della Categoria)...&quot; &amp;  CHR$(10) &amp; CHR$(10)_
+							&amp; &quot;Le altre Categorie non saranno rinumerate, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
+   						&amp; &quot; &quot;,&quot;          Numerazione Manuale Categorie&quot;, iCapitoloProposta)&apos; &amp; CHR$(10) 
    			If sTesto2 = &quot;&quot; then &apos; se si preme annulla Inputbox restituisce una stringa vuota
    				exit sub		
  			end if
@@ -643,7 +643,7 @@ dim icapitolo
 			If lrowProvv &gt; 1 then
 						lrowProvv = lrowProvv-1
 					else
-				MSGBOX &quot;1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CAPITOLO A CUI RIFERIRMI...&quot;
+				MSGBOX &quot;1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CATEGORIA A CUI RIFERIRMI...&quot;
 				 iCapitolo = 1
 					exit do
 			end if
@@ -710,13 +710,13 @@ Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto i
 	For i = 3 To lRowE 
 		if oSheet1.GetCellByPosition(40 , i).CellStyle =  &quot;Livello-1-scritta mini val&quot; then
 			Barra_chiudi_sempre_4
-			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali di Capitolo....&quot;, 70)
+			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali di Categoria....&quot;, 70)
 			SubSum_Cap (i)
 		end if
 		if oSheet1.GetCellByPosition(39 , i).CellStyle =  &quot;livello2 valuta mini&quot; or _
 			oSheet1.GetCellByPosition(39 , i).CellStyle =  &quot;livello2 valuta&quot; then
 			Barra_chiudi_sempre_4
-			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali dei SottoCap.....&quot;, 80)
+			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali dei SottoCat.....&quot;, 80)
 			SubSum_SottoCap (i)
 		end if
 	next i
@@ -759,24 +759,37 @@ Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 	&apos;importo lavori
 &apos;	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU-1 &amp; &quot;)&quot; rigabart
 	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot;
-	oSheet.GetCellByPosition(40 , lrowStart1).Formula = sFormula
-	
-		&apos;importo manodopera
+	REM RINUNCIO ALL&apos;USO DELLA COLONNA AP
+&apos;	oSheet.GetCellByPosition(40 , lrowStart1).Formula = sFormula
+	&apos;IMPORTO
+	oSheet.GetCellByPosition(18 , lrowStart1).Formula = sFormula
+	oSheet.GetCellByPosition(18 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini val&quot;
+	&apos;INCIDENZA MANODOPERA
+	sFormula = &quot;=AE&quot; &amp; lrowStart1+1 &amp; &quot;/S&quot; &amp;lrowStart1+1
+	oSheet.GetCellByPosition(29 , lrowStart1).Formula = sFormula
+	oSheet.GetCellByPosition(29 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini %&quot;
+	&apos;IMPORTO MANODOPERA
+	sFormula = &quot;=SUBTOTAL(9;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:AE&quot; &amp; lRowU &amp; &quot;)&quot; &apos;totale per categoria
+	oSheet.GetCellByPosition(30 , lrowStart1).Formula = sFormula
+	oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini val&quot;
+	&apos;importo manodopera
 	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;AE&quot; &amp; lRowU-1 &amp; &quot;)&quot;
 	oSheet.GetCellByPosition(41 , lrowStart1).Formula = sFormula
 
 	&apos; sceglie se scrivere i subtotali sulla riga o cancellarli
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1 then 
-		sScritta =&quot;=CONCATENATE(&quot;&quot;( SUBT &quot;&quot;;&quot; &amp; &quot;DOLLAR(AO&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot; &amp; &quot; &quot;&quot; )&quot;&quot; &quot; &amp; &quot;)&quot;
-	&apos;	sScritta =&quot;=CONCATENATE(&quot;&quot;SubT &quot;&quot;;&quot; &amp; &quot;DOLLAR(AO&quot; &amp; lrowStart1+1 &amp; &quot;;2)&quot; &amp; &quot;)&quot; 
-		oSheet.GetCellByPosition(9 , lrowStart1).formula = sScritta
-		oSheet.GetCellByPosition(9 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini&quot;
-		oSheet.GetCellByPosition(18 , lrowStart1).string = &quot;&quot;
+		&apos;sScritta =&quot;=CONCATENATE(&quot;&quot;(subT &quot;&quot;;&quot; &amp; &quot;DOLLAR(AO&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot; &amp; &quot; &quot;&quot;)&quot;&quot; &quot; &amp; &quot;)&quot;
+		sScritta =&quot;=CONCATENATE(&quot;&quot; &quot;&quot;;&quot; &amp; &quot;DOLLAR(AO&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot;  &amp; &quot;)&quot; &apos; senza parentesi
+
+		&apos;oSheet.GetCellByPosition(9 , lrowStart1).formula = sScritta
+		&apos;oSheet.GetCellByPosition(9 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini&quot;
+		&apos;oSheet.GetCellByPosition(18 , lrowStart1).string = &quot;&quot;
 		
-		&apos;manodopera
-		sScritta =&quot;=CONCATENATE(&quot;&quot;(SUBT &quot;&quot;;&quot; &amp; &quot;DOLLAR(AP&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot; &amp; &quot; &quot;&quot;)&quot;&quot; &quot; &amp; &quot;)&quot;
-		oSheet.GetCellByPosition(30 , lrowStart1).formula = sScritta		
-		oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;Livello-1-scritta miniP&quot;		
+		&apos;manodopera REM 	questa non si riesce a nascondere nelle colonne chiuse
+		&apos;sScritta =&quot;=CONCATENATE(&quot;&quot;(subT &quot;&quot;;&quot; &amp; &quot;DOLLAR(AP&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot; &amp; &quot; &quot;&quot;)&quot;&quot; &quot; &amp; &quot;)&quot;
+		&apos;manodopera REM 	questa mi sembra fuori posto
+		&apos;oSheet.GetCellByPosition(30 , lrowStart1).formula = sScritta		
+		&apos;oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;Livello-1-scritta miniP&quot;		
 	end if	
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 0 then 
 		oSheet.GetCellByPosition(9 , lrowStart1).string = &quot;&quot;
@@ -821,10 +834,19 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 		end if
 		
 	next i
-	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;S&quot; &amp; lRowU-1 &amp; &quot;)&quot; &apos;rigabart
-	sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot;
-	oSheet.GetCellByPosition(39 , lrowStart1).Formula = sFormula
-	
+	&apos;sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;S&quot; &amp; lRowU-1 &amp; &quot;)&quot; &apos;rigabart
+	&apos;IMPORTO
+	sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot; &apos;totale per categoria
+	oSheet.GetCellByPosition(18 , lrowStart1).Formula = sFormula
+	oSheet.GetCellByPosition(18 , lrowStart1).CellStyle = &quot;livello2 scritta mini&quot;
+	&apos;INCIDENZA MANODOPERA
+	sFormula = &quot;=AE&quot; &amp; lrowStart1+1 &amp; &quot;/S&quot; &amp;lrowStart1+1
+	oSheet.GetCellByPosition(29 , lrowStart1).Formula = sFormula
+	oSheet.GetCellByPosition(29 , lrowStart1).CellStyle = &quot;livello2 valuta mini %&quot;
+	&apos;MANODOPERA
+	sFormula = &quot;=SUBTOTAL(9;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:AE&quot; &amp; lRowU &amp; &quot;)&quot; &apos;totale per categoria
+	oSheet.GetCellByPosition(30 , lrowStart1).Formula = sFormula
+	oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;livello2 valuta mini&quot;
 		&apos;importo manodopera in col AP
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 1 then 
 			sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;AE&quot; &amp; lRowU-1 &amp; &quot;)&quot;
@@ -836,13 +858,12 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 	end if
 	
 	&apos; sceglie se scrivere i subtotali sulla riga o cancellarli
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1 then 
-		sScritta =&quot;=CONCATENATE(&quot;&quot;( subt &quot;&quot;;&quot; &amp; &quot;DOLLAR(AN&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot; &amp; &quot; &quot;&quot; )&quot;&quot; &quot; &amp; &quot;)&quot;
-	&apos;	sScritta =&quot;=CONCATENATE(&quot;&quot;subT &quot;&quot;;&quot; &amp; &quot;DOLLAR(AN&quot; &amp; lrowStart1+1 &amp; &quot;;2)&quot; &amp; &quot;)&quot; &apos; senza parentesi
-		oSheet.GetCellByPosition(9 , lrowStart1).formula = sScritta
-		oSheet.GetCellByPosition(9 , lrowStart1).CellStyle = &quot;livello2 scritta mini&quot;
-		oSheet.GetCellByPosition(18 , lrowStart1).string = &quot;&quot;
-	end if	
+rem disattivo perché inutile - TOTALE € SULLA COLONNA QUANTITA&apos;
+&apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1 then 
+&apos;		sScritta =&quot;=CONCATENATE(&quot;&quot; &quot;&quot;;&quot; &amp; &quot;DOLLAR(AN&quot; &amp; lrowStart1+1 &amp; &quot;;2);)&quot; &apos; senza parentesi
+&apos;		oSheet.GetCellByPosition(9 , lrowStart1).formula = sScritta
+&apos;		oSheet.GetCellByPosition(9 , lrowStart1).CellStyle = &quot;livello2 scritta mini&quot;
+&apos;	end if	
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 0 then 
 		oSheet.GetCellByPosition(9 , lrowStart1).string = &quot;&quot;
 	end if	
@@ -1083,24 +1104,20 @@ end sub
 
 Sub Struttura   &apos;&apos;
 	&apos;_____________________
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	&apos;_____________________
 
 	sAttributo = Trova_Attr_Sheet
 	Select case sAttributo 
-	
 		Case &quot;Tipo_computo&quot;
 			Struttura_ComputoM
 			exit sub
-			
 		Case &quot;Tipo_CONTABILITA&quot;
 			Struttura_ComputoM
-			
 			exit sub
 		Case &quot;Tipo_Analisi&quot;
 			Struttura_Analisi
 			exit sub
-			
 	End select
 	msgbox &quot;Questa macro non lavora su questa tipologia di  tabella!&quot;&amp; CHR(10)_
 				&amp; &quot;Eseguila su una tabella di tipo COMPUTO o di Tipo Analisi!&quot;
@@ -1159,9 +1176,9 @@ End sub
 Sub Togli_Struttura ()
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Verifica_chiudi_preview
+&apos;	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	&apos;_____________________
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	&apos;_____________________
 
 
@@ -1375,11 +1392,23 @@ next I
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,281).string = NOW &apos;debug
 end sub
 
-
-sub Struttura_ComputoM &apos;__errore &apos; sul computo (mod &gt;)
+sub rir_
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+	lLastUrow = getLastUsedRow(oSheet)
+	&apos;print lLastUrow
+		conta_a = 0
+	for i = 1 to lLastUrow
+		IF oSheet.GetCellByPosition(1 , I).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; then
+						oSheet.getRows().getByindex(I).isvisible = False
+		end if
+	next
+	Barra_chiudi_sempre_4
+&apos;	fine:
+end sub
+sub Struttura_ComputoM REM COPIA DI Struttura_ComputoM CHE RAGGRUPPA
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; per evitare che duplichi la struttura
 	 Togli_Struttura
-	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	Ripristina_statusLine
 	Barra_Apri_Chiudi_5(&quot;1  Sto creando le strutture... Pazienta...&quot;, 10)
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
@@ -1501,8 +1530,11 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 							oCRA.Sheet =iSheet
 							oCRA.StartColumn = 	4
 							oCRA.StartRow = iRIs
+						&apos;	PRINT IRIS
 							oCRA.EndColumn =  9
 							oSheet.group(oCRA,1,1)
+						&apos;	XRAY oSheet
+							oSheet.getRows().getByindex(i).isvisible = False
 							&apos; magari provare autoOutline qui in locale (sarà + veloce?)
 							oSheet.showLevel(iLivelliVisibili-1,1)
 						&apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition (4, iRIs, 9, I-1 )) &apos;debug &apos;elisabetta
@@ -1530,7 +1562,6 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 			&apos;	oSheet.hideDetail(oCRA)
 				oSheet.showLevel(iLivelliVisibili-1,1)
 			&apos;	oSheet.showLevel(1,1)
-
 				I = I+1 
 		end if
 		prossima:
@@ -1568,184 +1599,13 @@ next I
 	oCRA.EndColumn =  8
 	oCRA.EndRow = 100
 	oSheet.group(oCRA,0)
+	oSheet.showLevel(0,0)
+
 	Ripristina_statusLine
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,281).string = NOW &apos;debug
 end sub
 
-sub Struttura_ComputoCONT &apos;PROVA  PROVA per il foglio contabilita  NON USATA
-print &quot;questo&quot;  
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; per evitare che duplichi la struttura
-	 Togli_Struttura
-	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	Ripristina_statusLine
-	Barra_Apri_Chiudi_5(&quot;1C  Sto creando le strutture... Pazienta...&quot;, 10)
-	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
-	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
-   	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
-		s_R = &quot;&quot;
-	end if
-	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-		s_R = &quot;_R&quot;
-	end if		
-	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
-				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
-				s_R = &quot;_R&quot;	
-	end if	
 
-	
-	lStartRow = oSheet.GetCellByPosition( 0 , 0)
-&apos;	lLastUrowNN = getLastUsedRow(oSheet)
-	
-	sString$ = &quot;Fine Computo&quot;
-	
-	oEnd=uFindString(sString$, oSheet) 
-	If isNull (oEnd) or isEmpty (oEnd)  then 
-						lLastUrowNN = getLastUsedRow(oSheet)-1
-					else
-						lLastUrowNN=oEnd.RangeAddress.EndRow -1
-	end if
-	IF lLastUrowNN	&gt;= 600 and lLastUrowNN	&lt;= 1000 then
-		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo! &quot; &amp; CHR$(10)_
-		 	&amp; &quot;   (alcuni minuti...)  &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot;         PROSEGUO ?... &quot; &amp; CHR$(10) _
-   			&amp;  CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
-   			exit sub
-    	end if
-	end if
-	IF lLastUrowNN	&gt; 1001 then
-		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo! &quot; &amp; CHR$(10)_
-			&amp; &quot;   ( Parecchi  minuti...)  &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot;         PROSEGUO ?... &quot; &amp; CHR$(10) _
-   			&amp;  CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
-   			exit sub
-    	end if
-	end if
-	&apos;lLastUrowNN=oEnd.RangeAddress.EndRow-1
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,280).string = NOW &apos;debug
-	Ripristina_statusLine
-	Barra_Apri_Chiudi_5(&quot;2  Sto creando le strutture... Pazienta...&quot;, 15)
-	iLivelliVisibili = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value 
-	if iLivelliVisibili=0 then &apos;per avere comunque un valore di default nel caso il riferimento sia vuoto
-			iLivelliVisibili = 2
-	end if
-For I = 3  to lLastUrowNN
-Dim oCRA As New com.sun.star.table.CellRangeAddress
-	iRiga = i
-&apos;	do while oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Livello-1-scritta&quot; &amp; s_R
-			
-		&apos;		print left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) &apos;debug
-		&apos; se è dentro una intestazione di capito o sottoCap
-		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp Start Attributo_R&quot; &amp; s_R or _
-		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Livello-1-scritta&quot; &amp; s_R or _
-		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-1-sotto_&quot; &amp; s_R  or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 valuta&quot;  &amp; s_R   or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-2-sotto_&quot;  &amp; s_R   or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 sopra&quot;  &amp; s_R  or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Default&quot;  or _
-			 	left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) = &quot;Reg-SAL&quot; then	 &apos;questa per usare stile gerarchico
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-	&apos;	print &quot;cap &quot; &amp;  oSheet.GetCellByPosition(1 ,I ).CellStyle
-				goto prossima &apos; passa alla riga dopo
-			else 
-				iRI=I
-				Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche sopra&quot; &amp; s_R OR  _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot;  &amp; s_R OR  _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot;  &amp; s_R OR  _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp sotto Bianche&quot;  &amp; s_R &apos; &apos; prima avevo OR
-				&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-				&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
-						if oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R  then
-							iRIs = I
-							Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R 
-							&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug
-							&apos;	print &apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )).CellStyle&apos;debug
-								I = I + 1 &apos;genni
-							loop
-							if iRIs &gt; I-1 then
-									ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
-									beep
-									oCRA.EndRow = iRIs
-									msgbox &quot;1 Da queste parti lo stile delle righe non sembra ordinato! &quot; &amp; I-1 &amp; CHR$(10)_
-											&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;	
-								else
-									oCRA.EndRow = I-1	
-							end if
-							oCRA.Sheet =iSheet
-							oCRA.StartColumn = 	4
-							oCRA.StartRow = iRIs
-							oCRA.EndColumn =  9
-							oSheet.group(oCRA,1,1)
-							oSheet.showLevel(iLivelliVisibili-1,1)
-							&apos;oSheet.hideDetail(oCRA)
-						end if
-						I=I+1
-				loop
-				&apos;print &quot;michiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa&quot;
-				if iRI &gt; I-1 then
-						ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
-						beep
-						oCRA.EndRow = iRi
-						msgbox &quot;In questo punto lo stile delle righe non sembra ordinato! &quot;&amp; CHR$(10)_
-								&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;	
-					else
-						oCRA.EndRow = I-1	
-				end if
-				oCRA.Sheet =iSheet
-				oCRA.StartColumn = 	5
-				oCRA.StartRow = iRI
-				oCRA.EndColumn =  5
-				&apos;oCRA.EndRow = I-1
-				oSheet.group(oCRA,1)
-			&apos;	oSheet.hideDetail(oCRA)
-				oSheet.showLevel(iLivelliVisibili-1,1)
-			&apos;	oSheet.showLevel(1,1)
-
-				I = I+1 
-		end if
-		prossima:
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-	&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
-	&apos;	if i = 10 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
-		&apos;	Ripristina_statusLine
-			sTxt = &quot;Sto creando le strutture e sono alla riga &quot; &amp; i
-		&apos;	Barra_Apri_Chiudi_5( stxt, 50)
-	&apos;	end if
-		goto salta_debug
-
-		Ripristina_statusLine
-		Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/5*100/lLastUrowNN)
-		if i &gt;= lLastUrowNN / 4 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*100/lLastUrowNN)
-		end if
-		if i &gt;= lLastUrowNN/4*2 then &apos;and i &lt;= lLastUrowNN/4*2 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt , lLastUrowNN/4*2*100/lLastUrowNN)
-		end if
-		if i &gt;= lLastUrowNN/4*3 then &apos;and i &lt;= lLastUrowNN/4*3 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*3*100/lLastUrowNN)
-		end if
-
-		salta_debug:
-next I
-
-	oCRA.Sheet =iSheet
-	oCRA.StartColumn = 	4
-	oCRA.StartRow = 1
-	oCRA.EndColumn =  8
-	oCRA.EndRow = 100
-	oSheet.group(oCRA,0)
-	Ripristina_statusLine
-	&apos;ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,281).string = NOW &apos;debug
-end sub
 
 
 
@@ -1764,7 +1624,7 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
 
 	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
 	sAttributo = Trova_Attr_Sheet
-    If sAttributo = &quot;Tipo_EP&quot; Then	&apos;Tipo_EP
+    If sAttributo = &quot;Tipo_ElencoP&quot; Then	&apos;Tipo_EP
       			Tronca_Altezza_Voci_EP
       			exit sub
     end if
@@ -2063,7 +1923,7 @@ SUB SubTot_in_mezzo &apos;rifa la somma  &apos;riporta i subTotali (fa solo un l
 	lSotCap = 1
 	For i = 2  to lLastUrowNN 
 		if	oSheet.GetCellByPosition(1 , (i)).CellStyle = &quot;Livello-1-scritta&quot; then &apos; link a subTot CAP
-			sformula =  &quot;=CONCATENATE(&quot;&quot;(subtotale &quot;&quot;;TEXT(AO&quot; &amp; i+1 &amp; &quot;;&quot; &amp; _
+			sformula =  &quot;=CONCATENATE(&quot;&quot;(SUBTOTAL &quot;&quot;;TEXT(AO&quot; &amp; i+1 &amp; &quot;;&quot; &amp; _
 						 &quot;&quot;&quot;[$€-410] #.##0,00;-[$€-410] #.##0,00&quot;&quot;&quot; &amp; &quot;);&quot;&quot;&quot; &amp; &quot;)&quot;&quot;&quot; &amp; &quot;)&quot;
 			oSheet.GetCellByPosition(9 , (i)).setformula(sformula)
 			oSheet.GetCellByPosition(9 , (i)).CellStyle = &quot;Livello-1-subT&quot;
@@ -2075,7 +1935,7 @@ SUB SubTot_in_mezzo &apos;rifa la somma  &apos;riporta i subTotali (fa solo un l
 
 		end if
 		if	oSheet.GetCellByPosition(2 , (i)).CellStyle = &quot;livello2_&quot; then &apos; link a subTot sottoCAP
-			sformula =  &quot;=CONCATENATE(&quot;&quot;(subtotale &quot;&quot;;TEXT(AN&quot; &amp; i+1 &amp; &quot;;&quot; &amp; _
+			sformula =  &quot;=CONCATENATE(&quot;&quot;(SUBTOTAL &quot;&quot;;TEXT(AN&quot; &amp; i+1 &amp; &quot;;&quot; &amp; _
 						 &quot;&quot;&quot;[$€-410] #.##0,00;-[$€-410] #.##0,00&quot;&quot;&quot; &amp; &quot;);&quot;&quot;&quot; &amp; &quot;)&quot;&quot;&quot; &amp; &quot;)&quot;
 			oSheet.GetCellByPosition(9 , (i)).formula = sformula
 			oSheet.GetCellByPosition(9 , (i)).CellStyle = &quot;Livello-2-subT&quot;

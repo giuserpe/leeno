@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_0" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                         
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                         
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -544,6 +544,7 @@ Sub Pulisci_Colonne_tag  &apos;elimina tutti i tag da EP e dalle Analisi
 	lrow=1 
 	
 	lcolbase = Colonna_giusta_EP (oSheet)
+
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase
 				exit sub
@@ -551,7 +552,8 @@ Sub Pulisci_Colonne_tag  &apos;elimina tutti i tag da EP e dalle Analisi
  		
 	
 	ocell = oSheet.GetCellByPosition( lcolbase + 9 ,lrow)
-	lUltimaRiga = getLastUsedRow(oSheetAnalisi)	
+&apos;	lUltimaRiga = getLastUsedRow(oSheetAnalisi)
+	lUltimaRiga = getLastUsedRow(oSheet)	
 	oMioRange = oSheet.getCellRangeByPosition (lcolbase+9,lrow,lcolbase+9,lUltimaRiga)
 	oMioRange.ClearContents(iCellAttr)
 	oMioRange.CellStyle = &quot;EP-sfondo&quot;

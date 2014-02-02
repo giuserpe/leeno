@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Finale" script:language="StarBasic">
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                             
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                             
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -845,7 +845,7 @@ Select Case sAttributo
 		Visualizza_PageBreak
 		Impagina_Analisi_N
 	&apos;	Visualizza_PageBreak
-	Case &quot;Tipo_EP&quot; 
+	Case &quot;Tipo_ElencoP&quot; 
 		msgbox &quot;Questo sembra essere un Elenco prezzi, e non serve una impagninazione automatica dei salti pagina...&quot;
 		exit sub
 	Case &quot;&quot;
@@ -873,7 +873,6 @@ dim lrow as long
 dim I as long
 dim lrowS as long
 	oSheet = ThisComponent.currentController.activeSheet
-
 	&apos; controllo e avvertimento riguardo all&apos;opportunità di lavorare su una tabella base (originale)
 	sSheetName= ThisComponent.currentcontroller.activesheet.name
 	If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
@@ -961,7 +960,8 @@ dim lrowS as long
 			else 
 				If sScelta = 6 then &apos;se SI
 						lrow = 5
-						oSheet.removeAllManualPageBreaks	
+						oSheet.removeAllManualPageBreaks
+					&apos;print &quot;,,,,&quot;	
 					else
 						lrow=lrowStart
 				end if
@@ -1374,7 +1374,7 @@ SUB Set_solo_Righe_ripet
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
 
-	  Case &quot;Tipo_EP&quot; 
+	  Case &quot;Tipo_ElencoP&quot; 
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe	
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1404,18 +1404,19 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	Visualizza_PageBreak	
-	if isMissing(sSMS) then
-		if msgbox ( &quot;Ridefinisco in automatico l&apos;area di stampa?&quot; &amp; CHR$(10)&amp; CHR$(10)_
-		 	  	&amp;&quot;         (La potrai comunque riaggiustare poi a mano...)&quot; &amp; CHR$(10)_
-				&amp;&quot;?&quot; &amp; CHR$(10)_
-			        	&amp; &quot;&quot; &amp; CHR$(10)_
-						&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-		
-				sMessaggio = &quot;NO_messaggio&quot;
-			else
-				exit sub
-		end if
-	end if
+REM RIMUOVO IL MESSAGGIO DI RICHIESTA
+&apos;	if isMissing(sSMS) then
+&apos;		if msgbox ( &quot;Ridefinisco in automatico l&apos;area di stampa?&quot; &amp; CHR$(10)&amp; CHR$(10)_
+&apos;		 	  	&amp;&quot;         (La potrai comunque riaggiustare poi a mano...)&quot; &amp; CHR$(10)_
+&apos;				&amp;&quot;?&quot; &amp; CHR$(10)_
+&apos;			        	&amp; &quot;&quot; &amp; CHR$(10)_
+&apos;						&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
+&apos;		
+&apos;				sMessaggio = &quot;NO_messaggio&quot;
+&apos;			else
+&apos;				exit sub
+&apos;		end if
+&apos;	end if
 
  
 	&apos;--------------------------------------------------
@@ -1513,7 +1514,14 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 &apos;		Impagina_N REM TANTO è DA FARE
 	  Case &quot;Tipo_CONTABILITA&quot;
-		lLastUrow = getLastUsedRow(oSheet)
+	  	sString$ = &quot;Fine Computo&quot;
+		oEnd=uFindString(sString$, oSheet)	
+		If isNull (oEnd) or isEmpty (oEnd) 		then
+				msgbox &quot; ERRORE!  Probabilemente manca la riga rossa di chiusura&quot;
+				exit sub
+		end if
+		lLastUrow=oEnd.CellAddress.Row 	
+	&apos;	lLastUrow = getLastUsedRow(oSheet)
 		if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
 				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
 				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
@@ -1605,7 +1613,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 			&amp; &quot;devi controllare la Largezza della pagina... lavorando sulla larghezza delle colonne...&quot;&amp; CHR$(10)_
 			&amp;&quot;In ogni caso - usando lo stilista - puoi lavorare anche sullo stile pagina...&quot;
 	end if		
-	If sAttributo = &quot;Tipo_EP&quot; Then 
+	If sAttributo = &quot;Tipo_ElencoP&quot; Then 
 		Visualizza_normale&apos;Dal momento che Elenco_Prezzi non ha bisogno di passare per Impagina_bis una volta 
 		&apos;selezionate le aree di stampa si toglie il PageBreak	
 	 
@@ -1951,10 +1959,10 @@ end sub
 
 
 SUB annota_num_pag_libretto
-
 	&apos;_____________________
 	chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	&apos;_____________________
+	togli_salti_pagina
 	
 	sSheetName = ThisComponent.currentcontroller.activesheet.name
 	&apos;controlla se è tabella originale COMPUTO... perché è in quella e solo in
@@ -1964,7 +1972,6 @@ SUB annota_num_pag_libretto
 			        	&amp; &quot; ... Annullo....&quot; 
 		 exit sub
  	end if
- 	
  		&apos;controlla se è impostata a &quot;Libretto qui&quot;
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0  then
 		msgbox &quot;Questa contabilità è impostata  per un &quot;&quot;Libretto&quot;&quot; Cartaceo!&quot; &amp; CHR$(10)_
@@ -1972,27 +1979,24 @@ SUB annota_num_pag_libretto
 			&amp; &quot;Consulta la guida al capitolo: Libretto delle Misure&quot;
 		exit sub
 	end if
-	
- 	
-	Visualizza_PageBreak
- 	if msgbox (&quot;L&apos;area di stampa è impostata corretamente?&quot; &amp; CHR$(10)_
-			        	&amp; &quot; (se rispondi NO tento di individuarla ed interrompendo poi la macro per controlli e agiustamenti manuali! )&quot; &amp; CHR$(10)_
-						&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-			else
-			Set_Area_Stampa_N 
-			msgbox &quot;Ho definito l&apos;area di stampa un po&apos; a capocchia...&quot; &amp; CHR$(10)_
-					&amp; &quot;E&apos; quindi necessario un controllo visivo, sopratutto per verificare se la larghezza è adeguata!&quot;  &amp; CHR$(10)_
-					&amp; &quot;Quindi interrompo la macro per le verifiche e gli aggiustamenti...&quot;  &amp; CHR$(10)_
-					&amp; &quot;quando sei soddisfatto ripeti questa macro!&quot;
-				exit sub
- 		end if	
-
+&apos;	Visualizza_PageBreak
+	REM L&apos;AREA DI STAMPA *DEVE* ESSERE GIA&apos; PRONTA
+ 	&apos;if msgbox (&quot;L&apos;area di stampa è impostata corretamente?&quot; &amp; CHR$(10)_
+	&apos;		        	&amp; &quot; (se rispondi NO tento di individuarla ed interrompendo poi la macro per controlli e agiustamenti manuali! )&quot; &amp; CHR$(10)_
+	&apos;					&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
+	&apos;		else
+	&apos;		Set_Area_Stampa_N 
+	&apos;		msgbox &quot;Ho definito l&apos;area di stampa un po&apos; a caso...&quot; &amp; CHR$(10)_
+	&apos;				&amp; &quot;E&apos; quindi necessario un controllo visivo, sopratutto per verificare se la larghezza è adeguata!&quot;  &amp; CHR$(10)_
+	&apos;				&amp; &quot;Quindi interrompo la macro per le verifiche e gli aggiustamenti...&quot;  &amp; CHR$(10)_
+	&apos;				&amp; &quot;quando sei soddisfatto ripeti questa macro!&quot;
+	&apos;			exit sub
+ 	&apos;	end if	
 	dim lLastUrow as long
 	dim lrow as long
 	dim I as long
 	dim lrowS as long
 	oSheet = ThisComponent.currentController.activeSheet
-
 	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd)  then
@@ -2003,32 +2007,29 @@ SUB annota_num_pag_libretto
 		else
 			lLastUrow =oEnd.CellAddress.Row 
 	end if 
-	
 	lrowFine = lLastUrow
-
 &apos;	lrowStart= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale la selezione 
 &apos;	if lrowStart = -1 then		 
 &apos;		exit sub
 &apos;	end if
 &apos;	lrow=lrowStart
-
 &apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
 	&apos;lLastUrow = lRowFine	
 	For I = 3 To lLastUrow Step 1
 		iContatore = 1	
 		&apos;oCell = oSheet.GetCellByPosition( 0 , lrow)
-
 		if I &gt;= lLastUrow then
 			&apos;		print &quot;Caso 1&quot;
 			goto Vai_alla_fine_di_tutto
 			exit for
 		end if
-		if oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak = true then
-			oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak=False &apos;rimuovilo
-		end if 
-		if  oSheet.GetCellByPosition( 0 , I).rows.IsStartOfNewPage = True then 
-			iContatore = iContatore+1
-		&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , i)) &apos;debug
+	&apos;	if oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak = true then
+	&apos;		oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak=False &apos;rimuovilo
+	&apos;	end if 
+		if  oSheet.GetCellByPosition( 0 , I).rows.IsStartOfNewPage = True then
+&apos;			iContatore = iContatore+1
+
+			&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , i)) &apos;debug
 			if I &gt; lLastUrow then
 				goto Vai_alla_fine_di_tutto
 			end if
@@ -2037,28 +2038,22 @@ SUB annota_num_pag_libretto
 					&apos;	print &quot;Caso 3&quot;
 		 		Exit For
 		 	end if
-		 
-		 	
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			oRangeVoce =  Circoscrive_Voce_Computo_Att ( I)
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 			lrowS = oRangeVoce.RangeAddress.StartRow
 			lrowE = oRangeVoce.RangeAddress.EndRow
-			lrowU =lrowS-2
-			
+&apos;			lrowU =lrowS-2
 			oCell_k = oSheet.GetCellByPosition(0, lrowS)
-		
 			lrow = lrowS-1
-
 			if I &gt; lLastUrow then
 				goto Vai_alla_fine_di_tutto
 				exit for
 			end if
 			lrowS = lrowS+1
-
-			oCell_k.rows.IsStartOfNewPage = &quot;true&quot;	
+		&apos;	oCell_k.rows.IsStartOfNewPage = &quot;true&quot;	
 				&apos;	ThisComponent.CurrentController.Select(oCell_k)
-				&apos;	print &quot;1 &quot; &amp; oCell_k.CellAddress.row
+		&apos;		print &quot;1 &quot; &amp; oCell_k.CellAddress.row
 
 			lrow = lrowE&apos;-1
 			if I &gt;= lLastUrow then
@@ -2098,7 +2093,7 @@ SUB annota_num_pag_libretto
 			&apos; notazione &quot;impropria: libretto e registro sono sulla stessa tab..
 			&apos; in realta&apos; compila solo la &quot;giusta&quot; colonna della tab CONTABILITA
 	msgbox &quot;Ho scritto i numeri del libretto nella colonna del Registro di Contabilità!&quot;
-
+Apri_Registro_Standard
 END SUB
 
 
@@ -2120,6 +2115,7 @@ sub num_pag_libretto &apos;annota sul registro i num di pagina del libretto
 		end if
 		IF oSheet.GetCellByPosition( 0  , i).cellstyle = &quot;Comp End Attributo_R&quot; then
 			oSheet.GetCellByPosition( 20  , i).value = inumPag
+		&apos;	oSheet.GetCellByPosition( 19  , i).string = &quot;1&quot;
 		end if
 	next
 	&apos;print &quot;finito&quot;
@@ -2160,5 +2156,8 @@ Sub AddPageNumber  &apos; esempio trovato in rete... anche questo funziona...
       oSheet.getCellByPosition(iCol_PageNumber, iCurrentRow).Value = iPageNumber 
    Next iCurrentRow
 End Sub
-
+sub togli_salti_pagina
+	oSheet = ThisComponent.currentController.activeSheet
+	oSheet.removeAllManualPageBreaks
+end sub
 </script:module>

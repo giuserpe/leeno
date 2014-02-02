@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                          
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                          
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -48,7 +48,6 @@ END SUB
 
 SUB Pesca_cod   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
 &apos;	print &quot;globals &quot; &amp;  sGVV &amp; &quot;-&quot; &amp; sGorigine &amp; &quot;-&quot; &amp; sGDove
-
 	Select case ThisComponent.currentcontroller.activesheet.name
 	
 		Case &quot;CONTABILITA&quot;
@@ -56,13 +55,18 @@ SUB Pesca_cod   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
 			lrow = range2cell &apos;cerca_partenza
 
 			if 	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(44, lrow).string = &quot;&quot; and _
-					ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1, lrow).cellstyle= &quot;comp Art-EP_R&quot; then	
+					ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1, lrow).cellstyle= &quot;comp Art-EP_R&quot; then
+				PRINT &quot;VAI1&quot;
+			&apos;		PRINT 	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(44, lrow).string
+			&apos;		PRINT ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1, lrow).cellstyle
 					sGDove = &quot;Elenco Prezzi&quot;
 			 		sGVV = &quot;va&quot;	
 					sGorigine = &quot;CONTABILITA&quot;	
 					cerca_partenza
 					&apos;porta su EP ????
+				PRINT &quot;VAI2&quot;
 					Pesca_cod_1
+				PRINT &quot;VAI3&quot;		
 					exit sub
 				else
 					sGDove = &quot;COMPUTO&quot;
@@ -315,11 +319,13 @@ dim oCell as object
 		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
 	end if     
 	if ThisComponent.currentcontroller.activesheet.name = &quot;Analisi di Prezzo&quot; then
-		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 4, lrow ) 
+		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
 	end if  
 
 &apos;2) focus su EP
+
 	Sel_Elenco_Prezzi
+	PRINT&quot;VAS1&quot;
 &apos;3) fine macro: adesso tocca all&apos;utente cercare il suo codice...
 	&apos;(alla fine dovrà rieseguire la SC)
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value &gt; 0 or _
@@ -396,7 +402,7 @@ SUB Pesca_cod_2
 	end if
 	if oSheet.name = &quot;Analisi di Prezzo&quot; then
 &apos;	print &quot;eccoci&quot;
-		if oSheet.GetCellByPosition( 4, lrow).cellstyle &lt;&gt; &quot;An-lavoraz-Cod&quot; then
+		if oSheet.GetCellByPosition( 0, lrow).cellstyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; then
 			sTitolo = &quot;Click sulla cella di destinazione del Codice  (ESC per Annullare, NO Click su X ) &quot; 
  	 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  	 		if SelectedRange = &quot;&quot; or _
@@ -405,7 +411,7 @@ SUB Pesca_cod_2
  	 			exit sub
  			 end if
 			lrow = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
-			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 4, lrow)
+			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow)
 		end if
 		oPartenza.SetString(sCodice)
 		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 3, lrow)	

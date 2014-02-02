@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_2" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.8.63                                                                                                                                                                                                                                                                                                                                                           
+&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -70,12 +70,13 @@ sub Apri_Sommario
 end sub
 
 Sub fixme
-	  	fissa(47,3, 1,4)
-	  &apos;	fissa(4,3)
-	&apos;  	ThisComponent.CurrentController().freezeAtPosition(47,3)
+	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
+		ThisComponent.CurrentController().freezeAtPosition(0,2)
+	end if
+&apos;		
 end sub
 
-sub Apri_Registro_Standard 
+sub Apri_Registro_Standard
 	dim Tabella1 as string
 	dim Config1 as string
 	Tabella1 = &quot;CONTABILITA&quot;
@@ -94,32 +95,30 @@ sub Apri_Registro_Standard
 	for i = 2 to iLastRow &apos; nasconde le righe di chiusura sal
 		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
 				oSheet.getRows().getByindex(i).isvisible = False
-			&apos;	if i &gt;= iRow_PosIniz then 
-			&apos;		iConta = iConta+1  &apos;conta le righe che sta chiudendo dall&apos;inizio fino alla pos corrente
-			&apos;	end if
 		end if
 	next
 &apos;	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 ,lrowStart )
 &apos;print &quot;ecco&quot;
 	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
 	
-	ThisComponent.CurrentController().freezeAtPosition(47,3)
-&apos;	fissa(47,3, 1,lrowStart)
- &apos;	fissa(2,49, 2,lrowStart)
-
-
-	If (oSheet.GetCellByPosition( 17, 1).string)&lt;&gt;&quot;&quot; then
-			oSheet.getColumns().getByindex(17).isVisible = true
-		else
+	ThisComponent.CurrentController().freezeAtPosition(47,2)
+&apos;nascondi la colonna SICUREZZA
 			oSheet.getColumns().getByindex(17).isVisible = false	
-	end if
-
-	&apos; riporta il cursore sulla posizione di partenza
+&apos; riporta il cursore sulla posizione di partenza
 &apos;	ThisComponent.CurrentController.Select( oPos )
-
 	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 ,iRow_PosIniz)  &apos; + iConta)
 	&apos; toglie la selezione 
-&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 			
+&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+Tronca_Altezza_Voci
+RIR_
+&apos;togli_salti_pagina
+			sString$ = &quot;T O T A L E&quot;
+			oEnd=uFindString(sString$, oSheet)
+			iEndRow=oEnd.RangeAddress.EndRow
+	REM SAL PROGRESSIVO sul T O T A L E
+	sFormulaSomma =&quot;=ROUND(SUBTOTAL(9;Z3&quot; &amp; &quot;:Z&quot; &amp; iEndRow+1 &amp; &quot;);2)&quot;
+	oSheet.GetCellByPosition(25,iEndRow).FORMULA = sFormulaSomma
+
 end sub
 
 
@@ -171,10 +170,10 @@ sub Imposta_libretto_Cart
 			end if
 		next			
 		&apos;chiedo ulteriore conferma
-		if msgbox (&quot;Sei proprio certo di voler di voler impostare la modalità Tradizionale di tenuta del Libretto delle Misure su questo foglio di Contabilità?&quot; &amp; CHR$(10)_
-				&amp; &quot; (Ti ricordo che i numeri di pagina esistenti saranno sovrascritti!&quot; &amp; CHR$(10)_
-						&amp; &quot; Sei certo di questo? (Magari cosulta la guida al capitolo: Libretto delle Misure)&quot; &amp; CHR$(10)_
-						&amp; &quot;               Proseguo ??&quot; &amp; CHR$(10)_
+		if msgbox (&quot;Sei proprio certo di voler impostare la modalità Tradizionale di tenuta del Libretto delle Misure su questo foglio di Contabilità?&quot; &amp; CHR$(10)_
+				&amp; &quot;Ti ricordo che i numeri di pagina esistenti saranno sovrascritti!&quot; &amp; CHR$(10)_
+						&amp; &quot;Sei certo di questo? (Magari cosulta la guida al capitolo: Libretto delle Misure)&quot; &amp; CHR$(10)_
+						&amp; &quot;Proseguo ?&quot; &amp; CHR$(10)_
 						&amp; &quot;&quot; ,291, &quot;&quot;) &lt;&gt; 6 then
 						sMsg = &quot;interrompo&quot;
 				end if
@@ -202,8 +201,10 @@ end sub
 sub Apri_libretto_misure &apos; e imposta la modalità Libretto Elettronico
 	dim Tabella1 as string
 	dim Config1 as string
+	togli_struttura
+&apos;	togli_salti_pagina
 	&apos;_____________________
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	oPos = ThisComponent.getCurrentSelection()	
 	&apos; ambaradan che controlla la modalità di tenuta del libretto delle Misure
@@ -277,7 +278,14 @@ sub Apri_libretto_misure &apos; e imposta la modalità Libretto Elettronico
 		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
 				oSheet.getRows().getByindex(i).isvisible = False
 		end if
+		if  (oSheet.GetCellByPosition(2 , (i)).CellStyle)= &quot;Comp TOTALI&quot; then
+				oSheet.getRows().getByindex(i).isvisible = False
+		end if
 	next
+		&apos;	if msgbox ( &quot;Annoto Num. d&apos;ordine e Pag. del Libretto&quot; &amp; CHR$(10)_
+		&apos;	&amp; &quot;sul registro di contabilità?&quot; ,36, &quot;&quot;) = 7 then
+		&apos;	annota_num_pag_libretto
+		&apos;	end if
 end sub
 
 sub Reg_Sal_No_COL &apos; nome poco significativo... cosa c&apos;entra la Col?
@@ -299,13 +307,14 @@ sub Reg_Sal_No_COL &apos; nome poco significativo... cosa c&apos;entra la Col?
 	
 	iLastRow = getLastUsedRow(oSheet)
 	for i=2 to iLastRow &apos; Visualizza le righe di chiusura sal           
-		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
+		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; OR _
+		oSheet.GetCellByPosition(2 , (i)).CellStyle= &quot;Comp TOTALI&quot;	then
 				oSheet.getRows().getByindex(i).isvisible = True
 		end if
 	next
-	for i = 11 to 17
+&apos;	for i = 11 to 17
 &apos;		oSheet.getColumns().getByIndex (i).isVisible = false
-	next
+&apos;	next
 	
 	&apos; riporta il cursore sulla posizione di partenza
 &apos;	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 ,lrowStart )

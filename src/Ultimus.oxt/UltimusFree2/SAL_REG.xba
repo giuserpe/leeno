@@ -139,7 +139,7 @@ Sub Chiudi_SAL_Principale
 		&apos;print oSheet.GetCellByPosition( 0 , i).cellstyle
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Reg-SAL-chiudi_N&quot; then
 			sNumSalT = right(left(oSheet.GetCellByPosition( 2, i).string, 18),2)
-			print &quot;nums &quot; &amp; sNumSalT
+		&apos;	print &quot;nums &quot; &amp; sNumSalT
 			iNumSalT = sNumSalT
 
 			exit for

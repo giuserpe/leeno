@@ -18,10 +18,11 @@
 
 
 Sub Tagga_VociPrezzo_non_usate () 
-	tag_usata_on_off  &apos;
+&apos;	tag_usata_on_off  &apos;
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Tagga_VociPrezzo_non_usate_linkato &apos;ho spostato la macro main in Pulizia_1 per questioni di ordine
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	EliminaVociTaggate_EP_0
 end sub
 
 

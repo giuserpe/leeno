@@ -1443,16 +1443,6 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 		selArea(0).StartRow = 0
 		sNomePart = Left (ThisComponent.currentcontroller.activesheet.name,5)
 		
-		&apos; questo forse da eliminare....
-		goto 	salta
- 		If oSheet.GetCellbyPosition( 0, 46 ).string = &quot;Figure e annotazioni&quot; or _
- 		sNomePart = &quot;Regis&quot; then
- 					selArea(0).EndColumn = 46 &apos;34
- 				else
- 					selArea(0).EndColumn = 41 &apos;34
- 		
- 		end if
-		salta:	
 	&apos;		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 	&apos;	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
 	&apos;			right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
@@ -1463,7 +1453,7 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	
 
 &apos;		selArea(0).EndRow = lLastUrow
-		selArea(0).EndRow = lRowE-1
+		selArea(0).EndRow = lRowE
 	
 		oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)

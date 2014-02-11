@@ -60,7 +60,6 @@ Sub sicurezza_Analisi_on_off &apos; chiude le col della manodopera su Analisi
 	ThisComponent.CurrentController.Select( oPos )
 End Sub
 
-
 Sub tag_usata_on_off
 
 	If  Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet  &lt;&gt; &quot;Tipo_ElencoP&quot; Then 

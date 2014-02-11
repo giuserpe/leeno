@@ -504,7 +504,7 @@ SUB Nuova_Voce_Computo_Att  &apos;
 &apos;--------------------------------------------
 	oDpage = oSheet.DrawPage
  	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
-		&apos;	xray oform
+	&apos;		xray oform
  	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
 		 &apos;	xray oCtrlModel.Enabled
 		&apos; msgbox oCtrlModel.Enabled
@@ -533,11 +533,11 @@ SUB Nuova_Voce_Computo_Att  &apos;
 		exit sub
 	end if 
 	lrowFine=oEnd.RangeAddress.EndRow
-	
+
 	if lrow &lt; 3 then
 		lrow = 3
 	end if 
-
+	REM stabilisce la miglior posizione di inserimento
 	If Constrolla_se_M1 = true then
 		if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 0 then
 			goto inserisci_voce
@@ -677,13 +677,13 @@ SUB Nuova_Voce_Computo_Att  &apos;
 			lrow = nCurRow +1
 			goto Inserisci_voce
 	end if				
-
+ 	inserisci_voce:
 &apos;print &quot;9&quot;
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	lRow = Mettiti_esattamente_tra_due_VociC_Att (lRow)
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  &apos;	print lrow 
- 	inserisci_voce:
+
 
  	&apos;++++++++++++++++++++++++++++++++++++++	
 
@@ -930,7 +930,7 @@ salta:
 			lrow = iEnd + 1
 	end if
 &apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
-&apos;print &quot;1 -  &quot; &amp; lrow
+&apos; print &quot;1 -  &quot; &amp; lrow
 	&apos; verifico che dove inserisco ci sia una riga vuota
 	if oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot; then 
 &apos;		print &quot;&apos; se non c&apos;è la metto&quot;
@@ -948,36 +948,29 @@ salta:
 &apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
 &apos;		print &quot;2 -  &quot; &amp; lrow		
 		
-		oSheet.getRows.insertByIndex(lrow+1, 1) 
+rem		oSheet.getRows.insertByIndex(lrow+1, 1) 
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
 	&apos;	print &quot;3 -  &quot; &amp; lrow
 
-		oCellN = oSheet.GetCellbyPosition( 0, lrow+1)
-		oCelleN= oCellN.getCellAddress()
-		oSheetO = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-		oRangeO =  osheetO.getCellRangeByPosition (45,41,54,41 )
-		oRangeO = oRangeO.RangeAddress
-		oSheet.copyRange(oCelleN,oRangeO)
+rem		oCellN = oSheet.GetCellbyPosition( 0, lrow+1)
+rem		oCelleN= oCellN.getCellAddress()
+rem		oSheetO = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+rem		oRangeO =  osheetO.getCellRangeByPosition (45,41,54,41 )
+rem		oRangeO = oRangeO.RangeAddress
+rem		oSheet.copyRange(oCelleN,oRangeO)
 		&apos;ritaro lrow
-		lrow = lrow +1
+rem		lrow = lrow +1
 	end if
 	inserisci:
-&apos;print &quot;1,2&quot;
-&apos;	lrowNum= 7 &apos; numero di righe da inserire per una nuova Analisi
-
-&apos;	 oSheet.getRows.insertByIndex(lrow, 7) &apos;7 è ilnumero di righe da inserire per una nuova Analisi
- 	 oSheet.getRows.insertByIndex(lrow, 26) &apos;rigagiuserpe INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
-
+	oSheet.getRows.insertByIndex(lrow, 27) &apos;rigagiuserpe INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
 	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
-	
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
 	&apos; ritarato la posizione di inserimento
-
 	&apos; eventualmente rifa il nome di area
 	&apos;if isNull (ThisComponent.NamedRanges.blocco_analisi.ReferredCells) then
-	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
-		rifa_nomearea (&quot;S1&quot;, &quot;$AT$42:$BC$48&quot; , &quot;blocco_analisi&quot;)
-	end if
+&apos;	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
+&apos;		rifa_nomearea (&quot;S1&quot;, &quot;$AT$42:$BC$48&quot; , &quot;blocco_analisi&quot;)
+&apos;	end if
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S1
 	oDoc = ThisComponent
@@ -996,14 +989,14 @@ salta:
 
 &apos;+++++++++++ Queste invece paiono togliere il focus dal pulsante... (come un flipper...)
 	ThisComponent.CurrentController.Select(ThisComponent.CurrentController.getActiveSheet.getCellByPosition(0 , 0))
-	oAreaR = Osheet.GetCellByPosition( 0 , lrow +1)
+	oAreaR = Osheet.GetCellByPosition( 0 , lrow +2)
   	Thiscomponent.currentcontroller.select(oAreaR)
 &apos;+++++++++++++++++++++++++++ ma si rimane comunque incastrati nella cella selezionata
 &apos; ovvero solo con enter o tab non si esce... (occorre usare il mouse)
 	&apos; ma aggiungendo questo viene tolta la selezione...
    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; togle la selezione
-	oContr.setFirstVisibleRow(lrowFine)
+	oContr.setFirstVisibleRow(lrow)
  	exit sub
 errore:
 oCtrlModel.Enabled = True

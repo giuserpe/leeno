@@ -325,7 +325,7 @@ dim oCell as object
 &apos;2) focus su EP
 
 	Sel_Elenco_Prezzi
-	PRINT&quot;VAS1&quot;
+&apos;	PRINT&quot;VAS1&quot;
 &apos;3) fine macro: adesso tocca all&apos;utente cercare il suo codice...
 	&apos;(alla fine dovrà rieseguire la SC)
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value &gt; 0 or _

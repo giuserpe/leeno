@@ -239,7 +239,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/image19</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Inserisci Capitolo</value>
+						<value>Inserisci Categoria</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
@@ -256,7 +256,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/image20</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Inserisci SottoCapitolo</value>
+						<value>Inserisci SottoCategoria</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
@@ -540,7 +540,7 @@ oor:package="org.openoffice.Office">
 							<value>%origin%/icons/rinum_cap</value>
 						</prop>
 						<prop oor:name="Title" oor:type="xs:string">
-							<value>Rinumera Cap, Sottocap - rifà i subTotali e Totali Generali</value>
+							<value>Rinumera Cat, Sottocat - rifà i subTotali e Totali Generali</value>
 						</prop>
 						<prop oor:name="Target" oor:type="xs:string">
 							<value>_self</value>

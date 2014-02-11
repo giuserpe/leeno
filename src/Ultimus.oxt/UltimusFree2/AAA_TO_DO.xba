@@ -2,11 +2,11 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="AAA_TO_DO" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________
-&apos;	  UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                           
+&apos;	  LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi
-&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL	http://www.gnu.org/licenses/lgpl.html
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO					
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -113,7 +113,7 @@ End function
 &apos;UserInterfaceRepresentation
 
 &apos; questi sono appunti miei che aggiorno man mano che trovo un problema e/o risolvo un problema
-&apos; se avete voglia di metterci mano o darmi dei consigli sono ben accetti, (supporto@ultimus.it)
+&apos; se avete voglia di metterci mano o darmi dei consigli sono ben accetti, (supporto@leeno.org)
 &apos;altrimenti non fatevi venire mal di testa e ignorate questo modulo...
 
 

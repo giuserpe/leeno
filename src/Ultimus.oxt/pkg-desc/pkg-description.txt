@@ -1,4 +1,4 @@
-UltimusFree2-2.080223.0.oxt
+LeenO.oxt
 Copyright Bartolomeo Aimar (c) 2008 
 Licenza LGPL 
 

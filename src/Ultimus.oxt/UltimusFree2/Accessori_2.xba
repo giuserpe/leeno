@@ -2,9 +2,9 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori_2" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                       
+&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                       
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -278,8 +278,8 @@ Sub Protect_alcune_tabelle
 	If thisComponent.Sheets.hasByName(&quot;S4&quot;)  and nome &lt;&gt; &quot;S4&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S4&quot;).protect(&quot;&quot;)
 	end if
-	If thisComponent.Sheets.hasByName(&quot;copyright_licenza_UltimusFree&quot;) Then &apos; se la sheet esiste
-		thisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;).protect(&quot;&quot;)
+	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then &apos; se la sheet esiste
+		thisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;).protect(&quot;&quot;)
 	end if
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) and nome &lt;&gt; &quot;S1&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S1&quot;).protect(&quot;&quot;)
@@ -324,8 +324,8 @@ Sub Chiudi_o_elimina_tabelle_inutili
 	If thisComponent.Sheets.hasByName(&quot;S5&quot;)  and nome &lt;&gt; &quot;S5&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S5&quot;).isVisible = FALSE 
 	end if
-	If thisComponent.Sheets.hasByName(&quot;copyright_licenza_UltimusFree&quot;) Then &apos; se la sheet esiste
-		thisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;).isVisible = FALSE 
+	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then &apos; se la sheet esiste
+		thisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;).isVisible = FALSE 
 	end if
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) and nome &lt;&gt; &quot;S1&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S1&quot;).isVisible = FALSE 

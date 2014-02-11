@@ -2,11 +2,11 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________	
-&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                            
+&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                            
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -33,25 +33,18 @@ Function Constrolla_se_M1
 	
 	
 	Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
-&apos; con licenza e disclaimer
-		
-		oSheet = ThisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;)
+		oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;)
 		If oSheet.isVisible = false  then
-&apos;			If msgbox (&quot;Sei proprio certo di voler leggere la licenza?&quot; ,36, &quot;&quot;&amp; CHR$(10)) = 7 then
-&apos;					exit sub		
-&apos;			end if
 					oSheet.isVisible = TRUE
 					Thiscomponent.currentcontroller.setactivesheet(oSheet)
 			else
 					oSheet.isVisible = false
 					If Constrolla_se_M1 = true then
 								Vai_a_M1
-								&apos;print &quot;c&apos;è M1&quot;
 						else
 								Sel_Altre_Opz
 					end if
 		end if
-		
 	END SUB
 	
 	

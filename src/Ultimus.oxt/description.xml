@@ -4,7 +4,7 @@
  xmlns:dep="http://openoffice.org/extensions/description/2006"
  xmlns:xlink="http://www.w3.org/1999/xlink">
 	<identifier value="vnd.bartaimar.ultimusfree4"/>
-	<version value="3.9.0-nightly build"/>
+	<version value="3.9.0"/>
 	<!-- <dependencies>
 		<OpenOffice.org-minimal-version value="2.2" dep:name="OpenOffice.org 2.2"/>
 	</dependencies> -->
@@ -14,6 +14,9 @@
 	<display-name>
 		<name lang="it">LeenO</name>
 	</display-name>
+	<extension-description>
+		<src xlink:href="pkg-desc/description.txt" lang="it" />
+	</extension-description>
 	<icon>
 		<default xlink:href="icon.png" />
 	</icon>

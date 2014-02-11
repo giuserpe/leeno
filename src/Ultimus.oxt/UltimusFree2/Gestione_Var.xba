@@ -2,11 +2,11 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gestione_Var" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   UltimusFree - Version 3.9.0                                                                                                                                                                                                                                                                                                                                                           
+&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
-&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@ultimus.it
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione UltimusFree     
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -67,27 +67,10 @@ sub info
 end sub
 
 Sub store_info (sVer_templ as string,  sTemp_major as string , sTemp_minor as string, sPregessi)
-
-&apos;con documentinfo deprecato ed eliminato da libò 4 bisogna ora lavorare su:
- &apos; ThisComponent.DocumentProperties.UserDefinedProperties.AddProperty(&quot;chi sei?&quot;,0,&quot;lo scemo&quot;)  &apos;o qualcosa del genere...
-
-&apos;	if not ThisComponent.DocumentInfo.PropertySetInfo.HasPropertyByName(&quot;Template_Ultimus_Version&quot;) then   	&apos;!!! documentinfo deprecato il libo 4, lavorare con DocumentProperties
- &apos; 	  ThisComponent.DocumentInfo.AddProperty(&quot;Template_Ultimus_Version&quot;,0,&quot;&quot;)
-&apos;	endif 
-
-&apos;	ThisComponent.DocumentInfo.DocumentProperties.UserDefinedProperties.Template_Ultimus_Version  = &quot;versione del template:&quot; &amp; sVer_templ &amp; CHR(10)_
-&apos;							  &amp; &quot; - Questo Template è &quot;&quot;sincronizzato&quot;&quot; con la versione &quot; &amp; sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx di UltimusFree&quot;
-
-	 &apos; questo invece lo mandiamo a capo
 	ThisComponent.DocumentProperties.Description =   &quot;versione del template: &quot; &amp; sVer_templ &amp; CHR(10)_
-			&amp; &quot;Questo Template è &quot;&quot;sincronizzato&quot;&quot; con la versione&quot;  &amp;sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx di UltimusFree&quot; &amp; CHR(10)_
+			&amp; &quot;Questo Template è &quot;&quot;sincronizzato&quot;&quot; con la versione&quot;  &amp;sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx di LeenO&quot; &amp; CHR(10)_
 			&amp; &quot;NB Consiglio sempre di archiviare (insieme al computo) una copia della libreria oxt usata per creare il computo&quot;
 
-	&apos;print sPregressi
-&apos;	If sPregressi = &quot;0&quot; then
-		&apos; rimuove il campo impostato se (e quando) il template era stato ottenuto con la procedura di aggiornamento
-&apos;		ThisComponent.DocumentInfo.removeProperty(&quot;Pregressi&quot;) 	
-&apos;	end if
 end sub
 
 
@@ -116,7 +99,7 @@ Sub Salva_Doc_con_nome (sVer_templ as string,  sTemp_major as string , sTemp_min
    	sCartella = Folder()
    sCartella = sCartella +  &quot;/&quot;
    
-  sUrl= sCartella &amp; &quot;Esempio_&quot; &amp; sVer_templ &amp; &quot;_Ultimus-&quot; &amp; sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx&quot; &amp; &quot;.ods&quot;
+  sUrl= sCartella &amp; &quot;Esempio_&quot; &amp; sVer_templ &amp; &quot;_LeenO-&quot; &amp; sTemp_major &amp; &quot;.&quot; &amp; sTemp_minor &amp; &quot;.xx&quot; &amp; &quot;.ods&quot;
 
   &apos; salviamo comunque il doc corrente
  &apos;  oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )

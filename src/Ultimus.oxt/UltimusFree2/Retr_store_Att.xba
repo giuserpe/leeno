@@ -67,8 +67,6 @@ oSheet = ThisComponent.currentController.activeSheet
   &apos; print sAttributo
 Trova_Attr = sAttributo
 End Function
-
-
 Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è sufficiente
 &apos; copiare da una sheet all&apos;altra la cella A1 che contiene l&apos;attributo...
    oDoc = ThisComponent
@@ -322,29 +320,21 @@ END SUB
 
 Function Trova_Attr_N (optional oCell as object, optional oSheet as object)
    oDoc = ThisComponent&apos; RangeAddress
-  &apos; If ErroreDet = 1 then 
 		on error goto gestione_Er
-&apos;	end if
-
-  
    if  isMissing (oSheet) Then 
 		oSheet = ThisComponent.currentController.activeSheet
 	end if
 	if  isMissing (oCell) Then 
    			oCell = thisComponent.getCurrentSelection()
    	end if
-   	
- 
    oCustomXmlAttributes = oCell.UserDefinedAttributes
-    &apos; xray oCustomXmlAttributes
    If oCustomXmlAttributes.hasElements = false then
 		 &apos;  print &quot;no attrinuti&quot;
 	   Trova_Attr_N = &quot;no attributi&quot;
 		 &apos; PRINT &quot;NO&quot;
  	  	exit function
    end if
-   
-	 &apos;   xray oCustomXmlAttributes
+	  &apos;  xray oCustomXmlAttributes
 	&apos;   Print &quot;Attribute  is: &quot; &amp; oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value
 	 &apos;  sAttributo_N = oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value &apos;( &quot;idCella&quot; ).Value
    sAttributo_N = oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value &apos;( &quot;idCella&quot; ).Value
@@ -354,7 +344,6 @@ Function Trova_Attr_N (optional oCell as object, optional oSheet as object)
 	exit function
 	gestione_Er:
 		Trova_Attr_N = &quot;Falso&quot;
-
 End Function
 
 

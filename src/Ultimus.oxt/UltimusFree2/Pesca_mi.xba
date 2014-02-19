@@ -23,23 +23,6 @@ Global sGDove as string
 &apos; scopo: &quot;pescare&quot; un codice sull&apos;elenco prezzi! (inizialmente)
 &apos;        poi estesa anche a contabilita &lt;&gt; Ecomputo etc...
 
-SUB Pesca_cod_0  &apos; probabilmente non usata...
-&apos;0) verifica contesto
-&apos; decide se azionare Pesca_cod_1 oppure Pesca_cod_2
-
-	oSheet = ThisComponent.currentController.activeSheet
-	sSheetName = ThisComponent.currentcontroller.activesheet.name
-	If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Analisi di Prezzo&quot; then
-	print &quot;3&quot;
-		Pesca_cod_1
-		exit sub
-	end if
-	If sSheetName=&quot;Elenco Prezzi&quot; then
-		Pesca_cod_2
-		exit sub
-	end if
-&apos;	msgbox &quot;questa macro va usata solo su Computo o su EP&quot;
-END SUB
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sUB ANNULLALA
 	sMemoPesca = &quot;&quot;
@@ -100,7 +83,7 @@ SUB Pesca_cod   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
 		Case &quot;Elenco Prezzi&quot;
 			&apos;esegui vieni appropriato
 			if sGorigine = &quot;CONTABILITA&quot; then
-					&apos;preleva solo i dati (da fare)
+					&apos;preleva solo i dati
 					Pesca_solo_dati_metti_in_contab
 					
 				else

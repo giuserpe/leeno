@@ -46,5 +46,29 @@ dim testo as string
 testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
 partita (testo)
 end sub
+sub Genera_Registro
+	 oSheet = ThisComponent &apos;.getSheets()
+&apos;	 xray oSheet
+	If not thisComponent.Sheets.hasByName(&quot;REGISTRO&quot;) Then &apos; se la sheet esiste
+		oSheet.getSheets().insertNewByName(&quot;REGISTRO&quot;,4,0) &apos; creala
+	end if
+	osheet = thisComponent.Sheets.getByName(&quot;REGISTRO&quot;)  &apos;settala come corrente
+	oSheet.GetCellByPosition(2 , 1).setstring(&quot;laciolla&quot;) &apos;scrivi
+	print
+goto fine
+	oSheetTempR = oSheets.GetByName(&quot;REGISTRO&quot;) &apos;recuperiamo la tabella
+
+	oView = ThisComponent.CurrentController&apos;@@
+	oView.setActiveSheet(oSheetTempR) &apos;attiviamola@@
+	oDocument = ThisComponent
+	oSheetAnalisi = oDocument.Sheets.getByName (&quot;Analisi di Prezzo&quot;) &apos; sheet da cui copiare
+	
+	oCelle=oDocument.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oSheet2 = oDocument.Sheets.getByName(odocument.currentcontroller.activesheet.name) &apos; sheet (corrente) dove incollare
+	oQuelleRange=oSheetAnalisi.getCellRangeByName(&quot;A1:A5000&quot;)  &apos; range da copiare
+	oQuellRangeAddresse = oQuelleRange.getRangeAddress &apos; indirizzo cella base del range
+    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+fine:
+end sub
 
 </script:module>

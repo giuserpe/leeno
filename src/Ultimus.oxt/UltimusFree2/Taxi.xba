@@ -1508,8 +1508,8 @@ sub Rimetti_in_ordine_tab
 	if 	thisComponent.Sheets.hasByName(&quot;S5&quot;) then
 		thisComponent.Sheets.moveByName(&quot;S5&quot;,9)	
 	end if
-	If thisComponent.Sheets.hasByName(&quot;copyright_licenza_UltimusFree&quot;) Then
-		thisComponent.Sheets.moveByName(&quot;copyright_licenza_UltimusFree&quot;,thisComponent.Sheets.count)
+	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then
+		thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,thisComponent.Sheets.count)
 	end if
 end sub 
 

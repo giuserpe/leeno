@@ -71,7 +71,7 @@ end sub
 
 Sub fixme
 	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-		ThisComponent.CurrentController().freezeAtPosition(0,2)
+		ThisComponent.CurrentController().freezeAtPosition(0,1)
 	end if
 &apos;		
 end sub
@@ -101,7 +101,7 @@ sub Apri_Registro_Standard
 &apos;print &quot;ecco&quot;
 	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
 	
-	ThisComponent.CurrentController().freezeAtPosition(47,2)
+	ThisComponent.CurrentController().freezeAtPosition(47,1)
 &apos;nascondi la colonna SICUREZZA
 			oSheet.getColumns().getByindex(17).isVisible = false	
 &apos; riporta il cursore sulla posizione di partenza
@@ -199,6 +199,7 @@ end sub
 
 
 sub Apri_libretto_misure &apos; e imposta la modalità Libretto Elettronico
+Mostra_Tutto
 	dim Tabella1 as string
 	dim Config1 as string
 	togli_struttura
@@ -233,7 +234,7 @@ sub Apri_libretto_misure &apos; e imposta la modalità Libretto Elettronico
 			if  oSheet.GetCellByPosition(20 , i).string &lt;&gt; &quot;&quot; then &apos;se trova dati 
 			&apos; se non lo è chiedo se impostare la tenuta del libretto elettronico
 				if msgbox (&quot;Mi risulta ci siano dei numeri di pag. già scritti!&quot; &amp; CHR$(10)_
-						&amp; &quot; se procedo impostando adesso la Modalitò Elettronica di tenuta del Libretto delle Misure quei dati saranno sovrascritti!&quot; &amp; CHR$(10)_
+						&amp; &quot; se procedo impostando adesso la Modalità Elettronica di tenuta del Libretto delle Misure quei dati saranno sovrascritti!&quot; &amp; CHR$(10)_
 						&amp; &quot; Sei certo di questo? (Magari cosulta la guida al capitolo: Libretto delle Misure)&quot; &amp; CHR$(10)_
 						&amp; &quot;               Proseguo ??&quot; &amp; CHR$(10)_
 						&amp; &quot;&quot; ,291, &quot;&quot;) &lt;&gt; 6 then
@@ -286,6 +287,7 @@ sub Apri_libretto_misure &apos; e imposta la modalità Libretto Elettronico
 		&apos;	&amp; &quot;sul registro di contabilità?&quot; ,36, &quot;&quot;) = 7 then
 		&apos;	annota_num_pag_libretto
 		&apos;	end if
+
 end sub
 
 sub Reg_Sal_No_COL &apos; nome poco significativo... cosa c&apos;entra la Col?

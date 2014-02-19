@@ -128,7 +128,7 @@ goto saltaprova
 		 &apos;	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1  or _
  		&apos;	if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
 				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-							&amp; &quot; 1 Se qui sotto c&apos;è un già SAL &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
+							&amp; &quot; 1 Se qui sotto c&apos;è già un SAL &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
 							&amp;	&quot;   &quot;, 36, &quot;&quot;)
 							if sDomanda = 7 then
 								exit sub 
@@ -154,7 +154,7 @@ saltaprova:
 	for i = lRow to iLastRow
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Reg-SAL-chiudi_N&quot; then
 				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-							&amp; &quot; Qui sotto c&apos;è un già SAL &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
+							&amp; &quot; Qui sotto c&apos;è un SAL già &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
 							&amp; &quot; E se ci sono altri sal ancora a Valle, devi controllarne le somme...&quot; &amp; CHR$(10)_
 							&amp;	&quot;   &quot;, 36, &quot;&quot;)
 							if sDomanda = 7 then

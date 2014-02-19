@@ -155,6 +155,7 @@ for i =2 to lLastUrow &apos;col &amp; rows - rows/col  righe/colonne
 		end if						
 		if oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#NAME?&quot; or _
 			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#name?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#NOME?&quot; or _
 			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#nome?&quot; then
 			if sMs &lt;&gt; 1 then
 					Barra_chiudi_sempre_4

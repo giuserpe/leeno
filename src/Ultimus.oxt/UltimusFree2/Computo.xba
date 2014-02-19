@@ -84,7 +84,7 @@ for i = 0 to 1000
 			x=10
 		end if
 		quantity= oSheet.GetCellByPosition(x,riga_selezione).AbsoluteName
-		oRange = oSheet.getCellRangeByPosition (2,riga_selezione,8,riga_selezione)
+		oRange = oSheet.getCellRangeByPosition (9,riga_selezione,9,riga_selezione)
 		oRange.CellBackColor = RGB(255, 204, 153)
 
 		i = i+10000
@@ -102,7 +102,8 @@ oContr.setFirstVisibleRow(focus)
 fine:
 end sub
 
-Sub Firme_in_calce
+Sub Firme_in_calce &apos;RIEPILOGO CATEGORIE
+Rinumera_TUTTI_Capitoli2
 osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 &apos;xray osheet
  	if oSheet.name = &quot;COMPUTO&quot; Or _

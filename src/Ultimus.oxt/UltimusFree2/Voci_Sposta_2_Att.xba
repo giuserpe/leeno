@@ -19,25 +19,18 @@ dim oSrow as long
 dim oErow as long
 dim StartRow as long
 &apos; ScreenUpdatingOn 
-
   
 &apos;.......................................................................................................
 
 	lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lSrow = -1 then
-		 
 		exit sub
 	end if
-	
-
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0 , oSrow)&apos; errata selezione di un range
-	
-
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	sStRange = Circoscrive_Voce_Computo_Att (lSrow)
 	oOldSelection = sStRange
-	
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 
 	sTitolo = &quot;Click sulla riga dove vuoi spostare la voce  (ESC per Annullare, NO Click su X )  &quot;
@@ -81,7 +74,9 @@ dim StartRow as long
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	
 END SUB
 
-
+sub lilli
+msgbox  Trova_Attr_N
+ end sub
 &apos;_______________________________________________________________________________________++
 FUNCTION Mettiti_esattamente_tra_due_VociC_Att (ByVal lrow As Long)&apos; trova il punto di inserimanto
 &apos; nel caso l&apos;utente non si sia posizionato bene...   &apos; specifico per voci Computo
@@ -110,9 +105,7 @@ Dim oCell as object
 		exit FUNCTION
 	end if 
 	lrowF=oEnd.CellAddress.Row 
-
-
-	oCell=oSheet.GetCellbyPosition( 0, lrow)
+&apos;	oCell=oSheet.GetCellbyPosition( 0, lrow)
 	if oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sopra&quot;_
 		 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;Livello-1-scritta&quot; then
 
@@ -125,42 +118,36 @@ Dim oCell as object
 		 Mettiti_esattamente_tra_due_VociC_Att = lrow+1
 		 goto fine
 	end if
-	if oSheet.GetCellbyPosition( 0, lrow ).CellStyle = &quot;livello-2-sotto_&quot;_
-			  or oSheet.GetCellbyPosition( 0, lrow ).CellStyle = &quot;livello2 valuta&quot;_
-			 or	oSheet.GetCellbyPosition( 0, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
-			do while Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
-				lrow = lrow+1
-			 	Mettiti_esattamente_tra_due_VociC_Att = lrow-1
-
-			 loop
+	REM SU RIGHE DI CATEGORIA
+	if oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-2-sotto_&quot;_
+	  or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello2 valuta&quot;_
+	  or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
+	  do while Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+	  	lrow = lrow+1
+	  	Mettiti_esattamente_tra_due_VociC_Att = lrow-1
+	  loop
 	end if
-			
-	sAttributo_N = Trova_Attr_N (oCell, oSheet)
 	
+	sAttributo_N = Trova_Attr_N (oCell, oSheet)
+&apos;	PRINT 	Trova_Attr_N
 	if  sAttributo_N = &quot;Start_voce_COMPUTO&quot; then &apos; esattamente all&apos;inizio di una voce
 		Mettiti_esattamente_tra_due_VociC_Att = lrow&apos;+1
 		exit function
-
 	end if
 	
 
 	For nCurRow = lrow To lrowF
 		 oCell=oSheet.GetCellbyPosition( 0, nCurRow)&apos; lrow )
 		 ThisComponent.CurrentController.Select(oCell) &apos;debug 
-
 		 &apos;sAttributo_N = Trova_Attr_N (oCell, oSheet)
 			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;Start_voce_COMPUTO&quot; then &apos;OR _
-				&apos;	     (Trova_Attr_N (oSheet.GetCellbyPosition( 1, nCurRow), oSheet)) &lt;&gt; &quot;Capitolo&quot;  OR _
-				&apos;	     (Trova_Attr_N (oSheet.GetCellbyPosition( 1, nCurRow), oSheet)) &lt;&gt; &quot;SottoCapitolo&quot; then
 				lrow = ocell.celladdress.row
 				Mettiti_esattamente_tra_due_VociC_Att = lrow
-
 				exit function &apos;for
 			end if
 			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;End_voce_COMPUTO&quot;  then
 				lrow = ocell.celladdress.row
 				Mettiti_esattamente_tra_due_VociC_Att = lrow +1
-
 				exit function &apos;for
 			end if
 			if  nCurRow = lrowF then &apos; questa solo alla fine... allora torna su
@@ -174,7 +161,6 @@ Dim oCell as object
 						nCurRow = nCurRow-1
 						oCell=oSheet.GetCellbyPosition( 0, nCurRow)
 						&apos;&apos;&apos;ThisComponent.CurrentController.Select(oCell) &apos;debug 
-
 				loop
 				lrow = ocell.celladdress.row+1
 				Mettiti_esattamente_tra_due_VociC_Att = lrow
@@ -184,7 +170,6 @@ Dim oCell as object
  	next
  	fine:
 End Function		
-
 Function Sposta_range_buono_Att (ByVal lnuovaPosRow As Long,o1RangeSelection as object ) &apos;preleva il range selezionato..
 &apos; ma NON è un difetto... almeno fino a quando non si riuscirà a trovare il modo di 
 &apos; evidenziare una bella clessidra e ignorare TUTTI gli imput utente

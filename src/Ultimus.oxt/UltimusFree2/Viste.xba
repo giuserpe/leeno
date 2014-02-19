@@ -808,7 +808,7 @@ END SUB
 sub Libretto_Misure &apos; accendi spegni la col del REgistro di contabilità sul computo (non sul registro)
 					&apos; forse obsoleta
 	dim sScelta as string
-	print &quot;questa????&quot;
+	print &quot;questa???&quot;
 	&apos;_____________________
 	chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	&apos;_____________________

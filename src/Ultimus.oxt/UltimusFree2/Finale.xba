@@ -1949,17 +1949,14 @@ end sub
 
 
 SUB annota_num_pag_libretto
-	&apos;_____________________
 	chiudi_dialoghi  &apos; chiude tutti i dialoghi
-	&apos;_____________________
 	togli_salti_pagina
-	
 	sSheetName = ThisComponent.currentcontroller.activesheet.name
 	&apos;controlla se è tabella originale COMPUTO... perché è in quella e solo in
-	&apos; quella tablella che bisogna registrare i numeri di pagina &apos;furbino 
+	&apos;quella tablella che bisogna registrare i numeri di pagina &apos;furbino 
 	If sSheetName&lt;&gt;&quot;CONTABILITA&quot; then
  		 msgbox (&quot;QUESTA MACRO VA ESEGUITA SULLA TABELLA &quot;&quot;CONTABILITA&quot;&quot; ORIGINALE!&quot; &amp; CHR$(10)_
-			        	&amp; &quot; ... Annullo....&quot; 
+	        	&amp; &quot;Annullo!&quot;
 		 exit sub
  	end if
  		&apos;controlla se è impostata a &quot;Libretto qui&quot;
@@ -1968,20 +1965,7 @@ SUB annota_num_pag_libretto
 			&amp; &quot;e questa macro si può usare solo se si è scelta quella modalità!&quot; &amp; CHR$(10)_
 			&amp; &quot;Consulta la guida al capitolo: Libretto delle Misure&quot;
 		exit sub
-	end if
-&apos;	Visualizza_PageBreak
-	REM L&apos;AREA DI STAMPA *DEVE* ESSERE GIA&apos; PRONTA
- 	&apos;if msgbox (&quot;L&apos;area di stampa è impostata corretamente?&quot; &amp; CHR$(10)_
-	&apos;		        	&amp; &quot; (se rispondi NO tento di individuarla ed interrompendo poi la macro per controlli e agiustamenti manuali! )&quot; &amp; CHR$(10)_
-	&apos;					&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-	&apos;		else
-	&apos;		Set_Area_Stampa_N 
-	&apos;		msgbox &quot;Ho definito l&apos;area di stampa un po&apos; a caso...&quot; &amp; CHR$(10)_
-	&apos;				&amp; &quot;E&apos; quindi necessario un controllo visivo, sopratutto per verificare se la larghezza è adeguata!&quot;  &amp; CHR$(10)_
-	&apos;				&amp; &quot;Quindi interrompo la macro per le verifiche e gli aggiustamenti...&quot;  &amp; CHR$(10)_
-	&apos;				&amp; &quot;quando sei soddisfatto ripeti questa macro!&quot;
-	&apos;			exit sub
- 	&apos;	end if	
+	end if	
 	dim lLastUrow as long
 	dim lrow as long
 	dim I as long
@@ -1998,13 +1982,6 @@ SUB annota_num_pag_libretto
 			lLastUrow =oEnd.CellAddress.Row 
 	end if 
 	lrowFine = lLastUrow
-&apos;	lrowStart= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale la selezione 
-&apos;	if lrowStart = -1 then		 
-&apos;		exit sub
-&apos;	end if
-&apos;	lrow=lrowStart
-&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	&apos;lLastUrow = lRowFine	
 	For I = 3 To lLastUrow Step 1
 		iContatore = 1	
 		&apos;oCell = oSheet.GetCellByPosition( 0 , lrow)
@@ -2082,7 +2059,8 @@ SUB annota_num_pag_libretto
 	num_pag_libretto &apos;annota sul registro i num di pagina del libretto
 			&apos; notazione &quot;impropria: libretto e registro sono sulla stessa tab..
 			&apos; in realta&apos; compila solo la &quot;giusta&quot; colonna della tab CONTABILITA
-	msgbox &quot;Ho scritto i numeri del libretto nella colonna del Registro di Contabilità!&quot;
+&apos;	msgbox &quot;Ho scritto i numeri del libretto nella colonna del Registro di Contabilità!&quot;
+Apri_Registro_Standard
 Apri_Registro_Standard
 END SUB
 
@@ -2097,20 +2075,28 @@ sub num_pag_libretto &apos;annota sul registro i num di pagina del libretto
 	lLastUrowNN = getLastUsedRow(oSheet)
 	inumPag = 1
 	For i = 2  to lLastUrowNN
+		Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrowNN, 0)
 		if  oSheet.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
-			 	&apos;xray oSheet.GetCellByPosition(0,i).rows
 			inumPag = inumPag+1
 			 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 20  , i)) &apos;debug
 			 	&apos;print inumPag
 		end if
-		IF oSheet.GetCellByPosition( 0  , i).cellstyle = &quot;Comp End Attributo_R&quot; then
+		IF oSheet.GetCellByPosition( 1  , i).cellstyle = &quot;comp Art-EP_R&quot; then
 			oSheet.GetCellByPosition( 20  , i).value = inumPag
-		&apos;	oSheet.GetCellByPosition( 19  , i).string = &quot;1&quot;
+			oSheet.GetCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
+&apos;			oSheet.GetCellByPosition(19, i).string= &quot;1&quot; &apos; numero libretto
+				rem sistemo gli stili di cella
+			oSheet.getCellRangeByPosition(19, i, 20 , i).cellstyle = &quot;num centro bianco&quot;
+&apos;			oSheet.GetCellByPosition(21, i).string= &quot;20/04/11&quot;
+&apos;  			oSheet.GetCellByPosition(21 , i).cellstyle = &quot;Data_bianca&quot;
 		end if
+
 	next
 	&apos;print &quot;finito&quot;
 end sub
+sub zzz
 
+end sub
 
 
 Sub AddPageNumber  &apos; esempio trovato in rete... anche questo funziona...

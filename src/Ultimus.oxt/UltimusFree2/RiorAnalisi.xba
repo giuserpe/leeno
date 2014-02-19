@@ -41,6 +41,7 @@ thisComponent.Sheets.removebyname(&quot;TempR&quot;)  &apos; la cancella
 end if
 
 	oSheets.insertNewByName(&quot;TempR&quot;,4,0)
+	print
 	oSheetTempR = oSheets.GetByName(&quot;TempR&quot;) &apos;recuperiamo la tabella
 
 	oView = ThisComponent.CurrentController&apos;@@

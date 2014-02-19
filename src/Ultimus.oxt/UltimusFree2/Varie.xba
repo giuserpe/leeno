@@ -912,11 +912,15 @@ Dim nome_sheet as string
 Dim OcalcSheet as Object
 Dim I as long
 Dim oSheet_num as integer
-	&apos;Dim iflag
-	&apos;	oDoc=thisComponent
-	&apos;	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
-	&apos;	oView = ThisComponent.CurrentController
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
+&apos;--------------------------------------------
+REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
+	oDpage = thisComponent.currentcontroller.activesheet.DrawPage
+ 	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
+ 	oCtrlModel = oform.getbyname(&quot;+ Riga&quot;)
+	oCtrlModel.Enabled = False
+&apos;--------------------------------------------
+
 	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot;  then
 		exit sub
 	end if
@@ -928,6 +932,7 @@ Dim oSheet_num as integer
 		Case &quot;Tipo_Analisi&quot;
 			copia_riga_A
 	end select
+		oCtrlModel.Enabled = True	
 end sub
 &apos;#####################################
 
@@ -1765,14 +1770,17 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
  	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 and _
- 		sAttributo = &quot;Tipo_computo&quot; then  
+ 		sAttributo = &quot;Tipo_computo&quot; then
+		msgbox &quot;La rinumerazione è disabilitata perché è stata abilitata la Contabilità&quot;
  		&apos; inibisce anche se la var apposita è diversa da 0
  		exit sub
  	endif
 
 	&apos;inibisce la rinumerazione se la var apposita è diversa da 0
  	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 and _
- 		sAttributo = &quot;Tipo_computo&quot; then    
+ 		sAttributo = &quot;Tipo_computo&quot; then
+		msgbox &quot;La rinumerazione è disabilitata: controlla la Variabile Generale H335&quot;&amp; CHR$(10)_
+			&amp; &quot;dal Menu Principale&gt;Variabili Generali&quot;
  		exit sub
  	endif 	
 

@@ -105,7 +105,7 @@ sub Nascondi_tutte_secondarie
 			oSheet.isVisible = false &apos;true
       EndIf
 	Next
-	ThisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;).isVisible = false 
+	ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;).isVisible = false 
 end sub
 
 
@@ -185,7 +185,7 @@ End Sub
 
 
 Sub Nascondi_TUTTI_docs_e_Copertine
-	ThisComponent.Sheets.getByName(&quot;copyright_licenza_UltimusFree&quot;).isVisible = false 
+	ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;).isVisible = false 
 	Nascondi_tabs_COMPUTO_soltanto
 	Nascondi_tabs_contabilita_soltanto
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then

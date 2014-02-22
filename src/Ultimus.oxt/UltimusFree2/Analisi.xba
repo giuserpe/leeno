@@ -47,9 +47,7 @@ Dim iflag
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0, lrow )
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-&apos;	iflag =	CNTR_Analisi (lrow)&apos; controlla se la riga Ã¨ buona
 	sFlag = &quot;A&quot;
-&apos;print iflag
 	if iflag = 1 then
 		exit sub
 	end if

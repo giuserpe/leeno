@@ -31,7 +31,6 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	endif
 	oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
 
-
 	If MsgBox  (&quot;Sto per Taggare le voci di Elenco Prezzi e Analisi realmente utilizzate nel computo e nelle analisi.&quot;&amp; CHR$(10)_
 		&amp;	&quot;L&apos;operazione potrebbe richiedere molto tempo...  Se NON hai salvato, esci e Salva....&quot;_
 		&amp; &quot;e poi ripeti questo comando&quot;  &amp; CHR$(10) &amp; &quot;PROSEGUO senza salvare? &quot;, 292, &quot;Si tratta di un&apos;operazione Lunga!!!!&quot;) = 7 then
@@ -47,7 +46,6 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	end if
 	Uscita_forzata = &quot;&quot;
-	
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	DOPPIONI_TROVA
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -78,8 +76,6 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
 	tag = &quot;UC&quot;
-&apos;	print &quot;inizio A1&quot;
-
    &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  	A_1 (tag)
 	&apos; percorre i computo e tagga in EP con UC
@@ -274,10 +270,7 @@ do while oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;Fine Computo&q
  		  		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
   		  		Uscita_forzata = S_EP (xA, Tag)
   		  		&apos;le segna su EP (da dovunque arrivi)??
-  		 &apos; 		print &quot;eseguito S_EP&quot;
   		  		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-  	&apos;&apos;	  	ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
-  		 &apos; 	print &quot;eseguito S_EP con questo risultato  :&quot; &amp; Uscita_forzata
   		 		if Uscita_forzata = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 					exit sub
 				end if
@@ -288,7 +281,6 @@ do while oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;Fine Computo&q
  		  				exit sub
  		  		end if
  		  		If Uscita_forzata = &quot;continua&quot; then
- 		  &apos;		print &quot;colora&quot;
  		  				oCellT = oSheet.GetCellByPosition( 1, lrow-1 )	
  		  				oCellT.Cellbackcolor= RGB(159,207,36) &apos;(255,141,56)
  		  		&apos;		ThisComponent.CurrentController.Select(ocell)
@@ -331,7 +323,7 @@ dim lrowS as long
 				print lcolbase
 				exit sub
 			end if
- 	
+ 		REM RIORDINA SECONDO LA COLONNA 9
 			sChiama = Riordina_0(lcolbase+9, false) &apos; esegue function di riordino dell&apos;elenco...&apos;8
 			if sChiama = &quot;uscita forzata&quot; or _
 			 	sChiama = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
@@ -342,35 +334,36 @@ dim lrowS as long
 			lrow = 1
 			oCell = oSheet.GetCellByPosition(lcolbase+ 9,lrow )  &apos;8
 			Xa = oCell.string
+&apos;			print xa
 			oCellB = oSheet.GetCellByPosition(lcolbase+ 8,lrow )&apos;7
 			xB = oCellB.string
 			&apos;	 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
-		&apos;	print &quot;Tagged &quot; &amp; Tagged &amp; &quot; -e Tag- &quot; &amp; Tag
-	
+&apos;			print xb
+&apos;			print &quot;Tagged &quot; &amp; Tagged &amp; &quot; e Tag &quot; &amp; Tag
 			do While oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string  &lt;&gt; &quot;&quot; 
-					If oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string  = Tagged then &apos;8
-				&apos;		print &quot;ecco Xa = &quot; &amp; Tagged
-						If oSheet.GetCellByPosition(lcolbase+ 8,lrow ).string = &quot;(AP)&quot; or _
-						   oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string =&quot;=$&apos;&quot; then 
-						&apos;	oCellB = oSheet.GetCellByPosition( 0,lrow )
-							xB = oSheet.GetCellByPosition(lcolbase+ 0,lrow ).string
-							Barra_chiudi_sempre_4
-							Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrow, 0)
-							&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-							&apos;print tag
-						&apos;	print xb
-							S_AN (tag, xB)
-							&apos; &apos; Tagga nelle Analisi con usata
-							 &apos; poi percorre la voce di Analisi cercando tutti codici
-							 &apos; li preleva poi esegue S_EP (che li tagga in EP)	
-							&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-							If Uscita_forzata = &quot;Esci&quot; then
- 						&apos;	 print &quot; Uscita_forzata &quot;
-  	 						   exit sub
- 							end if
-						end if
+				If oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string  = Tagged then REM SE IL TAG E&apos; UC
+				&apos;	print &quot; ecco Xa = &quot; &amp; Tagged
+					If oSheet.GetCellByPosition(lcolbase+ 8,lrow ).string = &quot;(AP)&quot; Then
+&apos;						   oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string =&quot;=$&apos;&quot; then
+					&apos;	oCellB = oSheet.GetCellByPosition( 0,lrow )
+						xB = oSheet.GetCellByPosition(lcolbase+ 0,lrow ).string
+						Barra_chiudi_sempre_4
+						Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrow, 0)
+						&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+						&apos;print tag
+					&apos;	print xb
+						S_AN (tag, xB)
+						&apos; &apos; Tagga nelle Analisi con usata
+						 &apos; poi percorre la voce di Analisi cercando tutti codici
+						 &apos; li preleva poi esegue S_EP (che li tagga in EP)	
+						&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+						If Uscita_forzata = &quot;Esci&quot; then
+						&apos;	 print &quot; Uscita_forzata &quot;
+ 	 						   exit sub
+							end if
 					end if
-				lrow = lrow  +1
+				end if
+				lrow = lrow+1
 				oCell = oSheet.GetCellByPosition(lcolbase+ 8,lrow )  &apos;7
 			loop	
 	Barra_chiudi_sempre_4				

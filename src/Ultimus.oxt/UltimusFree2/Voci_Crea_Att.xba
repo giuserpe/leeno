@@ -274,7 +274,7 @@ goto opla
 	&apos; ma aggiungendo questo viene tolta la selezione...
    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 	
-print &quot;&apos;di capua&quot;
+print &quot;di capua&quot;
 opla:
  	&apos; dati del libretto
 	&apos;copio (mi annoto) il range degli estremi del libretto della voce precedente

@@ -37,7 +37,7 @@ Sub esporta_PDF_Foglio_Attivo
 					exit sub
 			end select	
 	end if
-	REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&apos;ANAGRAFICA
+REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&apos;ANAGRAFICA
 &apos;   	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 &apos;		iCaso = msgbox (&quot; Aggiorno in automatico le Intestazioni ed i Piè di Pagina?&quot; &amp; CHR$(10) &amp; CHR$(10)_
 &apos;				&amp; &quot; (...prelevandoli dalla schermata dei “Dati dl Documento”) &quot; &amp; CHR$(10)&amp; CHR$(10)_
@@ -169,29 +169,62 @@ Sub esporta_PDF_Foglio_Attivo
 	end if
 	
 END SUB
+sub ppp
+ming = array (&quot;ccc&quot;,&quot;kkk&quot;)
+for each ll in ming
+print ll
+next
+end sub
 
 
-
-SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
+SUB esporta_PDF2&apos;(sUrl) &apos; copyright 2010 Paolo Mantovani
   Dim mSheetAreas()
   oDoc = ThisComponent
   oSheets = oDoc.Sheets()
   oActiveSheet = oDoc.CurrentController.ActiveSheet()
-
+&apos; xray oSheets.getbyname(&quot;computo&quot;)
   For Each oSh In oSheets
-    If oSh.Name &lt;&gt; oActiveSheet.Name Then
+&apos;    If oSh.Name &lt;&gt; oActiveSheet.Name Then
+    If oSh.Name = &quot;COMPUTO&quot; OR _
+		oSh.Name = &quot;CONTABILITA&quot; Then
+		PRINT oSh.Name
       Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
       oSh.PrintAreas() = Array()
     End If
   Next
-	
     &apos;parametri di esportazione
 	Dim  mStoreOpts(1) As New com.sun.star.beans.PropertyValue
 	mStoreOpts(0).Name = &quot;Overwrite&quot;
 	mStoreOpts(0).Value = True
 	mStoreOpts(1).Name = &quot;FilterName&quot;
 	mStoreOpts(1).Value = &quot;calc_pdf_Export&quot;
-	&apos;sUrl = &quot;file:///home/bart/test.pdf&quot;
+	sUrl = &quot;file:///C:/test.pdf&quot;
+	oDoc.storeToURL(sUrl, mStoreOpts())
+
+	For Each mShArea In mSheetAreas()
+    	oSh = oSheets.getByName(mShArea(0))
+    	oSh.PrintAreas() = mShArea(1)
+	Next
+End Sub
+SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
+  Dim mSheetAreas()
+  oDoc = ThisComponent
+  oSheets = oDoc.Sheets()
+  oActiveSheet = oDoc.CurrentController.ActiveSheet()
+&apos; print oActiveSheet.name
+  For Each oSh In oSheets
+    If oSh.Name &lt;&gt; oActiveSheet.Name Then
+      Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
+      oSh.PrintAreas() = Array()
+    End If
+  Next
+    &apos;parametri di esportazione
+	Dim  mStoreOpts(1) As New com.sun.star.beans.PropertyValue
+	mStoreOpts(0).Name = &quot;Overwrite&quot;
+	mStoreOpts(0).Value = True
+	mStoreOpts(1).Name = &quot;FilterName&quot;
+	mStoreOpts(1).Value = &quot;calc_pdf_Export&quot;
+&apos;	sUrl = &quot;file:///C:/test.pdf&quot;
 	oDoc.storeToURL(sUrl, mStoreOpts())
 
 	For Each mShArea In mSheetAreas()
@@ -201,17 +234,13 @@ SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
 End Sub
 
 
-
 Sub AppendItem(mList(), vItem) &apos; copyright 2010 Paolo Mantovani
 Dim iMax As Long
   iMax = UBound(mList())
   iMax = iMax + 1
   Redim Preserve mList(iMax)
   mList(iMax) = vItem
-End Sub 
-
-
-
+End Sub
 
 Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi 
 	&apos;per richiesta di offerta

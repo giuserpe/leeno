@@ -508,7 +508,7 @@ if sPG1 = 0 or isEmpty (sPG1) then
    ThisComponent.CurrentController.Frame.CreateStatusIndicator
 &apos;  oProgressBar.Start(&quot;&quot;,100)&apos;
  &apos; oProgressBar.Value = 100
-  oProgressBar.Start(&quot;&quot;,100)&apos;
+ oProgressBar.Start(&quot;&quot;,100)&apos;
   oProgressBar.Value = lvalore
 
   oProgressBar.Text = sTxt

@@ -85,9 +85,7 @@ SUB Pesca_cod   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
 			if sGorigine = &quot;CONTABILITA&quot; then
 					&apos;preleva solo i dati
 					Pesca_solo_dati_metti_in_contab
-					
 				else
-			
 					Pesca_cod_2
 			end if
 			sGVV = &quot;&quot;
@@ -475,7 +473,7 @@ dim oSheet as object
 &apos;&apos;			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
 &apos;		end if
 		&apos;oPartenza_A.SetString(sCodice)
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice)
+		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+2).SetString(sCodice)
 		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2)
 &apos;	end if
 

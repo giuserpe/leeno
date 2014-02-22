@@ -149,19 +149,6 @@ function cerca_in_array(anArray as object, aString as string) as string
 end function
 
 
-Sub AppendItem(mList(), vItem)
-Dim iMax As Long
-
-  iMax = UBound(mList())
-  iMax = iMax + 1
-  Redim Preserve mList(iMax)
-  mList(iMax) = vItem 
-end sub
-
-
-
-
-
 Sub ExampleArray______________________
 Dim a(), i%
 a = Array(0, 1, 2)

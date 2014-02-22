@@ -36,6 +36,7 @@ sub aggiorna_nome_CC  &apos;  aggiorna la cella con il nome del file di Contabil
 End Sub
 
 sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello
+on error goto avviso
 &apos;	on error goto errore_apri
 	Dim mArgs()
 	Dim sUrl As String
@@ -76,6 +77,8 @@ sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello
 	errore_apri:
 	msgbox &quot;Devi selezionare il nome file del Capitolo, oppure il file è inesistente!&quot;
 	exit sub
+	avviso:
+	msgbox &quot;Seleziona il nome di un Capitolo&quot;
 	fine:
 	&apos;Close sDocURL
 End Sub

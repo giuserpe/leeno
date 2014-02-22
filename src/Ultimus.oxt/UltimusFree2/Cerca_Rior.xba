@@ -417,7 +417,6 @@ dim oSheet as object
 	lRowE=oEnd.RangeAddress.EndRow 
 
  oCellAddress = oSheet.getCellRangeByName(&quot;b10&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
-&apos; memo NB
 
   lcolbase = Colonna_giusta_EP(osheet)
   if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
@@ -425,24 +424,13 @@ dim oSheet as object
 		exit sub
   end if
  	
-  
- &apos;sCol= ColumnNameOf(lcolbase+11) &apos;
  
- &apos;sCol= ColumnNameOf(lcolbase+11)	
  sCol_R= ColumnNameOf(lcolbase)	
  
  sCol= ColumnNameOf(getLastUsedCol(oSheet))
- 
- sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$&quot; &amp; sCol_R &amp; &quot;$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE 
-&apos;  sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$L$&quot; &amp; lRowE 
+ sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$&quot; &amp; sCol_R &amp; &quot;$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE+1 
  oRanges.addNewByName(&quot;elenco_prezzi&quot;, sMiaStringa , oCellAddress, 0)
-&apos;print sMiaStringa
  sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE 
-&apos;  sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$L$&quot; &amp; lRowE 
-
-&apos;mercato oRanges.addNewByName(&quot;elenco_prezzi_R&quot;, sMiaStringa , oCellAddress, 0)
- 
- &apos;sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$A$2:$A$&quot; &amp; lRowE  
  sCol= ColumnNameOf(lcolbase)
  sMiaStringa=  &quot;$&apos;Elenco Prezzi&apos;.$&quot; &amp; sCol &amp; &quot;$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE  
  

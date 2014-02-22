@@ -915,10 +915,10 @@ Dim oSheet_num as integer
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
 &apos;--------------------------------------------
 REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
-	oDpage = thisComponent.currentcontroller.activesheet.DrawPage
- 	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
- 	oCtrlModel = oform.getbyname(&quot;+ Riga&quot;)
-	oCtrlModel.Enabled = False
+rem	oDpage = thisComponent.currentcontroller.activesheet.DrawPage
+rem	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
+rem	oCtrlModel = oform.getbyname(&quot;Pulsante 11&quot;) &apos; pulsante +RIGA
+rem	oCtrlModel.Enabled = False &apos; disabilita
 &apos;--------------------------------------------
 
 	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot;  then
@@ -932,7 +932,7 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 		Case &quot;Tipo_Analisi&quot;
 			copia_riga_A
 	end select
-		oCtrlModel.Enabled = True	
+rem		oCtrlModel.Enabled = True &apos;riabilita il pulsante +RIGA
 end sub
 &apos;#####################################
 

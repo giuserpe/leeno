@@ -71,7 +71,7 @@ end sub
 
 Sub fixme
 	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-		ThisComponent.CurrentController().freezeAtPosition(0,1)
+		ThisComponent.CurrentController().freezeAtPosition(0,2)
 	end if
 &apos;		
 end sub

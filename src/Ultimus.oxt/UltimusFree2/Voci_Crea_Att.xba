@@ -117,8 +117,7 @@ sub nuova_voce_contab &apos;da finire...
 		lRow = lRow + 1
 		goto FAI
 	end if
-	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;comp 10 s_R&quot; or _
-		oSheet.GetCellByPosition( 0 ,lRow).cellstyle = &quot;comp 10 s_R&quot; then
+	If 	   oSheet.GetCellByPosition( 0 ,lRow).cellstyle = &quot;comp 10 s_R&quot; then
 		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
 			lRow = lRow-1
 		loop &apos;
@@ -200,7 +199,7 @@ REM ELIMINA UNA SERIE DI DATI
 	osheet2.getCellByPosition(21,lrow+1).string = &quot;&quot;	&apos;DATA
 	osheet2.getCellByPosition(36,lrow+3).string = &quot;&quot;	&apos;CONTROLLI
 	osheet2.getCellByPosition(37,lrow+3).string = &quot;&quot;	&apos;CONTROLLI
-	&apos;rende ricoscibile la voce come diretta all&apos;EP
+	&apos;rende riconoscibile la voce come diretta all&apos;EP
 	&apos;ovvero la voce non viene dal Computo
 	osheet2.getCellByPosition(44,lrow+1).cellstyle = &quot;num_centro_bianco_ep&quot;
 	osheet2.getCellByPosition(2,lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;&apos;_ep&quot;&apos; ci metterei &quot;Comp-Bianche in mezzo Descr_R&quot;
@@ -274,11 +273,12 @@ goto opla
 	&apos; ma aggiungendo questo viene tolta la selezione...
    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 	
-print &quot;&apos;di capua&quot;
+print &quot;di capua&quot;
 opla:
  	&apos; dati del libretto
 	&apos;copio (mi annoto) il range degli estremi del libretto della voce precedente
-	lrowmod1 = lrow
+	lrowmod1 = lrow1
+&apos;goto evita
 	do while oSheet.GetCellByPosition(19  , lRowMod1).string = &quot;&quot;
 		if oSheet.GetCellByPosition(19  , lRowMod1).string = &quot;Libretto numero&quot; or _
 			oSheet.GetCellByPosition(19  , lRowMod1).string = &quot;Lib. Num.&quot; or _
@@ -289,7 +289,7 @@ opla:
 		end if
 		lRowMod1 = lRowMod1-1		
 	loop
-					
+&apos;evita:					
 	If  lRowMod1 &gt; 1 then &apos; se NON è la prima voce (cioè ci sono voci sopra)
 			&apos; oRangeData è il range dei dati libretto della voce sovrastante	
 			oRangeData = oSheet.getCellRangeByPosition(19 ,lRowMod1, 21, lRowMod1).RangeAddress
@@ -321,30 +321,28 @@ opla:
 			oSheet.copyRange(oDest, oRangeData)
 		else
 			&apos; se ha trovato la riga di intestazione							
-			oSheet.GetCellByPosition(19, lRow+1).string= &quot;1&quot;
-			oSheet.GetCellByPosition(20, lRow+1).string= &quot;1&quot;
-			oSheet.getCellRangeByPosition(19, lRow+1, 20 , lRow+1).cellstyle = &quot;num centro bianco&quot;
-			oSheet.GetCellByPosition(21, lRow+1).string= &quot;&quot;
-  			oSheet.GetCellByPosition(21 , lRow+1).cellstyle = &quot;Data_bianca&quot;
+			oSheet.GetCellByPosition(19, lRow+2).string= &quot;1&quot;
+			oSheet.GetCellByPosition(20, lRow+2).string= &quot;1&quot;
+			oSheet.getCellRangeByPosition(19, lRow+2, 20 , lRow+2).cellstyle = &quot;num centro bianco&quot;
+			oSheet.GetCellByPosition(21, lRow+2).string= date
+  			oSheet.GetCellByPosition(21 , lRow+2).cellstyle = &quot;Data_bianca&quot;
 	end if	
 &apos;	oSheet.getCellRangeByPosition(19, lRow+1, 21, lRow+3).cellstyle = &quot;num centro&quot;
 &apos;	oSheet.GetCellByPosition( 21 ,lRow+1).cellstyle = &quot;Data&quot;	
  &apos;++++++++++++++++++++++++
-    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-	sGDove = &quot;Elenco Prezzi&quot;
+    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+    sGDove = &quot;Elenco Prezzi&quot;
 	sGVV = &quot;va&quot;	
 	sGorigine = &quot;CONTABILITA&quot;				
 	&apos;porta su EP
 	&apos;Pesca_cod_1
 	Sel_Elenco_Prezzi
-	
 	Barra_chiudi_sempre_4	
 	goto salta_messaggio
 	msgbox &quot;Sei sull&apos;Elenco Prezzi!   Cerca il Nuovo Prezzo che ti serve.... &quot; &amp; CHR$(10)_
 			&amp; &quot;(puoi usare Shit F3, oppure Ctrl-F, ...),&quot; &amp; CHR$(10)_
 			&amp; &quot;Un click sulla riga della voce e poi ri-aziona in qualche modo la macro &apos;Pesca va e vieni&apos; !&quot;  
 	salta_messaggio:
-
  	exit sub
 errore:
 Barra_chiudi_sempre_4
@@ -447,9 +445,9 @@ SUB Nuova_Voce_Computo_Att  &apos;
 REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 	oDpage = oSheet.DrawPage
  	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
- 	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
+	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
 	oCtrlModel.Enabled = False
- &apos;-------------------------------------------------	
+&apos;-------------------------------------------------	
 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then		 
 		exit sub
@@ -498,6 +496,9 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
 		oCtrlModel.Enabled = True
 		exit sub
+	end if
+	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Default&quot; then
+ 		goto Inserisci_voce
 	end if
  	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Ultimus_centro&quot; then
  		sString$ = &quot;TOTALI COMPUTO&quot;
@@ -549,7 +550,7 @@ REM SOTTO CATEGORIA O SUBCATEGORIA
 	end if
 REM SOTTO SUB CATEGORIA O SUBITO SOPRA AL TOTALE
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-2-sotto_&quot; then &apos; or _
-			lrow = nCurRow&apos; +1
+			lrow = nCurRow +1
 			goto Inserisci_voce
 	end if
 REM SUL TOTALE
@@ -558,13 +559,20 @@ REM SUL TOTALE
 			goto Inserisci_voce
 	end if
 REM SUI RIGHI DI MISURAZIONE
-			if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; then
-				do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot;
-					lrow = lrow-1	
-				loop
+&apos;	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; then
+&apos;		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot;
+&apos;			lrow = lrow-1	
+&apos;		loop
+&apos;		goto Inserisci_voce
+&apos;	end if
+REM SUI RIGHI DI MISURAZIONE
+	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot; then
+		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot;
+			lrow = lrow+1	
+		loop
+		lrow = lrow+1
 		goto Inserisci_voce
 	end if
-
 rem QUESTA SOTTO SERVE???
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 &apos;	lRow = Mettiti_esattamente_tra_due_VociC_Att (lRow)
@@ -679,6 +687,7 @@ end function
 
 
 SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
+print
 &apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	oContr = ThisComponent.CurrentController
@@ -719,9 +728,10 @@ oltre:
 	end if 
 	lrowFine=oEnd.RangeAddress.EndRow
 	If lrow &gt; lrowFine then
-		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
-		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
-		exit sub
+	lrow =lrowFine
+	&apos;	msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
+	&apos;	&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+	&apos;	exit sub
 	end if
 	if lrow = 0 then
 		lrow = lrow+1&apos;+2
@@ -802,7 +812,7 @@ rem		oSheet.copyRange(oCelleN,oRangeO)
 rem		lrow = lrow +1
 	end if
 	inserisci:
-	oSheet.getRows.insertByIndex(lrow, 27) &apos;rigagiuserpe INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
+	oSheet.getRows.insertByIndex(lrow, 26) &apos;rigagiuserpe INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
 	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
 	&apos; ritarato la posizione di inserimento

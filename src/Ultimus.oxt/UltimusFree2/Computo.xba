@@ -179,16 +179,16 @@ REM SE ELENCO PREZZI
 		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
 	REM INSERISCI LA DATA E IL PROGETTISTA
-&apos;		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
-&apos;		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle =  &quot;Ultimus&quot;
-&apos;		oSheet.GetCellByPosition(2 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
-&apos;		oSheet.GetCellByPosition(2 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
-&apos;		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
+		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle =  &quot;Ultimus&quot;
+		oSheet.GetCellByPosition(2 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
+		oSheet.GetCellByPosition(2 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
+		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
 	REM CONSOLIDA LA DATA	
-&apos;		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
-&apos;		Flags = com.sun.star.sheet.CellFlags.FORMULA
-&apos;		aSaveData = oRange.getDataArray()
-&apos;  		oRange.setDataArray( aSaveData )
+		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
+		Flags = com.sun.star.sheet.CellFlags.FORMULA
+		aSaveData = oRange.getDataArray()
+  		oRange.setDataArray( aSaveData )
 
 		end if
 &apos;	goto fine

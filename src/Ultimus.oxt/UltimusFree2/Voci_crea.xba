@@ -307,9 +307,11 @@ Dim oCell
 	oEnd=uFindString(sString$, oSheet) 
 	lrowFine=oEnd.RangeAddress.EndRow 
 	If lrow &gt; lrowFine then
-		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
-		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
-		exit sub
+	lrow = lrowFine
+	print
+	&apos;	msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
+	&apos;	&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+	&apos;	exit sub
 	end if
   	ThisComponent.CurrentController.Select(oCell)&apos; debug
 &apos;	print

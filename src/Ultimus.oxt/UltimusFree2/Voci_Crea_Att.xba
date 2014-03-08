@@ -687,7 +687,6 @@ end function
 
 
 SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
-print
 &apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	oContr = ThisComponent.CurrentController
@@ -695,30 +694,12 @@ print
 		exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
-
-
-
-goto oltre
-&apos;--------------------------------------------
-	oDpage = oSheet.DrawPage
- 	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
-		&apos;	xray oform
-		&apos;	exit sub
- 	oCtrlModel = oform.getbyname(&quot;alfa&quot;)&apos;(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
-		 	xray oCtrlModel.Enabled
-		&apos; msgbox oCtrlModel.Enabled
-	oCtrlModel.Enabled = true
- 	oCtrlModel.Enabled = False
- 	&apos;	msgbox oCtrlModel.Enabled
- &apos;-------------------------------------------------		
-oltre:	
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	If Constrolla_se_M1 = true then
 		if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 0 then
 			goto inserisci
 		end if
 	end if
-
 	sString$ = &quot;Fine ANALISI&quot;
 	oEnd=uFindString(sString$, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd)  then 
@@ -727,50 +708,31 @@ oltre:
 		exit sub
 	end if 
 	lrowFine=oEnd.RangeAddress.EndRow
-	If lrow &gt; lrowFine then
-	lrow =lrowFine
-	&apos;	msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Analisi &quot;_
-	&apos;	&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
-	&apos;	exit sub
+	If lrow &gt; lrowFine or _
+		lrow = lrowFine then &apos;oltre la riga rossa
+		lrow =lrowFine-1
 	end if
 	if lrow = 0 then
-		lrow = lrow+1&apos;+2
+		lrow = lrow+10
 	end if	
-goto salta	&apos; riattivare in occasione di un salto di minorversion (sempre serva realmente a qualcosa)
-&apos;--------------------------------------------
-	oDpage = oSheet.DrawPage
-
- 	oform = oDpage.Forms.getbyname (&quot;Standard_A&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
-			xray oDpage.Forms
-		xray oform
-
- 	oCtrlModel = oform.getbyname(&quot;PB1&quot;)&apos;(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;) &quot;PushButton4&quot;
-		 &apos;	xray oCtrlModel.Enabled
-		&apos; msgbox oCtrlModel.Enabled
-	oCtrlModel.Enabled = true
- 	oCtrlModel.Enabled = False
- 	&apos;	msgbox oCtrlModel.Enabled
- &apos;-------------------------------------------------	
-salta:
 	&apos; se sono sul grigio inserisco
 	if oSheet.GetCellbyPosition( 0, lrow).CellStyle= &quot;Analisi_Sfondo&quot; then 
-	&apos;print &quot;ok&quot;
-			goto Inserisci
+		goto Inserisci
 		else
-			&apos; circoscrivo la voce trovando: inizio, fine e il punto critico
-			for i = lrow to lrowFine
-				if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-sfondo-basso Att End&quot; then
-					iEnd = i
-					exit for
-				end if 
-			next	
-			for i = lrow to 2 step -1
-		&apos;	print i
-				if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-1_sigla&quot; then
-					iStart = i
-					exit for
-				end if 
-			next	
+		&apos; circoscrivo la voce trovando: inizio, fine e il punto critico
+		for i = lrow to lrowFine
+			if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-sfondo-basso Att End&quot; then
+				iEnd = i
+				exit for
+			end if 
+		next	
+		for i = lrow to 2 step -1
+	&apos;	print i
+			if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-1_sigla&quot; then
+				iStart = i
+				exit for
+			end if 
+		next	
 			iCrit = iStart+2
 	end if
 	&apos; in base al punto critico decido se inserire sopra o sotto
@@ -779,37 +741,15 @@ salta:
 		else
 			lrow = iEnd + 1
 	end if
-&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
-&apos; print &quot;1 -  &quot; &amp; lrow
 	&apos; verifico che dove inserisco ci sia una riga vuota
 	if oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot; then 
-&apos;		print &quot;&apos; se non c&apos;è la metto&quot;
+		&apos; se non c&apos;è la metto&quot;
 		if oSheet.GetCellbyPosition( 0, lrow).CellStyle= &quot;An-sfondo-basso Att End&quot; then
 			lrow = lrow +1
-&apos;			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
-&apos;			print &quot;eeee &quot; &amp; lrow
 		end if
 		if oSheet.GetCellbyPosition( 0, lrow).CellStyle=&quot;An-1_sigla&quot; then
-&apos;				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
-&apos;		print &quot;ecco&quot;
 			lrow = lrow -1
-
 		end if
-&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
-&apos;		print &quot;2 -  &quot; &amp; lrow		
-		
-rem		oSheet.getRows.insertByIndex(lrow+1, 1) 
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow)) &apos; debug	
-	&apos;	print &quot;3 -  &quot; &amp; lrow
-
-rem		oCellN = oSheet.GetCellbyPosition( 0, lrow+1)
-rem		oCelleN= oCellN.getCellAddress()
-rem		oSheetO = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-rem		oRangeO =  osheetO.getCellRangeByPosition (45,41,54,41 )
-rem		oRangeO = oRangeO.RangeAddress
-rem		oSheet.copyRange(oCelleN,oRangeO)
-		&apos;ritaro lrow
-rem		lrow = lrow +1
 	end if
 	inserisci:
 	oSheet.getRows.insertByIndex(lrow, 26) &apos;rigagiuserpe INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
@@ -833,18 +773,7 @@ rem		lrow = lrow +1
 	oQuellRangeAddresse = oRangeOrigine.RangeAddress &apos;CellRangeAddress
 
     oSheet2.copyRange(oCelle,oQuellRangeAddresse)
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-	&apos; riattivare in occasione di un salto di minorversion (sempre serva realmente a qualcosa)
-&apos;	oCtrlModel.Enabled = true
-
-&apos;+++++++++++ Queste invece paiono togliere il focus dal pulsante... (come un flipper...)
-	ThisComponent.CurrentController.Select(ThisComponent.CurrentController.getActiveSheet.getCellByPosition(0 , 0))
-	oAreaR = Osheet.GetCellByPosition( 0 , lrow +2)
-  	Thiscomponent.currentcontroller.select(oAreaR)
-&apos;+++++++++++++++++++++++++++ ma si rimane comunque incastrati nella cella selezionata
-&apos; ovvero solo con enter o tab non si esce... (occorre usare il mouse)
-	&apos; ma aggiungendo questo viene tolta la selezione...
-   thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; togle la selezione
 	oContr.setFirstVisibleRow(lrow)
  	exit sub

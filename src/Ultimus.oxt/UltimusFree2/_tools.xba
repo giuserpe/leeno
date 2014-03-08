@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM  *****  BASIC  *****
+sub colora_capitoli_listino
+	If thisComponent.Sheets.hasByName(&quot;Listino&quot;) Then &apos; se la sheet esiste
+		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
+		else
+		msgbox &quot;Sei certo di lavorare su di un file di Listino?&quot;, 0, &quot;AVVISO!&quot;
+	exit sub
+	END IF
+	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
+	Barra_Apri_Chiudi_5(&quot;                                 Eseguo ...&quot;, 0)
+&apos;	sString$ = &quot;ATTENZIONE!&quot;
+&apos;	oEnd=uFindString(sString$, oSheet)
+&apos;	primariga=oEnd.RangeAddress.EndRow
+	for i = 0 to lLastUrow
+		if oSheet.GetCellByPosition( 5,i).getstring = &quot;ATTENZIONE!&quot; then
+			primariga = i+1
+		exit for
+		end if 
+	next
+	for i =  primariga to lLastUrow
+		if len(oSheet.GetCellbyPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
+		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
+		oRange.CellBackColor = RGB(255, 255, 204)
+		end if
+		if len(oSheet.GetCellbyPosition( 2, i ).string) = 3 then 
+		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
+		oRange.CellBackColor = RGB(255, 255, 0)
+		end if
+		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt; 3 then 
+		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
+		oRange.CellBackColor = RGB(230, 230, 76)
+		end if
+	next
+	oSheet.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne
+	oSheet.getCellRangeByposition(12,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
+	oSheet.getCellRangeByposition(0,lLastUrow+1,0,1048575).Rows.IsVisible=false &apos; nascondi righe
+	oSheet = ThisComponent.Sheets.getByName(&quot;Temp&quot;)
+	oSheet.getCellRangeByPosition (0,0,8,0).Columns.IsVisible=True &apos; mostra colonne
+	oSheet.getCellRangeByposition(9,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
+	oSheet.getCellRangeByposition(0,getLastUsedRow(oSheet)-15,0,1048575).Rows.IsVisible=false &apos; nascondi righe
+
+end sub
+
 sub Genera_SOMMARIO_ANALISI_FUNZIONA
 rem attivo le analisi
 	oSheet = ThisComponent

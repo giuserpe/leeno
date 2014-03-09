@@ -265,9 +265,9 @@ goto opla
  	oCtrlModel.Enabled = True
  
 &apos;+++++++++++ Queste invece paiono togliere il focus dal pulsante... (come un flipper...)
-	ThisComponent.CurrentController.Select(ThisComponent.CurrentController.getActiveSheet.getCellByPosition(0 ,0))
-	oAreaR = Osheet.GetCellByPosition( 1 , lrow +1)
-  	Thiscomponent.currentcontroller.select(oAreaR)
+&apos;	ThisComponent.CurrentController.Select(ThisComponent.CurrentController.getActiveSheet.getCellByPosition(0 ,0))
+&apos;	oAreaR = Osheet.GetCellByPosition( 1 , lrow +1)
+&apos; 	Thiscomponent.currentcontroller.select(oAreaR)
 &apos;+++++++++++++++++++++++++++ ma si rimane comunque incastrati nella cella selezionata
 &apos; ovvero solo con enter o tab non si esce... (occorre usare il mouse)
 	&apos; ma aggiungendo questo viene tolta la selezione...

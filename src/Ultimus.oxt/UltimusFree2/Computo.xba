@@ -101,7 +101,7 @@ oRange.CellBackColor = RGB(255, 204, 153)
 oContr.setFirstVisibleRow(focus)
 fine:
 end sub
-
+	
 Sub Firme_in_calce &apos;RIEPILOGO CATEGORIE
 Rinumera_TUTTI_Capitoli2
 osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection

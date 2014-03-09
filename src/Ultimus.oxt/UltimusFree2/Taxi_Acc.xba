@@ -186,23 +186,4 @@ Sub Accoda_un_computo &apos; accodamento di dati partendo dal file DCC
 	Main_Importa_Altro_Computo(&quot;qualcosa&quot;)
 
 END SUB
-
-sub prova_focus 
-	sTargetURL = ConvertToURL(&quot;file:///home/aimar/Pippo.ods&quot;) 
-	sSheetTarget = &quot;leo&quot; &apos;&quot;gina&quot;
-	&apos; sRangeTarget = &quot;$D$15&quot;
-	Focus_su_altro_Doc ( sTargetURL , sSheetTarget , sRangeTarget )
-				
-end sub
-
-
-
-
-
-
-
-
-
-
-
 </script:module>

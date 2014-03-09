@@ -676,28 +676,7 @@ Sub Nascondi_tab_corrente
  	oSheet.isVisible = false
 end sub
 
-sub Zoo_a_default &apos; da cancellare
-print &quot;Focus.Zoo_a_default  - Ma non era disattivata?&quot;	
-	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-	orange = oSheet.getCellRangeByPosition(0,0,0,37)
-	oContr = ThisComponent.CurrentController	 
-	oContr.select(oRange)
-	oContr.ZoomType=OPTIMAL
-	oContr.select (oSheet.getCellByPosition(1,1))
 
-
-	oSheet = ThisComponent.Sheets.getByName(_
-	ThisComponent.currentcontroller.activesheet.name)
-&apos;	orange = oSheet.getCellRangeByPosition(0,0,15,37)
-	orange = oSheet.getCellRangeByPosition(10,0,16,37)
-	oContr = ThisComponent.CurrentController	 
-	oContr.select(oRange)
-&apos;xray oContr &apos;.ZoomType
-	oContr.ZoomType=OPTIMAL
-	oContr.select (oSheet.getCellByPosition(10,0))
-&apos;	oContr.select (oSheet.getCellByPosition(0,0))
-
-end sub
 
 
 

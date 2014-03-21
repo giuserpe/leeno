@@ -166,11 +166,11 @@ REM on error goto ErrorHandler
 	&apos;print sVer2
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-		REM NUOVO NUMERO VERSIONE GIUSERPE
+REM NUOVO NUMERO VERSIONE GIUSERPE
 		oSheet.unprotect(&quot;&quot;)
         versioneUF_major= 3
         versioneUF_minor= 9
-        versioneUF_subversion= 0
+        versioneUF_subversion= 1
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion
@@ -202,7 +202,7 @@ REM on error goto ErrorHandler
 			if sVerMajorDoc = &quot;UF2&quot; then 
 			  if sVerMinorDoc &gt; &quot;070701&quot;  then	
 				Select Case msgbox (&quot;(5)  &quot; &amp; CHR$(10)  &amp; CHR$(10)_
-					  &amp; &quot; Questo documento è stato elaborato con una versione di UltimusFree più vecchia di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
+					  &amp; &quot; Questo documento è stato elaborato con una versione di LeenO più vecchia di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
 	  				  &amp; &quot;  &quot; &amp; CHR$(10) &amp; CHR$(10)_
 					  &amp; &quot;Sussistono problemi di incompatibilità del Doc con la versione di libreria installata. &quot;  &amp; CHR$(10) &amp; CHR$(10)_
 					  &amp; &quot;Vuoi tentare la PROCEDURA AUTOMATICA DI ADATTAMENTO di questo documento?&quot;  &amp; CHR$(10)_
@@ -252,18 +252,18 @@ REM on error goto ErrorHandler
 				
 		select case sCaso
 		Case 3
-		msgbox &quot;(3) Questo documento è stato elaborato con una versione molto datata di Ultimus &quot; &amp;CHR$(10)_
-		&amp; &quot; e sussistono gravi problemi di incompatibilità con la Versione di Ultimus attiva su questo PC. &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		msgbox &quot;(3) Questo documento è stato elaborato con una versione molto datata di LeenO &quot; &amp;CHR$(10)_
+		&amp; &quot; e sussistono gravi problemi di incompatibilità con la Versione di LeenO attiva su questo PC. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Il trasferimento dei dati di questo Doc ad un Template adatto è complicato ma non impossibile... se hai problemi contattami &quot;  &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Oppure installa una versione di Ultimus datata e coerente con il tuo documento  &quot;  &amp; CHR$(10) &amp; CHR$(10)	
+		&amp; &quot; Oppure installa una versione di LeenO datata e coerente con il tuo documento  &quot;  &amp; CHR$(10) &amp; CHR$(10)	
 
 		Case 2
-		msgbox &quot;(2) Questo documento è stato elaborato con una versione Ultimus più recente di&quot; &amp;CHR$(10)_
+		msgbox &quot;(2) Questo documento è stato elaborato con una versione LeenO più recente di&quot; &amp;CHR$(10)_
 		&amp; &quot; quella installata e/o attiva su questo PC. &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Sussistono gravi problemi di incompatibilità tra il documento e la Versione di Ultimus. &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Sussistono gravi problemi di incompatibilità tra il documento e la Versione di LeenO. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Il trasferimento dei dati di questo Doc in un Template adatto è complicato ma non impossibile... se hai problemi contattami &quot;  &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Installa una versione di Ultimus pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot;  &amp; CHR$(10) &amp; CHR$(10)		
-&apos;		&amp; &quot; Installa una versione di Ultimus pari o superiore alla &quot; &amp;  CHR$(10) &amp; CHR$(10)	
+		&amp; &quot; Installa una versione di LeenO pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot;  &amp; CHR$(10) &amp; CHR$(10)		
+&apos;		&amp; &quot; Installa una versione di LeenO pari o superiore alla &quot; &amp;  CHR$(10) &amp; CHR$(10)	
 		Osheet = thisComponent.sheets.getbyname(&quot;computo&quot;)
 		Thiscomponent.currentcontroller.setactivesheet(Osheet)
 		Barra_chiudi_sempre_4
@@ -271,16 +271,16 @@ REM on error goto ErrorHandler
 
 		Case 1
 		msgbox &quot;(1)   &quot; &amp; CHR$(10)  &amp; CHR$(10)_
-		&amp; &quot;1  Questo documento è stato elaborato con una versione di Ultimus più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		&amp; &quot;1  Questo documento è stato elaborato con una versione di LeenO più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
 		&amp; &quot;       &quot;  &amp; CHR$(10)_
 		&amp; &quot;       Sussistono gravi problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Ultimus è comunque attivo, ma usare le macro su questo documento potrebbe compromettere i dati!&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; LeenO è comunque attivo, ma usare le macro su questo documento potrebbe compromettere i dati!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Se devi solo leggere o fare qualche correzione puoi comunque usare tranquillamente tutti i comandi standard di OOo &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Se invece devi lavorare ancora sul computo dovresti riversare i sui dati in un template aggiornato !&quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Il trasferimento dei dati di questo Doc in un Template aggiornato è po&apos; complicato ma fattibile...&quot;   &amp; CHR$(10)_
 		&amp; &quot; C&apos;è in giro della documentazione specifica su questo argomento... ma se incontri problemi contattami &quot;  &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Oppure e in altrenativa installa una versione di Ultimus &quot;&quot;datata&quot;&quot; e coerente con il tuo documento &quot;&amp; CHR$(10)_
+		&amp; &quot; Oppure e in altrenativa installa una versione di LeenO &quot;&quot;datata&quot;&quot; e coerente con il tuo documento &quot;&amp; CHR$(10)_
 		&amp; &quot;   &quot; &amp; sNoNonVER &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;  &quot; &amp; CHR$(10)
 		Ripristina_statusLine
@@ -288,7 +288,7 @@ REM on error goto ErrorHandler
 	
 		Case 8
 		msgbox &quot;(8)   &quot; &amp; CHR$(10)  &amp; CHR$(10)_
-		&amp; &quot;  Questo documento è stato elaborato con una versione di Ultimus più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		&amp; &quot;  Questo documento è stato elaborato con una versione di LeenO più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
 		&amp; &quot;       &quot;  &amp; CHR$(10)_
 		&amp; &quot;     Probabilmente non ci sono seri problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;Ma in quel periodo ho i rilasciato versioni in modo un po&apos; confuso! Consiglio quindi caldamente il trasferimento/riversamento dei dati di questo Doc in un Template aggiornato!&quot; &amp; CHR$(10) &amp; CHR$(10)	
@@ -297,7 +297,7 @@ REM on error goto ErrorHandler
     else
 		if sVerMinorDoc &lt;  sVerMinorInstallata then
 			Select Case msgbox (&quot;(5)  &quot; &amp; CHR$(10)  &amp; CHR$(10)_
-				  &amp; &quot; Questo documento è stato elaborato con una versione di UltimusFree più vecchia di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
+				  &amp; &quot; Questo documento è stato elaborato con una versione di LeenO più vecchia di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
 	  			  &amp; &quot;  &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				  &amp; &quot;Sussistono problemi di incompatibilità del Doc con la versione di libreria installata. &quot;  &amp; CHR$(10) &amp; CHR$(10)_
 				  &amp; &quot;Vuoi tentare la PROCEDURA AUTOMATICA DI ADATTAMENTO di questo documento?&quot;  &amp; CHR$(10)_
@@ -316,10 +316,10 @@ REM on error goto ErrorHandler
  	   		
 		if sVerMinorDoc &gt; sVerMinorInstallata then 
 			msgbox &quot;(6)  &quot; &amp; CHR$(10)  &amp; CHR$(10)_
-			&amp; &quot;  Questo documento è stato elaborato con una versione di UltimusFree più recente di quella installata e/o attiva su questo PC. &quot; &amp;CHR$(10)_
+			&amp; &quot;  Questo documento è stato elaborato con una versione di LeenO più recente di quella installata e/o attiva su questo PC. &quot; &amp;CHR$(10)_
 			&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;Sussistono problemi di incompatibilità tra questo documento e la Versione di Ultimus. &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;Installa una versione di UltimusFree pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot;  &amp; CHR$(10) &amp; CHR$(10)	
+			&amp; &quot;Sussistono problemi di incompatibilità tra questo documento e la Versione di LeenO. &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Installa una versione di LeenO pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot;  &amp; CHR$(10) &amp; CHR$(10)	
 		end if
     end if
 
@@ -645,7 +645,7 @@ REM on error goto ErrorHandler
 	&apos;Barra_apri_chiudi_4 	
 &apos;	Clessid_lock_End
 	Msgbox &quot; Non ho potuto completare la procedura di Controllo in apertura!&quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Prova a salvare il documento e poi ripetere la procedura dal menu to Ultimus_3 &gt; Esegui Procedura di Controllo (Doc attivo)&quot;   ,16
+		&amp; &quot; Prova a salvare il documento e poi ripetere la procedura dal menu to LeenO_3 &gt; Esegui Procedura di Controllo (Doc attivo)&quot;   ,16
 &apos;	msgbox &quot;Si è verificato un errore in  &quot;&quot;Su_Apertura_Doc&quot;&quot;&quot; &amp; CHR$(10)_
 &apos;	&amp; &quot; Se hai &quot;&quot;disturbato&quot;&quot; l&apos;apertura del documento pasticciando con il mouse o la tastiera c&apos;era da aspettarselo...&quot; &amp; CHR$(10)_
 &apos;	&amp; &quot; Prova a chiudere e riaprire il documento!&quot;
@@ -713,7 +713,7 @@ dim Esiste as boolean
 	
         versioneUF_major= 3
         versioneUF_minor= 9
-        versioneUF_subversion= 0
+        versioneUF_subversion= 1
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value =  versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value =  versioneUF_minor
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value =  versioneUF_subversion

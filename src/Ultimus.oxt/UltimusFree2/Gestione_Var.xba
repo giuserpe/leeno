@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gestione_Var" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                           
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -61,10 +61,6 @@ sub salva_il_template &apos; per la pubblicazione del Template
     Salva_Doc_con_nome (sVer_templ,  sTemp_major, sTemp_minor )
 end sub
 
-sub info
-	xray	ThisComponent.DocumentProperties.UserDefinedProperties.AddProperty(&quot;chi sei?&quot;,0,&quot;lo scemo&quot;) &apos;(&quot;Template_Ultimus_Version&quot;).Has(&quot;Template_Ultimus_Version&quot;)
-&apos;	ThisComponent.DocumentProperties.Description = 
-end sub
 
 Sub store_info (sVer_templ as string,  sTemp_major as string , sTemp_minor as string, sPregessi)
 	ThisComponent.DocumentProperties.Description =   &quot;versione del template: &quot; &amp; sVer_templ &amp; CHR(10)_

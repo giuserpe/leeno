@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Crea_Att" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                          
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                          
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -22,9 +22,6 @@ Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 	&apos;_____________________
 	chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	&apos;_____________________
-
-
-
 	Select Case thisComponent.currentcontroller.activesheet.name
 		Case = &quot;COMPUTO&quot;
        		Nuova_Voce_Computo_Att
@@ -382,18 +379,6 @@ FUNCTION SE_contabilita
 end FUNCTION
 
 
-Function Disattiva_button  &apos;viene richiamata dopo l&apos;esecuzione 
-print &quot;oops... non credevo venisse usata&quot;
-	oSheet = ThisComponent.currentController.activeSheet
-	oDpage = oSheet.DrawPage
- 	oform = oDpage.Forms.getbyname(&quot;WW-Standard&quot;)
- 	oCtrlModel = oform.getbyname(&quot;PushButton2&quot;)
- 	msgbox oCtrlModel.Enabled
- 	oCtrlModel.Enabled = False
-&apos; msgbox oCtrlModel.Enabled	
- &apos;	Wait 3000
-end Function 
-
 SUB tante_voci_insieme
 	dim quante as long
 	dim i as long
@@ -431,8 +416,7 @@ end sub
 &apos;___________________________________________________________________________________________
 
 SUB Nuova_Voce_Computo_Att  &apos;
-&apos;print &quot;proseguo?&quot;
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then &apos;gestione errori
 		on error goto Errore
 	end if
 	dim lrow as long
@@ -443,10 +427,10 @@ SUB Nuova_Voce_Computo_Att  &apos;
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;--------------------------------------------
 REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
-	oDpage = oSheet.DrawPage
- 	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
-	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
-	oCtrlModel.Enabled = False
+&apos;	oDpage = oSheet.DrawPage
+&apos;	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
+&apos;	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
+&apos;	oCtrlModel.Enabled = False
 &apos;-------------------------------------------------	
 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then		 
@@ -469,13 +453,7 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 	lrowFine=oEnd.RangeAddress.EndRow
 	if lrow &lt;= 2 then
 		lrow = 3
-	end if 
-	REM stabilisce la miglior posizione di inserimento VECCHIA
-&apos;	If Constrolla_se_M1 = true then
-&apos;		if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 0 then
-&apos;			goto inserisci_voce
-&apos;		end if
-&apos;	end if	
+	end if 	
 	If lrowfine=3 then
 		oSheet.getRows.insertByIndex(2, 2)
 		osheet.getCellRangeByPosition (0,2,45,3).CellStyle = &quot;Default&quot;
@@ -491,31 +469,26 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 		lrow = 3
 		goto Inserisci_voce
 	end if
-	If lrow &gt;= lrowFine then
-		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
-		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
-		oCtrlModel.Enabled = True
-		exit sub
-	end if
-	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Default&quot; then
- 		goto Inserisci_voce
-	end if
- 	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Ultimus_centro&quot; then
+ 	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Ultimus_centro&quot; or lrow &gt;= lrowFine then
  		sString$ = &quot;TOTALI COMPUTO&quot;
  		oEnd=uFindString(sString$, oSheet)
  		lrow=oEnd.RangeAddress.EndRow-1
  		goto Inserisci_voce
 	end if
-	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; And _
-		oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp sotto Bianche&quot; then
+	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; then
 			print
-			oSheet.getRows.insertByIndex(lrow+1, 1) 
+			&apos;oSheet.getRows.insertByIndex(lrow+1, 1) 
 			osheet.getCellRangeByPosition (0,lrow+1,45,lrow+1).CellStyle = &quot;Default&quot;
+			lrow = lrow-1
+			goto Inserisci_voce
+	end if
+	if 	oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp sotto Bianche&quot; then
 			lrow = lrow+1
 			goto Inserisci_voce
 	end if
-
 	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Default&quot; And _
+		oSheet.GetCellByPosition( 1, lrow-1).cellstyle = &quot;Default&quot; Or _
+		oSheet.GetCellByPosition( 1, lrow+1).cellstyle = &quot;Comp TOTALI&quot; or _
 		oSheet.GetCellByPosition( 1, lrow+1).cellstyle = &quot;Default&quot; then
 		if oSheet.GetCellByPosition( 1, lrow+2).cellstyle &lt;&gt; &quot;Comp TOTALI&quot; then
 			print
@@ -627,7 +600,7 @@ rem QUESTA SOTTO SERVE???
  		sAttributo = &quot;Tipo_computo&quot; then    
  		Osheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
  	endif 	
- 	oCtrlModel.Enabled = True
+ &apos;	oCtrlModel.Enabled = True
  	
    thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 	
@@ -687,7 +660,17 @@ end function
 
 
 SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
-&apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente  
+	REM CANCELLA DAL blocco_analisi la riga con &quot;Oneri di Sicurezza diretti&quot; 
+	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+	if oSheet.GetCellByPosition(7,290).getvalue = 190 and _
+		oSheet.GetCellByPosition(8,290).getvalue = 3 and _
+		oSheet.GetCellByPosition(9,290).getvalue = 9 then
+		oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+		if oSheet.GetCellByPosition(4,124).string = &quot;Oneri di Sicurezza diretti&quot; then
+			oSheet.rows.removeByIndex (124, 1)
+		end if
+	end if
+	
 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	oContr = ThisComponent.CurrentController
 	if lrow = -1 then	 

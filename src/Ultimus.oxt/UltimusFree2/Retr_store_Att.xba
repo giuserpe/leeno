@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Retr_store_Att" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                           
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -189,8 +189,6 @@ Function Trova_Attr_Sheet
 	
     oDoc = ThisComponent
 	oSheet = ThisComponent.currentController.activeSheet
-	&apos;xray oSheet
-	
    &apos; Get the collection of attributes. 
 	for icol = 0 to 2  &apos;cerca nel riquadro col &amp; rows)
 		For i = 0 to 5		
@@ -204,8 +202,9 @@ Function Trova_Attr_Sheet
 	   					Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value
 	   					exit for
 	   			end if
-	   			if oCustomXmlAttributes.hasbyname( &quot;Tipo&quot; ) then &apos; il doppione &apos;Tipo&apos; e &apos;Tipo_sheet&apos; deriva da un mio errore... :-(
-	   					&apos; mantengo per compatibilità con i vari template...
+	   			if oCustomXmlAttributes.hasbyname( &quot;Tipo&quot; ) then 
+	   			&apos; il doppione &apos;Tipo&apos; e &apos;Tipo_sheet&apos; deriva da un mio errore... :-(
+	   			&apos; mantengo per compatibilità con i vari template...
 					 Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
 					 exit for
 				end if	

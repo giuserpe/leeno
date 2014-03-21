@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Agg_Templ" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                              
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -575,22 +575,23 @@ sub Colora_Tabs &apos;sistena i colori delle tabs
 		sSheetName = bSheetNames( i )  &apos;255,233,
 		If sSheetName = &quot;Elenco Prezzi&quot; then 
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
-			SetTabColorN(RGB(255,211,32))	
+			SetTabColorN(RGB(255,240,178))	
 	&apos;		SetTabColorN(RGB(255,233,173))
 		end if
-		If sSheetName = &quot;Analisi di Prezzo&quot; then 
+		If sSheetName = &quot;Analisi di Prezzo&quot; or _
+			sSheetName = &quot;Lista Analisi&quot; then 
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
 			&apos;SetTabColorN(RGB(215,252,200))	
-			SetTabColorN(RGB(61,235,61))
+			SetTabColorN(RGB(185,255,168))
 		end if
 		If sSheetName = &quot;COMPUTO&quot; then 
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
-			SetTabColorN(RGB(207,117,255))
+			SetTabColorN(RGB(255,199,231))
 	&apos;		SetTabColorN(RGB(241,248,255))
 		end if	
 		If sSheetName = &quot;CONTABILITA&quot; then 
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
-			SetTabColorN(RGB(255,140,130))
+			SetTabColorN(RGB(255,180,175))
 &apos;			SetTabColorN(RGB(255,228,219))
 		end if
 

@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Magic" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                           
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -236,93 +236,5 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 End Sub
 
 
-Sub Formula_magica___
 
-		oSheet = ThisComponent.currentController.activeSheet
-		iRow= Range2Cell
-
-	if oSheet.GetCellByPosition( 2, iRow ).cellstyle  = &quot;comp 1-a&quot; or _
-		oSheet.GetCellByPosition( 5, iRow ).cellstyle  = &quot;comp 1-a&quot;	then	
-		sSimbDividente = &quot;  &gt;| &quot;
-
-		sComp=oSheet.GetCellByPosition( 2, iRow ).string
-		if InStr(1, sComp, sSimbDividente) &lt;&gt; 0 then
-			sComp = Left(sComp,InStr(1, sComp, sSimbDividente)-1) &apos; Restituisce la stringa 
-		end if
-
-		sString4 = oSheet.GetCellByPosition( 4, iRow ).formula
-		sString5 = oSheet.GetCellByPosition( 5, iRow ).formula
-		sString6 = oSheet.GetCellByPosition( 6, iRow ).formula
-		sString7 = oSheet.GetCellByPosition( 7, iRow ).formula
-		sString8 = oSheet.GetCellByPosition( 8, iRow ).formula
-
-		if sString4 &lt;&gt; &quot;&quot; then 
-						 sString4 =	&quot;(&quot; &amp; sString4 &amp;&quot;)&quot;
-						 iTag = 1
-		end if	
-
-		if sString5 &lt;&gt; &quot;&quot; then 
-						 sString5 =	&quot;(&quot; &amp; sString5 &amp;&quot;)&quot; 
-						 iTag = 1
-		end if	
-		if sString4 &lt;&gt; &quot;&quot; and sString5 &lt;&gt; &quot;&quot; and sString6 &lt;&gt; &quot;&quot;  then 
-						 sString5 =	&quot;*&quot; &amp; sString5 	
-				if itag = 1 then 
-					sString5 =	&quot;*&quot; &amp; sString5
-				end if			
-		end if	
-	&apos;	sString5 = sString4 &amp; sString5
-		
-			
-		if sString6 &lt;&gt; &quot;&quot; then 
-						 sString6 =	&quot;(&quot; &amp; sString6 &amp;&quot;)&quot; 
-						 iTag = 1
-		end if
-		if sString5 &lt;&gt; &quot;&quot;  and sString6 &lt;&gt; &quot;&quot; and sString7 &lt;&gt; &quot;&quot; then 
-						 sString6 =	&quot;*&quot; &amp; sString6 
-				else
-				if itag = 1 then 
-					sString6 =	&quot;*&quot; &amp; sString6
-				end if			
-		end if	
-
-		
-		if sString7 &lt;&gt; &quot;&quot; then 
-						 sString7 =	&quot;(&quot; &amp; sString7 &amp;&quot;)&quot; 
-						 iTag = 1
-		end if	
-		if sString6 &lt;&gt; &quot;&quot; and sString7 &lt;&gt; &quot;&quot; and sString8 &lt;&gt; &quot;&quot; then 
-						 sString7 =	&quot;*&quot; &amp; sString7 
-				else
-				if itag = 1 then 
-					sString7 =	&quot;*&quot; &amp; sString7
-				end if			
-		end if	
-	&apos;	sString7 = sString6 &amp; sString7			
-		
-		if sString8 &lt;&gt; &quot;&quot; then 
-						 sString8 =	&quot;(&quot; &amp; sString8 &amp;&quot;)&quot; 
-						 iTag = 1
-		end if	
-		if sString7 &lt;&gt; &quot;&quot; or  sString8 &lt;&gt; &quot;&quot; then 
-						 sString8 =	&quot;*&quot; &amp; sString8
-						else
-				if itag = 1 then 
-					sString8 =	&quot;*&quot; &amp; sString8
-				end if			
-		end if
-	&apos;	sString8 = sString7 &amp; sString8	
-		sString8 = sString4 &amp; sString5 &amp; sString6 &amp; sString7 &amp; sString8
-		&apos;Source = &quot;il mio cane&quot;
-		Search = &quot;=&quot;
-		NewPart = &quot;&quot;		
-		sString8 = Replace_G (sString8 , Search , NewPart )			
-		sTringTUTTA = sComp &amp; sSimbDividente &amp; sString8 
-
-&apos;print sTringTUTTA
-
-		oSheet.GetCellByPosition( 2, iRow ).Formula = sTringTUTTA
-	end if&apos;
-
-End Sub
 </script:module>

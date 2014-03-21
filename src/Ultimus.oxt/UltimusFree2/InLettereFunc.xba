@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="InLettereFunc" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                              
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -380,18 +380,5 @@ SUB In_Let
 	oBarra.End
 	msgbox &quot;   La conversione in LETTERE è terminata!!&quot;
 end sub
-
-
-
-
-
-
-
 REM  *****  BASIC  *****
-
-Sub ocho
-	NUM = 1.348
-   print Round(NUM,2)
-  &apos; PRINT SPIPPO
-End Sub 
 </script:module>

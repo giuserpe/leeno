@@ -3,7 +3,7 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Header_Footer" script:language="StarBasic">
 REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                          
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                          
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -480,7 +480,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	sPrima = Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	if sPrima =&quot;Attiva&quot; then
-		wait 1000
+		wait 5000
 	end if	
 	oSheetCur = ThisComponent.Sheets.getByName(_
 	ThisComponent.currentcontroller.activesheet.name)

@@ -43,19 +43,26 @@ sub colora_capitoli_listino
 
 end sub
 
-sub Genera_SOMMARIO_ANALISI_FUNZIONA
+sub Genera_LISTA_ANALISI
+on error goto fine
 rem attivo le analisi
 	oSheet = ThisComponent
-	If not thisComponent.Sheets.hasByName(&quot;LISTA_ANALISI&quot;) Then &apos; se la sheet NON esiste
-		thisComponent.getSheets().insertNewByName(&quot;LISTA_ANALISI&quot;,4,0) &apos; creala ALLA POSIZIONE 4
-		else
-		msgbox &quot;Esiste già una Lista di Analisi.&quot; &amp; CHR$(10) _
-		&amp; &quot;Rischi di sovrascriverla.&quot; &amp; CHR$(10) _
-		&amp; &quot;Cambia il nome di quella esistente e riprova.&quot;, 0, &quot;AVVISO!&quot;
-	exit sub
+	If thisComponent.Sheets.hasByName(&quot;Lista Analisi&quot;) Then &apos; se la sheet esiste
+	ttt=	msgbox (&quot;Esiste già una tabella con nome &quot;&quot;Lista Analisi&quot;&quot;.&quot; &amp; CHR$(10) _
+		&amp; &quot;Se scegli OK sarà rigenerata e sovrascritta!&quot; &amp; CHR$(10) _
+		&amp; &quot;Se scegli ANNULLA, potrai cambiarne il nome e riprovare.&quot;, 48 + 1, &quot;AVVISO!&quot;)
 	end if
-	oSheetS= thisComponent.Sheets.getByName(&quot;LISTA_ANALISI&quot;)
-	id = 1
+	If ttt = 1 then &apos;se scegli OK
+		thisComponent.getSheets().removeByName(&quot;Lista Analisi&quot;) &apos; cancella la sheet
+	end if
+	If ttt = 2 then &apos;se scegli ANNULLA
+		oSheetS= thisComponent.Sheets.getByName(&quot;Lista Analisi&quot;)
+		ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0))
+		exit sub
+	end if	
+	thisComponent.getSheets().insertNewByName(&quot;Lista Analisi&quot;,4,0) &apos; creala ALLA POSIZIONE 4
+	oSheetS= thisComponent.Sheets.getByName(&quot;Lista Analisi&quot;)
+  	id = 1
 	RigSomm = 1 &apos;prima riga inserimento in SOMMARIO_ANALISI
 	ColSomm = 1 &apos;prima colonna inserimento in SOMMARIO_ANALISI
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
@@ -110,6 +117,8 @@ rem recupero i dati dalle ANALISI DI PREZZO
 			rem*****************************************************************************************
 			REM INIZIO INSERIMENTO
 			oSheetS.GetCellByPosition(0, RigSomm).setvalue(id)
+	   	    oSheet.GetCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
+			oSheet.GetCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
 			for each el in voce		
 				if ColSomm &lt;4 then
 					oSheetS.GetCellByPosition(ColSomm, RigSomm).setstring(el)
@@ -124,6 +133,21 @@ rem recupero i dati dalle ANALISI DI PREZZO
 		end if
 		Barra_Apri_Chiudi_5(&quot;                                 Restano &quot;&amp; lLastUrow-i &amp;&quot; righe...&quot;, 0)
 	next
+rem riga di intestazione
+	oSheets.getCellRangeByPosition(0,0,13,0).CellStyle=&quot;An.1v-Att Start&quot;
+	oSheets.GetCellByPosition(0,0).setstring(&quot;N.&quot;)
+	oSheets.GetCellByPosition(2,0).setstring(&quot;DESCRIZIONE&quot;)
+	oSheets.GetCellByPosition(3,0).setstring(&quot;UNITA&apos; DI MISURA&quot;)
+	oSheets.GetCellByPosition(4,0).setstring(&quot;A&quot; + chr(13) + chr(13) + &quot;MANODOPERA&quot; + chr(13) + &quot;(con S.G e U.I.)&quot;)
+	oSheets.GetCellByPosition(5,0).setstring(&quot;B&quot; + chr(13) + chr(13) + &quot;MATERIALI&quot;+ chr(13))
+	oSheets.GetCellByPosition(6,0).setstring(&quot;C&quot; + chr(13) + chr(13) + &quot;NOLI&quot;+ chr(13))
+	oSheets.GetCellByPosition(7,0).setstring(&quot;D&quot; + chr(13) + chr(13) + &quot;TRASPORTI&quot;+ chr(13))
+	oSheets.GetCellByPosition(8,0).setstring(&quot;E&quot; + chr(13) + &quot;ATRE FORNITURE E PRESTAZIONI&quot;+ chr(13))
+	oSheets.GetCellByPosition(9,0).setstring(&quot;F&quot; + chr(13) + &quot;TOTALE COSTI DIRETTI&quot; + chr(13) + &quot;(A+B+C+D+E)&quot;)
+	oSheets.GetCellByPosition(10,0).setstring(&quot;G&quot; + chr(13) + chr(13) + &quot;S.G.&quot; + chr(13))
+	oSheets.GetCellByPosition(11,0).setstring(&quot;H&quot; + chr(13) + chr(13) + &quot;U.I.&quot; + chr(13))
+	oSheets.GetCellByPosition(12,0).setstring(&quot;I&quot; + chr(13) + chr(13) + &quot;TOTALE COSTI INDIRETTI&quot;)
+	oSheets.GetCellByPosition(13,0).setstring(&quot;L&quot; + chr(13) + chr(13) + &quot;PREZZO UNITARIO OFFERTO&quot;)
 REM gli do il colore
 	oSheetS.getCellRangeByPosition(0, 1, 0, RigSomm-1).cellstyle = &quot;comp progress&quot;
 	oSheetS.getCellRangeByPosition(1, 1, 1, RigSomm-1).cellstyle = &quot;An-1v&quot;
@@ -134,113 +158,21 @@ REM gli do il colore
 	oSheetS.getCellRangeByPosition(12,1,12, RigSomm-1).cellstyle = &quot;An-lavoraz-generica&quot;
 	oSheetS.getCellRangeByPosition(13,1,13, RigSomm-1).cellstyle = &quot;An-1v-dx&quot;
 	msgbox (&quot;Fatto. E grazie per l&apos;attesa!&quot; &amp; CHR$(10) _
-	&amp; &quot;Analisi trasscritte nella lista: &quot; &amp; id-1 )
+	&amp; &quot;Analisi trascritte nella lista: &quot; &amp; id-1 &amp; CHR$(10) _
+	+ &quot;Sistema la larghezza delle colonne.&quot;, 64)
+	ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0))
+	fine:
 end sub
 
-sub Genera_SOMMARIO_ANALISI REM tocca sitemare bene l&apos;array di array
-Dim tutte_le_voci()
-	oSheet = ThisComponent
-	If not thisComponent.Sheets.hasByName(&quot;LISTA_ANALISI&quot;) Then &apos; se la sheet NON esiste
-		thisComponent.getSheets().insertNewByName(&quot;LISTA_ANALISI&quot;,4,0) &apos; creala ALLA POSIZIONE 4
-	end if
-	oSheetS= thisComponent.Sheets.getByName(&quot;LISTA_ANALISI&quot;)
-	id = 1
-	RigSomm = 1 &apos;prima riga inserimento in SOMMARIO_ANALISI
-	ColSomm = 1 &apos;prima colonna inserimento in SOMMARIO_ANALISI
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
-	for i =  3 to 100&apos;lLastUrow
-&apos;			print oSheet.GetCellByPosition( 1, i).cellstyle
-rem recupero i dati dalle analisi
-		if oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-1-descr_&quot; then
-			art = oSheet.GetCellByPosition( 0, i).getstring &apos;articolo
-			desc = oSheet.GetCellByPosition( 1, i).getstring &apos;descrizione
-			um = oSheet.GetCellByPosition( 2, i).getstring &apos;unità
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;A&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			manodopera = oSheet.GetCellByPosition( 6, i).getvalue() &apos;manodopera
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;B&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			materiali = oSheet.GetCellByPosition( 6, i).getvalue() &apos;materiali
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;C&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			noli = oSheet.GetCellByPosition( 6, i).getvalue() &apos;noli
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;D&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			trasporti = oSheet.GetCellByPosition( 6, i).getvalue() &apos;trasporti
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;E&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			prestazioni = oSheet.GetCellByPosition( 6, i).getvalue() &apos;prestazioni
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;F&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			totaleC = oSheet.GetCellByPosition( 6, i).getvalue() &apos;totaleC
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;G&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-Utili&quot; then
-			utili = oSheet.GetCellByPosition( 5, i).getvalue &apos;utili
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;H&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-Utili&quot; then
-			spese = oSheet.GetCellByPosition( 5, i).getvalue &apos;spese
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;I&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			totaleCD = oSheet.GetCellByPosition(6,i).getvalue() &apos;totaleCD
-		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;L&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			prezzoU = oSheet.GetCellByPosition(6,i).getvalue() &apos;prezzoU
-			voce = array (art, desc, um, manodopera, materiali, noli, trasporti, prestazioni, totaleC, utili, spese, totaleCD, prezzoU)
-		rem*****************************************************************************************
-		REM INIZIO INSERIMENTO
-	goto oltre
-		oSheetS.GetCellByPosition(0, RigSomm).setvalue(id)
-		for each el in voce		
-			if ColSomm &lt;4 then
-				oSheetS.GetCellByPosition(ColSomm, RigSomm).setstring(el)
-			else
-				oSheetS.GetCellByPosition(ColSomm, RigSomm).setvalue(el)
-			end if
-			ColSomm=ColSomm+1
-		next
-		id=id+1
-		ColSomm=1
-		RigSomm=RigSomm+1
-	oltre:
-		end if
-      Appenditem(tutte_le_voci(), array(voce))
-&apos;      oSh.PrintAreas() = Array()
-&apos;		tutte_le_voci = array (voce)
-		Barra_Apri_Chiudi_5(&quot;                                 Mancano &quot;&amp; lLastUrow-i &amp;&quot; righe...&quot;, 0)
-	next
 
-for each analisi in tutte_le_voci()
-		for each el in analisi
-		print el
-			if ColSomm &lt;4 then
-				oSheetS.GetCellByPosition(ColSomm, RigSomm).setstring(el)
-			else
-				oSheetS.GetCellByPosition(ColSomm, RigSomm).setvalue(el)
-			end if
-			ColSomm=ColSomm+1
-		next
-		id=id+1
-		ColSomm=1
-		RigSomm=RigSomm+1
-next
-			msgbox (&quot;Fatto. E grazie per l&apos;attesa!&quot; &amp; CHR$(10) _
-			&amp; &quot;Analisi trasscritte nella lista: &quot; &amp; id )
-end sub
 
 
 sub che_sheet
 	print Trova_Attr_Sheet
+end sub
+sub nnnn
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	xray oSheet
 end sub
 
 sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni

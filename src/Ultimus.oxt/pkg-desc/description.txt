@@ -1,7 +1,6 @@
 LeenO-3.9.1.oxt
-Copyright (c) 2001-2013 Bartolomeo Aimar
-Copyright (c) 2014 Giuseppe Vizziello
+(c) 2014 Giuseppe Vizziello
+(c) 2001-2013 Bartolomeo Aimar
 
-Computo Metrico Estimativo su LibreOffice/OpenOffice.org Calc
-File assistito per Computi Metrici e Contabilita' Lavori
-
+LeenO - Computo metrico assistito
+* applicativo per computi metrici estimativi *

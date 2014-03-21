@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                        
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                        
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -1278,108 +1278,39 @@ dim xB as string
 		CNTR_Computo = 1
 End function
 
-&apos;+++++++++++++++++++++++++++++++++++++++++++++
 
-
-Sub Inserisci_Incid_manodopera()&apos; obsoleta ... cancellare poi...
-
-dim nome as string
-Dim oDoc As Object
-Dim oSheets As Object
-dim oCelle As Object
-Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
-Dim CellAddress As New com.sun.star.table.CellAddress
-dim lrow as integer
-dim lcol as integer
-dim lrow2 as integer
-Dim oView As Object
-Dim nome_sheet as string
-Dim OcalcSheet as Object
-Dim I as long
-Dim oSheet_num as integer
-Dim iflag
-	oDoc=thisComponent
-	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
-	oCelle=oDoc.getCurrentSelection().getCellAddress()
-	lrow=oCelle.Row	
-	oSheets = odoc.Sheets
-	oView = ThisComponent.CurrentController
-	nome_sheet = oView.GetActiveSheet.Name
-	
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	iflag =	CNTR_Analisi (lrow)&apos; controlla se la riga è buona
-			sFlag = &quot;A&quot;
-
-	if iflag = 1 then
-		exit sub
-	end if
-	oCalcSheet = ThisComponent.currentController.activeSheet
-&apos;	oCalcSheet = oSheets.GetByIndex(0)
-&apos;	For I = 0 to oSheets.Count -1 
-&apos;		oCalcSheet = oSheets(I) &apos;recuperiamo la tabella
-&apos;		if oCalcSheet.Name = nome_sheet Then
-&apos;			oSheet_num = I
-&apos;		end if
-&apos;	Next I
-&apos;	oSheets = oDoc.Sheets (oCalcSheet)
-&apos;	CellRangeAddress.Sheet = oCalcSheet   
-&apos;	CellRangeAddress.StartColumn = 0
-&apos;	CellRangeAddress.StartRow = lrow
-&apos;	CellRangeAddress.EndColumn = 250 
-&apos;	CellRangeAddress.EndRow = lrow
-&apos;	print lrow
-&apos;	oSheets.insertCells(CellRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)&apos; inserisce delle righe vuote
-&apos;exit sub
-&apos;print
-&apos;	lrow2 = lrow  +1
-&apos;	CellAddress.Sheet = oSheet_num   
-&apos;	CellRangeAddress.StartRow = lrow2
-&apos;	CellRangeAddress.EndRow = lrow2
-&apos;	CellAddress.Column = 0
-&apos;	CellAddress.Row = lrow
-&apos;	oSheets.copyRange(CellAddress, CellRangeAddress)
-
-	if sflag = &quot;A&quot; then &apos; ????
-			lcol = 1
-		else
-			lcol = 3
-	end if
-&apos;	oCell = oSheets.GetCellByPosition( lcol , lrow+1)	
-&apos;	ThisComponent.CurrentController.Select(oCell)
-	
-	
-	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-	
-	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente             
-  oCelle=thisComponent.getCurrentSelection().getCellAddress()    
- lrow=oCelle.Row        
-  oCell = oSheet.GetCellByPosition(0,lrow )      
-  ThisComponent.CurrentController.Select(oCell)
-    
-   &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia gli utili %
-	oDoc = ThisComponent
-	DocView=oDoc.getCurrentController()
-	oSheet1=oDoc.NamedRanges.utili.ReferredCells &apos; utili è il nome del range
-	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
-	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
-	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
- &apos;   oSheet2.copyRange(oCelle,oQuellRangeAddresse)
-    	oCell = oSheet.GetCellByPosition( 7 , lrow)	
-	ThisComponent.CurrentController.Select(oCell)
-&apos;	print
-	Range_Somma_locale_analisi_incidenza (6)
-	oCell.cellstyle=&quot;An-lavoraz-dx% ins&quot;
-	msgbox &quot;Controlla la formula... potrebbe non essere giusta!!!&quot;
-END SUB
-
-&apos;************************************************************************
 Sub Inserisci_Utili
-	if ThisComponent.currentController.activeSheet.name &lt;&gt; &quot;Analisi di Prezzo&quot; then
-		exit sub
-	end if
+Dim oCellAddress as object
+Dim oRangeAddress as object
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	oRanges = ThisComponent.NamedRanges
+	oCellAddress = oSheet.getCellRangeByName(&quot;b10&quot;).getCellAddress() &apos; b10 è un valore a caso
+	if (ThisComponent.NamedRanges.hasByName(&quot;oneri_sicurezza&quot;))= false then &apos;se il range non esiste lo ricrea completamente
+		oRanges.addNewByName(&quot;oneri_sicurezza&quot;, &quot;$S5.$B$93:$P$93&quot; , oCellAddress, 0)&apos;definisce l&apos;area
+		oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;)&apos;scegli il foglio S5
+	    oSheet.GetCellByPosition(1 , 92).CellStyle=&quot;An-lavoraz-desc-CEN&quot;
+	    oSheet.GetCellByPosition(2 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
+   	    oSheet.GetCellByPosition(3 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
+   	    oSheet.GetCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
+		oSheet.GetCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
+   	    oSheet.GetCellByPosition(5 , 92).CellStyle=&quot;An-lavoraz-%&quot;
+		oSheet.GetCellByPosition(5 , 92).setstring(&quot;=SE(O(E93=&quot;&quot;Spese Generali&quot;&quot;;E93=&quot;&quot;Spese Generali (calcolate su F)&quot;&quot;); $S1.$H$320;SE(O(E93=&quot;&quot;utili d&apos;impresa&quot;&quot;;E93=&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot;);$S1.$H$321;SE(E93=&quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;$S1.$H$322;SE(O(E93=&quot;&quot;Di cui sicurezza afferenti l&apos;impresa&quot;&quot;;SINISTRA(E93;18)=&quot;&quot;Oneri di Sicurezza&quot;&quot;);$S1.$H$319;SE(E93=&quot;&quot;Sconto&quot;&quot;;$S1.$H$324;SE(E93=&quot;&quot;Maggiorazione&quot;&quot;;$S1.$H$326))))))&quot;)
+   	    oSheet.GetCellByPosition(6 , 92).CellStyle=&quot;An-lavoraz-Utili-num sin&quot;
+   	    oSheet.GetCellByPosition(6 , 92).setstring(&quot;=SOMMA(H77:H89)*F93&quot;)
+   	    oSheet.GetCellByPosition(7 , 92).CellStyle=&quot;An-senza&quot;
+   	    oSheet.GetCellByPosition(8 , 92).CellStyle=&quot;An-senza-DX&quot;
+   	    oSheet.GetCellByPosition(9 , 92).CellStyle=&quot;An-lavoraz-dx%&quot;
+   	    oSheet.GetCellByPosition(10 , 92).CellStyle=&quot;An-lavoraz-generica&quot;
+   	    oSheet.GetCellByPosition(11 , 92).CellStyle=&quot;An-lavoraz-dx&quot;
+   	    oSheet.GetCellByPosition(11 , 92).setstring(&quot;=SE (RICERCA(&quot;&quot;sicurezza&quot;&quot;;E93);G93;&quot;&quot;)&quot;)
+   	    oSheet.getCellRangeByPosition(12 ,92,15,92).CellStyle=&quot;Analisi_Sfondo&quot;
+	end if
 	lrow= Range2Cell &apos;riga corrente
-&apos;	print lrow
+	oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow
+	If lrow&gt;lrowFine then
+		lrow=lrowFine-5
+	end if
 	for i =  lrow to lrow+50
 		if 	oSheet.GetCellbyPosition( 0, i ).string = &quot;L&quot; or _
 			InStr (oSheet.GetCellbyPosition( 3, i ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 or _
@@ -1407,24 +1338,6 @@ Sub Inserisci_Utili
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,i)) &apos;focus cella
 end sub
 
-Sub Inserisci_Utili_old &apos; o Oneri di sicurezza o Maggiorazione %
-	nome_sheet = thisComponent.currentcontroller.activesheet.name
-	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot;  then
-		exit sub
-	end if
-
-	&apos;_____________________
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,326).value = 3 then
-				Inserisci_Utili_giuserpe
-			else
-				Inserisci_Utili_Classica
-		end if
-	end if
-end sub
 
 Sub Inserisci_Utili_Classica
 dim nome as string

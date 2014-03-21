@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Strutture" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.0                                                                                                                                                                                                                                                                                                                                                       
+&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                       
 &apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -36,7 +36,7 @@ Sub Inser_Capitolo
 	lrowFine=oEnd.RangeAddress.EndRow 
 
 	If lrow &gt; lrowFine  then
-		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
+		msgbox &quot;sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
 		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
 		exit sub
 	end if
@@ -1143,13 +1143,9 @@ Sub Struttura_Analisi ()
 	lastUrow = getLastUsedRow(oSheet)
 	oRange = osheet.getCellRangeByPosition (6,2,6,lastUrow )
 
-
-	xxx= ThisComponent.CurrentController.Select(oRange)
-	xray xxx
 	dim document   as object
 	dim dispatcher as object
 	document   = ThisComponent.CurrentController.Frame
-xray document
 	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	dispatcher.executeDispatch(document, &quot;.uno:AutoOutline&quot;, &quot;&quot;, 0, Array())
 	
@@ -1203,9 +1199,7 @@ Sub Togli_Struttura ()
       else
 		oSheet.clearOutline()		
 	end if
-	&apos;oSheet.clearOutline()
-&apos;	oCelle=osheet.getCellRangeByPosition (0,lrS,lcE,lrE )
-&apos;	oCelle=osheet.getCellRangeByPosition (lcS,lrS,lcE,lrE )
+
 	ThisComponent.CurrentController.Select(ocelle)
 end sub
 

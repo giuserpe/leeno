@@ -185,7 +185,12 @@ SUB esporta_PDF2&apos;(sUrl) &apos; copyright 2010 Paolo Mantovani
 &apos; xray oSheets.getbyname(&quot;computo&quot;)
   For Each oSh In oSheets
 &apos;    If oSh.Name &lt;&gt; oActiveSheet.Name Then
+<<<<<<< HEAD
     If oSh.Name = &quot;COMPUTO&quot; Then
+=======
+    If oSh.Name = &quot;COMPUTO&quot; OR _
+		oSh.Name = &quot;CONTABILITA&quot; Then
+>>>>>>> cbd0ca58a584820ef616b9b9e0b6b24b04ea2a82
 		PRINT oSh.Name
       Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
       oSh.PrintAreas() = Array()

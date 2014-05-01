@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM  *****  BASIC  *****
-sub colora_capitoli_listino
+sub colora_capitoli_listino &apos;(C) Giuseppe Vizziello 2014
 	If thisComponent.Sheets.hasByName(&quot;Listino&quot;) Then &apos; se la sheet esiste
 		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 		else
@@ -46,15 +46,17 @@ end sub
 
 
 
-
-sub che_sheet
-	print Trova_Attr_Sheet
+sub ripara_computo
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	lLastUrow = getLastUsedRow(oSheet)
+	print lLastUrow
+	for i= 0 to lLastUrow
+		if oSheet.GetCellByPosition(17, i).cellstyle = &quot;Comp-sotto euri&quot; then &apos;importo sicurezza
+			oSheet.GetCellByPosition(17 , i).setformula(&quot;=J&quot; &amp; i+1 &amp; &quot;*AB&quot; &amp; i+1)
+		end if
+	next
+	
 end sub
-sub nnnn
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	xray oSheet
-end sub
-
 sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lLastUrow = getLastUsedRow(oSheet)

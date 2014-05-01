@@ -74,9 +74,6 @@ dim StartRow as long
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	
 END SUB
 
-sub lilli
-msgbox  Trova_Attr_N
- end sub
 &apos;_______________________________________________________________________________________++
 FUNCTION Mettiti_esattamente_tra_due_VociC_Att (ByVal lrow As Long)&apos; trova il punto di inserimanto
 &apos; nel caso l&apos;utente non si sia posizionato bene...   &apos; specifico per voci Computo
@@ -270,22 +267,10 @@ end if
 ThisComponent.CurrentController.Select(oRange)
 END FUNCTION
 
-SUB SCEMO_____
-oSheet = ThisComponent.currentController.activeSheet
- oSelezione = thisComponent.getCurrentSelection()
-&apos;checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
-&apos;if checkzelle then 
-		lrow = oSelezione.celladdress.row
-&apos;		lcol = oSelezione.celladdress.column		
-	oRange=Circoscrive_Voce_Computo_Att (lrow)
-&apos;	ThisComponent.CurrentController.Select(oRange)
-END SUB
 
-
-FUNCTION Circoscrive_Voce_Computo_Att(ByVal lrow As Long) &apos;individua un record di Computo
+FUNCTION Circoscrive_Voce_Computo_Att (ByVal lrow As Long) &apos;individua un record di Computo
 &apos;---------------------------------------------------------------------------
 							&apos;restituisce il range&apos;
-&apos;print lrow
 dim lrowS as long
 dim lrowE as long
 	oSheet = ThisComponent.currentController.activeSheet 

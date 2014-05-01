@@ -10,7 +10,7 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della ContabilitÃ  Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-sub Main_Riordina_Analisi_Alfabetico &apos; giuseppe vizziello
+sub Main_Riordina_Analisi_Alfabetico &apos;(C) Giuseppe Vizziello 2014
 	Dim articoli()
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata

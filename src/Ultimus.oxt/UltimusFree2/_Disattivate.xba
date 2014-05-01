@@ -2,6 +2,66 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;********************************************************
+
+SUB SCEMO_____
+oSheet = ThisComponent.currentController.activeSheet
+ oSelezione = thisComponent.getCurrentSelection()
+&apos;checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
+&apos;if checkzelle then 
+		lrow = oSelezione.celladdress.row
+&apos;		lcol = oSelezione.celladdress.column		
+	oRange=Circoscrive_Voce_Computo_Att (lrow)
+&apos;	ThisComponent.CurrentController.Select(oRange)
+END SUB
+&apos;_____________________________________________________________________________
+Function  Circoscrive_Voce_Computo$ (ByVal lrow As Long) &apos;individua un record di Computo MOLTO vecchio
+									&apos; ancora nn è chiaro se serve... ma l&apos;ho aggiornata nel gennaio del 2011 per S5
+&apos;---------------------------------------------------------------------------
+	
+&apos;msgbox &quot;Per favore se vi appare questa finestra scrivetemi citando: Function  Circoscrive_Voce_Computo$&quot;
+dim lrowS as long
+dim lrowE as long
+	 oSheet = ThisComponent.currentController.activeSheet 
+	lrowS = lRow
+	lcol = 0
+	lcolS = lcol
+	oCellStart = oSheet.GetCellByPosition( lcol , lrow)
+ &apos;   ThisComponent.CurrentController.Select(oCell)
+ 
+	If oSheet.GetCellByPosition(2 , lrow ).string = &quot;SOMMANO &quot; then 
+ 		goto sommano_trovato 
+	end if 
+
+	Do while oSheet.GetCellByPosition(2 , lrow ).string &lt;&gt;  &quot;SOMMANO &quot; &apos;or _
+  		&apos;	oSheet.GetCellByPosition(2 , lrow ).string &lt;&gt;  &quot;SOMMANO&quot; 
+ 	   lrow = lrow+1
+ 	   ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 2 , lrow))
+  	   print
+ 	Loop
+ 	lrow = lrow+1
+	sommano_trovato:
+
+ &apos;  ThisComponent.CurrentController.Select(oCell) 
+    lrowE = lrow-1  
+ &apos;	xA = ThisComponent.getcurrentselection.getstring
+ &apos;	xA = oCell.string	
+  	Do  while oSheet.GetCellByPosition(0 , lrow ).string = &quot;&quot;  &apos; xA =  &quot;&quot;
+  		lrow = lrow-1
+  	  	&apos;oCell = oSheet.GetCellByPosition( 0 , lrow)
+  	  	&apos;xA = oCell.string	
+	loop
+ 	&apos;	oCelle=thisComponent.getCurrentSelection().getCellAddress()    
+	 &apos;   lrowS=oCelle.Row - 1
+		lrowS= lrow -1
+	&apos;	print lrows
+	oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,31,lrowE )
+	&apos;	lista =  &quot;0, &quot; &amp; lrowS &amp; &quot;,31 ,&quot; &amp; lrowE 
+	Circoscrive_Voce_Computo= oRangeVoceC
+&apos; ThisComponent.CurrentController.Select(oRangeVoceC) &apos;maria
+ &apos;print 
+
+end Function
+&apos;=================================================================================  
 Sub Formula_magica___
 
 		oSheet = ThisComponent.currentController.activeSheet
@@ -25,7 +85,7 @@ Sub Formula_magica___
 		if sString4 &lt;&gt; &quot;&quot; then 
 						 sString4 =	&quot;(&quot; &amp; sString4 &amp;&quot;)&quot;
 						 iTag = 1
-		end if	
+		End If	
 
 		if sString5 &lt;&gt; &quot;&quot; then 
 						 sString5 =	&quot;(&quot; &amp; sString5 &amp;&quot;)&quot; 
@@ -200,197 +260,6 @@ Dim iflag
 	msgbox &quot;Controlla la formula... potrebbe non essere giusta!!!&quot;
 END SUB
 &apos; Questa Ã¨ molto traballante... da rivedere completamente...
-Sub Main_Riordina_Analisi_Alfabetico_old &apos; riordina le analisi in ordine alfabetico
-&apos;-----------------------------------&apos; trovando anche i codici doppi.
-&apos;	oSheets = ThisComponent.Sheets
-	 oSheets = ThisComponent.getSheets()
-if msgbox (&quot; Mi hai chiesto di riordinare le analisi in ordine alfabetico.. &quot; &amp; CHR$(10) _
-				&amp;&quot; E&apos; un&apos;operazione lunghetta.... Sei certo di volerlo fare adesso? &quot;&amp; CHR$(10)_
-				&amp;&quot; L&apos;undo potrebbe risultare impossibile... non sarebbe meglio salvare prima il file? &quot; &amp; CHR$(10) _
-				&amp;&quot;           Che faccio... Proseguo ?...  &quot;,292, &quot;Attento!!! Hai salvato?&quot;) = 7 then
-			exit sub
-end if	 
-
-
-&apos;	on error goto riprendi
-	mydoc = StarDesktop.CurrentComponent
-	myView = myDoc.CurrentController
-dim lrowS as long
-dim lrow as long
-dim lrowDove as long
-dim oOrigine as object
-&apos;on error goto gestione_er
-
-Doc = thisComponent
-If thisComponent.Sheets.hasByName(&quot;TempR&quot;) Then &apos; se la sheet esiste
-thisComponent.Sheets.removebyname(&quot;TempR&quot;)  &apos; la cancella
-end if
-
-	oSheets.insertNewByName(&quot;TempR&quot;,4,0)
-	print
-	oSheetTempR = oSheets.GetByName(&quot;TempR&quot;) &apos;recuperiamo la tabella
-
-	oView = ThisComponent.CurrentController&apos;@@
-	oView.setActiveSheet(oSheetTempR) &apos;attiviamola@@
-	oDocument = ThisComponent
-	oSheetAnalisi = oDocument.Sheets.getByName (&quot;Analisi di Prezzo&quot;) &apos; sheet da cui copiare
-	
-	oCelle=oDocument.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
-	oSheet2 = oDocument.Sheets.getByName(odocument.currentcontroller.activesheet.name) &apos; sheet (corrente) dove incollare
-	oQuelleRange=oSheetAnalisi.getCellRangeByName(&quot;A1:A5000&quot;)  &apos; range da copiare
-	oQuellRangeAddresse = oQuelleRange.getRangeAddress &apos; indirizzo cella base del range
-    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
-    &apos; copiato la col A
-
-	ThisComponent.CurrentController.Select(oMioRange)&apos;@@@@@
-	oSheetnum=SheetNameToNumber (&quot;TempR&quot;)
-	Dim aSortFields(0) as New com.sun.star.util.SortField
-   	Dim aSortDesc(0) as New com.sun.star.beans.PropertyValue
-
-   oDesktop = createUnoService(&quot;com.sun.star.frame.Desktop&quot;)
-   oDocument = ThisComponent
-   oSheet = oDocument.Sheets().getByIndex(oSheetnum)
-   oRange = oSheet.getCellRangeByPosition(0,0,0,5000)  
-   aSortFields(0).Field = 0           
-   aSortFields(0).SortAscending = False   &apos; descending sort
-   aSortDesc(0).Name = &quot;SortFields&quot;
-   aSortDesc(0).Value = aSortFields()
-   oRange.Sort(aSortDesc())
-	nMode = com.sun.star.sheet.CellDeleteMode.ROWS
-
-	sString$ = &quot;----&quot;
-	oOrigine=uFindString(sString$, oSheetTempR)
-	lrowS = oOrigine.CellAddress.Row
-	lrow = lrowS
-
-	 nEndRow = getLastUsedRow(oSheet)
-
-	myrows = oSheet.getrows
-	myrows.removebyindex(lrowS,nEndRow)&apos; ripulisce cancellando il resto della colonna
-
-	oRCell = oSheetTempR.getCellByPosition (0,0)
-	xA = oRCell.string
-
-	If xA = &quot;inizio analisi&quot; then 
-		 aAddress = oRcell.getRangeAddress
-		 myrows.removebyindex(0,1)
-   		&apos;  oSheetTempR.removeRange(aAddress, nMode)
-	end if
-
-&apos;	 inserisciriga vuota  altrimenti non riordina correttamente
-	 
-	 lRowNum= 1 &apos; numero di righe da inserire
-	 oSheet.unprotect(&quot;&quot;)
-	oSheet.getRows.insertByIndex(0, lRowNum)&apos;
-
-   oDesktop = createUnoService(&quot;com.sun.star.frame.Desktop&quot;)
-   oDocument = ThisComponent
-   oSheet = oDocument.Sheets().getByIndex(oSheetnum)
-   oRange = oSheet.getCellRangeByPosition(0,0,0,5000)  
-   aSortFields(0).Field = 0           
-   aSortFields(0).SortAscending = true&apos; False   &apos; descending sort
-   aSortDesc(0).Name = &quot;SortFields&quot;
-   aSortDesc(0).Value = aSortFields()
-   oRange.Sort(aSortDesc())
-	sString$ = &quot;Fine ANALISI&quot;
-	oOrigine=uFindString(sString$, oSheetTempR)
- 	lrowFine = oOrigine.CellAddress.Row
- 	oRangeRow = oSheetTempR.getCellRangeByPosition (0,lrowFine,10,lrowFine)
- 	aAddress = oRangeRow.getRangeAddress
-   	oSheetTempR.removeRange(aAddress, nMode)
-&apos;   	print &quot;&quot;
-	lrow =0
-		oRCell = oSheetTempR.GetCellByPosition( 0 , lrow )
-  &apos; 	ThisComponent.CurrentController.Select(oRCell)&apos;@@@@@@@@
-		oTag = oRCell.string
-&apos;		print &quot;&quot;
-	While oTag &lt;&gt; &quot;&quot;&apos; and(or oTag1 &lt;&gt; &quot;&quot;
-		oTag = oRCell.string
-		lrow = lrow +1
-		oRCell = oSheetTempR.GetCellByPosition( 0 , lrow )
-		oTag1 = oRCell.string
-	&apos;	print &quot;&quot;
-		If oTag = oTag1 then
-			If otag1 = &quot;&quot; then
-					oCelle=thisComponent.getCurrentSelection().getCellAddress()    
-  						lrow=oCelle.Row
-  					&apos; if un po&apos; scemo... da rivedere...  					
-				else
-					ThisComponent.CurrentController.Select(oRCell)
-					MsgBox &quot;ATTENZIONE!!!! &quot;&amp; CHR(10)_
-					&amp; &quot;Ho individuato voci diverse con il medesimo codice!!&quot;&amp; CHR(10)_
-					&amp; &quot;  Se non risolvi prima l&apos;omonimia non posso riordinare... &quot; &amp; CHR(10) &amp; CHR(10)_
-					&amp; &quot;La sigla incriminata Ã¨:  &quot; + oTag  +  &quot;  &quot; &amp; CHR(10) &amp; CHR(10)_
-					&amp; &quot;Vai alle Analisi di Prezzo, risolvi il problema e poi riprova... &quot;		
-				&apos;	&amp; &quot;La sigla incriminata Ã¨:  &quot; + oTag  +  &quot;                   Vai alle Analisi&quot;_
-				&apos;	&amp; &quot; di Prezzo, risolvi il problema e poi riprova... &quot;		
-					exit sub
-			end if
-		end if
-	wend
-	&apos; se arriva qui vuole dire che non ci sono doppioni...............................
-	&apos; e parte a spostare....................................
- &apos;    oSheets =thiscomponent.Sheets
-
-	oCell = oSheet.GetCellByPosition( 0, 0 )
-&apos;	ThisComponent.CurrentController.Select(oCell)&apos; debug@@@@
- 	oTag1 = oCell.string
- 	lrow = 0
- 	&apos; ciclo per trovare il primo spazio buono dove inserire la prima analisi riordinata
-	lrowE = 1
-	oRCell = oSheetAnalisi.GetCellByPosition( 0 , 1 )	
-	xA = oRCell.string
-	Do While  xA = &quot;&quot;
-		lrowE = lrowE+1
-		oRCell = oSheetAnalisi.GetCellByPosition( 0 , lrowE )
-		xA = oRCell.string
-	loop
-&apos;	lrowE = lrowE-1
-&apos;print
-	&apos; ciclo di riordinamento vero e proprio
-Do While oTag1 &lt;&gt; &quot;&quot;
-	sString$ = oTag1
-	oOrigine=uFindString(sString$, oSheetAnalisi)
-	 lrowDove = oOrigine.CellAddress.Row
-
-	oCell = oSheetAnalisi.GetCellByPosition( 0, lrowDove )
- 	ThisComponent.CurrentController.Select(oCell)&apos;@@@
-&apos;
-				&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-				oVoce = CircoscrivileAnalisi_7 (lrowDove)
-				ThisComponent.CurrentController.Select(oVoce)
-	&apos;	print &apos;debug
-
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-		Sposta_range_buono(lrowE)
-	
-&apos;print &apos;debug
-	oSelections = ThisComponent.getCurrentSelection()
-&apos;	print
-	oRange=oSelections.getRangeAddress()    
-	lrowE=oRange.EndRow 
-	lrowE = lrowE +1 &apos;riga di inserimento in Analisi
-	lrow = lrow +1 &apos;
-
-	oRCell = oSheetTempR.GetCellByPosition( 0 , lrow )
-	oTag1 = oRCell.string
-
-Loop
-
-msgbox &quot; Le Analisi sono state riordinate in ordine alfabetico (in Base alla sigla)  Credo sia tutto OK ma meglio controllare&quot;
- &apos; ok Ripulito e riordinato le sigle    
-&apos; cancello la sheet... non serve piÃ¹
-&apos;thisComponent.Sheets.removebyname(&quot;TempR&quot;)  &apos;riattivare
-exit sub
-gestione_er:
-Msgbox &quot;*/^^oops... un errrore... :-(  e non so neanche dirti da cosa puÃ² dipendere...!&quot;
-thisComponent.Sheets.removebyname(&quot;TempR&quot;)
-If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
-	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
-end if
-
-END SUB
-
 
 Function Disattiva_button  &apos;viene richiamata dopo l&apos;esecuzione 
 print &quot;oops... non credevo venisse usata&quot;
@@ -451,11 +320,11 @@ print &quot;questo&quot;
 	Barra_Apri_Chiudi_5(&quot;1C  Sto creando le strutture... Pazienta...&quot;, 10)
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos;			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+&apos;			exit sub
+&apos;	end if
    	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
 		s_R = &quot;&quot;
 	end if

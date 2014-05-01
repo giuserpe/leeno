@@ -279,6 +279,31 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>
+				<node oor:name="mT16" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value></value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>private:separator</value>
+					</prop>
+				</node>	
+				<node oor:name="mT17" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Ricicla_misure?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<value>%origin%/icons/ricicla</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>Ricicla voce computo</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
 			</node>
 		</node>
 		<node oor:name="OfficeMenuBar">
@@ -951,7 +976,7 @@ oor:package="org.openoffice.Office">
 						<value>private:separator</value>
 					</prop>
 				</node>				
-				<node oor:name="m13" oor:op="replace">
+				<node oor:name="m14" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -968,7 +993,24 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>
-				<node oor:name="m14" oor:op="replace">
+				<node oor:name="m15" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.elimina_voce?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<value>%origin%/icons/cestino</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>Elimina voce</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
+				<node oor:name="m16" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -985,7 +1027,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>		
-				<node oor:name="m15" oor:op="replace">
+				<node oor:name="m17" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1002,7 +1044,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>		
-				<node oor:name="m16" oor:op="replace">
+				<node oor:name="m18" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value></value>
 					</prop>
@@ -1010,7 +1052,7 @@ oor:package="org.openoffice.Office">
 						<value>private:separator</value>
 					</prop>
 				</node>
-				<node oor:name="m17" oor:op="replace">
+				<node oor:name="m19" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1027,7 +1069,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>						
-				<node oor:name="m18" oor:op="replace">
+				<node oor:name="m20" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value></value>
 					</prop>
@@ -1035,7 +1077,7 @@ oor:package="org.openoffice.Office">
 						<value>private:separator</value>
 					</prop>
 				</node>				
-				<node oor:name="m19" oor:op="replace">
+				<node oor:name="m21" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1052,7 +1094,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>	
-				<node oor:name="m20" oor:op="replace">
+				<node oor:name="m22" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1069,7 +1111,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>	
-				<node oor:name="m21" oor:op="replace">
+				<node oor:name="m23" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1086,7 +1128,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>	
-				<node oor:name="m22" oor:op="replace">
+				<node oor:name="m24" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value></value>
 					</prop>
@@ -1094,7 +1136,7 @@ oor:package="org.openoffice.Office">
 						<value>private:separator</value>
 					</prop>
 				</node>
-				<node oor:name="m23" oor:op="replace">
+				<node oor:name="m25" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1111,7 +1153,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>	
-				<node oor:name="m24" oor:op="replace">
+				<node oor:name="m26" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1128,7 +1170,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>	
-				<node oor:name="m25" oor:op="replace">
+				<node oor:name="m27" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1145,7 +1187,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>	
-				<node oor:name="m26" oor:op="replace">
+				<node oor:name="m28" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value></value>
 					</prop>
@@ -1153,7 +1195,7 @@ oor:package="org.openoffice.Office">
 						<value>private:separator</value>
 					</prop>
 				</node>	
-				<node oor:name="m27" oor:op="replace">
+				<node oor:name="m29" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1167,7 +1209,7 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>		
-				<node oor:name="m28" oor:op="replace">
+				<node oor:name="m30" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -1297,7 +1339,7 @@ oor:package="org.openoffice.Office">
 						</node>			
 					</node>
 				</node>
-				<node oor:name="m29" oor:op="replace">
+				<node oor:name="m31" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>

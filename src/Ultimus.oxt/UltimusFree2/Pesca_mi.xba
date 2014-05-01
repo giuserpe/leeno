@@ -12,7 +12,7 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-Global oPartenza as object
+Global oPartenza As Object 
 Global oPartenza_A as object
 Global sCodice as string
 Global sGVV as string
@@ -24,24 +24,90 @@ Global sGDove as string
 &apos;        poi estesa anche a contabilita &lt;&gt; Ecomputo etc...
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Sub Ricicla_Misure 
+&apos; Pesca_cod__per_reg_A_2
+	If  ThisComponent.currentcontroller.activesheet.Name = &quot;CONTABILITA&quot; then
+		sGVV = &quot;va&quot;
+		lrow = range2cell &apos;cerca_partenza
+		sGDove = &quot;COMPUTO&quot;
+ 		sGVV = &quot;va&quot;	
+		sGorigine = &quot;CONTABILITA&quot;			
+		Pesca_cod__per_reg_A_1
+	End If
+			&apos;porta su Computo 		
+End Sub
+
 sUB ANNULLALA
 	sMemoPesca = &quot;&quot;
 END SUB
-
-
-SUB Pesca_cod   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
-&apos;	print &quot;globals &quot; &amp;  sGVV &amp; &quot;-&quot; &amp; sGorigine &amp; &quot;-&quot; &amp; sGDove
+Sub Pesca_cod
+&apos;	Print
 	Select case ThisComponent.currentcontroller.activesheet.name
-	
 		Case &quot;CONTABILITA&quot;
 			sGVV = &quot;va&quot;
 			lrow = range2cell &apos;cerca_partenza
+			PRINT &quot;VAI1&quot;
+			sGDove = &quot;Elenco Prezzi&quot;
+			sGVV = &quot;va&quot;	
+			sGorigine = &quot;CONTABILITA&quot;	
+			cerca_partenza
+			&apos;porta su EP ????
+			PRINT &quot;VAI2&quot;
+			Pesca_cod_1
+			PRINT &quot;VAI3&quot;		
+			exit sub
+		Case &quot;COMPUTO&quot;
+			 if sGorigine = &quot;CONTABILITA&quot; then
+			 		sGVV = &quot;viene&quot; &apos;incolla
+			 		sGDove = &quot;CONTABILITA&quot;
+			 		sGorigine = &quot;COMPUTO&quot;
+		 			&apos; esegue viene appropriato
+					&apos;preleva solo i dati (da fare)
+			 		Pesca_cod__per_reg_A_2
+					sGVV = &quot;&quot;
+					sGDove = &quot;&quot;		
+				 	sGorigine =	&quot;&quot;				 		
+			 	else &apos; 
+			 		sGVV = &quot;va&quot;
+			 		sGDove = &quot;Elenco Prezzi&quot;
+			 		sGorigine = &quot;COMPUTO&quot;
+				 	&apos;porta su EP
+				 	Pesca_cod_1
+			 end if
+			 
+		Case &quot;Elenco Prezzi&quot;
+			&apos;esegui vieni appropriato
+			if sGorigine = &quot;CONTABILITA&quot; then
+				&apos;preleva solo i dati
+				Print 
+				Pesca_solo_dati_metti_in_contab
+				else
+					Pesca_cod_2
+			end if
+			sGVV = &quot;&quot;
+			sGDove = &quot;&quot;		
+		 	sGorigine =	&quot;&quot;			
+		 	
+		Case &quot;Analisi di Prezzo&quot;
+			sGVV = &quot;va&quot;
+			sGDove = &quot;Elenco Prezzi&quot;		
+		 	sGorigine =	&quot;Analisi di Prezzo&quot;
+		 	&apos;porta su EP
+		 	Pesca_cod_1
+		 			 
+	end select
+End Sub
 
+
+SUB Pesca_cod_bart_non_usata   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
+&apos;	print &quot;globals &quot; &amp;  sGVV &amp; &quot;-&quot; &amp; sGorigine &amp; &quot;-&quot; &amp; sGDove
+	Select case ThisComponent.currentcontroller.activesheet.name
+		Case &quot;CONTABILITA&quot;
+			sGVV = &quot;va&quot;
+			lrow = range2cell &apos;cerca_partenza
 			if 	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(44, lrow).string = &quot;&quot; and _
 					ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1, lrow).cellstyle= &quot;comp Art-EP_R&quot; then
 				PRINT &quot;VAI1&quot;
-			&apos;		PRINT 	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(44, lrow).string
-			&apos;		PRINT ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1, lrow).cellstyle
 					sGDove = &quot;Elenco Prezzi&quot;
 			 		sGVV = &quot;va&quot;	
 					sGorigine = &quot;CONTABILITA&quot;	
@@ -51,15 +117,15 @@ SUB Pesca_cod   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
 					Pesca_cod_1
 				PRINT &quot;VAI3&quot;		
 					exit sub
-				else
+				Else
+				Print &quot;eccomi&quot;
 					sGDove = &quot;COMPUTO&quot;
 			 		sGVV = &quot;va&quot;	
 					sGorigine = &quot;CONTABILITA&quot;			
 					Pesca_cod__per_reg_A_1
 					exit sub
 					&apos;porta su Computo 		
-			end if			
-			
+			end if
 		Case &quot;COMPUTO&quot;
 			 if sGorigine = &quot;CONTABILITA&quot; then
 			 		sGVV = &quot;viene&quot; &apos;incolla
@@ -84,6 +150,7 @@ SUB Pesca_cod   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
 			&apos;esegui vieni appropriato
 			if sGorigine = &quot;CONTABILITA&quot; then
 					&apos;preleva solo i dati
+					Print 
 					Pesca_solo_dati_metti_in_contab
 				else
 					Pesca_cod_2
@@ -193,7 +260,7 @@ end function
 
 
 
-SUB Pesca_cod__   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
+SUB Pesca_cod__non_usata &apos;Pesca_cod__   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
 &apos;print &quot;uffaaaaa&quot;
 	&apos;sceglie tra le due routine
 &apos;	questo ambaradan serve per decidere il contesto (si può fare di meglio... ma questa funziona)
@@ -328,7 +395,7 @@ SUB Pesca_cod_2
 	dim lrow as long
 	dim oCell as object
 	dim oSheet as object
-	on error goto errore
+&apos;	on error goto errore
 	oSheet = ThisComponent.currentController.activeSheet
 	sSheetName= ThisComponent.currentcontroller.activesheet.name
 	If sSheetName &lt;&gt; &quot;Elenco Prezzi&quot; then &apos;non mi pare possa succedere... 
@@ -405,7 +472,7 @@ SUB Pesca_cod_2
 	sGDove = &quot;&quot;		
  	sGorigine =	&quot;&quot;		
  	exit sub
- 	errore:
+&apos; 	errore:
 	sMemoPesca = empty
 	oPartenza = Nothing &apos;azzero svuoto la variabile
 	&apos; elimino il puntatore
@@ -453,10 +520,10 @@ dim oSheet as object
  	
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow   
-	sCodice = oSheet.GetCellByPosition( lcolbase , lrow).string
+	sCodice = oSheet.GetCellByPosition(lcolbase , lrow).String
 	&apos;	filtro
 	ThisComponent.CurrentController.Select(oPartenza_A)
-	&apos;print 
+	print 
 	lrow = oPartenza_A.RangeAddress.StartRow 
 	
 	oSheet = ThisComponent.currentController.activeSheet
@@ -473,7 +540,8 @@ dim oSheet as object
 &apos;&apos;			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
 &apos;		end if
 		&apos;oPartenza_A.SetString(sCodice)
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+2).SetString(sCodice)
+		Print sCodice
+		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice)
 		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2)
 &apos;	end if
 

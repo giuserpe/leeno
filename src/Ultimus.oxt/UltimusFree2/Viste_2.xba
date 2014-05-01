@@ -275,19 +275,20 @@ Mostra_Tutto
 	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.currentController.activeSheet
 	iLastRow = getLastUsedRow(oSheet)
+goto oltre:
 	for i=2 to iLastRow &apos; nasconde le righe di chiusura sal
 		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
 				oSheet.getRows().getByindex(i).isvisible = False
 		end if
 		if  (oSheet.GetCellByPosition(2 , (i)).CellStyle)= &quot;Comp TOTALI&quot; then
-				oSheet.getRows().getByindex(i).isvisible = False
+				oSheet.getRows().getByindex(i).isvisible = True
 		end if
 	next
 		&apos;	if msgbox ( &quot;Annoto Num. d&apos;ordine e Pag. del Libretto&quot; &amp; CHR$(10)_
 		&apos;	&amp; &quot;sul registro di contabilità?&quot; ,36, &quot;&quot;) = 7 then
 		&apos;	annota_num_pag_libretto
 		&apos;	end if
-
+oltre:
 end sub
 
 sub Reg_Sal_No_COL &apos; nome poco significativo... cosa c&apos;entra la Col?

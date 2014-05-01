@@ -136,7 +136,7 @@ Function Constrolla_se_M1
 	
 	
 &apos;&apos;***************************************************************+
-	Sub Sposta_Righe_Anche_in_tabelle_diverse
+Sub Sposta_Righe_Anche_in_tabelle_diverse
 		dim iStartCol as long
 		dim iStartRow as long
 		dim iEndCol as long
@@ -197,17 +197,12 @@ Function Constrolla_se_M1
 	oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
 	oSheetDest.copyRange(oDest, oSrc)
 	
-	
 &apos; rimuove il range sorgente ... commmentare se non serve
 &apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
 	myrows = oSheetDest.getrows
 		oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
 &apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
-		 myrows.removebyindex(iStartRow,iRowCountSRC)
-	
-&apos;	 print lrowDest-iRowCountSRC
-&apos;	 print lrowDest-iRowCountSRC+k
-&apos;	 print lrowDest
+	myrows.removebyindex(iStartRow,iRowCountSRC)
 		if oSheetDest.name = oSheetSRC.name then
 			if lrowDest &lt;  iStartRow then
 			orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest+k+1,250,lrowDest+iRowCountSRC+k)
@@ -216,79 +211,95 @@ Function Constrolla_se_M1
 		end if
 		ThisComponent.CurrentController.Select(orange_t) 
 	end if
-&apos;	ThisComponent.CurrentController.Select(orange_t)    	 
+	print
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 &apos; toglie la selezione 	
 END SUB
+&apos;&apos;***************************************************************+
+
 
 
 
 Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
-	dim iStartCol as long
-	dim iStartRow as long
-	dim iEndCol as long
-	dim iEndRow as long
+		dim iStartCol as long
+		dim iStartRow as long
+		dim iEndCol as long
+		dim iEndRow as long
+		dim l3RowS as long
+		dim l3RowE as long
+		dim iRowCountSRC as long
+		dim lrowDest as long
+		dim lSheetSRC as long
+		
+		oDoc = thisComponent
+		oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
+		oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
+		lSheetSRC = oRangeSRC.RangeAddress.sheet
+		iRowCountSRC = oRangeSRC.Rows.Count &apos; mumero di righe del range
+			 With oRangeSRC.RangeAddress
+			iStartCol = .StartColumn
+			iStartRow =.StartRow
+			iEndCol = .EndColumn
+			iEndRow = .EndRow
+		End With
+		
+			orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
+		ThisComponent.CurrentController.Select(orange_t)
+		sTitolo = &quot;Click sulla riga dove SPOSTARE la selezione  (ESC per Annullare, NO Click su X ) &quot;
+			 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+			 if SelectedRange = &quot;&quot; or _
+			 	SelectedRange = &quot;ANNULLA&quot; or _
+			 	SelectedRange = &quot;GNente&quot; then
+			 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+			 	exit sub
+		 end if
 	
-	dim l3RowS as long
-	dim l3RowE as long
+	lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
+&apos;	 lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
+		 lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet 
+		 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
 	
-	dim iRowCountSRC as long
-	dim lrowDest as long
-	dim lSheetSRC as long
-	oDoc = thisComponent
-	oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
-	oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
-	lSheetSRC = oRangeSRC.RangeAddress.sheet
-	iRowCountSRC = oRangeSRC.Rows.Count &apos; mumero di righe del range
-		 With oRangeSRC.RangeAddress
-		iStartCol = .StartColumn
-		iStartRow =.StartRow
-		iEndCol = .EndColumn
-		iEndRow = .EndRow
-	End With
-	orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
-	ThisComponent.CurrentController.Select(orange_t) 
 	
-	sTitolo = &quot;Click sulla riga dove COPIARE la selezione   (ESC per Annullare, NO Click su X ) &quot;
-		 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
-		 if SelectedRange = &quot;&quot; or _
-		 	SelectedRange = &quot;ANNULLA&quot; or _
-		 	SelectedRange = &quot;GNente&quot; then
-		 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-		 	exit sub
-	 end if
-
-&apos; xray SelectedRange  &apos;debug 11/01/11
-lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
-
-	 lSheetDest =  getSheet(SelectedRange) &apos;numero della sheet 
-	 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
-
 &apos; inserisci le righe
-oSheetDest.unprotect(&quot;&quot;)
-oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
-
-If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  ci sposta sopra,,,
-	if lrowDest &lt;  iStartRow then
-		iStartRow = iStartRow + iRowCountSRC
-		iEndRow   = iEndRow   + iRowCountSRC
+	oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
+&apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
+	oSheetDest.unprotect(&quot;&quot;)
+	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
+	
+	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  si sposta sopra,,,
+		if lrowDest &lt;  iStartRow then
+			iStartRow = iStartRow + iRowCountSRC
+			iEndRow   = iEndRow   + iRowCountSRC
+			K = +1
+&apos;	 print &quot;Su +1&quot;
+		end if
 	end if
-end if
-
+	k= -1
+	
 &apos; copia
-oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
-oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
-oSheetDest.copyRange(oDest, oSrc)
-	orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest,250,lrowDest+iRowCountSRC-1)
-ThisComponent.CurrentController.Select(orange_t)   
+	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
+	oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+	oSheetDest.copyRange(oDest, oSrc)
+	
 &apos; rimuove il range sorgente ... commmentare se non serve
 &apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
-&apos;	 myrows = oSheetSRC.getrows
-&apos;	 myrows.removebyindex(iStartRow,iRowCountSRC)
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	myrows = oSheetDest.getrows
+		oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
+&apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
+&apos;	myrows.removebyindex(iStartRow,iRowCountSRC)
+		if oSheetDest.name = oSheetSRC.name then
+			if lrowDest &lt;  iStartRow then
+			orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest+k+1,250,lrowDest+iRowCountSRC+k)
+		else
+						orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest-iRowCountSRC+k+1,250,lrowDest+k)
+		end if
+		ThisComponent.CurrentController.Select(orange_t) 
+	end if
+	print
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 &apos; toglie la selezione 	
 END SUB
-
+&apos;&apos;***************************************************************+
 
 Sub ToggleGrid &apos; Attiva/disattiva griglia
 ThisComponent.CurrentController.ShowGrid = _

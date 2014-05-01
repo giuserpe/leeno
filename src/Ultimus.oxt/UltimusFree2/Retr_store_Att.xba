@@ -15,21 +15,21 @@
 
 &apos; Il codice di questo modulo è stato copiato quasi integralmente da DannyB su OOforum
 sub Verifica_Attributo
-sAttributo = Trova_Attr_Sheet
-if sAttributo = &quot;Tipo_computo&quot; then
-	print &quot;Tipo computo&quot;
-	else
-	if sAttributo = &quot;Tipo_analisi&quot; then
-		print &quot;tipo Analisi&quot;
-		else
-		if sAttributo = &quot;Tipo_ElencoP&quot; then
-				print &quot;tipo Analisi&quot;
-			else
-				exit sub
-		end if
-	end if
-end if
-
+	sAttributo = Trova_Attr_Sheet
+	print sAttributo
+&apos;	if sAttributo = &quot;Tipo_computo&quot; then
+&apos;		print &quot;Tipo computo&quot;
+&apos;	else
+&apos;		if sAttributo = &quot;Tipo_analisi&quot; then
+&apos;			print &quot;tipo Analisi&quot;
+&apos;		else
+&apos;			if sAttributo = &quot;Tipo_ElencoP&quot; then
+&apos;				print &quot;tipo Analisi&quot;
+&apos;			else
+&apos;				exit sub
+&apos;			end if
+&apos;		end if
+&apos;	end if
 END SUB
 
 sub TestAtt &apos; test per verificare l&apos;Attributo della sheet
@@ -68,43 +68,38 @@ oSheet = ThisComponent.currentController.activeSheet
 Trova_Attr = sAttributo
 End Function
 Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è sufficiente
-&apos; copiare da una sheet all&apos;altra la cella A1 che contiene l&apos;attributo...
-   oDoc = ThisComponent
-oSheet = ThisComponent.currentController.activeSheet
-   
-   &apos; Get cell B5.
-   oCell = oSheet.getCellRangeByName( &quot;A1&quot; )&apos;.getCellByPosition( 0, 0 )
-xray ocell
-   &apos; Get the collection of attributes.
-   oCustomXmlAttributes = oCell.UserDefinedAttributes
-   
-   &apos; Do some manipulations of the collection.
- &apos;  oCustomXmlAttributes.insertByName( &quot;John&quot;, CreateAttributeData(&quot;Blue&quot;) )
-&apos;   oCustomXmlAttributes.insertByName( &quot;Bill&quot;,  CreateAttributeData(&quot;Green&quot;) )
-&apos;   oCustomXmlAttributes.insertByName( &quot;Jason&quot;,  CreateAttributeData(&quot;Purple&quot;) )
-&apos;   oCustomXmlAttributes.insertByName( &quot;Tom&quot;,  CreateAttributeData(&quot;Red&quot;) )
-   &apos; Test to see if someone had previously set a &quot;David&quot; attribute on this paragraph....
- &apos;     If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
-      &apos; If there was already a &quot;Mark&quot; attribute, then remove it.
- &apos;     oCustomXmlAttributes.removeByName ( &quot;Tipo&quot; )
- &apos;  EndIf
-
-   If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
-      &apos; Change the value of the attribute.
-    &apos;  oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
-      oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
-     &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
-   Else
-      &apos; Since this attribute was not present, create it.
-      oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
-&apos;      oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
-     &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
-   EndIf
-   &apos; Test to see if someone had previously set a &quot;Mark&quot; attribute on this paragraph....
-
-   
-   &apos; Store the collection of attributes back to the property.
-   oCell.UserDefinedAttributes = oCustomXmlAttributes
+				&apos; copiare da una sheet all&apos;altra la cella A1 che contiene l&apos;attributo...
+	oDoc = ThisComponent
+	oSheet = ThisComponent.currentController.activeSheet
+	&apos; Get cell B5.
+	oCell = oSheet.getCellRangeByName( &quot;A1&quot; )&apos;.getCellByPosition( 0, 0 )
+	xray ocell
+	&apos; Get the collection of attributes.
+	oCustomXmlAttributes = oCell.UserDefinedAttributes
+	&apos; Do some manipulations of the collection.
+	&apos;  oCustomXmlAttributes.insertByName( &quot;John&quot;, CreateAttributeData(&quot;Blue&quot;) )
+	&apos;   oCustomXmlAttributes.insertByName( &quot;Bill&quot;,  CreateAttributeData(&quot;Green&quot;) )
+	&apos;   oCustomXmlAttributes.insertByName( &quot;Jason&quot;,  CreateAttributeData(&quot;Purple&quot;) )
+	&apos;   oCustomXmlAttributes.insertByName( &quot;Tom&quot;,  CreateAttributeData(&quot;Red&quot;) )
+	&apos; Test to see if someone had previously set a &quot;David&quot; attribute on this paragraph....
+	&apos;     If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
+	&apos; If there was already a &quot;Mark&quot; attribute, then remove it.
+	&apos;     oCustomXmlAttributes.removeByName ( &quot;Tipo&quot; )
+	&apos;  EndIf
+	If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
+		&apos; Change the value of the attribute.
+		oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
+		&apos;  oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
+		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
+   		Else
+   		&apos; Since this attribute was not present, create it.
+   		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
+   		&apos;      oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
+   		oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
+   	EndIf
+	&apos; Test to see if someone had previously set a &quot;Mark&quot; attribute on this paragraph....
+	&apos; Store the collection of attributes back to the property.
+	oCell.UserDefinedAttributes = oCustomXmlAttributes
 END SUB
 &apos;_______________________________________________________________________________________+++++++++++
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -183,11 +178,9 @@ end sub
 
 
 Function Trova_Attr_Sheet
-
 &apos;on error resume next 
 	Verifica_chiudi_preview
-	
-    oDoc = ThisComponent
+	oDoc = ThisComponent
 	oSheet = ThisComponent.currentController.activeSheet
    &apos; Get the collection of attributes. 
 	for icol = 0 to 2  &apos;cerca nel riquadro col &amp; rows)
@@ -199,8 +192,9 @@ Function Trova_Attr_Sheet
 		    &apos;xray oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
 		   	If oCustomXmlAttributes.hasElements = true then 
 		   		if oCustomXmlAttributes.hasbyname( &quot;Tipo_sheet&quot; ) then
-	   					Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value
-	   					exit for
+	   				Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value
+	   				&apos;ThisComponent.CurrentController.Select( ocell) &apos;debug
+	   				exit for
 	   			end if
 	   			if oCustomXmlAttributes.hasbyname( &quot;Tipo&quot; ) then 
 	   			&apos; il doppione &apos;Tipo&apos; e &apos;Tipo_sheet&apos; deriva da un mio errore... :-(
@@ -213,8 +207,6 @@ Function Trova_Attr_Sheet
 	next
 &apos;	print Trova_Attr_Sheet
 End Function
-
-
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 &apos;_______________________________________________________________________________________

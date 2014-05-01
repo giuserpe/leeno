@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM  *****  BASIC  *****
-sub vedi_voce REM  leeno 3.8.64
+sub vedi_voce REM  &apos;(C) Giuseppe Vizziello 2013
 	Dim test As String
 	Dim riga_selezione As Integer
 	Dim focus as integer
@@ -15,7 +15,7 @@ sub vedi_voce REM  leeno 3.8.64
 		&amp; &quot;Devi trovarti in COMPUTO o CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
 		goto fine
  	end if
-	procedi:
+procedi:
 &apos;	print SE_contabilita
 	&apos;if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot;  then
 	&apos;	exit sub
@@ -78,12 +78,12 @@ i = 0
 for i = 0 to 1000
 	test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
 	if test = &quot;Comp End Attributo&quot; or test = &quot;Comp End Attributo_R&quot; then
-		if test = &quot;Comp End Attributo&quot; then
-			x=9
-			else 
-			x=10
-		end if
-		quantity= oSheet.GetCellByPosition(x,riga_selezione).AbsoluteName
+&apos;		if test = &quot;Comp End Attributo&quot; then
+&apos;			x=9
+&apos;			else 
+&apos;			x=10
+&apos;		end if
+		quantity= oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
 		oRange = oSheet.getCellRangeByPosition (9,riga_selezione,9,riga_selezione)
 		oRange.CellBackColor = RGB(255, 204, 153)
 
@@ -93,7 +93,7 @@ for i = 0 to 1000
 		i = i+1
 	end if
 next
-oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot; &quot;&quot;;&quot;&quot;vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art.&quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
+oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot; &quot;&quot;;&quot;&quot;vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
 
 oSheet.GetCellByPosition(4 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
 oRange = oSheet.getCellRangeByPosition (2,riga_corrente,4,riga_corrente)

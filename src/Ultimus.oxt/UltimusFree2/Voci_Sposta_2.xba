@@ -31,63 +31,8 @@ function getRigaIniziale(ByVal sAddress as string) as string
 end function
 
 
-sub Circ
-	lrow = range2cell
-	orange = Circoscrive_Voce_Computo$ (lrow)
-	&apos;maria 
-end sub
 
 
-
-&apos;_____________________________________________________________________________
-Function  Circoscrive_Voce_Computo$ (ByVal lrow As Long) &apos;individua un record di Computo MOLTO vecchio
-									&apos; ancora nn è chiaro se serve... ma l&apos;ho aggiornata nel gennaio del 2011 per S5
-&apos;---------------------------------------------------------------------------
-	
-&apos;msgbox &quot;Per favore se vi appare questa finestra scrivetemi citando: Function  Circoscrive_Voce_Computo$&quot;
-dim lrowS as long
-dim lrowE as long
-	 oSheet = ThisComponent.currentController.activeSheet 
-	lrowS = lRow
-	lcol = 0
-	lcolS = lcol
-	oCellStart = oSheet.GetCellByPosition( lcol , lrow)
- &apos;   ThisComponent.CurrentController.Select(oCell)
- 
-	If oSheet.GetCellByPosition(2 , lrow ).string = &quot;SOMMANO &quot; then 
- 		goto sommano_trovato 
-	end if 
-
-	Do while oSheet.GetCellByPosition(2 , lrow ).string &lt;&gt;  &quot;SOMMANO &quot; &apos;or _
-  		&apos;	oSheet.GetCellByPosition(2 , lrow ).string &lt;&gt;  &quot;SOMMANO&quot; 
- 	   lrow = lrow+1
- 	   ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 2 , lrow))
-  	   print
- 	Loop
- 	lrow = lrow+1
-	sommano_trovato:
-
- &apos;  ThisComponent.CurrentController.Select(oCell) 
-    lrowE = lrow-1  
- &apos;	xA = ThisComponent.getcurrentselection.getstring
- &apos;	xA = oCell.string	
-  	Do  while oSheet.GetCellByPosition(0 , lrow ).string = &quot;&quot;  &apos; xA =  &quot;&quot;
-  		lrow = lrow-1
-  	  	&apos;oCell = oSheet.GetCellByPosition( 0 , lrow)
-  	  	&apos;xA = oCell.string	
-	loop
- 	&apos;	oCelle=thisComponent.getCurrentSelection().getCellAddress()    
-	 &apos;   lrowS=oCelle.Row - 1
-		lrowS= lrow -1
-	&apos;	print lrows
-	oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,31,lrowE )
-	&apos;	lista =  &quot;0, &quot; &amp; lrowS &amp; &quot;,31 ,&quot; &amp; lrowE 
-	Circoscrive_Voce_Computo= oRangeVoceC
-&apos; ThisComponent.CurrentController.Select(oRangeVoceC) &apos;maria
- &apos;print 
-
-end Function
-&apos;=================================================================================  
 
 
  Function  Circoscrive_Voce_Computo_B (ByVal lrow As Long) &apos;individua un record di Computo

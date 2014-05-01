@@ -14,7 +14,6 @@
 
 &apos;versione di VISTE per template 5C (5 colonne nelle quantità)
 &apos;UF2-070108 - v
-
 Dim oDialogScenari As Object &apos; Questa variabile va dichiarata perchè viene utilizzata
 							 &apos; dalle altre sub per chiudere il dialogo
 Dim oDialogScenari_2 As Object &apos; Questa variabile va dichiarata perchè viene utilizzata
@@ -1182,11 +1181,14 @@ end sub
 
 
 sub Computo_Normale_terra_terra
+	oSheet = ThisComponent.currentController.activeSheet
+	oRange = oSheet.getCellRangeByposition(39,0,1023,0) &apos;nascondi il resto delle colonne
+	oRange.Columns.IsVisible=false
 	&apos;registro la posizione attuale del cursore
 	oPos = ThisComponent.getCurrentSelection()
 	if 	templateTipo = &quot;5C&quot; then
 		&apos;	Viste_nuove(&quot;TTTTTTTTTTFTFFFFFFFTFFFFFFFFFFFFFFFFT&quot;)
-			Viste_nuove(&quot;TTTFTTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFTTFF&quot;)
+			Viste_nuove(&quot;TTTFTTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFF&quot;)
 						&apos;123456789012345678901234567890123456789012345678
 				&apos;		          10        20        30        40
 				else
@@ -1194,14 +1196,11 @@ sub Computo_Normale_terra_terra
 						&apos;1234567890123456789012345678901234567890123456
 			&apos;	print &quot;2&quot;		
 	end if	
-	oSheet = ThisComponent.currentController.activeSheet
-	oRange = oSheet.getCellRangeByposition(39,0,500,0)
-	oRange.Columns.IsVisible=false
+
 
 	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
 
-	ThisComponent.CurrentController().freezeAtPosition(39,2)
-
+	ThisComponent.CurrentController().freezeAtPosition(0,2)
 	&apos; riporta il cursore sulla posizione di partenza
 	ThisComponent.CurrentController.Select( oPos )
 &apos;	fissa (39,2)&apos; optional icol as long, optional irow as long)

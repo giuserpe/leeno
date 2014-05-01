@@ -25,11 +25,11 @@ Sub Inser_Capitolo
 		exit sub
 	end if	
 	oSheet = ThisComponent.currentController.activeSheet
-	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+&apos;			exit sub
+&apos;	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet) 
@@ -281,11 +281,11 @@ SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che for
 	&apos;	lrow= Range2Cell  &apos; per ridurre a cella iniziale un eventuale range
 	oCell1=oSheet1.GetCellByPosition(2 , lrow)
 	oSheet = ThisComponent.currentController.activeSheet
-	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+&apos;			exit sub
+&apos;	end if
 	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;Rinumero la gerarchia dei Capitoli..... pazienta....&quot;, 60)
@@ -349,11 +349,11 @@ Sub Inser_SottoCapitolo
 	end if
 &apos;	print &quot;inizio &quot; &amp; 	lrow
 	oSheet = ThisComponent.currentController.activeSheet
-	sAttributo = Trova_Attr_Sheet	
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet	
+&apos;    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;&apos;
+&apos;			exit sub
+&apos;	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet) 
@@ -931,11 +931,11 @@ end sub
 sub Crea_AutoFilter &apos; sul computo
 
 	oSheet = ThisComponent.currentController.activeSheet
-	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+&apos;			exit sub
+&apos;	end if
 	lStartRow = oSheet.GetCellByPosition( 0 , 0)
 	lLastUrowNN = getLastUsedRow(oSheet)
 	lLastUcol = getLastUsedCol(oSheet)
@@ -1211,11 +1211,11 @@ sub Struttura_ComputoM____OK &apos; sul computo (ok sulla 3.7)
 	Barra_Apri_Chiudi_5(&quot;1  Sto creando le strutture... Pazienta...&quot;, 10)
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-	sAttributo = Trova_Attr_Sheet
-    If not ( sAttributo = &quot;Tipo_computo&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If not ( sAttributo = &quot;Tipo_computo&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+&apos;			exit sub
+&apos;	end if
    	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
 		s_R = &quot;&quot;
 	end if
@@ -1407,11 +1407,11 @@ sub Struttura_ComputoM REM COPIA DI Struttura_ComputoM CHE RAGGRUPPA
 	Barra_Apri_Chiudi_5(&quot;1  Sto creando le strutture... Pazienta...&quot;, 10)
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-	sAttributo = Trova_Attr_Sheet
-    If not ( sAttributo = &quot;Tipo_computo&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If not ( sAttributo = &quot;Tipo_computo&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
+&apos;			exit sub
+&apos;	end if
    	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
 		s_R = &quot;&quot;
 	end if
@@ -1618,6 +1618,7 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
 
 	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
 	sAttributo = Trova_Attr_Sheet
+&apos;	Print sAttributo
     If sAttributo = &quot;Tipo_ElencoP&quot; Then	&apos;Tipo_EP
       			Tronca_Altezza_Voci_EP
       			exit sub
@@ -1647,6 +1648,7 @@ end sub
 
 SUB Tronca_Altezza_Voci_Computo &apos;1  e Contabilità
 		oSheet = ThisComponent.currentController.activeSheet
+	&apos;	Print 	right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2)
  		if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
 				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
 				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
@@ -1670,7 +1672,6 @@ SUB Tronca_Altezza_Voci_Computo &apos;1  e Contabilità
 	
 	lrow= Range2Cell
 	if lrow = -1 then
-			 
 			exit sub
 	end if	
 	for i = lrow to  lLastUrowNN
@@ -1695,18 +1696,18 @@ SUB Tronca_Altezza_Voci_Computo &apos;1  e Contabilità
 	verifica:
 	&apos; se la riga &apos;base&apos; NON è ottimizzata in altezza
 	if oSheet.GetCellByPosition(1 ,lrow).Rows.OptimalHeight = false then
-				&apos; le allunga
-	  			sString$ = &quot;Fine Computo&quot;
-				oEnd=uFindString(sString$, oSheet) 
-				If isNull (oEnd) or isEmpty (oEnd)  then 
-						lLastUrowNN = getLastUsedRow(oSheet)
-					else
-						lLastUrowNN=oEnd.RangeAddress.EndRow &apos;-1
-				end if
-				oRange = oSheet.getCellRangeByPosition (1,2,5,lLastUrowNN)
-				oRange.Rows.OptimalHeight = true
-				ThisComponent.CurrentController.Select(oActiveCell1)
-				exit sub
+		&apos; le allunga
+	  	sString$ = &quot;Fine Computo&quot;
+		oEnd=uFindString(sString$, oSheet) 
+		If isNull (oEnd) or isEmpty (oEnd)  then 
+				lLastUrowNN = getLastUsedRow(oSheet)
+			else
+				lLastUrowNN=oEnd.RangeAddress.EndRow &apos;-1
+		end if
+		oRange = oSheet.getCellRangeByPosition (1,2,5,lLastUrowNN)
+		oRange.Rows.OptimalHeight = true
+		ThisComponent.CurrentController.Select(oActiveCell1)
+		exit sub
 	end if
 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
@@ -1893,11 +1894,11 @@ SUB SubTot_in_mezzo &apos;rifa la somma  &apos;riporta i subTotali (fa solo un l
 	&apos;	lrow= Range2Cell  &apos; per ridurre a cella iniziale un eventuale range
 	oCell1=oSheet1.GetCellByPosition(2 , lrow)
 	oSheet = ThisComponent.currentController.activeSheet
-	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;&apos;
+&apos;			exit sub
+&apos;	end if
 	goto saltalo
 	if msgbox ( &quot;Vuoi nascondere (e spostare) il Codice Voce ? &quot;&amp; CHR$(10)_
 					&amp; &quot;?&quot; ,36, &quot;&quot;) = 6 then

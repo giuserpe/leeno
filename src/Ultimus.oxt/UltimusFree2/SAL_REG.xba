@@ -526,11 +526,20 @@ Sub Sommario_in_Computo &apos;usa i somma.se
 	end if
 
 	iRowEnd_Aree = lrow
+	
+goto salta:	&apos;righe corrette da Giuseppe Pastore
+	&apos;potrebbero rimanere inutilizzate perché sto cambiando la struttura del libretto (GV)
+	sQuale_SAL = oSheetA.GetCellByPosition( 13, ( iRowEnd_Aree - 3 ) ).String
+	&apos; legge il num del SAL 
+	
+	Mystring = oSheetA.GetCellByPosition( 13, ( lRow - 3 ) ).string
+	&apos;SearchString =  &quot;S.A.L.&quot; rimosso io NON  SERVE PIU
+	sNumSAL = MyString &apos;Right(MyString, 2) NON SERVE SPOSTARSI DI DUE CELLE
+salta:
 
 	sQuale_SAL = oSheetA.GetCellByPosition( 2, iRowEnd_Aree ).string
 	
 	&apos; legge il num del SAL 
-	
 	Mystring = oSheetA.GetCellByPosition( 2, lRow ).string
 	SearchString =  &quot;SAL&quot;
 	sNumSAL = Right(MyString, 2)

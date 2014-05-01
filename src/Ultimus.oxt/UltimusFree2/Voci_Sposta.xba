@@ -13,6 +13,34 @@
 &apos;_______________________________________________________________________________________
 
 REM ______________________________________________________
+Sub elimina_voce &apos;(C) Giuseppe Vizziello 2014
+On Error GoTo fine:
+	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
+	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
+	oCell=thisComponent.getCurrentSelection()
+	cRow=oCell.RangeAddress.StartRow
+	Select Case oNomeSheet
+		Case &quot;Analisi di Prezzo&quot;
+			sStRange = CircoscrivileAnalisi_Att (cRow)
+		Case  &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
+			sStRange = Circoscrive_Voce_Computo_Att (cRow)
+	end select
+	With sStRange.RangeAddress
+		iRowStart =.StartRow
+		iRowEnd = .EndRow
+	End With
+	ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
+	If MsgBox (&quot;Stai per eliminare la voce selezionata&quot;&amp; CHR$(10)_
+		&amp;&quot;Vuoi procedere?&quot;, 1+32+256, &quot;Attenzione!&quot;) = 2 Then
+		Else
+		oSheet.rows.removeByIndex (iRowStart, iRowEnd-iRowStart+1)
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+		Numera_Voci_Computo (&quot;&quot;)
+	End If
+	fine:
+end sub
+
+
 Sub spostaVCA() &apos; assegnata a ALT-X??
 &apos; decide se attivare sposta analisi o sposta voce-computo
     Dim nome_sheet as string

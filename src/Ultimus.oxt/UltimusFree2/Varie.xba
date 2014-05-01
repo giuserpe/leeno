@@ -891,10 +891,6 @@ chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	ThisComponent.CurrentController.Select(oRangeSel)
 END SUB
 
-
-
-
-
 Sub copia_riga_Ent &apos; capisce su quale tipologia di tabelle è
 &apos; e reinvia ad _C or a _A  
 &apos; aggiunta per la scorciatoia... i bottoni vanno direttamente alle specifiche macro
@@ -975,15 +971,6 @@ dim sFlag as string
 		oSheet.clearOutline()
 	  &apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;E&quot;) 
 	&apos;&apos;	oSpalte2.isVisible = false 	
-	&apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;F&quot;) 		   		
-	&apos;	oSpalte2.isVisible = false 
-	&apos;	oSpalte1 = oSheet.getColumns().getByName(&quot;G&quot;) 
-	&apos;	oSpalte1.isVisible = false
-	&apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;H&quot;) 
-	&apos;	oSpalte2.isVisible = false
-	&apos;	oSpalte1 = oSheet.getColumns().getByName(&quot;I&quot;) 
-	&apos;	oSpalte1.isVisible = false 
-	&apos;	print &quot;questo è il cvaso&quot;
       else
 		oSheet.clearOutline()		
 	&apos;	print &quot;altro...&quot;
@@ -1053,7 +1040,7 @@ dim sFlag as string
 		oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
     	lrow = oRangeVC.RangeAddress.EndRow
 	&apos;	Controlla_Somma_locale (9, lrow)
-	  	Controlla_Somma_locale (10, lrow)
+	&apos;  	Controlla_Somma_locale (10, lrow)
 	  	lrow = itemp
 	end if
 &apos;Attenzione ho inserito questo richiamo percHé perdeva il focus nel viaggio
@@ -1063,8 +1050,9 @@ dim sFlag as string
  &apos; frase magica per togliere il focus dal pulsante...!
 	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow+1))
+	oSheet.GetCellByPosition(1 , lrow+1).CellStyle =  &quot;Comp-Bianche in mezzo_R&quot; &apos; imposta lo stile
 &apos;	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
-exit sub
+&apos;exit sub
 	&apos;queste due tolgono il nero dello sfondo della cella selezionata
 	oRanges = ThisComponent.createInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)
 	ThisComponent.CurrentController.Select(oRanges)
@@ -1703,16 +1691,15 @@ END SUB
 
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione...
  &apos;&apos; Clessid_lock_Start
-
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; and _
-    	sAttributo &lt;&gt; &quot;Tipo_CONTABILITA&quot; Then 
- 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia... o comunque di &quot;&quot;tipo computo&quot;&quot;)&quot;
- 			 Clessid_lock_End
-			exit sub
-	end if
+&apos;	sAttributo = Trova_Attr_Sheet
+&apos;    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; and _
+&apos;    	sAttributo &lt;&gt; &quot;Tipo_CONTABILITA&quot; Then 
+&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia... o comunque di &quot;&quot;tipo computo&quot;&quot;)&quot;
+&apos; 			 Clessid_lock_End
+&apos;			exit sub
+&apos;	end if
 
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
  	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 and _
@@ -1733,11 +1720,7 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
 		s_R = &quot;&quot;
 	end if
-	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-		s_R = &quot;_R&quot;
-	end if	
-	&apos;prob superata... non esiste una tab &quot;Libretto&quot;
-	if left(ThisComponent.currentcontroller.activesheet.name, 8) = &quot;Libretto&quot; then
+	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; Then
 		s_R = &quot;_R&quot;
 	end if	
 	lStartRow = oSheet.GetCellByPosition( 0 , 0)
@@ -1748,7 +1731,6 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 &apos;	sString$ = &quot;Fine Computo&quot;
 &apos;	oEnd=uFindString(sString$, oSheet) 
 &apos;	lLastUrowNN=oEnd.RangeAddress.EndRow-1
-
 	if IsMissing(verbosa) Then
 		If msgbox (CHR$(10) &amp;&quot;Sto per Ri-Numerare questa tabella...&quot; &amp; CHR$(10)&amp; CHR$(10)_
 				&amp; &quot; Procedo ? &quot;&amp; CHR$(10)&amp; CHR$(10)_
@@ -1756,11 +1738,11 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 			exit sub
 		end if
 	End If
-	
 &apos;	print &quot;comp Art-EP&quot; &amp; s_R
 &apos;	print &quot;Comp Start Attributo&quot; &amp; s_R
 	For i = 2  to lLastUrowNN
-		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R  then	 
+		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; Or _
+			oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP_R&quot; Then &apos;  &amp; s_R  then &apos;&lt;&lt;&lt; vecchio modulo contabilità	 
 			 oSheet.GetCellByPosition(0 , (I)).string = numV 
 			 numV = numV + 1
 		end if

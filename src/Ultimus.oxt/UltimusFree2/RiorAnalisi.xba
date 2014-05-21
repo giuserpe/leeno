@@ -14,6 +14,7 @@ sub Main_Riordina_Analisi_Alfabetico &apos;(C) Giuseppe Vizziello 2014
 	Dim articoli()
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
+ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 	lrowDest = 3
 	for i =  0 to 10
 		if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An.1v-Att Start&quot; and _
@@ -35,7 +36,10 @@ sub Main_Riordina_Analisi_Alfabetico &apos;(C) Giuseppe Vizziello 2014
 			next
 			Appenditem(articoli(), art)
 		end if
-	next
+	Next
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then &apos; altrimenti BubbleSortlist non va
+ 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+	End If 
 	for each el in BubbleSortlist(BubbleSortlist(articoli())) &apos;riordino la lista
 		for i = 0 to lLastUrow
 			if oSheet.GetCellByPosition( 0, i).string = el then &apos;trovo l&apos;inizio della scheda
@@ -44,8 +48,9 @@ sub Main_Riordina_Analisi_Alfabetico &apos;(C) Giuseppe Vizziello 2014
 					if oSheet.GetCellByPosition( 0, x).string = &quot;----&quot; then &apos;trovo la fine della scheda
 						fine=x+1
 						i=x+1
-						nrighe = fine-inizio &apos; ampienza in righe della scheda
-						oSheet.getRows.insertByIndex(lrowDest, nrighe+1) &apos; crea spazio per inserire la scheda
+						nrighe = fine-inizio &apos; ampiezza in righe della scheda
+						insRows (lrowDest, nrighe+1) &apos;insertByIndex non funziona
+					&apos;	oSheet.getRows.insertByIndex(lrowDest, nrighe+1) &apos; crea spazio per inserire la scheda
 						selezione = oSheet.getCellRangeByPosition(0, inizio+nrighe, 250, fine+nrighe).RangeAddress
 						ThisComponent.CurrentController.Select(selezione) &apos;seleziona le righe da spostare
 						oDest = oSheet.GetCellByPosition(0,lrowDest).CellAddress
@@ -58,7 +63,7 @@ sub Main_Riordina_Analisi_Alfabetico &apos;(C) Giuseppe Vizziello 2014
 				exit for
 			end if
 		next
-	next
+	Next
 	exit sub
 end sub
 </script:module>

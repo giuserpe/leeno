@@ -76,16 +76,6 @@ Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è
 	xray ocell
 	&apos; Get the collection of attributes.
 	oCustomXmlAttributes = oCell.UserDefinedAttributes
-	&apos; Do some manipulations of the collection.
-	&apos;  oCustomXmlAttributes.insertByName( &quot;John&quot;, CreateAttributeData(&quot;Blue&quot;) )
-	&apos;   oCustomXmlAttributes.insertByName( &quot;Bill&quot;,  CreateAttributeData(&quot;Green&quot;) )
-	&apos;   oCustomXmlAttributes.insertByName( &quot;Jason&quot;,  CreateAttributeData(&quot;Purple&quot;) )
-	&apos;   oCustomXmlAttributes.insertByName( &quot;Tom&quot;,  CreateAttributeData(&quot;Red&quot;) )
-	&apos; Test to see if someone had previously set a &quot;David&quot; attribute on this paragraph....
-	&apos;     If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
-	&apos; If there was already a &quot;Mark&quot; attribute, then remove it.
-	&apos;     oCustomXmlAttributes.removeByName ( &quot;Tipo&quot; )
-	&apos;  EndIf
 	If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
 		&apos; Change the value of the attribute.
 		oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
@@ -103,7 +93,7 @@ Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è
 END SUB
 &apos;_______________________________________________________________________________________+++++++++++
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Sub Stora_Attr_sheet
+Sub Stora_Attr_sheet &apos;sub tipo_
 &apos;	sValoreAtt_p = &quot;Tipo_CronoP&quot;
 &apos;	sValoreAtt_p = &quot;Tipo_EP&quot;
 &apos;	sValoreAtt_p = &quot;Tipo_computo&quot;
@@ -117,15 +107,6 @@ end sub
 
 
 Function Stora_Attr_sheet_generico(sValoreAtt as string, optional oSheet as object, optional cella as string )&apos; 
-  &apos; oDoc = ThisComponent
-&apos;xray oSheet
-
-&apos;	If isNull(oSheet) or isEmpty(oSheet)  then
-&apos;		oSheet = ThisComponent.currentController.activeSheet
-&apos;		xray osheet
-&apos;	end if
-
-  &apos;oRange = oSheet.getCellRangeByPosition(0,0,0,5000)
   if ismissing(cella) then  
 			oCell = oSheet.getCellRangeByName( &quot;A1&quot;  )&apos;.getCellByPosition( 0, 0 ) &apos; 
 		else

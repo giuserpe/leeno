@@ -104,8 +104,8 @@ sub Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri(optional oRange as object)
 	e = oMyRange.StartRow &apos;getRigaIniziale(a)
 	f = oMyRange.EndRow &apos;getRigaFinale(a)
 	NumCol = oMyRange.StartColumn &apos; definisce il numero della colonna
-		oFoglio.unprotect(&quot;&quot;)
-	oFoglio.Columns.insertbyindex(d+1,1)
+	oFoglio.unprotect(&quot;&quot;)
+	oFoglio.Columns.insertbyindex (d+1,1)
 
 	oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
 	oBarra.Start(&quot;  Conversione in corso...&quot;, Val(f))

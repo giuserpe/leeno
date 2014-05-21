@@ -173,7 +173,8 @@ on error resume next &apos;da tenere attivo escluso debug
 	oCell = oSheet.GetCellByPosition( lcolbase,lrowI) &apos; 3 ) 
 &apos;	oTargetDoc.CurrentController.Select(oCell) &apos;vediamo se serve
 	oSheet.unprotect(&quot;&quot;)
-	oSheet.getRows.insertByIndex(2, lrowI-1)
+	insRows (2, lrowI-1)
+&apos;	oSheet.getRows.insertByIndex (2, lrowI-1)
 	
 	&apos; sistemo gli stili nelle celle
 	oSheet.getCellByPosition(lcolbase+0,lrowI).CellStyle = &quot;EP-aS&quot;

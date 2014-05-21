@@ -18,43 +18,44 @@ Global sCodice as string
 Global sGVV as string
 Global sGorigine as string
 Global sGDove as string
+Global RigaVoceGlobal as long
 
 &apos; modulo in test
 &apos; scopo: &quot;pescare&quot; un codice sull&apos;elenco prezzi! (inizialmente)
 &apos;        poi estesa anche a contabilita &lt;&gt; Ecomputo etc...
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Sub Ricicla_Misure 
-&apos; Pesca_cod__per_reg_A_2
+Sub Ricicla_Misure
 	If  ThisComponent.currentcontroller.activesheet.Name = &quot;CONTABILITA&quot; then
 		sGVV = &quot;va&quot;
 		lrow = range2cell &apos;cerca_partenza
 		sGDove = &quot;COMPUTO&quot;
  		sGVV = &quot;va&quot;	
-		sGorigine = &quot;CONTABILITA&quot;			
-		Pesca_cod__per_reg_A_1
+		sGorigine = &quot;CONTABILITA&quot;
+		Pesca_cod__per_reg_A_1 &apos;porta su Computo 
+		pesca_cod
 	End If
-			&apos;porta su Computo 		
 End Sub
 
 sUB ANNULLALA
 	sMemoPesca = &quot;&quot;
 END SUB
-Sub Pesca_cod
+
+Sub Pesca_cod &apos; [pesca...]
 &apos;	Print
 	Select case ThisComponent.currentcontroller.activesheet.name
 		Case &quot;CONTABILITA&quot;
 			sGVV = &quot;va&quot;
 			lrow = range2cell &apos;cerca_partenza
-			PRINT &quot;VAI1&quot;
+&apos;			PRINT &quot;VAI1&quot;
 			sGDove = &quot;Elenco Prezzi&quot;
 			sGVV = &quot;va&quot;	
 			sGorigine = &quot;CONTABILITA&quot;	
 			cerca_partenza
 			&apos;porta su EP ????
-			PRINT &quot;VAI2&quot;
+&apos;			PRINT &quot;VAI2&quot;
 			Pesca_cod_1
-			PRINT &quot;VAI3&quot;		
+&apos;			PRINT &quot;VAI3&quot;		
 			exit sub
 		Case &quot;COMPUTO&quot;
 			 if sGorigine = &quot;CONTABILITA&quot; then
@@ -63,6 +64,23 @@ Sub Pesca_cod
 			 		sGorigine = &quot;COMPUTO&quot;
 		 			&apos; esegue viene appropriato
 					&apos;preleva solo i dati (da fare)
+&apos;____________________________________________________________________________________
+					sTitolo = &quot;Click su voce da portare in contabilità (ESC per ANNULLARE)&quot;
+					SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+					&apos; in caso di selezione nulla:
+				 	if left(SelectedRange,1) &lt;&gt; &quot;$&quot; then &apos; non funziona agendo col mouse sulla X
+						ThisComponent.currentcontroller.removeRangeSelectionListener(oRangeSelectionListener)	 	
+			 	 	 	RigaVoceGlobal = &quot;&quot;
+						sGVV = &quot;&quot;
+						sGDove = &quot;&quot;
+				 		sGorigine =	&quot;&quot;
+						lRowInsert = oPartenza_A.RangeAddress.endRow
+						oSheet = ThisComponent.Sheets.getbyname(&quot;CONTABILITA&quot;)
+						ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1, lRowInsert+1))	
+			 	 		exit sub
+			 		end if
+					RigaVoceGlobal = getRigaIniziale(SelectedRange)
+&apos;____________________________________________________________________________________
 			 		Pesca_cod__per_reg_A_2
 					sGVV = &quot;&quot;
 					sGDove = &quot;&quot;		
@@ -79,7 +97,6 @@ Sub Pesca_cod
 			&apos;esegui vieni appropriato
 			if sGorigine = &quot;CONTABILITA&quot; then
 				&apos;preleva solo i dati
-				Print 
 				Pesca_solo_dati_metti_in_contab
 				else
 					Pesca_cod_2
@@ -189,8 +206,9 @@ function cerca_partenza
 							&amp;	&quot;   Selezionane un&apos;altra più in basso....&quot;)
 		exit function
 	end if
-	if lRow = 2 then
-		oSheet.getRows.insertByIndex(lRow, 1)
+	if lRow = 2 Then
+	insRows (lRow, 1) &apos;insertByIndex non funziona
+&apos;		oSheet.getRows.insertByIndex(lRow, 1)
 		oSheet.getCellRangeByPosition(0, lRow, 49 , lRow).cellstyle =  &quot;Reg_prog&quot;
 	end if
 	
@@ -486,7 +504,7 @@ dim lrow as long
 dim oCell as object
 dim oSheet as object
 
-	on error goto errore
+&apos;	on error goto errore
 
 	oSheet = ThisComponent.currentController.activeSheet
 	sSheetName= ThisComponent.currentcontroller.activesheet.name
@@ -522,27 +540,14 @@ dim oSheet as object
 	lrow=oCell.RangeAddress.StartRow   
 	sCodice = oSheet.GetCellByPosition(lcolbase , lrow).String
 	&apos;	filtro
-	ThisComponent.CurrentController.Select(oPartenza_A)
-	print 
+	ThisComponent.CurrentController.Select(oPartenza_A) 
 	lrow = oPartenza_A.RangeAddress.StartRow 
 	
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;	if oSheet.name = &quot;COMPUTO&quot; then  &apos;??????????????????????????????
-&apos;		if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP&quot; then
-&apos;			sTitolo = &quot;Seleziona la cella di destinazione (Codice)  (ESC per Annullare, NO Click su X ) &quot; 
- &apos;	 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners
- &apos;			if SelectedRange = &quot;&quot; or _
- &apos;			 	SelectedRange = &quot;ANNULLA&quot; then
- &apos;			 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
- &apos;			 	exit sub
-&apos;		 	end if
-&apos;			lrow = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
-&apos;&apos;			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
-&apos;		end if
-		&apos;oPartenza_A.SetString(sCodice)
-		Print sCodice
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice)
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2)
+	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice) &apos; inserisce il codice
+&apos;	print
+	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2) &apos; va sul primo rigo di misurazione
+&apos;	print
 &apos;	end if
 
 	sMemoPesca = empty

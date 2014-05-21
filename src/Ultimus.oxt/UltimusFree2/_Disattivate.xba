@@ -1,7 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;********************************************************
+Sub inseriscirighesopra (InsertPos as long, nRows as long)
+		dim document   as object
+		dim dispatcher as object
+&apos;	InsertRow = ThisComponent.getCurrentSelection().celladdress.row
+rem questa me l&apos;ha passata A. Vallortigara
+	document = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	dim args3(0) as new com.sun.star.beans.PropertyValue
+	args3(0).Name = &quot;ToPoint&quot;
+	args3(0).Value = &quot;A&quot; &amp; InsertPos+1 &apos;cella di inserimento
+	dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args3())
+	for i=1 to nRows
+		dispatcher.executeDispatch(document, &quot;.uno:InsertRows&quot;, &quot;&quot;, 0, Array())
+	next
+end Sub&apos;********************************************************
 
 SUB SCEMO_____
 oSheet = ThisComponent.currentController.activeSheet

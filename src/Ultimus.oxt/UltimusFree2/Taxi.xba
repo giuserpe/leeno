@@ -507,12 +507,11 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 				lrowEnd_COMP = oEnd.RangeAddress.EndRow -2
 			&apos;	print &quot;alla : &quot; &amp; lrowEnd_COMP
 		end if
-
-		oSheet.getRows.insertByIndex(lrowEnd_COMP,iIns_COMPUTO-1)
+	insRows (lrowEnd_COMP,iIns_COMPUTO-1)
+&apos;		oSheet.getRows.insertByIndex(lrowEnd_COMP,iIns_COMPUTO-1)
 
 		sRangeTarget_COMP = &quot;$A&quot; &amp; lrowEnd_COMP+1
 		ThisComponent.CurrentController.Select(sRangeTarget_COMP)
-
 
 		Copia_DATI_Colleg (sSourceURL, sTargetURL, sSheetSRC_COMPUTO, sSheetTarget_COMPUTO, sRangeSRC_COMPUTO, sRangeTarget_COMP,_
 					sAreaName_COMPUTO )
@@ -530,7 +529,8 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 			wait iTemp
 		loop			
 		&apos;aggiungo la scritta
-		oSheet.getRows.insertByIndex(lrowEnd_COMP,3)
+		insRows (lrowEnd_COMP,3)
+&apos;		oSheet.getRows.insertByIndex(lrowEnd_COMP,3)
 		oRange = oSheet.getCellRangeByPosition(0,lrowEnd_COMP,45,lrowEnd_COMP+2)
 		ThisComponent.CurrentController.Select(oRange)
 	&apos;	Property2default(oRange) 
@@ -603,8 +603,9 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		ThisComponent.CurrentController.Select(oSheet)
 		sString$ = &quot;Fine ANALISI&quot;
 		oEnd = UltimusFree2.Taxi.uFindString_taxi(sString$, oSheet)
-		lrowEnd_AP=oEnd.RangeAddress.EndRow 
-		oSheet.getRows.insertByIndex(lrowEnd_AP,iIns_AP)
+		lrowEnd_AP=oEnd.RangeAddress.EndRow
+		insRows (lrowEnd_AP,iIns_AP)
+&apos;		oSheet.getRows.insertByIndex(lrowEnd_AP,iIns_AP)
 		sRangeTarget_AP = &quot;$A&quot; &amp; lrowEnd_AP
 		&apos; abbiamo il punto di inserimento
 
@@ -612,7 +613,8 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 					sArea_Name_AP )
 			&apos;print &quot;analisi fatta&quot;
 				&apos;aggiungo la scritta
-		oSheet.getRows.insertByIndex(lrowEnd_AP,2)
+		insRows (lrowEnd_AP,2)
+&apos;		oSheet.getRows.insertByIndex(lrowEnd_AP,2)
 		oRange = oSheet.getCellRangeByPosition(0,lrowEnd_AP,45,lrowEnd_AP+1)
 		ThisComponent.CurrentController.Select(oRange)&apos;per ritrovarsi li quando finito
 		&apos;oRange.CellStyle=&quot;Default&quot; neglio lasciare il suo sfondo grigio
@@ -650,8 +652,9 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		&apos;trovo il punto di inserimento EP
 		sString$ = &quot;Fine elenco&quot;
 		oEnd=uFindString_taxi(sString$, oSheet) 
-		lrowEnd_EP_src =oEnd.RangeAddress.EndRow 
-		oSheet.getRows.insertByIndex(lrowEnd_EP_src,iIns_EP)
+		lrowEnd_EP_src =oEnd.RangeAddress.EndRow
+		insRows (lrowEnd_EP_src,iIns_EP)
+&apos;		oSheet.getRows.insertByIndex(lrowEnd_EP_src,iIns_EP)
 
 		lcolbase = Colonna_giusta_EP (oSheet)
  		if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
@@ -2069,7 +2072,8 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
    
 	lrow = 3
 	oSheet.unprotect(&quot;&quot;)
-	oSheet.getRows.insertByIndex(lrow,1)
+	insRows (lrow,1)
+&apos;	oSheet.getRows.insertByIndex(lrow,1)
 	oCell = oSheet.GetCellByPosition( lcolbase+0 , lrow)
 	oCell.CellStyle=&quot;EP-Cs&quot;
 					
@@ -2207,7 +2211,8 @@ Sub ANALISI_IN_ELENCOPREZZI_AVCP (lrow as long) &apos; copia l&apos;analisi e la
    
 	lrow = 3
 	oSheet.unprotect(&quot;&quot;)
-	oSheet.getRows.insertByIndex(lrow,1)
+	insRows (lrow,1)
+&apos;	oSheet.getRows.insertByIndex(lrow,1)
 	oCell = oSheet.GetCellByPosition( lcolbase+0 , lrow)
 	oCell.CellStyle=&quot;EP-Cs&quot;
 					

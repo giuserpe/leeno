@@ -848,7 +848,9 @@ sub Libretto_Misure &apos; accendi spegni la col del REgistro di contabilità su
 		&apos;	ThisComponent.CurrentController().freezeAtPosition(lcol,2)
 		&apos;	ThisComponent.CurrentController.Select(oSelections)
 END SUB
-
+sub ciolla
+fissa (0,3)
+end sub
 
 Sub fissa(lColFix as long, lrowFix  as long, optional lcol as long, optional lrow as long)
 
@@ -1182,8 +1184,8 @@ end sub
 
 sub Computo_Normale_terra_terra
 	oSheet = ThisComponent.currentController.activeSheet
-	oRange = oSheet.getCellRangeByposition(39,0,1023,0) &apos;nascondi il resto delle colonne
-	oRange.Columns.IsVisible=false
+	oRange = oSheet.getCellRangeByposition(33,0,1023,0) &apos;nascondi il resto delle colonne
+	oRange.Columns.IsVisible=false	
 	&apos;registro la posizione attuale del cursore
 	oPos = ThisComponent.getCurrentSelection()
 	if 	templateTipo = &quot;5C&quot; then
@@ -1196,8 +1198,6 @@ sub Computo_Normale_terra_terra
 						&apos;1234567890123456789012345678901234567890123456
 			&apos;	print &quot;2&quot;		
 	end if	
-
-
 	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
 
 	ThisComponent.CurrentController().freezeAtPosition(0,2)

@@ -205,12 +205,13 @@ Sub Svuota_CONTABILITA &apos;main
 	&apos;_____________________
 	chiudi_dialoghi  &apos; chiude tutti i dialoghi
 	&apos;_____________________
-	if msgbox (&quot;1 Sto per eliminare TUTTI i dati da questa tabella di CONTABILITA&apos; ed i relativi Sommari in computo&quot; &amp; CHR$(10)_
-		&amp;&quot;PROSEGUO ?... &quot; &amp; CHR$(10) _
+	if msgbox (&quot;(1) Sto per eliminare TUTTI i dati da questa tabella di CONTABILITA&apos; ed i relativi Sommari in Computo&quot; &amp; CHR$(10)_
+		&amp;&quot;PROSEGUO ? &quot; &amp; CHR$(10) _
 		&amp;  CHR$(10),36, &quot;Attento!!!&quot;) = 7 then
 		exit sub
 	end if
 	Svuota_CONTABILITA_esegui
+	fissa (0,3)
 end sub
 
 Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
@@ -242,9 +243,6 @@ Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
 
 		If lrowFine &gt;= 2 then
 			oSheet.rows.removeByIndex (2, lrowFine)
-		&apos;	oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
-		&apos;	ThisComponent.CurrentController.Select(oRange)
-		&apos;	elimina_riga 
 		end if	
 	end if
 	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
@@ -263,17 +261,17 @@ Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
 		end if
 	end if
 		&apos;aggiunge una riga vuota &quot;quasi&quot; in testa e la formatta... NON è importante per il codice... ma pare ergonomico
-	oSheet.getRows.insertByIndex(2, 3)&apos;
-	oSheet.getCellRangeByPosition(0, 3, 48 , 4).cellstyle =  &quot;Reg_prog&quot;
-	oSheet.getCellRangeByPosition(0, 2, 48 , 2).cellstyle =  &quot;Comp No print&quot;
-	oSheet.getCellRangeByPosition(0, 5, 48 , 5).cellstyle =  &quot;Comp TOTALI&quot;
+	insRows (2,2) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(2, 2)&apos;
+	oSheet.getCellRangeByPosition(0, 2, 48 , 3).cellstyle =  &quot;Reg_prog&quot;
+&apos;	oSheet.getCellRangeByPosition(0, 2, 48 , 2).cellstyle =  &quot;comp In testa&quot;
+	oSheet.getCellRangeByPosition(0, 4, 48 , 4).cellstyle =  &quot;Comp TOTALI&quot;
 	oSheet.GetCellByPosition(2,2).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 &apos;	oSheet.GetCellByPosition(25,2).FORMULA=&quot;=Z&quot; &amp; lrowFine+3
 &apos;	oSheet.GetCellByPosition(25,2).FORMULA=&quot;=ROUND(SUBTOTAL(9;Z4:Z&quot; &amp; lrowFine+2 &amp; &quot;);2)&quot;
-	oSheet.GetCellByPosition(15,2).FORMULA=&quot;=ROUND(SUBTOTAL(9;P4:P5);2)&quot;
-	oSheet.getCellbyPosition(15,2).cellstyle =&quot;comp In testa&quot;
+	oSheet.GetCellByPosition(15,2).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
+&apos;	oSheet.getCellbyPosition(15,2).cellstyle =&quot;comp In testa&quot;
 &apos;	oSheet.GetCellByPosition(25,lrowFine+2).FORMULA=&quot;=ROUND(SUBTOTAL(9;Z4:Z&quot; &amp; lrowFine+2 &amp; &quot;);2)&quot;
-	oSheet.GetCellByPosition(15,5).FORMULA=&quot;=ROUND(SUBTOTAL(9;P4:P5);2)&quot;
-	&apos;	ThisComponent.CurrentController.setFirstVisibleColumn (iColStart)
+	oSheet.GetCellByPosition(15,4).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
 end sub
 </script:module>

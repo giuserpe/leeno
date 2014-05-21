@@ -1114,7 +1114,8 @@ Dim iflag
 	Next I
 	lrow = lrow+1
 	lRowNum= 3 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insRows (lrow, lRowNum)
+&apos;	oSheet.getRows.insertByIndex(lrow, lRowNum)
 
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
 

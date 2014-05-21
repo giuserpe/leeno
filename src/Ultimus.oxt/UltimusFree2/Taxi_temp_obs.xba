@@ -161,7 +161,8 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi_____ (lrow as long) &apos; copia l&apos;analisi
    
    lrow = 3
    oSheet.unprotect(&quot;&quot;)
-   oSheet.getRows.insertByIndex(lrow,1)
+   insRows (lrow,1)
+&apos;   oSheet.getRows.insertByIndex(lrow,1)
    oCell = oSheet.GetCellByPosition( 0 , lrow)
 	oCell.CellStyle=&quot;EP-Cs&quot;
 					
@@ -295,7 +296,8 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi______________________________ (lrow as long) &a
    
    lrow = 3
    oSheetDest.unprotect(&quot;&quot;)
-   oSheet.getRows.insertByIndex(lrow,1)
+   insRows (lrow,1)
+&apos;   oSheet.getRows.insertByIndex(lrow,1)
 
    oCell = oSheet.GetCellByPosition( 0 , lrow)
 					oCell.CellBackColor = RGB(255,220,130) &apos;238;233;191

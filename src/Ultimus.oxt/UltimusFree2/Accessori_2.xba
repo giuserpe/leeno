@@ -515,8 +515,9 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			&apos;crea la riga se non c&apos;è
 			&apos;probabilmente superata, serviva per modificare il template all&apos;insaputa dell&apos;utente  Comp No print
 			If oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;comp In testa&quot;) AND _
-			  	oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;Comp No print&quot;) then
-					oSheet.getRows.insertByIndex(1, 1)
+			  	oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;Comp No print&quot;) Then
+			  		insRows (1, 1) &apos;insertByIndex non funziona
+&apos;					oSheet.getRows.insertByIndex(1, 1)
 					osheet.getCellRangeByPosition (0,1,41,1).CellStyle =  &quot;comp In testa&quot;
 					osheet.getCellRangeByPosition (0,1,41,1).Rows.OptimalHeight = true
 			end if
@@ -562,14 +563,16 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			
 				select case Situaz
 					Case 1
-						oSheet.getRows.insertByIndex(lrowFin, 1)
+						insRows (lrowFin, 1) &apos;insertByIndex non funziona
+&apos;						oSheet.getRows.insertByIndex(lrowFin, 1)
 						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin).CellStyle =  &quot;Default&quot;
 				&apos;		print &quot;una sola standard&quot;
 					Case 2
 				&apos;		print &quot;due righe standard, quindi vuote&quot;&apos;
 						lrowfin = lrowfin-1
 					Case 3
-						oSheet.getRows.insertByIndex(lrowFin, 2)
+						insRows (lrowFin, 2) &apos;insertByIndex non funziona
+&apos;						oSheet.getRows.insertByIndex(lrowFin, 2)
 						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin+1).CellStyle =  &quot;Default&quot;	
 						lrowfin = lrowfin+1				
 					&apos;	print &quot;nessuna riga&quot;
@@ -853,61 +856,7 @@ END SUB
 
 
 
-SUB SERVIZIO  &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
-	&apos;print &quot;partenza&quot;
-	oSheet = ThisComponent.currentController.activeSheet
-	ilastRow = getLastUsedRow(oSheet)
-&apos;	ilastrow = 14
-	lrow = 3
-&apos;	do while oSheet.GetCellByPosition(9, ilastrow).value &lt;&gt; &quot;&quot;
 
-	Do while  lrow &lt; ilastrow
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 10, lrow))
-	&apos;	print oSheet.GetCellByPosition(10, lrow).value
-		if oSheet.GetCellByPosition(2, lrow).string = &quot;&quot; then
-		
-	&apos;	xray oSheet.getrows()
-			&apos;	If oSheet.getrows().getByIndex(lrow).isVisible = false  then
-			&apos;			oSheet.getrows().getByIndex(lrow).isVisible = TRUE 
-	  		&apos;		else	 
-						oSheet.getrows.getByIndex(lrow).isVisible = false 
-			&apos;	end if
-&apos;	end if
-			
-	&apos;		percento = oSheet.GetCellByPosition(8, lrow).value
-	&apos;		per_g = percento / 100
-	&apos;		oSheet.GetCellByPosition(9, lrow).value= per_g
-		end if
-		lrow = lrow + 1
-		&apos;oCell = Osheet.GetCellByPosition(lcol, lrow)
-	loop
-	print &quot;FINITO:::::!&quot;
-END SUB
-
-
-
-SUB SERVIZIO__  &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
-	&apos;print &quot;partenza&quot;
-	oSheet = ThisComponent.currentController.activeSheet
-	ilastRow = getLastUsedRow(oSheet)
-&apos;	ilastrow = 9
-	lrow = 2
-&apos;	do while oSheet.GetCellByPosition(9, ilastrow).value &lt;&gt; &quot;&quot;
-
-	Do while  lrow &lt; ilastrow
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 10, lrow))
-	&apos;	print oSheet.GetCellByPosition(10, lrow).value
-		if oSheet.GetCellByPosition(10, lrow).value &lt;&gt; 0 then 
-			percento = oSheet.GetCellByPosition(10, lrow).value
-			prezzo = oSheet.GetCellByPosition(7, lrow).value
-			importo = percento * prezzo
-			oSheet.GetCellByPosition(9, lrow).value= importo
-		end if
-		lrow = lrow + 1
-		&apos;oCell = Osheet.GetCellByPosition(lcol, lrow)
-	loop
-&apos;puttana
-END SUB
 
 
 

@@ -33,55 +33,53 @@ Global sA as string
 
 function getRange(sTitolo as string) as string
 	on error goto cleanExit
-   sA = &quot;&quot;
-   TestRangeSelection(sTitolo)
-   iConta = 100
-   do while sA = &quot;&quot; 
-     wait iConta
-     iConta = iConta + iConta
-     if sA = &quot;ANNULLA&quot; then
-     	exit do
-     end if
-     &apos;print &quot;vediamo :&quot; &amp; sA
-	&apos; come è impostato annulla bene solo su Esc e su Enter
-	&apos; se si clicca sulla crocetta di annullo non c&apos;è modo di intercettare sA
-	&apos; ovvero non si riesce ad interrompere il loop
-     if iConta &gt; 30000 then
-     	exit do
-     end if
-   loop
-   &apos;print sSI
-  &apos; xray getRange
-   getRange = sA
-  cleanExit:
-  ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-  	sA = &quot;ANNULLA&quot; &apos; qui non credo si arrivi MAI
-	 &apos;oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)  &apos;&apos;
+	sA = &quot;&quot;
+	TestRangeSelection(sTitolo)
+	iConta = 10
+	do while sA = &quot;&quot; 
+		wait iConta
+		iConta = iConta + iConta
+		if sA = &quot;ANNULLA&quot; then
+			exit do
+		end if
+	&apos;print &quot;vediamo :&quot; &amp; sA
+	&apos;annulla bene solo su Esc e su Enter
+	&apos;se si clicca sulla crocetta di annullo non c&apos;è modo di intercettare sA
+	&apos;ovvero non si riesce ad interrompere il loop
+		if iConta &gt; 30000 then
+			exit do
+		end if
+	loop
+	&apos;print sSI
+	&apos; xray getRange
+	getRange = sA
+	cleanExit:
+	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+	sA = &quot;ANNULLA&quot; &apos; qui non credo si arrivi MAI
+	&apos;oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)  &apos;&apos;
 end function
 
 Sub TestRangeSelection(sTitolo)&apos; as string)
-oDocView = ThisComponent.currentController 
- oDocView.removeRangeSelectionListener(oRangeSelectionListener)
- 
- If Not IsNull(oRangeSelectionListener) Then
-     oDocView.removeRangeSelectionListener(oRangeSelectionListener)
- End If
-Dim oEvent as new com.sun.star.script.ScriptEventDescriptor
- oRangeSelectionListener = createUnoListener(&quot;oDocView_&quot; , _
-     &quot;com.sun.star.sheet.XRangeSelectionListener&quot;)
- oDocView.addRangeSelectionListener (oRangeSelectionListener)
+	oDocView = ThisComponent.currentController 
+	oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+rem If Not IsNull(oRangeSelectionListener) Then
+rem 	oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+rem End If
+	Dim oEvent as new com.sun.star.script.ScriptEventDescriptor
+ 	oRangeSelectionListener = createUnoListener(&quot;oDocView_&quot; , _
+	&quot;com.sun.star.sheet.XRangeSelectionListener&quot;)
+	oDocView.addRangeSelectionListener (oRangeSelectionListener)
 &apos;xray oRangeSelectionListener
 
- Dim mArgs(2) As New com.sun.star.beans.PropertyValue
- mArgs(0).Name = &quot;InitialValue&quot;
- mArgs(0).Value = &quot;ANNULLA&quot;  &apos; era &quot;A1&quot; proviamo se funziona&apos; ma occorre valutare la risposta
- mArgs(1).Name = &quot;Title&quot;
- mArgs(1).Value = sTitolo &apos;&quot;    Click sulla destinazione........................&quot; &apos;My Title&quot;
- mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
- mArgs(2).Value = True
-
- oDocView.startRangeSelection(mArgs())
- cleanExit:
+	Dim mArgs(2) As New com.sun.star.beans.PropertyValue
+	mArgs(0).Name = &quot;InitialValue&quot;
+	mArgs(0).Value = &quot;ANNULLA&quot;  &apos; era &quot;A1&quot; proviamo se funziona&apos; ma occorre valutare la risposta
+	mArgs(1).Name = &quot;Title&quot;
+	mArgs(1).Value = sTitolo &apos;&quot;    Click sulla destinazione........................&quot; &apos;My Title&quot;
+	mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
+	mArgs(2).Value = True
+	oDocView.startRangeSelection(mArgs())
+	cleanExit:
  &apos;oDocView_aborted(oRangeSelectionListener)
 &apos; xray oEvent&apos;.source
 &apos; oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)

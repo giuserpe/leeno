@@ -230,7 +230,8 @@ Sub popi_serva &apos;accrocchio solo per giuserpe...
 &apos;		print &quot;vediamo all&apos;inizio &quot; &amp; lDove
 
 	Do while lrow &lt; lLastUrow+lpasso
-		oSheet.getRows.insertByIndex(lDove, lrows)
+		insRows (lDove, lrows)
+&apos;		oSheet.getRows.insertByIndex(lDove, lrows)
 
 		lLastUrow = getLastUsedRow(oSheet)
 		lrow = lrow+lrows+lpasso
@@ -331,30 +332,30 @@ end sub
 
 
 sub rif &apos; solo per testare quella sotto
-
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	ocellS = oSheet.GetCellByPosition(10,15)
-	ocellE = oSheet.GetCellByPosition(20,20)
-&apos;	orange_t = oSheet.getCellRangeByPosition(10,10,15,12)
-&apos;	rifa_nomearea (ocellS, ocellE , &quot;prova&quot;)
-	rifa_nomearea (&quot;CONTABILITA&quot;, &quot;G10:l20&quot; , &quot;prova&quot;)
+	rifa_nomearea (&quot;CONTABILITA&quot;, &quot;G10:L20&quot; , &quot;prova&quot;)
 end sub
 
 SUB rifa_nomearea (sSheet as string, sRange as string, sName as string)
 	&apos; prova per avere un solo moduulo richiamabile da al tre sub
 	&apos; questo vuole i dati in formaro A1 C1
-	Barra_Apri_Chiudi_5(&quot;Devo ridefinire un Nome di Area... Pazienta... &quot;, 50)
-	sPath = &quot;$&apos;&quot; &amp; sSheet &amp; &quot;&apos;.&quot; &amp; sRange 
+&apos;	Barra_Apri_Chiudi_5(&quot;Devo ridefinire un Nome di Area... Pazienta... &quot;, 50)
+	sPath = &quot;$&apos;&quot; &amp; sSheet &amp; &quot;&apos;.&quot; &amp; sRange
+	oRanges = ThisComponent.NamedRanges
    	oCellAddress = ThisComponent.Sheets.getByName(sSheet).getCellRangeByName(&quot;A1&quot;).getCellAddress() 
+&apos;    Dim oCellAddress As new com.sun.star.table.CellAddress
+&apos; 	xray oCellAddress   
+&apos;        oCellAddress.Sheet = 2 &apos;id Sheet&apos;
+&apos;		oCellAddress.Column = i &apos;Column i.
+&apos;        oCellAddress.Row = i + 1 &apos;Row i + 1..
    	&apos;Parameter aPosition specifies the base address for relative cell references
+	IF oRanges.hasByName(sName) THEN
+ 		oRanges.removeByName(sName)
+ 	end IF
+&apos;	oRanges.addNewByName(sName,sPath,oCellAddress,0)
 
-	If ThisComponent.NamedRanges.hasByName(sName) Then
- 			 ThisComponent.NamedRanges.removeByName(sName)
-	End If	
-	ThisComponent.NamedRanges.addNewByName(sName,sPath,oCellAddress,0 )
-	Barra_Apri_Chiudi_5
+&apos;	Barra_Apri_Chiudi_5
 end sub
-
 
 
 Function Verifica_chiudi_preview &apos;(optional sPrima as string)

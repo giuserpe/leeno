@@ -1288,7 +1288,8 @@ oor:package="org.openoffice.Office">
 								<value>_self</value>
 							</prop>
 						</node>
-						<node oor:name="m13S6" oor:op="replace">
+						<!-- ROMOSSO PERCHE' RITENUTO INUTILE -->
+<!-- 						<node oor:name="m13S6" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>
 							</prop>
@@ -1304,7 +1305,7 @@ oor:package="org.openoffice.Office">
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
 							</prop>
-						</node>
+						</node> -->
 						<node oor:name="m13S7" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>

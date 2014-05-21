@@ -120,7 +120,8 @@ sub adegua_s5 REM ADEGUAMENTO DEL FILE DI ESEMPIO 3.9.xx
 	oS_S5.getCellByPosition(34, sopra).string = &quot;&quot;
 	oS_S5.getCellByPosition(35, sopra).string = &quot;&quot;
 	
-	oS_S5.getRows.insertByIndex(sotto, 1)
+	insRows (sotto, 1)
+&apos;	oS_S5.getRows.insertByIndex(sotto, 1)
 	oS_S5.getCellByPosition(1, sopra+3).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
 	oS_S5.getCellRangeByPosition(2, sopra+3, 7, sopra+3).cellstyle = &quot;comp sotto centro_R&quot;
 	oS_S5.getCellByPosition(8, sopra+3).string = &quot;Sommano positivi e negativi &quot;
@@ -146,8 +147,9 @@ VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 	oEnd=uFindString(sString$, oSheet)
 	iEndRow=oEnd.RangeAddress.EndRow
 	if lrow &gt;= iEndRow then &apos;SE OLTRE IL &quot;T O T A L E&quot;
-		if oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle &lt;&gt; &quot;Reg_prog&quot; then
-			oSheet.getRows.insertByIndex(iEndRow, 1)
+		if oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle &lt;&gt; &quot;Reg_prog&quot; Then
+			insRows (iEndRow, 1)
+&apos;			oSheet.getRows.insertByIndex(iEndRow, 1)
 			oSheet.getCellRangeByPosition(0, iEndRow, 48 , iEndRow).cellstyle =  &quot;Reg_prog&quot;
 			print iEndRow
 			lrow = iEndRow
@@ -216,22 +218,12 @@ goto zumba
 	&apos;	 saltaO:
 	end if
 zumba:
-&apos;	oCell = oSheet.GetCellByPosition( 0, lrow)
 
-&apos;suggerito da Vallortigara per inserire 4 righe. l&apos;istrizione insertByIndex dà problemi ai range delle righe successive
+&apos;l&apos;istrizione insertByIndex dà problemi ai range delle righe successive
 &apos;---------------------------------------------------------------------
-	document   = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	dim args3(0) as new com.sun.star.beans.PropertyValue
-	args3(0).Name = &quot;ToPoint&quot;
-	args3(0).Value = &quot;A&quot; &amp; lrow+1
-	dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args3())
-	for i=1 to 5
-		dispatcher.executeDispatch(document, &quot;.uno:InsertRows&quot;, &quot;&quot;, 0, Array())
-	next
-&apos;---------------------------------------------------------------------
-	
-&apos;	oSheet.getRows.insertByIndex(lrow, 4) &apos;inserisce 4 righe
+Print &quot;problema&quot;
+	insRows (lrow, 5) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(lrow, 5) &apos;inserisce 5 righe
 
 
 	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen_cont&quot;) then &apos; eventualmente rifa il nome di area
@@ -247,13 +239,12 @@ zumba:
 
 	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
     oSheet2.copyRange(oCell,oQuellRangeAddresse)
-    
-&apos;  	Numera_Voci_Computo (&quot;niente prompt&quot;)
-	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-&apos;	Print &quot;lrow &quot; &amp; lrow
+
 	data_misura = oSheet.GetCellByPosition(1,iVoce+2).getvalue() &apos;prende la data dalla voce precedente
-	lib_n = oSheet.GetCellByPosition(19,iVoce+1).getvalue() &apos;prende il numero libretto dalla voce precedente
-	lib_p = oSheet.GetCellByPosition(20,iVoce+1).getvalue() &apos;prende la data dalla voce precedente
+&apos;--------REM numero e pagina libretto sono annotate con annota_pagina_libretto
+&apos;	lib_n = oSheet.GetCellByPosition(19,iVoce+1).getvalue() &apos;prende il numero libretto dalla voce precedente
+&apos;	lib_p = oSheet.GetCellByPosition(20,iVoce+1).getvalue() &apos;prende la pagina dalla voce precedente
+&apos;--------	
 	If lib_n = 0 or lib_p = 0 Then
 		lib_n = 1
 		lib_p = 1
@@ -267,47 +258,6 @@ zumba:
  	oSheet.GetCellByPosition(19, lRow+1).value= lib_n
  	oSheet.GetCellByPosition(20, lRow+1).value= lib_p	
 REM ELIMINA UNA SERIE DI DATI # sembra inutile
-goto salta:
-&apos;	oSheet2.getCellByPosition(44, lrow+1).string = &quot;&quot;
-	&apos;rende riconoscibile la voce come diretta all&apos;EP
-	&apos;ovvero la voce non viene dal Computo
-&apos;	osheet2.getCellByPosition(44,lrow+1).cellstyle = &quot;num_centro_bianco_ep&quot;
-&apos;	osheet2.getCellByPosition(2,lrow+2).string = &quot;&quot;	&apos;DESCRIZIONE
-&apos;	osheet2.getCellByPosition(3,lrow+2).string = &quot;&quot;	
-&apos;	osheet2.getCellByPosition(4,lrow+2).string = &quot;&quot;	&apos;P.U.
-&apos;	osheet2.getCellByPosition(5,lrow+2).string = &quot;&quot;	&apos;LUNG.
-&apos;	osheet2.getCellByPosition(6,lrow+2).string = &quot;&quot;	&apos;LARG.
-&apos;	osheet2.getCellByPosition(7,lrow+2).string = &quot;&quot;	&apos;H
-&apos;	osheet2.getCellByPosition(8,lrow+2).string = &quot;&quot;	&apos;COEFF
-&apos;	osheet2.getCellByPosition(9,lrow+2).string = &quot;&quot; &apos;QUANT. PROGETTO
-&apos;	osheet2.getCellByPosition(9,lrow+3).string = &quot;&quot;	&apos; SOMMANO PROGETTO
-&apos;	osheet2.getCellByPosition(12,lrow+3).string = &quot;&quot;
-&apos;	osheet2.getCellByPosition(13,lrow+1).string = &quot;&quot;	&apos; SAL N.	
-&apos;	osheet2.getCellByPosition(18,lrow+3).string = &quot;&quot;	&apos;TOTALE COMPUTO
-&apos;	osheet2.getCellByPosition(19,lrow+1).string = &quot;&quot;	&apos;LIB. N.
-&apos;	osheet2.getCellByPosition(20,lrow+1).string = &quot;&quot;	&apos;lIB. P.
-&apos;	osheet2.getCellByPosition(21,lrow+1).string = &quot;&quot;	&apos;DATA
-&apos;	osheet2.getCellByPosition(36,lrow+3).string = &quot;&quot;	&apos;CONTROLLI
-&apos;	osheet2.getCellByPosition(37,lrow+3).string = &quot;&quot;	&apos;CONTROLLI
-&apos;	osheet2.getCellByPosition(2,lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;&apos; ci metterei &quot;Comp-Bianche in mezzo Descr_R&quot;
-&apos;
-&apos;	&apos;cerco il sal sotto, se c&apos;è
-&apos;	dim iSALpost as integer
-&apos;	iLastRow = getLastUsedRow(oSheet2)
-&apos;	for i = lrow to iLastRow
-&apos;		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Reg-SAL-chiudi_N&quot; then
-&apos;			sNumSalPost = right(oSheet.GetCellByPosition( 2, i).string, 2)
-&apos;			iSALpost = sNumSalPost
-&apos;			exit for
-&apos;		end if
-&apos;		iSALpost = 1000  &apos; mi serve un numero per inpostare a false	
-&apos;	next 
-&apos;	&apos; se sotto c&apos;è un sal chiuso, annota il numero nella voce
-&apos;	oSheet.GetCellByPosition( 13 , lrow+1).cellstyle = &quot;Sal&quot;
-&apos;	if iSALpost &lt;&gt; 1000 then
-&apos;		oSheet.GetCellByPosition( 13 , lrow+1).value = iSALpost
-&apos;	end if
-salta:
 	oCell=oSheet.getCellByPosition(1, lrow+1) &apos;seleziona la cella
 	ThisComponent.CurrentController.Select(oCell)
 &apos; 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
@@ -572,16 +522,18 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 	if lrow &lt;= 2 then
 		lrow = 3
 	end if 	
-	If lrowfine=3 then
-		oSheet.getRows.insertByIndex(2, 2)
+	If lrowfine=3 Then
+		insRows (2, 2)
+&apos;		oSheet.getRows.insertByIndex(2, 2)
 		osheet.getCellRangeByPosition (0,2,45,3).CellStyle = &quot;Default&quot;
 		lrowfine = lrowfine+2
 		lrow = 3
 		goto Inserisci_voce
 	end if
 
-	If lrowfine=4 then
-		oSheet.getRows.insertByIndex(2, 1)
+	If lrowfine=4 Then
+		insRows (2, 1)
+&apos;		oSheet.getRows.insertByIndex(2, 1)
 		osheet.getCellRangeByPosition (0,2,45,2).CellStyle = &quot;Default&quot;
 		lrowfine = lrowfine+1
 		lrow = 3
@@ -595,7 +547,6 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 	end if
 	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; then
 			print
-			&apos;oSheet.getRows.insertByIndex(lrow+1, 1) 
 			osheet.getCellRangeByPosition (0,lrow+1,45,lrow+1).CellStyle = &quot;Default&quot;
 			lrow = lrow-1
 			goto Inserisci_voce
@@ -669,8 +620,9 @@ rem QUESTA SOTTO SERVE???
 &apos;	lRow = Mettiti_esattamente_tra_due_VociC_Att (lRow)
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  	inserisci_voce:
-	lRowNum= 4 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	print lrow
+	insRows (lrow, 4) &apos; numero di righe da inserire
+&apos;	oSheet.getRows.insertByIndex(lrow, 4)
 	&apos; eventualmente rifa il nome di area
 	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
 		rifa_nomearea (&quot;S5&quot;, &quot;$A$9:$AP$12&quot; , &quot;Serv_gen1_8&quot;)
@@ -776,7 +728,7 @@ end function
 
 
 
-SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
+SUB NuovaAnalisi_Att &apos;
 	REM CANCELLA DAL blocco_analisi la riga con &quot;Oneri di Sicurezza diretti&quot; 
 	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	if oSheet.GetCellByPosition(7,290).getvalue = 190 and _
@@ -788,7 +740,7 @@ SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
 		end if
 	end if
 	
-	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	lrow= Range2Cell  &apos;prende l&apos;idirizzo della prima cella del range
 	oContr = ThisComponent.CurrentController
 	if lrow = -1 then	 
 		exit sub
@@ -850,19 +802,17 @@ SUB NuovaAnalisi_Att &apos;compltamente riscritta 101019 &apos;&apos;
 		if oSheet.GetCellbyPosition( 0, lrow).CellStyle=&quot;An-1_sigla&quot; then
 			lrow = lrow -1
 		end if
-	end if
-	inserisci:
-	oSheet.getRows.insertByIndex(lrow, 26) &apos;rigagiuserpe INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
+	End If
+inserisci:
+	insRows (lrow, 25) &apos;sub di bart per sostituire InsertbyIndex
+&apos;	oSheet.getRows.insertByIndex(lrow, 25) &apos;INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
 	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	&apos; ritarato la posizione di inserimento
-	&apos; eventualmente rifa il nome di area
-	&apos;if isNull (ThisComponent.NamedRanges.blocco_analisi.ReferredCells) then
-&apos;	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
-&apos;		rifa_nomearea (&quot;S1&quot;, &quot;$AT$42:$BC$48&quot; , &quot;blocco_analisi&quot;)
-&apos;	end if
+	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
+		rifa_nomearea (&quot;S5&quot;, &quot;$B$107:$P$132&quot; , &quot;blocco_analisi&quot;)
+	end if
 	
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S1
+&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S5
 	oDoc = ThisComponent
 	DocView=oDoc.getCurrentController()
 	oRangeOrigine=oDoc.NamedRanges.blocco_analisi.ReferredCells &apos; blocco_analisi è il nome del range

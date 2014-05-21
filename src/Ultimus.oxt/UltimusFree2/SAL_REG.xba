@@ -228,8 +228,9 @@ REM STRANAMENTE NON TRADUCE LA FORMULA DALL&apos;INGLESE
  &apos;		end if
  &apos;	next
 
-	&apos; adesso inserisco le righe vuote	
-	oSheet.getRows.insertByIndex(iRowsInsert, 4)
+	&apos; adesso inserisco le righe vuote
+	insrows (iRowsInsert, 4)
+&apos;	oSheet.getRows.insertByIndex(iRowsInsert, 4)
 		
 		&apos; e la riempio con quanto serve (iRowsInsert riga ins, cioè la prima)
 	oRange = osheet.getCellRangeByPosition (0,iRowsInsert,48,iRowsInsert)

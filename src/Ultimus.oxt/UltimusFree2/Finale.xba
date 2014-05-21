@@ -867,7 +867,7 @@ END SUB
 
 
 Sub Impagina_Computo_N &apos; versione nuova elaborata per la 3.2 su XP in vbox
-
+&apos;NON USATA
 dim lLastUrow as long
 dim lrow as long
 dim I as long
@@ -1131,7 +1131,8 @@ dim lrowS as long
 					&apos;lrow_Int = lrow_Int+2
 
 					sFormula = &quot;=CONCATENATE(&quot;&quot;Tot.Pag. &quot;&quot;&quot; &amp; &quot;;TEXT(SUM(S&quot; &amp; lrow_Int &amp; &quot;:S&quot; &amp; lrowC &amp; &quot;);&quot;&quot;[$€-410] #.##0,00;[RED]-[$€-410] #.##0,00&quot;&quot;))&quot;
-					oSheet.getRows.insertByIndex(lrowC,1)
+					insRows (lrowC,1)
+&apos;					oSheet.getRows.insertByIndex(lrowC,1)
 					I=I+1		
 					&apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
  					&apos;	   BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
@@ -1394,8 +1395,8 @@ end sub
 
 &apos;------------------------------------------------------------------------
 
-Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di stampa su un foglio 
-
+Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di stampa su un foglio
+	togli_salti_pagina
 	dim oCellStart as object
 	dim lrowE as long
 	dim sString$ as string	
@@ -1516,12 +1517,12 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
 				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
 				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
-				selArea(0).EndColumn = getLastUsedCol(oSheet)
+				selArea(0).EndColumn = 11&apos;getLastUsedCol(oSheet)
 		end if	
-		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;		
+		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 1
-		selArea(0).EndRow = lLastUrow
+		selArea(0).EndRow = lLastUrow-4
 
 		oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1537,6 +1538,16 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 		&apos;o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
 			
 		oSheet.setPrintareas(selArea())
+&apos;oSheet = ThisComponent.currentController.activeSheet
+&apos;xray oSheet
+&apos;oSheet.getCellRangeByposition(0,lLastUrow-3,0,lLastUrow).Rows.IsVisible=false &apos; nascondi righe
+&apos;		Dim oCRA As New com.sun.star.table.CellRangeAddress
+&apos;			oCRA.Sheet = oSheet.RangeAddress.sheet
+&apos;			oCRA.StartColumn = 	1
+&apos;			oCRA.StartRow = lLastUrow-3
+&apos;			oCRA.EndColumn =  19
+&apos;			oCRA.EndRow = lLastUrow
+&apos;			oSheet.group(oCRA,1,0)
 
 	  Case &quot;Tipo_ElencoP&quot; &apos;&quot;Tipo_EP&quot;
 &apos;	  print &quot;Tipo_ElencoP&quot;
@@ -1598,10 +1609,10 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 	&apos;	end if
 	end if
 	if sMessaggio &lt;&gt; &quot;NO_messaggio&quot; then
-		msgbox &quot;L&apos;area di stampa è state ridefinita... Controlla che Ultimus abbia correttamente interpretato&quot;_
-			&amp; &quot; la situazione... ma sopratutto, prima di sistemare i salti pagina, &quot; &amp; CHR$(10)_
-			&amp; &quot;devi controllare la Largezza della pagina... lavorando sulla larghezza delle colonne...&quot;&amp; CHR$(10)_
-			&amp;&quot;In ogni caso - usando lo stilista - puoi lavorare anche sullo stile pagina...&quot;
+		msgbox &quot;L&apos;area di stampa è stata ridefinita!&quot;&apos; ... Controlla che LeenO abbia correttamente interpretato&quot;_
+&apos;			&amp; &quot; la situazione... ma sopratutto, prima di sistemare i salti pagina, &quot; &amp; CHR$(10)_
+&apos;			&amp; &quot;devi controllare la Largezza della pagina... lavorando sulla larghezza delle colonne...&quot;&amp; CHR$(10)_
+&apos;			&amp;&quot;In ogni caso - usando lo stilista - puoi lavorare anche sullo stile pagina...&quot;
 	end if		
 	If sAttributo = &quot;Tipo_ElencoP&quot; Then 
 		Visualizza_normale&apos;Dal momento che Elenco_Prezzi non ha bisogno di passare per Impagina_bis una volta 
@@ -2066,11 +2077,8 @@ END SUB
 
 
 
-
-sub num_pag_libretto &apos;annota sul registro i num di pagina del libretto
-&apos; problema: quando eseguirla?
-&apos; a cosa agganciarla? mmm.... al momento viene eseguita in coda al rifacimento dei salti pag (vedi 
-&apos; sub annota_num_pag_libretto  e mi pare anche l&apos;unica condizione sensata dove eseguirla
+REM NON USATA
+sub num_pag_libretto &apos;annota pagina e libretto su CONTABILITA (solo libretto dalla 3.9.2)
 	oSheet = ThisComponent.currentController.activeSheet
 	lLastUrowNN = getLastUsedRow(oSheet)
 	inumPag = 1
@@ -2081,21 +2089,20 @@ sub num_pag_libretto &apos;annota sul registro i num di pagina del libretto
 			 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 20  , i)) &apos;debug
 			 	&apos;print inumPag
 		end if
+&apos;goto salto:
 		IF oSheet.GetCellByPosition( 1  , i).cellstyle = &quot;comp Art-EP_R&quot; then
 			oSheet.GetCellByPosition( 20  , i).value = inumPag
-			oSheet.GetCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
+&apos;			oSheet.GetCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
 &apos;			oSheet.GetCellByPosition(19, i).string= &quot;1&quot; &apos; numero libretto
 				rem sistemo gli stili di cella
-			oSheet.getCellRangeByPosition(19, i, 20 , i).cellstyle = &quot;num centro bianco&quot;
+&apos;			oSheet.getCellRangeByPosition(19, i, 20 , i).cellstyle = &quot;num centro bianco&quot;
 &apos;			oSheet.GetCellByPosition(21, i).string= &quot;20/04/11&quot;
 &apos;  			oSheet.GetCellByPosition(21 , i).cellstyle = &quot;Data_bianca&quot;
 		end if
 
 	next
+salto:
 	&apos;print &quot;finito&quot;
-end sub
-sub zzz
-
 end sub
 
 

@@ -37,43 +37,35 @@ END SUB
 
 
 SUB Pesca_cod__per_reg_A_1
-
-dim lrow as long
-dim oCell as object
-dim oSheet as object
-dim	lNumProgre as long
+	dim lrow as long
+	dim oCell as object
+	dim oSheet as object
+	dim	lNumProgre as long
 	&apos;individua la riga corrente
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow 
+
 	oSheet = ThisComponent.currentController.activeSheet
-	
+	sString$ = &quot;T O T A L E&quot;
+	oEnd=uFindString(sString$, oSheet)
+	iEndRow=oEnd.RangeAddress.EndRow	
+
 	&apos;verifiche varie sulla posizione di inserimento
-	If oSheet.GetCellByPosition( 0 , 3).cellstyle = &quot;Reg_prog&quot; and _
-		oSheet.GetCellByPosition( 0 , 4).cellstyle = &quot;Reg_prog&quot; then
-		lrow = 4
-		goto fai_e_basta &apos; FAI
+	If oSheet.GetCellByPosition( 0 , 2).cellstyle = &quot;Reg_prog&quot; and _
+		oSheet.GetCellByPosition( 0 , 3).cellstyle = &quot;Reg_prog&quot; and _
+		oSheet.GetCellByPosition( 0 , 4).cellstyle = &quot;Comp TOTALI&quot;  then
+		lrow = 3
+	goto fai_e_basta &apos; FAI
 	end if
-	iEndRow = getLastUsedRow(oSheet)
+&apos;	iEndRow = getLastUsedRow(oSheet)
 	if lrow &gt; iEndRow then
-		 MsgBox  (&quot;(1) La riga selezionata e&apos; fuori dall&apos;area di lavoro!&quot; 
-		exit sub
+		lrow = iEndRow -1
 	end if
 	if lRow &lt; 3 then
-		 MsgBox  (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
-							&amp;	&quot;   Selezionane un&apos;altra più in basso....&quot;)
-		exit sub
+		lrow=3
+		goto FAI
 	end if
-&apos;	if lRow = 3 then
-&apos;		oSheet.getRows.insertByIndex(lRow, 1)
-&apos;		oSheet.getCellRangeByPosition(0, lRow, 49 , lRow).cellstyle =  &quot;Reg_prog&quot;
-&apos;	end if
-	
-&apos;	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
-&apos;			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
-&apos;				&apos;lrow = lrow-1
-&apos;			&apos;print &quot;wow&quot;
-&apos;			goto 	fai_e_basta
-&apos;	end if
+
 	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
 		lRow = lRow + 1
 		goto fai_e_basta &apos; FAI
@@ -97,10 +89,8 @@ dim	lNumProgre as long
 
 		if oSheet.GetCellByPosition( 0 , lRow+1).cellstyle = &quot;Comp Start Attributo_R&quot; then
 				lRow = lRow
-			&apos;	print &quot;2 - &quot; &amp; lrow
 				goto FAI
 		end if		
-		&apos;lrow = lrow+1		
 	end if	
 	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; then
 		goto FAI
@@ -118,59 +108,55 @@ dim	lNumProgre as long
 
 	FAI:
 fai_e_basta:
-	
-
-
-
 	&apos; sarebbe pronto ad inserire ma meglio chiedere conferma
 	&apos; verifica se stai inserendo in mezzo alle altre
 &apos;	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; or _ &apos; questa non l&apos;ho capita... tenere d&apos;occhio ed eventualmente rimettere òla riga
-goto saltaprova  
-	if	oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Reg-SAL-chiudi_N&quot;then
-	 		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
-	&apos; 	print  lrow
-	&apos; 	print oSheet.GetCellByPosition( 0 , lRow).cellstyle
-		 &apos;	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1  or _
- 		&apos;	if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
-				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-							&amp; &quot; 1 Se qui sotto c&apos;è già un SAL &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
-							&amp;	&quot;   &quot;, 36, &quot;&quot;)
-							if sDomanda = 7 then
-								exit sub 
-							end if
-		&apos;  goto saltaO &apos;proviamo a disattivarlo
-&apos;			do while left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Default&quot; or _
-		&apos;	do while oSheet.GetCellByPosition( 2 , lRow).string = &quot;&quot; and _
-		&apos;			left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;
-		&apos;		if 	lRow &lt;=3 then
-		&apos;			exit do
-		&apos;		end if
-		&apos;		lRow = lRow - 1		
-		&apos;	loop
-		&apos;	lRow = lrow + 1						
-		&apos;  saltaO:
-	end if
-
-
-&apos;	lrow = lrow -1
-	&apos;cerco il sal sotto se c&apos;è
-	dim iSALpost as integer
-	iLastRow = getLastUsedRow(oSheet)
-	for i = lRow to iLastRow
-		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Reg-SAL-chiudi_N&quot; then
-				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-							&amp; &quot; Qui sotto c&apos;è un SAL già &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
-							&amp; &quot; E se ci sono altri sal ancora a Valle, devi controllarne le somme...&quot; &amp; CHR$(10)_
-							&amp;	&quot;   &quot;, 36, &quot;&quot;)
-							if sDomanda = 7 then
-								exit sub 
-							end if
-			&apos;santina
-			exit for
-		end if
-		iSALpost = 1000  &apos; mi serve un numero per inpostare a false	
-	next
-saltaprova:
+rem goto saltaprova  
+rem 	if	oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Reg-SAL-chiudi_N&quot;then
+rem 	 		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
+rem 	&apos; 	print  lrow
+rem 	&apos; 	print oSheet.GetCellByPosition( 0 , lRow).cellstyle
+rem 		 &apos;	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1  or _
+rem 		&apos;	if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
+rem 				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
+rem 							&amp; &quot; 1 Se qui sotto c&apos;è già un SAL &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
+rem 							&amp;	&quot;   &quot;, 36, &quot;&quot;)
+rem 							if sDomanda = 7 then
+rem 								exit sub 
+rem 							end if
+rem 		&apos;  goto saltaO &apos;proviamo a disattivarlo
+rem &apos;			do while left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Default&quot; or _
+rem 		&apos;	do while oSheet.GetCellByPosition( 2 , lRow).string = &quot;&quot; and _
+rem 		&apos;			left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;
+rem 		&apos;		if 	lRow &lt;=3 then
+rem 		&apos;			exit do
+rem 		&apos;		end if
+rem 		&apos;		lRow = lRow - 1		
+rem 		&apos;	loop
+rem 		&apos;	lRow = lrow + 1						
+rem 		&apos;  saltaO:
+rem 	end if
+rem 
+rem 
+rem &apos;	lrow = lrow -1
+rem 	&apos;cerco il sal sotto se c&apos;è
+rem 	dim iSALpost as integer
+rem 	iLastRow = getLastUsedRow(oSheet)
+rem 	for i = lRow to iLastRow
+rem 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Reg-SAL-chiudi_N&quot; then
+rem 				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
+rem 							&amp; &quot; Qui sotto c&apos;è un SAL già &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
+rem 							&amp; &quot; E se ci sono altri sal ancora a Valle, devi controllarne le somme...&quot; &amp; CHR$(10)_
+rem 							&amp;	&quot;   &quot;, 36, &quot;&quot;)
+rem 							if sDomanda = 7 then
+rem 								exit sub 
+rem 							end if
+rem 			&apos;santina
+rem 			exit for
+rem 		end if
+rem 		iSALpost = 1000  &apos; mi serve un numero per inpostare a false	
+rem 	next
+rem saltaprova:
 &apos;1)  registra la posizione
 	oPartenza_A = ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow, 2, lrow )
 &apos;2) focus su Computo
@@ -184,7 +170,6 @@ saltaprova:
 			&amp; &quot;Un click sulla riga della voce e poi ri-aziona semplicemente la macro &apos;Pesca va e vieni&apos;!&quot; &amp; CHR$(10)_
 			&amp; &quot;( Ctrl ins    Ctrl 8     Ctrl Alt K )&quot;
 	end if
-
 End SUB
 
 
@@ -210,7 +195,7 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 			exit sub
 	end if
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
+&apos;	Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
 &apos;.......................................................................................................
 	lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lSrow = -1 then	 
@@ -220,6 +205,10 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 	oCell = oSheet.GetCellByPosition( 0 , oSrow)&apos; errata selezione di un range
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	&apos;individia la voce del computo
+&apos;	print RigaVoceGlobal
+	if RigaVoceGlobal &lt;&gt; &quot;&quot; then
+		lSrow = RigaVoceGlobal
+	end if
 	sStRange = Circoscrive_Voce_Computo_Att (lSrow)
 	  With sStRange.RangeAddress
 			lRowStart_A =.StartRow
@@ -298,16 +287,19 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 &apos;	se la riga è nascosta devo visualizzarla, altrimenti anche le celle inserite sarenno nascoste
 	oSheet.getRows().getByindex(lRowInsert).isvisible = TRUE
 	&apos; iserisco il blocco
-	if oSheet.getCellByPosition(0 , 3).cellstyle = &quot;Reg_prog&quot; and _
-		oSheet.getCellByPosition(0 , 4).cellstyle = &quot;Reg_prog&quot; 	then
-&apos;	lRowInsert = 3 or lRowInsert = 4 then
-		lrow = 4
+LROW = lRowInsert
+		if oSheet.getCellByPosition(0 , 2).cellstyle = &quot;Reg_prog&quot; and _
+			oSheet.getCellByPosition(0 , 3).cellstyle = &quot;Reg_prog&quot; OR _
+			lrow&lt;=3 then
+			lrow = 3
 		else
-		lRow = lRowInsert+1
-		sStRange = Circoscrive_Voce_Computo_Att (lRow+1)
-		lRow = sStRange.RangeAddress.EndRow+1 &apos;nuovo punto di inserimento
-	end if	
-	oSheet.getRows.insertByIndex(lRow, lRowEnd-lRowStart+1) &apos;inserisce il numero di righe della voce di computo
+			lRow = lRowInsert+1
+			sStRange = Circoscrive_Voce_Computo_Att (lRow+1)
+			lRow = sStRange.RangeAddress.EndRow+1 &apos;nuovo punto di inserimento
+		end if
+&apos;PRINT LROW
+	insRows (lRow, lRowEnd-lRowStart+1) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(lRow, lRowEnd-lRowStart+1) &apos;inserisce il numero di righe della voce di computo
 	Sotto=lrow+lRowEnd-lRowStart &apos;ultima riga della voce
 	oSheet.getCellRangeByPosition(0 , lrow, 48, sotto).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; &apos;do una mano di fondo a tutta la voce
 	oSheet.getCellRangeByPosition(0 , sotto, 48, sotto).cellstyle = &quot;comp sotto centro_R&quot; &apos;do una mano di fondo a tutta la voce
@@ -343,8 +335,9 @@ rem copia il cod.art. nella colonna 44
 		oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
 	End If
 	&apos; sistemo la riga 3...  
-	if lRow = 2 then 
-		oSheet.getRows.insertByIndex(lRow, 1)
+	if lRow = 2 Then
+	insRows (lRow, 1) &apos;insertByIndex non funziona
+&apos;		oSheet.getRows.insertByIndex(lRow, 1)
 		lRow =lRow+1
 	end if
 &apos;	fissa (0,2)
@@ -375,7 +368,8 @@ STILI:	REM attribuisco gli stili alla voce proveniente dal computo
 	oSheet.GetCellByPosition(27 , sotto).cellstyle = &quot;Comp-SAL n valuta_sotto&quot;					
 	oSheet.getCellRangeByPosition(31 , lrow, 36, sotto-1).cellstyle = &quot;compTagG&quot;				&apos;tag
 AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
-	oSheet.getRows.insertByIndex(sotto, 1)
+	insRows (sotto, 1) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(sotto, 1)
 	sotto = sotto+1
 	oSheet.getCellByPosition(1, sotto-1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
 	oSheet.getCellRangeByPosition(2, sotto-1, 7, sotto-1).cellstyle = &quot;comp sotto centro_R&quot;

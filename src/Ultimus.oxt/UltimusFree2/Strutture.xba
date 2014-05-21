@@ -12,8 +12,6 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-
-
 Sub Inser_Capitolo
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -88,8 +86,9 @@ Sub Inser_Capitolo
 	 	if oSheet.GetCellByPosition( 0, nCurRow).string  &lt;&gt; &quot;&quot; 	then
 	 	 	if 	nCurRow = lrowFine 	then
 	 					Select Case lrowFine
-	 						case   &lt;= 3 
-	 							 oSheet.getRows.insertByIndex(lrowFine, 4)
+	 						case   &lt;= 3
+	 							insRows (lrowFine, 4)
+&apos;	 							 oSheet.getRows.insertByIndex(lrowFine, 4)
 	 							 lrowFine = lrowFine +4
 	 					&apos;	case  &gt; 4
 	 				&apos;			print &quot;b&quot;
@@ -152,10 +151,9 @@ Sub Inser_Capitolo
    							&amp; &quot; &quot;,&quot;          Inserimento Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
    			If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
    				exit sub		
-   			end if	
-		  	oSheet.getRows.insertByIndex(lrow, 3)
-		  	
-
+   			end If
+   			insRows (lrow, 3)
+&apos;		  	oSheet.getRows.insertByIndex(lrow, 3)
    			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 
 			&apos;oSrc = oSheetSRC.getCellRangeByPosition(72,45,113,47).RangeAddress
@@ -426,8 +424,9 @@ Sub Inser_SottoCapitolo
 	 	if oSheet.GetCellByPosition( 0, nCurRow).string  &lt;&gt; &quot;&quot; 	then
 	 	 	if 	nCurRow = lrowFine 	then
 	 					Select Case lrowFine
-	 						case   &lt;= 3 
-	 							 oSheet.getRows.insertByIndex(lrowFine, 4)
+	 						case   &lt;= 3
+	 							insRows (lrowFine, 4)
+&apos;	 							 oSheet.getRows.insertByIndex(lrowFine, 4)
 	 							 lrowFine = lrowFine +4
 	 					&apos;	case  &gt; 4
 	 				&apos;			print &quot;b&quot;
@@ -499,8 +498,9 @@ Sub Inser_SottoCapitolo
    
    		If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
    				exit sub		
-   		end if	
-	   oSheet.getRows.insertByIndex(lrow, 3)
+   		end If
+   		insRows (lrow, 3)
+&apos;	   oSheet.getRows.insertByIndex(lrow, 3)
 	   oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 
 	  &apos;oSrc = oSheetSRC.getCellRangeByPosition(72,49,119,51).RangeAddress

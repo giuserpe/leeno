@@ -180,7 +180,8 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 	oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
 &apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
 	oSheetDest.unprotect(&quot;&quot;)
-	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
+	insRows (lrowDest, iRowCountSRC) &apos;insertByIndex non funziona
+&apos;	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
 	
 	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  si sposta sopra,,,
 		if lrowDest &lt;  iStartRow then
@@ -264,7 +265,8 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 	oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
 &apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
 	oSheetDest.unprotect(&quot;&quot;)
-	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
+	insRows (lrowDest, iRowCountSRC) &apos;insertByIndex non funziona
+&apos;	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
 	
 	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  si sposta sopra,,,
 		if lrowDest &lt;  iStartRow then
@@ -339,33 +341,35 @@ Thiscomponent.currentcontroller.setactivesheet(oSheetDest)
 END SUB
 
 function getRange_Colore(sTitolo as string) as string &apos;listener specifico per copiare il colore...
-sA = &quot;&quot;
-TestRangeSelection_colore(sTitolo)
-do
-	wait 100
-loop while sA = &quot;&quot;
-getRange_colore = sA
-end function
+	sA = &quot;&quot;
+	TestRangeSelection_colore(sTitolo)
+	do
+		wait 100
+	loop while sA = &quot;&quot;
+	getRange_colore = sA
+end Function
+
 
 
 Sub TestRangeSelection_Colore(sTitolo as string) &apos;listener specifico per copiare il colore...
-oDocView = ThisComponent.currentController 
-oDocView.removeRangeSelectionListener(oRangeSelectionListener)
-If Not IsNull(oRangeSelectionListener) Then
-			 oDocView.removeRangeSelectionListener(oRangeSelectionListener)
-End If
-oRangeSelectionListener = createUnoListener(&quot;oDocView_&quot; , _
-&quot;com.sun.star.sheet.XRangeSelectionListener&quot;)
-oDocView.addRangeSelectionListener (oRangeSelectionListener)
-Dim mArgs(2) As New com.sun.star.beans.PropertyValue
-mArgs(0).Name = &quot;InitialValue&quot;
-mArgs(0).Value = &quot;ANNULLA&quot;
-mArgs(1).Name = &quot;Title&quot;
-mArgs(1).Value = sTitolo &apos;&quot;  Copia il COLORE di SFONDO... fai Click sulla destinazione........................&quot; &apos;My Title&quot;
-mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
-mArgs(2).Value = True
-oDocView.startRangeSelection(mArgs())
+	oDocView = ThisComponent.currentController 
+	oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+	If Not IsNull(oRangeSelectionListener) Then
+		oDocView.removeRangeSelectionListener(oRangeSelectionListener)
+	End If
+	oRangeSelectionListener = createUnoListener(&quot;oDocView_&quot; , _
+	&quot;com.sun.star.sheet.XRangeSelectionListener&quot;)
+	oDocView.addRangeSelectionListener (oRangeSelectionListener)
+	Dim mArgs(2) As New com.sun.star.beans.PropertyValue
+	mArgs(0).Name = &quot;InitialValue&quot;
+	mArgs(0).Value = &quot;ANNULLA&quot;
+	mArgs(1).Name = &quot;Title&quot;
+	mArgs(1).Value = sTitolo &apos;&quot;  Copia il COLORE di SFONDO... fai Click sulla destinazione........................&quot; &apos;My Title&quot;
+	mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
+	mArgs(2).Value = True
+	oDocView.startRangeSelection(mArgs())
 END SUB
+
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sub copia_solo_colore_Sfondo333

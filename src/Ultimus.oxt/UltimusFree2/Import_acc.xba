@@ -501,7 +501,8 @@ Sub Conversione_2&apos;(sOutputFilePath)
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 	ilastRow = getLastUsedRow(oSheet)
 	oSrc = oSheet.getCellRangeByPosition(0,0,25,ilastRow).RangeAddress
-	oSheetDest.getRows.insertByIndex(3, ilastRow+2 )
+	insRows (3, ilastRow+2 ) &apos;insertByIndex non funziona
+&apos;	oSheetDest.getRows.insertByIndex(3, ilastRow+2 )
 &apos;&apos;	print
 	oDest = oSheetDest.GetCellByPosition(0,3 ).CellAddress
     oSheetDest.copyRange(oDest, oSrc)

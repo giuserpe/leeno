@@ -289,7 +289,8 @@ SUB Elimina_doppione &apos; _no_rior
 	ThisComponent.CurrentController.Select(oCell)&apos;@
    
 	lrow = 3
-	oSheet.getRows.insertByIndex(lrow,1)
+	insRows (lrow,1)
+&apos;	oSheet.getRows.insertByIndex(lrow,1)
 	oCell = oSheet.GetCellByPosition( lcolbase , lrow)
 	oCell.CellStyle=&quot;EP-Cs&quot;
 	oCell.string= oCodAnalisi
@@ -568,7 +569,8 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string) &apos;ada
    ThisComponent.CurrentController.Select(oCell)&apos;@
 &apos;   print 
    lrow = 3
-   oSheet.getRows.insertByIndex(lrow,1)
+	insRows(lrow,1)
+  &apos; oSheet.getRows.insertByIndex(lrow,1)
    oCell = oSheet.GetCellByPosition( lcolbase + lscarto+0 , lrow)
 	oCell.CellStyle=&quot;EP-Cs&quot;
    oCell.string= oCodAnalisi
@@ -772,7 +774,8 @@ Function ANALISI_IN_ELENCOPREZZI_Der(optional flag_rior as string)
    ThisComponent.CurrentController.Select(oCell)&apos;@
    
    lrow = 3
-   oSheet.getRows.insertByIndex(lrow,1)
+   insRows (lrow,1)
+&apos;   oSheet.getRows.insertByIndex(lrow,1)
    oCell = oSheet.GetCellByPosition( lcolbase+0 , lrow)
 				&apos;	oCell.CellBackColor = RGB(255,220,130) &apos;238;233;191
 					oCell.CellStyle=&quot;EP-Cs&quot;
@@ -1009,8 +1012,8 @@ dim sFlag as string
 	if iflag = &quot;1&quot; then &apos; questa non so a cosa serve, perché iflag è sempre a 0
 		exit sub
 	end if
-
-	oSheet.getRows.insertByIndex(lrow + 1,1) &apos; inserisci 1 riga sotto
+	insRows (lrow + 1,1)
+&apos;	oSheet.getRows.insertByIndex(lrow + 1,1) &apos; inserisci 1 riga sotto
 	oSRC = oSheet.getCellRangeByPosition (2,lrow,250,lrow ).RangeAddress &apos; seleziona la riga sorgente
 	oDest = oSheet.GetCellByPosition(2, lrow+1).CellAddress &apos;stabilisce la destinazione
 	oSheet.copyRange(oDest,oSRC)&apos;copia sorgente su destinazione
@@ -1130,8 +1133,8 @@ Dim iflag
 	CellRangeAddress.StartColumn = 0
 	CellRangeAddress.StartRow = lrow	
 	CellRangeAddress.EndColumn = 15 &apos;250 
-
-	oSheet.getRows.insertByIndex(lrow, 1)
+	insRows (lrow, 1)
+&apos;	oSheet.getRows.insertByIndex(lrow, 1)
 &apos;exit sub
 	CellAddress.Sheet = oSheet_num   
 	CellRangeAddress.StartRow = lrow+1
@@ -1319,7 +1322,8 @@ Dim oRangeAddress as object
 		end if
 	next
 	inserisci:
-	oSheet.getRows.insertByIndex(lrow, 1) &apos;rigagiuserpe INSERISCE LE RIGHE PER oneri_sicurezza
+	insRows(lrow, 1)
+&apos;	oSheet.getRows.insertByIndex(lrow, 1) &apos;rigagiuserpe INSERISCE LE RIGHE PER oneri_sicurezza
 	oRangeAddress=ThisComponent.NamedRanges.oneri_sicurezza.ReferredCells.getRangeAddress &apos; utili è il nome del range
 	oCellAddress  = oSheet.getCellByPosition(0, lrow).getCellAddress() &apos; indirizzo dell&apos;inserimento
 	oSheet.copyRange(oCellAddress, oRangeAddress) &apos; inserimento
@@ -1526,7 +1530,8 @@ Dim iflag
 	Next I
 	lrow = lrow+1
 	lRowNum= 3 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insrows(lrow, lRowNum)
+&apos;	oSheet.getRows.insertByIndex(lrow, lRowNum)
 
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
 
@@ -1621,8 +1626,8 @@ sub Inserisci_Riga_rossa&apos; di chiusura
 
     sAttributo = Trova_Attr_Sheet
 &apos;print sAttributo
-
-	oSheet.getRows.insertByIndex(lrow, 1)
+	insRows (lrow, 1)
+&apos;	oSheet.getRows.insertByIndex(lrow, 1)
 	&apos;lrow = lrow+1
 &apos; oSheet = ThisComponent.currentController.activeSheet
   &apos;  oCell = ThisComponent.CurrentSelection
@@ -1876,7 +1881,8 @@ Sub Svuota_Computo () &apos;svuota tutto (o quasi) il doc di computo &apos; dora
 	Svuota_CONTABILITA_esegui 
 	
 	&apos;aggiunge una riga vuota &quot;quasi&quot; in testa e la formatta... NON è importante per il codice... ma pare ergonomico
-	oSheet.getRows.insertByIndex(2, 1)&apos;
+	insRows (2, 1)
+&apos;	oSheet.getRows.insertByIndex(2, 1)&apos;
 	oSheet.getCellRangeByPosition(0, 2, 49 , 2).cellstyle =  &quot;Reg_prog&quot;
 	Adatta_h_riga_intera_tabella(&quot;CONTABILITA&quot;)
 	if	sState = &quot;chiusa&quot; then

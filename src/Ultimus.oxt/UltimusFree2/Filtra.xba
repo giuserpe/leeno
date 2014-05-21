@@ -106,7 +106,7 @@ Sub Filtro_Comune(sCol as  string, lColTagga as long, xTag as string) &apos;ovve
 	&apos;	oRangeVoce = Circoscrive_Voce_Computo_B ( lrow)
 
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-		oRangeVoce =  Circoscrive_Voce_Computo_Att ( lrow)
+		oRangeVoce =  Circoscrive_Voce_Computo_Att (lrow)
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	&apos;	print
 		lcount = oRangeVoce.Rows.count
@@ -119,7 +119,8 @@ Sub Filtro_Comune(sCol as  string, lColTagga as long, xTag as string) &apos;ovve
 		 oSrc = oSheetSRC.getCellRangeByPosition(lsC,lsR,leC,leR).RangeAddress
 	   	 oDest = oSheetDest.GetCellByPosition( 0, lrowDest ).CellAddress
 	   &apos;	oFoglio  &apos;problll
-	   	 oSheetDest.getRows.insertByIndex(lrowDest, lcount ) 
+	   insRows(lrowDest, lcount )
+		&apos;oSheetDest.getRows.insertByIndex(lrowDest, lcount ) 
  	 	 oSheetDest.copyRange(oDest, oSrc)
 	  	 lrow = lrow+2
 	  	 lrowDest = lrowDest + oRangeVoce.Rows.Count

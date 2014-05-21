@@ -236,9 +236,10 @@ dim oSheetSRC as object
   	ThisComponent.CurrentController.Select(oCell)
  &apos; 	print lrow
 lRowNum= 4 &apos; numero di righe da inserire
-oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insRows (lrow, lRowNum)
+	&apos;oSheet.getRows.insertByIndex(lrow, lRowNum)
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-&apos;inserisci_rows (lrow, lrowNum ) &apos; Altrenativa di inserimento
+&apos;insRows (lrow, lrowNum ) &apos; Altrenativa di inserimento
 
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia il blocco delle voce (formati + formule + numeri)
 	oDoc = ThisComponent
@@ -264,6 +265,7 @@ END SUB
 
 
 &apos;########################################################################
+REM NON USATA - E&apos; IN USO NuovaAnalisi_Att	
 sub NuovaAnalisi &apos; Inserisce una Nuova analisi di prezzo VERSIONE che usa il circoscrivi
 			&apos; sotto l&apos;analisi su cui si è posizionati
 dim xdocument   as object
@@ -331,8 +333,9 @@ Dim oCell
  				xA = oCell.string 
  			loop
  		&apos;	print lcont &amp;&quot; fuori  &quot; &amp; lrow
- 			if lrow &lt; 3 then 
- 					oSheet.getRows.insertByIndex(lrow, 1)
+ 			if lrow &lt; 3 Then
+ 					insRows(lrow, 1)
+&apos; 					oSheet.getRows.insertByIndex(lrow, 1)
  					lrow = lrow &apos;-1
  				else
  					lrow = lrow -1
@@ -396,10 +399,10 @@ Dim oCell
 		oCell = oSheet.GetCellByPosition( 0 , lrow)
 		proprio_in_mezzo:
 			ThisComponent.CurrentController.Select(oCell)
-salta:			
-lrowNum= 7 &apos; numero di righe da inserire
-
- oSheet.getRows.insertByIndex(lrow, lrowNum) 
+salta:
+	lrowNum= 7 &apos; numero di righe da inserire
+	insRows (lrow, lrowNum) 
+&apos;	oSheet.getRows.insertByIndex(lrow, lrowNum) 
 
 &apos;print &quot;fatto spazio&quot;
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S1
@@ -421,35 +424,26 @@ oCell = oSheet.GetCellByPosition( 0 , lrow +1)
 	
 END SUB
 
-
-
-
 &apos;########################################################################
-sub inserisci_rows (lrow as long, lrowNum as long )&apos; funzione per sostituire il metodo insertByIndex (che non aggiorna i riferimenti)
+sub insRows (lrow as long, lrowNum as long ) &apos;grazie Bart
+&apos; funzione per sostituire il metodo insertByIndex (che non aggiorna i riferimenti)
 &apos; con CellInsertMode Creata in seguito ad una cantonata NON è usata.. (credo  !!)
 dim iSheet_num  as integer
 Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
 Dim CellAddress As New com.sun.star.table.CellAddress
-
 	oDoc=thisComponent
 	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
 	oSheets = odoc.Sheets
     nome_sheet = thisComponent.currentcontroller.activesheet.name
-     &apos;  oSheetN = odoc.currentcontroller.activesheet.name
     iSheet_num = SheetNameToNumber( nome_sheet)
-&apos;    print isheet_num
-    print lrow
-   &apos; oSheets = oDoc.Sheets (oSheet_num)
+rem definizione del range
 	oSheets = oDoc.Sheets (iSheet_num)
-	
 	CellRangeAddress.Sheet = iSheet_num    
 	CellRangeAddress.StartColumn = 0
 	CellRangeAddress.StartRow = lrow
 	CellRangeAddress.EndColumn = 250 
-	CellRangeAddress.EndRow = lrow+lrowNum
+	CellRangeAddress.EndRow = lrow+lrowNum-1
+
 	oSheets.insertCells(CellRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)
-
-
 END SUB
-
 </script:module>

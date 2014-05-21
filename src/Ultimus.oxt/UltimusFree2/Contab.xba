@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Contab" script:language="StarBasic">REM  *****  BASIC  *****
-Sub partita (testo as string)
 
+Sub partita (testo as string)
 	Dim test As String
 	Dim riga_selezione As Integer
 	Dim focus as integer
 	
 	osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
-&apos;xray osheet
  	if oSheet.name = &quot;CONTABILITA&quot; then
  	 goto procedi
  	 else
@@ -18,57 +17,177 @@ Sub partita (testo as string)
  	end if
  	procedi:
 
-	riga_corrente = thisComponent.getCurrentSelection.celladdress.row
+	riga_corrente = range2cell &apos; thisComponent.getCurrentSelection.celladdress.row
 	if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
+		EXIT SUB	
 		msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi selezionare una riga di editing.&quot;, 0,&quot;ERRORE!&quot;)
-		goto fine
+		&amp; &quot;Devi selezionare un rigo di misurazione.&quot;, 0,&quot;ERRORE!&quot;)
+		EXIT SUB
 	end if
 		oSheet.GetCellByPosition(2 , riga_corrente).setstring(testo)
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
 		oRange.CellBackColor = RGB(255, 255, 153)
-   				&apos;	oRange.CharFontStyleName = &quot;Arial Narrow&quot;
-   					&apos;oRange.Charweight = 500
-   					
-   				&apos;	oRange.CharColor = RGB(0,0,0)
-	&apos;	oCellS.CharColor = 16711680 
-	&apos;	oCellS.CharFontName  =  &quot;Bitstream Vera Sans&quot; 
-	&apos;	oCellS.CharHeight = 13
+		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,riga_corrente))		
  	fine:
 end sub
 sub partita_provvisoria
-dim testo as string
-testo = &quot;PARTITA PROVVISORIA&quot;
-partita (testo)
+	dim testo as string
+	testo = &quot;PARTITA PROVVISORIA&quot;
+	partita (testo)
 end sub
 sub detrai_partita_provvisoria
-dim testo as string
-testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
-partita (testo)
+	dim testo as string
+	testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
+	partita (testo)
 end sub
-sub Genera_Registro
-	 oSheet = ThisComponent &apos;.getSheets()
-&apos;	 xray oSheet
-	If not thisComponent.Sheets.hasByName(&quot;REGISTRO&quot;) Then &apos; se la sheet esiste
-		oSheet.getSheets().insertNewByName(&quot;REGISTRO&quot;,4,0) &apos; creala
+
+sub Genera_REGISTRO &apos;(C) Giuseppe Vizziello 2014
+Dim oSheet as object
+Dim oSheets as object
+Dim elVoci()&apos; elenco voci
+&apos;goto main:
+&apos;on error goto fine
+rem attivo il registro di contabilità
+&apos;	oSheet = ThisComponent
+	If thisComponent.Sheets.hasByName(&quot;Registro&quot;) Then &apos; se la sheet esiste
+	ttt=	msgbox (&quot;Esiste già una tabella con nome &quot;&quot;Registro&quot;&quot;.&quot; &amp; CHR$(10) _
+		&amp; &quot;Se scegli OK sarà rigenerata e sovrascritta!&quot; &amp; CHR$(10) _
+		&amp; &quot;Se scegli ANNULLA, potrai cambiarne il nome e riprovare.&quot;, 48 + 1, &quot;AVVISO: foglio &quot;&quot;Registro&quot;&quot; già presente!&quot;)
 	end if
-	osheet = thisComponent.Sheets.getByName(&quot;REGISTRO&quot;)  &apos;settala come corrente
-	oSheet.GetCellByPosition(2 , 1).setstring(&quot;laciolla&quot;) &apos;scrivi
-	print
-goto fine
-	oSheetTempR = oSheets.GetByName(&quot;REGISTRO&quot;) &apos;recuperiamo la tabella
+	If ttt = 1 then &apos;se scegli OK
+		thisComponent.getSheets().removeByName(&quot;Registro&quot;) &apos; cancella la sheet
+		thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,4,0) &apos; ricreala ALLA POSIZIONE 4
+	end if
+	If ttt = 2 then &apos;se scegli ANNULLA
+		oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+		ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0)) &apos;visualizza registro
+		exit sub	&apos;esci
+	end if	
+main:
 
-	oView = ThisComponent.CurrentController&apos;@@
-	oView.setActiveSheet(oSheetTempR) &apos;attiviamola@@
-	oDocument = ThisComponent
-	oSheetAnalisi = oDocument.Sheets.getByName (&quot;Analisi di Prezzo&quot;) &apos; sheet da cui copiare
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,0,0))
 	
-	oCelle=oDocument.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
-	oSheet2 = oDocument.Sheets.getByName(odocument.currentcontroller.activesheet.name) &apos; sheet (corrente) dove incollare
-	oQuelleRange=oSheetAnalisi.getCellRangeByName(&quot;A1:A5000&quot;)  &apos; range da copiare
-	oQuellRangeAddresse = oQuelleRange.getRangeAddress &apos; indirizzo cella base del range
-    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
-fine:
+
+	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet) 
+	lrowFine =oEnd.RangeAddress.EndRow-2
+	
+	for i =  3 to lrowFine
+&apos;		xray oSheet.GetCellByPosition(0, i)
+
+		if oSheet.GetCellByPosition(0, i).cellstyle = &quot;Comp Start Attributo_R&quot; then &apos;i = inizio voce
+			sStRange = Circoscrive_Voce_Computo_Att (i)
+&apos;			print i
+			With sStRange.RangeAddress
+				f = .EndRow		&apos;fine voce
+			End With
+			num = oSheet.GetCellByPosition(0, i+1).getstring &apos;num. voce
+			art = oSheet.GetCellByPosition(1, i+1).getstring &apos;articolo
+			data = oSheet.GetCellByPosition(1, i+2).getstring &apos;data
+			desc = oSheet.GetCellByPosition( 2, i+1).getstring &apos;descrizione
+			um = oSheet.GetCellByPosition( 9, i+1).getstring &apos;unità
+			Nlib = oSheet.GetCellByPosition( 19, i+1).getvalue &apos;Lib. N.
+			Plib = oSheet.GetCellByPosition( 20, i+1).getvalue &apos;Lib. P.
+			quant = oSheet.GetCellByPosition( 9, f).getvalue &apos;quantità
+			prezzo = oSheet.GetCellByPosition( 13, f).getvalue &apos;prezzo
+			importo= oSheet.GetCellByPosition( 15, f).getvalue &apos;importo
+
+		end if
+		i=f
+		&apos;voce = array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo)
+		AppendItem(elVoci(), array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo))
+		Barra_Apri_Chiudi_5(&quot;                                 Restano &quot;&amp; lrowFine-i &amp;&quot; righe...&quot;, 0)
+	next
+	rem*****************************************************************************************
+	REM INIZIO INSERIMENTO
+	oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+	ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0))
+	RigSomm = 3 &apos;prima riga inserimento in Registro
+	ColSomm = 0 &apos;prima colonna inserimento in Registro
+	for each el in elVoci()
+&apos;		for each n in el()
+			oSheetS.GetCellByPosition(ColSomm, RigSomm).setstring(el(0)+ chr(13) + el(1)+ chr(13) + el(2))&apos; num, art, data
+&apos;			oSheetS.GetCellByPosition(ColSomm+1, RigSomm).setstring(el(1)+ chr(13) + el(2))
+			oSheetS.GetCellByPosition(ColSomm+1, RigSomm).setstring(el(3)) &apos;descrizione
+			oSheetS.GetCellByPosition(ColSomm+2, RigSomm).setstring(el(4)) &apos;um
+			oSheetS.GetCellByPosition(ColSomm+3, RigSomm).setvalue(el(5)) &apos;Nlib
+			oSheetS.GetCellByPosition(ColSomm+4, RigSomm).setvalue(el(6)) &apos;Plib
+			if el(7)&gt;0 then
+				oSheetS.GetCellByPosition(ColSomm+5, RigSomm).setvalue(el(7)) &apos;quantità
+				else
+				oSheetS.GetCellByPosition(ColSomm+6, RigSomm).setvalue(el(7)) &apos;quantità in meno
+			end if
+			oSheetS.GetCellByPosition(ColSomm+7, RigSomm).setvalue(el(8)) &apos;prezzo
+			if el(9)&gt;0 then
+				oSheetS.GetCellByPosition(ColSomm+8, RigSomm).setvalue(el(9)) &apos;debito
+				else
+				oSheetS.GetCellByPosition(ColSomm+9, RigSomm).setvalue(el(9)) &apos;pagamento
+			end if
+			RigSomm=RigSomm+1
+	next
+	
+	rem riga di intestazione
+	oSheets.getCellRangeByPosition(0,0,13,0).CellStyle=&quot;An.1v-Att Start&quot;
+	oSheets.GetCellByPosition(0,0).setstring(&quot;N.&quot;+ chr(13) +&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
+	oSheets.GetCellByPosition(1,0).setstring(&quot;DESIGNAZIONE DEI LAVORI&quot;+ chr(13) + &quot;E DELLE SOMMINISTRAZIONI&quot;)
+	oSheets.GetCellByPosition(2,0).setstring(&quot;U.M.&quot;)
+	oSheets.GetCellByPosition(3,0).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
+	oSheets.GetCellByPosition(4,0).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
+	oSheets.GetCellByPosition(5,0).setstring(&quot;Quantità&quot; + chr(13) + &quot;Positive&quot;)
+	oSheets.GetCellByPosition(6,0).setstring(&quot;Quantità&quot; + chr(13) + &quot;Negative&quot;)
+	oSheets.GetCellByPosition(7,0).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
+	oSheets.GetCellByPosition(8,0).setstring(&quot;Importi&quot; + chr(13) + &quot;debito&quot;)
+	oSheets.GetCellByPosition(9,0).setstring(&quot;Importi&quot; + chr(13) + &quot;pagamento&quot;)
+REM gli do il colore
+	oSheetS.getCellRangeByPosition(0, 1, 0, RigSomm-1).cellstyle = &quot;comp progress&quot;
+	oSheetS.getColumns().getByName(&quot;B&quot;).Columns.Width = 12000
+	oSheetS.getCellRangeByPosition(1, 1, 1, RigSomm-1).cellstyle = &quot;An-lavoraz-generica&quot;
+	oSheetS.getCellRangeByPosition(2, 1, 2, RigSomm-1).cellstyle = &quot;An-lavoraz-generica_1_rigo&quot;
+	oSheetS.getCellRangeByPosition(3, 1, 3, RigSomm-1).cellstyle = &quot;An-1v&quot;
+	oSheetS.getCellRangeByPosition(4, 1, 9, RigSomm-1).cellstyle = &quot;An-lavoraz-generica&quot;
+	oSheetS.getCellRangeByPosition(10,1,11, RigSomm-1).cellstyle = &quot;An-lavoraz-Utili-num sin&quot;
+	oSheetS.getCellRangeByPosition(12,1,12, RigSomm-1).cellstyle = &quot;An-lavoraz-generica&quot;
+	oSheetS.getCellRangeByPosition(13,1,13, RigSomm-1).cellstyle = &quot;An-1v-dx&quot;
+	
+	msgbox (&quot;Fatto. Grazie per l&apos;attesa!&quot; &amp; CHR$(10) _
+	+ &quot;Sistema la larghezza delle colonne.&quot;, 64, &quot;Voci trascritte nel registro: &quot; &amp; RigSomm-1
 end sub
 
+sub test
+	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
+	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
+	oCell=thisComponent.getCurrentSelection()
+	xray ocell
+end sub
+
+
+
+sub annota_pagina_libretto&apos; su CONTABILITA (solo libretto dalla 3.9.2)
+Set_Area_Stampa_N (&quot;NO_messaggio&quot;)
+	oSheet = ThisComponent.currentController.activeSheet
+	lLastUrowNN = getLastUsedRow(oSheet)
+	inumPag = 1
+	For i = 2  to lLastUrowNN
+		Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrowNN, 0)
+		if  oSheet.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
+			inumPag = inumPag+1
+			 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 20  , i)) &apos;debug
+			 	&apos;print inumPag
+		end if
+&apos;goto salto:
+		IF oSheet.GetCellByPosition( 1  , i).cellstyle = &quot;comp Art-EP_R&quot; then 
+			oSheet.GetCellByPosition( 20  , i).value = inumPag
+&apos;			oSheet.GetCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
+			oSheet.GetCellByPosition(19, i).value= 1 &apos; numero libretto
+			oSheet.GetCellByPosition(23, i).string= &quot;#01&quot; &apos; numero SAL
+				rem sistemo gli stili di cella
+&apos;			oSheet.getCellRangeByPosition(19, i, 20 , i).cellstyle = &quot;num centro bianco&quot;
+&apos;			oSheet.GetCellByPosition(21, i).string= &quot;20/04/11&quot;
+&apos;  			oSheet.GetCellByPosition(21 , i).cellstyle = &quot;Data_bianca&quot;
+		end if
+
+	next
+salto:
+	&apos;print &quot;finito&quot;
+end sub
 </script:module>

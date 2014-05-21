@@ -322,8 +322,8 @@ If  test &lt;&gt; &quot;Tipo_EP&quot; AND _
 	if lrow = 0 then &apos; se è la prima...
 		lrow = 1
 	end if
-	
-	oSheet.getRows.insertByIndex(lrow,1)
+	insRows (lrow,1)
+&apos;	oSheet.getRows.insertByIndex(lrow,1)
 	oSheet.getCellByPosition(lcolbase+0,lrow).CellStyle = &quot;EP-aS&quot;
 	oSheet.getCellByPosition(lcolbase+1,lrow).CellStyle = &quot;EP-a&quot;
 	oSheet.getCellByPosition(lcolbase+2,lrow).CellStyle = &quot;EP-mezzo&quot;

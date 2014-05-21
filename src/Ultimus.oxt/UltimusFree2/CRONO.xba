@@ -38,7 +38,8 @@ oDoc = thisComponent
  	 SelectedRange = getRange() &apos; richiama il listeners
 	 lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
 	oSheetDest.unprotect(&quot;&quot;)
-	oSheetDest.getRows.insertByIndex(lrowDest, 1)
+	insRows (lrowDest, 1) &apos;insertByIndex non funziona
+&apos;	oSheetDest.getRows.insertByIndex(lrowDest, 1)
 
 	oSrc = oSheetSRC.getCellRangeByPosition(0,iRow,3,iRow).RangeAddress
     oDest = oSheetDest.GetCellByPosition(1,lrowDest ).CellAddress
@@ -113,7 +114,6 @@ oDoc = thisComponent
 
 	oSheetDest = oDoc.Sheets.getByName(&quot;CronoP&quot;)
 	
-&apos;	oSheetDest.getRows.insertByIndex(lrowDest, 1)
 	oSheetDest.unprotect(&quot;&quot;)
 	oSheetDest.getColumns.insertByIndex(lcol, 1)
 
@@ -172,7 +172,8 @@ oDoc = thisComponent
 	end if
 	 oSheetDest = oDoc.Sheets.getByName(&quot;CronoP&quot;)
 	oSheetDest.unprotect(&quot;&quot;)
-	oSheetDest.getRows.insertByIndex(lrowDest, 1)
+	insRows (lrowDest, 1) &apos;insertByIndex non funziona
+&apos;	oSheetDest.getRows.insertByIndex(lrowDest, 1)
 
 	oCell = oSheetDest.GetCellByPosition( 0 , lrowDest)
 	sFormula = &quot;=A&quot; &amp; lrowDest &amp; &quot;+1&quot;

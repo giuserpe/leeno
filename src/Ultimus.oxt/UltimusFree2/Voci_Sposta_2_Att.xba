@@ -223,7 +223,8 @@ Dim CellAddress As New com.sun.star.table.CellAddress
 
 		ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1,L2RowS))
 &apos;	print L2RowS
-	oSheet.getRows.insertByIndex(L2RowS, iRowCount)
+	insRows (L2RowS, iRowCount)
+&apos;	oSheet.getRows.insertByIndex(L2RowS, iRowCount)
 
 &apos;print
 	&apos; recupera il vecchio range (che, a causa dell&apos;inserimento, ha cambiato coordinate..)	

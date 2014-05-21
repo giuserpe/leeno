@@ -7,7 +7,7 @@ rem attivo le analisi
 	If thisComponent.Sheets.hasByName(&quot;Lista Analisi&quot;) Then &apos; se la sheet esiste
 	ttt=	msgbox (&quot;Esiste già una tabella con nome &quot;&quot;Lista Analisi&quot;&quot;.&quot; &amp; CHR$(10) _
 		&amp; &quot;Se scegli OK sarà rigenerata e sovrascritta!&quot; &amp; CHR$(10) _
-		&amp; &quot;Se scegli ANNULLA, potrai cambiarne il nome e riprovare.&quot;, 48 + 1, &quot;AVVISO!&quot;)
+		&amp; &quot;Se scegli ANNULLA, potrai cambiarne il nome e riprovare.&quot;, 48 + 1, &quot;AVVISO: foglio &quot;&quot;Lista Analisi&quot;&quot; già presente!&quot;)
 	end if
 	If ttt = 1 then &apos;se scegli OK
 		thisComponent.getSheets().removeByName(&quot;Lista Analisi&quot;) &apos; cancella la sheet
@@ -99,7 +99,7 @@ rem riga di intestazione
 	oSheets.GetCellByPosition(5,0).setstring(&quot;B&quot; + chr(13) + chr(13) + &quot;MATERIALI&quot;+ chr(13))
 	oSheets.GetCellByPosition(6,0).setstring(&quot;C&quot; + chr(13) + chr(13) + &quot;NOLI&quot;+ chr(13))
 	oSheets.GetCellByPosition(7,0).setstring(&quot;D&quot; + chr(13) + chr(13) + &quot;TRASPORTI&quot;+ chr(13))
-	oSheets.GetCellByPosition(8,0).setstring(&quot;E&quot; + chr(13) + &quot;ATRE FORNITURE E PRESTAZIONI&quot;+ chr(13))
+	oSheets.GetCellByPosition(8,0).setstring(&quot;E&quot; + chr(13) + &quot;ALTRE FORNITURE E PRESTAZIONI&quot;+ chr(13))
 	oSheets.GetCellByPosition(9,0).setstring(&quot;F&quot; + chr(13) + &quot;TOTALE COSTI DIRETTI&quot; + chr(13) + &quot;(A+B+C+D+E)&quot;)
 	oSheets.GetCellByPosition(10,0).setstring(&quot;G&quot; + chr(13) + chr(13) + &quot;S.G.&quot; + chr(13))
 	oSheets.GetCellByPosition(11,0).setstring(&quot;H&quot; + chr(13) + chr(13) + &quot;U.I.&quot; + chr(13))
@@ -121,23 +121,7 @@ REM gli do il colore
 	fine:
 end sub
 
-SUB DOLO REM SOLO MANUTENZIONE
-	&apos;if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$88:$L$88&quot; , &quot;manodopera&quot;)
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$89:$L$89&quot; , &quot;materiali&quot;)
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$90:$L$90&quot; , &quot;noli&quot;)
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$91:$L$91&quot; , &quot;trasporti&quot;)
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$92:$L$92&quot; , &quot;altre_forniture&quot;)
-		REM VECCHIO BLOCCO ANALISI_BART
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$45:$N$51&quot; , &quot;blocco_analisi&quot;)
-		REM BLOCCO ANALISI AVCP
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$106:$P$131&quot; , &quot;blocco_analisi&quot;)
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
-		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
 
-
-	&apos;end if
-END SUB
 Sub titolo_Monodopera &apos; MODIFICATA PER GIUSERPE o Oneri di sicurezza o Maggiorazione %							&apos; Ctrl F9  oppure Alt F9
 dim nome as string
 Dim oDoc As Object
@@ -181,7 +165,8 @@ Dim iflag
 	Next I
 &apos;	lrow = lrow+1
 	lRowNum= 1 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insRows (lrow, lRowNum) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(lrow, lRowNum)
 
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
 
@@ -256,7 +241,8 @@ Dim iflag
 	Next I
 &apos;	lrow = lrow+1
 	lRowNum= 1 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insRows (lrow, lRowNum) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(lrow, lRowNum)
 
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
 
@@ -322,7 +308,8 @@ Dim iflag
 		end if
 	Next I
 	lRowNum= 1 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insRows (lrow, lRowNum) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(lrow, lRowNum)
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
 	if sflag = &quot;A&quot; then &apos; ????
 			lcol = 1
@@ -390,7 +377,8 @@ Dim iflag
 	Next I
 &apos;	lrow = lrow+1
 	lRowNum= 1 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insRows (lrow, lRowNum) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(lrow, lRowNum)
 
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
 
@@ -464,7 +452,8 @@ Dim iflag
 	Next I
 &apos;	lrow = lrow+1
 	lRowNum= 1 &apos; numero di righe da inserire
-	oSheet.getRows.insertByIndex(lrow, lRowNum)
+	insRows (lrow, lRowNum) &apos;insertByIndex non funziona
+&apos;	oSheet.getRows.insertByIndex(lrow, lRowNum)
 
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)
 

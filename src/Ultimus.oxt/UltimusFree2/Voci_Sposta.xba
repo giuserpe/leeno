@@ -13,7 +13,7 @@
 &apos;_______________________________________________________________________________________
 
 REM ______________________________________________________
-Sub elimina_voce &apos;(C) Giuseppe Vizziello 2014
+Sub elimina_voce &apos;elimina voce (C) Giuseppe Vizziello 2014
 On Error GoTo fine:
 	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)

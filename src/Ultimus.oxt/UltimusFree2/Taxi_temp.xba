@@ -318,7 +318,8 @@ Sub Solo_Computo_ (anche_computo as boolean)
  	   oSheetDest.unprotect(&quot;&quot;)
  
 		 &apos;exit sub
- 	   oSheetDest.getRows.insertByIndex(lrowDest, lrowEnd -2 )
+	insRows (lrowDest, lrowEnd -2 )
+&apos; 	   oSheetDest.getRows.insertByIndex(lrowDest, lrowEnd -2 )
  	   oSheetDest.copyRange(oDest, oSrc)
  &apos;	   If mantieni_S2 = false then
  	  	oSheets = ThisComponent.Sheets

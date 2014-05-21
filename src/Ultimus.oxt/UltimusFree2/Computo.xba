@@ -21,13 +21,15 @@ procedi:
 	&apos;	exit sub
 	&apos;end if
 &apos;	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
-	oAddress = thisComponent.getCurrentSelection.celladdress
+&apos;	oAddress = thisComponent.getCurrentSelection.celladdress
 	oContr = ThisComponent.CurrentController
 	focus = oContr.getFirstVisibleRow
-	riga_corrente = oAddress.row
+
+	riga_corrente = range2cell &apos;oAddress.row
 	if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
+	exit sub
 		msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi selezionare una riga di editing.&quot;, 0,&quot;ERRORE!&quot;)
+		&amp; &quot;Devi selezionare un rigo di misurazione.&quot;, 0,&quot;ERRORE!&quot;)
 		goto fine
 	end if
 	REM se è presente la &quot;PARTITA PROVVISORIA&quot; aggiungi riga e vai, ma non va
@@ -45,9 +47,9 @@ procedi:
 	sTitolo = &quot;Selezionare una voce precedente...&quot;
 	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
 	if SelectedRange = &quot;&quot; or _
-	SelectedRange = &quot;ANNULLA&quot; or _
-	SelectedRange = &quot;GNente&quot; then
-	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+		SelectedRange = &quot;ANNULLA&quot; or _
+		SelectedRange = &quot;GNente&quot; then
+		ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	exit sub
 end if
 riga_selezione = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di vedi voce da riportare
@@ -93,7 +95,9 @@ for i = 0 to 1000
 		i = i+1
 	end if
 next
-oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot; &quot;&quot;;&quot;&quot;vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
+InputDesc = InputBox(&quot;Inserire descrizione:&quot;, &quot;Descrizione della misurazione&quot;, &quot; &quot;)
+
+oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;&quot;&amp; InputDesc &amp;&quot;&quot;&quot;;&quot;&quot; - vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
 
 oSheet.GetCellByPosition(4 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
 oRange = oSheet.getCellRangeByPosition (2,riga_corrente,4,riga_corrente)
@@ -102,7 +106,7 @@ oContr.setFirstVisibleRow(focus)
 fine:
 end sub
 	
-Sub Firme_in_calce &apos;RIEPILOGO CATEGORIE
+Sub Firme_in_calce &apos;RIEPILOGO CATEGORIE (c) Giuseppe Vizziello 2014
 Rinumera_TUTTI_Capitoli2
 osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 &apos;xray osheet
@@ -143,8 +147,9 @@ REM SE ANALISI PREZZI
 		inserisco_qui = lRowE
 		oContr = ThisComponent.CurrentController
 		oContr.setFirstVisibleColumn (0)
-		oContr.setFirstVisibleRow(lRowE-2)		
-		oSheet.getRows.insertByIndex(inserisco_qui,15)
+		oContr.setFirstVisibleRow(lRowE-2)
+		insRows (inserisco_qui,15) &apos;insertByIndex non funziona
+&apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
 		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
 	REM INSERISCI LA DATA E IL PROGETTISTA
@@ -174,8 +179,9 @@ REM SE ELENCO PREZZI
 		inserisco_qui = lRowE
 		oContr = ThisComponent.CurrentController
 		oContr.setFirstVisibleColumn (0)
-		oContr.setFirstVisibleRow(lRowE-2)		
-		oSheet.getRows.insertByIndex(inserisco_qui,15)
+		oContr.setFirstVisibleRow(lRowE-2)	
+		insRows (inserisco_qui,15) &apos;insertByIndex non funziona
+&apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
 		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
 	REM INSERISCI LA DATA E IL PROGETTISTA
@@ -220,8 +226,9 @@ REM SE COMPUTO
 		inserisco_qui = lRowE+1
 		oContr = ThisComponent.CurrentController
 		oContr.setFirstVisibleColumn (0)
-		oContr.setFirstVisibleRow(lRowE-2)		
-		oSheet.getRows.insertByIndex(inserisco_qui,15)
+		oContr.setFirstVisibleRow(lRowE-2)
+		insRows (inserisco_qui,15) &apos;insertByIndex non funziona
+&apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
 		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
 	REM INSERIMENTO TITOLO
@@ -238,7 +245,8 @@ REM SE COMPUTO
 &apos;				If Not gr_CAP_start then
 &apos;					gr_CAP_start = riga_corrente 
 &apos;				End If
-				oSheet.getRows.insertByIndex(riga_corrente,1)
+				insRows (riga_corrente,1) &apos;insertByIndex non funziona
+&apos;				oSheet.getRows.insertByIndex(riga_corrente,1)
 				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=TEXT(&quot; &amp; id_cap &amp;&quot;;&quot;&quot;@&quot;&quot;)&quot;)
 				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_Cap&quot;
 				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap)
@@ -251,7 +259,8 @@ REM SE COMPUTO
 				str_cap  = oSheet.GetCellByPosition(2,i).AbsoluteName
 				tot_cap  = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
-				oSheet.getRows.insertByIndex(riga_corrente, 1)
+				insRows (riga_corrente,1) &apos;insertByIndex non funziona
+&apos;				oSheet.getRows.insertByIndex(riga_corrente, 1)
 				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_SubCap&quot;
 				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=&quot; &amp; id_cap)
 				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap)
@@ -261,7 +270,8 @@ REM SE COMPUTO
 			if oSheet.GetCellByPosition(1 , i).CellStyle =  &quot;Comp TOTALI&quot; then
 				tot_cap  = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
-				oSheet.getRows.insertByIndex(riga_corrente, 1)
+				insRows (riga_corrente,1) &apos;insertByIndex non funziona
+&apos;				oSheet.getRows.insertByIndex(riga_corrente, 1)
 				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
 				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
 				oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;TOTALE&quot;)

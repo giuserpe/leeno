@@ -53,6 +53,9 @@ rem attivo il registro di contabilità
 	ttt=	msgbox (&quot;Esiste già una tabella con nome &quot;&quot;Registro&quot;&quot;.&quot; &amp; CHR$(10) _
 		&amp; &quot;Se scegli OK sarà rigenerata e sovrascritta!&quot; &amp; CHR$(10) _
 		&amp; &quot;Se scegli ANNULLA, potrai cambiarne il nome e riprovare.&quot;, 48 + 1, &quot;AVVISO: foglio &quot;&quot;Registro&quot;&quot; già presente!&quot;)
+		else
+				thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,4,0) &apos; creala ALLA POSIZIONE 4
+		oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
 	end if
 	If ttt = 1 then &apos;se scegli OK
 		thisComponent.getSheets().removeByName(&quot;Registro&quot;) &apos; cancella la sheet
@@ -62,7 +65,9 @@ rem attivo il registro di contabilità
 		oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
 		ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0)) &apos;visualizza registro
 		exit sub	&apos;esci
-	end if	
+	end if
+&apos;	oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+
 main:
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
@@ -100,7 +105,7 @@ main:
 	next
 	rem*****************************************************************************************
 	REM INIZIO INSERIMENTO
-	oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+	oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)	
 	ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0))
 	RigSomm = 3 &apos;prima riga inserimento in Registro
 	ColSomm = 0 &apos;prima colonna inserimento in Registro
@@ -150,7 +155,7 @@ REM gli do il colore
 	oSheetS.getCellRangeByPosition(13,1,13, RigSomm-1).cellstyle = &quot;An-1v-dx&quot;
 	
 	msgbox (&quot;Fatto. Grazie per l&apos;attesa!&quot; &amp; CHR$(10) _
-	+ &quot;Sistema la larghezza delle colonne.&quot;, 64, &quot;Voci trascritte nel registro: &quot; &amp; RigSomm-1
+	+ &quot;Sistema la larghezza delle colonne.&quot;, 64, &quot;Voci trascritte nel registro: &quot; &amp; RigSomm-1 &amp; &quot;voci!&quot;
 end sub
 
 sub test
@@ -175,7 +180,8 @@ Set_Area_Stampa_N (&quot;NO_messaggio&quot;)
 			 	&apos;print inumPag
 		end if
 &apos;goto salto:
-		IF oSheet.GetCellByPosition( 1  , i).cellstyle = &quot;comp Art-EP_R&quot; then 
+		IF oSheet.GetCellByPosition( 1  , i).cellstyle = &quot;comp Art-EP_R&quot; or _
+			oSheet.GetCellByPosition( 1  , i).cellstyle = &quot;comp Art-EP&quot; then 
 			oSheet.GetCellByPosition( 20  , i).value = inumPag
 &apos;			oSheet.GetCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
 			oSheet.GetCellByPosition(19, i).value= 1 &apos; numero libretto

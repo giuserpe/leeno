@@ -213,8 +213,64 @@ Sub Svuota_CONTABILITA &apos;main
 	Svuota_CONTABILITA_esegui
 	fissa (0,3)
 end sub
+Sub Svuota_CONTABILITA_esegui (optional sSommari as String) &apos;(C) Giuseppe Vizziello 2014 - riscritta totalmente
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+ 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
+REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+rem riga di intestazione
+	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
+	oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
+	oSheet.GetCellByPosition(2,2).setstring(&quot;LAVORAZIONI&quot;+ chr(13) + &quot;O PROVVISTE&quot;)
+	oSheet.GetCellByPosition(5,2).setstring(&quot;P.U.&quot;+ chr(13) + &quot;Coeff.&quot;)
+	oSheet.GetCellByPosition(6,2).setstring(&quot;Lung.&quot;)
+	oSheet.GetCellByPosition(7,2).setstring(&quot;Larg.&quot;)
+	oSheet.GetCellByPosition(8,2).setstring(&quot;Alt.&quot; + chr(13) +&quot;Peso&quot;)
+	oSheet.GetCellByPosition(9,2).setstring(&quot;Quantità&quot; + chr(13) + &quot;Positive&quot;)
+	oSheet.GetCellByPosition(11,2).setstring(&quot;Quantità&quot; + chr(13) + &quot;Negative&quot;)
+	oSheet.GetCellByPosition(13,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
+	oSheet.GetCellByPosition(15,2).setstring(&quot;Importi&quot;)
+	oSheet.GetCellByPosition(17,2).setstring(&quot;Sicurezza&quot; + chr(13) + &quot;inclusa&quot;)
+	oSheet.GetCellByPosition(18,2).setstring(&quot;Serve  per avere la quantità&quot; + chr(13) + &quot;realizzate “pulite” e sommabili&quot;)
+	oSheet.GetCellByPosition(19,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
+	oSheet.GetCellByPosition(20,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
+	oSheet.GetCellByPosition(22,2).setstring(&quot;flag&quot;)
+	oSheet.GetCellByPosition(23,2).setstring(&quot;SAL&quot; + chr(13) +&quot;N.&quot;)
+	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
+	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
+	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
+	oSheet.GetCellByPosition(31,2).setstring(&quot;tag Cat&quot;)
+	oSheet.GetCellByPosition(32,2).setstring(&quot;tag&quot; + chr(13) +&quot;subCat&quot;)
+	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
+	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
+	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
+Rem colore colonne riga di intestazione
+	oSheet.getCellRangeByPosition(0, 2, 35 , 2).cellstyle =  &quot;comp Int_colonna_R&quot; &apos;do un fondo a tutte
+	oSheet.getCellByPosition(0, 2).cellstyle =  &quot;comp Int_colonna_R_prima&quot;
+	oSheet.getCellByPosition(18, 2).cellstyle =  &quot;COnt_noP&quot;
+	oSheet.getCellRangeByPosition(31, 2, 32 , 2).cellstyle =  &quot;comp Int_colonna vert&quot;
+Rem	riga di controllo importo
+	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
+	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
+	oSheet.getCellRangeByPosition(0, 1, 35 , 1).cellstyle = &quot;Reg_prog&quot;
+Rem riga del totale
+	oSheet.GetCellByPosition(2,3).setstring(&quot;T O T A L E&quot;)
+	oSheet.GetCellByPosition(15,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
+	oSheet.getCellRangeByPosition(0, 3, 35 , 3).cellstyle =  &quot;Comp TOTALI&quot;
+Rem riga rossa
+	oSheet.GetCellByPosition(0,4).setstring(&quot;Fine Computo&quot;)
+	oSheet.getCellRangeByPosition(0, 4, 35 , 4).cellstyle = &quot;Riga_rossa_Chiudi&quot;
 
-Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
+	oSheet.getCellRangeByPosition(0,0,0,3).rows.OptimalHeight  = true &apos; ottimizza altezze
+apri_libretto_misure
+&apos;set_larghezza_colonne
+se_ci_sono_problemi_guarda_la_sub_di_Bart:
+end sub
+Sub Svuota_CONTABILITA_esegui_bart  (optional sSommari as String) &apos;non usata
 	&apos;ATTENZIONE, se arriva da dialog il parametro non è mai NULL
 	&apos; perché intercetta il clic del mouse o cose del genere...
 	if thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) then
@@ -223,8 +279,7 @@ Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
 			osheet.isVisible = TRUE
 			sState = &quot;chiusa&quot;
 		end if
-		sString$ = &quot;T O T A L E&quot;
-		oEnd=uFindString(sString$, oSheet) 
+		oEnd=uFindString(&quot;T O T A L E&quot;, oSheet) 
 		lrowFine =oEnd.RangeAddress.EndRow-1
 		&apos;L&apos;ULTIMA (PRIMA DELLA RIGA ROSSA LA SVUOTO  SOLTANTO)
 		iCellAttr = _
@@ -242,7 +297,7 @@ Sub Svuota_CONTABILITA_esegui  (optional sSommari as String)
 		lrowFine = lrowFine-1 &apos; &apos;oEnd.RangeAddress.EndRow-2 
 
 		If lrowFine &gt;= 2 then
-			oSheet.rows.removeByIndex (2, lrowFine)
+			oSheet.rows.removeByIndex (12, 22)&apos;lrowFine)
 		end if	
 	end if
 	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta

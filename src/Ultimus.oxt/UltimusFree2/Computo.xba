@@ -99,8 +99,8 @@ InputDesc = InputBox(&quot;Inserire descrizione:&quot;, &quot;Descrizione della 
 
 oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;&quot;&amp; InputDesc &amp;&quot;&quot;&quot;;&quot;&quot; - vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
 
-oSheet.GetCellByPosition(4 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
-oRange = oSheet.getCellRangeByPosition (2,riga_corrente,4,riga_corrente)
+oSheet.GetCellByPosition(5 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
+oRange = oSheet.getCellRangeByPosition (2,riga_corrente,5,riga_corrente)
 oRange.CellBackColor = RGB(255, 204, 153)
 oContr.setFirstVisibleRow(focus)
 fine:

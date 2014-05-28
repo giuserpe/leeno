@@ -848,9 +848,7 @@ sub Libretto_Misure &apos; accendi spegni la col del REgistro di contabilità su
 		&apos;	ThisComponent.CurrentController().freezeAtPosition(lcol,2)
 		&apos;	ThisComponent.CurrentController.Select(oSelections)
 END SUB
-sub ciolla
-fissa (0,3)
-end sub
+
 
 Sub fissa(lColFix as long, lrowFix  as long, optional lcol as long, optional lrow as long)
 
@@ -1190,7 +1188,7 @@ sub Computo_Normale_terra_terra
 	oPos = ThisComponent.getCurrentSelection()
 	if 	templateTipo = &quot;5C&quot; then
 		&apos;	Viste_nuove(&quot;TTTTTTTTTTFTFFFFFFFTFFFFFFFFFFFFFFFFT&quot;)
-			Viste_nuove(&quot;TTTFTTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFF&quot;)
+			Viste_nuove(&quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFF&quot;)
 						&apos;123456789012345678901234567890123456789012345678
 				&apos;		          10        20        30        40
 				else
@@ -1206,6 +1204,16 @@ sub Computo_Normale_terra_terra
 &apos;	fissa (39,2)&apos; optional icol as long, optional irow as long)
 &apos;	fissa (12,2)
 	ColRid_off
+	oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
+	oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
+	oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 5900
+	oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 1300
+	oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 1300
+	oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 1300
+	oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1300
+	oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
+	oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
+	oSheet.getColumns().getByName(&quot;S&quot;).Columns.Width = 1700
 
 END SUB      
 

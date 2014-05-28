@@ -143,19 +143,17 @@ MAIN:
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
 VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
-	sString$ = &quot;T O T A L E&quot;
-	oEnd=uFindString(sString$, oSheet)
+	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
 	iEndRow=oEnd.RangeAddress.EndRow
 	if lrow &gt;= iEndRow then &apos;SE OLTRE IL &quot;T O T A L E&quot;
-		if oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle &lt;&gt; &quot;Reg_prog&quot; Then
-			insRows (iEndRow, 1)
-&apos;			oSheet.getRows.insertByIndex(iEndRow, 1)
-			oSheet.getCellRangeByPosition(0, iEndRow, 48 , iEndRow).cellstyle =  &quot;Reg_prog&quot;
-			print iEndRow
-			lrow = iEndRow
-			else
-			lrow = iEndRow-1
-		end if
+rem		if oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle &lt;&gt; &quot;Reg_prog&quot; Then
+rem			insRows (iEndRow, 1)&apos;oSheet.getRows.insertByIndex(iEndRow, 1)
+rem			oSheet.getCellRangeByPosition(0, iEndRow, 48 , iEndRow).cellstyle =  &quot;Reg_prog&quot;
+rem			lrow = iEndRow
+rem			else
+rem			lrow = iEndRow-1
+rem		end if
+		lrow = iEndRow
 		goto FAI
 	end if
 	if lRow &lt;= 2 then
@@ -241,22 +239,14 @@ Print &quot;problema&quot;
     oSheet2.copyRange(oCell,oQuellRangeAddresse)
 
 	data_misura = oSheet.GetCellByPosition(1,iVoce+2).getvalue() &apos;prende la data dalla voce precedente
-&apos;--------REM numero e pagina libretto sono annotate con annota_pagina_libretto
-&apos;	lib_n = oSheet.GetCellByPosition(19,iVoce+1).getvalue() &apos;prende il numero libretto dalla voce precedente
-&apos;	lib_p = oSheet.GetCellByPosition(20,iVoce+1).getvalue() &apos;prende la pagina dalla voce precedente
-&apos;--------	
-	If lib_n = 0 or lib_p = 0 Then
-		lib_n = 1
-		lib_p = 1
-	End If
 	If data_misura = 0 Then
 		oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
 		oSheet.GetCellByPosition(1, lRow+2).cellstyle = &quot;Data_bianca&quot;
 		Else 
 		oSheet.GetCellByPosition(1, lRow+2).setvalue(data_misura)
 	End If 
- 	oSheet.GetCellByPosition(19, lRow+1).value= lib_n
- 	oSheet.GetCellByPosition(20, lRow+1).value= lib_p	
+ 	oSheet.GetCellByPosition(19, lRow+1).setstring(&quot;#&quot;) &apos;lib_n
+ 	oSheet.GetCellByPosition(20, lRow+1).setstring(&quot;#&quot;) &apos;lib_p	
 REM ELIMINA UNA SERIE DI DATI # sembra inutile
 	oCell=oSheet.getCellByPosition(1, lrow+1) &apos;seleziona la cella
 	ThisComponent.CurrentController.Select(oCell)

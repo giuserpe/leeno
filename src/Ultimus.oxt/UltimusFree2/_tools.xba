@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM  *****  BASIC  *****
-
+sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda della sheet
+	oSheet =ThisComponent.currentController.activeSheet
+	Select Case oSheet.CodeName
+		case = &quot;CONTABILITA&quot;
+		oSheet.getCellRangeByposition(13,0,1023,0).Columns.Width = 2000 &apos; larghezza colonne importi
+		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 800 &apos; larghezza colonne importi
+		oSheet.getCellRangeByposition(51,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
+&apos;	oSheet.getRows().getByIndex(&quot;1&quot;).Rows.Height = 850 &apos;altezza riga di intestazione
+	REM larghezza colonne
+		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
+		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
+		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 7800
+		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
+		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
+		case = &quot;F&quot;	
+			&apos;	oSheetD.GetCellByPosition(i, 2 ).Columns.IsVisible = False
+		case = &quot;&quot;
+	end select
+end sub
 Sub AddNamedRange(sName$ as string, s$ as String)
 Dim oRange &apos; The created range.
 Dim oRanges &apos; All named ranges.
@@ -27,12 +49,31 @@ next
 print &quot;fatto!&quot;
 End Sub
 
-sub studiostyle
-	odoc=ThisComponent
-	dim def as object
-&apos;if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(&quot;Comp TOTALI %&quot;
-&apos;	def=odoc.stylefamilies.getByName(&quot;Cellstyles&quot;).getbyname(&quot;pSIN&quot;)
-	xray odoc
+sub stili_cella
+	dim sty()
+	dim Doc as object
+	dim Sheet as object
+	sty()=Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getElementNames()
+	Doc = ThisComponent
+	If Doc.Sheets.hasByName(&quot;stili&quot;) Then
+		Sheet = Doc.Sheets.getByName(&quot;stili&quot;)
+		Else
+		Sheet = Doc.createInstance(&quot;com.sun.star.sheet.Spreadsheet&quot;)
+		Doc.Sheets.insertByName(&quot;stili&quot;, Sheet)
+	End If
+	imax=UBound(sty())
+	i =0
+	for each el in BubbleSortlist(sty())
+		Sheet.GetCellByPosition( 0, i).setstring(el)
+		Sheet.GetCellByPosition( 1, i).cellstyle = el
+		Sheet.GetCellByPosition( 1, i).setvalue(20)
+	i=i+2
+	Barra_Apri_Chiudi_5(&quot;                                 Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
+	next	
+&apos;	def=odoc.StyleFamilies.getByName(&quot;Cellstyles&quot;).getElementsNames
+print &quot;ok&quot;
+ThisComponent.CurrentController.Select(Sheet.GetCellByPosition(0,0))
+
 end sub
 
 SUB Elimina_Nomi_Area_errati

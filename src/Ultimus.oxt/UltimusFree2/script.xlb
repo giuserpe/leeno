@@ -75,4 +75,5 @@
  <library:element library:name="celle"/>
  <library:element library:name="_tools"/>
  <library:element library:name="_Disattivate"/>
+ <library:element library:name="ZIP"/>
 </library:library>

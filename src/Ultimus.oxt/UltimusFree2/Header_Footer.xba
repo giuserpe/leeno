@@ -488,6 +488,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
 	oController = oDesktop.CurrentFrame.Controller
 	oDocument = oController.Model
+&apos;	xray oDocument
 	oStyleFam = oDocument.StyleFamilies
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
 	REM CONTO IL NUMERO DEGLI STILI DI PAGINA

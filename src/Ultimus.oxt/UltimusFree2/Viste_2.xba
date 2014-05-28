@@ -289,7 +289,7 @@ goto oltre:
 		&apos;	annota_num_pag_libretto
 		&apos;	end if
 oltre:
-	oSheet.getCellRangeByposition(51,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
+set_larghezza_colonne
 end sub
 
 sub Reg_Sal_No_COL &apos; nome poco significativo... cosa c&apos;entra la Col?

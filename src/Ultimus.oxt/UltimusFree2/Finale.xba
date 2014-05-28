@@ -1521,15 +1521,16 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 		end if	
 		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 		selArea(0).StartColumn = 0
-		selArea(0).StartRow = 1
-		selArea(0).EndRow = lLastUrow-4
+		selArea(0).EndColumn = 11 &apos;fino a colonna quantità negative
+		selArea(0).StartRow = 2
+		selArea(0).EndRow = lLastUrow-2
 
 		oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
-		oTitles.startRow = 1&apos; headstart - 1
+		oTitles.startRow = 2&apos; headstart - 1
 		oTitles.EndRow = 2 &apos;headend - 1
 		oTitles.startColumn = 0
-		oTitles.EndColumn = 46
+		oTitles.EndColumn = 36
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
    

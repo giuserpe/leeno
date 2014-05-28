@@ -315,20 +315,22 @@ rem copia il cod.art. nella colonna 44
 		iVoce = Range_prec.RangeAddress.StartRow &apos; il suo inizio
 
 		data_misura = oSheet.GetCellByPosition(1,iVoce+2).getvalue() &apos;prende la data dalla voce precedente
+goto oops: &apos; questa la lascio a annota_pagina_libretto
 		lib_n = oSheet.GetCellByPosition(19,iVoce+1).getvalue() &apos;prende il numero libretto dalla voce precedente
 		lib_p = oSheet.GetCellByPosition(20,iVoce+1).getvalue() &apos;prende la data dalla voce precedente
 		If lib_n = 0 or lib_p = 0 Then
 			lib_n = 1
 			lib_p = 1
 		End If
-
+oops:
+		oSheet.GetCellByPosition(19, lRow+1).value= 0 &apos;lib_n
+		oSheet.GetCellByPosition(20, lRow+1).value= 0 &apos;lib_p
+		oSheet.GetCellByPosition(23, lRow+1).value= 0 &apos;lib_p
 		If data_misura = 0 Then
 			oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
 			Else 
 			oSheet.GetCellByPosition(1, lRow+2).setvalue(data_misura)
 		End If 
-		oSheet.GetCellByPosition(19, lRow+1).value= lib_n
-		oSheet.GetCellByPosition(20, lRow+1).value= lib_p
 		
 	end if
 	If isEmpty (data_misura) then
@@ -347,7 +349,7 @@ STILI:	REM attribuisco gli stili alla voce proveniente dal computo
 	oSheet.GetCellByPosition(0 , lrow).cellstyle = &quot;Comp Start Attributo_R&quot; 					&apos;prima cella sx
 	oSheet.GetCellByPosition(0 , sotto).cellstyle = &quot;Comp End Attributo_R&quot;						&apos;ultima cella sx
 	oSheet.getCellRangeByPosition(0 , lrow+1, 0, sotto-1).cellstyle = &quot;comp 10 s_R&quot;			&apos;prima colonna
-	oSheet.GetCellByPosition(1 , lrow+1).cellstyle = &quot;comp Art-EP&quot;							&apos;articolo
+	oSheet.GetCellByPosition(1 , lrow+1).cellstyle = &quot;comp Art-EP_R&quot;							&apos;articolo
 	oSheet.GetCellByPosition(1 , lrow+2).cellstyle = &quot;Data_bianca&quot;								&apos;data
 	If sotto-lrow&gt;=4 then
 		oSheet.getCellRangeByPosition(1 , lrow+3, 1, sotto-1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;&apos;sotto articolo
@@ -356,7 +358,7 @@ STILI:	REM attribuisco gli stili alla voce proveniente dal computo
 	oSheet.GetCellByPosition(1 , sotto).cellstyle = &quot;comp sotto Bianche_R&quot;						&apos;sotto sotto articolo
 	oSheet.GetCellByPosition(2 , lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;			&apos;descrizione
 	oSheet.getCellRangeByPosition(9 , lrow+1, 30, lrow+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;	&apos;a destra della descrizione
-	oSheet.getCellRangeByPosition(19, lRow+1, 20, lRow+1).cellstyle = &quot;num centro&quot;				&apos;Lib. N. e P.
+	oSheet.getCellRangeByPosition(19, lRow+1, 23, lRow+1).cellstyle = &quot;num centro&quot;				&apos;Lib. N. e P.
 	oSheet.GetCellByPosition(13 , lRow+1).cellstyle = &quot;Sal&quot;										&apos;Sal
 	oSheet.getCellRangeByPosition(2 , lrow+2, 8, sotto-1).cellstyle = &quot;comp 1-a&quot;				&apos;misure
 	oSheet.getCellRangeByPosition(2 , sotto, 7, sotto).cellstyle = &quot;comp sotto centro_R&quot;		&apos;sotto misure

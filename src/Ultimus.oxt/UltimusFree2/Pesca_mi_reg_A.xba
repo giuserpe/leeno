@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi_reg_A" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi_reg_A" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -28,7 +28,7 @@ SUB Pesca_cod_per_reg_A &apos;&apos; non ricordo lo scopo....
 		exit sub
 	end if
 	If sSheetName=&quot;CONTABILITA&quot; then
-		print &quot;a&quot;  &apos; ma quando si si usa?   Ma si usa?
+		print &quot;a&quot; &apos; ma quando si si usa? Ma si usa?
 		Pesca_cod__per_reg_A_1
 		exit sub
 	end if
@@ -36,7 +36,8 @@ SUB Pesca_cod_per_reg_A &apos;&apos; non ricordo lo scopo....
 END SUB
 
 
-SUB Pesca_cod__per_reg_A_1
+SUB Pesca_cod__per_reg_A_1 &apos; per CONTABILITA 
+&apos;modificata pesantemente &apos;(C) Giuseppe Vizziello 2014
 	dim lrow as long
 	dim oCell as object
 	dim oSheet as object
@@ -46,118 +47,29 @@ SUB Pesca_cod__per_reg_A_1
 	lrow=oCell.RangeAddress.StartRow 
 
 	oSheet = ThisComponent.currentController.activeSheet
-	sString$ = &quot;T O T A L E&quot;
-	oEnd=uFindString(sString$, oSheet)
+	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
 	iEndRow=oEnd.RangeAddress.EndRow	
-
-	&apos;verifiche varie sulla posizione di inserimento
-	If oSheet.GetCellByPosition( 0 , 2).cellstyle = &quot;Reg_prog&quot; and _
-		oSheet.GetCellByPosition( 0 , 3).cellstyle = &quot;Reg_prog&quot; and _
-		oSheet.GetCellByPosition( 0 , 4).cellstyle = &quot;Comp TOTALI&quot;  then
-		lrow = 3
-	goto fai_e_basta &apos; FAI
-	end if
-&apos;	iEndRow = getLastUsedRow(oSheet)
+	&apos;verifiche sulla posizione di inserimento
 	if lrow &gt; iEndRow then
-		lrow = iEndRow -1
+	 	lrow = iEndRow
+	 	goto FAI
 	end if
 	if lRow &lt; 3 then
 		lrow=3
 		goto FAI
 	end if
-
-	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
-		lRow = lRow + 1
-		goto fai_e_basta &apos; FAI
-	end if
-	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; then
-		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
-			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) = &quot;Reg-SAL&quot;then
-			do while left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot;
-				lrow = lrow+1
-			loop
-		&apos;	print lrow
+	stile = oSheet.GetCellByPosition(0, lRow).cellstyle
+	select case stile
+		case &quot;Comp Start Attributo_R&quot;, &quot;comp 10 s_R&quot;, &quot;Comp End Attributo_R&quot;
+			sStRange = Circoscrive_Voce_Computo_Att (lRow)
+			With sStRange.RangeAddress
+				lRow = .EndRow+1
+			End With
 			goto FAI
-		end if
-		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
-			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
-			goto 	fai_e_basta
-		end if
-		if oSheet.GetCellByPosition( 0 , lRow-1).cellstyle = &quot;Comp End Attributo_R&quot; then
-				goto FAI
-		end if
+	end select
 
-		if oSheet.GetCellByPosition( 0 , lRow+1).cellstyle = &quot;Comp Start Attributo_R&quot; then
-				lRow = lRow
-				goto FAI
-		end if		
-	end if	
-	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; then
-		goto FAI
-	end if
-	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
-		lRow = lRow + 1
-		goto FAI
-	end if
-	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;comp 10 s_R&quot; or _
-		oSheet.GetCellByPosition( 0 ,lRow).cellstyle = &quot;comp 10 s_R&quot; then
-		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
-			lRow = lRow-1
-		loop &apos;
-	end if
-
-	FAI:
-fai_e_basta:
-	&apos; sarebbe pronto ad inserire ma meglio chiedere conferma
-	&apos; verifica se stai inserendo in mezzo alle altre
-&apos;	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; or _ &apos; questa non l&apos;ho capita... tenere d&apos;occhio ed eventualmente rimettere òla riga
-rem goto saltaprova  
-rem 	if	oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Reg-SAL-chiudi_N&quot;then
-rem 	 		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
-rem 	&apos; 	print  lrow
-rem 	&apos; 	print oSheet.GetCellByPosition( 0 , lRow).cellstyle
-rem 		 &apos;	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1  or _
-rem 		&apos;	if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
-rem 				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-rem 							&amp; &quot; 1 Se qui sotto c&apos;è già un SAL &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
-rem 							&amp;	&quot;   &quot;, 36, &quot;&quot;)
-rem 							if sDomanda = 7 then
-rem 								exit sub 
-rem 							end if
-rem 		&apos;  goto saltaO &apos;proviamo a disattivarlo
-rem &apos;			do while left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Default&quot; or _
-rem 		&apos;	do while oSheet.GetCellByPosition( 2 , lRow).string = &quot;&quot; and _
-rem 		&apos;			left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;
-rem 		&apos;		if 	lRow &lt;=3 then
-rem 		&apos;			exit do
-rem 		&apos;		end if
-rem 		&apos;		lRow = lRow - 1		
-rem 		&apos;	loop
-rem 		&apos;	lRow = lrow + 1						
-rem 		&apos;  saltaO:
-rem 	end if
-rem 
-rem 
-rem &apos;	lrow = lrow -1
-rem 	&apos;cerco il sal sotto se c&apos;è
-rem 	dim iSALpost as integer
-rem 	iLastRow = getLastUsedRow(oSheet)
-rem 	for i = lRow to iLastRow
-rem 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Reg-SAL-chiudi_N&quot; then
-rem 				sDomanda = MsgBox  (&quot;Sei certo di voler contabilizzare una voce di Computo inserendola in questa posizione?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-rem 							&amp; &quot; Qui sotto c&apos;è un SAL già &apos;chiuso&apos;, e il suo importo verrà inevitabilmente modificato!&quot; &amp; CHR$(10)_
-rem 							&amp; &quot; E se ci sono altri sal ancora a Valle, devi controllarne le somme...&quot; &amp; CHR$(10)_
-rem 							&amp;	&quot;   &quot;, 36, &quot;&quot;)
-rem 							if sDomanda = 7 then
-rem 								exit sub 
-rem 							end if
-rem 			&apos;santina
-rem 			exit for
-rem 		end if
-rem 		iSALpost = 1000  &apos; mi serve un numero per inpostare a false	
-rem 	next
-rem saltaprova:
-&apos;1)  registra la posizione
+FAI:
+&apos;1) registra la posizione
 	oPartenza_A = ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow, 2, lrow )
 &apos;2) focus su Computo
 	Sel_Computo
@@ -165,10 +77,10 @@ rem saltaprova:
 	&apos;(alla fine dovrà rieseguire la SC)
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1 and _
  		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
-		msgbox &quot;Sei sulla tab COMPUTO!   Cerca la voce che ti serve.... &quot; &amp; CHR$(10)_
+		msgbox &quot;Sei sulla tab COMPUTO! Cerca la voce che ti serve.... &quot; &amp; CHR$(10)_
 			&amp; &quot;(puoi usare Shit F3, oppure Ctrl-F, ...),&quot; &amp; CHR$(10)_
 			&amp; &quot;Un click sulla riga della voce e poi ri-aziona semplicemente la macro &apos;Pesca va e vieni&apos;!&quot; &amp; CHR$(10)_
-			&amp; &quot;( Ctrl ins    Ctrl 8     Ctrl Alt K )&quot;
+			&amp; &quot;( Ctrl ins Ctrl 8 Ctrl Alt K )&quot;
 	end if
 End SUB
 
@@ -176,7 +88,7 @@ End SUB
 
 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++
-SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità  COMPUTO&lt;&gt;CONTABILITA
+SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità COMPUTO&lt;&gt;CONTABILITA
 	dim lrow as long
 	dim cPrezzo as Currency
 	dim sCodice as string
@@ -188,16 +100,16 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 		print &quot;qualcosa non va...&quot; &apos;ma per il momento la lascio li
 		exit sub
 	end If
-	if ismissing(oPartenza_A) or isNull(oPartenza_A) then   &apos;or _
+	if ismissing(oPartenza_A) or isNull(oPartenza_A) then &apos;or _
 		Msgbox &quot;Questa macro va esaguita PRIMA dal foglio CONTABILITA&quot; &amp; CHR$(10) _
 				&amp; &quot;Altrimenti non ho la posizione della riga di destinazione...&quot; &amp; CHR$(10) _
-		 		&amp;  &quot;&quot;, 16, &quot;   Errore! &quot;
+		 		&amp; &quot;&quot;, 16, &quot; Errore! &quot;
 			exit sub
 	end if
 	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;  Attendi... Pazienta...&quot;, 10)
+&apos;	Barra_Apri_Chiudi_5(&quot; Attendi... Pazienta...&quot;, 10)
 &apos;.......................................................................................................
-	lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lSrow = -1 then	 
 		exit sub
 	end if
@@ -210,13 +122,14 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 		lSrow = RigaVoceGlobal
 	end if
 	sStRange = Circoscrive_Voce_Computo_Att (lSrow)
-	  With sStRange.RangeAddress
+	 With sStRange.RangeAddress
 			lRowStart_A =.StartRow
 			lRowEnd_A = .EndRow
 	 End With
-&apos;	Print lRowStart_A  &amp; &quot; &quot; &amp; lRowEnd_A
+	 Hvoce = lRowEnd_A - lRowStart_A +1
+&apos;	Print lRowStart_A &amp; &quot; &quot; &amp; lRowEnd_A
 	sStRange1 = oSheet.getCellRangeByPosition(1, lRowStart_A, 8, lRowEnd_A)&apos;seleziona la voce (solo misure) del computo senza n. ordine
-	RangeTAG = oSheet.getCellRangeByPosition(27, lRowStart_A, 38, lRowEnd_A)&apos;seleziona incidenze e TAGs
+	RangeTAG = oSheet.getCellRangeByPosition(27, lRowStart_A, 35, lRowEnd_A)&apos;seleziona incidenze e TAGs
 	sStRange2 = oSheet.getCellRangeByPosition(0, lRowStart_A, 0, lRowEnd_A)	&apos;seleziona solo il n. ordine del computo
 	&apos; Eliminazione degli eventuali links
 	&apos;goto salta
@@ -229,42 +142,38 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 			oCell = oSheet.GetCellByPosition( n , i) &apos;occhio Bart, tendi ad invertirli
 			if ocell.Type = com.sun.star.table.CellContentType.FORMULA then
 				&apos; se è formula verifico se contiene un link ad altre celle o se solo formula di calcolo
-				sTmp = Mid(oCell.formula, 2, 1)  &apos;Left (oCell.formula, 2)
+				sTmp = Mid(oCell.formula, 2, 1) &apos;Left (oCell.formula, 2)
 				dim iTmp as integer
 				iTmp = sTmp 	
 				iTmp = iTmp +1 -1
-				If  stmp &lt;&gt; iTmp then &apos; se diversi è perché contiene lettere (quindi è link)
+				If stmp &lt;&gt; iTmp then &apos; se diversi è perché contiene lettere (quindi è link)
 					ThisComponent.CurrentController.Select(ocell)
 					dim sD as string
-					sD = msgbox (&quot;Ho trovato link ovvero COLLEGAMENTO ad un&apos;altra cella!&quot; &amp; CHR$(10)_
-						&amp; &quot;Nel caso si tratti veramente di un link e che questo collegamento punti ad una cella esterna a questa voce, portandolo sulla contabilità tale e quale le misure saranno falsate &quot; &amp;  CHR$(10) &amp;  CHR$(10)_
-						&amp; &quot;Se ritieni puoi annullare l&apos;operazione in corso e controllare.&quot; &amp; CHR$(10)_
-						&amp; &quot;Se si tratta solo di una formula con riferimenti alla cella non ci sono problemi.&quot; &amp;  CHR$(10)&amp; CHR$(10)_
-						&amp; &quot;Se Rispondi NO proseguo, ma ti ritroverai con dei valori nulli (o #RIF!)&quot; &amp;  CHR$(10) &amp; CHR$(10)_
-						&amp; &quot;Oppure (consigliato) consolido i dati qui sulla tabella di Computo e proseguo. &quot; &amp; CHR$(10)_
-						&amp; &quot;      				    CONSOLIDO?&quot;  &amp; CHR$(10)_
-						&amp; &quot;&quot;,35, &quot;ATTENZIONE: link nei dettagli delle misure di COMPUTO&quot;)
+					msgbox (&quot;Ho trovato link ovvero COLLEGAMENTO ad un&apos;altra cella!&quot; &amp; CHR$(10)_
+						&amp; &quot;Come risultato finale di questa operazione otterrai la copia dei dati consolidati.&quot; &amp; CHR$(10)_
+						&amp; &quot;Dovrai, eventualmente, correggere la descrizione dei righi di misurazione interessati!&quot; &amp; CHR$(10)_
+						&amp; &quot;&quot;,64, &quot;ATTENZIONE: link nei dettagli delle misure di COMPUTO&quot;)
 						sBreak = &quot;break&quot;
-   						exit for
-   				end if
-   			end if
+ 						exit for
+ 				end if
+ 			end if
 		next
 	next
-   	select case sD
-					case &quot;2&quot;
-						Barra_chiudi_sempre_4
-						exit sub
-						
-					case &quot;7&quot; &apos; rispostA NO: non fa niente (fa finta di niente e prosegue)
-					case &quot;6&quot;
-						Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-								com.sun.star.sheet.CellFlags.OBJECTS
- 						aSaveData = oRangeMisure.getDataArray()
-		 				&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
- 						&apos;una volta cancellate le relative celle risulterebbero vuote
- 					  	oRangeMisure.clearContents(Flags)
-   						oRangeMisure.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
-   	end select
+&apos; 	select case sD
+&apos;					case &quot;2&quot;
+&apos;						Barra_chiudi_sempre_4
+&apos;						exit sub
+&apos;						
+&apos;					case &quot;7&quot; &apos; rispostA NO: non fa niente (fa finta di niente e prosegue)
+&apos;					case &quot;6&quot;
+&apos;						Flags = com.sun.star.sheet.CellFlags.FORMULA + _
+&apos;								com.sun.star.sheet.CellFlags.OBJECTS
+&apos;						aSaveData = oRangeMisure.getDataArray()
+&apos;		 				&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
+&apos;						&apos;una volta cancellate le relative celle risulterebbero vuote
+&apos;					 	oRangeMisure.clearContents(Flags)
+&apos;						oRangeMisure.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
+&apos;	end select
 	
 &apos;	Barra_chiudi_sempre_4
 
@@ -276,56 +185,41 @@ SUB Pesca_cod__per_reg_A_2   &apos;preleva da Computo e incolla su contabilità 
 	oSRC2 =	sStRange2.RangeAddress
 	srcTAG = RangeTAG.RangeAddress
 	&apos;preleva un po&apos; di dati di posizione da oPartenza_A
-	inumsheet =  oPartenza_A.RangeAddress.Sheet
+	inumsheet = oPartenza_A.RangeAddress.Sheet
 	irowPartenza = oPartenza_A.RangeAddress.startrow +2
 &apos;______________________________________________________passo sulla tabella destinazione____________________________
 	oSheet = ThisComponent.sheets.getByIndex(inumsheet)
 	lRowInsert = oPartenza_A.RangeAddress.endRow
 &apos;	ThisComponent.CurrentController.Select (oPartenza_A)
-&apos;print
+
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0 , lRowInsert)) &apos;torna sulla contabilità
 &apos;	se la riga è nascosta devo visualizzarla, altrimenti anche le celle inserite sarenno nascoste
 	oSheet.getRows().getByindex(lRowInsert).isvisible = TRUE
 	&apos; iserisco il blocco
 LROW = lRowInsert
-		if oSheet.getCellByPosition(0 , 2).cellstyle = &quot;Reg_prog&quot; and _
-			oSheet.getCellByPosition(0 , 3).cellstyle = &quot;Reg_prog&quot; OR _
-			lrow&lt;=3 then
-			lrow = 3
-		else
-			lRow = lRowInsert+1
-			sStRange = Circoscrive_Voce_Computo_Att (lRow+1)
-			lRow = sStRange.RangeAddress.EndRow+1 &apos;nuovo punto di inserimento
-		end if
-&apos;PRINT LROW
 	insRows (lRow, lRowEnd-lRowStart+1) &apos;insertByIndex non funziona
 &apos;	oSheet.getRows.insertByIndex(lRow, lRowEnd-lRowStart+1) &apos;inserisce il numero di righe della voce di computo
 	Sotto=lrow+lRowEnd-lRowStart &apos;ultima riga della voce
-	oSheet.getCellRangeByPosition(0 , lrow, 48, sotto).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; &apos;do una mano di fondo a tutta la voce
-	oSheet.getCellRangeByPosition(0 , sotto, 48, sotto).cellstyle = &quot;comp sotto centro_R&quot; &apos;do una mano di fondo a tutta la voce
+	oSheet.getCellRangeByPosition(0 , lrow, 35, sotto).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; &apos;do una mano di fondo a tutta la voce
+	oSheet.getCellRangeByPosition(0 , sotto, 35, sotto).cellstyle = &quot;comp sotto centro_R&quot; &apos;do una mano di fondo a tutta la voce
 rem copia il cod.art. nella colonna 44
 	oDest1 = oSheet.GetCellByPosition( 1 , lRow).CellAddress &apos; punto di inserimento voce
-	oDest2 = oSheet.GetCellByPosition( 44 , lRow).CellAddress &apos; punto di inserimento n.ord.
+rem	oDest2 = oSheet.GetCellByPosition( 44 , lRow).CellAddress &apos; punto di inserimento n.ord.
 	destTAG = oSheet.GetCellByPosition( 27 , lRow).CellAddress &apos; punto di inserimento incidenze e TAGs
 	oSheet.copyRange(oDest1, oSRC1) &apos;incolla la voce di computo
-	oSheet.copyRange(oDest2, oSRC2)&apos; incolla n.ord. sulla colonna 44
+CONSOLIDA_MISURE:
+	oRange = oSheet.getCellRangeByPosition (2,lRow+2,8,sotto-1)
+	Flags = com.sun.star.sheet.CellFlags.FORMULA
+	aSaveData = oRange.getDataArray()
+	oRange.setDataArray( aSaveData )
+
+rem	oSheet.copyRange(oDest2, oSRC2)&apos; incolla n.ord. sulla colonna 44
 	oSheet.copyRange(destTAG, srcTAG)&apos; incolla incidenze e TAGs colonna 27
 	if oSheet.GetCellByPosition( 1 , lRow-1).cellstyle = &quot;comp sotto Bianche_R&quot; then
 		Range_prec = Circoscrive_Voce_Computo_Att (lRow-1) &apos;trova la voce precedente
 		iVoce = Range_prec.RangeAddress.StartRow &apos; il suo inizio
 
 		data_misura = oSheet.GetCellByPosition(1,iVoce+2).getvalue() &apos;prende la data dalla voce precedente
-goto oops: &apos; questa la lascio a annota_pagina_libretto
-		lib_n = oSheet.GetCellByPosition(19,iVoce+1).getvalue() &apos;prende il numero libretto dalla voce precedente
-		lib_p = oSheet.GetCellByPosition(20,iVoce+1).getvalue() &apos;prende la data dalla voce precedente
-		If lib_n = 0 or lib_p = 0 Then
-			lib_n = 1
-			lib_p = 1
-		End If
-oops:
-		oSheet.GetCellByPosition(19, lRow+1).value= 0 &apos;lib_n
-		oSheet.GetCellByPosition(20, lRow+1).value= 0 &apos;lib_p
-		oSheet.GetCellByPosition(23, lRow+1).value= 0 &apos;lib_p
 		If data_misura = 0 Then
 			oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
 			Else 
@@ -336,16 +230,10 @@ oops:
 	If isEmpty (data_misura) then
 		oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
 	End If
-	&apos; sistemo la riga 3...  
-	if lRow = 2 Then
-	insRows (lRow, 1) &apos;insertByIndex non funziona
-&apos;		oSheet.getRows.insertByIndex(lRow, 1)
-		lRow =lRow+1
-	end if
 &apos;	fissa (0,2)
 
 STILI:	REM attribuisco gli stili alla voce proveniente dal computo
-	oSheet.getCellRangeByPosition(1 , lrow, 45, lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; 		&apos;prima riga
+	oSheet.getCellRangeByPosition(1 , lrow, 35, lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; 		&apos;prima riga
 	oSheet.GetCellByPosition(0 , lrow).cellstyle = &quot;Comp Start Attributo_R&quot; 					&apos;prima cella sx
 	oSheet.GetCellByPosition(0 , sotto).cellstyle = &quot;Comp End Attributo_R&quot;						&apos;ultima cella sx
 	oSheet.getCellRangeByPosition(0 , lrow+1, 0, sotto-1).cellstyle = &quot;comp 10 s_R&quot;			&apos;prima colonna
@@ -359,7 +247,7 @@ STILI:	REM attribuisco gli stili alla voce proveniente dal computo
 	oSheet.GetCellByPosition(2 , lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;			&apos;descrizione
 	oSheet.getCellRangeByPosition(9 , lrow+1, 30, lrow+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;	&apos;a destra della descrizione
 	oSheet.getCellRangeByPosition(19, lRow+1, 23, lRow+1).cellstyle = &quot;num centro&quot;				&apos;Lib. N. e P.
-	oSheet.GetCellByPosition(13 , lRow+1).cellstyle = &quot;Sal&quot;										&apos;Sal
+&apos;	oSheet.GetCellByPosition(13 , lRow+1).cellstyle = &quot;Sal&quot;										&apos;Sal
 	oSheet.getCellRangeByPosition(2 , lrow+2, 8, sotto-1).cellstyle = &quot;comp 1-a&quot;				&apos;misure
 	oSheet.getCellRangeByPosition(2 , sotto, 7, sotto).cellstyle = &quot;comp sotto centro_R&quot;		&apos;sotto misure
 	oSheet.getCellRangeByPosition(13 , sotto, 17, sotto).cellstyle = &quot;comp sotto centro_R&quot;		&apos;sotto
@@ -368,18 +256,26 @@ STILI:	REM attribuisco gli stili alla voce proveniente dal computo
 	oSheet.GetCellByPosition(8 , sotto).cellstyle = &quot;comp sotto BiancheS_R&quot;
 	oSheet.getCellRangeByPosition(9 , sotto-1, 9, sotto).cellstyle = &quot;Comp-Variante num sotto&quot;&apos;sommano positivi
 	oSheet.GetCellByPosition(27 , sotto).cellstyle = &quot;Comp-SAL n valuta_sotto&quot;					
-	oSheet.getCellRangeByPosition(31 , lrow, 36, sotto-1).cellstyle = &quot;compTagG&quot;				&apos;tag
+	oSheet.getCellRangeByPosition(31 , lrow, 35, sotto-1).cellstyle = &quot;compTagG&quot;				&apos;tag
 AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
 	insRows (sotto, 1) &apos;insertByIndex non funziona
 &apos;	oSheet.getRows.insertByIndex(sotto, 1)
 	sotto = sotto+1
 	oSheet.getCellByPosition(1, sotto-1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
 	oSheet.getCellRangeByPosition(2, sotto-1, 7, sotto-1).cellstyle = &quot;comp sotto centro_R&quot;
-	oSheet.getCellByPosition(8, sotto-1).string = &quot;Sommano positivi e negativi &quot;
+	oSheet.getCellByPosition(8, sotto-1).setformula(&quot;=CONCATENATE(&quot;&quot;Somma positivi e negativi [&quot;&quot;;VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
 	oSheet.getCellByPosition(8, sotto-1).cellstyle = &quot;comp sotto BiancheS_R&quot;
 	oSheet.getCellRangeByPosition(9, lrow+2, 9, sotto-2).cellstyle = &quot;Comp-Variante&quot;			&apos;righe positivi
 	oSheet.getCellRangeByPosition(11, lrow+2, 11, sotto-2).cellstyle = &quot;Comp-Variante&quot;			&apos;righe negativi
-
+	i = 1
+	do while i &lt; Hvoce+1
+		oSheet.getCellByPosition(31, sotto-i).setformula(&quot;=AF$&quot; &amp; sotto+1)
+		oSheet.getCellByPosition(32, sotto-i).setformula(&quot;=AG$&quot; &amp; sotto+1)
+		oSheet.getCellByPosition(33, sotto-i).setformula(&quot;=AH$&quot; &amp; sotto+1)
+		oSheet.getCellByPosition(34, sotto-i).setformula(&quot;=AI$&quot; &amp; sotto+1)
+		oSheet.getCellByPosition(35, sotto-i).setformula(&quot;=AJ$&quot; &amp; sotto+1)
+		i=i+1
+	loop
 IMPOSTO_VALORI_E_FORMULE:
 	i=2
 	do while lrow+i &lt; sotto-1
@@ -387,6 +283,8 @@ IMPOSTO_VALORI_E_FORMULE:
 		oSheet.GetCellByPosition(11, lrow+i).setformula(&quot;=IF(PRODUCT(E&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(E&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;)*-1)&quot;) &apos;riga negativi
 		i=i+1
 	loop
+	oSheet.GetCellByPosition(9, lrow+1).setformula(&quot;=VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE())&quot;) &apos;Unità di misura
+	oSheet.GetCellByPosition(28, sotto).string = &quot;&quot;
 	oSheet.GetCellByPosition(37, sotto).string = &quot;&quot;
 	oSheet.GetCellByPosition(9, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;J&quot; &amp; lrow+3 &amp; &quot;:J&quot; &amp; sotto-1 &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;J&quot; &amp; lrow+3 &amp;&quot;:J&quot; &amp; sotto-1 &amp;&quot;))&quot;) &apos;Somma positivi
 	oSheet.GetCellByPosition(9, sotto).setformula(&quot;=J&quot; &amp; sotto &amp; &quot;-L&quot; &amp; sotto) &apos;SOMMANO
@@ -401,226 +299,8 @@ IMPOSTO_VALORI_E_FORMULE:
 	oSheet.GetCellByPosition(17, sotto).setformula(&quot;=J&quot; &amp; sotto+1 &amp; &quot;*AB&quot; &amp; sotto+1) &apos;IMPORTO
 	oSheet.GetCellByPosition(17 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
 Numera_Voci_Computo (&quot;niente prompt&quot;)
-
-CONSOLIDO_ALCUNE_FORMULE:
-goto salto1: &apos;inutile se si copiano SOLO le misure dal computo
-&apos; consolido l&apos;importo da computo (da formula a numero)
-	oRange = oSheet.getCellRangeByPosition (18, sotto,18, sotto)
-	Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS
- 	aSaveData = oRange.getDataArray()
-   	oRange.clearContents(Flags)
-   	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
-&apos; consolido l&apos;importo da computo (da formula a numero)
-	oRange = oSheet.getCellRangeByPosition (9, lrow+2, 9, sotto)
-	Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS
- 	aSaveData = oRange.getDataArray()
-   	oRange.clearContents(Flags)
-   	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
-salto1:
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow+2))
 exit sub
-	for i = 1 to 45
-		if oSheet.GetCellByPosition( i , lrow).cellstyle = &quot;Comp-Bianche sopraS&quot; or _
-		 	oSheet.GetCellByPosition( i , lrow).cellstyle = &quot;Comp-Bianche sopra&quot; or _
-		 	oSheet.GetCellByPosition( i , lrow).cellstyle = &quot;Comp-Biance sopra&quot; then
-				oSheet.GetCellByPosition( i , lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; &apos;modifico stile prima riga della voce
-		end if
-		if oSheet.GetCellByPosition( i , lrow).cellstyle = &quot;Comp bianca sopra dx&quot; then
-			oSheet.GetCellByPosition( i , lrow).cellstyle = &quot;Comp bianca sopra dx_R&quot; &apos;modifico stile prima riga col AU
-		end if
-	next
-	for i = 0 to 45
-		if oSheet.GetCellByPosition( i , lrow+1).cellstyle = &quot;Comp-Bianche in mezzo&quot; then
-			oSheet.GetCellByPosition( i , lrow+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-		end if
-	next
-&apos; imposta uno stile per le ultime due col in fondo su tutta la voce appena inserita
-	oSheet.getCellRangeByPosition(47, lRow, 48 , lRow + lRowEnd-lRowStart).cellstyle =  &quot;Reg_prog&quot;
-
-&apos;	oSheet.GetCellByPosition( 1 , lRowMod+1).Cellbackcolor= RGB(255,255,255)&apos;(255,255.255)
-	oSheet.GetCellByPosition( 0 , lRowMod).cellstyle = &quot;Comp Start Attributo_R&quot;
-&apos;	oSheet.GetCellByPosition( 44 , lRowMod).cellstyle =  &quot;Comp-Bianche sopra_R&quot; &apos;&quot;Mis-Lib-Note_R&quot;
-	oSheet.getCellRangeByPosition(44, lRowMod, 45 , lRowMod).cellstyle =  &quot;Comp-Bianche sopra_R&quot;
-	oSheet.GetCellByPosition( 46 , lRowMod).cellstyle = &quot;Comp bianca sopra dx_R&quot;
-	oSheet.GetCellByPosition( 0 , lRowMod+1).cellstyle = &quot;comp 10 s_R&quot; &apos;&quot;comp progress&quot;	
-&apos; rimuovo la validation dalla cella con il codice voce (quel codice NON deve più essere cambiato)
-	Flags = com.sun.star.sheet.CellFlags.HARDATTR 
-	oSheet.GetCellByPosition( 1 , lRowMod+1).clearContents(Flags) 
-	oSheet.GetCellByPosition( 1 , lRowMod+1).cellstyle = &quot;comp Art-EP&quot; &apos;&quot;_R&quot;	
-	oSheet.GetCellByPosition( 2 , lRowMod+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;
-	oSheet.getCellRangeByPosition(37, lRowMod+1, 37,lRowMod+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-	oSheet.GetCellByPosition( 44 , lRowMod+1).cellstyle = &quot;num_centro_bianco&quot;
-&apos; intanto che ci sono prendo nota del num della voce computo
-	sNumVoceC =	oSheet.GetCellByPosition( 44 , lRowMod+1).string	
-	oSheet.getCellRangeByPosition(19 , lRowMod+1 , 21 , lRowMod+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-	oSheet.GetCellByPosition( 19 , lRowMod+1).string = &quot;&quot;
-	oSheet.GetCellByPosition( 20 , lRowMod+1).string = &quot;&quot;
-	oSheet.GetCellByPosition( 21 , lRowMod+1).string = &quot;&quot;
-	oSheet.GetCellByPosition( 45 , lRowMod+1).cellstyle = &quot;Mis-Lib-Note_R&quot;
-	oSheet.GetCellByPosition( 46 , lRowMod+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-	lRowMod = lRowMod + 2
-
-	do while oSheet.GetCellByPosition( 19 , lRowMod).cellstyle &lt;&gt; &quot;comp sotto Euro 3&quot; &apos;or _
-		if 	oSheet.GetCellByPosition( 19 , lRowMod).cellstyle = &quot;comp sotto Unitario&quot; then
-			exit do
-		end if &apos; questo PER ??? (vedi i commenti qualche riga più sotto)
-		if 	oSheet.GetCellByPosition( 19 , lRowMod).cellstyle = &quot;Comp-Soma sotto&quot; then
-			exit do
-		end if 
-&apos; il while lavora sulle righe dei componenti
-&apos;copio il range degli estremi del libretto della voce precedente	
-	&apos;&apos;	oDest = oSheet.GetCellByPosition( 19 , lRowMod).CellAddress
-	&apos;&apos;	if not isnull (oRangeData) then &apos; se andando su non ha trovato date e/o numeri
-		&apos; ma ha trovato la riga di intestazione oRange è stato posto a &quot;&quot; e non lo scrive
-	&apos;&apos;		oSheet.copyRange(oDest, oRangeData)
-	&apos;&apos;	end if disattivata su sollecito di giuserpe per scriverla solo solo sulla riga finale
-
-		vCons =	oSheet.GetCellByPosition( 9 , lRowMod).value	
-		oSheet.GetCellByPosition( 9 , lRowMod).value = vCons
-		oSheet.GetCellByPosition( 0 , lRowMod).cellstyle = &quot;comp 10 s_R&quot;
-		oSheet.GetCellByPosition( 1, lRowMod).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-		oSheet.GetCellByPosition( 3, lRowMod).cellstyle = &quot;Comp-Bianche in mezzo bordate_R&quot;
-		oSheet.getCellRangeByPosition(11, lRowMod, 28,lRowMod).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-		oSheet.getCellRangeByPosition(37, lRowMod, 38,lRowMod).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-		oSheet.getCellRangeByPosition(44, lRowMod, 46,lRowMod).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-		oSheet.GetCellByPosition( 45 ,lRowMod).cellstyle = &quot;Mis-Lib-Note_R&quot;
-		oSheet.GetCellByPosition( 10 , lRowMod).cellstyle = &quot;Comp-Variante_R&quot;
-&apos;questa parte aggiusta i link 
-		if oSheet.GetCellByPosition( 10 , lRowMod).Type = 3 THEN &apos;&quot;FORMULA then&quot;
-		&apos; se c&apos;era un errore sulla colonna  in computo faceva disastri
-		&apos;meglio riscrivere
-			sFormula2 = &quot;=IF(PRODUCT(E&quot; &amp; lRowMod+1 &amp; &quot;:I&quot; &amp; lRowMod+1 &amp; &quot;)=0;&quot;&amp;&quot;&quot;&quot;&quot;&quot;&quot;&amp;&quot;;PRODUCT(E&quot; &amp; lRowMod+1 &amp; &quot;:I&quot; &amp; lRowMod+1 &amp; &quot;))&quot;
-		&apos; il +1  alla riga è perché lo vuole by name (che sarebbe byPorition +1) 
-			oSheet.GetCellByPosition( 10 , lRowMod).formula = sFormula2
-		end if
-		lRowMod = lRowMod+1
-	loop
-
-&apos; adesso lavoro sull&apos;ultima riga
-	vCons =	oSheet.GetCellByPosition( 9 , lRowMod).value
-	oSheet.GetCellByPosition( 9 , lRowMod).value = vCons
-	oSheet.GetCellByPosition( 0  , lRowMod).cellstyle = &quot;Comp End Attributo_R&quot;
-	oSheet.GetCellByPosition( 1  , lRowMod).cellstyle = &quot;comp sotto Bianche_R&quot;
-	oSheet.GetCellByPosition( 2  , lRowMod).cellstyle = &quot;comp sotto BiancheS_R&quot;
-	oSheet.GetCellByPosition( 12  , lRowMod).cellstyle = &quot;Comp-Variante num sotto&quot;
-	oSheet.GetCellByPosition( 12  , lRowMod).formula = &quot;=K&quot; &amp; lRowMod+1
-	oSheet.getCellRangeByPosition(3, lRowMod, 8, lRowMod).cellstyle = &quot;comp sotto centro_R&quot;	
-	oSheet.getCellByPosition(13, lRowMod).cellstyle = &quot;comp sotto centro_R&quot;	
-
-	&apos; svuota alcune celle inutili
-	oSheet.GetCellByPosition( 36, lRowMod).string = &quot;&quot; 
-	oSheet.GetCellByPosition( 36, lRowMod).cellstyle = &quot;Reg_prog&quot;
-	oSheet.GetCellByPosition( 37, lRowMod).string = &quot;&quot; 
-	oSheet.GetCellByPosition( 37, lRowMod).cellstyle = &quot;Reg_prog&quot;
-	sFormulaMan = &quot;=IF(AD&quot; &amp; lRowMod+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;; PRODUCT(AD&quot; &amp; lRowMod+1 &amp; &quot;*Z&quot; &amp; lRowMod+1 &amp; &quot;))&quot;
-&apos; NB lrowmode è +1 perchè scrive nella formula...
- 	oSheet.GetCellByPosition( 30 , lRowMod).setformula(sFormulaMan) &apos;	
-	oSheet.GetCellByPosition( 10 , lRowMod).cellstyle = &quot;Comp-Variante num sotto_R&quot;	
-&apos;copio il range degli estremi del libretto della voce precedente
-&apos; attenzione: se da problemi provare ismissing
-goto dopo1:
-	if not isnull (oRangeData)  then &apos; se andando su ha trovato date e/o numeri
-			&apos;li trascrive incollando orange
-			oDest = oSheet.GetCellByPosition( 19 , lRowMod).CellAddress
-			oSheet.copyRange(oDest, oRangeData)
-		else
-			&apos; se ha trovato la riga di intestazione							
-			oSheet.GetCellByPosition(19, lRowMod).string= &quot;1&quot;
-			oSheet.GetCellByPosition(20, lRowMod).string= &quot;1&quot;
-			oSheet.GetCellByPosition(21, lRowMod).string= &quot;&quot;
-	end if
-	oSheet.getCellRangeByPosition(19, lRowMod, 21, lRowMod).cellstyle = &quot;num centro&quot;
-	oSheet.GetCellByPosition(21 ,lRowMod).cellstyle = &quot;Data&quot;	
-	oSheet.getCellByPosition(46, lRowMod).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
-	oSheet.getCellRangeByPosition(44, lRowMod, 46, lRowMod).cellstyle = &quot;Comp End Attributo_R&quot;
-	oRangeSal = oSheet.getCellRangeByPosition(13, lRowMod, 16,lRowMod)  &apos;prima arrivava alla col 17, ora la si tiene com&apos;è per la sic
-dopo1:
-	iCellAttr = _
-	com.sun.star.sheet.CellFlags.VALUE + _
-	com.sun.star.sheet.CellFlags.DATETIME + _
-	com.sun.star.sheet.CellFlags.STRING + _
-	com.sun.star.sheet.CellFlags.ANNOTATION + _
-	com.sun.star.sheet.CellFlags.FORMULA + _
-	com.sun.star.sheet.CellFlags.OBJECTS + _
-	com.sun.star.sheet.CellFlags.HARDATTR + _
-	com.sun.star.sheet.CellFlags.EDITATTR + _
-	com.sun.star.sheet.CellFlags.STYLES 	
-
-	oRangeSal.ClearContents(iCellAttr)
-&apos;bisognerebbe attribuirgli poi uno stile in base all&apos;uso che se farà	
-&apos;oRangeSal.CellStyle=  &quot;num centro bianco&quot; &apos; &quot;comp sotto centro_R&quot;
-	oRangeSal = oSheet.getCellRangeByPosition(22, lRowMod, 26,lRowMod) &apos;prima arrvava alla 27, ora la 27 è usata per la sicur
-	iCellAttr = _
-	com.sun.star.sheet.CellFlags.VALUE + _
-	com.sun.star.sheet.CellFlags.DATETIME + _
-	com.sun.star.sheet.CellFlags.STRING + _
-	com.sun.star.sheet.CellFlags.ANNOTATION + _
-	com.sun.star.sheet.CellFlags.FORMULA + _
-	com.sun.star.sheet.CellFlags.OBJECTS + _
-	com.sun.star.sheet.CellFlags.HARDATTR + _
-	com.sun.star.sheet.CellFlags.EDITATTR + _
-	com.sun.star.sheet.CellFlags.STYLES 
-	oRangeSal.ClearContents(iCellAttr)
-	
-&apos; inserisco la formula dell&apos;importo Sicurezza (deve calcolare quello relativo alle misurate)
-	sFormulaMan = &quot;=(PRODUCT(AB&quot; &amp; lRowMod+1 &amp; &quot;*K&quot; &amp; lRowMod+1 &amp; &quot;))&quot;
-	&apos; NB lrowmode è +1 perchè scrive nella formula...
- 	oSheet.GetCellByPosition( 17 , lRowMod).setformula(sFormulaMan) &apos;		
-	
-	oSheet.getCellRangeByPosition(17, lRowMod, 17,lRowMod).cellstyle = &quot;comp sotto Euro 3_R&quot;
-	&apos;ufffa
-	oRangeSal.CellStyle=  &quot;num centro bianco&quot;
-&apos; bisognerebbe attribuirgli poi uno stile in base all&apos;uso che se farà
-
-	oSheet.GetCellByPosition( 13 , lRowMod).cellstyle = &quot;comp sotto centro_R&quot;
-	oSheet.GetCellByPosition( 25 , lRowMod).cellstyle = &quot;comp sotto Euro 3_R&quot;	
-	oSheet.GetCellByPosition( 25 , lRowMod).setformula (&quot;=(L&quot; &amp; lRowMod+1 &amp; &quot;*K&quot; &amp; lRowMod+1 &amp; &quot;)&quot; 	
-&apos;print lRowMod
-
-
-GOTO salta_cond_form
-	&apos;possiamo aggiungere una formattazione condizionata MA NON FUNZIONA CORRETTAMENTE
-	Dim oSelectionRange as Object, oSelectionConditions as Object
-&apos;	oSelectionRange = ThisComponent.CurrentSelection
-	oSelectionRange = 	oSheet.GetCellByPosition( 25 , lRowMod)	&apos;18
-	&apos;sRiferim = 	&quot;$S$&quot; &amp; lRowMod+1  &apos; restituiva un riferimento asoluto...	
-&apos;	sRiferim_a = 	&quot;$S$&quot; &amp; lRowMod+1
-	iRiga = lRowMod+1
-	dim sRiga as string
-	sRiga = iriga
-	dim sRiferim as string
-	sRiferim = &quot;$S&quot; &amp; sRiga
-&apos; uff... pare accettare solo valori, che immette poi come rif assoluti
-&apos; se gli do una stringa CON UN RELATIVO (LA RIGA LA VOGLIO RELATIVA) mi falsa il num di riga..	
-	
-&apos;	print sRiferim
-		oSelectionConditions = oSelectionRange.ConditionalFormat						&apos; Store Selection Conditions
-		oSelectionConditions.Clear()	&apos; pulisce 
-		Dim oNewCondition(4) as new com.sun.star.beans.PropertyValue	
-		oNewCondition(1).Name = &quot;Operator&quot;
-		oNewCondition(1).Value = com.sun.star.sheet.ConditionOperator.GREATER  &apos;&quot;FORMULA&quot; &apos; 	&apos; Set Operator
-		oNewCondition(2).Name = &quot;Formula1&quot;
-		oNewCondition(2).Value = sRiferim &apos; &quot;$A1&quot; 		&apos; Set Formula1 
-&apos;	print sRiferim	
-&apos;xray 	sRiferim
-		oNewCondition(3).Name = &quot;StyleName&quot;
-		oNewCondition(3).Value = &quot;comp_sotto_E_cond&quot; 	&apos; Set StyleName
-		oSelectionConditions.addNew(oNewCondition())		&apos; Add New Conditional Format to Array
-		oSelectionRange.setPropertyValue(&quot;ConditionalFormat&quot;, oSelectionConditions)		
-&apos;xray oSelectionRange&apos;.setPropertyValue
-	&apos;oSheet.GetCellByPosition( 43 , lRowMod).cellstyle = &quot;noprint_2&quot;	
-salta_cond_form:	
-
-	oSheet.GetCellByPosition( 43 , lRowMod).string = sNumVoceC	&apos; perché anche in questa colonna?
-
-	Numera_Voci_Computo (&quot;niente prompt&quot;) &apos; in questo caso (cioè quando si numera la CONTABILITA)
-		
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 5  , lRowMod-1)) &apos; su misure?	
-	Tronca_Altezza_Voci_Computo
-	oPartenza_A = Nothing 
-	Barra_chiudi_sempre_4 
- 	exit sub
  	errore:
 	sMemoPesca = empty
 	oPartenza = Nothing &apos;azzero svuoto la variabile

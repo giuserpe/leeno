@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Agg_Templ2" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Agg_Templ2" script:language="StarBasic">REM ***** BASIC *****
 
 Sub Riki(sSheetSRC , sSheetTarget) 
 	sTargetURL
@@ -15,7 +15,7 @@ Sub Riki(sSheetSRC , sSheetTarget)
 	sSheetTarget_COMPUTO = &quot;COMPUTO&quot;
 	sSheetSRC_CONTABILITA = &quot;CONTABILITA&quot;
 	sSheetTarget_CONTABILITA = &quot;CONTABILITA&quot;	
-	sSheetSRC_S1 = &quot;S1&quot;  &apos;VarGen&apos;&apos;
+	sSheetSRC_S1 = &quot;S1&quot; &apos;VarGen&apos;&apos;
 		Copia_DATI_Colleg (sSourceURL, sTargetURL, sSheetSRC_CONTABILITA, sSheetTarget_CONTABILITA, _
 						sRangeSRC_CONTABILITA, sRangeTarget_CONTABILITA, sAreaName_CONTABILITA )	
 End Sub
@@ -33,33 +33,33 @@ Sub CopySpreadsheet (sSheetSRC as string, firstDoc as object, secondDoc as objec
 
 	dispatchURL(firstDoc,&quot;.uno:SelectAll&quot;)
 	dispatchURL(firstDoc,&quot;.uno:Copy&quot;)
-    wait 200
-   &apos;secondDoc = StarDesktop.loadComponentFromUrl(&quot;private:factory/scalc&quot;,&quot;_blank&quot;,0,dimArray())
+ wait 200
+ &apos;secondDoc = StarDesktop.loadComponentFromUrl(&quot;private:factory/scalc&quot;,&quot;_blank&quot;,0,dimArray())
 	secondDoc.getSheets().insertNewByName(sSheetSRC,iPos)
 	wait 100
 	selectSheetByName(secondDoc, sSheetSRC)
 	dispatchURL(secondDoc,&quot;.uno:Paste&quot;)
 	Barra_chiudi_sempre_4
 	exit sub
-   errore:
+ errore:
 	Barra_chiudi_sempre_4
-   print &quot;Errore nel modulo &apos;Sub CopySpreadsheet&apos; copiando &quot; &amp; sSheetSRC &amp; &quot;  (&quot; &amp; error &amp; &quot;)&quot;
+ print &quot;Errore nel modulo &apos;Sub CopySpreadsheet&apos; copiando &quot; &amp; sSheetSRC &amp; &quot; (&quot; &amp; error &amp; &quot;)&quot;
 End Sub
 
 Sub selectSheetByName(document, sheetName)&apos;Author original code: Sajid Ahmed
-   document.getCurrentController.select(document.getSheets().getByName(sheetName))
+ document.getCurrentController.select(document.getSheets().getByName(sheetName))
 End Sub
 
 Sub dispatchURL(document, aURL)&apos;Author original code: Sajid Ahmed
-   Dim noProps()
-   Dim URL As New com.sun.star.util.URL
-   frame = document.getCurrentController().getFrame()
-   URL.Complete = aURL
-   transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
-   transf.parseStrict(URL)
-   disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF _
-   OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
-   disp.dispatch(URL, noProps())
+ Dim noProps()
+ Dim URL As New com.sun.star.util.URL
+ frame = document.getCurrentController().getFrame()
+ URL.Complete = aURL
+ transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
+ transf.parseStrict(URL)
+ disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF _
+ OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
+ disp.dispatch(URL, noProps())
 End Sub 
 
 Function rinomina_sheet (sNome)
@@ -67,87 +67,87 @@ Function rinomina_sheet (sNome)
 	sNome2 = sNome &amp; sSuff
 	if thisComponent.Sheets.hasByName(sNome2) Then
 		oSheetRinom2 = ThisComponent.Sheets.getByName(sNome2)
-  		sNome2 = sNome2 &amp; sSuff &amp; sSuff
-  		if thisComponent.Sheets.hasByName(sNome2) Then
-  				sNome2 = sNome2 &amp; &quot;_&quot; &amp; right(now,8)
-  		     	oSheetRinom2.setName (sNome2) 
-  		     else
-  		    	oSheetRinom2.setName (sNome2) 
-  		 end if
+ 		sNome2 = sNome2 &amp; sSuff &amp; sSuff
+ 		if thisComponent.Sheets.hasByName(sNome2) Then
+ 				sNome2 = sNome2 &amp; &quot;_&quot; &amp; right(now,8)
+ 		 	oSheetRinom2.setName (sNome2) 
+ 		 else
+ 		 	oSheetRinom2.setName (sNome2) 
+ 		 end if
 	end if
 	if thisComponent.Sheets.hasByName(sNome) Then
 		oSheetRinom = ThisComponent.Sheets.getByName(sNome)
-  		sNome = sNome &amp; sSuff
-     	oSheetRinom.setName (sNome) 
-   		thisComponent.Sheets.moveByName(sNome ,0)
-     end if
-     rinomina_sheet = sNome
+ 		sNome = sNome &amp; sSuff
+ 	oSheetRinom.setName (sNome) 
+ 		thisComponent.Sheets.moveByName(sNome ,0)
+ end if
+ rinomina_sheet = sNome
 end function
 
 
 
 Sub clickCommandButton1
 	oSheet = ThisComponent.currentController.activeSheet
- &apos;   oPage = Thiscomponent.Sheets.getByName(&quot;Sheet1&quot;).getDrawPage
-    oPage = oSheet.getDrawPage
+ &apos; oPage = Thiscomponent.Sheets.getByName(&quot;Sheet1&quot;).getDrawPage
+ oPage = oSheet.getDrawPage
 &apos;xray opage
 &apos;exit sub
-    iCount = oPage.getCount
-    print icount
-    For i = 0 to iCount - 1
-    	
-        oEle = oPage.getByIndex(i)
-        &apos;oEle.size
-        xray oEle
-&apos;        oEle.size.Height                                   838   
-	&apos;	oEle.size.Width =19608   
-		oEle.setSize( 838, 20000)  
-   goto salta
-        If oEle.Name = &quot;tutti&quot; then &apos;&quot;gruppo_contab&quot; Then
-        	&apos;print oEle.getCount ()
-        	&apos;xray oEle
-        	oEle.enterGroup()		
-        	For n = 0 to nCount - 1
-        		oSele = oEle.getByIndex(n)
-        		xray oSEle.getcontrol
-        		oSEle.getcontrol
-        	&apos;	print oSEle.Name &apos;() &apos;release()
-        		&apos;print n
-        		&apos;xray oSEle
-        	next
-        end if
-  goto salta
-        &apos;oPage.getByIndex(i)
-        xray oEle
-        exit sub
-        oEle.release()
-        
-  	 
-        exit sub
-         xray oEle
-        &apos;oEle.leaveGroup()
-        if oEle.ShapeType = &quot;com.sun.star.drawing.GroupShape&quot; then 		
-        	print &quot;dentro&quot;
-        	oEle.ungroup()		
-	        &apos;oELE.enterGroup() 
-	        &apos;xray oEle
-	        &apos;oEle.remove()
-	         
-	        &apos;xray oele
-	    end if
-       &apos; oEle.remove() &apos;release()
-      &apos;  
-        exit sub
-        oControl = oEle.getControl()
-        If oControl.DefaultControl = &quot;com.sun.star.form.control.CommandButton&quot; Then
-            &apos; Found command button - change label of other buttons &apos;
-            If oEle.Name &lt;&gt; &quot;CommandButton1&quot; Then
-                oControl.Label = &quot;Inactive&quot;
-                oControl.Enabled = False
-            End If
-        End If
-        salta:
-    Next
+ iCount = oPage.getCount
+ print icount
+ For i = 0 to iCount - 1
+ 	
+ oEle = oPage.getByIndex(i)
+ &apos;oEle.size
+ xray oEle
+&apos; oEle.size.Height 838 
+	&apos;	oEle.size.Width =19608 
+		oEle.setSize( 838, 20000) 
+ goto salta
+ If oEle.Name = &quot;tutti&quot; then &apos;&quot;gruppo_contab&quot; Then
+ 	&apos;print oEle.getCount ()
+ 	&apos;xray oEle
+ 	oEle.enterGroup()		
+ 	For n = 0 to nCount - 1
+ 		oSele = oEle.getByIndex(n)
+ 		xray oSEle.getcontrol
+ 		oSEle.getcontrol
+ 	&apos;	print oSEle.Name &apos;() &apos;release()
+ 		&apos;print n
+ 		&apos;xray oSEle
+ 	next
+ end if
+ goto salta
+ &apos;oPage.getByIndex(i)
+ xray oEle
+ exit sub
+ oEle.release()
+ 
+ 	 
+ exit sub
+ xray oEle
+ &apos;oEle.leaveGroup()
+ if oEle.ShapeType = &quot;com.sun.star.drawing.GroupShape&quot; then 		
+ 	print &quot;dentro&quot;
+ 	oEle.ungroup()		
+	 &apos;oELE.enterGroup() 
+	 &apos;xray oEle
+	 &apos;oEle.remove()
+	 
+	 &apos;xray oele
+	 end if
+ &apos; oEle.remove() &apos;release()
+ &apos; 
+ exit sub
+ oControl = oEle.getControl()
+ If oControl.DefaultControl = &quot;com.sun.star.form.control.CommandButton&quot; Then
+ &apos; Found command button - change label of other buttons &apos;
+ If oEle.Name &lt;&gt; &quot;CommandButton1&quot; Then
+ oControl.Label = &quot;Inactive&quot;
+ oControl.Enabled = False
+ End If
+ End If
+ salta:
+ Next
 End Sub
 
 sub Makro_Schaltflaeche
@@ -192,11 +192,11 @@ oControl = oDocCtrl.getControl( oControlModel )
 oControl.ActionCommand = makro
 
 If InStr(makro, &quot;.&quot;) &gt; 0 Then
-    oListener = CreateUnoListener( &quot;Tastenkey_&quot; , &quot;com.sun.star.awt.XActionListener&quot; )
-    oControl.addActionListener( oListener )
+ oListener = CreateUnoListener( &quot;Tastenkey_&quot; , &quot;com.sun.star.awt.XActionListener&quot; )
+ oControl.addActionListener( oListener )
 Else
-    oListener = CreateUnoListener(a4 &amp; &quot;_&quot;, &quot;com.sun.star.awt.XMouseListener&quot; )
-    oControl.addMouseListener(oListener)
+ oListener = CreateUnoListener(a4 &amp; &quot;_&quot;, &quot;com.sun.star.awt.XMouseListener&quot; )
+ oControl.addMouseListener(oListener)
 End If
 
 oDispatcher.executeDispatch(StarDesktop, makro, &quot;&quot;, 0, args1())
@@ -204,66 +204,66 @@ End Sub
 
 Sub clickCommandButton1_________________
 	oSheet = ThisComponent.currentController.activeSheet
- &apos;   oPage = Thiscomponent.Sheets.getByName(&quot;Sheet1&quot;).getDrawPage
-    oPage = oSheet.getDrawPage
+ &apos; oPage = Thiscomponent.Sheets.getByName(&quot;Sheet1&quot;).getDrawPage
+ oPage = oSheet.getDrawPage
 
-    iCount = oPage.getCount
-    
-&apos;   oPage = oDoc.getDrawPages().getByIndex( nPageToDelete )
-           &apos; Tell the document to remove it.
-  &apos; ThisComponent.getDrawPages().remove( oPage )  
+ iCount = oPage.getCount
+ 
+&apos; oPage = oDoc.getDrawPages().getByIndex( nPageToDelete )
+ &apos; Tell the document to remove it.
+ &apos; ThisComponent.getDrawPages().remove( oPage ) 
 
 		oDpage = oSheet.DrawPage
  		oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
  		oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
 		oCtrlModel.Enabled = true	
-    
- &apos;exit sub   
-    
-    For i = 0 to iCount - 1
-    	
-        oEle = oPage.getByIndex(i)
-        &apos;oPage.getByIndex(i)
-        MRI oEle
-        exit sub
-        oEle.release()
-        	 
-        exit sub
-         xray oEle
-        &apos;oEle.leaveGroup()
-        if oEle.ShapeType = &quot;com.sun.star.drawing.GroupShape&quot; then 		
-        	print &quot;dentro&quot;
-        	oEle.ungroup()		
-	        &apos;oELE.enterGroup() 
-	        &apos;xray oEle
-	        &apos;oEle.remove()
-	         
-	        &apos;xray oele
-	    end if
-       &apos; oEle.remove() &apos;release()
-      &apos;  
-        exit sub
-        oControl = oEle.getControl()
-        If oControl.DefaultControl = &quot;com.sun.star.form.control.CommandButton&quot; Then
-            &apos; Found command button - change label of other buttons &apos;
-            If oEle.Name &lt;&gt; &quot;CommandButton1&quot; Then
-                oControl.Label = &quot;Inactive&quot;
-                oControl.Enabled = False
-            End If
-        End If
-    Next
+ 
+ &apos;exit sub 
+ 
+ For i = 0 to iCount - 1
+ 	
+ oEle = oPage.getByIndex(i)
+ &apos;oPage.getByIndex(i)
+ MRI oEle
+ exit sub
+ oEle.release()
+ 	 
+ exit sub
+ xray oEle
+ &apos;oEle.leaveGroup()
+ if oEle.ShapeType = &quot;com.sun.star.drawing.GroupShape&quot; then 		
+ 	print &quot;dentro&quot;
+ 	oEle.ungroup()		
+	 &apos;oELE.enterGroup() 
+	 &apos;xray oEle
+	 &apos;oEle.remove()
+	 
+	 &apos;xray oele
+	 end if
+ &apos; oEle.remove() &apos;release()
+ &apos; 
+ exit sub
+ oControl = oEle.getControl()
+ If oControl.DefaultControl = &quot;com.sun.star.form.control.CommandButton&quot; Then
+ &apos; Found command button - change label of other buttons &apos;
+ If oEle.Name &lt;&gt; &quot;CommandButton1&quot; Then
+ oControl.Label = &quot;Inactive&quot;
+ oControl.Enabled = False
+ End If
+ End If
+ Next
 End Sub
 
  
-sub copia_teste  &apos;( oSheetDest as object, oRangeDest as object, oSrc as object )ì
+sub copia_teste &apos;( oSheetDest as object, oRangeDest as object, oSrc as object )ì
 	&apos; rifa le intestazioni di colonna (copiandole da S5
 &apos;	on error goto errore
 	
 	&apos;mette il doc in modalità bozza			
-  	Bozza_ON
+ 	Bozza_ON
 	ThisComponent.ApplyFormDesignMode = False &apos;True
 	oSheetSRC=ThisComponent.Sheets.getByName(&quot;S5&quot;)
-	If oSheetSRC.isVisible = false  then
+	If oSheetSRC.isVisible = false then
 	 		oSheetSRC.isVisible = TRUE
 	 end if	
 
@@ -271,74 +271,74 @@ sub copia_teste  &apos;( oSheetDest as object, oRangeDest as object, oSrc as obj
 	&apos;EP
 	oSheetDest=ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 &apos;	oSheetDest.protect(&quot;&quot;)
-    oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
+ oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
 	oRangeDest = oSheetDest.getCellRangeByPosition(0,0,30,0)
 
 	Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS  + _
+			com.sun.star.sheet.CellFlags.OBJECTS + _
 			com.sun.star.sheet.CellFlags.STRING + _
 			com.sun.star.sheet.CellFlags.DATETIME + com.sun.star.sheet.CellFlags.ANNOTATION + _
 			com.sun.star.sheet.CellFlags.EDITATTR + com.sun.star.sheet.CellFlags.STYLES + _
 			com.sun.star.sheet.CellFlags.VALUE
-   	oRangeDest.clearContents(Flags)
+ 	oRangeDest.clearContents(Flags)
 
 	oSrc = oSheetSRC.getCellRangeByPosition(1,58,30,58).RangeAddress
-    oSheetDest.copyRange(oDest, oSrc)
+ oSheetDest.copyRange(oDest, oSrc)
 
-  
-    &apos;Analisi
+ 
+ &apos;Analisi
 	oSheetDest=ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	oRangeDest = oSheetDest.getCellRangeByPosition(0,0,30,0)
-    oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
+ oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
 
 	Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS  + _
+			com.sun.star.sheet.CellFlags.OBJECTS + _
 			com.sun.star.sheet.CellFlags.STRING + _
 			com.sun.star.sheet.CellFlags.DATETIME + com.sun.star.sheet.CellFlags.ANNOTATION + _
 			com.sun.star.sheet.CellFlags.EDITATTR + com.sun.star.sheet.CellFlags.STYLES + _
 			com.sun.star.sheet.CellFlags.VALUE
-   	oRangeDest.clearContents(Flags)
+ 	oRangeDest.clearContents(Flags)
 	oSrc = oSheetSRC.getCellRangeByPosition(1,41,30,41)
 	oSrc = oSrc.RangeAddress
-    oSheetDest.copyRange(oDest, oSrc)
+ oSheetDest.copyRange(oDest, oSrc)
 
-   &apos;Computo
+ &apos;Computo
 	oSheetDest=ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	oRangeDest = oSheetDest.getCellRangeByPosition(0,0,45,1)
-    oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
+ oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
 	Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS  + _
+			com.sun.star.sheet.CellFlags.OBJECTS + _
 			com.sun.star.sheet.CellFlags.STRING + _
 			com.sun.star.sheet.CellFlags.DATETIME + com.sun.star.sheet.CellFlags.ANNOTATION + _
 			com.sun.star.sheet.CellFlags.EDITATTR + com.sun.star.sheet.CellFlags.STYLES + _
 			com.sun.star.sheet.CellFlags.VALUE
-   	oRangeDest.clearContents(Flags)
+ 	oRangeDest.clearContents(Flags)
 	oSrc = oSheetSRC.getCellRangeByPosition(0,0,45,1).RangeAddress
-    oSheetDest.copyRange(oDest, oSrc)
+ oSheetDest.copyRange(oDest, oSrc)
  
-    &apos;CONTABILITA
+ &apos;CONTABILITA
 	oSheetDest=ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	oRangeDest = oSheetDest.getCellRangeByPosition(0,0,49,1)
-    oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
+ oDest = oSheetDest.GetCellByPosition(0,0 ).CellAddress
 	Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS  + _
+			com.sun.star.sheet.CellFlags.OBJECTS + _
 			com.sun.star.sheet.CellFlags.STRING + _
 			com.sun.star.sheet.CellFlags.DATETIME + com.sun.star.sheet.CellFlags.ANNOTATION + _
 			com.sun.star.sheet.CellFlags.EDITATTR + com.sun.star.sheet.CellFlags.STYLES + _
 			com.sun.star.sheet.CellFlags.VALUE
-   	oRangeDest.clearContents(Flags)
+ 	oRangeDest.clearContents(Flags)
 	oSrc = oSheetSRC.getCellRangeByPosition(0,18,49,19).RangeAddress
-    oSheetDest.copyRange(oDest, oSrc)
+ oSheetDest.copyRange(oDest, oSrc)
 	
-	msgbox  (&quot;Ho sovrascritto le intestazioni di colonna ma alcuni pulsanti (o gruppi di pulsanti) potrebbero essere spostati o spariti&quot;&amp; CHR$(10)_
+	msgbox (&quot;Ho sovrascritto le intestazioni di colonna ma alcuni pulsanti (o gruppi di pulsanti) potrebbero essere spostati o spariti&quot;&amp; CHR$(10)_
 				&amp; &quot;Sistemali a mano, confronta la situazione con i modelli che trovi nel foglio &apos;S5&apos; e nel caso copia/incolla i pulsanti mancanti&quot; &amp; CHR$(10) _
 				&amp; &quot;NB La modalità bozza è già attivata&quot;
 
-    
-    exit sub
+ 
+ exit sub
 	errore:
 	&apos;toglie la modalità bozza			
-  	Bozza_OFF
+ 	Bozza_OFF
 	ThisComponent.ApplyFormDesignMode = false
 	Barra_chiudi_sempre_4
 	SGenericoMemo = &quot;&quot;
@@ -386,7 +386,7 @@ a(1,	9	) =	&quot;$S2.$B$54:$E$55&quot;
 a(2,	0	) =	&quot;S5&quot;
 a(2,	1	) =	&quot;M1&quot;
 a(2,	2	) =	&quot;M1&quot;
-a(2,	3	) =	&quot;M1&quot;  
+a(2,	3	) =	&quot;M1&quot; 
 a(2,	4	) =	&quot;M1&quot;
 a(2,	5	) =	&quot;M1&quot;
 a(2,	6	) =	&quot;S5&quot;
@@ -432,7 +432,7 @@ a(3,	9	) =	&quot;B54&quot;
 				Barra_Apri_Chiudi_5(&quot;.. Sto ridefinendo alcuni nomi di area.... pazienta ancora...&quot;, 50)
 		end if
 			&apos; se il nome di area c&apos;è già lo cancella 
-&apos;print i &amp; &quot; &quot;  &amp; &quot;ora canc&quot;
+&apos;print i &amp; &quot; &quot; &amp; &quot;ora canc&quot;
 		If ThisComponent.NamedRanges.hasByName(a(0,i)) Then
 				 ThisComponent.NamedRanges.removeByName(a(0,i))
 		End If	
@@ -462,8 +462,8 @@ Sub setDocEventOnClose () &apos;assegna una macro ad un evento (chiusura file)
 &apos;&apos;&apos;	mEvt(1).Name = &quot;Script&quot;
 &apos;&apos;&apos;	mEvt(1).Value =&quot;vnd.sun.star.script:Standard.Controllo.Solo_se_Ultimus?language=Basic&amp;location=document&quot;
 
-    oDoc.getEvents().replaceByName(&quot;OnPrepareUnload&quot;, mEvt())
-&apos;    oDoc.getEvents().replaceByName(&quot;OnPrepareUnload&quot;, mEvt())
+ oDoc.getEvents().replaceByName(&quot;OnPrepareUnload&quot;, mEvt())
+&apos; oDoc.getEvents().replaceByName(&quot;OnPrepareUnload&quot;, mEvt())
 
 &apos;	oDoc.getEvents().replaceByName(&quot;OnSaveAs&quot;, mEvt())
 &apos;	oDoc.getEvents().replaceByName(&quot;OnSaveAsDone&quot;, mEvt())
@@ -474,8 +474,8 @@ Sub setDocEventOnClose () &apos;assegna una macro ad un evento (chiusura file)
 	mEvt(0).Value= &quot;Script&quot;
 	mEvt(1).Name = &quot;Script&quot;
 &apos;	mEvt(1).Value =&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;
-    mEvt(1).Value =&quot;&quot;
-   &apos; oDoc.getEvents().replaceByName(&quot;OnPrepareUnload&quot;, mEvt())
+ mEvt(1).Value =&quot;&quot;
+ &apos; oDoc.getEvents().replaceByName(&quot;OnPrepareUnload&quot;, mEvt())
 &apos;	oDoc.getEvents().replaceByName(&quot;OnSaveAs&quot;, mEvt())
 	oDoc.getEvents().replaceByName(&quot;OnSaveAsDone&quot;, mEvt())
 	oDoc.getEvents().replaceByName(&quot;OnSave&quot;, mEvt())
@@ -491,7 +491,7 @@ Sub setDocEventOnClose () &apos;assegna una macro ad un evento (chiusura file)
 End Sub
 
 
-Sub destroy  &apos; non usata...
+Sub destroy &apos; non usata...
 sSourceFile = ConvertToURL( sPathDoc )
 Filecopy sSourceFile, sURLmem
 &apos;verifica presenza documento .pdf e avvisa processo riuscito
@@ -514,20 +514,20 @@ Sub Elimina_copia_aPerdere (sUrl)
 end sub
 
 
-Function Salva_copia_aPerdere &apos; salva il doc corrente come temporaneo (con nome  = data)
-   oDoc = ThisComponent
-   &apos; Get the document&apos;s controller.
-   oDocCtrl = oDoc.getCurrentController()
-   &apos; Get the frame from the controller.
-   oDocFrame = oDocCtrl.getFrame()
-   oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
-   Dim myProps(1) as New com.sun.star.beans.PropertyValue
-   &apos;il valore di questo array va impostato a 1
-    oSheet = ThisComponent.CurrentController.ActiveSheet
-    
-    dim sUrl2, sNameDest as string
+Function Salva_copia_aPerdere &apos; salva il doc corrente come temporaneo (con nome = data)
+ oDoc = ThisComponent
+ &apos; Get the document&apos;s controller.
+ oDocCtrl = oDoc.getCurrentController()
+ &apos; Get the frame from the controller.
+ oDocFrame = oDocCtrl.getFrame()
+ oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+ Dim myProps(1) as New com.sun.star.beans.PropertyValue
+ &apos;il valore di questo array va impostato a 1
+ oSheet = ThisComponent.CurrentController.ActiveSheet
+ 
+ dim sUrl2, sNameDest as string
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 
 
@@ -536,7 +536,7 @@ Function Salva_copia_aPerdere &apos; salva il doc corrente come temporaneo (con 
 	sPath = Replace_G(sURL, sName, &quot;&quot;) 
 
 	sName = Replace_G(sName, &quot;.ods&quot;, &quot;&quot;) 
-&apos;	sSuffX =  gina_furbetta_2 &apos; se la prossima non fa questioni è meglio sovrascrivere...
+&apos;	sSuffX = gina_furbetta_2 &apos; se la prossima non fa questioni è meglio sovrascrivere...
 	sSuffX = &quot;100000&quot;	
 	sName = &quot;cancellami&quot; &amp; &quot;_temp_&quot; &amp; sSuffX &amp; &quot;.ods&quot;
 	sNewURL = sPath &amp; sName 

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                     
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -81,7 +81,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		&apos;	sURLdest = ConvertToUrl(ThisComponent.getURL()) 
 		&apos;	sNomedest = FileNameoutofPath(sURLdest)
 			sSourceURL = GetFileURL( _
-		    &quot;Cerca il file da Accodare in QUESTO Doc.&quot;)
+		 &quot;Cerca il file da Accodare in QUESTO Doc.&quot;)
 			&apos;If sFileURL &lt;&gt; &quot;&quot; Then 
 			If sSourceURL &lt;&gt; &quot;&quot; Then 
  				Stardesktop.LoadComponentFromUrl(sSourceURL, &quot;_default&quot;, 0, Array())
@@ -107,7 +107,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 
 	dim sUrl2, sNameDest as string
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 
 &apos;d10	UrlSrc = ThisComponent.getURL() &apos; file source
@@ -131,9 +131,9 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		msgbox &quot;Il file sorgente (questo file)&quot; &amp; CHR$(10)_
 			&amp; &quot;&lt; &quot; &amp; sNameDest &amp; &quot; &gt;&quot; &amp; CHR$(10)_
 		&amp; &quot; COINCIDE con il file di destinazione&quot; &amp; CHR$(10)_
-		&amp; &quot;(vale a dire con il Computo Corrente)  &lt;&quot; &amp; sNameDest &amp; &quot; &gt;&quot; &amp; CHR$(10)_
+		&amp; &quot;(vale a dire con il Computo Corrente) &lt;&quot; &amp; sNameDest &amp; &quot; &gt;&quot; &amp; CHR$(10)_
 		&amp; &quot;Cioè stai tentando di accodare un file dentro se stesso...&quot; &amp; CHR$(10)_
-		&amp; &quot;(E&apos; proprio il caso di dire: un cane che si morde la coda... :-)  )&quot; &amp; CHR$(10)_
+		&amp; &quot;(E&apos; proprio il caso di dire: un cane che si morde la coda... :-) )&quot; &amp; CHR$(10)_
 		&amp; &quot;Accodamento Annullato!!&quot; ,, &quot;Operazione Annullata!!&quot;
 		exit sub
 	end if
@@ -146,16 +146,16 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	End if
  
  	
-	if msgbox (&quot;documento SORGENTE:  &quot; &amp; CHR$(10)_
-						&amp; &quot; &quot; &amp; sNomeSrc &amp; &quot;&quot;&amp;  CHR$(10) &amp;  CHR$(10)_
-		&amp; &quot;     documento DESTINAZIONE:&quot; &amp; CHR$(10)_
+	if msgbox (&quot;documento SORGENTE: &quot; &amp; CHR$(10)_
+						&amp; &quot; &quot; &amp; sNomeSrc &amp; &quot;&quot;&amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; documento DESTINAZIONE:&quot; &amp; CHR$(10)_
 			 &amp; &quot; &quot; &amp; sNameDest &amp; &quot;&quot; &amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)_
-   			&amp;&quot;         PROSEGUO ?   &quot; &amp;  CHR$(10)_
-   			&amp; &quot;(Se il i fogli sono molti e corposi potrebbe essere cosa lunga... )&quot;_
-   			&amp;  CHR$(10) &amp; &quot;&quot;,36, &quot;Accodamento di dati da un doc ad un altro&quot;) = 7 then
-   			exit sub
-   	end if
-  		sAnnulla = &quot;tieni&quot;
+ 			&amp;&quot; PROSEGUO ? &quot; &amp; CHR$(10)_
+ 			&amp; &quot;(Se il i fogli sono molti e corposi potrebbe essere cosa lunga... )&quot;_
+ 			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Accodamento di dati da un doc ad un altro&quot;) = 7 then
+ 			exit sub
+ 	end if
+ 		sAnnulla = &quot;tieni&quot;
  
  	 	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 		DlgAc=CreateUnoDialog(DialogLibraries.UltimusFree2.DialogAccoda)
@@ -163,17 +163,17 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 
 	&apos; pare voglia execute PRIMA ??
  		DlgAc.execute()
-  		iOP1 = DlgAc.getControl(&quot;CheckBox1&quot;).State &apos;EP
+ 		iOP1 = DlgAc.getControl(&quot;CheckBox1&quot;).State &apos;EP
  		iOP2 = DlgAc.getControl(&quot;CheckBox3&quot;).State &apos;AP
  		iOP3 = DlgAc.getControl(&quot;CheckBox6&quot;).State &apos;Computo
-  		iOP4 = DlgAc.getControl(&quot;CheckBox7&quot;).State &apos;Anagrafica 
-  		iOP5 = DlgAc.getControl(&quot;CheckBox4&quot;).State &apos;VarGen 
-  		iOP6 = DlgAc.getControl(&quot;CheckBox5&quot;).State &apos;CONTABILITA
-  		iOP7 = DlgAc.getControl(&quot;CheckBox8&quot;).State &apos;M1 dati del Computo
+ 		iOP4 = DlgAc.getControl(&quot;CheckBox7&quot;).State &apos;Anagrafica 
+ 		iOP5 = DlgAc.getControl(&quot;CheckBox4&quot;).State &apos;VarGen 
+ 		iOP6 = DlgAc.getControl(&quot;CheckBox5&quot;).State &apos;CONTABILITA
+ 		iOP7 = DlgAc.getControl(&quot;CheckBox8&quot;).State &apos;M1 dati del Computo
 
 
-&apos;	if iOP6 = 1 and    
-	&apos;	if iOP6 = true and iRowE &gt; 11  then
+&apos;	if iOP6 = 1 and 
+	&apos;	if iOP6 = true and iRowE &gt; 11 then
 	
 &apos;	wait 100 &apos;serve per aspettare che annulla si sistemi...
 	
@@ -184,7 +184,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	iTempo = 50
 	do while sAnnulla = &quot;tieni&quot; 
 		itempo = iTempo+iTempo
-  		if iTempo &gt;1000 then
+ 		if iTempo &gt;1000 then
 			exit do
 		end if
  		wait iTempo
@@ -196,7 +196,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	ThisComponent.CurrentController.Select(&quot;Elenco Prezzi&quot;)	
 	sproteggi_sheet_TUTTE
 	Visualizza_sheet_TUTTE
-	  	 
+	 	 
 &apos; inizio parte nuova&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 	Barra_Apri_Chiudi_4
@@ -209,7 +209,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	sSheetTarget_COMPUTO = &quot;COMPUTO&quot;
 	sSheetSRC_CONTABILITA = &quot;CONTABILITA&quot;
 	sSheetTarget_CONTABILITA = &quot;CONTABILITA&quot;	
-	sSheetSRC_S1 = &quot;S1&quot;  &apos;VarGen
+	sSheetSRC_S1 = &quot;S1&quot; &apos;VarGen
 	sSheetTarget_S1 = &quot;S1&quot;
 	sSheetSRC_EP = &quot;Elenco Prezzi&quot;
 	sSheetSRC_EP_C = &quot;Elenco Prezzi_copia&quot;
@@ -225,37 +225,37 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	aSheetNames = ThisComponent.getSheets.getElementNames()
 	sEsistenza = &quot;&quot;
 	For i = LBound( ThisComponent.getSheets.getElementNames() ) To UBound( ThisComponent.getSheets.getElementNames() )
-  	    cSheetName2 = aSheetNames( i ) 
-   	 	  If  cSheetName2 = &quot;CONTABILITA&quot; Then
-      				sEsistenza = &quot;esiste&quot;     				
-      	  end if
-   	Next	
-   	if sEsistenza &lt;&gt; &quot;esiste&quot; then
-   		iOP6 = 0  &apos;disattivo l&apos;importazione
-	end if   	
+ 	 cSheetName2 = aSheetNames( i ) 
+ 	 	 If cSheetName2 = &quot;CONTABILITA&quot; Then
+ 				sEsistenza = &quot;esiste&quot; 				
+ 	 end if
+ 	Next	
+ 	if sEsistenza &lt;&gt; &quot;esiste&quot; then
+ 		iOP6 = 0 &apos;disattivo l&apos;importazione
+	end if 	
 	
 
 	&apos; cancello il doppione... roba prob. obsoleta...
 	If thisComponent.Sheets.hasByName(&quot;Elenco Prezzi_copia&quot;) Then &apos; se la sheet esiste
- 	  	oSheets = ThisComponent.Sheets
+ 	 	oSheets = ThisComponent.Sheets
  		oSheets.removeByName(&quot;Elenco Prezzi_copia&quot;) &apos; la elimino
 	end if
 	
 	&apos; controllo se c&apos;è compatibilità con le Variabili Generali 
 	if iOP5 = 1 then
 		if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,294).string &lt;= 2 then
-  			iOP5=0 
-  			msgbox &quot;Spiacente, ma ho rilevato una incompatibilità e non posso trasferire le variabili Generali!&quot;&amp; CHR$(10) &amp; CHR$(10)_
-  				&amp; &quot;       Dovrai pertanto poi farlo a mano!&quot;
-  			sMS1 = &quot;Attenzione, Non ho potuto trasferire le Variabili Generali&quot;
-  		end if
+ 			iOP5=0 
+ 			msgbox &quot;Spiacente, ma ho rilevato una incompatibilità e non posso trasferire le variabili Generali!&quot;&amp; CHR$(10) &amp; CHR$(10)_
+ 				&amp; &quot; Dovrai pertanto poi farlo a mano!&quot;
+ 			sMS1 = &quot;Attenzione, Non ho potuto trasferire le Variabili Generali&quot;
+ 		end if
 	end if &apos;
 	
 		
 
 &apos;	DuplicaSheetTaxi &apos;duplica la sheet
 	&apos; queste per la grana che non copiagiusti i riferimenti di formula alle altre tabelle
-	&apos; se non si ha lo stesso index..  
+	&apos; se non si ha lo stesso index.. 
 	thisComponent.Sheets.moveByName(sSheetSRC_EP ,0)
 	thisComponent.Sheets.moveByName(sSheetSRC_AP ,1)
 	thisComponent.Sheets.moveByName(sSheetSRC_COMPUTO ,2)
@@ -274,7 +274,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		thisComponent.Sheets.moveByName(&quot;S5&quot;,9)	
 	end if
 
-	if  iOP1 = 2 or iOP2=1 or iOP3=1 or iOP6=1 then 
+	if iOP1 = 2 or iOP2=1 or iOP3=1 or iOP6=1 then 
 		&apos; ripulusco l&apos;EP dalle voci AP li registrate 
 		Elimina_AP_da_EP
 	end if
@@ -308,16 +308,16 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	sString$ = &quot;Fine ANALISI&quot;
 	oEnd = uFindString_taxi(sString$, oSheet) &apos;ofelia
 	lrowEnd_AP=oEnd.RangeAddress.EndRow 
-	iRowS = 2  &apos;oRangeSRC.RangeAddress.Startrow
-	sRangeSRC_AP = &quot;$A$&quot; &amp; iRowS &amp; &quot;:$EA$&quot; &amp; lrowEnd_AP  &apos;2
+	iRowS = 2 &apos;oRangeSRC.RangeAddress.Startrow
+	sRangeSRC_AP = &quot;$A$&quot; &amp; iRowS &amp; &quot;:$EA$&quot; &amp; lrowEnd_AP &apos;2
 	
-	sArea_Name_AP =  &quot;ATMP_&quot; &amp; sSheetSRC_AP
+	sArea_Name_AP = &quot;ATMP_&quot; &amp; sSheetSRC_AP
 
 	Definisci_NomeArea (sSheetSRC_AP, sArea_Name_AP, sRangeSRC_AP, iRowS ) 	
 	iIns_AP= lrowEnd_AP+1 - iRowS
 
 
-	&apos;  EP sorgente
+	&apos; EP sorgente
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	&apos;circoscrive l&apos;EP sorgente
 	sString$ = &quot;Fine elenco&quot;
@@ -337,7 +337,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 
 	sRangeSRC_EP = &quot;$&quot; &amp; ColumnNameOf(lcolbase+0) &amp; &quot;$&quot; &amp; iRowS &amp; &quot;:$&quot; &amp; ColumnNameOf(lcolbase+30) &amp; &quot;$&quot; &amp; iRowE+1
 &apos;	sRangeSRC_EP = &quot;$&quot; &amp; A &amp; &quot;$&quot; &amp; iRowS &amp; &quot;:$EA$&quot; &amp; iRowE+1
-	sAreaName_EP =  &quot;ATMP_&quot; &amp; sSheetSRC_EP
+	sAreaName_EP = &quot;ATMP_&quot; &amp; sSheetSRC_EP
 
 	Definisci_NomeArea (sSheetSRC_EP, sAreaName_EP, sRangeSRC_EP, iRowS) 	
 	iIns_EP = iRowE - iRowS +1
@@ -366,35 +366,35 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	&apos; fisso il range DATI anagrafica
 	sRangeSRC_DATI = &quot;$A$&quot; &amp; 2 &amp; &quot;:$D$&quot; &amp; 150
 	
-	sAreaName_Dati =  &quot;ATMP_&quot; &amp; sSheetSRC_DATI
-    Definisci_NomeArea (sSheetSRC_DATI, sAreaName_Dati, sRangeSRC_DATI, 0 )
-    
-    
+	sAreaName_Dati = &quot;ATMP_&quot; &amp; sSheetSRC_DATI
+ Definisci_NomeArea (sSheetSRC_DATI, sAreaName_Dati, sRangeSRC_DATI, 0 )
+ 
+ 
 	&apos; fisso il range Variabili Generali VARGen &apos;DISATTIVATA
 	 &apos;sRangeSRC_S1 = &quot;$F$292:$S$293&quot; 
 
-&apos;	sAreName_S1 =  &quot;ATMP_&quot; &amp; sSheetSRC_S1	 
- &apos;   Definisci_NomeArea (sSheetSRC_S1, sAreName_S1, sRangeSRC_S1, )
+&apos;	sAreName_S1 = &quot;ATMP_&quot; &amp; sSheetSRC_S1	 
+ &apos; Definisci_NomeArea (sSheetSRC_S1, sAreName_S1, sRangeSRC_S1, )
 
 	&apos; fisso il range Variabili Generali VARGen B
 &apos;	 sRangeSRC_S1_B = &quot;$F$297:$S$340&quot; &apos;melior est abundare quam... NOOO!
 	 
-&apos;	sAreName_S1_B =  &quot;ATMP_&quot; &amp; sSheetSRC_S1	&amp; &quot;_B&quot;
-  &apos;  Definisci_NomeArea (sSheetSRC_S1, sAreName_S1_B, sRangeSRC_S1_B, )
+&apos;	sAreName_S1_B = &quot;ATMP_&quot; &amp; sSheetSRC_S1	&amp; &quot;_B&quot;
+ &apos; Definisci_NomeArea (sSheetSRC_S1, sAreName_S1_B, sRangeSRC_S1_B, )
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-	Barra_chiudi_sempre_4   
+	Barra_chiudi_sempre_4 
 	&apos;salvo il file con i nomeRanges definiti
 	&apos; è indispensabile salvare altrimenti non vede i name nuovi
 &apos;print &quot;salvo il sorgente&quot;
 	Salva_copia_data 
 &apos;print &quot;sorgente salvato, ora passo su target&quot;
 		msgbox &quot; Ho appena salvato il documento SORGENTE:&quot;&amp; CHR$(10)_
-				&amp;&quot;   &quot; &amp; sNomeSrc &amp; &quot; &quot; &amp; CHR$(10)_
+				&amp;&quot; &quot; &amp; sNomeSrc &amp; &quot; &quot; &amp; CHR$(10)_
 			&amp; &quot;rinominandolo (ho aggiunto un suffisso univoco)&quot; &amp; CHR$(10)_
 			&amp; &quot;(alla fine dell&apos;accodamento potrete cancellarlo)&quot; &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Da adesso fino alla fine dell&apos;operazione di accodamento&quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;     NON TOCCATE ne il mouse e ne la tastiera&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot; NON TOCCATE ne il mouse e ne la tastiera&quot; &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;attendendo pazientemente la conclusione; &quot;&amp; CHR$(10)_
 			&amp; &quot;una serie di suoni e una finestra vi avvertiranno!&quot; 
 			
@@ -445,7 +445,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	&apos; controllo se il Target è vuoto (se non lo è non posso accodare la Contabilità)
 	&apos; Ovvero la Contabilità si ppuò accorpare solo riversando su template vuoto... altrimenti non serve
 	if iOP6 = 1 then
-	  if not (ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(1,20).string = &quot;&quot; and _
+	 if not (ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(1,20).string = &quot;&quot; and _
 		ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(1,21).string = &quot;&quot; and _
 		ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(1,22).string = &quot;&quot; and _
 		ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(1,23).string = &quot;&quot; and _
@@ -453,10 +453,10 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(1,25).string = &quot;&quot; and _
 		ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(1,26).string = &quot;&quot; ) then
 		iOP6 = 0	
-		msgbox &quot;Il Template NON è vuoto e non posso quindi accodare la contabilità!&quot;  &amp; CHR$(10)_
+		msgbox &quot;Il Template NON è vuoto e non posso quindi accodare la contabilità!&quot; &amp; CHR$(10)_
 			&amp;	&quot;Proseguo comunque disattivando l&apos;accodamento della contabilità&quot;
 		sMS2 = &quot;Attenzione: la Contabilità non è stata accodata&quot;
-	  end if	
+	 end if	
 	end if
 	&apos; Modifica la var generale...
 	&apos;	iAnnota = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).string 
@@ -465,15 +465,15 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 
 	aSheetNames = ThisComponent.getSheets.getElementNames()	
 	sEsistenza = &quot;&quot;
-  	For i = LBound( ThisComponent.getSheets.getElementNames() ) To UBound( ThisComponent.getSheets.getElementNames() )
-  	    cSheetName2 = aSheetNames( i ) &apos; get string from array    
-   	 	  If  cSheetName2 = &quot;CONTABILITA&quot; Then
-      				thisComponent.Sheets.moveByName(sSheetTarget_CONTABILITA ,3)
-      				sEsistenza = &quot;esiste&quot;      			
-      	  end if
-   	Next
-   	if sEsistenza &lt;&gt; &quot;esiste&quot; then
-	   	thisComponent.Sheets.insertNewByName(sSheetTarget_CONTABILITA,3)
+ 	For i = LBound( ThisComponent.getSheets.getElementNames() ) To UBound( ThisComponent.getSheets.getElementNames() )
+ 	 cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ 	 	 If cSheetName2 = &quot;CONTABILITA&quot; Then
+ 				thisComponent.Sheets.moveByName(sSheetTarget_CONTABILITA ,3)
+ 				sEsistenza = &quot;esiste&quot; 			
+ 	 end if
+ 	Next
+ 	if sEsistenza &lt;&gt; &quot;esiste&quot; then
+	 	thisComponent.Sheets.insertNewByName(sSheetTarget_CONTABILITA,3)
 	end if 
 
 	thisComponent.Sheets.moveByName(sSheetSRC_EP ,0)
@@ -487,13 +487,13 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	if 	thisComponent.Sheets.hasByName(&quot;S5&quot;) then
 		thisComponent.Sheets.moveByName(&quot;S5&quot;,9)	
 	end if
-	Barra222_chiudi_sempre_4    
+	Barra222_chiudi_sempre_4 
 	Barra222_Apri_Chiudi_4
 
 
 	&apos;____________ COMPUTO
 
-	if  iOP3 = 1 or iOP6 =1 then
+	if iOP3 = 1 or iOP6 =1 then
 		&apos;trovo il punto di inserimento COMPUTO
 		oSheet = ThisComponent.Sheets.getByName(sSheetTarget_COMPUTO) 
 &apos; ThisComponent.CurrentController.Select(oSheet)&apos;debug
@@ -517,7 +517,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 					sAreaName_COMPUTO )
 
 		iTemp = 200 &apos; tantra techniques
-		do while oSheet.getCellRangeByName(&quot;$C&quot; &amp; 3).string = &quot;&quot; or  _
+		do while oSheet.getCellRangeByName(&quot;$C&quot; &amp; 3).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 4).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 5).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 6).string = &quot;&quot; or _
@@ -539,16 +539,16 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		oCellS = oSheet.GetCellByPosition( 1, lrowEnd_COMP+1)
 	&apos;	wait 2000 
 		sRange_scritta = &quot;INIZIO VOCI ACCODATE il &quot; &amp; now _
-		    &amp; &quot; (questa scritta è solo un appunto; al codice non serve e puoi cancellarla quando vuoi)&quot; 
+		 &amp; &quot; (questa scritta è solo un appunto; al codice non serve e puoi cancellarla quando vuoi)&quot; 
 		oCellS.string = sRange_scritta
 		oCellS.CharColor = 16711680 
-		oCellS.CharFontName  =  &quot;Bitstream Vera Sans&quot; 
+		oCellS.CharFontName = &quot;Bitstream Vera Sans&quot; 
 		oCellS.CharHeight = 13
 	end if				
 
 	iRowE = getLastUsedRow(oSheet)
 
-	for i = 0 to iRowE  
+	for i = 0 to iRowE 
 			if oSheet.GetCellByPosition(0, i).cellstyle = &quot;comp progress&quot; or _
 				(oSheet.GetCellByPosition(0, i).cellstyle =&quot;comp 10 s_R&quot; and oSheet.GetCellByPosition(1, i).cellstyle =&quot;comp Art-EP_R&quot;) then &apos;and _
 				&apos;oSheet.getCellRangeByposition(2,i,8,i).getIsMerged = false then
@@ -558,7 +558,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 				oSheet.getCellRangeByposition(2,i,8,i).merge(true)
 			end if
 	next
-	Barra222_chiudi_sempre_4    
+	Barra222_chiudi_sempre_4 
 	Barra222_Apri_Chiudi_4
 	oProgressBar222.Value = 30
 
@@ -577,7 +577,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 						sRangeSRC_CONTABILITA, sRangeTarget_CONTABILITA, sAreaName_CONTABILITA )	
 
 		iTemp = 200 &apos; tantra techniques
-		do while oSheet.getCellRangeByName(&quot;$F&quot; &amp; 5).string = &quot;&quot; or  _
+		do while oSheet.getCellRangeByName(&quot;$F&quot; &amp; 5).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$F&quot; &amp; 6).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$F&quot; &amp; 7).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$F&quot; &amp; 8).string = &quot;&quot; or _
@@ -589,7 +589,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 			wait iTemp
 		loop			
 	end if
-	Barra222_chiudi_sempre_4    
+	Barra222_chiudi_sempre_4 
 	Barra222_Apri_Chiudi_4	
 	oProgressBar222.Value = 50
 	oProgressBar222.Text = &quot;Uff... pare cosa lunga...ma sono circa a metà!&quot;
@@ -597,7 +597,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 
 	&apos;_________________ ANALISI ____________________________
 	
-	if  iOP1 = 2 or iOP2=1 or iOP3=1 or iOP6=1 then 
+	if iOP1 = 2 or iOP2=1 or iOP3=1 or iOP6=1 then 
 		&apos;punto inserimento Analisi
 		oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 		ThisComponent.CurrentController.Select(oSheet)
@@ -621,14 +621,14 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		oRange.isTextWrapped = false
 		oCellS = oSheet.GetCellByPosition( 1, lrowEnd_AP)
 		sRange_scritta = &quot;INIZIO VOCI ACCODATE il &quot; &amp; now _
-		    &amp; &quot; ... (questa scritta è solo per orientarsi; al codice non serve e puoi cancellarla quando vuoi)&quot; 
+		 &amp; &quot; ... (questa scritta è solo per orientarsi; al codice non serve e puoi cancellarla quando vuoi)&quot; 
 		oCellS.string = sRange_scritta
 		oCellS.CharColor = 16711680 
-		oCellS.CharFontName  =  &quot;Bitstream Vera Sans&quot; 
+		oCellS.CharFontName = &quot;Bitstream Vera Sans&quot; 
 		oCellS.CharHeight = 14
 
 		iTemp = 200 &apos; tantra techniques
-		do while oSheet.getCellRangeByName(sRangeTarget_AP).string = &quot;&quot; or  _
+		do while oSheet.getCellRangeByName(sRangeTarget_AP).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$A&quot; &amp; lrowEnd_AP+1).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$A&quot; &amp; lrowEnd_AP+2).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$A&quot; &amp; lrowEnd_AP+3).string = &quot;&quot; or _
@@ -640,13 +640,13 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 			wait iTemp
 		loop
 	end if
-	Barra222_chiudi_sempre_4    
+	Barra222_chiudi_sempre_4 
 	Barra222_Apri_Chiudi_4
 	
 	
 
 	&apos;_________________ EP __________Elenco Prezzi________________________________
-	if  iOP1=1 or iOP3=2 or iOP3=1 or iOP6=1 then &apos; EP obbligatorio se Computo = 1 e se AnP =1	
+	if iOP1=1 or iOP3=2 or iOP3=1 or iOP6=1 then &apos; EP obbligatorio se Computo = 1 e se AnP =1	
 		oSheet = ThisComponent.Sheets.getByName(sSheetTarget_EP) 		
 		
 		&apos;trovo il punto di inserimento EP
@@ -683,10 +683,10 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 
 	end if	
 
-	Barra222_chiudi_sempre_4    
+	Barra222_chiudi_sempre_4 
 	Barra222_Apri_Chiudi_4
 	oProgressBar222.Value = 70
-	oProgressBar222.Text = &quot;Ci siamo quasi... Non toccare niente...  e lasciami lavorare....&quot;
+	oProgressBar222.Text = &quot;Ci siamo quasi... Non toccare niente... e lasciami lavorare....&quot;
 	&apos;_________________ M1 
 
 	if iOP7 = 1 then
@@ -698,7 +698,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 				
 				
 	&apos;	iTemp = 200 &apos; tantra techniques
-&apos;		do while oSheet.getCellRangeByName(&quot;$C&quot; &amp; 3).string = &quot;&quot; or  _
+&apos;		do while oSheet.getCellRangeByName(&quot;$C&quot; &amp; 3).string = &quot;&quot; or _
 &apos;			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 4).string = &quot;&quot; or _
 &apos;			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 5).string = &quot;&quot; or _
 &apos;			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 6).string = &quot;&quot; or _
@@ -727,7 +727,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 				sAreaName_Dati )		
 
 		iTemp = 200 &apos; tantra techniques
-		do while oSheet.getCellRangeByName(&quot;$C&quot; &amp; 3).string = &quot;&quot; or  _
+		do while oSheet.getCellRangeByName(&quot;$C&quot; &amp; 3).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 4).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 5).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$C&quot; &amp; 6).string = &quot;&quot; or _
@@ -739,7 +739,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 			wait iTemp
 		loop
 	end if		
-	Barra222_chiudi_sempre_4    
+	Barra222_chiudi_sempre_4 
 	Barra222_Apri_Chiudi_4	
 
 
@@ -757,7 +757,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 				sAreName_S1)
 
 		iTemp = 200 &apos; tantra techniques 
-		do while oSheet.getCellRangeByName(&quot;$H&quot; &amp; 294).string = &quot;&quot; or  _
+		do while oSheet.getCellRangeByName(&quot;$H&quot; &amp; 294).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$H&quot; &amp; 295).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$H&quot; &amp; 296).string = &quot;&quot; or iTemp &gt;3000
 			iTemp = iTemp +Itemp
@@ -775,7 +775,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	&apos;			 	sAreName_S1)
 
 		iTemp = 200 &apos; tantra techniques
-		do while oSheet.getCellRangeByName(&quot;$H&quot; &amp; 298).string = &quot;&quot; or  _
+		do while oSheet.getCellRangeByName(&quot;$H&quot; &amp; 298).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$H&quot; &amp; 299).string = &quot;&quot; or _
 			 oSheet.getCellRangeByName(&quot;$H&quot; &amp; 300).string = &quot;&quot; or iTemp &gt;3000
 			iTemp = iTemp +Itemp
@@ -789,12 +789,12 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	disattiva:
 	
 		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	Registro le Analisi
-	if  iOP1=1 or iOP3=2 or iOP3=1 or iOP6=1 then 			
+	if iOP1=1 or iOP3=2 or iOP3=1 or iOP6=1 then 			
 		oSheetDest = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 		lLastUrowNN = getLastUsedRow(oSheetDest)
 			&apos; percorre le analisi di Prezzo e ciascuna viene &quot;registrata nell&apos;Elenco Prezzi
-		For i = lrowEnd_AP-1  to lLastUrowNN &apos;- 3
-			if oSheetDest.GetCellByPosition( 4, i ).string =  &quot;TOTALE&quot; then
+		For i = lrowEnd_AP-1 to lLastUrowNN &apos;- 3
+			if oSheetDest.GetCellByPosition( 4, i ).string = &quot;TOTALE&quot; then
 				if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0 then
 			&apos;	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition( 4, lrow ))
 			&apos;		print &quot;ne registro una&quot;
@@ -817,9 +817,9 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	&apos; le tre righe seguenti (in teoria) dovrebbero essere sufficienti
 	&apos; ma per ragioni che mi sfuggono non li elimina tutti
 	&apos; 20110213 , come tutti i basici dovrebbero ricordare...
-	&apos;SI DEVE USARE step -1  &quot;DA SISTEMARE&quot;
+	&apos;SI DEVE USARE step -1 &quot;DA SISTEMARE&quot;
 	&apos;for k=0 to ThisComponent.AreaLinks.Count+1 
-   	&apos;	 ThisComponent.AreaLinks.removeByIndex(k) 
+ 	&apos;	 ThisComponent.AreaLinks.removeByIndex(k) 
 	&apos;next 
 	&apos; questo ambaradan invece dovrebbe eliminarli tutti... :-(
 	for k=0 to ThisComponent.AreaLinks.Count+20 
@@ -827,14 +827,14 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 			exit for
 		end if
 		ThisComponent.AreaLinks.removeByIndex(k) 
-	next  
+	next 
 	Do while ThisComponent.AreaLinks.hasElements
 		for k=0 to ThisComponent.AreaLinks.Count+20 
 			ThisComponent.AreaLinks.removeByIndex(k) 
 		next
 	loop
 	IF ThisComponent.AreaLinks.hasElements then
-		print &quot;Uff!  ce ne sono ancora. Questa è una vera infestazione...!&quot;
+		print &quot;Uff! ce ne sono ancora. Questa è una vera infestazione...!&quot;
 		for k=0 to ThisComponent.AreaLinks.Count+20 
 			ThisComponent.AreaLinks.removeByIndex(k) 
 		next
@@ -849,7 +849,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	end if
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	 &apos;&apos;	 &apos;Clessid_lock_Start_D
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;  
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Adatta_h_riga_intera_tabella(&quot;Elenco Prezzi&quot;)
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -874,17 +874,17 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 &apos;	oDocsrc=stardesktop.LoadComponentFromUrl(sSourceURL , &quot;_default&quot;, 0, Array())
 &apos;	oDocsrc.Close(true)	
 	ThisComponent.CurrentController.Frame.Name = &quot;&quot; 
-	Barra_chiudi_sempre_4   
+	Barra_chiudi_sempre_4 
 	Barra222_chiudi_sempre_4
 	suona_1_2
 	Msgbox &quot;L&apos;accodamento è terminato! &quot;&amp; CHR$(10)_
 			&amp; &quot;Consiglio di SALVARE questo documento, CHIUDERLO e poi RIAPRIRLO! (prima di effettuare operazioni o verifiche! )&quot; &amp; CHR$(10)&amp; CHR$(10)_
-		&amp; &quot; NB Nel caso sia stata importata la CONTABILITA&apos; i sommari vanno nuovamente aggiornati (SAL per SAL)!  &quot;&amp; CHR$(10)_
+		&amp; &quot; NB Nel caso sia stata importata la CONTABILITA&apos; i sommari vanno nuovamente aggiornati (SAL per SAL)! &quot;&amp; CHR$(10)_
 		&amp; sMS1 &amp; CHR$(10)_
 		&amp; sMS2 &amp; CHR$(10)
 	exit sub
 	errore:
-	Print &quot; E&apos; stato generato l&apos;errore: &quot; &amp; error &amp;  &quot; e la procedura non è stata completata!!&quot;
+	Print &quot; E&apos; stato generato l&apos;errore: &quot; &amp; error &amp; &quot; e la procedura non è stata completata!!&quot;
 	Barra222_chiudi_sempre_4
 	Barra_chiudi_sempre_4
 END SUB
@@ -907,12 +907,12 @@ sub prova345
 oEnum = StarDesktop.Components.createEnumeration
 While oEnum.hasMoreElements
 
-    oDoc = oEnum.NextElement
-    If IsDocumentDiUnCertoTipo(oDoc) Then
-        &apos; fai qualcosa con il documento
-        print oDoc.URL
-       xray odoc
-    End If 
+ oDoc = oEnum.NextElement
+ If IsDocumentDiUnCertoTipo(oDoc) Then
+ &apos; fai qualcosa con il documento
+ print oDoc.URL
+ xray odoc
+ End If 
 Wend
 
 &apos;xray StarDesktop &apos;.CurrentFrame.ComponentWindow
@@ -927,26 +927,26 @@ print left(&quot;Reg-SAL_vattelapesca&quot;, 7)
 
 exit sub
 
-  aSheetNames = oSheets.getElementNames()
- xray  aSheetNames
+ aSheetNames = oSheets.getElementNames()
+ xray aSheetNames
  exit sub
-   For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array
-      If cSheetName = cSheetName2 Then
-         SheetNameToNumber() = i
-         &apos;Exit Function
-      EndIf
-   Next
+ For i = LBound( aSheetNames ) To UBound( aSheetNames )
+ cSheetName2 = aSheetNames( i ) &apos; get string from array
+ If cSheetName = cSheetName2 Then
+ SheetNameToNumber() = i
+ &apos;Exit Function
+ EndIf
+ Next
 
 	&apos;for k=0 to ThisComponent.AreaLinks.Count+1 
-   	&apos;	 ThisComponent.AreaLinks.removeByIndex(k) 
+ 	&apos;	 ThisComponent.AreaLinks.removeByIndex(k) 
 	&apos;next 
 &apos;:com::sun::star::container::XIndexAccess
  &apos; oSheet = ThisComponent.currentController.activeSheet
-&apos;  ThisComponent.AreaLinks.getcount
-&apos;  removeByIndex
+&apos; ThisComponent.AreaLinks.getcount
+&apos; removeByIndex
  &apos; xray thisComponent.frame &apos;CurrentController.Frame.getContainerWindow.setFocus()
-  &apos; xframe &apos;ThisComponent&apos; .AreaLinks &apos;.getByIndex(1)
+ &apos; xframe &apos;ThisComponent&apos; .AreaLinks &apos;.getByIndex(1)
  exit sub
 &apos;print ThisComponent.AreaLinks.Count +1
 	for k=0 to ThisComponent.AreaLinks.Count+20 
@@ -954,7 +954,7 @@ exit sub
 			exit for
 		end if
 		ThisComponent.AreaLinks.removeByIndex(k) 
-	next  
+	next 
 	IF ThisComponent.AreaLinks.hasElements then
 		for k=0 to ThisComponent.AreaLinks.Count+20 
 			ThisComponent.AreaLinks.removeByIndex(k) 
@@ -995,7 +995,7 @@ exit sub
  						if sLinked_2 = &quot;&quot; then
 								sLinked_2 = sRif_1 						
  							else
- 								if sLinked_3 = &quot;&quot;  then	
+ 								if sLinked_3 = &quot;&quot; then	
 									sLinked_3 = sRif_1
 								end if
 						end if
@@ -1011,14 +1011,14 @@ Sub zibellino
 oEnum = StarDesktop.Components.createEnumeration
 While oEnum.hasMoreElements
 
-    oDoc = oEnum.NextElement
- &apos;   If thiscomponent.oDoc.sURLOO Then
-    if ConvertToUrl(ThisComponent.getURL()) = oSunRise then 
-        &apos; fai qualcosa con il documento
-        StarDesktop.loadComponentFromURL(, &quot;_default&quot;,0 , Array())
-        &apos;print oDoc.URL
-        &apos;xray odoc
-    End If 
+ oDoc = oEnum.NextElement
+ &apos; If thiscomponent.oDoc.sURLOO Then
+ if ConvertToUrl(ThisComponent.getURL()) = oSunRise then 
+ &apos; fai qualcosa con il documento
+ StarDesktop.loadComponentFromURL(, &quot;_default&quot;,0 , Array())
+ &apos;print oDoc.URL
+ &apos;xray odoc
+ End If 
 Wend
 
 &apos;xray StarDesktop &apos;.CurrentFrame.ComponentWindow
@@ -1029,9 +1029,9 @@ end sub
 		
 	
 
-Function Riordina_Taxi (oSheet, ColdaRior, AscDesc as boolean  )as variant &apos; Riordina l&apos;elenco prezzi con criteri
-&apos;Ritorna la riga finale    										 a scelta... (si usa richiamata da altra sub)
-                                  				
+Function Riordina_Taxi (oSheet, ColdaRior, AscDesc as boolean )as variant &apos; Riordina l&apos;elenco prezzi con criteri
+&apos;Ritorna la riga finale 										 a scelta... (si usa richiamata da altra sub)
+ 				
  	dim lrowF as long
  	dim oEnd as object
 	sString$ = &quot;Fine elenco&quot;
@@ -1060,16 +1060,16 @@ Function Riordina_Taxi (oSheet, ColdaRior, AscDesc as boolean  )as variant &apos
 &apos;ThisComponent.getCurrentController.select(oMioRange) &apos;@@@@@@@@@@@@@@@
 &apos;print &apos;@@@@@@@@@@@@@@@@@@@@@@@@@@@@@	
 &apos; e poi lo riordina 
-  Dim oSheetDSC,oDSCRange  As Object
-  Dim aSortFields(0) As New com.sun.star.util.SortField
-  Dim aSortDesc(0) As New com.sun.star.beans.PropertyValue
-&apos;  ThisComponent.getCurrentController.select(oMioRange) &apos;@@@@@@@@@@@@@@
-&apos;print  &apos;@@@@@@@@@@@@@@@@
-  aSortFields(0).Field = ColdaRior &apos; 0
-  aSortFields(0).SortAscending =  AscDesc &apos;TRUE&apos;FALSE
-  aSortDesc(0).Name = &quot;SortFields&quot;
-  aSortDesc(0).Value = aSortFields()
-  oMioRange.Sort(aSortDesc())
+ Dim oSheetDSC,oDSCRange As Object
+ Dim aSortFields(0) As New com.sun.star.util.SortField
+ Dim aSortDesc(0) As New com.sun.star.beans.PropertyValue
+&apos; ThisComponent.getCurrentController.select(oMioRange) &apos;@@@@@@@@@@@@@@
+&apos;print &apos;@@@@@@@@@@@@@@@@
+ aSortFields(0).Field = ColdaRior &apos; 0
+ aSortFields(0).SortAscending = AscDesc &apos;TRUE&apos;FALSE
+ aSortDesc(0).Name = &quot;SortFields&quot;
+ aSortDesc(0).Value = aSortFields()
+ oMioRange.Sort(aSortDesc())
 &apos;	Riordina_0 = lrowF
 
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
@@ -1083,44 +1083,44 @@ End Function
 
 
 Function uFindString_taxi(sString, oSheet) As Variant &apos; richiamata solo da taxi
-  Dim nCurCol As Integer
-  Dim nCurRow As Integer
-  Dim nEndCol As Integer
-  Dim nEndRow As Integer
-  Dim oCell As Object
-  Dim oCursor As Object
-  Dim aAddress As Variant
-  Dim sFind As String
+ Dim nCurCol As Integer
+ Dim nCurRow As Integer
+ Dim nEndCol As Integer
+ Dim nEndRow As Integer
+ Dim oCell As Object
+ Dim oCursor As Object
+ Dim aAddress As Variant
+ Dim sFind As String
 &apos;print sString
-  oCell = oSheet.GetCellbyPosition( 0, 0 )
-  oCursor = oSheet.createCursorByRange(oCell)
-  oCursor.GotoEndOfUsedArea(True)
-  aAddress = oCursor.RangeAddress
-  nEndRow = aAddress.EndRow
-  nEndCol = aAddress.EndColumn
+ oCell = oSheet.GetCellbyPosition( 0, 0 )
+ oCursor = oSheet.createCursorByRange(oCell)
+ oCursor.GotoEndOfUsedArea(True)
+ aAddress = oCursor.RangeAddress
+ nEndRow = aAddress.EndRow
+ nEndCol = aAddress.EndColumn
 &apos;if sString = &quot;Fine Computo&quot; then
  &apos; ThisComponent.CurrentController.Select(oSheet)&apos;debug
- &apos;   print &quot;son dentro ufind &quot; &amp; ThisComponent.CurrentController.Frame.Name
+ &apos; print &quot;son dentro ufind &quot; &amp; ThisComponent.CurrentController.Frame.Name
 &apos;end if 
 &apos;print nEndRow
-  For nCurCol = 0 To nEndCol       &apos;Go through the range column by column,
-    For nCurRow = 0 To nEndRow     &apos;row by row.
-      oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
-      sFind = oCell.String          &apos;Get cell contents.
-      If sFind = sString then
-        uFindString_taxi = oCell
-        Exit Function
-      End If
-     		&apos;  ThisComponent.CurrentController.Select(oCell)
-	&apos;  print &quot;ecco!&quot;	
+ For nCurCol = 0 To nEndCol &apos;Go through the range column by column,
+ For nCurRow = 0 To nEndRow &apos;row by row.
+ oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+ sFind = oCell.String &apos;Get cell contents.
+ If sFind = sString then
+ uFindString_taxi = oCell
+ Exit Function
+ End If
+ 		&apos; ThisComponent.CurrentController.Select(oCell)
+	&apos; print &quot;ecco!&quot;	
 
-    Next
-  Next
+ Next
+ Next
 End Function
 
 
 
-       					 
+ 					 
 	 
 
 
@@ -1176,7 +1176,7 @@ sAreaName = sAreaName
  Rem --- Go, Get them ---- 
  dispatcher.executeDispatch(oDocumentFrame, &quot;.uno:InsertExternalDataSource&quot;, &quot;&quot;, 0, args2()) 
 
-	Barra_chiudi_sempre_4   
+	Barra_chiudi_sempre_4 
 end sub
 
 
@@ -1256,12 +1256,12 @@ sRangeTarget = sRangeTarget
  	wait iTempo
  loop	
  if ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; then
-  	print &quot;adesso mi fermo 5 secondi&quot; &apos; solo per verifica... poi togliere
+ 	print &quot;adesso mi fermo 5 secondi&quot; &apos; solo per verifica... poi togliere
  	wait 5000
  end if
  
  
- &apos;per copiare  
+ &apos;per copiare 
  Dim Args3(0) As New com.sun.star.beans.PropertyValue
  Args3(0).Name = &quot;ToPoint&quot;
  Args3(0).Value = sRangeTarget &apos;&quot;$D$15&quot; &apos; range destinazione
@@ -1321,19 +1321,19 @@ Function Trova_rangeSRC_Computo (oSheet as object)&apos;(anche_computo as boolea
 &apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1,lrowend)) &apos;debug	
 &apos;print lrowend
 		if oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or  oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;TOTALI num&quot; then
+			or oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;TOTALI num&quot; then
 			&apos;	print &quot;caso 1&quot;
 			lrowend =lrowEnd-1
 		end if
 		if oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or  oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;TOTALI num&quot; then
+			or oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;TOTALI num&quot; then
 					&apos;	print &quot;caso 2&quot;
 			lrowend =lrowEnd-2
 		end if		
 		if oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or  oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;TOTALI num&quot; then
+			or oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;TOTALI num&quot; then
 			 &apos;	lrowend =lrowEnd-3
-		end if	&apos; queste per evitare di includere righe di totali  in posizioni improprie
+		end if	&apos; queste per evitare di includere righe di totali in posizioni improprie
 		lrowend =lrowEnd-1
 		
 		
@@ -1344,7 +1344,7 @@ Function Trova_rangeSRC_Computo (oSheet as object)&apos;(anche_computo as boolea
 			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;Livello-1-scritta&quot; _
 			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;livello2 sopra&quot; _
 			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;livello-1-sotto_&quot; _
-			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;comp In testa&quot;  then
+			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;comp In testa&quot; then
 			 	lrowInizio = i
 			 	exit for
 			end if 
@@ -1364,9 +1364,9 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
 &apos; GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 &apos;xray sTargetURL
 
- sTargetURL = sTargetURL     
- sSheetTarget = sSheetTarget  
- sRangeTarget = sRangeTarget  
+ sTargetURL = sTargetURL 
+ sSheetTarget = sSheetTarget 
+ sRangeTarget = sRangeTarget 
  sStringa = sStringa
  sFrName = sFrName 
  if isnull(sSheetTarget) or ismissing(sSheetTarget) or sSheetTarget = &quot;&quot; then
@@ -1389,14 +1389,14 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
 &apos;ma facciamo sta prova
 &apos;oEnum = StarDesktop.Components.createEnumeration
 &apos;While oEnum.hasMoreElements
-&apos;    oDoc = oEnum.NextElement
-&apos;    If Verifica_who(oDoc) Then
-&apos;        sUrl = oDoc.URL							  
-&apos;        Doc2 = StarDesktop.loadComponentFromURL( sUrl,&quot;_default&quot;,0 , Array() )
-&apos;&apos;        aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
+&apos; oDoc = oEnum.NextElement
+&apos; If Verifica_who(oDoc) Then
+&apos; sUrl = oDoc.URL							 
+&apos; Doc2 = StarDesktop.loadComponentFromURL( sUrl,&quot;_default&quot;,0 , Array() )
+&apos;&apos; aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
  &apos; 		Doc2.getCurrentController().getFrame().focusGained(aFocusEvent)
-        &apos; xray odoc
-&apos;    End If 
+ &apos; xray odoc
+&apos; End If 
 &apos;Wend
 &apos; fine prova
 
@@ -1404,8 +1404,8 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
 
  iTempo=400
  do while ThisComponent.CurrentController.Frame.Name = sFrName 
-  	itempo = iTempo+iTempo
-  	if iTempo &gt;10000 then
+ 	itempo = iTempo+iTempo
+ 	if iTempo &gt;10000 then
 			exit do
 	end if
  	wait iTempo
@@ -1429,8 +1429,8 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
  oDispatcher.executeDispatch(tFrame, &quot;.uno:JumpToTable&quot; ,&quot;&quot; ,0 ,mArgs2())
  
  &apos;controllo...
- &apos;print ConvertToUrl(ThisComponent.getURL()) &amp; &quot;  &quot; &amp; sTargetURL 
-&apos; if ConvertToUrl(ThisComponent.getURL()) &lt;&gt;  sTargetURL then
+ &apos;print ConvertToUrl(ThisComponent.getURL()) &amp; &quot; &quot; &amp; sTargetURL 
+&apos; if ConvertToUrl(ThisComponent.getURL()) &lt;&gt; sTargetURL then
  &apos;	print &quot; ho fallito lo spostamento (di Focus) al doc: &quot; &amp; sTargetURL
  &apos;	Focus_su_altro_Doc = &quot;fallito&quot;
  &apos;	exit Function
@@ -1438,7 +1438,7 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
  &apos;	goto riprova
  &apos;end if
  
-  &apos; se vogliamo andare in un posto preciso
+ &apos; se vogliamo andare in un posto preciso
  Dim Args3(0) As New com.sun.star.beans.PropertyValue
  Args3(0).Name = &quot;ToPoint&quot;
  Args3(0).Value = &quot;$D$15&quot; &apos; range destinazione
@@ -1472,15 +1472,15 @@ if ismissing(irows) then
 	irows = 0 &apos;cautelativa per errore possibile
 end sub
  If oRanges.hasByName(sAreaName) Then
-   oRanges.getByName(sAreaName)
-   oRanges.removeByName(sAreaName)
+ oRanges.getByName(sAreaName)
+ oRanges.removeByName(sAreaName)
  End If
 &apos;print irows
 &apos;xray oSheet.getCellRangebyPosition(0,irows,0,irows+1)
  oCellAddress = oSheet.GetCellByPosition(0,irows).getCellAddress()
- &apos;oCellAddress = oSheet.getCellRangeByName(&quot;a1&quot;)    .getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
- sDefArea=  &quot;$&apos;&quot; &amp; sSheetName &amp; &quot;&apos;.&quot; &amp; sAreaRange  &apos; gli &apos; di delimitazione servono quando ci sono spazi nel nome sheet
- &apos; sDefArea=  &quot;$&quot; &amp; sSheetName &amp; &quot;.&quot; &amp; sAreaRange 
+ &apos;oCellAddress = oSheet.getCellRangeByName(&quot;a1&quot;) .getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
+ sDefArea= &quot;$&apos;&quot; &amp; sSheetName &amp; &quot;&apos;.&quot; &amp; sAreaRange &apos; gli &apos; di delimitazione servono quando ci sono spazi nel nome sheet
+ &apos; sDefArea= &quot;$&quot; &amp; sSheetName &amp; &quot;.&quot; &amp; sAreaRange 
 
  oRanges.addNewByName(sAreaName, sDefArea , oCellAddress, 0)
 END SUB 
@@ -1527,23 +1527,23 @@ Function DCC_non_Definito
 	Select case msgbox (&quot;Attenzione!! Sto per importare gli stili da del file:&quot; &amp; CHR$(10)_
 					&amp; sSourceURL &amp; CHR$(10)_
 					&amp; &quot;Questa operazione sovrascriverà irrimediabilmente gli eventuali stili con lo stesso nome del doc	attivo!&quot; &amp; CHR$(10)_
-					&amp;&quot;         PROSEGUO ?... &quot; &amp; CHR$(10) _
-   					&amp;  CHR$(10) &amp; &quot;&quot;,35, &quot;Importa Stili in blocco ?&quot;) 
-   				
+					&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
+ 					&amp; CHR$(10) &amp; &quot;&quot;,35, &quot;Importa Stili in blocco ?&quot;) 
+ 				
 				case 6 &apos;SI
-   					curl = ConvertToUrl(sSourceURL) &apos;sSourceURL
-					styles=thiscomponent.getStyleFamilies()  &apos;get the interface to load styles
+ 					curl = ConvertToUrl(sSourceURL) &apos;sSourceURL
+					styles=thiscomponent.getStyleFamilies() &apos;get the interface to load styles
 					styles.loadStylesFromURL(curl,Array()) &apos; by default loads &amp; overrides all styles
 				case 7
-	   				exit function
- 	  			case 2
-   					exit function
-   	end select	
+	 				exit function
+ 	 			case 2
+ 					exit function
+ 	end select	
 end function
 
 
 
-Sub gina  &apos; trasferisce una sheet da un doc ad un altro
+Sub gina &apos; trasferisce una sheet da un doc ad un altro
 &apos; verifcando e trasferendo sino a a 3 link
 	dim sAreaNameSRC as string
 	dim oSheetSRC as object
@@ -1564,7 +1564,7 @@ Sub gina  &apos; trasferisce una sheet da un doc ad un altro
 	if ismissing(UrlSrc) or UrlSrc = &quot;&quot; then
 	 	 msgbox &quot; Questo documento (il SORGENTE) non è noto al file system &quot;&amp; sSheetSRC &amp; &quot; &quot; &amp; CHR$(10)_
 			&amp; &quot;Ovvero NON è ancora stato salvato con un nome&quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;Devi prima salvare questo documento&quot;,,&quot;Operazione interrotta!&quot;  &apos;mettere un save as?
+			&amp; &quot;Devi prima salvare questo documento&quot;,,&quot;Operazione interrotta!&quot; &apos;mettere un save as?
 			exit sub
 		exit sub
 	end if	
@@ -1572,7 +1572,7 @@ Sub gina  &apos; trasferisce una sheet da un doc ad un altro
 
 	sNomeSrc = FileNameoutofPath(UrlSrc)
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	sSourceURL = ConvertToUrl(ThisComponent.getURL()) 
 		&apos;	sTargetURL = ConvertToURL (UltimusFree2.Lupo_0.sUltimus) &apos; file destinazione
@@ -1581,8 +1581,8 @@ Sub gina  &apos; trasferisce una sheet da un doc ad un altro
 	
 
 	&apos; acchiappiamo il sorgente
-    sFrameSRC = &quot;Sorgente&quot; &amp; gina_furbetta_2 &apos; gli diamo un nome ragionevolmente univoco
-   	ThisComponent.CurrentController.Frame.Name = sFrameSRC
+ sFrameSRC = &quot;Sorgente&quot; &amp; gina_furbetta_2 &apos; gli diamo un nome ragionevolmente univoco
+ 	ThisComponent.CurrentController.Frame.Name = sFrameSRC
 		
 	&apos; la tab corrente (quella da accodare)
 	oSheetSRC = ThisComponent.currentController.activeSheet
@@ -1598,7 +1598,7 @@ goto annullato
 		exit sub
 	end if	
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;2      Pazienta... &quot;, 30)
+	Barra_Apri_Chiudi_5(&quot;2 Pazienta... &quot;, 30)
 	&apos;print &quot;1.5&quot;
 &apos;	sTargetURL = ConvertToURL (UltimusFree2.Lupo_0.sUltimus) &apos; file destinazione
 &apos;	sSourceURL = ConvertToUrl(ThisComponent.getURL()) 
@@ -1609,10 +1609,10 @@ annullato:
 	if ismissing(sUltimus) or sUltimus = &quot;&quot; then
 		Select case msgbox (&quot;In questo momento non c&apos;è un file DCC definito!&quot;&amp; CHR$(10)_
 					&amp;&quot; Vuoi cercare il documento dove accodare la tabella &quot;&amp; sSheetSRC &amp; &quot; ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
-   					&amp;  CHR$(10) &amp; &quot;&quot;,35, &quot;Non c&apos;è un DCC definito!&quot;) 
-   				
+ 					&amp; CHR$(10) &amp; &quot;&quot;,35, &quot;Non c&apos;è un DCC definito!&quot;) 
+ 				
 				case 6 &apos;SI
-   						sSourceURL = GetFileURL( &quot;Cerca il file destinazione.&quot;)
+ 						sSourceURL = GetFileURL( &quot;Cerca il file destinazione.&quot;)
 						If sSourceURL &lt;&gt; &quot;&quot; Then 
  								Stardesktop.LoadComponentFromUrl(sSourceURL, &quot;_default&quot;, 1, Array())
 			 					wait 100 &apos; 
@@ -1625,17 +1625,17 @@ annullato:
 						end if
 
 				case 7
-	   				exit sub
- 	  			case 2
-   					exit sub
-   		end select	
+	 				exit sub
+ 	 			case 2
+ 					exit sub
+ 		end select	
 	end if 
 
 	If sNomeSrc = sNameDest then
 		msgbox &quot;Il file sorgente (questo file)&quot; &amp; CHR$(10)_
 			&amp; &quot;&lt; &quot; &amp; sNameDest &amp; &quot; &gt;&quot; &amp; CHR$(10)_
 		&amp; &quot; COINCIDE con il file di destinazione&quot; &amp; CHR$(10)_
-		&amp; &quot;(vale a dire con il Computo Corrente)  &lt;&quot; &amp; sNameDest &amp; &quot; &gt;&quot; &amp; CHR$(10)_
+		&amp; &quot;(vale a dire con il Computo Corrente) &lt;&quot; &amp; sNameDest &amp; &quot; &gt;&quot; &amp; CHR$(10)_
 		&amp; &quot;Accodamento Annullato!!&quot; ,, &quot;Operazione Annullata!!&quot; _
 		&amp; &quot;&quot;, 16,&quot;&quot;
 		exit sub
@@ -1648,13 +1648,13 @@ annullato:
 			exit sub
 	End if
 
-	if msgbox (&quot;Sto per duplicare/accodare il foglio: &quot;  &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot;        &quot;&amp; sSheetSRC &amp; CHR$(10) &amp; CHR$(10)_
+	if msgbox (&quot;Sto per duplicare/accodare il foglio: &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot; &quot;&amp; sSheetSRC &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;nel documento:&quot; &amp; CHR$(10) &amp; CHR$(10)_
-			 &amp; &quot;     &quot; &amp; sNameDest &amp; &quot;&quot; &amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)_
-   			&amp;&quot;PROSEGUO ?&quot; &amp; CHR$(10) &amp; &quot;&quot; ,36, &quot;&quot;) = 7 then
-   			exit sub
-   	end if
+			 &amp; &quot; &quot; &amp; sNameDest &amp; &quot;&quot; &amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)_
+ 			&amp;&quot;PROSEGUO ?&quot; &amp; CHR$(10) &amp; &quot;&quot; ,36, &quot;&quot;) = 7 then
+ 			exit sub
+ 	end if
 	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;4 Pazienta... &quot;, 40)
@@ -1674,9 +1674,9 @@ annullato:
 	Barra_Apri_Chiudi_4
 	&apos;xray tabLinked
 	&apos;estraggo i nomi delle tab linkate
-	sLinkata_0  =	tabLinked(0)
-	sLinkata_1  =	tabLinked(1)
-	sLinkata_2  =	tabLinked(2)
+	sLinkata_0 =	tabLinked(0)
+	sLinkata_1 =	tabLinked(1)
+	sLinkata_2 =	tabLinked(2)
 	&apos;print sLinkata_0 
 	&apos;print sLinkata_1
 	&apos;print sLinkata_2
@@ -1692,13 +1692,13 @@ annullato:
 	end if
 
 	firstDoc = ThisComponent
-  
-  		&apos;	selectSheetByName(firstDoc, sCurr_Sheet)
-  	&apos; seleziona la sheet da trasferire
+ 
+ 		&apos;	selectSheetByName(firstDoc, sCurr_Sheet)
+ 	&apos; seleziona la sheet da trasferire
 	thiscomponent.getCurrentController.select(thiscomponent.getSheets().getByName(sSheetSRC))
 	
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;6    Pazienta... &quot;, 50)
+	Barra_Apri_Chiudi_5(&quot;6 Pazienta... &quot;, 50)
  	&apos;copia lo stile di pagina del foglio
  	Copy_PageStyle 	
  	&apos; e gli altri amenicoli collegati
@@ -1707,11 +1707,11 @@ annullato:
 	PrintRepeatRows = oSheetSRC.PrintTitleRows	
 
 	&apos; copia la tabella nella clip board
-    dispatchURL(firstDoc,&quot;.uno:SelectAll&quot;)
-    dispatchURL(firstDoc,&quot;.uno:Copy&quot;)
-    sSheetTarget = sSheetSRC
-    
-  &apos;  print sSheetTarget
+ dispatchURL(firstDoc,&quot;.uno:SelectAll&quot;)
+ dispatchURL(firstDoc,&quot;.uno:Copy&quot;)
+ sSheetTarget = sSheetSRC
+ 
+ &apos; print sSheetTarget
 &apos;	print sFrameSRC
 &apos;	Barra_chiudi_sempre_4
 
@@ -1721,12 +1721,12 @@ annullato:
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 &apos;	sFrName = &quot;Sorgente&quot;
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;Sto facendo un po&apos; di fatica...  Pazienta... &quot;, 60)
+	Barra_Apri_Chiudi_5(&quot;Sto facendo un po&apos; di fatica... Pazienta... &quot;, 60)
 	
 	Focus_su_altro_Doc (sTargetURL , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
 	if ThisComponent.CurrentController.Frame.Name = sFrameSRC then
 		i=0
-		print &quot;Uff...  sei ancora sul sorgente....:-) Riprova!&quot;	
+		print &quot;Uff... sei ancora sul sorgente....:-) Riprova!&quot;	
 		do while ThisComponent.CurrentController.Frame.Name = sFrameSRC 
 		print i
 			Focus_su_altro_Doc (sTargetURL , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
@@ -1742,22 +1742,22 @@ annullato:
  		Focus_su_altro_Doc (sTargetURL , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
  	end if
  	if ThisComponent.CurrentController.Frame.Name = sFrameSRC then
-		msgbox &quot;Basta... rinuncio!  La tua macchina è troppo datata, &quot; &amp; CHR$(10)_
-			&amp; &quot;o hai troppe risorse impegnate in altre attività!&quot;  &amp; CHR$(10)_
-			&amp; &quot;Prima di riprovare resetta OOo - quickstarter compreso (se c&apos;è) -&quot;  &amp; CHR$(10)_
+		msgbox &quot;Basta... rinuncio! La tua macchina è troppo datata, &quot; &amp; CHR$(10)_
+			&amp; &quot;o hai troppe risorse impegnate in altre attività!&quot; &amp; CHR$(10)_
+			&amp; &quot;Prima di riprovare resetta OOo - quickstarter compreso (se c&apos;è) -&quot; &amp; CHR$(10)_
 			&amp; &quot;e chiudi le altre applicazioni che ti succhiano memoria e risorse!&quot; &amp; CHR$(10)_
 			&amp; &quot;( Considera anche di resettare la macchina...) &quot;
  	&apos;	sFrName = &quot;Sorgente&quot;
  	end if
  &apos;print &quot;Dopo tutto : &quot; &amp; ThisComponent.CurrentController.Frame.Name
- 	sFrameSRC = &quot;Target&quot; &amp; gina_furbetta_2  
+ 	sFrameSRC = &quot;Target&quot; &amp; gina_furbetta_2 
  	ThisComponent.CurrentController.Frame.Name = sFrameSRC	
  	
  	thisComponent.CurrentController.Frame.getContainerWindow.setFocus()	
  	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
-&apos;print &quot;questo è :  &quot; &amp; ThisComponent.CurrentController.Frame.Name
+&apos;print &quot;questo è : &quot; &amp; ThisComponent.CurrentController.Frame.Name
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;7    Pazienta... &quot;, 70)
+	Barra_Apri_Chiudi_5(&quot;7 Pazienta... &quot;, 70)
 
 
 	&apos; modulino furbo che Registra la posizione delle tabs
@@ -1771,20 +1771,20 @@ annullato:
 	
 	&apos; controlla se sul Target esiste la tab
 	if thisComponent.Sheets.hasByName(sSheetSRC) Then
-   		oSheetRinom = ThisComponent.Sheets.getByName(sSheetSRC)
-   			&apos; se già esiste gli aggiunge l&apos;ora del momento.. 
-   			&apos; in pratica un numero abbastanza random da non riprodursi così spesso   		
-   			sSheetRinom = sSheetSRC &amp; &quot;_&quot; &amp; right(now,8)
-     		oSheetRinom.setName (sSheetRinom) 
-   		msgbox &quot;Sul doc di destinazione già esiste un foglio &quot; &amp; sSheetSRC &amp; &quot;!&quot; &amp; CHR$(10) _
-   			&amp; &quot;per questo rinomino quel foglio (gia esistente) come &quot; &amp; sSheetRinom 
-   	end if   	
-   	
+ 		oSheetRinom = ThisComponent.Sheets.getByName(sSheetSRC)
+ 			&apos; se già esiste gli aggiunge l&apos;ora del momento.. 
+ 			&apos; in pratica un numero abbastanza random da non riprodursi così spesso 		
+ 			sSheetRinom = sSheetSRC &amp; &quot;_&quot; &amp; right(now,8)
+ 		oSheetRinom.setName (sSheetRinom) 
+ 		msgbox &quot;Sul doc di destinazione già esiste un foglio &quot; &amp; sSheetSRC &amp; &quot;!&quot; &amp; CHR$(10) _
+ 			&amp; &quot;per questo rinomino quel foglio (gia esistente) come &quot; &amp; sSheetRinom 
+ 	end if 	
+ 	
 	&apos;	oSheet = ThisComponent.Sheets.getByName(sSheetSRC) 	
 	&apos;	ThisComponent.CurrentController.Select(sSheetSRC)
 	&apos;print sLinkata_0
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;8    Pazienta... &quot;, 80)
+	Barra_Apri_Chiudi_5(&quot;8 Pazienta... &quot;, 80)
 	if sLinkata_0 &lt;&gt; &quot;&quot; and sLinkata_0 &lt;&gt; sSheetSRC then &apos;&lt;&gt; sSheetSRC perché a volte ci sono link interni alla tabella
 			if not thisComponent.Sheets.hasByName(sLinkata_0) then
 					msgbox &quot;Il foglio in trasferimento ha uno o più link a &quot; &amp; sLinkata_0 &amp; &quot; che non esite sul doc di destinazione!&quot; &amp; CHR$(10)_
@@ -1795,7 +1795,7 @@ annullato:
 						&amp; &quot;e potrebbe non contenere i dati che &quot; &amp; CHR$(10)_
 						&amp; sSheetSRC &amp; &quot; si aspetta...&quot; &amp; CHR$(10)_
 						&amp; &quot;Nel caso dovrai provvedere poi accodando anche &quot; &amp; sLinkata_0 &amp; CHR$(10) &amp; CHR$(10)_
-						&amp; &quot;  ...intanto io proseguo!&quot;						
+						&amp; &quot; ...intanto io proseguo!&quot;						
 					thisComponent.Sheets.moveByName(sLinkata_0 ,0)
 			end if
 	end if
@@ -1810,7 +1810,7 @@ annullato:
 						&amp; &quot;e potrebbe non contenere i dati che &quot; &amp; sSheetSRC &amp; CHR$(10)_
 						&amp; &quot;si aspetta...&quot; &amp; CHR$(10)_
 						&amp; &quot;Nel caso dovrai provvedere poi accodando anche &quot; &amp; sLinkata_1 &amp; CHR$(10) &amp; CHR$(10)_
-						&amp; &quot;   ...intanto io proseguo!&quot;						
+						&amp; &quot; ...intanto io proseguo!&quot;						
 					thisComponent.Sheets.moveByName(sLinkata_1 ,1)
 			end if
 	end if
@@ -1829,16 +1829,16 @@ annullato:
 					thisComponent.Sheets.moveByName(sLinkata_2 ,2)
 			end if
 	end if
-	Barra_Apri_Chiudi_5(&quot;9    Pazienta... &quot;, 90)
-    dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	Barra_Apri_Chiudi_5(&quot;9 Pazienta... &quot;, 90)
+ dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	if 	ThisComponent.CurrentController.Frame.Name = sFrameSRC then
 			secondDoc = stardesktop.LoadComponentFromUrl(sTargetURL, &quot;_default&quot;, 0, Array())
-			secondDoc  = ThisComponent
+			secondDoc = ThisComponent
 			&apos;direi che è un caso impossibile... o no???
-    	else
-    		secondDoc  = ThisComponent
+ 	else
+ 		secondDoc = ThisComponent
 
-    end if
+ end if
 &apos;prrrr
 &apos;	If not thisComponent.Sheets.hasByName(sSheetSRC) Then
 	secondDoc.getSheets().insertNewByName(sSheetSRC, 0)
@@ -1846,13 +1846,13 @@ annullato:
 	 		
 &apos;	end if
  	selectSheetByName(secondDoc, sSheetSRC)
-   	dispatchURL(secondDoc,&quot;.uno:Paste&quot;)	
-   	
-   	oSheet = ThisComponent.currentController.activeSheet
+ 	dispatchURL(secondDoc,&quot;.uno:Paste&quot;)	
+ 	
+ 	oSheet = ThisComponent.currentController.activeSheet
 	Write_PageStyle
 	oSheet.setPrintAreas(print_area)
 	oSheet.setTitleRows(RepeatRows)
-	oSheet.setPrintTitleRows(PrintRepeatRows)  
+	oSheet.setPrintTitleRows(PrintRepeatRows) 
 	
 
 	&apos; modulino furbo che Rripristina la posizione delle tabs (registrata nella var aSheetNames) 
@@ -1865,14 +1865,14 @@ annullato:
 				thisComponent.Sheets.moveByName(sSheetName ,n)
 			end if
 		next
-	Next  
+	Next 
 	&apos; fine modulino furbo che ripristina la sequenza/posizione delle tabs 
 
 	&apos;servirebbe anche un modulino furbo che ripristini lo stato di visibilità
 	&apos; delle sheet come prima dell&apos;importazione
 
 
-	 &apos;  Adesso accontentiamo giuserpe che non la vuole al fondo
+	 &apos; Adesso accontentiamo giuserpe che non la vuole al fondo
  	thisComponent.Sheets.moveByName (sSheetSRC ,7)
  	if thisComponent.Sheets.hasByName(sSheetRinom) Then
  		thisComponent.Sheets.moveByName (sSheetRinom ,8) 	
@@ -1882,12 +1882,12 @@ annullato:
 	Chiudi_o_elimina_tabelle_inutili
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  	
-   	Barra_chiudi_sempre_4
-   	
-	if msgbox (&quot;Il foglio  &quot; &amp; sSheetSRC &amp; &quot;  è stato duplicato con successo&quot; &amp; CHR$(10)_
-		&amp; &quot;in questo documento   (&quot;  &amp; sNameDest &amp; &quot; )&quot; &amp; CHR$(10)&amp; CHR$(10) _
+ 	Barra_chiudi_sempre_4
+ 	
+	if msgbox (&quot;Il foglio &quot; &amp; sSheetSRC &amp; &quot; è stato duplicato con successo&quot; &amp; CHR$(10)_
+		&amp; &quot;in questo documento (&quot; &amp; sNameDest &amp; &quot; )&quot; &amp; CHR$(10)&amp; CHR$(10) _
 		&amp; &quot;Vuoi nascondere le tabelle secondarie ?&quot;&amp; CHR$(10) _
-		&amp; &quot;  (se ti sparisce qualcosa lo potrai trovare in Formato&gt;Foglio&gt;Mostra)&quot; , 4,&quot;&quot;&amp; CHR$(10)) = 6 then
+		&amp; &quot; (se ti sparisce qualcosa lo potrai trovare in Formato&gt;Foglio&gt;Mostra)&quot; , 4,&quot;&quot;&amp; CHR$(10)) = 6 then
 		Chiudi_o_elimina_tabelle_inutili &apos; cioè le secondarie)	 
 		Nascondi_tutte_secondarie
 		&apos; riattiva visibilità di quelle comunque in gioco al momento
@@ -1897,7 +1897,7 @@ annullato:
 		ThisComponent.Sheets.getByName(sSheetSRC).isVisible = true 
 		
 	&apos;	Nascondi_TUTTI_docs_e_Copertine
-	&apos;	Nascondi_tabs_contabilita  
+	&apos;	Nascondi_tabs_contabilita 
 	end if
 	
 	&apos; questo solo per portare in primo piano la sheet appena importata (ci sono modi migliori...)
@@ -1987,7 +1987,7 @@ end sub
 Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la inserisce in Elenco Prezzi come nuovo prezzo
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	 &apos;&apos;	 &apos;Clessid_lock_Start_D
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;  
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
 	&apos;print &quot;parto da &quot;	 &amp; lrow
 	If lrow = 0 then
 		lrow = 2
@@ -2005,59 +2005,59 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 	
 	&apos; trovo l&apos;inizio voce Analisi
 	Do While (oCell.string &lt;&gt; &quot;TOTALE&quot;) and ((Trova_Attr_N (oCell1, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		  lrow = lrow - 1
-  		  oCell = oSheet.GetCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
-		  oCell1 = oSheet.GetCellByPosition( 3 , lrow)
+		 lrow = lrow - 1
+ 		 oCell = oSheet.GetCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
+		 oCell1 = oSheet.GetCellByPosition( 3 , lrow)
 	loop
 
 	saltarello:
 	lrowRisel = lrow
 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ) )&apos;debug
-		 &apos; print &quot;voilà&quot;		   
+		 &apos; print &quot;voilà&quot;		 
 	oCodAnalisi = oSheet.GetCellByPosition( 0, lrow ).string
 	&apos;	xA = oCell.string
-    oCelle = oSheet.GetCellByPosition( 1, lrow ) 
+ oCelle = oSheet.GetCellByPosition( 1, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
-	oLdescAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
-  	&apos; print oLdescAnalisi
-   
+	oLdescAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
+ 	&apos; print oLdescAnalisi
+ 
  	oCelle = oSheet.GetCellByPosition( 2, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
-	oLumAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
+	oLumAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
 	
  	oCelle = oSheet.GetCellByPosition( 9, lrow ) &apos; rigagiuserpe
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
-	oLsicAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
-   	
+	oLsicAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
+ 	
 	oCelle = oSheet.GetCellByPosition( 6, lrow ) &apos; iflag è la colonna del prezzo
-   &apos; diversa dopo la mofùdifica della struttura della voce di analisi
-   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-   oConv.Address = oCelle.getCellAddress
-   oLprezzoAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
+ &apos; diversa dopo la mofùdifica della struttura della voce di analisi
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oCelle.getCellAddress
+ oLprezzoAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
  
-  
-    oCelle = oSheet.GetCellByPosition( 7, lrow ) 
-   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-   oConv.Address = oCelle.getCellAddress
-   oIncidAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
+ 
+ oCelle = oSheet.GetCellByPosition( 7, lrow ) 
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oCelle.getCellAddress
+ oIncidAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
 	
-   oCelle = oSheet.GetCellByPosition( 0, lrow )      
-   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-   oConv.Address = oCelle.getCellAddress
-   oLOrigPAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
+ oCelle = oSheet.GetCellByPosition( 0, lrow ) 
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oCelle.getCellAddress
+ oLOrigPAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
 
-   oAP = &quot;(AP)&quot;
-  
-  &apos;........ rimando di selezione sulla tab Analisi di prezzo
-   oCella = oSheet.GetCellByPosition( 1, lrowRisel )      
-   ThisComponent.CurrentController.Select(oCella)
-  &apos; .... per quando si torna sulla tab 
-  
+ oAP = &quot;(AP)&quot;
+ 
+ &apos;........ rimando di selezione sulla tab Analisi di prezzo
+ oCella = oSheet.GetCellByPosition( 1, lrowRisel ) 
+ ThisComponent.CurrentController.Select(oCella)
+ &apos; .... per quando si torna sulla tab 
+ 
 
-   oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
+ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
  &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; oCell=thisComponent.getCurrentSelection()&apos;
  
 	lcolbase = Colonna_giusta_EP (oSheet)
@@ -2067,9 +2067,9 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 	end if
  	
 	
-   oCell = oSheet.GetCellByPosition( lcolbase+0,3 )   
-   ThisComponent.CurrentController.Select(oCell)&apos;@
-   
+ oCell = oSheet.GetCellByPosition( lcolbase+0,3 ) 
+ ThisComponent.CurrentController.Select(oCell)&apos;@
+ 
 	lrow = 3
 	oSheet.unprotect(&quot;&quot;)
 	insRows (lrow,1)
@@ -2081,41 +2081,41 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 
 	lscarto	= 0 &apos; dA USARE PER LA vER. 4
 
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +1 , lrow)  
-    oCell.formula =  oLdescAnalisi
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +1 , lrow) 
+ oCell.formula = oLdescAnalisi
 	oCell.CellStyle=&quot;EP-C&quot;
  					
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +2 , lrow)
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
-   	oCell.formula =  oLumAnalisi
-   	
+ 	oCell.formula = oLumAnalisi
+ 	
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +3 , lrow)&apos; rigagiuserpe
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
-   	oCell.formula =  oLsicAnalisi
-   	
+ 	oCell.formula = oLsicAnalisi
+ 	
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 4 , lrow)
-  	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-  	 oCell.formula = oLprezzoAnalisi   
+ 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
+ 	 oCell.formula = oLprezzoAnalisi 
 
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 5 , lrow)&apos;@@@@
 	 oCell.formula = oIncidAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo %&quot;
-	  					   
+	 					 
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 6 , lrow)&apos;@@@@
-	 oCell.formula = &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp;  lrow+1
+	 oCell.formula = &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp; lrow+1
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-	 		  					   
+	 		 					 
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 7 , lrow)
 	 oCell.formula = oLOrigPAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
 	 
-   oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 8 , lrow)
-    oCell.string = oAP  
+ oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 8 , lrow)
+ oCell.string = oAP 
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
 	
-   oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 9 , lrow)
-  	&apos; oCell.CellBackColor = RGB(0,0,139)
-    oCell.CellStyle=&quot;EP-sfondo&quot;
+ oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 9 , lrow)
+ 	&apos; oCell.CellBackColor = RGB(0,0,139)
+ oCell.CellStyle=&quot;EP-sfondo&quot;
 
 
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
@@ -2125,7 +2125,7 @@ END SUB
 Sub ANALISI_IN_ELENCOPREZZI_AVCP (lrow as long) &apos; copia l&apos;analisi e la inserisce in Elenco Prezzi come nuovo prezzo
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	 &apos;&apos;	 &apos;Clessid_lock_Start_D
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;  
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
 	&apos;print &quot;parto da &quot;	 &amp; lrow
 	If lrow = 0 then
 		lrow = 2
@@ -2143,60 +2143,60 @@ Sub ANALISI_IN_ELENCOPREZZI_AVCP (lrow as long) &apos; copia l&apos;analisi e la
 	
 	&apos; trovo l&apos;inizio voce Analisi
 	Do While (oCell.string &lt;&gt; &quot;TOTALE&quot;) and ((Trova_Attr_N (oCell1, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		  lrow = lrow  - 1
-  		  oCell = oSheet.GetCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
-		  oCell1 = oSheet.GetCellByPosition( 3 , lrow)
+		 lrow = lrow - 1
+ 		 oCell = oSheet.GetCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
+		 oCell1 = oSheet.GetCellByPosition( 3 , lrow)
 	loop
 
 	saltarello:
 	lrow = lrow+1
 	lrowRisel = lrow
 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ) )&apos;debug
-		 &apos; print &quot;voilà&quot;		   
+		 &apos; print &quot;voilà&quot;		 
 	oCodAnalisi = oSheet.GetCellByPosition( 0, lrow ).string &apos; CODICE
 	&apos;	xA = oCell.string
-    oCelle = oSheet.GetCellByPosition( 1, lrow ) 
+ oCelle = oSheet.GetCellByPosition( 1, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
-	oLdescAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;DESCRIZIONE
-  	&apos; print oLdescAnalisi
-   
+	oLdescAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation &apos;DESCRIZIONE
+ 	&apos; print oLdescAnalisi
+ 
  	oCelle = oSheet.GetCellByPosition( 2, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
-	oLumAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;UNITA&apos; DI MISURA
+	oLumAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation &apos;UNITA&apos; DI MISURA
 	
  	oCelle = oSheet.GetCellByPosition( 10, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
-	oLsicAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;SICUREZZA
-   	
+	oLsicAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation &apos;SICUREZZA
+ 	
 	oCelle = oSheet.GetCellByPosition( 6, lrow ) &apos; iflag è la colonna del prezzo
-   &apos; diversa dopo la mofùdifica della struttura della voce di analisi
-   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-   oConv.Address = oCelle.getCellAddress
-   oLprezzoAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;PREZZO
+ &apos; diversa dopo la mofùdifica della struttura della voce di analisi
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oCelle.getCellAddress
+ oLprezzoAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation &apos;PREZZO
  
-  
-    oCelle = oSheet.GetCellByPosition( 8, lrow ) 
-   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-   oConv.Address = oCelle.getCellAddress
-   oIncidAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;INCIDENZA
+ 
+ oCelle = oSheet.GetCellByPosition( 8, lrow ) 
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oCelle.getCellAddress
+ oIncidAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation &apos;INCIDENZA
 	
-   oCelle = oSheet.GetCellByPosition( 0, lrow )      
-   oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-   oConv.Address = oCelle.getCellAddress
-   oLOrigPAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation &apos;CODICE
+ oCelle = oSheet.GetCellByPosition( 0, lrow ) 
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oCelle.getCellAddress
+ oLOrigPAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation &apos;CODICE
 
-   oAP = &quot;(AP)&quot;
-  
-  &apos;........ rimando di selezione sulla tab Analisi di prezzo
-   oCella = oSheet.GetCellByPosition( 1, lrowRisel )      
-   ThisComponent.CurrentController.Select(oCella)
-  &apos; .... per quando si torna sulla tab 
-  
+ oAP = &quot;(AP)&quot;
+ 
+ &apos;........ rimando di selezione sulla tab Analisi di prezzo
+ oCella = oSheet.GetCellByPosition( 1, lrowRisel ) 
+ ThisComponent.CurrentController.Select(oCella)
+ &apos; .... per quando si torna sulla tab 
+ 
 
-   oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
+ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
  &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; oCell=thisComponent.getCurrentSelection()&apos;
  
 	lcolbase = Colonna_giusta_EP (oSheet)
@@ -2206,9 +2206,9 @@ Sub ANALISI_IN_ELENCOPREZZI_AVCP (lrow as long) &apos; copia l&apos;analisi e la
 	end if
  	
 	
-   oCell = oSheet.GetCellByPosition( lcolbase+0,3 )   
-   ThisComponent.CurrentController.Select(oCell)&apos;@
-   
+ oCell = oSheet.GetCellByPosition( lcolbase+0,3 ) 
+ ThisComponent.CurrentController.Select(oCell)&apos;@
+ 
 	lrow = 3
 	oSheet.unprotect(&quot;&quot;)
 	insRows (lrow,1)
@@ -2220,41 +2220,41 @@ Sub ANALISI_IN_ELENCOPREZZI_AVCP (lrow as long) &apos; copia l&apos;analisi e la
 
 	lscarto	= 0 &apos; dA USARE PER LA vER. 4
 
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +1 , lrow)  
-    oCell.formula =  oLdescAnalisi
+	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +1 , lrow) 
+ oCell.formula = oLdescAnalisi
 	oCell.CellStyle=&quot;EP-C&quot;
  					
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +2 , lrow)
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
-   	oCell.formula =  oLumAnalisi
-   	
+ 	oCell.formula = oLumAnalisi
+ 	
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +3 , lrow)&apos; rigagiuserpe
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
-   	oCell.formula =  oLsicAnalisi
-   	
+ 	oCell.formula = oLsicAnalisi
+ 	
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 4 , lrow)
-  	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-  	 oCell.formula = oLprezzoAnalisi   
+ 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
+ 	 oCell.formula = oLprezzoAnalisi 
 
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 5 , lrow)&apos;@@@@
 	 oCell.formula = oIncidAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo %&quot;
-	  					   
+	 					 
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 6 , lrow)&apos;@@@@
-	 oCell.formula = &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp;  lrow+1
+	 oCell.formula = &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp; lrow+1
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-	 		  					   
+	 		 					 
 	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 7 , lrow)
 	 oCell.formula = oLOrigPAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
 	 
-   oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 8 , lrow)
-    oCell.string = oAP  
+ oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 8 , lrow)
+ oCell.string = oAP 
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
 	
-   oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 9 , lrow)
-  	&apos; oCell.CellBackColor = RGB(0,0,139)
-    oCell.CellStyle=&quot;EP-sfondo&quot;
+ oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 9 , lrow)
+ 	&apos; oCell.CellBackColor = RGB(0,0,139)
+ oCell.CellStyle=&quot;EP-sfondo&quot;
 
 
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	

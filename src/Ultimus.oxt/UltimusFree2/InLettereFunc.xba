@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="InLettereFunc" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="InLettereFunc" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-REM TUTTO il codice di questo modulo è stato creato  da Paolo Mantovani
+REM TUTTO il codice di questo modulo è stato creato da Paolo Mantovani
 
 
 
@@ -39,71 +39,71 @@ On Error GoTo errH:
 ThisComponent.addActionLock
 
 
-    &apos;numero troppo grande!
-    If Abs(Numero) &gt;= 10 ^ 12 Then GoTo errH
-    
-    
-    &apos;leviamo il segno e eventuali decimali
-    dblNumero = Int(Abs(Numero))
-    
-    &apos;cominciamo il lavoro!
-    mColCifre = RaggruppaCifre(dblNumero)
-    
-    strUnit = mColCifre(0)
-    strMigliaia = mColCifre(1)
-    strMilioni = mColCifre(2)
-    strMiliardi = mColCifre(3)
-    
-    If Numero &lt;&gt; 0 And strUnit = &quot;zero&quot; Then strUnit = &quot;&quot;
-    
-    Select Case strMiliardi
-        Case &quot;zero&quot;: strMiliardi = &quot;&quot;
-        Case &quot;uno&quot;: strMiliardi = &quot;unmiliardo&quot;
-        Case Else
-        strMiliardi = strMiliardi &amp; &quot;miliardi&quot;
-    End Select
-    
-    Select Case strMilioni
-        Case &quot;zero&quot;: strMilioni = &quot;&quot;
-        Case &quot;uno&quot;: strMilioni = &quot;unmilione&quot;
-        Case Else
-        strMilioni = strMilioni &amp; &quot;milioni&quot;
-    End Select
-    
-    Select Case strMigliaia
-        Case &quot;zero&quot;: strMigliaia = &quot;&quot;
-        Case &quot;uno&quot;: strMigliaia = &quot;mille&quot;
-        Case Else
-        strMigliaia = strMigliaia &amp; &quot;mila&quot;
-    End Select
-    
+ &apos;numero troppo grande!
+ If Abs(Numero) &gt;= 10 ^ 12 Then GoTo errH
+ 
+ 
+ &apos;leviamo il segno e eventuali decimali
+ dblNumero = Int(Abs(Numero))
+ 
+ &apos;cominciamo il lavoro!
+ mColCifre = RaggruppaCifre(dblNumero)
+ 
+ strUnit = mColCifre(0)
+ strMigliaia = mColCifre(1)
+ strMilioni = mColCifre(2)
+ strMiliardi = mColCifre(3)
+ 
+ If Numero &lt;&gt; 0 And strUnit = &quot;zero&quot; Then strUnit = &quot;&quot;
+ 
+ Select Case strMiliardi
+ Case &quot;zero&quot;: strMiliardi = &quot;&quot;
+ Case &quot;uno&quot;: strMiliardi = &quot;unmiliardo&quot;
+ Case Else
+ strMiliardi = strMiliardi &amp; &quot;miliardi&quot;
+ End Select
+ 
+ Select Case strMilioni
+ Case &quot;zero&quot;: strMilioni = &quot;&quot;
+ Case &quot;uno&quot;: strMilioni = &quot;unmilione&quot;
+ Case Else
+ strMilioni = strMilioni &amp; &quot;milioni&quot;
+ End Select
+ 
+ Select Case strMigliaia
+ Case &quot;zero&quot;: strMigliaia = &quot;&quot;
+ Case &quot;uno&quot;: strMigliaia = &quot;mille&quot;
+ Case Else
+ strMigliaia = strMigliaia &amp; &quot;mila&quot;
+ End Select
+ 
 
-    
-    &apos;uniamo le stringhe
-    strNumero = strMiliardi &amp; _
-                strMilioni &amp; _
-                strMigliaia &amp; _
-                strUnit
-    
-    &apos;Operazioni di rifinitura:
-    
-    &apos;sostituzione della &quot;è&quot; quando occorre
-    If Right(strNumero, 3) = &quot;tre&quot; And Len(strNumero) &gt; 3 Then
-        strNumero = Left(strNumero, Len(strNumero) - 1) &amp; &quot;è&quot;
-    End If
-   if strNumero = &quot;&quot; then &apos;inserito da Bart per il caso particolare dello zero dimenticato da Paolom
-   		strNumero = &quot;zero&quot;  		
-   end if         
-	ThisComponent.removeActionLock    &apos; 
+ 
+ &apos;uniamo le stringhe
+ strNumero = strMiliardi &amp; _
+ strMilioni &amp; _
+ strMigliaia &amp; _
+ strUnit
+ 
+ &apos;Operazioni di rifinitura:
+ 
+ &apos;sostituzione della &quot;è&quot; quando occorre
+ If Right(strNumero, 3) = &quot;tre&quot; And Len(strNumero) &gt; 3 Then
+ strNumero = Left(strNumero, Len(strNumero) - 1) &amp; &quot;è&quot;
+ End If
+ if strNumero = &quot;&quot; then &apos;inserito da Bart per il caso particolare dello zero dimenticato da Paolom
+ 		strNumero = &quot;zero&quot; 		
+ end if 
+	ThisComponent.removeActionLock &apos; 
 
 &apos;risultato
 ExitHere:
-        INLETTERE_P = strNumero
-    Exit Function
+ INLETTERE_P = strNumero
+ Exit Function
 
 &apos;è successo un errore
 errH:
-	ThisComponent.removeActionLock  
+	ThisComponent.removeActionLock 
 	INLETTERE_P = cstr(Now) &amp; &quot; Errore &quot; &amp; Err &amp; &quot; : &quot; &amp; Error$ &amp; &quot; Linea &quot; + Erl
 
 End Function
@@ -129,134 +129,134 @@ Miliardi = (Numero - Milioni * 1000000 - Migliaia * 1000 - Unit)
 Miliardi = Miliardi / 1000000000
 Miliardi = Miliardi - (Miliardi \ 1000) * 1000
 
-  mCol(0) = PrimiMille(Unit)
-  mCol(1) = PrimiMille(Migliaia)
-  mCol(2) = PrimiMille(Milioni)
-  mCol(3) = PrimiMille(Miliardi)
-  
-  
-  RaggruppaCifre = mCol()
+ mCol(0) = PrimiMille(Unit)
+ mCol(1) = PrimiMille(Migliaia)
+ mCol(2) = PrimiMille(Milioni)
+ mCol(3) = PrimiMille(Miliardi)
+ 
+ 
+ RaggruppaCifre = mCol()
 
 End Function
 
 Function PrimiMille(ByVal Numero As Integer) As String
-  Dim strNumero As String
-  
-  Dim Cent As Integer
-  Dim Dec As Integer
-  Dim Un As Integer
-  
-  Dim strCent As String
-  Dim strDec As String
-  Dim strUn As String
-  
-  &apos;divide il numero nelle sue cifre
-    Cent = Numero \ 100
-    Dec = (Numero - (100 * Cent)) \ 10
-    Un = Numero - (10 * (Dec + (10 * Cent)))
-    
-   &apos;liberiamoci di un caso particolare
-   &apos;(numero = 0)
-    Select Case Numero
-      Case 0:
-        strNumero = &quot;zero&quot;
-        GoTo ExitHere
-      
-      Case Else
-      &apos;si può proseguire
-    End Select
+ Dim strNumero As String
+ 
+ Dim Cent As Integer
+ Dim Dec As Integer
+ Dim Un As Integer
+ 
+ Dim strCent As String
+ Dim strDec As String
+ Dim strUn As String
+ 
+ &apos;divide il numero nelle sue cifre
+ Cent = Numero \ 100
+ Dec = (Numero - (100 * Cent)) \ 10
+ Un = Numero - (10 * (Dec + (10 * Cent)))
+ 
+ &apos;liberiamoci di un caso particolare
+ &apos;(numero = 0)
+ Select Case Numero
+ Case 0:
+ strNumero = &quot;zero&quot;
+ GoTo ExitHere
+ 
+ Case Else
+ &apos;si può proseguire
+ End Select
 
-    &apos;chiama la funzione di traduzione
-    &apos;delle centinaia
-    strCent = Centinaia(Cent)
-  
+ &apos;chiama la funzione di traduzione
+ &apos;delle centinaia
+ strCent = Centinaia(Cent)
+ 
 
-    &apos;liberiamoci di altri casi particolari
-    &apos;(da 11 a 19)
-    Select Case Dec * 10 + Un
-      Case 11: strUn = &quot;undici&quot;
-      Case 12: strUn = &quot;dodici&quot;
-      Case 13: strUn = &quot;tredici&quot;
-      Case 14: strUn = &quot;quattordici&quot;
-      Case 15: strUn = &quot;quindici&quot;
-      Case 16: strUn = &quot;sedici&quot;
-      Case 17: strUn = &quot;diciassette&quot;
-      Case 18: strUn = &quot;diciotto&quot;
-      Case 19: strUn = &quot;diciannove&quot;
-      
-      Case Else
-      &apos;si possono chiamare le funzioni
-      &apos;di traduzione delle decine e delle Unit
-        strDec = Decine(Dec)
-        strUn = Unit(Un)
-        &apos;se l&apos;Unit è 1 o 8 occorre troncare
-        &apos;l&apos;ultima lettera delle decine
-        If (Un = 1 Or Un = 8) And _
-                  strDec &lt;&gt; &quot;&quot; Then
-            
-            strDec = Left(strDec, Len(strDec) - 1)
-        
-        End If
-    
-    End Select
-    &apos;finalmente si può comporre il risultato
-     strNumero = strCent &amp; strDec &amp; strUn
+ &apos;liberiamoci di altri casi particolari
+ &apos;(da 11 a 19)
+ Select Case Dec * 10 + Un
+ Case 11: strUn = &quot;undici&quot;
+ Case 12: strUn = &quot;dodici&quot;
+ Case 13: strUn = &quot;tredici&quot;
+ Case 14: strUn = &quot;quattordici&quot;
+ Case 15: strUn = &quot;quindici&quot;
+ Case 16: strUn = &quot;sedici&quot;
+ Case 17: strUn = &quot;diciassette&quot;
+ Case 18: strUn = &quot;diciotto&quot;
+ Case 19: strUn = &quot;diciannove&quot;
+ 
+ Case Else
+ &apos;si possono chiamare le funzioni
+ &apos;di traduzione delle decine e delle Unit
+ strDec = Decine(Dec)
+ strUn = Unit(Un)
+ &apos;se l&apos;Unit è 1 o 8 occorre troncare
+ &apos;l&apos;ultima lettera delle decine
+ If (Un = 1 Or Un = 8) And _
+ strDec &lt;&gt; &quot;&quot; Then
+ 
+ strDec = Left(strDec, Len(strDec) - 1)
+ 
+ End If
+ 
+ End Select
+ &apos;finalmente si può comporre il risultato
+ strNumero = strCent &amp; strDec &amp; strUn
 
 ExitHere:
-    PrimiMille = strNumero
-     
+ PrimiMille = strNumero
+ 
 End Function
 Function Unit(ByVal Valore As Integer) As String
 Dim strX As String
-  
-  Select Case Valore
-      Case 0: strX = &quot;&quot;
-      Case 1: strX = &quot;uno&quot;
-      Case 2: strX = &quot;due&quot;
-      Case 3: strX = &quot;tre&quot;
-      Case 4: strX = &quot;quattro&quot;
-      Case 5: strX = &quot;cinque&quot;
-      Case 6: strX = &quot;sei&quot;
-      Case 7: strX = &quot;sette&quot;
-      Case 8: strX = &quot;otto&quot;
-      Case 9: strX = &quot;nove&quot;
-      Case Else: strX = &quot;&quot;
-    End Select
-    
-  Unit = strX
+ 
+ Select Case Valore
+ Case 0: strX = &quot;&quot;
+ Case 1: strX = &quot;uno&quot;
+ Case 2: strX = &quot;due&quot;
+ Case 3: strX = &quot;tre&quot;
+ Case 4: strX = &quot;quattro&quot;
+ Case 5: strX = &quot;cinque&quot;
+ Case 6: strX = &quot;sei&quot;
+ Case 7: strX = &quot;sette&quot;
+ Case 8: strX = &quot;otto&quot;
+ Case 9: strX = &quot;nove&quot;
+ Case Else: strX = &quot;&quot;
+ End Select
+ 
+ Unit = strX
 End Function
 
 Function Decine(ByVal Valore As Integer) As String
-  Dim strX As String
-  
-    Select Case Valore
-      Case 0: strX = &quot;&quot;
-      Case 1: strX = &quot;dieci&quot;
-      Case 2: strX = &quot;venti&quot;
-      Case 3: strX = &quot;trenta&quot;
-      Case 4: strX = &quot;quaranta&quot;
-      Case 5: strX = &quot;cinquanta&quot;
-      Case 6: strX = &quot;sessanta&quot;
-      Case 7: strX = &quot;settanta&quot;
-      Case 8: strX = &quot;ottanta&quot;
-      Case 9: strX = &quot;novanta&quot;
-      Case Else: strX = &quot;&quot;
-    End Select
-    
-  Decine = strX
+ Dim strX As String
+ 
+ Select Case Valore
+ Case 0: strX = &quot;&quot;
+ Case 1: strX = &quot;dieci&quot;
+ Case 2: strX = &quot;venti&quot;
+ Case 3: strX = &quot;trenta&quot;
+ Case 4: strX = &quot;quaranta&quot;
+ Case 5: strX = &quot;cinquanta&quot;
+ Case 6: strX = &quot;sessanta&quot;
+ Case 7: strX = &quot;settanta&quot;
+ Case 8: strX = &quot;ottanta&quot;
+ Case 9: strX = &quot;novanta&quot;
+ Case Else: strX = &quot;&quot;
+ End Select
+ 
+ Decine = strX
 End Function
 
 Function Centinaia(ByVal Valore As Integer) As String
 Dim strX As String
-  
-  Select Case Valore
-      Case 0: strX = &quot;&quot;
-      Case 1: strX = &quot;cento&quot;
-      Case Else
-        strX = Unit(Valore) &amp; &quot;cento&quot;
-    End Select
-    
-  Centinaia = strX
+ 
+ Select Case Valore
+ Case 0: strX = &quot;&quot;
+ Case 1: strX = &quot;cento&quot;
+ Case Else
+ strX = Unit(Valore) &amp; &quot;cento&quot;
+ End Select
+ 
+ Centinaia = strX
 End Function
 
 
@@ -322,27 +322,27 @@ SUB In_Let
 			&amp; &quot;E&apos; prevista la selezione di una cella o di un intervallo di celle di una colonna...&quot;&amp; CHR$(10)_
 			&amp; &quot; (una selezione verticale di celle contigue...)&quot;&amp; CHR$(10)_
 			&amp; &quot;... riprova...&quot; &amp; CHR$(10)_
-			&amp;	&quot;   &quot;, , &quot;Errore di Selezione...&quot;
+			&amp;	&quot; &quot;, , &quot;Errore di Selezione...&quot;
 		exit sub
 	end if
 
-	sDomanda = MsgBox  (&quot; Questa macro richiede una preventiva selezione di un settore di colonna contenente delle cifre&quot; &amp; CHR$(10) &amp; CHR$(10)_
+	sDomanda = MsgBox (&quot; Questa macro richiede una preventiva selezione di un settore di colonna contenente delle cifre&quot; &amp; CHR$(10) &amp; CHR$(10)_
 	 		&amp; &quot;La selezione verrà convertita IN LETTERE &quot; &amp; CHR$(10)_
-	 		&amp; &quot; (es. duecentocinquanta/64)  &quot; &amp; CHR$(10)_
-	 		&amp; &quot; e riportata in una nuova colonna a destra della selezione&quot;&amp;  CHR$(10) &amp; CHR$(10)_
-	 							&amp;&quot; La selezione è corretta?           PROSEGUO ?... &quot; &amp; CHR$(10) _
-							&amp;	&quot;   &quot;, 35, &quot;Conversione di cifre di valuta in lettere (centocinquanta/33)&quot;)
+	 		&amp; &quot; (es. duecentocinquanta/64) &quot; &amp; CHR$(10)_
+	 		&amp; &quot; e riportata in una nuova colonna a destra della selezione&quot;&amp; CHR$(10) &amp; CHR$(10)_
+	 							&amp;&quot; La selezione è corretta? PROSEGUO ?... &quot; &amp; CHR$(10) _
+							&amp;	&quot; &quot;, 35, &quot;Conversione di cifre di valuta in lettere (centocinquanta/33)&quot;)
 		if sDomanda = 7 then
 			exit sub 
 		end if
-   						
+ 						
 	oFoglio.unprotect(&quot;&quot;)
 	oFoglio.Columns.insertbyindex(d+1,1) &apos;inserisco una nuova colonna
 	oFoglio.getColumns.getByIndex(d+1).isVisible = true &apos; la rendo comunque visibile
 	&apos; brigida
 
 	oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
-	oBarra.Start(&quot;  Conversione in corso...&quot;, Val(f))
+	oBarra.Start(&quot; Conversione in corso...&quot;, Val(f))
 
 	For g = Val(e) to Val(f) &apos; Inizia il ciclo
 		oBarra.setValue(g)
@@ -356,13 +356,13 @@ SUB In_Let
 		sNum_1 = INLETTERE_P(num) &apos; quella funzione pensa ad estrarre l&apos;intero per conto suo
 	
 		&apos; ma qui facciamo cabale per estrarre la parte decimale
-		num_2_int = Int(Abs(num))  &apos; parte intera
-		num_2_dec = num - num_2_int   &apos; parte decimale
+		num_2_int = Int(Abs(num)) &apos; parte intera
+		num_2_dec = num - num_2_int &apos; parte decimale
 
 		num_3_dec = num_2_dec * 100 
 
 		dim num_4_dec as integer
-		num_4_dec = num_3_dec  &apos; così l&apos;ho arrotondato
+		num_4_dec = num_3_dec &apos; così l&apos;ho arrotondato
 		dim num_5_dec as string
 		num_5_dec = num_4_dec &apos; trasformo in stringa
 		if len(num_5_dec) = 1 then
@@ -372,13 +372,13 @@ SUB In_Let
 		&apos;ora acccorpo la stringa
 		sTutto = sSegno &amp; &quot; &quot; &amp; snum_1 &amp; &quot;/&quot; &amp; num_5_dec
 		sTutto = Replace_G (sTutto , &quot; &quot; , &quot;&quot; )	&apos; tolgo eventuali spazi eccedenti
-		oFoglio.GetCellByPosition(NumCol+1, g).string = sTutto    &apos;sSegno &amp; &quot; &quot; &amp; snum_1 &amp; &quot;/&quot; &amp; num_5_dec
-		oFoglio.GetCellByPosition(NumCol+1, g).cellstyle  = &quot;EP statistiche_lettere&quot;
+		oFoglio.GetCellByPosition(NumCol+1, g).string = sTutto &apos;sSegno &amp; &quot; &quot; &amp; snum_1 &amp; &quot;/&quot; &amp; num_5_dec
+		oFoglio.GetCellByPosition(NumCol+1, g).cellstyle = &quot;EP statistiche_lettere&quot;
 
 	Next
 	oBarra.setValue(0)
 	oBarra.End
-	msgbox &quot;   La conversione in LETTERE è terminata!!&quot;
+	msgbox &quot; La conversione in LETTERE è terminata!!&quot;
 end sub
-REM  *****  BASIC  *****
+REM ***** BASIC *****
 </script:module>

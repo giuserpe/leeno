@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_Acc" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_Acc" script:language="StarBasic">REM ***** BASIC *****
 
 &apos; nuove tabelle (in genere accessorie per il nuovo Taxi
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -55,22 +55,22 @@ dim ilastUrow as long
 	ilastUCol = getLastUsedCol(oSheet)
 	tabLinked() = Array(sLinked_0 , sLinked_1 , sLinked_2)
 	
-	if ilastUrow &gt; 0 then &apos; se la tabella nom almeno due righr piene ikast row risulta 0 e da&apos; errore div /0  
+	if ilastUrow &gt; 0 then &apos; se la tabella nom almeno due righr piene ikast row risulta 0 e da&apos; errore div /0 
 		ilastUrow =2
 	end if
 	For i = 1 to ilastUrow
 		&apos; questa è solo una progress bar 
 		if i = cint(20/100*ilastUrow) or _
-		    i = cint(30/100*ilastUrow) or _
-		    i = cint(42/100*ilastUrow) or _
-		    i = cint(56/100*ilastUrow) or _
-		    i = cint(65/100*ilastUrow) or _
-		    i = cint(80/100*ilastUrow) or _
+		 i = cint(30/100*ilastUrow) or _
+		 i = cint(42/100*ilastUrow) or _
+		 i = cint(56/100*ilastUrow) or _
+		 i = cint(65/100*ilastUrow) or _
+		 i = cint(80/100*ilastUrow) or _
 			i = cint(90/100*ilastUrow) then 
-			 &apos;  print i &amp; &quot; A&quot;
-			   oProgressBar.Value = i*100/ilastUrow
-			   oProgressBar.Text = &quot;Lo so... questa operazione è un po&apos; lunga... ma pazienta! (&quot; &amp; i &amp; &quot;)&quot;	
-			&apos;   print &quot;b&quot;
+			 &apos; print i &amp; &quot; A&quot;
+			 oProgressBar.Value = i*100/ilastUrow
+			 oProgressBar.Text = &quot;Lo so... questa operazione è un po&apos; lunga... ma pazienta! (&quot; &amp; i &amp; &quot;)&quot;	
+			&apos; print &quot;b&quot;
 		end if		
 
 		for n = 0 to ilastUCol
@@ -122,7 +122,7 @@ end function
 
 Function trova_file &apos; file picker (generico) non usato
 	sFileURL = GetFileURL( _
-    &quot;Cerca il file .&quot;)
+ &quot;Cerca il file .&quot;)
 	If sFileURL = &quot;&quot; Then Exit function
  			&apos; oSFAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
 	trova_file = sFileURL	
@@ -143,43 +143,43 @@ Sub Accoda_un_computo &apos; accodamento di dati partendo dal file DCC
 	end if
 	sURLdest = ConvertfromUrl(ThisComponent.getURL()) 
 	sNomedest = FileNameoutofPath(sURLdest)
-	&apos;print &quot;sUltimus:  &quot; &amp; sUltimus &apos;&amp; &quot; -- &quot; &amp; sURLdest&apos;&apos;
+	&apos;print &quot;sUltimus: &quot; &amp; sUltimus &apos;&amp; &quot; -- &quot; &amp; sURLdest&apos;&apos;
 	if sURLdest = sUltimus then
-			if  msgbox (&quot; Vuoi accodare un computo in questo  documento?&quot; &amp; CHR$(10)_
+			if msgbox (&quot; Vuoi accodare un computo in questo documento?&quot; &amp; CHR$(10)_
 				&amp; &quot;(&quot;&amp; sNomedest &amp; &quot; )&quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest  ) = 6 then
+				&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest ) = 6 then
 				goto esegui	
-			  else
+			 else
 			 &apos; 	print 1
-			  	exit sub
+			 	exit sub
 			end if	
 		else
 			if ismissing(sUltimus) or sUltimus = &quot;&quot; then
-				if  msgbox (&quot; Vuoi accodare un computo in questo  documento?&quot; &amp; CHR$(10)_
+				if msgbox (&quot; Vuoi accodare un computo in questo documento?&quot; &amp; CHR$(10)_
 					&amp; &quot;(&quot;&amp; sNomedest &amp; &quot; )&quot; &amp; CHR$(10) &amp; CHR$(10)_
-					&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest  ) = 6 then
+					&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest ) = 6 then
 					Scrivi_Globale
 					Aggiorniamoli 
 					goto esegui	 				
-				  else
-				  &apos;	print &quot;1a&quot;
-				  	exit sub
+				 else
+				 &apos;	print &quot;1a&quot;
+				 	exit sub
 				end if
 			end if
 	end if
 	
 	if sURLdest &lt;&gt; sUltimus then
-	 	if  msgbox (&quot; Il DCC (il Doc di Contabilità Corrente ) è un altro&quot; &amp;  CHR$(10)_
-	 			&amp; &quot;(cioè: &quot; &amp;  sUltimus &amp; &quot;)&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+	 	if msgbox (&quot; Il DCC (il Doc di Contabilità Corrente ) è un altro&quot; &amp; CHR$(10)_
+	 			&amp; &quot;(cioè: &quot; &amp; sUltimus &amp; &quot;)&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot; Vuoi comunque accodare dei dati di un altro computo qui in &quot; &amp; CHR$(10)_
-				&amp;  &quot;  &quot; &amp; sNomedest &amp; &quot;   ? &quot; &amp; CHR$(10)_
-				&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest  ) = 6 then	
+				&amp; &quot; &quot; &amp; sNomedest &amp; &quot; ? &quot; &amp; CHR$(10)_
+				&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest ) = 6 then	
 				&apos; rende DCC questo file&quot;
 				Scrivi_Globale
 				Aggiorniamoli 
 				goto esegui	 
 			else
-			  	exit sub
+			 	exit sub
 		end if	
 	end if
 	esegui:

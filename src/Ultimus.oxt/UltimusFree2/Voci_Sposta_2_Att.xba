@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sposta_2_Att" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sposta_2_Att" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -19,10 +19,10 @@ dim oSrow as long
 dim oErow as long
 dim StartRow as long
 &apos; ScreenUpdatingOn 
-  
+ 
 &apos;.......................................................................................................
 
-	lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lSrow = -1 then
 		exit sub
 	end if
@@ -33,7 +33,7 @@ dim StartRow as long
 	oOldSelection = sStRange
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 
-	sTitolo = &quot;Click sulla riga dove vuoi spostare la voce  (ESC per Annullare, NO Click su X )  &quot;
+	sTitolo = &quot;Click sulla riga dove vuoi spostare la voce (ESC per Annullare, NO Click su X ) &quot;
 	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  	if SelectedRange = &quot;&quot; or _
  	 	SelectedRange = &quot;ANNULLA&quot; then
@@ -52,9 +52,9 @@ dim StartRow as long
 &apos;print &quot;Ritorna &quot; &amp; StartRowM
  	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI18! &quot;
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI18! &quot;
 		exit sub
 	end if 
 	lrowF=oEnd.CellAddress.Row 
@@ -63,8 +63,8 @@ dim StartRow as long
 		oCellK = oSheet.GetCellByPosition( 0 , StartRow)
 		ThisComponent.CurrentController.Select(oCellK)
 		msgbox &quot; Hai selezionato una destinazione ESTERNA all&apos;area &quot; &amp; CHR$(10)_
-		&amp; &quot; definita dalla riga rossa di chiusura...  &quot;&amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot;                      e questo non è consentito!...&quot;
+		&amp; &quot; definita dalla riga rossa di chiusura... &quot;&amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; e questo non è consentito!...&quot;
 		ThisComponent.CurrentController.Select(sStRange)
 		exit SUB
 	end if
@@ -76,19 +76,19 @@ END SUB
 
 &apos;_______________________________________________________________________________________++
 FUNCTION Mettiti_esattamente_tra_due_VociC_Att (ByVal lrow As Long)&apos; trova il punto di inserimanto
-&apos; nel caso l&apos;utente non si sia posizionato bene...   &apos; specifico per voci Computo
+&apos; nel caso l&apos;utente non si sia posizionato bene... &apos; specifico per voci Computo
 &apos; (mai fidarsi dell&apos;utente...) ))
 &apos;--------------------------------------------------------------
 &apos;--------------------------------------------------------------
-dim xdocument   as object
+dim xdocument as object
 dim xdispatcher as object
 dim xA as string
 Dim oSheet as object
 Dim oCell as object
 &apos;print &quot;Mettiti_esattamente_tra_due_VociC_Att &quot;
-  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente    
-  oCell = oSheet.GetCellByPosition( 1, lrow )
-&apos;	xA =  oCell.string
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oCell = oSheet.GetCellByPosition( 1, lrow )
+&apos;	xA = oCell.string
 &apos; cocco
 
 	if lrow = 0 then
@@ -96,9 +96,9 @@ Dim oCell as object
 	end if
  	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI ! &quot;
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
 		exit FUNCTION
 	end if 
 	lrowF=oEnd.CellAddress.Row 
@@ -106,9 +106,9 @@ Dim oCell as object
 	if oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sopra&quot;_
 		 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;Livello-1-scritta&quot; then
 
-&apos;	print &quot;1  : &quot; &amp; lrow
+&apos;	print &quot;1 : &quot; &amp; lrow
 		 do while Trova_Attr_N (oSheet.GetCellbyPosition( 0, lrow ), oSheet) &lt;&gt; &quot;End_voce_COMPUTO&quot; and _
-		 			 lrow &gt;= 1  
+		 			 lrow &gt;= 1 
 		 			lrow = lrow-1
 		 &apos;	print lrow &apos;pinzon
 		 loop
@@ -117,17 +117,17 @@ Dim oCell as object
 	end if
 	REM SU RIGHE DI CATEGORIA
 	if oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-2-sotto_&quot;_
-	  or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello2 valuta&quot;_
-	  or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
-	  do while Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
-	  	lrow = lrow+1
-	  	Mettiti_esattamente_tra_due_VociC_Att = lrow-1
-	  loop
+	 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello2 valuta&quot;_
+	 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
+	 do while Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+	 	lrow = lrow+1
+	 	Mettiti_esattamente_tra_due_VociC_Att = lrow-1
+	 loop
 	end if
 	
 	sAttributo_N = Trova_Attr_N (oCell, oSheet)
 &apos;	PRINT 	Trova_Attr_N
-	if  sAttributo_N = &quot;Start_voce_COMPUTO&quot; then &apos; esattamente all&apos;inizio di una voce
+	if sAttributo_N = &quot;Start_voce_COMPUTO&quot; then &apos; esattamente all&apos;inizio di una voce
 		Mettiti_esattamente_tra_due_VociC_Att = lrow&apos;+1
 		exit function
 	end if
@@ -142,19 +142,19 @@ Dim oCell as object
 				Mettiti_esattamente_tra_due_VociC_Att = lrow
 				exit function &apos;for
 			end if
-			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;End_voce_COMPUTO&quot;  then
+			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;End_voce_COMPUTO&quot; then
 				lrow = ocell.celladdress.row
 				Mettiti_esattamente_tra_due_VociC_Att = lrow +1
 				exit function &apos;for
 			end if
-			if  nCurRow = lrowF then &apos; questa solo alla fine... allora torna su
-				Do while (Trova_Attr_N ((oSheet.GetCellbyPosition( 0, nCurRow)), oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;  OR _
-					     (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;Capitolo&quot;  OR _
-					     (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;SottoCapitolo&quot;
-					     if nCurRow &lt;=1 then
-					     	exit function
-					     end if
-					     
+			if nCurRow = lrowF then &apos; questa solo alla fine... allora torna su
+				Do while (Trova_Attr_N ((oSheet.GetCellbyPosition( 0, nCurRow)), oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot; OR _
+					 (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;Capitolo&quot; OR _
+					 (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;SottoCapitolo&quot;
+					 if nCurRow &lt;=1 then
+					 	exit function
+					 end if
+					 
 						nCurRow = nCurRow-1
 						oCell=oSheet.GetCellbyPosition( 0, nCurRow)
 						&apos;&apos;&apos;ThisComponent.CurrentController.Select(oCell) &apos;debug 
@@ -193,22 +193,22 @@ Dim CellAddress As New com.sun.star.table.CellAddress
 	&apos;1 sta per il range di origine (nella sua posizione di origine...)
 	i1sheet = o1RangeSelection.RangeAddress.Sheet 
 	o1ColoumnS = 0 &apos; nel nostro caso meglio settarla a 0
-	L1RowS =  o1RangeSelection.RangeAddress.StartRow
+	L1RowS = o1RangeSelection.RangeAddress.StartRow
 	o1ColoumnE	= 255 &apos; ovvero l&apos;intera riga
-	L1RowE	=   o1RangeSelection.RangeAddress.EndRow
+	L1RowE	= o1RangeSelection.RangeAddress.EndRow
 	L1RowSCount = o1RangeSelection.Rows.Count &apos; mumero di righe del range
 
 	&apos; il 2 per l&apos;area vuota da inserire...
 	o2sheet = i1sheet &apos; per il momento è la medesima...
 	o2ColoumnS = o1ColoumnS
-	L2RowS =  lrowDest
+	L2RowS = lrowDest
 	o2ColoumnE	= o1ColoumnE
 	L2RowE	= L2RowS + L1RowSCount -1 &apos; si toglie uno per ragioni che mi sfuggono... 
 
 	&apos;inserisce righe vuote
- &apos; 	CellRangeAddress.Sheet =  o2sheet
- &apos;   CellRangeAddress.StartColumn = o2ColoumnS
- &apos;   CellRangeAddress.StartRow =  L2RowS
+ &apos; 	CellRangeAddress.Sheet = o2sheet
+ &apos; CellRangeAddress.StartColumn = o2ColoumnS
+ &apos; CellRangeAddress.StartRow = L2RowS
 &apos;	CellRangeAddress.EndColumn = o2ColoumnE
 &apos;	CellRangeAddress.EndRow = L2RowE
 
@@ -235,9 +235,9 @@ Dim CellAddress As New com.sun.star.table.CellAddress
 	L3ColoumnE	= o1ColoumnE
 	lrowT =	L1RowS
 	if L1RowS &gt; lrowDest then
-			L3RowS =  L1RowS + L1RowSCount
+			L3RowS = L1RowS + L1RowSCount
 	 	 else 
-			L3RowS =  L1RowS
+			L3RowS = L1RowS
 	end if
 	L3RowE	= L3RowS + L1RowSCount
 	CellRangeAddress.Sheet = i3sheet
@@ -256,9 +256,9 @@ oSheet.moveRange(CellAddress, CellRangeAddress) &apos; lo sposta nello spazio fa
 oSheet.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.UP) &apos; rimuove le righe vuote
 
 
-lrdif =  L3RowE - L3RowS - 1
+lrdif = L3RowE - L3RowS - 1
 
-if  lrowDest &gt; lrowT then &apos; questo pasticcetto per visualizzare la voce spostata adesso
+if lrowDest &gt; lrowT then &apos; questo pasticcetto per visualizzare la voce spostata adesso
 &apos;	print &quot;verso il basso&quot;
 	oRange = oSheet.getCellRangeByposition (L3ColoumnS, L2RowS-lrdif-1 , L3ColoumnE, L2RowS-1)	
 	else
@@ -310,17 +310,17 @@ dim lrowE as long
 	loop
 	lrowE = nCurRow
 
-  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+ oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
 
 	Circoscrive_Voce_Computo_Att= oRangeVoceC
 	
- &apos; dis_080212   ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
+ &apos; dis_080212 ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
 
 end Function
-&apos;=================================================================================  
+&apos;================================================================================= 
 
 
-FUNCTION  Circoscrive_Voce_Computo_Att_________________________(ByVal lrow As Long) &apos;individua un record di Computo
+FUNCTION Circoscrive_Voce_Computo_Att_________________________(ByVal lrow As Long) &apos;individua un record di Computo
 &apos;---------------------------------------------------------------------------
 							&apos;restituisce il range&apos;
 &apos;print lrow
@@ -359,14 +359,14 @@ dim lrowE as long
 	loop
 	lrowE = nCurRow
 
-  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+ oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
 
 	Circoscrive_Voce_Computo_Att= oRangeVoceC
 	
- &apos; dis_080212   ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
+ &apos; dis_080212 ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
 
 end Function
-&apos;=================================================================================  
+&apos;================================================================================= 
 
 
 </script:module>

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Help" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Help" script:language="StarBasic">REM ***** BASIC *****
 
-REM  *****  BASIC  *****
+REM ***** BASIC *****
 global oSheetOrigine as object
 
 Sub Help_Scorciatoie
@@ -22,7 +22,7 @@ ritorno:
 msgbox &quot;Spiacente non ho aggiornato le scorciatoie... quindi ripristino la modalità standard!&quot;
 &apos; modificando la variabile generale
 ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = 1
-goto ritorno  &apos; torna su
+goto ritorno &apos; torna su
 
 &apos; presumibilmente da qui in poi non verrà mai eseguito
 	sNomeTab = ThisComponent.currentcontroller.activesheet.name
@@ -49,7 +49,7 @@ end sub
 
 
 Sub Apri_sheet_Scorciatoie
-	If  ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;Scorciatoie&quot; then
+	If ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;Scorciatoie&quot; then
 		oSheetOrigine = ThisComponent.currentController.activeSheet
 		Thiscomponent.currentcontroller.setactivesheet(ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;)
 	&apos;	print &quot;caso 1&quot;
@@ -57,7 +57,7 @@ Sub Apri_sheet_Scorciatoie
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;)
 &apos;	print &quot;1&quot;&apos;
-	If oSheet.isVisible = false  then
+	If oSheet.isVisible = false then
 &apos;	print &quot;2&quot;	
 	 		oSheet.isVisible = TRUE
 	 		Thiscomponent.currentcontroller.setactivesheet(oSheet)
@@ -70,7 +70,7 @@ END SUB
 
 Sub Chiudi_sheet_Scorciatoie
 	oSheet = ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;)
-	If oSheet.isVisible = TRUE  then	
+	If oSheet.isVisible = TRUE then	
 	 		oSheet.isVisible = FALSE
 	 		Thiscomponent.currentcontroller.setactivesheet(oSheetOrigine)
 	 end if

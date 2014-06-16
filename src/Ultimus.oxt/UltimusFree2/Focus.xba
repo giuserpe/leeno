@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Focus" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Focus" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -49,11 +49,11 @@ END SUB
 
 Sub Sel_Altre_Opz2() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
 
-print &quot;Focus.Sel_Altre_Opz2  - Ma non era disattivata?&quot;
+print &quot;Focus.Sel_Altre_Opz2 - Ma non era disattivata?&quot;
 	dim osheet as object
 	dim oAreaR as object
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;) &apos;
-	If oSheet.isVisible = false  then
+	If oSheet.isVisible = false then
  		oSheet.isVisible = true
 	 end if
 	oAreaR = Osheet.getCellRangeByName (&quot;altre_opzioni_8&quot;) &apos; nome di area
@@ -64,13 +64,13 @@ END SUB
 &apos;##############################################################
 
 Sub Sel_provared() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
-print &quot;Focus.Sel_provared  - Ma non era disattivata?&quot;
+print &quot;Focus.Sel_provared - Ma non era disattivata?&quot;
 	dim osheet as object
 	dim oAreaR as object
 	dim oCell as object
 &apos;	ThisComponent.unlockControllers()
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;) &apos; ? si può eliminare?
-	If oSheet.isVisible = false  then
+	If oSheet.isVisible = false then
  		oSheet.isVisible = true
 	 end if
 	oAreaR = Osheet.getCellRangeByname(&quot;a77:p111&quot;)
@@ -97,7 +97,7 @@ Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (er
 	oSheet.isVisible = TRUE
 	For I = 0 to thisComponent.Sheets.Count -1 &apos;gennaro
 		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
-		if left (oCalcSheet.getName(),3)  = &quot;S2_&quot; then
+		if left (oCalcSheet.getName(),3) = &quot;S2_&quot; then
 			nome = oCalcSheet.getName
 			thisComponent.Sheets.getByName(nome).isVisible = TRUE
 			thisComponent.Sheets.moveByName (nome ,6)
@@ -112,19 +112,19 @@ Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (er
 	If sNomesheet = &quot;M1&quot; then 
 		oSheetCurrent.isVisible = false 
 	endif
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,2).formula,7) =  &quot;=&apos;file:&quot;  then
+	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,2).formula,7) = &quot;=&apos;file:&quot; then
 		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,2).formula	
 		goto saltaQui:
 	end if
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,3).formula,7) =  &quot;=&apos;file:&quot;  then
+	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,3).formula,7) = &quot;=&apos;file:&quot; then
 		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,3).formula	
 		goto saltaQui:
 	end if
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,4).formula,7) =  &quot;=&apos;file:&quot;  then
+	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,4).formula,7) = &quot;=&apos;file:&quot; then
 		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,4).formula	
 		goto saltaQui:
 	end if
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,5).formula,7) =  &quot;=&apos;file:&quot;  then
+	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,5).formula,7) = &quot;=&apos;file:&quot; then
 		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,5).formula	
 		goto saltaQui:
 	end if
@@ -132,14 +132,14 @@ Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (er
 	exit sub
 	
 	saltaQui:
-			msgbox &quot;		       	ATTENZIONE!&quot; &amp; CHR$(10)_
-				&amp; &quot;Mi risulta che l&apos;Anagrafica Progetto sia  linkata (in tutto o in parte) al file:&quot; &amp; CHR$(10)_
+			msgbox &quot;		 	ATTENZIONE!&quot; &amp; CHR$(10)_
+				&amp; &quot;Mi risulta che l&apos;Anagrafica Progetto sia linkata (in tutto o in parte) al file:&quot; &amp; CHR$(10)_
 				&amp;	sLink &amp; CHR$(10)&amp; CHR$(10)_
 				&amp;	&quot;ovvero esternamente a questo documento!&quot;&amp; CHR$(10)_
-				&amp; &quot; &quot; &amp; CHR$(10)  &amp; CHR$(13) &amp; CHR$(10)_
+				&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(13) &amp; CHR$(10)_
 				&amp;	&quot;( Per &quot;&quot;forzare&quot;&quot; l&apos;aggiornamento del collegamento:&quot; &amp; CHR$(10)_
-				&amp; &quot;  usa lo shortcut Alt K      &quot;&amp; CHR$(10)_
-				&amp; &quot;  Oppure dal menu di OOo Modifica &gt; Aggiornamenti &gt; Aggiorna... )&quot;&amp; CHR$(10)_
+				&amp; &quot; usa lo shortcut Alt K &quot;&amp; CHR$(10)_
+				&amp; &quot; Oppure dal menu di OOo Modifica &gt; Aggiornamenti &gt; Aggiorna... )&quot;&amp; CHR$(10)_
 				&amp; &quot; &quot; &amp; CHR$(10)
 
 END SUB
@@ -149,13 +149,13 @@ END SUB
 
 
 Sub Sel_print_Opz2() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
-print &quot;Focus.Sel_print_Opz2()  - Ma non era disattivata?&quot;
+print &quot;Focus.Sel_print_Opz2() - Ma non era disattivata?&quot;
 	dim osheet as object
 	dim oAreaR as object
 	dim oCell as object
 &apos;	ThisComponent.unlockControllers()
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;) 
-	If oSheet.isVisible = false  then
+	If oSheet.isVisible = false then
  		oSheet.isVisible = true
 	 end if
 	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
@@ -166,23 +166,23 @@ END SUB
 &apos;##############################################################
 Sub Sel_print_Opz3() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
 
-print &quot;Focus.Sel_print_Opz3()  - Ma non era disattivata?&quot;
+print &quot;Focus.Sel_print_Opz3() - Ma non era disattivata?&quot;
 	dim osheet as object
 	dim oAreaR as object
 	dim oCell as object
 	Osheet = thisComponent.sheets.getbyname(&quot;S2&quot;) 
 
-  oDocument = StarDesktop.getCurrentComponent
-  oView = oDocument.getCurrentController
-  	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
+ oDocument = StarDesktop.getCurrentComponent
+ oView = oDocument.getCurrentController
+ 	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
 	Thiscomponent.currentController.select(oAreaR)
-  &apos;Move to a specified cell
-  &apos;oCell = oView.getActiveSheet.getCellByPosition(5,10)
-  &apos;Move at the beginning of the selection
-   ocell=odocument.getcurrentselection
+ &apos;Move to a specified cell
+ &apos;oCell = oView.getActiveSheet.getCellByPosition(5,10)
+ &apos;Move at the beginning of the selection
+ ocell=odocument.getcurrentselection
 
-  oRanges = oDocument.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)
-  oView.Select(oRanges)
+ oRanges = oDocument.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)
+ oView.Select(oRanges)
 
 END SUB
 
@@ -196,17 +196,17 @@ Sub Sel_Filtro() &apos;
 	Thiscomponent.currentController.select(	Osheet)
 	 oDocument = StarDesktop.getCurrentComponent
 	 oView = oDocument.getCurrentController
-	  &apos;	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
+	 &apos;	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
 	&apos;	Thiscomponent.currentController.select(oAreaR)
-	  &apos;Move to a specified cell
+	 &apos;Move to a specified cell
 	 oCell = oView.getActiveSheet.getCellByPosition(0,0)
-	  &apos;Move at the beginning of the selection
-	  &apos; ocell=odocument.getcurrentselection
+	 &apos;Move at the beginning of the selection
+	 &apos; ocell=odocument.getcurrentselection
 	
 	 &apos; oRanges = oDocument.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)
 	oView.Select(oCell)
 	oAreaR = Osheet.getCellRangeByName (&quot;b3:f3&quot;)
-  	Thiscomponent.currentcontroller.select(oAreaR)
+ 	Thiscomponent.currentcontroller.select(oAreaR)
 	oContr = ThisComponent.CurrentController
 	oContr.setFirstVisibleColumn (0)&apos;( lprimaCol )
 	oContr.setFirstVisibleRow(0 )
@@ -258,7 +258,7 @@ Dim StartCol, StartRow, EndCol, EndRow, CellRow, CellCol As Long
  &apos;dis_080219	 			else
 	 			&apos;	if oCalcApp.sheets.getByname(&quot;S1&quot;)= then
  &apos;dis_080219						Set oSheet = oCalcApp.sheets.getByname(&quot;S1&quot;)
- &apos;dis_080219						If oSheet.isVisible = false  then
+ &apos;dis_080219						If oSheet.isVisible = false then
  &apos;dis_080219							msgbox &quot;Per accedere ai menu devi prima chiudere questo file e riaprirlo...!&quot;
  &apos;dis_080219						 end if
  &apos;dis_080219						Set oCalcView = oCalcApp.CurrentController
@@ -281,13 +281,13 @@ END SUB
 
  &apos;##############################################################
 Sub Sel_Altre_Opz_3() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
-print &quot;Focus.Sel_Altre_Opz_3  - Ma non era disattivata?&quot;
+print &quot;Focus.Sel_Altre_Opz_3 - Ma non era disattivata?&quot;
 	dim osheet as object
 	dim oAreaR as object
 &apos;	ThisComponent.unlockControllers()
 	Visualizza_normale
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;) 
-	If oSheet.isVisible = false  then
+	If oSheet.isVisible = false then
  		oSheet.isVisible = true
 	 end if
 	oAreaR = Osheet.getCellRangeByName (&quot;A1:A1&quot;)
@@ -344,7 +344,7 @@ Sub Vai_submenu_segnaVoci_non_usate()
 	dim oAreaR as object
 
 	&apos;_____________________
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	
 	oSheetCurrent = ThisComponent.currentController.activeSheet
@@ -355,7 +355,7 @@ Sub Vai_submenu_segnaVoci_non_usate()
 &apos;print 2
 &apos;	ThisComponent.unlockControllers()
 	Osheet = thisComponent.sheets.getbyname(&quot;S3&quot;)
-	If oSheet.isVisible = false  then
+	If oSheet.isVisible = false then
  		oSheet.isVisible = true
 	end if 
 	oAreaR = Osheet.getCellRangeByName (&quot;AJ1:AJ1&quot;)
@@ -368,23 +368,25 @@ Sub Vai_submenu_segnaVoci_non_usate()
 	endif
 END SUB
 
-Sub Logo_Avvio()
+Sub Logo_Avvio
 	dim osheet as object
 	dim oAreaR as object
 &apos;	ThisComponent.unlockControllers()
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-		If oSheet.isVisible = false  then
+		If oSheet.isVisible = false then
  		oSheet.isVisible = true
 		end if 
-      else 
-      	exit sub
-    end if		
-	oAreaR = Osheet.getCellRangeByName (&quot;A389:A389&quot;)
-	Thiscomponent.currentcontroller.select(oAreaR)
+	else 
+ 		exit sub
+	end if		
+&apos;	oAreaR = Osheet.getCellRangeByName (&quot;A388:P421&quot;)
+&apos;	Thiscomponent.currentcontroller.select(oAreaR)
 	oContr = ThisComponent.CurrentController
-	oContr.setFirstVisibleColumn (0)
-	oContr.setFirstVisibleRow(389)	
+	oContr.Select(oSheet.getCellByPosition(0, 388))
+	oContr.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+&apos;	oContr.setFirstVisibleColumn (0)
+	oContr.setFirstVisibleRow(388)	
 END SUB
 
 Sub Vai_allo_schema_viste()
@@ -393,13 +395,13 @@ Sub Vai_allo_schema_viste()
 &apos;	ThisComponent.unlockControllers()
 	If thisComponent.Sheets.hasByName(&quot;S4&quot;) Then
 		Osheet = thisComponent.sheets.getbyname(&quot;S4&quot;)
-		If oSheet.isVisible = false  then
+		If oSheet.isVisible = false then
  		oSheet.isVisible = true
 		end if 
-      else 
-      	exit sub
-    end if	
-    ThisComponent.Sheets.getByName(&quot;S4&quot;).unprotect(&quot;&quot;)	
+ else 
+ 	exit sub
+ end if	
+ ThisComponent.Sheets.getByName(&quot;S4&quot;).unprotect(&quot;&quot;)	
 	oAreaR = Osheet.getCellRangeByName (&quot;FA18:FA148&quot;)	
 	Thiscomponent.currentcontroller.select(oAreaR)
 	oContr = ThisComponent.CurrentController
@@ -419,7 +421,7 @@ Sub Vai_submenu_Manutenzione()
 
 
 	Osheet = thisComponent.sheets.getbyname(&quot;S4&quot;) 
-&apos;	If oSheet.isVisible = false  then
+&apos;	If oSheet.isVisible = false then
  		oSheet.isVisible = true
 &apos;	 end if
 	 
@@ -500,7 +502,7 @@ Sub Vai_a_VARIABILI()&apos; GENERALI()
 	&apos;		oContr.setFirstVisibleRow(291 )
 &apos;	exit sub
 	ThisComponent.CurrentController().splitAtPosition( 0,0) &apos;per rimuovere il freeze
-	if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(6,291).string = &quot;&quot; then
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(6,291).string = &quot;&quot; then
 			&apos; Attenzione: un print in questo punto incasina la macro...
 			oContr = ThisComponent.CurrentController
 			oContr.setFirstVisibleColumn (6)&apos;( lprimaCol )
@@ -533,7 +535,7 @@ Sub Vai_a_M1()
 	Chiudi_o_elimina_tabelle_inutili
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	Osheet = thisComponent.sheets.getbyname(&quot;M1&quot;) 
-&apos;		If oSheet.isVisible = false  then
+&apos;		If oSheet.isVisible = false then
  	oSheet.isVisible = true
 &apos;		 end if
 	Thiscomponent.currentcontroller.select(oSheet) 
@@ -550,7 +552,7 @@ Sub Vai_a_M1()
 
 END SUB
 
-Sub Vai_a_M1_noSelect ()
+Sub Vai_a_M1_noSelect () &apos;non usata
 
 print &quot; questa (Vai_a_M1_noSelect) non credo sia usata &quot;
 	dim osheet as object
@@ -559,7 +561,7 @@ print &quot; questa (Vai_a_M1_noSelect) non credo sia usata &quot;
 &apos;	If thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
 &apos;	print &quot;caso&quot;
 		
-&apos;		If oSheet.isVisible = false  then
+&apos;		If oSheet.isVisible = false then
  &apos;			oSheet.isVisible = true
 &apos;&apos;		 end if
 &apos;		Thiscomponent.currentcontroller.select(oSheet) 
@@ -569,7 +571,7 @@ print &quot; questa (Vai_a_M1_noSelect) non credo sia usata &quot;
 		oContr = ThisComponent.CurrentController
 		oContr.setFirstVisibleColumn (0)&apos;( lprimaCol )
 		oContr.setFirstVisibleRow(0 )
-&apos;	   else 
+&apos;	 else 
 &apos;	 	 Sel_Altre_Opz
 &apos;	end if	
 END SUB
@@ -594,8 +596,8 @@ SUB Visualizza_S4
 dim osheet as object
 	oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
 		if msgbox ( &quot;Il menù che hai richiesto contiene un misto di macro sperimentali (e spesso non ancora testate), e macro obsolete probabilmente non più funzionanti&quot;&amp; CHR$(10)_
-		        	&amp;&quot; ... Proseguo malgrado gli avvertimenti? &quot; &amp; CHR$(10)_
-		        	&amp; &quot;&quot; &amp; CHR$(10)_
+		 	&amp;&quot; ... Proseguo malgrado gli avvertimenti? &quot; &amp; CHR$(10)_
+		 	&amp; &quot;&quot; &amp; CHR$(10)_
 					&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
 
 					&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -625,11 +627,11 @@ SUB Nascondi_S4
 	oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
 &apos;		if sSheetNome &lt;&gt; &quot;S4&quot; then
 	&apos;	if msgbox ( &quot;Il menù che hai richiesto contiene delle macro sperimentali (e spesso pasticciate)&quot;&amp; CHR$(10)_
-&apos;	&apos;	        	&amp;&quot; E&apos; un vaso di Pandora... ma se sei curioso e proprio insistii.&quot; &amp; CHR$(10)_
-	&apos;	        	&amp; &quot;ti apro la tabella S4 che è normalmente nascosta... &quot; &amp; CHR$(10)_
-	&apos;	        	&amp; &quot;(Auguri!!! :-) )&quot; &amp; CHR$(10)_
+&apos;	&apos;	 	&amp;&quot; E&apos; un vaso di Pandora... ma se sei curioso e proprio insistii.&quot; &amp; CHR$(10)_
+	&apos;	 	&amp; &quot;ti apro la tabella S4 che è normalmente nascosta... &quot; &amp; CHR$(10)_
+	&apos;	 	&amp; &quot;(Auguri!!! :-) )&quot; &amp; CHR$(10)_
 &apos;					&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-			If oSheet.isVisible = false  then
+			If oSheet.isVisible = false then
 			 		oSheet.isVisible = TRUE
 	 				Thiscomponent.currentcontroller.setactivesheet(oSheet)
 	 			else
@@ -647,11 +649,11 @@ SUB Visualizza_S4M
 dim osheet as object
 	oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
 		if msgbox ( &quot;Il menù che hai richiesto contiene delle macro di manutenzione che si usano raramente.&quot;&amp; CHR$(10)_
-		        	&amp;&quot; DA Usare con cautela!&quot; &amp; CHR$(10)_
-		        	&amp;&quot; ... proseguo ? &quot; &amp; CHR$(10)_
-		        	&amp; &quot;&quot; &amp; CHR$(10)_
+		 	&amp;&quot; DA Usare con cautela!&quot; &amp; CHR$(10)_
+		 	&amp;&quot; ... proseguo ? &quot; &amp; CHR$(10)_
+		 	&amp; &quot;&quot; &amp; CHR$(10)_
 					&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-		&apos;	If oSheet.isVisible = false  then
+		&apos;	If oSheet.isVisible = false then
 			 		oSheet.isVisible = TRUE
 	 				Thiscomponent.currentcontroller.setactivesheet(oSheet)
 	 		&apos;	else
@@ -685,7 +687,7 @@ FUNCTION ZOOMMATA (iRowMax as long, iColMax as long) &apos; APPROSSIMA LO ZOOM A
  &apos; da cancellare
 
 &apos;	on error goto Error_handler
-print &quot;Focus.ZOOMMATA  - Ma non era disattivata?&quot;	
+print &quot;Focus.ZOOMMATA - Ma non era disattivata?&quot;	
 	oContr = ThisComponent.CurrentController
 	
 	oContr.setFirstVisibleColumn (0)&apos; work only from this position
@@ -698,64 +700,64 @@ print &quot;Focus.ZOOMMATA  - Ma non era disattivata?&quot;
  	 	print icount
  	 		exit function
  	 	end if
- 	 	if iRowMax - iRow  = 0 then &apos;or iRowMax - iRow  = 1 then
+ 	 	if iRowMax - iRow = 0 then &apos;or iRowMax - iRow = 1 then
  	&apos; 	print &quot;1&gt;&quot; &amp; irow &amp; &quot; - &quot; &amp; iRowMax
-  			goto Set_X
-  		end if
-  		if irow &lt; 1 or iRow &gt; 250 then
-  &apos;		print &quot;2 &gt;&quot; &amp; irow
-  			goto Set_X
-  		end if
+ 			goto Set_X
+ 		end if
+ 		if irow &lt; 1 or iRow &gt; 250 then
+ &apos;		print &quot;2 &gt;&quot; &amp; irow
+ 			goto Set_X
+ 		end if
  		if iRowMax &gt; iRow then
-  			iZval = -1
-  				else
-  			iZval = 1
-  		end if
-  		Select Case iZoom
-  			Case  &lt; 20 
-  				goto Set_X
-  			Case  &gt; 399 
-  				goto Set_X
-  		end select
-  		iZoom = iZoom + iZval
+ 			iZval = -1
+ 				else
+ 			iZval = 1
+ 		end if
+ 		Select Case iZoom
+ 			Case &lt; 20 
+ 				goto Set_X
+ 			Case &gt; 399 
+ 				goto Set_X
+ 		end select
+ 		iZoom = iZoom + iZval
 		oContr.ZoomType=BYVALUE 
-  		oContr.ZoomValue=iZoom
-  		iRow = oContr.getVisibleRange.EndRow 
-  		iZoom =oContr.ZoomValue
-  		count = count+1
-  	loop
+ 		oContr.ZoomValue=iZoom
+ 		iRow = oContr.getVisibleRange.EndRow 
+ 		iZoom =oContr.ZoomValue
+ 		count = count+1
+ 	loop
 	
-  	Set_X:
-  	
-  	&apos; Print &quot;&apos; controlla anche la larghezza  &quot; &amp;  irow &amp; &quot; - &quot; &amp; iRowMax
+ 	Set_X:
+ 	
+ 	&apos; Print &quot;&apos; controlla anche la larghezza &quot; &amp; irow &amp; &quot; - &quot; &amp; iRowMax
 	iCol = oContr.getVisibleRange.EndColumn
 &apos;	print icol
 	If iCol &lt; iColMax then
-	   	 do While iCol &lt;&gt; iColMax 	
-  			if iColMax - iCol  = 0 then &apos;or iColMax - iCol = 1 then
-  		&apos;	print &quot;3 &quot; &amp; iColMax - iCol &amp; &quot; . &quot; &amp; iColMax &amp; &quot; . &quot; &amp; iCol
-  				exit FUNCTION
-  			end if
-  			if iCol &lt; 1 or icol &gt; 250 then
-  		&apos;	print &quot;4 &quot; &amp; icol
-  				exit FUNCTION
-  			end if
-  			if iColMax &gt; iCol then
-  				iZval = -1
-  					else
-  				iZval = 1
-  			end if
-  			iZoom = iZoom + iZval
-  			Select Case iZoom
-  				Case  &lt; 20
-   					exit Function
-  				Case  &gt; 399 
-  					exit Function
-  			end select
-  		
-  			oContr.ZoomType=BYVALUE 
-  			oContr.ZoomValue=iZoom
-  			iCol = oContr.getVisibleRange.EndColumn
+	 	 do While iCol &lt;&gt; iColMax 	
+ 			if iColMax - iCol = 0 then &apos;or iColMax - iCol = 1 then
+ 		&apos;	print &quot;3 &quot; &amp; iColMax - iCol &amp; &quot; . &quot; &amp; iColMax &amp; &quot; . &quot; &amp; iCol
+ 				exit FUNCTION
+ 			end if
+ 			if iCol &lt; 1 or icol &gt; 250 then
+ 		&apos;	print &quot;4 &quot; &amp; icol
+ 				exit FUNCTION
+ 			end if
+ 			if iColMax &gt; iCol then
+ 				iZval = -1
+ 					else
+ 				iZval = 1
+ 			end if
+ 			iZoom = iZoom + iZval
+ 			Select Case iZoom
+ 				Case &lt; 20
+ 					exit Function
+ 				Case &gt; 399 
+ 					exit Function
+ 			end select
+ 		
+ 			oContr.ZoomType=BYVALUE 
+ 			oContr.ZoomValue=iZoom
+ 			iCol = oContr.getVisibleRange.EndColumn
 		loop
 	end if	
 	exit function
@@ -794,12 +796,12 @@ Exit sub : End If
 	oContr.setFirstVisibleRow(primaRowV)
 	exit sub
 	
-	if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value &lt;&gt; 1 then
-	print  &quot;&lt;&gt; 1&quot;
-		if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value = 2 then
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value &lt;&gt; 1 then
+	print &quot;&lt;&gt; 1&quot;
+		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value = 2 then
 	 			msgbox &quot;L&apos;approssimazione Automatica dello Zoom è disattivata!&quot; &amp; CHR(10)_
 	 			&amp;&quot;Se vuoi attivarla devi modificare la Variabile Generale&quot; &amp; CHR(10)_
-	 			&amp;&quot;(Menù Principale &gt; Settaggio Variabili Generali  e imposta l&apos;Aggiustamento automatico dello Zoom = 1&quot;
+	 			&amp;&quot;(Menù Principale &gt; Settaggio Variabili Generali e imposta l&apos;Aggiustamento automatico dello Zoom = 1&quot;
 	 			exit sub
 	 		else 
 	 			msgbox &quot;Su questo ducumento questa Opzione non è attiva ...&quot; &amp; CHR(10)	
@@ -834,7 +836,7 @@ sub Trova_ZOOM &apos; trova il coefficiente di zoom
 &apos; dis_090424	oSheet = ThisComponent.currentController.activeSheet
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-	  else
+	 else
 		exit sub
 	end if
 		Sel_Altre_Opz
@@ -862,14 +864,14 @@ sub Trova_ZOOM &apos; trova il coefficiente di zoom
 		lcolMargine = 17
 	end if
 
-  	&apos; nel caso che qualcosa non funzioni ne impostiamo uno minimo (per evitare l&apos;errore)
-  	&apos; è successo con user personalizzato... aggiunto isempty
-    If lRowMargine = &quot;&quot; or isempty(lRowMargine) then 
-    	lRowMargine = 235
-    end if &apos;isempthy
-    if lcolMargine = &quot;&quot; or isempty(lcolMargine)  then
-    	lcolMargine = 14
-    end if
+ 	&apos; nel caso che qualcosa non funzioni ne impostiamo uno minimo (per evitare l&apos;errore)
+ 	&apos; è successo con user personalizzato... aggiunto isempty
+ If lRowMargine = &quot;&quot; or isempty(lRowMargine) then 
+ 	lRowMargine = 235
+ end if &apos;isempthy
+ if lcolMargine = &quot;&quot; or isempty(lcolMargine) then
+ 	lcolMargine = 14
+ end if
 
 	orange = oSheet.getCellRangeByPosition(0,190,lcolMargine,lRowMargine)
 
@@ -877,7 +879,7 @@ sub Trova_ZOOM &apos; trova il coefficiente di zoom
 	oContr.ZoomType=OPTIMAL
 
 
-     ThisComponent.Sheets.getByName(&quot;S1&quot;).unprotect(&quot;&quot;)
+ ThisComponent.Sheets.getByName(&quot;S1&quot;).unprotect(&quot;&quot;)
 	 ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,293).value=_
 	 			ThisComponent.CurrentController.ZoomValue 	
 &apos;	oContr.select(oSheet.getCellRangeByPosition(0,1,0,1))

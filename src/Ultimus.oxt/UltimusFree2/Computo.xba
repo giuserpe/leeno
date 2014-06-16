@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM  *****  BASIC  *****
-sub vedi_voce REM  &apos;(C) Giuseppe Vizziello 2013
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM ***** BASIC *****
+SUB RA
+PRINT Trova_Attr_Sheet
+END SUB
+sub vedi_voce REM &apos;(C) Giuseppe Vizziello 2013
 	Dim test As String
 	Dim riga_selezione As Integer
 	Dim focus as integer
@@ -17,7 +20,7 @@ sub vedi_voce REM  &apos;(C) Giuseppe Vizziello 2013
  	end if
 procedi:
 &apos;	print SE_contabilita
-	&apos;if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot;  then
+	&apos;if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
 	&apos;	exit sub
 	&apos;end if
 &apos;	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
@@ -122,8 +125,8 @@ osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
  	end if
 &apos; 	print sString
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then
-		msgbox &quot;Manca la riga rossa di chiusura della tabella!   PROVVEDI 25! &quot;
+	If isNull (oEnd) or isEmpty (oEnd) then
+		msgbox &quot;Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;
 		exit sub
 	end if
 	lRowE = oEnd.CellAddress.Row	REM TROVA LA POSIZIONE DELLA RIGA ROSSA
@@ -137,7 +140,7 @@ REM SE ANALISI PREZZI
 &apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
 		i = 0
 		For i = 0 to 1000
-			if oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Riga_rossa_Chiudi&quot; then
+			if oSheet.GetCellByPosition(0 , lRowE).CellStyle = &quot;Riga_rossa_Chiudi&quot; then
 				iserisco_qui = lRowE
 				i = 10000
 			else
@@ -150,26 +153,26 @@ REM SE ANALISI PREZZI
 		oContr.setFirstVisibleRow(lRowE-2)
 		insRows (inserisco_qui,15) &apos;insertByIndex non funziona
 &apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
-		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
+		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle = &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
 	REM INSERISCI LA DATA E IL PROGETTISTA
 		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
-		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle =  &quot;Ultimus&quot;
+		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = &quot;Ultimus&quot;
 		oSheet.GetCellByPosition(5 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
 		oSheet.GetCellByPosition(5 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
-&apos;		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
+&apos;		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle = &quot;Ultimus_centro&quot;
 	REM CONSOLIDA LA DATA	
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
 		Flags = com.sun.star.sheet.CellFlags.FORMULA
 		aSaveData = oRange.getDataArray()
-   		oRange.setDataArray( aSaveData )
-		end if
+ 		oRange.setDataArray(aSaveData)
+	end if
 REM SE ELENCO PREZZI
 	If Trova_Attr_Sheet = &quot;Tipo_EP&quot; OR Trova_Attr_Sheet = &quot;Tipo_ElencoP&quot; Then
 &apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
 		i = 0
 		For i = 0 to 1000
-			if oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Riga_rossa_Chiudi&quot; then
+			if oSheet.GetCellByPosition(0 , lRowE).CellStyle = &quot;Riga_rossa_Chiudi&quot; then
 				iserisco_qui = lRowE
 				i = 10000
 			else
@@ -182,19 +185,19 @@ REM SE ELENCO PREZZI
 		oContr.setFirstVisibleRow(lRowE-2)	
 		insRows (inserisco_qui,15) &apos;insertByIndex non funziona
 &apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
-		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
+		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle = &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
 	REM INSERISCI LA DATA E IL PROGETTISTA
 		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
-		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle =  &quot;Ultimus&quot;
+		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = &quot;Ultimus&quot;
 		oSheet.GetCellByPosition(2 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
 		oSheet.GetCellByPosition(2 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
-		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
+		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle = &quot;Ultimus_centro&quot;
 	REM CONSOLIDA LA DATA	
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
 		Flags = com.sun.star.sheet.CellFlags.FORMULA
 		aSaveData = oRange.getDataArray()
-  		oRange.setDataArray( aSaveData )
+ 		oRange.setDataArray( aSaveData )
 
 		end if
 &apos;	goto fine
@@ -215,8 +218,8 @@ REM SE COMPUTO
 &apos;	goto fine
 		i = 0
 		For i = 0 to 1000
-			if oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Comp TOTALI&quot; OR _
-				oSheet.GetCellByPosition(0 , lRowE).CellStyle =  &quot;Reg_prog&quot; Then
+			if oSheet.GetCellByPosition(0 , lRowE).CellStyle = &quot;Comp TOTALI&quot; OR _
+				oSheet.GetCellByPosition(0 , lRowE).CellStyle = &quot;Reg_prog&quot; Then
 				iserisco_qui = lRowE
 				i = 10000
 			else
@@ -229,18 +232,18 @@ REM SE COMPUTO
 		oContr.setFirstVisibleRow(lRowE-2)
 		insRows (inserisco_qui,15) &apos;insertByIndex non funziona
 &apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
-		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle =  &quot;Ultimus_centro&quot;
+		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle = &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
 	REM INSERIMENTO TITOLO
 		oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;Riepilogo Categorie&quot;)
-		osheet.getCellRangeByPosition (1,riga_corrente,19,riga_corrente).CellStyle =  &quot;Riepilogo_Cap_titolo&quot;
+		osheet.getCellRangeByPosition (1,riga_corrente,19,riga_corrente).CellStyle = &quot;Riepilogo_Cap_titolo&quot;
 	inizio_gruppo = riga_corrente
 		For i =3 to lRowE
 	REM CAPITOLI
-			if oSheet.GetCellByPosition(1 , i).CellStyle =  &quot;Livello-1-scritta&quot; then
-				id_cap  = oSheet.GetCellByPosition(1,i).AbsoluteName
-				str_cap  = oSheet.GetCellByPosition(2,i).AbsoluteName
-				tot_cap  = oSheet.GetCellByPosition(18,i).AbsoluteName
+			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Livello-1-scritta&quot; then
+				id_cap = oSheet.GetCellByPosition(1,i).AbsoluteName
+				str_cap = oSheet.GetCellByPosition(2,i).AbsoluteName
+				tot_cap = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
 &apos;				If Not gr_CAP_start then
 &apos;					gr_CAP_start = riga_corrente 
@@ -248,49 +251,49 @@ REM SE COMPUTO
 				insRows (riga_corrente,1) &apos;insertByIndex non funziona
 &apos;				oSheet.getRows.insertByIndex(riga_corrente,1)
 				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=TEXT(&quot; &amp; id_cap &amp;&quot;;&quot;&quot;@&quot;&quot;)&quot;)
-				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_Cap&quot;
+				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle = &quot;Riepilogo_Cap&quot;
 				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap)
 				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
 			end if
 	REM SOTTOCAPITOLI
 &apos;			riga_corrente =	riga_corrente +1
-			if oSheet.GetCellByPosition(1 , i).CellStyle =  &quot;livello2 valuta&quot; then
-				id_cap  = oSheet.GetCellByPosition(1,i).AbsoluteName
-				str_cap  = oSheet.GetCellByPosition(2,i).AbsoluteName
-				tot_cap  = oSheet.GetCellByPosition(18,i).AbsoluteName
+			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;livello2 valuta&quot; then
+				id_cap = oSheet.GetCellByPosition(1,i).AbsoluteName
+				str_cap = oSheet.GetCellByPosition(2,i).AbsoluteName
+				tot_cap = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
 				insRows (riga_corrente,1) &apos;insertByIndex non funziona
 &apos;				oSheet.getRows.insertByIndex(riga_corrente, 1)
-				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_SubCap&quot;
+				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle = &quot;Riepilogo_SubCap&quot;
 				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=&quot; &amp; id_cap)
 				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap)
 				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
 			end if
 	REM TOTALE
-			if oSheet.GetCellByPosition(1 , i).CellStyle =  &quot;Comp TOTALI&quot; then
-				tot_cap  = oSheet.GetCellByPosition(18,i).AbsoluteName
+			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Comp TOTALI&quot; then
+				tot_cap = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
 				insRows (riga_corrente,1) &apos;insertByIndex non funziona
 &apos;				oSheet.getRows.insertByIndex(riga_corrente, 1)
-				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
+&apos;				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
 				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
 				oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;TOTALE&quot;)
-				osheet.getCellRangeByPosition (1,riga_corrente,17,riga_corrente).CellStyle =  &quot;Riepilogo_Cap_bold_tot&quot;
-				osheet.getCellRangeByPosition (11,riga_corrente,18,riga_corrente).CellStyle =  &quot;Riepilogo_Cap_bold_tot_valuta&quot;
+				osheet.getCellRangeByPosition (1,riga_corrente,17,riga_corrente).CellStyle = &quot;Riepilogo_Cap_bold_tot&quot;
+				osheet.getCellRangeByPosition (18,riga_corrente,18,riga_corrente).CellStyle = &quot;Riepilogo_Cap_bold_tot_valuta&quot;
 			end if
 		fine_gruppo = riga_corrente
 		next i
 
 	REM INSERISCI LA DATA
-&apos;		oSheet.GetCellByPosition(2 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
-&apos;		oSheet.GetCellByPosition(8 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
-&apos;		oSheet.GetCellByPosition(8 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
-&apos;		osheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+7).CellStyle =  &quot;Ultimus_centro&quot;
+		oSheet.GetCellByPosition(2 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+		oSheet.GetCellByPosition(8 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
+		oSheet.GetCellByPosition(8 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
+		osheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+7).CellStyle = &quot;Ultimus_centro&quot;
 	REM CONSOLIDA LA DATA	
-&apos;		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
-&apos;		Flags = com.sun.star.sheet.CellFlags.FORMULA
-&apos;		aSaveData = oRange.getDataArray()
-&apos;  		oRange.setDataArray( aSaveData )
+		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
+		Flags = com.sun.star.sheet.CellFlags.FORMULA
+		aSaveData = oRange.getDataArray()
+ 		oRange.setDataArray( aSaveData )
 	REM RAGGRUPPA 
 		oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 		iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
@@ -298,7 +301,7 @@ REM SE COMPUTO
 			oCRA.Sheet =iSheet
 &apos;			oCRA.StartColumn = 	1
 			oCRA.StartRow = inizio_gruppo
-&apos;			oCRA.EndColumn =  19
+&apos;			oCRA.EndColumn = 19
 			oCRA.EndRow = fine_gruppo
 			oSheet.group(oCRA,1)
 			&apos;oSheet = ThisComponent.currentController.activeSheet

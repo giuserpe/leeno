@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_temp" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_temp" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -30,12 +30,12 @@ oSheetDest = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	
 &apos;	ThisComponent.CurrentController.Select(oSheetDest)	
 &apos; ThisComponent.CurrentController.Select(oCell) &apos;debug @@@@@@@@@@@@@@@
-&apos;	print  lLastUrowNN
+&apos;	print lLastUrowNN
 
 &apos;exit sub
 &apos; percorre le analisi di Prezzo e ciascuna viene &quot;registrata nell&apos;Elenco Prezzi
-	For i = lrow  to lLastUrowNN - 3
-&apos;print i &amp; &quot;  &quot; &amp; lrow
+	For i = lrow to lLastUrowNN - 3
+&apos;print i &amp; &quot; &quot; &amp; lrow
 	&apos;	 	if oCell.string = &quot;TOTALE&quot; OR (Trova_Attr_N (oCell1, oSheet)) = &quot;End_voce_ANALISI&quot; then
 		
 		
@@ -58,7 +58,7 @@ oSheetDest = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 			 end if
 			 
 	next
-&apos;print lrow &amp; &quot;  &quot; &amp; lLastUrowNN
+&apos;print lrow &amp; &quot; &quot; &amp; lLastUrowNN
 
 &apos; Copia il computo da Computo_2 a Computo 
 &apos; se era stato richiesto flag nella sub richiamata effettuerà o meno la copiatura
@@ -82,10 +82,10 @@ oSheetDest = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 
 	
 	Msgbox &quot;L&apos;accodamento è terminato! &quot;&amp; CHR$(10)_
-			&amp; &quot; Adesso puoi nuovamente toccare mouse e tastiera come ti pare!  &quot;&amp; CHR$(10)_
-			&amp; &quot;Il trasferimento delle voci mi risulta correttamente completato....   &quot;&apos; &amp; CHR$(10)_
-		&apos;	&amp; &quot;Dovresti poi Adattare l&apos;altezza delle righe  in alcune tabelle  ! &quot;&apos;&amp; CHR$(10)_
-	&apos;		&amp; &quot;...ma prima di lamentarti prova a riordinare l&apos;Elenco Prezzi....     !&quot;&amp; CHR$(10)_
+			&amp; &quot; Adesso puoi nuovamente toccare mouse e tastiera come ti pare! &quot;&amp; CHR$(10)_
+			&amp; &quot;Il trasferimento delle voci mi risulta correttamente completato.... &quot;&apos; &amp; CHR$(10)_
+		&apos;	&amp; &quot;Dovresti poi Adattare l&apos;altezza delle righe in alcune tabelle ! &quot;&apos;&amp; CHR$(10)_
+	&apos;		&amp; &quot;...ma prima di lamentarti prova a riordinare l&apos;Elenco Prezzi.... !&quot;&amp; CHR$(10)_
 	&apos;		&amp; &quot;... e adattare l&apos;altezza ottimale delle righe del Computo...&quot;
 END SUB
 
@@ -93,33 +93,33 @@ END SUB
 Function Controlla_esistenza_sheet (sNameDocDest as string, sCurr_Sheet, sDest_sheet)
 &apos; modulino in lavorazione... controlla se nel doc di destinazione esiste già una sheet con quel nome 
 	secondDoc = stardesktop.LoadComponentFromUrl(sNameDocDest, &quot;_default&quot;, 0, Array())
-    oSheets =   secondDoc.getSheets()	
+ oSheets = secondDoc.getSheets()	
 	aSheetNames = oSheets.getElementNames()
-    For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array    
-      If cSheetName2 = sDest_sheet Then
-      			If msgbox (&quot;la tabella &quot; &amp; sDest_sheet &amp; &quot; esiste gà nel doc di destinazione...&quot;&amp; CHR$(10) _
-      					  &amp; &quot;Se premi &quot;&quot;OK&quot;&quot; la elimino e proseguo... &quot;&amp; CHR$(10) _
-      					  &amp;  &quot;Se invece premi &quot;&quot;Annulla&quot;&quot; interrompo l&apos;accodamento!&quot;  ,33, &quot;&quot;&amp; CHR$(10)) = 1 then
-      					 oSheets.removebyname(cSheetName2)		
-      					&apos;print &quot;rimossa! ... proseguo!! &quot;      			
-      				else
-      					oSheets.getByName(sDest_sheet).isVisible = TRUE
-						selectSheetByName(secondDoc, sDest_sheet  )
-						msgbox &quot;Sul doc di destinazione (&quot; &amp; sNameDocDest &amp; &quot;)  esiste già una tabella &quot; &amp; sDest_sheet &amp; CHR$(10) _
+ For i = LBound( aSheetNames ) To UBound( aSheetNames )
+ cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ If cSheetName2 = sDest_sheet Then
+ 			If msgbox (&quot;la tabella &quot; &amp; sDest_sheet &amp; &quot; esiste gà nel doc di destinazione...&quot;&amp; CHR$(10) _
+ 					 &amp; &quot;Se premi &quot;&quot;OK&quot;&quot; la elimino e proseguo... &quot;&amp; CHR$(10) _
+ 					 &amp; &quot;Se invece premi &quot;&quot;Annulla&quot;&quot; interrompo l&apos;accodamento!&quot; ,33, &quot;&quot;&amp; CHR$(10)) = 1 then
+ 					 oSheets.removebyname(cSheetName2)		
+ 					&apos;print &quot;rimossa! ... proseguo!! &quot; 			
+ 				else
+ 					oSheets.getByName(sDest_sheet).isVisible = TRUE
+						selectSheetByName(secondDoc, sDest_sheet )
+						msgbox &quot;Sul doc di destinazione (&quot; &amp; sNameDocDest &amp; &quot;) esiste già una tabella &quot; &amp; sDest_sheet &amp; CHR$(10) _
 								&amp; &quot;decidi cosa farne...&quot;
 						Controlla_esistenza_sheet = &quot;annulla&quot;
 					&apos;	print &quot;annullo e seleziono!!!&quot;
 						exit Function 
 				end if
-      End If
-    Next
+ End If
+ Next
 &apos; fine modulino di controllo esistenza
 End Function
 
 
 sub Main
-&apos; Recorded by  
+&apos; Recorded by 
 &apos; Date: Tue Jun 10 16:46:24 2008
 	
 	&apos; get access to the document
@@ -150,7 +150,7 @@ end sub
 
 
 sub selectSheetByName(document,sNameDocDest)
-        document.getCurrentController.select(document.getSheets().getByName(sNameDocDest))
+ document.getCurrentController.select(document.getSheets().getByName(sNameDocDest))
 end sub
 
 Sub Anche_Dati_Progetto (anche_Dati as boolean)
@@ -184,32 +184,32 @@ Sub Anche_Dati_Progetto (anche_Dati as boolean)
 &apos;	
 			ThisComponent.Sheets.removeByName(&quot;M1_2&quot;) 
 
-    	 Else
-    		
-   	  		If thisComponent.Sheets.hasByName(&quot;S2_2&quot;) Then &apos; se la sheet esiste
- 	  	  	 	oSheets = ThisComponent.Sheets
- 		   		oSheets.removeByName(&quot;S2_2&quot;) 
+ 	 Else
+ 		
+ 	 		If thisComponent.Sheets.hasByName(&quot;S2_2&quot;) Then &apos; se la sheet esiste
+ 	 	 	 	oSheets = ThisComponent.Sheets
+ 		 		oSheets.removeByName(&quot;S2_2&quot;) 
 			end if
-	   	  	If thisComponent.Sheets.hasByName(&quot;M1_2&quot;) Then &apos; se la sheet esiste
-  	 	  	 	oSheets = ThisComponent.Sheets
- 		   		oSheets.removeByName(&quot;M1_2&quot;) 
+	 	 	If thisComponent.Sheets.hasByName(&quot;M1_2&quot;) Then &apos; se la sheet esiste
+ 	 	 	 	oSheets = ThisComponent.Sheets
+ 		 		oSheets.removeByName(&quot;M1_2&quot;) 
 			end if		
-    end if
+ end if
 End Sub
 
 
 SUB Elimina_Tutti_Nomi_Definitiva 
 dim n as integer
-     oDoc = ThisComponent
-     oAree=oDoc.NamedRanges&apos;
-     oNomiArea() = oAree.ElementNames()
-     n = oAree.Count - 1
-      For i = 0 to n &apos; elimino i nomi fino ad elenco_prezzi (by Marco Caresia)
-     	  if oNomiArea(i) = &quot;elenco_prezzi&quot; then 
-       			exit for
-      	  end if
-          oAree. RemoveByName(oNomiArea(i))                	
-      next
+ oDoc = ThisComponent
+ oAree=oDoc.NamedRanges&apos;
+ oNomiArea() = oAree.ElementNames()
+ n = oAree.Count - 1
+ For i = 0 to n &apos; elimino i nomi fino ad elenco_prezzi (by Marco Caresia)
+ 	 if oNomiArea(i) = &quot;elenco_prezzi&quot; then 
+ 			exit for
+ 	 end if
+ oAree. RemoveByName(oNomiArea(i)) 	
+ next
 &apos; nomi cancellati fino ad elenco_prezzi (escluso)
 &apos; Adesso inverto l&apos;ordine di cancellazione incominciando 
 &apos; dall&apos;ultima... (by Lido Bernardini)
@@ -235,9 +235,9 @@ sub Elimina_Tutti_NomiArea
 	
 	
 	oProgressbar =ThisComponent.GetCurrentController.GetFrame.CreateStatusIndicator()
-    oProgressbar.Start(&quot;&quot;,100)
+ oProgressbar.Start(&quot;&quot;,100)
 
-    iNumAree =  oAree.getCount()
+ iNumAree = oAree.getCount()
 	iStep = (100/iNumAree)
 	oProgressbar.Value = iStep
 	
@@ -245,10 +245,10 @@ sub Elimina_Tutti_NomiArea
 			oNomiArea = oAree.ElementNames(n)
 			oAree. RemoveByName(oNomiArea)
 			iNew = ((istep *i) +1 )
-		&apos;	If iNew = 0  then
+		&apos;	If iNew = 0 then
 		&apos;		 inew = istep
 		&apos;	end if
-	&apos;		print &quot;i  &quot; &amp; i
+	&apos;		print &quot;i &quot; &amp; i
 	&apos;		oProgressbar.Value = (100 / i)&apos; /oAree.getCount())
 			oProgressbar.Value = iNew
 	&apos;		print (iStep * n )
@@ -274,19 +274,19 @@ Sub Solo_Computo_ (anche_computo as boolean)
 		oEnd=uFindString_taxi(sString$, oSheet) 
 		lrowEnd=oEnd.RangeAddress.EndRow 
 		if oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or  oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;TOTALI num&quot; then
+			or oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;TOTALI num&quot; then
 			&apos;	print &quot;caso 1&quot;For i
 			lrowend =lrowEnd-1
 		end if
 		if oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or  oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;TOTALI num&quot; then
+			or oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;TOTALI num&quot; then
 					&apos;	print &quot;caso 2&quot;
 			lrowend =lrowEnd-2
 		end if		
 		if oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or  oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;TOTALI num&quot; then
+			or oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;TOTALI num&quot; then
 			 &apos;	lrowend =lrowEnd-3
-		end if	&apos; queste per evitare di includere righe di totali  in posizioni improprie
+		end if	&apos; queste per evitare di includere righe di totali in posizioni improprie
 		lrowend =lrowEnd-1
 		
 		
@@ -314,30 +314,30 @@ Sub Solo_Computo_ (anche_computo as boolean)
 		&apos;ThisComponent.getCurrentController.select(oSheetDest.getCellRangeByPosition(0,lrowdest,250,lrowdest))
 		&apos;print lrowdest
 		&apos;	exit sub
- 	   oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
- 	   oSheetDest.unprotect(&quot;&quot;)
+ 	 oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+ 	 oSheetDest.unprotect(&quot;&quot;)
  
 		 &apos;exit sub
 	insRows (lrowDest, lrowEnd -2 )
-&apos; 	   oSheetDest.getRows.insertByIndex(lrowDest, lrowEnd -2 )
- 	   oSheetDest.copyRange(oDest, oSrc)
- &apos;	   If mantieni_S2 = false then
- 	  	oSheets = ThisComponent.Sheets
- 	   	oSheets.removeByName(&quot;COMPUTO_2&quot;)
- 	   	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).string = 1 then
+&apos; 	 oSheetDest.getRows.insertByIndex(lrowDest, lrowEnd -2 )
+ 	 oSheetDest.copyRange(oDest, oSrc)
+ &apos;	 If mantieni_S2 = false then
+ 	 	oSheets = ThisComponent.Sheets
+ 	 	oSheets.removeByName(&quot;COMPUTO_2&quot;)
+ 	 	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).string = 1 then
 			Rifa_Somme_TOT_Computo
 		end if
-&apos; 	   	End If 	
- 	    &apos;oSheets = ThisComponent.Sheets
- &apos;	  &apos; 	oSheets.removeByName(&quot;COMPUTO_2&quot;)
- &apos;	  Else
+&apos; 	 	End If 	
+ 	 &apos;oSheets = ThisComponent.Sheets
+ &apos;	 &apos; 	oSheets.removeByName(&quot;COMPUTO_2&quot;)
+ &apos;	 Else
  	 &apos; print &quot;mantieni_S2&quot; 
- 	&apos;  xray mantieni_S2
- 	&apos;&apos;  	If mantieni_S2 = false then
- 	&apos;  		oSheets = ThisComponent.Sheets
- 	&apos;   		oSheets.removeByName(&quot;COMPUTO_2&quot;)
- 	   	&apos;End If 	
-    End if
+ 	&apos; xray mantieni_S2
+ 	&apos;&apos; 	If mantieni_S2 = false then
+ 	&apos; 		oSheets = ThisComponent.Sheets
+ 	&apos; 		oSheets.removeByName(&quot;COMPUTO_2&quot;)
+ 	 	&apos;End If 	
+ End if
 
 END SUB
 
@@ -347,31 +347,31 @@ Sub dispatchURL (optional document, optional aURL) &apos; se da problemi mettere
 		end if
 		if isnull (document) then
 			aURL = &quot;.uno:SelectAll&quot;
-        end if
-        Dim noProps()
-        Dim URL as new com.sun.star.util.URL
+ end if
+ Dim noProps()
+ Dim URL as new com.sun.star.util.URL
 
-        frame = document.getCurrentController().getFrame()
-        URL.Complete = aURL
-        transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
-        transf.parseStrict(URL)
-        disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
-        disp.dispatch(URL, noProps())
+ frame = document.getCurrentController().getFrame()
+ URL.Complete = aURL
+ transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
+ transf.parseStrict(URL)
+ disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
+ disp.dispatch(URL, noProps())
 End Sub
 
 
 Sub dispatchURL2 (document, aURL) &apos; se da problemi mettere optional
 &apos;document=thisconponent
 	&apos;	aurl = &quot;.uno:SelectAll&quot;
-        Dim noProps()
-        Dim URL as new com.sun.star.util.URL
+ Dim noProps()
+ Dim URL as new com.sun.star.util.URL
 
-        frame = document.getCurrentController().getFrame()
-        URL.Complete = aURL
-        transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
-        transf.parseStrict(URL)
-        disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
-        disp.dispatch(URL, noProps())
+ frame = document.getCurrentController().getFrame()
+ URL.Complete = aURL
+ transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
+ transf.parseStrict(URL)
+ disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
+ disp.dispatch(URL, noProps())
 End Sub
 
 </script:module>

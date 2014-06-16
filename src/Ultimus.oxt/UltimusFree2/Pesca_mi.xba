@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                          
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -22,11 +22,11 @@ Global RigaVoceGlobal as long
 
 &apos; modulo in test
 &apos; scopo: &quot;pescare&quot; un codice sull&apos;elenco prezzi! (inizialmente)
-&apos;        poi estesa anche a contabilita &lt;&gt; Ecomputo etc...
+&apos; poi estesa anche a contabilita &lt;&gt; Ecomputo etc...
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Sub Ricicla_Misure
-	If  ThisComponent.currentcontroller.activesheet.Name = &quot;CONTABILITA&quot; then
+	If ThisComponent.currentcontroller.activesheet.Name = &quot;CONTABILITA&quot; then
 		sGVV = &quot;va&quot;
 		lrow = range2cell &apos;cerca_partenza
 		sGDove = &quot;COMPUTO&quot;
@@ -116,79 +116,7 @@ Sub Pesca_cod &apos; [pesca...]
 End Sub
 
 
-SUB Pesca_cod_bart_non_usata   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
-&apos;	print &quot;globals &quot; &amp;  sGVV &amp; &quot;-&quot; &amp; sGorigine &amp; &quot;-&quot; &amp; sGDove
-	Select case ThisComponent.currentcontroller.activesheet.name
-		Case &quot;CONTABILITA&quot;
-			sGVV = &quot;va&quot;
-			lrow = range2cell &apos;cerca_partenza
-			if 	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(44, lrow).string = &quot;&quot; and _
-					ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1, lrow).cellstyle= &quot;comp Art-EP_R&quot; then
-				PRINT &quot;VAI1&quot;
-					sGDove = &quot;Elenco Prezzi&quot;
-			 		sGVV = &quot;va&quot;	
-					sGorigine = &quot;CONTABILITA&quot;	
-					cerca_partenza
-					&apos;porta su EP ????
-				PRINT &quot;VAI2&quot;
-					Pesca_cod_1
-				PRINT &quot;VAI3&quot;		
-					exit sub
-				Else
-				Print &quot;eccomi&quot;
-					sGDove = &quot;COMPUTO&quot;
-			 		sGVV = &quot;va&quot;	
-					sGorigine = &quot;CONTABILITA&quot;			
-					Pesca_cod__per_reg_A_1
-					exit sub
-					&apos;porta su Computo 		
-			end if
-		Case &quot;COMPUTO&quot;
-			 if sGorigine = &quot;CONTABILITA&quot; then
-			 		sGVV = &quot;viene&quot; &apos;incolla
-			 		sGDove = &quot;CONTABILITA&quot;
-			 		sGorigine = &quot;COMPUTO&quot;
-			 		&apos; esegue viene appropriato
-					&apos;preleva solo i dati (da fare)
-			 		Pesca_cod__per_reg_A_2
-					sGVV = &quot;&quot;
-					sGDove = &quot;&quot;		
-				 	sGorigine =	&quot;&quot;				 		
-			 		
-			 	else &apos; 
-			 		sGVV = &quot;va&quot;
-			 		sGDove = &quot;Elenco Prezzi&quot;
-			 		sGorigine = &quot;COMPUTO&quot;
-				 	&apos;porta su EP
-				 	Pesca_cod_1
-			 end if
-			 
-		Case &quot;Elenco Prezzi&quot;
-			&apos;esegui vieni appropriato
-			if sGorigine = &quot;CONTABILITA&quot; then
-					&apos;preleva solo i dati
-					Print 
-					Pesca_solo_dati_metti_in_contab
-				else
-					Pesca_cod_2
-			end if
-			sGVV = &quot;&quot;
-			sGDove = &quot;&quot;		
-		 	sGorigine =	&quot;&quot;			
-		 	
-		Case &quot;Analisi di Prezzo&quot;
-			sGVV = &quot;va&quot;
-			sGDove = &quot;Elenco Prezzi&quot;		
-		 	sGorigine =	&quot;Analisi di Prezzo&quot;
-		 	&apos;porta su EP
-		 	Pesca_cod_1
-		 			 
-	end select
-	
-&apos;	print &quot;azzerate? &quot; &amp;  sGVV &amp; &quot;-&quot; &amp; sGorigine &amp; &quot;-&quot; &amp; sGDove
-	
-	
-end sub
+
 
 function cerca_partenza
 	oCell=thisComponent.getCurrentSelection()
@@ -198,18 +126,18 @@ function cerca_partenza
 	&apos;verifiche varie sulla posizione di inserimento
 	iEndRow = getLastUsedRow(oSheet)
 	if lrow &gt; iEndRow then
-		 MsgBox  (&quot;La riga selezionata e&apos; fuori dall&apos;area di lavoro!&quot; 
+		 MsgBox (&quot;La riga selezionata e&apos; fuori dall&apos;area di lavoro!&quot; 
 		exit function
 	end if
 	if lRow &lt; 2 then
-		 MsgBox  (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
-							&amp;	&quot;   Selezionane un&apos;altra più in basso....&quot;)
+		 MsgBox (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
+							&amp;	&quot; Selezionane un&apos;altra più in basso....&quot;)
 		exit function
 	end if
 	if lRow = 2 Then
 	insRows (lRow, 1) &apos;insertByIndex non funziona
 &apos;		oSheet.getRows.insertByIndex(lRow, 1)
-		oSheet.getCellRangeByPosition(0, lRow, 49 , lRow).cellstyle =  &quot;Reg_prog&quot;
+		oSheet.getCellRangeByPosition(0, lRow, 49 , lRow).cellstyle = &quot;Reg_prog&quot;
 	end if
 	
 	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
@@ -270,7 +198,7 @@ function cerca_partenza
 
 	FAI:
 	fai_e_basta:
-&apos;  registra la posizione
+&apos; registra la posizione
 	oPartenza_A = ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow+1, 2, lrow+1 )
 	oPartenza_A = ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow, 2, lrow )
 	cerca_partenza = lrow
@@ -278,77 +206,14 @@ end function
 
 
 
-SUB Pesca_cod__non_usata &apos;Pesca_cod__   &apos;quella di partenza (TUTTO INIZIA DA QUESTA)
-&apos;print &quot;uffaaaaa&quot;
-	&apos;sceglie tra le due routine
-&apos;	questo ambaradan serve per decidere il contesto (si può fare di meglio... ma questa funziona)
-&apos;xray smemopesca &apos;&lt;empty&gt;
-&apos;print ThisComponent.currentcontroller.activesheet.name &apos;sMemoPesca
-&apos;  select Case ThisComponent.currentcontroller.activesheet.name
- &apos; 		Case &quot;CONTABILITA&quot;
-&apos;  			sMemoPesca = &quot;cod_reg&quot;
- &apos; 			Pesca_cod_per_reg_A
- &apos; 		Case
-&apos;  End select
-	&apos;	PRINT &quot;prima&quot; &amp; &quot;  &quot; &amp; sMemoPesca
-	&apos;	exit sub
-		If ThisComponent.currentcontroller.activesheet.name=&quot;CONTABILITA&quot; then 
-		&apos; AND _
-		&apos;	sMemoPesca = Nothing then &apos;empty &apos; then
-			sMemoPesca = &quot;cod_reg&quot;
-			Pesca_cod_per_reg_A
-			exit sub
-			&apos;print sMemoPesca
-		end if
-		If ThisComponent.currentcontroller.activesheet.name=&quot;COMPUTO&quot; then &apos;&apos;AND _
-			&apos;	sMemoPesca = empty  then
-			if sMemoPesca = &quot;cod_reg&quot; then
-				Pesca_cod_per_reg_A
-				&apos;sMemoPesca = &quot;cod&quot;
-				exit sub
-			end if
-		&apos;	print &quot;è vuoto? &quot; &amp; sMemoPesca
-		&apos;	xray sMemoPesca
-			if sMemoPesca = &quot;cod&quot; or isempty(sMemoPesca) or sMemoPesca = &quot;&quot; then
-		&apos;	print &quot;dentro&quot;
-				Pesca_cod_0
-				exit sub
-			end if
-		end if
-		If ThisComponent.currentcontroller.activesheet.name=&quot;Analisi di Prezzo&quot; then  &apos;&apos;AND _
-			&apos;sMemoPesca = empty  then
-			if sMemoPesca = &quot;cod&quot; then
-				Pesca_cod_2
-				sMemoPesca = empty
-			&apos;	print sMemoPesca
-				exit sub
-			end if
-			if isEmpty(sMemoPesca) then
-				Pesca_cod_1
-				exit sub			
-			end if
-		end if
-		If ThisComponent.currentcontroller.activesheet.name=&quot;Elenco Prezzi&quot; then
-				Pesca_cod_2
-		exit sub
-	end if
- 
-	&apos;PRINT sMemoPesca
-	select case sMemoPesca 
-		case &quot;cod&quot; 
-		&apos;print 1
-			Pesca_cod_0
-		case &quot;cod_reg&quot;
-			Pesca_cod_per_reg_A
-	end select
-end sub
+
 
 
 SUB Pesca_cod_1
 dim lrow as long
 dim oCell as object
 
-	on  error goto errore
+	on error goto errore
 	&apos;sMemoPesca = &quot;cod&quot;
 	&apos;individua la riga corrente
 	oCell=thisComponent.getCurrentSelection()
@@ -356,8 +221,8 @@ dim oCell as object
 	oSheet = ThisComponent.currentController.activeSheet
 
 	if lRow &lt; 2 then
-		 MsgBox  (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
-							&amp;	&quot;   Selezionane un&apos;altra più in basso....&quot;)
+		 MsgBox (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
+							&amp;	&quot; Selezionane un&apos;altra più in basso....&quot;)
 		exit sub
 	end if
 
@@ -366,27 +231,27 @@ dim oCell as object
 		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = &quot;Comp&quot; or _
 			left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = &quot;comp&quot; then
 				oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
-    			lrow = oRangeVC.RangeAddress.StartRow +1
-    		else 
-    			msgbox &quot;Devi agire posizionato dentro una voce!&quot; 
+ 			lrow = oRangeVC.RangeAddress.StartRow +1
+ 		else 
+ 			msgbox &quot;Devi agire posizionato dentro una voce!&quot; 
 				exit sub
 		end if
 	end if
 	if ThisComponent.currentcontroller.activesheet.name = &quot;Analisi di Prezzo&quot; then
 		if left((oSheet.GetCellByPosition( 3 , lRow).cellstyle),10) &lt;&gt; &quot;An-lavoraz&quot; then
-			    msgbox &quot;Devi agire posizionato sul componente!  ( Annullo! ) &quot; 
+			 msgbox &quot;Devi agire posizionato sul componente! ( Annullo! ) &quot; 
 				exit sub
 		end if
 	end if 	
 
 
-&apos;1)  registra la posizione
+&apos;1) registra la posizione
 	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
 		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
-	end if     
+	end if 
 	if ThisComponent.currentcontroller.activesheet.name = &quot;Analisi di Prezzo&quot; then
 		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
-	end if  
+	end if 
 
 &apos;2) focus su EP
 
@@ -396,12 +261,12 @@ dim oCell as object
 	&apos;(alla fine dovrà rieseguire la SC)
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value &gt; 0 or _
  		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt; 0 then
- 		   &apos;non fa nulla
+ 		 &apos;non fa nulla
  		 else
 			msgbox &quot;Cerca la voce che ti serve.... &quot; &amp; CHR$(10)_
 				&amp; &quot;(puoi usare Shit F3, oppure Ctrl-F, ...),&quot; &amp; CHR$(10)_
 				&amp; &quot;Un click sulla riga della voce e poi ri-aziona &apos;pesca va e vieni&apos;&quot;&amp; CHR$(10)_
-				&amp; &quot; (Ctrl Alt K  oppure   Ctrl Ins) &quot;  
+				&amp; &quot; (Ctrl Alt K oppure Ctrl Ins) &quot; 
 	end if
 	exit sub
 	errore:
@@ -428,7 +293,7 @@ SUB Pesca_cod_2
 	if ismissing(oPartenza) or isNull(oPartenza) then 
 	&apos;	Msgbox &quot;Questa macro va esaguita PRIMA dal foglio COMPUTO&quot; &amp; CHR$(10) _
 	&apos;			&amp; &quot;Altrimenti (sul COMPUTO) non ho la posizione della riga di destinazione...&quot; &amp; CHR$(10) _
-	&apos;	 		&amp;  &quot;&quot;, 16, &quot;   Errore! &quot;
+	&apos;	 		&amp; &quot;&quot;, 16, &quot; Errore! &quot;
 			exit sub
 	end if	
 
@@ -442,7 +307,7 @@ SUB Pesca_cod_2
  	end if
  	
 	oCell=thisComponent.getCurrentSelection()
-	lrow=oCell.RangeAddress.StartRow   
+	lrow=oCell.RangeAddress.StartRow 
 	sCodice = oSheet.GetCellByPosition( lcolbase , lrow).string
 	&apos;	filtro
 	
@@ -451,9 +316,9 @@ SUB Pesca_cod_2
 	lrow = oPartenza.RangeAddress.StartRow 
 
 	oSheet = ThisComponent.currentController.activeSheet
-	if oSheet.name = &quot;COMPUTO&quot; then  &apos;??????????????????????????????
+	if oSheet.name = &quot;COMPUTO&quot; then &apos;??????????????????????????????
 		if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP&quot; then
-			sTitolo = &quot;Seleziona la cella di destinazione (Codice)  (ESC per Annullare, NO Click su X ) &quot; 
+			sTitolo = &quot;Seleziona la cella di destinazione (Codice) (ESC per Annullare, NO Click su X ) &quot; 
  	 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  			if SelectedRange = &quot;&quot; or _
  			 	SelectedRange = &quot;ANNULLA&quot; then
@@ -469,7 +334,7 @@ SUB Pesca_cod_2
 	if oSheet.name = &quot;Analisi di Prezzo&quot; then
 &apos;	print &quot;eccoci&quot;
 		if oSheet.GetCellByPosition( 0, lrow).cellstyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; then
-			sTitolo = &quot;Click sulla cella di destinazione del Codice  (ESC per Annullare, NO Click su X ) &quot; 
+			sTitolo = &quot;Click sulla cella di destinazione del Codice (ESC per Annullare, NO Click su X ) &quot; 
  	 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  	 		if SelectedRange = &quot;&quot; or _
  	 			SelectedRange = &quot;ANNULLA&quot; then
@@ -520,7 +385,7 @@ dim oSheet as object
 	if ismissing(oPartenza_A) or isNull(oPartenza_A) then 
 	&apos;	Msgbox &quot;Questa macro va esaguita PRIMA dal foglio COMPUTO&quot; &amp; CHR$(10) _
 	&apos;			&amp; &quot;Altrimenti (sul COMPUTO) non ho la posizione della riga di destinazione...&quot; &amp; CHR$(10) _
-	&apos;	 		&amp;  &quot;&quot;, 16, &quot;   Errore! &quot;
+	&apos;	 		&amp; &quot;&quot;, 16, &quot; Errore! &quot;
 	&apos;print &quot;esce qui&quot;
 				oPartenza_A = ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow, 2, lrow )
 
@@ -537,7 +402,7 @@ dim oSheet as object
  	end if
  	
 	oCell=thisComponent.getCurrentSelection()
-	lrow=oCell.RangeAddress.StartRow   
+	lrow=oCell.RangeAddress.StartRow 
 	sCodice = oSheet.GetCellByPosition(lcolbase , lrow).String
 	&apos;	filtro
 	ThisComponent.CurrentController.Select(oPartenza_A) 

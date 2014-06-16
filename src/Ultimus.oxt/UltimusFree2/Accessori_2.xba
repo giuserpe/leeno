@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori_2" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                       
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori_2" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -16,8 +16,8 @@
 
 
 
-sub SwitchDesign &apos;Bozza_on_off  101221 &apos; questo è lo switc
-  	SwitchDesignMode()  &apos; basta questa riga
+sub SwitchDesign &apos;Bozza_on_off 101221 &apos; questo è lo switc
+ 	SwitchDesignMode() &apos; basta questa riga
 &apos;	ThisComponent.ApplyFormDesignMode = False &apos;True
 &apos;ToggleToolbarVisible(ThisComponent, &quot;private:resource/toolbar/formcontrols&quot;, 2)
 &apos;exit sub
@@ -29,39 +29,39 @@ sub SwitchDesign &apos;Bozza_on_off  101221 &apos; questo è lo switc
 end sub
 
 Sub ToggleToolbarVisible(oDoc, sURL, prepinac)
-  Dim oLayout
-  oLayout = oDoc.CurrentController.getFrame().LayoutManager
+ Dim oLayout
+ oLayout = oDoc.CurrentController.getFrame().LayoutManager
  xray oLayout
-&apos;xray  oLayout.isElementVisible(sURL)
-&apos;xray  oLayout.isElementLocked(sURL)
-&apos;xray  oLayout.isElementFloating(sURL)
+&apos;xray oLayout.isElementVisible(sURL)
+&apos;xray oLayout.isElementLocked(sURL)
+&apos;xray oLayout.isElementFloating(sURL)
 &apos;oLayout.Visible=true
-  Select Case prepinac
-    Case 0  rem --- hide toolbar
-    	 oLayout.hideElement(sURL)
-     	&apos;oLayout.hideElement(sURL).setVisible(False)
-    Case 1  rem --- show toolbar
-      oLayout.showElement(sURL)
-     &apos; oLayout.hideElement(sURL).setVisible(True)
-    Case 2  rem --- switch toolbar
-      If oLayout.isElementVisible(sURL) Then
-        oLayout.hideElement(sURL)
-      Else
-        oLayout.showElement(sURL)
-      End If
-  End Select
+ Select Case prepinac
+ Case 0 rem --- hide toolbar
+ 	 oLayout.hideElement(sURL)
+ 	&apos;oLayout.hideElement(sURL).setVisible(False)
+ Case 1 rem --- show toolbar
+ oLayout.showElement(sURL)
+ &apos; oLayout.hideElement(sURL).setVisible(True)
+ Case 2 rem --- switch toolbar
+ If oLayout.isElementVisible(sURL) Then
+ oLayout.hideElement(sURL)
+ Else
+ oLayout.showElement(sURL)
+ End If
+ End Select
 End Sub
 
 
 
-Sub Bozza_ON  &apos;101221
+Sub Bozza_ON &apos;101221
  If NOT isDesignModeOn() Then
 	 SwitchDesignMode()
  	ThisComponent.ApplyFormDesignMode = True
  end if
 End Sub
 
-sub Bozza_OFF  &apos;(quindi esegue) 101221
+sub Bozza_OFF &apos;(quindi esegue) 101221
  If isDesignModeOn() Then
 	 SwitchDesignMode()
 	 ThisComponent.ApplyFormDesignMode = True
@@ -75,13 +75,13 @@ Sub SwitchDesign____ &apos; By Andrew Pitonyak &apos; quella buona
 &apos; la cosa è invertita... ma poco male, basta saperlo!
  If isDesignModeOn()= false Then
 &apos; print &quot;è on e lo metto off&quot;
- 	  	SwitchDesignMode()
+ 	 	SwitchDesignMode()
 		ThisComponent.ApplyFormDesignMode = True
 		sproteggi_sheet_TUTTE
  	else
  &apos;	print &quot;è off e lo metto on&quot;
 		SwitchDesignMode()
- 		ThisComponent.ApplyFormDesignMode  = False
+ 		ThisComponent.ApplyFormDesignMode = False
  		&apos;&apos;&apos;@ Sel_Altre_Opz
  End If
 end sub
@@ -89,13 +89,13 @@ end sub
 Sub SwitchDesign___ &apos; By Andrew Pitonyak 
  If isDesignModeOn() Then
  print &quot;è on e lo metto off&quot;
- 	  	SwitchDesignMode()
+ 	 	SwitchDesignMode()
 		ThisComponent.ApplyFormDesignMode = True
 		sproteggi_sheet_TUTTE
  	else
  	print &quot;è off e lo metto on&quot;
 		SwitchDesignMode()
- 		ThisComponent.ApplyFormDesignMode  = False
+ 		ThisComponent.ApplyFormDesignMode = False
  		Sel_Altre_Opz
  End If
 end sub
@@ -103,7 +103,7 @@ end sub
 
 Sub setDesignModeOFF() &apos;evitarla...!!!
  If NOT isDesignModeOn() Then
-   SwitchDesignMode()
+ SwitchDesignMode()
  End If
  REM Set DesignMode ON for the next time the document is opened!
  &apos;Stardesktop.getCurrentComponent().ApplyFormDesignMode = True
@@ -113,7 +113,7 @@ End Sub
 
 Sub setDesignModeON() 
  If isDesignModeOn() Then
-   SwitchDesignMode()
+ SwitchDesignMode()
  End If
  REM Set DesignMode OFF for the next time the document is opened!
  &apos;Stardesktop.getCurrentComponent().ApplyFormDesignMode = False
@@ -128,16 +128,16 @@ Sub SwitchDesignMode( )
  &apos;Print &quot;Switching design mode&quot;
  sCommand = &quot;.uno:SwitchControlDesignMode&quot;
  oFrame = ThisComponent.getCurrentController().getFrame()
- oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)  
-  oDisp.executeDispatch(oFrame, &quot;.uno:SwitchControlDesignMode&quot;, &quot;&quot;, 0, Array())
+ oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;) 
+ oDisp.executeDispatch(oFrame, &quot;.uno:SwitchControlDesignMode&quot;, &quot;&quot;, 0, Array())
 End Sub
 
 Function isDesignModeOn() As Boolean
- Dim oFrame            &apos; Current frame
- Dim oDisp             &apos; The created dispatcher
- Dim oParser           &apos; URL Transformer to parse the URL.
- Dim oStatusListener   &apos; The status listener that is created
- Dim sListenerName     &apos; The type of listener that is created
+ Dim oFrame &apos; Current frame
+ Dim oDisp &apos; The created dispatcher
+ Dim oParser &apos; URL Transformer to parse the URL.
+ Dim oStatusListener &apos; The status listener that is created
+ Dim sListenerName &apos; The type of listener that is created
  Dim oUrl as New com.sun.star.util.URL
 
  REM Location 3 is used to prevent the state from being
@@ -159,13 +159,13 @@ Function isDesignModeOn() As Boolean
 
  REM Create the status listener and save a reference to it in the repository
  If (Not IsNull(oDisp)) Then
-   sListenerName = &quot;com.sun.star.frame.XStatusListener&quot;
-   oStatusListener = CreateUnoListener(&quot;Status_&quot;, sListenerName)
-   repository(2, oStatusListener)
-   oDisp.addStatusListener(oStatusListener, oURL)
-   isDesignModeOn = repository(4)
+ sListenerName = &quot;com.sun.star.frame.XStatusListener&quot;
+ oStatusListener = CreateUnoListener(&quot;Status_&quot;, sListenerName)
+ repository(2, oStatusListener)
+ oDisp.addStatusListener(oStatusListener, oURL)
+ isDesignModeOn = repository(4)
  Else
-   isDesignModeOn = False
+ isDesignModeOn = False
  End If
 End Function
 
@@ -178,28 +178,28 @@ REM the design mode is toggled and when the listener is first created.
 Function Status_statusChanged(oEvt)
  &apos;Print &quot;In status changed: &quot; &amp; oEvt.State
  If repository(3) Then
-   repository(3, False)
-   repository(4, oEvt.State)
+ repository(3, False)
+ repository(4, oEvt.State)
  End If
  removeStatusListener()
 End Function
 
 Function removeStatusListener()
- Dim oStatusListener  &apos; The saved status listener to remove.
- Dim oUrl             &apos; The saved URL object
- Dim oDisp            &apos; The saved dispatcher object
- Dim x                &apos; This is an empty variant variable!
+ Dim oStatusListener &apos; The saved status listener to remove.
+ Dim oUrl &apos; The saved URL object
+ Dim oDisp &apos; The saved dispatcher object
+ Dim x &apos; This is an empty variant variable!
 
  REM Verify that the dispatcher exists before trying to remove
  REM the status listener.
  oDisp = repository(1)
  If NOT IsEmpty(oDisp) AND NOT IsNull(oDisp) Then
-   oUrl = repository(0)
-   oStatusListener = repository(2)
-   repository(0, x)   &apos; Remove the URL
-   repository(1, x)   &apos; Remove the dispatch
-   repository(2, x)   &apos; Remove the status listener
-   oDisp.removeStatusListener(oStatusListener, oURL)
+ oUrl = repository(0)
+ oStatusListener = repository(2)
+ repository(0, x) &apos; Remove the URL
+ repository(1, x) &apos; Remove the dispatch
+ repository(2, x) &apos; Remove the status listener
+ oDisp.removeStatusListener(oStatusListener, oURL)
  End If
 End Function
 
@@ -237,22 +237,22 @@ Sub sproteggi_sheet_TUTTE
 End Sub
 
 Sub refreshAllSheetLinks() &apos;fa il refresh dei link esterni&apos;
-&apos; credo in tutto il doc...   ____ Alt K _______
+&apos; credo in tutto il doc... ____ Alt K _______
 	Clessid_lock_Start 
 	oEnum = thisComponent.AreaLinks.createEnumeration
 	while oEnum.hasMoreElements
-	   oLink = oEnum.NextElement
-	   oLink.refresh
+	 oLink = oEnum.NextElement
+	 oLink.refresh
 	wend
 	oEnum = thisComponent.SheetLinks.createEnumeration
 	while oEnum.hasMoreElements
-	   oLink = oEnum.NextElement
-	   oLink.refresh
+	 oLink = oEnum.NextElement
+	 oLink.refresh
 	wend
 	oEnum = thisComponent.DDELinks.createEnumeration
 	while oEnum.hasMoreElements
-	   oLink = oEnum.NextElement
-	   oLink.refresh
+	 oLink = oEnum.NextElement
+	 oLink.refresh
 	wend
 	 Clessid_lock_End
 End Sub
@@ -275,7 +275,7 @@ Sub Protect_alcune_tabelle
 	If thisComponent.Sheets.hasByName(&quot;Scorciatoie&quot;) and nome &lt;&gt; &quot;Scorciatoie&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).protect(&quot;&quot;)
 	end if
-	If thisComponent.Sheets.hasByName(&quot;S4&quot;)  and nome &lt;&gt; &quot;S4&quot; Then &apos; se la sheet esiste
+	If thisComponent.Sheets.hasByName(&quot;S4&quot;) and nome &lt;&gt; &quot;S4&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S4&quot;).protect(&quot;&quot;)
 	end if
 	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then &apos; se la sheet esiste
@@ -287,7 +287,7 @@ Sub Protect_alcune_tabelle
 	If thisComponent.Sheets.hasByName(&quot;S2&quot;) and nome &lt;&gt; &quot;S2&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S2&quot;).protect(&quot;&quot;)
 	end if 
-	If thisComponent.Sheets.hasByName(&quot;S3&quot;)and nome &lt;&gt;  &quot;S3&quot; Then &apos; se la sheet esiste
+	If thisComponent.Sheets.hasByName(&quot;S3&quot;)and nome &lt;&gt; &quot;S3&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S3&quot;).protect(&quot;&quot;)
 	end if 
 	If thisComponent.Sheets.hasByName(&quot;M1&quot;)and nome &lt;&gt; &quot;M1&quot; Then &apos; se la sheet esiste
@@ -310,18 +310,18 @@ Sub Chiudi_o_elimina_tabelle_inutili
 	end if
 
 	If thisComponent.Sheets.hasByName(&quot;TempR&quot;) Then &apos; se la sheet esiste
-		thisComponent.Sheets.removebyname(&quot;TempR&quot;)  &apos; la cancella
+		thisComponent.Sheets.removebyname(&quot;TempR&quot;) &apos; la cancella
 	end if
 	If thisComponent.Sheets.hasByName(&quot;Legenda&quot;) and nome &lt;&gt; &quot;Legenda&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;Legenda&quot;).isVisible = FALSE 
 	end if
 	If thisComponent.Sheets.hasByName(&quot;Scorciatoie&quot;) and nome &lt;&gt; &quot;Scorciatoie&quot; Then &apos; se la sheet esiste
-		thisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).isVisible = FALSE  
+		thisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).isVisible = FALSE 
 	end if
-	If thisComponent.Sheets.hasByName(&quot;S4&quot;)  and nome &lt;&gt; &quot;S4&quot; Then &apos; se la sheet esiste
+	If thisComponent.Sheets.hasByName(&quot;S4&quot;) and nome &lt;&gt; &quot;S4&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S4&quot;).isVisible = FALSE 
 	end if
-	If thisComponent.Sheets.hasByName(&quot;S5&quot;)  and nome &lt;&gt; &quot;S5&quot; Then &apos; se la sheet esiste
+	If thisComponent.Sheets.hasByName(&quot;S5&quot;) and nome &lt;&gt; &quot;S5&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S5&quot;).isVisible = FALSE 
 	end if
 	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then &apos; se la sheet esiste
@@ -333,7 +333,7 @@ Sub Chiudi_o_elimina_tabelle_inutili
 	If thisComponent.Sheets.hasByName(&quot;S2&quot;) and nome &lt;&gt; &quot;S2&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S2&quot;).isVisible = FALSE 
 	end if 
-	If thisComponent.Sheets.hasByName(&quot;S3&quot;)and nome &lt;&gt;  &quot;S3&quot; Then &apos; se la sheet esiste
+	If thisComponent.Sheets.hasByName(&quot;S3&quot;)and nome &lt;&gt; &quot;S3&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S3&quot;).isVisible = FALSE 
 	end if 
 	If thisComponent.Sheets.hasByName(&quot;M1&quot;)and nome &lt;&gt; &quot;M1&quot; Then &apos; se la sheet esiste
@@ -346,11 +346,11 @@ Sub Chiudi_o_elimina_tabelle_inutili
 		oSheets = ThisComponent.Sheets
 	For I = 0 to oSheets.Count -1 
 		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
-		if left (oCalcSheet.getName(),8)  = &quot;&apos;file://&quot; then
+		if left (oCalcSheet.getName(),8) = &quot;&apos;file://&quot; then
 			nome = oCalcSheet.getName
 			thisComponent.Sheets.getByName(nome).isVisible = FALSE 
 		end if
-		if left (oCalcSheet.getName(),3)  = &quot;S2_&quot; then
+		if left (oCalcSheet.getName(),3) = &quot;S2_&quot; then
 			nome = oCalcSheet.getName
 			thisComponent.Sheets.getByName(nome).isVisible = FALSE 
 		end if
@@ -377,28 +377,28 @@ SUB registra_nomi_area_su_tabella &apos; per manutenzione
 &apos; nell&apos;altro template e poi eseguire 
 
 	Doc = thisComponent
-	If thisComponent.Sheets.hasByName(&quot;namedRanges&quot;)  Then &apos; se la sheet esiste
-		thisComponent.Sheets.removebyname(&quot;namedRanges&quot;)   &apos; la cancella
+	If thisComponent.Sheets.hasByName(&quot;namedRanges&quot;) Then &apos; se la sheet esiste
+		thisComponent.Sheets.removebyname(&quot;namedRanges&quot;) &apos; la cancella
 	end if
 	thisComponent.Sheets.insertNewByName(&quot;namedRanges&quot;,4,0)
-	oSheet = thisComponent.Sheets.GetByName(&quot;namedRanges&quot;)  &apos;recuperiamo la tabella
-     oDoc = ThisComponent
-     oAree=oDoc.NamedRanges&apos;
-     oNomiArea() = oAree.ElementNames()
-     n = oAree.Count - 1
-      For i = 0 to n &apos; elimino i nomi fino ad elenco_prezzi (by Marco Caresia)
-        sNome =  ThisComponent.NamedRanges.getByIndex(i).Name
-        sRange = ThisComponent.NamedRanges.getByIndex(i).Content       	
+	oSheet = thisComponent.Sheets.GetByName(&quot;namedRanges&quot;) &apos;recuperiamo la tabella
+ oDoc = ThisComponent
+ oAree=oDoc.NamedRanges&apos;
+ oNomiArea() = oAree.ElementNames()
+ n = oAree.Count - 1
+ For i = 0 to n &apos; elimino i nomi fino ad elenco_prezzi (by Marco Caresia)
+ sNome = ThisComponent.NamedRanges.getByIndex(i).Name
+ sRange = ThisComponent.NamedRanges.getByIndex(i).Content 	
 		oSheet.GetCellByPosition( 0 , lrow).string = sNome
 		oSheet.GetCellByPosition( 1 , lrow).string = sRange
-		lrow = lrow+1         	
-      next
-  	 msgbox &quot;Ho creato la tabella namedRanges e dentro ho scritto i nomi di area di questo doc!&quot; &amp; CHR$(10)_
-  	  		&amp; &quot;Adesso puoi trasferire la tabella namedRanges in una altro doc e copiarvi i nuovi nomi...&quot;  &amp; CHR$(10) &amp; CHR$(10)_
-  	  		&amp; &quot; (tasto dx del mouse sulla linguetta della tabella namedRanges &gt; Sposta/copia... &quot; &amp; CHR$(10)_
-  	  		&amp; &quot; magari metti la spunta su copia... vedi tu&quot; &amp; CHR$(10)_
-  	  		&amp; &quot; dalla finestrella in alto seleziona il doc template di destinazione...&quot; &amp; CHR$(10)_
-  	  		&amp; &quot;  poi vai su quel Doc e da li dai ???? Ctrl Shift Y ?????)&quot;
+		lrow = lrow+1 	
+ next
+ 	 msgbox &quot;Ho creato la tabella namedRanges e dentro ho scritto i nomi di area di questo doc!&quot; &amp; CHR$(10)_
+ 	 		&amp; &quot;Adesso puoi trasferire la tabella namedRanges in una altro doc e copiarvi i nuovi nomi...&quot; &amp; CHR$(10) &amp; CHR$(10)_
+ 	 		&amp; &quot; (tasto dx del mouse sulla linguetta della tabella namedRanges &gt; Sposta/copia... &quot; &amp; CHR$(10)_
+ 	 		&amp; &quot; magari metti la spunta su copia... vedi tu&quot; &amp; CHR$(10)_
+ 	 		&amp; &quot; dalla finestrella in alto seleziona il doc template di destinazione...&quot; &amp; CHR$(10)_
+ 	 		&amp; &quot; poi vai su quel Doc e da li dai ???? Ctrl Shift Y ?????)&quot;
 END SUB
 
 
@@ -412,48 +412,48 @@ SUB riscrivi_nomi_area &apos; ri-scrive i nomi di area del doc
 &apos; spunta su copia... poi dalla finestrella in alto seleziona il &quot;doc template&quot; di destinazione
 
 	dim n as integer
-If thisComponent.Sheets.hasByName(&quot;namedRanges&quot;)  Then &apos; se la sheet esiste
+If thisComponent.Sheets.hasByName(&quot;namedRanges&quot;) Then &apos; se la sheet esiste
 
 		if msgbox ( &quot;Sto per riscrivere i nomi di Area di questo documento&quot;&amp; CHR$(10)_
-		        	&amp;&quot;Quelli esistenti saranno ELIMINATI! &quot; &amp; CHR$(10)_
-		        	&amp; &quot;&quot; &amp; CHR$(10)_
+		 	&amp;&quot;Quelli esistenti saranno ELIMINATI! &quot; &amp; CHR$(10)_
+		 	&amp; &quot;&quot; &amp; CHR$(10)_
 					&amp; &quot;Proseguo ?&quot; ,36, &quot;&quot;) = 6 then
 			&apos;msgbox &quot;Sto per riscrivere i nomi di Area di questo documento&quot;
-			oSheet = ThisComponent.Sheets.getByName(&quot;namedRanges&quot;)   
-	  
-		     oAree=ThisComponent.NamedRanges&apos;
-		     oNomiArea() = oAree.ElementNames() 
-		    n = oAree.Count - 1
- 		    For i = 0 to n &apos; elimino i nomi fino ad elenco_prezzi (by Marco Caresia)
- 		       oAree. RemoveByName(oNomiArea(i))   
- 		    next
-		     oCell = oSheet.GetCellbyPosition( 0, 0 )
+			oSheet = ThisComponent.Sheets.getByName(&quot;namedRanges&quot;) 
+	 
+		 oAree=ThisComponent.NamedRanges&apos;
+		 oNomiArea() = oAree.ElementNames() 
+		 n = oAree.Count - 1
+ 		 For i = 0 to n &apos; elimino i nomi fino ad elenco_prezzi (by Marco Caresia)
+ 		 oAree. RemoveByName(oNomiArea(i)) 
+ 		 next
+		 oCell = oSheet.GetCellbyPosition( 0, 0 )
  			 oCursor = oSheet.createCursorByRange(oCell)
  			 oCursor.GotoEndOfUsedArea(True)
  			 aAddress = oCursor.RangeAddress
  			 nEndRow = aAddress.EndRow
  	 
-  	 	    For lrow = 0 to nEndRow
-  			   	sName = oSheet.GetCellByPosition( 0 , lrow).string
-   			  	sRange = oSheet.GetCellByPosition( 1 , lrow).string
-     	
-     			oCellAddress = oSheet.getCellRangeByName(&quot;b10&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
-   	
-     			ThisComponent.NamedRanges.addNewByName(SName,sRange,oCellAddress,0 )
-  		    next 	
-  		    msgbox &quot;nameRanges ripristinati con successo!&quot;  
-  		 End if
-  Else
-  	 msgbox &quot;Non trovo in questo doc la tabella namedRanges &quot; &amp; CHR$(10)_
-  	  		&amp; &quot;e la tabella namedRanges è indispensabile per aggiornare i nomi di area!&quot; &amp; CHR$(10)_
-  	  		&amp; &quot;Inserisci in questo doc una tabella namedRanges &quot;&quot;buona&quot;&quot;... e poi riprova&quot;
-  	 
+ 	 	 For lrow = 0 to nEndRow
+ 			 	sName = oSheet.GetCellByPosition( 0 , lrow).string
+ 			 	sRange = oSheet.GetCellByPosition( 1 , lrow).string
+ 	
+ 			oCellAddress = oSheet.getCellRangeByName(&quot;b10&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
+ 	
+ 			ThisComponent.NamedRanges.addNewByName(SName,sRange,oCellAddress,0 )
+ 		 next 	
+ 		 msgbox &quot;nameRanges ripristinati con successo!&quot; 
+ 		 End if
+ Else
+ 	 msgbox &quot;Non trovo in questo doc la tabella namedRanges &quot; &amp; CHR$(10)_
+ 	 		&amp; &quot;e la tabella namedRanges è indispensabile per aggiornare i nomi di area!&quot; &amp; CHR$(10)_
+ 	 		&amp; &quot;Inserisci in questo doc una tabella namedRanges &quot;&quot;buona&quot;&quot;... e poi riprova&quot;
+ 	 
 end if
 END SUB
 
 
 
-SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in testa al computo
+SUB Rifa_Somme_TOT_Computo &apos;&apos; rifà la riga delle somme in fondo e in testa al computo
 
 			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
 			sproteggi_sheet_TUTTE
@@ -475,14 +475,14 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 						oStyleTesta.NumberFormat = 116
 					&apos;	oStyleTesta.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
 					&apos;	oStyleTesta.VertJustify = com.sun.star.table.CellVertJustify.CENTER 
-						oStyleTesta.ParentStyle = &quot;Comp TOTALI&quot;  &apos;pseudo-prop 
+						oStyleTesta.ParentStyle = &quot;Comp TOTALI&quot; &apos;pseudo-prop 
 			
 			end if
 			
 			if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(&quot;comp In testa&quot;)= false then
 				&apos;	print &quot;non c&apos;é 00000000&quot;
 				 &apos; exit sub
-				  &apos;questa è una prova di creazione di stile di testo... funzia ... ma male
+				 &apos;questa è una prova di creazione di stile di testo... funzia ... ma male
 					Set oStyleTesta = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)
 					Call Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(&quot;comp In testa&quot;, oStyleTesta )
 						oStyleTesta.IsCellBackgroundTransparent = False
@@ -491,13 +491,13 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 						oStyleTesta.CharHeight = 10
 						oStyleTesta.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
 						oStyleTesta.VertJustify = com.sun.star.table.CellVertJustify.CENTER 
-						oStyleTesta.ParentStyle = &quot;Comp No print&quot;  &apos;pseudo-prop 
+						oStyleTesta.ParentStyle = &quot;Comp No print&quot; &apos;pseudo-prop 
 				&apos; fine creazione stile funzionante (circa)
 
 				&apos; questo invece sembrava non funzionare
 				&apos;	With oStyleTesta
 				&apos;	 	.CellBackColor = RGB(230,230,230) &apos; 15132390 
-				&apos;	 	.CharFontName = &quot;Arial&quot;    
+				&apos;	 	.CharFontName = &quot;Arial&quot; 
 				&apos;	 	.CharHeight = 20
 				&apos;	End With
 				&apos;		xray oStyleTesta &apos;
@@ -507,18 +507,18 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			colore = RGB(230,230,230) 
 			lcolore = colore
 		&apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
- 		&apos;	   BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
+ 		&apos;	 BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
 		&apos;	End If 
 		&apos;	xray lcolore
 			&apos; la riga seguente continuava a dare errore fino a quando non l&apos;ho dichiarata
 			Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(&quot;Comp No print&quot;).CellBackColor= lcolore 
 			&apos;crea la riga se non c&apos;è
-			&apos;probabilmente superata, serviva per modificare il template all&apos;insaputa dell&apos;utente  Comp No print
+			&apos;probabilmente superata, serviva per modificare il template all&apos;insaputa dell&apos;utente Comp No print
 			If oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;comp In testa&quot;) AND _
-			  	oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;Comp No print&quot;) Then
-			  		insRows (1, 1) &apos;insertByIndex non funziona
+			 	oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;Comp No print&quot;) Then
+			 		insRows (1, 1) &apos;insertByIndex non funziona
 &apos;					oSheet.getRows.insertByIndex(1, 1)
-					osheet.getCellRangeByPosition (0,1,41,1).CellStyle =  &quot;comp In testa&quot;
+					osheet.getCellRangeByPosition (0,1,41,1).CellStyle = &quot;comp In testa&quot;
 					osheet.getCellRangeByPosition (0,1,41,1).Rows.OptimalHeight = true
 			end if
 			&apos;salta:
@@ -531,8 +531,8 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			end if 
 
 		&apos;	For i = 1 To lLastUrow Step 
-			For i =  lLastUrow To 2 Step -1			
-				if  oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Comp TOTALI sin&quot; or _
+			For i = lLastUrow To 2 Step -1			
+				if oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Comp TOTALI sin&quot; or _
 					oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Comp TOTALI&quot; or _
 					oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Comp TOTALI num&quot;or _
 					oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Comp TOTALI&quot; or oSheet.GetCellByPosition(1 , i).CellStyle = &quot;TOTALI&quot; or _
@@ -543,21 +543,21 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 				end if 
 			Next i 	
 				&apos;	print &quot;vediamo lrowfin alla fine del For &quot; &amp; lrowFin	
-			if  isNull (lrowFin) or isEmpty (lrowFin) then			
+			if isNull (lrowFin) or isEmpty (lrowFin) then			
 					sString$ = &quot;Fine Computo&quot;
 					oEnd=uFindString(sString$, oSheet) 
 					lrowFin=oEnd.RangeAddress.EndRow 
 				if oSheet.GetCellByPosition(0 ,lrowFin-1).CellStyle = &quot;Default&quot; _
-					And  oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle &lt;&gt; &quot;Default&quot; then 
+					And oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle &lt;&gt; &quot;Default&quot; then 
 					Situaz = 1
 				end if
 
 				if oSheet.GetCellByPosition(0 ,lrowFin-1).CellStyle = &quot;Default&quot; _
-					And  oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle = &quot;Default&quot; then 
+					And oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle = &quot;Default&quot; then 
 					Situaz = 2
 				end if
 				if oSheet.GetCellByPosition(0 ,lrowFin-1).CellStyle &lt;&gt; &quot;Default&quot; _
-					And  oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle &lt;&gt; &quot;Default&quot; then 
+					And oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle &lt;&gt; &quot;Default&quot; then 
 					Situaz = 3
 				end if				
 			
@@ -565,7 +565,7 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 					Case 1
 						insRows (lrowFin, 1) &apos;insertByIndex non funziona
 &apos;						oSheet.getRows.insertByIndex(lrowFin, 1)
-						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin).CellStyle =  &quot;Default&quot;
+						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin).CellStyle = &quot;Default&quot;
 				&apos;		print &quot;una sola standard&quot;
 					Case 2
 				&apos;		print &quot;due righe standard, quindi vuote&quot;&apos;
@@ -573,7 +573,7 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 					Case 3
 						insRows (lrowFin, 2) &apos;insertByIndex non funziona
 &apos;						oSheet.getRows.insertByIndex(lrowFin, 2)
-						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin+1).CellStyle =  &quot;Default&quot;	
+						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin+1).CellStyle = &quot;Default&quot;	
 						lrowfin = lrowfin+1				
 					&apos;	print &quot;nessuna riga&quot;
 				End Select
@@ -582,7 +582,7 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			&apos;serie &quot;in testa&quot;
 			oSheet.getCellRangeByPosition(0,1,17,1).cellstyle = &quot;Comp No print&quot;
 			oSheet.getCellRangeByPosition(18,1,41,1).cellstyle = &quot;comp In testa&quot;
-			oSheet.GetCellbyPosition(29, 1 ).CellStyle =  &quot;comp In testa %&quot;
+			oSheet.GetCellbyPosition(29, 1 ).CellStyle = &quot;comp In testa %&quot;
 
 		&apos;	oSheet.GetCellbyPosition( 2, 1 ).setformula(&quot;=C&quot; &amp; lrowFin+1)
 			oSheet.GetCellbyPosition( 6, 1 ).setformula(&quot;Riassuntiva Totali computo (NB: non appare in stampa)&quot;)
@@ -636,7 +636,7 @@ SUB Rifa_Somme_TOT_Computo  &apos;&apos; rifà la riga delle somme in fondo e in
 			oSheet.GetCellbyPosition(41, lrowFin ).setformula(&quot;=Sum(AP&quot; &amp; lrowInizio &amp; &quot;:AP&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 			oSheet.GetCellbyPosition(29, lrowFin ).CellStyle = &quot;Comp TOTALI %&quot;
 
-				&apos;  =AE120/S120		
+				&apos; =AE120/S120		
 			&apos;in testa alla AK
 			&apos;oSheet.GetCellbyPosition(36, 0 ).setformula(&quot;=Sum(AK&quot; &amp; lrowInizio &amp; &quot;:AK&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 END SUB
@@ -644,7 +644,7 @@ END SUB
 
 
 
-SUB Rifa_GG_G1G1_Contab  &apos; RIFA ANCHE le formule di somma.se
+SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 &apos; rifà le aree GG e G1G1 in CONTABILITA (servono per la formula somma.se)
 
 
@@ -669,14 +669,14 @@ SUB Rifa_GG_G1G1_Contab  &apos; RIFA ANCHE le formule di somma.se
 				oRanges.removeByName(&quot;G1G1&quot;)
 			End If 
 			&apos;_____________________
-			chiudi_dialoghi  
+			chiudi_dialoghi 
 			&apos;_____________________
 			oCellAddress = oSheet.getCellRangeByName(&quot;AJ1&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
 &apos;			$CONTABILITA.$AJ$2:$AJ$540
-		&apos;	 sMiaStringa=  &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
-			 sMiaStringa=  &quot;$CONTABILITA.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow+1
+		&apos;	 sMiaStringa= &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
+			 sMiaStringa= &quot;$CONTABILITA.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow+1
 			oRanges.addNewByName(&quot;GG&quot;, sMiaStringa , oCellAddress, 0) rem SETTA LA COLONNA DEL SOMME.SE
-			sMiaStringa =  &quot;$CONTABILITA.$Z$&quot; &amp; lrowInizio &amp; &quot;:$Z$&quot; &amp; lLastUrow+1
+			sMiaStringa = &quot;$CONTABILITA.$Z$&quot; &amp; lrowInizio &amp; &quot;:$Z$&quot; &amp; lLastUrow+1
 			oRanges.addNewByName(&quot;G1G1&quot;, sMiaStringa , oCellAddress, 0)	REM SETTA LA COLONNA DEGLI IMPORTI
 
 		&apos;POPOLARE L&apos;EP CON LE FORMULE DI SOMMA.SE
@@ -685,9 +685,9 @@ SUB Rifa_GG_G1G1_Contab  &apos; RIFA ANCHE le formule di somma.se
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			sString$ = &quot;Fine elenco&quot;
 			oEnd=uFindString(sString$, oSheet)
-			If isNull (oEnd) or isEmpty (oEnd)  then &apos;11111
+			If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
 				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-				msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI ! &quot;
+				msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
 				exit sub
 			end if 
 			lrowF=oEnd.RangeAddress.EndRow 
@@ -701,46 +701,46 @@ SUB Rifa_GG_G1G1_Contab  &apos; RIFA ANCHE le formule di somma.se
 			
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-					iScarto = 0  &apos;se ver. 3
+					iScarto = 0 &apos;se ver. 3
 				else
-					iscarto = 2  &apos;se vers. 4
+					iscarto = 2 &apos;se vers. 4
 			endif	
 		
 			sCol= ColumnNameOf(lcolbase+iScarto)
 			sCol2= ColumnNameOf(lcolbase+iscarto+14)
-			sCol4 = ColumnNameOf(lcolbase+iscarto+4)  &apos;col E
+			sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
 			
 			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
 			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = true
 
 			For I = 1 To lrowF-1 Step 1
 			
-				if  oSheet.GetCellByPosition(lcolbase+0 , i).string = &quot;&quot; and _
+				if oSheet.GetCellByPosition(lcolbase+0 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(lcolbase+1 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(lcolbase+2 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+4 , i).string = &quot;&quot; then  
+					oSheet.GetCellByPosition(lcolbase+4 , i).string = &quot;&quot; then 
 					sFormula = &quot;&quot;
 					oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
 					sFormula_q = &quot;&quot;
-					oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q)  
+					oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 
 					&apos;	Tutto questo If per svuotare e NON scrivere formule se la riga è vuota
 					
 					exit for
 				end if 		
 REM				Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot; &amp; i, 50)
-				Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; i &amp; &quot; di &quot; &amp; lrowF, 0)
+				Barra_Apri_Chiudi_5(&quot; #&quot;&amp; i &amp; &quot; di &quot; &amp; lrowF, 0)
 				
 				sFormula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
 				oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
 				oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
-				&apos;=L2/E2  =O2/E2
+				&apos;=L2/E2 =O2/E2
 		&apos;		sFormula_q = &quot;=O&quot; &amp; i+1 &amp; &quot;/E&quot; &amp; i+1 &amp; &quot; &quot;
 				sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot;&amp; sCol4 &amp; i+1 &amp; &quot; &quot;
-				oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q)  		
+				oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 		
 				oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;		
 			Next I	
 			
-			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp;  sCol2 &amp; lrowF &amp; &quot;)&quot;		
+			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;		
 			oSheet.GetCellByPosition(lcolbase+14 , lrowF).setformula(sFormula1)	
 					
 		&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
@@ -751,7 +751,7 @@ REM				Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quo
 END SUB
 
 
-SUB Rifa_AA_BB_Computo  &apos; RIFA ANCHE le formule di somma.se
+SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 &apos; rifà le aree AA e BB nel computo (servono per la formula somma.se)
 
 
@@ -775,12 +775,12 @@ SUB Rifa_AA_BB_Computo  &apos; RIFA ANCHE le formule di somma.se
 				oRanges.removeByName(&quot;BB&quot;)
 			End If 
 			&apos;_____________________
-			chiudi_dialoghi  
+			chiudi_dialoghi 
 			&apos;_____________________
 			oCellAddress = oSheet.getCellRangeByName(&quot;Aj1&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
-			 sMiaStringa=  &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
+			 sMiaStringa= &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
 			oRanges.addNewByName(&quot;AA&quot;, sMiaStringa , oCellAddress, 0)
-			 sMiaStringa=  &quot;$&apos;COMPUTO&apos;.$S$&quot; &amp; lrowInizio &amp; &quot;:$S$&quot; &amp; lLastUrow
+			 sMiaStringa= &quot;$&apos;COMPUTO&apos;.$S$&quot; &amp; lrowInizio &amp; &quot;:$S$&quot; &amp; lLastUrow
 			oRanges.addNewByName(&quot;BB&quot;, sMiaStringa , oCellAddress, 0)			
 
 		&apos;POPOLARE L&apos;EP CON LE FORMULE DI SOMMA.SE
@@ -789,9 +789,9 @@ SUB Rifa_AA_BB_Computo  &apos; RIFA ANCHE le formule di somma.se
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			sString$ = &quot;Fine elenco&quot;
 			oEnd=uFindString(sString$, oSheet)
-			If isNull (oEnd) or isEmpty (oEnd)  then &apos;11111
+			If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
 				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-				msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI ! &quot;
+				msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
 				exit sub
 			end if 
 			lrowF=oEnd.RangeAddress.EndRow 
@@ -805,14 +805,14 @@ SUB Rifa_AA_BB_Computo  &apos; RIFA ANCHE le formule di somma.se
 			
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-					iScarto = 0  &apos;se ver. 3
+					iScarto = 0 &apos;se ver. 3
 				else
-					iscarto = 2  &apos;se vers. 4
+					iscarto = 2 &apos;se vers. 4
 			endif	
 		
-			sCol  = ColumnNameOf(lcolbase+iScarto)
+			sCol = ColumnNameOf(lcolbase+iScarto)
 			sCol2 = ColumnNameOf(lcolbase+iscarto+11) &apos;Col L
-			sCol4 = ColumnNameOf(lcolbase+iscarto+4)  &apos;col E
+			sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
 
 
 			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true
@@ -821,14 +821,14 @@ SUB Rifa_AA_BB_Computo  &apos; RIFA ANCHE le formule di somma.se
 			&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 
 			For I = 1 To lrowF-1 Step 1
-				if  oSheet.GetCellByPosition(lcolbase+0 , i).string = &quot;&quot; and _
+				if oSheet.GetCellByPosition(lcolbase+0 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(lcolbase+1 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(lcolbase+2 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+4 , i).string = &quot;&quot; then  
+					oSheet.GetCellByPosition(lcolbase+4 , i).string = &quot;&quot; then 
 					sFormula = &quot;&quot;
 					oSheet.GetCellByPosition(lcolbase+11 , i).setformula(sFormula)
 					sFormula_q = &quot;&quot;
-					oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q)  
+					oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q) 
 					&apos;	Tutto questo If per svuotare e NON scrivere formule se la riga è vuota
 					&apos; print &quot;caso&quot; 
 					exit for
@@ -839,11 +839,11 @@ SUB Rifa_AA_BB_Computo  &apos; RIFA ANCHE le formule di somma.se
 				oSheet.GetCellByPosition(lcolbase+11 , i).cellstyle = &quot;EP statistiche&quot;
 
 				sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot; &amp; sCol4 &amp; i+1 &amp; &quot; &quot;
-				oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q)  
+				oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q) 
 				oSheet.GetCellByPosition(lcolbase+10 , i).cellstyle = &quot;EP statistiche_q&quot;
 			Next I	
 			
-			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp;  sCol2 &amp; lrowF &amp; &quot;)&quot;
+			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;
 			
 			oSheet.GetCellByPosition(lcolbase+11 , lrowF).setformula(sFormula1)			
 		&apos;&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
@@ -863,7 +863,7 @@ END SUB
 Function TrovaFine_Computo (optional oSheet as object) as integer &apos; funzione chiave per trovare la fine del Computo
 		&apos; sostituisce gli ambaradan attorno alla riga rossa
 		on error goto errore
-		if  IsMissing(oSheet) Then
+		if IsMissing(oSheet) Then
 			oSheet = ThisComponent.currentController.activeSheet
 		end if
 		ilastRow = getLastUsedRow(oSheet)
@@ -875,15 +875,15 @@ Function TrovaFine_Computo (optional oSheet as object) as integer &apos; funzion
 				oSheet.GetCellByPosition(1, ilastrow).CellStyle = &quot;Comp TOTALI&quot; or _
 				oSheet.GetCellByPosition(2, ilastrow).CellStyle = &quot;Reg-SAL-chiudi_Sotto&quot; or _
 				oSheet.GetCellByPosition(2, ilastrow).CellStyle = 	&quot;comp sotto BiancheS_R&quot; then
-			&apos;	oSheet.GetCellByPosition(0, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(1, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(2, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(3, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(4, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(5, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(6, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(7, ilastrow).string = &quot;&quot;  And _
-			&apos;	oSheet.GetCellByPosition(18, ilastrow).string = &quot;&quot;     then
+			&apos;	oSheet.GetCellByPosition(0, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(1, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(2, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(3, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(4, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(5, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(6, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(7, ilastrow).string = &quot;&quot; And _
+			&apos;	oSheet.GetCellByPosition(18, ilastrow).string = &quot;&quot; then
 					exit do
 			end if 
 			if ilastrow &lt;= 3 then 
@@ -905,7 +905,7 @@ Sub Annulla_Salva_spazio
 	iRowE = getLastUsedRow(oSheet)
 	sSoloOra =1
 	&apos;oSheet_qui.GetCellByPosition(0, i)
-	for i = 0 to iRowE  
+	for i = 0 to iRowE 
 			if oSheet.GetCellByPosition(0, i).cellstyle = &quot;comp progress&quot; and _
 				oSheet.getCellRangeByposition(2,i,8,i).getIsMerged = True then
 				
@@ -1005,10 +1005,10 @@ end sub
 Sub Sistema_il_listino___ 
 	oSheet=ThisComponent.currentController.activeSheet 
 	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE  
-			if oSheet.GetCellByPosition(0, i).string &lt;&gt; &quot;&quot;  then
+	for i = 2 to iRowE 
+			if oSheet.GetCellByPosition(0, i).string &lt;&gt; &quot;&quot; then
 				oSheet.GetCellByPosition(1, i).string = oSheet.GetCellByPosition(0, i).string &amp; &quot; &quot; &amp; oSheet.GetCellByPosition(1, i).string	
-				oSheet.GetCellByPosition(1, i).cellstyle =  &quot;List-stringa-sin&quot;
+				oSheet.GetCellByPosition(1, i).cellstyle = &quot;List-stringa-sin&quot;
 				oSheet.GetCellByPosition(2, i).cellstyle = &quot;List-stringa-sin&quot;
 				oSheet.GetCellByPosition(3, i).cellstyle = &quot;List-num-centro&quot;
 				oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-num-euro&quot;
@@ -1031,7 +1031,7 @@ Sub Sistema_il_listino
 	iRowE = getLastUsedRow(oSheet)
 	dim alfa as string
 	dim beta as integer
-	for i = 2 to iRowE  
+	for i = 2 to iRowE 
 			if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot; and oSheet.GetCellByPosition(2, i).value = isnotANUMBER and _
 				oSheet.GetCellByPosition(2, i).value &lt;&gt; 0 then
 				
@@ -1041,7 +1041,7 @@ Sub Sistema_il_listino
 				&apos;	oSheet.GetCellByPosition(9, i).string = &quot;&quot;
 			end if
 		&apos;	oSheet.GetCellByPosition(0, i).string &amp; &quot;.&quot; &amp; oSheet.GetCellByPosition(1, i).string &amp; &quot;.&quot; &amp; oSheet.GetCellByPosition(2, i).string 
-		&apos;	if oSheet.GetCellByPosition(7, i).value = 0  then
+		&apos;	if oSheet.GetCellByPosition(7, i).value = 0 then
 		&apos;		oSheet.GetCellByPosition(7, i).string = &quot;&quot;
 		&apos;	end if
 	next
@@ -1051,7 +1051,7 @@ end sub
 Sub elimina_righe_vuote
 	oSheet=ThisComponent.currentController.activeSheet 
 	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE  
+	for i = 2 to iRowE 
 	&apos;	goto salta
 			if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _
@@ -1063,8 +1063,8 @@ Sub elimina_righe_vuote
 	&apos;	salta:
 	goto oltre
 			if oSheet.GetCellByPosition(4, i).string = &quot;&quot; or _
-				oSheet.GetCellByPosition(4, i).string = &quot;  &quot; or _
-				oSheet.GetCellByPosition(4, i).string = &quot;   &quot; or _
+				oSheet.GetCellByPosition(4, i).string = &quot; &quot; or _
+				oSheet.GetCellByPosition(4, i).string = &quot; &quot; or _
 				oSheet.GetCellByPosition(4, i).string = &quot; &quot; then
 				oSheet.getrows.removebyindex(i,1)
 			&apos;	i = i-1
@@ -1077,25 +1077,25 @@ end sub
 Sub Sistema_il_listino_______________________
 	oSheet=ThisComponent.currentController.activeSheet 
 	iRowE = getLastUsedRow(oSheet)
-	for i = 16 to iRowE  
+	for i = 16 to iRowE 
 		goto salta
-			if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot;  and _
-				oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot;  and _
-				oSheet.GetCellByPosition(6, i).string = &quot;&quot;  and _
-				oSheet.GetCellByPosition(7, i).string = &quot;&quot;  and _
-					oSheet.GetCellByPosition(4, i+1).string &lt;&gt; &quot;&quot;  and _
-				oSheet.GetCellByPosition(2, i+1).string = &quot;&quot;  and _
-				oSheet.GetCellByPosition(7, i+1).string = &quot;&quot;  and _
-				oSheet.GetCellByPosition(6, i+1).string = &quot;&quot;  then
+			if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot; and _
+				oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot; and _
+				oSheet.GetCellByPosition(6, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(7, i).string = &quot;&quot; and _
+					oSheet.GetCellByPosition(4, i+1).string &lt;&gt; &quot;&quot; and _
+				oSheet.GetCellByPosition(2, i+1).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(7, i+1).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(6, i+1).string = &quot;&quot; then
 				&apos;print i
-				oSheet.GetCellByPosition(4, i).string = oSheet.GetCellByPosition(4, i).string &amp; &quot; &quot; &amp; Chr(10) &amp; &quot; &quot; &amp;  oSheet.GetCellByPosition(4, i+1).string
+				oSheet.GetCellByPosition(4, i).string = oSheet.GetCellByPosition(4, i).string &amp; &quot; &quot; &amp; Chr(10) &amp; &quot; &quot; &amp; oSheet.GetCellByPosition(4, i+1).string
 				oSheet.getrows.removebyindex(i+1,1)
 			end if
 		salta:		&apos;exit for
 		goto salta1
-			if oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot;  and _
-					oSheet.GetCellByPosition(7, i).string &lt;&gt; &quot;&quot;  and _
-					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;%&quot;  then
+			if oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(7, i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;%&quot; then
 				&apos;	print i
 					oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-stringa-sin&quot;
 						oSheet.GetCellByPosition(6, i).cellstyle = &quot;List-num-centro&quot;
@@ -1104,11 +1104,11 @@ Sub Sistema_il_listino_______________________
 			&apos;	end if
 			end if
 		salta1:
-		if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot;  and _
-					oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot;  and _
-					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot;  and _
-					oSheet.GetCellByPosition(7, i).string &lt;&gt; &quot;&quot;  and _
-					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;%&quot;  then
+		if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(7, i).string &lt;&gt; &quot;&quot; and _
+					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;%&quot; then
 				&apos;	print i
 					oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-stringa-sin&quot;
 						oSheet.GetCellByPosition(6, i).cellstyle = &quot;List-num-centro&quot;
@@ -1124,10 +1124,10 @@ end sub
 Sub Sistema_il_listino____
 	oSheet=ThisComponent.currentController.activeSheet 
 	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE  
-			if oSheet.GetCellByPosition(0, i).string &lt;&gt; &quot;&quot;  then
+	for i = 2 to iRowE 
+			if oSheet.GetCellByPosition(0, i).string &lt;&gt; &quot;&quot; then
 				oSheet.GetCellByPosition(1, i).string = oSheet.GetCellByPosition(0, i).string &amp; &quot; &quot; &amp; oSheet.GetCellByPosition(1, i).string	
-				oSheet.GetCellByPosition(1, i).cellstyle =  &quot;List-stringa-sin&quot;
+				oSheet.GetCellByPosition(1, i).cellstyle = &quot;List-stringa-sin&quot;
 				oSheet.GetCellByPosition(2, i).cellstyle = &quot;List-stringa-sin&quot;
 				oSheet.GetCellByPosition(3, i).cellstyle = &quot;List-num-centro&quot;
 				oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-num-euro&quot;
@@ -1146,7 +1146,7 @@ end sub
 Sub Sistema_listino_2
 	oSheet=ThisComponent.currentController.activeSheet 
 	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE  
+	for i = 2 to iRowE 
 			if oSheet.GetCellByPosition(3, i).string &lt;&gt; &quot;&quot; and _
 				oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot; and _
 				oSheet.GetCellByPosition(2, i).string = &quot;&quot; then
@@ -1172,7 +1172,7 @@ Sub Salva_spazio (osheet as object)
 
 	iRowE = getLastUsedRow(oSheet)
 
-	for i = 0 to iRowE  
+	for i = 0 to iRowE 
 			if oSheet.GetCellByPosition(0, i).cellstyle = &quot;comp progress&quot; or _
 				(oSheet.GetCellByPosition(0, i).cellstyle =&quot;comp 10 s_R&quot; and oSheet.GetCellByPosition(1, i).cellstyle =&quot;comp Art-EP_R&quot;) then &apos;and _
 				&apos;oSheet.getCellRangeByposition(2,i,8,i).getIsMerged = false then
@@ -1182,8 +1182,8 @@ Sub Salva_spazio (osheet as object)
 				oSheet.getCellRangeByposition(2,i-1,8,i-1).merge(true)
 				oSheet.getCellRangeByposition(2,i,8,i).merge(true)
 				
-				oSheet.GetCellByPosition(9, i).Formula =   &quot;=VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
-				oSheet.GetCellByPosition(10, i).Formula =   &quot;=VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
+				oSheet.GetCellByPosition(9, i).Formula = &quot;=VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
+				oSheet.GetCellByPosition(10, i).Formula = &quot;=VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
 				oSheet.GetCellByPosition(11, i).string = &quot;€&quot;
 				oSheet.GetCellByPosition(18, i).string = &quot;€&quot;
 				&apos;valeria 

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_0" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                         
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_0" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -18,7 +18,7 @@
 
 
 Sub Tagga_VociPrezzo_non_usate () 
-&apos;	tag_usata_on_off  &apos;
+&apos;	tag_usata_on_off &apos;
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Tagga_VociPrezzo_non_usate_linkato &apos;ho spostato la macro main in Pulizia_1 per questioni di ordine
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -40,12 +40,12 @@ If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value
 end if
 
 	 &apos;PRINT &quot;eseguo A_1&quot;
-	 oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)    
-	 lrow=2        
+	 oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) 
+	 lrow=2 
  	 oCell = oSheet.GetCellByPosition( 1, lrow )
-	 xA =  &quot;&quot;
+	 xA = &quot;&quot;
 	 lUltimaRiga = getLastUsedRow(oSheet)
-    passa_oltre:
+ passa_oltre:
 &apos;	print lUltimaRiga &amp;&quot; &quot; &amp; lrow
 	If lrow &gt;= lUltimaRiga then
 		goto Fine
@@ -57,83 +57,83 @@ do while oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;Fine Computo&q
 &apos;	xray ocell
 &apos;	lrowM = lrow
 	do while oSheet.GetCellByPosition( 9, lrow).string = &quot;&quot;
-	&apos;	Do  while xA = &quot;&quot; &apos; ciclo in Computo
+	&apos;	Do while xA = &quot;&quot; &apos; ciclo in Computo
 &apos;	print lrow
-		    If lrow &gt;= lUltimaRiga then
+		 If lrow &gt;= lUltimaRiga then
 					goto Fine
 			end if
  	 		lrow=lrow+1
-  		 	oCell = oSheet.GetCellByPosition( 1, lrow )
- 	&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+ 		 	oCell = oSheet.GetCellByPosition( 1, lrow )
+ 	&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
  	&apos;		PRint &quot;passo sempre?&quot;
- 		 	xA =  oCell.string 		
+ 		 	xA = oCell.string 		
 	Loop 
 	
 	If lrow &gt;= lUltimaRiga then
 		goto Fine
 	end if
-	if oSheet.GetCellByPosition( 0, lrow).string =  &quot;Fine Computo&quot; then
+	if oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine Computo&quot; then
 				 	 exit sub
-		  else
- 		  		xA =  oCell.string
- 		  		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-  		  		Uscita_forzata = S_EP (xA, Tag)
-  		  		&apos;le segna su EP (da dovunque arrivi)??
-  		 &apos; 		print &quot;eseguito S_EP&quot;
-  		  		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-  		  		
-		  		
-  	&apos;&apos;	  	ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
-  		 &apos; 	print &quot;eseguito S_EP con questo risultato  :&quot; &amp; Uscita_forzata
+		 else
+ 		 		xA = oCell.string
+ 		 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 		 		Uscita_forzata = S_EP (xA, Tag)
+ 		 		&apos;le segna su EP (da dovunque arrivi)??
+ 		 &apos; 		print &quot;eseguito S_EP&quot;
+ 		 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ 		 		
+		 		
+ 	&apos;&apos;	 	ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
+ 		 &apos; 	print &quot;eseguito S_EP con questo risultato :&quot; &amp; Uscita_forzata
 				if Uscita_forzata = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 						print Uscita_forzata
 						exit sub
-				end if    		 
-  		  		If Uscita_forzata = &quot;Esci1&quot; then
-  		  				Uscita_forzata = &quot;Esci&quot;
-  		  				ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+				end if 		 
+ 		 		If Uscita_forzata = &quot;Esci1&quot; then
+ 		 				Uscita_forzata = &quot;Esci&quot;
+ 		 				ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
 						msgbox &quot;questo è il codice orfano...&quot;
- 		  				exit sub
- 		  		end if
- 		  		If Uscita_forzata = &quot;continua&quot; then
- 		  &apos;		print &quot;colora&quot;
- 		  				oCellT = oSheet.GetCellByPosition( 1, lrow-1 )	
- 		  				oCellT.Cellbackcolor= RGB(159,207,36) &apos;(255,141,56)
- 		  		&apos;		ThisComponent.CurrentController.Select(ocell)
- 		  		&apos;		print &quot;colorato&quot;
- 		  				
- 		   		end if		
+ 		 				exit sub
+ 		 		end if
+ 		 		If Uscita_forzata = &quot;continua&quot; then
+ 		 &apos;		print &quot;colora&quot;
+ 		 				oCellT = oSheet.GetCellByPosition( 1, lrow-1 )	
+ 		 				oCellT.Cellbackcolor= RGB(159,207,36) &apos;(255,141,56)
+ 		 		&apos;		ThisComponent.CurrentController.Select(ocell)
+ 		 		&apos;		print &quot;colorato&quot;
+ 		 				
+ 		 		end if		
 
 				lrow= lrow +1
 				oCell = oSheet.GetCellByPosition( 1, lrow )
-				xA =  oCell.string
-			&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+				xA = oCell.string
+			&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
  			&apos;	print &quot;su quale sheet mi tro?&quot;
 	end if
 Loop
-&apos;print &quot;A_1  b&quot; &apos;debug
+&apos;print &quot;A_1 b&quot; &apos;debug
 Fine:
-&apos; print &quot;A_1&quot;  &apos;debug
+&apos; print &quot;A_1&quot; &apos;debug
 exit sub
 Errore:
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-	&apos;	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )	
+	&apos;	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )	
 end sub
 
 
 
 
-Function S_AN_special (Tag as string, xC as string)  &apos; cerca nelle Analisi e segna nel Computo
+Function S_AN_special (Tag as string, xC as string) &apos; cerca nelle Analisi e segna nel Computo
 
 &apos;print &quot;S_AN orig&quot;
 		Dim lrowA as long 
 			 sString$ = xC
 		&apos;print sString$
 			 oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-		 &apos;	ThisComponent.CurrentController.Select(oSheetAnalisi)&apos; @@@solo per  debug 
-		 &apos;	 print &quot;dentro  &quot; + xC
+		 &apos;	ThisComponent.CurrentController.Select(oSheetAnalisi)&apos; @@@solo per debug 
+		 &apos;	 print &quot;dentro &quot; + xC
 
 			 CellaCercata = uFindString(sString$, oSheetAnalisi)
 	&apos;		 If CellaCercata = true then
@@ -149,7 +149,7 @@ Function S_AN_special (Tag as string, xC as string)  &apos; cerca nelle Analisi 
 	&apos;		oCellT= oSheetAnalisi.GetCellByPosition( 9, lrowA-1) &apos;8
 	
 	&apos; la routine che segue serve a agire in modo diverso sulle analisi se si una un tempalte capace di gestire la sicurezza
-	if  getLastUsedCol(oSheetAnalisi)&gt; 9 and _
+	if getLastUsedCol(oSheetAnalisi)&gt; 9 and _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
 			 	aggiungi=2
 			 else
@@ -158,19 +158,19 @@ Function S_AN_special (Tag as string, xC as string)  &apos; cerca nelle Analisi 
 			oCellT= oSheetAnalisi.GetCellByPosition( 9 + aggiungi, lrowA-1) &apos;9
 				
 		oCellT.string = &quot;usata&quot;		
-	&apos; 	ThisComponent.CurrentController.Select(ocellT)&apos; @@@solo per  debug
-&apos; Print &quot;degnata&quot; &apos; @@@solo per  debug
+	&apos; 	ThisComponent.CurrentController.Select(ocellT)&apos; @@@solo per debug
+&apos; Print &quot;degnata&quot; &apos; @@@solo per debug
 				
-			Do  while xA = &quot;&quot; &apos; mi sposto in basso fino al marcatore fine analisi ----					
+			Do while xA = &quot;&quot; &apos; mi sposto in basso fino al marcatore fine analisi ----					
  		 			 lrowA=lrowA+1
  			 		 oCell =oSheetAnalisi.GetCellByPosition( 0, lrowA )
- 			 		 xA =  oCell.string
+ 			 		 xA = oCell.string
  			Loop 
  		&apos;	ThisComponent.CurrentController.Select(oCell)&apos; debug
  		&apos;	print
 			if xA &lt;&gt; &quot;----&quot; then &apos; se esite prosegue, altrimenti errore!!!
 			&apos;	oCell =oSheetAnalisi.GetCellByPosition( 0, lrowA+1 )
-				&apos;	oCelle=thisComponent.getCurrentSelection().getCellAddress()    
+				&apos;	oCelle=thisComponent.getCurrentSelection().getCellAddress() 
 			&apos;	lrow=oCelle.Row 
 	 			oCell = oSheetAnalisi.GetCellByPosition( 0, lrowA -2 )
 	 			ThisComponent.CurrentController.Select(oCell) 
@@ -182,33 +182,33 @@ Function S_AN_special (Tag as string, xC as string)  &apos; cerca nelle Analisi 
 			end if
 			
  			 oCell = oSheetAnalisi.GetCellByPosition( 4, lrowA )
-	&apos;		 ThisComponent.CurrentController.Select(oCell)&apos; solo per  debug
+	&apos;		 ThisComponent.CurrentController.Select(oCell)&apos; solo per debug
 	&apos;		 print
- 			 xA =  oCell.string	
-			Do  while xA &lt;&gt; &quot;rif.  El. Prezzi&quot; &apos;cicla in singola analisi
- 	 		 	xD =  oCell.string &apos; sigla da tornare a taggare in Elenco
+ 			 xA = oCell.string	
+			Do while xA &lt;&gt; &quot;rif. El. Prezzi&quot; &apos;cicla in singola analisi
+ 	 		 	xD = oCell.string &apos; sigla da tornare a taggare in Elenco
 &apos; 	 		 
  	 			 lrowA=lrowA-1 	
  		 	 	oCell =oSheetAnalisi.GetCellByPosition( 4, lrowA )
-		&apos; 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+		&apos; 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
 		&apos; 	 print
-	 		 	 xA =  oCell.string
+	 		 	 xA = oCell.string
 	 		 	 &apos;xA = xB
  			 	&apos; print xB
  			 	If xA = &quot;&quot; Then &apos; caso di Utli impresa
  			 		goto fine_loop	
  			 	end if
- 			 	 If xA = &quot;rif.  El. Prezzi&quot; then
- 			 	  	exit Function
+ 			 	 If xA = &quot;rif. El. Prezzi&quot; then
+ 			 	 	exit Function
  			 	 end if
- 			 	 	xD =  oCell.string &apos; sigla da tornare a taggare in Elenco
+ 			 	 	xD = oCell.string &apos; sigla da tornare a taggare in Elenco
  		&apos;	print xd	 		 
  					S_EP (xD, Tag)
  
 				fine_loop:	 			
 				oCell =oSheetAnalisi.GetCellByPosition( 4, lrowA )
-&apos;			 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
-	 		 	 xA =  oCell.string
+&apos;			 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
+	 		 	 xA = oCell.string
 	 		Loop 
 END Function
 
@@ -220,32 +220,32 @@ Sub SegnaManinaVociUsate &apos; segna manualmente le voci di prezzo da tenere
 &apos; asseggnato a ctrl-TAB
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
  If nome_sheet = &quot;Elenco Prezzi&quot; Then
-       &apos; Riformatta_Voce_Computo
-        SegnaManinaVociUsate_EP
-         Else
-        If nome_sheet = &quot;Analisi di Prezzo&quot; Then
-         	  SegnaManinaVociUsate_Analisi
-          Else: MsgBox &quot;Questa è: &quot; +nome_sheet + &quot;     ___  e questa Macro si usa soltanto nell&apos;Elenco Prezzi e nelle ANALISI !!!! ___&quot;
-         End If
+ &apos; Riformatta_Voce_Computo
+ SegnaManinaVociUsate_EP
+ Else
+ If nome_sheet = &quot;Analisi di Prezzo&quot; Then
+ 	 SegnaManinaVociUsate_Analisi
+ Else: MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ e questa Macro si usa soltanto nell&apos;Elenco Prezzi e nelle ANALISI !!!! ___&quot;
+ End If
  End If
 END SUB
 
 Sub SegnaManinaVociUsate_Analisi
 		nome_sheet = thisComponent.currentcontroller.activesheet.name
 
-    If nome_sheet &lt;&gt; &quot;Analisi di Prezzo&quot; Then
-			MsgBox &quot;Questa è: &quot; +nome_sheet + &quot;     ___  se vuoi segnare delle voci a manina lo devi fare&quot;_
-			&amp;&quot;nella tabella ELENCO PREZZI o &quot;&quot;Analisi di Prezzo&quot;&quot;!___  (Prima di Eliminare ricordati comunque di RI-passare ancora &lt;Segna le voci di Elenco Prezzi e Analisi utilizzate nel computo&gt; &quot;
-        
-    End If    
+ If nome_sheet &lt;&gt; &quot;Analisi di Prezzo&quot; Then
+			MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ se vuoi segnare delle voci a manina lo devi fare&quot;_
+			&amp;&quot;nella tabella ELENCO PREZZI o &quot;&quot;Analisi di Prezzo&quot;&quot;!___ (Prima di Eliminare ricordati comunque di RI-passare ancora &lt;Segna le voci di Elenco Prezzi e Analisi utilizzate nel computo&gt; &quot;
+ 
+ End If 
 	&apos;______________________________________________-
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then 
-			iScarto = 0  &apos;se ver. 3
+			iScarto = 0 &apos;se ver. 3
 		else
-			iscarto = 2  &apos;se vers. 4
+			iscarto = 2 &apos;se vers. 4
 	endif
 
-	lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lSrow = -1 then
 		 
 		exit sub
@@ -265,7 +265,7 @@ Sub SegnaManinaVociUsate_Analisi
 	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 &apos;	oCell = oSheet.GetCellByPosition( 9+iScarto, lrow) &apos;8
-	if  getLastUsedCol(oSheet)&gt; 9 And _
+	if getLastUsedCol(oSheet)&gt; 9 And _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
 			 	aggiungi=2
 			 else
@@ -286,13 +286,13 @@ Sub SegnaManinaVociUsate_EP &apos; segna manualmente le voci di EP da mantenere
 
 	&apos;______________________________________________-
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0  &apos;se ver. 3
+			iScarto = 0 &apos;se ver. 3
 		else
-			iscarto = 2  &apos;se vers. 4
+			iscarto = 2 &apos;se vers. 4
 	endif
 
-    If nome_sheet = &quot;Elenco Prezzi&quot; Then
-   			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+ If nome_sheet = &quot;Elenco Prezzi&quot; Then
+ 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			lrow= Range2Cell
 			if lrow = -1 then
 				 
@@ -312,12 +312,12 @@ Sub SegnaManinaVociUsate_EP &apos; segna manualmente le voci di EP da mantenere
 		&apos;	oCell = oSheet.GetCellByPosition( 8+iScarto, lrow) &apos; non ricordo perché voglio colorare
 			&apos;anche la col I (la 8) ???
 		&apos;	oCell.Cellbackcolor= RGB(203,72,46)
-	      Else	
-			MsgBox &quot;Questa è: &quot; +nome_sheet + &quot;     ___  se vuoi segnare delle voci a manina lo devi fare&quot;_
-			&amp;&quot;nella tabella ELENCO PREZZI o ANALISI di PREZZO!!___  (Prima di Eliminare ricordati comunque di RI-passare ancora &lt;Segna le voci di Elenco Prezzi e Analisi utilizzate nel computo&gt; &quot;
+	 Else	
+			MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ se vuoi segnare delle voci a manina lo devi fare&quot;_
+			&amp;&quot;nella tabella ELENCO PREZZI o ANALISI di PREZZO!!___ (Prima di Eliminare ricordati comunque di RI-passare ancora &lt;Segna le voci di Elenco Prezzi e Analisi utilizzate nel computo&gt; &quot;
 			exit sub
-    End If
-   	oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
+ End If
+ 	oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(lcolbase+ 1, lrow+1)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 	
@@ -325,7 +325,7 @@ END SUB
 
 
 
-Sub EliminaVociTaggate_EP_0  &apos; in realtà è il rovescio: Elimina le voci NON taggate
+Sub EliminaVociTaggate_EP_0 &apos; in realtà è il rovescio: Elimina le voci NON taggate
 	EliminaVociTaggate_EP &apos; il giro vizioso sembra indispensabile... perché
 	&apos;se la sub viene chiamata direttamente da pulsante il parametro optional riporta i
 	&apos; valori del MouseEvent ... (mai capito perché.. prob un bug... ma non l&apos;ho segnalato...)
@@ -348,9 +348,9 @@ end if
 &apos;xray sPip
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 if isMissing (sPip) then
-	If MsgBox  (&quot; Sto per Eliminare da questo documento le voci di Elenco Prezzi NON utilizzate (e non segnate come da mantenere).&quot;_
-		&amp;	&quot;   L&apos;operazione potrebbe richiedereun po&apos; di tempo...  Se NON hai salvato, esci e Salva....&quot;_
-		&amp; &quot; e poi ripeti questo comando_  PROSEGUO  senza salvare? &quot;, 292, &quot;Attento!!! Hai salvato?&quot;) = 7 then
+	If MsgBox (&quot; Sto per Eliminare da questo documento le voci di Elenco Prezzi NON utilizzate (e non segnate come da mantenere).&quot;_
+		&amp;	&quot; L&apos;operazione potrebbe richiedereun po&apos; di tempo... Se NON hai salvato, esci e Salva....&quot;_
+		&amp; &quot; e poi ripeti questo comando_ PROSEGUO senza salvare? &quot;, 292, &quot;Attento!!! Hai salvato?&quot;) = 7 then
 			exit sub
 			
 	end if 
@@ -365,7 +365,7 @@ end if
  		
 	lRowF=Riordina_0(lcolbase + 9, TRUE) &apos;8
 	
-	IF lRowF =  &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+	IF lRowF = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 			 	 print &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot;
 			 	 exit sub
 	end if 		 
@@ -389,7 +389,7 @@ end if
 			else
 				lrow=lrow-1
 		end if
-		oCell = oSheet.GetCellByPosition( lcolbase + 9,lrow)  &apos;8
+		oCell = oSheet.GetCellByPosition( lcolbase + 9,lrow) &apos;8
 		xA = oCell.string
 	loop
 	
@@ -400,7 +400,7 @@ end if
  	&apos;	xray sPip
  		if isMissing (sPip) then
 	 		MSGBOX &quot; &quot; &amp; CHR$(10)_
-			&amp; &quot;1  Sei certo di aver segnato le voci da mantenere?   &quot;&amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;1 Sei certo di aver segnato le voci da mantenere? &quot;&amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Perché a me non risulta nessuna voce contrassegnata...&quot;&amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Quindi esco!&quot;
 		end if	
@@ -414,19 +414,19 @@ end if
  &apos;	xray myrows
  	
  	myrows.removebyindex(lrow,nRowsCount)
- 	oCell = oSheet.GetCellByPosition(lcolbase +  0,3)
+ 	oCell = oSheet.GetCellByPosition(lcolbase + 0,3)
  	ThisComponent.CurrentController.Select(oCell)
  	if isMissing (sPip) then
  		msgbox &quot;Non mi risultano più voci da eliminare!&quot;
  	end if
 exit sub
 Errore:
-msgbox &quot;Sei certo di aver segnato le voci da mantenere?  perché a me risulta un errore e non saprei a cos&apos;altro attribuirlo...&quot;
+msgbox &quot;Sei certo di aver segnato le voci da mantenere? perché a me risulta un errore e non saprei a cos&apos;altro attribuirlo...&quot;
 END SUB
 
 
 Sub EliminaVociTaggate_Analisi_0
-	EliminaVociTaggate_Analisi  &apos; espedeiente per aggiare un bug...
+	EliminaVociTaggate_Analisi &apos; espedeiente per aggiare un bug...
 		&apos; vedi la consorella che cancella l&apos;Elenco Prezzi
 end sub
 
@@ -435,21 +435,21 @@ end sub
 Sub EliminaVociTaggate_Analisi(optional sPip)&apos; 
 
 if isMissing (sPip) then 
-	If MsgBox  (&quot; Sto per Eliminare da questo documento le voci di Analisi NON utilizzate (e non segnate come &quot;&quot;buone&quot;&quot; da mantenere).&quot;_
+	If MsgBox (&quot; Sto per Eliminare da questo documento le voci di Analisi NON utilizzate (e non segnate come &quot;&quot;buone&quot;&quot; da mantenere).&quot;_
 			&amp;	&quot; Se ha molte analisi il comando &quot;&quot;Annulla&quot;&quot; potrebbe non riuscire a ripristinare la situazione...&quot; &amp; CHR$(10)_
 			&amp; &quot;Quindi se NON hai salvato, esci e Salva.... e poi ripeti questo comando&quot; &amp; CHR$(10)_
 			&amp; &quot;PROSEGUO senza salvare? &quot;, 292, &quot;Attento!!! Hai salvato?&quot;) = 7 then
 			exit sub
 	end if 
-	sPip = &quot;usata&quot;  &apos;segnata in automatico
-	ELSE  sPip = &quot;usata&quot;  &apos;caso di segnata a mano ??? sono uguali
+	sPip = &quot;usata&quot; &apos;segnata in automatico
+	ELSE sPip = &quot;usata&quot; &apos;caso di segnata a mano ??? sono uguali
 end if
 Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
 dim lrow as long
 dim lrowF as long
 dim iSheet_num as integer
-dim iEndRow  as integer
-dim lrowsNum  as integer
+dim iEndRow as integer
+dim lrowsNum as integer
 dim oSheet as object
 dim lrowS as long
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
@@ -462,7 +462,7 @@ dim lrowS as long
 	inumSheet = oCell.RangeAddress.sheet
 	iEndRow = getLastUsedRow(oSheet)
 	
-	if  getLastUsedCol(oSheet)&gt; 9 and _
+	if getLastUsedCol(oSheet)&gt; 9 and _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
 			 	aggiungi=2
 			 else
@@ -480,8 +480,8 @@ dim lrowS as long
 			&apos;xray ovoce
 			lrowA = oVoce.RangeAddress.Startrow
 			
-		&apos;	if  oSheet.GetCellByPosition( 9,lrowA).STRING &lt;&gt; sPip then  &apos;
-			if  oSheet.GetCellByPosition( 9 + aggiungi ,lrowA).STRING &lt;&gt; sPip then 
+		&apos;	if oSheet.GetCellByPosition( 9,lrowA).STRING &lt;&gt; sPip then &apos;
+			if oSheet.GetCellByPosition( 9 + aggiungi ,lrowA).STRING &lt;&gt; sPip then 
 					iCount = oVoce.rows.count
 					myrows=oSheet.getrows
 					myrows.removebyindex(lrowA,iCount)
@@ -495,14 +495,14 @@ finito:
 ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0,1)
 &apos;if isMissing (sPip) then
 	msgbox &quot;Le analisi NON utilizzate sono state eliminate... spero non te ne debba pentire... :-)&quot;&amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Scherzavo!! Se hai passato questa macro vuol dire che il computo è finito!  Complimenti!&quot;&amp; CHR$(10)
+		&amp; &quot; Scherzavo!! Se hai passato questa macro vuol dire che il computo è finito! Complimenti!&quot;&amp; CHR$(10)
 &apos;end if
 END SUB
 
 
 
 &apos;+++++++++++++++++++++++++++++++++++++++
-Sub Pulisci_Colonne_tag  &apos;elimina tutti i tag da EP e dalle Analisi
+Sub Pulisci_Colonne_tag &apos;elimina tutti i tag da EP e dalle Analisi
 	
 	&apos;verifica da dove è stata chiamata la macro
 	sSheetContest = ThisComponent.currentController.activeSheet.name
@@ -511,17 +511,17 @@ Sub Pulisci_Colonne_tag  &apos;elimina tutti i tag da EP e dalle Analisi
 		exit sub
 	end if
 	oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lrow=2  
+	lrow=2 
 	
 	&apos; la routine che segue serve a agire in modo diverso sulle analisi se si una un tempalte capace di gestire la sicurezza
-	if  getLastUsedCol(oSheetAnalisi)&gt; 9 and _
+	if getLastUsedCol(oSheetAnalisi)&gt; 9 and _
 			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
 				 	aggiungi=2
 				 else
 				 	aggiungi=0			 	
 	end if	
 
-	ocell = oSheetAnalisi.GetCellByPosition( 9 + aggiungi ,lrow) &apos;9  &apos;orecchione
+	ocell = oSheetAnalisi.GetCellByPosition( 9 + aggiungi ,lrow) &apos;9 &apos;orecchione
 	lUltimaRiga = getLastUsedRow(oSheetAnalisi)	
 	oMioRange = oSheetAnalisi.getCellRangeByPosition (9+ aggiungi ,lrow,9 + aggiungi ,lUltimaRiga)
 &apos;	oMioRange = oSheetAnalisi.getCellRangeByPosition (10+ aggiungi ,lrow,10 + aggiungi ,lUltimaRiga)
@@ -595,7 +595,7 @@ END SUB
 
 
 
-SUB DOPPIONI_TROVA_giuserpe()  &apos;   &apos; trova i codici doppi nell&apos;EP e controlla se anche
+SUB DOPPIONI_TROVA_giuserpe() &apos; &apos; trova i codici doppi nell&apos;EP e controlla se anche
 &apos; le voci sono uguali... solo se uguali le cancella...
 
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -622,7 +622,7 @@ DOPPIONI_TROVA_giu_discrimina
 DOPPIONI_TROVA_giu_discrimina
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
-msgbox &quot;Sono state automaticamente eliminate  eventuali voci doppie identiche dall&apos;elenco prezzi..&quot;  &amp; CHR$(10)_
+msgbox &quot;Sono state automaticamente eliminate eventuali voci doppie identiche dall&apos;elenco prezzi..&quot; &amp; CHR$(10)_
 		&amp; &quot;Ma non è detto, perché ci sono situazioni dove ho difficoltà ad individuarle.&quot; &amp; CHR$(10)_
 		&amp; &quot;Vedo quindi se c&apos;è ne sono ancora...&quot;
 
@@ -630,7 +630,7 @@ msgbox &quot;Sono state automaticamente eliminate  eventuali voci doppie identic
 DOPPIONI_TROVA_manuale
 exit sub
 suona_1_2
-msgbox &quot;Dovrei aver eliminato tutte le eventuali voci doppie identiche dall&apos;elenco prezzi..&quot;  &amp; CHR$(10)_
+msgbox &quot;Dovrei aver eliminato tutte le eventuali voci doppie identiche dall&apos;elenco prezzi..&quot; &amp; CHR$(10)_
 		&amp; &quot;Ma non è detto, perché ci sono situazioni dove ho difficoltà ad individuarle.&quot; &amp; CHR$(10)_
 		&amp; &quot;(ad esempio: se le Analisi hanno un triplo annidamento, occorre passare questa macro due volte...&quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;In ogni caso è opportuno un controllo usando &quot;&quot;Trova Codici Doppi in El.Prezzi&quot;&quot; (icona binoccolo),&quot; &amp; CHR$(10)_
@@ -644,7 +644,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 &apos; le voci sono uguali... solo se uguali le cancella...
 
 	&apos;Clessid_lock_Start
-	Barra_Apri_Chiudi_5(&quot;    Sto cercando.....&quot;, 30)
+	Barra_Apri_Chiudi_5(&quot; Sto cercando.....&quot;, 30)
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
 		on error goto Fine
 	end if
@@ -667,14 +667,14 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
  	
 	
 &apos;	do While oSheet.GetCellByPosition(lcolbase + 0,lrow ).string &lt;&gt; &quot;&quot; 
-			&apos;if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow +1).string  then 
-			&apos;	dimmi = Replace_G (oSheet.GetCellByPosition( 1,lrow+1 ).string, &quot;#REF!&quot;)  &apos;then
-			&apos;	print &quot;topona&quot;  Replace_G(Source As String, Search As
+			&apos;if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow +1).string then 
+			&apos;	dimmi = Replace_G (oSheet.GetCellByPosition( 1,lrow+1 ).string, &quot;#REF!&quot;) &apos;then
+			&apos;	print &quot;topona&quot; Replace_G(Source As String, Search As
 			&apos;end if
 	for i = lrow = 2 to lUltimaRiga
 
-			if      oSheet.GetCellByPosition( lcolbase +0,i+1 ).string = oSheet.GetCellByPosition(lcolbase +0,i).string _
-				And oSheet.GetCellByPosition(lcolbase + 1,i+1 ).string = oSheet.GetCellByPosition(lcolbase +1,i).string  _
+			if oSheet.GetCellByPosition( lcolbase +0,i+1 ).string = oSheet.GetCellByPosition(lcolbase +0,i).string _
+				And oSheet.GetCellByPosition(lcolbase + 1,i+1 ).string = oSheet.GetCellByPosition(lcolbase +1,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 2,i+1 ).string = oSheet.GetCellByPosition(lcolbase +2,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 4,i+1 ).string = oSheet.GetCellByPosition(lcolbase +4,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 5,i+1 ).value = oSheet.GetCellByPosition(lcolbase +5,i).value _
@@ -686,8 +686,8 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 		 			&apos;exit sub 
 		 			&apos;print &quot;E 1&quot;
 			end if
-			if      oSheet.GetCellByPosition( lcolbase +0,i+1 ).string = oSheet.GetCellByPosition(lcolbase +0,i).string _
-				And oSheet.GetCellByPosition(lcolbase + 1,i+1 ).string = oSheet.GetCellByPosition(lcolbase +1,i).string  _
+			if oSheet.GetCellByPosition( lcolbase +0,i+1 ).string = oSheet.GetCellByPosition(lcolbase +0,i).string _
+				And oSheet.GetCellByPosition(lcolbase + 1,i+1 ).string = oSheet.GetCellByPosition(lcolbase +1,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 2,i+1 ).string = oSheet.GetCellByPosition(lcolbase +2,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 4,i+1 ).string = oSheet.GetCellByPosition(lcolbase +4,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 5,i+1 ).value = oSheet.GetCellByPosition(lcolbase +5,i).value _
@@ -703,7 +703,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 		 				else
 							if oSheet.GetCellByPosition(lcolbase + 7,i+1).string &lt;&gt; oSheet.GetCellByPosition(lcolbase + 0,i+1).string then
 							&apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(lcolbase + 0, i, lcolbase +4, i)) &apos;debug
-		 					&apos;		print &quot;E  3&quot;
+		 					&apos;		print &quot;E 3&quot;
 									myrows = oSheet.getrows &apos; &apos; rimuove solo le voci di Analisi che sembrano errate &apos;&apos;&apos;&apos;
 		 							myrows.removebyindex(i+1,1)			
 		 							i = i+1
@@ -719,7 +719,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 								 	 		SelectedRange = &quot;ANNULLA&quot; then
 								 	 		ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 								 			thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-											&apos;print &quot;&apos; toglie la selezione  ed esce	&quot;
+											&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 											Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 				 	exit sub
 										else
@@ -736,21 +736,21 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 					salta:	
 			end if
 			Barra_chiudi_sempre_4
-			if      oSheet.GetCellByPosition( lcolbase +0,i+1 ).string = oSheet.GetCellByPosition(lcolbase +0,i).string _
-				And oSheet.GetCellByPosition(lcolbase + 1,i+1 ).string = oSheet.GetCellByPosition(lcolbase +1,i).string  _
+			if oSheet.GetCellByPosition( lcolbase +0,i+1 ).string = oSheet.GetCellByPosition(lcolbase +0,i).string _
+				And oSheet.GetCellByPosition(lcolbase + 1,i+1 ).string = oSheet.GetCellByPosition(lcolbase +1,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 2,i+1 ).string = oSheet.GetCellByPosition(lcolbase +2,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 7,i+1 ).string = oSheet.GetCellByPosition(lcolbase +7,i).string _
 				And oSheet.GetCellByPosition(lcolbase + 4,i+1 ).value &lt;&gt; oSheet.GetCellByPosition(lcolbase +4,i).value then
 							ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(lcolbase + 4, i, lcolbase +4, i+1))
 							Barra_Apri_Chiudi_5(&quot;Trovate due voci simili: Clicca sulla voce da Eliminare&quot;, 10)						 	
-							sTitolo = &quot;Le Due voci sono SIMILI: Click sulla voce da Eliminare (Annulla con ESC, NO Click su X           )&quot;
+							sTitolo = &quot;Le Due voci sono SIMILI: Click sulla voce da Eliminare (Annulla con ESC, NO Click su X )&quot;
  							SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  							Barra_chiudi_sempre_4
  							if SelectedRange = &quot;&quot; or _
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-								&apos;print &quot;&apos; toglie la selezione  ed esce	&quot;
+								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								&apos;Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
 						 	end if
@@ -763,7 +763,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 						&apos;	Barra_Apri_Chiudi_5(&quot;--&quot;, 1)						 	
 			end if
 			if oSheet.GetCellByPosition( lcolbase +0,i+1 ).string = oSheet.GetCellByPosition(lcolbase +0,i).string and _
-				(oSheet.GetCellByPosition( lcolbase +0,i+1 ).cellstyle = &quot;EP-Cs&quot;  or _
+				(oSheet.GetCellByPosition( lcolbase +0,i+1 ).cellstyle = &quot;EP-Cs&quot; or _
 				 oSheet.GetCellByPosition( lcolbase +0,i+1 ).cellstyle = &quot;EP-As&quot;) then
 				ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(lcolbase + 0 , i, lcolbase +7, i+1))
 				Barra_Apri_Chiudi_5(&quot;Trovate due voci simili: Clicca sulla voce da Eliminare&quot;, 10)						 	
@@ -774,7 +774,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 						SelectedRange = &quot;ANNULLA&quot; then
 			 			ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 						thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-						&apos;print &quot;&apos; toglie la selezione  ed esce	&quot;
+						&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 						Barra_chiudi_sempre_4
 						Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 					 	exit sub
@@ -795,7 +795,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 exit sub
 				
 					if oSheet.GetCellByPosition(lcolbase + 7 , lrow+1 ).string &lt;&gt; oSheet.GetCellByPosition(lcolbase +7,lrow).string And _
-					   oSheet.GetCellByPosition(lcolbase + 6 , lrow+1 ).value &lt;&gt; oSheet.GetCellByPosition(lcolbase +6,lrow).value then
+					 oSheet.GetCellByPosition(lcolbase + 6 , lrow+1 ).value &lt;&gt; oSheet.GetCellByPosition(lcolbase +6,lrow).value then
 							&apos;rimuove quelle IDENTICHE
 						myrows = oSheet.getrows &apos; rimuove solo le voci proprio identiche &apos;&apos;&apos;&apos;
 		 				myrows.removebyindex(lrow,1)
@@ -804,13 +804,13 @@ exit sub
 					if oSheet.GetCellByPosition(lcolbase + 7,lrow+1 ).string &lt;&gt; oSheet.GetCellByPosition(lcolbase +7,lrow).string then
 							ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(lcolbase +7, lrow, lcolbase +7, lrow+1))
 							Barra_Apri_Chiudi_5(&quot;Trovate due voci simili: Clicca sulla voce da Eliminare&quot;, 10)						 	
-							sTitolo = &quot;Le due voci sono simili: Seleziona la voce da Eliminare (ESC per Annullare, NO Click su X           )&quot;
+							sTitolo = &quot;Le due voci sono simili: Seleziona la voce da Eliminare (ESC per Annullare, NO Click su X )&quot;
  							SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  							if SelectedRange = &quot;&quot; or _
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-								&apos;print &quot;&apos; toglie la selezione  ed esce	&quot;
+								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
 						 	end if
@@ -830,7 +830,7 @@ exit sub
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-								&apos;print &quot;&apos; toglie la selezione  ed esce	&quot;
+								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
 						 	end if
@@ -856,14 +856,14 @@ exit sub
 
 &apos;			if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow +1).string _
 &apos;&apos;				And oSheet.GetCellByPosition( 2,lrow ).string = oSheet.GetCellByPosition(2,lrow+1).string _
-&apos;				And oSheet.GetCellByPosition( 8,lrow ).string &lt;&gt; &quot;(AP)&quot;  then	
-			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow +1).string  and _
-				dimmi = Replace_G (oSheet.GetCellByPosition(lcolbase + 0,lrow ).string, &quot;#REF!&quot;)  then
-				print dimmi &apos;topona  Replace_G(Source As String, Search As
+&apos;				And oSheet.GetCellByPosition( 8,lrow ).string &lt;&gt; &quot;(AP)&quot; then	
+			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow +1).string and _
+				dimmi = Replace_G (oSheet.GetCellByPosition(lcolbase + 0,lrow ).string, &quot;#REF!&quot;) then
+				print dimmi &apos;topona Replace_G(Source As String, Search As
 			end if
 				
  			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow +1).string _
-				And oSheet.GetCellByPosition(lcolbase + 8,lrow ).string &lt;&gt; &quot;(AP)&quot;  then	
+				And oSheet.GetCellByPosition(lcolbase + 8,lrow ).string &lt;&gt; &quot;(AP)&quot; then	
 					ThisComponent.CurrentController.Select(	oSheet.GetCellByPosition(lcolbase + 8,lrow )				
 	 		 		myrows = oSheet.getrows &apos; rimuove 
 		 			myrows.removebyindex(lrow,1)
@@ -871,22 +871,22 @@ exit sub
 
 &apos;			if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow+1).string _
 &apos;				And oSheet.GetCellByPosition( 2,lrow).string = oSheet.GetCellByPosition(2,lrow+1).string _
-&apos;				And oSheet.GetCellByPosition( 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot;  then
+&apos;				And oSheet.GetCellByPosition( 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot; then
 			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow+1).string _
-				And oSheet.GetCellByPosition(lcolbase + 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot;  then
+				And oSheet.GetCellByPosition(lcolbase + 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot; then
 					ThisComponent.CurrentController.Select(	oSheet.GetCellByPosition(lcolbase + 8,lrow )
 	 		 		myrows = oSheet.getrows
 		 			myrows.removebyindex(lrow+1,1)
 			end if			
 			lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow )  
+			oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow ) 
 &apos;	LOOP
 	Clessid_lock_End
 	exit sub
 	Fine:
 	Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 	&apos;Clessid_lock_End
-	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
 
 
@@ -895,7 +895,7 @@ SUB DOPPIONI_TROVA_giu_discrimina______ &apos; trova i codici doppi nell&apos;EP
 &apos; le voci sono uguali... solo se uguali le cancella...
 
 	&apos;Clessid_lock_Start
-	Barra_Apri_Chiudi_5(&quot;    Sto cercando.....&quot;, 30)
+	Barra_Apri_Chiudi_5(&quot; Sto cercando.....&quot;, 30)
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
 		on error goto Fine
 	end if
@@ -918,12 +918,12 @@ SUB DOPPIONI_TROVA_giu_discrimina______ &apos; trova i codici doppi nell&apos;EP
  	
 	
 	do While oSheet.GetCellByPosition(lcolbase + 0,lrow ).string &lt;&gt; &quot;&quot; 
-			&apos;if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow +1).string  then 
-			&apos;	dimmi = Replace_G (oSheet.GetCellByPosition( 1,lrow+1 ).string, &quot;#REF!&quot;)  &apos;then
-			&apos;	print &quot;topona&quot;  Replace_G(Source As String, Search As
+			&apos;if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow +1).string then 
+			&apos;	dimmi = Replace_G (oSheet.GetCellByPosition( 1,lrow+1 ).string, &quot;#REF!&quot;) &apos;then
+			&apos;	print &quot;topona&quot; Replace_G(Source As String, Search As
 			&apos;end if
-			if      oSheet.GetCellByPosition( lcolbase +0,lrow+1 ).string = oSheet.GetCellByPosition(lcolbase +0,lrow).string _
-				And oSheet.GetCellByPosition(lcolbase + 1,lrow+1 ).string = oSheet.GetCellByPosition(lcolbase +1,lrow).string  _
+			if oSheet.GetCellByPosition( lcolbase +0,lrow+1 ).string = oSheet.GetCellByPosition(lcolbase +0,lrow).string _
+				And oSheet.GetCellByPosition(lcolbase + 1,lrow+1 ).string = oSheet.GetCellByPosition(lcolbase +1,lrow).string _
 				And oSheet.GetCellByPosition(lcolbase + 2,lrow+1 ).string = oSheet.GetCellByPosition(lcolbase +2,lrow).string _
 				And oSheet.GetCellByPosition(lcolbase + 4,lrow+1 ).value = oSheet.GetCellByPosition(lcolbase +4,lrow).value _
 				And oSheet.GetCellByPosition(lcolbase + 5,lrow+1 ).value = oSheet.GetCellByPosition(lcolbase +5,lrow).value _
@@ -938,7 +938,7 @@ SUB DOPPIONI_TROVA_giu_discrimina______ &apos; trova i codici doppi nell&apos;EP
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-								&apos;print &quot;&apos; toglie la selezione  ed esce	&quot;
+								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
 						 	end if
@@ -959,14 +959,14 @@ SUB DOPPIONI_TROVA_giu_discrimina______ &apos; trova i codici doppi nell&apos;EP
 
 &apos;			if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow +1).string _
 &apos;&apos;				And oSheet.GetCellByPosition( 2,lrow ).string = oSheet.GetCellByPosition(2,lrow+1).string _
-&apos;				And oSheet.GetCellByPosition( 8,lrow ).string &lt;&gt; &quot;(AP)&quot;  then	
-			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow +1).string  and _
-				dimmi = Replace_G (oSheet.GetCellByPosition(lcolbase + 0,lrow ).string, &quot;#REF!&quot;)  then
-				print dimmi &apos;topona  Replace_G(Source As String, Search As
+&apos;				And oSheet.GetCellByPosition( 8,lrow ).string &lt;&gt; &quot;(AP)&quot; then	
+			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow +1).string and _
+				dimmi = Replace_G (oSheet.GetCellByPosition(lcolbase + 0,lrow ).string, &quot;#REF!&quot;) then
+				print dimmi &apos;topona Replace_G(Source As String, Search As
 			end if
 				
  			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow +1).string _
-				And oSheet.GetCellByPosition(lcolbase + 8,lrow ).string &lt;&gt; &quot;(AP)&quot;  then	
+				And oSheet.GetCellByPosition(lcolbase + 8,lrow ).string &lt;&gt; &quot;(AP)&quot; then	
 					ThisComponent.CurrentController.Select(	oSheet.GetCellByPosition(lcolbase + 8,lrow )				
 	 		 		myrows = oSheet.getrows &apos; rimuove 
 		 			myrows.removebyindex(lrow,1)
@@ -974,22 +974,22 @@ SUB DOPPIONI_TROVA_giu_discrimina______ &apos; trova i codici doppi nell&apos;EP
 
 &apos;			if oSheet.GetCellByPosition( 0,lrow ).string = oSheet.GetCellByPosition(0,lrow+1).string _
 &apos;				And oSheet.GetCellByPosition( 2,lrow).string = oSheet.GetCellByPosition(2,lrow+1).string _
-&apos;				And oSheet.GetCellByPosition( 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot;  then
+&apos;				And oSheet.GetCellByPosition( 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot; then
 			if oSheet.GetCellByPosition(lcolbase + 0,lrow ).string = oSheet.GetCellByPosition(lcolbase +0,lrow+1).string _
-				And oSheet.GetCellByPosition(lcolbase + 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot;  then
+				And oSheet.GetCellByPosition(lcolbase + 8,lrow+1 ).string &lt;&gt; &quot;(AP)&quot; then
 					ThisComponent.CurrentController.Select(	oSheet.GetCellByPosition(lcolbase + 8,lrow )
 	 		 		myrows = oSheet.getrows
 		 			myrows.removebyindex(lrow+1,1)
 			end if			
 			lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow )  
+			oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow ) 
 	LOOP
 	Clessid_lock_End
 	exit sub
 	Fine:
 	Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 	&apos;Clessid_lock_End
-	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
 
 
@@ -1019,7 +1019,7 @@ SUB DOPPIONI_TROVA &apos; trova i codici doppi nell&apos;EP
 		oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow ) 
 		Xa = oCell.string
 	loop
-	oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow )  
+	oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow ) 
 	&apos; ThisComponent.CurrentController.Select(oCell) &apos;debug
 	 &apos;print
 	Xa = oCell.string
@@ -1030,13 +1030,13 @@ SUB DOPPIONI_TROVA &apos; trova i codici doppi nell&apos;EP
 				&apos;ThisComponent.CurrentController.Select(oCell) 
 				oRange = oSheet.getCellRangeByPosition(lcolbase + 0,lrow ,lcolbase + 0,lrow +1)
 				ThisComponent.CurrentController.Select(orange) 
-				msgbox &quot;1 Come puoi vedere il codice  &quot;&quot; &quot; &amp; xA &amp; &quot; &quot;&quot; è presente (almeno) due volte nell&apos;Elenco Prezzi! &quot;&amp; CHR$(10)_
+				msgbox &quot;1 Come puoi vedere il codice &quot;&quot; &quot; &amp; xA &amp; &quot; &quot;&quot; è presente (almeno) due volte nell&apos;Elenco Prezzi! &quot;&amp; CHR$(10)_
 				&amp; &quot;sistema la cosa e poi ripeti la macro &apos;Trova Codici doppi in El. Prezzi&apos; &quot;
 				Uscita_forzata = &quot;Esci&quot;
 				exit sub
 			end if
 			lrow = lrow+1
-			oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow )  
+			oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow ) 
 			Xa = oCell.string
 			oCellB = oSheet.GetCellByPosition(lcolbase + 0,lrow+1 )
 			xB = oCellB.string
@@ -1044,7 +1044,7 @@ SUB DOPPIONI_TROVA &apos; trova i codici doppi nell&apos;EP
 	&apos;msgbox &quot;Non mi risultano dei codici doppi nell&apos;Elenco Prezzi &quot;
 	exit sub
 	Fine:
-	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
 
 

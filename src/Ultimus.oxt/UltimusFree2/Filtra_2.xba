@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Filtra_2" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                             
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Filtra_2" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -22,7 +22,7 @@ sub Dialog_Filtro_Apri
 &apos;print &quot;1 &quot; &amp; sAnnulla
 	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 	Dialog_Filtro=CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_Filtro)
-   Dialog_Filtro.execute()
+ Dialog_Filtro.execute()
 end sub
 
 Sub Dialog_Filtro_Chiudi
@@ -46,49 +46,49 @@ end sub
 
 Sub Filtro &apos;(Optional oSheetG as object)&apos; Filtro Standard semplificato
 
-  Dim oSheet          &apos; Sheet filtered.
-  Dim oFilterDesc     &apos; Filter descriptor.
-  
+ Dim oSheet &apos; Sheet filtered.
+ Dim oFilterDesc &apos; Filter descriptor.
+ 
 
 	oSheet = ThisComponent.currentController.activeSheet
 
-    lLastUrow = getLastUsedRow(oSheet)
+ lLastUrow = getLastUsedRow(oSheet)
 
-    Barra_apri_chiudi_4 
-    sAttributo = Trova_Attr_Sheet
+ Barra_apri_chiudi_4 
+ sAttributo = Trova_Attr_Sheet
 
-    If sAttributo &lt;&gt; &quot;Tipo_EP&quot; and sAttributo &lt;&gt; &quot;Tipo_computo&quot; and _
-   		not thisComponent.Sheets.hasByName(&quot;Listino&quot;) then
-   		&apos;print &quot;no&quot;
-   		Barra_chiudi_sempre_4
-   		exit sub
-    end if
+ If sAttributo &lt;&gt; &quot;Tipo_EP&quot; and sAttributo &lt;&gt; &quot;Tipo_computo&quot; and _
+ 		not thisComponent.Sheets.hasByName(&quot;Listino&quot;) then
+ 		&apos;print &quot;no&quot;
+ 		Barra_chiudi_sempre_4
+ 		exit sub
+ end if
 on error resume next
 &apos; il ciclo di for che segue serve ad eliminare il filtro
 &apos; per impostare un nuovo filtro questo ciclo è inutile (un filtro sostituisce l&apos;altro)
 &apos; ma se si vuole avere una sola shortcut per attivare e disattivare un filtro non vedo alternative...
 &apos; qualche idea in merito?
-
-    For i = 3  to lLastUrow
+ For i = 3 to lLastUrow
 				if	oSheet.getRows().getByIndex(i).IsFiltered = true then
 					oActiveCell1 = thisComponent.getCurrentSelection()
 					oFilterDesc = oSheet.createFilterDescriptor(True)
-  					oSheet.filter(oFilterDesc)
-  					if oActiveCell1.CellAddress.Row &lt; lLastUrow then 
-  							ThisComponent.CurrentController.Select(oActiveCell1)
-  						else							
-  							if lLastUrow-10 &gt; 0 then
-  								lLastUrow=lLastUrow-10
-  							end if
-  							ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1, lLastUrow))
-  					end if
+ 					oSheet.filter(oFilterDesc)
+ 					if oActiveCell1.CellAddress.Row &lt; lLastUrow then 
+ 							ThisComponent.CurrentController.Select(oActiveCell1)
+ 						else							
+ 							if lLastUrow-10 &gt; 0 then
+ 								lLastUrow=lLastUrow-10
+ 							end if
+ 							ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1, lLastUrow))
+ 					end if
  					Barra_chiudi_sempre_4
-  					exit sub
+ 					exit sub
 				end if
-    Next I 
-    Barra_apri_chiudi_4 
+ Next I 
+ Barra_apri_chiudi_4 
 	sAttributo = Trova_Attr_Sheet
-	If sAttributo = &quot;Tipo_ElencoP&quot; Then	
+	If sAttributo = &quot;Tipo_ElencoP&quot; OR _
+		sAttributo = &quot;Tipo_EP&quot; Then	
 		&apos; questa invece trova automaticamente la colonna giusta +col
 		if oSheet.getCellByPosition(1,0).string = &quot; Descrizione &quot; or _
  			oSheet.getCellByPosition(1,0).string = &quot;Descrizione &quot; or _
@@ -110,9 +110,9 @@ on error resume next
  		Barra_chiudi_sempre_4
 		exit sub
 	end if
-    If sAttributo = &quot;Tipo_computo&quot; Then	
+ If sAttributo = &quot;Tipo_computo&quot; Then	
 			Barra_Apri_Chiudi_4
-    		Crea_Filtro_EP_Computo (2) &apos; (2, &quot;AttComp&quot;)
+ 		Crea_Filtro_EP_Computo (2) &apos; (2, &quot;AttComp&quot;)
 			Barra_chiudi_sempre_4
 			exit sub
 	end if
@@ -130,21 +130,21 @@ End Sub
 
 sub Crea_Filtro_EP_Computo (lcol as long) &apos;, sAttTipo as string) &apos;lcol è il nume della colonna dove applicare il filtro su EP o su Computo 
  
-   	sStringa = InputBox (&quot;&quot; &amp; CHR$(10)_
-   						&amp; &quot; Scrivi le parole chiave che vuoi Filtrare/cercare&quot; &amp; CHR$(10) &amp; CHR$(10)_
-   						&amp; &quot;(Puoi inserire fino a 3 parole separate da uno spazio)&quot;&amp; CHR$(10) &amp; CHR$(10)_
-   						 , &quot;      Filtra le voci che contengono la parole (nell&apos;ordine)&quot;, SGenericoMemo)
+ 	sStringa = InputBox (&quot;&quot; &amp; CHR$(10)_
+ 						&amp; &quot; Scrivi le parole chiave che vuoi Filtrare/cercare&quot; &amp; CHR$(10) &amp; CHR$(10)_
+ 						&amp; &quot;(Puoi inserire fino a 3 parole separate da uno spazio)&quot;&amp; CHR$(10) &amp; CHR$(10)_
+ 						 , &quot; Filtra le voci che contengono la parole (nell&apos;ordine)&quot;, SGenericoMemo)
 	SGenericoMemo = sStringa
-    If sStringa = &quot;&quot; then
-    	exit sub
-    end if
+ If sStringa = &quot;&quot; then
+ 	exit sub
+ end if
 	Dim oFields(0) As New com.sun.star.sheet.TableFilterField
 
 	oSheet = ThisComponent.currentController.activeSheet
 
 &apos;	lLastUrowNN = getLastUsedRow(oSheet)
 
-    &apos;questo wait annulla subito la finestra di dialogo
+ &apos;questo wait annulla subito la finestra di dialogo
 	wait 100
 	
 
@@ -164,61 +164,61 @@ sub Crea_Filtro_EP_Computo (lcol as long) &apos;, sAttTipo as string) &apos;lcol
 	end if
 	sStrFilter = sStrFilter &amp; &quot;.*&quot;
 &apos;	sStrFilter = &quot;.*&quot; &amp; sStrFilter &amp; &quot;.*&quot;
-&apos;print sStrFilter	  
+&apos;print sStrFilter	 
 &apos;CHR$(10)_
 
 &apos;print lcol
-  REM If argument is True, creates an empty filter
-  REM descriptor. If argument is False, create a 
-  REM descriptor with the previous settings.
-  oFilterDesc = oSheet.createFilterDescriptor(True)
-&apos;  sStringa = &quot;scavo&quot;
-&apos;  xray oFilterDesc
-  With oFields(0)
-    REM I could use the Connection property to indicate 
-    REM how to connect to the previous field. This is 
-    REM the first field so this is not required.
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
+ REM If argument is True, creates an empty filter
+ REM descriptor. If argument is False, create a 
+ REM descriptor with the previous settings.
+ oFilterDesc = oSheet.createFilterDescriptor(True)
+&apos; sStringa = &quot;scavo&quot;
+&apos; xray oFilterDesc
+ With oFields(0)
+ REM I could use the Connection property to indicate 
+ REM how to connect to the previous field. This is 
+ REM the first field so this is not required.
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
-    REM The Field property is the zero based column
-    REM number to filter. If you have the cell, you
-    REM can use .Field = oCell.CellAddress.Column.
-    .Field = lCol 
+ REM The Field property is the zero based column
+ REM number to filter. If you have the cell, you
+ REM can use .Field = oCell.CellAddress.Column.
+ .Field = lCol 
 
-    REM Compare using a numeric or a string?
-    .IsNumeric = false &apos;True
+ REM Compare using a numeric or a string?
+ .IsNumeric = false &apos;True
 
-    REM The NumericValue property is used 
-    REM because .IsNumeric = True from above.
-    &apos;.NumericValue = 80
+ REM The NumericValue property is used 
+ REM because .IsNumeric = True from above.
+ &apos;.NumericValue = 80
 	
 	
-    REM If IsNumeric was False, then the 
-    REM StringValue property would be used.
-    REM .StringValue = &quot;what ever&quot;
-   &apos; .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot;     
+ REM If IsNumeric was False, then the 
+ REM StringValue property would be used.
+ REM .StringValue = &quot;what ever&quot;
+ &apos; .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot; 
 	.StringValue =	sStrFilter
-    REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
-    REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
-    REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
-    REM BOTTOM_VALUES, and BOTTOM_PERCENT
-    .Operator = com.sun.star.sheet.FilterOperator.EQUAL
-  End With
-  
-  REM The filter descriptor supports the following
-  REM properties: IsCaseSensitive, SkipDuplicates,
+ REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ .Operator = com.sun.star.sheet.FilterOperator.EQUAL
+ End With
+ 
+ REM The filter descriptor supports the following
+ REM properties: IsCaseSensitive, SkipDuplicates,
  &apos;UseRegularExpressions
 &apos; XRAY oFilterDesc
-  REM SaveOutputPosition, Orientation, ContainsHeader, 
-  REM CopyOutputData, OutputPosition, and MaxFieldCount.
-  oFilterDesc.setFilterFields(oFields())
-  oFilterDesc.UseRegularExpressions = TRUE
-  &apos;  oFilterDesc.UseRegularExpressions = false
-  oFilterDesc.ContainsHeader = True
-  oSheet.filter(oFilterDesc)
-  ThisComponent.CurrentController.setFirstVisibleRow (1) 
-  
+ REM SaveOutputPosition, Orientation, ContainsHeader, 
+ REM CopyOutputData, OutputPosition, and MaxFieldCount.
+ oFilterDesc.setFilterFields(oFields())
+ oFilterDesc.UseRegularExpressions = TRUE
+ &apos; oFilterDesc.UseRegularExpressions = false
+ oFilterDesc.ContainsHeader = True
+ oSheet.filter(oFilterDesc)
+ ThisComponent.CurrentController.setFirstVisibleRow (1) 
+ 
 end sub
 
 
@@ -226,14 +226,14 @@ sub Crea_Filtro_EP_Computo____ (lcol as long) &apos;, &apos; prova con due crite
 &apos;lcol è la colonna dobe applicare il filtro su EP o su Computo 
  
  
-   	sStringa = InputBox (&quot;&quot; &amp; CHR$(10)_
-   						&amp; &quot; Scrivi qui sotto la stringa che vuoi Filtrare/cercare:&quot; &amp; CHR$(10) &amp; CHR$(10)_
-	 					 , &quot;      Filtra le voci che contengono la stringa!&quot;, SGenericoMemo)
+ 	sStringa = InputBox (&quot;&quot; &amp; CHR$(10)_
+ 						&amp; &quot; Scrivi qui sotto la stringa che vuoi Filtrare/cercare:&quot; &amp; CHR$(10) &amp; CHR$(10)_
+	 					 , &quot; Filtra le voci che contengono la stringa!&quot;, SGenericoMemo)
 
 	SGenericoMemo = sStringa
-    If sStringa = &quot;&quot; then
-    	exit sub
-    end if
+ If sStringa = &quot;&quot; then
+ 	exit sub
+ end if
 	Dim oFields(0) As New com.sun.star.sheet.TableFilterField
 sStringa = scavo
 sStringa1 = trincea
@@ -243,92 +243,92 @@ lcol1 = lcol
 
 	lLastUrowNN = getLastUsedRow(oSheet)
 
- &apos;&apos;&apos; 	  oAddr = oSheet.getCellRangeByposition(0,0,lLastUcol,lLastUrowNN).getRangeAddress()
+ &apos;&apos;&apos; 	 oAddr = oSheet.getCellRangeByposition(0,0,lLastUcol,lLastUrowNN).getRangeAddress()
 
-  
-  REM If argument is True, creates an empty filter
-  REM descriptor. If argument is False, create a 
-  REM descriptor with the previous settings.
-  oFilterDesc = oSheet.createFilterDescriptor(True)
-&apos;  sStringa = &quot;scavo&quot;
-&apos;  xray oFilterDesc
-  With oFields(0)
-    REM I could use the Connection property to indicate 
-    REM how to connect to the previous field. This is 
-    REM the first field so this is not required.
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
+ 
+ REM If argument is True, creates an empty filter
+ REM descriptor. If argument is False, create a 
+ REM descriptor with the previous settings.
+ oFilterDesc = oSheet.createFilterDescriptor(True)
+&apos; sStringa = &quot;scavo&quot;
+&apos; xray oFilterDesc
+ With oFields(0)
+ REM I could use the Connection property to indicate 
+ REM how to connect to the previous field. This is 
+ REM the first field so this is not required.
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
-    REM The Field property is the zero based column
-    REM number to filter. If you have the cell, you
-    REM can use .Field = oCell.CellAddress.Column.
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
-    .Field = lCol 
+ REM The Field property is the zero based column
+ REM number to filter. If you have the cell, you
+ REM can use .Field = oCell.CellAddress.Column.
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
+ .Field = lCol 
 
-    REM Compare using a numeric or a string?
-    .IsNumeric = false &apos;True
+ REM Compare using a numeric or a string?
+ .IsNumeric = false &apos;True
 
-    REM The NumericValue property is used 
-    REM because .IsNumeric = True from above.
-    &apos;.NumericValue = 80
+ REM The NumericValue property is used 
+ REM because .IsNumeric = True from above.
+ &apos;.NumericValue = 80
 	
 	
-    REM If IsNumeric was False, then the 
-    REM StringValue property would be used.
-    REM .StringValue = &quot;what ever&quot;
-    .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot;     
+ REM If IsNumeric was False, then the 
+ REM StringValue property would be used.
+ REM .StringValue = &quot;what ever&quot;
+ .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot; 
 
-    REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
-    REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
-    REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
-    REM BOTTOM_VALUES, and BOTTOM_PERCENT
-    .Operator = com.sun.star.sheet.FilterOperator.EQUAL
-  End With
+ REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ .Operator = com.sun.star.sheet.FilterOperator.EQUAL
+ End With
 &apos;xray ofields
-  With oFields(1)
-    REM I could use the Connection property to indicate 
-    REM how to connect to the previous field. This is 
-    REM the first field so this is not required.
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
+ With oFields(1)
+ REM I could use the Connection property to indicate 
+ REM how to connect to the previous field. This is 
+ REM the first field so this is not required.
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
-    REM The Field property is the zero based column
-    REM number to filter. If you have the cell, you
-    REM can use .Field = oCell.CellAddress.Column.
-    .Connection = com.sun.star.sheet.FilterConnection.AND
-    .Field = lCol1 
+ REM The Field property is the zero based column
+ REM number to filter. If you have the cell, you
+ REM can use .Field = oCell.CellAddress.Column.
+ .Connection = com.sun.star.sheet.FilterConnection.AND
+ .Field = lCol1 
 
-    REM Compare using a numeric or a string?
-    .IsNumeric = false &apos;True
+ REM Compare using a numeric or a string?
+ .IsNumeric = false &apos;True
 
-    REM The NumericValue property is used 
-    REM because .IsNumeric = True from above.
-    &apos;.NumericValue = 80
+ REM The NumericValue property is used 
+ REM because .IsNumeric = True from above.
+ &apos;.NumericValue = 80
 	
 	
-    REM If IsNumeric was False, then the 
-    REM StringValue property would be used.
-    REM .StringValue = &quot;what ever&quot;
-    .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot;     
+ REM If IsNumeric was False, then the 
+ REM StringValue property would be used.
+ REM .StringValue = &quot;what ever&quot;
+ .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot; 
 
-    REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
-    REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
-    REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
-    REM BOTTOM_VALUES, and BOTTOM_PERCENT
-    .Operator = com.sun.star.sheet.FilterOperator.EQUAL
-  End With
+ REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ .Operator = com.sun.star.sheet.FilterOperator.EQUAL
+ End With
 
-  print sStringa &amp; &quot;  &quot; &amp; sStringa2
-  REM The filter descriptor supports the following
-  REM properties: IsCaseSensitive, SkipDuplicates,
+ print sStringa &amp; &quot; &quot; &amp; sStringa2
+ REM The filter descriptor supports the following
+ REM properties: IsCaseSensitive, SkipDuplicates,
  &apos;UseRegularExpressions
 &apos; XRAY oFilterDesc
-  REM SaveOutputPosition, Orientation, ContainsHeader, 
-  REM CopyOutputData, OutputPosition, and MaxFieldCount.
-  oFilterDesc.setFilterFields(oFields())
-  oFilterDesc.UseRegularExpressions = TRUE
-  oFilterDesc.ContainsHeader = True
-  oSheet.filter(oFilterDesc)
+ REM SaveOutputPosition, Orientation, ContainsHeader, 
+ REM CopyOutputData, OutputPosition, and MaxFieldCount.
+ oFilterDesc.setFilterFields(oFields())
+ oFilterDesc.UseRegularExpressions = TRUE
+ oFilterDesc.ContainsHeader = True
+ oSheet.filter(oFilterDesc)
  ThisComponent.CurrentController.setFirstVisibleRow (1) 
  &apos; xray ThisComponent.CurrentController.getFirstVisibleRow
  &apos; ThisComponent.CurrentController.Select(oActiveCell1)
@@ -338,52 +338,52 @@ end sub
 
 
 Sub RemoveSheetFilter() &apos;non usata ... solo una prova superata
-  Dim oSheet          &apos; Sheet filtered.
-  Dim oFilterDesc     &apos; Filter descriptor.
-  xray oFilterDesc
-  oSheet = ThisComponent.currentController.activeSheet
-  	oActiveCell1 = thisComponent.getCurrentSelection()
+ Dim oSheet &apos; Sheet filtered.
+ Dim oFilterDesc &apos; Filter descriptor.
+ xray oFilterDesc
+ oSheet = ThisComponent.currentController.activeSheet
+ 	oActiveCell1 = thisComponent.getCurrentSelection()
 	&apos;print &quot;tolgo&quot;
-  oFilterDesc = oSheet.createFilterDescriptor(True)
-  oSheet.filter(oFilterDesc)
-  sAperto = &quot;&quot;
-  ThisComponent.CurrentController.Select(oActiveCell1)
+ oFilterDesc = oSheet.createFilterDescriptor(True)
+ oSheet.filter(oFilterDesc)
+ sAperto = &quot;&quot;
+ ThisComponent.CurrentController.Select(oActiveCell1)
 End Sub
 
 Sub RemoveSF() &apos;non usata ... solo una prova superata &apos;temp di prova &apos;RIMUOVE IL &quot;FILTRO STANDARD&quot; SULLA SHEET CORRENTE
-  Dim oSheet          &apos; Sheet filtered.
-  Dim oFilterDesc     &apos; Filter descriptor.
+ Dim oSheet &apos; Sheet filtered.
+ Dim oFilterDesc &apos; Filter descriptor.
  
-  oSheet = ThisComponent.currentController.activeSheet
-   lLastUrow = getLastUsedRow(oSheet)
-   For i = 2  to lLastUrow
+ oSheet = ThisComponent.currentController.activeSheet
+ lLastUrow = getLastUsedRow(oSheet)
+ For i = 2 to lLastUrow
 				if	oSheet.getRows().getByIndex(i).IsFiltered = true then
 					sFiltro = 1
 					goto pirla
 				end if
-   Next I 
-   sfiltro = 0
-  
+ Next I 
+ sfiltro = 0
+ 
  pirla:
  &apos;print sFiltro 
  
  if sfiltro = 0 then
  		exit sub
-    else
-   	&apos;	 print &quot;lo tolgo&quot;
-  &apos;IsFiltered 
-  &apos;	oFilterRange=oSheet.getSpreadsheet
-  &apos;ThisComponent.getCurrentController.select(oFilterRange)
- &apos; xray orow &apos;.getSpreadsheet  &apos; ThisComponent.getCurrentController.select(oFilterRange)
-  &apos;	xray osheet.SheetFilterDescriptor
+ else
+ 	&apos;	 print &quot;lo tolgo&quot;
+ &apos;IsFiltered 
+ &apos;	oFilterRange=oSheet.getSpreadsheet
+ &apos;ThisComponent.getCurrentController.select(oFilterRange)
+ &apos; xray orow &apos;.getSpreadsheet &apos; ThisComponent.getCurrentController.select(oFilterRange)
+ &apos;	xray osheet.SheetFilterDescriptor
 	&apos;print &quot;tolgo&quot;
 &apos;	exit sub
  		 oFilterDesc = oSheet.createFilterDescriptor(True)
- &apos;	  xray oFilterDesc &apos;oSheet.filter(oFilterDesc)
-	  oSheet.filter(oFilterDesc)
-	&apos;  sAperto = &quot;&quot;
-  &apos;	ThisComponent.CurrentController.Select(oActiveCell1)
-  	end if
+ &apos;	 xray oFilterDesc &apos;oSheet.filter(oFilterDesc)
+	 oSheet.filter(oFilterDesc)
+	&apos; sAperto = &quot;&quot;
+ &apos;	ThisComponent.CurrentController.Select(oActiveCell1)
+ 	end if
 End Sub
 
 
@@ -394,30 +394,30 @@ dim sStringa2 as string
 dim sStringa3 as string
 
 &apos;goto salto
-   	sStringa = InputBox (&quot;&quot; &amp; CHR$(10)_
-   						&amp; &quot; Scrivi le parole chiave che vuoi Filtrare/cercare&quot; &amp; CHR$(10) &amp; CHR$(10)_
-   						&amp; &quot;(Puoi inserire fino a 3 parole separate da uno spazio)&quot;&amp; CHR$(10) &amp; CHR$(10)_
-   						 , &quot;      Filtra le voci che contengono la parole (nell&apos;ordine)&quot;, SGenericoMemo)
+ 	sStringa = InputBox (&quot;&quot; &amp; CHR$(10)_
+ 						&amp; &quot; Scrivi le parole chiave che vuoi Filtrare/cercare&quot; &amp; CHR$(10) &amp; CHR$(10)_
+ 						&amp; &quot;(Puoi inserire fino a 3 parole separate da uno spazio)&quot;&amp; CHR$(10) &amp; CHR$(10)_
+ 						 , &quot; Filtra le voci che contengono la parole (nell&apos;ordine)&quot;, SGenericoMemo)
 	SGenericoMemo = sStringa
-    If sStringa = &quot;&quot; then
-    	exit sub
-    end if
+ If sStringa = &quot;&quot; then
+ 	exit sub
+ end if
 &apos;salto:
 
 
 
-goto salto_2    
+goto salto_2 
 	Dialog_Filtro_Apri 
 &apos;
 xray 	Dialog_Filtro &apos;.setControl(&quot;TextField1&quot;).text = sStringa1
 	sStringa1 = Dialog_Filtro.getControl(&quot;TextField1&quot;).text
 	sStringa2 = Dialog_Filtro.getControl(&quot;TextField2&quot;).text
 	sStringa3 = Dialog_Filtro.getControl(&quot;TextField3&quot;).text
-	  &apos;print stringa1 &amp; &quot; &quot; &amp; stringa2 &amp; &quot; &quot; &amp; stringa3
+	 &apos;print stringa1 &amp; &quot; &quot; &amp; stringa2 &amp; &quot; &quot; &amp; stringa3
 	iTempo = 50
 	do while sAnnulla = &quot;tieni&quot; 
 		itempo = iTempo+iTempo
-  		if iTempo &gt;1000 then
+ 		if iTempo &gt;1000 then
 			exit do
 		end if
  		wait iTempo
@@ -435,21 +435,21 @@ salto_2:
 
 &apos;	oRange = thiscomponent.NamedRanges.elenco_prezzi.ReferredCells
 &apos;	lLastUrowNN = getLastUsedRow(oSheet)
-    &apos;oRange=oSheet.getCellRangeByPosition(0,0,5,lLastUrowNN)
-    
-    &apos;questo wait annulla subito la finestra di dialogo
+ &apos;oRange=oSheet.getCellRangeByPosition(0,0,5,lLastUrowNN)
+ 
+ &apos;questo wait annulla subito la finestra di dialogo
 	wait 100
 	
-   &apos; Barra_Apri_Chiudi_4
-    
- &apos;&apos;&apos;   ThisComponent.CurrentController.Select(oRange)
-  &apos;&apos;&apos;  Thiscomponent.currentcontroller.setactivesheet(oSheet)
+ &apos; Barra_Apri_Chiudi_4
+ 
+ &apos;&apos;&apos; ThisComponent.CurrentController.Select(oRange)
+ &apos;&apos;&apos; Thiscomponent.currentcontroller.setactivesheet(oSheet)
 
 
-  REM If argument is True, creates an empty filter
-  REM descriptor. If argument is False, create a 
-  REM descriptor with the previous settings.&apos;
-  oFilterDesc = oSheet.createFilterDescriptor(True)
+ REM If argument is True, creates an empty filter
+ REM descriptor. If argument is False, create a 
+ REM descriptor with the previous settings.&apos;
+ oFilterDesc = oSheet.createFilterDescriptor(True)
 dim ssStrFilter as string
 &apos;sStringa = Replace_G (sStringa,&quot;&quot;&quot;&quot;,&quot;#&quot;)
 &apos;print sStringa
@@ -472,66 +472,66 @@ end if
 sStrFilter = sStrFilter &amp; &quot;.*&quot;
 print &quot;&gt;&quot; &amp; sStrFilter &amp; &quot;&lt;&quot;
 &apos;exit sub
-  With oFields(0)
-    REM I could use the Connection property to indicate 
-    REM how to connect to the previous field. This is 
-    REM the first field so this is not required.
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
-    &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
+ With oFields(0)
+ REM I could use the Connection property to indicate 
+ REM how to connect to the previous field. This is 
+ REM the first field so this is not required.
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
+ &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
-    REM The Field property is the zero based column
-    REM number to filter. If you have the cell, you
-    REM can use .Field = oCell.CellAddress.Column.
-    .Field = 4
+ REM The Field property is the zero based column
+ REM number to filter. If you have the cell, you
+ REM can use .Field = oCell.CellAddress.Column.
+ .Field = 4
 
-    REM Compare using a numeric or a string?
-    .IsNumeric = false &apos;True
+ REM Compare using a numeric or a string?
+ .IsNumeric = false &apos;True
 
-    REM The NumericValue property is used 
-    REM because .IsNumeric = True from above.
-    &apos;.NumericValue = 80
+ REM The NumericValue property is used 
+ REM because .IsNumeric = True from above.
+ &apos;.NumericValue = 80
 	
 	
-    REM If IsNumeric was False, then the 
-    REM StringValue property would be used.
-    REM .StringValue = &quot;what ever&quot;
-    
- &apos;   .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot;     
-  &apos;  .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot; &amp; sStringa2 &amp; &quot;.*&quot;
- &apos;   .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot; &amp; sStringa2 &amp; &quot;.*&quot;  &amp; sStringa3 &amp; &quot;.*&quot;  
+ REM If IsNumeric was False, then the 
+ REM StringValue property would be used.
+ REM .StringValue = &quot;what ever&quot;
+ 
+ &apos; .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot; 
+ &apos; .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot; &amp; sStringa2 &amp; &quot;.*&quot;
+ &apos; .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot; &amp; sStringa2 &amp; &quot;.*&quot; &amp; sStringa3 &amp; &quot;.*&quot; 
 	.StringValue =	sStrFilter
 &apos;	oActiveCell1 &apos; questa provo a disattivarla?
 	
-    REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
-    REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
-    REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
-    REM BOTTOM_VALUES, and BOTTOM_PERCENT
-    .Operator = com.sun.star.sheet.FilterOperator.EQUAL
-  End With
-  REM The filter descriptor supports the following
-  REM properties: IsCaseSensitive, SkipDuplicates,
+ REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ .Operator = com.sun.star.sheet.FilterOperator.EQUAL
+ End With
+ REM The filter descriptor supports the following
+ REM properties: IsCaseSensitive, SkipDuplicates,
  &apos;UseRegularExpressions
 &apos; XRAY oFilterDesc
-  REM SaveOutputPosition, Orientation, ContainsHeader, 
-  REM CopyOutputData, OutputPosition, and MaxFieldCount.
-  oFilterDesc.setFilterFields(oFields())
-  oFilterDesc.UseRegularExpressions = TRUE
-  oFilterDesc.ContainsHeader = True
-  
+ REM SaveOutputPosition, Orientation, ContainsHeader, 
+ REM CopyOutputData, OutputPosition, and MaxFieldCount.
+ oFilterDesc.setFilterFields(oFields())
+ oFilterDesc.UseRegularExpressions = TRUE
+ oFilterDesc.ContainsHeader = True
+ 
 &apos; la riga che segue è ETERNA... se qualcuno ha una buona idea me lo dica...
-  oSheet.filter(oFilterDesc)
-  
+ oSheet.filter(oFilterDesc)
+ 
 
-    &apos; disatt 080605 oProgressBar.End
+ &apos; disatt 080605 oProgressBar.End
  &apos; Barra_Apri_Chiudi_4
-   &apos; oProgressBar.reset() 
-   &apos; oProgressBar.setvalue(0)
-   &apos; oProgressBar.setText(&quot;&quot;)
-  
-  ThisComponent.CurrentController.setFirstVisibleRow (1) 
+ &apos; oProgressBar.reset() 
+ &apos; oProgressBar.setvalue(0)
+ &apos; oProgressBar.setText(&quot;&quot;)
+ 
+ ThisComponent.CurrentController.setFirstVisibleRow (1) 
  &apos; if not isnull (oActiveCell1) then
-&apos;  	ThisComponent.CurrentController.Select(oActiveCell1)
-&apos;  end if
+&apos; 	ThisComponent.CurrentController.Select(oActiveCell1)
+&apos; end if
 &apos;	ThisComponent.CurrentController.setFirstVisibleRow (1) 	
 &apos;	xray oRange &apos;.AutoFilter = True 
 end sub

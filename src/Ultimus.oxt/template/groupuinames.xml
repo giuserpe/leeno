@@ -4,7 +4,8 @@
 	<groupuinames:template-group groupuinames:name="layout" groupuinames:default-ui-name="Sfondi di presentazione" />
 	<groupuinames:template-group groupuinames:name="misc" groupuinames:default-ui-name="Varie" />
 	<groupuinames:template-group groupuinames:name="officorr" groupuinames:default-ui-name="Corrispondenza commerciale" />
-	<groupuinames:template-group groupuinames:name="offimisc" groupuinames:default-ui-name="Documenti di lavoro - LeenO" />
+	<groupuinames:template-group groupuinames:name="offimisc" groupuinames:default-ui-name="Documenti di lavoro" />
 	<groupuinames:template-group groupuinames:name="personal" groupuinames:default-ui-name="Corrispondenza personale e documenti" />
 	<groupuinames:template-group groupuinames:name="presnt" groupuinames:default-ui-name="Presentazioni" />
+	<groupuinames:template-group groupuinames:name="leeno" groupuinames:default-ui-name="LeenO - computi e contabilità" />
 </groupuinames:template-group-list>

@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="X_TMP" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="X_TMP" script:language="StarBasic">REM ***** BASIC *****
 Sub createButton
-   	oSheet=ThisComponent.currentController.activeSheet 
-  oCell = oSheet.GetCellbyPosition( 0, 0 )
-  oCursor = oSheet.createCursorByRange(oCell)
+ 	oSheet=ThisComponent.currentController.activeSheet 
+ oCell = oSheet.GetCellbyPosition( 0, 0 )
+ oCursor = oSheet.createCursorByRange(oCell)
 createButton(&quot;untesto&quot;, &quot;suonome&quot;, &quot;sTag1&quot;, oCursor, 4)
 end sub
 
 
 Sub createButton_exe (sText, sName, sTag, oCursor, way, optional macro, optional oDocument)
-  if isMissing(oDocument) Then
-    oDocument = ThisComponent
-  end if
-  Dim button, shape, drawpage
-  Dim oSize as new com.sun.star.awt.Size
-  Dim oPosition as new com.sun.star.awt.Point
+ if isMissing(oDocument) Then
+ oDocument = ThisComponent
+ end if
+ Dim button, shape, drawpage
+ Dim oSize as new com.sun.star.awt.Size
+ Dim oPosition as new com.sun.star.awt.Point
 
-  button = createUnoService(&quot;com.sun.star.form.component.CommandButton&quot;)
-  button.Label     = sText
-  button.Enabled   = True
-  button.Printable = False
-  button.Name      = sName
-  button.Tag       = sTag
+ button = createUnoService(&quot;com.sun.star.form.component.CommandButton&quot;)
+ button.Label = sText
+ button.Enabled = True
+ button.Printable = False
+ button.Name = sName
+ button.Tag = sTag
 
-  shape = oDocument.createInstance(&quot;com.sun.star.drawing.ControlShape&quot;)
-  oSize.Height = 1000
-  oSize.Width  = 3000
-  oPosition.X  = 0
-  oPosition.Y  = 0
-  shape.setSize(oSize)
-  shape.setPosition(oPosition)
-  shape.LayerName = &quot;Controls&quot;
-  shape.AnchorType = com.sun.star.text.TextContentAnchorType.AS_CHARACTER
-  shape.setControl(button)
-  shape.attach(oCursor)
+ shape = oDocument.createInstance(&quot;com.sun.star.drawing.ControlShape&quot;)
+ oSize.Height = 1000
+ oSize.Width = 3000
+ oPosition.X = 0
+ oPosition.Y = 0
+ shape.setSize(oSize)
+ shape.setPosition(oPosition)
+ shape.LayerName = &quot;Controls&quot;
+ shape.AnchorType = com.sun.star.text.TextContentAnchorType.AS_CHARACTER
+ shape.setControl(button)
+ shape.attach(oCursor)
 
-  if not isMissing(macro) then
-    Dim oListener
-    Dim id,form, oEvent as new com.sun.star.script.ScriptEventDescriptor
-  	if way=1 then
-            &apos; METHOD 1
-	    oEvent.ListenerType = &quot;XActionListener&quot;
-	    oEvent.EventMethod  = &quot;actionPerformed&quot;
-	    oEvent.ScriptType   = &quot;Basic&quot;
-	    oEvent.ScriptCode   = &quot;document:&quot;+macro
-	    form = oDocument.DrawPage.getForms().getByIndex(0)
-	    id = form.getCount() -1
-	    form.registerScriptEvent(id,oEvent)
-  	elseif way=2 then
-            &apos; METHOD 2
-	    oEvent.ListenerType = &quot;XActionListener&quot;
-	    oEvent.EventMethod  = &quot;actionPerformed&quot;
-	    oEvent.ScriptType   = &quot;StarBasic&quot;
-	    oEvent.ScriptCode   = &quot;document:&quot;+macro
-	    form = oDocument.DrawPage.getForms().getByIndex(0)
-	    id = form.getCount() -1
-	    form.registerScriptEvent(id,oEvent)
-  	elseif way=3 then
-            &apos; METHOD 3
-	    oEvent.ListenerType = &quot;XActionListener&quot;
-	    oEvent.EventMethod  = &quot;actionPerformed&quot;
-	    oEvent.ScriptType   = &quot;Script&quot;
-	    oEvent.ScriptCode   = &quot;document:&quot;+macro
-	    form = oDocument.DrawPage.getForms().getByIndex(0)
-	    id = form.getCount() -1
-	    form.registerScriptEvent(id,oEvent)
-  	elseif way=4 then
-            &apos; METHOD 4
-	    oEvent.ListenerType = &quot;XActionListener&quot;
-	    oEvent.EventMethod  = &quot;actionPerformed&quot;
-	    oEvent.ScriptType   = &quot;Script&quot;
-	    oEvent.ScriptCode   = &quot;vnd.sun.star.script:&quot;+macro+&quot;?language=Basic&amp;location=document&quot;
-	    form = oDocument.DrawPage.getForms().getByIndex(0)
-	    id = form.getCount() -1
-	    form.registerScriptEvent(id,oEvent)
-  	end if
-  end if
+ if not isMissing(macro) then
+ Dim oListener
+ Dim id,form, oEvent as new com.sun.star.script.ScriptEventDescriptor
+ 	if way=1 then
+ &apos; METHOD 1
+	 oEvent.ListenerType = &quot;XActionListener&quot;
+	 oEvent.EventMethod = &quot;actionPerformed&quot;
+	 oEvent.ScriptType = &quot;Basic&quot;
+	 oEvent.ScriptCode = &quot;document:&quot;+macro
+	 form = oDocument.DrawPage.getForms().getByIndex(0)
+	 id = form.getCount() -1
+	 form.registerScriptEvent(id,oEvent)
+ 	elseif way=2 then
+ &apos; METHOD 2
+	 oEvent.ListenerType = &quot;XActionListener&quot;
+	 oEvent.EventMethod = &quot;actionPerformed&quot;
+	 oEvent.ScriptType = &quot;StarBasic&quot;
+	 oEvent.ScriptCode = &quot;document:&quot;+macro
+	 form = oDocument.DrawPage.getForms().getByIndex(0)
+	 id = form.getCount() -1
+	 form.registerScriptEvent(id,oEvent)
+ 	elseif way=3 then
+ &apos; METHOD 3
+	 oEvent.ListenerType = &quot;XActionListener&quot;
+	 oEvent.EventMethod = &quot;actionPerformed&quot;
+	 oEvent.ScriptType = &quot;Script&quot;
+	 oEvent.ScriptCode = &quot;document:&quot;+macro
+	 form = oDocument.DrawPage.getForms().getByIndex(0)
+	 id = form.getCount() -1
+	 form.registerScriptEvent(id,oEvent)
+ 	elseif way=4 then
+ &apos; METHOD 4
+	 oEvent.ListenerType = &quot;XActionListener&quot;
+	 oEvent.EventMethod = &quot;actionPerformed&quot;
+	 oEvent.ScriptType = &quot;Script&quot;
+	 oEvent.ScriptCode = &quot;vnd.sun.star.script:&quot;+macro+&quot;?language=Basic&amp;location=document&quot;
+	 form = oDocument.DrawPage.getForms().getByIndex(0)
+	 id = form.getCount() -1
+	 form.registerScriptEvent(id,oEvent)
+ 	end if
+ end if
 End Sub
 
 
@@ -89,40 +89,40 @@ Sub copia_foglio &apos;NON copia gli oggetti e i pulsanti (rapida)
 
 REM source document
 Dim sURL$, sLinkSheetName$
-   sURL = thisComponent.getURL()
-   
-   	oSheet=ThisComponent.currentController.activeSheet 
+ sURL = thisComponent.getURL()
+ 
+ 	oSheet=ThisComponent.currentController.activeSheet 
 	iSheet_num = oSheet.RangeAddress.sheet 
-   
-   sLinkSheetName = thisComponent.Sheets.getByIndex(iSheet_num).getName()
-   
+ 
+ sLinkSheetName = thisComponent.Sheets.getByIndex(iSheet_num).getName()
+ 
 REM target document
 Dim doc, sheets, sName$, pos%
-   doc = StarDesktop.loadComponentFromURL(&quot;private:factory/scalc&quot;, &quot;_default&quot;,0, Array())
-   sheets = doc.getSheets()
-   sName = getUniqueName(sheets, &quot;Copied&quot;)
-   pos = 1
+ doc = StarDesktop.loadComponentFromURL(&quot;private:factory/scalc&quot;, &quot;_default&quot;,0, Array())
+ sheets = doc.getSheets()
+ sName = getUniqueName(sheets, &quot;Copied&quot;)
+ pos = 1
 
 REM new sheet
 Dim sh
-   sheets.insertNewByName(sName, pos)
-   sh = sheets.getByName(sName)
-   
+ sheets.insertNewByName(sName, pos)
+ sh = sheets.getByName(sName)
+ 
 REM link the new sheet
-   sh.link(sURL, sLinkSheetName, &quot;calc8&quot;, &quot;&quot;, com.sun.star.sheet.SheetLinkMode.NORMAL)
-   
+ sh.link(sURL, sLinkSheetName, &quot;calc8&quot;, &quot;&quot;, com.sun.star.sheet.SheetLinkMode.NORMAL)
+ 
 REM break link
-   sh.setLinkMode(com.sun.star.sheet.SheetLinkMode.NONE)
+ sh.setLinkMode(com.sun.star.sheet.SheetLinkMode.NONE)
 End Sub
 
 Function getUniqueName(oContainer,sName$)
 Dim i%,sNew$
-   sNew = sName
-   Do while oContainer.hasByName(sNew)
-      i = i +1
-      sNew = sName &amp;&quot;_&quot;&amp; i     
-   loop
-   getUniqueName = sNew
+ sNew = sName
+ Do while oContainer.hasByName(sNew)
+ i = i +1
+ sNew = sName &amp;&quot;_&quot;&amp; i 
+ loop
+ getUniqueName = sNew
 End Function
 
 &apos;_____________________________________________________________________
@@ -132,13 +132,13 @@ Sub ciapa
 	on error goto errore
 exit sub
 errore:
-DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 end sub
 
 Sub proviamola
  oSheet = ThisComponent.currentController.activeSheet
  
- iSrow = Range2Cell  &apos; quweste 4 righe per ridurre a cella iniziale una eventuale 
+ iSrow = Range2Cell &apos; quweste 4 righe per ridurre a cella iniziale una eventuale 
 	if iSrow = -1 then
 		 
 		exit sub
@@ -172,11 +172,11 @@ SUB Property2default(oRange as object) &apos;NON FUNZIONA (nessun errore... ma n
 	oRange.setPropertyToDefault(&quot;ParaBottomMargin&quot;)
 	oRange.setPropertyToDefault(&quot;CharWeight&quot;)
 	oRange.setPropertyToDefault(&quot;CharFontStyleName&quot;)	
-	oRange.setPropertyToDefault(&quot;CharUnderline&quot;)            
+	oRange.setPropertyToDefault(&quot;CharUnderline&quot;) 
 	oRange.setPropertyToDefault(&quot;ValidationLocal&quot;)
-   	oRange.setPropertyToDefault(&quot;Validation&quot;)  
-	oRange.setPropertyToDefault(&quot;ShadowFormat&quot;)  
-	oRange.setPropertyToDefault(&quot;ShrinkToFit&quot;)  
+ 	oRange.setPropertyToDefault(&quot;Validation&quot;) 
+	oRange.setPropertyToDefault(&quot;ShadowFormat&quot;) 
+	oRange.setPropertyToDefault(&quot;ShrinkToFit&quot;) 
 	oRange.setPropertyToDefault(&quot;CharEmphasis&quot;)
 	oRange.setPropertyToDefault(&quot;CharPosture&quot;)
 	oRange.setPropertyToDefault(&quot;CharWeight&quot;)
@@ -185,18 +185,18 @@ End sub
 
 
 Sub popi_serva &apos;accrocchio solo per giuserpe...
-	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
-	oCelle=thisComponent.getCurrentSelection().getCellAddress()   
-	lrowStart = oCelle.Row        
+	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+	oCelle=thisComponent.getCurrentSelection().getCellAddress() 
+	lrowStart = oCelle.Row 
 
 	if msgbox (&quot;Questa macro è per Esperti &quot; &amp; CHR(10)_
-		&amp; &quot; serve a inserire una riga vuota &quot;&quot;a passo&quot;&quot; in una tabella con dei dati&quot;  &amp; CHR(10)_
+		&amp; &quot; serve a inserire una riga vuota &quot;&quot;a passo&quot;&quot; in una tabella con dei dati&quot; &amp; CHR(10)_
 		&amp; &quot; è stata creata per GiuSerpe... e che io sappia la usa solo lui...)&quot; &amp; CHR(10)_
 		&amp; &quot; Procedo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;&quot; ,36, &quot;&quot;) &lt;&gt; 6 then
 		exit sub
 	end if			
-	sScelta = msgbox (CHR$(10) &amp;&quot;Vuoi Cominciare dall&apos;inizio della Tabella?        &quot; &amp; CHR$(10)&amp; CHR$(10)_
+	sScelta = msgbox (CHR$(10) &amp;&quot;Vuoi Cominciare dall&apos;inizio della Tabella? &quot; &amp; CHR$(10)&amp; CHR$(10)_
 				&amp; &quot;(Se NO! inizio dalla riga corrente...) &quot;&amp; CHR$(10)&amp; CHR$(10)_
 				&amp; &quot;&quot; ,291, &quot;&quot;) 
 				
@@ -212,17 +212,17 @@ Sub popi_serva &apos;accrocchio solo per giuserpe...
 	
 	
 	oCell = oSheet.GetCellByPosition( 0, lrow )
-   	lLastUrow = getLastUsedRow(oSheet)
+ 	lLastUrow = getLastUsedRow(oSheet)
 	lpasso = inputbox (&quot; Inserisci il passo di inserimento...&quot;) &apos;
-	if   lpasso = &quot;&quot; then
+	if lpasso = &quot;&quot; then
 		 exit sub
 	end if
- 	lrows = inputbox (&quot;Scrivi il numero di righe vuote da inserire...&quot;)  
- 	if   lrows = &quot;&quot; then
+ 	lrows = inputbox (&quot;Scrivi il numero di righe vuote da inserire...&quot;) 
+ 	if lrows = &quot;&quot; then
 		 exit sub
  	end if
 
-&apos;	lrow=oCelle.Row        
+&apos;	lrow=oCelle.Row 
  	lLastUrow = getLastUsedRow(oSheet)
 	lrow = lrow+lpasso
 	lDove = lrow&apos;+lrows
@@ -239,7 +239,7 @@ Sub popi_serva &apos;accrocchio solo per giuserpe...
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ))&apos;debug
 	&apos;	print &quot;dentro e fatto &quot; &amp; lrow
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ))&apos;debug	
-	&apos;	print lLastUrow &amp; &quot;  &quot; &amp; lrow
+	&apos;	print lLastUrow &amp; &quot; &quot; &amp; lrow
 	loop
 End Sub
 
@@ -247,16 +247,16 @@ End Sub
 Sub BackGround_2_default
 	oSheet = ThisComponent.Sheets.getByName(_
 	ThisComponent.currentcontroller.activesheet.name)
-  	ocell = thiscomponent.currentselection()
+ 	ocell = thiscomponent.currentselection()
 	sCellStyle = ocell.CellStyle
 &apos;	msgbox &quot;Il colore di sfondo dello Stile &lt;&quot; &amp; sCellStyle &amp; &quot;&gt; applicato alla cella selezionata&quot; &amp; CHR$(10)_
-	&apos; &amp; &quot; è stato resettato a &quot;&quot;Default&quot;&quot; &quot;  
+	&apos; &amp; &quot; è stato resettato a &quot;&quot;Default&quot;&quot; &quot; 
 &apos;	dim oMyStyleCell as object
 	oMyStyleCell = Thiscomponent._
 		StyleFamilies.CellStyles.getByName(sCellStyle)
 		
 &apos;	xray 	oMyStyleCell&apos;.getPropertyDefaults(&quot;b&quot;)
-&apos;	getParentStyle            (  )                             AS string 
+&apos;	getParentStyle ( ) AS string 
 &apos;getPropertyDefault
 	&apos;________________________________
 oMyStyleCell.setPropertyToDefault(&quot;CellBackColor&quot;)
@@ -272,16 +272,16 @@ end sub
 Sub Validation_2_default
 	oSheet = ThisComponent.Sheets.getByName(_
 	ThisComponent.currentcontroller.activesheet.name)
-  	ocell = thiscomponent.currentselection()
+ 	ocell = thiscomponent.currentselection()
 	sCellStyle = ocell.CellStyle
 &apos;	msgbox &quot;Il colore di sfondo dello Stile &lt;&quot; &amp; sCellStyle &amp; &quot;&gt; applicato alla cella selezionata&quot; &amp; CHR$(10)_
-	&apos; &amp; &quot; è stato resettato a &quot;&quot;Default&quot;&quot; &quot;  
+	&apos; &amp; &quot; è stato resettato a &quot;&quot;Default&quot;&quot; &quot; 
 &apos;	dim oMyStyleCell as object
 	oMyStyleCell = Thiscomponent._
 		StyleFamilies.CellStyles.getByName(sCellStyle)
 		
 &apos;	xray 	oMyStyleCell&apos;.getPropertyDefaults(&quot;b&quot;)
-&apos;	getParentStyle            (  )                             AS string 
+&apos;	getParentStyle ( ) AS string 
 &apos;getPropertyDefault
 	&apos;________________________________
 
@@ -301,7 +301,7 @@ end sub
 Sub Border_2_default
 	oSheet = ThisComponent.Sheets.getByName(_
 	ThisComponent.currentcontroller.activesheet.name)
-  	ocell = thiscomponent.currentselection()
+ 	ocell = thiscomponent.currentselection()
 	sCellStyle = ocell.CellStyle
 	msgbox &quot;I bordi dello Stile &lt;&quot; &amp; sCellStyle &amp; &quot;&gt; applicati alla cella selezionata&quot; &amp; CHR$(10)_
 	 &amp; &quot; sono stati resettati a &quot;&quot;Default&quot;&quot; &quot; 
@@ -325,7 +325,7 @@ Sub esporta_csw
 	iColE = getLastUsedCol(oSheet)
 	for i = 1 to iRowE
 		for icol = 0 to iColE &apos;cerco nelle due direzioni
-		print icol &amp; &quot;  &quot; &amp; iColE
+		print icol &amp; &quot; &quot; &amp; iColE
 		next
 	next
 end sub
@@ -337,23 +337,21 @@ sub rif &apos; solo per testare quella sotto
 end sub
 
 SUB rifa_nomearea (sSheet as string, sRange as string, sName as string)
-	&apos; prova per avere un solo moduulo richiamabile da al tre sub
+	&apos; prova per avere un solo modulo richiamabile da al tre sub
 	&apos; questo vuole i dati in formaro A1 C1
 &apos;	Barra_Apri_Chiudi_5(&quot;Devo ridefinire un Nome di Area... Pazienta... &quot;, 50)
 	sPath = &quot;$&apos;&quot; &amp; sSheet &amp; &quot;&apos;.&quot; &amp; sRange
 	oRanges = ThisComponent.NamedRanges
-   	oCellAddress = ThisComponent.Sheets.getByName(sSheet).getCellRangeByName(&quot;A1&quot;).getCellAddress() 
-&apos;    Dim oCellAddress As new com.sun.star.table.CellAddress
-&apos; 	xray oCellAddress   
-&apos;        oCellAddress.Sheet = 2 &apos;id Sheet&apos;
-&apos;		oCellAddress.Column = i &apos;Column i.
-&apos;        oCellAddress.Row = i + 1 &apos;Row i + 1..
-   	&apos;Parameter aPosition specifies the base address for relative cell references
+ 	oCellAddress = ThisComponent.Sheets.getByName(sSheet).getCellRangeByName(&quot;A1&quot;).getCellAddress() 
+&apos;now1=now
 	IF oRanges.hasByName(sName) THEN
  		oRanges.removeByName(sName)
  	end IF
-&apos;	oRanges.addNewByName(sName,sPath,oCellAddress,0)
-
+&apos;now2=now
+	oRanges.addNewByName(sName,sPath,oCellAddress,0)
+&apos;now3=now
+&apos;print now3-now1
+&apos;print now3-now2
 &apos;	Barra_Apri_Chiudi_5
 end sub
 
@@ -362,11 +360,11 @@ Function Verifica_chiudi_preview &apos;(optional sPrima as string)
 	dim document as object
 	dim dispatcher as object
 	 if ThisComponent.getCurrentController.getFrame.LayoutManager.isElementVisible _
-	   ( &quot;private:resource/toolbar/previewbar&quot; ) Then &apos; controlla se si è in preview  
-        Verifica_chiudi_preview = &quot;Attiva&quot;
- 	    document = ThisComponent.CurrentController.Frame  
- 	    dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)  
- 	    dispatcher.executeDispatch(document, &quot;.uno:ClosePreview&quot;, &quot;&quot;, 0, Array())     
-	 End If  
+	 ( &quot;private:resource/toolbar/previewbar&quot; ) Then &apos; controlla se si è in preview 
+ Verifica_chiudi_preview = &quot;Attiva&quot;
+ 	 document = ThisComponent.CurrentController.Frame 
+ 	 dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;) 
+ 	 dispatcher.executeDispatch(document, &quot;.uno:ClosePreview&quot;, &quot;&quot;, 0, Array()) 
+	 End If 
 end Function
 </script:module>

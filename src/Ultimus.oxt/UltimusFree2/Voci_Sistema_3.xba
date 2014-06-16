@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_3" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                          
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_3" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -24,19 +24,19 @@ dim oSheet as object
 
 	sAttributo = Trova_Attr_Sheet
 	if sAttributo &lt;&gt; &quot;Tipo_computo&quot; then
-		msgbox &quot;Questa macro non lavora su questa tipologia di  tabella!&quot;&amp; CHR(10)_
+		msgbox &quot;Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
 		&amp; &quot;Eseguila su una tabella COMPUTO o similare!&quot;
 		exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
-    lrow = Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+ lrow = Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then
 		 
 		exit sub
 	end if
 	oCell = oSheet.GetCellByPosition( 3 , lrow)&apos; errata selezione di un range
 	ThisComponent.CurrentController.Select(oCell)
-    oRange = Circoscrive_Voce_Computo_B (lrow)
+ oRange = Circoscrive_Voce_Computo_B (lrow)
 	lRow=oRange.RangeAddress.startRow +1
 
 	if templateTipo = &quot;ATT&quot; then lcol5 = 3
@@ -44,9 +44,9 @@ dim oSheet as object
 
 	oCell = oSheet.GetCellByPosition( lcol5 , lrow)
 	xA = oCell.string
-				Do  while xA &lt;&gt;  &quot;SOMMANO &quot; &apos;and  lrow &lt; lastUrow
+				Do while xA &lt;&gt; &quot;SOMMANO &quot; &apos;and lrow &lt; lastUrow
 						lrow = lrow+1
-  						oCell = oSheet.GetCellByPosition( lcol5 , lrow)
+ 						oCell = oSheet.GetCellByPosition( lcol5 , lrow)
  						xA = oCell.string
 		 		Loop
 &apos;________________________________________________________________________
@@ -59,13 +59,13 @@ dim oSheet as object
  &apos;_______________________________________________________________
  	&apos;	 exit sub
  		 oCell = oSheet.GetCellByPosition( lcol5 , lrow)
-  		 Do while oSheet.GetCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;
+ 		 Do while oSheet.GetCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;
 			lrow = lrow+1
 			oCell = oSheet.GetCellByPosition( lcol5, lrow )
 		loop
 		lrow = lrow+2
-  		oCell = oSheet.GetCellByPosition( lcol5 , lrow)
-  		ThisComponent.CurrentController.Select(oCell)
+ 		oCell = oSheet.GetCellByPosition( lcol5 , lrow)
+ 		ThisComponent.CurrentController.Select(oCell)
 END SUB
 
 
@@ -74,7 +74,7 @@ SUB COPIA_FORMULE()&apos; tentativo in progress per fare un solo comando da shor
 
 	sAttributo = Trova_Attr_Sheet
 	if sAttributo &lt;&gt; &quot;Tipo_computo&quot; then
-		msgbox &quot;Questa macro non lavora su questa tipologia di  tabella!&quot;&amp; CHR(10)_
+		msgbox &quot;Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
 		&amp; &quot;Eseguila su una tabella COMPUTO o similare!&quot;
 		exit sub
 	end if
@@ -102,11 +102,11 @@ dim sString$, xA, sTag as string
 	oCell = oSheet.GetCellByPosition( 3 , iRow)
 	ThisComponent.CurrentController.Select(oCell)
 	lastUrow = getLastUsedRow(oSheet)
-	sString$ = &quot;Fine Computo&quot;  &apos; DOPPIO CONTROLLO sulla fine della sheet
+	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI9! &quot;
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI9! &quot;
 		exit sub
 	end if 
 	lRowE=oEnd.RangeAddress.EndRow 
@@ -114,7 +114,7 @@ dim sString$, xA, sTag as string
 	oCell = oSheet.GetCellByPosition( 2 , iRow)
 	xA = oCell.string
 
-	Do  while iRow &lt; lastUrow And iRow &lt; lRowE
+	Do while iRow &lt; lastUrow And iRow &lt; lRowE
 				if iRow &gt; lRowE then 
 						Print &quot;finito&quot;
 						exit sub				
@@ -136,7 +136,7 @@ dim sString$, xA, sTag as string
  		 end if
  		 oCell = oSheet.GetCellByPosition( 2 , iRow)
  &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
- &apos;		 print  &quot;prima   &quot; &amp; iRow
+ &apos;		 print &quot;prima &quot; &amp; iRow
  &apos;		print &quot;lrow1 &quot; &amp; lrow 		 
  		 Copia_Formule_Su_Computo_Sing_Voce (iRow)	
 &apos;______________________________________________________________________________
@@ -151,77 +151,77 @@ dim sString$, xA, sTag as string
 			iRow = iRow+1
 			oCell = oSheet.GetCellByPosition( 2, iRow )
 		loop
-  	&apos;&apos;&apos;	 Do while oSheet.GetCellByPosition( 3, iRow).string &lt;&gt; &quot;SOMMANO &quot;
+ 	&apos;&apos;&apos;	 Do while oSheet.GetCellByPosition( 3, iRow).string &lt;&gt; &quot;SOMMANO &quot;
 	&apos;&apos;&apos;		iRow = iRow+1
 	&apos;&apos;&apos;		oCell = oSheet.GetCellByPosition( 3, iRow )
 	&apos;&apos;&apos;	loop
 		iRow= iRow+2
-  		oCell = oSheet.GetCellByPosition( 2 , iRow)      
-     
+ 		oCell = oSheet.GetCellByPosition( 2 , iRow) 
+ 
  		
  
 		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
  	&apos;	print &quot;dopo &quot; &amp; iRow
 	&apos;	ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
-	&apos;	print &quot; posizione dopo l&apos;azione singila voce  &quot; &amp; iRow
+	&apos;	print &quot; posizione dopo l&apos;azione singila voce &quot; &amp; iRow
 	&apos;	iRow = iRow +2
 &apos;		print &quot;sommato &quot; &amp;iRow
-  		oCell = oSheet.GetCellByPosition( 2 , iRow)
-  	&apos;	xA = oCell.string
+ 		oCell = oSheet.GetCellByPosition( 2 , iRow)
+ 	&apos;	xA = oCell.string
  &apos;	print &quot;ciclo esterno&quot;
-  	loop
-  	msgbox &quot;La macchina ha ricopiato delle formule &quot;&quot; fresche&quot;&quot;  in molte colonne del Computo!&quot;_
-  	&amp; &quot;   (I valori esistenti NON sono stati modificati e sembra tutto a posto, ma non è detto...&quot;
+ 	loop
+ 	msgbox &quot;La macchina ha ricopiato delle formule &quot;&quot; fresche&quot;&quot; in molte colonne del Computo!&quot;_
+ 	&amp; &quot; (I valori esistenti NON sono stati modificati e sembra tutto a posto, ma non è detto...&quot;
 END SUB
 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Sub Copia_Formule_Su_Computo_Sing_Voce (lrow as long) &apos; agisce su ciascuna voce 
-  
+ 
 &apos;dim lrow as long
 dim lrow1 as long
 dim lcol as long
 dim nome_sheet as string
 dim oSheet, oEnd, oCell as object 
-    oSheet = ThisComponent.currentController.activeSheet
-    oCell = oSheet.GetCellByPosition( 9 , lrow)  
-    &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-    Copia_Trattini_locale_Computo_0 (9, lrow) &apos; trattini (per controllo fine somma)
-    Copia_Trattini_locale_Computo_0 (10, lrow)
-    Copia_Trattini_locale_Computo_0 (12, lrow)
-    Copia_Trattini_locale_Computo_0 (13, lrow)
-    Copia_Trattini_locale_Computo_0 (14, lrow)
-    Copia_Trattini_locale_Computo_0 (15, lrow)
-    Copia_Trattini_locale_Computo_0 (16, lrow)
-    Copia_Trattini_locale_Computo_0 (17, lrow)
-  &apos;  Copia_Trattini_locale_Computo_0 (19, lrow)
- &apos;   Copia_Trattini_locale_Computo_0 (20, lrow)
- &apos;   Copia_Trattini_locale_Computo_0 (21, lrow)
- &apos;   Copia_Trattini_locale_Computo_0 (22, lrow)
- &apos;  print &quot;1&quot;
-    Copia_Formule_locale_linkP_1 (18, lrow)   &apos; link piatti 
+ oSheet = ThisComponent.currentController.activeSheet
+ oCell = oSheet.GetCellByPosition( 9 , lrow) 
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ Copia_Trattini_locale_Computo_0 (9, lrow) &apos; trattini (per controllo fine somma)
+ Copia_Trattini_locale_Computo_0 (10, lrow)
+ Copia_Trattini_locale_Computo_0 (12, lrow)
+ Copia_Trattini_locale_Computo_0 (13, lrow)
+ Copia_Trattini_locale_Computo_0 (14, lrow)
+ Copia_Trattini_locale_Computo_0 (15, lrow)
+ Copia_Trattini_locale_Computo_0 (16, lrow)
+ Copia_Trattini_locale_Computo_0 (17, lrow)
+ &apos; Copia_Trattini_locale_Computo_0 (19, lrow)
+ &apos; Copia_Trattini_locale_Computo_0 (20, lrow)
+ &apos; Copia_Trattini_locale_Computo_0 (21, lrow)
+ &apos; Copia_Trattini_locale_Computo_0 (22, lrow)
+ &apos; print &quot;1&quot;
+ Copia_Formule_locale_linkP_1 (18, lrow) &apos; link piatti 
  &apos; print &quot;2&quot;
-    Copia_Formule_locale_linkP_2 (36, lrow)   &apos; altro link piatto (dopo i tag) 
+ Copia_Formule_locale_linkP_2 (36, lrow) &apos; altro link piatto (dopo i tag) 
  	
-&apos;  print &quot;3&quot; 	
- &apos; 	Copia_Formule_locale_LookUP_3 (16, lrow)  &apos; reimposta il VlookUp del prezzo unitario
+&apos; print &quot;3&quot; 	
+ &apos; 	Copia_Formule_locale_LookUP_3 (16, lrow) &apos; reimposta il VlookUp del prezzo unitario
  &apos; ma se c&apos;è un prezzo &quot;forzato&quot; a manina si incasina il computo
 &apos; quindi facciamo un po&apos; di manipolazioni utili allo scopo
-     oCellt = oSheet.GetCellByPosition( 11 , lrow)
-  	 if (oCellt.Type = com.sun.star.table.CellContentType.EMPTY) then
-  	 	Copia_Formule_locale_LookUP_3 (11, lrow) &apos; se è vuota mette il vlookup da S1
-  	 end if
-     if (oCellt.Type = com.sun.star.table.CellContentType.FORMULA) then
-       		sdentro = oCellt.formula 
-     		sdentro = Left (sdentro, 6)
-     &apos;		print sdentro
-     		If  oCellt.formula = &quot;=VLOOK&quot; then &apos; se c&apos;è un vlookup lo &quot;conferma&quot;
-     	&apos;	print &quot;rifa&quot;
-		   		Copia_Formule_locale_LookUP_3 (11, lrow)
-		   	end if
-		   	&apos;se invece è ALTRA formula la mantiene 
-      end if
-     
-     
+ oCellt = oSheet.GetCellByPosition( 11 , lrow)
+ 	 if (oCellt.Type = com.sun.star.table.CellContentType.EMPTY) then
+ 	 	Copia_Formule_locale_LookUP_3 (11, lrow) &apos; se è vuota mette il vlookup da S1
+ 	 end if
+ if (oCellt.Type = com.sun.star.table.CellContentType.FORMULA) then
+ 		sdentro = oCellt.formula 
+ 		sdentro = Left (sdentro, 6)
+ &apos;		print sdentro
+ 		If oCellt.formula = &quot;=VLOOK&quot; then &apos; se c&apos;è un vlookup lo &quot;conferma&quot;
+ 	&apos;	print &quot;rifa&quot;
+		 		Copia_Formule_locale_LookUP_3 (11, lrow)
+		 	end if
+		 	&apos;se invece è ALTRA formula la mantiene 
+ end if
+ 
+ 
  	ThisComponent.CurrentController.Select(oCell) &apos; debug???
 END SUB
 
@@ -246,7 +246,7 @@ lrowOr = lrow +1&apos; mi sembra precario...
 		oSheet.GetCellByPosition( 30, lrow ).setformula(sFormula )
 		sFormula = &quot;=AF&quot; &amp; lrowOr 
 		oSheet.GetCellByPosition( 31, lrow ).setformula(sFormula )
-    &apos; oCellB.setformula(sFormula )
+ &apos; oCellB.setformula(sFormula )
  	&apos; copia strrr
  &apos;	print &quot;frma&quot;
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -254,17 +254,17 @@ lrowOr = lrow +1&apos; mi sembra precario...
 &apos;	xray thiscomponent
 &apos;	exit Function
 &apos;	oSheetSRC=thiscomponent.NamedRanges.Serv_gen2.ReferredCells &apos; Serv_gen1_8 è il nome del range
-&apos;	oCell=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+&apos;	oCell=oDoc.getCurrentSelection().getCellAddress() &apos; indirizzo cella attiva (qui)
 	oCell=oSheet.getCellByPosition(29, lrow).CellAddress
 &apos;	oSheet2 = ThisComponent.currentController.activeSheet &apos; sheet corrente dove incollare
 &apos;print oshhet2
 &apos;	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
 &apos;	xray oQuellRangeAddresse
 
- &apos;   oSheet2.copyRange(oCell,oQuellRangeAddresse)
-    
-&apos;    ThisComponent.CurrentController.Select(oCell)
-&apos;    print &quot;e una...&quot;
+ &apos; oSheet2.copyRange(oCell,oQuellRangeAddresse)
+ 
+&apos; ThisComponent.CurrentController.Select(oCell)
+&apos; print &quot;e una...&quot;
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 end function
 
@@ -302,7 +302,7 @@ lrowOr = lrow +1&apos; mi sembra precario...
 		sFormula = &quot;=AF&quot; &amp; lrowOr 
 		oSheet.GetCellByPosition( 31, lrow ).setformula(sFormula )
 		loop
-    &apos; oCellB.setformula(sFormula )
+ &apos; oCellB.setformula(sFormula )
  	&apos; copia strrr
  &apos;	print &quot;frma&quot;
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -310,17 +310,17 @@ lrowOr = lrow +1&apos; mi sembra precario...
 &apos;	xray thiscomponent
 &apos;	exit Function
 &apos;	oSheetSRC=thiscomponent.NamedRanges.Serv_gen2.ReferredCells &apos; Serv_gen1_8 è il nome del range
-&apos;	oCell=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+&apos;	oCell=oDoc.getCurrentSelection().getCellAddress() &apos; indirizzo cella attiva (qui)
 	oCell=oSheet.getCellByPosition(29, lrow).CellAddress
 &apos;	oSheet2 = ThisComponent.currentController.activeSheet &apos; sheet corrente dove incollare
 &apos;print oshhet2
 &apos;	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
 &apos;	xray oQuellRangeAddresse
 
- &apos;   oSheet2.copyRange(oCell,oQuellRangeAddresse)
-    
-&apos;    ThisComponent.CurrentController.Select(oCell)
-&apos;    print &quot;e una...&quot;
+ &apos; oSheet2.copyRange(oCell,oQuellRangeAddresse)
+ 
+&apos; ThisComponent.CurrentController.Select(oCell)
+&apos; print &quot;e una...&quot;
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 
@@ -338,7 +338,7 @@ dim xA as string
 	 lcolB = 0
 	 oCell = oSheet.GetCellByPosition( lcolB , lrowE)
 	xA = oCell.string
-&apos;		  print xA
+&apos;		 print xA
 	do while xA = &quot;&quot;
 		lrowE = lrowE -1
 		oCell = oSheet.getCellByPosition (0,lrowE)
@@ -347,9 +347,9 @@ dim xA as string
 	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	oSrc = oSheetSRC.getCellRangeByPosition(13,45,13,45).RangeAddress
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-    oDest = oSheetDest.GetCellByPosition(lcol,lrowE).CellAddress
-    oSheetDest.copyRange(oDest, oSrc)   
- &apos;&apos;&apos;   ThisComponent.CurrentController.Select(oCell) &apos; debug 
+ oDest = oSheetDest.GetCellByPosition(lcol,lrowE).CellAddress
+ oSheetDest.copyRange(oDest, oSrc) 
+ &apos;&apos;&apos; ThisComponent.CurrentController.Select(oCell) &apos; debug 
 &apos;print &quot;trattini finiti&quot;
 end Function	
 
@@ -368,14 +368,14 @@ dim oSheet, oEnd, oCell as object
 &apos;	 lrow = oCell.CellAddress.row
 	 lrowE = lrow
 	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-&apos;&apos;&apos;	  ThisComponent.CurrentController.Select(oCell) &apos; debug
+&apos;&apos;&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; debug
 
 	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	oSrc = oSheetSRC.getCellRangeByPosition(22,47,34,47).RangeAddress
 &apos;	oSrc = oSheetSRC.getCellRangeByPosition(22,47,32,47).RangeAddress
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-    oDest = oSheetDest.GetCellByPosition(lcol,lrow).CellAddress
-    oSheetDest.copyRange(oDest, oSrc)
+ oDest = oSheetDest.GetCellByPosition(lcol,lrow).CellAddress
+ oSheetDest.copyRange(oDest, oSrc)
 &apos;print &quot;link 1 finito&quot;
 end Function	
 
@@ -390,17 +390,17 @@ dim oSheet, oEnd, oCell as object
 &apos;	 lrow = oCell.CellAddress.row
 	 lrowE = lrow
 	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-&apos;	  ThisComponent.CurrentController.Select(oCell) &apos; debug
+&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; debug
 &apos;print lrow
 	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	oSrc = oSheetSRC.getCellRangeByPosition(40,47,41,47).RangeAddress
 &apos;	oSrc = oSheetSRC.getCellRangeByPosition(36,47,36,47).RangeAddress
 
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-&apos;	print lcol &amp; &quot;  &quot;&amp; lrow
-    oDest = oSheetDest.GetCellByPosition(lcol,lrow).CellAddress
-    oSheetDest.copyRange(oDest, oSrc)
-&apos;print &quot;link 2   finito&quot;
+&apos;	print lcol &amp; &quot; &quot;&amp; lrow
+ oDest = oSheetDest.GetCellByPosition(lcol,lrow).CellAddress
+ oSheetDest.copyRange(oDest, oSrc)
+&apos;print &quot;link 2 finito&quot;
 end Function
 
 Function Copia_Formule_locale_LookUP_3 (lCol, lrow as long) &apos; agisce su singola colonna richiamata da sub
@@ -432,7 +432,7 @@ dim oSheet, oEnd, oCell as object
 	 loop
 	 lrowE = lrowE +1
 	sFormula = &quot;=VLOOKUP(B&quot; &amp; lrowE &amp; &quot;;elenco_prezzi;5;FALSE())&quot;
-     oCellB.setformula(sFormula )
+ oCellB.setformula(sFormula )
 
 end Function
 	

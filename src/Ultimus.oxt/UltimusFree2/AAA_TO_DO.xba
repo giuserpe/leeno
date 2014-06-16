@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="AAA_TO_DO" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="AAA_TO_DO" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________
-&apos;	  LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi
+&apos;	 LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL	http://www.gnu.org/licenses/lgpl.html
+&apos; Licenza LGPL	http://www.gnu.org/licenses/lgpl.html
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO					
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-&apos; versioneUF_major=1                                           
-&apos; versioneUF_minor=1                                             
-&apos; versioneUF_subversion=1                         
+&apos; versioneUF_major=1 
+&apos; versioneUF_minor=1 
+&apos; versioneUF_subversion=1 
 
 &apos;	BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
 
@@ -31,12 +31,12 @@ end sub
 
 REM dà l&apos;indirizzo delle celle in forma umana
 Function Indirizzo_in_forma_leggibile &apos; by Paolo Mantovani
-  oActiveCell = ThisComponent.getCurrentSelection()
-  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-  oConv.Address = oActiveCell.getCellAddress
-&apos;  Print oConv.UserInterfaceRepresentation
+ oActiveCell = ThisComponent.getCurrentSelection()
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oActiveCell.getCellAddress
+&apos; Print oConv.UserInterfaceRepresentation
  &apos; Print oConv.PersistentRepresentation
-  Indirizzo_in_forma_leggibile = oConv.UserInterfaceRepresentation
+ Indirizzo_in_forma_leggibile = oConv.UserInterfaceRepresentation
 End function 
 &apos; malgrado le buone intenzioni aggiorno poco queste note... ma dovrei!
 &apos; pertanto:
@@ -47,16 +47,16 @@ End function
 &apos; verificare se veramente il codice se ne frega della gerarchia degli stili, ma penso varamente di si
 
 
-&apos; le cose da sistemare, sono spesso sono localizzabili cercando la stringa:  ||| 
+&apos; le cose da sistemare, sono spesso sono localizzabili cercando la stringa: ||| 
 
-&apos;|||  il namedRanges &quot;elenco_prezi_R&quot; serve a qualcosa?  ... controllare
+&apos;||| il namedRanges &quot;elenco_prezi_R&quot; serve a qualcosa? ... controllare
 
 &apos;||| per la procedura di adattamento di vecchio template : eliminare il nome di area elenco_prezzi e poi fargli riordinare l&apos;EP
 
 
 
 &apos; Modificata la chiamata di &quot;pesca va e vieni&quot; sotto un solo comando:
-&apos; - Ctrl Ins   Ctrl Alt K   Ctrl 6   
+&apos; - Ctrl Ins Ctrl Alt K Ctrl 6 
 &apos; o ancora dal menu top o dall&apos;icona con l&apos;amo.
 &apos; Ricorda di portarlo sulla 4
 
@@ -65,9 +65,9 @@ End function
 
 &apos;101020
 &apos;&apos; Accorpate le due formule magiche per le formule nelle celle (ora solo Ctrl 9 sia per
-&apos;  scrivere sulla riga corrente che per aggiornare tutto il foglio)
+&apos; scrivere sulla riga corrente che per aggiornare tutto il foglio)
 
-&apos; UF2 080210  ___________________________________
+&apos; UF2 080210 ___________________________________
 &apos; Attivata la funzione a &quot;schermo intero&quot; già in apertura attivabile dalle Variabili Generali
 &apos; Come conseguenza è stato disattivato il Controllo conferma dati perchè era una pezza 
 &apos; traballante e npn consentiva di lavorare a &quot;Schermo Intero&quot; (usava il numero delle toolsbar aperte...)
@@ -109,7 +109,7 @@ End function
 &apos; aGGIUNTO
 
 &apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
- &apos;	   BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
+ &apos;	 BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
 &apos;	End If 
 
 &apos;UserInterfaceRepresentation
@@ -122,14 +122,14 @@ End function
 
 &apos; PROBLEMI NOTI!
 &apos; Nelle maacro dove viene attivato il listeners che chiede dove si vuole inserire/spostare,
-&apos; e si  annulla l&apos;operazione cliccando sulla crocetta in alto a dx,
+&apos; e si annulla l&apos;operazione cliccando sulla crocetta in alto a dx,
 &apos; l&apos;operazione NON viene veramente annullata e il loop continua fino allo scadere del temporizzatore
 &apos; magari mettere il timeout tra le var generali?
 
 &apos;_______________________________________________________________________________
 
-&apos; Lo shortcut  CTRL Alt X non sembra attivo nelle mie installazioni di OO sotto Debian
-&apos; (ma la stessa macro assegnata a  CTRL Alt Y funzia perfettamente...)
+&apos; Lo shortcut CTRL Alt X non sembra attivo nelle mie installazioni di OO sotto Debian
+&apos; (ma la stessa macro assegnata a CTRL Alt Y funzia perfettamente...)
 &apos; Probabilmente dipende dalla sovrapposizione di due installazioni di OO sovrapposte.
 &apos; Se qualcuno ha noie analoghe me lo faccia sapere.... così vediamo se è solo un problema mio
 
@@ -144,7 +144,7 @@ End function
 &apos;----------------------------------------
 
 &apos;A volte Quando va in autosalvataggio (e c&apos;è unoperazione in corso non conclusa)
-&apos; altera  la riga di status... (nel senso che congela la barra di scorrimento sulla riga di status)
+&apos; altera la riga di status... (nel senso che congela la barra di scorrimento sulla riga di status)
 &apos;101020 non è più successo...
 
 

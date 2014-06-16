@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_Prezzario_3" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_Prezzario_3" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -18,33 +18,33 @@
 
 Sub Voce_a_ElencoPrezzi_Alt (sQualeTipoCodice as string) &apos;versione 081220 (Da prezziario a Template)
 &apos;---------------------------------------------------------------------------
-  	Dim oSourceDoc As Object, oSourceSheet As Object
-  	Dim oTargetDoc As Object, oTargetSheet As Object
-  	Dim sUrl As String
+ 	Dim oSourceDoc As Object, oSourceSheet As Object
+ 	Dim oTargetDoc As Object, oTargetSheet As Object
+ 	Dim sUrl As String
  	dim sDesc as string
  	dim sUM as string
 	dim sCodOrigine as string
- 	dim iPrezzo  
+ 	dim iPrezzo 
  	dim iIncMan 
  	dim iSic
 &apos;...print &quot;ecco&quot;
-&apos;xray oUltimo_indirizzo_conosciuto &apos;= &quot;&quot;  &apos;temp per debub
+&apos;xray oUltimo_indirizzo_conosciuto &apos;= &quot;&quot; &apos;temp per debub
 &apos;xray sPrezzario_in_uso 
 &apos;print &quot;uff&quot;	
 on error resume next &apos;da tenere attivo escluso debug
 
-  	oSourceDoc=ThisComponent
-  	oSourceSheet= oSourceDoc.Sheets.getByName(&quot;Temp&quot;)&apos; Siamo su &quot;Temp&quot;
+ 	oSourceDoc=ThisComponent
+ 	oSourceSheet= oSourceDoc.Sheets.getByName(&quot;Temp&quot;)&apos; Siamo su &quot;Temp&quot;
 
 	&apos;la frase che segue serve solo per confermare eventuali dati in sospeso (editing mode)
 	ThisComponent.CurrentController.Select(ThisComponent.currentController.activeSheet.getCellByPosition(0,0)) 
-  	
-  &apos;------------------	
+ 	
+ &apos;------------------	
 	oSheetTemp = ThisComponent.currentcontroller.activesheet &apos; FINALMENTE riferimento alla tabella attiva (senza nome ne numero)
-	sPrezzario_in_uso =  ConvertToUrl  (ThisComponent.getURL() ) &apos;oNome_P
-	sPrezzario_in_usoTT =  ConvertToUrl  (ThisComponent.getURL() ) 
+	sPrezzario_in_uso = ConvertToUrl (ThisComponent.getURL() ) &apos;oNome_P
+	sPrezzario_in_usoTT = ConvertToUrl (ThisComponent.getURL() ) 
 	&apos;-----------------------
-	sPrezzario_in_uso =  ConvertToUrl  (ThisComponent.getURL() )
+	sPrezzario_in_uso = ConvertToUrl (ThisComponent.getURL() )
 	&apos;imposta l&apos;ambaradan per andare o tornare qui
 	&apos; dopo l&apos;inserimento della voce
 	if IsNull(oSheetTemp) then
@@ -59,14 +59,14 @@ on error resume next &apos;da tenere attivo escluso debug
 
 	 &apos; si prelevano i dati su &quot;Temp&quot;
 	sDesc = oSourceSheet.getCellByPosition(2,2).String &apos; si prelevano i dati su &quot;Temp&quot;
-	sUM = oSourceSheet.getCellByPosition(3,2).String   &apos; alle quattro variabili
+	sUM = oSourceSheet.getCellByPosition(3,2).String &apos; alle quattro variabili
 	iPrezzo = oSourceSheet.getCellByPosition(4,2).Value
 	sCodOrigine = oSourceSheet.getCellByPosition(6,2).String
 	iSic = oSourceSheet.getCellByPosition(7,2).value
 	iIncMan = oSourceSheet.getCellByPosition(5,2).value
 
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 
 
@@ -81,8 +81,8 @@ on error resume next &apos;da tenere attivo escluso debug
 			&apos; nel caso abbia perso il puntamento al listino
 			&apos; tentiamo questo
 			sCodOrigineNUDO = oSourceSheet.getCellByPosition(6,2).Formula
-		  	BigString=sCodOrigineNUDO
-			PreString = &quot;;   &quot;
+		 	BigString=sCodOrigineNUDO
+			PreString = &quot;; &quot;
 			PostString = &quot;)&quot;
 			SearchPos = 10
 			sCodOrigineNUDO = FindPartString(BigString, PreString, PostString , SearchPos)
@@ -99,15 +99,15 @@ on error resume next &apos;da tenere attivo escluso debug
 	
 	
 	&apos;ora tutti i dati del prezzario dovrebbero essere &apos;in memoria&apos; vediamo il DCC
-	&apos;aggiorna_nome_CC  &apos; prima cosa azzerare eventuali &apos;fantasmi&quot;
+	&apos;aggiorna_nome_CC &apos; prima cosa azzerare eventuali &apos;fantasmi&quot;
 	ThisComponent.getCurrentController.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;).string = UltimusFree2.Lupo_0.sUltimus
 	If UltimusFree2.Lupo_0.sUltimus = &quot;&quot; then &apos; se non è definoto...
 		Select case msgbox (&quot;Non è stato definito il documento DCC, ovvero non so dove infilare la voce di prezzo!!&quot; &amp; CHR$(10)_
 					&amp; &quot;Carica il documento di Computo dal tuo HardDisk &quot; &amp; CHR$(10)_
 					&amp; &quot;(lo devi &apos;caricare&apos; nuovamente... anche se è già aperto)&quot; &amp; CHR$(10)_
-					&amp;&quot;         Carico il documento ?... &quot; &amp; CHR$(10) _
-   					&amp;  CHR$(10) &amp; &quot;&quot;,35, &quot;Carico il documento di Contabilità DCC ?&quot;) 
-   				
+					&amp;&quot; Carico il documento ?... &quot; &amp; CHR$(10) _
+ 					&amp; CHR$(10) &amp; &quot;&quot;,35, &quot;Carico il documento di Contabilità DCC ?&quot;) 
+ 				
 				case 6 &apos;SI
 						sSourceURL = GetFileURL( _
 						&quot;CARICA IL TUO DOCUMENTO DI COMPUTO&quot;)
@@ -119,16 +119,16 @@ on error resume next &apos;da tenere attivo escluso debug
 								exit sub
  						end if
 				case 7
-	   				exit sub
- 	  			case 2
-   					exit sub
-   		end select	
-		Scrivi_Globale &apos;registra il doc come DCC  
+	 				exit sub
+ 	 			case 2
+ 					exit sub
+ 		end select	
+		Scrivi_Globale &apos;registra il doc come DCC 
 		Sel_Elenco_Prezzi
-   	end if
-  
-  	SUrl = UltimusFree2.Lupo_0.sUltimus 
-  	sUrl2 = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus)
+ 	end if
+ 
+ 	SUrl = UltimusFree2.Lupo_0.sUltimus 
+ 	sUrl2 = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus)
 
 
 
@@ -152,17 +152,17 @@ on error resume next &apos;da tenere attivo escluso debug
 
 &apos;	oSheet = oTargetDoc.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 									&apos;						 &apos; i dati in oSRC
-	wait 100  
+	wait 100 
 
 	oSheet = oTargetDoc.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos; Ho cambiato ThisComponent con oTargetDoc che è
-														  &apos; la variabile che contiene gia l&apos; oggetto documento
-														  &apos; cioè Ultimus ( vedi sopra oTargetDoc = ...), così 
-														  &apos; non si ferma 
+														 &apos; la variabile che contiene gia l&apos; oggetto documento
+														 &apos; cioè Ultimus ( vedi sopra oTargetDoc = ...), così 
+														 &apos; non si ferma 
 
 	Thiscomponent.currentcontroller.setactivesheet(Osheet)
 	Osheet.isVisible = true	
 			
-	lcolbase = Colonna_giusta_EP(osheet) 										  
+	lcolbase = Colonna_giusta_EP(osheet) 										 
 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 		print lcolbase
 		exit sub
@@ -189,8 +189,8 @@ on error resume next &apos;da tenere attivo escluso debug
 	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;)&quot; 
 	&apos; iScarto è per la versione 4 (questo pezzo non è stato ancora testato)
 &apos;	if iscarto &lt;&gt; 0 then
-&apos;		oSheet.getCellByPosition(lcolbase+iscarto+5,lrowI).CellStyle =  &quot;EP-mezzo %&quot;
-&apos;		oSheet.getCellByPosition(lcolbase+iscarto+6,lrowI).CellStyle =  &quot;EP-mezzo&quot;
+&apos;		oSheet.getCellByPosition(lcolbase+iscarto+5,lrowI).CellStyle = &quot;EP-mezzo %&quot;
+&apos;		oSheet.getCellByPosition(lcolbase+iscarto+6,lrowI).CellStyle = &quot;EP-mezzo&quot;
 &apos;			oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
 &apos;			 &quot;=IF(E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp;&quot;)&quot; 
 			&apos; oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
@@ -206,18 +206,18 @@ on error resume next &apos;da tenere attivo escluso debug
 	&apos; scrivo in EP i dati delle variabili prelevate dal listino,
 	
 	if sQualeTipoCodice = &quot;interno&quot; then
-		oSheet.getCellByPosition(lcolbase,lrowI).SetString(&quot;......&quot;)  
+		oSheet.getCellByPosition(lcolbase,lrowI).SetString(&quot;......&quot;) 
 	end if
 &apos;print sQualeTipoCodice
-&apos;print lcolbase  &amp; &quot;  &quot; &amp;lrowI
+&apos;print lcolbase &amp; &quot; &quot; &amp;lrowI
 	if sQualeTipoCodice = &quot;originale&quot; then
 &apos;		print &quot;prima &quot; &amp; &quot; - &quot; &amp; lcolbase &amp; &quot; - &quot; &amp; sCodOrigineNUDO
-		oSheet.getCellByPosition(lcolbase,lrowI).SetString(sCodOrigineNUDO)  
+		oSheet.getCellByPosition(lcolbase,lrowI).SetString(sCodOrigineNUDO) 
 &apos;		print &quot;dopo!&quot;
 	end if
 
 	oSheet.getCellByPosition(lcolbase+1,lrowI).SetString(sDesc) 
-	oSheet.getCellByPosition(lcolbase+2,lrowI).SetString(sUM)   
+	oSheet.getCellByPosition(lcolbase+2,lrowI).SetString(sUM) 
 	oSheet.getCellByPosition(lcolbase+3,lrowI).SetValue(iSic)
 	oSheet.getCellByPosition(lcolbase+4,lrowI).SetValue(iPrezzo)
 &apos;PRINT iIncMan
@@ -241,9 +241,9 @@ on error resume next &apos;da tenere attivo escluso debug
  				if not isnull(sPrezzario_in_uso) then				
  				end if
  			end if
- 		  else
- 		    &apos; se non è flaggato con &quot;a&quot; annula il ritorno al listino
- 		    exit sub
+ 		 else
+ 		 &apos; se non è flaggato con &quot;a&quot; annula il ritorno al listino
+ 		 exit sub
  		end if	
  		 &apos;	oPrezzario = StarDesktop.LoadComponentFromUrl(sUrl0, &quot;_default&quot;, 0, Array())
  &apos;		 	xray sPrezzario_in_uso
@@ -284,22 +284,22 @@ on error resume next &apos;da tenere attivo escluso debug
 		Sel_Elenco_Prezzi
 		oSheet = ThisComponent.currentController.activeSheet		
 		thiscomponent.CurrentController.Select(oSheet.getCellByPosition(lcolbase,lrowI))
-		 msgbox &quot;!!!!!  Inserisci il TUO codice organizzativo (di comodo) per l&apos;Elenco Prezzi&quot;&amp; CHR(10) &amp; CHR(10)_
-    		&amp;&quot; (Vedi (e modifica eventualmente) la tabella &quot;&quot;Legenda&quot;&quot; come tuo promemoria... &quot;&amp; CHR(10)_
-    		&amp; &quot; &quot;&amp; CHR(10)_
-    		&amp; &quot;Ctrl shift Z oppure ALT -Z   per tornare sul prezzario...&quot; &amp; CHR(10)_
-    		&amp; &quot; &quot;
-    end if
-   
-   &apos;ora vorrei tanto rendere null la variabile
-   &apos; xray oUltimo_indirizzo_conosciuto
-    oUltimo_indirizzo_conosciuto = Nothing  &apos;.release() &apos; = &quot;null object&quot; 
+		 msgbox &quot;!!!!! Inserisci il TUO codice organizzativo (di comodo) per l&apos;Elenco Prezzi&quot;&amp; CHR(10) &amp; CHR(10)_
+ 		&amp;&quot; (Vedi (e modifica eventualmente) la tabella &quot;&quot;Legenda&quot;&quot; come tuo promemoria... &quot;&amp; CHR(10)_
+ 		&amp; &quot; &quot;&amp; CHR(10)_
+ 		&amp; &quot;Ctrl shift Z oppure ALT -Z per tornare sul prezzario...&quot; &amp; CHR(10)_
+ 		&amp; &quot; &quot;
+ end if
+ 
+ &apos;ora vorrei tanto rendere null la variabile
+ &apos; xray oUltimo_indirizzo_conosciuto
+ oUltimo_indirizzo_conosciuto = Nothing &apos;.release() &apos; = &quot;null object&quot; 
 	
 &apos;	if isnull (UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto) then
 &apos;			print &quot;vuoto&quot;
 &apos;		else
 &apos;			print &quot;qualcos&apos;altro&quot;
 &apos;	end if
- &apos;    xray oUltimo_indirizzo_conosciuto
+ &apos; xray oUltimo_indirizzo_conosciuto
 END SUB
 </script:module>

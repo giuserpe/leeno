@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_tmp" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                           3.0.16               
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_tmp" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 3.0.16 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -19,12 +19,12 @@ sub SetTabColor_1
 colore = RGB(255,128,0)
 	rem ----------------------------------------------------------------------
 	rem define variables
-	dim document   as object
+	dim document as object
 	dim dispatcher as object
 	rem ----------------------------------------------------------------------
 	rem get access to the document
 	If ThisComponent.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) Then
-		document   = ThisComponent.CurrentController.Frame
+		document = ThisComponent.CurrentController.Frame
 		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 		
 		rem ----------------------------------------------------------------------
@@ -38,12 +38,12 @@ End Sub
 Sub SetTabColor
 	rem ----------------------------------------------------------------------
 	rem define variables
-	dim document   as object
+	dim document as object
 	dim dispatcher as object
 	rem ----------------------------------------------------------------------
 	rem get access to the document
 	If ThisComponent.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) Then
-		document   = ThisComponent.CurrentController.Frame
+		document = ThisComponent.CurrentController.Frame
 		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 		
 		rem ----------------------------------------------------------------------
@@ -60,17 +60,17 @@ Sub SetTabColor
 End Sub
 
 Sub ExampleArray_ok
-  dim a(1,2) as string
+ dim a(1,2) as string
 
-    a(0,0) = &quot;pippo&quot;
-    a(0,1) = &quot;gigio&quot;
-    a(0,2) = &quot;zio_barba&quot;
+ a(0,0) = &quot;pippo&quot;
+ a(0,1) = &quot;gigio&quot;
+ a(0,2) = &quot;zio_barba&quot;
 
-    a(1,0) = &quot;qualcosa&quot;
-    a(1,1) = &quot;carabattole&quot;
-    a(1,2) = &quot;barbatrucco 26&quot;
+ a(1,0) = &quot;qualcosa&quot;
+ a(1,1) = &quot;carabattole&quot;
+ a(1,2) = &quot;barbatrucco 26&quot;
 
-    msgbox cerca_in_array(a, &quot;gigio&quot;) 
+ msgbox cerca_in_array(a, &quot;gigio&quot;) 
 End Sub
 
 
@@ -78,35 +78,35 @@ End Sub
 
 &apos;___________________________________
 Sub ExampleArray
-  dim a(2,3) as string
+ dim a(2,3) as string
 
-    a(0,0) = &quot;pippo&quot;
-    a(0,1) = &quot;gigio&quot;
-    a(0,2) = &quot;zio_barba&quot;
-    a(0,3) = &quot;Orco&quot;
-    
-    a(1,0) = &quot;qualcosa&quot;
-    a(1,1) = &quot;carabattole&quot;
-    a(1,2) = &quot;barbatrucco 26&quot;
-    a(1,3) = &quot;Cattivo&quot;
+ a(0,0) = &quot;pippo&quot;
+ a(0,1) = &quot;gigio&quot;
+ a(0,2) = &quot;zio_barba&quot;
+ a(0,3) = &quot;Orco&quot;
+ 
+ a(1,0) = &quot;qualcosa&quot;
+ a(1,1) = &quot;carabattole&quot;
+ a(1,2) = &quot;barbatrucco 26&quot;
+ a(1,3) = &quot;Cattivo&quot;
 
-    a(2,0) = &quot;qualcosaSS&quot;
-    a(2,1) = &quot;carabattoleSS&quot;
-    a(2,2) = &quot;barbatrucco 26SS&quot;
-    a(2,3) = &quot;di più&quot;
+ a(2,0) = &quot;qualcosaSS&quot;
+ a(2,1) = &quot;carabattoleSS&quot;
+ a(2,2) = &quot;barbatrucco 26SS&quot;
+ a(2,3) = &quot;di più&quot;
 
-    msgbox cerca_in_arrayD(a, &quot;Orco&quot;) 
+ msgbox cerca_in_arrayD(a, &quot;Orco&quot;) 
 End Sub
 
 function cerca_in_arrayD(anArrayD as object, aString as string) as string
-    dim iStop as integer
-    iStop = UBound(anArrayD, 2)
-    for i=0 to iStop
-        if(anArrayD(0, i) = aString) then
-            cerca_in_arrayD = anArrayD(1,i) &amp; &quot; - &quot; &amp; anArrayD(2,i)
-            exit function
-        end if
-    next
+ dim iStop as integer
+ iStop = UBound(anArrayD, 2)
+ for i=0 to iStop
+ if(anArrayD(0, i) = aString) then
+ cerca_in_arrayD = anArrayD(1,i) &amp; &quot; - &quot; &amp; anArrayD(2,i)
+ exit function
+ end if
+ next
 end function
 
 Sub dentro
@@ -123,8 +123,8 @@ Sub dentro
 		&apos;	oNamedAddress = oNamedRange.referredCells.RangeAddress
 		xray oNome &apos;.Content
 &apos;		xray = oNome.referredCells.RangeAddress
-&apos;		xray = oNome.getReferencePosition&apos;      (  )                             AS com.sun.star.table.CellAddress                           com.sun.star.sheet.XNamedRange 
-&apos;		xray = oNome.getReferredCells (  ) 
+&apos;		xray = oNome.getReferencePosition&apos; ( ) AS com.sun.star.table.CellAddress com.sun.star.sheet.XNamedRange 
+&apos;		xray = oNome.getReferredCells ( ) 
 
 		end if
  	next
@@ -132,20 +132,20 @@ end sub
 &apos;_________________________________
 
 &apos;For Each mShArea In mSheetAreas()
- &apos;   oSh = oSheets.getByName(mShArea(0))
- &apos;   oSh.PrintAreas() = mShArea(1)
+ &apos; oSh = oSheets.getByName(mShArea(0))
+ &apos; oSh.PrintAreas() = mShArea(1)
  &apos; Next
  
  
 function cerca_in_array(anArray as object, aString as string) as string
-    dim iStop as integer
-    iStop = UBound(anArray, 2)
-    for i=0 to iStop
-        if(anArray(0, i) = aString) then
-            cerca_in_array = anArray(1,i)
-            exit function
-        end if
-    next
+ dim iStop as integer
+ iStop = UBound(anArray, 2)
+ for i=0 to iStop
+ if(anArray(0, i) = aString) then
+ cerca_in_array = anArray(1,i)
+ exit function
+ end if
+ next
 end function
 
 
@@ -169,7 +169,7 @@ aRangeAddress = mAreas(0)
 
 mAreas() = oSheet.getPrintAreas()
 For Each aRangeAddress in mAreas()
-  xray aRangeAddress
+ xray aRangeAddress
 Next 
 end sub
 
@@ -326,26 +326,26 @@ a(1,	19	) =	&quot;$&apos;Elenco Prezzi&apos;.$A$2:$A$96&quot;
 &apos;print cerca_in_array(a,&quot;blocco_analisi&quot;) 
 
 			for i = 0 to ubound(aNomi)
- 				  oNome = oAreeNomi.getByName(aNomi(i))
- 			&apos;	  xray onome
- 				  sNome = oNome.getName	
- 				  print snome
- 				  exit sub			  
- 				  	 &apos; le due che seguono annotano sulla tabella attiva i nomi di area e idati (decommentarle alla bisogna)
- 					 &apos;ThisComponent.currentController.activeSheet.GetCellbyPosition( 0, i ).string =  oNome.name
+ 				 oNome = oAreeNomi.getByName(aNomi(i))
+ 			&apos;	 xray onome
+ 				 sNome = oNome.getName	
+ 				 print snome
+ 				 exit sub			 
+ 				 	 &apos; le due che seguono annotano sulla tabella attiva i nomi di area e idati (decommentarle alla bisogna)
+ 					 &apos;ThisComponent.currentController.activeSheet.GetCellbyPosition( 0, i ).string = oNome.name
  					 &apos;ThisComponent.currentController.activeSheet.GetCellbyPosition( 1, i ).string = oNome.Content 
- 				  if InStr(oNome.Content, &quot;#REF&quot;) &lt;&gt; 0 or  InStr(oNome.Content,&quot;#rif!&quot;) &lt;&gt; 0 or _
- 				  		oNome.Content = &quot;&quot;	 then
+ 				 if InStr(oNome.Content, &quot;#REF&quot;) &lt;&gt; 0 or InStr(oNome.Content,&quot;#rif!&quot;) &lt;&gt; 0 or _
+ 				 		oNome.Content = &quot;&quot;	 then
  						sCogn = cerca_in_array(a,sNome) 
  						if not isnull (sCogn) then
- 					 	&apos;&apos;	print oNome.name &amp; &quot; &gt; &quot; &amp; oNome.Content &amp; &quot;  ma diventa &quot; &amp; sCogn
+ 					 	&apos;&apos;	print oNome.name &amp; &quot; &gt; &quot; &amp; oNome.Content &amp; &quot; ma diventa &quot; &amp; sCogn
  					 &apos;	xray oNome 
  					 &apos;	xray sCogn
  					 	&apos;	oNome.setContent = sCogn
  					 	&apos;xray oNome.Content
  					 		sName = &quot;SALspec&quot; &apos;&amp; c-iColBase+1
-	sRange =  &quot;$&apos;CONTABILITA&apos;.$M$&quot;&amp; iSALsopra &amp; &quot;:$M$&quot; &amp; iRowEnd_Aree   	
-   	oCellAddress = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).getCellRangeByName(&quot;A1&quot;).getCellAddress() &apos;Parameter aPosition specifies the base address for relative cell references
+	sRange = &quot;$&apos;CONTABILITA&apos;.$M$&quot;&amp; iSALsopra &amp; &quot;:$M$&quot; &amp; iRowEnd_Aree 	
+ 	oCellAddress = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).getCellRangeByName(&quot;A1&quot;).getCellAddress() &apos;Parameter aPosition specifies the base address for relative cell references
 	If ThisComponent.NamedRanges.hasByName(sName) Then
  			 ThisComponent.NamedRanges.removeByName(sName)
 	End If	
@@ -353,13 +353,13 @@ a(1,	19	) =	&quot;$&apos;Elenco Prezzi&apos;.$A$2:$A$96&quot;
  					 	end if
  					 &apos;	
  				&apos;	 xray 	oNome
- 				  	 &apos;oNome.setContent(
- 				  	&apos;	print&quot; l&apos; area &quot; &amp; oNome.name &amp; &quot;è corrotta&quot;
- 				  end if
- 				  &apos; questo serve per infilare a forzaun errore per testare
- 				  if   oNome.name = &quot;blocco_analisi&quot; then
- 				  	&apos;oNome.Content = &quot;$contabilita.$k$#ref!:$k$#ref!&quot;
- 				  end if
+ 				 	 &apos;oNome.setContent(
+ 				 	&apos;	print&quot; l&apos; area &quot; &amp; oNome.name &amp; &quot;è corrotta&quot;
+ 				 end if
+ 				 &apos; questo serve per infilare a forzaun errore per testare
+ 				 if oNome.name = &quot;blocco_analisi&quot; then
+ 				 	&apos;oNome.Content = &quot;$contabilita.$k$#ref!:$k$#ref!&quot;
+ 				 end if
  
  			next
  &apos;	end if
@@ -369,21 +369,21 @@ exit sub&apos;
 	End If	
 	ThisComponent.NamedRanges.addNewByName(SName,sRange,oCellAddress,0 )
 
-  	If ThisComponent.NamedRanges.hasByName(&quot;AAAspec&quot;) Then
+ 	If ThisComponent.NamedRanges.hasByName(&quot;AAAspec&quot;) Then
  			 ThisComponent.NamedRanges.removeByName(&quot;AAAspec&quot;)
 	End If
-	sRange =  &quot;$&apos;CONTABILITA&apos;.$AR&quot; &amp; &quot;$&quot; &amp; iSALsopra &amp; &quot;:$AR$&quot; &amp; iRowEnd_Aree      		
+	sRange = &quot;$&apos;CONTABILITA&apos;.$AR&quot; &amp; &quot;$&quot; &amp; iSALsopra &amp; &quot;:$AR$&quot; &amp; iRowEnd_Aree 		
 	ThisComponent.NamedRanges.addNewByName(&quot;AAAspec&quot;,sRange,oCellAddress,0 )	
 
 	If thisComponent.DatabaseRanges.hasByName(&quot;MyName1&quot;) then	
 			for i = 0 to ubound(mRangeNames)
- 				  oDBRange = oDbRanges.getByName(mRangeNames(i))		  
- 				  if thisComponent.DatabaseRanges.getByName(&quot;MyName1&quot;).AutoFilter  = true then
- 		  					subTurnOffAutoFilter 
- 		  				&apos;	goto fine
+ 				 oDBRange = oDbRanges.getByName(mRangeNames(i))		 
+ 				 if thisComponent.DatabaseRanges.getByName(&quot;MyName1&quot;).AutoFilter = true then
+ 		 					subTurnOffAutoFilter 
+ 		 				&apos;	goto fine
  		 	 		else
- 		  				Crea_AutoFilter	
- 		  			&apos;	goto fine	  		
+ 		 				Crea_AutoFilter	
+ 		 			&apos;	goto fine	 		
  		 		 end if
 			next
 		else

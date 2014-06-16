@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_2" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_2" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -14,8 +14,8 @@
 
 Sub Scelta_Viste_2()
 &apos;	sAttributo = Trova_Attr_Sheet
- &apos;   If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then
- &apos;        	msgbox &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
+ &apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then
+ &apos; 	msgbox &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
 &apos;&apos;		 			&amp; &quot;Sei certo di essere su una tabella di computo?&quot;
 	&apos;	 	exit sub
 &apos; 	end if &apos;
@@ -83,17 +83,17 @@ sub Apri_Registro_Standard
 	Config1 = &quot;Registro-Standard&quot;
 	on error resume next
 	&apos;registro la posizione attuale del cursore
-	iRow_PosIniz =  Range2Cell
+	iRow_PosIniz = Range2Cell
 &apos;print iRow_PosIniz
 &apos;	oPos = ThisComponent.getCurrentSelection()
 
-  	lrowStart=thisComponent.getCurrentSelection().getCellAddress().Row   
+ 	lrowStart=thisComponent.getCurrentSelection().getCellAddress().Row 
 	&apos;print lrowstart
 	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.currentController.activeSheet
 	iLastRow = getLastUsedRow(oSheet)
 	for i = 2 to iLastRow &apos; nasconde le righe di chiusura sal
-		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
+		if left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
 				oSheet.getRows().getByindex(i).isvisible = False
 		end if
 	next
@@ -106,7 +106,7 @@ sub Apri_Registro_Standard
 			oSheet.getColumns().getByindex(17).isVisible = false	
 &apos; riporta il cursore sulla posizione di partenza
 &apos;	ThisComponent.CurrentController.Select( oPos )
-	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 ,iRow_PosIniz)  &apos; + iConta)
+	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 ,iRow_PosIniz) &apos; + iConta)
 	&apos; toglie la selezione 
 &apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 Tronca_Altezza_Voci
@@ -124,17 +124,17 @@ end sub
 
 
 sub Imposta_libretto_Cart
-  dim Tabella1 as string
-  dim Config1 as string
+ dim Tabella1 as string
+ dim Config1 as string
 	&apos;_____________________
-  chiudi_dialoghi  &apos; chiude tutti i dialoghi
+ chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	
 	&apos; ambaradan che controlla la modalità di tenuta del libretto delle Misure
-  if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 1  then
-		if msgbox ( &quot;Questa contabilità è impostata  per un &quot;&quot;Libretto&quot;&quot; gestito in modalità elettronica!&quot; &amp; CHR$(10)_
+ if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 1 then
+		if msgbox ( &quot;Questa contabilità è impostata per un &quot;&quot;Libretto&quot;&quot; gestito in modalità elettronica!&quot; &amp; CHR$(10)_
 			&amp; &quot;Sei certo di voler impostare la modalità tradizionale?&quot; &amp; CHR$(10)_
-			&amp; &quot;        Procedo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot; Procedo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;&quot; ,292, &quot;&quot;) &lt;&gt; 6 then			
 		&apos;	print 1 &apos; cioè no
 	&apos;		&amp; &quot;Cosulta la guida al capitolo: Libretto delle Misure&quot;
@@ -145,7 +145,7 @@ sub Imposta_libretto_Cart
 		oSheet = ThisComponent.currentController.activeSheet	
 		sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)
-		If isNull (oEnd) or isEmpty (oEnd)  then
+		If isNull (oEnd) or isEmpty (oEnd) then
 			msgbox &quot; Manca la riga rossa di chiusura !&quot; &amp; CHR$(10)_
 				&amp; &quot; potresti avere risultati non corretti in coda alla tabella&quot;
 				lLastUrow = getLastUsedRow(oSheet)
@@ -154,12 +154,12 @@ sub Imposta_libretto_Cart
 		For I = 4 To lrowFine Step 1
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(20 , i) &apos;debug
 	&apos;	print oSheet.GetCellByPosition(20 , i).string
-			if  oSheet.GetCellByPosition(20 , i).string &lt;&gt; &quot;&quot; then &apos;se trova dati 
+			if oSheet.GetCellByPosition(20 , i).string &lt;&gt; &quot;&quot; then &apos;se trova dati 
 			&apos; se non lo è chiedo se impostare la tenuta del libretto elettronico
 				if msgbox (&quot;Mi risulta ci siano dei numeri di pag. già scritti!&quot; &amp; CHR$(10)_
 						&amp; &quot; se procedo impostando adesso la modalità Cartacea del Libretto delle Misure quei dati saranno sovrascritti!&quot; &amp; CHR$(10)_
 						&amp; &quot; Sei certo di questo? (Magari cosulta la guida al capitolo: Libretto delle Misure)&quot; &amp; CHR$(10)_
-						&amp; &quot;               Proseguo ??&quot; &amp; CHR$(10)_
+						&amp; &quot; Proseguo ??&quot; &amp; CHR$(10)_
 						&amp; &quot;&quot; ,291, &quot;&quot;) &lt;&gt; 6 then
 						sMsg = &quot;interrompo&quot;
 				end if
@@ -205,14 +205,14 @@ Mostra_Tutto
 	togli_struttura
 &apos;	togli_salti_pagina
 	&apos;_____________________
-&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	oPos = ThisComponent.getCurrentSelection()	
 	&apos; ambaradan che controlla la modalità di tenuta del libretto delle Misure
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0  then
-		if msgbox ( &quot;Questa contabilità attualmente è impostata  per un &quot;&quot;Libretto&quot;&quot; cartaceo!&quot; &amp; CHR$(10)_
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0 then
+		if msgbox ( &quot;Questa contabilità attualmente è impostata per un &quot;&quot;Libretto&quot;&quot; cartaceo!&quot; &amp; CHR$(10)_
 			&amp; &quot;Pertanto la visualizzazione del Libretto delle Misure è incompatibile e non è di nessuna utilità!&quot;&amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;        Procedo Comunque ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot; Procedo Comunque ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;&quot; ,292, &quot;&quot;) &lt;&gt; 6 then			
 	&apos;		print 1 &apos; cioè no
 	&apos;		&amp; &quot;Cosulta la guida al capitolo: Libretto delle Misure&quot;
@@ -222,7 +222,7 @@ Mostra_Tutto
 		oSheet = ThisComponent.currentController.activeSheet	
 		sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)
-		If isNull (oEnd) or isEmpty (oEnd)  then
+		If isNull (oEnd) or isEmpty (oEnd) then
 			msgbox &quot; Manca la riga rossa di chiusura !&quot; &amp; CHR$(10)_
 				&amp; &quot; potresti avere risultati non corretti in coda alla tabella&quot;
 				lLastUrow = getLastUsedRow(oSheet)
@@ -231,12 +231,12 @@ Mostra_Tutto
 		For I = 4 To lrowFine Step 1
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(20 , i) &apos;debug
 	&apos;	print oSheet.GetCellByPosition(20 , i).string
-			if  oSheet.GetCellByPosition(20 , i).string &lt;&gt; &quot;&quot; then &apos;se trova dati 
+			if oSheet.GetCellByPosition(20 , i).string &lt;&gt; &quot;&quot; then &apos;se trova dati 
 			&apos; se non lo è chiedo se impostare la tenuta del libretto elettronico
 				if msgbox (&quot;Mi risulta ci siano dei numeri di pag. già scritti!&quot; &amp; CHR$(10)_
 						&amp; &quot; se procedo impostando adesso la Modalità Elettronica di tenuta del Libretto delle Misure quei dati saranno sovrascritti!&quot; &amp; CHR$(10)_
 						&amp; &quot; Sei certo di questo? (Magari cosulta la guida al capitolo: Libretto delle Misure)&quot; &amp; CHR$(10)_
-						&amp; &quot;               Proseguo ??&quot; &amp; CHR$(10)_
+						&amp; &quot; Proseguo ??&quot; &amp; CHR$(10)_
 						&amp; &quot;&quot; ,291, &quot;&quot;) &lt;&gt; 6 then
 						sMsg = &quot;interrompo&quot;
 				end if
@@ -250,16 +250,16 @@ Mostra_Tutto
 		if msgbox (&quot;Sei proprio certo di voler di voler impostare la modalità di tenuta del Libretto delle Misure in forma elettronica su questo foglio di Contabilità?&quot; &amp; CHR$(10)_
 				&amp; &quot; (Ti ricordo che i numeri di pagina saranno sovrascritti!&quot; &amp; CHR$(10)_
 						&amp; &quot; Sei certo di questo? (Magari cosulta la guida al capitolo: Libretto delle Misure)&quot; &amp; CHR$(10)_
-						&amp; &quot;               Proseguo ??&quot; &amp; CHR$(10)_
+						&amp; &quot; Proseguo ??&quot; &amp; CHR$(10)_
 						&amp; &quot;&quot; ,291, &quot;&quot;) &lt;&gt; 6 then
 						sMsg = &quot;interrompo&quot;
 				end if
 				if sMsg = &quot;interrompo&quot; then
 					exit sub
 		end if
-		For I = 4 To lrowFine Step 1  &apos; mbo.. è in test... elimina il numero del libretto quando si 
+		For I = 4 To lrowFine Step 1 &apos; mbo.. è in test... elimina il numero del libretto quando si 
 			&apos; communta da una modalità all&apos;altra
-			if  oSheet.GetCellByPosition(19 , i).string &lt;&gt; &quot;&quot; then 
+			if oSheet.GetCellByPosition(19 , i).string &lt;&gt; &quot;&quot; then 
 				oSheet.GetCellByPosition(19 , i).string = &quot;&quot;
 			end if
 		next
@@ -277,10 +277,10 @@ Mostra_Tutto
 	iLastRow = getLastUsedRow(oSheet)
 goto oltre:
 	for i=2 to iLastRow &apos; nasconde le righe di chiusura sal
-		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
+		if left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
 				oSheet.getRows().getByindex(i).isvisible = False
 		end if
-		if  (oSheet.GetCellByPosition(2 , (i)).CellStyle)= &quot;Comp TOTALI&quot; then
+		if (oSheet.GetCellByPosition(2 , (i)).CellStyle)= &quot;Comp TOTALI&quot; then
 				oSheet.getRows().getByindex(i).isvisible = True
 		end if
 	next
@@ -299,7 +299,7 @@ sub Reg_Sal_No_COL &apos; nome poco significativo... cosa c&apos;entra la Col?
 	
 	&apos;registro la posizione attuale del cursore &apos;minella
 	lrowStart = Range2Cell
-  &apos;	lrowStart=thisComponent.getCurrentSelection().getCellAddress().Row   
+ &apos;	lrowStart=thisComponent.getCurrentSelection().getCellAddress().Row 
 
 	Tabella1 = &quot;CONTABILITA&quot;
 	Config1 = &quot;Reg_sal&quot;
@@ -310,8 +310,8 @@ sub Reg_Sal_No_COL &apos; nome poco significativo... cosa c&apos;entra la Col?
 
 	
 	iLastRow = getLastUsedRow(oSheet)
-	for i=2 to iLastRow &apos; Visualizza le righe di chiusura sal           
-		if  left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; OR _
+	for i=2 to iLastRow &apos; Visualizza le righe di chiusura sal 
+		if left ( (oSheet.GetCellByPosition(2 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; OR _
 		oSheet.GetCellByPosition(2 , (i)).CellStyle= &quot;Comp TOTALI&quot;	then
 				oSheet.getRows().getByindex(i).isvisible = True
 		end if
@@ -341,17 +341,17 @@ sub Reg_Sal_N_on_off &apos; universale... per N SAL
 	Tabella1 = &quot;CONTABILITA&quot;
 	Config1 = &quot;Reg_sal&quot;
 	Carica_vista_da_schema(Tabella1, Config1)
-	sNumSal = InputBox (&quot;  Scrivi il NUMERO del SAL che vuoi VISUALIZZARE&quot;&amp; CHR$(10)_
-   							&amp; &quot; &quot;,&quot;          VISUALIZZA un SAL&quot;, &quot;1&quot;)&apos; &amp; CHR$(10) 
-   	If sNumSal = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
-   			exit sub		
-   	end if	
-   	dim iNumSal as integer
-   	iNumSal = sNumSal &apos; la trasformo in valore
+	sNumSal = InputBox (&quot; Scrivi il NUMERO del SAL che vuoi VISUALIZZARE&quot;&amp; CHR$(10)_
+ 							&amp; &quot; &quot;,&quot; VISUALIZZA un SAL&quot;, &quot;1&quot;)&apos; &amp; CHR$(10) 
+ 	If sNumSal = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
+ 			exit sub		
+ 	end if	
+ 	dim iNumSal as integer
+ 	iNumSal = sNumSal &apos; la trasformo in valore
 	iColSal = 11 + iNumSal
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	if iNumSal &lt;= 6 then 
-		If oSheet.getColumns().getByIndex (iColSal).isVisible = false  then
+		If oSheet.getColumns().getByIndex (iColSal).isVisible = false then
 				sMark = 1 
 			 else
 			 	sMark = 0 	 		
@@ -360,7 +360,7 @@ sub Reg_Sal_N_on_off &apos; universale... per N SAL
 	end if
 &apos;	oSheet = ThisComponent.currentController.activeSheet
 	for i=2 to getLastUsedRow(oSheet) 
-		if  left ( (oSheet.GetCellByPosition(1 , (i)).CellStyle),16 ) = &quot;Reg-SAL-chiudi_&quot; &amp; iNumSal then
+		if left ( (oSheet.GetCellByPosition(1 , (i)).CellStyle),16 ) = &quot;Reg-SAL-chiudi_&quot; &amp; iNumSal then
 				oSheet.getRows().getByindex(i).isvisible = sMark
 				oSheet.getRows().getByindex(i+1).isvisible = sMark				
 		end if
@@ -376,7 +376,7 @@ sub Reg_Sal_1_on_off
 	iNumSal = 1
 	iColSal = 11 + iNumSal
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByIndex (iColSal).isVisible = false  then
+	If oSheet.getColumns().getByIndex (iColSal).isVisible = false then
 			sMark = 1 
 		 else
 		 	sMark = 0 	 		
@@ -384,7 +384,7 @@ sub Reg_Sal_1_on_off
 	oSheet.getColumns().getByindex(iColSal).isVisible = sMark
 	oSheet = ThisComponent.currentController.activeSheet
 	for i=2 to getLastUsedRow(oSheet) 
-		if  left ( (oSheet.GetCellByPosition(1 , (i)).CellStyle),16 ) = &quot;Reg-SAL-chiudi_&quot; &amp; iNumSal then
+		if left ( (oSheet.GetCellByPosition(1 , (i)).CellStyle),16 ) = &quot;Reg-SAL-chiudi_&quot; &amp; iNumSal then
 				oSheet.getRows().getByindex(i).isvisible = sMark
 				oSheet.getRows().getByindex(i+1).isvisible = sMark				
 		end if
@@ -398,7 +398,7 @@ sub Reg_Sal_2_on_off
 	Config1 = &quot;Reg_sal&quot;
 	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;N&quot;).isVisible = false  then
+	If oSheet.getColumns().getByName(&quot;N&quot;).isVisible = false then
 			sMark = 1 
 		 else
 		 	sMark = 0 	 		
@@ -406,7 +406,7 @@ sub Reg_Sal_2_on_off
 	oSheet.getColumns().getByName(&quot;N&quot;).isVisible = sMark
 	oSheet = ThisComponent.currentController.activeSheet
 	for i=2 to getLastUsedRow(oSheet) 
-		if  left ( (oSheet.GetCellByPosition(1 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
+		if left ( (oSheet.GetCellByPosition(1 , (i)).CellStyle),8 ) = &quot;Reg-SAL-&quot; then
 				oSheet.getRows().getByindex(i).isvisible = sMark
 		end if
 	next
@@ -419,9 +419,9 @@ sub Reg_Sal_3_on_off
 	Config1 = &quot;Reg_sal&quot;
 	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;O&quot;).isVisible = false  then
+	If oSheet.getColumns().getByName(&quot;O&quot;).isVisible = false then
 			oSheet.getColumns().getByName(&quot;O&quot;).isVisible = TRUE 
-	  else	 		
+	 else	 		
 			oSheet.getColumns().getByName(&quot;O&quot;).isVisible = false 
 	end if
 end sub
@@ -433,9 +433,9 @@ sub Reg_Sal_4_on_off
 	Config1 = &quot;Reg_sal&quot;
 	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;P&quot;).isVisible = false  then
+	If oSheet.getColumns().getByName(&quot;P&quot;).isVisible = false then
 			oSheet.getColumns().getByName(&quot;P&quot;).isVisible = TRUE 
-	  else	 		
+	 else	 		
 			oSheet.getColumns().getByName(&quot;P&quot;).isVisible = false 
 	end if
 end sub
@@ -447,9 +447,9 @@ sub Reg_Sal_5_on_off
 	Config1 = &quot;Reg_sal&quot;
 	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;Q&quot;).isVisible = false  then
+	If oSheet.getColumns().getByName(&quot;Q&quot;).isVisible = false then
 			oSheet.getColumns().getByName(&quot;Q&quot;).isVisible = TRUE 
-	  else	 		
+	 else	 		
 			oSheet.getColumns().getByName(&quot;Q&quot;).isVisible = false 
 	end if
 end sub
@@ -458,7 +458,7 @@ sub manodopera_on_off
 	dim Tabella1 as string
 	dim Config1 as string
 	&apos;_____________________
-&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	Tabella1 = &quot;CONTABILITA&quot;
 	Config1 = &quot;Reg_sal&quot;
@@ -468,7 +468,7 @@ sub manodopera_on_off
 		oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = false	 then
 			oSheet.getColumns().getByName(&quot;AD&quot;).isVisible = TRUE 
 			oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = TRUE 
-	  else	 
+	 else	 
 			oSheet.getColumns().getByName(&quot;AD&quot;).isVisible = false 
 			oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = false 			
 	end if
@@ -480,7 +480,7 @@ sub sicurezza_on_off
 	dim Tabella1 as string
 	dim Config1 as string
 	&apos;_____________________
-&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) 
@@ -489,7 +489,7 @@ sub sicurezza_on_off
 	If oSheet.getColumns().getByName(&quot;R&quot;).isVisible = false then&apos;or _
 	&apos;	oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = false	 then
 			oSheet.getColumns().getByName(&quot;R&quot;).isVisible = TRUE 
-	  else	 
+	 else	 
 			oSheet.getColumns().getByName(&quot;R&quot;).isVisible = false 
 	end if
 end sub
@@ -497,7 +497,7 @@ end sub
 
 sub Residui_on_off
 	&apos;_____________________
-&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 &apos;	dim Tabella1 as string
 &apos;	dim Config1 as string
@@ -524,14 +524,14 @@ end sub
 sub progetto_imp_on_off
 	dim Tabella1 as string
 	dim Config1 as string
-	Tabella1 =  &quot;CONTABILITA&quot;
+	Tabella1 = &quot;CONTABILITA&quot;
 	Config1 = &quot;progetto_imp&quot;
 &apos;	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) 
 
-	If oSheet.getColumns().getByName(&quot;s&quot;).isVisible = false  then
+	If oSheet.getColumns().getByName(&quot;s&quot;).isVisible = false then
 			oSheet.getColumns().getByName(&quot;S&quot;).isVisible = TRUE 
-	  else	 		
+	 else	 		
 			oSheet.getColumns().getByName(&quot;S&quot;).isVisible = false 
 	end if
 
@@ -541,12 +541,12 @@ sub Quantita_prevista_aComputo_on_off
 	dim Tabella1 as string
 	dim Config1 as string
 	&apos;_____________________
-&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;j&quot;).isVisible = false  then
+	If oSheet.getColumns().getByName(&quot;j&quot;).isVisible = false then
 			oSheet.getColumns().getByName(&quot;j&quot;).isVisible = TRUE 
-	  else	 		
+	 else	 		
 			oSheet.getColumns().getByName(&quot;j&quot;).isVisible = false 
 	end if
 end sub
@@ -555,12 +555,12 @@ sub Figure_Annotazioni_Computo_on_off
 	dim Tabella1 as string
 	dim Config1 as string
 	&apos;_____________________
-&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = false  then
+	If oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = false then
 			oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = TRUE 
-	  else	 		
+	 else	 		
 			oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = false 
 	end if
 end sub
@@ -574,7 +574,7 @@ dim bValue as boolean
 dim sValue as string
 dim sString as string
 	&apos;_____________________
-&apos;	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
 iRow = 150
@@ -629,7 +629,7 @@ oSheet = ThisComponent.currentController.activeSheet
 &apos;	oCell = oSheet.GetCellByPosition(iNumCol, 2 )
 &apos;	ThisComponent.CurrentController.Select(oCell) 
 &apos;	bValue = oCell.Columns.IsVisible
-&apos;	sValue =  bValue
+&apos;	sValue = bValue
 &apos;	sList = sList + left(sValue, 1)
 &apos;next
 &apos;print sList
@@ -659,7 +659,7 @@ For i = 0 to 50
 &apos;	oCell = oSheet.GetCellByPosition(iNumCol, 2 )
 &apos;	ThisComponent.CurrentController.Select(oCell) 
 &apos;	bValue = oCell.Columns.IsVisible
-&apos;	sValue =  bValue
+&apos;	sValue = bValue
 &apos;	sList = sList + left(sValue, 1)
 next
 &apos;print sList
@@ -675,7 +675,7 @@ oSheetDest.GetCellByPosition(i+156+1 , iRow ).cellstyle=&quot;Bordo_fine&quot;
 &apos;oCell.string = sNomeConf
 oCell = oSheetDest.GetCellByPosition(i+156 , iRow )
 &apos;xray oSheetDest
-If oSheetDest.isVisible = false  then
+If oSheetDest.isVisible = false then
 		oSheetDest.isVisible = TRUE
  	else
  		oSheetDest.isVisible = false

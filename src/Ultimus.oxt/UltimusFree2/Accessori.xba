@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________	
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                            
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -22,7 +22,7 @@ Function Constrolla_se_M1
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-		cSheetName2 = aSheetNames( i ) &apos; get string from array    
+		cSheetName2 = aSheetNames( i ) &apos; get string from array 
 		If cSheetName2 = &quot;M1&quot; Then
 			Constrolla_se_M1 = true
 			Exit Function 
@@ -34,7 +34,7 @@ Function Constrolla_se_M1
 	
 	Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
 		oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;)
-		If oSheet.isVisible = false  then
+		If oSheet.isVisible = false then
 					oSheet.isVisible = TRUE
 					Thiscomponent.currentcontroller.setactivesheet(oSheet)
 			else
@@ -50,12 +50,12 @@ Function Constrolla_se_M1
 	
 	
 &apos; In questa tabella una serie di macro accessorie e non specifiche per Ultimus ma
-&apos;  possono essere usate dentro Ultimus... ed alcune sono richiamate direttamente da Ultimus
+&apos; possono essere usate dentro Ultimus... ed alcune sono richiamate direttamente da Ultimus
 	
 	
 &apos;_______________________________________________________________________________________++++++++++++++++++++
 &apos;NON FUNZIONA! Bisognerà farla a manina....
-	sub Consolida_perizia  &apos; Consolida una perizia di variante (approvata) &apos; (tasto NON ASSEGNATA)
+	sub Consolida_perizia &apos; Consolida una perizia di variante (approvata) &apos; (tasto NON ASSEGNATA)
 &apos; quindi da passare solo DOPO aver finito la perizia
 &apos; copia la colonna di &quot;prezzi totali variante&quot; su &quot;prezzi totali computo&quot;
 &apos; in questo modo i Sal (già presenti) si riferiscono adesso alla perizia
@@ -66,11 +66,11 @@ Function Constrolla_se_M1
 &apos; &quot;Computo_pincoPallo_Perizia_SAL4&quot;... &quot;Computo_pincoPallo_Perizia_SALfinale&quot;
 		rem ----------------------------------------------------------------------
 		rem define variables
-		dim document   as object
+		dim document as object
 		dim dispatcher as object
 		rem ----------------------------------------------------------------------
 		rem get access to the document
-		document   = ThisComponent.CurrentController.Frame
+		document = ThisComponent.CurrentController.Frame
 		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 		
 		rem ----------------------------------------------------------------------
@@ -152,7 +152,7 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 		oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
 		lSheetSRC = oRangeSRC.RangeAddress.sheet
 		iRowCountSRC = oRangeSRC.Rows.Count &apos; mumero di righe del range
-			 With oRangeSRC.RangeAddress
+		 With oRangeSRC.RangeAddress
 			iStartCol = .StartColumn
 			iStartRow =.StartRow
 			iEndCol = .EndColumn
@@ -161,7 +161,7 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 		
 			orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
 		ThisComponent.CurrentController.Select(orange_t)
-		sTitolo = &quot;Click sulla riga dove SPOSTARE la selezione  (ESC per Annullare, NO Click su X ) &quot;
+		sTitolo = &quot;Click sulla riga dove SPOSTARE la selezione (ESC per Annullare, NO Click su X ) &quot;
 			 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
 			 if SelectedRange = &quot;&quot; or _
 			 	SelectedRange = &quot;ANNULLA&quot; or _
@@ -173,7 +173,7 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 	lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
 &apos;	 lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
 		 lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet 
-		 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
+		 oSheetDest	= ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
 	
 	
 &apos; inserisci le righe
@@ -183,10 +183,10 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 	insRows (lrowDest, iRowCountSRC) &apos;insertByIndex non funziona
 &apos;	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
 	
-	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  si sposta sopra,,,
-		if lrowDest &lt;  iStartRow then
+	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando si sposta sopra,,,
+		if lrowDest &lt; iStartRow then
 			iStartRow = iStartRow + iRowCountSRC
-			iEndRow   = iEndRow   + iRowCountSRC
+			iEndRow = iEndRow + iRowCountSRC
 			K = +1
 &apos;	 print &quot;Su +1&quot;
 		end if
@@ -199,13 +199,13 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 	oSheetDest.copyRange(oDest, oSrc)
 	
 &apos; rimuove il range sorgente ... commmentare se non serve
-&apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
+&apos; idea: Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
 	myrows = oSheetDest.getrows
 		oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
 &apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
 	myrows.removebyindex(iStartRow,iRowCountSRC)
 		if oSheetDest.name = oSheetSRC.name then
-			if lrowDest &lt;  iStartRow then
+			if lrowDest &lt; iStartRow then
 			orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest+k+1,250,lrowDest+iRowCountSRC+k)
 		else
 						orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest-iRowCountSRC+k+1,250,lrowDest+k)
@@ -246,7 +246,7 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 		
 			orange_t = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow)
 		ThisComponent.CurrentController.Select(orange_t)
-		sTitolo = &quot;Click sulla riga dove SPOSTARE la selezione  (ESC per Annullare, NO Click su X ) &quot;
+		sTitolo = &quot;Click sulla riga dove SPOSTARE la selezione (ESC per Annullare, NO Click su X ) &quot;
 			 SelectedRange = getRange(sTitolo) &apos; richiama il listeners
 			 if SelectedRange = &quot;&quot; or _
 			 	SelectedRange = &quot;ANNULLA&quot; or _
@@ -258,7 +258,7 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 	lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
 &apos;	 lrowDest = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
 		 lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet 
-		 oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
+		 oSheetDest	= ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet dest
 	
 	
 &apos; inserisci le righe
@@ -268,10 +268,10 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 	insRows (lrowDest, iRowCountSRC) &apos;insertByIndex non funziona
 &apos;	oSheetDest.getRows.insertByIndex(lrowDest, iRowCountSRC)
 	
-	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando  si sposta sopra,,,
-		if lrowDest &lt;  iStartRow then
+	If lSheetSRC = lSheetDest then &apos; Trucchetto per spostare il range SRC quando si sposta sopra,,,
+		if lrowDest &lt; iStartRow then
 			iStartRow = iStartRow + iRowCountSRC
-			iEndRow   = iEndRow   + iRowCountSRC
+			iEndRow = iEndRow + iRowCountSRC
 			K = +1
 &apos;	 print &quot;Su +1&quot;
 		end if
@@ -284,13 +284,13 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 	oSheetDest.copyRange(oDest, oSrc)
 	
 &apos; rimuove il range sorgente ... commmentare se non serve
-&apos; idea:  Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
+&apos; idea: Inserire una msgbox di scelta... Taglio o Copio? @@@@ da fare
 	myrows = oSheetDest.getrows
 		oSheetDest.unprotect(&quot;&quot;) &apos; ma prima bisogna sproteggere la sheet
 &apos;altrimenti getbyindex non funzia (prob si può eliminare... il computo veniva protetto per errore...
 &apos;	myrows.removebyindex(iStartRow,iRowCountSRC)
 		if oSheetDest.name = oSheetSRC.name then
-			if lrowDest &lt;  iStartRow then
+			if lrowDest &lt; iStartRow then
 			orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest+k+1,250,lrowDest+iRowCountSRC+k)
 		else
 						orange_t =oSheetDest.getCellRangeByPosition(0,lrowDest-iRowCountSRC+k+1,250,lrowDest+k)
@@ -322,7 +322,7 @@ Dim lcolorSRC as long
 		oCellSRC=ThisComponent.getCurrentSelection()
 		lcolorSRC = oCellSRC.Cellbackcolor
 &apos;		xray lcolorSRC
-		sTitolo = &quot; COLORE Prelevato: seleziona destinazione   (ESC per Annullare, NO Click su X )  &quot;
+		sTitolo = &quot; COLORE Prelevato: seleziona destinazione (ESC per Annullare, NO Click su X ) &quot;
 	&apos;	SelectedRange = getRange_colore(sTitolo) &apos; richiama il listeners (specifico)&apos;
 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners generico
 		&apos; che restuisce un address come stringa	
@@ -334,7 +334,7 @@ Dim lcolorSRC as long
 		 	exit sub
 	 	end if 	
 	 	lSheetDest=	getSheet(SelectedRange) &apos;numero della sheet (anche un&apos;altra da SRC)
-		oSheetDest	=  ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet
+		oSheetDest	= ThisComponent.Sheets.getByIndex(lSheetDest)&apos; oggetto sheet
 		oRangeDest = oSheetDest.getCellRangeByName(SelectedRange) &apos; oggetto range di destinazione
 	 	oRangeDest.Cellbackcolor = lcolorSRC
 Thiscomponent.currentcontroller.setactivesheet(oSheetDest)
@@ -364,7 +364,7 @@ Sub TestRangeSelection_Colore(sTitolo as string) &apos;listener specifico per co
 	mArgs(0).Name = &quot;InitialValue&quot;
 	mArgs(0).Value = &quot;ANNULLA&quot;
 	mArgs(1).Name = &quot;Title&quot;
-	mArgs(1).Value = sTitolo &apos;&quot;  Copia il COLORE di SFONDO... fai Click sulla destinazione........................&quot; &apos;My Title&quot;
+	mArgs(1).Value = sTitolo &apos;&quot; Copia il COLORE di SFONDO... fai Click sulla destinazione........................&quot; &apos;My Title&quot;
 	mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
 	mArgs(2).Value = True
 	oDocView.startRangeSelection(mArgs())
@@ -376,7 +376,7 @@ sub copia_solo_colore_Sfondo333
 oCellSRC=ThisComponent.getCurrentSelection()
 lcolorSRC=oCellSRC.Cellbackcolor &apos;-- Cattura il
 &apos; colore della prima cella selezionata 
-a = MsgBox(&quot;Se vuoi applicare il colore della cella selezionata ad altre celle premi oK,  e poi seleziona la destinazione con il mouse ...  &quot;_
+a = MsgBox(&quot;Se vuoi applicare il colore della cella selezionata ad altre celle premi oK, e poi seleziona la destinazione con il mouse ... &quot;_
 , 128 + 32 + 1 , &quot; Click sulla destinazione&quot;)
 &apos;Qui ho aggiunto un box con tanto di pulsanti OK Annulla
 &apos;Annulla serve nel caso l&apos; utente dia inizio al processo 
@@ -386,7 +386,7 @@ If a = 2 Then Exit Sub
 
 Sel_Range=getTheRange()
 If IsNull(Sel_Range) Then Exit Sub &apos;Se, malauguratamente
-&apos; non dovesse tornare niente da getTheRange, si esce                       
+&apos; non dovesse tornare niente da getTheRange, si esce 
 Sel_Range.Cellbackcolor = lcolorSRC
 END SUB
 
@@ -441,12 +441,12 @@ lcol = 0 &apos; in Ultimus lo pongo = 0 perchè nella tabella di Computo di Ulti
 &apos;(Altrimenti le va a cercare nelle colonne nascoste... )
 
 ripeti:
-&apos;	print &quot;lrow prima di ripetere &quot; &amp; lcol &amp; &quot;  &amp;  &quot; &amp; lrow
+&apos;	print &quot;lrow prima di ripetere &quot; &amp; lcol &amp; &quot; &amp; &quot; &amp; lrow
 Barra_chiudi_sempre_4
 Barra_Apri_Chiudi_5(&quot;.. cerca...cerca... cerca....&quot;, 50)
 oOrigine=uFindError(oSheet,lrow, lcol)
 &apos;exit sub
-if IsNull (oOrigine)  then &apos; se non trova valori di errore
+if IsNull (oOrigine) then &apos; se non trova valori di errore
 	if msgbox (CHR$(10) &amp;&quot;Non trovo più valori con Errore...&quot; &amp; CHR$(10)&amp; CHR$(10)_
 	&amp; &quot; Vuoi effettuare la ricerca dall&apos;inizio del foglio? &quot;&amp; CHR$(10)&amp; CHR$(10)_
 	&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
@@ -499,18 +499,18 @@ nEndRow = aAddress.EndRow
 nEndCol = aAddress.EndColumn
 &apos; print &quot;cerco in &quot; &amp; nCurRow &amp; &quot; - &quot; &amp; nEndRow
 
-For nCurRow = lrow To nEndRow     &apos;row by row.
-For nCurCol = lcol To nEndCol       &apos;Go through the range column by column, col by col
+For nCurRow = lrow To nEndRow &apos;row by row.
+For nCurCol = lcol To nEndCol &apos;Go through the range column by column, col by col
 	oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
-	lFind = oCell.Error       
+	lFind = oCell.Error 
 	If lFind &lt;&gt; 0 and _
-		 oSheet.getColumns().getByIndex(nCurCol).isVisible=true  then
+		 oSheet.getColumns().getByIndex(nCurCol).isVisible=true then
 		 
-&apos;  PRINT &quot;RQNGE  &quot; &amp; nEndRow &amp; &quot;  &quot; &amp; nCurRow
+&apos; PRINT &quot;RQNGE &quot; &amp; nEndRow &amp; &quot; &quot; &amp; nCurRow
 	
 	uFindError = oCell
-&apos;     ThisComponent.CurrentController.Select(oCell)
-&apos;    print
+&apos; ThisComponent.CurrentController.Select(oCell)
+&apos; print
 	Exit Function
 End If
 Next
@@ -519,7 +519,7 @@ Barra_Chiudi_sempre_4
 msgbox &quot;finito... non trovo valori N/D...&quot;
 End Function
 
-Sub MINUSCOLO &apos; cTRL -Alt - M  Lavora solo su una cella e se è selezionato
+Sub MINUSCOLO &apos; cTRL -Alt - M Lavora solo su una cella e se è selezionato
 &apos;un range avverte che ha &quot;lavorato solo la prima.
 &apos; ààà-4
 oSheet = ThisComponent.currentController.activeSheet
@@ -560,11 +560,11 @@ oSRC = oSheetSRC.GetCellByPosition(9,54,9,54).RangeAddress
 &apos;		oSheet.copyRange(oCellDest,oSRC)
 
 &apos;	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
-&apos;   oSheet2.copyRange(oCell,oQuellRangeAddresse)
+&apos; oSheet2.copyRange(oCell,oQuellRangeAddresse)
 
 &apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
-&apos;   oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
-&apos;   oSheetDest.copyRange(oDest, oSrc)
+&apos; oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+&apos; oSheetDest.copyRange(oDest, oSrc)
 
 End Sub
 
@@ -585,12 +585,12 @@ end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
 oCell = oSheet.GetCellByPosition(lcol , lrow)
 strTemp = oCell.string
 strTemp = LCase(strTemp)
-oCell.string = Join(Split(oCell.String, &quot;  &quot;, &quot;&quot;)&apos; = LCase(strTemp)
-oCell.string = Join(Split(oCell.String, &quot;   &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot;     &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot;  &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot;   &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot;     &quot;, &quot;&quot;)
+oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)&apos; = LCase(strTemp)
+oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
 oCell.string = Join(Split(oCell.String, Chr(10)), &quot;&quot;)
 oCell.string = Join(Split(oCell.String, Chr(9)), &quot;&quot;)
 oCell.string = Join(Split(oCell.String,&quot;- &quot;, &quot;&quot;)
@@ -686,7 +686,7 @@ end sub
 &apos;DA FARE
 &apos; ààà individua un nodo o un problema in giro per i moduli&apos;
 &apos; il numero che segue la priorità: 
-&apos; 1 Molto importante...  
+&apos; 1 Molto importante... 
 &apos; aumentando i numeri scende...
 
 
@@ -704,7 +704,7 @@ end sub
 
 
 
-&apos; Automatizzare la perizia di variante?  Operazione fattibile a mano velocemente...
+&apos; Automatizzare la perizia di variante? Operazione fattibile a mano velocemente...
 &apos; ... magari scrivere solo un promemoria su &quot;come fare&quot;
 
 &apos; BLOCCARE I COMANDI DURANTE L&apos;ESECUZIONE DI UNA MACRO!!!!! 

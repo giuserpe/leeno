@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Import_acc" script:language="StarBasic">
-REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -17,12 +17,12 @@ REM  *****  BASIC  *****
 Sub ForceCSVOpen &apos;main
 &apos;print &quot;3&quot;
 &apos;Use this line if you always want to load the same file at the same location
-&apos;sUrl     = &quot;file:///C:/WINDOWS/Desktop/test2.csv&quot;   
+&apos;sUrl = &quot;file:///C:/WINDOWS/Desktop/test2.csv&quot; 
 
 &apos;Alternatively, use this line if you want to browse for the file
-&apos;sUrl    = BrowseForFile(&quot;Browse for File to be imported as CSV&quot;, &quot;any file&quot;, &quot;C:\windows\desktop&quot;, &quot;*.*&quot;)
-sUrl  = converttourl(&quot;c:\p_importato.csv&quot;)
-&apos;sUrl  = converttourl(&quot;c:\tempo_csv.txt&quot;)
+&apos;sUrl = BrowseForFile(&quot;Browse for File to be imported as CSV&quot;, &quot;any file&quot;, &quot;C:\windows\desktop&quot;, &quot;*.*&quot;)
+sUrl = converttourl(&quot;c:\p_importato.csv&quot;)
+&apos;sUrl = converttourl(&quot;c:\tempo_csv.txt&quot;)
 &apos;use this line if you always want to use the same specifications for the CSV import
 &apos;for details, check http://api.openoffice.org/docs/DevelopersGuide/Spreadsheet/Spreadsheet.htm#1+2+2+3+2+Filter+Options+for+the+CSV+Filter
 &apos;sFilter = &quot;CHR(64),,ANSI,1,&quot; &apos; Tab (Chr(9)) delimiter, no text delimiter, ANSI coding
@@ -50,33 +50,33 @@ End Sub
 
 function loadCSVfromURL(sUrl as String, sFilter as String, bHidden as Boolean) as Object
 Dim aProps(2) As New com.sun.star.beans.PropertyValue
-aProps(0).Name  = &quot;FilterName&quot;
+aProps(0).Name = &quot;FilterName&quot;
 aProps(0).Value = &quot;Text - txt - csv (StarCalc)&quot;
-aProps(1).Name  = &quot;FilterOptions&quot;
-aProps(1).Value = sFilter   
-aProps(2).Name  = &quot;Hidden&quot;
+aProps(1).Name = &quot;FilterOptions&quot;
+aProps(1).Value = sFilter 
+aProps(2).Name = &quot;Hidden&quot;
 aProps(2).Value = bHidden
-loadCSVfromURL  = StarDesktop.loadComponentFromURL(sUrl, &quot;_blank&quot;, 0, aProps())
+loadCSVfromURL = StarDesktop.loadComponentFromURL(sUrl, &quot;_blank&quot;, 0, aProps())
 end function
 &apos;----------
-&apos;   Lets the user select a file with a given filter
-&apos;   call like sFile = BrowseForFile(&quot;Pick the file downloaded from Postbank&quot;, &quot;Postbank download file&quot;, &quot;C:\Windows\Desktop&quot;,&quot;PB*.csv&quot;)
-&apos;   returns &quot;&quot; when not successful
+&apos; Lets the user select a file with a given filter
+&apos; call like sFile = BrowseForFile(&quot;Pick the file downloaded from Postbank&quot;, &quot;Postbank download file&quot;, &quot;C:\Windows\Desktop&quot;,&quot;PB*.csv&quot;)
+&apos; returns &quot;&quot; when not successful
 
 function BrowseForFile(sTitle as String, sFilterName as String, sStartDirectory as String, sFilter as String) as String
 dim ars
 o=CreateUnoService(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
 o.setTitle(sTitle)
-o.appendFilter(  sFilterName &amp; &quot; (&quot; &amp; sFilter &amp; &quot;)&quot;, sFilter)
+o.appendFilter( sFilterName &amp; &quot; (&quot; &amp; sFilter &amp; &quot;)&quot;, sFilter)
 o.setMultiSelectionMode(false)
 o.setDisplayDirectory(ConvertToUrl(sStartDirectory))
  
 if o.execute() = com.sun.star.ui.dialogs.ExecutableDialogResults.OK then
-  ars = o.getFiles()
-  BrowseForFile = ars(UBound(ars))
-  else
-  BrowseForFile = &quot;&quot;
-  endif
+ ars = o.getFiles()
+ BrowseForFile = ars(UBound(ars))
+ else
+ BrowseForFile = &quot;&quot;
+ endif
 end function
 
 
@@ -100,9 +100,9 @@ o = createUnoService(&quot;com.sun.star.ui.dialogs.FilterOptionsDialog&quot;)
 o.setPropertyValues(aProps())
 
 if o.execute() = com.sun.star.ui.dialogs.ExecutableDialogResults.OK then
-  aPropOut = o.getPropertyValues()
-  GetFilterOptionsFromCSVImportDialog = aPropOut(0).Value
-  endif
+ aPropOut = o.getPropertyValues()
+ GetFilterOptionsFromCSVImportDialog = aPropOut(0).Value
+ endif
 oInputStream.closeInput()
 end function 
 
@@ -111,7 +111,7 @@ end function
 
 
 Sub Main_Conversione &apos;da pwe a OO
-    Clessid_lock_Start
+ Clessid_lock_Start
 &apos;print &quot;1&quot;
 &apos;If ErroreDet = 1 then 
 &apos;	on error goto Errore
@@ -130,10 +130,10 @@ Dim sInputFilePath as string
 Dim sOutputFilePath as string
 &apos;dim sSuperC1 as string
 &apos;Dim oUcb as Object
-sInputFilePath   = BrowseForFile(&quot;Browse for File.pwe to be imported as CSV&quot;, &quot;&quot;, &quot;C:\windows\desktop&quot;, &quot;*.pwe&quot;)
-sInputFilePath   = converttourl(sInputFilePath) 
-  &apos;  sInputFilePath = converttourl(&quot;c:\restauri.pwe&quot;)
-    sOutputFilePath = converttourl(&quot;c:\tempo_csv.txt&quot;)
+sInputFilePath = BrowseForFile(&quot;Browse for File.pwe to be imported as CSV&quot;, &quot;&quot;, &quot;C:\windows\desktop&quot;, &quot;*.pwe&quot;)
+sInputFilePath = converttourl(sInputFilePath) 
+ &apos; sInputFilePath = converttourl(&quot;c:\restauri.pwe&quot;)
+ sOutputFilePath = converttourl(&quot;c:\tempo_csv.txt&quot;)
 
 	sCRLF = CHR(13) &amp; CHR(10) &apos;Serve per andare a capo
 &apos;Apre il file da cui devi leggere
@@ -156,59 +156,59 @@ sInputFilePath   = converttourl(sInputFilePath)
 	oOutputStream.SetOutputStream(oOutputFile.GetOutputStream)
 &apos;xray oInputStream
 
-	Do Until  oInputStream.IsEOF
+	Do Until oInputStream.IsEOF
 	&apos;	sLineaDaScrivere = &quot;&quot;
 
 		do 
 			sLineaLetta = oInputStream.ReadLine
 
 				if sLineaLetta= &quot;PWE (PriMus EXCHANGE) - by ACCA&quot; then
-					  sLinea = &quot;@@@@&quot; &amp; sInputFilePath &amp; CHR(13) &amp; CHR(10)
+					 sLinea = &quot;@@@@&quot; &amp; sInputFilePath &amp; CHR(13) &amp; CHR(10)
 				end if
-				if sLineaLetta= &quot;2.00&quot; then  sLinea =  &quot;&quot; &apos;&amp; CHR(13) &amp; CHR(10)
-				if sLineaLetta= &quot;ANSI&quot; then  sLinea = sLinea = &quot; &quot;&apos;&amp; CHR(13) &amp; CHR(10)
+				if sLineaLetta= &quot;2.00&quot; then sLinea = &quot;&quot; &apos;&amp; CHR(13) &amp; CHR(10)
+				if sLineaLetta= &quot;ANSI&quot; then sLinea = sLinea = &quot; &quot;&apos;&amp; CHR(13) &amp; CHR(10)
 			&apos;	if sLineaLetta = &quot;@;Inizio Dati Generali&quot; then
 			&apos;		exit do
 			&apos;	end if
 				
-				if Left(sLineaLetta, 2) = &quot;@a&quot; then sLinea =  &quot;&quot;
-				if Left(sLineaLetta, 2) = &quot;@b&quot; then sLinea =  &quot;&quot;
-				if Left(sLineaLetta, 2) = &quot;@c&quot; then sLinea =  &quot;&quot;
-				if Left(sLineaLetta, 2) = &quot;@d&quot; then sLinea =  &quot;&quot;
-				if Left(sLineaLetta, 2) = &quot;@e&quot; then sLinea =  &quot;&quot;
-				if Left(sLineaLetta, 2) = &quot;@f&quot; then sLinea =  &quot;&quot;
-				if Left(sLineaLetta, 2) = &quot;@g&quot; then sLinea =  &quot;&quot;
-				if Left(sLineaLetta, 2) = &quot;@h&quot; then sLinea =  &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@a&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@b&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@c&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@d&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@e&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@f&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@g&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@h&quot; then sLinea = &quot;&quot;
 
-				if Left(sLineaLetta, 2) = &quot;@m&quot; then sLinea =  &quot;&quot;	
-				if Left(sLineaLetta, 2) = &quot;@n&quot; then sLinea =  &quot;&quot;		
-				if Left(sLineaLetta, 2) = &quot;@9&quot; then sLinea =  &quot;&quot; &apos; ci sono molti 9 (9a, 9b etc)
-				if Left(sLineaLetta, 2) = &quot;@;&quot; then sLinea =  &quot;&quot;			
+				if Left(sLineaLetta, 2) = &quot;@m&quot; then sLinea = &quot;&quot;	
+				if Left(sLineaLetta, 2) = &quot;@n&quot; then sLinea = &quot;&quot;		
+				if Left(sLineaLetta, 2) = &quot;@9&quot; then sLinea = &quot;&quot; &apos; ci sono molti 9 (9a, 9b etc)
+				if Left(sLineaLetta, 2) = &quot;@;&quot; then sLinea = &quot;&quot;			
 			
 				if Left(sLineaLetta, 2) = &quot;@i&quot; then 
-					sSuperC1 =  (right(sLineaLetta, len(sLineaLetta) - 2))
-					sLinea =  &quot;&quot;
+					sSuperC1 = (right(sLineaLetta, len(sLineaLetta) - 2))
+					sLinea = &quot;&quot;
 				end if
 			
-				if Left(sLineaLetta, 2) = &quot;@j&quot; then sLinea =  &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@j&quot; then sLinea = &quot;&quot;
 			
 				If Left(sLineaLetta, 2) = &quot;@k&quot; then
 					 sC1 = (right(sLineaLetta, len(sLineaLetta) - 2))
-					sLinea =  &quot;&quot;
+					sLinea = &quot;&quot;
 				end if
 				if Left(sLineaLetta, 2) = &quot;@l&quot; then
 					 sSubC1 = (right(sLineaLetta, len(sLineaLetta) - 2))
-					sLinea =  &quot;&quot;
+					sLinea = &quot;&quot;
 				end if
 			
 				if Left(sLineaLetta, 2) = &quot;@H&quot; then
 			
-					 lInd1 =  (right(sLineaLetta, len(sLineaLetta) - 2))
+					 lInd1 = (right(sLineaLetta, len(sLineaLetta) - 2))
 					&apos; print lInd1
 					 lInd1 = (CInt(lInd1)) -1
-				     lpos  = 1
+				 lpos = 1
 					 for i=1 to lInd1	 	
-						   lpos  = InStr (lpos+1, sSuperC1, &quot;|&quot;)  
+						 lpos = InStr (lpos+1, sSuperC1, &quot;|&quot;) 
 					 next
 					 if lpos = 1 then lpos = lpos-1				 
 					 sSuperC = Mid(sSuperC1, lpos+1,(Len (sSuperC1))- lpos)
@@ -216,50 +216,50 @@ sInputFilePath   = converttourl(sInputFilePath)
 					 If InStr (sSuperC, &quot;|&quot;) &gt; 0 then
 						 sSuperC = Left(sSuperC, (InStr (sSuperC, &quot;|&quot;))-1 
 					 end if
-					 sLinea =  &quot;&quot; 	
+					 sLinea = &quot;&quot; 	
 				end if
 				if Left(sLineaLetta, 2) = &quot;@J&quot; then
-					 lInd1 =  (right(sLineaLetta, len(sLineaLetta) - 2))
+					 lInd1 = (right(sLineaLetta, len(sLineaLetta) - 2))
 					 lInd1 =(CInt(lInd1)) -1
-				     lpos  = 1
+				 lpos = 1
 					 for i=1 to lInd1				 	
-					   lpos  = InStr (lpos+1, sC1, &quot;|&quot;)  
+					 lpos = InStr (lpos+1, sC1, &quot;|&quot;) 
 					 next
 					 if lpos = 1 then lpos = lpos-1
 					 sC = Mid(sC1, lpos+1,(Len (sC1))- lpos)
 					 If InStr (sC, &quot;|&quot;) &gt; 0 then
 						 sC = Left(sC, (InStr (sC, &quot;|&quot;))-1 &apos;&amp; CHR(13)&amp; CHR(10)
 					 end if
-					 sLinea =  &quot;&quot; 
+					 sLinea = &quot;&quot; 
 						 
 				end if	
 				if Left(sLineaLetta, 2) = &quot;@K&quot; then
-					 lInd1 =  (right(sLineaLetta, len(sLineaLetta) - 2))
+					 lInd1 = (right(sLineaLetta, len(sLineaLetta) - 2))
 					 lInd1 =(CInt(lInd1)) -1
-				     lpos  = 1
+				 lpos = 1
 					 for i=1 to lInd1				 	
-					   lpos  = InStr (lpos+1, sSubC1, &quot;|&quot;)  
+					 lpos = InStr (lpos+1, sSubC1, &quot;|&quot;) 
 					 next
 					 if lpos = 1 then lpos = lpos-1
 						 sSubC = Mid(sSubC1, lpos+1,(Len (sSubC1))- lpos)
 					 If InStr (sSubC, &quot;|&quot;) &gt; 0 then
 					 	sSubC = Left(sSubC, (InStr (sSubC, &quot;|&quot;))-1 &apos;&amp; CHR(13) 
 					 end if
-					 sLinea =  &quot;&quot; 
+					 sLinea = &quot;&quot; 
 				end if	&apos;
 				
 				if Left(sLineaLetta, 2) = &quot;@V&quot; then
-					 sLinea =  &quot;@&quot; &amp; &quot;&apos;&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;&amp; sCRLF &apos; codice mod Acca
+					 sLinea = &quot;@&quot; &amp; &quot;&apos;&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;&amp; sCRLF &apos; codice mod Acca
 				end if
 			&apos;
 
 				If Left(sLineaLetta, 2) = &quot;@A&quot; then sLinea= &quot;&quot;	&apos; codice originale Basilicata		
-				if Left(sLineaLetta, 2) = &quot;@;&quot; then sLinea =  &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@;&quot; then sLinea = &quot;&quot;
 				if Left(sLineaLetta, 2) = &quot;@I&quot; then sLinea = &quot;@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos; n. progressivo... creato dal pwe..
 				if Left(sLineaLetta, 2) = &quot;@R&quot; then sLinea= &quot;@Z&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2))
 	&apos;			if Left(sLineaLetta, 2) = &quot;@R&quot; then sLinea = &quot;@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;descr sintetica (eliminare?)
 	
-				if Left(sLineaLetta, 2) = &quot;@D&quot; then  &apos;&amp; &quot; &quot; &apos; descrizione estesa
+				if Left(sLineaLetta, 2) = &quot;@D&quot; then &apos;&amp; &quot; &quot; &apos; descrizione estesa
 						sLinea = &quot;@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2))&amp; &quot; &quot;
 				&apos;		sLineaLetta2 = oInputStream.ReadLine
 				&apos;		if Left(sLineaLetta2,2 ) &lt;&gt; &quot;@U&quot; then
@@ -282,12 +282,12 @@ sInputFilePath   = converttourl(sInputFilePath)
 				end if 
 				 
 				if Left(sLineaLetta, 2) = &quot;@U&quot; then sLinea = &quot;@@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;um
-				if Left(sLineaLetta, 2) = &quot;@N&quot; then sLinea =  &quot;&quot;
-				If Left(sLineaLetta, 2) = &quot;@Y&quot; then sLinea =  &quot;&quot;	&apos; si elimina				
-				if Left(sLineaLetta, 2) = &quot;@F&quot; then sLinea =  &quot;&quot;
-	&apos;ò			if Left(sLineaLetta, 2) = &quot;@O&quot; then sLinea =  &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@N&quot; then sLinea = &quot;&quot;
+				If Left(sLineaLetta, 2) = &quot;@Y&quot; then sLinea = &quot;&quot;	&apos; si elimina				
+				if Left(sLineaLetta, 2) = &quot;@F&quot; then sLinea = &quot;&quot;
+	&apos;ò			if Left(sLineaLetta, 2) = &quot;@O&quot; then sLinea = &quot;&quot;
 				if Left(sLineaLetta, 2) = &quot;@O&quot; then sLinea = &quot;@XX&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;ò
-				if Left(sLineaLetta, 2) = &quot;@0&quot; then sLinea =  &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@0&quot; then sLinea = &quot;&quot;
 				if Left(sLineaLetta, 2) = &quot;@P&quot; then 
 						if sLineaLetta= &quot;@P0|0|0|0|0&quot; then 
 							sLinea= &quot;&quot;&apos; &amp; CHR(13) &amp; CHR(10)
@@ -309,9 +309,9 @@ sInputFilePath   = converttourl(sInputFilePath)
 	
 		&apos;loop Until Left(sLineaLetta, 2) &lt;&gt; &quot;@P&quot;
 		&apos;		if Left(sLineaLetta, 2) &lt;&gt; &quot;@0&quot;
-			&apos;	print &quot;chiudo riga &quot;  &amp; sLineaDaScrivere
+			&apos;	print &quot;chiudo riga &quot; &amp; sLineaDaScrivere
 			temp:
-  			sLineaDaScrivere =    sSuperC &amp; &quot; - &quot; &amp; sC &amp; &quot; - &quot; &amp;  sSubC  &amp; sLineaDaScrivere
+ 			sLineaDaScrivere = sSuperC &amp; &quot; - &quot; &amp; sC &amp; &quot; - &quot; &amp; sSubC &amp; sLineaDaScrivere
 			sSuperC=&quot;&quot;
 			sC=&quot;&quot;
 			sSubC =&quot;&quot;
@@ -353,7 +353,7 @@ sInputFilePath   = converttourl(sInputFilePath)
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 End Sub
 
 
@@ -364,8 +364,8 @@ Sub Ri_passaggio
 &apos;	on error goto Errore
 &apos;end if 
 
-    Clessid_lock_Start
-    
+ Clessid_lock_Start
+ 
 Dim oInputFile as Object
 Dim oOutputStream as Object
 Dim oStreamString as Object
@@ -378,9 +378,9 @@ Dim sLineaDaScrivere as string
 Dim sInputFilePath as string
 Dim sOutputFilePath as string
 
- &apos;   sInputFilePath = converttourl(&quot;c:\prova4.txt&quot;)
-  sInputFilePath = converttourl(&quot;c:\tempo_csv.txt&quot;)
-    sOutputFilePath = converttourl(&quot;c:\p_importato.csv&quot;)
+ &apos; sInputFilePath = converttourl(&quot;c:\prova4.txt&quot;)
+ sInputFilePath = converttourl(&quot;c:\tempo_csv.txt&quot;)
+ sOutputFilePath = converttourl(&quot;c:\p_importato.csv&quot;)
 
 	sCRLF = CHR(13) &amp; CHR(10) &apos;Serve per andare a capo
 &apos;Apre il file da cui devi leggere
@@ -403,14 +403,14 @@ Dim sOutputFilePath as string
 	oOutputStream.SetOutputStream(oOutputFile.GetOutputStream)
 &apos;xray oInputStream
 
-	Do Until  oInputStream.IsEOF
+	Do Until oInputStream.IsEOF
 		sLineaDaScrivere = &quot;&quot;
 	&apos;	Do
 			sLineaLetta = oInputStream.ReadLine
 			sLinea = sLineaLetta
 			ricerca =&quot;@XX1&quot;
 		&apos;	print slinea
-		If InStr (1,  sLinea,&quot;@XX1&quot;) &lt;&gt; 0 then
+		If InStr (1, sLinea,&quot;@XX1&quot;) &lt;&gt; 0 then
 			&apos;	sLinea = Replace(sLinea, &quot;@XX1&quot;, &quot;@&quot;)
 			&apos;&apos;&apos;	slinea = &quot;@@&quot; &amp; slinea
 		&apos;&apos;	&apos;	sLinea = Replace(sLinea, &quot;@Z&quot;, &quot;@@&quot;)
@@ -457,13 +457,13 @@ Sub Conversione_2&apos;(sOutputFilePath)
 &apos;print	thiscomponent.getURL()	
 
 &apos;	print &quot;sorgente...: &quot; &amp; sSorgente
-	sInputFilePath   = BrowseForFile(&quot;CERCA IL FILE Template_Prezzario.ods  E APRILO... &quot;, &quot;&quot;, &quot;C:\windows\desktop&quot;, &quot;*.ods&quot;)
+	sInputFilePath = BrowseForFile(&quot;CERCA IL FILE Template_Prezzario.ods E APRILO... &quot;, &quot;&quot;, &quot;C:\windows\desktop&quot;, &quot;*.ods&quot;)
 &apos;
 	sDestinazione = sInputFilePath 
 
 	sUrlDest = converttourl(sDestinazione)
 	
-	oDocDest=stardesktop.LoadComponentFromUrl(sUrlDest, &quot;_default&quot;, 0, Array())  
+	oDocDest=stardesktop.LoadComponentFromUrl(sUrlDest, &quot;_default&quot;, 0, Array()) 
 	wait 1000 
 	print	thiscomponent.getURL()
 	sNameDest2 = FileNameOutOfPath(ThisComponent.getURL() )
@@ -476,7 +476,7 @@ Sub Conversione_2&apos;(sOutputFilePath)
 &apos;	sNameDest2	= &quot;Template_Prezzario-TV&quot;
 
 	
-&apos;	sUrlSrc  = converttourl(&quot;c:\p_importato&quot;)
+&apos;	sUrlSrc = converttourl(&quot;c:\p_importato&quot;)
 &apos;	sUrlSrc = ThisComponent.getURL()
 &apos;	print sUrlSrc
 	oDocsrc=stardesktop.LoadComponentFromUrl(sUrlSrc, &quot;_default&quot;, 0, Array())
@@ -494,7 +494,7 @@ Sub Conversione_2&apos;(sOutputFilePath)
 &apos;xray oDocsrc
 	oDocsrc.Close(true) &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;*********************
 	
-	oDocsrc=stardesktop.LoadComponentFromUrl(sUrlDest, &quot;_default&quot;, 0, Array())   
+	oDocsrc=stardesktop.LoadComponentFromUrl(sUrlDest, &quot;_default&quot;, 0, Array()) 
 &apos;	oSheets = oDoc.Sheets
 &apos;xray ThisComponent
 	oSheet = ThisComponent.Sheets.getByName(&quot;Tabella1&quot;) 
@@ -505,7 +505,7 @@ Sub Conversione_2&apos;(sOutputFilePath)
 &apos;	oSheetDest.getRows.insertByIndex(3, ilastRow+2 )
 &apos;&apos;	print
 	oDest = oSheetDest.GetCellByPosition(0,3 ).CellAddress
-    oSheetDest.copyRange(oDest, oSrc)
+ oSheetDest.copyRange(oDest, oSrc)
 	oCell = oSheetdest.GetCellByPosition( 0, 3 )
 	
 	osheets= thiscomponent.sheets
@@ -514,7 +514,7 @@ Sub Conversione_2&apos;(sOutputFilePath)
 
 
 Conversione_3
-&apos;	xray  oRange
+&apos;	xray oRange
 End Sub
 
 
@@ -531,43 +531,43 @@ SUB Conversione_3 &apos; RIFINISCILA_BENE_A
 	ilastRow = getLastUsedRow(oSheet)
 	oSheet.Columns.insertbyindex(0,1)
 	&apos;print &quot;2&quot;
-	oRange = oSheet.getCellRangeByposition(3, 2  ,3,ilastRow)
+	oRange = oSheet.getCellRangeByposition(3, 2 ,3,ilastRow)
 	oSrc = oRange.RangeAddress
-    oDest = oSheet.GetCellByPosition(0,3).CellAddress
-    oSheet.moveRange(oDest, oSrc)
-    
-&apos;    xray oSheet.Columns
+ oDest = oSheet.GetCellByPosition(0,3).CellAddress
+ oSheet.moveRange(oDest, oSrc)
+ 
+&apos; xray oSheet.Columns
 	oSheet.Columns.removeByindex(3,1)
 	
  
 
 &apos;	oRange = oSheet.getCellRangeByposition(1, 0 ,1,ilastRow)
 &apos;	oSrc = oRange.RangeAddress
- &apos;   oDest = oSheet.GetCellByPosition(2,0).CellAddress
- &apos;   oSheet.moveRange(oDest, oSrc)    
-    
+ &apos; oDest = oSheet.GetCellByPosition(2,0).CellAddress
+ &apos; oSheet.moveRange(oDest, oSrc) 
+ 
 &apos;	oRange = oSheet.getCellRangeByposition(8, 0 ,8,ilastRow)
 &apos;	oSrc = oRange.RangeAddress
-&apos;    oDest = oSheet.GetCellByPosition(7,0).CellAddress
- &apos;   oSheet.moveRange(oDest, oSrc)
-  
+&apos; oDest = oSheet.GetCellByPosition(7,0).CellAddress
+ &apos; oSheet.moveRange(oDest, oSrc)
+ 
 &apos;	Osheet.Columns.getbyname(&quot;F&quot;).HoriJustify = 2
-    Osheet.Columns.getbyname(&quot;A&quot;).Width=2900
-    Osheet.Columns.getbyname(&quot;B&quot;).Width=2900
-    Osheet.Columns.getbyname(&quot;C&quot;).Width=3000
-    Osheet.Columns.getbyname(&quot;D&quot;).Width=12000
-    Osheet.Columns.getbyname(&quot;G&quot;).Width=2000       
-    Osheet.Columns.getbyname(&quot;F&quot;).Width=1500
-    Osheet.Columns.getbyname(&quot;E&quot;).Width=18500
+ Osheet.Columns.getbyname(&quot;A&quot;).Width=2900
+ Osheet.Columns.getbyname(&quot;B&quot;).Width=2900
+ Osheet.Columns.getbyname(&quot;C&quot;).Width=3000
+ Osheet.Columns.getbyname(&quot;D&quot;).Width=12000
+ Osheet.Columns.getbyname(&quot;G&quot;).Width=2000 
+ Osheet.Columns.getbyname(&quot;F&quot;).Width=1500
+ Osheet.Columns.getbyname(&quot;E&quot;).Width=18500
 
-    Osheet.Columns.getbyname(&quot;H&quot;).Width=2500
-    Osheet.Columns.getbyname(&quot;i&quot;).Width=2000
-    Osheet.Columns.getbyname(&quot;j&quot;).Width=2000
-    Osheet.Columns.getbyname(&quot;k&quot;).Width=2000
-    Osheet.Columns.getbyname(&quot;l&quot;).Width=2000
-    Osheet.Columns.getbyname(&quot;m&quot;).Width=2000
-    Osheet.Columns.getbyname(&quot;n&quot;).Width=2000
-    Osheet.Columns.getbyname(&quot;v&quot;).Width=2000
+ Osheet.Columns.getbyname(&quot;H&quot;).Width=2500
+ Osheet.Columns.getbyname(&quot;i&quot;).Width=2000
+ Osheet.Columns.getbyname(&quot;j&quot;).Width=2000
+ Osheet.Columns.getbyname(&quot;k&quot;).Width=2000
+ Osheet.Columns.getbyname(&quot;l&quot;).Width=2000
+ Osheet.Columns.getbyname(&quot;m&quot;).Width=2000
+ Osheet.Columns.getbyname(&quot;n&quot;).Width=2000
+ Osheet.Columns.getbyname(&quot;v&quot;).Width=2000
 
 	oSpalte1 = oSheet.getColumns().getByName(&quot;a&quot;) 
 	oSpalte1.isVisible = false &apos;TRUE 
@@ -582,9 +582,9 @@ SUB Conversione_3 &apos; RIFINISCILA_BENE_A
 	oSpalte1 = oSheet.getColumns().getByName(&quot;f&quot;) 
 	oSpalte1.isVisible = TRUE 
 
- &apos;   Osheet.Columns.getbyname(&quot;a&quot;).HoriJustify = 2
- &apos;   oRange = oSheet.getCellRangeByposition(0, 3 ,4,ilastRow)
-  &apos;  ThisComponent.CurrentController.Select(oRange)
+ &apos; Osheet.Columns.getbyname(&quot;a&quot;).HoriJustify = 2
+ &apos; oRange = oSheet.getCellRangeByposition(0, 3 ,4,ilastRow)
+ &apos; ThisComponent.CurrentController.Select(oRange)
 &apos;	oRange.IsTextWrapped=true
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByposition(2, 0))
 &apos;	print &quot;adesso converto...?&quot;
@@ -593,11 +593,11 @@ SUB Conversione_3 &apos; RIFINISCILA_BENE_A
 	 
 	oRange = oSheet.getCellRangeByposition(8, 3 ,8,ilastRow)
 	oSrc = oRange.RangeAddress
-    oDest = oSheet.GetCellByPosition(7,3).CellAddress
-    &apos;oSheet.copyRange(oDest, oSrc)	
-    oSheet.moveRange(oDest, oSrc)
-  &apos;  sSorgente = ThisComponent.getURL() 
-&apos;  Esegui_Da_Template_Prezzario_A
+ oDest = oSheet.GetCellByPosition(7,3).CellAddress
+ &apos;oSheet.copyRange(oDest, oSrc)	
+ oSheet.moveRange(oDest, oSrc)
+ &apos; sSorgente = ThisComponent.getURL() 
+&apos; Esegui_Da_Template_Prezzario_A
 	ilastRow = getLastUsedRow(oSheet)
 
 &apos;	oRange = oSheet.getCellRangeByPosition(0,2,0,ilastRow)
@@ -624,13 +624,13 @@ SUB Conversione_3 &apos; RIFINISCILA_BENE_A
 	oRange = oSheet.getCellRangeByPosition(7,2,7,ilastRow)
 	oRange.CellStyle=&quot;p4&quot;
 
-  msgbox &quot;FINITO!!! &quot;  &amp; chr(10)_
-  &amp;&quot;  SISTEMA LE RIGHE 3, 4,5... C&apos;E&apos; UN PO&apos; DI CASINO...&quot;  &amp; chr(10)_
-  &amp;&quot;  SISTEMATI UN PO&apos; LA LARGHEZZA DELLA COLONNA &quot;&quot;DESCRIZIONE&quot;&quot;&quot;  &amp; chr(10)_
-    &amp; &quot; SCRIVI LA SIGLA DEL PREZZIARIO NELLA CELLA B1&quot; &amp; chr(10)_
-  &amp; &quot;SALVA IL FILE CON UN NOME APPROPRIATO!&quot; &amp; chr(10) &amp; chr(10)_
-  &amp; &quot;E&apos; possibile che le oprazioni descritte sopra siano inibite...&quot; &amp; chr(10)_
-  &amp; &quot;In tal caso devi prima salvare il file, chiuderlo e riaprirlo...&quot;
+ msgbox &quot;FINITO!!! &quot; &amp; chr(10)_
+ &amp;&quot; SISTEMA LE RIGHE 3, 4,5... C&apos;E&apos; UN PO&apos; DI CASINO...&quot; &amp; chr(10)_
+ &amp;&quot; SISTEMATI UN PO&apos; LA LARGHEZZA DELLA COLONNA &quot;&quot;DESCRIZIONE&quot;&quot;&quot; &amp; chr(10)_
+ &amp; &quot; SCRIVI LA SIGLA DEL PREZZIARIO NELLA CELLA B1&quot; &amp; chr(10)_
+ &amp; &quot;SALVA IL FILE CON UN NOME APPROPRIATO!&quot; &amp; chr(10) &amp; chr(10)_
+ &amp; &quot;E&apos; possibile che le oprazioni descritte sopra siano inibite...&quot; &amp; chr(10)_
+ &amp; &quot;In tal caso devi prima salvare il file, chiuderlo e riaprirlo...&quot;
 END SUB
 
 Function replaceA (Source As String, Search As String, NewPart As String)
@@ -659,24 +659,24 @@ replaceA = Result
 End Function
 
 sub Copia_Sheet_2_AltroDoc_Alt (sNameDocDest as string, sCurr_Sheet, sDest_sheet)&apos;(nome nudo senza astensione)
-&apos;print sNameDocDest &amp; &quot;  &quot;&amp;  sCurr_Sheet &amp; &quot;  &quot; &amp; sDest_sheet
-        firstDoc = ThisComponent
-  &apos;      selectSheetByName(firstDoc, &quot;Sheet2&quot;)
-  
-  
-  		selectSheetByName(firstDoc, sCurr_Sheet)
-  		document.getCurrentController.select(document.getSheets().getByName(sNameDocDest))
-  		
-        dispatchURL(firstDoc,&quot;.uno:SelectAll&quot;)
-       &apos; print &quot;vediamo&quot;
-        dispatchURL(firstDoc,&quot;.uno:Copy&quot;)
-        &apos;secondDoc = StarDesktop.loadComponentFromUrl(&quot;private:factory/scalc&quot;,&quot;_blank&quot;,0,dimArray())
+&apos;print sNameDocDest &amp; &quot; &quot;&amp; sCurr_Sheet &amp; &quot; &quot; &amp; sDest_sheet
+ firstDoc = ThisComponent
+ &apos; selectSheetByName(firstDoc, &quot;Sheet2&quot;)
+ 
+ 
+ 		selectSheetByName(firstDoc, sCurr_Sheet)
+ 		document.getCurrentController.select(document.getSheets().getByName(sNameDocDest))
+ 		
+ dispatchURL(firstDoc,&quot;.uno:SelectAll&quot;)
+ &apos; print &quot;vediamo&quot;
+ dispatchURL(firstDoc,&quot;.uno:Copy&quot;)
+ &apos;secondDoc = StarDesktop.loadComponentFromUrl(&quot;private:factory/scalc&quot;,&quot;_blank&quot;,0,dimArray())
 		secondDoc = stardesktop.LoadComponentFromUrl(sNameDocDest, &quot;_default&quot;, 0, Array())
 	&apos;	secondDoc = stardesktop.LoadComponentFromUrl(sNameDocDest, &quot;_default&quot;, thiscomponent.Sheets.Count, Array())
 	&apos; 080610 notevole miglioria,,, thiscomponent.Sheets.Count della riga dopo mette le tabelle al fondo
-        secondDoc.getSheets().insertNewByName(sDest_sheet, thiscomponent.Sheets.Count)
-        selectSheetByName(secondDoc, sDest_sheet)
-      &apos;  selectSheetByName(secondDoc, &quot;inserted&quot;)
-        dispatchURL(secondDoc,&quot;.uno:Paste&quot;)
+ secondDoc.getSheets().insertNewByName(sDest_sheet, thiscomponent.Sheets.Count)
+ selectSheetByName(secondDoc, sDest_sheet)
+ &apos; selectSheetByName(secondDoc, &quot;inserted&quot;)
+ dispatchURL(secondDoc,&quot;.uno:Paste&quot;)
 End Sub
 </script:module>

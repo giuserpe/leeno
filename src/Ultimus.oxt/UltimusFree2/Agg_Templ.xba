@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Agg_Templ" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Agg_Templ" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -38,9 +38,9 @@ sub AGGIORNA_TEMPLATE &apos;main
 &apos;	on error goto errore
 	&apos; versione oxt installata
 	versioneUF_major = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value
-	versioneUF_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value   
+	versioneUF_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
 
-&apos;	if  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 163 and _
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 163 and _
 &apos;		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &lt; 169 then	
 &apos;		aggiorna_leggero
 &apos;&apos;		exit sub
@@ -74,7 +74,7 @@ sub AGGIORNA_TEMPLATE &apos;main
 			&amp; &quot;Il Template-modello deve essere ovviamente &apos;recente&apos; e &apos;sincronizzato&apos; con la libreria installata &quot;_
 			&amp; &quot;(&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.xx)&quot; &amp; CHR$(10)_
 			&amp; &quot;Quindi, se ancora non l&apos;hai fatto, puoi farlo ora: scarica da &quot;&amp; CHR$(10)_
-			&amp; &quot; http://aimar.mrjive.it/?q=node/44 la versione più aggiornata del Template&quot;  &amp; CHR$(10)_
+			&amp; &quot; http://aimar.mrjive.it/?q=node/44 la versione più aggiornata del Template&quot; &amp; CHR$(10)_
 			&amp; &quot; (magari badando che anche la libreria installata sul tuo PC sia aggiornata!)&quot;&amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;NB Le operazioni che seguono sono tendenzialmente gravose per la macchina, &quot;_
 			&amp; &quot;per essere certi che vada a buon fine in tempi brevi sarebbe preferibile resettare prima OOo... &quot; &amp; CHR$(10)_
@@ -95,19 +95,19 @@ sub AGGIORNA_TEMPLATE &apos;main
 	sTuttoOK = Aggiorna_Template_2 
 
 	&apos;azzera la variabile che altrimenti inibisce il controllo in apertura
-    SGenericoMemo = &quot;&quot;	
-    
-    &apos;Vai_a_M1 &apos; magari fargli eseguire la procedura in apertura?   
-	&apos; dava errore su computi molto vecchi (privi di M1)  meglio andare da un&apos;altra parte
+ SGenericoMemo = &quot;&quot;	
+ 
+ &apos;Vai_a_M1 &apos; magari fargli eseguire la procedura in apertura? 
+	&apos; dava errore su computi molto vecchi (privi di M1) meglio andare da un&apos;altra parte
 	Sel_Elenco_Prezzi
 	
-    wait 1000
-    &apos; copia i valori Utente dalla vecchia tab (S1_VEC) e li incolla su quella importata	
-    aggiorna_variabili 
+ wait 1000
+ &apos; copia i valori Utente dalla vecchia tab (S1_VEC) e li incolla su quella importata	
+ aggiorna_variabili 
 
-    
-    &apos; aggiorna le info nelle  proprietà del file e qualcosa nelle var gen
-    aggiorna_info_sincro
+ 
+ &apos; aggiorna le info nelle proprietà del file e qualcosa nelle var gen
+ aggiorna_info_sincro
  
  	&apos; colora le tabs
  	Colora_Tabs
@@ -116,12 +116,12 @@ sub AGGIORNA_TEMPLATE &apos;main
  	Salva_spazio_A_A 
  	
  	if GetGuiType() &lt;&gt; 3 then
- 			&apos;	if msgbox ( &quot;Se stai usando NeoOfffice  &quot; &amp; sStile_Pag &amp; &quot; esiste gà&quot; &amp; CHR$(10)_
-			 &apos;       		&amp;&quot; cosa faccio: lo sosvrascrivo?&quot; &amp; CHR$(10)_
-			  &apos;     		 	&amp; &quot;&quot; &amp; CHR$(10)_
-			&apos;				&amp; &quot;&quot; ,36, &quot;&quot;) = 7 then  &apos; se la risposta è NO
-			&apos;	     	exit sub
-			&apos;	     else
+ 			&apos;	if msgbox ( &quot;Se stai usando NeoOfffice &quot; &amp; sStile_Pag &amp; &quot; esiste gà&quot; &amp; CHR$(10)_
+			 &apos; 		&amp;&quot; cosa faccio: lo sosvrascrivo?&quot; &amp; CHR$(10)_
+			 &apos; 		 	&amp; &quot;&quot; &amp; CHR$(10)_
+			&apos;				&amp; &quot;&quot; ,36, &quot;&quot;) = 7 then &apos; se la risposta è NO
+			&apos;	 	exit sub
+			&apos;	 else
 	
  		&apos; rimuove il file di conf degli accelerator a livello del doc
 		rimuovi_SC_Doc 
@@ -133,18 +133,18 @@ sub AGGIORNA_TEMPLATE &apos;main
  	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 &apos;	Chiudi_o_elimina_tabelle_inutili
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
- 	   
-    &apos; riscrive i nomi di area 
-    Rifa_nomi_area
+ 	 
+ &apos; riscrive i nomi di area 
+ Rifa_nomi_area
  	
 	goto disattivato &apos; NB disattivata solo questa finestra di dialogo...
  	&apos; tenta di sistemare le intestazioni di colonna (ma con i pulsantti è un disastro)
  	beep
- 	iCaso =  msgbox  (&quot;Sto per sovrascrivere le righe di intestazione di COLONNA per Elenco Prezzi, Analisi, COMPUTO e CONTABILITA.&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+ 	iCaso = msgbox (&quot;Sto per sovrascrivere le righe di intestazione di COLONNA per Elenco Prezzi, Analisi, COMPUTO e CONTABILITA.&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;Se hai personalizzato alcune scritte queste andranno perse le dovrai eventualmente rifare&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;Se il tuo Documento è abbastanza recente puoi evitare questo passaggio dai risulati incerti!&quot; &amp; CHR$(10)_
 				&amp; &quot;(La puoi fare anche dopo in un secondo momento)&quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot;  Proseguo sovrascrivendo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot; Proseguo sovrascrivendo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;&quot; ,35, &quot;&quot;) 
 			select case iCaso
 				case 7
@@ -155,33 +155,33 @@ sub AGGIORNA_TEMPLATE &apos;main
 				
 			end select	
 	disattivato:	
-    copia_teste 
+ copia_teste 
  	modifiche_risibili
  	
- 	sSave = 0  &apos; impostato per prova... evitare gli sutomatismi?
+ 	sSave = 0 &apos; impostato per prova... evitare gli sutomatismi?
  	&apos;(altrimenti su libò non funzionava...)
  	
-    if sTuttoOK &lt;&gt; &quot;Annullato&quot; then
-    	  beep
-          if sSave =1 then  &apos;and  GetGuiType() &lt;&gt; 3 then &apos;se Non è un MAC
-    			&apos; salviamo il doc corrente
+ if sTuttoOK &lt;&gt; &quot;Annullato&quot; then
+ 	 beep
+ if sSave =1 then &apos;and GetGuiType() &lt;&gt; 3 then &apos;se Non è un MAC
+ 			&apos; salviamo il doc corrente
 				oDocFrame = ThisComponent.getCurrentController().getFrame()	
 				oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
 				oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
-				sMessaggio =  &quot;Il tuo documento è stato aggiornato e salvato come: &quot; &amp;  ConvertFromUrl(sTuttoOK) &amp; CHR$(10)
+				sMessaggio = &quot;Il tuo documento è stato aggiornato e salvato come: &quot; &amp; ConvertFromUrl(sTuttoOK) &amp; CHR$(10)
 			else
-				sMessaggio =  &quot;Il tuo documento: &quot; &amp;  ConvertFromUrl(sTuttoOK) &amp;  &quot; è stato aggiornato!&quot; &amp; CHR$(10)	
-		  end if
-		  if GetGuiType() = 3 then
-		&apos;	  msgbox &quot;Adesso dovresti salvare il documento!&quot; &amp; CHR$(10)_
+				sMessaggio = &quot;Il tuo documento: &quot; &amp; ConvertFromUrl(sTuttoOK) &amp; &quot; è stato aggiornato!&quot; &amp; CHR$(10)	
+		 end if
+		 if GetGuiType() = 3 then
+		&apos;	 msgbox &quot;Adesso dovresti salvare il documento!&quot; &amp; CHR$(10)_
 		 &apos; 			&amp; &quot;(Mi spiace, ma siccome hai un MacHintosh non lo posso fare io...&quot;
-		  end if
-		  msgbox sMessaggio &amp; CHR$(10)_
+		 end if
+		 msgbox sMessaggio &amp; CHR$(10)_
 				&amp; &quot;Tutto sembra a posto, ma ricorda che ho importato delle nuove tabelle rinominando le tue vecchie &quot; _
 				&amp; &quot;con il suffisso &apos;_VEC&apos; per consentire controlli comparativi.&quot; &amp; CHR$(10)_
 				&amp; &quot; Le puoi eliminare a mano in qualsiasi momento! &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;Anche la tua &apos;Anagrafica&apos; (tab. &apos;S2&apos; ) è stata rinominata come &apos;S2_vec&apos; e, nella maggior parte dei casi puoi rispristinarla, rinominando o cancellando quella nuova appena importata.&quot;
-      	  msgbox sMessaggio &amp; CHR$(10)_
+ 	 msgbox sMessaggio &amp; CHR$(10)_
 				&amp; &quot;Purtroppo e quasi certamente ti troverai con dei pulsantoni spostati o da ridimensionare.)&quot;&amp; CHR$(10)_
 				&amp; &quot;Vai sulle varie tab El.Prezzi, Analisi, Computo e rimettili a posto trascinando con il mouse (sei già in modalità bozza...) e alla fine BLOCCALI!&quot;&amp; CHR$(10)_
 				&amp; &quot; (Se incontri difficoltà sul MANUALE, al Cap. AGGIORNAMENTO DI UN COMPUTO &apos;VECCHIO&apos;, ci sono dei suggerimenti in merito...)&quot;&amp; CHR$(10) &amp; CHR$(10)_
@@ -189,10 +189,10 @@ sub AGGIORNA_TEMPLATE &apos;main
 				&amp; &quot; - SALVARE il documento e poi chiuderlo&quot;&amp; CHR$(10)_
 				&amp; &quot; - Resettare Libò e/o OOo&quot;&amp; CHR$(10)_
 				&amp; &quot; Riaprire il documento ed ESEGUIRE la Procedura di Controllo&quot;
-	   else
-			  Print &quot;Qualcosa. nell&apos;adattamento, è andato storto... !&quot;  &apos;&amp; CHR$(10)_
-			  msgbox &quot;Resetta OOo/Libò, chiudi tutte le altre applicazioni e poi riprova!&quot;&amp; CHR$(10)_
-			     &amp; &quot;Ma questa volta Non cliccare o digitare al di fuori di quanto ti è richiesto dal wizard!&quot;
+	 else
+			 Print &quot;Qualcosa. nell&apos;adattamento, è andato storto... !&quot; &apos;&amp; CHR$(10)_
+			 msgbox &quot;Resetta OOo/Libò, chiudi tutte le altre applicazioni e poi riprova!&quot;&amp; CHR$(10)_
+			 &amp; &quot;Ma questa volta Non cliccare o digitare al di fuori di quanto ti è richiesto dal wizard!&quot;
 	 end if
 	exit Sub
 	errore:
@@ -214,8 +214,8 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	Visualizza_sheet_TUTTE
 	sproteggi_sheet_TUTTE
 &apos;ThisComponent.currentController.activeSheet.Rows.OptimalHeight = true
-	ThisComponent.CurrentController.ZoomType  = 3               
-	ThisComponent.CurrentController.ZoomValue   = 90
+	ThisComponent.CurrentController.ZoomType = 3 
+	ThisComponent.CurrentController.ZoomValue = 90
 
 
 	&apos;prima gli stili da rinominare
@@ -232,7 +232,7 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 			sContab = 2 &apos; computo vecchio senza foglio contabilità
 		else
 			&apos; se invece c&apos;è, verifica se era quello della fase di test
-			if thisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1,0).string &lt;&gt; &quot;&quot;  then
+			if thisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).GetCellByPosition(1,0).string &lt;&gt; &quot;&quot; then
 					sContab = 1 &apos; esiste ma è quello della fase di test
 				else
 					sContab = 3 &apos; esiste
@@ -255,7 +255,7 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	sSheetRinom2 = rinomina_sheet (&quot;S2&quot;)
 	rinomina_sheet (&quot;S3&quot;)
 	rinomina_sheet (&quot;S4&quot;)
-&apos;	rinomina_sheet (&quot;M1&quot;)  &apos; al momento M1 (se c&apos;è è identica... credo)
+&apos;	rinomina_sheet (&quot;M1&quot;) &apos; al momento M1 (se c&apos;è è identica... credo)
 	if not thisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; ma se manca viene comunque rifatta	
 		sM1 = 2
 	end if
@@ -263,8 +263,8 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	if thisComponent.Sheets.hasByName(&quot;S5&quot;) then &apos;
 		rinomina_sheet (&quot;S5&quot;)	
 	end if
-	ThisComponent.CurrentController.ZoomType  = 3               
-	ThisComponent.CurrentController.ZoomValue   = 90
+	ThisComponent.CurrentController.ZoomType = 3 
+	ThisComponent.CurrentController.ZoomValue = 90
 	
 	
 	&apos; qui passa sul Sorgente (caricandolo)	
@@ -292,11 +292,11 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	sNewURL = Salva_copia_aPerdere	
 
 	&apos; annoto alcuni dati di questo doc per usarli dopo
-    GsTemp_major =  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value 
-    &apos;versione minor prevista per questo template (cioè versione oxt installata)
-    GsTemp_minor =  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
-    &apos; numero del template... lo leggo nelle var
-    GsVer_templ = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value
+ GsTemp_major = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value 
+ &apos;versione minor prevista per questo template (cioè versione oxt installata)
+ GsTemp_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
+ &apos; numero del template... lo leggo nelle var
+ GsVer_templ = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value
 
 
 	
@@ -304,17 +304,17 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;.. Sto lavorando...(metto le tab tutte in fila...&quot;, 30)
 	
-	ThisComponent.CurrentController.ZoomType  = 3               
-	ThisComponent.CurrentController.ZoomValue   = 90
+	ThisComponent.CurrentController.ZoomType = 3 
+	ThisComponent.CurrentController.ZoomValue = 90
 	Rimetti_in_ordine_tab
-&apos;print &quot;Se  Ora esco... ma farà casino&quot;	
+&apos;print &quot;Se Ora esco... ma farà casino&quot;	
 &apos;exit function
 	UrlSrc = ThisComponent.getURL() &apos; file sorgente
 	firstDoc = ThisComponent
 	sproteggi_sheet_TUTTE
 
 	if sContab = 2 or _
-	   sContab = 1 then &apos;&quot;true&quot; then
+	 sContab = 1 then &apos;&quot;true&quot; then
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;.. Importo CONTABILITA....&quot;, 50)
 		iPos=SheetNameToNumber (&quot;CONTABILITA&quot;)
@@ -366,18 +366,18 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 &apos;	&apos;print &quot;questa è la nostra &quot; &amp; ipos
 	&apos;print &quot;Esco?&quot; &apos; chiaranino
 	if sM1 = 2 then &apos; se manca viene comunque rifatta	
-		wait 100   &apos;  M1 al momento è identica... disattivata in attesa della necessità
+		wait 100 &apos; M1 al momento è identica... disattivata in attesa della necessità
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;.. Importo M1....&quot;, 30)
 		ThisComponent.Sheets.getByName(&quot;M1&quot;).Rows.OptimalHeight = true 
 		iPos = SheetNameToNumber (&quot;M1&quot;) 
-		CopySpreadsheet (&quot;M1&quot;,  firstDoc, secondDoc, iPos)
+		CopySpreadsheet (&quot;M1&quot;, firstDoc, secondDoc, iPos)
 		print &quot;ho importato M1&quot;
 	end if
 
 	Barra_chiudi_sempre_4
 
-	&apos;ora passo di la  (..,1, porta il frame in primo piano)
+	&apos;ora passo di la (..,1, porta il frame in primo piano)
 &apos;	Stardesktop.LoadComponentFromUrl(UrlSecond, &quot;_default&quot;, 1, Array())
 
 	&apos;ora passo sul tuo doc
@@ -390,10 +390,10 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	Sel_Computo() &apos; serve solo per tirami via da M1 che è sensibile al mouse
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;.. sto lavorando (chiudo il Modello del template)....&quot;, 60)
-  &apos;  SGenericoMemo = &quot;&quot;	
-  
-  	&apos; chiudo il doc modello
-    firstDoc.Close (True)
+ &apos; SGenericoMemo = &quot;&quot;	
+ 
+ 	&apos; chiudo il doc modello
+ firstDoc.Close (True)
 
 
 	Barra_chiudi_sempre_4
@@ -405,11 +405,11 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	&apos; attenzione li sovrascrive tutti (modulo suggerito da dfrench - Nuova Zelanda)
 	curl = UrlSrc
 	&apos;print curl
-	styles=thiscomponent.getStyleFamilies()  &apos;get the interface to load styles
+	styles=thiscomponent.getStyleFamilies() &apos;get the interface to load styles
 	styles.loadStylesFromURL(curl,Array()) &apos; by default loads &amp; overrides all styles
 
-   &apos;  cancello il file temporaneo del modello
-    Elimina_copia_aPerdere (sNewURL)
+ &apos; cancello il file temporaneo del modello
+ Elimina_copia_aPerdere (sNewURL)
 	
 	&apos; aggiorno le info in file&gt;proprietà
 	aggiorna_info_sincro
@@ -430,10 +430,10 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	Sel_analisi() &apos; serve solo per tirami via da M1 che è sensibile al mouse
 	
 	&apos; modifico il link a
-    oSheet_uff = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) 
+ oSheet_uff = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) 
 	Search_replace (oSheet_uff , sSheetRinom , &quot;S1&quot; )&apos; 
 
-	    
+	 
 	&apos;Giro scemo per fare si che la S2 rimanga quella utente, rinominando la nuova come S2_NUOVA
 	ThisComponent.Sheets.getByName(&quot;S2&quot;).setName (&quot;S2_VEC_VEC&quot;) 
 	ThisComponent.Sheets.getByName(&quot;S2_VEC&quot;).setName (&quot;S2&quot;)
@@ -485,7 +485,7 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 	SGenericoMemo = &quot;&quot;
 	Print &quot;Errore in: &apos;Function Aggiorna_Template_2&apos; - &quot; &amp; error
 	Aggiorna_Template_2 = &quot;Annullato&quot;
-end  FUNCTION	
+end FUNCTION	
 
 
 
@@ -500,21 +500,21 @@ Sub aggiorna_info_sincro
 	sOldminor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).value	
 	
 	&apos; imposto le nuove versioni
-    ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).value = GsTemp_major 
-    ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).value = GsTemp_minor 
+ ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).value = GsTemp_major 
+ ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).value = GsTemp_minor 
 
 	&apos; questa legge la versione precedente su cui si è effettuato l&apos;aggiornamento
 &apos;	if ThisComponent.DocumentInfo.PropertySetInfo.HasPropertyByName(&quot;Pregressi&quot;) then
 &apos;		sAggiungi = &quot;Pregressi&quot; &amp; &quot; 
- &apos; 	    sAggiungi = ThisComponent.DocumentInfo.getPropertyValue(&quot;Pregressi&quot;) &apos;,0,&quot;&quot;)
+ &apos; 	 sAggiungi = ThisComponent.DocumentInfo.getPropertyValue(&quot;Pregressi&quot;) &apos;,0,&quot;&quot;)
 &apos;	end if
 
 	&apos; aggiunge un campo per la bisogna (ricordarsi di eliminarlo quando si fa un nuovo template) |||
-&apos;&apos;&apos;	ThisComponent.DocumentInfo.setUserFieldName  (0,&quot;Pregressi&quot;)			&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
-&apos;&apos;&apos;	sInfo = &quot;Ottenuto come aggiornamento da: &quot; &amp; sOldTemplVer &amp; &quot;_&quot; &amp; sOldMajor &amp; &quot;.&quot; &amp; sOldminor  	&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
-&apos;&apos;&apos;	ThisComponent.DocumentInfo.setUserFieldValue (0, sInfo) &apos;        	&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
+&apos;&apos;&apos;	ThisComponent.DocumentInfo.setUserFieldName (0,&quot;Pregressi&quot;)			&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
+&apos;&apos;&apos;	sInfo = &quot;Ottenuto come aggiornamento da: &quot; &amp; sOldTemplVer &amp; &quot;_&quot; &amp; sOldMajor &amp; &quot;.&quot; &amp; sOldminor 	&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
+&apos;&apos;&apos;	ThisComponent.DocumentInfo.setUserFieldValue (0, sInfo) &apos; 	&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
 
-&apos;&apos;&apos;	store_info (GsVer_templ,  GsTemp_major, GsTemp_minor, 1 ) 	&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
+&apos;&apos;&apos;	store_info (GsVer_templ, GsTemp_major, GsTemp_minor, 1 ) 	&apos; documentinfo deprecato il libo 4, lavorare con DocumentProperties
 end sub
 
 
@@ -522,7 +522,7 @@ end sub
 
 
 sub tempoMemo
-    SGenericoMemo = &quot;&quot;
+ SGenericoMemo = &quot;&quot;
 end sub
 
 
@@ -531,9 +531,9 @@ Sub aggiorna_variabili &apos; e anche altri aggiornamenti in giro&apos;
 	sproteggi_sheet_TUTTE
 
  	oSheetDest = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-   	oDest = oSheetDest.GetCellByPosition( 7,291 ).CellAddress
-	oSrc = ThisComponent.Sheets.getByName(&quot;S1_VEC&quot;).getCellRangeByPosition(7,291,7,293).RangeAddress  
-   	oSheetDest.copyRange(oDest, oSrc)
+ 	oDest = oSheetDest.GetCellByPosition( 7,291 ).CellAddress
+	oSrc = ThisComponent.Sheets.getByName(&quot;S1_VEC&quot;).getCellRangeByPosition(7,291,7,293).RangeAddress 
+ 	oSheetDest.copyRange(oDest, oSrc)
  
 	&apos; trovo la fine della lista di variabili dell&apos;utente
 	for i = 328 to 350
@@ -544,19 +544,19 @@ Sub aggiorna_variabili &apos; e anche altri aggiornamenti in giro&apos;
 		end if
 	next
 	iUU = iUU -1
-   	oDest = oSheetDest.GetCellByPosition( 7,296 ).CellAddress
-	oSrc = ThisComponent.Sheets.getByName(&quot;S1_VEC&quot;).getCellRangeByPosition(7,296,7,iUU).RangeAddress  
-   	oSheetDest.copyRange(oDest, oSrc)
-   	&apos; LE SALVA
-   	Salva_Var_Gen_Personali
-   	&apos; fine variabili
-   	
-   	&apos;altro sparso
-   	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-   	oDest = oSheetDest.GetCellByPosition( 0,0 ).CellAddress
-	oSrc = ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellRangeByPosition(4,43,4,43).RangeAddress  
-   	oSheetDest.copyRange(oDest, oSrc)
-   	
+ 	oDest = oSheetDest.GetCellByPosition( 7,296 ).CellAddress
+	oSrc = ThisComponent.Sheets.getByName(&quot;S1_VEC&quot;).getCellRangeByPosition(7,296,7,iUU).RangeAddress 
+ 	oSheetDest.copyRange(oDest, oSrc)
+ 	&apos; LE SALVA
+ 	Salva_Var_Gen_Personali
+ 	&apos; fine variabili
+ 	
+ 	&apos;altro sparso
+ 	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+ 	oDest = oSheetDest.GetCellByPosition( 0,0 ).CellAddress
+	oSrc = ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellRangeByPosition(4,43,4,43).RangeAddress 
+ 	oSheetDest.copyRange(oDest, oSrc)
+ 	
 end sub
 
 
@@ -572,7 +572,7 @@ sub Colora_Tabs &apos;sistena i colori delle tabs
 	oSheets = ThisComponent.getSheets()
 	bSheetNames = oSheets.getElementNames()
 	For i = LBound( bSheetNames ) To UBound( bSheetNames )
-		sSheetName = bSheetNames( i )  &apos;255,233,
+		sSheetName = bSheetNames( i ) &apos;255,233,
 		If sSheetName = &quot;Elenco Prezzi&quot; then 
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
 			SetTabColorN(RGB(255,240,178))	
@@ -595,7 +595,7 @@ sub Colora_Tabs &apos;sistena i colori delle tabs
 &apos;			SetTabColorN(RGB(255,228,219))
 		end if
 
-		if i= 4 or i =4 then  
+		if i= 4 or i =4 then 
 	&apos;		ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
 		&apos;	SetTabColorN(RGB(102,102,102))
 		end if
@@ -614,12 +614,12 @@ end sub
 
 sub SetTabColorN(colore) &apos; agisce sulla sheet attiva
 &apos;print colore
-	dim document   as object
+	dim document as object
 	dim dispatcher as object
 	rem ----------------------------------------------------------------------
 	rem get access to the document
 	If ThisComponent.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) Then
-		document   = ThisComponent.CurrentController.Frame
+		document = ThisComponent.CurrentController.Frame
 		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)		
 		rem ----------------------------------------------------------------------
 		dim args1(0) as new com.sun.star.beans.PropertyValue
@@ -634,12 +634,12 @@ End Sub
 Sub SetTabColorAll &apos;lavora su tutte
 	rem ----------------------------------------------------------------------
 	rem define variables
-	dim document   as object
+	dim document as object
 	dim dispatcher as object
 	rem ----------------------------------------------------------------------
 	rem get access to the document
 	If ThisComponent.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) Then
-		document   = ThisComponent.CurrentController.Frame
+		document = ThisComponent.CurrentController.Frame
 		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 		
 		rem ----------------------------------------------------------------------
@@ -671,11 +671,11 @@ StyleFamilies = Doc.StyleFamilies
 CellStyles = StyleFamilies.getByName(&quot;CellStyles&quot;)
 sproteggi_sheet_TUTTE
 For I = 0 To CellStyles.Count - 1
-  CellStyle = CellStyles(I)
-  if CellStyle.name = sNom_V then
-  		&apos;MsgBox CellStyle.Name 
-  		CellStyle.setName( sNom_N)
-  end if
+ CellStyle = CellStyles(I)
+ if CellStyle.name = sNom_V then
+ 		&apos;MsgBox CellStyle.Name 
+ 		CellStyle.setName( sNom_N)
+ end if
 Next I
 
 end sub

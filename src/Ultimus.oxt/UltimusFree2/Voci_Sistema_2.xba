@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_2" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_2" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -37,7 +37,7 @@ oSheets = odoc.Sheets
 	 
 	 sRangeSRC = &quot;&apos;S1&apos;.$E$45:$Am$47&quot;
 
- 	lrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+ 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
  	if lrow = -1 then
 		 
 		exit sub
@@ -59,48 +59,48 @@ oSheets = odoc.Sheets
 	loop
 	
 &apos;print lrow
-	if templateTipo = &quot;ATT&quot; then oRangeVC =  Circoscrive_Voce_Computo_B (lrow)
+	if templateTipo = &quot;ATT&quot; then oRangeVC = Circoscrive_Voce_Computo_B (lrow)
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	&apos;	oRangeVC =  Circoscrive_Voce_Computo_B (lrow)
+	&apos;	oRangeVC = Circoscrive_Voce_Computo_B (lrow)
 	if templateTipo = &quot;5C&quot; then exit sub
 &apos;ThisComponent.CurrentController.Select(oRangeVC)
 &apos;print
-     lrow = oRangeVC.RangeAddress.StartRow
+ lrow = oRangeVC.RangeAddress.StartRow
 
 	 oCell = oSheet.GetCellByPosition( 0 , lrow)
-  &apos;  ThisComponent.CurrentController.Select(oCell)
+ &apos; ThisComponent.CurrentController.Select(oCell)
 
-	sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+1 ) &apos;&quot;calculDPU.A29&quot;
+	sRangeDest = &quot;COMPUTO.A&quot;+ (lrow+1 ) &apos;&quot;calculDPU.A29&quot;
 	
 	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
 
-    oCell = oSheet.GetCellByPosition( 0 , lrow)
+ oCell = oSheet.GetCellByPosition( 0 , lrow)
  
 	lrow = oRangeVC.RangeAddress.EndRow -1
 	lrowE = lrow
 oCell = oSheet.GetCellByPosition( 1 , lrow )
- &apos;	    ThisComponent.CurrentController.Select(oCell)	
+ &apos;	 ThisComponent.CurrentController.Select(oCell)	
 
 	sRangeSRC = &quot;&apos;S1&apos;.$E$48:$Am$48&quot;
-	sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+2 )
+	sRangeDest = &quot;COMPUTO.A&quot;+ (lrow+2 )
 	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
 	&apos; ok! Sistemata anche la riga sommano
 	&apos; copiato tutto (formati, formule e contenuti) della riga sommano
 
-    oCell = oSheet.GetCellByPosition( 1 , lrow-1)
-     xA =oCell.String	
-  &apos;  ThisComponent.CurrentController.Select(oCell)
-  
-	Do while xA =  &quot;&quot; &apos; ciclo che copia i formati dei conti parziali
- 		sRangeDest =  &quot;COMPUTO.A&quot;+ (lrow+1 )
- &apos;	    TargetCell = oSheetN+&quot;.A&quot;+ (lrow+1 )
- 		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$Am$47&quot;	    
+ oCell = oSheet.GetCellByPosition( 1 , lrow-1)
+ xA =oCell.String	
+ &apos; ThisComponent.CurrentController.Select(oCell)
+ 
+	Do while xA = &quot;&quot; &apos; ciclo che copia i formati dei conti parziali
+ 		sRangeDest = &quot;COMPUTO.A&quot;+ (lrow+1 )
+ &apos;	 TargetCell = oSheetN+&quot;.A&quot;+ (lrow+1 )
+ 		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$Am$47&quot;	 
  		copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
-   		lrow=lrow-1
- 	    oCell = oSheet.GetCellByPosition( 1 , lrow)
-  	 &apos;   ThisComponent.CurrentController.Select(oCell)
- &apos;	    Print&quot; copiato&quot;
- 	    xA =oCell.String	    
+ 		lrow=lrow-1
+ 	 oCell = oSheet.GetCellByPosition( 1 , lrow)
+ 	 &apos; ThisComponent.CurrentController.Select(oCell)
+ &apos;	 Print&quot; copiato&quot;
+ 	 xA =oCell.String	 
 	loop
 	
 	oCell = oSheet.GetCellByPosition( 1 , lrowE+3)

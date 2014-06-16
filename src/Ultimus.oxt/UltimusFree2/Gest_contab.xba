@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gest_contab" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gest_contab" script:language="StarBasic">REM ***** BASIC *****
 
 &apos; gestione visibilità tabelle contabilità
 
-Sub Mostra_tabs_contabilita_soltanto  &apos; visualizza tutte le tabs della Contabilità
+Sub Mostra_tabs_contabilita_soltanto &apos; visualizza tutte le tabs della Contabilità
 							&apos; e nasconde alcune del Computo
 dim oSheets as object
-dim oSheet  as object
+dim oSheet as object
 dim aSheetNames as object
 dim cSheetName2 as string
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()
 	&apos; visualizza tutte le tabs della Contabilità
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array  
-      If left(cSheetName2,3) = &quot;cT_&quot; Then
-      		oSheet = ThisComponent.Sheets.getByIndex(i)
-      		thisComponent.Sheets.moveByName(cSheetName2 ,4)
+ cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ If left(cSheetName2,3) = &quot;cT_&quot; Then
+ 		oSheet = ThisComponent.Sheets.getByIndex(i)
+ 		thisComponent.Sheets.moveByName(cSheetName2 ,4)
 			oSheet.isVisible = true &apos;false &apos;true
 			Thiscomponent.currentcontroller.setactivesheet(Osheet
-      EndIf
-	Next  
+ EndIf
+	Next 
 	
 	thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
 	thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
@@ -29,8 +29,8 @@ dim cSheetName2 as string
 End Sub
 
 
-Sub Abilita_contabilita  
-	dim oSheet  as object
+Sub Abilita_contabilita 
+	dim oSheet as object
 	&apos;	Mostra_tabs_contabilita_soltanto
 	Nascondi_tabs_COMPUTO_soltanto
 	Osheet = thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
@@ -48,8 +48,8 @@ Sub Abilita_contabilita
 		&apos;	exit sub
 	end if
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 1 THEN 
-		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt; 0  THEN 
-			msgbox &quot;La Contabilità lavori è stata abilitata! Questo presuppone che il Computo sia finito ed i lavori già appaltati!&quot;  &amp; CHR$(10)_
+		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt; 0 THEN 
+			msgbox &quot;La Contabilità lavori è stata abilitata! Questo presuppone che il Computo sia finito ed i lavori già appaltati!&quot; &amp; CHR$(10)_
 				&amp; &quot;(NB: Alcune modalità avranno comportamenti diversi ed altre saranno inibite)&quot; 
 		end if
 	END IF
@@ -61,9 +61,9 @@ Sub Abilita_contabilita
 End Sub
 
 
-Sub Nascondi_tabs_contabilita  
+Sub Nascondi_tabs_contabilita 
 dim oSheets as object
-dim oSheet  as object
+dim oSheet as object
 dim aSheetNames as object
 dim cSheetName2 as string
 	oSheets = ThisComponent.getSheets()
@@ -76,7 +76,7 @@ dim cSheetName2 as string
 	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).isVisible = false 
 	thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
 	thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
-    Sel_Altre_Opz
+ Sel_Altre_Opz
 End Sub
 
 
@@ -86,24 +86,24 @@ sub Nascondi_tutte_secondarie
 	aSheetNames = oSheets.getElementNames()
 	&apos;nasconde i documenti di contabilità
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array  
-     &apos; print cSheetName2
-      If left(cSheetName2,3) = &quot;cT_&quot; Then
-      &apos;	 left(cSheetName2,5) = &quot;CONTA&quot;	Then
-      		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
-      	&apos;	thisComponent.Sheets.moveByName(cSheetName2 ,4)
+ cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ &apos; print cSheetName2
+ If left(cSheetName2,3) = &quot;cT_&quot; Then
+ &apos;	 left(cSheetName2,5) = &quot;CONTA&quot;	Then
+ 		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
+ 	&apos;	thisComponent.Sheets.moveByName(cSheetName2 ,4)
 			oSheet.isVisible = false &apos;true
-      EndIf
+ EndIf
 	Next
 	&apos;nasconde le copertine
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array  
-     &apos; print cSheetName2
-      If left(cSheetName2,3) = &quot;cP_&quot; Then
-      		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
-      	&apos;	thisComponent.Sheets.moveByName(cSheetName2 ,4)
+ cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ &apos; print cSheetName2
+ If left(cSheetName2,3) = &quot;cP_&quot; Then
+ 		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
+ 	&apos;	thisComponent.Sheets.moveByName(cSheetName2 ,4)
 			oSheet.isVisible = false &apos;true
-      EndIf
+ EndIf
 	Next
 	ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;).isVisible = false 
 end sub
@@ -111,21 +111,21 @@ end sub
 
 Sub Nascondi_tabs_contabilita_soltanto
 dim oSheets as object
-dim oSheet  as object
+dim oSheet as object
 dim aSheetNames as object
 dim cSheetName2 as string
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array  
-     &apos; print cSheetName2
-      If left(cSheetName2,3) = &quot;cT_&quot; Then
-      &apos;	 left(cSheetName2,5) = &quot;CONTA&quot;	Then
-      		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
-      		thisComponent.Sheets.moveByName(cSheetName2 ,4)
+ cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ &apos; print cSheetName2
+ If left(cSheetName2,3) = &quot;cT_&quot; Then
+ &apos;	 left(cSheetName2,5) = &quot;CONTA&quot;	Then
+ 		oSheet = ThisComponent.Sheets.getByIndex(i) &apos;
+ 		thisComponent.Sheets.moveByName(cSheetName2 ,4)
 			oSheet.isVisible = false &apos;true
 		 		 	
-      EndIf
+ EndIf
 	Next
 	
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
@@ -139,20 +139,20 @@ End Sub
 
 Sub Mostra_tabs_COMPUTO &apos; parliamo sempre di tabs accesorie: docs e Copertine
 	dim oSheets as object
-	dim oSheet  as object
+	dim oSheet as object
 	dim aSheetNames as object
 	dim cSheetName2 as string
 
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()&apos; pare vada ri-letta
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array  
-      If left(cSheetName2,3) = &quot;cP_&quot; Then
-      		oSheet = ThisComponent.Sheets.getByIndex(i)
-      		thisComponent.Sheets.moveByName(cSheetName2 ,7)
+ cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ If left(cSheetName2,3) = &quot;cP_&quot; Then
+ 		oSheet = ThisComponent.Sheets.getByIndex(i)
+ 		thisComponent.Sheets.moveByName(cSheetName2 ,7)
 			oSheet.isVisible = true
 			Thiscomponent.currentcontroller.setactivesheet(Osheet)
-      EndIf
+ EndIf
 	Next 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
 		thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
@@ -166,19 +166,19 @@ End Sub
 
 Sub Nascondi_tabs_COMPUTO_soltanto &apos; parliamo sempre di tabs accesorie: docs e Copertine
 dim oSheets as object
-dim oSheet  as object
+dim oSheet as object
 dim aSheetNames as object
 dim cSheetName2 as string
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()&apos; pare vada ri-letta
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array  
-      If left(cSheetName2,3) = &quot;cP_&quot; Then
-      		oSheet = ThisComponent.Sheets.getByIndex(i)
-      		thisComponent.Sheets.moveByName(cSheetName2 ,7)
+ cSheetName2 = aSheetNames( i ) &apos; get string from array 
+ If left(cSheetName2,3) = &quot;cP_&quot; Then
+ 		oSheet = ThisComponent.Sheets.getByIndex(i)
+ 		thisComponent.Sheets.moveByName(cSheetName2 ,7)
 			oSheet.isVisible = False
 			&apos;Thiscomponent.currentcontroller.setactivesheet(Osheet)
-      EndIf
+ EndIf
 	Next 
 
 End Sub
@@ -203,11 +203,11 @@ end sub
 
 Sub Svuota_CONTABILITA &apos;main
 	&apos;_____________________
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	if msgbox (&quot;(1) Sto per eliminare TUTTI i dati da questa tabella di CONTABILITA&apos; ed i relativi Sommari in Computo&quot; &amp; CHR$(10)_
 		&amp;&quot;PROSEGUO ? &quot; &amp; CHR$(10) _
-		&amp;  CHR$(10),36, &quot;Attento!!!&quot;) = 7 then
+		&amp; CHR$(10),36, &quot;Attento!!!&quot;) = 7 then
 		exit sub
 	end if
 	Svuota_CONTABILITA_esegui
@@ -215,13 +215,19 @@ Sub Svuota_CONTABILITA &apos;main
 end sub
 Sub Svuota_CONTABILITA_esegui (optional sSommari as String) &apos;(C) Giuseppe Vizziello 2014 - riscritta totalmente
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+	for i = 1 to 20 &apos;(questo 20 posso dedurlo dal quadro riepilogativo contabile)
+		if ThisComponent.NamedRanges.hasByName(&quot;Sal_&quot; &amp; i) then
+		 	ThisComponent.NamedRanges.removeByName(&quot;Sal_&quot; &amp; i)
+		end if
+	next
+		
  	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
 REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
 	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
-	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 rem riga di intestazione
 	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
 	oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
@@ -235,11 +241,12 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(13,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
 	oSheet.GetCellByPosition(15,2).setstring(&quot;Importi&quot;)
 	oSheet.GetCellByPosition(17,2).setstring(&quot;Sicurezza&quot; + chr(13) + &quot;inclusa&quot;)
-	oSheet.GetCellByPosition(18,2).setstring(&quot;Serve  per avere la quantità&quot; + chr(13) + &quot;realizzate “pulite” e sommabili&quot;)
+	oSheet.GetCellByPosition(18,2).setstring(&quot;Serve per avere le quantità&quot; + chr(13) + &quot;realizzate “pulite” e sommabili&quot;)
 	oSheet.GetCellByPosition(19,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
 	oSheet.GetCellByPosition(20,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
 	oSheet.GetCellByPosition(22,2).setstring(&quot;flag&quot;)
 	oSheet.GetCellByPosition(23,2).setstring(&quot;SAL&quot; + chr(13) +&quot;N.&quot;)
+	oSheet.GetCellByPosition(25,2).setstring(&quot;Importo&quot; + chr(13) +&quot;parziale&quot;)
 	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
 	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
 	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
@@ -249,84 +256,31 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
 	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
 Rem colore colonne riga di intestazione
-	oSheet.getCellRangeByPosition(0, 2, 35 , 2).cellstyle =  &quot;comp Int_colonna_R&quot; &apos;do un fondo a tutte
-	oSheet.getCellByPosition(0, 2).cellstyle =  &quot;comp Int_colonna_R_prima&quot;
-	oSheet.getCellByPosition(18, 2).cellstyle =  &quot;COnt_noP&quot;
-	oSheet.getCellRangeByPosition(31, 2, 32 , 2).cellstyle =  &quot;comp Int_colonna vert&quot;
+	oSheet.getCellRangeByPosition(0, 2, 35 , 2).cellstyle = &quot;comp Int_colonna_R&quot; &apos;do un fondo a tutte
+	oSheet.getCellByPosition(0, 2).cellstyle = &quot;comp Int_colonna_R_prima&quot;
+	oSheet.getCellByPosition(18, 2).cellstyle = &quot;COnt_noP&quot;
+	oSheet.getCellRangeByPosition(31, 2, 32 , 2).cellstyle = &quot;comp Int_colonna vert&quot;
+	oSheet.getCellRangeByPosition(0,0,0,3).rows.OptimalHeight = true &apos; ottimizza altezze
 Rem	riga di controllo importo
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
-	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
+	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
+	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
 	oSheet.getCellRangeByPosition(0, 1, 35 , 1).cellstyle = &quot;Reg_prog&quot;
 Rem riga del totale
 	oSheet.GetCellByPosition(2,3).setstring(&quot;T O T A L E&quot;)
-	oSheet.GetCellByPosition(15,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
-	oSheet.getCellRangeByPosition(0, 3, 35 , 3).cellstyle =  &quot;Comp TOTALI&quot;
+	oSheet.GetCellByPosition(15,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(17,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
+	oSheet.GetCellByPosition(30,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
+	oSheet.getCellRangeByPosition(0, 3, 35 , 3).cellstyle = &quot;Comp TOTALI&quot;
 Rem riga rossa
 	oSheet.GetCellByPosition(0,4).setstring(&quot;Fine Computo&quot;)
 	oSheet.getCellRangeByPosition(0, 4, 35 , 4).cellstyle = &quot;Riga_rossa_Chiudi&quot;
 
-	oSheet.getCellRangeByPosition(0,0,0,3).rows.OptimalHeight  = true &apos; ottimizza altezze
+
 apri_libretto_misure
-&apos;set_larghezza_colonne
+Visualizza_normale_esegui
 se_ci_sono_problemi_guarda_la_sub_di_Bart:
 end sub
-Sub Svuota_CONTABILITA_esegui_bart  (optional sSommari as String) &apos;non usata
-	&apos;ATTENZIONE, se arriva da dialog il parametro non è mai NULL
-	&apos; perché intercetta il clic del mouse o cose del genere...
-	if thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) then
-		oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-		if osheet.isVisible = false then
-			osheet.isVisible = TRUE
-			sState = &quot;chiusa&quot;
-		end if
-		oEnd=uFindString(&quot;T O T A L E&quot;, oSheet) 
-		lrowFine =oEnd.RangeAddress.EndRow-1
-		&apos;L&apos;ULTIMA (PRIMA DELLA RIGA ROSSA LA SVUOTO  SOLTANTO)
-		iCellAttr = _
-			com.sun.star.sheet.CellFlags.VALUE + _
-			com.sun.star.sheet.CellFlags.DATETIME + _
-			com.sun.star.sheet.CellFlags.STRING + _
-			com.sun.star.sheet.CellFlags.ANNOTATION + _
-			com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS + _
-			com.sun.star.sheet.CellFlags.HARDATTR + _
-			com.sun.star.sheet.CellFlags.EDITATTR &apos;+ _
-			com.sun.star.sheet.CellFlags.STYLES 
-		osheet.getCellRangeByPosition (0,lrowfine,48,lrowfine).ClearContents(iCellAttr)
-		osheet.getCellRangeByPosition (0,lrowfine,48,lrowfine).CellStyle = &quot;Reg_prog&quot;
-		lrowFine = lrowFine-1 &apos; &apos;oEnd.RangeAddress.EndRow-2 
 
-		If lrowFine &gt;= 2 then
-			oSheet.rows.removeByIndex (12, 22)&apos;lrowFine)
-		end if	
-	end if
-	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
-	Adatta_h_riga_intera_tabella(&quot;CONTABILITA&quot;)
-	if	sState = &quot;chiusa&quot; then
-		osheet.isVisible = false
-	end if &apos;
-
-	if sSommari = &quot;true&quot; then
-		&apos; pulisce anche i sommari in Computo
-		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-		iColEnd = getLastUsedCol(oSheet)
-		iColStart = 44
-		if iColEnd-iColStart+1 &gt; 0 then
-			oSheet.Columns.removeByindex(iColStart,iColEnd-iColStart+1)	
-		end if
-	end if
-		&apos;aggiunge una riga vuota &quot;quasi&quot; in testa e la formatta... NON è importante per il codice... ma pare ergonomico
-	insRows (2,2) &apos;insertByIndex non funziona
-&apos;	oSheet.getRows.insertByIndex(2, 2)&apos;
-	oSheet.getCellRangeByPosition(0, 2, 48 , 3).cellstyle =  &quot;Reg_prog&quot;
-&apos;	oSheet.getCellRangeByPosition(0, 2, 48 , 2).cellstyle =  &quot;comp In testa&quot;
-	oSheet.getCellRangeByPosition(0, 4, 48 , 4).cellstyle =  &quot;Comp TOTALI&quot;
-	oSheet.GetCellByPosition(2,2).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
-&apos;	oSheet.GetCellByPosition(25,2).FORMULA=&quot;=Z&quot; &amp; lrowFine+3
-&apos;	oSheet.GetCellByPosition(25,2).FORMULA=&quot;=ROUND(SUBTOTAL(9;Z4:Z&quot; &amp; lrowFine+2 &amp; &quot;);2)&quot;
-	oSheet.GetCellByPosition(15,2).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
-&apos;	oSheet.getCellbyPosition(15,2).cellstyle =&quot;comp In testa&quot;
-&apos;	oSheet.GetCellByPosition(25,lrowFine+2).FORMULA=&quot;=ROUND(SUBTOTAL(9;Z4:Z&quot; &amp; lrowFine+2 &amp; &quot;);2)&quot;
-	oSheet.GetCellByPosition(15,4).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot;
-end sub
 </script:module>

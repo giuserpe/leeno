@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_1" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                         
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_1" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -25,22 +25,22 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	end if
  	
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0  &apos;se ver. 3
+			iScarto = 0 &apos;se ver. 3
 		else
-			iscarto = 2  &apos;se vers. 4
+			iscarto = 2 &apos;se vers. 4
 	endif
 	oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
 
-	If MsgBox  (&quot;Sto per Taggare le voci di Elenco Prezzi e Analisi realmente utilizzate nel computo e nelle analisi.&quot;&amp; CHR$(10)_
-		&amp;	&quot;L&apos;operazione potrebbe richiedere molto tempo...  Se NON hai salvato, esci e Salva....&quot;_
-		&amp; &quot;e poi ripeti questo comando&quot;  &amp; CHR$(10) &amp; &quot;PROSEGUO senza salvare? &quot;, 292, &quot;Si tratta di un&apos;operazione Lunga!!!!&quot;) = 7 then
+	If MsgBox (&quot;Sto per Taggare le voci di Elenco Prezzi e Analisi realmente utilizzate nel computo e nelle analisi.&quot;&amp; CHR$(10)_
+		&amp;	&quot;L&apos;operazione potrebbe richiedere molto tempo... Se NON hai salvato, esci e Salva....&quot;_
+		&amp; &quot;e poi ripeti questo comando&quot; &amp; CHR$(10) &amp; &quot;PROSEGUO senza salvare? &quot;, 292, &quot;Si tratta di un&apos;operazione Lunga!!!!&quot;) = 7 then
 			exit sub
 	end if
 
-	If MsgBox  (&quot; Prima di procedere sarebbe meglio &quot;&quot;ripulire&quot;&quot; le colonne dei Tag!&quot; &amp; CHR$(10)_
+	If MsgBox (&quot; Prima di procedere sarebbe meglio &quot;&quot;ripulire&quot;&quot; le colonne dei Tag!&quot; &amp; CHR$(10)_
 				&amp; &quot; In modo da lavorare su una situazione &quot;&quot;pulita&quot;&quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot;  	&quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp;  &quot;RIPULISCO?  (Consigliato...) &quot;, 4+0+32, &quot;   PULIZIA DEI TAG ATTUALI &quot;) = 6 then
+				&amp; &quot; 	&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;RIPULISCO? (Consigliato...) &quot;, 4+0+32, &quot; PULIZIA DEI TAG ATTUALI &quot;) = 6 then
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			Pulisci_Colonne_tag	&apos;pulizia dei vecchi eventuali tag
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -51,16 +51,16 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
 	If Uscita_forzata = &quot;Esci&quot; then
-  	    exit sub	    
+ 	 exit sub	 
  	end if
  	
  	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	sString$ = &quot;Fine elenco&quot;
 	oEnd=uFindString(sString$, oSheet)	
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Quasi certamente manca la riga rossa di chiusura della tabella! Controlla e  PROVVEDI! &quot; &amp; CHR$(10)_
-			&amp;	&quot;   (   posizionati al fondo dell&apos;Elenco ed dai Ctrl Alt P )&quot;
+		msgbox &quot; Quasi certamente manca la riga rossa di chiusura della tabella! Controlla e PROVVEDI! &quot; &amp; CHR$(10)_
+			&amp;	&quot; ( posizionati al fondo dell&apos;Elenco ed dai Ctrl Alt P )&quot;
 		exit sub
 	end if 		
 	lrowE=oEnd.CellAddress.Row
@@ -73,13 +73,13 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	ThisComponent.CurrentController.Select(oCell)
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 &apos;	Barra_apri_chiudi_4
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
 	tag = &quot;UC&quot;
-   &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  	A_1 (tag)
 	&apos; percorre i computo e tagga in EP con UC
-   &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	If Uscita_forzata = &quot;Esci&quot; then
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
@@ -87,23 +87,23 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
  		 exit sub
  	end if
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 &apos;	Barra_apri_chiudi_4	
 	Tag = &quot;UA&quot;
 	Tagged = &quot;UC&quot;
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	A_2 (tag, tagged)	
 	&apos; percorre EP. cerca i tag UA and (AP) ,
-	&apos; quando trova, esegue  S_AN
+	&apos; quando trova, esegue S_AN
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	If Uscita_forzata = &quot;Esci&quot; then
 		 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 &apos;	Barra_apri_chiudi_4	
 
 	Tag = &quot;UA1&quot;
@@ -111,17 +111,17 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	A_2 (tag, tagged)	
 	&apos; percorre EP. cerca i tag UA1 and (AP) ,
-	&apos; quando trova, esegue  S_AN
+	&apos; quando trova, esegue S_AN
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	If Uscita_forzata = &quot;Esci&quot; then
 		 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 	Barra_chiudi_sempre_4
 &apos;	Barra_apri_chiudi_4	
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 
 	Tag = &quot;UA2&quot;
 	Tagged = &quot;UA1&quot;
@@ -129,17 +129,17 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	&apos;2° ciclo di annidamento
 	A_2 (tag, tagged)
 	&apos; percorre EP. cerca i tag UC and (AP) ,
-	&apos; quando trova, esegue  S_AN
+	&apos; quando trova, esegue S_AN
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	If Uscita_forzata = &quot;Esci&quot; then
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 	Barra_chiudi_sempre_4
 &apos;	Barra_apri_chiudi_4
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 	Tag = &quot;UA3&quot;
 	Tagged = &quot;UA2&quot;
 	&apos;3° ciclo di annidamento
@@ -148,10 +148,10 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
  	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 	&apos;Barra_apri_chiudi_4	
 		
 	Tag = &quot;UA4&quot;
@@ -162,10 +162,10 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
  	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 &apos;	Barra_apri_chiudi_4	
 		
 	Tag = &quot;UA5&quot;
@@ -177,10 +177,10 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	FP-23-5-0
 
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowE, 0)
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 &apos;	Barra_apri_chiudi_4
 	Tag = &quot;UA6&quot;
 	Tagged = &quot;UA5&quot;
@@ -193,7 +193,7 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 		Riordina_ElencoPrezzi 	
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	
 		Barra_chiudi_sempre_4
@@ -209,7 +209,7 @@ Errore:
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-	&apos;	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	&apos;	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 end sub
 
 
@@ -230,12 +230,12 @@ If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value
 end if
 
 	&apos; PRINT &quot;eseguo A_1&quot;
-	 oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)    
-	 lrow=2        
+	 oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+	 lrow=2 
  	 oCell = oSheet.GetCellByPosition( 1, lrow )
-	 xA =  &quot;&quot;
+	 xA = &quot;&quot;
 	 lUltimaRiga = getLastUsedRow(oSheet
-    passa_oltre:
+ passa_oltre:
 &apos;	print lUltimaRiga &amp;&quot; &quot; &amp; lrow
 	If lrow &gt;= lUltimaRiga then
 		goto Fine
@@ -247,55 +247,55 @@ do while oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;Fine Computo&q
 &apos;	xray ocell
 &apos;	lrowM = lrow
 	do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;
-	&apos;	Do  while xA = &quot;&quot; &apos; ciclo in Computo
+	&apos;	Do while xA = &quot;&quot; &apos; ciclo in Computo
 &apos;	print lrow
-		    If lrow &gt;= lUltimaRiga then
+		 If lrow &gt;= lUltimaRiga then
 					goto Fine
 			end if
  	 		lrow=lrow+1
-  		 	oCell = oSheet.GetCellByPosition( 1, lrow )
- 	&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+ 		 	oCell = oSheet.GetCellByPosition( 1, lrow )
+ 	&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
  	&apos;		PRint &quot;passo sempre?&quot;
- 		 	xA =  oCell.string 		
+ 		 	xA = oCell.string 		
 	Loop 
 	
 	If lrow &gt;= lUltimaRiga then
 		goto Fine
 	end if
-	if oSheet.GetCellByPosition( 0, lrow).string =  &quot;Fine Computo&quot; then
+	if oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine Computo&quot; then
 				 	 exit sub
-		  else
- 		  		xA =  oCell.string
-	  			Barra_chiudi_sempre_4
- 		  		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-  		  		Uscita_forzata = S_EP (xA, Tag)
-  		  		&apos;le segna su EP (da dovunque arrivi)??
-  		  		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-  		 		if Uscita_forzata = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+		 else
+ 		 		xA = oCell.string
+	 			Barra_chiudi_sempre_4
+ 		 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 		 		Uscita_forzata = S_EP (xA, Tag)
+ 		 		&apos;le segna su EP (da dovunque arrivi)??
+ 		 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ 		 		if Uscita_forzata = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 					exit sub
 				end if
-  		  		If Uscita_forzata = &quot;Esci1&quot; then
-  		  				Uscita_forzata = &quot;Esci&quot;   &apos;mirko
-  		  				ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+ 		 		If Uscita_forzata = &quot;Esci1&quot; then
+ 		 				Uscita_forzata = &quot;Esci&quot; &apos;mirko
+ 		 				ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
 						msgbox &quot;questo è il codice orfano...&quot;
- 		  				exit sub
- 		  		end if
- 		  		If Uscita_forzata = &quot;continua&quot; then
- 		  				oCellT = oSheet.GetCellByPosition( 1, lrow-1 )	
- 		  				oCellT.Cellbackcolor= RGB(159,207,36) &apos;(255,141,56)
- 		  		&apos;		ThisComponent.CurrentController.Select(ocell)
- 		  		&apos;		print &quot;colorato&quot;
- 		  				
- 		   		end if		
+ 		 				exit sub
+ 		 		end if
+ 		 		If Uscita_forzata = &quot;continua&quot; then
+ 		 				oCellT = oSheet.GetCellByPosition( 1, lrow-1 )	
+ 		 				oCellT.Cellbackcolor= RGB(159,207,36) &apos;(255,141,56)
+ 		 		&apos;		ThisComponent.CurrentController.Select(ocell)
+ 		 		&apos;		print &quot;colorato&quot;
+ 		 				
+ 		 		end if		
 
 				lrow= lrow +1
 				oCell = oSheet.GetCellByPosition( 1, lrow )
-				xA =  oCell.string
-			&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+				xA = oCell.string
+			&apos;	ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
  			&apos;	print &quot;su quale sheet mi tro?&quot;
 	end if
 Loop
-&apos;print &quot;A_1  b&quot; &apos;debug
+&apos;print &quot;A_1 b&quot; &apos;debug
 Fine:
 	Barra_chiudi_sempre_4
 exit sub
@@ -303,12 +303,12 @@ Errore:
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 		Barra_chiudi_sempre_4
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-	&apos;	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	&apos;	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END Sub
 
 &apos;_______________________________________________________________________________________+++++++++
 Sub A_2 (tag as string, Tagged as string) &apos; 	&apos; percorre EP. cerca i tag and Tagged ,
-												&apos; quando trova, esegue  S_AN
+												&apos; quando trova, esegue S_AN
 dim lrow as long
 dim lrowE as long
 dim lrowS as long
@@ -316,8 +316,8 @@ dim lrowS as long
 			Barra_apri_chiudi_4	
 
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
-			&apos;oCell = oSheet.GetCellByPosition( 6,2 )   
-	&apos;		Print &quot;riordino? &quot;  
+			&apos;oCell = oSheet.GetCellByPosition( 6,2 ) 
+	&apos;		Print &quot;riordino? &quot; 
 			lcolbase = Colonna_giusta_EP(osheet) 
 			if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase
@@ -332,23 +332,23 @@ dim lrowS as long
 			
 	&apos;		Print &quot;riordinato!!!&quot;
 			lrow = 1
-			oCell = oSheet.GetCellByPosition(lcolbase+ 9,lrow )  &apos;8
+			oCell = oSheet.GetCellByPosition(lcolbase+ 9,lrow ) &apos;8
 			Xa = oCell.string
 &apos;			print xa
 			oCellB = oSheet.GetCellByPosition(lcolbase+ 8,lrow )&apos;7
 			xB = oCellB.string
-			&apos;	 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+			&apos;	 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
 &apos;			print xb
 &apos;			print &quot;Tagged &quot; &amp; Tagged &amp; &quot; e Tag &quot; &amp; Tag
-			do While oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string  &lt;&gt; &quot;&quot; 
-				If oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string  = Tagged then REM SE IL TAG E&apos; UC
+			do While oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string &lt;&gt; &quot;&quot; 
+				If oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string = Tagged then REM SE IL TAG E&apos; UC
 				&apos;	print &quot; ecco Xa = &quot; &amp; Tagged
 					If oSheet.GetCellByPosition(lcolbase+ 8,lrow ).string = &quot;(AP)&quot; Then
-&apos;						   oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string =&quot;=$&apos;&quot; then
+&apos;						 oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string =&quot;=$&apos;&quot; then
 					&apos;	oCellB = oSheet.GetCellByPosition( 0,lrow )
 						xB = oSheet.GetCellByPosition(lcolbase+ 0,lrow ).string
 						Barra_chiudi_sempre_4
-						Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrow, 0)
+						Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrow, 0)
 						&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 						&apos;print tag
 					&apos;	print xb
@@ -359,12 +359,12 @@ dim lrowS as long
 						&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 						If Uscita_forzata = &quot;Esci&quot; then
 						&apos;	 print &quot; Uscita_forzata &quot;
- 	 						   exit sub
+ 	 						 exit sub
 							end if
 					end if
 				end if
 				lrow = lrow+1
-				oCell = oSheet.GetCellByPosition(lcolbase+ 8,lrow )  &apos;7
+				oCell = oSheet.GetCellByPosition(lcolbase+ 8,lrow ) &apos;7
 			loop	
 	Barra_chiudi_sempre_4				
 end Sub
@@ -379,11 +379,11 @@ Function S_AN (Tag as string, xC as string)
 	Barra_chiudi_sempre_4
 	Barra_apri_chiudi_4	
 	oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-&apos;	print &quot;dentro  &quot; + xC
+&apos;	print &quot;dentro &quot; + xC
 &apos;	Trattini_in_Analisi
 	CellaCercata = TrovaSTR(sString$, oSheetAnalisi)
 	If IsNull(CellaCercata) then
-		msgbox &quot;non trovo il codice:   &quot; &amp; xC &amp; CHR$(10)&amp; &quot;&quot; &amp; CHR$(10)_
+		msgbox &quot;non trovo il codice: &quot; &amp; xC &amp; CHR$(10)&amp; &quot;&quot; &amp; CHR$(10)_
 		&amp; &quot;Proseguo ugualmente, ma probabilmente non ho segnato &quot; &amp; xC &amp; &quot;(sempre esista) come &quot;&quot;usata&quot;&quot; &quot; &amp; CHR$(10)_
 		&amp; &quot;Pertanto il risultato di questa macro probabilmente non è attendibile!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;Probabilmente è solo un problema di maiuscole/minuscole! Prova a cancellare la voce dall&apos;EP e ricrearla nuovamente dalla Analisi di Prezzo&quot;
@@ -403,9 +403,9 @@ Function S_AN (Tag as string, xC as string)
 		oSheetAnalisi.GetCellByPosition(11, lrowA).string = &quot;usata&quot; rem TAG
 	end if
 	lrowA=lrowA+1
-	Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; lrowA &amp; &quot; di &quot; &amp; lastR, 0)
-	xA =  oCell.string
-	xD =  oCell.string &apos; sigla da tornare a taggare in Elenco
+	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowA &amp; &quot; di &quot; &amp; lastR, 0)
+	xA = oCell.string
+	xD = oCell.string &apos; sigla da tornare a taggare in Elenco
 &apos;	Barra_chiudi_sempre_4
 &apos;	Barra_apri_chiudi_4	
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	 		 
@@ -432,8 +432,8 @@ dim sString as string
 					exit function
 				end if
  			
-				oCell = oSheet.GetCellByPosition(lcolbase + 0,1 )      
-&apos;				ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+				oCell = oSheet.GetCellByPosition(lcolbase + 0,1 ) 
+&apos;				ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
 &apos;						print &quot;elenco -- Xa: &quot; &amp; Xa &amp; &quot;|| e con Tag: &quot; &amp; Tag
 						&apos;circoscrive l&apos;elenco e cerca la fine
 				sString$ = &quot;Fine elenco&quot;
@@ -453,21 +453,21 @@ dim sString as string
 				&apos;brancaleone
 
 				If IsNull(oIniz) then
-							sDomanda = MsgBox  (&quot;La voce di Computo &lt; &quot; &amp; sString &amp; &quot; &gt; non esiste in Elenco Prezzi!&quot; &amp; CHR$(10)_
+							sDomanda = MsgBox (&quot;La voce di Computo &lt; &quot; &amp; sString &amp; &quot; &gt; non esiste in Elenco Prezzi!&quot; &amp; CHR$(10)_
 							&amp; &quot;Se si tratta di Opere Pubbliche il fatto è illegale. In tal caso esci e risolvi il problema!&quot;&amp; CHR$(10)_
 							&amp; &quot;Se invece è un computo per privati puoi ignorare la cosa e proseguire...&quot;&amp; CHR$(10)_
 							&amp; &quot;Che faccio PROSEGUO? &quot;, 292, &quot;&quot;)
 					if sDomanda = 7 then
 					&apos;	Uscita_forzata = &quot;Esci1&quot;
-						S_EP  = &quot;Esci1&quot;
+						S_EP = &quot;Esci1&quot;
 					&apos;	print &quot;esco per doppio mancante!&quot;
 						exit function 
 					end if
-				  	If  sDomanda = 6 then
-					  	&apos;	Uscita_forzata = &quot;continua&quot;
-					  			S_EP  = &quot;continua&quot;
-					  	&apos;	print &quot; proseguo&quot;
-					  		exit function 
+				 	If sDomanda = 6 then
+					 	&apos;	Uscita_forzata = &quot;continua&quot;
+					 			S_EP = &quot;continua&quot;
+					 	&apos;	print &quot; proseguo&quot;
+					 		exit function 
 					end if
 				end if				
 				lrowS=oIniz.CellAddress.Row 
@@ -478,15 +478,15 @@ dim sString as string
 				end if 
 				oCell = oSheet.GetCellByPosition(lcolbase + 0,lrowS )
 				ThisComponent.CurrentController.Select(oCell)	&apos;debug
-				xA =  oCell.string 
+				xA = oCell.string 
 				oCell = oSheet.GetCellByPosition( lcolbase +9, lrowS) &apos;8
 				oCell.string = Tag
 				oCell.Cellbackcolor= RGB(255,0,0)&apos; 10&apos; 1 nero&apos;&amp;HCCCCCC grigio&apos;&amp;H00000 nero
 				oCell = oSheet.GetCellByPosition(lcolbase + 7, lrowS)
 				oCell.Cellbackcolor= RGB(255,141,56)
-			    oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+			 oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
 				 oCell = oSheet.GetCellByPosition( 1, lrow+1 )
-	    		 xA =  oCell.string
+	 		 xA = oCell.string
 &apos;@	passa_oltre:
 				Barra_chiudi_sempre_4
 end function

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie_1" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                          
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie_1" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -16,9 +16,9 @@
 
 SUB DOPPIONI_TROVA_Durante (lrowPartenza as long, codice as string)&apos; _no_rior
  &apos;&apos;&apos;&apos;la registrazione della voce in EP
-&apos; cerca  solo il doppione di quella voce in trasferimento
+&apos; cerca solo il doppione di quella voce in trasferimento
 	&apos;_____________________
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -36,7 +36,7 @@ SUB DOPPIONI_TROVA_Durante (lrowPartenza as long, codice as string)&apos; _no_ri
  end if
  	 
  
- lscarto = 0  &apos;per la 4
+ lscarto = 0 &apos;per la 4
 			
 
 lrow = 1
@@ -44,7 +44,7 @@ lUltimaRiga = getLastUsedRow(oSheet)
 If lrow &gt;= lUltimaRiga then
 		goto Fine
 	end if
-do while oSheet.GetCellByPosition( lcolbase+0,lrow ).string  = &quot;&quot;
+do while oSheet.GetCellByPosition( lcolbase+0,lrow ).string = &quot;&quot;
 	lrow = lorw+1
 loop
 
@@ -67,12 +67,12 @@ loop
 				exit sub
 			end if
 			vScelta = msgbox( &quot;(111) Come puoi vedere il codice di questa voce: &quot; &amp; CHR$(10) _
-				&amp; &quot;    &quot; &amp; codice &amp; &quot; &quot; &amp; CHR$(10) _
+				&amp; &quot; &quot; &amp; codice &amp; &quot; &quot; &amp; CHR$(10) _
 				&amp; xA &amp; &quot; è già presente nell&apos;Elenco Prezzi! &quot;&amp; CHR$(10) _
 				&amp; &quot; &quot;&amp; CHR$(10)_
-				&amp; &quot;        Annullo l&apos;operazione? &quot;, 36)
-            if vScelta = 6 then
-			    	Dim oDisp as object
+				&amp; &quot; Annullo l&apos;operazione? &quot;, 36)
+ if vScelta = 6 then
+			 	Dim oDisp as object
 					 oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
@@ -92,12 +92,12 @@ loop
 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-  					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
+ 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
+ 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
+ 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
+ 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
  					 oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-					 ocell =  oSheet.GetCellByPosition( 0,lrowPartenza)
+					 ocell = oSheet.GetCellByPosition( 0,lrowPartenza)
 					 ThisComponent.CurrentController.Select(ocell )
 					exit SUB
 				else
@@ -107,7 +107,7 @@ loop
 		end if	
 		exit sub
 			lrow = lrow+1
-			oCell = oSheet.GetCellByPosition( lcolbase+0,lrow )  
+			oCell = oSheet.GetCellByPosition( lcolbase+0,lrow ) 
 			Xa = oCell.string
 			oCellB = oSheet.GetCellByPosition( lcolbase+0,lrow+1 )
 			xB = oCellB.string &apos;
@@ -131,7 +131,7 @@ End select
 &apos;print &quot; 2&quot;
 		oEnd=uFindString(sString$, oSheet) 
 &apos;print &quot;3&quot;	
-		if isNull (oEnd) or isEmpty (oEnd)  then
+		if isNull (oEnd) or isEmpty (oEnd) then
 			Controllo_riga_rossa = &quot;Fallito&quot;
 			Controllo_riga_rossa = &quot;&quot;
 		end if
@@ -162,13 +162,13 @@ Function ControlloConfermaDati() &apos; Funzione di controllo
 	&apos;do not single step / run through Basic IDE. Results are inpredictible
 	&apos;by ms777 --- &apos; Assemblata da Lido Bernardini
 &apos;	On Error Goto ErrorHandler &apos; Se c&apos; è un errore salta alla label ErrorHandler
-	oDoc   =  ThisComponent
+	oDoc = ThisComponent
 	
-	&apos;print &quot; se leggi questo messaggio informami specificando: Varie.ControlloConfermaDati  e la macro che stavi eseguendo | grazie! (Bart)&quot;
+	&apos;print &quot; se leggi questo messaggio informami specificando: Varie.ControlloConfermaDati e la macro che stavi eseguendo | grazie! (Bart)&quot;
 &apos;	xray ThisComponent
-	oAC    = oDoc.CurrentController.Frame.ComponentWindow.accessibleContext
+	oAC = oDoc.CurrentController.Frame.ComponentWindow.accessibleContext
 
-&apos; inserita per usare lo &quot;schermo intero&quot;  Ciò se la variabile Schermo intero è attiva
+&apos; inserita per usare lo &quot;schermo intero&quot; Ciò se la variabile Schermo intero è attiva
 &apos; non esegue questa macro di controllo
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value &lt;&gt; 0 then
@@ -176,29 +176,29 @@ If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 	end if
 end if	&apos; aggiunta il 080512
 
-	if  oAC.AccessibleChildCount = 3  then
- 			msgbox &quot;  Probabilmente c&apos;è una qualche barra (or Finestra ancorata) di troppo. CHIUDILA! &quot;&amp; CHR(10) &amp; CHR(10)_
+	if oAC.AccessibleChildCount = 3 then
+ 			msgbox &quot; Probabilmente c&apos;è una qualche barra (or Finestra ancorata) di troppo. CHIUDILA! &quot;&amp; CHR(10) &amp; CHR(10)_
  				&amp;	&quot;(se si tratta di una finestra probabilmente è sufficiente renderla &quot;&quot;flottante&quot;&quot;)&quot; &amp; CHR(10)_
  				 &amp; &quot; &quot; &amp; CHR(10)_
- 			   	&amp; &quot; In ogni caso io proseguo... , ma senza effettuare i controlli...&quot; &amp; CHR(10) &amp; CHR(10)_
+ 			 	&amp; &quot; In ogni caso io proseguo... , ma senza effettuare i controlli...&quot; &amp; CHR(10) &amp; CHR(10)_
 			&amp; &quot; &quot;
 			ControlloConfermaDati = &quot;Diverso da Esci&quot;
 			exit function		
 	end if	
-	if  oAC.AccessibleChildCount = 1  then
- 			msgbox &quot;    La &quot;&quot;Barra di Calcolo&quot;&quot; è chiusa! &quot;&amp; CHR(10) &amp; CHR(10)_
- 			   	&amp; &quot;         ----------- APRILA! ----------   &quot;&amp; CHR(10) &amp; CHR(10)_
-			&amp; &quot;( Menu &gt; Visualizza,  &quot;&quot;spunta&quot;&quot; su Barra di Calcolo ) &quot;
+	if oAC.AccessibleChildCount = 1 then
+ 			msgbox &quot; La &quot;&quot;Barra di Calcolo&quot;&quot; è chiusa! &quot;&amp; CHR(10) &amp; CHR(10)_
+ 			 	&amp; &quot; ----------- APRILA! ---------- &quot;&amp; CHR(10) &amp; CHR(10)_
+			&amp; &quot;( Menu &gt; Visualizza, &quot;&quot;spunta&quot;&quot; su Barra di Calcolo ) &quot;
 			ControlloConfermaDati = &quot;Esci&quot;
 			exit function		
 	end if	
 	&apos; These variables are needed for all/some of the functions
-	oACToolbar        = oAC.getAccessibleChild(1).accessibleContext &apos; Questa riga rileva 
+	oACToolbar = oAC.getAccessibleChild(1).accessibleContext &apos; Questa riga rileva 
 		&apos;un componente della finestra di Calc &quot;Child(1)&quot; che dovrebbe essre la &quot; Barra di calcolo&quot;
 &apos;		XRAY 	oACToolbar
 	If oACToolbar.AccessibleChildCount = 10 then
-		msgbox &quot;  Probabilmente c&apos;è una qualche barra di troppo! &quot;&amp; CHR(10) &amp; CHR(10)_
- 			   	&amp; &quot; Proseguo ugualmente senza effettuare i controlli...&quot; &amp; CHR(10) &amp; CHR(10)_
+		msgbox &quot; Probabilmente c&apos;è una qualche barra di troppo! &quot;&amp; CHR(10) &amp; CHR(10)_
+ 			 	&amp; &quot; Proseguo ugualmente senza effettuare i controlli...&quot; &amp; CHR(10) &amp; CHR(10)_
 			&amp; &quot; &quot;
 			ControlloConfermaDati = &quot;Diverso da Esci&quot;
 			exit function	
@@ -211,7 +211,7 @@ end if	&apos; aggiunta il 080512
 &apos;	XRAY 	oACToolbar
 	fName = oACFunctionAccept.AccessibleName &apos; Rileva il nome del componente
 &apos;	xray fName
-&apos;PRINT &quot;nome?  &quot; &amp; FnAME
+&apos;PRINT &quot;nome? &quot; &amp; FnAME
 &apos;If fName = &quot;Funzione&quot; then &apos;Or fName = &quot;Accept&quot; Then
 	If fName = &quot;Accetta&quot; Or fName = &quot;Accept&quot; Then &apos; Se il nome è &quot;Accetta&quot; esegue le linee se è
 				 &apos; &quot;Funzione&quot; le salta(Ho aggiunto &quot;Accept per chi usa OOo in inglese
@@ -233,14 +233,14 @@ end if	&apos; aggiunta il 080512
 	Exit Function
 	ErrorHandler: &apos; potrebbe trattarsi anche di altro... ma questo è il piè probabile
 	msgbox &quot;Si è verificato un errore, controlla che la Barra di Calcolo sia aperta &quot;&amp; CHR(10) &amp; CHR(10)_
-		&amp; &quot;( Menu &gt; Visualizza,  &quot;&quot;spunta&quot;&quot; su Barra di Calcolo ) &quot;
+		&amp; &quot;( Menu &gt; Visualizza, &quot;&quot;spunta&quot;&quot; su Barra di Calcolo ) &quot;
 	ControlloConfermaDati = &quot;Esci&quot;
 End Function
 
 
 &apos;_______________________________________________________________________________________________________
 Function Range2Cell (optional flag) &apos;NUOVA funzione da richiamare da altri moduli
-			&apos; restitusce  una Row anche se l&apos;utente ha selezionato un range
+			&apos; restitusce una Row anche se l&apos;utente ha selezionato un range
 			&apos; (&quot;Mai fidarsi dell&apos;utente... - Paolom &quot;)
 &apos; flag per non evidenziare il messaggio
 	if HasUnoInterfaces( thisComponent.getCurrentSelection, &quot;com.sun.star.drawing.XShapes&quot; ) = true then
@@ -265,7 +265,7 @@ end Function
 
 
 Function Range2Cell____________________________ () &apos; funzione da richiamare da altri moduli
-			&apos; restitusce  una Row anche se l&apos;utente ha selezionato un range
+			&apos; restitusce una Row anche se l&apos;utente ha selezionato un range
 			&apos; (&quot;Mai fidarsi dell&apos;utente... - Paolom &quot;)
 			&apos;dora
 	on error goto errore
@@ -273,7 +273,7 @@ Function Range2Cell____________________________ () &apos; funzione da richiamare
 &apos;	Verifica_chiudi_preview
 	odoc=thisComponent
 	oZelle=oDoc.getCurrentSelection()
-&apos;    if oZelle =	com.sun.star.drawing.SvxShapeCollection then
+&apos; if oZelle =	com.sun.star.drawing.SvxShapeCollection then
 
 	checkzelle=HasUnoInterfaces( oZelle, &quot;com.sun.star.table.XCell&quot; )
 	if checkzelle then
@@ -289,7 +289,7 @@ Function Range2Cell____________________________ () &apos; funzione da richiamare
 	exit function
 	errore:
 &apos;	Range2Cell = oDoc.getCurrentSelection()
-	Range2Cell = -1  &apos;(-1 come valore di errore)
+	Range2Cell = -1 &apos;(-1 come valore di errore)
 end Function
 
 &apos;********************************************************************************
@@ -301,11 +301,11 @@ Function Range2Cell_COL () &apos; funzione da richiamare da altri moduli
 	oZelle=oDoc.getCurrentSelection()
 	checkzelle=HasUnoInterfaces( oZelle, &quot;com.sun.star.table.XCell&quot; )
 &apos;xray checkzelle
-  sEsco = ControlloConfermaDati &apos;controlla se si è modo Editazione
+ sEsco = ControlloConfermaDati &apos;controlla se si è modo Editazione
  &apos; If sEsco = &quot;Esci&quot; then
- &apos;	   exit function
+ &apos;	 exit function
  &apos; end if &apos; fine controllo
-  
+ 
 	if checkzelle then
 			Range2Cell_COL= ozelle.celladdress.column
 		else
@@ -313,7 +313,7 @@ Function Range2Cell_COL () &apos; funzione da richiamare da altri moduli
 	end if
 end Function
 
-Sub Inserisci_100()  &apos; serve ad un tubo... a meno che non la modifico per la cpia da s1 
+Sub Inserisci_100() &apos; serve ad un tubo... a meno che non la modifico per la cpia da s1 
 &apos; del blocchetto ... da usare su computi vecchi 
 dim nome as string
 Dim oDoc As Object
@@ -351,39 +351,39 @@ Dim iflag
 		else
 			lcol = 3
 	end if
-	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente             
- 	 oCelle=thisComponent.getCurrentSelection().getCellAddress()    
-	 lrow=oCelle.Row        
-	  oCell = oSheet.GetCellByPosition(7,lrow )      
-	  ThisComponent.CurrentController.Select(oCell)	
-	  oCell.formula= &quot;100%&quot;
-	  oCell.cellstyle=&quot;An-lavoraz-dx% ins&quot;
+	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ 	 oCelle=thisComponent.getCurrentSelection().getCellAddress() 
+	 lrow=oCelle.Row 
+	 oCell = oSheet.GetCellByPosition(7,lrow ) 
+	 ThisComponent.CurrentController.Select(oCell)	
+	 oCell.formula= &quot;100%&quot;
+	 oCell.cellstyle=&quot;An-lavoraz-dx% ins&quot;
 end sub 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Sub Salva_temp
-   oDoc = ThisComponent
-   &apos; Get the document&apos;s controller.
-   oDocCtrl = oDoc.getCurrentController()
-   &apos; Get the frame from the controller.
-   oDocFrame = oDocCtrl.getFrame()
-   oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
-   Dim myProps(1) as New com.sun.star.beans.PropertyValue
-   &apos;il valore di questo array va impostato a 1
-    oSheet = ThisComponent.CurrentController.ActiveSheet
-    
-    dim sUrl2, sNameDest as string
+ oDoc = ThisComponent
+ &apos; Get the document&apos;s controller.
+ oDocCtrl = oDoc.getCurrentController()
+ &apos; Get the frame from the controller.
+ oDocFrame = oDocCtrl.getFrame()
+ oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+ Dim myProps(1) as New com.sun.star.beans.PropertyValue
+ &apos;il valore di questo array va impostato a 1
+ oSheet = ThisComponent.CurrentController.ActiveSheet
+ 
+ dim sUrl2, sNameDest as string
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 
 	sCartella = ThisComponent.getURL() &apos; file sorgente
-   
-  sUrl= sCartella +  &quot;_temp_&quot; + &quot;.ods&quot;
+ 
+ sUrl= sCartella + &quot;_temp_&quot; + &quot;.ods&quot;
 
-  &apos; salviamo comunque il doc corrente
- &apos;  oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
-  &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+ &apos; salviamo comunque il doc corrente
+ &apos; oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+ &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
  
 
 	&apos; get access to the document
@@ -407,19 +407,19 @@ Sub Salva_temp
 End Sub 
 
 Sub Salva_copia_data &apos; salva il doc corrente con nuovo nome con data
-   oDoc = ThisComponent
-   &apos; Get the document&apos;s controller.
-   oDocCtrl = oDoc.getCurrentController()
-   &apos; Get the frame from the controller.
-   oDocFrame = oDocCtrl.getFrame()
-   oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
-   Dim myProps(1) as New com.sun.star.beans.PropertyValue
-   &apos;il valore di questo array va impostato a 1
-    oSheet = ThisComponent.CurrentController.ActiveSheet
-    
-    dim sUrl2, sNameDest as string
+ oDoc = ThisComponent
+ &apos; Get the document&apos;s controller.
+ oDocCtrl = oDoc.getCurrentController()
+ &apos; Get the frame from the controller.
+ oDocFrame = oDocCtrl.getFrame()
+ oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+ Dim myProps(1) as New com.sun.star.beans.PropertyValue
+ &apos;il valore di questo array va impostato a 1
+ oSheet = ThisComponent.CurrentController.ActiveSheet
+ 
+ dim sUrl2, sNameDest as string
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 
 
@@ -443,19 +443,19 @@ Sub Salva_copia_data &apos; salva il doc corrente con nuovo nome con data
 		sName = left(sName,iPos)
 	end if
 	sName = Replace_G(sName, &quot;.ods&quot;, &quot;&quot;) 
-	sSuffX =  gina_furbetta_2
+	sSuffX = gina_furbetta_2
 	sName = sName &amp; &quot;_Utmp&quot; &amp; sSuffX &amp; &quot;.ods&quot;
 	sNewURL = sPath &amp; sName 
 
 &apos;	vecchio modo
 &apos;	sCartella = ConvertToUrl(ThisComponent.getURL()) 
 &apos;	sCartella = Replace_G(sCartella, &quot;.ods&quot;, &quot;&quot;) 
-&apos;	temp =  gina_furbetta_2
+&apos;	temp = gina_furbetta_2
 &apos;	sUrl = sCartella &amp; temp &amp; &quot;.ods&quot;
 
-  &apos; salviamo comunque il doc corrente
- &apos;  oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
-  &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+ &apos; salviamo comunque il doc corrente
+ &apos; oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+ &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
  
 	&apos; get access to the document
 	oDocumentModel = ThisComponent
@@ -478,18 +478,18 @@ End Sub
 
 
 Sub Salva_copia_data__ &apos; salva il doc corrente con nuovo nome con data
-   oDoc = ThisComponent
-   &apos; Get the document&apos;s controller.
-   oDocCtrl = oDoc.getCurrentController()
-   &apos; Get the frame from the controller.
-   oDocFrame = oDocCtrl.getFrame()
-   oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
-   Dim myProps(1) as New com.sun.star.beans.PropertyValue
-   &apos;il valore di questo array va impostato a 1
-    oSheet = ThisComponent.CurrentController.ActiveSheet
-    
-    dim sUrl2, sNameDest as string
-    GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+ oDoc = ThisComponent
+ &apos; Get the document&apos;s controller.
+ oDocCtrl = oDoc.getCurrentController()
+ &apos; Get the frame from the controller.
+ oDocFrame = oDocCtrl.getFrame()
+ oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+ Dim myProps(1) as New com.sun.star.beans.PropertyValue
+ &apos;il valore di questo array va impostato a 1
+ oSheet = ThisComponent.CurrentController.ActiveSheet
+ 
+ dim sUrl2, sNameDest as string
+ GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 
 	sURL = ConvertToUrl(ThisComponent.getURL()) 
 	sName = FileNameoutofPath(sURL)
@@ -497,19 +497,19 @@ Sub Salva_copia_data__ &apos; salva il doc corrente con nuovo nome con data
 	if len(sName) &gt; 50 then
 		sName = left(sName, 50)
 	end if
-	temp =  gina_furbetta_2
+	temp = gina_furbetta_2
 	sNewURL = sPath &amp; sName &amp; temp &amp; &quot;.ods&quot;
 
 &apos;	vecchio modo
 &apos;	sCartella = ConvertToUrl(ThisComponent.getURL()) 
 &apos;	sCartella = Replace_G(sCartella, &quot;.ods&quot;, &quot;&quot;) 
-&apos;	temp =  gina_furbetta_2
+&apos;	temp = gina_furbetta_2
 &apos;	sUrl = sCartella &amp; temp &amp; &quot;.ods&quot;
 
 
-  &apos; salviamo comunque il doc corrente
- &apos;  oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
-  &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+ &apos; salviamo comunque il doc corrente
+ &apos; oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+ &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
  
 
 	&apos; get access to the document
@@ -572,37 +572,37 @@ FUNCTION gina_furbetta_2&apos; funzione che prende la data, minuti secondi di si
 END FUNCTION 
 
 Function getLastUsedCol(oSheet as Object) as Integer
-  Dim oCell As Object
-  Dim oCursor As Object
-  Dim aAddress As Variant
-  
-  oCell = oSheet.GetCellbyPosition( 0, 0 )
+ Dim oCell As Object
+ Dim oCursor As Object
+ Dim aAddress As Variant
+ 
+ oCell = oSheet.GetCellbyPosition( 0, 0 )
  &apos; print thisComponent.currentcontroller.activesheet.name
 &apos;			ThisComponent.CurrentController.Select(oSheet)&apos; debug
 	&apos;		ThisComponent.CurrentController.Select(oCell)
 	&apos;		print &quot;tab in cui cercare&quot;
-  oCursor = oSheet.createCursorByRange(oCell)
-  oCursor.GotoEndOfUsedArea(True)
-  aAddress = oCursor.RangeAddress
-  getLastUsedCol = aAddress.EndColumn
+ oCursor = oSheet.createCursorByRange(oCell)
+ oCursor.GotoEndOfUsedArea(True)
+ aAddress = oCursor.RangeAddress
+ getLastUsedCol = aAddress.EndColumn
 End Function
 
 
 		&apos; Given the name of a sheet, return it&apos;s index.
 		&apos; Return -1 if not found.
 Function SheetNameToNumber( ByVal cSheetName As String ) As Long
-   oSheets = ThisComponent.getSheets()
-   &apos; aSheetNames is an Array() of String.  (The sheet names).   
-   aSheetNames = oSheets.getElementNames()
-   
-   For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array
-      If cSheetName = cSheetName2 Then
-         SheetNameToNumber() = i
-         Exit Function
-      EndIf
-   Next  
-   SheetNameToNumber() = -1
+ oSheets = ThisComponent.getSheets()
+ &apos; aSheetNames is an Array() of String. (The sheet names). 
+ aSheetNames = oSheets.getElementNames()
+ 
+ For i = LBound( aSheetNames ) To UBound( aSheetNames )
+ cSheetName2 = aSheetNames( i ) &apos; get string from array
+ If cSheetName = cSheetName2 Then
+ SheetNameToNumber() = i
+ Exit Function
+ EndIf
+ Next 
+ SheetNameToNumber() = -1
 End Function 
 
 
@@ -615,9 +615,9 @@ END SUB
 
 
 Function getLastUsedRow (oSheet as Object) as long &apos;Integer (non bastava su tabelle lunghe: Overflow)
-  Dim oCell As Object
-  Dim oCursor As Object
-  Dim aAddress As Variant
+ Dim oCell As Object
+ Dim oCursor As Object
+ Dim aAddress As Variant
  &apos; xray osheet
 	if ismissing (oSheet) or isnull(oSheet) then
  		oSheet = ThisComponent.currentController.activeSheet
@@ -651,20 +651,20 @@ Dim oCellB as object
 	 xA = oCell.string
 &apos;	oCellB = oSheet.GetCellByPosition( lcol , lrow-1)
 	 &apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug
-&apos;	  print  lrow
+&apos;	 print lrow
 	 sCol= ColumnNameOf(lcol)
 &apos;	 do while xA &lt;&gt; &quot;-&quot;
 &apos;xray oSheet.GetCellByPosition( lcol , lrow)
 	
 &apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 6 , lrow)) &apos; debug
-&apos;	  print oSheet.GetCellByPosition( 6 , lrowF).CellStyle
+&apos;	 print oSheet.GetCellByPosition( 6 , lrowF).CellStyle
 &apos;	do while oSheet.GetCellByPosition( 0 , lrowF).string &lt;&gt; &quot;----&quot; and _
 &apos; qui si è già incasinato il 9/5/07
 	do while oSheet.GetCellByPosition( 6 , lrowF).CellStyle &lt;&gt; &quot;An-lavoraz-Utili-num sin&quot; and _
 			 oSheet.GetCellByPosition( 0 , lrowF).string &lt;&gt; &quot;----&quot; and _
 			 (Trova_Attr_N (oSheet.GetCellByPosition( 0, lrowF ), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot;
 &apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 6 , lrowF)) &apos; debug
-&apos;		  print  &quot;AAAA&quot; &amp; lrowF
+&apos;		 print &quot;AAAA&quot; &amp; lrowF
 	 	lrowF = lrowF+1
 	loop
 &apos;	lrowF = lrowF-1
@@ -685,15 +685,15 @@ Dim oCellB as object
 		oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^Sommano^&quot; or _
 		oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;Sommano&quot; then
 		lrowS = lrowS+2
-	  else
+	 else
 		lrowS = lrowS+1
 	end if
 
 &apos;	 lrow = lrow+3	
-&apos;     sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrow-1 &amp; &quot;:&quot; &amp; sCol &amp; lrowE &amp; &quot;)*D&quot;  &amp; lrowE+1
-    	
-      sFormula =  &quot;=G&quot; &amp; lrowE &amp; &quot;/SUM(&quot; &amp; sCol &amp; lrowS &amp; &quot;:&quot; &amp; sCol &amp; lrowF &amp; &quot;)&quot;&apos;  &amp; lrowE+1
-   &apos; 	print sFormula
+&apos; sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrow-1 &amp; &quot;:&quot; &amp; sCol &amp; lrowE &amp; &quot;)*D&quot; &amp; lrowE+1
+ 	
+ sFormula = &quot;=G&quot; &amp; lrowE &amp; &quot;/SUM(&quot; &amp; sCol &amp; lrowS &amp; &quot;:&quot; &amp; sCol &amp; lrowF &amp; &quot;)&quot;&apos; &amp; lrowE+1
+ &apos; 	print sFormula
 	 oCellB.setformula(sFormula	 )
 end Function
 
@@ -715,7 +715,7 @@ Dim oCellB as object
 	 xA = oCell.string
 &apos;	oCellB = oSheet.GetCellByPosition( lcol , lrow-1)
 	 	ThisComponent.CurrentController.Select(oCell) &apos; debug
-	  lrowS = lrow
+	 lrowS = lrow
 	 sCol= ColumnNameOf(lcol)
 &apos;	 do while xA &lt;&gt; &quot;-&quot;
 
@@ -734,10 +734,10 @@ Dim oCellB as object
 &apos;	 lrow = lrow+3	
 	&apos; sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrow-1 &amp; &quot;:&quot; &amp; sCol &amp; lrowE &amp; &quot;)&quot;
 	&apos;sMolt= &quot;D&quot; 
-     sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowS &amp; &quot;:&quot; &amp; sCol &amp; lrowE &amp; &quot;)*D&quot;  &amp; lrowE+1
-     
-     &apos;	ThisComponent.CurrentController.Select(oCellB) &apos; debug
-    &apos;	print sFormula 
+ sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowS &amp; &quot;:&quot; &amp; sCol &amp; lrowE &amp; &quot;)*D&quot; &amp; lrowE+1
+ 
+ &apos;	ThisComponent.CurrentController.Select(oCellB) &apos; debug
+ &apos;	print sFormula 
 	 oCellB.setformula(sFormula	 )
 end Function
 
@@ -786,7 +786,7 @@ Dim iflag
 		end if
 	Next I
 	oSheets = oDoc.Sheets (oSheet_num)
-	CellRangeAddress.Sheet = oSheet_num    
+	CellRangeAddress.Sheet = oSheet_num 
 	CellRangeAddress.StartColumn = 0
 	CellRangeAddress.StartRow = lrow+1
 	CellRangeAddress.EndColumn = 250 
@@ -797,7 +797,7 @@ Dim iflag
 	ThisComponent.CurrentController.Select(oSheets.GetCellByPosition( lcol , lrow+1)
 
 	lrow2 = lrow &apos; +1
-	CellAddress.Sheet = oSheet_num   
+	CellAddress.Sheet = oSheet_num 
 	CellRangeAddress.StartRow = lrow2
 	CellRangeAddress.EndRow = lrow2
 	CellAddress.Column = 0
@@ -815,22 +815,22 @@ Dim iflag
 	
 	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 	
-	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente             
-  oCelle=thisComponent.getCurrentSelection().getCellAddress()    
- lrow=oCelle.Row        
-  oCell = oSheet.GetCellByPosition(0,lrow )      
-  ThisComponent.CurrentController.Select(oCell)
-&apos;  print &quot;vediamo!!!&quot;
-   &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia gli utili %
+	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oCelle=thisComponent.getCurrentSelection().getCellAddress() 
+ lrow=oCelle.Row 
+ oCell = oSheet.GetCellByPosition(0,lrow ) 
+ ThisComponent.CurrentController.Select(oCell)
+&apos; print &quot;vediamo!!!&quot;
+ &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia gli utili %
 	oDoc = ThisComponent
 	DocView=oDoc.getCurrentController()
 	oSheet1=oDoc.NamedRanges.utili.ReferredCells &apos; utili è il nome del range
-	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oCelle=oDoc.getCurrentSelection().getCellAddress() &apos; indirizzo cella attiva (qui)
 	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
 	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
-    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+ oSheet2.copyRange(oCelle,oQuellRangeAddresse)
 
-    	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+ 	oCell = oSheet.GetCellByPosition( 1 , lrow)	
 	ThisComponent.CurrentController.Select(oCell)
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -839,23 +839,23 @@ Dim iflag
 
 	&apos;	print lrow
 
-	IF oSheet.GetCellByPosition(2, lrow-1).string &lt;&gt; &quot;&quot;  or _
+	IF oSheet.GetCellByPosition(2, lrow-1).string &lt;&gt; &quot;&quot; or _
 		 oSheet.GetCellByPosition(3, lrow-1).CellStyle = &quot;An-lavoraz-input&quot; then
 		 	oSheet.GetCellByPosition(1, lrow).STRING = &quot;Oneri di Sicurezza&quot;
 		 ELSE
 &apos;		 print oSheet.GetCellByPosition(1, lrow-1).string
 		 	Select Case oSheet.GetCellByPosition(1, lrow-1).string
-		 		Case  &quot;Oneri di Sicurezza&quot;
-		  		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 322).value = 1 then
+		 		Case &quot;Oneri di Sicurezza&quot;
+		 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 322).value = 1 then
 		 				oSheet.GetCellByPosition(1, lrow).string = &quot;spese generali&quot;
 		 			else 
 		 				oSheet.GetCellByPosition(1, lrow).string = &quot;spese generali e utili (sulle voci precedenti)&quot;
 		 		end if
-		 		Case  &quot;spese generali&quot;
+		 		Case &quot;spese generali&quot;
 		 				oSheet.GetCellByPosition(1, lrow).string = &quot;utili d&apos;impresa&quot;
-		 		Case  &quot;utili d&apos;impresa&quot;
+		 		Case &quot;utili d&apos;impresa&quot;
 		 					oSheet.GetCellByPosition(1, lrow).string = &quot;&quot;
-		 		Case  &quot;spese generali e utili (sulle voci precedenti)&quot;
+		 		Case &quot;spese generali e utili (sulle voci precedenti)&quot;
 		 					oSheet.GetCellByPosition(1, lrow).string = &quot;&quot;		
 		 	End select
 	end if 
@@ -863,7 +863,7 @@ Dim iflag
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow+1))
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &lt;&gt; 2 then
 		msgbox &quot; Controlla qe quanto proposto è quello che ti serve, altrimenti seleziona un&apos;altra maggiorazione dalla finestrella... &quot;&amp; CHR$(10) _
-		&amp; &quot;               (puoi comunque scriverela manina...)&quot;&amp; CHR$(10) &amp; CHR$(10) _
+		&amp; &quot; (puoi comunque scriverela manina...)&quot;&amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Occhio comunque alla SOMMA in colonna G... la default potrebbe non corrispondere alle tue esigenze!&quot;
 	end if
 END SUB
@@ -911,7 +911,7 @@ Dim iflag
 		end if
 	Next I
 	oSheets = oDoc.Sheets (oSheet_num)
-	CellRangeAddress.Sheet = oSheet_num    
+	CellRangeAddress.Sheet = oSheet_num 
 	CellRangeAddress.StartColumn = 0
 	CellRangeAddress.StartRow = lrow+1
 	CellRangeAddress.EndColumn = 250 
@@ -922,7 +922,7 @@ Dim iflag
 	ThisComponent.CurrentController.Select(oSheets.GetCellByPosition( lcol , lrow+1)
 
 	lrow2 = lrow &apos; +1
-	CellAddress.Sheet = oSheet_num   
+	CellAddress.Sheet = oSheet_num 
 	CellRangeAddress.StartRow = lrow2
 	CellRangeAddress.EndRow = lrow2
 	CellAddress.Column = 0
@@ -940,22 +940,22 @@ Dim iflag
 	
 	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 	
-	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente             
-  oCelle=thisComponent.getCurrentSelection().getCellAddress()    
- lrow=oCelle.Row        
-  oCell = oSheet.GetCellByPosition(0,lrow )      
-  ThisComponent.CurrentController.Select(oCell)
-&apos;  print &quot;vediamo!!!&quot;
-   &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia gli utili %
+	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oCelle=thisComponent.getCurrentSelection().getCellAddress() 
+ lrow=oCelle.Row 
+ oCell = oSheet.GetCellByPosition(0,lrow ) 
+ ThisComponent.CurrentController.Select(oCell)
+&apos; print &quot;vediamo!!!&quot;
+ &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia gli utili %
 	oDoc = ThisComponent
 	DocView=oDoc.getCurrentController()
 	oSheet1=oDoc.NamedRanges.utili.ReferredCells &apos; utili è il nome del range
-	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oCelle=oDoc.getCurrentSelection().getCellAddress() &apos; indirizzo cella attiva (qui)
 	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
 	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
-    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+ oSheet2.copyRange(oCelle,oQuellRangeAddresse)
 
-    	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+ 	oCell = oSheet.GetCellByPosition( 1 , lrow)	
 	ThisComponent.CurrentController.Select(oCell)
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -969,27 +969,27 @@ Dim iflag
 		oSheet.GetCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
 		goto fatto
 	end if
-	IF oSheet.GetCellByPosition(2, lrow-1).string &lt;&gt; &quot;&quot;  or _
+	IF oSheet.GetCellByPosition(2, lrow-1).string &lt;&gt; &quot;&quot; or _
 		 oSheet.GetCellByPosition(3, lrow-1).CellStyle = &quot;An-lavoraz-input&quot; then
 		 	oSheet.GetCellByPosition(1, lrow).STRING = &quot;Oneri di Sicurezza&quot;
 		 ELSESconto
 
 		 	Select Case oSheet.GetCellByPosition(1, lrow-1).string
-		 		Case  &quot;Oneri di Sicurezza&quot;
-		  		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 322).value = 1 then
+		 		Case &quot;Oneri di Sicurezza&quot;
+		 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 322).value = 1 then
 		 				oSheet.GetCellByPosition(1, lrow).string = &quot;spese generali&quot;
 		 			else 
 		 				oSheet.GetCellByPosition(1, lrow).string = &quot;spese generali e utili (sulle voci precedenti)&quot;
 		 		end if
-		 		Case  &quot;spese generali&quot;
+		 		Case &quot;spese generali&quot;
 		 				oSheet.GetCellByPosition(1, lrow).string = &quot;utili d&apos;impresa&quot;
-		 		Case  &quot;utili d&apos;impresa&quot;
+		 		Case &quot;utili d&apos;impresa&quot;
 		 				If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 324).value = 1 then
 								oSheet.GetCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
 							else
 								oSheet.GetCellByPosition(1, lrow).STRING = &quot;Maggiorazione&quot;
 		 				end if
-		 		Case  &quot;spese generali e utili (sulle voci precedenti)&quot;
+		 		Case &quot;spese generali e utili (sulle voci precedenti)&quot;
 		 				If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 324).value = 1 then
 								oSheet.GetCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
 							else
@@ -1003,7 +1003,7 @@ Dim iflag
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow+1))
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &lt;&gt; 2 then
 		msgbox &quot; Controlla qe quanto proposto è quello che ti serve, altrimenti seleziona un&apos;altra maggiorazione dalla finestrella... &quot;&amp; CHR$(10) _
-		&amp; &quot;               (puoi comunque scriverela manina...)&quot;&amp; CHR$(10) &amp; CHR$(10) _
+		&amp; &quot; (puoi comunque scriverela manina...)&quot;&amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Occhio comunque alla SOMMA in colonna G... la default potrebbe non corrispondere alle tue esigenze!&quot;
 	end if
 END SUB
@@ -1013,54 +1013,54 @@ sub Numera_Voci_Computo_vecia2 &apos;
 &apos;______________________________________________________________-
 &apos; funziona bene, ma è migliorabile... 
 &apos; magari garantirne il funzionamento anche senza la riga di chiusura...
- oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
-  oCelle=thisComponent.getCurrentSelection().getCellAddress()   
-  lrow=oCelle.Row        
-  oCell = oSheet.GetCellByPosition( 0, lrow )      
-  ThisComponent.CurrentController.Select(oCell)&apos; spostamento tutto a sin (mai fidarsi dell&apos;utente...)
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oCelle=thisComponent.getCurrentSelection().getCellAddress() 
+ lrow=oCelle.Row 
+ oCell = oSheet.GetCellByPosition( 0, lrow ) 
+ ThisComponent.CurrentController.Select(oCell)&apos; spostamento tutto a sin (mai fidarsi dell&apos;utente...)
  
 	sAttributo = Trova_Attr_Sheet
-    If sAttributo &lt;&gt; &quot;Tipo_computo&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
+ If sAttributo &lt;&gt; &quot;Tipo_computo&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
  			 msgbox &quot;Questa macro si può usare solo nella tabella di COMPUTO!&quot;
 			exit sub
 	end if
 
-  
-  Dim NumC, numV
-  numV = oCell.value
-&apos;  print numV
-  if numV = 0 then
- 	 msgbox &quot;Errore!!!! .... non so da che Numero incominciare (a numerare...) !!!    DEVI posizionarti su un numero buono!&quot;
+ 
+ Dim NumC, numV
+ numV = oCell.value
+&apos; print numV
+ if numV = 0 then
+ 	 msgbox &quot;Errore!!!! .... non so da che Numero incominciare (a numerare...) !!! DEVI posizionarti su un numero buono!&quot;
  	 exit sub
-   end if
- 	 oCelle=thisComponent.getCurrentSelection().getCellAddress()    
- 	 lrow=oCelle.Row        
- 	 oCell = oSheet.GetCellByPosition( 0, lrow+1 )   
-	  ThisComponent.CurrentController.Select(oCell)&apos;@@@@
- 	  numC = oCell.string &apos;formula&apos;.value
- 	  lLastUrow = getLastUsedRow(oSheet)
- &apos;	  numMax = 15 &apos; controllo per non finire in culo a giove in caso di errore
+ end if
+ 	 oCelle=thisComponent.getCurrentSelection().getCellAddress() 
+ 	 lrow=oCelle.Row 
+ 	 oCell = oSheet.GetCellByPosition( 0, lrow+1 ) 
+	 ThisComponent.CurrentController.Select(oCell)&apos;@@@@
+ 	 numC = oCell.string &apos;formula&apos;.value
+ 	 lLastUrow = getLastUsedRow(oSheet)
+ &apos;	 numMax = 15 &apos; controllo per non finire in culo a giove in caso di errore
  	
-  Do While numC = &quot;&quot; 
+ Do While numC = &quot;&quot; 
  	lrow = lrow+1
-  	 oCell = oSheet.GetCellByPosition( 0, lrow)   
-  	 numC = oCell.string
+ 	 oCell = oSheet.GetCellByPosition( 0, lrow) 
+ 	 numC = oCell.string
  &apos; 	 numMax = numMax-1 &apos; controllo per non finire in culo a giove in caso di errore
-  	 If lrow &gt; lLastUrow then
-  	 	msgbox &quot;mi sembra di essere finito fuori dal seminato...&quot;_
-  	 	&amp;  &quot; Probabilmente ti manca la riga rossa di fine tabella o c&apos;è qualche altro errore non meglio identificato...&quot;
-  	 	exit sub
-  	 end if
-  loop
-  	ThisComponent.CurrentController.Select(oCell)
-   If NumC = &quot;Fine Computo&quot; Or NumC = &quot;Questa riga NON deve essere cancellata, MAI!!!  (ma può rmanere tranquillamente NASCOSTA!)&quot; or lrow &gt; lLastUrow Then 
-               &apos; Selection.Offset(-2, 0).Select
-        MsgBox &quot;Finito!!!&quot;
-        Exit Sub
-   Else                         
-  		numV = numV + 1
-  		oCell.value = numV
-  End If
+ 	 If lrow &gt; lLastUrow then
+ 	 	msgbox &quot;mi sembra di essere finito fuori dal seminato...&quot;_
+ 	 	&amp; &quot; Probabilmente ti manca la riga rossa di fine tabella o c&apos;è qualche altro errore non meglio identificato...&quot;
+ 	 	exit sub
+ 	 end if
+ loop
+ 	ThisComponent.CurrentController.Select(oCell)
+ If NumC = &quot;Fine Computo&quot; Or NumC = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rmanere tranquillamente NASCOSTA!)&quot; or lrow &gt; lLastUrow Then 
+ &apos; Selection.Offset(-2, 0).Select
+ MsgBox &quot;Finito!!!&quot;
+ Exit Sub
+ Else 
+ 		numV = numV + 1
+ 		oCell.value = numV
+ End If
 END SUB
 
 
@@ -1129,18 +1129,18 @@ Dim iflag
 	oCell = oSheet.GetCellByPosition( lcol , lrow+1)	
 	ThisComponent.CurrentController.Select(oCell)
 
-   oCell = oSheet.GetCellByPosition(0,lrow )      
-   ThisComponent.CurrentController.Select(oCell)
+ oCell = oSheet.GetCellByPosition(0,lrow ) 
+ ThisComponent.CurrentController.Select(oCell)
 
 	oDoc = ThisComponent
 	DocView=oDoc.getCurrentController()
 	oSheet1=oDoc.NamedRanges.utili_gs.ReferredCells &apos; utili è il nome del range
-	oCelle=oDoc.getCurrentSelection().getCellAddress()  &apos; indirizzo cella attiva (qui)
+	oCelle=oDoc.getCurrentSelection().getCellAddress() &apos; indirizzo cella attiva (qui)
 	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
 	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
-    oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+ oSheet2.copyRange(oCelle,oQuellRangeAddresse)
 
-    	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+ 	oCell = oSheet.GetCellByPosition( 1 , lrow)	
 	ThisComponent.CurrentController.Select(oCell)
 
 
@@ -1148,14 +1148,14 @@ Dim iflag
 	Range_Somma_locale_analisi (6)
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	lrow = lrow +1
-   	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+ 	oCell = oSheet.GetCellByPosition( 1 , lrow)	
 	ThisComponent.CurrentController.Select(oCell)
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Range_Somma_locale_analisi (6)
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	lrow = lrow +1
-  	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+ 	oCell = oSheet.GetCellByPosition( 1 , lrow)	
 	ThisComponent.CurrentController.Select(oCell)
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;

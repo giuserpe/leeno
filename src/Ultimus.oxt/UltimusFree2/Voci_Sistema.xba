@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                            
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -14,30 +14,30 @@
 
 &apos;********************************************************
 Sub Riformatta_VCA () &apos;assegnato a 
-&apos; decide se attivare Riformatta analisi o  Riformatta voce-computo
-    Dim nome_sheet as string
+&apos; decide se attivare Riformatta analisi o Riformatta voce-computo
+ Dim nome_sheet as string
 &apos;ScreenUpdatingOff 
 nome_sheet = thisComponent.currentcontroller.activesheet.name
 
-	if  msgbox (&quot;  Questa macro non è stata verificata con le versioni più recenti... &quot;&amp; CHR$(10)_
-				&amp; &quot;  Intendi proseguire ugualmente?&quot; &amp; CHR$(10)_
-					&amp; &quot;    Proseguo ? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
+	if msgbox (&quot; Questa macro non è stata verificata con le versioni più recenti... &quot;&amp; CHR$(10)_
+				&amp; &quot; Intendi proseguire ugualmente?&quot; &amp; CHR$(10)_
+					&amp; &quot; Proseguo ? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
 				
 				print &quot;esco&quot;
 				exit sub
 	end if
-    If nome_sheet = &quot;COMPUTO&quot; Then
-       &apos; Riformatta_Voce_Computo
-        Uniforma_Formati_Computo_sing_voce
-         Else
-        If nome_sheet = &quot;Analisi di Prezzo&quot; Then
-           &apos;Riformatta_Voce_Analisi &apos; questa continua ad essere buona
-          &apos; Riformatta_Voce_Analisi_special &apos;da usare con computi vecchi...
-           Uniforma_Formati_ANALISI_sing_voce
-          Else: MsgBox &quot;Questa è: &quot; +nome_sheet + &quot;     ___  e questa Macro si usa soltanto nel COMPUTO e nelle ANALISI !!!! 1___&quot;
-            End If
-         End If
-&apos;ScreenUpdatingOn   
+ If nome_sheet = &quot;COMPUTO&quot; Then
+ &apos; Riformatta_Voce_Computo
+ Uniforma_Formati_Computo_sing_voce
+ Else
+ If nome_sheet = &quot;Analisi di Prezzo&quot; Then
+ &apos;Riformatta_Voce_Analisi &apos; questa continua ad essere buona
+ &apos; Riformatta_Voce_Analisi_special &apos;da usare con computi vecchi...
+ Uniforma_Formati_ANALISI_sing_voce
+ Else: MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ e questa Macro si usa soltanto nel COMPUTO e nelle ANALISI !!!! 1___&quot;
+ End If
+ End If
+&apos;ScreenUpdatingOn 
 END SUB
 
 
@@ -53,16 +53,16 @@ end if
 END FUNCTION
 &apos;______________________________________________________________________________________________
 
-Function Copia_Costanti (oSheetSRC, oSheetDest,  sDestCell, SrcRange  as variant) 
+Function Copia_Costanti (oSheetSRC, oSheetDest, sDestCell, SrcRange as variant) 
 print SrcRange
 dim SrcRange as string
  &apos;oSheetSRC = ThisComponent.Sheets.getByName(&quot;Sheet11&quot;)
  &apos; oSheetDest = ThisComponent.Sheets.getByName(&quot;Tabelle10_2&quot;)
  &apos; oSrc = oSheetSRC.getCellRangeByPosition(SrcRange).RangeAddress
- &apos;   oSrc = oSheetSRC.getCellRangeByName(&quot;A1&quot;).RangeAddress
-  oDest = oSheetDest.getCellRangeByPosition(sDestCell).CellAddress
-  &apos;  oDest = oSheetDest.getCellRangeByName(&quot;B1&quot;).CellAddress
-  oSheetDest.copyRange(oDest, oSrc)
+ &apos; oSrc = oSheetSRC.getCellRangeByName(&quot;A1&quot;).RangeAddress
+ oDest = oSheetDest.getCellRangeByPosition(sDestCell).CellAddress
+ &apos; oDest = oSheetDest.getCellRangeByName(&quot;B1&quot;).CellAddress
+ oSheetDest.copyRange(oDest, oSrc)
 
 exit function
 print &quot;fermala&quot;
@@ -121,26 +121,26 @@ Function Trova_sommano$ (ByVal lrow As Long)&apos;As Long&apos; restituisce il n
 	 oCell = oSheet.GetCellByPosition(3 , lrow )
 	xA =oCell.String
 	If xA = &quot;SOMMANO &quot; then 
-   	   goto sommano_trovato 
+ 	 goto sommano_trovato 
 	end if 
-  Do  while xA &lt;&gt;  &quot;SOMMANO &quot;
-  		lrow= lrow + 1
-  	   oCell = oSheet.GetCellByPosition( 3 , lrow)
-  	   xA =oCell.String
-  	   ThisComponent.CurrentController.Select(oCell)
-  &apos;	   print
+ Do while xA &lt;&gt; &quot;SOMMANO &quot;
+ 		lrow= lrow + 1
+ 	 oCell = oSheet.GetCellByPosition( 3 , lrow)
+ 	 xA =oCell.String
+ 	 ThisComponent.CurrentController.Select(oCell)
+ &apos;	 print
 
  	 Loop
-  sommano_trovato:
-  Trova_sommano = lrow
-   &apos;	    ThisComponent.CurrentController.Select(oCell)
+ sommano_trovato:
+ Trova_sommano = lrow
+ &apos;	 ThisComponent.CurrentController.Select(oCell)
 
 End function
 
 
 
 
-Function Copia_Formato (SourceSheetNum as long, TargetSheetNum as long,  TargetCell, SrcRange  as variant) 
+Function Copia_Formato (SourceSheetNum as long, TargetSheetNum as long, TargetCell, SrcRange as variant) 
 
 	&apos; get access to the document
 	DocumentModel = ThisComponent
@@ -150,7 +150,7 @@ Function Copia_Formato (SourceSheetNum as long, TargetSheetNum as long,  TargetC
 	
 	Dim Args2(0) As New com.sun.star.beans.PropertyValue
 	Args2(0).Name = &quot;Nr&quot;
-	Args2(0).Value =  SourceSheetNum &apos;source sheet
+	Args2(0).Value = SourceSheetNum &apos;source sheet
 	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:JumpToTable&quot; ,&quot;&quot; ,0 ,Args2())
 &apos;print &quot;andato sulla sheet&quot;
 	Dim Args3(0) As New com.sun.star.beans.PropertyValue
@@ -188,7 +188,7 @@ wait 100
 &apos;print &quot;copio&quot;
 end Function
 
-Function Copia_Formato_2 (SourceSheetNum, TargetSheetNum,  TargetCell, SrcRange  as variant) 
+Function Copia_Formato_2 (SourceSheetNum, TargetSheetNum, TargetCell, SrcRange as variant) 
 &apos;	oSheet = ThisComponent.currentController.activeSheet
 &apos;	oSheetScr = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) 
 
@@ -251,8 +251,8 @@ end Function
 Sub Trattini_in_Analisi ()&apos; &apos;controlla se ci sono trattini alla fine di ogni voce di analisi
 &apos;al momento non c&apos;è niente che la richiama e nemmeno è assegnata ad uno short cut...
 &apos; richiamarla da?? 
-dim lrowW  as long
-dim lrow  as long
+dim lrowW as long
+dim lrow as long
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lrow = 1	
 	oCell = oSheet.getCellByPosition (0,lrow)
@@ -336,7 +336,7 @@ dim TargetCell as string
 Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
 dim oCelle as object
 msgbox &quot;se leggi questo messaggio scrivimi citando: Sub Riformatta_Voce_Analisi&quot;
-	lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale un eventuale range
+	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale un eventuale range
 	if lSrow = -1 then
 		 
 		exit sub
@@ -371,11 +371,11 @@ print 4444444444444
 &apos;	ThisComponent.CurrentController.Select(ovoce)
 &apos;print lrowE
 	oCelle = osheet.getCellRangeByPosition (0,lrowS,8,lrowE )
-&apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente             
+&apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
 &apos;	oCelle=thisComponent.getCurrentSelection()
 	 
-  &apos;	 lrowS = oCelle.RangeAddress.StartRow
-  &apos;	 print lrowS
+ &apos;	 lrowS = oCelle.RangeAddress.StartRow
+ &apos;	 print lrowS
  	 TargetSheetNum = oCelle.RangeAddress.sheet
  	TargetSheetNum = TargetSheetNum+1
  	SourceSheetNum = SheetNameToNumber (&quot;S1&quot;)
@@ -385,56 +385,56 @@ print 4444444444444
  &apos;	print &quot;lrowS &quot; &amp; lrowS
 &apos;	TargetCell = TargetSheetNum &amp; &quot;.A&quot; &amp; (lrowS+1)
 	TargetCell = &quot;A&quot; &amp; (lrowS-1+1)
-   &apos;  print &quot;TargetCell &quot; &amp; TargetCell
+ &apos; print &quot;TargetCell &quot; &amp; TargetCell
 
-      
-   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$42:$AW$44&quot;)
-    &apos;formati prime 3 rows
+ 
+ Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$42:$AW$44&quot;)
+ &apos;formati prime 3 rows
 
 	&apos;qwerty
 
 &apos;	COPIA_ANCHE_ATTRIBUTI
-    lrowE = oCelle.RangeAddress.EndRow
-     TargetCell = &quot;A&quot; &amp; (lrowE+1 )
- &apos;    print lrowe
- &apos;    print &quot;TargetCell &quot; &amp; TargetCell
-      Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$42:$Aw$42&quot;)
-    &apos;formati riga GRIGIA
+ lrowE = oCelle.RangeAddress.EndRow
+ TargetCell = &quot;A&quot; &amp; (lrowE+1 )
+ &apos; print lrowe
+ &apos; print &quot;TargetCell &quot; &amp; TargetCell
+ Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$42:$Aw$42&quot;)
+ &apos;formati riga GRIGIA
 
-&apos;	print &quot;grigia &quot; &amp; lrowE-1 &amp; &quot;  &quot; &amp; TargetCell
-    lrowE = oCelle.RangeAddress.EndRow
-    
-    TargetCell = &quot;A&quot; &amp; (lrowE-1 +1)
-  
- &apos;    print &quot;TargetCell &quot; &amp; TargetCell
-   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$48:$AW$48&quot;)
-    &apos;formati ultima riga 
-    
+&apos;	print &quot;grigia &quot; &amp; lrowE-1 &amp; &quot; &quot; &amp; TargetCell
+ lrowE = oCelle.RangeAddress.EndRow
+ 
+ TargetCell = &quot;A&quot; &amp; (lrowE-1 +1)
+ 
+ &apos; print &quot;TargetCell &quot; &amp; TargetCell
+ Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$48:$AW$48&quot;)
+ &apos;formati ultima riga 
+ 
 
-    lrowE =lrowE-2
-  &apos;  print &quot;lrowe riaggiustato: &quot; &amp; lrowe
-    oCell = oSheet.GetCellByPosition( 4 , lrowE)
-    ThisComponent.CurrentController.Select(oCell)
-  &apos;  print &quot;riparto da  &quot; &amp; lrowE
-    xA = oCell.string
-    do while xA &lt;&gt; &quot;rif.  El. Prezzi&quot;
- &apos;   print &quot;ciclo con &quot; &amp; lrowE
-    	If xA = &quot;&quot; then
-    			TargetCell = &quot;A&quot;+ (lrowE+1 )
-    &apos;				print &quot;utili&quot;
-    			&apos;print &quot;&quot;
-    		   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$49:$AW$49&quot;)
-    		   &apos;grigio
-  			
-    		else
-    		   TargetCell = &quot;A&quot;+ (lrowE+1 )
-    	&apos;	   print &quot;normale&quot;
-    		   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$46:$AW$46&quot;)&apos; &quot;$AL$47:$AT$47&quot;)
-    		    
-    	end if
-    	lrowE = lrowE-1
-    	oCell = oSheet.GetCellByPosition( 4 , lrowE)
-    	xA = oCell.string
+ lrowE =lrowE-2
+ &apos; print &quot;lrowe riaggiustato: &quot; &amp; lrowe
+ oCell = oSheet.GetCellByPosition( 4 , lrowE)
+ ThisComponent.CurrentController.Select(oCell)
+ &apos; print &quot;riparto da &quot; &amp; lrowE
+ xA = oCell.string
+ do while xA &lt;&gt; &quot;rif. El. Prezzi&quot;
+ &apos; print &quot;ciclo con &quot; &amp; lrowE
+ 	If xA = &quot;&quot; then
+ 			TargetCell = &quot;A&quot;+ (lrowE+1 )
+ &apos;				print &quot;utili&quot;
+ 			&apos;print &quot;&quot;
+ 		 Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$49:$AW$49&quot;)
+ 		 &apos;grigio
+ 			
+ 		else
+ 		 TargetCell = &quot;A&quot;+ (lrowE+1 )
+ 	&apos;	 print &quot;normale&quot;
+ 		 Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$46:$AW$46&quot;)&apos; &quot;$AL$47:$AT$47&quot;)
+ 		 
+ 	end if
+ 	lrowE = lrowE-1
+ 	oCell = oSheet.GetCellByPosition( 4 , lrowE)
+ 	xA = oCell.string
 	loop
 		oCell = oSheet.GetCellByPosition( 1 , lrowF+3)
 	 ThisComponent.CurrentController.Select(oCell)
@@ -444,9 +444,9 @@ Sub Rifa_Sum_Ana_sing(lrowS as long, lrowE as long ) &apos;
 
 &apos; FUNZIONA SOLO SU VECCHIE CON &quot;^Sommano^&quot;... COMPLETARLA SE SERVE
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-&apos;	lrowS = Range2Cell  
+&apos;	lrowS = Range2Cell 
 	&apos; oCell = oSheet.GetCellByPosition( lcol , lrow)
-	&apos;  ThisComponent.CurrentController.Select(oCell)
+	&apos; ThisComponent.CurrentController.Select(oCell)
 	lcol =6
 	oCellB = oSheet.GetCellByPosition( lcol , lrowS)
 	 sCol= ColumnNameOf(lcol)
@@ -467,9 +467,9 @@ lrow = lrowE
 &apos;print sFormula
 	 lcol =7
 	 sCol= ColumnNameOf(lcol)
-	  sFormula1 = &quot;=SUM(&quot; &amp; sCol &amp; lrowE &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;)&quot;
-	   oSheet.GetCellByPosition( lcol , lrowS).setformula(sFormula1)	
-&apos;	 ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(  scol , lrowS))
+	 sFormula1 = &quot;=SUM(&quot; &amp; sCol &amp; lrowE &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;)&quot;
+	 oSheet.GetCellByPosition( lcol , lrowS).setformula(sFormula1)	
+&apos;	 ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( scol , lrowS))
 &apos;print sFormula1
 	&apos; Rifa_Somma_Analisi (6,lrowS) 
 End sub
@@ -485,7 +485,7 @@ dim oCelle as object
 &apos;print lsrow
 	if ismissing (lSrow) or lSrow = 0 then
 &apos;	print &quot;me la faccio&quot;
-		lSrow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale un eventuale range
+		lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale un eventuale range
 		if lSrow = -1 then
 		 
 		exit sub
@@ -516,11 +516,11 @@ dim oCelle as object
 &apos;	ThisComponent.CurrentController.Select(ovoce)
 &apos;print lrowE
 	oCelle = osheet.getCellRangeByPosition (0,lrowS,8,lrowE )
-&apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente             
+&apos;	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
 &apos;	oCelle=thisComponent.getCurrentSelection()
 	 
-  &apos;	 lrowS = oCelle.RangeAddress.StartRow
-  &apos;	 print lrowS
+ &apos;	 lrowS = oCelle.RangeAddress.StartRow
+ &apos;	 print lrowS
  	 TargetSheetNum = oCelle.RangeAddress.sheet
  	TargetSheetNum = TargetSheetNum+1
  	SourceSheetNum = SheetNameToNumber (&quot;S1&quot;)
@@ -530,79 +530,79 @@ dim oCelle as object
  &apos;	print &quot;lrowS &quot; &amp; lrowS
 &apos;	TargetCell = TargetSheetNum &amp; &quot;.A&quot; &amp; (lrowS+1)
 	TargetCell = &quot;A&quot; &amp; (lrowS-1+1)
-  
-      &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-      Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AT$42:$BD$44&quot;)
-     &apos;Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$42:$AW$44&quot;)
-    &apos;formati prime 3 rows
+ 
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AT$42:$BD$44&quot;)
+ &apos;Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$42:$AW$44&quot;)
+ &apos;formati prime 3 rows
 
 	 oSheet = ThisComponent.currentController.activeSheet 
 
 	oTargetSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
  	oSRC = oTargetSheet.getCellRangeByName(&quot;AU43:BC44&quot;).RangeAddress
-   &apos;oSRC = oTargetSheet.getCellRangeByName(&quot;AQ43:AV44&quot;).RangeAddress 
+ &apos;oSRC = oTargetSheet.getCellRangeByName(&quot;AQ43:AV44&quot;).RangeAddress 
  	oDest = oSheet.GetCellByPosition( 3, lrowS ).CellAddress
-       &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-   	oSheet.copyRange(oDest,oSRC)&apos; per copiare colori, formati e dati
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 	oSheet.copyRange(oDest,oSRC)&apos; per copiare colori, formati e dati
 
 &apos;	COPIA_ANCHE_ATTRIBUTI
-    lrowE = oCelle.RangeAddress.EndRow
-     TargetCell = &quot;A&quot; &amp; (lrowE+1 )
-   &apos;  print &quot;2&quot; &amp; lrowe
- &apos;    print &quot;TargetCell &quot; &amp; TargetCell
-       &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-         Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AT$42:$BD$42&quot;)
-       &apos; Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$42:$Aw$42&quot;)
+ lrowE = oCelle.RangeAddress.EndRow
+ TargetCell = &quot;A&quot; &amp; (lrowE+1 )
+ &apos; print &quot;2&quot; &amp; lrowe
+ &apos; print &quot;TargetCell &quot; &amp; TargetCell
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AT$42:$BD$42&quot;)
+ &apos; Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$42:$Aw$42&quot;)
 
-    &apos;formati riga GRIGIA
+ &apos;formati riga GRIGIA
 
-&apos;	print &quot;grigia &quot; &amp; lrowE-1 &amp; &quot;  &quot; &amp; TargetCell
-    lrowE = oCelle.RangeAddress.EndRow
-    
-    TargetCell = &quot;A&quot; &amp; (lrowE-1 +1)
-  
- &apos;    print &quot;TargetCell &quot; &amp; TargetCell
-       &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-      Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AT$48:$BD$48&quot;)
-    &apos; Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$48:$AW$48&quot;)
-    &apos;formati ultima riga 
-    
-    
+&apos;	print &quot;grigia &quot; &amp; lrowE-1 &amp; &quot; &quot; &amp; TargetCell
+ lrowE = oCelle.RangeAddress.EndRow
+ 
+ TargetCell = &quot;A&quot; &amp; (lrowE-1 +1)
+ 
+ &apos; print &quot;TargetCell &quot; &amp; TargetCell
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AT$48:$BD$48&quot;)
+ &apos; Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$48:$AW$48&quot;)
+ &apos;formati ultima riga 
+ 
+ 
  	oSRC = oTargetSheet.getCellRangeByName(&quot;AT48:BB48&quot;).RangeAddress 
  &apos;	oSRC = oTargetSheet.getCellRangeByName(&quot;AN48:AU48&quot;).RangeAddress 
  	oDest = oSheet.GetCellByPosition( 0, lrowe-1 ).CellAddress
-       &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-   	oSheet.copyRange(oDest,oSRC)&apos; per copiare colori, formati e dati
-      &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 	oSheet.copyRange(oDest,oSRC)&apos; per copiare colori, formati e dati
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	
 	Rifa_Somma_Analisi (6,lrowS) 
 	
-    lrowE =lrowE-2
-  &apos;  print &quot;lrowe riaggiustato: &quot; &amp; lrowe
-    oCell = oSheet.GetCellByPosition( 4 , lrowE)
-    ThisComponent.CurrentController.Select(oCell)
-  &apos;  print &quot;riparto da  &quot; &amp; lrowE
-    xA = oCell.string
-    do while xA &lt;&gt; &quot;rif.  El. Prezzi&quot;
- &apos;   print &quot;ciclo con &quot; &amp; lrowE
-    	If xA = &quot;&quot; then
-    			TargetCell = &quot;A&quot;+ (lrowE+1 )
-    &apos;		 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-    		   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AT$49:$BD$49&quot;)
-    	&apos;	   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$49:$AW$49&quot;)
+ lrowE =lrowE-2
+ &apos; print &quot;lrowe riaggiustato: &quot; &amp; lrowe
+ oCell = oSheet.GetCellByPosition( 4 , lrowE)
+ ThisComponent.CurrentController.Select(oCell)
+ &apos; print &quot;riparto da &quot; &amp; lrowE
+ xA = oCell.string
+ do while xA &lt;&gt; &quot;rif. El. Prezzi&quot;
+ &apos; print &quot;ciclo con &quot; &amp; lrowE
+ 	If xA = &quot;&quot; then
+ 			TargetCell = &quot;A&quot;+ (lrowE+1 )
+ &apos;		 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 		 Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AT$49:$BD$49&quot;)
+ 	&apos;	 Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$49:$AW$49&quot;)
 
-    		   &apos;grigio
-  			
-    		else
-    		   TargetCell = &quot;A&quot;+ (lrowE+1 )
-    	&apos;	   print &quot;normale&quot;
-          &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-       		   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AT$46:$BD$46&quot;)&apos;
-         &apos;	   Copia_Formato (SourceSheetNum, TargetSheetNum,  TargetCell, &quot;$AN$46:$AW$46&quot;)&apos; &quot;$AL$47:$AT$47&quot;)
-  		    
-    	end if
-    	lrowE = lrowE-1
-    	oCell = oSheet.GetCellByPosition( 4 , lrowE)
-    	xA = oCell.string
+ 		 &apos;grigio
+ 			
+ 		else
+ 		 TargetCell = &quot;A&quot;+ (lrowE+1 )
+ 	&apos;	 print &quot;normale&quot;
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 		 Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AT$46:$BD$46&quot;)&apos;
+ &apos;	 Copia_Formato (SourceSheetNum, TargetSheetNum, TargetCell, &quot;$AN$46:$AW$46&quot;)&apos; &quot;$AL$47:$AT$47&quot;)
+ 		 
+ 	end if
+ 	lrowE = lrowE-1
+ 	oCell = oSheet.GetCellByPosition( 4 , lrowE)
+ 	xA = oCell.string
 	loop
 	
 		oCell = oSheet.GetCellByPosition( 1 , lrowF+3)
@@ -614,7 +614,7 @@ END SUB
 
 &apos;__________________________________________________________________________
 
-FUNCTION  CircoscrivileAnalisi_7(ByVal lrow As Long) &apos;individua un record di Analisi
+FUNCTION CircoscrivileAnalisi_7(ByVal lrow As Long) &apos;individua un record di Analisi
 &apos;---------------------------------------------------------------------------
 							&apos;restituisce il range
 
@@ -627,7 +627,7 @@ dim lrowE as long
 &apos;print &quot;0&quot; &amp; lrow
 	nCurRow = lrow
 &apos;	print lrow
-	Do while oSheet.GetCellByPosition( 4, nCurRow).string &lt;&gt; &quot;TOTALE&quot; and  oSheet.GetCellByPosition( 5, nCurRow).string &lt;&gt; &quot;TOTALE&quot;&apos;  And nCurRow &gt; 2 
+	Do while oSheet.GetCellByPosition( 4, nCurRow).string &lt;&gt; &quot;TOTALE&quot; and oSheet.GetCellByPosition( 5, nCurRow).string &lt;&gt; &quot;TOTALE&quot;&apos; And nCurRow &gt; 2 
 				if nCurRow &lt; 2 then
 					Do while oSheet.GetCellByPosition( 4, nCurRow).string &lt;&gt; &quot;TOTALE&quot; And oSheet.GetCellByPosition( 5, nCurRow).string &lt;&gt; &quot;TOTALE&quot;
 	&apos;print oSheet.GetCellByPosition( 4, nCurRow).string
@@ -637,14 +637,14 @@ dim lrowE as long
 				&apos;		print &quot;iniz&quot;
 					loop
 				end if
-   				nCurRow = nCurRow-1
+ 				nCurRow = nCurRow-1
 				oCell=oSheet.GetCellbyPosition( 5, nCurRow)
 			&apos;	ThisComponent.CurrentController.Select(oCell)
 			&apos;	print &quot;!1&quot;
 	loop
 	lrowS = nCurRow
 &apos;	print nCurRow
-	Do while oSheet.GetCellByPosition( 0, nCurRow).string  &lt;&gt; &quot;----&quot;  
+	Do while oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;----&quot; 
 				nCurRow = nCurRow+1
 				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
 			&apos;					ThisComponent.CurrentController.Select(oCell)
@@ -652,7 +652,7 @@ dim lrowE as long
 	loop
 	lrowE = nCurRow+1
 
-  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+ oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
 
 	CircoscrivileAnalisi_7 = oRangeVoceC
 &apos; ThisComponent.CurrentController.Select(oRangeVoceC)
@@ -660,9 +660,9 @@ dim lrowE as long
 end Function
 
 
-&apos;=================================================================================  
+&apos;================================================================================= 
 		
-FUNCTION  CircoscrivileAnalisi_7_ATT (ByVal lrow As Long) &apos;individua un record di Analisi
+FUNCTION CircoscrivileAnalisi_7_ATT (ByVal lrow As Long) &apos;individua un record di Analisi
 &apos;---------------------------------------------------------------------------
 	&apos;non funziona bene.. !!						&apos;restituisce il range
 
@@ -713,7 +713,7 @@ ThisComponent.CurrentController.Select(oCell)
 						&apos;	print &quot;iniz&quot; &amp; nCurRow
 					loop
 	end if
-   				nCurRow = nCurRow+1
+ 				nCurRow = nCurRow+1
 				oCell=oSheet.GetCellbyPosition( 3, nCurRow)
 			&apos;	ThisComponent.CurrentController.Select(oCell)
 			&apos;	print &quot;!1&quot;
@@ -729,7 +729,7 @@ ThisComponent.CurrentController.Select(oCell)
 	loop
 	lrowE = nCurRow+1
 
-  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+ oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
 
 	CircoscrivileAnalisi_7_ATT = oRangeVoceC
  ThisComponent.CurrentController.Select(oRangeVoceC)
@@ -742,18 +742,18 @@ Sub Concatena_Analisi_Funzione
 Dim lrow as long
 Dim lrowE as long
 dim lastUrow as long
-&apos;if msgbox (&quot;Attento!  la macro ri-registra le analisi in Elenco Prezzi... è meglio prima riplulirlo  ANNULLO? &quot;, 4) = 6 then
+&apos;if msgbox (&quot;Attento! la macro ri-registra le analisi in Elenco Prezzi... è meglio prima riplulirlo ANNULLO? &quot;, 4) = 6 then
 &apos;	exit sub
 &apos;end if
 
 
 	oSheet = thiscomponent.Sheets.getByName (&quot;Analisi di Prezzo&quot;)
 	&apos;----------------------------------------
-	if  msgbox (&quot;   La macchina sta per riformattare la tabella &quot;&quot;Analisi di Prezzo&quot;&quot; &quot;&amp; CHR$(10)_
+	if msgbox (&quot; La macchina sta per riformattare la tabella &quot;&quot;Analisi di Prezzo&quot;&quot; &quot;&amp; CHR$(10)_
 				&amp; &quot;uniformando gli stili di cella a quelli della maschera in S1!&quot;&amp; CHR$(10)_
-				&amp; &quot;    Consiglio di salvare prima il documento!&quot; &amp; CHR$(10)_
-			&amp;	&quot;ATTENZIONE!  la macro ri-registra le analisi in Elenco Prezzi...bisogna prima ripulirlo...?&quot;&amp; CHR$(10)_
-			&amp; &quot;    ANNULLO? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 6 then
+				&amp; &quot; Consiglio di salvare prima il documento!&quot; &amp; CHR$(10)_
+			&amp;	&quot;ATTENZIONE! la macro ri-registra le analisi in Elenco Prezzi...bisogna prima ripulirlo...?&quot;&amp; CHR$(10)_
+			&amp; &quot; ANNULLO? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 6 then
 		&apos;	&amp;&quot;&quot;,4, &quot;&quot;&amp; CHR$(10)) = 7 then
 
 		exit sub	
@@ -768,7 +768,7 @@ dim lastUrow as long
 	lrow = CDbl(Var)
 	
  &apos;	VarScelta = InputBox(&quot;Sovrascrivo colori e altre formattazioni forzate applicate localmente?&quot;&amp; CHR$(10)_
- &apos;	      &amp; &quot; 1 per mantenere   ---   0 per sovrascrivere&quot; , &quot;SCEGLI 1 PER MANTENERE I FORMATI FORZATI - 0 PER SOVRASCRIVE CON GLI STILI&quot;, &quot;1&quot;)
+ &apos;	 &amp; &quot; 1 per mantenere --- 0 per sovrascrivere&quot; , &quot;SCEGLI 1 PER MANTENERE I FORMATI FORZATI - 0 PER SOVRASCRIVE CON GLI STILI&quot;, &quot;1&quot;)
 &apos;	If VarScelta = &quot;&quot; then
 &apos;			exit sub
 &apos;	end if	
@@ -779,24 +779,24 @@ dim lastUrow as long
 &apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
 &apos;	ThisComponent.CurrentController.Select(oCell)
 	lastUrow = getLastUsedRow(oSheet)
-	sString$ = &quot;Fine ANALISI&quot;  &apos; DOPPIO CONTROLLO sulla fine della sheet
+	sString$ = &quot;Fine ANALISI&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI6! &quot;
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI6! &quot;
 		exit sub
 	end if 
 	lRowE=oEnd.RangeAddress.EndRow 
 &apos;	oCell = ThisComponent.CurrentSelection
- &apos;   lrow = oCell.CellAddress.row
+ &apos; lrow = oCell.CellAddress.row
 &apos;	oCell = oSheet.GetCellByPosition( 3 , lrow)
 &apos;	xA = oCell.string
 
-	Do  while lrow &lt; lastUrow And lrow &lt; lRowE
+	Do while lrow &lt; lastUrow And lrow &lt; lRowE
 &apos;	print lrow &amp; &quot; - &quot; &amp; lastUrow &amp; &quot; - &quot; &amp; lRowE
 				 &apos;Do while oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;&quot;
 	 					lRow = lrow+1
-			    &apos; loop			     
+			 &apos; loop			 
 			&apos;	 if oSheet.GetCellByPosition( 0, lrow).string = &quot;----&quot; then
 	 		&apos;				lRow = lrow+1
 	 		&apos;		&apos;	else
@@ -819,19 +819,19 @@ dim lastUrow as long
 	 						lrow = oCell.CellAddress.row
 	 					&apos;	Riformatta_Voce_Analisi(lrow)
 	 				
-		&apos;	     end if
-			     &apos;&apos;&apos;oCell = ThisComponent.CurrentSelection
-     		&apos;&apos;&apos;	lrow = oCell.CellAddress.row
+		&apos;	 end if
+			 &apos;&apos;&apos;oCell = ThisComponent.CurrentSelection
+ 		&apos;&apos;&apos;	lrow = oCell.CellAddress.row
 			
 		oCell = oSheet.GetCellByPosition( 0 , lrow)	
 		if lrow &gt; lastUrow then 
 			Msgbox &quot;Finito&quot;
 			exit sub
 		end if
-  &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... debug
+ &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... debug
 &apos;print
-  	loop
-  &apos;	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo!   Sembra tutto a posto, ma non è detto...&quot;
+ 	loop
+ &apos;	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo! Sembra tutto a posto, ma non è detto...&quot;
 END SUB
 &apos;__________________________________________________________________________
 
@@ -846,11 +846,11 @@ dim lastUrow as long
 &apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
 &apos;	ThisComponent.CurrentController.Select(oCell)
 	lastUrow = getLastUsedRow(oSheet)
-	sString$ = &quot;Fine ANALISI&quot;  &apos; DOPPIO CONTROLLO sulla fine della sheet
+	sString$ = &quot;Fine ANALISI&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI7! &quot;
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI7! &quot;
 		exit sub
 	end if 
 	lRowE=oEnd.RangeAddress.EndRow 
@@ -858,22 +858,22 @@ dim lastUrow as long
 	oCell = oSheet.GetCellByPosition( 3 , lrow)
 	xA = oCell.string
 
-	Do  while lrow &lt; lastUrow And lrow &lt; lRowE
+	Do while lrow &lt; lastUrow And lrow &lt; lRowE
 				 Do while oSheet.GetCellByPosition( 0, lrow).string &lt;&gt; &quot;&quot;
 	 					lRow = lrow+1
-			     loop			     
+			 loop			 
 			&apos;	 if oSheet.GetCellByPosition( 0, lrow).string = &quot;----&quot; then
 	 		&apos;				lRow = lrow+1
 	 		&apos;			else
 	 						Riformatta_Voce_Analisi_special(lrow)
-		&apos;	     end if
-			     
+		&apos;	 end if
+			 
 			
 		oCell = oSheet.GetCellByPosition( 0 , lrow)	
-  		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ 		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
 print
-  	loop
-  &apos;	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo!   Sembra tutto a posto, ma non è detto...&quot;
+ 	loop
+ &apos;	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo! Sembra tutto a posto, ma non è detto...&quot;
 END SUB
 &apos;_________________________________
 
@@ -888,11 +888,11 @@ dim lastUrow as long
 	oCell = oSheet.GetCellByPosition( 3 , lrow)
 	ThisComponent.CurrentController.Select(oCell)
 	lastUrow = getLastUsedRow(oSheet)
-	sString$ = &quot;Fine Computo&quot;  &apos; DOPPIO CONTROLLO sulla fine della sheet
+	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI8! &quot;
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI8! &quot;
 		exit sub
 	end if 
 	lRowE=oEnd.RangeAddress.EndRow 
@@ -900,14 +900,14 @@ dim lastUrow as long
 	oCell = oSheet.GetCellByPosition( 2 , lrow)
 	xA = oCell.string
 
-	Do  while lrow &lt; lastUrow And lrow &lt; lRowE
-				Do  while xA &lt;&gt;  &quot;SOMMANO &quot; &apos;and  lrow &lt; lastUrow
+	Do while lrow &lt; lastUrow And lrow &lt; lRowE
+				Do while xA &lt;&gt; &quot;SOMMANO &quot; &apos;and lrow &lt; lastUrow
 						If lrowE &lt;= lrow then
 						sTag = &quot;esci&quot;
 							exit do
 						end if		
 						lrow = lrow+1
-  						oCell = oSheet.GetCellByPosition( 2 , lrow)
+ 						oCell = oSheet.GetCellByPosition( 2 , lrow)
  						xA = oCell.string
 						ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
 					&apos;	print
@@ -921,18 +921,18 @@ dim lastUrow as long
  	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&apos;
 		
 		lrow = lrow+1
-  		oCell = oSheet.GetCellByPosition( 3 , lrow)
-  		xA = oCell.string
-  		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
-  	loop
-  	if msg = 1 then
-	  	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo!   Sembra tutto a posto, ma non è detto...&quot;
+ 		oCell = oSheet.GetCellByPosition( 3 , lrow)
+ 		xA = oCell.string
+ 		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
+ 	loop
+ 	if msg = 1 then
+	 	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo! Sembra tutto a posto, ma non è detto...&quot;
 	end if
 END SUB
 
 
 Sub Controlla_Somma_Computo_Sing_Voce &apos; agisce su una voce soltanto
-   &apos;
+ &apos;
 dim nome_sheet as string
 dim lrow1 as long
 dim lcol as long
@@ -942,7 +942,7 @@ dim ocell as object
 
 	sAttributo = Trova_Attr_Sheet
 	if sAttributo &lt;&gt; &quot;Tipo_computo&quot; then
-		msgbox &quot;Questa macro non lavora su questa tipologia di  tabella!&quot;&amp; CHR(10)_
+		msgbox &quot;Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
 		&amp; &quot;Eseguila su una tabella COMPUTO o similare!&quot;
 		exit sub
 	end if
@@ -952,25 +952,25 @@ dim ocell as object
 	lrow= Range2Cell 
 	oCell = oSheet.GetCellByPosition( 0 , lrow) 
  &apos;
-  &apos;   oCell = ThisComponent.CurrentSelection
- &apos;    lrow = oCell.CellAddress.row
-  &apos; print lrow  
-    &apos; oRangeVC =  Circoscrive_Voce_Computo_B (lrow) &apos;061218
+ &apos; oCell = ThisComponent.CurrentSelection
+ &apos; lrow = oCell.CellAddress.row
+ &apos; print lrow 
+ &apos; oRangeVC = Circoscrive_Voce_Computo_B (lrow) &apos;061218
 	oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
-     lrow = oRangeVC.RangeAddress.EndRow
-   oCell = oSheet.GetCellByPosition( 9 , lrow)
- &apos;  print &quot;e adesso  &quot; &amp;  lrow
- &apos;  ThisComponent.CurrentController.Select(oCell)
+ lrow = oRangeVC.RangeAddress.EndRow
+ oCell = oSheet.GetCellByPosition( 9 , lrow)
+ &apos; print &quot;e adesso &quot; &amp; lrow
+ &apos; ThisComponent.CurrentController.Select(oCell)
 &apos;print lrow
 &apos;xray osheet
-    Controlla_Somma_locale (9, lrow)
-    Controlla_Somma_locale (10, lrow)
-    Controlla_Somma_locale (12, lrow) 
-    Controlla_Somma_locale (13, lrow) 
-    Controlla_Somma_locale (14, lrow) 
-    Controlla_Somma_locale (15, lrow)
-    Controlla_Somma_locale (16, lrow)
-    Controlla_Somma_locale (17, lrow) 
+ Controlla_Somma_locale (9, lrow)
+ Controlla_Somma_locale (10, lrow)
+ Controlla_Somma_locale (12, lrow) 
+ Controlla_Somma_locale (13, lrow) 
+ Controlla_Somma_locale (14, lrow) 
+ Controlla_Somma_locale (15, lrow)
+ Controlla_Somma_locale (16, lrow)
+ Controlla_Somma_locale (17, lrow) 
 &apos;print &quot;dopo la seriereisulta&quot;
 &apos; xray osheet
  &apos;print &quot;e ritorno&quot;
@@ -999,33 +999,33 @@ Dim osheet as object
 	 xA = oCell.string
 	oCellB = oSheet.GetCellByPosition( lcol , lrowB)
 	 &apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug
-	&apos;  print nome_sheet &amp; &quot;  &quot; &amp; lrow
+	&apos; print nome_sheet &amp; &quot; &quot; &amp; lrow
 	 sCol= ColumnNameOf(lcol)
 
 	do while oSheet.GetCellByPosition( lcol , lrow).string &lt;&gt; &quot;-&quot; &apos;or _
 			if oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo&quot; or _
-				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;  or _
+				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; or _
 				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra&quot; or _
 				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; or _
-				lrow &lt; 4  then
+				lrow &lt; 4 then
 				exit do
-			  Else
+			 Else
 				lrow = lrow-1
 			end if
 	loop
 
  &apos;&apos;&apos;&apos;	 do while oSheet.GetCellByPosition( lcol , lrow).string &lt;&gt; &quot;-&quot;_
  &apos;	 print lcol
-	  &apos;  and Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow-1), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+	 &apos; and Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow-1), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
 	 &apos; print oSheet.GetCellByPosition( lcol , lrow).string
 &apos;&apos;&apos;&apos;		 lrow = lrow-1
 	&apos;	 ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)) &apos; debug
-	 &apos; 		print &quot;dcsf  &quot; &amp; nome_sheet &amp; &quot; &quot;  &amp; lrow
+	 &apos; 		print &quot;dcsf &quot; &amp; nome_sheet &amp; &quot; &quot; &amp; lrow
 &apos;&apos;&apos;&apos;	 loop
 
 &apos;	 do while xA &lt;&gt; &quot;-&quot;_
-&apos;	    and Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow-1), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
-	  &apos; NB nei loop si deve usare AND... una o l&apos;altra condizione fanno uscire dal loop... ?
+&apos;	 and Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow-1), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+	 &apos; NB nei loop si deve usare AND... una o l&apos;altra condizione fanno uscire dal loop... ?
 &apos;	 	lrow = lrow-1
 &apos;	 	oCell = oSheet.GetCellByPosition( lcol , lrow)
 &apos;	 	xA = oCell.string
@@ -1036,7 +1036,7 @@ Dim osheet as object
 	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;
 	 oCellB.setformula(sFormula	)
 &apos;	 ThisComponent.CurrentController.Select(oCellB) &apos; debug
-&apos;	  print 
+&apos;	 print 
 end Function
 
 
@@ -1055,7 +1055,7 @@ Dim oCellB as object
 	 lrowE = lrow
 &apos;	 lcol = oCell.CellAddress.column
 	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-	  ThisComponent.CurrentController.Select(oCell)
+	 ThisComponent.CurrentController.Select(oCell)
 
 	oCellB = oSheet.GetCellByPosition( 6 , lrow)
 	 sCol= ColumnNameOf(lcol)
@@ -1076,13 +1076,13 @@ lrow = lrow+2
 	 lrow = lrow+2	
 	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowE+2 &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;
 	 oCellB.setformula(sFormula )
-	&apos;	  ThisComponent.CurrentController.Select(oCellB)
-&apos;	  print	sFormula	   
+	&apos;	 ThisComponent.CurrentController.Select(oCellB)
+&apos;	 print	sFormula	 
 
 	 sFormulaC = &quot;=SUM(&quot; &amp; sColC &amp; lrowE+2 &amp; &quot;:&quot; &amp; sColC &amp; lrow-1 &amp; &quot;)&quot;
 	 oCellC.setformula(sFormulaC )
-		  ThisComponent.CurrentController.Select(ocellc)
-&apos;	  print	sFormula_i
+		 ThisComponent.CurrentController.Select(ocellc)
+&apos;	 print	sFormula_i
 	 
 &apos;print sformula
 end Function
@@ -1098,7 +1098,7 @@ dim lrow as long
 dim lrowE as long
 Dim oCell as object
 Dim oCellB as object
-&apos;print &quot;lcol  &quot; &amp; lCol
+&apos;print &quot;lcol &quot; &amp; lCol
 &apos;oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = ThisComponent.CurrentSelection
@@ -1107,8 +1107,8 @@ Dim oCellB as object
 	 lrowE = lrow
 &apos;	 lcol = oCell.CellAddress.column
 	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-&apos;	  ThisComponent.CurrentController.Select(oCell)
-	&apos;  print
+&apos;	 ThisComponent.CurrentController.Select(oCell)
+	&apos; print
 	 xA = oCell.string
 	oCellB = oCell
 	 sCol= ColumnNameOf(lcol)
@@ -1121,7 +1121,7 @@ Dim oCellB as object
 	
 	 lrow = lrow+2	
 	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowE &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;)&quot;
-	   oCellB.setformula(sFormula )
+	 oCellB.setformula(sFormula )
 
 end Function
 
@@ -1130,20 +1130,20 @@ end Function
 
 Sub Indirizzo_in_forma_leggibile_
 oActiveCell = ThisComponent.getCurrentSelection()
-  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-  oConv.Address = oActiveCell.getCellAddress
-  &apos;Print oConv.UserInterfaceRepresentation
-  &apos;Print oConv.PersistentRepresentation
+ oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ oConv.Address = oActiveCell.getCellAddress
+ &apos;Print oConv.UserInterfaceRepresentation
+ &apos;Print oConv.PersistentRepresentation
 END SUB
 
 &apos;_________________________________________________________________________________
 Function ColumnNameOf( nColumnNumber As Long )&apos;converte num col in alfanumerico
-   oDoc = ThisComponent
-   oSheet = oDoc.getSheets().getByIndex( 0 ) &apos; there must always be a zero&apos;th sheet!
-   lcolumns = oSheet.getColumns()
-   lcolumn = lcolumns.getByIndex( nColumnNumber )
-   cColumnName = lcolumn.getName()
-   ColumnNameOf() = cColumnName
+ oDoc = ThisComponent
+ oSheet = oDoc.getSheets().getByIndex( 0 ) &apos; there must always be a zero&apos;th sheet!
+ lcolumns = oSheet.getColumns()
+ lcolumn = lcolumns.getByIndex( nColumnNumber )
+ cColumnName = lcolumn.getName()
+ ColumnNameOf() = cColumnName
 End Function 
 
 

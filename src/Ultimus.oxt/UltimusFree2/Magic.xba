@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Magic" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Magic" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -15,31 +15,31 @@
 
 
 Function Replace_G(Source As String, Search As String, NewPart As String)
-  Dim Result As String
-  Dim StartPos As Long
-  Dim CurrentPos As Long
+ Dim Result As String
+ Dim StartPos As Long
+ Dim CurrentPos As Long
  
-  Result = &quot;&quot;
-  StartPos = 1
-  CurrentPos = 1
+ Result = &quot;&quot;
+ StartPos = 1
+ CurrentPos = 1
  
-  If Search = &quot;&quot; Then
-    Result = Source
-  Else 
-    Do While CurrentPos &lt;&gt; 0
-      CurrentPos = InStr(StartPos, Source, Search)
-      If CurrentPos &lt;&gt; 0 Then
-        Result = Result + Mid(Source, StartPos, _
-        CurrentPos - StartPos)
-        Result = Result + NewPart
-        StartPos = CurrentPos + Len(Search)
-      Else
-        Result = Result + Mid(Source, StartPos, Len(Source))
-      End If                &apos; Position &lt;&gt; 0
-    Loop 
-  End If 
+ If Search = &quot;&quot; Then
+ Result = Source
+ Else 
+ Do While CurrentPos &lt;&gt; 0
+ CurrentPos = InStr(StartPos, Source, Search)
+ If CurrentPos &lt;&gt; 0 Then
+ Result = Result + Mid(Source, StartPos, _
+ CurrentPos - StartPos)
+ Result = Result + NewPart
+ StartPos = CurrentPos + Len(Search)
+ Else
+ Result = Result + Mid(Source, StartPos, Len(Source))
+ End If &apos; Position &lt;&gt; 0
+ Loop 
+ End If 
  
-  Replace_G = Result
+ Replace_G = Result
 End Function
 
 
@@ -61,9 +61,9 @@ dim lrow as long
 	For lrow=3 To lLastUrow
 	&apos;	if oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; then
  	&apos;		Formula_magica (lrow)
-	&apos;	end if  questo le aggiorna tutte
+	&apos;	end if questo le aggiorna tutte
 	
-			sSimbDividente = &quot;  &gt;( &quot;
+			sSimbDividente = &quot; &gt;( &quot;
 
 &apos;	print 	InStr((oSheet.GetCellbyPosition( 2, lrow ).string) , sSimbDividente)
 		if oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; and _
@@ -95,9 +95,9 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 	end if
 	
 	dim iProvv as Double	
-	if oSheet.GetCellByPosition( 2, iRowQ ).cellstyle  = &quot;comp 1-a&quot; or _
-		oSheet.GetCellByPosition( 5, iRowQ ).cellstyle  = &quot;comp 1-a&quot;	then	
-		sSimbDividente = &quot;  &gt;( &quot;
+	if oSheet.GetCellByPosition( 2, iRowQ ).cellstyle = &quot;comp 1-a&quot; or _
+		oSheet.GetCellByPosition( 5, iRowQ ).cellstyle = &quot;comp 1-a&quot;	then	
+		sSimbDividente = &quot; &gt;( &quot;
 
 		sComp=oSheet.GetCellByPosition( 2, iRowQ ).string
 		if InStr(1, sComp, sSimbDividente) &lt;&gt; 0 then
@@ -106,8 +106,8 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 			sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
 			sProvv = Replace_G(sString4,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
-		 	if iProvv + 1.999958689  = 1.999958689 then
-		 			if  oSheet.GetCellByPosition( 4, iRowQ ).value = 0 then
+		 	if iProvv + 1.999958689 = 1.999958689 then
+		 			if oSheet.GetCellByPosition( 4, iRowQ ).value = 0 then
 		 					sString4 = &quot;&quot;
 		 				else
 		 			sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
@@ -117,8 +117,8 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 		sString5 = oSheet.GetCellByPosition( 5, iRowQ ).formula
 			sProvv = Replace_G(sString5,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
-		 	if iProvv + 1.999958689  = 1.999958689 then
-		 			if  oSheet.GetCellByPosition( 5, iRowQ ).value = 0 then
+		 	if iProvv + 1.999958689 = 1.999958689 then
+		 			if oSheet.GetCellByPosition( 5, iRowQ ).value = 0 then
 		 					sString5 = &quot;&quot;
 		 				else
 							sString5 = oSheet.GetCellByPosition( 5, iRowQ ).formula
@@ -128,18 +128,18 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 		sString6 = oSheet.GetCellByPosition( 6, iRowQ ).formula
 			sProvv = Replace_G(sString6,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
-		 	if iProvv + 1.999958689  = 1.999958689 then
-		 			if  oSheet.GetCellByPosition( 6, iRowQ ).value = 0 then
+		 	if iProvv + 1.999958689 = 1.999958689 then
+		 			if oSheet.GetCellByPosition( 6, iRowQ ).value = 0 then
 		 					sString6 = &quot;&quot;
 		 				else
-					  		sString6 = oSheet.GetCellByPosition( 6, iRowQ ).formula
+					 		sString6 = oSheet.GetCellByPosition( 6, iRowQ ).formula
 					end if
 		 	end if
 		sString7 = oSheet.GetCellByPosition( 7, iRowQ ).formula
 			sProvv = Replace_G(sString7,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
-		 	if iProvv + 1.999958689  = 1.999958689 then
-		 			if  oSheet.GetCellByPosition( 7, iRowQ ).value = 0 then
+		 	if iProvv + 1.999958689 = 1.999958689 then
+		 			if oSheet.GetCellByPosition( 7, iRowQ ).value = 0 then
 		 					sString7 = &quot;&quot;
 		 				else
 		 					sString7 = oSheet.GetCellByPosition( 7, iRowQ ).formula
@@ -148,8 +148,8 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 		sString8 = oSheet.GetCellByPosition( 8, iRowQ ).formula
 			sProvv = Replace_G(sString8,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
-		 	if iProvv + 1.999958689  = 1.999958689 then
-		 			if  oSheet.GetCellByPosition( 8, iRowQ ).value = 0 then
+		 	if iProvv + 1.999958689 = 1.999958689 then
+		 			if oSheet.GetCellByPosition( 8, iRowQ ).value = 0 then
 		 					sString8 = &quot;&quot;
 		 				else
 							sString8 = oSheet.GetCellByPosition( 8, iRowQ ).formula
@@ -166,11 +166,11 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 	
 			
 		iTag = 0
-		if sString4 &lt;&gt; &quot;&quot;  then 
+		if sString4 &lt;&gt; &quot;&quot; then 
 			if left(sString4,1) = &quot;=&quot; then 
 					sString4 =	&quot;(&quot; &amp; sString4 &amp;&quot;)&quot; 
 				else
-					 sString4  = sString4  
+					 sString4 = sString4 
 			end if
 			iTag = 1
 		end if	
@@ -178,7 +178,7 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 			if left(sString5,1) = &quot;=&quot; then 
 					sString5 =	&quot;(&quot; &amp; sString5 &amp;&quot;)&quot;
 				else
-					 sString5  = sString5 
+					 sString5 = sString5 
 			end if
 			if itag = 1 then &apos;
 					sString5 =	&quot;*&quot; &amp; sString5
@@ -190,7 +190,7 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 			if left(sString6,1) = &quot;=&quot; then 
 					sString6 =	&quot;(&quot; &amp; sString6 &amp;&quot;)&quot;
 				else
-					 sString6  = sString6 
+					 sString6 = sString6 
 			end if
 			if itag = 1 then &apos;
 					sString6 =	&quot;*&quot; &amp; sString6
@@ -202,7 +202,7 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 			if left(sString7,1) = &quot;=&quot; then 
 					sString7 =	&quot;(&quot; &amp; sString7 &amp;&quot;)&quot;
 				else
-					 sString7  = sString7 
+					 sString7 = sString7 
 			end if
 			if itag = 1 then &apos;
 					sString7 =	&quot;*&quot; &amp; sString7
@@ -215,7 +215,7 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 			if left(sString8,1) = &quot;=&quot; then
 					sString8 =	&quot;(&quot; &amp; sString8 &amp;&quot;)&quot;
 				else
-					 sString8  = sString8 
+					 sString8 = sString8 
 			end if
 			if itag = 1 then &apos; and sString7 &lt;&gt; &quot;&quot; then 
 					sString8 =	&quot;*&quot; &amp; sString8

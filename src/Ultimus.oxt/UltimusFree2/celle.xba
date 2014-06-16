@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="celle" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="celle" script:language="StarBasic">REM ***** BASIC *****
 REM questa funziona solo se la cella ha già una annotazione
 function add_nota &apos;(icol as integer, irow as integer, testo as string)
 	oSel = thisComponent.getCurrentSelection
@@ -13,5 +13,19 @@ function add_nota &apos;(icol as integer, irow as integer, testo as string)
 end function
 sub fds
 add_nota (8,15,&quot;prova&quot;)
-end sub 
+end sub
+
+rem controlla l&apos;appartenenza di una cella ad un range
+sub intersect
+sheet = ThisComponent.Sheets.GetByName(&quot;CONTABILITA&quot;)
+&apos;MiaCella = InputBox(&quot;Inserisce il nome della cella :&quot;)
+&apos;range1 = sheet.getCellRangeByName(miacella)
+range1 = thiscomponent.currentselection
+range2 = range1.queryintersection(sheet.GetCellRangeByName(&quot;Sal_1&quot;).rangeaddress()) 
+If range2.RangeAddressesAsString = &quot;&quot; Then 
+    MsgBox &quot;La cella non appartiene al Sal_1&quot;,48,&quot;Oh,no!&quot;
+Else  
+	MsgBox &quot;La cella appartiene al Sal_1&quot;,64,&quot;Evviva!!!&quot;
+end if
+end sub
 </script:module>

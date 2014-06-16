@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenerMouse" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenerMouse" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -30,7 +30,7 @@ end sub
 
 
 function getTheRangeQ()
-    
+ 
 &apos;	DialogLibraries.LoadLibrary(&quot;Standard&quot; )
 &apos;	oDialogoSeleRange = CreateUnoDialog(DialogLibraries.Standard.Dialog1 ) &apos; Inizializza il dialogo
 &apos;	oDialogoSeleRange.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
@@ -40,8 +40,8 @@ function getTheRangeQ()
 	on error goto cleanExit
 	Sel=True
 	
-	do &apos; Inizia un ciclo infinito dal quale si esce  
-	wait 100           
+	do &apos; Inizia un ciclo infinito dal quale si esce 
+	wait 100 
 	loop Until Sel=False&apos; quando sel diventa False
 	getTheRangeQ=oSelect
 

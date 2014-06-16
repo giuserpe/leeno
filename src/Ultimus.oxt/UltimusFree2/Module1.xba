@@ -1,48 +1,48 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Module1" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Module1" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
 Sub SalvaCodice
-  oFactory = createUnoService(&quot;com.sun.star.comp.deployment.PackageManagerFactory&quot;)
-  oPkgMgr = oFactory.getPackageManager(&quot;user&quot;)
-  sID = &quot;vnd.bartaimar.UltimusFree4&quot;
+ oFactory = createUnoService(&quot;com.sun.star.comp.deployment.PackageManagerFactory&quot;)
+ oPkgMgr = oFactory.getPackageManager(&quot;user&quot;)
+ sID = &quot;vnd.bartaimar.UltimusFree4&quot;
  &apos; xray oPkgMgr.getDeployedPackage(sID,null)
  &apos;Ultimus-3.2.135.oxt
 mPkgs() = oPkgMgr.getDeployedPackages(Null, Null)
 xray mPkgs()
-  sNomeExt = &quot;Ultimus-3.2.&quot;
-  sNumSubVer = InputBox (&quot;  Scrivi il NUMERO della Subversione&quot;&amp; CHR$(10)_
-   							&amp; sNomeExt ,&quot;          Salva il Codice dell&apos;Extension&quot;, &quot;1&quot;)&apos; &amp; CHR$(10) 
-   	If sNumSubVer = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
-   			exit sub		
-   	end if	
-  sNewTitle = sNomeExt &amp; sNumSubVer &amp; &quot;.oxt&quot;
-&apos;  sDestUrl  = BrowseForFile(&quot;Seleziona la dir in cui salvare&quot;, &quot;.pwe&quot;, &quot;C:\windows\desktop&quot;, &quot;*.*&quot;) 
-   sDestUrl =Folder
+ sNomeExt = &quot;Ultimus-3.2.&quot;
+ sNumSubVer = InputBox (&quot; Scrivi il NUMERO della Subversione&quot;&amp; CHR$(10)_
+ 							&amp; sNomeExt ,&quot; Salva il Codice dell&apos;Extension&quot;, &quot;1&quot;)&apos; &amp; CHR$(10) 
+ 	If sNumSubVer = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
+ 			exit sub		
+ 	end if	
+ sNewTitle = sNomeExt &amp; sNumSubVer &amp; &quot;.oxt&quot;
+&apos; sDestUrl = BrowseForFile(&quot;Seleziona la dir in cui salvare&quot;, &quot;.pwe&quot;, &quot;C:\windows\desktop&quot;, &quot;*.*&quot;) 
+ sDestUrl =Folder
 &apos; xray folder
-   If sDestUrl = &quot;/&quot; Then
-    exit sub
-   end if
+ If sDestUrl = &quot;/&quot; Then
+ exit sub
+ end if
  &apos; sDestUrl = &quot;file:///home/paolo/&quot;
  
-  oPkg =  oPkgMgr.getDeployedPackage(sID, &quot;&quot;, Null, Null)
-  oPkg.exportTo( sDestUrl, sNewTitle, 1, Null)
+ oPkg = oPkgMgr.getDeployedPackage(sID, &quot;&quot;, Null, Null)
+ oPkg.exportTo( sDestUrl, sNewTitle, 1, Null)
  End Sub
 
 
 
 
-Sub DelBlankRows  &apos;HideBlankRows
+Sub DelBlankRows &apos;HideBlankRows
  &apos;http://codesnippets.services.openoffice.org/Calc/Calc.HideShowBlank.snip
 &apos; authors: Ian Laurenson (initial), René Zimmer
 dim i as long
@@ -96,7 +96,7 @@ sModulSubName
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 &apos;		Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 
 end sub
 

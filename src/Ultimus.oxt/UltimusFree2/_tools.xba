@@ -1,6 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM ***** BASIC *****
+Sub Main
+rifa_nomearea (&quot;Foglio1&quot;,&quot;A1:A5&quot;,&quot;per_cortesia&quot;)
+End Sub
+Sub _listino_accoda_in_unico
+ &apos;ACCODA PIù FILE DI CALC IN UNO SOLO
+Dim DocName as object, DocUlr as string, dummy()
+Doc = ThisComponent
+Sheet = Doc.Sheets(0) 
+sPath =&quot;C:\Users\giuserpe\Desktop\2013\&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
+sFileName = Dir(sPath &amp; &quot;*.ods&quot;, 0)
+Barra_Apri_Chiudi_5(&quot;.......................Sto lavorando su &quot;&amp; sFileName, 0)
+Do While (sFileName &lt;&gt; &quot;&quot;)
+  c = Sheet.createCursor
+  c.gotoEndOfUsedArea(false)
+  LastRow = c.RangeAddress.EndRow + 1
+  DocUrl = ConvertToURL(sPath &amp; sFileName)
+&apos;on error goto errore
+  DocName = StarDesktop.loadComponentFromURL (DocUrl, &quot;_blank&quot;,0, Dummy() )
+  Sheet1 = DocName.Sheets(1) &apos; questo indica l&apos;index del foglio da copiare
+  c = Sheet1.createCursor
+  c.gotoEndOfUsedArea(false)
+  LastRow1 = c.RangeAddress.EndRow
+	oStart=uFindString(&quot;ATTENZIONE!&quot;, Sheet1)
+	Srow=oStart.RangeAddress.EndRow+1
+  Range = Sheet1.getCellRangeByPosition(1, Srow,  12, LastRow1).getDataArray &apos;(1^ colonna, 1^ riga, 10^ colonna, ultima riga)
+  DocName.dispose
+  dRange  = Sheet.getCellRangeByPosition(1, LastRow, 12, LastRow1 + LastRow-Srow)
+  dRange.setDataArray(Range)
+    sFileName = Dir()
+
+
+&apos;   	oStart=uFindString(&quot;Elenco prezzi Regione Umbria 2013&quot;, Sheet)
+&apos;   	Srow=oStart.RangeAddress.EndRow
+&apos;   	oStart=uFindString(&quot;ATTENZIONE!&quot;, Sheet)
+&apos;	Srow1=oStart.RangeAddress.EndRow
+&apos;	print Srow
+&apos;	print Srow1
+&apos;	Sheet.getrows.removebyindex(Srow,Srow1-Srow+1)
+
+Loop
+print &quot;fatto!&quot;
+		errore:
+End Sub
+
+Sub inseriscirighe
+Dim oSheet, oRangeAddress
+oSheet = ThisComponent.Sheets(0)
+oRangeAddress = oSheet.getCellRangeByName(&quot;A2:A14&quot;).getRangeAddress()
+oSheet.insertCells(oRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)
+End Sub
+Sub Protezione_area (foglio as string, nomearea as string) &apos;usato in annota_pagina_libretto
+	Dim rngClear As Object
+	Dim oSheet1 As Object
+	Dim CellProtStruc As Object
+	oSheet1 = ThisComponent.Sheets.GetByName(foglio)
+&apos;	oSheet1.Unprotect &quot;&quot;
+	rngClear = oSheet1.GetCellRangeByName(nomearea)
+rem	rngClear.clearContents( _
+rem	com.sun.star.sheet.CellFlags.VALUE _
+rem	+ com.sun.star.sheet.CellFlags.STRING _
+rem	+ com.sun.star.sheet.CellFlags.DATETIME _
+rem	+ com.sun.star.sheet.CellFlags.ANNOTATION _
+rem	+ com.sun.star.sheet.CellFlags.FORMULA _
+rem	+ com.sun.star.sheet.CellFlags.HARDATTR _
+rem	+ com.sun.star.sheet.CellFlags.STYLES _
+rem	+ com.sun.star.sheet.CellFlags.OBJECTS _
+rem	+ com.sun.star.sheet.CellFlags.EDITATTR)
+	CellProtStruc = rngClear.CellProtection
+	CellProtStruc.isLocked = True
+	rngClear.CellProtection = CellProtStruc
+	oSheet1.Protect &quot;&quot;
+End Sub
 sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda della sheet
 	oSheet =ThisComponent.currentController.activeSheet
 	Select Case oSheet.CodeName
@@ -32,19 +104,19 @@ Dim oCell &apos; Cell object.
 Dim s$
 
 for i = 1 to 5
-    sName$ = i
-    oRanges = ThisComponent.NamedRanges
-&apos;    xray oRanges
-        If NOT oRanges.hasByName(sName$) Then
-        Dim oCellAddress As new com.sun.star.table.CellAddress
-        oCellAddress.Sheet = 2 &apos;id Sheet
+ sName$ = i
+ oRanges = ThisComponent.NamedRanges
+&apos; xray oRanges
+ If NOT oRanges.hasByName(sName$) Then
+ Dim oCellAddress As new com.sun.star.table.CellAddress
+ oCellAddress.Sheet = 2 &apos;id Sheet
 		oCellAddress.Column = i &apos;Column i.
-        oCellAddress.Row = i + 1 &apos;Row i + 1..
-        s$ = &quot;$Foglio3.$B$3:$e$10&quot;
-&apos;        xray oCellAddress
-        REM oRanges.addNewByName(nome_range, stringa_di_definiziones$, oCellAddress, 0)
-        oRanges.addNewByName(sName$, s$, oCellAddress, 0)
-        End If
+ oCellAddress.Row = i + 1 &apos;Row i + 1..
+ s$ = &quot;$Foglio3.$B$3:$e$10&quot;
+&apos; xray oCellAddress
+ REM oRanges.addNewByName(nome_range, stringa_di_definiziones$, oCellAddress, 0)
+ oRanges.addNewByName(sName$, s$, oCellAddress, 0)
+ End If
 next
 print &quot;fatto!&quot;
 End Sub
@@ -60,7 +132,11 @@ sub stili_cella
 		Else
 		Sheet = Doc.createInstance(&quot;com.sun.star.sheet.Spreadsheet&quot;)
 		Doc.Sheets.insertByName(&quot;stili&quot;, Sheet)
+		Sheet = Doc.Sheets.getByName(&quot;stili&quot;)
 	End If
+	ThisComponent.CurrentController.Select(Sheet.GetCellByPosition(0,0))
+&apos;	thisComponent.getSheets().removeByName(&quot;stili&quot;)
+&apos;	thisComponent.getSheets().insertNewByName(&quot;stili&quot;,5,0)
 	imax=UBound(sty())
 	i =0
 	for each el in BubbleSortlist(sty())
@@ -68,12 +144,53 @@ sub stili_cella
 		Sheet.GetCellByPosition( 1, i).cellstyle = el
 		Sheet.GetCellByPosition( 1, i).setvalue(20)
 	i=i+2
-	Barra_Apri_Chiudi_5(&quot;                                 Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
+	Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
 	next	
 &apos;	def=odoc.StyleFamilies.getByName(&quot;Cellstyles&quot;).getElementsNames
 print &quot;ok&quot;
-ThisComponent.CurrentController.Select(Sheet.GetCellByPosition(0,0))
+end sub
 
+sub studio_stile
+ &apos;  oCell=ThisComponent.Sheets.GetByName(&quot;Foglio1&quot;).getCellByPosition(1, 1)&apos;B2
+ oCell=thiscomponent.currentselection
+   
+   nSty=oCell.cellstyle
+   Dim oSty as object
+   oSty = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getbyname(nSty)
+   alt = oSty.CharHeight*47&apos;35.2777777778
+   topm = oSty.ParaTopMargin
+   for nr=2 to 10
+      hh=alt+(nr-1)*0.85*alt+topm
+      oCell.Rows.Height = hh
+      wait 1000
+   next
+end sub
+sub studio_stile__
+oCell=thiscomponent.currentselection
+&apos;	With oCell.CellAddress
+&apos;		icol =.Column
+&apos;		iRow =.Row
+&apos;	End With
+
+
+
+&apos;xray oCell
+nSty=oCell.cellstyle
+&apos;print nsty
+Dim dSty as object
+dsty = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getbyname(nSty)
+&apos;xray dsty
+alt = dsty.CharHeight*0.352777777778
+topm = dsty.ParaTopMargin*0.352777777778
+nr =5
+&apos;nr = n+(n-1)*0.18
+&apos;print (nr+nr-1)*100*alt+topm
+oCell.Rows.Height = nr*100*alt+(nr-1)*30*alt+topm
+&apos;	oSheet = ThisComponent.currentController.activeSheet
+&apos;	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
+&apos;	oPrimaCella.Rows.Height = 2200
+&apos;print alt
+&apos;print topm
 end sub
 
 SUB Elimina_Nomi_Area_errati
@@ -89,13 +206,13 @@ SUB Elimina_Nomi_Area_errati
 		Doc.Sheets.insertByName(&quot;duplicati&quot;, Sheet)
 	End If
 	dim n as integer
-    	oDoc = ThisComponent
-    	oAree=oDoc.NamedRanges
-  		oNomiArea() = oAree.ElementNames()
+ 	oDoc = ThisComponent
+ 	oAree=oDoc.NamedRanges
+ 		oNomiArea() = oAree.ElementNames()
 		n = oAree.Count - 1
 		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)&apos;
 		
-      For i = 0 to n
+ For i = 0 to n
 		Cell = Sheet.getCellByPosition(0, i)				&apos;prima colonna
 		Cell.String = oNomiArea(i)							&apos;inserisce nome area
 		Cell = Sheet.getCellByPosition(1, i)				&apos;seconda colonna
@@ -103,12 +220,12 @@ SUB Elimina_Nomi_Area_errati
 		Cell.String = Contenuto								&apos;inserisce il contenuto
 
 ELIMINA_I_NOMI_DI_AREA_ERRATI:
-      	if InStr(Contenuto, &quot;#REF!&quot;) or _
+ 	if InStr(Contenuto, &quot;#REF!&quot;) or _
 			InStr(Contenuto, &quot;#rif!&quot;) then&apos;
 print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
 			oAree. RemoveByName(oNomiArea(i))
-    	end if
-      next
+ 	end if
+ next
 END SUB
 SUB NamedArea2AreaDB
 	Dim Doc As Object
@@ -123,15 +240,15 @@ SUB NamedArea2AreaDB
 &apos;		Doc.Sheets.insertByName(&quot;duplicati&quot;, Sheet)
 &apos;	End If
 	dim n as integer
-    	oDoc = ThisComponent
-    	xray oDoc
-    	&apos;oAree=oDoc.NamedRanges
+ 	oDoc = ThisComponent
+ 	xray oDoc
+ 	&apos;oAree=oDoc.NamedRanges
 		oAree=oDoc.DatabaseRanges
-  		oNomiArea() = oAree.ElementNames()
+ 		oNomiArea() = oAree.ElementNames()
 		n = oAree.Count - 1
 &apos;		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)&apos;
 		
-      For i = 0 to n
+ For i = 0 to n
 &apos;		Cell = Sheet.getCellByPosition(0, i)				&apos;prima colonna
 &apos;		Cell.String = oNomiArea(i)							&apos;inserisce nome area
 &apos;		Cell = Sheet.getCellByPosition(1, i)				&apos;seconda colonna
@@ -139,12 +256,12 @@ SUB NamedArea2AreaDB
 &apos;		Cell.String = Contenuto								&apos;inserisce il contenuto
 
 ELIMINA_I_NOMI_DI_AREA_ERRATI:
-&apos;      	if InStr(Contenuto, &quot;#REF!&quot;) or _
+&apos; 	if InStr(Contenuto, &quot;#REF!&quot;) or _
 &apos;			InStr(Contenuto, &quot;#rif!&quot;) then&apos;
 print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
 &apos;			oAree. RemoveByName(oNomiArea(i))
-&apos;    	end if
-      next
+&apos; 	end if
+ next
 END SUB
 
 SUB DOLO REM SOLO MANUTENZIONE
@@ -160,13 +277,14 @@ SUB DOLO REM SOLO MANUTENZIONE
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$106:$P$131&quot; , &quot;blocco_analisi&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
 &apos;		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
-     oDoc = ThisComponent
-     oAree=oDoc.NamedRanges&apos;
-xray oDoc
+rifa_nomearea (&quot;Foglio1&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
+ oDoc = ThisComponent
+ oAree=oDoc.NamedRanges&apos;
+&apos;xray oDoc
 
 	&apos;end if
 END SUB
-sub colora_capitoli_listino &apos;(C) Giuseppe Vizziello 2014
+sub _listino_colora_capitoli&apos;(C) Giuseppe Vizziello 2014
 	If thisComponent.Sheets.hasByName(&quot;Listino&quot;) Then &apos; se la sheet esiste
 		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 		else
@@ -174,7 +292,7 @@ sub colora_capitoli_listino &apos;(C) Giuseppe Vizziello 2014
 	exit sub
 	END IF
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
-	Barra_Apri_Chiudi_5(&quot;                                 Eseguo ...&quot;, 0)
+	Barra_Apri_Chiudi_5(&quot; Eseguo ...&quot;, 0)
 &apos;	sString$ = &quot;ATTENZIONE!&quot;
 &apos;	oEnd=uFindString(sString$, oSheet)
 &apos;	primariga=oEnd.RangeAddress.EndRow
@@ -184,19 +302,20 @@ sub colora_capitoli_listino &apos;(C) Giuseppe Vizziello 2014
 		exit for
 		end if 
 	next
-	for i =  primariga to lLastUrow
+	for i = primariga to lLastUrow
 		if len(oSheet.GetCellbyPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
 		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
 		oRange.CellBackColor = RGB(255, 255, 204)
 		end if
-		if len(oSheet.GetCellbyPosition( 2, i ).string) = 3 then 
-		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
-		oRange.CellBackColor = RGB(255, 255, 0)
-		end if
-		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt; 3 then 
+	&apos;	if len(oSheet.GetCellbyPosition( 2, i ).string) = 3 then 
+	&apos;	oRange = oSheet.getCellRangeByPosition (0,i,11,i)
+	&apos;	oRange.CellBackColor = RGB(255, 255, 0)
+	&apos;	end if
+		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 5 then 
 		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
 		oRange.CellBackColor = RGB(230, 230, 76)
 		end if
+	Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; lLastUrow-i &amp;&quot; righe...&quot;, 0)
 	next
 	oSheet.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne
 	oSheet.getCellRangeByposition(12,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
@@ -237,7 +356,7 @@ sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
 		if oSheet.GetCellbyPosition( 0, i ).string = &quot;F&quot; then 
 			fine =i
 			&apos;print fine
-			Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; inizio &amp; &quot; di &quot; &amp; lLastUrow, 0)
+			Barra_Apri_Chiudi_5(&quot; #&quot;&amp; inizio &amp; &quot; di &quot; &amp; lLastUrow, 0)
 			print oSheet.GetCellByPosition(3 , inizio-3).value()*1.2
 			Print oSheet.GetCellByPosition(3 , inizio-2).value()
 			print oSheet.GetCellByPosition(3 , inizio-1).value()
@@ -269,7 +388,7 @@ sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazion
 	for i = 1 to lLastUrow
 	if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An-lavoraz-Cod-sx&quot; and 	oSheet.GetCellbyPosition( 0, i ).string = &quot;&quot; then 
 			&apos;print fine
-			Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrow, 0)
+			Barra_Apri_Chiudi_5(&quot; #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrow, 0)
 			oSheet.GetCellByPosition(0 , i).setstring(&quot; &quot;)
 			
 	end if
@@ -277,7 +396,7 @@ sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazion
 	Barra_chiudi_sempre_4
 	fine:
 end sub
-SUB SERVIZIO  &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
+SUB SERVIZIO &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
 	&apos;print &quot;partenza&quot;
 	oSheet = ThisComponent.currentController.activeSheet
 	ilastRow = getLastUsedRow(oSheet)
@@ -285,15 +404,15 @@ SUB SERVIZIO  &apos; una macro per mio uso e consumo che modifico e adatto doi v
 	lrow = 3
 &apos;	do while oSheet.GetCellByPosition(9, ilastrow).value &lt;&gt; &quot;&quot;
 
-	Do while  lrow &lt; ilastrow
+	Do while lrow &lt; ilastrow
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 10, lrow))
 	&apos;	print oSheet.GetCellByPosition(10, lrow).value
 		if oSheet.GetCellByPosition(2, lrow).string = &quot;&quot; then
 		
 	&apos;	xray oSheet.getrows()
-			&apos;	If oSheet.getrows().getByIndex(lrow).isVisible = false  then
+			&apos;	If oSheet.getrows().getByIndex(lrow).isVisible = false then
 			&apos;			oSheet.getrows().getByIndex(lrow).isVisible = TRUE 
-	  		&apos;		else	 
+	 		&apos;		else	 
 						oSheet.getrows.getByIndex(lrow).isVisible = false 
 			&apos;	end if
 &apos;	end if
@@ -310,7 +429,7 @@ END SUB
 
 
 
-SUB SERVIZIO__  &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
+SUB SERVIZIO__ &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
 	&apos;print &quot;partenza&quot;
 	oSheet = ThisComponent.currentController.activeSheet
 	ilastRow = getLastUsedRow(oSheet)
@@ -318,7 +437,7 @@ SUB SERVIZIO__  &apos; una macro per mio uso e consumo che modifico e adatto doi
 	lrow = 2
 &apos;	do while oSheet.GetCellByPosition(9, ilastrow).value &lt;&gt; &quot;&quot;
 
-	Do while  lrow &lt; ilastrow
+	Do while lrow &lt; ilastrow
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 10, lrow))
 	&apos;	print oSheet.GetCellByPosition(10, lrow).value
 		if oSheet.GetCellByPosition(10, lrow).value &lt;&gt; 0 then 

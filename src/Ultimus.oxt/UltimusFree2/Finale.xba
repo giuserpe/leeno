@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Finale" script:language="StarBasic">
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                             
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarà grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -25,7 +25,7 @@ Sub Prepara_un_Doc_per_la_stampa(optional sCosa as long)
 	end if
 	Set_Header_Footer (&quot;no messaggio&quot;)
 	Sbianca_e_o_consolida(6)
-	&apos;Pulisci_Tabella_Tutta  &apos;_new
+	&apos;Pulisci_Tabella_Tutta &apos;_new
 	oSheet = ThisComponent.currentController.activeSheet
 	sSheetName=oSheet.name
 
@@ -55,7 +55,7 @@ end sub
 
 
 
-REM  *****  BASIC  *****
+REM ***** BASIC *****
 
 
 
@@ -88,14 +88,14 @@ dim iNumInser as integer
 
  	&apos;xray thiscomponent.isActionLocked 
  	&apos;xray thiscomponent.hasControllersLocked
- &apos;  &apos;__________________________
+ &apos; &apos;__________________________
 &apos;	Clessid_lock_Start
 	oDoc = thisComponent
 &apos;	sNomeSheet = ThisComponent.currentController.activeSheet
 	sNomeSheet = oDoc.currentcontroller.activesheet.name
 &apos;	print sNomeSheet
 	oSheet = oDoc.currentcontroller.activesheet
-    Copy_PageStyle
+ Copy_PageStyle
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	&apos;Height 
@@ -118,10 +118,10 @@ dim iNumInser as integer
 
 	If thisComponent.Sheets.hasByName(sNomeSheet &amp; sSuffix) Then &apos; se la sheet esiste
 		If thisComponent.Sheets.hasByName(sNomeSheet &amp; sSuffix &amp; &quot;_bk&quot;) Then		
-			thisComponent.Sheets.removebyname(sNomeSheet &amp;  sSuffix &amp; &quot;_bk&quot;)
+			thisComponent.Sheets.removebyname(sNomeSheet &amp; sSuffix &amp; &quot;_bk&quot;)
 		end if
 		oSheet = oDoc.Sheets.getByName(sNomeSheet &amp; sSuffix)
-		oSheet.Name = sNomeSheet &amp;  sSuffix &amp; &quot;_bk&quot;
+		oSheet.Name = sNomeSheet &amp; sSuffix &amp; &quot;_bk&quot;
 	end if
 &apos;print lnumSheet
 	if isMissing (lnumSheet) then
@@ -142,16 +142,16 @@ dim iNumInser as integer
 			DuplicaSheetinDoc = &quot;Annulla&quot;
 			exit Function
 		end if
-	  Else	&apos; agg 080624
-	  	sNuovoNome = sNome &apos; agg 080624
+	 Else	&apos; agg 080624
+	 	sNuovoNome = sNome &apos; agg 080624
 	end if &apos; agg 080624 &apos;&apos;
 &apos;	oDoc.Sheets.CopybyName(sNomeSheet,sNome, iNumInser)&apos;
 &apos;	For i 
 	if sNuovoNome = sNomeSheet then &apos; questo perché se si scegli d i salvare con lo 
-		sNuovoNome = sNuovoNome &amp; &quot;_&quot;  &apos; nome della sheet di origine questa verrebbe poi cancellata
+		sNuovoNome = sNuovoNome &amp; &quot;_&quot; &apos; nome della sheet di origine questa verrebbe poi cancellata
 	end if
 &apos;	If Qui c&apos;è un problema: nel caso la sheet esista già (ma non è quella da duplicare) da un errore...
-	If thisComponent.Sheets.hasByName(sNuovoNome)  Then
+	If thisComponent.Sheets.hasByName(sNuovoNome) Then
 		sMod = sNuovoNome
 		Do while sNuovoNome = sMod
 			sMod = inputbox (&quot;Il foglio &quot; &amp; sNewNome &amp; &quot;esiste già! Modifica il nome&quot;, ,sMod)
@@ -176,7 +176,7 @@ dim iNumInser as integer
 	ocell = oSheet.GetCellbyPosition( 0, 3 )
 	Thiscomponent.currentcontroller.select(ocell)
 
-&apos;	sNuovoNome = InputBox (&quot;HO DUPLICATO LA TABELLA...           ADESSO DAGLI UN NOME! &quot;,_
+&apos;	sNuovoNome = InputBox (&quot;HO DUPLICATO LA TABELLA... ADESSO DAGLI UN NOME! &quot;,_
 &apos;	 &quot;ATTRIBUISCI UN NOME ALLA NUOVA TABELLA&quot;, sNome)
 
 &apos;	print sNuovoNome
@@ -192,7 +192,7 @@ END FUNCTION
 
 
 
-SUB Duplica_Sheet_new_doc &apos; CONSOLIDA e poi esporta  usa CopiaSheet 
+SUB Duplica_Sheet_new_doc &apos; CONSOLIDA e poi esporta usa CopiaSheet 
 &apos; &apos; Shortcut: Ctrl-Alt-Q (in NUOVO doc)
 dim nEndRow as long
 dim nEndCol as long
@@ -210,8 +210,8 @@ dim nEndCol as long
 
 	Barra_Apri_Chiudi_4
 
-&apos;	wait 5000  &apos;disatt 080609 a favore di
-&apos;	wait 1000  &apos;diasatt 080624
+&apos;	wait 5000 &apos;disatt 080609 a favore di
+&apos;	wait 1000 &apos;diasatt 080624
 
 &apos;	on error goto Gestione_Errore
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -222,7 +222,7 @@ dim nEndCol as long
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	pezzo in prova
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
@@ -252,22 +252,22 @@ dim nEndCol as long
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;xray oSheet
 	If oSheet.isProtected = true then
-	   osheet.unprotect(&quot;&quot;)
+	 osheet.unprotect(&quot;&quot;)
 	end if
 	bGrid=ThisComponent.CurrentController.ShowGrid
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
-    Copy_PageStyle
+ Copy_PageStyle
  	oCell = oSheet.GetCellbyPosition( 0, 0 )
-  	oCursor = oSheet.createCursorByRange(oCell)
-  	
+ 	oCursor = oSheet.createCursorByRange(oCell)
+ 	
  	 oCursor.GotoEndOfUsedArea(True)
  	 aAddress = oCursor.RangeAddress
-    	nEndRow = aAddress.EndRow
-    	nEndCol = aAddress.EndColumn
-  	
+ 	nEndRow = aAddress.EndRow
+ 	nEndCol = aAddress.EndColumn
+ 	
 	oRange = oSheet.getCellRangeByPosition (0,0,245,nEndRow+30)
 &apos;***********************************
 	&apos;(0,0,nEndColumn,nEndRow+30) &apos;perché nEndCol non funziona ed è a 0?
@@ -277,14 +277,14 @@ dim nEndCol as long
  	aSaveData = oRange.getDataArray()
  	&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
  	&apos;una volta cancellate le relative celle risulterebbero vuote
-   	oRange.clearContents(Flags)
-   	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle   
+ 	oRange.clearContents(Flags)
+ 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
 
 
 
 rem ----------------------------------loadcomponentFromUrl(sUrl, &quot;_default&quot;, 0, Array()))------------------------------------
 rem define variables
-&apos;dim oDoc   as object
+&apos;dim oDoc as object
 dim dispatcher as object
 rem ----------------------------------------------------------------------
 rem get access to the document
@@ -313,7 +313,7 @@ args2(2).Name = &quot;Copy&quot;
 args2(2).Value = false
 
 dispatcher.executeDispatch(oDoc, &quot;.uno:Move&quot;, &quot;&quot;, 0, args2())
-&apos; la sheet adesso è un nuovo doc  e il focus è sopra ?
+&apos; la sheet adesso è un nuovo doc e il focus è sopra ?
 
 
 
@@ -356,7 +356,7 @@ Msgbox &quot;Questa tabella è stata CONSOLIDATA ed esportata come nuovo Documen
 exit sub
 Gestione_Errore:
 Barra_Apri_Chiudi_4
-DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
 
 
@@ -379,8 +379,8 @@ dim nEndCol as long
 
 	Barra_Apri_Chiudi_4
 
-&apos;	wait 5000  &apos;disatt 080609 a favore di
-&apos;	wait 1000  &apos;diasatt 080624
+&apos;	wait 5000 &apos;disatt 080609 a favore di
+&apos;	wait 1000 &apos;diasatt 080624
 
 &apos;	on error goto Gestione_Errore
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -391,7 +391,7 @@ dim nEndCol as long
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	pezzo in prova
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
@@ -421,27 +421,27 @@ dim nEndCol as long
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;xray oSheet
 	If oSheet.isProtected = true then
-	   osheet.unprotect(&quot;&quot;)
+	 osheet.unprotect(&quot;&quot;)
 	end if
 	bGrid=ThisComponent.CurrentController.ShowGrid
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
-    Copy_PageStyle
+ Copy_PageStyle
  	oCell = oSheet.GetCellbyPosition( 0, 0 )
-  	oCursor = oSheet.createCursorByRange(oCell)
-  	
+ 	oCursor = oSheet.createCursorByRange(oCell)
+ 	
  	 oCursor.GotoEndOfUsedArea(True)
  	 aAddress = oCursor.RangeAddress
-    	nEndRow = aAddress.EndRow
-    	nEndCol = aAddress.EndColumn
+ 	nEndRow = aAddress.EndRow
+ 	nEndCol = aAddress.EndColumn
  
 
 
 rem ----------------------------------loadcomponentFromUrl(sUrl, &quot;_default&quot;, 0, Array()))------------------------------------
 rem define variables
-&apos;dim oDoc   as object
+&apos;dim oDoc as object
 dim dispatcher as object
 rem ----------------------------------------------------------------------
 rem get access to the document
@@ -470,7 +470,7 @@ args2(2).Name = &quot;Copy&quot;
 args2(2).Value = false
 
 dispatcher.executeDispatch(oDoc, &quot;.uno:Move&quot;, &quot;&quot;, 0, args2())
-&apos; la sheet adesso è un nuovo doc  e il focus è sopra ?
+&apos; la sheet adesso è un nuovo doc e il focus è sopra ?
 
 
 
@@ -513,14 +513,14 @@ Msgbox &quot;Questa tabella è adesso un documento esterno e autonomo... e dovre
 exit sub
 Gestione_Errore:
 Barra_Apri_Chiudi_4
-DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
 
 
 
 
 
-SUB Duplica_e_Consolida_doc &apos; duplica e consolida  ( usa CopiaSheet )
+SUB Duplica_e_Consolida_doc &apos; duplica e consolida ( usa CopiaSheet )
 &apos; &apos; specifica per RdO da )
 dim nEndRow as long
 dim nEndCol as long
@@ -537,8 +537,8 @@ dim nEndCol as long
 
 	Barra_Apri_Chiudi_4
 
-&apos;	wait 5000  &apos;disatt 080609 a favore di
-&apos;	wait 1000  &apos;diasatt 080624
+&apos;	wait 5000 &apos;disatt 080609 a favore di
+&apos;	wait 1000 &apos;diasatt 080624
 
 &apos;	on error goto Gestione_Errore
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -549,7 +549,7 @@ dim nEndCol as long
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	pezzo in prova
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
@@ -580,22 +580,22 @@ dim nEndCol as long
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;xray oSheet
 	If oSheet.isProtected = true then
-	   osheet.unprotect(&quot;&quot;)
+	 osheet.unprotect(&quot;&quot;)
 	end if
 	bGrid=ThisComponent.CurrentController.ShowGrid
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
-    Copy_PageStyle
+ Copy_PageStyle
  	oCell = oSheet.GetCellbyPosition( 0, 0 )
-  	oCursor = oSheet.createCursorByRange(oCell)
-  	
+ 	oCursor = oSheet.createCursorByRange(oCell)
+ 	
  	 oCursor.GotoEndOfUsedArea(True)
  	 aAddress = oCursor.RangeAddress
-    	nEndRow = aAddress.EndRow
-    	nEndCol = aAddress.EndColumn
-  	
+ 	nEndRow = aAddress.EndRow
+ 	nEndCol = aAddress.EndColumn
+ 	
 	oRange = oSheet.getCellRangeByPosition (0,0,245,nEndRow+30)
 &apos;***********************************
 	&apos;(0,0,nEndColumn,nEndRow+30) &apos;perché nEndCol non funziona ed è a 0?
@@ -605,10 +605,10 @@ dim nEndCol as long
  	aSaveData = oRange.getDataArray()
  	&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
  	&apos;una volta cancellate le relative celle risulterebbero vuote
-   	oRange.clearContents(Flags)
-   	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle   
-   	
-   	&apos; rinominarla?
+ 	oRange.clearContents(Flags)
+ 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
+ 	
+ 	&apos; rinominarla?
 end sub
 
 
@@ -630,7 +630,7 @@ oDocument = oController.Model
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
 	oAktPage = oTablePageStyles.getByname(sStile_Pag) &apos;&quot;PageStyle_COMPUTO_A4&quot;)
 	aProperties = oAktPage.PropertySetInfo.Properties
-&apos;	xray  oAktPage
+&apos;	xray oAktPage
 
 END SUB
 
@@ -650,29 +650,29 @@ oDocument = thiscomponent
 	
 	oCpyStyle = oDocument.createInstance(&quot;com.sun.star.style.PageStyle&quot;)
 &apos;	xray oTablePageStyles
-&apos;	if not IsNull(sStile_Pag) or sStile_Pag &lt;&gt; &quot;Default&quot;  then
-	if sStile_Pag &lt;&gt; &quot;Default&quot;  then
+&apos;	if not IsNull(sStile_Pag) or sStile_Pag &lt;&gt; &quot;Default&quot; then
+	if sStile_Pag &lt;&gt; &quot;Default&quot; then
 		if oTablePageStyles.hasByName(sStile_Pag) then
 				if msgbox ( &quot;Nel documento di destinazione lo stile di pagina &quot; &amp; sStile_Pag &amp; &quot; esiste gà&quot; &amp; CHR$(10)_
-			        		&amp;&quot; cosa faccio: lo sosvrascrivo?&quot; &amp; CHR$(10)_
-			       		 	&amp; &quot;&quot; &amp; CHR$(10)_
-							&amp; &quot;&quot; ,36, &quot;&quot;) = 7 then  &apos; se la risposta è NO
-				     	exit sub
-				     else
-				     	oTablePageStyles.removeByName(sStile_Pag) &apos; lo rimuove
-				     
+			 		&amp;&quot; cosa faccio: lo sosvrascrivo?&quot; &amp; CHR$(10)_
+			 		 	&amp; &quot;&quot; &amp; CHR$(10)_
+							&amp; &quot;&quot; ,36, &quot;&quot;) = 7 then &apos; se la risposta è NO
+				 	exit sub
+				 else
+				 	oTablePageStyles.removeByName(sStile_Pag) &apos; lo rimuove
+				 
 				end if 	
 		end if				
 				oTablePageStyles.insertByName(sStile_Pag, oCpyStyle)
-				aProperties =  oAktPage.PropertySetInfo.Properties
+				aProperties = oAktPage.PropertySetInfo.Properties
 
 				For i = LBound(aProperties) to UBound(aProperties)
- 				   sX = aProperties(i).Name
- 				   If  oAktPage.getPropertyState(sX) =_
- 				  	  com.sun.star.beans.PropertyState.DIRECT_VALUE Then
-				       vTmp =  oAktPage.getPropertyValue(sX)
-				       oCpyStyle.setPropertyValue(sX, vTmp)
- 				  End If
+ 				 sX = aProperties(i).Name
+ 				 If oAktPage.getPropertyState(sX) =_
+ 				 	 com.sun.star.beans.PropertyState.DIRECT_VALUE Then
+				 vTmp = oAktPage.getPropertyValue(sX)
+				 oCpyStyle.setPropertyValue(sX, vTmp)
+ 				 End If
 				Next i 
 				oSheet.PageStyle = sStile_Pag &apos;imposta lo stile duplicato come corrente
 		end if
@@ -690,32 +690,32 @@ SUB Write_uff (sNome_Stile)
 	oTableCellStyles = Thiscomponent.StyleFamilies.getbyName(&quot;CellStyles&quot;)
 	
 	set oStylePippo = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)	
-	if sNome_Stile &lt;&gt; &quot;Default&quot;  then
+	if sNome_Stile &lt;&gt; &quot;Default&quot; then
 		if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(sNome_Stile) then
 				if msgbox ( &quot;Nel documento di destinazione lo stile di cella &quot; &amp; sNome_Stile &amp; &quot; esiste gà&quot; &amp; CHR$(10)_
-			        		&amp;&quot; cosa faccio: lo sosvrascrivo?&quot; &amp; CHR$(10)_
-			       		 	&amp; &quot;&quot; &amp; CHR$(10)_
-							&amp; &quot;&quot; ,36, &quot;&quot;) = 7 then  &apos; se la risposta è NO
-				     	exit sub
-				     else
-				     	Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).removeByName(sNome_Stile)     
+			 		&amp;&quot; cosa faccio: lo sosvrascrivo?&quot; &amp; CHR$(10)_
+			 		 	&amp; &quot;&quot; &amp; CHR$(10)_
+							&amp; &quot;&quot; ,36, &quot;&quot;) = 7 then &apos; se la risposta è NO
+				 	exit sub
+				 else
+				 	Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).removeByName(sNome_Stile) 
 				end if 	
 		end if	
 			Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(sNome_Stile, oStylePippo )
 				set oStylePippo = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)	
 	&apos;		Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).
 		&apos;	oTableCellStyles.insertByName(sNome_Stile, oStylePippo)
-				aProperties =  oStylePippo.PropertySetInfo.Properties
+				aProperties = oStylePippo.PropertySetInfo.Properties
 			&apos;	xray aProperties
 				oStylePippo.setPropertyValue(&quot;IsCellBackgroundTransparent&quot; , &quot;false&quot;)
 exit sub
 				For i = LBound(aProperties) to UBound(aProperties)
- 				   sX = aProperties(i).Name
- 				   If  oStylePippo.getPropertyState(sX) =_
- 				  	  com.sun.star.beans.PropertyState.DIRECT_VALUE Then
-				       vTmp =  oStileC.getPropertyValue(sX)
-				       oStylePippo.setPropertyValue(sX, vTmp)
- 				  End If
+ 				 sX = aProperties(i).Name
+ 				 If oStylePippo.getPropertyState(sX) =_
+ 				 	 com.sun.star.beans.PropertyState.DIRECT_VALUE Then
+				 vTmp = oStileC.getPropertyValue(sX)
+				 oStylePippo.setPropertyValue(sX, vTmp)
+ 				 End If
 				Next i 
 				&apos;oSheet.PageStyle = sStile_Pag &apos;imposta lo stile duplicato come corrente
 	end if
@@ -726,36 +726,36 @@ END SUB
 Sub SalvaDoc(sUrl1) &apos; è stata un&apos;dea stupida...
 oDoc2 = ThisComponent&apos;.CurrentController.Frame
 Dim oArg()
-  For a = Len(sUrl1) To 0 Step - 1
-     b = Mid(sUrl1,a,1)
-     If b = &quot;/&quot; Or b = &quot;\&quot; Then Exit For
-  Next
-  c = Left(sUrl1,a)
-  oUrl = c &amp; &quot;ChiamaloConeTiPare.ods&quot;
-  oDoc2.storeAsUrl(oUrl,oArg())
+ For a = Len(sUrl1) To 0 Step - 1
+ b = Mid(sUrl1,a,1)
+ If b = &quot;/&quot; Or b = &quot;\&quot; Then Exit For
+ Next
+ c = Left(sUrl1,a)
+ oUrl = c &amp; &quot;ChiamaloConeTiPare.ods&quot;
+ oDoc2.storeAsUrl(oUrl,oArg())
 
 END SUB
 
 
 SUB dispatchURL___(document, aURL) &apos; usata da Duplica_Sheet_new_doc 1
-  Dim noProps()
-  Dim URL As New com.sun.star.util.URL
+ Dim noProps()
+ Dim URL As New com.sun.star.util.URL
 
-  frame = document.getCurrentController().getFrame()
-  URL.Complete = aURL
-  transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
+ frame = document.getCurrentController().getFrame()
+ URL.Complete = aURL
+ transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
  transf.parseStrict(URL)
 
-  disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF _
-         OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
-  disp.dispatch(URL, noProps())
+ disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF _
+ OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
+ disp.dispatch(URL, noProps())
 END SUB
 
 
 
 
 &apos;------------------------------------------------------------------------
-SUB Impagina_N  &apos; richiamata con shortcut da una tabella
+SUB Impagina_N &apos; richiamata con shortcut da una tabella
 &apos; versione nuova elaborata su xp in vbox
 
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -766,21 +766,21 @@ Verifica_chiudi_preview
 sAttributo = Trova_Attr_Sheet &apos;Trova_Attr
 
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos;non consente l&apos;esec su tab originale
-   sSheetName= ThisComponent.currentcontroller.activesheet.name
-  If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 then 
+ sSheetName= ThisComponent.currentcontroller.activesheet.name
+ If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 then 
 	If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
  		 sSheetName=&quot;Analisi di Prezzo&quot; or _
  		 sSheetName=&quot;FiltroTMP&quot; then
  		&apos;scoperta e memento: se si usa print (invece di msgbox) insieme a &amp; CHR$(10)_ il messaggio
  		&apos; viene spezzato in diverse finestre...
  		msgbox &quot;Mi hai chiesto di impaginare questa tabella scrivendo i Totali di pagina su una tabella base (Originale)...&quot; &amp; CHR$(10)_
- 		&amp; &quot;   Questo NON E&apos; CONSENTITO perche&apos; va ad alterare i dati&quot;
+ 		&amp; &quot; Questo NON E&apos; CONSENTITO perche&apos; va ad alterare i dati&quot;
  		msgbox	&quot;Se proprio vuoi rovinare il tuo computo fallo (&quot;&quot;con le tue manine&quot;&quot;)...&quot;&amp; CHR$(10)_
  		&amp; &quot;Io invece ti consiglio di duplicare questa tabella creandone una copia (manipolabile impunemente) Menu Top ULTIMUS_3 &gt; STAMPA &gt; 1) Prepara il doc per la stampa!&quot;
  		&apos; ne faccio una copia?
  		exit sub
  	end if
-  end if
+ end if
 end if
 
 &apos;modulo che controlla se lo stile di pag ha pagina in altezza per pagine in lumgh.
@@ -800,23 +800,23 @@ end if
 &apos;	xray oAktPage
 		
 &apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
-&apos; 	   BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
+&apos; 	 BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
 &apos;	End If 
 	sNomeStyle=oAktPage.DisplayName
 
 	if oAktPage.ScaleToPagesY&lt;&gt;0 then
 		if msgbox ( &quot;Le attuali impostazioni di stampa contenute nello stile di pagina (&quot; &amp; sNomeStyle &amp;&quot;) non sono compatibili con questa macro&quot;&amp; CHR$(10)&amp; CHR$(10)_
-		   	&amp;&quot;Modifico d&apos;ufficio lo stile di stampa ?&quot; &amp; CHR$(10)_
+		 	&amp;&quot;Modifico d&apos;ufficio lo stile di stampa ?&quot; &amp; CHR$(10)_
 			&amp; CHR$(10)_
-			        	&amp; &quot;&quot; &amp; CHR$(10)_
+			 	&amp; &quot;&quot; &amp; CHR$(10)_
 						&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
 			sScalatura = InputBox (&quot;&quot; &amp; CHR$(10)_
-   				&amp; &quot; Imposta la scala di stampa (il 70% è un buon compromesso per iniziare...)&quot; &amp; CHR$(10) &amp; CHR$(10)_
-	 			 , &quot;Se poi vorrai modificarlo lo povrai fare dalla GUI di OpenOffice      &quot;, 70)
-			 	  	 If sScalatura = &quot;&quot; then
-						msgbox &quot; La macro è stata annullata!&quot; 			    
-    					exit sub
-    			     end if
+ 				&amp; &quot; Imposta la scala di stampa (il 70% è un buon compromesso per iniziare...)&quot; &amp; CHR$(10) &amp; CHR$(10)_
+	 			 , &quot;Se poi vorrai modificarlo lo povrai fare dalla GUI di OpenOffice &quot;, 70)
+			 	 	 If sScalatura = &quot;&quot; then
+						msgbox &quot; La macro è stata annullata!&quot; 			 
+ 					exit sub
+ 			 end if
 					oAktPage.ScaleToPagesY=0
 					oAktPage.ScaleToPagesx=0
 					oAktPage.PageScale=sScalatura		
@@ -885,8 +885,8 @@ dim lrowS as long
  	&apos; e la procedura di stampa operando direttamente sulle tabelle originali
  	&apos;	if msgbox (&quot;Stai operando su una tabella base (Originale)...&quot; &amp; CHR$(10)_
  	&apos;					&amp; &quot; l&apos;operazione in sè non mi pare distruttiva... ma mi sfugge la ragione...&quot; &amp; CHR$(10)_
- 	&apos;					&amp; &quot;   Sei certo che vuoi proseguire?&quot; &amp; CHR$(10)_
-	&apos;		        	&amp; &quot;&quot; &amp; CHR$(10)_
+ 	&apos;					&amp; &quot; Sei certo che vuoi proseguire?&quot; &amp; CHR$(10)_
+	&apos;		 	&amp; &quot;&quot; &amp; CHR$(10)_
 	&apos;					&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
 	&apos;		else
 	&apos;			exit sub
@@ -894,10 +894,10 @@ dim lrowS as long
  	end if
 	If sSheetName=&quot;CONTABILITA&quot; then &apos;
  		&apos;controlla se è impostata a &quot;Libretto Cartaceo&quot;
-		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 1  then
-			msgbox &quot;Questa contabilità è impostata  per un &quot;&quot;Libretto Elettronico!&quot;&quot; &quot; &amp; CHR$(10)_
+		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 1 then
+			msgbox &quot;Questa contabilità è impostata per un &quot;&quot;Libretto Elettronico!&quot;&quot; &quot; &amp; CHR$(10)_
 				&amp; &quot;e questa macro non si può usare in quella modalità!&quot; &amp; CHR$(10)_
-				&amp; &quot;    (Consulta il Manuale al capitolo: Libretto delle Misure)&quot;
+				&amp; &quot; (Consulta il Manuale al capitolo: Libretto delle Misure)&quot;
 			exit sub
 		end if
 				&apos; l&apos;eventuale libretto annotato li
@@ -906,7 +906,7 @@ dim lrowS as long
 	
 	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then
+	If isNull (oEnd) or isEmpty (oEnd) then
 		msgbox &quot; Manca la riga rossa di chiusura !&quot; &amp; CHR$(10)_
 				&amp; &quot; potresti avere risultati non corretti in coda alla tabella&quot;
 				lLastUrow = getLastUsedRow(oSheet)
@@ -915,14 +915,14 @@ dim lrowS as long
 	lLastUrow =oEnd.CellAddress.Row 
 	lrowFine = lLastUrow
 
-	lrowStart= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale la selezione 
+	lrowStart= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale la selezione 
 	if lrowStart = -1 then
 		 
 		exit sub
 	end if
-  	 scelta = msgbox ( &quot;ADATTO L&apos;ALTEZZA DELLE RIGHE?? )&quot;&amp; CHR$(10)_
-		        	&amp;&quot; ... attento... eventuali righe nascoste da fitri e/o strutture verranno rese visibili... &quot; &amp; CHR$(10)_
-		        	&amp; &quot;&quot; &amp; CHR$(10)_
+ 	 scelta = msgbox ( &quot;ADATTO L&apos;ALTEZZA DELLE RIGHE?? )&quot;&amp; CHR$(10)_
+		 	&amp;&quot; ... attento... eventuali righe nascoste da fitri e/o strutture verranno rese visibili... &quot; &amp; CHR$(10)_
+		 	&amp; &quot;&quot; &amp; CHR$(10)_
 					&amp; &quot;&quot; ,291, &quot;&quot;) &apos; = 6 then
 					
 	if scelta = 6 then
@@ -930,13 +930,13 @@ dim lrowS as long
 			oRange_k.rows.OptimalHeight= TRUE &apos; adatta le righe (tutte escluse le prime 3)	 
 			&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe (tutte)	
 	end if	
-	if scelta =2  then
+	if scelta =2 then
 		exit sub
 	end if
 	
-  	scelta = msgbox ( &quot;Vuoi controllare la posizione dei Salti Pagina uno per uno? &quot;&amp; CHR$(10)_
-		        	&amp;&quot;  (se rispondi NO li inserisco in automatico... ma può darsi che il risultato poi non ti piaccia...) &quot; &amp; CHR$(10)_
-		        	&amp; &quot;&quot; &amp; CHR$(10)_
+ 	scelta = msgbox ( &quot;Vuoi controllare la posizione dei Salti Pagina uno per uno? &quot;&amp; CHR$(10)_
+		 	&amp;&quot; (se rispondi NO li inserisco in automatico... ma può darsi che il risultato poi non ti piaccia...) &quot; &amp; CHR$(10)_
+		 	&amp; &quot;&quot; &amp; CHR$(10)_
 					&amp; &quot;&quot; ,291, &quot;&quot;) &apos; = 6 then
 	if scelta = 6 then
 				uno_per_uno= 300 &apos; come gli spartani... in realtà è un numero qualsiasi...	
@@ -951,7 +951,7 @@ dim lrowS as long
 &apos;	oSheet.GetCellByPosition( 0 , 1).Rows.Height = 1 &apos;questa � discutibile... pensare se eliminarla
 	
 &apos;	if sSheetName&lt;&gt;&quot;CONTABILITA&quot; then	
-		sScelta = msgbox (CHR$(10) &amp;&quot;Vuoi Cominciare dall&apos;inizio della Tabella?        &quot; &amp; CHR$(10)&amp; CHR$(10)_
+		sScelta = msgbox (CHR$(10) &amp;&quot;Vuoi Cominciare dall&apos;inizio della Tabella? &quot; &amp; CHR$(10)&amp; CHR$(10)_
 				 &amp; &quot;(se rispondi no inizio dalla riga corrente!)&quot; &amp; CHR$(10)_
 				&amp; &quot; &quot;&amp; CHR$(10)&amp; CHR$(10)_
 				&amp; &quot;&quot; ,35, &quot;&quot;) 
@@ -984,25 +984,25 @@ dim lrowS as long
 		if oSheet.GetCellByPosition( 1 , I).CellStyle = &quot;Comp_T_pag&quot; then 	
 				 	&apos;	myrows = oSheet.getrows
 	 		&apos;conta = conta-2
-		&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , I)) &apos;debug	
+		&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , I)) &apos;debug	
 		&apos;	print &quot; e voilà&quot;
 	 		oSheet.getrows.removebyindex(I,1)
 	 		I=I-1
-		&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , I)) &apos;debug	
+		&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , I)) &apos;debug	
 		&apos;	print &quot; e voilà 2&quot;
 		end if
 
 		if oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak = true then
-			&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , i)) &apos;debug
+			&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , i)) &apos;debug
 			&apos;print &quot; manualp &quot; &amp; I
 			oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak=False &apos;rimuovilo
 		end if 
 		&apos;xray oSheet.GetCellByPosition(36 ,36 ).rows
 		
 		&apos; quando trova un fine pagina
-		if  oSheet.GetCellByPosition( 0 , I).rows.IsStartOfNewPage = True then 
+		if oSheet.GetCellByPosition( 0 , I).rows.IsStartOfNewPage = True then 
 				iContatore = iContatore+1
-			&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , i)) &apos;debug
+			&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , i)) &apos;debug
 			&apos;	print i
 			&apos;	Dim AselArea(0) as new com.sun.star.table.CellRangeAddress
 			&apos;	AselArea(0) = osheet.getPrintareas(0).EndRow&apos;CellRangeAddress
@@ -1021,7 +1021,7 @@ dim lrowS as long
 		 
 		 	
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			oRangeVoce =  Circoscrive_Voce_Computo_Att ( I)
+			oRangeVoce = Circoscrive_Voce_Computo_Att ( I)
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 			lrowS = oRangeVoce.RangeAddress.StartRow
 			lrowE = oRangeVoce.RangeAddress.EndRow
@@ -1033,7 +1033,7 @@ dim lrowS as long
 					 oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;livello-1-sopra&quot; or _
 					 oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;Livello-1-scritta&quot; or _
 					 oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;livello-1-sotto_&quot; then
-				&apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , lRowU)) &apos;debug
+				&apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lRowU)) &apos;debug
 			&apos;	print &quot;dentro &quot; &amp; oSheet.GetCellByPosition(1, lrowU).CellStyle
 					 do while oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;livello-2-sotto&quot; or _
 						 oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;livello2 valuta&quot; or _
@@ -1041,7 +1041,7 @@ dim lrowS as long
 						 oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;livello-1-sopra&quot; or _
 						 oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;Livello-1-scritta&quot; or _
 						 oSheet.GetCellByPosition(1, lrowU).CellStyle = &quot;livello-1-sotto_&quot;
-				&apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , lRowU)) &apos;debug
+				&apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lRowU)) &apos;debug
 				&apos;	 	print oSheet.GetCellByPosition(1, lrowU).CellStyle
 						 lrowU = lrowU-1
 					loop
@@ -1062,7 +1062,7 @@ dim lrowS as long
 			end if
 			lrowS = lrowS+1
 
-			if uno_per_uno = 300 then  
+			if uno_per_uno = 300 then 
 			
 					&apos;modulino per visualizzare anche qualche riga sopra rispetto a
 					&apos; quella individuata dal codice come &quot;papabile&quot;
@@ -1074,10 +1074,10 @@ dim lrowS as long
 					
 			&apos;		ThisComponent.CurrentController.Select(oCell_k) &apos; mantenere serve per visualizzare
 					ThisComponent.CurrentController.Select(oRange_k) &apos; mantenere serve per visualizzare
-					sScelta = msgbox (CHR$(10) &amp;&quot; Interrompo la pagina SOPRA le celle selezionate?         &quot; &amp; CHR$(10)&amp; CHR$(10)_
+					sScelta = msgbox (CHR$(10) &amp;&quot; Interrompo la pagina SOPRA le celle selezionate? &quot; &amp; CHR$(10)&amp; CHR$(10)_
 					&amp; &quot; Se rispondi NO poi ti proporrò di selezionarne una riga a tua discrezione... &quot;&amp; CHR$(10)_
-					&amp;&quot;(In tal caso non oltrepassare il salto pagina &apos;obbligatorio&apos; in basso, evidenziato da  una riga (blu se riesci a vederla...))&quot;&amp; CHR$(10)&amp; CHR$(10)_
-					&amp;&quot; Interrompo in questo punto ?         &quot;  &amp; &quot;&quot; ,35, &quot;&quot;)
+					&amp;&quot;(In tal caso non oltrepassare il salto pagina &apos;obbligatorio&apos; in basso, evidenziato da una riga (blu se riesci a vederla...))&quot;&amp; CHR$(10)&amp; CHR$(10)_
+					&amp;&quot; Interrompo in questo punto ? &quot; &amp; &quot;&quot; ,35, &quot;&quot;)
 					if sScelta = 2 then 
 							&apos; se Annulla
 							exit sub
@@ -1087,7 +1087,7 @@ dim lrowS as long
 									oCell.rows.IsManualPageBreak=False &apos;rimuovilo
 								end if
 
-								sTitolo = &quot;Click dove vuoi interrompere la pagina    (ESC per Annullare, NO Click su X )  &quot;
+								sTitolo = &quot;Click dove vuoi interrompere la pagina (ESC per Annullare, NO Click su X ) &quot;
 							 	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
 						 	 	 if SelectedRange = &quot;&quot; or _
 							 	 	SelectedRange = &quot;ANNULLA&quot; then
@@ -1105,25 +1105,25 @@ dim lrowS as long
 			
 		
 			&apos; prova per inserire totali di pagina	
-			sAttributo = Trova_Attr_Sheet  &apos;print  sAttributo
+			sAttributo = Trova_Attr_Sheet &apos;print sAttributo
 			If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-			  If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 and _
-			  	  sAttributo =  &quot;Tipo_computo&quot;	 then 
+			 If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 and _
+			 	 sAttributo = &quot;Tipo_computo&quot;	 then 
 					lrowC = oCell_k.CellAddress.row
 	&apos;	xray lrowc
 					&apos;	oSheet.getRows.insertByIndex(lrowC, 1)
-					&apos;	lrowC = lrowC +1  &apos; se scrivo sulla stessa non serve
+					&apos;	lrowC = lrowC +1 &apos; se scrivo sulla stessa non serve
 					&apos;	oSheet.GetCellByPosition(9 , (i)).formula = sformula
-					&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , lRowC)) &apos;debug
+					&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lRowC)) &apos;debug
 					&apos;	print lrowC
 						&apos;cerco la riga in testa alla pagina
 					lrow_Int = lrowC-10
 					do while oSheet.GetCellByPosition(1 , lrow_Int).rows.IsStartOfNewPage = false And _
 						lrow_Int &gt; 3					
 						lrow_Int = lrow_Int-1
-					loop			  	  
+					loop			 	 
 					oCell_k = oSheet.GetCellByPosition( 0 , lrowS-1)
-			  	 	oCell_k.rows.IsStartOfNewPage = &quot;true&quot;	
+			 	 	oCell_k.rows.IsStartOfNewPage = &quot;true&quot;	
 
 					&apos; partiamo un po&apos; sotto	
 					&apos;	xray lrow_Int
@@ -1135,7 +1135,7 @@ dim lrowS as long
 &apos;					oSheet.getRows.insertByIndex(lrowC,1)
 					I=I+1		
 					&apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
- 					&apos;	   BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
+ 					&apos;	 BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
 					&apos;	End If 
 					oRange_da_Formattare =oSheet.getCellRangeByPosition (0,lrowC,240,lrowC)
 					oRange_da_Formattare.CellStyle = &quot;Comp_T_pag&quot;
@@ -1188,7 +1188,7 @@ dim lrowS as long
 &apos;				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
 &apos;				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
 &apos;			&apos;	selArea(0).EndColumn = getLastUsedCol(oSheet)
-&apos;		if oSheet.getColumns().getByIndex(20).isVisible = false  then &apos; vede se � libretto
+&apos;		if oSheet.getColumns().getByIndex(20).isVisible = false then &apos; vede se � libretto
 &apos;			num_pag_libretto &apos;annota sul registro i num di pagina del libretto
 &apos;			&apos; notazione &quot;impropria: libretto e registro sono sulla stessa tab..
 &apos;			&apos; in realt� compila solo la &quot;giusta&quot; colonna della tab CONTABILITA
@@ -1230,8 +1230,8 @@ dim I as long
  	&apos; e la procedura di stampa operando direttamente sulle tabelle originali
 &apos; 		if msgbox (&quot;Stai operando su una tabella base (Originale)...&quot; &amp; CHR$(10)_
  &apos;						&amp; &quot; l&apos;operazione in sè non mi pare distruttiva... ma mi sfugge la ragione...&quot; &amp; CHR$(10)_
- &apos;						&amp; &quot;   Sei certo che vuoi proseguire?&quot; &amp; CHR$(10)_
-&apos;			        	&amp; &quot;&quot; &amp; CHR$(10)_
+ &apos;						&amp; &quot; Sei certo che vuoi proseguire?&quot; &amp; CHR$(10)_
+&apos;			 	&amp; &quot;&quot; &amp; CHR$(10)_
 &apos;						&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
 &apos;			else
 &apos;				exit sub
@@ -1245,9 +1245,9 @@ dim I as long
 	&apos;usa LeenO e il tuo computo sarà più burbanzoso che mai
 	oSheet.Rows.OptimalHeight= TRUE
 	&apos; ambaradan per togliere righe in eccesso in alto
-  	lrowT =1 
-  	oCellT = oSheet.GetCellByPosition( 0 , lrowT)
-  	Do while oSheet.GetCellByPosition( 0, lrowT).string = &quot;&quot;
+ 	lrowT =1 
+ 	oCellT = oSheet.GetCellByPosition( 0 , lrowT)
+ 	Do while oSheet.GetCellByPosition( 0, lrowT).string = &quot;&quot;
 	 		lRowT = lrowT+1
 	 		conta = conta+1
 	loop
@@ -1267,26 +1267,26 @@ dim I as long
 
 	lLastUrow = getLastUsedRow(oSheet)
 &apos;	print lLastUrow
-	lrow =  5 &apos;
+	lrow = 5 &apos;
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
 &apos;	xray oCell
 &apos;	ThisComponent.CurrentController.Select(oCell)
 
 	for i = 1 to lLastUrow
 	oCell = oSheet.GetCellByPosition( 0 , i)
-	   If oCell.string = &quot;----&quot; then
-	   	i =i+1
-	   		oCell = oSheet.GetCellByPosition( 0 , i)
-         oCell.rows.IsStartOfNewPage = &quot;true&quot;
-      end if
-      next
+	 If oCell.string = &quot;----&quot; then
+	 	i =i+1
+	 		oCell = oSheet.GetCellByPosition( 0 , i)
+ oCell.rows.IsStartOfNewPage = &quot;true&quot;
+ end if
+ next
 
 &apos;possibile che non ci sia il metodo removemanualpage... CONTROLLARE
 &apos;eccome se c&apos;è... vedi alcune righe sopra,,, ma per il momento lascio ancora la rimozione qui sotto
 
 
 goto fine REM DA QUI FINO A fine: SEMBRA TUTTO INUTILE PER LE ANALISI_AVCP 
-	For I = 1 To lLastUrow Step 1 &apos; ciclo di for riga per riga  
+	For I = 1 To lLastUrow Step 1 &apos; ciclo di for riga per riga 
 		oCell = oSheet.GetCellByPosition( 0 , lrow)
 		if ocell.rows.IsManualPageBreak = true then
 			ocell.rows.IsManualPageBreak=False &apos;rimuovilo
@@ -1294,18 +1294,18 @@ goto fine REM DA QUI FINO A fine: SEMBRA TUTTO INUTILE PER LE ANALISI_AVCP
 		if lrow &gt;= lLastUrow then
 		 	Exit For
 		end if&apos;
-		if  oCell.rows.IsStartOfNewPage = True then &apos; se c&apos;è un salto
+		if oCell.rows.IsStartOfNewPage = True then &apos; se c&apos;è un salto
 			xA = oCell.string
-		    if oSheet.GetCellByPosition( 0, lrow-1).string = &quot;----&quot; then REM RIGA SALTO PAGINA ANALISI_BART
-		    		oCell.rows.IsStartOfNewPage = &quot;true&quot;
-		    		lrow = lrow+4
-   			&apos;		print lrow
-		    		goto saltarello
-		    end if
-		        
-		    lrow = lrow 
+		 if oSheet.GetCellByPosition( 0, lrow-1).string = &quot;----&quot; then REM RIGA SALTO PAGINA ANALISI_BART
+		 		oCell.rows.IsStartOfNewPage = &quot;true&quot;
+		 		lrow = lrow+4
+ 			&apos;		print lrow
+		 		goto saltarello
+		 end if
+		 
+		 lrow = lrow 
 
-		    Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;	or oSheet.GetCellByPosition( 0, lrow).string = &quot;----&quot; 
+		 Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;	or oSheet.GetCellByPosition( 0, lrow).string = &quot;----&quot; 
 		 			lrow = lrow-1
 		 	loop
 		 	oCell = oSheet.GetCellByPosition( 0 , lrow-1)
@@ -1320,11 +1320,11 @@ goto fine REM DA QUI FINO A fine: SEMBRA TUTTO INUTILE PER LE ANALISI_AVCP
 		oCell = oSheet.GetCellByPosition( 0 , lrow)
 	Next I
 fine:	
-	&apos; questa  serve per trovare e chiudere la riga rossa
+	&apos; questa serve per trovare e chiudere la riga rossa
 	sString$ = &quot;Fine ANALISI&quot;
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI 26! &quot;
+	If isNull (oEnd) or isEmpty (oEnd) then
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI 26! &quot;
 		exit sub
 	end if 				
 	lRowE=oEnd.CellAddress.Row 
@@ -1340,7 +1340,7 @@ SUB Set_solo_Righe_ripet
 	sAttributo = Trova_Attr_Sheet
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case sAttributo
-	  Case &quot;Tipo_computo&quot;
+	 Case &quot;Tipo_computo&quot;
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 0&apos; headstart - 1
@@ -1353,7 +1353,7 @@ SUB Set_solo_Righe_ripet
 		&apos;oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 		&apos;oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 		
-	  Case &quot;Tipo_Analisi&quot;
+	 Case &quot;Tipo_Analisi&quot;
 		&apos;oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
 		&apos;oSheet.setPrintTitleRows(False)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1365,7 +1365,7 @@ SUB Set_solo_Righe_ripet
 		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 
-	  Case &quot;Tipo_CONTABILITA&quot;
+	 Case &quot;Tipo_CONTABILITA&quot;
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 1&apos; headstart - 1
@@ -1375,7 +1375,7 @@ SUB Set_solo_Righe_ripet
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
 
-	  Case &quot;Tipo_ElencoP&quot; 
+	 Case &quot;Tipo_ElencoP&quot; 
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe	
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1387,7 +1387,7 @@ SUB Set_solo_Righe_ripet
 		oSheet.setTitleRows(oTitles)
 		oRigaNascosta = oSheet.getRows().getByIndex (lrowE) 
 		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine computo	
-	  Case &quot;&quot;
+	 Case &quot;&quot;
 	End Select
 end sub
 
@@ -1405,23 +1405,6 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	Visualizza_PageBreak	
-REM RIMUOVO IL MESSAGGIO DI RICHIESTA
-&apos;	if isMissing(sSMS) then
-&apos;		if msgbox ( &quot;Ridefinisco in automatico l&apos;area di stampa?&quot; &amp; CHR$(10)&amp; CHR$(10)_
-&apos;		 	  	&amp;&quot;         (La potrai comunque riaggiustare poi a mano...)&quot; &amp; CHR$(10)_
-&apos;				&amp;&quot;?&quot; &amp; CHR$(10)_
-&apos;			        	&amp; &quot;&quot; &amp; CHR$(10)_
-&apos;						&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
-&apos;		
-&apos;				sMessaggio = &quot;NO_messaggio&quot;
-&apos;			else
-&apos;				exit sub
-&apos;		end if
-&apos;	end if
-
- 
-	&apos;--------------------------------------------------
-
 
 	Dim selArea(0) as new com.sun.star.table.CellRangeAddress
 	&apos;Visualizza_normale &apos;per chi è ossessivo e con mania di controllo si consiglia la disattivazione
@@ -1429,13 +1412,13 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 	sAttributo = Trova_Attr_Sheet
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case sAttributo
-	  Case &quot;Tipo_computo&quot;
+	 Case &quot;Tipo_computo&quot;
 		&apos;print &quot;Tipo computo&quot;
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
 		sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)	
 		If isNull (oEnd) or isEmpty (oEnd) 		then
-				msgbox &quot; ERRORE!  Probabilemente manca la riga rossa di chiusura&quot;
+				msgbox &quot; ERRORE! Probabilemente manca la riga rossa di chiusura&quot;
 				exit sub
 		end if
 		lRowE=oEnd.CellAddress.Row 			
@@ -1464,7 +1447,7 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 		oTitles.EndColumn = 35
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
-   
+ 
 &apos;		oSheet.setTitleRows(oSheet.getCellRangeByName(&quot;A1&quot;,&quot;H2&quot;).getRangeAddress())&apos; non funzionava bene
 		&apos;Le due linee sopra impostano la riga da ripetere in ciascuna pagina che viene stampata
 		&apos;o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
@@ -1475,12 +1458,12 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 	&apos;&apos;&apos;	Pulisci_Tabella(oRange)
 		&apos;Queste ,invece, selezionano il range usato(un po più abbondante &quot; &quot;AZ&quot;&amp;lRowE+10 &quot;)
 		&apos;e viene chiamata la sub Pulisci_Tabella()
-		  
+		 
 		&apos; nasconde la riga di Fine Elenco
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 		
-	  Case &quot;Tipo_Analisi&quot;
+	 Case &quot;Tipo_Analisi&quot;
 		oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
 		sString$ = &quot;Fine ANALISI&quot;
 		oEnd=uFindString(sString$, oSheet)			
@@ -1504,11 +1487,11 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 &apos;		Impagina_N REM TANTO è DA FARE
-	  Case &quot;Tipo_CONTABILITA&quot;
-	  	sString$ = &quot;Fine Computo&quot;
+	 Case &quot;Tipo_CONTABILITA&quot;
+	 	sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)	
 		If isNull (oEnd) or isEmpty (oEnd) 		then
-				msgbox &quot; ERRORE!  Probabilemente manca la riga rossa di chiusura&quot;
+				msgbox &quot; ERRORE! Probabilemente manca la riga rossa di chiusura&quot;
 				exit sub
 		end if
 		lLastUrow=oEnd.CellAddress.Row 	
@@ -1533,7 +1516,7 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 		oTitles.EndColumn = 36
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
-   
+ 
 &apos;		oSheet.setTitleRows(oSheet.getCellRangeByName(&quot;A1&quot;,&quot;H2&quot;).getRangeAddress())&apos; non funzionava bene
 		&apos;Le due linee sopra impostano la riga da ripetere in ciascuna pagina che viene stampata
 		&apos;o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
@@ -1546,12 +1529,12 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 &apos;			oCRA.Sheet = oSheet.RangeAddress.sheet
 &apos;			oCRA.StartColumn = 	1
 &apos;			oCRA.StartRow = lLastUrow-3
-&apos;			oCRA.EndColumn =  19
+&apos;			oCRA.EndColumn = 19
 &apos;			oCRA.EndRow = lLastUrow
 &apos;			oSheet.group(oCRA,1,0)
 
-	  Case &quot;Tipo_ElencoP&quot; &apos;&quot;Tipo_EP&quot;
-&apos;	  print &quot;Tipo_ElencoP&quot;
+	 Case &quot;Tipo_ElencoP&quot; &apos;&quot;Tipo_EP&quot;
+&apos;	 print &quot;Tipo_ElencoP&quot;
 		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe	
 		sString$ = &quot;Fine elenco&quot;
 		oEnd=uFindString(sString$, oSheet)			
@@ -1583,7 +1566,7 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 	REM RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
 	oPrimaCella.Rows.Height = 1200
-	  Case &quot;&quot;
+	 Case &quot;&quot;
 		msgbox &quot;Non riconosco questo tipo di documento... &quot; &amp; CHR$(10)_
 		&amp;&quot;Pertanto ho approssimato l&apos;area di stampa come pare a me! &quot; &amp; CHR$(10)_
 		&amp; &quot;Controlla che corrisponda alle tue aspettative!&quot;&amp; CHR$(10)_
@@ -1600,12 +1583,12 @@ REM RIMUOVO IL MESSAGGIO DI RICHIESTA
 
 	if not isMissing(sSMS) then		
 	&apos;	if msgbox ( &quot;2 Ti va bene l&apos;area di stampa così com&apos;é impostata?&quot; &amp; CHR$(10)&amp; CHR$(10)_
-	&apos;	 	  	&amp;&quot;         (Altrimenti annullo perché tu la possa ridefinire a mano)&quot; &amp; CHR$(10)_
+	&apos;	 	 	&amp;&quot; (Altrimenti annullo perché tu la possa ridefinire a mano)&quot; &amp; CHR$(10)_
 	&apos;			&amp;&quot;?&quot; &amp; CHR$(10)_
-	&apos;		        	&amp; &quot;&quot; &amp; CHR$(10)_
+	&apos;		 	&amp; &quot;&quot; &amp; CHR$(10)_
 	&apos;					&amp; &quot;&quot; ,291, &quot;&quot;) = 6 then
 				sMessaggio = &quot;NO_messaggio&quot;
-	&apos;		else	  		
+	&apos;		else	 		
 	&apos;			exit sub
 	&apos;	end if
 	end if
@@ -1638,18 +1621,18 @@ If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 	end if
 end if
 
-  oSheet = ThisComponent.currentController.activeSheet
+ oSheet = ThisComponent.currentController.activeSheet
  sSheetName= ThisComponent.currentcontroller.activesheet.name
  If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
  		 sSheetName=&quot;Analisi di Prezzo&quot; or _
  		 sSheetName=&quot;CONTABILITA&quot; then
  		&apos;scoperta e memento: se si usa print (invece di msgbox) insieme a &amp; CHR$(10)_ il messaggio
 	sSMS = msgbox (&quot;Mi hai chiesto di sbiancare ed eliminare i pulsanti su una tabella base (una tab originale di lavoro)...&quot; &amp; CHR$(10)_
- 		&amp; &quot;   Se hai aggiunto colori come promemoria questi andranno persi, come andrà persa qualsiasi formattazione non registrata nello stile di cella&quot;&amp; CHR$(10)_
- 		&amp; &quot;  (e comunque potresti alterare altri dati di questa tabella!)&quot;&amp; CHR$(10)_
+ 		&amp; &quot; Se hai aggiunto colori come promemoria questi andranno persi, come andrà persa qualsiasi formattazione non registrata nello stile di cella&quot;&amp; CHR$(10)_
+ 		&amp; &quot; (e comunque potresti alterare altri dati di questa tabella!)&quot;&amp; CHR$(10)_
  		&amp; &quot; Per procedere alla stampa si consiglia invece di operare su una COPIA di questa tabella seguendo la procedura predisposta 1)... 2) ... 3)... (consulta il Manuale)&quot; &amp; CHR$(10)_
 		&amp; &quot; Prosegui comunque a tuo rischio e pericolo ? &quot; &amp; CHR$(10)_
-		&amp; &quot;    (se rispondi NO, produrrò in automatico una tabella da pasticciare impunemente...)&quot; &amp; CHR$(10)_
+		&amp; &quot; (se rispondi NO, produrrò in automatico una tabella da pasticciare impunemente...)&quot; &amp; CHR$(10)_
 						&amp; &quot;&quot; ,291, &quot;&quot;) 
 	Select Case sSMS
 		case 6
@@ -1657,9 +1640,9 @@ end if
 			 Sbianca_e_o_consolida(1, &quot;Parla&quot;)
 			 exit sub
 		case 7
-		     &apos;sCosa =6
-		     Prepara_un_Doc_per_la_stampa
-		     exit sub
+		 &apos;sCosa =6
+		 Prepara_un_Doc_per_la_stampa
+		 exit sub
 		case 2
 			exit sub
 	end select
@@ -1678,11 +1661,11 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
 	oSheet = ThisComponent.currentController.activeSheet
  	oCell = oSheet.GetCellbyPosition( 0, 0 )
  	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
-  	oCursor = oSheet.createCursorByRange(oCell)
+ 	oCursor = oSheet.createCursorByRange(oCell)
  	 oCursor.GotoEndOfUsedArea(True)
  	 aAddress = oCursor.RangeAddress
-  	nEndRow = aAddress.EndRow
-  	nEndCol = aAddress.EndColumn
+ 	nEndRow = aAddress.EndRow
+ 	nEndCol = aAddress.EndColumn
 	oRange = oSheet.getCellRangeByPosition (0,0,240,nEndRow)
 
  	sAttributo = Trova_Attr_Sheet
@@ -1694,9 +1677,9 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
 					Flags = com.sun.star.sheet.CellFlags.FORMULA
 					aSaveData = oRange.getDataArray()
 					oRange.clearContents(Flags)
-   					oRange.CellBackColor = RGB(255, 255, 255)
-   					oRange.CharColor = RGB(0,0,0)
-   					oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
+ 					oRange.CellBackColor = RGB(255, 255, 255)
+ 					oRange.CharColor = RGB(0,0,0)
+ 					oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
  					aSaveData = oRange.getDataArray()
  					oSheet.GetCellbyPosition( 0, 0 ).rows.Height=Altezza_prima_riga
 
@@ -1706,17 +1689,17 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
 					com.sun.star.sheet.CellFlags.HARDATTR
 					aSaveData = oRange.getDataArray()
 					oRange.clearContents(Flags)
-   				&apos;	oRange.CellBackColor = RGB(255, 255, 255)
-   				&apos;	oRange.CharColor = RGB(0,0,0)
-   					oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
+ 				&apos;	oRange.CellBackColor = RGB(255, 255, 255)
+ 				&apos;	oRange.CharColor = RGB(0,0,0)
+ 					oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
  					aSaveData = oRange.getDataArray()
 			case = 1 &apos; non consolida (ciè sbianca e basta)
-   					oRange.CellBackColor = RGB(255, 255, 255)
-   					oRange.CharColor = RGB(0,0,0) 	
-   					If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-   						IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string  &lt;= 2 then
+ 					oRange.CellBackColor = RGB(255, 255, 255)
+ 					oRange.CharColor = RGB(0,0,0) 	
+ 					If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+ 						IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &lt;= 2 then
 						&apos; se &quot;livello difficoltà&quot; è diverso niubbi
-	   						if sParla = &quot;Parla&quot; then
+	 						if sParla = &quot;Parla&quot; then
 		 						msgbox &quot;I colori sono stati solo nascosti daL colore bianco.&quot; &amp; CHR$(10)_
  								&amp; &quot;Per ripristinare i colori applica a tutta la tabella: Menu Formato &gt; Formattazione Predefinita&quot;
  							end if		
@@ -1727,8 +1710,8 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
 
 exit sub
 errore: 
-Clessid_lock_End  
-DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )	
+Clessid_lock_End 
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )	
 END SUB
 
 Sub Pulisci_Tabella(oRange)
@@ -1737,23 +1720,23 @@ Sub Pulisci_Tabella(oRange)
  	aSaveData = oRange.getDataArray()
  	&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
  	&apos;una volta cancellate le relative celle risulterebbero vuote
-   	oRange.clearContents(Flags)
-   	oRange.CellBackColor = RGB(255, 255, 255)
-   	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
+ 	oRange.clearContents(Flags)
+ 	oRange.CellBackColor = RGB(255, 255, 255)
+ 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
 END SUB
 
 &apos;Sub EliminaColonne &apos; Questa passa tutte le colonne e se ne trova una nascosta la elimina
-				   &apos; Parte dalla quarta, perche mi sembra che sulla terza ci sia qualcosa che
-				   &apos; viene utilizzato da Impagina_bis
+				 &apos; Parte dalla quarta, perche mi sembra che sulla terza ci sia qualcosa che
+				 &apos; viene utilizzato da Impagina_bis
 Sub EliminaColonne &apos; 
 i = 3
 oSheet = ThisComponent.currentController.activeSheet
 Do
 oColumns = oSheet.getColumns()
-   oCol = oColumns.getByIndex(i) 
+ oCol = oColumns.getByIndex(i) 
 	If Not oCol.IsVisible Then
 		oSheet.Columns.removeByIndex(i , 1)
- 	  Else
+ 	 Else
 		i = i + 1
 	End If
 	Loop Until i = 50
@@ -1764,7 +1747,7 @@ sub Visualizza_normale &apos; nel senso di Menu Visualizza &gt; normale
  	&apos; 0 il codice può attivare Visualizza Normale ad Anteprima Impaginazione
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione, ma non toglierla
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	(mi pare una stupidata)
-  If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
+ If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
  		Select Case ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value
  			case 0
 				Visualizza_normale_esegui
@@ -1774,7 +1757,7 @@ sub Visualizza_normale &apos; nel senso di Menu Visualizza &gt; normale
 				&apos; e non so come risolvere.... 
 		End Select
 	else
-  end if	
+ end if	
 END SUB
 
 sub Visualizza_normale_esegui &apos; nel senso di Menu Visualizza &gt; normale
@@ -1782,9 +1765,9 @@ sub Visualizza_normale_esegui &apos; nel senso di Menu Visualizza &gt; normale
  	&apos; 0 il codice può attivare Visualizza Normale ad Anteprima Impaginazione
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	
-	dim document   as object
+	dim document as object
 	dim dispatcher as object
-	document   = ThisComponent.CurrentController.Frame
+	document = ThisComponent.CurrentController.Frame
 	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	dim args1(0) as new com.sun.star.beans.PropertyValue
 	args1(0).Name = &quot;NormalViewMode&quot;
@@ -1796,7 +1779,7 @@ END SUB
 
 &apos;**************************************************************************************************
 SUB Visualizza_PageBreak
-  If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+ If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
  	&apos; 0 il codice può attivare Visualizza Normale ad Anteprima Impaginazione
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione&quot;
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	(mi pare una stupidata)
@@ -1813,7 +1796,7 @@ SUB Visualizza_PageBreak
 
 
 	End Select
-  end if
+ end if
 end sub
 
 
@@ -1821,9 +1804,9 @@ SUB Visualizza_PageBreak_esegui &apos; nel senso di Menu Visualizza &gt; Antepri
 &apos;pare che la cosa sia possibile solo via UNO e soprattutto
 &apos; il codice non è in grado di conoscerne lo stato
 
-		dim document   as object
+		dim document as object
 		dim dispatcher as object
-		document   = ThisComponent.CurrentController.Frame
+		document = ThisComponent.CurrentController.Frame
 		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 		dim args1(0) as new com.sun.star.beans.PropertyValue
 		args1(0).Name = &quot;PagebreakMode&quot;
@@ -1839,33 +1822,33 @@ SUB Visualizza_PageBreak_originale_disattivata_in_test &apos; nel senso di Menu 
 
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
  if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 1 or _
-  	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 0 then &apos;vedi Sub Visualizza_normale
+ 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 0 then &apos;vedi Sub Visualizza_normale
  	&apos; 0 il codice può attivare Visualizza Normale ad Anteprima Impaginazione
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value = 1  then 
-		if ThisComponent.CurrentController.ZoomValue  &gt; 55 then
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value = 1 then 
+		if ThisComponent.CurrentController.ZoomValue &gt; 55 then
 			ThisComponent.CurrentController.ZoomValue = _
 			ThisComponent.CurrentController.ZoomValue*0.75
 		end if
 		&apos;e salta la procedura di pagebreak
-      else
+ else
 
 		&apos;ho scoperto un&apos;opzione di calc
 		&apos; che consente di vedere i salti pagina e bordi printarea
 		&apos; anche in vista normale...
 		&apos; menu Opzioni &gt; OpenOffice.org Calc &gt; Vista &gt; Interruzzioni di pagina
 
-		dim document   as object
+		dim document as object
 		dim dispatcher as object
-		document   = ThisComponent.CurrentController.Frame
+		document = ThisComponent.CurrentController.Frame
 		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 		dim args1(0) as new com.sun.star.beans.PropertyValue
 		args1(0).Name = &quot;PagebreakMode&quot;
 		args1(0).Value = true
 		dispatcher.executeDispatch(document, &quot;.uno:PagebreakMode&quot;, &quot;&quot;, 0, args1())
 	end if
-  end if
+ end if
 end if
 END SUB
 
@@ -1873,21 +1856,21 @@ Sub Ri_Formatta_Capitoli &apos; duplica sul computo gli stili di cella delle int
 &apos; la ricerca e l&apos;individuazione viene fatta sullo stile di cella della colonna A
 
 Clessid_lock_Start 
-  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+ oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	lcol5 = 0
-  oCell = oSheet.GetCellByPosition(lcol5 , 1)
-  ilastRow = getLastUsedRow(oSheet)
-  
-  oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+ oCell = oSheet.GetCellByPosition(lcol5 , 1)
+ ilastRow = getLastUsedRow(oSheet)
+ 
+ oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
  ThisComponent.CurrentController.Select(oCell)
 &apos; exit sub
-  dim lrow as long
-  lrow = 2
+ dim lrow as long
+ lrow = 2
 Do while lrow &lt; ilastRow-5
 	 if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-1-sopra&quot; then 
 	 	oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 45, 107,45)
 		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC ,  oRangeDest, 0) 
+		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
 		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 45, 72,45).rangeaddress
 		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  		oSheet.copyRange(oDest,oRangeSRC)
@@ -1897,7 +1880,7 @@ Do while lrow &lt; ilastRow-5
 	 if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;Livello-1-scritta&quot; then
 	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,46,107,46)
 		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC ,  oRangeDest, 0) 
+		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
 		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 46, 72,46).rangeaddress
 		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  		oSheet.copyRange(oDest,oRangeSRC)		
@@ -1906,7 +1889,7 @@ Do while lrow &lt; ilastRow-5
 	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
 	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,47,107,47)
 		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC ,  oRangeDest, 0) 
+		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
 		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 47, 72,47).rangeaddress
 		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  		oSheet.copyRange(oDest,oRangeSRC)
@@ -1915,7 +1898,7 @@ Do while lrow &lt; ilastRow-5
 	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-2-sotto&quot; then
 	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,49,107,49)
 		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC ,  oRangeDest, 0) 
+		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
 		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 49, 72,49).rangeaddress
 		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  		oSheet.copyRange(oDest,oRangeSRC)
@@ -1925,7 +1908,7 @@ Do while lrow &lt; ilastRow-5
 	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello2 valuta&quot; then
 	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,50,107,50)
 		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC ,  oRangeDest, 0) 
+		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
 		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 50, 72,50).rangeaddress
 		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  		oSheet.copyRange(oDest,oRangeSRC)
@@ -1934,7 +1917,7 @@ Do while lrow &lt; ilastRow-5
 	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-2-sotto&quot; then
 	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,51,107,51)
 		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC ,  oRangeDest, 0) 
+		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
 		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 51, 72,51).rangeaddress
 		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  		oSheet.copyRange(oDest,oRangeSRC)
@@ -1942,7 +1925,7 @@ Do while lrow &lt; ilastRow-5
 	lrow = lrow+1
 loop
 	Clessid_lock_End
-  print &quot;ok ! FATTO!&quot;
+ print &quot;ok ! FATTO!&quot;
 end sub
 
 Sub Agg_Dati_Comp &apos; aggiorna i campi in &quot;dati del Documento&quot;
@@ -1961,19 +1944,19 @@ end sub
 
 
 SUB annota_num_pag_libretto
-	chiudi_dialoghi  &apos; chiude tutti i dialoghi
+	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	togli_salti_pagina
 	sSheetName = ThisComponent.currentcontroller.activesheet.name
 	&apos;controlla se è tabella originale COMPUTO... perché è in quella e solo in
 	&apos;quella tablella che bisogna registrare i numeri di pagina &apos;furbino 
 	If sSheetName&lt;&gt;&quot;CONTABILITA&quot; then
  		 msgbox (&quot;QUESTA MACRO VA ESEGUITA SULLA TABELLA &quot;&quot;CONTABILITA&quot;&quot; ORIGINALE!&quot; &amp; CHR$(10)_
-	        	&amp; &quot;Annullo!&quot;
+	 	&amp; &quot;Annullo!&quot;
 		 exit sub
  	end if
  		&apos;controlla se è impostata a &quot;Libretto qui&quot;
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0  then
-		msgbox &quot;Questa contabilità è impostata  per un &quot;&quot;Libretto&quot;&quot; Cartaceo!&quot; &amp; CHR$(10)_
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0 then
+		msgbox &quot;Questa contabilità è impostata per un &quot;&quot;Libretto&quot;&quot; Cartaceo!&quot; &amp; CHR$(10)_
 			&amp; &quot;e questa macro si può usare solo se si è scelta quella modalità!&quot; &amp; CHR$(10)_
 			&amp; &quot;Consulta la guida al capitolo: Libretto delle Misure&quot;
 		exit sub
@@ -1985,7 +1968,7 @@ SUB annota_num_pag_libretto
 	oSheet = ThisComponent.currentController.activeSheet
 	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then
+	If isNull (oEnd) or isEmpty (oEnd) then
 			msgbox &quot; Manca la riga rossa di chiusura !&quot; &amp; CHR$(10)_
 				&amp; &quot; potresti avere risultati non corretti in coda alla tabella&quot;
 				lLastUrow = getLastUsedRow(oSheet)
@@ -2005,10 +1988,10 @@ SUB annota_num_pag_libretto
 	&apos;	if oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak = true then
 	&apos;		oSheet.GetCellByPosition( 0 , I).rows.IsManualPageBreak=False &apos;rimuovilo
 	&apos;	end if 
-		if  oSheet.GetCellByPosition( 0 , I).rows.IsStartOfNewPage = True then
+		if oSheet.GetCellByPosition( 0 , I).rows.IsStartOfNewPage = True then
 &apos;			iContatore = iContatore+1
 
-			&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1  , i)) &apos;debug
+			&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , i)) &apos;debug
 			if I &gt; lLastUrow then
 				goto Vai_alla_fine_di_tutto
 			end if
@@ -2018,7 +2001,7 @@ SUB annota_num_pag_libretto
 		 		Exit For
 		 	end if
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			oRangeVoce =  Circoscrive_Voce_Computo_Att ( I)
+			oRangeVoce = Circoscrive_Voce_Computo_Att ( I)
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 			lrowS = oRangeVoce.RangeAddress.StartRow
 			lrowE = oRangeVoce.RangeAddress.EndRow
@@ -2083,22 +2066,22 @@ sub num_pag_libretto &apos;annota pagina e libretto su CONTABILITA (solo librett
 	oSheet = ThisComponent.currentController.activeSheet
 	lLastUrowNN = getLastUsedRow(oSheet)
 	inumPag = 1
-	For i = 2  to lLastUrowNN
-		Barra_Apri_Chiudi_5(&quot;                                  #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrowNN, 0)
-		if  oSheet.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
+	For i = 2 to lLastUrowNN
+		Barra_Apri_Chiudi_5(&quot; #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrowNN, 0)
+		if oSheet.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
 			inumPag = inumPag+1
-			 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 20  , i)) &apos;debug
+			 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 20 , i)) &apos;debug
 			 	&apos;print inumPag
 		end if
 &apos;goto salto:
-		IF oSheet.GetCellByPosition( 1  , i).cellstyle = &quot;comp Art-EP_R&quot; then
-			oSheet.GetCellByPosition( 20  , i).value = inumPag
+		IF oSheet.GetCellByPosition( 1 , i).cellstyle = &quot;comp Art-EP_R&quot; then
+			oSheet.GetCellByPosition( 20 , i).value = inumPag
 &apos;			oSheet.GetCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
 &apos;			oSheet.GetCellByPosition(19, i).string= &quot;1&quot; &apos; numero libretto
 				rem sistemo gli stili di cella
 &apos;			oSheet.getCellRangeByPosition(19, i, 20 , i).cellstyle = &quot;num centro bianco&quot;
 &apos;			oSheet.GetCellByPosition(21, i).string= &quot;20/04/11&quot;
-&apos;  			oSheet.GetCellByPosition(21 , i).cellstyle = &quot;Data_bianca&quot;
+&apos; 			oSheet.GetCellByPosition(21 , i).cellstyle = &quot;Data_bianca&quot;
 		end if
 
 	next
@@ -2107,38 +2090,38 @@ salto:
 end sub
 
 
-Sub AddPageNumber  &apos; esempio trovato in rete... anche questo funziona...
+Sub AddPageNumber &apos; esempio trovato in rete... anche questo funziona...
 					&apos; tenerlo un po&apos; di tempo...
-   Dim oSheet as Object         &apos; Represent current worksheet
-   Dim oCell as Object            &apos; Represent current cell
-   Dim iCurrentRow as Long         &apos; Current Row being checked for page break
-   Dim iFirstRow as Long         &apos; First Row where data start
-   Dim iLastRow as Long         &apos; Last Row where data end
-   Dim iCol_PageNumber as Long      &apos; Column where to write page number
-   Dim iPageNumber as Long         &apos; The page number
-   
-                     &apos; Initialize variables
-                     &apos; Assign the proper sheet to oSheet
-   oSheet = thisComponent.getSheets.getByName(&quot;AddPageNumber&quot;) &apos; &lt;--- Put here your Sheet Name!!!
-   
-   iFirstRow = 3
-   iLastRow = 4201
-   iCol_PageNumber = 11
-   iPageNumber = 1
-   
-                     &apos; Loop through each cell of the first column
-                     &apos; and check the attribute IsStartOfNewPage
-   For iCurrentRow = iFirstRow to iLastRow
-      oCell = oSheet.getCellByPosition(1, iCurrentRow)
-      
-                     &apos; Is there a start of a new page?
-                     &apos; If yes, we must add 1 to the page number
-      If oCell.Rows.IsStartOfNewPage Then
-         iPageNumber = iPageNumber + 1
-      End If     
-                     &apos; Write the page number to the proper column
-      oSheet.getCellByPosition(iCol_PageNumber, iCurrentRow).Value = iPageNumber 
-   Next iCurrentRow
+ Dim oSheet as Object &apos; Represent current worksheet
+ Dim oCell as Object &apos; Represent current cell
+ Dim iCurrentRow as Long &apos; Current Row being checked for page break
+ Dim iFirstRow as Long &apos; First Row where data start
+ Dim iLastRow as Long &apos; Last Row where data end
+ Dim iCol_PageNumber as Long &apos; Column where to write page number
+ Dim iPageNumber as Long &apos; The page number
+ 
+ &apos; Initialize variables
+ &apos; Assign the proper sheet to oSheet
+ oSheet = thisComponent.getSheets.getByName(&quot;AddPageNumber&quot;) &apos; &lt;--- Put here your Sheet Name!!!
+ 
+ iFirstRow = 3
+ iLastRow = 4201
+ iCol_PageNumber = 11
+ iPageNumber = 1
+ 
+ &apos; Loop through each cell of the first column
+ &apos; and check the attribute IsStartOfNewPage
+ For iCurrentRow = iFirstRow to iLastRow
+ oCell = oSheet.getCellByPosition(1, iCurrentRow)
+ 
+ &apos; Is there a start of a new page?
+ &apos; If yes, we must add 1 to the page number
+ If oCell.Rows.IsStartOfNewPage Then
+ iPageNumber = iPageNumber + 1
+ End If 
+ &apos; Write the page number to the proper column
+ oSheet.getCellByPosition(iCol_PageNumber, iCurrentRow).Value = iPageNumber 
+ Next iCurrentRow
 End Sub
 sub togli_salti_pagina
 	oSheet = ThisComponent.currentController.activeSheet

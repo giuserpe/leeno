@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="RiorAnalisi" script:language="StarBasic">&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="RiorAnalisi" script:language="StarBasic">&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo Ã¨ parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo Ã¨ parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarÃ² grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della ContabilitÃ  Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -16,14 +16,14 @@ sub Main_Riordina_Analisi_Alfabetico &apos;(C) Giuseppe Vizziello 2014
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
 ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 	lrowDest = 3
-	for i =  0 to 10
+	for i = 0 to 10
 		if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An.1v-Att Start&quot; and _
 			oSheet.GetCellByPosition( 0, i).string = &quot;COD./N.&quot; then
 			lrowDest = i-1 &apos;trovo il punto di inserimento subito prima della prima scheda di Analisi
 			exit for
 		end if
 	next
-	for i =  0 to lLastUrow &apos;recupero i codici presenti dalle ANALISI DI PREZZO
+	for i = 0 to lLastUrow &apos;recupero i codici presenti dalle ANALISI DI PREZZO
 		if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An-1_sigla&quot; then
 		art = oSheet.GetCellByPosition( 0, i).getstring &apos;articolo
 		for each el in articoli() &apos;compilo la lista verificando i doppioni
@@ -38,7 +38,7 @@ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 		end if
 	Next
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then &apos; altrimenti BubbleSortlist non va
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	for each el in BubbleSortlist(BubbleSortlist(articoli())) &apos;riordino la lista
 		for i = 0 to lLastUrow

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Retr_store_Att" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Retr_store_Att" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -36,35 +36,35 @@ sub TestAtt &apos; test per verificare l&apos;Attributo della sheet
 	print Trova_Attr
 end sub
 
-Function Trova_Attr  &apos; cerca l&apos;attributo della sheet nelle prime tre col della prima riga 
-   oDoc = ThisComponent
+Function Trova_Attr &apos; cerca l&apos;attributo della sheet nelle prime tre col della prima riga 
+ oDoc = ThisComponent
 oSheet = ThisComponent.currentController.activeSheet
-   
-   &apos; Get cell B5.
-   oCell = oSheet.getCellByPosition( 0, 0 )
-    &apos;  oCell = oSheet.getCellRangeByName( &quot;A1&quot; ).getCellByPosition( 0, 0 )
-   &apos; Get the collection of attributes.
-   oCustomXmlAttributes = oCell.UserDefinedAttributes
-&apos;   xray oCustomXmlAttributes
-   If oCustomXmlAttributes.hasElements = false then
-   		oCell = oSheet.getCellByPosition( 1, 0)
-   		oCustomXmlAttributes = oCell.UserDefinedAttributes
-   		If oCustomXmlAttributes.hasElements = false then
-   			oCell = oSheet.getCellByPosition( 2, 0)
-   			oCustomXmlAttributes = oCell.UserDefinedAttributes
-   			If oCustomXmlAttributes.hasElements = false then
-   				oCell = oSheet.getCellByPosition( 3, 0)
-   				oCustomXmlAttributes = oCell.UserDefinedAttributes
-   				If oCustomXmlAttributes.hasElements = false then
-   				   	exit function
-   				end if
-   			end if
-   		end if
-   end if
- &apos;  xray oCustomXmlAttributes
-   &apos;Print &quot;Attribute  is: &quot;, oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
-   sAttributo = oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
-  &apos; print sAttributo
+ 
+ &apos; Get cell B5.
+ oCell = oSheet.getCellByPosition( 0, 0 )
+ &apos; oCell = oSheet.getCellRangeByName( &quot;A1&quot; ).getCellByPosition( 0, 0 )
+ &apos; Get the collection of attributes.
+ oCustomXmlAttributes = oCell.UserDefinedAttributes
+&apos; xray oCustomXmlAttributes
+ If oCustomXmlAttributes.hasElements = false then
+ 		oCell = oSheet.getCellByPosition( 1, 0)
+ 		oCustomXmlAttributes = oCell.UserDefinedAttributes
+ 		If oCustomXmlAttributes.hasElements = false then
+ 			oCell = oSheet.getCellByPosition( 2, 0)
+ 			oCustomXmlAttributes = oCell.UserDefinedAttributes
+ 			If oCustomXmlAttributes.hasElements = false then
+ 				oCell = oSheet.getCellByPosition( 3, 0)
+ 				oCustomXmlAttributes = oCell.UserDefinedAttributes
+ 				If oCustomXmlAttributes.hasElements = false then
+ 				 	exit function
+ 				end if
+ 			end if
+ 		end if
+ end if
+ &apos; xray oCustomXmlAttributes
+ &apos;Print &quot;Attribute is: &quot;, oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
+ sAttributo = oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
+ &apos; print sAttributo
 Trova_Attr = sAttributo
 End Function
 Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è sufficiente
@@ -73,20 +73,20 @@ Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è
 	oSheet = ThisComponent.currentController.activeSheet
 	&apos; Get cell B5.
 	oCell = oSheet.getCellRangeByName( &quot;A1&quot; )&apos;.getCellByPosition( 0, 0 )
-	xray ocell
+&apos;	xray ocell
 	&apos; Get the collection of attributes.
 	oCustomXmlAttributes = oCell.UserDefinedAttributes
 	If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
 		&apos; Change the value of the attribute.
-		oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
-		&apos;  oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
-		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
-   		Else
-   		&apos; Since this attribute was not present, create it.
-   		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
-   		&apos;      oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
-   		oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
-   	EndIf
+	&apos;	oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
+		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+		 oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
+ 		Else
+ 		&apos; Since this attribute was not present, create it.
+ 		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+ 		 oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
+ 	&apos;	oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
+ 	EndIf
 	&apos; Test to see if someone had previously set a &quot;Mark&quot; attribute on this paragraph....
 	&apos; Store the collection of attributes back to the property.
 	oCell.UserDefinedAttributes = oCustomXmlAttributes
@@ -99,7 +99,7 @@ Sub Stora_Attr_sheet &apos;sub tipo_
 &apos;	sValoreAtt_p = &quot;Tipo_computo&quot;
 &apos;	sValoreAtt_p = &quot;Tipo_Analisi&quot;
 	sValoreAtt_p = &quot;Tipo_CONTABILITA&quot;
-    oSheet_p = ThisComponent.currentController.activeSheet
+ oSheet_p = ThisComponent.currentController.activeSheet
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;A2&quot;)
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;B1&quot;)
@@ -107,50 +107,50 @@ end sub
 
 
 Function Stora_Attr_sheet_generico(sValoreAtt as string, optional oSheet as object, optional cella as string )&apos; 
-  if ismissing(cella) then  
-			oCell = oSheet.getCellRangeByName( &quot;A1&quot;  )&apos;.getCellByPosition( 0, 0 ) &apos; 
+ if ismissing(cella) then 
+			oCell = oSheet.getCellRangeByName( &quot;A1&quot; )&apos;.getCellByPosition( 0, 0 ) &apos; 
 		else
 			oCell = oSheet.getCellRangeByName( cella )
-   end if
+ end if
 &apos;	xray ocell
-   &apos; Get the collection of attributes.
-   oCustomXmlAttributes = oCell.UserDefinedAttributes
+ &apos; Get the collection of attributes.
+ oCustomXmlAttributes = oCell.UserDefinedAttributes
 &apos; xray oCustomXmlAttributes
  
-   If oCustomXmlAttributes.hasByName( &quot;Tipo_sheet&quot; ) Then
-      &apos; Change the value of the attribute.
-   &apos;   oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
-    &apos;  oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
- &apos;     oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_Analisi&quot;) )
-      oCustomXmlAttributes.replaceByName( &quot;Tipo_sheet&quot;,  CreateAttributeData(sValoreAtt) )
-   Else
-   
-      &apos; Since this attribute was not present, create it.
- &apos;     oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_computo&quot;) )
-  &apos;    oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_EP&quot;) )
-  &apos;    oCustomXmlAttributes.insertByName( &quot;Tipo&quot;,  CreateAttributeData(&quot;Tipo_Analisi&quot;) )
-      oCustomXmlAttributes.insertByName( &quot;Tipo_sheet&quot;,  CreateAttributeData(sValoreAtt) )
-   EndIf
-   &apos; xray oCustomXmlAttributes
-   &apos; Test to see if someone had previously set a &quot;Mark&quot; attribute on this paragraph....
-   &apos; Store the collection of attributes back to the property.
-   oCell.UserDefinedAttributes = oCustomXmlAttributes
+ If oCustomXmlAttributes.hasByName( &quot;Tipo_sheet&quot; ) Then
+ &apos; Change the value of the attribute.
+ &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+ &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
+ &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_Analisi&quot;) )
+ oCustomXmlAttributes.replaceByName( &quot;Tipo_sheet&quot;, CreateAttributeData(sValoreAtt) )
+ Else
+ 
+ &apos; Since this attribute was not present, create it.
+ &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+ &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
+ &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_Analisi&quot;) )
+ oCustomXmlAttributes.insertByName( &quot;Tipo_sheet&quot;, CreateAttributeData(sValoreAtt) )
+ EndIf
+ &apos; xray oCustomXmlAttributes
+ &apos; Test to see if someone had previously set a &quot;Mark&quot; attribute on this paragraph....
+ &apos; Store the collection of attributes back to the property.
+ oCell.UserDefinedAttributes = oCustomXmlAttributes
 END function
 
 
 &apos; Sugar coating to create an AttributeData struct, initialize and return it.
 Function CreateAttributeData( cValue )
-   oAttributeData = createUnoStruct( &quot;com.sun.star.xml.AttributeData&quot; )
-   oAttributeData.Type = &quot;CDATA&quot;
-   oAttributeData.Value = cValue
-   CreateAttributeData = oAttributeData
+ oAttributeData = createUnoStruct( &quot;com.sun.star.xml.AttributeData&quot; )
+ oAttributeData.Type = &quot;CDATA&quot;
+ oAttributeData.Value = cValue
+ CreateAttributeData = oAttributeData
 End Function
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 sub TestAtt_Sheet &apos; test per verificare l&apos;Attributo della sheet
 &apos;	oSheet = ThisComponent.currentController.activeSheet
-&apos;	oCell = oSheet.getCellRangeByName( &quot;A1&quot; ).getCellByPosition( 0, 0 )  
+&apos;	oCell = oSheet.getCellRangeByName( &quot;A1&quot; ).getCellByPosition( 0, 0 ) 
 	sAttributo_Sheet = Trova_Attr_Sheet
-	MsgBox (&quot;     &quot; &amp; sAttributo_Sheet _
+	MsgBox (&quot; &quot; &amp; sAttributo_Sheet _
 	 , 0 + 0 + 0 , &quot; --------------------------- &quot;)
 &apos;print sAttributo_N &apos;Trova_Attr_N
 end sub
@@ -163,27 +163,27 @@ Function Trova_Attr_Sheet
 	Verifica_chiudi_preview
 	oDoc = ThisComponent
 	oSheet = ThisComponent.currentController.activeSheet
-   &apos; Get the collection of attributes. 
-	for icol = 0 to 2  &apos;cerca nel riquadro col &amp; rows)
+ &apos; Get the collection of attributes. 
+	for icol = 0 to 2 &apos;cerca nel riquadro col &amp; rows)
 		For i = 0 to 5		
-   			oCell = oSheet.getCellByPosition( i, icol )
-   			oCustomXmlAttributes = oCell.UserDefinedAttributes
+ 			oCell = oSheet.getCellByPosition( i, icol )
+ 			oCustomXmlAttributes = oCell.UserDefinedAttributes
 			&apos;ThisComponent.CurrentController.Select( ocell) &apos;debug
-		    &apos;print 
-		    &apos;xray oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
-		   	If oCustomXmlAttributes.hasElements = true then 
-		   		if oCustomXmlAttributes.hasbyname( &quot;Tipo_sheet&quot; ) then
-	   				Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value
-	   				&apos;ThisComponent.CurrentController.Select( ocell) &apos;debug
-	   				exit for
-	   			end if
-	   			if oCustomXmlAttributes.hasbyname( &quot;Tipo&quot; ) then 
-	   			&apos; il doppione &apos;Tipo&apos; e &apos;Tipo_sheet&apos; deriva da un mio errore... :-(
-	   			&apos; mantengo per compatibilità con i vari template...
+		 &apos;print 
+		 &apos;xray oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
+		 	If oCustomXmlAttributes.hasElements = true then 
+		 		if oCustomXmlAttributes.hasbyname( &quot;Tipo_sheet&quot; ) then
+	 				Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value
+	 				&apos;ThisComponent.CurrentController.Select( ocell) &apos;debug
+	 				exit for
+	 			end if
+	 			if oCustomXmlAttributes.hasbyname( &quot;Tipo&quot; ) then 
+	 			&apos; il doppione &apos;Tipo&apos; e &apos;Tipo_sheet&apos; deriva da un mio errore... :-(
+	 			&apos; mantengo per compatibilità con i vari template...
 					 Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
 					 exit for
 				end if	
-		   	end if
+		 	end if
 		next
 	next
 &apos;	print Trova_Attr_Sheet
@@ -203,7 +203,7 @@ sub TestAtt_N &apos; test universale per verificare l&apos;Attributo della cella
 	oCustomXmlAttributes = oCell.UserDefinedAttributes
 	if oCustomXmlAttributes.hasElements = true then
 			sA = oCustomXmlAttributes.ElementNames(0)
-			print  oCustomXmlAttributes.getByName(sA).value
+			print oCustomXmlAttributes.getByName(sA).value
 		
 		&apos;	msgbox oCustomXmlAttributes.getByName(sA).Value
 		else
@@ -219,15 +219,15 @@ sub TestAtt_N________ &apos; test per verificare l&apos;Attributo della sheet
 &apos;	xray oCell.UserDefinedAttributes
 	
 	iF sAttributo_N &lt;&gt; false then
-		MsgBox (&quot;     &quot; &amp; sAttributo_N  _
+		MsgBox (&quot; &quot; &amp; sAttributo_N _
 		 , 0 + 0 + 0 , &quot; --------------------------- &quot;)
 &apos;	end if
 		else
 		
-		   oCustomXmlAttributes = oCell.UserDefinedAttributes
-		   If oCustomXmlAttributes.hasElements = true then
-		   	&apos;	exit sub
-		   
+		 oCustomXmlAttributes = oCell.UserDefinedAttributes
+		 If oCustomXmlAttributes.hasElements = true then
+		 	&apos;	exit sub
+		 
 			print oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value
 		end if
 	end if 
@@ -248,31 +248,31 @@ sAttAtt = &quot;&quot;
  &apos;sAttAtt = &quot;Start_voce_COMPUTO&quot;
 &apos; sAttAtt = &quot;End_voce_COMPUTO&quot;
 &apos; sAttAtt = &quot;Capitolo&quot;
-&apos;  sAttAtt = &quot;SottoCapitolo&quot;
+&apos; sAttAtt = &quot;SottoCapitolo&quot;
 &apos; sAttAtt =	&quot;Tipo_Analisi&quot;
 &apos;sAttAtt = &quot;Cod_Prezzo_scelta&quot;
 &apos;sAttAtt = &quot;UM_scelta&quot;
 &apos; sAttAtt = &quot;CompDesc&quot;
 
-   oDoc = ThisComponent
+ oDoc = ThisComponent
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;   oCell = oSheet.getCellRangeByName( &quot;D7&quot; ).getCellByPosition( 0, 0 )
+&apos; oCell = oSheet.getCellRangeByName( &quot;D7&quot; ).getCellByPosition( 0, 0 )
 	oCell=thisComponent.getCurrentSelection()
-   &apos; Get the collection of attributes.
-   oCustomXmlAttributes = oCell.UserDefinedAttributes
+ &apos; Get the collection of attributes.
+ oCustomXmlAttributes = oCell.UserDefinedAttributes
  &apos;xray oCustomXmlAttributes
  &apos;exit sub
-   If oCustomXmlAttributes.hasByName( sAttTipo ) Then
-      &apos; Change the value of the attribute.
-      oCustomXmlAttributes.replaceByName( sAttTipo,  CreateAttributeData(sAttAtt) )
-      oCustomXmlAttributes.replaceByName( sAttTipo,  CreateAttributeData(sAttAtt) )
-   Else
-      &apos; Since this attribute was not present, create it.
-      oCustomXmlAttributes.insertByName( sAttTipo,  CreateAttributeData(sAttAtt) )
-   EndIf
-    
-   &apos; Store the collection of attributes back to the property.
-   oCell.UserDefinedAttributes = oCustomXmlAttributes
+ If oCustomXmlAttributes.hasByName( sAttTipo ) Then
+ &apos; Change the value of the attribute.
+ oCustomXmlAttributes.replaceByName( sAttTipo, CreateAttributeData(sAttAtt) )
+ oCustomXmlAttributes.replaceByName( sAttTipo, CreateAttributeData(sAttAtt) )
+ Else
+ &apos; Since this attribute was not present, create it.
+ oCustomXmlAttributes.insertByName( sAttTipo, CreateAttributeData(sAttAtt) )
+ EndIf
+ 
+ &apos; Store the collection of attributes back to the property.
+ oCell.UserDefinedAttributes = oCustomXmlAttributes
 END SUB
 
 SUB Verifica_Attributo_N
@@ -291,25 +291,25 @@ END SUB
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 Function Trova_Attr_N (optional oCell as object, optional oSheet as object)
-   oDoc = ThisComponent&apos; RangeAddress
+ oDoc = ThisComponent&apos; RangeAddress
 		on error goto gestione_Er
-   if  isMissing (oSheet) Then 
+ if isMissing (oSheet) Then 
 		oSheet = ThisComponent.currentController.activeSheet
 	end if
-	if  isMissing (oCell) Then 
-   			oCell = thisComponent.getCurrentSelection()
-   	end if
-   oCustomXmlAttributes = oCell.UserDefinedAttributes
-   If oCustomXmlAttributes.hasElements = false then
-		 &apos;  print &quot;no attrinuti&quot;
-	   Trova_Attr_N = &quot;no attributi&quot;
+	if isMissing (oCell) Then 
+ 			oCell = thisComponent.getCurrentSelection()
+ 	end if
+ oCustomXmlAttributes = oCell.UserDefinedAttributes
+ If oCustomXmlAttributes.hasElements = false then
+		 &apos; print &quot;no attrinuti&quot;
+	 Trova_Attr_N = &quot;no attributi&quot;
 		 &apos; PRINT &quot;NO&quot;
- 	  	exit function
-   end if
-	  &apos;  xray oCustomXmlAttributes
-	&apos;   Print &quot;Attribute  is: &quot; &amp; oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value
-	 &apos;  sAttributo_N = oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value &apos;( &quot;idCella&quot; ).Value
-   sAttributo_N = oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value &apos;( &quot;idCella&quot; ).Value
+ 	 	exit function
+ end if
+	 &apos; xray oCustomXmlAttributes
+	&apos; Print &quot;Attribute is: &quot; &amp; oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value
+	 &apos; sAttributo_N = oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value &apos;( &quot;idCella&quot; ).Value
+ sAttributo_N = oCustomXmlAttributes.getByName( &quot;idCella&quot; ).Value &apos;( &quot;idCella&quot; ).Value
 	 &apos; print sAttributo_N
 	Trova_Attr_N = sAttributo_N
 		&apos;print Trova_Attr_N
@@ -335,29 +335,29 @@ sAttTipo = &quot;Tipo&quot;
 &apos;sAttAtt = &quot;UM_scelta&quot;
 &apos; sAttAtt = &quot;CompDesc&quot;
 
-   oDoc = ThisComponent
+ oDoc = ThisComponent
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;   oCell = oSheet.getCellRangeByName( &quot;D7&quot; ).getCellByPosition( 0, 0 )
+&apos; oCell = oSheet.getCellRangeByName( &quot;D7&quot; ).getCellByPosition( 0, 0 )
 	oCell=thisComponent.getCurrentSelection()
-   &apos; Get the collection of attributes.
-   oCustomXmlAttributes = oCell.UserDefinedAttributes
+ &apos; Get the collection of attributes.
+ oCustomXmlAttributes = oCell.UserDefinedAttributes
 &apos; xray oCustomXmlAttributes
 &apos; exit sub
 	sATT = oCustomXmlAttributes.ElementNames()
 &apos;	 xray sATT
-	oCustomXmlAttributes.removeByName (0, sATT)&apos;,  CreateAttributeData(sAttAtt)
+	oCustomXmlAttributes.removeByName (0, sATT)&apos;, CreateAttributeData(sAttAtt)
 &apos;exit sub
-&apos;   If oCustomXmlAttributes.hasByName( sAttTipo ) Then
-      &apos; Change the value of the attribute.
- &apos;     oCustomXmlAttributes.replaceByName( sAttTipo,  CreateAttributeData(sAttAtt) )
- &apos;     oCustomXmlAttributes.replaceByName( sAttTipo,  CreateAttributeData(sAttAtt) )
- &apos;  Else
-      &apos; Since this attribute was not present, create it.
-  &apos;    oCustomXmlAttributes.insertByName( sAttTipo,  CreateAttributeData(sAttAtt) )
-   &apos;EndIf
-    
-   &apos; Store the collection of attributes back to the property.
-   oCell.UserDefinedAttributes = oCustomXmlAttributes
+&apos; If oCustomXmlAttributes.hasByName( sAttTipo ) Then
+ &apos; Change the value of the attribute.
+ &apos; oCustomXmlAttributes.replaceByName( sAttTipo, CreateAttributeData(sAttAtt) )
+ &apos; oCustomXmlAttributes.replaceByName( sAttTipo, CreateAttributeData(sAttAtt) )
+ &apos; Else
+ &apos; Since this attribute was not present, create it.
+ &apos; oCustomXmlAttributes.insertByName( sAttTipo, CreateAttributeData(sAttAtt) )
+ &apos;EndIf
+ 
+ &apos; Store the collection of attributes back to the property.
+ oCell.UserDefinedAttributes = oCustomXmlAttributes
 END SUB
 
 </script:module>

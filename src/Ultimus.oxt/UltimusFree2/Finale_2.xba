@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Finale_2" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Finale_2" script:language="StarBasic">REM ***** BASIC *****
 
 Sub esporta_PDF_Foglio_Attivo
 
-   Dim sCartella As String
-   Dim oName as string
-   Dim oMycell as object
-   Dim oDoc as object
-   Dim oCell as object
-   Dim oNumero as string
-   Dim oSheet as object
-   Dim oSheets as object
-   Dim i%
-   Dim sURL as string
-   Dim sDocURL
-   dim document as object   
-   dim dispatcher as object
-   
+ Dim sCartella As String
+ Dim oName as string
+ Dim oMycell as object
+ Dim oDoc as object
+ Dim oCell as object
+ Dim oNumero as string
+ Dim oSheet as object
+ Dim oSheets as object
+ Dim i%
+ Dim sURL as string
+ Dim sDocURL
+ dim document as object 
+ dim dispatcher as object
+ 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&apos;
 	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -25,10 +25,10 @@ Sub esporta_PDF_Foglio_Attivo
 	sSheetName = ThisComponent.currentcontroller.activesheet.name &apos; il ome della sheet da trattare
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 		Set_solo_Righe_ripet &apos; le reimposta ogni volta
-		iCaso =  msgbox  (&quot;Ti va bene l&apos;area di stampa così com&apos;é impostata?&quot; &amp; CHR$(10)_
+		iCaso = msgbox (&quot;Ti va bene l&apos;area di stampa così com&apos;é impostata?&quot; &amp; CHR$(10)_
 				&amp; &quot;E le larghezze delle colonne?... Hai fatto una verifica visiva con l&apos;Anteprima di Stampa?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot;   (Se rispondi NO ridefinisco l&apos;Area di Stampa in automatico e PROCEDO)&quot;&amp; CHR$(10)_
-		 	  	&amp; &quot; (ANNULLA per interrompere, verificare visualmente e/o ridefinire a mano)&quot; &amp; CHR$(10)_
+				&amp; &quot; (Se rispondi NO ridefinisco l&apos;Area di Stampa in automatico e PROCEDO)&quot;&amp; CHR$(10)_
+		 	 	&amp; &quot; (ANNULLA per interrompere, verificare visualmente e/o ridefinire a mano)&quot; &amp; CHR$(10)_
 				&amp; &quot;&quot; ,35, &quot;&quot;) 
 			select case iCaso
 				case 7
@@ -38,7 +38,7 @@ Sub esporta_PDF_Foglio_Attivo
 			end select	
 	end if
 REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&apos;ANAGRAFICA
-&apos;   	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
+&apos; 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 &apos;		iCaso = msgbox (&quot; Aggiorno in automatico le Intestazioni ed i Piè di Pagina?&quot; &amp; CHR$(10) &amp; CHR$(10)_
 &apos;				&amp; &quot; (...prelevandoli dalla schermata dei “Dati dl Documento”) &quot; &amp; CHR$(10)&amp; CHR$(10)_
 &apos;				&amp; &quot; &quot;&amp; CHR$(10)&amp; CHR$(10)_
@@ -71,16 +71,16 @@ REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 
 	&apos;sceglie la dir proponendo quella del doc sorgente
 	If (Not GlobalScope.BasicLibraries.isLibraryLoaded(&quot;Tools&quot;)) Then
-    	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+ 	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 	End If	
 	&apos; codice originale di questa subroutine by Andrew Pitonyak
 	If (ThisComponent.hasLocation()) Then &apos; se è noto al file system
-	    	sDocURL = ThisComponent.getURL() 
-		    sDocDir  =  DirectoryNameoutofPath(sDocURL, &quot;/&quot;)
-  	 	 &apos;	sDocNameS =  FileNameoutofPath(sDocURL, &quot;/&quot;)
-  	 	 else
-  	 	 	oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
-	    	sDocDir = oPathSettings.Work &amp; &quot;/&quot;
+	 	sDocURL = ThisComponent.getURL() 
+		 sDocDir = DirectoryNameoutofPath(sDocURL, &quot;/&quot;)
+ 	 	 &apos;	sDocNameS = FileNameoutofPath(sDocURL, &quot;/&quot;)
+ 	 	 else
+ 	 	 	oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+	 	sDocDir = oPathSettings.Work &amp; &quot;/&quot;
 	End If
 
 
@@ -91,10 +91,10 @@ REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 	oFolderDialog.setDisplayDirectory(sDocDir)
 	oFolderDialog.Title = &quot;SELEZIONA LA CARTELLA DESTINAZIONE:&quot; 
 	If oFolderDialog.execute() Then
-        ChosenDir = oFolderDialog.Directory
-    Else
-        ChosenDir = 0 &apos; premuto annulla
-    Endif
+ ChosenDir = oFolderDialog.Directory
+ Else
+ ChosenDir = 0 &apos; premuto annulla
+ Endif
 	if ChosenDir = 0 then
 		If thisComponent.Sheets.hasByName(sElim) Then &apos; se avevo creato la _copia da sbiancare, la elimino
 			&apos;if not ismissing(sElim) or not isnull(sElim) then &apos; &apos;questo metodo isnull ismissing da sempre problemi
@@ -109,7 +109,7 @@ REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 	end if			
 	&apos;&gt;&gt;&gt;&gt; barra	aperta
 	sPG1 = 0		
- 	Barra_Apri_Chiudi_5(&quot;Attendi....  sto riflettendo... (Il tempo è solo una convenzione...))&quot;, 60) 
+ 	Barra_Apri_Chiudi_5(&quot;Attendi.... sto riflettendo... (Il tempo è solo una convenzione...))&quot;, 60) 
  	&apos;&lt;&lt;&lt;&lt;&lt;	
 	&apos; qui controlla se si tratta della dir corrente del doc
 	&apos; se non lo è aggiunge llo slash finale
@@ -119,11 +119,11 @@ REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 		ChosenDir = ChosenDir &amp; &quot;/&quot;
 	end if
 	&apos;sceglie il nome e assembla la path completa
-  		&apos;	sSheetName = ThisComponent.currentcontroller.activesheet.name 
-  	sDocName = sSheetName &amp; &quot;_&quot; &amp; gina_furbetta_2
+ 		&apos;	sSheetName = ThisComponent.currentcontroller.activesheet.name 
+ 	sDocName = sSheetName &amp; &quot;_&quot; &amp; gina_furbetta_2
 	sUrl = ChosenDir &amp; sDocName &amp; &quot;.pdf&quot;
-  	
-  	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 	
+ 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	esporta_PDF(sUrl)
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	&apos; chiudo la barra e azzero la variabile globale sPG1
@@ -157,42 +157,36 @@ REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 		GetGUIType
 	Visualizza_normale
-    if msgbox (CHR$(10) &amp;&quot;Il documento pdf è stato esportato come &quot; &amp; sUrl &amp; CHR$(10)&amp; CHR$(10)_
+ if msgbox (CHR$(10) &amp;&quot;Il documento pdf è stato esportato come &quot; &amp; sUrl &amp; CHR$(10)&amp; CHR$(10)_
 				&amp; &quot; Vuoi vedere il pdf ? &quot;&amp; CHR$(10)&amp; CHR$(10)_
 				&amp; &quot;&quot; ,36, &quot;&quot;) = 6 then
 				 Dim oSvc as object
 				 oSvc = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;) 
-    			 File:
+ 			 File:
 				 oSvc.execute(sUrl,&quot;&quot;, 0)
-     		else
+ 		else
 				exit sub		
 	end if
 	
 END SUB
-sub ppp
-ming = array (&quot;ccc&quot;,&quot;kkk&quot;)
-for each ll in ming
-print ll
-next
-end sub
 
 
 SUB esporta_PDF2&apos;(sUrl) &apos; copyright 2010 Paolo Mantovani
-  Dim mSheetAreas()
-  oDoc = ThisComponent
-  oSheets = oDoc.Sheets()
-  oActiveSheet = oDoc.CurrentController.ActiveSheet()
+ Dim mSheetAreas()
+ oDoc = ThisComponent
+ oSheets = oDoc.Sheets()
+ oActiveSheet = oDoc.CurrentController.ActiveSheet()
 &apos; xray oSheets.getbyname(&quot;computo&quot;)
-  For Each oSh In oSheets
-&apos;    If oSh.Name &lt;&gt; oActiveSheet.Name Then
-    If oSh.Name = &quot;COMPUTO&quot; Then
+ For Each oSh In oSheets
+&apos; If oSh.Name &lt;&gt; oActiveSheet.Name Then
+ If oSh.Name = &quot;COMPUTO&quot; Then
 		PRINT oSh.Name
-      Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
-      oSh.PrintAreas() = Array()
-    End If
-  Next
-    &apos;parametri di esportazione
-	Dim  mStoreOpts(1) As New com.sun.star.beans.PropertyValue
+ Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
+ oSh.PrintAreas() = Array()
+ End If
+ Next
+ &apos;parametri di esportazione
+	Dim mStoreOpts(1) As New com.sun.star.beans.PropertyValue
 	mStoreOpts(0).Name = &quot;Overwrite&quot;
 	mStoreOpts(0).Value = True
 	mStoreOpts(1).Name = &quot;FilterName&quot;
@@ -201,24 +195,24 @@ SUB esporta_PDF2&apos;(sUrl) &apos; copyright 2010 Paolo Mantovani
 	oDoc.storeToURL(sUrl, mStoreOpts())
 
 	For Each mShArea In mSheetAreas()
-    	oSh = oSheets.getByName(mShArea(0))
-    	oSh.PrintAreas() = mShArea(1)
+ 	oSh = oSheets.getByName(mShArea(0))
+ 	oSh.PrintAreas() = mShArea(1)
 	Next
 End Sub
 SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
-  Dim mSheetAreas()
-  oDoc = ThisComponent
-  oSheets = oDoc.Sheets()
-  oActiveSheet = oDoc.CurrentController.ActiveSheet()
+ Dim mSheetAreas()
+ oDoc = ThisComponent
+ oSheets = oDoc.Sheets()
+ oActiveSheet = oDoc.CurrentController.ActiveSheet()
 &apos; print oActiveSheet.name
-  For Each oSh In oSheets
-    If oSh.Name &lt;&gt; oActiveSheet.Name Then
-      Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
-      oSh.PrintAreas() = Array()
-    End If
-  Next
-    &apos;parametri di esportazione
-	Dim  mStoreOpts(1) As New com.sun.star.beans.PropertyValue
+ For Each oSh In oSheets
+ If oSh.Name &lt;&gt; oActiveSheet.Name Then
+ Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
+ oSh.PrintAreas() = Array()
+ End If
+ Next
+ &apos;parametri di esportazione
+	Dim mStoreOpts(1) As New com.sun.star.beans.PropertyValue
 	mStoreOpts(0).Name = &quot;Overwrite&quot;
 	mStoreOpts(0).Value = True
 	mStoreOpts(1).Name = &quot;FilterName&quot;
@@ -227,21 +221,21 @@ SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
 	oDoc.storeToURL(sUrl, mStoreOpts())
 
 	For Each mShArea In mSheetAreas()
-    	oSh = oSheets.getByName(mShArea(0))
-    	oSh.PrintAreas() = mShArea(1)
+ 	oSh = oSheets.getByName(mShArea(0))
+ 	oSh.PrintAreas() = mShArea(1)
 	Next
 End Sub
 
 
 Sub AppendItem(mList(), vItem) &apos; copyright 2010 Paolo Mantovani
 Dim iMax As Long
-  iMax = UBound(mList())
-  iMax = iMax + 1
-  Redim Preserve mList(iMax)
-  mList(iMax) = vItem
+ iMax = UBound(mList())
+ iMax = iMax + 1
+ Redim Preserve mList(iMax)
+ mList(iMax) = vItem
 End Sub
 
-Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi 
+Sub Computo_senza_prezzi &apos;Genera un Puro computo metrico senza i prezzi 
 	&apos;per richiesta di offerta
 	&apos;duplico la tabella nel doc stesso
 	
@@ -256,14 +250,14 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
 
 &apos;	ThisComponent.currentcontroller.activesheet.name= &quot;EP_NoP&quot;
 	
-	If thisComponent.Sheets.hasByName(&quot;CompuM_NoP_bk&quot;)  Then
+	If thisComponent.Sheets.hasByName(&quot;CompuM_NoP_bk&quot;) Then
 		thisComponent.Sheets.removebyname(&quot;CompuM_NoP_bk&quot;)
-		If thisComponent.Sheets.hasByName(&quot;CompuM_NoP&quot;)  Then
+		If thisComponent.Sheets.hasByName(&quot;CompuM_NoP&quot;) Then
 			thisComponent.sheets.getbyname(&quot;CompuM_NoP&quot;).name =&quot;CompuM_NoP_bk&quot;
 		end if
 	end if
-   	
-	If thisComponent.Sheets.hasByName(&quot;CompuM_NoP&quot;)  Then
+ 	
+	If thisComponent.Sheets.hasByName(&quot;CompuM_NoP&quot;) Then
 		osheet= thisComponent.sheets.getbyname(&quot;CompuM_NoP&quot;)
 		oSheet.name= &quot;CompuM_NoP_bk&quot;
 		&apos;ThisComponent.currentcontroller.activesheet.name= &quot;Lista_lavorazioni&quot;
@@ -276,7 +270,7 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
 
 	sString$ = &quot;Fine Computo&quot;
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then
+	If isNull (oEnd) or isEmpty (oEnd) then
 			msgbox &quot; Manca la riga rossa di chiusura !&quot; &amp; CHR$(10)_
 				&amp; &quot; potresti avere risultati non corretti in coda alla tabella&quot;
 			lLastUrow = getLastUsedRow(oSheet)
@@ -297,17 +291,17 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
 			com.sun.star.sheet.CellFlags.EDITATTR
 &apos;			com.sun.star.sheet.CellFlags.STYLES 
 
-	if msgbox (&quot;&quot;  &amp; CHR$(10)_
-				&amp;&quot;   Sto duplicando il Computo Metrico   &quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp;&quot;   Confermi la Cancellazione dei Prezzi ?   &quot; &amp; CHR$(10)_
-   				&amp;  CHR$(10) &amp; &quot;&quot;,4, &quot;Fare copia del Computo Metrico&quot;) = 6 then			
-   			&apos;	exit sub
-   				sSegno=1
-   				osheet.getCellRangeByPosition (11,2,11,lrowfine).ClearContents(iCellAttr)
-	   			osheet.getCellRangeByPosition (27,2,27,lrowfine).ClearContents(iCellAttr)
-	   			osheet.getCellRangeByPosition (17,0,17,lrowfine).ClearContents(iCellAttr)
-	   			osheet.getCellRangeByPosition (0,1,20,1).ClearContents(iCellAttr) &apos; la riassuntiva in testa
-  	end if
+	if msgbox (&quot;&quot; &amp; CHR$(10)_
+				&amp;&quot; Sto duplicando il Computo Metrico &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp;&quot; Confermi la Cancellazione dei Prezzi ? &quot; &amp; CHR$(10)_
+ 				&amp; CHR$(10) &amp; &quot;&quot;,4, &quot;Fare copia del Computo Metrico&quot;) = 6 then			
+ 			&apos;	exit sub
+ 				sSegno=1
+ 				osheet.getCellRangeByPosition (11,2,11,lrowfine).ClearContents(iCellAttr)
+	 			osheet.getCellRangeByPosition (27,2,27,lrowfine).ClearContents(iCellAttr)
+	 			osheet.getCellRangeByPosition (17,0,17,lrowfine).ClearContents(iCellAttr)
+	 			osheet.getCellRangeByPosition (0,1,20,1).ClearContents(iCellAttr) &apos; la riassuntiva in testa
+ 	end if
 
 	&apos;osheet.getCellRangeByPosition (11,2,11,lrowfine).ClearContents(iCellAttr)
 
@@ -325,8 +319,8 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
 	osheet.getCellRangeByPosition (19,0,26,lrowfine).ClearContents(iCellAttr)
 
 	&apos; ora svuoto cancello anche i rinvii nella riga del subtotali cap e sottocap
-    
-	    &apos;registro il valore della variabile
+ 
+	 &apos;registro il valore della variabile
 	iVar_332 = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value
  	
  	&apos; la metto a 0
@@ -338,47 +332,47 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
  	&apos;ripristino la Var generale che c&apos;era prima
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = iVar_332
 
-	for i = 2 to lrowFine Step 1  &apos;buffone
-		if oSheet.GetCellByPosition(2 , i).cellstyle = &quot;Comp-Bianche in mezzo Descr&quot;  AND _
+	for i = 2 to lrowFine Step 1 &apos;buffone
+		if oSheet.GetCellByPosition(2 , i).cellstyle = &quot;Comp-Bianche in mezzo Descr&quot; AND _
 			oSheet.GetCellByPosition(1 , i).cellstyle = &quot;comp Art-EP&quot; then
 			oRange = oSheet.getCellRangeByposition(2,i,2,i)
 			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
 			aSaveData = oRange.getDataArray()
  			oRange.clearContents(Flags)
- 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle  
+ 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
  		 	
  		 	oRange = oSheet.getCellRangeByposition(9,i,9,i)
 			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
 			aSaveData = oRange.getDataArray()
  			oRange.clearContents(Flags)
- 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle  
+ 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
 			oSheet.GetCellByPosition(11 , i).string = oSheet.GetCellByPosition(18 , i).string 		 	
  		end if
  		&apos;cap e sottocap (i numeri...)
- 		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;Livello-1-scritta&quot;  then
-  		 	oRange = oSheet.getCellRangeByposition(1,i,1,i)
-			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-			com.sun.star.sheet.CellFlags.OBJECTS
-			aSaveData = oRange.getDataArray()
- 			oRange.clearContents(Flags)
- 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle  		
-		end if
- 		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;livello2 valuta&quot;  then
+ 		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;Livello-1-scritta&quot; then
  		 	oRange = oSheet.getCellRangeByposition(1,i,1,i)
 			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
 			aSaveData = oRange.getDataArray()
  			oRange.clearContents(Flags)
- 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle  		
+ 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 		
+		end if
+ 		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;livello2 valuta&quot; then
+ 		 	oRange = oSheet.getCellRangeByposition(1,i,1,i)
+			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
+			com.sun.star.sheet.CellFlags.OBJECTS
+			aSaveData = oRange.getDataArray()
+ 			oRange.clearContents(Flags)
+ 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 		
 		end if
  		&apos;questo serve per aggiungere l&apos;if al prodotto ...
  		&apos; se viene implementato l&apos;if nel template questo modulino andrà poi rimosso
  		if sSegno = 1 then
-			if oSheet.GetCellByPosition(18 , i).cellstyle = &quot;comp sotto Euro Originale&quot;  AND _
+			if oSheet.GetCellByPosition(18 , i).cellstyle = &quot;comp sotto Euro Originale&quot; AND _
 				oSheet.GetCellByPosition(11 , i).cellstyle = &quot;comp sotto Unitario&quot; then
-				sFormulaN = &quot;=IF(L&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;&quot; &amp; &quot;;J&quot; &amp; i+1 &amp;  &quot;*L&quot; &amp; i+1 &amp; &quot;;&quot;&quot;&quot;&quot;)&quot;
+				sFormulaN = &quot;=IF(L&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;&quot; &amp; &quot;;J&quot; &amp; i+1 &amp; &quot;*L&quot; &amp; i+1 &amp; &quot;;&quot;&quot;&quot;&quot;)&quot;
 				oSheet.GetCellByPosition(18 , i).formula = SformulaN
 			end if
 		end if
@@ -404,14 +398,14 @@ Sub Computo_senza_prezzi  &apos;Genera un Puro computo metrico senza i prezzi
 	
 &apos;	oSheet.Columns.removeByindex(32, 100)			sNomeSheet = oDoc.currentcontroller.activesheet.name
 	if sSegno = 1 then
-    		msgbox &quot;Ho creato un duplicato &apos;in bianco&apos; del Computo Metrico!&quot;&amp; CHR$(10)_
+ 		msgbox &quot;Ho creato un duplicato &apos;in bianco&apos; del Computo Metrico!&quot;&amp; CHR$(10)_
 			&amp; &quot;Le descrizioni voce ora sono consolidate ed il foglio è esportabile come doc autonomo!&quot;&amp; CHR$(10)_
 			&amp; &quot; (le formule di calcolo per il totale sono ancora presenti)&quot;&amp; CHR$(10)_
 			&amp; &quot; Volendo creare un file autonomo:&quot;&amp; CHR$(10)_
 			&amp; &quot;Menu ULTIMUS_3 &gt; UTILITY &gt; Duplica il foglio attivo FUORI da questo Doc Calc&quot;&amp; CHR$(10)_
 			&amp; &quot;&quot; ,&quot;&quot;, &quot;Copia del Computo Metrico (SENZA Prezzi)&quot;	
 		else
-    		msgbox &quot;Ho creato un duplicato del Computo Metrico!&quot;&amp; CHR$(10)_
+ 		msgbox &quot;Ho creato un duplicato del Computo Metrico!&quot;&amp; CHR$(10)_
 			&amp; &quot;Le descrizioni voce ora sono consolidate ed il foglio è esportabile come doc autonomo!&quot;&amp; CHR$(10)_
 			&amp; &quot; (le formule di calcolo per il totale sono ancora presenti)&quot;&amp; CHR$(10)_
 			&amp; &quot; Volendo creare un file autonomo:&quot;&amp; CHR$(10)_
@@ -428,7 +422,7 @@ FUNCTION DuplicaSheetinDoc_Comp_NoP(Optional sSuffix as string, Optional lnumShe
 &apos; il foglio di computo per generare Rdo
 	dim iNumInser as integer
 
-	 &apos;  &apos;__________________________
+	 &apos; &apos;__________________________
 	&apos;	Clessid_lock_Start
 	oDoc = thisComponent
 	&apos;	sNomeSheet = ThisComponent.currentController.activeSheet
@@ -436,7 +430,7 @@ FUNCTION DuplicaSheetinDoc_Comp_NoP(Optional sSuffix as string, Optional lnumShe
 	sNomeRdO = &quot;CompuM_NoP&quot;
 	&apos;	print sNomeSheet
 	oSheet = oDoc.currentcontroller.activesheet
-    Copy_PageStyle
+ Copy_PageStyle
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	&apos;Height 
@@ -454,12 +448,12 @@ FUNCTION DuplicaSheetinDoc_Comp_NoP(Optional sSuffix as string, Optional lnumShe
 
 	If thisComponent.Sheets.hasByName(sNomeRdO &amp; sSuffix) Then &apos; se la sheet esiste
 		If thisComponent.Sheets.hasByName(sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;) Then		
-&apos;		print &quot;devo canc &quot; &amp; sNomeRdO &amp;  sSuffix &amp; &quot;_bk&quot;
-			thisComponent.Sheets.removebyname(sNomeRdO &amp;  sSuffix &amp; &quot;_bk&quot;)
+&apos;		print &quot;devo canc &quot; &amp; sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;
+			thisComponent.Sheets.removebyname(sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;)
 		end if
 wait 200
 		oSheet = oDoc.Sheets.getByName(sNomeRdO &amp; sSuffix)
-		oSheet.Name = sNomeRdO &amp;  sSuffix &amp; &quot;_bk&quot;
+		oSheet.Name = sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;
 	end if
 &apos;print lnumSheet
 &apos;	if isMissing (lnumSheet) then
@@ -480,16 +474,16 @@ wait 200
 			DuplicaSheetinDoc = &quot;Annulla&quot;
 			exit Function
 		end if
-	  Else	&apos; agg 080624
-	  	sNuovoNome = sNome &apos; agg 080624
+	 Else	&apos; agg 080624
+	 	sNuovoNome = sNome &apos; agg 080624
 	end if &apos; agg 080624 &apos;&apos;
 &apos;	oDoc.Sheets.CopybyName(sNomeSheet,sNome, iNumInser)&apos;
 &apos;	For i 
 	if sNuovoNome = sNomeSheet then &apos; questo perché se si scegli d i salvare con lo 
-		sNuovoNome = sNuovoNome &amp; &quot;_&quot;  &apos; nome della sheet di origine questa verrebbe poi cancellata
+		sNuovoNome = sNuovoNome &amp; &quot;_&quot; &apos; nome della sheet di origine questa verrebbe poi cancellata
 	end if
 &apos;	If Qui c&apos;è un problema: nel caso la sheet esista già (ma non è quella da duplicare) da un errore...
-	If thisComponent.Sheets.hasByName(sNuovoNome)  Then
+	If thisComponent.Sheets.hasByName(sNuovoNome) Then
 		sMod = sNuovoNome
 		Do while sNuovoNome = sMod
 			sMod = inputbox (&quot;Il foglio &quot; &amp; sNewNome &amp; &quot;esiste già! Modifica il nome&quot;, ,sMod)
@@ -498,9 +492,9 @@ wait 200
 	end if
 &apos;	print sNomeSheet
 &apos;	print sNuovoNome
-&apos;	print  iNumInser
+&apos;	print iNumInser
 
-	If thisComponent.Sheets.hasByName(sNuovoNome)  Then
+	If thisComponent.Sheets.hasByName(sNuovoNome) Then
 		print (sNuovoNome)
 	end if
 	if sNomeSheet = sNuovoNome then
@@ -527,21 +521,21 @@ wait 200
 END FUNCTION
 
 
-Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata dall&apos;Elenco Prezzi, ma senza i prezzi 
+Sub Modulo_Lista_categorie_appalto &apos;Crea Il modulo per una lista generata dall&apos;Elenco Prezzi, ma senza i prezzi 
 	&apos;per richiesta di offerta
 	&apos;duplico la tabella nel doc stesso
 	
 	if 	thiscomponent.currentcontroller.activesheet.name &lt;&gt; &quot;Elenco Prezzi&quot; then
-		msgbox &quot;Iniziativa annullata! ... è previsto che si parta dal foglio &apos;Elenco Prezzi&apos;  &quot;
+		msgbox &quot;Iniziativa annullata! ... è previsto che si parta dal foglio &apos;Elenco Prezzi&apos; &quot;
 		exit sub
 	end if
 
 	if msgbox (&quot;Sto per generare un Modulo con la:&quot; &amp; CHR$(10)_
 		&amp; &quot;LISTA DELLE LAVORAZIONI E FORNITURE PREVISTE PER L&apos;ESECUZIONE DELL&apos;APPALTO&quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp;&quot;         PROSEGUO ?... &quot; &amp; CHR$(10) _
-   				&amp;  CHR$(10) &amp; &quot;&quot;,36, &quot;Procedura per generare una &apos;Lista delle Lavorazioni&apos;&quot;) = 7 then			
-   				exit sub
-  	 end if
+				&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
+ 				&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Procedura per generare una &apos;Lista delle Lavorazioni&apos;&quot;) = 7 then			
+ 				exit sub
+ 	 end if
 
 
 	&apos;aggiorno il sommario
@@ -559,7 +553,7 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 
 	sString$ = &quot;Fine elenco&quot;
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then
+	If isNull (oEnd) or isEmpty (oEnd) then
 			msgbox &quot; Manca la riga rossa di chiusura !&quot; &amp; CHR$(10)_
 				&amp; &quot; potresti avere risultati non corretti in coda alla tabella&quot;
 			lLastUrow = getLastUsedRow(oSheet)
@@ -571,12 +565,12 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 	lrowFine = lLastUrow
 	
 	
-	oRange = oSheet.getCellRangeByposition(10,i,10,i)  &apos; le quantita del sommario
+	oRange = oSheet.getCellRangeByposition(10,i,10,i) &apos; le quantita del sommario
 			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
 			aSaveData = oRange.getDataArray()
  			oRange.clearContents(Flags)
- 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle  
+ 		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
 	 	
  
  	iCellAttr = _
@@ -601,20 +595,20 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 
 	oSrc = oSheet.getCellRangeByPosition(10,0,10,lrowfine).RangeAddress
 	oDest = oSheet.GetCellByPosition(3,0 ).CellAddress
-    oSheet.copyRange(oDest, oSrc)
+ oSheet.copyRange(oDest, oSrc)
 
 	&apos; ora cancello i dati nella col K 
 	osheet.getCellRangeByPosition (10,0,10,lrowfine).ClearContents(iCellAttr)	 
 
-	for i = 1 to lrowFine Step 1  &apos;buffone
-		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;EP-C&quot;  AND _
+	for i = 1 to lrowFine Step 1 &apos;buffone
+		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;EP-C&quot; AND _
 			oSheet.GetCellByPosition(1 , i).cellstyle = &quot;EP-C mezzo&quot; then
 			oSheet.GetCellByPosition(11 , i).string = oSheet.GetCellByPosition(18 , i).string 		
 		end if 	
 			 		&apos;questo serve per aggiungere l&apos;if al prodotto ...
 		if oSheet.GetCellByPosition(0 , i).cellstyle = &quot;EP-aS&quot; or _
 			oSheet.GetCellByPosition(0 , i).cellstyle =&quot;EP-Cs&quot; then
-			sFormulaN = &quot;=IF(E&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;&quot; &amp; &quot;;D&quot; &amp; i+1 &amp;  &quot;*E&quot; &amp; i+1 &amp; &quot;;&quot;&quot;&quot;&quot;)&quot;											
+			sFormulaN = &quot;=IF(E&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;&quot; &amp; &quot;;D&quot; &amp; i+1 &amp; &quot;*E&quot; &amp; i+1 &amp; &quot;;&quot;&quot;&quot;&quot;)&quot;											
 			oSheet.GetCellByPosition(11 , i).formula = SformulaN
 
  		end if
@@ -624,7 +618,7 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 
 	oSheet.GetCellByPosition(3 , 0).string =	&quot;Quantità&quot; &amp; CHR$(10) &amp; &quot;a Computo&quot;
 	oSheet.GetCellByPosition(4 , 0).string =	&quot;Prezzo Unitario €&quot;
-	oSheet.GetCellByPosition(5 , 0).string =	&quot;Prezzo Unitario €&quot; &amp; CHR$(10) &amp; &quot;IN  LETTERE&quot;
+	oSheet.GetCellByPosition(5 , 0).string =	&quot;Prezzo Unitario €&quot; &amp; CHR$(10) &amp; &quot;IN LETTERE&quot;
 	oSheet.GetCellByPosition(11 , 0).string =	&quot;TOTALE €&quot;
 	
 	oSheet.getColumns().getByName(&quot;D&quot;).isVisible = True
@@ -662,7 +656,7 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 		oTitles.EndColumn = 11
 	oSheet.setPrintTitleRows(true)
 	oSheet.setTitleRows(oTitles)
-   
+ 
 &apos;		oSheet.setTitleRows(oSheet.getCellRangeByName(&quot;A1&quot;,&quot;H2&quot;).getRangeAddress())&apos; non funzionava bene
 		&apos;Le due linee sopra impostano la riga da ripetere in ciascuna pagina che viene stampata
 		&apos;o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
@@ -673,21 +667,21 @@ Sub Modulo_Lista_categorie_appalto   &apos;Crea Il modulo per una lista generata
 	oRange_k = oSheet.getCellRangeByPosition (1,1,11,lrowFine)
 		oRange_k.rows.OptimalHeight= TRUE &apos; adatta le righe 	
 		
-		  
+		 
 		&apos; nasconde la riga di Fine Elenco
 	oSheet.getRows().getByIndex (lrowFine).isVisible = false 
 	
-	&apos; elimino proprio tutte le colonne dopo la 19  
+	&apos; elimino proprio tutte le colonne dopo la 19 
 	oSheet.Columns.removeByindex(12, 100)	
 &apos;	oSheet.Columns.removeByindex(32, 100)			sNomeSheet = oDoc.currentcontroller.activesheet.name
 
 	Scrivi_header_moduli
  	Sbianca_e_o_consolida(1) &apos; USANDO 1 SBIANCA SOLAMENTE
 	Barra_chiudi_sempre_4
-	msgbox &quot;Questa è un Modulo ricavato dall&apos;Elenco Prezzi&apos; ma privato dei prezzi!&quot;  &amp; CHR$(10)_
+	msgbox &quot;Questa è un Modulo ricavato dall&apos;Elenco Prezzi&apos; ma privato dei prezzi!&quot; &amp; CHR$(10)_
 		&amp; &quot;ovvero è una &apos;LISTA DELLE CATEGORIE DI LAVORO E FORNITURE PREVISTE PER L&apos;ESECUZIONE DELL&apos;APPALTO&quot; &amp; CHR$(10)_
 		&amp; &quot;Questo modulo può essere stampato direttamente in pdf, &quot; &amp; CHR$(10)_
-		&amp; &quot;e/o  esportato come documento Calc autonomo per la distribuzione in formato editabile&quot; &amp; CHR$(10)_
+		&amp; &quot;e/o esportato come documento Calc autonomo per la distribuzione in formato editabile&quot; &amp; CHR$(10)_
 			&amp; &quot; ( Menu ULTIMUS_3 &gt; UTILITY &gt; Duplica il foglio attivo FUORI da questo Doc Calc )&quot;&amp; CHR$(10)_
 		&amp; &quot;Se ritieni puoi aggiungere una colonna con i numeri progressivi&quot; 
 
@@ -696,7 +690,7 @@ end Sub
 
 
 
-SUB Duplica_e_Consolida_doc &apos; duplica e consolida  ( usa CopiaSheet )
+SUB Duplica_e_Consolida_doc &apos; duplica e consolida ( usa CopiaSheet )
 &apos; &apos; specifica per Lista delle Lavorazioni )
 dim nEndRow as long
 dim nEndCol as long
@@ -713,8 +707,8 @@ dim nEndCol as long
 
 	Barra_Apri_Chiudi_4
 
-&apos;	wait 5000  &apos;disatt 080609 a favore di
-&apos;	wait 1000  &apos;diasatt 080624
+&apos;	wait 5000 &apos;disatt 080609 a favore di
+&apos;	wait 1000 &apos;diasatt 080624
 
 &apos;	on error goto Gestione_Errore
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -725,7 +719,7 @@ dim nEndCol as long
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	pezzo in prova
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	   GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
@@ -756,22 +750,22 @@ dim nEndCol as long
 	oSheet = ThisComponent.currentController.activeSheet
 	&apos;xray oSheet
 	If oSheet.isProtected = true then
-	   osheet.unprotect(&quot;&quot;)
+	 osheet.unprotect(&quot;&quot;)
 	end if
 	bGrid=ThisComponent.CurrentController.ShowGrid
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
-    Copy_PageStyle
+ Copy_PageStyle
  	oCell = oSheet.GetCellbyPosition( 0, 0 )
-  	oCursor = oSheet.createCursorByRange(oCell)
-  	
+ 	oCursor = oSheet.createCursorByRange(oCell)
+ 	
  	 oCursor.GotoEndOfUsedArea(True)
  	 aAddress = oCursor.RangeAddress
-    	nEndRow = aAddress.EndRow
-    	nEndCol = aAddress.EndColumn
-  	
+ 	nEndRow = aAddress.EndRow
+ 	nEndCol = aAddress.EndColumn
+ 	
 	oRange = oSheet.getCellRangeByPosition (0,0,245,nEndRow+30)
 	&apos;***********************************
 	&apos;(0,0,nEndColumn,nEndRow+30) &apos;perché nEndCol non funziona ed è a 0?
@@ -781,25 +775,25 @@ dim nEndCol as long
  	aSaveData = oRange.getDataArray()
  	&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
  	&apos;una volta cancellate le relative celle risulterebbero vuote
-   	oRange.clearContents(Flags)
-   	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle   
-   	
-   	
-   	&apos; rinominarla
-	If thisComponent.Sheets.hasByName(&quot;Lista_lavorazioni_bk&quot;)  Then
+ 	oRange.clearContents(Flags)
+ 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
+ 	
+ 	
+ 	&apos; rinominarla
+	If thisComponent.Sheets.hasByName(&quot;Lista_lavorazioni_bk&quot;) Then
 		thisComponent.Sheets.removebyname(&quot;Lista_lavorazioni_bk&quot;)
-		If thisComponent.Sheets.hasByName(&quot;Lista_lavorazioni&quot;)  Then
+		If thisComponent.Sheets.hasByName(&quot;Lista_lavorazioni&quot;) Then
 			thisComponent.sheets.getbyname(&quot;Lista_lavorazioni&quot;).name = &quot;Lista_lavorazioni_bk&quot;
 		end if
 	end if
-   	
-	If thisComponent.Sheets.hasByName(&quot;Lista_lavorazioni&quot;)  Then
+ 	
+	If thisComponent.Sheets.hasByName(&quot;Lista_lavorazioni&quot;) Then
 		osheet= thisComponent.sheets.getbyname(&quot;Lista_lavorazioni&quot;)
 		oSheet.name= &quot;Lista_lavorazioni_bk&quot;
 		&apos;ThisComponent.currentcontroller.activesheet.name= &quot;Lista_lavorazioni&quot;
 	end if	
 	ThisComponent.currentcontroller.activesheet.name= &quot;Lista_lavorazioni&quot;
- &apos;  	print ThisComponent.currentcontroller.activesheet.name
+ &apos; 	print ThisComponent.currentcontroller.activesheet.name
 
 end sub
 
@@ -809,7 +803,7 @@ FUNCTION DuplicaSheetinDoc_EP_NoP(Optional sSuffix as string, Optional lnumSheet
 &apos; il foglio di computo per generare Rdo
 	dim iNumInser as integer
 
-	 &apos;  &apos;__________________________
+	 &apos; &apos;__________________________
 	&apos;	Clessid_lock_Start
 	oDoc = thisComponent
 	&apos;	sNomeSheet = ThisComponent.currentController.activeSheet
@@ -817,7 +811,7 @@ FUNCTION DuplicaSheetinDoc_EP_NoP(Optional sSuffix as string, Optional lnumSheet
 	sNomeRdO = &quot;CompuM_NoP&quot;
 	&apos;	print sNomeSheet
 	oSheet = oDoc.currentcontroller.activesheet
-    Copy_PageStyle
+ Copy_PageStyle
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	&apos;Height 
@@ -835,12 +829,12 @@ FUNCTION DuplicaSheetinDoc_EP_NoP(Optional sSuffix as string, Optional lnumSheet
 
 	If thisComponent.Sheets.hasByName(sNomeRdO &amp; sSuffix) Then &apos; se la sheet esiste
 		If thisComponent.Sheets.hasByName(sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;) Then		
-&apos;		print &quot;devo canc &quot; &amp; sNomeRdO &amp;  sSuffix &amp; &quot;_bk&quot;
-			thisComponent.Sheets.removebyname(sNomeRdO &amp;  sSuffix &amp; &quot;_bk&quot;)
+&apos;		print &quot;devo canc &quot; &amp; sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;
+			thisComponent.Sheets.removebyname(sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;)
 		end if
 wait 200
 		oSheet = oDoc.Sheets.getByName(sNomeRdO &amp; sSuffix)
-		oSheet.Name = sNomeRdO &amp;  sSuffix &amp; &quot;_bk&quot;
+		oSheet.Name = sNomeRdO &amp; sSuffix &amp; &quot;_bk&quot;
 	end if
 &apos;print lnumSheet
 &apos;	if isMissing (lnumSheet) then
@@ -861,16 +855,16 @@ wait 200
 			DuplicaSheetinDoc = &quot;Annulla&quot;
 			exit Function
 		end if
-	  Else	&apos; agg 080624
-	  	sNuovoNome = sNome &apos; agg 080624
+	 Else	&apos; agg 080624
+	 	sNuovoNome = sNome &apos; agg 080624
 	end if &apos; agg 080624 &apos;&apos;
 &apos;	oDoc.Sheets.CopybyName(sNomeSheet,sNome, iNumInser)&apos;
 &apos;	For i 
 	if sNuovoNome = sNomeSheet then &apos; questo perché se si scegli d i salvare con lo 
-		sNuovoNome = sNuovoNome &amp; &quot;_&quot;  &apos; nome della sheet di origine questa verrebbe poi cancellata
+		sNuovoNome = sNuovoNome &amp; &quot;_&quot; &apos; nome della sheet di origine questa verrebbe poi cancellata
 	end if
 &apos;	If Qui c&apos;è un problema: nel caso la sheet esista già (ma non è quella da duplicare) da un errore...
-	If thisComponent.Sheets.hasByName(sNuovoNome)  Then
+	If thisComponent.Sheets.hasByName(sNuovoNome) Then
 		sMod = sNuovoNome
 		Do while sNuovoNome = sMod
 			sMod = inputbox (&quot;Il foglio &quot; &amp; sNewNome &amp; &quot;esiste già! Modifica il nome&quot;, ,sMod)
@@ -879,9 +873,9 @@ wait 200
 	end if
 &apos;	print sNomeSheet
 &apos;	print sNuovoNome
-&apos;	print  iNumInser
+&apos;	print iNumInser
 
-	If thisComponent.Sheets.hasByName(sNuovoNome)  Then
+	If thisComponent.Sheets.hasByName(sNuovoNome) Then
 		print (sNuovoNome)
 	end if
 	if sNomeSheet = sNuovoNome then
@@ -928,9 +922,9 @@ oData= oCell.String
 
 oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
 oBozza_8 = oCell.String
-&apos;print  oBozza_8
+&apos;print oBozza_8
 If oBozza_8 &lt;&gt; &quot;&quot; Then
-      Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
+ Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
  End If
 
 oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
@@ -962,7 +956,7 @@ oDocument = oController.Model
 	oAktPage.HeaderIsOn = True 
 	oHeader = oAktPage.RightPageHeaderContent
 
-	oHLText = oHeader.LeftText.text       
+	oHLText = oHeader.LeftText.text 
 	oHLText.String = DX 
 
 	
@@ -974,7 +968,7 @@ oDocument = oController.Model
 	oAktPage.RightPageHeaderContent = oHeader
 	
 
-if sHide=&quot;Nascosta&quot;  then &apos; la rimette come l&apos;ha trovata
+if sHide=&quot;Nascosta&quot; then &apos; la rimette come l&apos;ha trovata
 	osheet.isvisible=false
 end if
 

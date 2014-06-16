@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_2" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_2" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -14,7 +14,7 @@
 &apos; questo gruppo di macro (derivato da Taxi) DOVREBBE serviree per trasferire una o più analisi
 &apos;global aSheetNames
 
-Sub Trasferisci_Analisi_1  &apos;questa serie di macro in TAxi_2 servono quando si ...?
+Sub Trasferisci_Analisi_1 &apos;questa serie di macro in TAxi_2 servono quando si ...?
 
 	print &quot; se leggi questo messaggio informami specificando: Taxi_2.Trasferisci_Analisi_1 e la macro che stavi eseguendo | grazie! (Bart)&quot;
 
@@ -26,17 +26,17 @@ Sub Trasferisci_Analisi_1  &apos;questa serie di macro in TAxi_2 servono quando 
 	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	
-	if  msgbox (&quot;  Per sicurezza prima salvo questo documento,&quot;&amp; CHR$(10)_
+	if msgbox (&quot; Per sicurezza prima salvo questo documento,&quot;&amp; CHR$(10)_
 			&amp; &quot;poi ne salvo una copia con un nuovo nome!&quot;&amp; CHR$(10)_
-			&amp; &quot;    PROSEGUO? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
+			&amp; &quot; PROSEGUO? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
 		&apos;	&amp;&quot;&quot;,4, &quot;&quot;&amp; CHR$(10)) = 7 then
 			
 		exit sub	
 	end if
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Salva_temp      &apos; salva il documento
+	Salva_temp &apos; salva il documento
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-&apos;  1 - svuota le colonne di tag
+&apos; 1 - svuota le colonne di tag
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Pulisci_Colonne_tag 
 &apos; &lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -45,9 +45,9 @@ Sub Trasferisci_Analisi_1  &apos;questa serie di macro in TAxi_2 servono quando 
 	ocell = oSheetAnalisi.GetCellByPosition( 1,lrow)
 	ThisComponent.CurrentController.Select(oCell)
 msgbox &quot;Segna le voci che vuoi trasferire usando Ctrl-Tab su ogni singola voce&quot;&amp; CHR$(10)_
-	&amp;     &quot;    Poi lancia il trasferimento con Ctrl-Alt-U&quot;
+	&amp; &quot; Poi lancia il trasferimento con Ctrl-Alt-U&quot;
 End SUB
-&apos; 2-  adesso si segnano (a MANINA) le analisi una per una con ctrl-W....
+&apos; 2- adesso si segnano (a MANINA) le analisi una per una con ctrl-W....
 
 
 
@@ -59,14 +59,14 @@ Sub Trasferisci_Analisi_2_() &apos; Ctrl-Alt-U
 
 dim lrow as long
 	oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lrow=3  
+	lrow=3 
 	ocell = oSheetAnalisi.GetCellByPosition( 8,lrow)
 	lUltimaRiga = getLastUsedRow(oSheetAnalisi)	
-	      
+	 
 &apos;	If lrow &gt;= lUltimaRiga then
 &apos;		goto Fine
 &apos;	end if
-	do while  lrow &lt; lUltimaRiga
+	do while lrow &lt; lUltimaRiga
 
 		if oSheetAnalisi.GetCellByPosition( 10, lrow).string = &quot;usata&quot; then
 &apos;		if oSheetAnalisi.GetCellByPosition( 8, lrow).string = 1 then
@@ -78,8 +78,8 @@ dim lrow as long
 			End if
 		end if
  		lrow = lrow+1
- &apos;	ThisComponent.CurrentController.Select(oSheetAnalisi.GetCellByPosition( 8,lrow))&apos; solo per  debug
-&apos;	 print lUltimaRiga &apos; solo per  debug
+ &apos;	ThisComponent.CurrentController.Select(oSheetAnalisi.GetCellByPosition( 8,lrow))&apos; solo per debug
+&apos;	 print lUltimaRiga &apos; solo per debug
 
  	loop
 
@@ -111,7 +111,7 @@ dim lrow as long
 	&apos;		Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 		print &quot;Z1&quot;	 &apos;debug
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 	
 	Tag = &quot;UA2&quot;
@@ -123,7 +123,7 @@ dim lrow as long
 	&apos;	Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 	
 	Tag = &quot;UA3&quot;
@@ -134,7 +134,7 @@ dim lrow as long
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 	&apos;	Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
  		
 	Tag = &quot;UA4&quot;
@@ -145,7 +145,7 @@ dim lrow as long
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 	&apos;	Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
  		
 	Tag = &quot;UA5&quot;
@@ -156,7 +156,7 @@ dim lrow as long
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 	&apos;	Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 
 	Tag = &quot;UA6&quot;
@@ -167,7 +167,7 @@ dim lrow as long
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 	&apos;	Clessid_lock_End
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-  	    exit sub	    
+ 	 exit sub	 
  	end if
 
 &apos;print &quot;tessssoro&quot;
@@ -196,7 +196,7 @@ End Sub
 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-Function S_AN_ (Tag as string,lrowA as long)  &apos; cerca nelle Analisi
+Function S_AN_ (Tag as string,lrowA as long) &apos; cerca nelle Analisi
 &apos;(versione modificata per trasferire solo le analisi)
 &apos;print &quot;S_AN&quot;
 	print &quot; se leggi questo messaggio informami specificando: Taxi_2.S_AN_1 e la macro che stavi eseguendo | grazie! (Bart)&quot;
@@ -213,9 +213,9 @@ Function S_AN_ (Tag as string,lrowA as long)  &apos; cerca nelle Analisi
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			Uscita_forzata = S_EP (xD, Tag) 
 			&apos;mirko		
-  		  &apos;	print &quot;eseguito S_EP con questo risultato  :&quot; &amp; Uscita_forzata
-  		  	If Uscita_forzata = &quot;Esci1&quot; then
-  		  				S_AN_ = &quot;Esci&quot;
+ 		 &apos;	print &quot;eseguito S_EP con questo risultato :&quot; &amp; Uscita_forzata
+ 		 	If Uscita_forzata = &quot;Esci1&quot; then
+ 		 				S_AN_ = &quot;Esci&quot;
 						exit function
 			end if
 			
@@ -225,18 +225,18 @@ Function S_AN_ (Tag as string,lrowA as long)  &apos; cerca nelle Analisi
 &apos;				oCellT= oSheetAnalisi.GetCellByPosition( 8, lrowA-1)
 &apos;				oCellT.string = &quot;usata&quot;
 			xA = oSheetAnalisi.GetCellByPosition( 0, lrowA ).string
-			Do  while xA = &quot;&quot; &apos; mi sposto in basso fino al marcatore fine analisi ----	(per trovare la fine della voce)				
+			Do while xA = &quot;&quot; &apos; mi sposto in basso fino al marcatore fine analisi ----	(per trovare la fine della voce)				
  		 			 lrowA=lrowA+1
- 		 		&apos;	 xA =  oCell.string
+ 		 		&apos;	 xA = oCell.string
  			 		 xA = oSheetAnalisi.GetCellByPosition( 0, lrowA ).string
  			 	&apos;	 ThisComponent.CurrentController.Select(oSheetAnalisi.GetCellByPosition( 0, lrowA ))&apos;debug
- 			 	&apos;	 print &quot;1&quot;&apos;xA =  oCell.string &apos;debug
+ 			 	&apos;	 print &quot;1&quot;&apos;xA = oCell.string &apos;debug
  			Loop 
  		&apos;	ThisComponent.CurrentController.Select(oCell)&apos; debug
  		&apos;	print &quot;2222222222&quot;
 			if xA &lt;&gt; &quot;----&quot; then &apos; se esite prosegue, altrimenti errore!!!
 			&apos;	oCell =oSheetAnalisi.GetCellByPosition( 0, lrowA+1 )
-				&apos;	oCelle=thisComponent.getCurrentSelection().getCellAddress()    
+				&apos;	oCelle=thisComponent.getCurrentSelection().getCellAddress() 
 			&apos;	lrow=oCelle.Row 
 	 			oCell = oSheetAnalisi.GetCellByPosition( 0, lrowA -2 )
 	 			ThisComponent.CurrentController.Select(oCell) 
@@ -248,27 +248,27 @@ Function S_AN_ (Tag as string,lrowA as long)  &apos; cerca nelle Analisi
 			end if
 			
  			 oCell = oSheetAnalisi.GetCellByPosition( 4, lrowA )
-	&apos;		 ThisComponent.CurrentController.Select(oCell)&apos; solo per  debug
+	&apos;		 ThisComponent.CurrentController.Select(oCell)&apos; solo per debug
 	&apos;		 print
 	&apos;------------------------------
- 			 xA =  oCell.string	
-			Do  while xA &lt;&gt; &quot;rif.  El. Prezzi&quot; &apos;cicla in singola analisi
- 	 		 	xD =  oCell.string &apos; sigla da tornare a taggare in Elenco
+ 			 xA = oCell.string	
+			Do while xA &lt;&gt; &quot;rif. El. Prezzi&quot; &apos;cicla in singola analisi
+ 	 		 	xD = oCell.string &apos; sigla da tornare a taggare in Elenco
 &apos; 	 		 
  	 			 lrowA=lrowA-1 	
  		 	 	oCell =oSheetAnalisi.GetCellByPosition( 4, lrowA )
-		&apos; 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
+		&apos; 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
 		 &apos;	 print &quot;prrrr&quot;
-	 		 	 xA =  oCell.string
+	 		 	 xA = oCell.string
 	 		 	 &apos;xA = xB
  			 	&apos; print xB
  			 	If xA = &quot;&quot; Then &apos; caso di Utli impresa
  			 		goto fine_loop	
  			 	end if
- 			 	 If xA = &quot;rif.  El. Prezzi&quot; then
- 			 	  	exit Function
+ 			 	 If xA = &quot;rif. El. Prezzi&quot; then
+ 			 	 	exit Function
  			 	 end if
- 			 	 	xD =  oCell.string &apos; sigla da tornare a taggare in Elenco
+ 			 	 	xD = oCell.string &apos; sigla da tornare a taggare in Elenco
  		&apos;	print xd	 		 
  					S_EP (xD, Tag)
 				fine_loop:	
@@ -276,12 +276,12 @@ Function S_AN_ (Tag as string,lrowA as long)  &apos; cerca nelle Analisi
  			 &apos;	 	lrowA=lrowA-1 	
  			 &apos;	 	print &quot;loop strano &quot;+ lrowA
  		 	 &apos;		oCell =oSheetAnalisi.GetCellByPosition( 4, lrowA)
- 		 	 &apos;		xD =  oCell.string
+ 		 	 &apos;		xD = oCell.string
  			 &apos;	loop
  			
 				oCell =oSheetAnalisi.GetCellByPosition( 4, lrowA )
-&apos;			 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per  debug
-	 		 	 xA =  oCell.string
+&apos;			 	 ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
+	 		 	 xA = oCell.string
 	 		Loop 
 END Function
 
@@ -290,16 +290,16 @@ END Function
 Sub EliminaVociTag_MM_EP___________ &apos; da eliminare
 dim lrow as long
 dim lrowF as long
-	print &quot; se leggi questo messaggio informami specificando: Taxi_2.EliminaVociTag_MM_EP___________  e la macro che stavi eseguendo | grazie! (Bart)&quot;
+	print &quot; se leggi questo messaggio informami specificando: Taxi_2.EliminaVociTag_MM_EP___________ e la macro che stavi eseguendo | grazie! (Bart)&quot;
 
 
 	on error goto Errore
 
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-&apos;	If MsgBox  (&quot; Sto per Eliminare da questo documento le voci di Elenco Prezzi NON utilizzate (e non segnate come da mantenere).&quot;_
-&apos;		&amp;	&quot;   L&apos;operazione potrebbe richiedereun po&apos; di tempo...  Se NON hai salvato, esci e Salva....&quot;_
-&apos;		&amp; &quot; e poi ripeti questo comando_  PROSEGUO  senza salvare? &quot;, 292, &quot;Attento!!! Hai salvato?&quot;) = 7 then
+&apos;	If MsgBox (&quot; Sto per Eliminare da questo documento le voci di Elenco Prezzi NON utilizzate (e non segnate come da mantenere).&quot;_
+&apos;		&amp;	&quot; L&apos;operazione potrebbe richiedereun po&apos; di tempo... Se NON hai salvato, esci e Salva....&quot;_
+&apos;		&amp; &quot; e poi ripeti questo comando_ PROSEGUO senza salvare? &quot;, 292, &quot;Attento!!! Hai salvato?&quot;) = 7 then
 &apos;			exit sub
 &apos;	end if 
 	lRowF=Riordina_0(7, TRUE)
@@ -332,7 +332,7 @@ dim lrowF as long
  if nRowsCount = 0 then
  		fine:
  		MSGBOX &quot; &quot; &amp; CHR$(10)_
-		&amp; &quot;Sei certo di aver segnato le voci da mantenere?   &quot;&amp; CHR$(10)_
+		&amp; &quot;Sei certo di aver segnato le voci da mantenere? &quot;&amp; CHR$(10)_
 			&amp; &quot;Perché tutte le voci mi risultano Contrassegnate...&quot;&amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Proseguendo ti cancellerei tutto l&apos;Elenco prezzi... &quot;&amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Quindi esco!&quot;	
@@ -350,7 +350,7 @@ dim lrowF as long
  		msgbox &quot;Non mi risultano più voci da eliminare!&quot;
 exit sub
 Errore:
-msgbox &quot;Sei certo di aver segnato le voci da mantenere?  Perché a me risulta un errore e non saprei a cos&apos;altro attribuirlo...&quot;
+msgbox &quot;Sei certo di aver segnato le voci da mantenere? Perché a me risulta un errore e non saprei a cos&apos;altro attribuirlo...&quot;
 END SUB
 
 
@@ -370,6 +370,6 @@ function restit
 				thisComponent.Sheets.moveByName(sSheetName ,n)
 			end if
 		next
-	Next  
+	Next 
 end function
 </script:module>

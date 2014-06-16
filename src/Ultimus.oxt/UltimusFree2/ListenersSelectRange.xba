@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenersSelectRange" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                            
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenersSelectRange" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -56,7 +56,7 @@ function getRange(sTitolo as string) as string
 	cleanExit:
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	sA = &quot;ANNULLA&quot; &apos; qui non credo si arrivi MAI
-	&apos;oEvent.source.removeRangeSelectionListener(oRangeSelectionListener)  &apos;&apos;
+	&apos;oEvent.source.removeRangeSelectionListener(oRangeSelectionListener) &apos;&apos;
 end function
 
 Sub TestRangeSelection(sTitolo)&apos; as string)
@@ -73,9 +73,9 @@ rem End If
 
 	Dim mArgs(2) As New com.sun.star.beans.PropertyValue
 	mArgs(0).Name = &quot;InitialValue&quot;
-	mArgs(0).Value = &quot;ANNULLA&quot;  &apos; era &quot;A1&quot; proviamo se funziona&apos; ma occorre valutare la risposta
+	mArgs(0).Value = &quot;ANNULLA&quot; &apos; era &quot;A1&quot; proviamo se funziona&apos; ma occorre valutare la risposta
 	mArgs(1).Name = &quot;Title&quot;
-	mArgs(1).Value = sTitolo &apos;&quot;    Click sulla destinazione........................&quot; &apos;My Title&quot;
+	mArgs(1).Value = sTitolo &apos;&quot; Click sulla destinazione........................&quot; &apos;My Title&quot;
 	mArgs(2).Name = &quot;CloseOnMouseRelease&quot;
 	mArgs(2).Value = True
 	oDocView.startRangeSelection(mArgs())
@@ -87,14 +87,14 @@ rem End If
 END SUB
 
 function getSheet (ByVal sAddress as string) as string&apos; by lupo
-&apos;   dim cellRange as object
-   dim currentSheet as object
- &apos;  dim row as object
-   currentSheet = ThisComponent.CurrentSelection.getSpreadSheet()
-   cellRange = currentSheet.getCellRangeByName(sAddress)
-   getSheet = cellRange.RangeAddress.sheet   
- &apos;  row = cellRange.getRows()
-   getSheet = cellRange.RangeAddress.sheet
+&apos; dim cellRange as object
+ dim currentSheet as object
+ &apos; dim row as object
+ currentSheet = ThisComponent.CurrentSelection.getSpreadSheet()
+ cellRange = currentSheet.getCellRangeByName(sAddress)
+ getSheet = cellRange.RangeAddress.sheet 
+ &apos; row = cellRange.getRows()
+ getSheet = cellRange.RangeAddress.sheet
 end function
 
 

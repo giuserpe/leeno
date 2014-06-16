@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_5" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                           
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sistema_5" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -15,7 +15,7 @@
 
 Sub Copia_Formule_Solo_su_Voce_Corrente_SOLO_IN_FONDO &apos; agisce sulla voce sotto il cursore 
 									&apos; e copiando le formule (non tocca i valorigià inseriti)
-									&apos;Assegnata a Ctrl-Maiusc-M  ???
+									&apos;Assegnata a Ctrl-Maiusc-M ???
 
 print &quot;?????????????????&quot;
 Dim lrow as long
@@ -24,8 +24,8 @@ dim lastUrow as long
 
 
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
-	     
-    lrow = Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	 
+ lrow = Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then
 		 
 		exit sub
@@ -33,47 +33,47 @@ dim lastUrow as long
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 3 , lrow)&apos; errata selezione di un range
 	ThisComponent.CurrentController.Select(oCell)
-    oRange = Circoscrive_Voce_Computo_B (lrow)
+ oRange = Circoscrive_Voce_Computo_B (lrow)
 	lRow=oRange.RangeAddress.startRow +1
 
 	oCell = oSheet.GetCellByPosition( 3 , lrow)
 	xA = oCell.string
-				Do  while xA &lt;&gt;  &quot;SOMMANO &quot; &apos;and  lrow &lt; lastUrow
+				Do while xA &lt;&gt; &quot;SOMMANO &quot; &apos;and lrow &lt; lastUrow
 						lrow = lrow+1
-  						oCell = oSheet.GetCellByPosition( 3 , lrow)
+ 						oCell = oSheet.GetCellByPosition( 3 , lrow)
  						xA = oCell.string
 		 		Loop
 &apos;print lrow
  		 Copia_Formule_Su_Computo_Sing_Voce_5 (lrow)		
 		lrow = lrow+3
-  		oCell = oSheet.GetCellByPosition( 3 , lrow)
+ 		oCell = oSheet.GetCellByPosition( 3 , lrow)
 END SUB
 
 &apos;----------------------------------------------------------
 Sub Copia_Formule_Su_Computo_Sing_Voce_5 (lrow as long) &apos; agisce su ciascuna voce 
-print &quot;?????????????????&quot;  
+print &quot;?????????????????&quot; 
 &apos;dim lrow as long
 dim lrow1 as long
 dim lcol as long
 dim nome_sheet as string
 dim oSheet, oEnd, oCell as object 
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
-    If nome_sheet &lt;&gt; &quot;COMPUTO&quot; Then
-    		msgbox &quot;questa macro si adopera solo nella tabella COMPUTO!!&quot;
-        exit sub
-     end if  
-          
-    oSheet = ThisComponent.currentController.activeSheet
-   &apos; oCell = ThisComponent.CurrentSelection
-  &apos;  lrow = oCell.CellAddress.row
-    oCell = oSheet.GetCellByPosition( 9 , lrow) 
-    &apos;&apos;&apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug???
-  &apos; print lrow
-  &apos;  Copia_Trattini_locale_Computo_0 (9, lrow) &apos; trattini (per controllo fine somma)
- &apos;  print lrow
-    Copia_Formule_locale_linkP_1 (17, lrow)   &apos; link piatti 
-  &apos; print lrow
-   Copia_Formule_locale_linkP_2 (30, lrow)   &apos; altro link piatto (dopo i tag) 
+ If nome_sheet &lt;&gt; &quot;COMPUTO&quot; Then
+ 		msgbox &quot;questa macro si adopera solo nella tabella COMPUTO!!&quot;
+ exit sub
+ end if 
+ 
+ oSheet = ThisComponent.currentController.activeSheet
+ &apos; oCell = ThisComponent.CurrentSelection
+ &apos; lrow = oCell.CellAddress.row
+ oCell = oSheet.GetCellByPosition( 9 , lrow) 
+ &apos;&apos;&apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug???
+ &apos; print lrow
+ &apos; Copia_Trattini_locale_Computo_0 (9, lrow) &apos; trattini (per controllo fine somma)
+ &apos; print lrow
+ Copia_Formule_locale_linkP_1 (17, lrow) &apos; link piatti 
+ &apos; print lrow
+ Copia_Formule_locale_linkP_2 (30, lrow) &apos; altro link piatto (dopo i tag) 
  &apos; print lrow
  &apos; 	Copia_Formule_locale_LookUP_3 (16, lrow)
  &apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug???

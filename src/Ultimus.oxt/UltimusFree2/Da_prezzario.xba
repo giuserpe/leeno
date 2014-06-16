@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_prezzario" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                             
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_prezzario" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -17,15 +17,15 @@ Global sUltimo_indirizzo_conosciuto as string
 Global sPrezzario_in_uso as string
 &apos;Global sFlag as string&apos;
 
-sub aggiorna_nome_CC  &apos;  aggiorna la cella con il nome del file di Contabilità Corrente
-&apos;    viene eseguita con &quot;mouse dentro&quot; su una serie di pulsanti, compreso quello
+sub aggiorna_nome_CC &apos; aggiorna la cella con il nome del file di Contabilità Corrente
+&apos; viene eseguita con &quot;mouse dentro&quot; su una serie di pulsanti, compreso quello
 &apos;	del rendi questo file il file di CC... (come ci vai sopra la cella si aggiorna)
 	&apos;If NOT DialogLibraries.hasByName(&quot;UltimusFree2&quot;) Then 
 	&apos;	exit sub
 	&apos;end if
 &apos;	on error resume next
 	rifa_nomearea (&quot;Temp&quot;, &quot;$C$18:$C$18&quot; , &quot;nome_CC2&quot;)
-	oDoc = ThisComponent  
+	oDoc = ThisComponent 
 	omycell = UltimusFree2.Lupo_0.sUltimus
 	if omycell = &quot;&quot; then
 		omycell = &quot;Non è definito alcun DCC!&quot;
@@ -70,8 +70,8 @@ on error goto avviso
 &apos;	MsgBox sFile
 	oDocument = StarDesktop.loadComponentFromURL( sFile, &quot;_blank&quot;, lFlags, mArgs())
  	oSheet = ThisComponent.Sheets.getByName(&quot;listino&quot;)
-	oCell = oSheet.GetCellByPosition( 0, 4 )      
-    ThisComponent.CurrentController.Select(oCell)
+	oCell = oSheet.GetCellByPosition( 0, 4 ) 
+ ThisComponent.CurrentController.Select(oCell)
 	oDoc.close(true)
 	goto fine
 	errore_apri:
@@ -89,9 +89,9 @@ Sub Vai_a_Contabilita
 				Select case msgbox (&quot;Al momento non c&apos;è un Documento di Contabilità Corrente (DCC) definito!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 					&amp; &quot;Puoi definirlo adesso caricando il documento di Computo dal tuo HardDisk &quot; &amp; CHR$(10)_
 					&amp; &quot;(lo devi &apos;caricare&apos; nuovamente... anche se è già aperto)&quot; &amp; CHR$(10)_
-					&amp;&quot;         Carico il documento ?... &quot; &amp; CHR$(10) _
-   					&amp;  CHR$(10) &amp; &quot;&quot;,35, &quot;Definisco il documento di Contabilità DCC ?&quot;) 
-   				
+					&amp;&quot; Carico il documento ?... &quot; &amp; CHR$(10) _
+ 					&amp; CHR$(10) &amp; &quot;&quot;,35, &quot;Definisco il documento di Contabilità DCC ?&quot;) 
+ 				
 					case 6 &apos;SI
 						sSourceURL = GetFileURL( _
 						&quot;CARICA IL TUO DOCUMENTO DI COMPUTO&quot;)
@@ -103,11 +103,11 @@ Sub Vai_a_Contabilita
 								exit sub
  						end if
 					case 7
-	   					exit sub
- 	  				case 2
-   						exit sub
-   			end select	
-			Scrivi_Globale &apos;registra il doc come DCC  
+	 					exit sub
+ 	 				case 2
+ 						exit sub
+ 			end select	
+			Scrivi_Globale &apos;registra il doc come DCC 
 	&apos;	else
 	&apos;		ThisComponent.getCurrentController.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;).string = UltimusFree2.Lupo_0.sUltimus
 	end if
@@ -122,7 +122,7 @@ Sub Vai_a_Contabilita
 			end if
 			wait iTemp
 	loop			
-  	Sel_Elenco_Prezzi
+ 	Sel_Elenco_Prezzi
 END SUB
 
 
@@ -153,18 +153,18 @@ Sub SpostaCursore_su_Prezzario
 	on error resume next
 	Set oCalcApp = ThisComponent
 &apos;xray UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto
-	If isNull( oUltimo_indirizzo_conosciuto) then &apos; or  oUltimo_indirizzo_conosciuto=&quot;&quot; then
+	If isNull( oUltimo_indirizzo_conosciuto) then &apos; or oUltimo_indirizzo_conosciuto=&quot;&quot; then
 		exit sub
 	end if
 		iSheetNum = UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto.RangeAddress.Sheet
 	lrow = UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto.RangeAddress.StartRow
 	Set oSheet = oCalcApp.sheets.getByIndex(iSheetNum)
 	Set oCalcView = oCalcApp.CurrentController 
-	If IsNull (oUltimo_indirizzo_conosciuto)  then
+	If IsNull (oUltimo_indirizzo_conosciuto) then
 	&apos;	print &quot;vuota&quot;
 		exit sub
 	end if
-    ThisComponent.CurrentController.Select(oUltimo_indirizzo_conosciuto)  
+ ThisComponent.CurrentController.Select(oUltimo_indirizzo_conosciuto) 
 	oCell = oSheet.GetCellByPosition(2 , lrow )
 	ThisComponent.CurrentController.Select(oCell)
 END SUB
@@ -173,18 +173,18 @@ END SUB
 
 Sub Ritorna_al_prezziario() &apos;Alt-Z
 	&apos;salta sull&apos;ultimo prezzario usato (se è noto...)
-	&apos;   altrimenti, se è un prezzario, e se può torna la
-	&apos; computo corrente  
-	  &apos;oSheet = ThisComponent.currentController.activeSheet
+	&apos; altrimenti, se è un prezzario, e se può torna la
+	&apos; computo corrente 
+	 &apos;oSheet = ThisComponent.currentController.activeSheet
 &apos;	 sSheetName= ThisComponent.currentcontroller.activesheet.name
 	If thisComponent.Sheets.hasByName(&quot;Computo&quot;) Then
-		If sPrezzario_in_uso &lt;&gt; &quot;&quot;  then
-			   oDoc=StarDesktop.LoadComponentFromUrl(ConvertToUrl (sPrezzario_in_uso), &quot;_default&quot;, 0, Array())
+		If sPrezzario_in_uso &lt;&gt; &quot;&quot; then
+			 oDoc=StarDesktop.LoadComponentFromUrl(ConvertToUrl (sPrezzario_in_uso), &quot;_default&quot;, 0, Array())
 			else
-			   msgbox &quot;OOPS! ... mi sono dimenticato su quale prezzario stavamo lavorando...&quot;
+			 msgbox &quot;OOPS! ... mi sono dimenticato su quale prezzario stavamo lavorando...&quot;
 		end if
-	  Else
-		Vai_a_Contabilita   	
+	 Else
+		Vai_a_Contabilita 	
 	end if
 end sub
 
@@ -195,7 +195,7 @@ end sub
 
 
 &apos;_________________________________________________________________________________________________________________________
-SUB ACCODA_PREZZO_UNIVERS_TV_SIC &apos; versione con incidenza + sicurezza.   variante con livelli ( per elettrici Piemonte)
+SUB ACCODA_PREZZO_UNIVERS_TV_SIC &apos; versione con incidenza + sicurezza. variante con livelli ( per elettrici Piemonte)
 &apos; al momento è strutturarata per digerire Milano e Piemonte, Cuneo, Marche
 
 dim xA as string
@@ -206,19 +206,19 @@ dim oCell as object
 dim oCellS as object
 dim livelli as long
 &apos;&apos;&apos;on error goto msgerr
-  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
-  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)        
-  oCell=thisComponent.getCurrentSelection()
-   oCellS = oCell &apos; punto di inizio 
-  lrow=oCell.RangeAddress.StartRow   
-  oCell = oSheet.GetCellByPosition( 7, lrow )      
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ oCell=thisComponent.getCurrentSelection()
+ oCellS = oCell &apos; punto di inizio 
+ lrow=oCell.RangeAddress.StartRow 
+ oCell = oSheet.GetCellByPosition( 7, lrow ) 
 
-	xA =  oCell.string
+	xA = oCell.string
 	If xA = &quot;&quot; or lrow &lt; 2 Then
 		 ThisComponent.CurrentController.Select(oCellS)
-		 MsgBox &quot;HAARG!!!  :-( /*\#               La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
+		 MsgBox &quot;HAARG!!! :-( /*\# La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
 		 &amp; &quot;(Infatti non trovo il prezzo!) Il cursore deve stare su una riga che contiene un PREZZO!!!!&quot;_
-		 &amp; &quot;        Controlla se sei sulla riga giusta e riprova!!&quot;
+		 &amp; &quot; Controlla se sei sulla riga giusta e riprova!!&quot;
 		&apos; ThisComponent.CurrentController.Select(oCellS)
 		 exit sub
 	end if
@@ -231,24 +231,24 @@ dim livelli as long
 		print &quot;sup&quot;
 		ocell = oSheet.GetCellByPosition( 6, 0)&apos;.value 
  		ThisComponent.CurrentController.Select(oCell)
-		msgbox &quot;  Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
+		msgbox &quot; Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
 			&amp; &quot; Al momento Ultimus gestisce solo 3 livelli...&quot; &amp; CHR$(10)_
 			&amp; &quot; pertanto devi ridurre il numero dei livelli ad un numero non superiore a 3&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;(Se qualcuno ritiene utile o necessario avere ulteriori livelli me lo faccia sapere...)&quot;
 				exit sub
 	end if
 	
-	if livelli = 0  then 
+	if livelli = 0 then 
 		oSheet.GetCellByPosition( 6, 0).value=1
 		&apos;	ThisComponent.CurrentController.Select(oSheetTemp.GetCellByPosition( 1, 1 ))
 		livelli =oSheetTemp.GetCellByPosition( 0, 6 ).value
-		msgbox &quot;Il livello di accodamento voce era vuoto!&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+		msgbox &quot;Il livello di accodamento voce era vuoto!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 					&amp;	&quot;Di default ho assegnato 1, ma puoi modificare il valore direttamente&quot; &amp; CHR$(10)_
 					&amp; &quot;nella cella G1 (tabella &quot;&quot;Listino&quot;&quot;) !&quot; &amp; CHR$(10)_
 					&amp; &quot;Fai qualche prova....&quot;&amp; CHR$(10)_
-					&amp;  &quot;&quot;
+					&amp; &quot;&quot;
 					
-		oCell = oSheet.GetCellByPosition( 7, lrow )  
+		oCell = oSheet.GetCellByPosition( 7, lrow ) 
 	end if
 
 	Tipologia = oSheetTemp.GetCellByPosition( 1, 8).string
@@ -261,7 +261,7 @@ dim livelli as long
 
 	if tipologia = &quot;Normale&quot; then
 &apos;	print &quot;normale&quot;
-		if oSheetTemp.GetCellByPosition( 4, 8).string = &quot;sic_%_13&quot;  then &apos; versione con sicurezza e manodop a scela automatica
+		if oSheetTemp.GetCellByPosition( 4, 8).string = &quot;sic_%_13&quot; then &apos; versione con sicurezza e manodop a scela automatica
 				Accoda_Normale_4(livelli, lrow)
 			else
 				Accoda_Normale(livelli, lrow)
@@ -284,7 +284,7 @@ end sub
 
 &apos;_________________________________________________________________________-
 
-SUB ACCODA_PREZZO_UNIVERS_TV &apos; versione con incidenza------   variante con livelli ( per elettrici Piemonte)
+SUB ACCODA_PREZZO_UNIVERS_TV &apos; versione con incidenza------ variante con livelli ( per elettrici Piemonte)
 &apos; al momento è strutturarata per digerire Milano e Piemonte Cuneo
 &apos; Questa DEVE ESSERE QUELA BUONA (la più avanzata) (ma allora TVsic ?)
 dim xA as string
@@ -295,27 +295,27 @@ dim oCell as object
 dim oCellS as object
 dim livelli as long
 &apos;&apos;&apos;on error goto msgerr
-  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
-  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)        
-  oCell=thisComponent.getCurrentSelection()
-   oCellS = oCell &apos; punto di inizio 
-  lrow=oCell.RangeAddress.StartRow   
-  oCell = oSheet.GetCellByPosition( 7, lrow )      
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ oCell=thisComponent.getCurrentSelection()
+ oCellS = oCell &apos; punto di inizio 
+ lrow=oCell.RangeAddress.StartRow 
+ oCell = oSheet.GetCellByPosition( 7, lrow ) 
 &apos;print oCell.value
 
 	&apos; questa supera il problema possibile
 	&apos; di avere dei prezzi in formATO STRINGA
 	if oCell.value = isNotANumber then
-			xA =  oCell.string
+			xA = oCell.string
 		else
-			xA =  oCell.value
+			xA = oCell.value
 	end if
 
 	If xA = &quot;&quot; or xA = 0 or lrow &lt; 2 Then
 		 ThisComponent.CurrentController.Select(oCellS)
-		 MsgBox &quot;HAARG!!!  :-( /*\#               La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
+		 MsgBox &quot;HAARG!!! :-( /*\# La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
 		 &amp; &quot;(Infatti non trovo il prezzo!) Il cursore deve stare su una riga che contiene un PREZZO!!!!&quot;_
-		 &amp; &quot;        Controlla se sei sulla riga giusta e riprova!!&quot;
+		 &amp; &quot; Controlla se sei sulla riga giusta e riprova!!&quot;
 		&apos; ThisComponent.CurrentController.Select(oCellS)
 		 exit sub
 	end if
@@ -323,7 +323,7 @@ dim livelli as long
 	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
 	&apos;oSheetTemp = thisComponent.sheets.getbyname(&quot;Listino&quot;)
 	
-&apos;  la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
+&apos; la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
 &apos; del prezzario. 
 &apos;	Tipologia = oSheetTemp.GetCellByPosition( 1, 8).string 
 	livelli = oSheet.GetCellByPosition( 6, 0).value 
@@ -333,24 +333,24 @@ dim livelli as long
 		print &quot;sup&quot;
 		ocell = oSheet.GetCellByPosition( 6, 0)&apos;.value 
  		ThisComponent.CurrentController.Select(oCell)
-		msgbox &quot;  Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
+		msgbox &quot; Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
 			&amp; &quot; Al momento Ultimus gestisce solo 3 livelli...&quot; &amp; CHR$(10)_
 			&amp; &quot; pertanto devi ridurre il numero dei livelli ad un numero non superiore a 3&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;(Se qualcuno ritiene utile o necessario avere ulteriori livelli me lo faccia sapere...)&quot;
 				exit sub
 	end if
 	
-	if livelli = 0  then 
+	if livelli = 0 then 
 			oSheet.GetCellByPosition( 6, 0).value=1
 		&apos;	ThisComponent.CurrentController.Select(oSheetTemp.GetCellByPosition( 1, 1 ))
 			livelli =oSheetTemp.GetCellByPosition( 0, 6 ).value
-			msgbox &quot;Il livello di accodamento voce era vuoto!&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+			msgbox &quot;Il livello di accodamento voce era vuoto!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 					&amp;	&quot;Di default ho assegnato 1, ma puoi modificare il valore direttamente&quot; &amp; CHR$(10)_
 					&amp; &quot;nella cella G1 (tabella &quot;&quot;Listino&quot;&quot;) !&quot; &amp; CHR$(10)_
 					&amp; &quot;Fai qualche prova....&quot;&amp; CHR$(10)_
-					&amp;  &quot;&quot;
+					&amp; &quot;&quot;
 					
-			oCell = oSheet.GetCellByPosition( 7, lrow )  
+			oCell = oSheet.GetCellByPosition( 7, lrow ) 
 		&apos;	oSheetTemp.GetCellByPosition( 1, 1 ).value=2
 		&apos;	ThisComponent.CurrentController.Select(oSheetTemp.GetCellByPosition( 1, 1 ))
 	end if
@@ -358,10 +358,10 @@ dim livelli as long
 Tipologia = oSheetTemp.GetCellByPosition( 1, 8).string
 
 oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
-	&apos; sUltimo_indirizzo_conosciuto =  
-&apos;	  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
-  &apos; oConv.Address = oUltimo_indirizzo_conosciuto.getRangeAddress
- &apos;  oLdescAnalisi = &quot;=$&quot; +  oConv.UserInterfaceRepresentation
+	&apos; sUltimo_indirizzo_conosciuto = 
+&apos;	 oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+ &apos; oConv.Address = oUltimo_indirizzo_conosciuto.getRangeAddress
+ &apos; oLdescAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
 &apos; xray oUltimo_indirizzo_conosciuto &apos; oConv
 &apos;print tipologia
 
@@ -371,7 +371,7 @@ oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
 		tipologia = &quot;Normale&quot;
 	end if
 	if tipologia = &quot;Normale&quot; then
-		if oSheetTemp.GetCellByPosition( 4, 8).string = &quot;sic_%_13&quot;  then &apos; versione con sicurezza e manodop a scela automatica
+		if oSheetTemp.GetCellByPosition( 4, 8).string = &quot;sic_%_13&quot; then &apos; versione con sicurezza e manodop a scela automatica
 				Accoda_Normale_4(livelli, lrow)
 			else
 				Accoda_Normale(livelli, lrow)
@@ -413,18 +413,18 @@ dim xD as string
 dim oCell as object
 dim oCellS as object
 &apos;&apos;&apos;on error goto msgerr
-  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
-  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)        
-  oCell=thisComponent.getCurrentSelection()
-   oCellS = oCell &apos; punto di inizio 
-  lrow=oCell.RangeAddress.StartRow   
-  oCell = oSheet.GetCellByPosition( 7, lrow )      
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ oCell=thisComponent.getCurrentSelection()
+ oCellS = oCell &apos; punto di inizio 
+ lrow=oCell.RangeAddress.StartRow 
+ oCell = oSheet.GetCellByPosition( 7, lrow ) 
  
-	xA =  oCell.string
+	xA = oCell.string
 	If xA = &quot;&quot; Then
-		 MsgBox &quot;HAARG!!!  :-( /*\#               La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
+		 MsgBox &quot;HAARG!!! :-( /*\# La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
 		 &amp; &quot;(Infatti non trovo il prezzo!) Il cursore deve stare su una riga che contiene un PREZZO!!!!&quot;_
-		 &amp; &quot;        Controlla se sei sulla riga giusta e riprova!!&quot;
+		 &amp; &quot; Controlla se sei sulla riga giusta e riprova!!&quot;
 		 ThisComponent.CurrentController.Select(oCellS)
 		 exit sub
 	end if
@@ -435,7 +435,7 @@ dim oCellS as object
 				else
 			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
 	end if
-	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sUM = oSheet.GetCellByPosition( 6, lrow).string
 	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
 	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
 	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
@@ -446,7 +446,7 @@ dim oCellS as object
 	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
 	
-&apos;  la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
+&apos; la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
 &apos; del prezzario. 
 	Tipologia = oSheetTemp.GetCellByPosition( 1, 8).string 
 &apos; Al momento funziona così:	se la cella contiene &quot;CN&quot;
@@ -460,19 +460,19 @@ dim oCellS as object
 	
 	Select Case Tipologia
 	
-	Case  &quot;CN&quot; 
+	Case &quot;CN&quot; 
 		Do while sAlfaNum0 = sAlfaNum1 
 				lrow = lrow-1
 				oCell = oSheet.GetCellByPosition( 2, lrow )
 				&apos;lAlfaA = Len( oCell.string)
-				sAlfaNum1  = oSheet.GetCellByPosition( 2, lrow).string			
+				sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow).string			
 		loop 
 		lrow = lrow+1
-		If  oSheet.GetCellByPosition( 7, lrow).getvalue = 0 then 
-					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+		If oSheet.GetCellByPosition( 7, lrow).getvalue = 0 then 
+					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
 					goto voce_completa
 			else
-					sDescr1 =  oSheet.GetCellByPosition( 4, lrow-1).string
+					sDescr1 = oSheet.GetCellByPosition( 4, lrow-1).string
 		end if
 
 	Case 2 &apos; per Milano e Piemonte (se cella B9 è vuota Tipologia = 0)
@@ -481,18 +481,18 @@ dim oCellS as object
 			lAlfaA = Len( oCell.string)
 			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
 
-			Do while lAlfaA = lAlfa0  AND sAlfac1 &lt;&gt; &quot;P&quot; 
+			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
 				oCell = oSheet.GetCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
 				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			loop 
-			sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
 	
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
 	
-					sDescr1 =  oSheet.GetCellByPosition( 4, lrow).string
+					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
 					goto voce_completa
 			end if
 			
@@ -513,7 +513,7 @@ dim oCellS as object
 			IF lAlfaA &gt; lAlfa0 then
 				goto voce_completa
 			end if
-			sDescr2 =  oSheet.GetCellByPosition( 4, lrow).string			
+			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string			
 			oCell = oSheet.GetCellByPosition( 2, lrow )
 
 	End select
@@ -523,7 +523,7 @@ dim oCellS as object
 	
 	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
 	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
-		sDescr2 = &quot;&quot;  &apos;
+		sDescr2 = &quot;&quot; &apos;
 	end if
 	If sDescr0 = sDescr1 then
 		sDescr1 = &quot;&quot;
@@ -532,7 +532,7 @@ dim oCellS as object
 	
 	 oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
 
-   
+ 
 &apos;print oUltimo_indirizzo_conosciuto
 &apos; tutti i dati sono adesso stivati nelle variabili
 	oSheet = oSheetTemp
@@ -541,7 +541,7 @@ dim oCellS as object
 
 	Flags = com.sun.star.sheet.CellFlags.STRING
 	oRange = oSheet.getCellRangeByPosition (1,2,5,2)
-  	oRange.clearContents(Flags)
+ 	oRange.clearContents(Flags)
 
 
 	if sCategoria &lt;&gt; &quot;&quot; then
@@ -551,14 +551,14 @@ dim oCellS as object
 	SCompleta1 = sAlfaNum0
 	oSheet.getCellByPosition(1,2).string = SCompleta1
 
-	if Len( sDescr3) &lt;&gt; 0  then
-		 sDescr3 =  sDescr3  &amp;  CHR(13)
+	if Len( sDescr3) &lt;&gt; 0 then
+		 sDescr3 = sDescr3 &amp; CHR(13)
 	end if
 	if Len( sDescr2) &lt;&gt; 0 then
-		 sDescr2 =  sDescr2  &amp;  CHR(13)
+		 sDescr2 = sDescr2 &amp; CHR(13)
 	end if
 	if Len( sDescr1) &lt;&gt; 0 then
-		 sDescr1 =  sDescr1  &amp;  CHR(13)
+		 sDescr1 = sDescr1 &amp; CHR(13)
 	end if
 
 	SCompleta2 = sDescr3 &amp; sDescr2 &amp; sDescr1 &amp; sDescr0
@@ -568,20 +568,20 @@ dim oCellS as object
 	oSheet.getCellByPosition(3,2).string=SCompleta3 
 	
 	SCompleta4 = Prezzo
-	oSheet.getCellByPosition(4,2).value = SCompleta4  &apos;Attenzione!	
+	oSheet.getCellByPosition(4,2).value = SCompleta4 &apos;Attenzione!	
 	&apos; il prezzo DEVE essere un numero VERO (non stringa)
 
-&apos;	SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
-	SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot;    &quot;&quot;; &quot; &amp; &quot;  &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+&apos;	SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+	SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
 &apos;	print &quot;CCCCCCCCCCCCCCCC&quot;
 	oSheet.getCellByPosition(5,2).formula = SCompleta5
 	
 &apos;	print &quot;trallala&quot;
-    oCell=oSheet.getCellByPosition(2,2) 
-    ThisComponent.CurrentController.Select(oCell)
-    Adatta_Altezza_riga 	
-&apos;    sQualeCella = &quot;$C$3&quot;
- &apos;   Seleziona_Cella (sQualeCella)
+ oCell=oSheet.getCellByPosition(2,2) 
+ ThisComponent.CurrentController.Select(oCell)
+ Adatta_Altezza_riga 	
+&apos; sQualeCella = &quot;$C$3&quot;
+ &apos; Seleziona_Cella (sQualeCella)
 
 END SUB
 
@@ -596,19 +596,19 @@ dim oCell as object
 dim oCellS as object
 dim livelli as long
 &apos;&apos;&apos;on error goto msgerr
-  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
-  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)        
-  oCell=thisComponent.getCurrentSelection()
-   oCellS = oCell &apos; punto di inizio 
-  lrow=oCell.RangeAddress.StartRow   
-  oCell = oSheet.GetCellByPosition( 7, lrow )      
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ oCell=thisComponent.getCurrentSelection()
+ oCellS = oCell &apos; punto di inizio 
+ lrow=oCell.RangeAddress.StartRow 
+ oCell = oSheet.GetCellByPosition( 7, lrow ) 
 
-	xA =  oCell.string
+	xA = oCell.string
 	If xA = &quot;&quot; or lrow &lt; 2 Then
 		 ThisComponent.CurrentController.Select(oCellS)
-		 MsgBox &quot;HAARG!!!  :-( /*\#               La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
+		 MsgBox &quot;HAARG!!! :-( /*\# La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
 		 &amp; &quot;(Infatti non trovo il prezzo!) Il cursore deve stare su una riga che contiene un PREZZO!!!!&quot;_
-		 &amp; &quot;        Controlla se sei sulla riga giusta e riprova!!&quot;
+		 &amp; &quot; Controlla se sei sulla riga giusta e riprova!!&quot;
 		&apos; ThisComponent.CurrentController.Select(oCellS)
 		 exit sub
 	end if
@@ -618,7 +618,7 @@ dim livelli as long
 				else
 			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
 	end if
-	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sUM = oSheet.GetCellByPosition( 6, lrow).string
 	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
 	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
 	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
@@ -629,7 +629,7 @@ dim livelli as long
 	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
 	&apos;oSheetTemp = thisComponent.sheets.getbyname(&quot;Listino&quot;)
 	
-&apos;  la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
+&apos; la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
 &apos; del prezzario. 
 &apos;	Tipologia = oSheetTemp.GetCellByPosition( 1, 8).string 
 
@@ -641,24 +641,24 @@ dim livelli as long
 		print &quot;sup&quot;
 		ocell = oSheet.GetCellByPosition( 6, 0)&apos;.value 
  		ThisComponent.CurrentController.Select(oCell)
-		msgbox &quot;  Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
+		msgbox &quot; Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
 			&amp; &quot; Al momento Ultimus gestisce solo 3 livelli...&quot; &amp; CHR$(10)_
 			&amp; &quot; pertanto devi ridurre il numero dei livelli ad un numero non superiore a 3&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;(Se qualcuno ritiene utile o necessario avere ulteriori livelli me lo faccia sapere...)&quot;
 				exit sub
 	end if
 	
-	if livelli = 0  then 
+	if livelli = 0 then 
 			oSheet.GetCellByPosition( 6, 0).value=1
 		&apos;	ThisComponent.CurrentController.Select(oSheetTemp.GetCellByPosition( 1, 1 ))
 			livelli =oSheetTemp.GetCellByPosition( 0, 6 ).value
-			msgbox &quot;Il livello di accodamento voce era vuoto!&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+			msgbox &quot;Il livello di accodamento voce era vuoto!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 					&amp;	&quot;Di default ho assegnato 1, ma puoi modificare il valore direttamente&quot; &amp; CHR$(10)_
 					&amp; &quot;nella cella G1 (tabella &quot;&quot;Listino&quot;&quot;) !&quot; &amp; CHR$(10)_
 					&amp; &quot;Fai qualche prova....&quot;&amp; CHR$(10)_
-					&amp;  &quot;&quot;
+					&amp; &quot;&quot;
 					
-			oCell = oSheet.GetCellByPosition( 7, lrow )  
+			oCell = oSheet.GetCellByPosition( 7, lrow ) 
 		&apos;	oSheetTemp.GetCellByPosition( 1, 1 ).value=2
 		&apos;	ThisComponent.CurrentController.Select(oSheetTemp.GetCellByPosition( 1, 1 ))
 	end if
@@ -694,18 +694,18 @@ dim oCell as object
 dim oCellS as object
 dim livelli as long
 &apos;&apos;&apos;on error goto msgerr
-  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente     
-  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)        
-  oCell=thisComponent.getCurrentSelection()
-   oCellS = oCell &apos; punto di inizio 
-  lrow=oCell.RangeAddress.StartRow   
-  oCell = oSheet.GetCellByPosition( 7, lrow )      
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+ oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
+ oCell=thisComponent.getCurrentSelection()
+ oCellS = oCell &apos; punto di inizio 
+ lrow=oCell.RangeAddress.StartRow 
+ oCell = oSheet.GetCellByPosition( 7, lrow ) 
 
-	xA =  oCell.string
+	xA = oCell.string
 	If xA = &quot;&quot; Then
-		 MsgBox &quot;HAARG!!!  :-( /*\#               La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
+		 MsgBox &quot;HAARG!!! :-( /*\# La riga selezionata NON contiene una voce (figlia) VALIDA!&quot;_
 		 &amp; &quot;(Infatti non trovo il prezzo!) Il cursore deve stare su una riga che contiene un PREZZO!!!!&quot;_
-		 &amp; &quot;        Controlla se sei sulla riga giusta e riprova!!&quot;
+		 &amp; &quot; Controlla se sei sulla riga giusta e riprova!!&quot;
 		 ThisComponent.CurrentController.Select(oCellS)
 		 exit sub
 	end if
@@ -715,7 +715,7 @@ dim livelli as long
 				else
 			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
 	end if
-	sUM =  oSheet.GetCellByPosition( 6, lrow).string
+	sUM = oSheet.GetCellByPosition( 6, lrow).string
 	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
 	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
 	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
@@ -726,7 +726,7 @@ dim livelli as long
 	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
 &apos;	oSheetTemp = thisComponent.sheets.getbyname(&quot;Listino&quot;)
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
-&apos;  la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
+&apos; la cella B9 viene usata per inserire un eventuale codice che identifica la tipologia
 &apos; del prezzario. 
 &apos;	Tipologia = oSheetTemp.GetCellByPosition( 1, 8).string 
 
@@ -736,24 +736,24 @@ dim livelli as long
 		&apos;print &quot;sup&quot;
 		ocell = oSheetTemp.GetCellByPosition( 1, 1 
  		ThisComponent.CurrentController.Select(oCell)
-		msgbox &quot;  Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
+		msgbox &quot; Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
 			&amp; &quot; Al momento Ultimus gestisce solo 3 livelli...&quot; &amp; CHR$(10)_
 			&amp; &quot; pertanto devi ridurre il numero dei livelli ad un numero non superiore a 3&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;(Se qualcuno ritiene utile o necessario avere ulteriori livelli me lo faccia sapere...)&quot;
 				exit sub
 	end if
 	
-	if livelli = 0  then 
+	if livelli = 0 then 
 			oSheetTemp.GetCellByPosition( 1, 1 ).value=2
 		&apos;	ThisComponent.CurrentController.Select(oSheetTemp.GetCellByPosition( 1, 1 ))
 			livelli =oSheetTemp.GetCellByPosition( 0, 6 ).value
-			msgbox &quot;Il livello di accodamento voce era vuoto!&quot;  &amp; CHR$(10) &amp; CHR$(10)_
+			msgbox &quot;Il livello di accodamento voce era vuoto!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 					&amp;	&quot;Di default ho assegnato 1, ma puoi modificare il valore direttamente&quot; &amp; CHR$(10)_
 					&amp; &quot;nella cella G1 (tabella &quot;&quot;Listino&quot;&quot;) !&quot; &amp; CHR$(10)_
 					&amp; &quot;Fai qualche prova....&quot;&amp; CHR$(10)_
-					&amp;  &quot;&quot;
+					&amp; &quot;&quot;
 					
-			oCell = oSheet.GetCellByPosition( , lrow )  
+			oCell = oSheet.GetCellByPosition( , lrow ) 
 			oSheetTemp.GetCellByPosition( 1, 1 ).value=1
 		&apos;	ThisComponent.CurrentController.Select(oSheetTemp.GetCellByPosition( 1, 1 ))
 	end if

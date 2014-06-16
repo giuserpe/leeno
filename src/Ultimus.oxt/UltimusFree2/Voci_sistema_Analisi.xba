@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_sistema_Analisi" script:language="StarBasic">&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                             
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_sistema_Analisi" script:language="StarBasic">&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -17,10 +17,10 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 							&apos; e lo riformatta decondo la maschera in S5
 
 			Adomanda = msgbox ( &quot;Sto per riformattare le voci di Analisi!&quot;&amp; CHR$(10)_
-		        	&amp;&quot;           (Si consiglia di salvare prima il doc)&quot;&amp; CHR$(10)_
-		        	&amp;&quot;Eseguo la riformattazione?&quot; ,35, &quot;&quot;)	
-		        	Select Case Adomanda
-		        		Case 6
+		 	&amp;&quot; (Si consiglia di salvare prima il doc)&quot;&amp; CHR$(10)_
+		 	&amp;&quot;Eseguo la riformattazione?&quot; ,35, &quot;&quot;)	
+		 	Select Case Adomanda
+		 		Case 6
 							&apos;dovrebbe proseguire...
 						Case 2
 							exit sub
@@ -38,7 +38,7 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 				if	oSheet.GetCellByPosition(1 , i).Cellstyle = &quot;Comp TOTALI&quot; then
 					exit for
 				end if
-				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+				if oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(3 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(4 , i).string = &quot;&quot; and _
@@ -57,7 +57,7 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 					oSheet.GetCellByPosition(1 , i).Cellstyle &lt;&gt; &quot;livello-2-sotto_&quot; then
 					
 					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i(oSheet)))
-				&apos;	Print  &quot; i è la prima riga della voce...&quot;
+				&apos;	Print &quot; i è la prima riga della voce...&quot;
 		
 					&apos; scrive (o sovrascrive) i segnalini per le somme	
 					oSheet.GetCellByPosition(9 , i+1).string = &quot;-&quot;
@@ -75,13 +75,13 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 					
 					oRange = oSheet.getCellRangeByPosition (0,i,42,i+1)
  					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
-  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
-   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
-   					&apos; applicando gli stili		  
- 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   
+ 					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+ 					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+ 					&apos; applicando gli stili		 
+ 				 	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle 
 
 				end if 
-				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+				if oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(3 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(9 , i).string &lt;&gt; &quot;&quot; and _
@@ -104,12 +104,12 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 					
 					oRange = oSheet.getCellRangeByPosition (0,i,42,i)
  					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
-  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
-   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
-   					&apos; applicando gli stili		  
- 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   		
+ 					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+ 					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+ 					&apos; applicando gli stili		 
+ 				 	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle 		
 				end if
-				if  oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
+				if oSheet.GetCellByPosition(0 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(1 , i).string = &quot;&quot; and _
 					oSheet.GetCellByPosition(2 , i).string &lt;&gt; &quot;&quot; and _
 					oSheet.GetCellByPosition(3 , i).string &lt;&gt; &quot;&quot; and _
@@ -137,18 +137,18 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 					
 					oRange = oSheet.getCellRangeByPosition (0,i,42,i)
  					aSaveData = oRange.getDataArray() &apos;salva i dati (in clipboard?)
-  					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
-   					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
-   					&apos; applicando gli stili		  
- 				  	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle   
+ 					oDest = oSheet.GetCellByPosition(0 , i).CellAddress
+ 					oSheet.copyRange(oDest, oSrc) &apos; copia tutto quello che c&apos;è in maschera	
+ 					&apos; applicando gli stili		 
+ 				 	oRange.setDataArray( aSaveData )&apos; rimette SOLO i dati (salvati prima) nelle rispettive celle 
 				end if
 			 		lrowFin = i &apos;serve??	 		
 			Next i 	
 			passa_oltre:
 		&apos;	Adomanda = msgbox ( &quot;I Formati sono stati applicati!&quot;&amp; CHR$(10)_
 			Adomanda = msgbox ( &quot;Sistemo i TAG?&quot; ,35, &quot;&quot;)	
-		        	Select Case Adomanda
-		        		Case 6
+		 	Select Case Adomanda
+		 		Case 6
 							&apos;questa dovrebbe costruire i tag
 							compila_tag_con_codice_voce (0)
 							Ripara_tag_corrotti (0)
@@ -157,15 +157,15 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 					end select		
 
 			Adomanda = msgbox( &quot;Proseguo con il controllo delle somme ? &quot; ,35, &quot;&quot;)
-	        	Select Case Adomanda
-		        	Case 6		
+	 	Select Case Adomanda
+		 	Case 6		
 						Controlla_Somme_Su_Tutto_Computo (0)
 					Case 2
 							exit sub
 					end select		
 			Adomanda =msgbox(&quot;Proseguo con la riscrittura delle formule ? &quot; ,35, &quot;&quot;)			
-	        	Select Case Adomanda
-		        	Case 6				&apos; questa rimette le moltiplicazioni (perchè quelle sopra le ha cancellate..)
+	 	Select Case Adomanda
+		 	Case 6				&apos; questa rimette le moltiplicazioni (perchè quelle sopra le ha cancellate..)
 								&apos;rivedere il codice sopra...
 						Rifa_Formule_Orizzontali
 			

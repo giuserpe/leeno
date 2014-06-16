@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="CRONO" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                          
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="CRONO" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -21,7 +21,7 @@ dim lrowDest as integer
 oDoc = thisComponent
 &apos;.........................................................................................................
 
-	iRow= Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	iRow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if iRow = -1 then
 		 
 		exit sub
@@ -29,7 +29,7 @@ oDoc = thisComponent
 	oSheet = ThisComponent.currentController.activeSheet
 
 	oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
-	oRangeSRC =  osheet.getCellRangeByPosition (0,iRow,3,iRow)
+	oRangeSRC = osheet.getCellRangeByPosition (0,iRow,3,iRow)
 
 	 oSheetDest = oDoc.Sheets.getByName(&quot;CronoP&quot;)
 
@@ -42,9 +42,9 @@ oDoc = thisComponent
 &apos;	oSheetDest.getRows.insertByIndex(lrowDest, 1)
 
 	oSrc = oSheetSRC.getCellRangeByPosition(0,iRow,3,iRow).RangeAddress
-    oDest = oSheetDest.GetCellByPosition(1,lrowDest ).CellAddress
-    oSheetDest.copyRange(oDest, oSrc)
-  &apos;exit sub  
+ oDest = oSheetDest.GetCellByPosition(1,lrowDest ).CellAddress
+ oSheetDest.copyRange(oDest, oSrc)
+ &apos;exit sub 
 	oRange = oSheetDest.getCellRangeByPosition (1,lrowDest,4,lrowDest)
 
 	Flags = com.sun.star.sheet.CellFlags.FORMULA+_
@@ -54,8 +54,8 @@ oDoc = thisComponent
  	aSaveData = oRange.getDataArray()
  	&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
  	&apos;una volta cancellate le relative celle risulterebbero vuote
-  	oRange.clearContents(Flags)
-	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle   
+ 	oRange.clearContents(Flags)
+	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
 
 	oCell = oSheetDest.GetCellByPosition( 0 , lrowDest)
 	sFormula = &quot;=A&quot; &amp; lrowDest &amp; &quot;+1&quot;
@@ -66,9 +66,9 @@ oDoc = thisComponent
 	oCell.setformula(sFormula)&apos; ri-formula per progressivo vecchio
 
 
-    oCell = oSheetDest.GetCellByPosition( 1 , lrowDest)
+ oCell = oSheetDest.GetCellByPosition( 1 , lrowDest)
 						oCell.CellStyle=&quot;planning rif&quot;
-    oCell = oSheetDest.GetCellByPosition( 4 , lrowDest)
+ oCell = oSheetDest.GetCellByPosition( 4 , lrowDest)
 						oCell.CellStyle=&quot;planning bla&quot;
 	ThisComponent.CurrentController.Select(oCell)
 End Sub
@@ -87,7 +87,7 @@ SUB GRIGIA
 	oCell.CellStyle=&quot;planning colore&quot;
 
 	sCol= ColumnNameOf(icol)
-	sFormula = &quot;=$F$6+$&quot; &amp; sCol &amp;  4
+	sFormula = &quot;=$F$6+$&quot; &amp; sCol &amp; 4
 &apos;	print sFormula
 	oCell.setformula(sFormula)	
 END SUB
@@ -135,24 +135,24 @@ oDoc = thisComponent
 	oRange1 = oSheetDest.getCellRangeByPosition (lcol,6,lcol,ilastRow)
 	oRange1.CellStyle=&quot;planning&quot;
 	
-    oCell = oSheetDest.GetCellByPosition( 1 , lrowDest)
+ oCell = oSheetDest.GetCellByPosition( 1 , lrowDest)
 						oCell.CellStyle=&quot;planning rif&quot;
 						oCell.CellBackColor =15132415
-    oCell = oSheetDest.GetCellByPosition( 4 , lrowDest)
+ oCell = oSheetDest.GetCellByPosition( 4 , lrowDest)
 						oCell.CellStyle=&quot;planning bla&quot;
 						oCell.CellBackColor = 15132415
 						
 	oCell1 = oSheetDest.GetCellByPosition( lcol , lrowDest)
 &apos;	oCell1.CellStyle=&quot;planning colore&quot;
 	sCol= ColumnNameOf(lcol)
-	sFormula = &quot;=$F$4+$&quot; &amp; sCol &amp;  4
+	sFormula = &quot;=$F$4+$&quot; &amp; sCol &amp; 4
 &apos;	oCell1.setformula(sFormula)	
 
 	ThisComponent.CurrentController.Select(oCell1)
 	exit sub&apos;
 	
 	Gestione_Errore:
-	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl,  Err,  Error$ )
+	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 End Sub
 
 
@@ -166,7 +166,7 @@ dim lrowDest as integer
 oDoc = thisComponent
 &apos;.........................................................................................................
 
-	lrowDest = Range2Cell  &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	lrowDest = Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrowDest = -1 then
 		exit sub
 	end if
@@ -188,10 +188,10 @@ oDoc = thisComponent
 	oRange1 = oSheetDest.getCellRangeByPosition (5,lrowDest,ilastCol-1,lrowDest)
 	oRange1.CellStyle=&quot;planning&quot;
 
-    oCell = oSheetDest.GetCellByPosition( 1 , lrowDest)
+ oCell = oSheetDest.GetCellByPosition( 1 , lrowDest)
 						oCell.CellStyle=&quot;planning rif&quot;
 						oCell.CellBackColor =15132415
-    oCell = oSheetDest.GetCellByPosition( 4 , lrowDest)
+ oCell = oSheetDest.GetCellByPosition( 4 , lrowDest)
 						oCell.CellStyle=&quot;planning bla&quot;
 						oCell.CellBackColor =15132415	
 					
@@ -200,7 +200,7 @@ oDoc = thisComponent
 End Sub
 
 
-Sub elimina_riga_CronoP  
+Sub elimina_riga_CronoP 
 
 Dim oSheets As Object
 dim oCelle As Object
@@ -247,13 +247,13 @@ dim oSelection As Object
 	CellRangeAddress.Sheet = oSheet_num
 	CellRangeAddress.StartColumn = 	0
 	CellRangeAddress.StartRow = lrowStart
-	CellRangeAddress.EndColumn =  250 &apos;espediente vomitevole...
+	CellRangeAddress.EndColumn = 250 &apos;espediente vomitevole...
 	CellRangeAddress.EndRow = lrowStart
 	oSheets.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.UP)
 
 END SUB
 
-Sub elimina_Colonna_CronoP  
+Sub elimina_Colonna_CronoP 
 
 dim nome as string
 Dim oDoc As Object
@@ -300,7 +300,7 @@ dim oSelection As Object
 	CellRangeAddress.Sheet = oSheet_num
 	CellRangeAddress.StartColumn = lcolStart
 	CellRangeAddress.StartRow = 0
-	CellRangeAddress.EndColumn =  lcolEnd
+	CellRangeAddress.EndColumn = lcolEnd
 	CellRangeAddress.EndRow = 5000 &apos;espediente vomitevole...
 	oSheets.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.LEFT)
 	

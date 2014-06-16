@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sposta_2" script:language="StarBasic">REM  *****  BASIC  *****
-&apos;_______________________________________________________________________________________  		
-&apos;   LeenO 3.9.1                                                                                                                                                                                                                                                                                                                                                              
-&apos;     Template assistito per la compilazione di Computi Metrici Estimativi 				
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sposta_2" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.9.1 
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos;     Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
-&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO     
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -17,17 +17,17 @@
 
 
 function getRigaIniziale(ByVal sAddress as string) as string
-   dim cellRange as object  &apos;!!!!!!!!!!!!!!!!!!!&quot;
-   dim currentSheet as object
-   dim row as object
-   currentSheet = ThisComponent.CurrentSelection.getSpreadSheet()
-   cellRange = currentSheet.getCellRangeByName(sAddress)
+ dim cellRange as object &apos;!!!!!!!!!!!!!!!!!!!&quot;
+ dim currentSheet as object
+ dim row as object
+ currentSheet = ThisComponent.CurrentSelection.getSpreadSheet()
+ cellRange = currentSheet.getCellRangeByName(sAddress)
  &apos; xray cellRange &apos;ThisComponent.CurrentSelection 
  &apos; ma perché poi rangebyname?
-  
-  &apos; row = cellRange.getRows()
-   &apos;print row
-   getRigaIniziale = cellRange.RangeAddress.StartRow
+ 
+ &apos; row = cellRange.getRows()
+ &apos;print row
+ getRigaIniziale = cellRange.RangeAddress.StartRow
 end function
 
 
@@ -35,12 +35,12 @@ end function
 
 
 
- Function  Circoscrive_Voce_Computo_B (ByVal lrow As Long) &apos;individua un record di Computo
+ Function Circoscrive_Voce_Computo_B (ByVal lrow As Long) &apos;individua un record di Computo
 &apos;---------------------------------------------------------------------------
 							&apos;restituisce il range 
 &apos;ThisComponent.lockControllers()
 
-msgbox &quot;Per favore se vi appare questo avviso scrivetemi citando: Function  Circoscrive_Voce_Computo_B&quot;
+msgbox &quot;Per favore se vi appare questo avviso scrivetemi citando: Function Circoscrive_Voce_Computo_B&quot;
 dim lrowS as long
 dim lrowE as long
 &apos;dim lrow as long
@@ -59,54 +59,54 @@ dim lcol5 as long
 
 	 oCell = oSheet.GetCellByPosition(lcol5 , lrow )
 	 xA = oCell.string
-    ThisComponent.CurrentController.Select(oCell)
+ ThisComponent.CurrentController.Select(oCell)
 	If xA = &quot;SOMMANO &quot; then 
 		lrow = lrow + 1
 		lcol = lcol5
-  	   oCell = oSheet.GetCellByPosition( lcol , lrow)
+ 	 oCell = oSheet.GetCellByPosition( lcol , lrow)
  		goto sommano_trovato 
 	end if 
 
-  Do  while xA &lt;&gt;  &quot;SOMMANO &quot;
- 	   lrow = lrow+1
-  	  oCell = oSheet.GetCellByPosition( lcol5 , lrow)
- &apos;	   ThisComponent.CurrentController.Select(oCell)
+ Do while xA &lt;&gt; &quot;SOMMANO &quot;
+ 	 lrow = lrow+1
+ 	 oCell = oSheet.GetCellByPosition( lcol5 , lrow)
+ &apos;	 ThisComponent.CurrentController.Select(oCell)
 		xA = oCell.string
  	 Loop
  	 lrow = lrow+1
-   	 oCell = oSheet.GetCellByPosition( 1 , lrow)
-	  xA = oCell.string	
-&apos;	  	ThisComponent.CurrentController.Select(oCell)&apos;debug 
- &apos; 	  		 print &quot;debugN&quot;	
-  sommano_trovato:
+ 	 oCell = oSheet.GetCellByPosition( 1 , lrow)
+	 xA = oCell.string	
+&apos;	 	ThisComponent.CurrentController.Select(oCell)&apos;debug 
+ &apos; 	 		 print &quot;debugN&quot;	
+ sommano_trovato:
 
- &apos;  ThisComponent.CurrentController.Select(oCell) 
+ &apos; ThisComponent.CurrentController.Select(oCell) 
  &apos;print &quot;debug1&quot;
-    lrowE = lrow-1  
-    lrow = lrow-1
-    oCell = oSheet.GetCellByPosition( 1 , lrow)
+ lrowE = lrow-1 
+ lrow = lrow-1
+ oCell = oSheet.GetCellByPosition( 1 , lrow)
  &apos;xA = ThisComponent.getcurrentselection.getstring
  	 xA = oCell.string	
  &apos;	 print xA
-  	Do  while xA =  &quot;&quot;
+ 	Do while xA = &quot;&quot;
  &apos; print &quot;dentro&quot;
-  		lrow = lrow-1 
-  	  	oCell = oSheet.GetCellByPosition( 1 , lrow)
-  	  	xA = oCell.string
-  	 &apos; 		ThisComponent.CurrentController.Select(oCell)&apos;debug 
-  	 &apos; 		 print &quot;debug2  &quot;	&amp; xa
+ 		lrow = lrow-1 
+ 	 	oCell = oSheet.GetCellByPosition( 1 , lrow)
+ 	 	xA = oCell.string
+ 	 &apos; 		ThisComponent.CurrentController.Select(oCell)&apos;debug 
+ 	 &apos; 		 print &quot;debug2 &quot;	&amp; xa
 	loop
- 		&apos;oCelle=thisComponent.getCurrentSelection().getCellAddress()    
-	 &apos;   lrowS=oCelle.Row - 1
+ 		&apos;oCelle=thisComponent.getCurrentSelection().getCellAddress() 
+	 &apos; lrowS=oCelle.Row - 1
 		lrowS= lrow -1
 	&apos;	print lrows
-  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,37,lrowE )
-  ThisComponent.CurrentController.Select(oRangeVoceC) &apos;debug
-  print &quot;debug3&quot;
+ oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,37,lrowE )
+ ThisComponent.CurrentController.Select(oRangeVoceC) &apos;debug
+ print &quot;debug3&quot;
  Circoscrive_Voce_Computo_B= oRangeVoceC
 
 end Function
-&apos;=================================================================================  
+&apos;================================================================================= 
  
 
 function Sposta_range_buono (lnuovaPosRow As Long) &apos;, o1RangeSelection as object) &apos;preleva il range selezionato..
@@ -133,23 +133,23 @@ Dim CellAddress As New com.sun.star.table.CellAddress
 	o1sheet = o1RangeSelection.RangeAddress.Sheet 
 	o1ColoumnS = 0 &apos; nel nostro caso meglio settarla a 0
 	&apos;o1ColoumnS = o1RangeSelection.RangeAddress.Startcolumn
-	L1RowS =  o1RangeSelection.RangeAddress.StartRow
+	L1RowS = o1RangeSelection.RangeAddress.StartRow
 	o1ColoumnE	= 255 &apos; ovvero l&apos;intera riga
 	&apos;o1ColoumnE	= o1RangeSelection.RangeAddress.Endcolumn
-	L1RowE	=   o1RangeSelection.RangeAddress.EndRow
+	L1RowE	= o1RangeSelection.RangeAddress.EndRow
 	L1RowSCount = o1RangeSelection.Rows.Count &apos; mumero di righe del range
 
 	&apos; il 2 per l&apos;area vuota da inserire...
 	o2sheet = o1sheet &apos; per il momento è la medesima...
 	o2ColoumnS = o1ColoumnS
-	L2RowS =  lrowDest
+	L2RowS = lrowDest
 	o2ColoumnE	= o1ColoumnE
 	L2RowE	= L2RowS + L1RowSCount -1 &apos; si toglie uno per ragioni che mi sfuggono... 
 
 	&apos;inserisce righe vuote
-  	CellRangeAddress.Sheet =  o2sheet
-    CellRangeAddress.StartColumn = o2ColoumnS
-    CellRangeAddress.StartRow =  L2RowS
+ 	CellRangeAddress.Sheet = o2sheet
+ CellRangeAddress.StartColumn = o2ColoumnS
+ CellRangeAddress.StartRow = L2RowS
 	CellRangeAddress.EndColumn = o2ColoumnE
 	CellRangeAddress.EndRow = L2RowE
 
@@ -166,9 +166,9 @@ Dim CellAddress As New com.sun.star.table.CellAddress
 	L3ColoumnE	= o1ColoumnE
 lrowT =	L1RowS
 	if L1RowS &gt; lrowDest then
-			L3RowS =  L1RowS + L1RowSCount
+			L3RowS = L1RowS + L1RowSCount
 	 	 else 
-			L3RowS =  L1RowS
+			L3RowS = L1RowS
 	end if
 	L3RowE	= L3RowS + L1RowSCount
 	CellRangeAddress.Sheet = o3sheet
@@ -187,99 +187,99 @@ Sheet.moveRange(CellAddress, CellRangeAddress) &apos; lo sposta nello spazio fat
 Sheet.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.UP) &apos; rimuove le righe vuote
 
 
-lrdif =  L3RowE - L3RowS - 1
+lrdif = L3RowE - L3RowS - 1
 
-if  lrowDest &gt; lrowT then &apos; questo pasticcetto per visualizzare la voce spostata adesso
+if lrowDest &gt; lrowT then &apos; questo pasticcetto per visualizzare la voce spostata adesso
 	oRange = Sheet.getCellRangeByposition (L3ColoumnS, L2RowS-lrdif , L3ColoumnE, L2RowS-1)	
 	else
 	oRange = Sheet.getCellRangeByposition (L3ColoumnS, L2RowS+1 , L3ColoumnE, L2RowS+lrdif )	
 end if
 ThisComponent.CurrentController.Select(oRange)
 end function
-  
+ 
 &apos;=================================================================
 
 
 Function Mettiti_esattamente_tra_due_VociC (ByVal lrow As Long)&apos;as string&apos;As Long &apos;as string &apos; trova il punto di inserimanto
-&apos; nel caso l&apos;utente non si sia posizionato bene...   &apos; specifico per voci Computo
+&apos; nel caso l&apos;utente non si sia posizionato bene... &apos; specifico per voci Computo
 &apos; (mai fidarsi dell&apos;utente...)
 &apos;--------------------------------------------------------------
 &apos;--------------------------------------------------------------
-dim xdocument   as object
+dim xdocument as object
 dim xdispatcher as object
 dim xA as string
 
 &apos;ThisComponent.lockControllers() &apos;disattiva l&apos;eco a schermo
 
  Dim oSheet
-  Dim oCell
- &apos;   lrow = lrow -1 &apos; per tararlo     
-  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente    
+ Dim oCell
+ &apos; lrow = lrow -1 &apos; per tararlo 
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
 
-  oCell = oSheet.GetCellByPosition( 1, lrow )
-	xA =  oCell.string
+ oCell = oSheet.GetCellByPosition( 1, lrow )
+	xA = oCell.string
  	sString$ = &quot;Fine Computo&quot;
 
 	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd)  then 
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella!   PROVVEDI17! &quot;
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI17! &quot;
 		Mettiti_esattamente_tra_due_VociC = &quot;uscita forzata&quot;
 		exit FUNCTION
 	end if 
 	lrowF=oEnd.CellAddress.Row 
-	If  (lrowF - lrow) &lt; 5 then &apos;se è vicino al fondo 
+	If (lrowF - lrow) &lt; 5 then &apos;se è vicino al fondo 
 		lrowF= lrowF-1
 		oCell = oSheet.GetCellByPosition( 3, lrowF)
-		xA =  oCell.string
+		xA = oCell.string
 		do while xA &lt;&gt; &quot;SOMMANO &quot;
 			lrowF= lrowF-1
 			oCell = oSheet.GetCellByPosition( 3, lrowF)
-			xA =  oCell.string
+			xA = oCell.string
 		loop
 		Mettiti_esattamente_tra_due_VociC = lrowF+1
 		exit function
 	end if 
-	If  xA &lt;&gt; &quot;&quot; then
+	If xA &lt;&gt; &quot;&quot; then
 				lrow = lrow-1
 				Mettiti_esattamente_tra_due_VociC = lrow
 				exit function
-		    else &apos;se è vuota...
-		       	lrowT = lrow
+		 else &apos;se è vuota...
+		 	lrowT = lrow
 				lrowT = lrowT+1
 				oCell = oSheet.GetCellByPosition( 1, lrowT )				
- 		 	 	xA =  oCell.string
+ 		 	 	xA = oCell.string
 				if xA &lt;&gt; &quot;&quot; then
 					lrowT = lrowT-1
 					oCell = oSheet.GetCellByPosition( 1, lrowT )				
  		 	 		lrow = lrowT
- 		 	 		&apos;xA =  oCell.string
+ 		 	 		&apos;xA = oCell.string
  		 	 		Mettiti_esattamente_tra_due_VociC = lrow
  		 	 		exit function
  		 	 	end if
  	end if 
  	 oCell = oSheet.GetCellByPosition( 1, lrow )
- 	 xA =  oCell.string
+ 	 xA = oCell.string
  		 	 	if xA &lt;&gt; &quot;&quot; then &apos; è piena 
  		 	 		lrow = lrow-1
  		 	 		Mettiti_esattamente_tra_due_VociC = lrow
- 				  else
+ 				 else
 					lrowT = lrow
 					Incremta = 0	
 					oCell = oSheet.GetCellByPosition( 1, lrowT )
-					xA =  oCell.string 
-	 			   do while xA = &quot;&quot;
+					xA = oCell.string 
+	 			 do while xA = &quot;&quot;
 						oIncremta=oIncremta+1
 						lrowT = lrowT+1
 						oCell = oSheet.GetCellByPosition( 1, lrowT )
- 		 				 xA =  oCell.string 
+ 		 				 xA = oCell.string 
  					loop
  					oIncremta = abs (oIncremta)
- 					if oIncremta &gt;= 3  then
- 						   Mettiti_esattamente_tra_due_VociC = &quot;ciucca&quot;
+ 					if oIncremta &gt;= 3 then
+ 						 Mettiti_esattamente_tra_due_VociC = &quot;ciucca&quot;
 						else
- 						   lrow = lrow+1
- 		 				   Mettiti_esattamente_tra_due_VociC = lrow
+ 						 lrow = lrow+1
+ 		 				 Mettiti_esattamente_tra_due_VociC = lrow
  		 				end if
 				end if
 end function		
@@ -288,19 +288,19 @@ end function
 
 &apos;__restituiscue il numero__DISATTIVATA perché doppia______________________________________________________________
 Function SheetNameToNumber_( ByVal cSheetName As String ) As Long
-   oSheets = ThisComponent.getSheets()
+ oSheets = ThisComponent.getSheets()
 print &quot;dovrebbe essere disattivata perché doppia...&quot;
-   &apos; aSheetNames is an Array() of String.  (The sheet names).   
-   aSheetNames = oSheets.getElementNames()
-   
-   For i = LBound( aSheetNames ) To UBound( aSheetNames )
-      cSheetName2 = aSheetNames( i ) &apos; get string from array
-      If cSheetName = cSheetName2 Then
-         SheetNameToNumber() = i
-         Exit Function
-      EndIf
-   Next
-   SheetNameToNumber() = -1
+ &apos; aSheetNames is an Array() of String. (The sheet names). 
+ aSheetNames = oSheets.getElementNames()
+ 
+ For i = LBound( aSheetNames ) To UBound( aSheetNames )
+ cSheetName2 = aSheetNames( i ) &apos; get string from array
+ If cSheetName = cSheetName2 Then
+ SheetNameToNumber() = i
+ Exit Function
+ EndIf
+ Next
+ SheetNameToNumber() = -1
 End Function 
 
 

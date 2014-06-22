@@ -33,7 +33,6 @@ Sub Ricicla_Misure
  		sGVV = &quot;va&quot;	
 		sGorigine = &quot;CONTABILITA&quot;
 		Pesca_cod__per_reg_A_1 &apos;porta su Computo 
-		pesca_cod
 	End If
 End Sub
 

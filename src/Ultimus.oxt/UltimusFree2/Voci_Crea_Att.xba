@@ -151,6 +151,20 @@ VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 		lrow = 4
 		goto FAI
 	end If
+REM se su firme
+	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro&quot; then
+		lrow1=lrow-1
+		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro&quot;
+			do while oSheet.getCellByPosition(23, lrow1).value = 0
+				lrow1=lrow1-1
+			loop
+			nSal = oSheet.getCellByPosition(23, lrow1).value
+		&apos;	if oSheet.getCellByPosition(22, lrow1).string = &quot;#reg&quot; then	nSal = nSal+1
+			lrow=lrow+1
+		loop
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow))
+		GoTo FAI
+	end if
 REM se in una voce esistente
 	Select Case oSheet.GetCellByPosition( 0 , lRow).cellstyle
 		Case = &quot;Comp End Attributo_R&quot; , &quot;Comp Start Attributo_R&quot; , &quot;comp 10 s_R&quot;
@@ -159,17 +173,13 @@ REM se in una voce esistente
 				iVoce =.StartRow
 				fVoce = .EndRow
 			End With
-&apos;			print fVoce+1
-&apos;			print oSheet.GetCellByPosition( 0 , fvoce+1).cellstyle
-
-&apos;MiaCella = InputBox(&quot;Inserisce il nome della cella :&quot;)
-&apos;range1 = sheet.getCellRangeByName(miacella)
-
 REM controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate
 			if 	oSheet.getCellByPosition(22, ivoce+1).string = &quot;#reg&quot; and _ 
 				oSheet.GetCellByPosition( 0 , fvoce+1).cellstyle &lt;&gt; &quot;Comp End Attributo_R&quot; then	
 					nSal = oSheet.getCellByPosition(23, ivoce+1).value
-					if	oSheet.getCellByPosition(22, fVoce+2).string = &quot;#reg&quot; then &apos; misura successiva
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, fvoce+1))
+					if	oSheet.getCellByPosition(22, fVoce+2).string = &quot;#reg&quot; OR _
+						oSheet.GetCellByPosition(0, fVoce+1).cellstyle = &quot;Ultimus_centro&quot; then &apos; misura successiva
 						&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition(22, fVoce+2))
 						ttt=msgbox (&quot;Inserendo qui una voce, comprometterai la validità di atti contabili già emessi.&quot; &amp; CHR$(10) _
 							&amp; &quot;Scegliendo OK sarai costretto a rigenerarli!&quot; &amp; CHR$(10) _
@@ -185,10 +195,7 @@ REM controllo se in punto di inserimmento della nuova misura è compreso tra due
 					end if
 				else
 				lrow = fVoce+1
-&apos;				GoTo FAI	
 			end if
-&apos;			oSheet.getCellByPosition(23, ivoce+1).value &lt;&gt; 0 and _
-&apos;		Print iVoce	&amp;&quot; &quot;&amp; fVoce
 			GoTo FAI
 	End select
 	FAI:
@@ -218,26 +225,20 @@ REM controllo se in punto di inserimmento della nuova misura è compreso tra due
 		oSheet.GetCellByPosition(1, lRow+2).setvalue(data_misura)
 	End If
 	
-	
-	
-	
-	
 NUMERO_SAL:
 &apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition(23, ivoce+1))
-	nSal = oSheet.GetCellByPosition(23, ivoce+1).getvalue()&apos; = nSal &apos; numero SAL
-&apos;	oSheet.GetCellByPosition(23, lRow+1).cellstyle = &quot;Sal&quot;
+&apos;	nSal = oSheet.GetCellByPosition(23, ivoce+1).getvalue()&apos; = nSal &apos; numero SAL
+&apos;print ivoce
 rem verifico l&apos;appartenenza della voce precedente ad un sal registrato
-	if ThisComponent.NamedRanges.hasByName(&quot;Sal_&quot; &amp; nSal) then
-		rangeSal = oSheet.GetCellRangeByName(&quot;Sal_&quot; &amp; nSal).rangeaddress()
+&apos;print nSAL
+	if ThisComponent.NamedRanges.hasByName(&quot;Lib#&quot; &amp; nSal) then
+		rangeSal = oSheet.GetCellRangeByName(&quot;Lib#&quot; &amp; nSal).rangeaddress()
 		With rangeSal
 			lr_sal = .EndRow
 		End With
-REM verifico che l&apos;ultima riga della voce precedente coincida con l&apos;ultima riga del SAL registrato
+REM verifico che l&apos;ultima riga della voce precedente coincide con l&apos;ultima riga del SAL registrato
 rem in tal caso annoto il sal successivo
-		If lr_sal = fvoce and _
-			oSheet.GetCellByPosition(22, ivoce+1).getstring = &quot;#reg&quot; Then 	&apos;SE REGISTRATO
-			nSal=nSal+1														&apos;SEGNA SAL SUCCESSIVO
-		end if
+		If lr_sal = lrow-1 then nSal=nSal+1	&apos;SE REGISTRATO SEGNA SAL SUCCESSIVO
 		else																&apos;altrimenti
 		nSal = oSheet.GetCellByPosition(23, ivoce+1).getvalue				&apos;indica lo stesso SAL
 	end if
@@ -498,7 +499,7 @@ rem QUESTA SOTTO SERVE???
 &apos;	lRow = Mettiti_esattamente_tra_due_VociC_Att (lRow)
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  	inserisci_voce:
-	print lrow
+&apos;	print lrow
 	insRows (lrow, 4) &apos; numero di righe da inserire
 &apos;	oSheet.getRows.insertByIndex(lrow, 4)
 	&apos; eventualmente rifa il nome di area

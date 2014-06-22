@@ -1,6 +1,89 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">REM ***** BASIC *****
+Function Rifa_Somma_Analisi (lCol as long, lrow as long) &apos;dopo che si è iinserita riga - NON USATA
+&apos; di % (Molto probab non serve più)
+&apos; 
+&apos;print lrow 
+&apos;dim lcol as long
+dim lrowE as long
+Dim oCell as object
+Dim oCellB as object
+
+	oSheet = ThisComponent.currentController.activeSheet
+	 lrowE = lrow
+&apos;	 lcol = oCell.CellAddress.column
+	 oCell = oSheet.GetCellByPosition( lcol , lrow)
+	 ThisComponent.CurrentController.Select(oCell)
+
+	oCellB = oSheet.GetCellByPosition( 6 , lrow)
+	 sCol= ColumnNameOf(lcol)
+
+	oCellC = oSheet.GetCellByPosition( 7 , lrow)
+	 sColC= ColumnNameOf(lcol+1)
+	 
+lrow = lrow+2
+&apos;cactus
+	 do while oSheet.GetCellByPosition( lcol , lrow).string &lt;&gt; &quot;-&quot; And _
+	 			(Trova_Attr_N (oSheet.GetCellByPosition( lcol , 0), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot; And _
+	 			oSheet.GetCellbyPosition( 7, lrow ).CellStyle = &quot;An-sfondo-basso dx&quot;
+	 	 	lrow = lrow+1
+			ThisComponent.CurrentController.Select(oCell)
+&apos;print &quot;!AA&quot;
+	 loop
+
+	 lrow = lrow+2	
+	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowE+2 &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;
+	 oCellB.setformula(sFormula )
+	&apos;	 ThisComponent.CurrentController.Select(oCellB)
+&apos;	 print	sFormula	 
+
+	 sFormulaC = &quot;=SUM(&quot; &amp; sColC &amp; lrowE+2 &amp; &quot;:&quot; &amp; sColC &amp; lrow-1 &amp; &quot;)&quot;
+	 oCellC.setformula(sFormulaC )
+		 ThisComponent.CurrentController.Select(ocellc)
+&apos;	 print	sFormula_i
+	 
+&apos;print sformula
+end Function
+
+
+
+
+&apos;*************************************************************************************************
+Function Rifa_Somma_Analisi___________(lCol as long) &apos;dopo che si è iinserita riga di % (Molto probab non serve più)
+&apos; NON USATA (e non so se funziona correttamente...)
+dim lrow as long
+&apos;dim lcol as long
+dim lrowE as long
+Dim oCell as object
+Dim oCellB as object
+&apos;print &quot;lcol &quot; &amp; lCol
+&apos;oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = ThisComponent.CurrentSelection
+&apos;	Orange = ThisComponent.CurrentSelection
+	 lrow = oCell.CellAddress.row
+	 lrowE = lrow
+&apos;	 lcol = oCell.CellAddress.column
+	 oCell = oSheet.GetCellByPosition( lcol , lrow)
+&apos;	 ThisComponent.CurrentController.Select(oCell)
+	&apos; print
+	 xA = oCell.string
+	oCellB = oCell
+	 sCol= ColumnNameOf(lcol)
+&apos;	 print sCol
+	 do while xA &lt;&gt; &quot;-&quot;
+	 	lrow = lrow-1
+	 	oCell = oSheet.GetCellByPosition( lcol , lrow)
+	 	xA = oCell.string
+	 loop
+	
+	 lrow = lrow+2	
+	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowE &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;)&quot;
+	 oCellB.setformula(sFormula )
+
+end Function
+
 Sub Svuota_CONTABILITA_esegui_bart (optional sSommari as String) &apos;non usata
 	&apos;ATTENZIONE, se arriva da dialog il parametro non è mai NULL
 	&apos; perché intercetta il clic del mouse o cose del genere...

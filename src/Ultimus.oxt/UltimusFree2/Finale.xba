@@ -2125,6 +2125,7 @@ Sub AddPageNumber &apos; esempio trovato in rete... anche questo funziona...
 End Sub
 sub togli_salti_pagina
 	oSheet = ThisComponent.currentController.activeSheet
+&apos;	xray oSheet
 	oSheet.removeAllManualPageBreaks
 end sub
 </script:module>

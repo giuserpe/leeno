@@ -35,7 +35,7 @@ SUB Pesca_cod_per_reg_A &apos;&apos; non ricordo lo scopo....
 &apos;	msgbox &quot;questa macro va usata solo su Computo o su CONTABILITA&quot;&apos;
 END SUB
 
-
+Global nSal as integer
 SUB Pesca_cod__per_reg_A_1 &apos; per CONTABILITA 
 &apos;modificata pesantemente &apos;(C) Giuseppe Vizziello 2014
 	dim lrow as long
@@ -45,7 +45,6 @@ SUB Pesca_cod__per_reg_A_1 &apos; per CONTABILITA
 	&apos;individua la riga corrente
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow 
-
 	oSheet = ThisComponent.currentController.activeSheet
 	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
 	iEndRow=oEnd.RangeAddress.EndRow	
@@ -58,15 +57,57 @@ SUB Pesca_cod__per_reg_A_1 &apos; per CONTABILITA
 		lrow=3
 		goto FAI
 	end if
-	stile = oSheet.GetCellByPosition(0, lRow).cellstyle
-	select case stile
-		case &quot;Comp Start Attributo_R&quot;, &quot;comp 10 s_R&quot;, &quot;Comp End Attributo_R&quot;
+REM se su firme
+	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro&quot; then
+		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro&quot;
+			lrow=lrow+1
+		loop
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow))
+	end if
+
+REM se in una voce esistente
+	Select Case oSheet.GetCellByPosition( 0 , lRow).cellstyle
+		Case = &quot;Comp End Attributo_R&quot; , &quot;Comp Start Attributo_R&quot; , &quot;comp 10 s_R&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (lRow)
 			With sStRange.RangeAddress
-				lRow = .EndRow+1
+				iVoce =.StartRow
+				fVoce = .EndRow
 			End With
-			goto FAI
-	end select
+REM controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate
+			if 	oSheet.getCellByPosition(22, ivoce+1).string = &quot;#reg&quot; and _ 
+				oSheet.GetCellByPosition( 0 , fvoce+1).cellstyle &lt;&gt; &quot;Comp End Attributo_R&quot; then	
+					nSal = oSheet.getCellByPosition(23, ivoce+1).value
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, fvoce+1))
+					if	oSheet.getCellByPosition(22, fVoce+2).string = &quot;#reg&quot; OR _
+						oSheet.GetCellByPosition(0, fVoce+1).cellstyle = &quot;Ultimus_centro&quot; then &apos; misura successiva
+						&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition(22, fVoce+2))
+						ttt=msgbox (&quot;Inserendo qui una voce, comprometterai la validità di atti contabili già emessi.&quot; &amp; CHR$(10) _
+							&amp; &quot;Scegliendo OK sarai costretto a rigenerarli!&quot; &amp; CHR$(10) _
+							&amp; &quot;Scegliendo ANNULLA, potrai decidere una diversa posizione di inserimento.&quot;, 48 + 1, &quot;AVVISO: misure già registrate!&quot;)
+							select case ttt
+								case 1 &apos; su OK
+									lrow = fVoce+1
+								case 2 &apos; su ANNULLA
+									exit sub
+							end select
+						else 
+						lrow = fVoce+1
+					end if
+				else
+				lrow = fVoce+1
+			end if
+			GoTo FAI
+	End select
+goto salta_controllo:
+&apos;	select case oSheet.GetCellByPosition(0, lRow).cellstyle
+&apos;		case &quot;Comp Start Attributo_R&quot;, &quot;comp 10 s_R&quot;, &quot;Comp End Attributo_R&quot;
+&apos;			sStRange = Circoscrive_Voce_Computo_Att (lRow)
+&apos;			With sStRange.RangeAddress
+&apos;				lRow = .EndRow+1
+&apos;			End With
+&apos;			goto FAI
+&apos;	end select
+salta_controllo:
 
 FAI:
 &apos;1) registra la posizione
@@ -82,6 +123,7 @@ FAI:
 			&amp; &quot;Un click sulla riga della voce e poi ri-aziona semplicemente la macro &apos;Pesca va e vieni&apos;!&quot; &amp; CHR$(10)_
 			&amp; &quot;( Ctrl ins Ctrl 8 Ctrl Alt K )&quot;
 	end if
+	pesca_cod
 End SUB
 
 
@@ -159,23 +201,6 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
  			end if
 		next
 	next
-&apos; 	select case sD
-&apos;					case &quot;2&quot;
-&apos;						Barra_chiudi_sempre_4
-&apos;						exit sub
-&apos;						
-&apos;					case &quot;7&quot; &apos; rispostA NO: non fa niente (fa finta di niente e prosegue)
-&apos;					case &quot;6&quot;
-&apos;						Flags = com.sun.star.sheet.CellFlags.FORMULA + _
-&apos;								com.sun.star.sheet.CellFlags.OBJECTS
-&apos;						aSaveData = oRangeMisure.getDataArray()
-&apos;		 				&apos;Questa linea salva i dati delle varie celle prima di cancellare le formule altrimenti
-&apos;						&apos;una volta cancellate le relative celle risulterebbero vuote
-&apos;					 	oRangeMisure.clearContents(Flags)
-&apos;						oRangeMisure.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
-&apos;	end select
-	
-&apos;	Barra_chiudi_sempre_4
 
 	&apos;azzero la var solo dopo aver deciso e risolto la questione dei link
 	sMemoPesca = empty
@@ -245,7 +270,8 @@ STILI:	REM attribuisco gli stili alla voce proveniente dal computo
 	end if
 	oSheet.GetCellByPosition(1 , sotto).cellstyle = &quot;comp sotto Bianche_R&quot;						&apos;sotto sotto articolo
 	oSheet.GetCellByPosition(2 , lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;			&apos;descrizione
-	oSheet.getCellRangeByPosition(9 , lrow+1, 30, lrow+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;	&apos;a destra della descrizione
+	oSheet.getCellByPosition(9 , lrow+1).cellstyle = &quot;vuote2&quot;									&apos;unità di misura nascosta
+	oSheet.getCellRangeByPosition(10 , lrow+1, 30, lrow+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;	&apos;a destra della descrizione
 	oSheet.getCellRangeByPosition(19, lRow+1, 23, lRow+1).cellstyle = &quot;num centro&quot;				&apos;Lib. N. e P.
 &apos;	oSheet.GetCellByPosition(13 , lRow+1).cellstyle = &quot;Sal&quot;										&apos;Sal
 	oSheet.getCellRangeByPosition(2 , lrow+2, 8, sotto-1).cellstyle = &quot;comp 1-a&quot;				&apos;misure
@@ -298,6 +324,8 @@ IMPOSTO_VALORI_E_FORMULE:
 	oSheet.GetCellByPosition(15 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
 	oSheet.GetCellByPosition(17, sotto).setformula(&quot;=J&quot; &amp; sotto+1 &amp; &quot;*AB&quot; &amp; sotto+1) &apos;IMPORTO
 	oSheet.GetCellByPosition(17 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
+	oSheet.GetCellByPosition(23, lrow+1).setvalue(nSal)								&apos;Numero SAL
+	oSheet.GetCellByPosition(23, lrow+1).cellstyle = &quot;Sal&quot;
 Numera_Voci_Computo (&quot;niente prompt&quot;)
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow+2))
 exit sub

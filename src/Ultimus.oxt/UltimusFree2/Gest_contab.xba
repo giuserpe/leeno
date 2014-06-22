@@ -216,8 +216,8 @@ end sub
 Sub Svuota_CONTABILITA_esegui (optional sSommari as String) &apos;(C) Giuseppe Vizziello 2014 - riscritta totalmente
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	for i = 1 to 20 &apos;(questo 20 posso dedurlo dal quadro riepilogativo contabile)
-		if ThisComponent.NamedRanges.hasByName(&quot;Sal_&quot; &amp; i) then
-		 	ThisComponent.NamedRanges.removeByName(&quot;Sal_&quot; &amp; i)
+		if ThisComponent.NamedRanges.hasByName(&quot;Lib#&quot; &amp; i) then
+		 	ThisComponent.NamedRanges.removeByName(&quot;Lib#&quot; &amp; i)
 		end if
 	next
 		

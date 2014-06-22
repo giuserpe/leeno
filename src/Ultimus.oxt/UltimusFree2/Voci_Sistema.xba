@@ -964,13 +964,14 @@ dim ocell as object
 &apos;print lrow
 &apos;xray osheet
  Controlla_Somma_locale (9, lrow)
- Controlla_Somma_locale (10, lrow)
- Controlla_Somma_locale (12, lrow) 
- Controlla_Somma_locale (13, lrow) 
- Controlla_Somma_locale (14, lrow) 
- Controlla_Somma_locale (15, lrow)
- Controlla_Somma_locale (16, lrow)
- Controlla_Somma_locale (17, lrow) 
+ rem LE SUCCESSIVE NON SONO PIù VALIDE DALLA 3.9.2
+&apos; Controlla_Somma_locale (10, lrow) &apos; perizia di variante
+&apos; Controlla_Somma_locale (12, lrow) &apos;sal1
+&apos; Controlla_Somma_locale (13, lrow) &apos;sal1
+&apos; Controlla_Somma_locale (14, lrow) &apos;sal1
+&apos; Controlla_Somma_locale (15, lrow) &apos;sal1
+&apos; Controlla_Somma_locale (16, lrow) &apos;sal1
+&apos; Controlla_Somma_locale (17, lrow) &apos;sicurezza
 &apos;print &quot;dopo la seriereisulta&quot;
 &apos; xray osheet
  &apos;print &quot;e ritorno&quot;
@@ -1014,27 +1015,11 @@ Dim osheet as object
 			end if
 	loop
 
- &apos;&apos;&apos;&apos;	 do while oSheet.GetCellByPosition( lcol , lrow).string &lt;&gt; &quot;-&quot;_
- &apos;	 print lcol
-	 &apos; and Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow-1), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
-	 &apos; print oSheet.GetCellByPosition( lcol , lrow).string
-&apos;&apos;&apos;&apos;		 lrow = lrow-1
-	&apos;	 ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrow)) &apos; debug
-	 &apos; 		print &quot;dcsf &quot; &amp; nome_sheet &amp; &quot; &quot; &amp; lrow
-&apos;&apos;&apos;&apos;	 loop
-
-&apos;	 do while xA &lt;&gt; &quot;-&quot;_
-&apos;	 and Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow-1), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
-	 &apos; NB nei loop si deve usare AND... una o l&apos;altra condizione fanno uscire dal loop... ?
-&apos;	 	lrow = lrow-1
-&apos;	 	oCell = oSheet.GetCellByPosition( lcol , lrow)
-&apos;	 	xA = oCell.string
-
-&apos;	 loop
-
-	 lrow = lrow+3&apos;2 &apos;usando 2 come valore fa la somma comprendendo il &quot;-&quot; di fine somma	
-	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;
-	 oCellB.setformula(sFormula	)
+Print LROWb
+	 lrow = lrow+3&apos;2 &apos;usando 2 come valore fa la somma comprendendo il &quot;-&quot; di fine somma
+	 sFormula = &quot;=IF(SUBTOTAL(9;&quot;&amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;)&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;&quot;&amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;))&quot;
+&apos;	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;
+	 oCellB.setformula(sFormula)
 &apos;	 ThisComponent.CurrentController.Select(oCellB) &apos; debug
 &apos;	 print 
 end Function
@@ -1042,96 +1027,14 @@ end Function
 
 
 &apos;*************************************************************************************************
-Function Rifa_Somma_Analisi (lCol as long, lrow as long) &apos;dopo che si è iinserita riga 
-&apos; di % (Molto probab non serve più)
-&apos; 
-&apos;print lrow 
-&apos;dim lcol as long
-dim lrowE as long
-Dim oCell as object
-Dim oCellB as object
 
-	oSheet = ThisComponent.currentController.activeSheet
-	 lrowE = lrow
-&apos;	 lcol = oCell.CellAddress.column
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-	 ThisComponent.CurrentController.Select(oCell)
-
-	oCellB = oSheet.GetCellByPosition( 6 , lrow)
-	 sCol= ColumnNameOf(lcol)
-
-	oCellC = oSheet.GetCellByPosition( 7 , lrow)
-	 sColC= ColumnNameOf(lcol+1)
-	 
-lrow = lrow+2
-&apos;cactus
-	 do while oSheet.GetCellByPosition( lcol , lrow).string &lt;&gt; &quot;-&quot; And _
-	 			(Trova_Attr_N (oSheet.GetCellByPosition( lcol , 0), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot; And _
-	 			oSheet.GetCellbyPosition( 7, lrow ).CellStyle = &quot;An-sfondo-basso dx&quot;
-	 	 	lrow = lrow+1
-			ThisComponent.CurrentController.Select(oCell)
-&apos;print &quot;!AA&quot;
-	 loop
-
-	 lrow = lrow+2	
-	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowE+2 &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;
-	 oCellB.setformula(sFormula )
-	&apos;	 ThisComponent.CurrentController.Select(oCellB)
-&apos;	 print	sFormula	 
-
-	 sFormulaC = &quot;=SUM(&quot; &amp; sColC &amp; lrowE+2 &amp; &quot;:&quot; &amp; sColC &amp; lrow-1 &amp; &quot;)&quot;
-	 oCellC.setformula(sFormulaC )
-		 ThisComponent.CurrentController.Select(ocellc)
-&apos;	 print	sFormula_i
-	 
-&apos;print sformula
-end Function
-
-
-
-
-&apos;*************************************************************************************************
-Function Rifa_Somma_Analisi___________(lCol as long) &apos;dopo che si è iinserita riga di % (Molto probab non serve più)
-&apos; NON USATA (e non so se funziona correttamente...)
-dim lrow as long
-&apos;dim lcol as long
-dim lrowE as long
-Dim oCell as object
-Dim oCellB as object
-&apos;print &quot;lcol &quot; &amp; lCol
-&apos;oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
-	oSheet = ThisComponent.currentController.activeSheet
-	oCell = ThisComponent.CurrentSelection
-&apos;	Orange = ThisComponent.CurrentSelection
-	 lrow = oCell.CellAddress.row
-	 lrowE = lrow
-&apos;	 lcol = oCell.CellAddress.column
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-&apos;	 ThisComponent.CurrentController.Select(oCell)
-	&apos; print
-	 xA = oCell.string
-	oCellB = oCell
-	 sCol= ColumnNameOf(lcol)
-&apos;	 print sCol
-	 do while xA &lt;&gt; &quot;-&quot;
-	 	lrow = lrow-1
-	 	oCell = oSheet.GetCellByPosition( lcol , lrow)
-	 	xA = oCell.string
-	 loop
-	
-	 lrow = lrow+2	
-	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowE &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;)&quot;
-	 oCellB.setformula(sFormula )
-
-end Function
-
-&apos;**************************************************************************************************
 
 
 Sub Indirizzo_in_forma_leggibile_
 oActiveCell = ThisComponent.getCurrentSelection()
  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
  oConv.Address = oActiveCell.getCellAddress
+ xray oconv
  &apos;Print oConv.UserInterfaceRepresentation
  &apos;Print oConv.PersistentRepresentation
 END SUB

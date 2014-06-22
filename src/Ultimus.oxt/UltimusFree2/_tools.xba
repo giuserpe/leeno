@@ -174,7 +174,7 @@ oCell=thiscomponent.currentselection
 
 
 
-&apos;xray oCell
+xray oCell
 nSty=oCell.cellstyle
 &apos;print nsty
 Dim dSty as object
@@ -225,42 +225,6 @@ ELIMINA_I_NOMI_DI_AREA_ERRATI:
 print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
 			oAree. RemoveByName(oNomiArea(i))
  	end if
- next
-END SUB
-SUB NamedArea2AreaDB
-	Dim Doc As Object
-	Dim Sheet As Object
-	Dim Cell As Object
-
-&apos;	Doc = ThisComponent
-&apos;	If Doc.Sheets.hasByName(&quot;duplicati&quot;) Then
-&apos;		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)
-&apos;		Else
-&apos;		Sheet = Doc.createInstance(&quot;com.sun.star.sheet.Spreadsheet&quot;)
-&apos;		Doc.Sheets.insertByName(&quot;duplicati&quot;, Sheet)
-&apos;	End If
-	dim n as integer
- 	oDoc = ThisComponent
- 	xray oDoc
- 	&apos;oAree=oDoc.NamedRanges
-		oAree=oDoc.DatabaseRanges
- 		oNomiArea() = oAree.ElementNames()
-		n = oAree.Count - 1
-&apos;		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)&apos;
-		
- For i = 0 to n
-&apos;		Cell = Sheet.getCellByPosition(0, i)				&apos;prima colonna
-&apos;		Cell.String = oNomiArea(i)							&apos;inserisce nome area
-&apos;		Cell = Sheet.getCellByPosition(1, i)				&apos;seconda colonna
-		Contenuto=oAree.getbyname(oNomiArea(i)).content
-&apos;		Cell.String = Contenuto								&apos;inserisce il contenuto
-
-ELIMINA_I_NOMI_DI_AREA_ERRATI:
-&apos; 	if InStr(Contenuto, &quot;#REF!&quot;) or _
-&apos;			InStr(Contenuto, &quot;#rif!&quot;) then&apos;
-print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
-&apos;			oAree. RemoveByName(oNomiArea(i))
-&apos; 	end if
  next
 END SUB
 

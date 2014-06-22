@@ -40,45 +40,115 @@ sub detrai_partita_provvisoria
 	testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
 	partita (testo)
 end sub
-sub genera_allegati_contabili &apos;(C) Giuseppe Vizziello 2014
+sub Genera_Allegati_Contabili &apos;(C) Giuseppe Vizziello 2014
 	annota_pagina_libretto
 	Genera_REGISTRO
-	msgbox (&quot;Fatto. Grazie per l&apos;attesa!&quot;, 64, &quot;Voci trascritte nel registro: &quot; &amp; RigSomm-1
+	msgbox (&quot;Fatto. Grazie per l&apos;attesa!&quot;, 64, &quot;Voci registrate: &quot; &amp; RigSomm-1
 end sub
+
 sub Genera_REGISTRO &apos;(C) Giuseppe Vizziello 2014
-annota_pagina_libretto
+	oRanges = ThisComponent.NamedRanges
+goTo salta: rem solo per debug
+	for i = 1 to 100 &apos; determina il numero del registro
+		if 	oRanges.hasByName(&quot;Reg#&quot; + i) then
+			oRanges.removeByName(&quot;Reg#&quot; + i)
+			else
+			exit for
+		end if
+	Next
+salta:
+&apos;annota_pagina_libretto
 Dim oSheet as object
 Dim oSheets as object
 Dim elVoci()&apos; elenco voci
 &apos;goto main:
 &apos;on error goto fine
-rem attivo il registro di contabilità
-&apos;	oSheet = ThisComponent
-	If thisComponent.Sheets.hasByName(&quot;Registro&quot;) Then &apos; se la sheet esiste
-	ttt=msgbox (&quot;Esiste già una tabella con nome &quot;&quot;Registro&quot;&quot;.&quot; &amp; CHR$(10) _
-		&amp; &quot;Se scegli OK sarà rigenerata e sovrascritta!&quot; &amp; CHR$(10) _
-		&amp; &quot;Se scegli ANNULLA, potrai cambiarne il nome e riprovare.&quot;, 48 + 1, &quot;AVVISO: foglio &quot;&quot;Registro&quot;&quot; già presente!&quot;)
+
+	IF not oRanges.hasByName(&quot;Lib#1&quot;) Then &apos;recupero il numero di registro da produrre
+		msgbox (&quot;Non è stata registrata nessuna misura del libretto!&quot;, 48 + 1, &quot;AVVISO!&quot;)
+		Exit Sub
+&apos;		nSal=1
 		else
-		thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,5,0) &apos; creala ALLA POSIZIONE 4
-		oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
-	end if
-	If ttt = 1 then &apos;se scegli OK
-		thisComponent.getSheets().removeByName(&quot;Registro&quot;) &apos; cancella la sheet
-		thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,5,0) &apos; ricreala ALLA POSIZIONE 4
-	end if
-	If ttt = 2 then &apos;se scegli ANNULLA
-		oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
-		ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0)) &apos;visualizza registro
-		exit sub	&apos;esci
-	end if
-main:
+		nSal=20
+		Do while nSal &gt; 0
+			IF oRanges.hasByName(&quot;Lib#&quot; &amp; nSal) THEN
+				exit do
+			end if
+		nSal=nSal-1
+		Loop
+	end If
+
+&apos;GoTo salto1:
+&apos;	If thisComponent.Sheets.hasByName(&quot;Registro&quot;) Then &apos; se la sheet esiste
+&apos;		ttt=msgbox (&quot;Esiste già una tabella con nome &quot;&quot;Registro&quot;&quot;.&quot; &amp; CHR$(10) _
+&apos;		&amp; &quot;Se scegli OK sarà rigenerata e sovrascritta!&quot; &amp; CHR$(10) _
+&apos;		&amp; &quot;Se scegli ANNULLA, potrai cambiarne il nome e riprovare.&quot;, 48 + 1, &quot;AVVISO: foglio &quot;&quot;Registro&quot;&quot; già presente!&quot;)
+&apos;		else
+&apos;		thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,5,0) &apos; creala ALLA POSIZIONE 4
+&apos;		oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+&apos;	end if
+&apos;	If ttt = 1 then &apos;se scegli OK
+&apos;		thisComponent.getSheets().removeByName(&quot;Registro&quot;) &apos; cancella la sheet
+&apos;		thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,5,0) &apos; ricreala ALLA POSIZIONE 4
+&apos;	end if
+&apos;	If ttt = 2 then &apos;se scegli ANNULLA
+&apos;		oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+&apos;		ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0)) &apos;visualizza registro
+&apos;		exit sub	&apos;esci
+&apos;	end If
+&apos;salto1:
+
+rem attivo il registro di contabilità
+
+	Select Case nSal
+	Case = 1
+		If not thisComponent.Sheets.hasByName(&quot;Registro&quot;) Then &apos; se la sheet esiste
+			thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,5,0) &apos; ricreala ALLA POSIZIONE 4
+		End If
+		oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+rem riga di intestazione
+		oSheetReg.getCellRangeByPosition(0,2,9,2).CellStyle=&quot;An.1v-Att Start&quot; &apos;STILE
+		oSheetReg.GetCellByPosition(0,2).setstring(&quot;N. ord.&quot;+ chr(13) +&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
+		oSheetReg.GetCellByPosition(1,2).setstring(&quot;LAVORAZIONI&quot;+ chr(13) + &quot;E SOMMINISTRAZIONI&quot;)
+		oSheetReg.GetCellByPosition(2,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
+		oSheetReg.GetCellByPosition(3,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
+		oSheetReg.GetCellByPosition(4,2).setstring(&quot;U.M.&quot;)
+		oSheetReg.GetCellByPosition(5,2).setstring(&quot;Quantità&quot; + chr(13) + &quot;Positive&quot;)
+		oSheetReg.GetCellByPosition(6,2).setstring(&quot;Quantità&quot; + chr(13) + &quot;Negative&quot;)
+		oSheetReg.GetCellByPosition(7,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
+		oSheetReg.GetCellByPosition(8,2).setstring(&quot;Importi&quot; + chr(13) + &quot;debito&quot;)
+		oSheetReg.GetCellByPosition(9,2).setstring(&quot;Importi&quot; + chr(13) + &quot;pagamento&quot;)
+	fissa (0,3)
+REM larghezza colonne
+		oSheetReg.getColumns().getByName(&quot;A&quot;).Columns.Width = 1600
+		oSheetReg.getColumns().getByName(&quot;B&quot;).Columns.Width = 7300
+		oSheetReg.getColumns().getByName(&quot;C&quot;).Columns.Width = 700
+		oSheetReg.getColumns().getByName(&quot;D&quot;).Columns.Width = 700
+		oSheetReg.getColumns().getByName(&quot;E&quot;).Columns.Width = 1500
+		oSheetReg.getColumns().getByName(&quot;F&quot;).Columns.Width = 1800
+		oSheetReg.getColumns().getByName(&quot;G&quot;).Columns.Width = 1800
+		oSheetReg.getColumns().getByName(&quot;H&quot;).Columns.Width = 1400
+		oSheetReg.getColumns().getByName(&quot;I&quot;).Columns.Width = 1900
+		oSheetReg.getColumns().getByName(&quot;J&quot;).Columns.Width = 1900
+		InsRow = 3 &apos;prima riga inserimento in Registro
+	Case &gt;1
+	oNamedRange=oRanges.getByName(&quot;Reg#&quot; &amp; nSal-1).referredCells
+	With oNamedRange.RangeAddress
+		precRowReg = .EndRow
+	End With
+	InsRow = precRowReg+1
+	Print InsRow
+End Select
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,0,0))
-	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet) 
-	lrowFine =oEnd.RangeAddress.EndRow-2
-	for i = 3 to lrowFine
+Rem Recupero i dati dal libretto
+	oNamedRange=oRanges.getByName(&quot;Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
+	With oNamedRange.RangeAddress
+		dariga = .StartRow
+		ariga = .EndRow
+	End With
+	for i = daRiga to aRiga
 		if oSheet.GetCellByPosition(0, i).cellstyle = &quot;Comp Start Attributo_R&quot; then &apos;i = inizio voce
-		
 			sStRange = Circoscrive_Voce_Computo_Att (i)
 &apos;			print i
 			With sStRange.RangeAddress
@@ -94,76 +164,154 @@ main:
 			quant = oSheet.GetCellByPosition( 9, f).getvalue &apos;quantità
 			prezzo = oSheet.GetCellByPosition( 13, f).getvalue &apos;prezzo
 			importo= oSheet.GetCellByPosition( 15, f).getvalue &apos;importo
-
+		else 
+	exit for
 		end if
 		i=f
 		&apos;voce = array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo)
 		AppendItem(elVoci(), array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo))
-		Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; lrowFine-i &amp;&quot; righe...&quot;, 0)
+		Barra_Apri_Chiudi_5(&quot;                                Restano &quot;&amp; aRiga-i &amp;&quot; righe...&quot;, 0)
 	next
 	rem*****************************************************************************************
-	REM INIZIO INSERIMENTO
-	oSheetS= thisComponent.Sheets.getByName(&quot;Registro&quot;)	
-	ThisComponent.CurrentController.Select(oSheetS.getCellRangeByPosition(0,0,0,0))
-	RigSomm = 3 &apos;prima riga inserimento in Registro
-	ColSomm = 0 &apos;prima colonna inserimento in Registro
+REM INIZIO INSERIMENTO
+	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)	
+	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(0,0,0,0))
+	InsCol = 0 &apos;prima colonna inserimento in Registro
+	REM RIGA RIPORTO
+	oSheetReg.GetCellByPosition(1, InsRow).setSTRING(&quot;R I P O R T O&quot;)
+	oSheetReg.GetCellByPosition(8, InsRow).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; InsRow &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; InsRow &amp; &quot;);2))&quot;)
+	oSheetReg.GetCellByPosition(9, InsRow).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$J$2:$J$&quot; &amp; InsRow &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$J$2:$J$&quot; &amp; InsRow &amp; &quot;);2))&quot;)
+	oSheetReg.getCellRangeByPosition (0,InsRow,9,InsRow).CellStyle = &quot;Ultimus_Bordo_sotto&quot;
+	InsRow=InsRow+1
 	for each el in elVoci()
 &apos;		for each n in el()
-			oSheetS.GetCellByPosition(ColSomm, RigSomm).setstring(el(0)+ chr(13) + el(1)+ chr(13) + el(2))&apos; num, art, data
-&apos;			oSheetS.GetCellByPosition(ColSomm+1, RigSomm).setstring(el(1)+ chr(13) + el(2))
-			oSheetS.GetCellByPosition(ColSomm+1, RigSomm).setstring(el(3)) &apos;descrizione
-			oSheetS.GetCellByPosition(ColSomm+2, RigSomm).setvalue(el(5)) &apos;Nlib
-			oSheetS.GetCellByPosition(ColSomm+3, RigSomm).setvalue(el(6)) &apos;Plib
-			oSheetS.GetCellByPosition(ColSomm+4, RigSomm).setstring(el(4)) &apos;um
+			oSheetReg.GetCellByPosition(InsCol, InsRow).setstring(el(0)+ chr(13) + el(1)+ chr(13) + el(2))&apos; num, art, data
+&apos;			oSheetReg.GetCellByPosition(InsCol+1, InsRow).setstring(el(1)+ chr(13) + el(2))
+			oSheetReg.GetCellByPosition(InsCol+1, InsRow).setstring(el(3)) &apos;descrizione
+			oSheetReg.GetCellByPosition(InsCol+2, InsRow).setvalue(el(5)) &apos;Nlib
+			oSheetReg.GetCellByPosition(InsCol+3, InsRow).setvalue(el(6)) &apos;Plib
+			oSheetReg.GetCellByPosition(InsCol+4, InsRow).setstring(el(4)) &apos;um
 			if el(7)&gt;0 then
-				oSheetS.GetCellByPosition(ColSomm+5, RigSomm).setvalue(el(7)) &apos;quantità
+				oSheetReg.GetCellByPosition(InsCol+5, InsRow).setvalue(el(7)) &apos;quantità
 				else
-				oSheetS.GetCellByPosition(ColSomm+6, RigSomm).setvalue(el(7)) &apos;quantità in meno
+				oSheetReg.GetCellByPosition(InsCol+6, InsRow).setvalue(el(7)) &apos;quantità in meno
 			end if
-			oSheetS.GetCellByPosition(ColSomm+7, RigSomm).setvalue(el(8)) &apos;prezzo
+			oSheetReg.GetCellByPosition(InsCol+7, InsRow).setvalue(el(8)) &apos;prezzo
 			if el(9)&gt;0 then
-				oSheetS.GetCellByPosition(ColSomm+8, RigSomm).setvalue(el(9)) &apos;debito
+				oSheetReg.GetCellByPosition(InsCol+8, InsRow).setvalue(el(9)) &apos;debito
 				else
-				oSheetS.GetCellByPosition(ColSomm+9, RigSomm).setvalue(el(9)) &apos;pagamento
+				oSheetReg.GetCellByPosition(InsCol+9, InsRow).setvalue(el(9)) &apos;pagamento
 			end if
-			RigSomm=RigSomm+1
-	next
-	rem riga di intestazione
-	oSheets.getCellRangeByPosition(0,2,9,2).CellStyle=&quot;An.1v-Att Start&quot;
-	oSheets.GetCellByPosition(0,2).setstring(&quot;N. ord.&quot;+ chr(13) +&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
-	oSheets.GetCellByPosition(1,2).setstring(&quot;LAVORAZIONI&quot;+ chr(13) + &quot;E SOMMINISTRAZIONI&quot;)
-	oSheets.GetCellByPosition(2,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
-	oSheets.GetCellByPosition(3,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
-	oSheets.GetCellByPosition(4,2).setstring(&quot;U.M.&quot;)
-	oSheets.GetCellByPosition(5,2).setstring(&quot;Quantità&quot; + chr(13) + &quot;Positive&quot;)
-	oSheets.GetCellByPosition(6,2).setstring(&quot;Quantità&quot; + chr(13) + &quot;Negative&quot;)
-	oSheets.GetCellByPosition(7,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
-	oSheets.GetCellByPosition(8,2).setstring(&quot;Importi&quot; + chr(13) + &quot;debito&quot;)
-	oSheets.GetCellByPosition(9,2).setstring(&quot;Importi&quot; + chr(13) + &quot;pagamento&quot;)
-REM larghezza colonne
-	oSheetS.getColumns().getByName(&quot;A&quot;).Columns.Width = 1600
-	oSheetS.getColumns().getByName(&quot;B&quot;).Columns.Width = 7000
-	oSheetS.getColumns().getByName(&quot;C&quot;).Columns.Width = 700
-	oSheetS.getColumns().getByName(&quot;D&quot;).Columns.Width = 700
-	oSheetS.getColumns().getByName(&quot;E&quot;).Columns.Width = 1500
-	oSheetS.getColumns().getByName(&quot;F&quot;).Columns.Width = 1800
-	oSheetS.getColumns().getByName(&quot;G&quot;).Columns.Width = 1800
-	oSheetS.getColumns().getByName(&quot;H&quot;).Columns.Width = 1500
-	oSheetS.getColumns().getByName(&quot;I&quot;).Columns.Width = 2000
-	oSheetS.getColumns().getByName(&quot;J&quot;).Columns.Width = 2000
-REM gli do il colore
-&apos;	oSheetS.getCellRangeByPosition(0, 3, 0, RigSomm-1).cellstyle = &quot;comp progress&quot;		&apos;n.
-	oSheetS.getCellRangeByPosition(0, 3, 1, RigSomm-1).cellstyle = &quot;List-stringa-sin&quot;	&apos;descr.
-&apos;	oSheetS.getCellRangeByPosition(2, 3, 2, RigSomm-1).cellstyle = &quot;List-stringa-centro&quot;&apos;u.m.
-	oSheetS.getCellRangeByPosition(2, 3, 4, RigSomm-1).cellstyle = &quot;List-num-centro&quot;	&apos;Lib. N. P.
-	oSheetS.getCellRangeByPosition(5, 3, 6, RigSomm-1).cellstyle = &quot;comp 1a&quot;			&apos;quant
-	oSheetS.getCellRangeByPosition(7, 3, 9, RigSomm-1).cellstyle = &quot;List-num-euro&quot;		&apos;soldi
+			InsRow=InsRow+1
+	Next
+	InsRow=InsRow+1
+	oSheetReg.GetCellByPosition(InsCol+1, InsRow).setstring(&quot;Parziale LAVORI A MISURA euro&quot;)
+	oSheetReg.GetCellByPosition(InsCol+8, InsRow).setformula(&quot;=ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; InsRow &amp; &quot;);2)&quot;)
+
+	oSheetReg.GetCellByPosition(InsCol+1, InsRow+2).setstring(&quot;T O T A L E  euro&quot;)
+	oSheetReg.GetCellByPosition(InsCol+8, InsRow+2).setformula(&quot;=ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; InsRow+2 &amp; &quot;);2)&quot;)
+&apos;	fineMisure = InsRow
+	inizioFirme = InsRow+3
+firme (inizioFirme)
+	fineFirme = getLastUsedRow(oSheetReg)&apos;+1
+
+rem definisci il range del SAL
+&apos;	For i= 0 To 100
+&apos;		insRows (fineFirme+i,1) &apos;insertByIndex non funziona
+&apos;		If oSheetReg.GetCellByPosition(0,fineFirme+i).rows.IsStartOfNewPage = True Then
+&apos;			Print fineFirme+i
+&apos;			Exit For
+&apos;		End if
+&apos;	Barra_Apri_Chiudi_5(&quot;                                           &quot;&amp; fineFirme+i, 0)
+&apos;	Next
+&apos;		Print fineFirme+i
+	If precRowReg&lt;3 Then precRowReg =2
+	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$J$&quot;&amp;fineFirme+1
+	rifa_nomearea (&quot;Registro&quot;, area , &quot;Reg#&quot; &amp; nSal)
+rem set area di stampa
+		oNamedRange=oRanges.getByName(&quot;Reg#&quot; &amp; nSal).referredCells
+		With oNamedRange.RangeAddress
+			daRiga = .StartRow
+			aRiga = .EndRow
+			daColonna = .StartColumn
+			aColonna = .EndColumn
+		End With
+
+
+	ThisComponent.CurrentController.setFirstVisibleRow(daRiga)
+REM	gli do il colore
+	&apos;	oSheetReg.getCellRangeByPosition(0, daRiga+1, 0, InsRow).cellstyle = &quot;comp progress&quot;		&apos;n.
+		oSheetReg.getCellRangeByPosition(0, daRiga+1, 1, InsRow).cellstyle = &quot;List-stringa-sin&quot;	&apos;descr.
+	&apos;	oSheetReg.getCellRangeByPosition(2, daRiga+1, 2, InsRow).cellstyle = &quot;List-stringa-centro&quot;&apos;u.m.
+		oSheetReg.getCellRangeByPosition(2, daRiga+1, 4, InsRow).cellstyle = &quot;List-num-centro&quot;	&apos;Lib. N. P.
+		oSheetReg.getCellRangeByPosition(5, daRiga+1, 6, InsRow).cellstyle = &quot;comp 1a&quot;			&apos;quant
+		oSheetReg.getCellRangeByPosition(7, daRiga+1, 9, InsRow).cellstyle = &quot;List-num-euro&quot;		&apos;soldi
+&apos;oSheetReg.GetCellByPosition(0 ,dariga).rows.IsManualPageBreak = true
+	Dim selArea(0) as new com.sun.star.table.CellRangeAddress
+		selArea(0).StartColumn = daColonna
+		selArea(0).StartRow = daRiga
+		selArea(0).EndColumn = aColonna
+		selArea(0).EndRow = aRiga
+&apos;		xray selArea()
+&apos;		xxx() = oNamedRange.RangeAddress()
+&apos;		xray xxx()
+rem set intestazione area di stampa
+		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
+		oTitles.startRow = 2&apos; headstart - 1
+		oTitles.EndRow = 2 &apos;headend - 1
+		oTitles.startColumn = daColonna
+		oTitles.EndColumn = aColonna
+		oSheetReg.setTitleRows(oTitles)
+		oSheetReg.setPrintareas(selArea())
+		oSheetReg.setPrintTitleRows(true)
+		Visualizza_PageBreak
+&apos;		xray osheets
+		fineFirme = getLastUsedRow(oSheetReg)
+&apos;Print dariga
+&apos;Print finefirme
+&apos;	oSheetReg.getCellRangeByPosition (0,inizioFirme-4,9,fineFirme-1).CellStyle = &quot;Ultimus_centro&quot;
+&apos;	oSheetReg.getCellByPosition(1 , inizioFirme+1).CellStyle = &quot;ULTIMUS&quot;
+&apos;	oSheetReg.getCellByPosition(1 , inizioFirme+11).CellStyle = &quot;ULTIMUS&quot;
+	oSheetReg.getCellRangeByPosition (0,inizioFirme-4,9,inizioFirme).CellStyle = &quot;ULTIMUS&quot;
+
+	oSheetReg.getCellByPosition(InsCol+1, InsRow).CellStyle = &quot;Ultimus_destra&quot;
+	oSheetReg.getCellByPosition(InsCol+1, InsRow+2).CellStyle = &quot;Ultimus_destra&quot;
+	oSheetReg.getCellByPosition(InsCol+8, InsRow).CellStyle = &quot;Ultimus_destra_totali&quot;
+	oSheetReg.getCellByPosition(InsCol+8, InsRow+2).CellStyle = &quot;Ultimus_destra_totali&quot;
+
+REM il settaggio degli stili, messo qui e ripetuto qualche riga sotto, serve a regolare bene l&apos;altezza delle celle
 adatta_altezza: 
- oCell=oSheetS.getCellRangeByPosition(0, 0, 9, RigSomm-1)
- ThisComponent.CurrentController.Select(oCell)
- Adatta_Altezza_riga
- fissa (0,3)
-end sub
+	oCell=oSheetReg.getCellRangeByPosition(0, daRiga, 9, fineFirme)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+	
+	Do While oSheetReg.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage = False
+		insRows (fineFirme,1) &apos;insertByIndex non funziona
+		oSheetReg.GetCellByPosition(1, fineFirme).setstring(&quot;--------------------------------------&quot;)
+		fineFirme = fineFirme+1
+&apos;				Barra_Apri_Chiudi_5(&quot;                                           &quot;&amp; _
+&apos;				 oSheetReg.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage, 0)
+	Loop
+	fineFirme = fineFirme-1
+&apos;Print oSheetReg.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage &amp; &quot; &quot; &amp; fineFirme
+	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$J$&quot;&amp;getLastUsedRow(oSheetReg)-1
+	rifa_nomearea (&quot;Registro&quot;, area , &quot;Reg#&quot; &amp; nSal)
+	oSheetReg.rows.removeByIndex (getLastUsedRow(oSheetReg), 1)
+	oSheetReg.rows.removeByIndex (getLastUsedRow(oSheetReg), 1)
+&apos;	Print insrow
+&apos;	print inizioFirme
+&apos;	print fineFirme
+REM LA RIPETIZIONE DEL SETTAGGIO DEGLI STILI E&apos; VOLUTA - VEDI REM DI SOPRA
+	oSheetReg.getCellRangeByPosition (0,inizioFirme,9,fineFirme-1).CellStyle = &quot;Ultimus_centro&quot;
+	oSheetReg.getCellByPosition(1 , inizioFirme+1).CellStyle = &quot;ULTIMUS&quot;
+	oSheetReg.getCellByPosition(1 , inizioFirme+11).CellStyle = &quot;ULTIMUS&quot;
+	oSheetReg.getCellRangeByPosition (0,inizioFirme,9,inizioFirme).CellStyle = &quot;ULTIMUS&quot;
+REM ULTIMA RIGA:
+	oSheetReg.GetCellByPosition(1, fineFirme-1).setSTRING(&quot;A   R I P O R T A R E&quot;)
+	oSheetReg.GetCellByPosition(8, fineFirme-1).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; fineFirme-1 &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; fineFirme-1 &amp; &quot;);2))&quot;)
+	oSheetReg.GetCellByPosition(9, fineFirme-1).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$J$2:$J$&quot; &amp; fineFirme-1 &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$J$2:$J$&quot; &amp; fineFirme-1 &amp; &quot;);2))&quot;)
+	oSheetReg.getCellRangeByPosition (0,fineFirme-1,9,fineFirme-1).CellStyle = &quot;Ultimus_Bordo_sotto&quot;
+end Sub
 
 sub test
 	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
@@ -171,34 +319,116 @@ sub test
 	oCell=thisComponent.getCurrentSelection()
 	xray ocell
 end sub
+Sub bbbbbbbbbbb
+	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+	print oSheetReg.GetCellByPosition(0,31).rows.IsStartOfNewPage
+&apos;	xray thisComponent.currentselection.cellAddress
+End Sub
 
-sub firme_libretto (lrow as long, nr as long)
+
+
+sub firme (lrow as long)&apos;, nr as long) &apos;(C) Giuseppe Vizziello 2014
+	Dim oSheet as object
+	oSheet = ThisComponent.currentController.activeSheet
+da_Rimuovere_queste_3:
+&apos;	oCell=thisComponent.getCurrentSelection()
+&apos;	lRow=oCell.RangeAddress.StartRow
+	select Case oSheet.name
+		case = &quot;CONTABILITA&quot;
+			insRows (lrow,12) &apos;insertByIndex non funziona
+			osheet.getCellRangeByPosition (0,lrow,35,lrow+11).CellStyle = &quot;Ultimus_centro&quot;
+			riga_corrente = lrow+2
+REM INSERISCI LA DATA E IL PROGETTISTA
+			oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+			osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = &quot;ULTIMUS&quot;
+			oSheet.GetCellByPosition(2 , riga_corrente+3).setformula(&quot;L&apos;Impresa esecutrice&quot;)
+			oSheet.GetCellByPosition(2 , riga_corrente+4).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$17;&quot;&quot;)&quot;&quot;)&quot;)
+			oSheet.GetCellByPosition(2 , riga_corrente+8).setformula(&quot;Il Direttore dei Lavori&quot;)
+			oSheet.GetCellByPosition(2 , riga_corrente+9).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$16;&quot;&quot;)&quot;&quot;)&quot;)
+REM CONSOLIDA LA DATA	
+			oRange = oSheet.getCellRangeByPosition (2,riga_corrente,2,riga_corrente)
+			Flags = com.sun.star.sheet.CellFlags.FORMULA
+			aSaveData = oRange.getDataArray()
+			oRange.setDataArray(aSaveData)
+		case = &quot;Registro&quot;
+			insRows (lrow,20) &apos;insertByIndex non funziona
+&apos;			osheet.getCellRangeByPosition (0,lrow,9,lrow+19).CellStyle = &quot;Ultimus_centro&quot;
+&apos;			print lrow
+			riga_corrente = lrow+1
+REM INSERISCI 
+			oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+&apos;			osheet.getCellByPosition(1 , riga_corrente).CellStyle = &quot;ULTIMUS&quot;
+&apos;			oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;L&apos;Impresa esecutrice&quot;&amp; CHR$(10)&amp;&quot;sticatsi&quot;)
+&apos;			oSheet.GetCellByPosition(1 , riga_corrente+4).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$17;&quot;&quot;)&quot;&quot;)&quot;)
+			oSheet.GetCellByPosition(1 , riga_corrente+2).setformula(&quot;L&apos;Impresa esecutrice&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2 , 16).getstring + &quot;)&quot;)
+			oSheet.GetCellByPosition(1 , riga_corrente+6).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2 , 15).getstring + &quot;)&quot;)
+&apos;			oSheet.GetCellByPosition(1 , riga_corrente+8).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$16;&quot;&quot;)&quot;&quot;)&quot;)
+			oSheet.GetCellByPosition(1 , riga_corrente+10).setformula(&quot;=CONCATENATE(&quot;&quot;In data &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; è stato emesso il CERTIFICATO DI PAGAMENTO n.&quot; &amp; nSal &amp; &quot; per un importo di euro&quot;&quot;)&quot;)
+&apos;			osheet.getCellByPosition(1 , riga_corrente+11).CellStyle = &quot;ULTIMUS&quot;
+&apos;			oSheet.GetCellByPosition(1 , riga_corrente+15).setformula(&quot;Il Direttore dei Lavori&quot;)
+&apos;			oSheet.GetCellByPosition(1 , riga_corrente+16).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$16;&quot;&quot;)&quot;&quot;)&quot;)
+			oSheet.GetCellByPosition(1 , riga_corrente+12).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2 , 15).getstring + &quot;)&quot;)
+			oSheet.GetCellByPosition(1 , riga_corrente+13).setstring(&quot;Sto sistemando il Registro...&quot;)
+REM CONSOLIDA LA DATA	
+			oRange = oSheet.getCellRangeByPosition (2,riga_corrente,2,riga_corrente)
+			Flags = com.sun.star.sheet.CellFlags.STRING
+			aSaveData = oRange.getDataArray()
+			oRange.setDataArray(aSaveData)
+	end select
+end sub
+sub firme_libretto (lrow as long, nr as long) &apos;(C) Giuseppe Vizziello 2014
+
 	Dim oSheet as object
 	osheet= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
-&apos;	oNamedRange = ThisComponent.CurrentSelection
-&apos;		With oNamedRange.RangeAddress
-&apos;			lrow = .EndRow
-&apos;		End With
 	insRows (lrow,nr) &apos;insertByIndex non funziona
-	osheet.getCellRangeByPosition (0,lrow,35,lrow+14).CellStyle = &quot;Ultimus_centro&quot;
+	osheet.getCellRangeByPosition (0,lrow,35,lrow+11).CellStyle = &quot;Ultimus_centro&quot;
 	riga_corrente = lrow+2
-	REM INSERISCI LA DATA E IL PROGETTISTA
+REM INSERISCI LA DATA E IL PROGETTISTA
 	oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
 	osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = &quot;Ultimus&quot;
 	oSheet.GetCellByPosition(2 , riga_corrente+3).setformula(&quot;L&apos;Impresa esecutrice&quot;)
 	oSheet.GetCellByPosition(2 , riga_corrente+4).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$17;&quot;&quot;)&quot;&quot;)&quot;)
 	oSheet.GetCellByPosition(2 , riga_corrente+8).setformula(&quot;Il Direttore dei Lavori&quot;)
 	oSheet.GetCellByPosition(2 , riga_corrente+9).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$16;&quot;&quot;)&quot;&quot;)&quot;)
-
-	REM CONSOLIDA LA DATA	
+REM CONSOLIDA LA DATA	
 	oRange = oSheet.getCellRangeByPosition (2,riga_corrente,2,riga_corrente)
 	Flags = com.sun.star.sheet.CellFlags.FORMULA
 	aSaveData = oRange.getDataArray()
 	oRange.setDataArray(aSaveData)
-	
 end sub
 
-sub annota_pagina_libretto&apos; su CONTABILITA (solo libretto dalla 3.9.2)
+sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
+	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
+	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
+	oCell=thisComponent.getCurrentSelection()
+	lRow=oCell.RangeAddress.StartRow
+
+	if oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;Ultimus_centro&quot; then
+		for i = 1 to 100
+			if oSheet.GetCellByPosition(0 , lrow-i).CellStyle &lt;&gt; &quot;Ultimus_centro&quot; then
+				uRow =lrow-i+1
+				exit for
+			end if
+		next
+		else
+		MsgBox (&quot;Devi selezionare una firma.&quot;, 1+48+256, &quot;Attenzione!&quot;) 
+		exit sub
+	end if
+
+	if oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;Ultimus_centro&quot; then
+		for i = 1 to 100
+			if oSheet.GetCellByPosition(0 , lrow+i).CellStyle &lt;&gt; &quot;Ultimus_centro&quot; then
+				dRow =lrow+i-1
+				exit for
+			end if
+		next
+	end if
+		oSheet.rows.removeByIndex (urow, drow-urow+1)
+end sub
+sub annota_pagina_libretto&apos; (C) Giuseppe Vizziello 2014
 Dim oSheet as object
 Dim inumPag as long
 Dim sStRange as object
@@ -211,17 +441,24 @@ Dim aVoce as string
 ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, 0))
 &apos;	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).protect(&quot;&quot;)
 	oRanges = ThisComponent.NamedRanges
-&apos;	oRanges.removeByName(&quot;Sal_1&quot;)
-&apos;	oRanges.removeByName(&quot;Sal_2&quot;)
-&apos;	oRanges.removeByName(&quot;Sal_3&quot;)
-&apos;	exit sub
-REM Recupero il nome del SAL
-	IF not oRanges.hasByName(&quot;Sal_1&quot;) THEN
+GoTo salta: &apos;solo per debug
+	for i = 2 to 100
+		if 	oRanges.hasByName(&quot;Lib#&quot; + i) then
+			oRanges.removeByName(&quot;Lib#&quot; + i)
+			else
+			exit for
+		end if
+	Next
+	Exit sub
+salta:
+
+REM Recupero il nome del SAL da registrare
+	IF not oRanges.hasByName(&quot;Lib#1&quot;) THEN
 		nSal=1
 		else
-		nSal=5
+		nSal=20
 		Do while nSal &gt; 0
-			IF oRanges.hasByName(&quot;Sal_&quot; &amp; nSal) THEN
+			IF oRanges.hasByName(&quot;Lib#&quot; &amp; nSal) THEN
 		&apos;			nSal=nSal-1
 				exit do
 			end if
@@ -232,7 +469,7 @@ REM Recupero il nome del SAL
 &apos;	print nSal
 Rem Recupero la prima riga non registrata
 	If nSal &gt; 1 Then
-		oNamedRange=oRanges.getByName(&quot;Sal_&quot; &amp; nSal-1).referredCells&apos;.RangeAddress
+		oNamedRange=oRanges.getByName(&quot;Lib#&quot; &amp; nSal-1).referredCells&apos;.RangeAddress
 		With oNamedRange.RangeAddress
 			daVoce = .EndRow+2
 		End With
@@ -274,7 +511,7 @@ Dim oCellRange as object
 &apos;print ultimariga
 
 &apos;	lrowDown =uFindString(&quot;T O T A L E&quot;, oSheet).RangeAddress.EndRow
-	inumPag = 0
+&apos;	inumPag = 1
 	For i = primariga to ultimariga
 		Barra_Apri_Chiudi_5(&quot; #&quot;&amp; i &amp; &quot; di &quot; &amp; ultimariga, 0)
 		if oSheet.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
@@ -296,35 +533,43 @@ Dim oCellRange as object
 &apos;		oSheet.GetCellByPosition( 1 , i).Rows.Height = 500 &apos;altezza riga
 		end if
 	next
-&apos;	print primariga
-&apos;	print lrowDown
-	nomearea=&quot;SAL_&quot;+nsal
+	nomearea=&quot;Lib#&quot;+nsal
 	print nomearea
 rem annota importo parziale SAL
 	oSheet.GetCellByPosition(25, ultimariga).formula = &quot;=ROUND(SUBTOTAL(9;P&quot; &amp; primariga+1 &amp; &quot;:P&quot; &amp; ultimariga+1 &amp; &quot;);2)&quot;
 	oSheet.GetCellByPosition(25, ultimariga).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem immetti le firme
-	firme_libretto(ultimariga+1,15)&apos; riga di inserimento / nr righe da inserire
-rem definisci il range del SAL
-	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;ultimariga+15+1
+&apos;	firme_libretto(ultimariga+1,12)&apos; riga di inserimento / nr righe da inserire
+	firme(ultimariga+1)&apos; riga di inserimento
+	
+	
+rem definisci il range del Lib#
+	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;ultimariga+12+1 REM 12 è il numero di righe per la firma - si regola in SUB FIRME
 	rifa_nomearea (&quot;CONTABILITA&quot;, area , nomearea)
 	
-oSheet.GetCellByPosition(0 , ultimariga+15+1).rows.IsManualPageBreak = true
+oSheet.GetCellByPosition(0 , ultimariga+12+1).rows.IsManualPageBreak = true
 
-	rem set area di stampa
-	Dim selArea(0) as new com.sun.star.table.CellRangeAddress
-		selArea(0).StartColumn = 0
-		selArea(0).StartRow = primariga
-		selArea(0).EndColumn = 11
-		selArea(0).EndRow = ultimariga+15
+	oNamedRange=oRanges.getByName(&quot;Lib#&quot; &amp; nSal).referredCells
+	With oNamedRange.RangeAddress
+		daRiga = .StartRow
+		aRiga = .EndRow
+		daColonna = .StartColumn
+		aColonna = .EndColumn
+	End With
+rem set area di stampa
+	Dim selLib(0) as new com.sun.star.table.CellRangeAddress
+		selLib(0).StartColumn = daColonna
+		selLib(0).StartRow = daRiga
+		selLib(0).EndColumn = 11
+		selLib(0).EndRow = aRiga
 rem set intestazione area di stampa
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 2&apos; headstart - 1
 		oTitles.EndRow = 2 &apos;headend - 1
 		oTitles.startColumn = 0
 		oTitles.EndColumn = 11
-&apos;		oSheet.setTitleRows(oTitles)
-		oSheet.setPrintareas(selArea())
+		oSheet.setTitleRows(oTitles)
+		oSheet.setPrintareas(selLib())
 		oSheet.setPrintTitleRows(true)
 		Visualizza_PageBreak
 	

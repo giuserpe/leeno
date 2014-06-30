@@ -29,6 +29,7 @@ On Error GoTo fine:
 		iRowStart =.StartRow
 		iRowEnd = .EndRow
 	End With
+	If oNomeSheet = &quot;Analisi di Prezzo&quot; Then iRowEnd=iRowEnd+1
 	ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
 	If MsgBox (&quot;Stai per eliminare la voce selezionata&quot;&amp; CHR$(10)_
 		&amp;&quot;Vuoi procedere?&quot;, 1+32+256, &quot;Attenzione!&quot;) = 2 Then
@@ -318,11 +319,12 @@ dim lrowE as long
 	loop
 	lrowS = nCurRow
 	nCurRow = lrow
-	Do while (Trova_Attr_N (oSheet.GetCellByPosition( 0 ,nCurRow ), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot; or _
+&apos;	Do while (Trova_Attr_N (oSheet.GetCellByPosition( 0 ,nCurRow ), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot; or _
+	Do while oSheet.GetCellByPosition( 0, nCurRow).cellstyle &lt;&gt; &quot;An-sfondo-basso Att End&quot; and _
 			oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;----&quot;
 				nCurRow = nCurRow+1
-	loop
-	lrowE = nCurRow+1
+	Loop
+	lrowE = nCurRow&apos;+1
  oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
 	CircoscrivileAnalisi_Att= oRangeVoceC
  	exit FUNCTION
@@ -331,7 +333,6 @@ dim lrowE as long
 	CircoscrivileAnalisi_Att = &quot;Falso&quot;
 end Function
 &apos;================================================================================= 
-
 
 FUNCTION CircoscrivileAnalisi_Att__________________________(ByVal lrow As Long) &apos;individua un record di Analisi
 &apos;---------------------------------------------------------------------------

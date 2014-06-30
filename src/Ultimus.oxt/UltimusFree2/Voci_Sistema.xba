@@ -963,6 +963,7 @@ dim ocell as object
  &apos; ThisComponent.CurrentController.Select(oCell)
 &apos;print lrow
 &apos;xray osheet
+print lrow
  Controlla_Somma_locale (9, lrow)
  rem LE SUCCESSIVE NON SONO PIù VALIDE DALLA 3.9.2
 &apos; Controlla_Somma_locale (10, lrow) &apos; perizia di variante
@@ -980,9 +981,7 @@ dim ocell as object
 &apos;	print
 END SUB
 
-	
-	
-Function Controlla_Somma_locale (lCol as long, lrowB as long) &apos; agisce su singola colonna richiamata da sub
+Function Controlla_Somma_locale (lCol as long, lrowB as long) &apos; agisce su singola colonna richiamata da sub NON USATA
 dim lrow as long
 &apos;dim lcol as long
 dim lrowE as long
@@ -995,10 +994,10 @@ Dim osheet as object
 	 
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
 
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-	oCellB = oCell
-	 xA = oCell.string
-	oCellB = oSheet.GetCellByPosition( lcol , lrowB)
+	 
+&apos;	oCellB = oCell
+&apos;	 xA = oCell.string
+&apos;	oCellB = oSheet.GetCellByPosition( lcol , lrowB)
 	 &apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug
 	&apos; print nome_sheet &amp; &quot; &quot; &amp; lrow
 	 sCol= ColumnNameOf(lcol)
@@ -1008,18 +1007,26 @@ Dim osheet as object
 				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; or _
 				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra&quot; or _
 				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; or _
+				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;vuote2&quot; or _
 				lrow &lt; 4 then
 				exit do
 			 Else
 				lrow = lrow-1
 			end if
-	loop
+	Loop
 
-Print LROWb
-	 lrow = lrow+3&apos;2 &apos;usando 2 come valore fa la somma comprendendo il &quot;-&quot; di fine somma
-	 sFormula = &quot;=IF(SUBTOTAL(9;&quot;&amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;)&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;&quot;&amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow &amp; &quot;))&quot;
+	 lrow = lrow+2
+	 Select Case nome_sheet
+	 	Case &quot;COMPUTO&quot;
+	 	oCell = oSheet.GetCellByPosition( lcol , lrowb)
+	 		 sFormula = &quot;=ROUND(SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb+1 &amp; &quot;);2)&quot;
+	 	Case &quot;CONTABILITA&quot;
+	 	oCell = oSheet.GetCellByPosition( lcol , lrowb-1)
+	 		 sFormula = &quot;=ROUND(IF(SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;)&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;));2)&quot;
+	 End select
+
 &apos;	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;
-	 oCellB.setformula(sFormula)
+	 oCell.setformula(sFormula)
 &apos;	 ThisComponent.CurrentController.Select(oCellB) &apos; debug
 &apos;	 print 
 end Function

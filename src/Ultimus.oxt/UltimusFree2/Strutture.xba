@@ -30,7 +30,7 @@ Sub Inser_Capitolo
 &apos;	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet) 
+	oEnd=uFindString(sString$, oSheet)
 	lrowFine=oEnd.RangeAddress.EndRow 
 
 	If lrow &gt; lrowFine then

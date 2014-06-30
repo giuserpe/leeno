@@ -2128,4 +2128,50 @@ sub togli_salti_pagina
 &apos;	xray oSheet
 	oSheet.removeAllManualPageBreaks
 end sub
+
+
+sub SBIANCA_celle &apos; da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:BackgroundColor&quot;, &quot;&quot;, 0, Array())
+end sub
+
+
+sub SBIANCA_ANNULLA &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:ResetAttributes&quot;, &quot;&quot;, 0, Array())
+end sub
+
+
+sub rimuovi_area_di_stampa &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:DeletePrintArea&quot;, &quot;&quot;, 0, Array())
+
+
+end sub
 </script:module>

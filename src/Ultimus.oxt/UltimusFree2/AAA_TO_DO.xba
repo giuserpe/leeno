@@ -21,13 +21,9 @@
 
 sub Note_di_Versione
 &apos; uff
-xray thiscomponent
+xray thiscomponent&apos;.CodeName
 End Sub
 
-sub Ciao_Mondo
-	print &quot;ciao mondo&quot;
-	&apos;on error goto next
-end sub
 
 REM dà l&apos;indirizzo delle celle in forma umana
 Function Indirizzo_in_forma_leggibile &apos; by Paolo Mantovani

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM ***** BASIC *****
-SUB RA
-PRINT Trova_Attr_Sheet
-END SUB
+
 sub vedi_voce REM &apos;(C) Giuseppe Vizziello 2013
 	Dim test As String
 	Dim riga_selezione As Integer
@@ -305,8 +303,9 @@ REM SE COMPUTO
 			oCRA.EndRow = fine_gruppo
 			oSheet.group(oCRA,1)
 			&apos;oSheet = ThisComponent.currentController.activeSheet
+		xray oSheet
 REM NASCONDE RIGHE
-&apos;	oRange = oSheet.getCellRangeByposition(0,inizio_gruppo,0,fine_gruppo)
+	oRange = oSheet.getCellRangeByposition(0,inizio_gruppo,0,fine_gruppo)
 &apos;	oRange.Rows.IsVisible=false
 Set_Area_Stampa_N
 	END IF

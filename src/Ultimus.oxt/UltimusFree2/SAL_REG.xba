@@ -265,7 +265,7 @@ REM STRANAMENTE NON TRADUCE LA FORMULA DALL&apos;INGLESE
 	oRange.CellStyle = &quot;Reg-SAL-chiudi_Sotto&quot;
 
 	&apos; compilo la 1° riga di chiusura del sal 
-	oSheet.GetCellByPosition(2,iRowsInsert).string = sStringa &apos;
+	oSheet.GetCellByPosition(2,iRowsInsert).formula = sStringa &apos;
 	&apos;???
 	iColore = oSheet.GetCellByPosition(1,iRowsInsert).CellBackColor		
 	&apos;???

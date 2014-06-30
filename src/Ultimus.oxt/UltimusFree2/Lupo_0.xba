@@ -167,10 +167,10 @@ REM NUOVO NUMERO VERSIONE GIUSERPE
 		oSheet.unprotect(&quot;&quot;)
  versioneUF_major= 3
  versioneUF_minor= 9
- versioneUF_subversion= 1
+ versioneUF_subversion= &quot;DEV&quot;
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
-		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value = versioneUF_subversion
+		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion
 		If thisComponent.Sheets.hasByName(&quot;Scorciatoie&quot;) Then
 			ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).GetCellByPosition(1,0).string = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion 
 		end if
@@ -705,10 +705,10 @@ dim Esiste as boolean
 	
  versioneUF_major= 3
  versioneUF_minor= 9
- versioneUF_subversion= 1
+ versioneUF_subversion= &quot;DEV&quot;
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).value = versioneUF_subversion
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion 
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
 	oSheet.protect(&quot;&quot;)

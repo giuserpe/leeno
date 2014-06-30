@@ -924,9 +924,7 @@ rem	oCtrlModel.Enabled = False &apos; disabilita
 		exit sub
 	end if
 	Select Case Trova_Attr_Sheet
-		Case &quot;Tipo_computo&quot;
-			copia_riga_C
-		Case &quot;Tipo_CONTABILITA&quot;
+		Case &quot;Tipo_computo&quot; , &quot;Tipo_CONTABILITA&quot;
 			copia_riga_C
 		Case &quot;Tipo_Analisi&quot;
 			copia_riga_A
@@ -969,7 +967,12 @@ dim sFlag as string
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
 	nome_sheet = oSheet.name
-
+&apos;			if nome_sheet = &quot;COMPUTO&quot; then
+&apos;				sFlag = &quot;C&quot;
+&apos;			end if
+&apos;			if nome_sheet = &quot;CONTABILITA&quot; then
+&apos;				 sflag = &quot;C2&quot; 
+&apos;			end if
 	if oSheet.GetCellByPosition(5 , 1).getCOLUMNS.IsVisible=false then
 		oSheet.clearOutline()
 	 &apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;E&quot;) 
@@ -979,7 +982,7 @@ dim sFlag as string
 	&apos;	print &quot;altro...&quot;
 	end if	
 	
-	if nome_sheet = &quot;COMPUTO&quot; or nome_sheet = &quot;CONTABILITA&quot; then
+	if nome_sheet = &quot;COMPUTO&quot; or &quot;CONTABILITA&quot; Then &apos;nome_sheet = &quot;CONTABILITA&quot; then
 			if oSheet.GetCellByPosition( 2 , lrow).CellStyle = &quot;comp 1-a&quot; then
 					iflag = 0
 				else
@@ -988,13 +991,6 @@ dim sFlag as string
 		 				&amp; &quot; Controlla e Riprova...&quot;
 					exit sub
 			end if
-			if nome_sheet = &quot;COMPUTO&quot; then
-				sFlag = &quot;C&quot;
-			end if
-			if nome_sheet = &quot;CONTABILITA&quot; then
-				 sflag = &quot;C2&quot; 
-			end if
-			
 		else
 			If nome_sheet = &quot;Analisi di Prezzo&quot; then &apos; questa non è testata
 			&apos; infatti da analisi viene eseguita copia_riga_A - UNIFICARLE ??
@@ -1017,10 +1013,9 @@ dim sFlag as string
 	oSRC = oSheet.getCellRangeByPosition (2,lrow,250,lrow ).RangeAddress &apos; seleziona la riga sorgente
 	oDest = oSheet.GetCellByPosition(2, lrow+1).CellAddress &apos;stabilisce la destinazione
 	oSheet.copyRange(oDest,oSRC)&apos;copia sorgente su destinazione
-&apos;	print &quot;arrosto&quot;
+
 	lrow=lrow+1
 	oSheet.getCellRangeByPosition (2,lrow,8,lrow).CellStyle = &quot;comp 1-a&quot; &apos; imposta lo stile
-&apos;	print &quot;arrosto&quot;
 	lrow=lrow-1
 	oRange = oSheet.getCellRangeByPosition (2,lrow+1,150,lrow+1)
 	oRange.Rows.OptimalHeight = true
@@ -1033,19 +1028,24 @@ dim sFlag as string
 	 	 oSheet.GetCellByPosition( 6 , lrow+1).string = &quot;&quot;
 	 	 oSheet.GetCellByPosition( 7 , lrow+1).string = &quot;&quot;
 	 	 oSheet.GetCellByPosition( 8 , lrow+1).string = &quot;&quot;
-	 end if	 
-	if sflag = &quot;C&quot; then &apos; se Computo
-		Controlla_Somma_Computo_Sing_Voce (lrow+1)
-	end if
-	
-	if sflag = &quot;C2&quot; then &apos; se CONTABILITA
-		itemp = lrow 
-		oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
- 	lrow = oRangeVC.RangeAddress.EndRow
-	&apos;	Controlla_Somma_locale (9, lrow)
-	&apos; 	Controlla_Somma_locale (10, lrow)
-	 	lrow = itemp
-	end if
+	 end If
+	oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
+	sRow = oRangeVC.RangeAddress.EndRow
+&apos;	Print sRow
+Print &quot;conviene cambiare la formula del subtotale sulla S5 per evitare il Controlla_Somma_locale&quot;
+	 Select case nome_sheet
+	 	Case &quot;COMPUTO&quot;
+REM i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
+REM ma tocca usare SUBTOTAL()
+	 	Controlla_Somma_locale (9, sRow)
+	 	Case &quot;CONTABILITA&quot;
+REM i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
+REM ma tocca usare SUBTOTAL()
+	 	Controlla_Somma_locale (9, sRow)
+	 	Controlla_Somma_locale (11, sRow)
+	 End Select 
+
+	 
 &apos;Attenzione ho inserito questo richiamo percHé perdeva il focus nel viaggio
 &apos;cioè tornava inspiegabilmente come &quot;elenco Prezzi&quot; ....
  &apos;	oSheet = ThisComponent.currentController.activeSheet
@@ -1602,7 +1602,8 @@ args1(0).Value = 0
 
 dispatcher.executeDispatch(document, &quot;.uno:SetOptimalRowHeight&quot;, &quot;&quot;, 0, args1())
 
-END SUB
+END Sub
+
 
 SUB Adatta_h_riga_intera_tabella(nSheet as string)
 	oSheet = thisComponent.sheets.getbyname(nSheet)
@@ -1796,22 +1797,27 @@ Sub Svuota_Computo () &apos;svuota tutto (o quasi) il doc di computo &apos; dora
  oDocFrame = oDocCtrl.getFrame()	
 	
 	&apos; salviamo comunque il doc corrente
- oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
- oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+&apos;	oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+&apos;	oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
  
  	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;Sto svuotando questo documento... Pazienta... &quot;, 30)
 	&apos;svuota Elenco Prezzi	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	sString$ = &quot;Fine elenco&quot;
-	oEnd=uFindString(sString$, oSheet) 
-	lrowFine=oEnd.RangeAddress.EndRow-2
+	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow-1
 	If lrowFine &gt; 2 then
-		oSheet.rows.removeByIndex (2, lrowFine)
-		&apos;oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
-	&apos;	ThisComponent.CurrentController.Select(oRange)
-		&apos;elimina_riga
-	end if
+&apos;		oSheet.rows.removeByIndex (2, lrowFine)
+		oRange = osheet.getCellRangeByPosition (0,1,13,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+
+cancella_dati
+		oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+		elimina_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	end If
+
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;2 Sto svuotando questo documento... Pazienta... &quot;, 40)
 
@@ -1819,64 +1825,79 @@ Sub Svuota_Computo () &apos;svuota tutto (o quasi) il doc di computo &apos; dora
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = 0
 
-	&apos;sString$ = &quot;Fine elenco&quot;
-	oEnd=uFindString(sString$, oSheet) 
-	lrowFine=oEnd.RangeAddress.EndRow-1
-	oRange = osheet.getCellRangeByPosition (0,1,10,lrowFine )
-	Flags = com.sun.star.sheet.CellFlags.STRING _
-			 + com.sun.star.sheet.CellFlags.HARDATTR _
-				+ com.sun.star.sheet.CellFlags.VALUE
- 	oRange.clearContents(Flags)
- 	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;3 Sto svuotando questo documento... Pazienta... &quot;, 50)
-	Ripristina_Validita_Lista
+&apos;	&apos;sString$ = &quot;Fine elenco&quot;
+&apos;	oEnd=uFindString(sString$, oSheet) 
+&apos;	lrowFine=oEnd.RangeAddress.EndRow-1
+&apos;	oRange = osheet.getCellRangeByPosition (0,1,10,lrowFine )
+&apos;	Flags = com.sun.star.sheet.CellFlags.STRING _
+&apos;			 + com.sun.star.sheet.CellFlags.HARDATTR _
+&apos;				+ com.sun.star.sheet.CellFlags.VALUE
+&apos;	oRange.clearContents(Flags)
+&apos;	Barra_chiudi_sempre_4
+&apos;	Barra_Apri_Chiudi_5(&quot;3 Sto svuotando questo documento... Pazienta... &quot;, 50)
 	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
-	Adatta_h_riga_intera_tabella(&quot;Elenco Prezzi&quot;)
-
+	lrowFine= getLastUsedRow(oSheet)
+	oCell=oSheet.getCellRangeByPosition(0, 0, 9, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona	
+&apos;	Adatta_h_riga_intera_tabella(&quot;Elenco Prezzi&quot;)
+fissa(0,1)
 
 &apos;&apos;svuota Analisi
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-&apos;	sString$ = &quot;Fine Computo&quot;
-	sString$ = &quot;Fine ANALISI&quot;
-	oEnd=uFindString(sString$, oSheet) 
-	lrowFine=oEnd.RangeAddress.EndRow-2
+&apos;	lrowFine= getLastUsedRow(oSheet)
+	oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow-1
 	If lrowFine &gt; 2 then
-		oSheet.rows.removeByIndex (2, lrowFine)
-		&apos;oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
-		&apos;ThisComponent.CurrentController.Select(oRange)
-		&apos;elimina_riga
-	end if
+&apos;		oSheet.rows.removeByIndex (2, lrowFine)
+		oRange = osheet.getCellRangeByPosition (0,1,0,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+		elimina_righe
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	end If
+	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;4 Sto svuotando questo documento... Pazienta... &quot;, 60)
 
 	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
-	Adatta_h_riga_intera_tabella(&quot;Analisi di Prezzo&quot;)
-	
+	lrowFine= getLastUsedRow(oSheet)
+	oCell=oSheet.getCellRangeByPosition(0, 0, 10, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+fissa(0,1)
 &apos;svuota Computo
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet) 
+	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet) 
 	lrowFine =oEnd.RangeAddress.EndRow-1
 
-	if oSheet.GetCellByPosition( 18, lrowfine ).cellstyle = &quot;Comp TOTALI num&quot; then
-		&apos;meglio sarebbe cancellarla... ma proviamo così...
-		osheet.getCellRangeByPosition (0,lrowfine,45,lrowfine).CellStyle = &quot;Default&quot;
-	end if
+&apos;	if oSheet.GetCellByPosition( 18, lrowfine ).cellstyle = &quot;Comp TOTALI num&quot; then
+&apos;		&apos;meglio sarebbe cancellarla... ma proviamo così...
+&apos;		osheet.getCellRangeByPosition (0,lrowfine,45,lrowfine).CellStyle = &quot;Default&quot;
+&apos;	end if
 
 	lrowFine = lrowFine-1 &apos;oEnd.RangeAddress.EndRow-2
 	If lrowFine &gt; 2 then
-		oSheet.rows.removeByIndex (2, lrowFine)
-&apos;		oRange = osheet.getCellRangeByPosition (0,3,0,lrowFine )
-&apos;		ThisComponent.CurrentController.Select(oRange)
-&apos;		elimina_riga
+&apos;		oSheet.rows.removeByIndex (2, lrowFine)
+		oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+		elimina_righe
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	end if	
 	Barra_chiudi_sempre_4	
 	Barra_Apri_Chiudi_5(&quot;5 Sto svuotando questo documento... Pazienta... &quot;, 70)
 
 	Rifa_Somme_TOT_Computo
 	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
-	Adatta_h_riga_intera_tabella(&quot;COMPUTO&quot;)
-
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet) 
+	lrowFine =oEnd.RangeAddress.EndRow
+	oCell=oSheet.getCellRangeByPosition(0, 0, 43, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+fissa(0,1)
 	&apos;svuota CONTABILITA
 	Svuota_CONTABILITA_esegui 
 	
@@ -1890,7 +1911,7 @@ Sub Svuota_Computo () &apos;svuota tutto (o quasi) il doc di computo &apos; dora
 	end if &apos;
 	
 	
-	
+Ripristina_Validita_Lista	
 	salva_temp
 	
 	&apos;rendi correntexx

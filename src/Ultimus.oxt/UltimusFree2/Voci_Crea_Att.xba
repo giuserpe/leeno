@@ -131,9 +131,7 @@ MAIN:
 &apos;individua la riga corrente
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow
-	if lRow &lt;= 2 then
-		lrow = 4
-	end if
+
 	oSheet = ThisComponent.currentController.activeSheet
 VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
@@ -142,19 +140,19 @@ VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 		lrow = iEndRow-2
 		&apos;goto FAI
 	end if
-	if lRow &lt;= 2 then
-		lrow = 4
+	if lRow &lt;= 3 then
+		lrow = 3
 		goto FAI
 	end if
-	if lRow = 3 and _
-		oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle = &quot;Reg_prog&quot; then
-		lrow = 4
-		goto FAI
-	end If
+&apos;	if lRow = 3 and _
+&apos;		oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle = &quot;Reg_prog&quot; then
+&apos;		lrow = 4
+&apos;		goto FAI
+&apos;	end If
 REM se su firme
-	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro&quot; then
+	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then
 		lrow1=lrow-1
-		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro&quot;
+		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot;
 			do while oSheet.getCellByPosition(23, lrow1).value = 0
 				lrow1=lrow1-1
 			loop
@@ -179,7 +177,7 @@ REM controllo se in punto di inserimmento della nuova misura è compreso tra due
 					nSal = oSheet.getCellByPosition(23, ivoce+1).value
 					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, fvoce+1))
 					if	oSheet.getCellByPosition(22, fVoce+2).string = &quot;#reg&quot; OR _
-						oSheet.GetCellByPosition(0, fVoce+1).cellstyle = &quot;Ultimus_centro&quot; then &apos; misura successiva
+						oSheet.GetCellByPosition(0, fVoce+1).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then &apos; misura successiva
 						&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition(22, fVoce+2))
 						ttt=msgbox (&quot;Inserendo qui una voce, comprometterai la validità di atti contabili già emessi.&quot; &amp; CHR$(10) _
 							&amp; &quot;Scegliendo OK sarai costretto a rigenerarli!&quot; &amp; CHR$(10) _
@@ -639,56 +637,29 @@ SUB NuovaAnalisi_Att &apos;
 		exit sub
 	end if 
 	lrowFine=oEnd.RangeAddress.EndRow
-	If lrow &gt; lrowFine or _
-		lrow = lrowFine then &apos;oltre la riga rossa
-		lrow =lrowFine-1
+	If lrow &gt;= lrowFine Then
+	 lrow =lrowFine&apos;-1 &apos;oltre la riga rossa
+	GoTo inserisci
+	End if 
+	if lrow &lt;1 Then
+		lrow = 1
+		GoTo inserisci
 	end if
-	if lrow = 0 then
-		lrow = lrow+10
-	end if	
 	&apos; se sono sul grigio inserisco
-	if oSheet.GetCellbyPosition( 0, lrow).CellStyle= &quot;Analisi_Sfondo&quot; then 
-		goto Inserisci
-		else
-		&apos; circoscrivo la voce trovando: inizio, fine e il punto critico
-		for i = lrow to lrowFine
-			if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-sfondo-basso Att End&quot; then
-				iEnd = i
-				exit for
-			end if 
-		next	
-		for i = lrow to 2 step -1
-	&apos;	print i
-			if oSheet.GetCellbyPosition( 0, i).CellStyle= &quot;An-1_sigla&quot; then
-				iStart = i
-				exit for
-			end if 
-		next	
-			iCrit = iStart+2
-	end if
-	&apos; in base al punto critico decido se inserire sopra o sotto
-	if lrow &lt; iCrit then
-			lrow = iStart -1
-		else
-			lrow = iEnd + 1
-	end if
-	&apos; verifico che dove inserisco ci sia una riga vuota
-	if oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot; then 
-		&apos; se non c&apos;è la metto&quot;
-		if oSheet.GetCellbyPosition( 0, lrow).CellStyle= &quot;An-sfondo-basso Att End&quot; then
-			lrow = lrow +1
-		end if
-		if oSheet.GetCellbyPosition( 0, lrow).CellStyle=&quot;An-1_sigla&quot; then
-			lrow = lrow -1
-		end if
-	End If
+	If oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot; Then 
+		do While oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot;
+			lrow=lrow+1
+		Loop
+		lrow=lrow+1
+	End if
+
 inserisci:
-	insRows (lrow, 25) &apos;sub di bart per sostituire InsertbyIndex
+	insRows (lrow, 26) &apos;sub di bart per sostituire InsertbyIndex
 &apos;	oSheet.getRows.insertByIndex(lrow, 25) &apos;INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
 	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
 	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
-		rifa_nomearea (&quot;S5&quot;, &quot;$B$107:$P$132&quot; , &quot;blocco_analisi&quot;)
+		rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
 	end if
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S5
@@ -702,7 +673,10 @@ inserisci:
 	oQuellRangeAddresse = oRangeOrigine.RangeAddress &apos;CellRangeAddress
 
  oSheet2.copyRange(oCelle,oQuellRangeAddresse)
+
+ thisComponent.currentController.Select(oSheet.GetCellByPosition( 0 , lrow+1))
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	&apos;ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	&apos; togle la selezione
 	oContr.setFirstVisibleRow(lrow)
  	exit sub

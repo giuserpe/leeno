@@ -264,6 +264,7 @@ end Function
 
 
 
+
 Function Range2Cell____________________________ () &apos; funzione da richiamare da altri moduli
 			&apos; restitusce una Row anche se l&apos;utente ha selezionato un range
 			&apos; (&quot;Mai fidarsi dell&apos;utente... - Paolom &quot;)
@@ -1020,7 +1021,7 @@ sub Numera_Voci_Computo_vecia2 &apos;
  ThisComponent.CurrentController.Select(oCell)&apos; spostamento tutto a sin (mai fidarsi dell&apos;utente...)
  
 	sAttributo = Trova_Attr_Sheet
- If sAttributo &lt;&gt; &quot;Tipo_computo&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
+ If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
  			 msgbox &quot;Questa macro si può usare solo nella tabella di COMPUTO!&quot;
 			exit sub
 	end if

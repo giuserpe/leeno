@@ -11,17 +11,12 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-
 Sub Inser_Capitolo
-
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then
-		 
-		exit sub
-	end if	
+&apos;	if lrow = -1 then	exit sub
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet
 &apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
@@ -29,14 +24,14 @@ Sub Inser_Capitolo
 &apos;			exit sub
 &apos;	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
-	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet)
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
 	lrowFine=oEnd.RangeAddress.EndRow 
-
-	If lrow &gt; lrowFine then
-		msgbox &quot;sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
-		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
-		exit sub
+	If lrow &gt; lrowFine Then
+		lrow = lrowFine
+		goto inserisci_voce
+&apos;		msgbox &quot;sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
+&apos;		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+&apos;		exit sub
 	end if
 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
@@ -60,8 +55,9 @@ Sub Inser_Capitolo
 	end if
 &apos;............................
 	if lrow = 0 then
-		lrow = lrow+1&apos;+2
-	end if
+		lrow = 3&apos;+2
+	end If
+GoTo evita1:
 	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;livello-1-sopra&quot; then
 			nCurRow = lrow
 			goto inserisci_voce
@@ -78,7 +74,8 @@ Sub Inser_Capitolo
 	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;livello-1-sotto_&quot; then
 			nCurRow = lrow+1
 			goto inserisci_voce
-	end if 	
+	end if
+evita1:
 
 	
 	 For nCurRow = lrow To lrowFine &apos; SE LA TABELLA è SENZA VOCI, CIOé VUOTA
@@ -138,13 +135,12 @@ Sub Inser_Capitolo
 			end if
  	next
  	
- 	inserisci_voce:
-			lrow = nCurRow
+inserisci_voce:
+&apos;			lrow = nCurRow
 
-			if	oSheet.GetCellbyPosition( 5, lrow-1).cellstyle = &quot;Comp TOTALI&quot; then
-				lrow = lrow - 1
-			end if
-		&apos;	lrow= Range2Cell 	
+&apos;			if	oSheet.GetCellbyPosition( 5, lrow-1).cellstyle = &quot;Comp TOTALI&quot; then	lrow = lrow - 1
+
+			lrow= Range2Cell 	
 		
 
 			sTesto = InputBox (&quot; (Scrivi il titolo della Categoria)...&quot;&amp; CHR$(10)_
@@ -152,26 +148,24 @@ Sub Inser_Capitolo
  			If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
  				exit sub		
  			end If
- 			insRows (lrow, 3)
+ 			insRows (lrow, 1)
 &apos;		 	oSheet.getRows.insertByIndex(lrow, 3)
  			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 
 			&apos;oSrc = oSheetSRC.getCellRangeByPosition(72,45,113,47).RangeAddress
-			oSrc = oSheetSRC.getCellRangeByPosition(0,2,48,4).RangeAddress
+			oSrc = oSheetSRC.getCellRangeByPosition(0,3,43,3).RangeAddress &apos;solo il rigo utile
 	&apos;		ThisComponent.CurrentController.Select(oSheetSRC.getCellRangeByPosition(72,45,108,47))
 	&apos;		print
  		 oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  		 oSheet.copyRange(oDest, oSrc)
- 		 
- 		 oCell=oSheet.GetCellbyPosition( 2, lRow+1)
+ 		 oCell=oSheet.GetCellbyPosition( 2, lRow)
  		 oCell.string=sTesto
  		 &apos; ThisComponent.CurrentController.Select(oCell)
- 		 ocellBaseA = oSheet.GetCellbyPosition( 1, lRow+1)
- 		 ocellBaseR = oSheet.GetCellbyPosition( 31, lRow+1)
+ 		 ocellBaseA = oSheet.GetCellbyPosition( 1, lRow)
+ 		 ocellBaseR = oSheet.GetCellbyPosition( 31, lRow)
 		&apos;	ThisComponent.CurrentController.Select(ocellBaseA)
 		&apos;	print
-	
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 then 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 or 1 then 
 	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
 			lrowProvv = lrow-1
 			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;			
@@ -188,23 +182,23 @@ Sub Inser_Capitolo
 			ocellBaseR.value = numCap1 +1
 	&apos;dis_080217		ThisComponent.CurrentController.Select(ocellBaseA)
 	end if 
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 then 
-	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
-			lrowProvv = lrow-1
-			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;			
-					If lrowProvv &gt; 4 then
-							lrowProvv = lrowProvv-1
-						else
-							exit do
-					end if
-			&apos;		print lrowProvv
-			loop
-			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
-		&apos;	dim numCap1 as long
-			numCap1 = numCap
-			ocellBaseR.value = numCap1 +1
-	&apos;dis_080217		ThisComponent.CurrentController.Select(ocellBaseA)
-	end if 
+&apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 then 
+&apos;	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
+&apos;			lrowProvv = lrow-1
+&apos;			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;			
+&apos;					If lrowProvv &gt; 4 then
+&apos;							lrowProvv = lrowProvv-1
+&apos;						else
+&apos;							exit do
+&apos;					end if
+&apos;			&apos;		print lrowProvv
+&apos;			loop
+&apos;			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
+&apos;		&apos;	dim numCap1 as long
+&apos;			numCap1 = numCap
+&apos;			ocellBaseR.value = numCap1 +1
+&apos;	&apos;dis_080217		ThisComponent.CurrentController.Select(ocellBaseA)
+&apos;	end if 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 0 then 
 			ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1, lRow+1)) &apos;31
 &apos;---------		
@@ -238,8 +232,8 @@ Sub Inser_Capitolo
  	&apos;&apos;&apos;			exit sub		
  	&apos;&apos;&apos;		end if
 
- 	end if
- 	oSheet.GetCellbyPosition( 31, lRow+1).string=sTesto2 &apos;31
+ 	end If
+&apos; 	oSheet.GetCellbyPosition( 31, lRow+1).string=&quot;sTesto2 &apos;31&quot;
 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 1 then 
 			Inser_SottoCapitolo
@@ -253,6 +247,8 @@ Sub Inser_Capitolo
 	end if
 	ThisComponent.CurrentController.Select(ocellBaseA)
 End Sub
+
+
 
 
 
@@ -280,7 +276,7 @@ SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che for
 	oCell1=oSheet1.GetCellByPosition(2 , lrow)
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet
-&apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; Then	
 &apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
 &apos;			exit sub
 &apos;	end if
@@ -348,19 +344,20 @@ Sub Inser_SottoCapitolo
 &apos;	print &quot;inizio &quot; &amp; 	lrow
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet	
-&apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; Then	
 &apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;&apos;
 &apos;			exit sub
 &apos;	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
-	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet) 
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
 	lrowFine=oEnd.RangeAddress.EndRow 
 
-	If lrow &gt; lrowFine then
-		msgbox &quot; sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
-		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
-		exit sub
+	If lrow &gt; lrowFine Then
+		lrow = lrowFine
+		goto inserisci_voce
+&apos;		msgbox &quot;sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
+&apos;		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
+&apos;		exit sub
 	end if
 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
@@ -370,7 +367,7 @@ Sub Inser_SottoCapitolo
 					Sincronizza_SottoCap_Tag_Capitolo_Cor
 			end if
 		else
-			Msgbox &quot;Non mi sembra opportuno usare queste macroo su una tabella esterna al template di Ultimus...&quot; &amp; CHR$(10)_
+			Msgbox &quot;Non mi sembra opportuno usare questa macro su una tabella esterna al template di Ultimus...&quot; &amp; CHR$(10)_
 				&amp; &quot; &quot;,, &quot;Iniziativa annullata!&quot;
 			exit sub	
 	end if
@@ -391,8 +388,9 @@ Sub Inser_SottoCapitolo
 	
 &apos;............................
 	if lrow = 0 then
-		lrow = lrow+1&apos;+2
-	end if
+		lrow = 3&apos;+2
+	end If
+GoTo salta1:
 	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;livello-1-sopra&quot; then
 			nCurRow = lrow
 			goto inserisci_voce
@@ -419,7 +417,8 @@ Sub Inser_SottoCapitolo
 &apos;	print &quot;wwwww&quot;
 			nCurRow = lrow &apos;-1
 			goto inserisci_voce
-	end if 	
+	end If
+salta1:
 	 For nCurRow = lrow To lrowFine &apos; SE LA TABELLA è SENZA VOCI, CIOé VUOTA
 	 	if oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;&quot; 	then
 	 	 	if 	nCurRow = lrowFine 	then
@@ -447,15 +446,15 @@ Sub Inser_SottoCapitolo
 			
 	next 
 &apos;..........................................................
-	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;Livello-1-scritta&quot; then
-			lrow = lrow+2
-			nCurRow = lrow
-			goto inserisci_voce
-	end if 
-	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;livello-1-sotto_&quot; then
-			nCurRow = lrow+1
-			goto inserisci_voce
-	end if 
+&apos;	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;Livello-1-scritta&quot; then
+&apos;			lrow = lrow+2
+&apos;			nCurRow = lrow
+&apos;			goto inserisci_voce
+&apos;	end if 
+&apos;	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;livello-1-sotto_&quot; then
+&apos;			nCurRow = lrow+1
+&apos;			goto inserisci_voce
+&apos;	end if 
 	oCell=oSheet.GetCellbyPosition( 0, lrow)&apos; lrow )
 	sAttributo_N = Trova_Attr_N (oCell, oSheet)
 	if sAttributo_N = &quot;Start_voce_COMPUTO&quot; then &apos; esattamente all&apos;inizio di una voce
@@ -487,8 +486,7 @@ Sub Inser_SottoCapitolo
 			end if
  	next
 
- 	inserisci_voce:
-
+inserisci_voce:
 		lrow=nCurRow
 		if	oSheet.GetCellbyPosition( 5, lrow-1).cellstyle = &quot;Comp TOTALI&quot; then
 			lrow = lrow - 1
@@ -499,21 +497,20 @@ Sub Inser_SottoCapitolo
  		If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
  				exit sub		
  		end If
- 		insRows (lrow, 3)
-&apos;	 oSheet.getRows.insertByIndex(lrow, 3)
+ 		insRows (lrow, 1)
 	 oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 
 	 &apos;oSrc = oSheetSRC.getCellRangeByPosition(72,49,119,51).RangeAddress
-	 oSrc = oSheetSRC.getCellRangeByPosition(0,5,46,7).RangeAddress
+	 oSrc = oSheetSRC.getCellRangeByPosition(0,6,46,6).RangeAddress
  	 oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  	 oSheet.copyRange(oDest, oSrc)
  		 
 		 
- 	 oCell=oSheet.GetCellbyPosition( 2, lRow+1) &apos;+2)
+ 	 oCell=oSheet.GetCellbyPosition( 2, lRow) &apos;+2)
  		 		 oCell.string=sTesto
- 	 ocellBaseA = oSheet.GetCellbyPosition( 31, lRow+1) &apos;31
+ 	 ocellBaseA = oSheet.GetCellbyPosition( 31, lRow) &apos;31
 			&apos; print &quot;b&quot;		 
-	ocellBaseB = oSheet.GetCellbyPosition( 32, lRow+1) &apos;31
+	ocellBaseB = oSheet.GetCellbyPosition( 32, lRow) &apos;31
 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 or _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 then 
@@ -570,7 +567,7 @@ Sub Inser_SottoCapitolo
 			ThisComponent.CurrentController.Select(oCell)
 	end if
 	&apos;sistema la somma del sotto Cap appena inserito				 
-	SubSum_SottoCap (lrow+1)
+	SubSum_SottoCap (lrow)
 
 	lrowProvv = lrow -1 
 	&apos;controlla se c&apos;è un sottoCap appena sopra
@@ -586,6 +583,8 @@ Sub Inser_SottoCapitolo
 		&apos;	print
 	loop
 	&apos; se c&apos;è aggiorna la somma
+	Print
+	
 	SubSum_SottoCap (lrowProvv)
 
 	ThisComponent.CurrentController.Select(oCell) 
@@ -692,9 +691,10 @@ Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto i
 
 	If isNull(oSheet1) or isEmpty (oSheet1) or isMissing(oSheet1) then
  			oSheet1 = ThisComponent.currentController.activeSheet
- 	end if
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_computo&quot; Then
-		 msgbox &quot; Questa non mi pare una tabella di Computo...!&quot;
+ 	end If
+&apos;Print Trova_Attr_Sheet
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_COMPUTO&quot; Then
+		 msgbox &quot;#1 Questa non mi pare una tabella di Computo...!&quot;
 		 	exit sub
 	end if
 
@@ -726,7 +726,7 @@ end sub
 Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 &apos; lavora su singolo sottocap
 
- If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_computo&quot; Then	
+ If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_COMPUTO&quot; Then	
  	exit Function
  end if
 	oSheet = ThisComponent.currentController.activeSheet
@@ -802,7 +802,7 @@ end Function
 Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 &apos; lavora su singolo sottocap
 
- If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_computo&quot; Then	
+ If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_COMPUTO&quot; Then	
  print &quot;Questa non è una tabella di tipo Computo!&quot;
  	exit Function
  end if
@@ -932,7 +932,7 @@ sub Crea_AutoFilter &apos; sul computo
 
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet
-&apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; Then	
 &apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
 &apos;			exit sub
 &apos;	end if
@@ -1109,7 +1109,7 @@ Sub Struttura &apos;&apos;
 
 	sAttributo = Trova_Attr_Sheet
 	Select case sAttributo 
-		Case &quot;Tipo_computo&quot;
+		Case &quot;Tipo_COMPUTO&quot;
 			Struttura_ComputoM
 			exit sub
 		Case &quot;Tipo_CONTABILITA&quot;
@@ -1212,7 +1212,7 @@ sub Struttura_ComputoM____OK &apos; sul computo (ok sulla 3.7)
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 &apos;	sAttributo = Trova_Attr_Sheet
-&apos; If not ( sAttributo = &quot;Tipo_computo&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
+&apos; If not ( sAttributo = &quot;Tipo_COMPUTO&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
 &apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
 &apos;			exit sub
 &apos;	end if
@@ -1408,7 +1408,7 @@ sub Struttura_ComputoM REM COPIA DI Struttura_ComputoM CHE RAGGRUPPA
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 &apos;	sAttributo = Trova_Attr_Sheet
-&apos; If not ( sAttributo = &quot;Tipo_computo&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
+&apos; If not ( sAttributo = &quot;Tipo_COMPUTO&quot; or sAttributo = &quot;Tipo_CONTABILITA&quot; ) Then	
 &apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
 &apos;			exit sub
 &apos;	end if
@@ -1627,7 +1627,7 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
  			Tronca_Altezza_Analisi
  			exit sub
  end if
-	If sAttributo = &quot;Tipo_computo&quot; or _
+	If sAttributo = &quot;Tipo_COMPUTO&quot; or _
 		sAttributo = &quot;Tipo_CONTABILITA&quot; Then	 
 		 Tronca_Altezza_Voci_Computo
 		 exit sub
@@ -1895,7 +1895,7 @@ SUB SubTot_in_mezzo &apos;rifa la somma &apos;riporta i subTotali (fa solo un li
 	oCell1=oSheet1.GetCellByPosition(2 , lrow)
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet
-&apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; Then	
 &apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;&apos;
 &apos;			exit sub
 &apos;	end if

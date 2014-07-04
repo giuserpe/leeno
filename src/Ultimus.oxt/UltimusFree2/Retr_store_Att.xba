@@ -17,7 +17,7 @@
 sub Verifica_Attributo
 	sAttributo = Trova_Attr_Sheet
 	print sAttributo
-&apos;	if sAttributo = &quot;Tipo_computo&quot; then
+&apos;	if sAttributo = &quot;Tipo_COMPUTO&quot; then
 &apos;		print &quot;Tipo computo&quot;
 &apos;	else
 &apos;		if sAttributo = &quot;Tipo_analisi&quot; then
@@ -79,11 +79,11 @@ Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è
 	If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
 		&apos; Change the value of the attribute.
 	&apos;	oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
-		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
 		 oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
  		Else
  		&apos; Since this attribute was not present, create it.
- 		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+ 		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
  		 oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
  	&apos;	oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
  	EndIf
@@ -96,13 +96,14 @@ END SUB
 Sub Stora_Attr_sheet &apos;sub tipo_
 &apos;	sValoreAtt_p = &quot;Tipo_CronoP&quot;
 &apos;	sValoreAtt_p = &quot;Tipo_EP&quot;
-&apos;	sValoreAtt_p = &quot;Tipo_computo&quot;
+	sValoreAtt_p = &quot;Tipo_COMPUTO&quot;
 &apos;	sValoreAtt_p = &quot;Tipo_Analisi&quot;
-	sValoreAtt_p = &quot;Tipo_CONTABILITA&quot;
- oSheet_p = ThisComponent.currentController.activeSheet
+&apos;	sValoreAtt_p = &quot;Tipo_CONTABILITA&quot;
+	 oSheet_p = ThisComponent.currentController.activeSheet
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;A2&quot;)
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;B2&quot;)
 end sub
 
 
@@ -119,14 +120,14 @@ Function Stora_Attr_sheet_generico(sValoreAtt as string, optional oSheet as obje
  
  If oCustomXmlAttributes.hasByName( &quot;Tipo_sheet&quot; ) Then
  &apos; Change the value of the attribute.
- &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+ &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
  &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
  &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_Analisi&quot;) )
  oCustomXmlAttributes.replaceByName( &quot;Tipo_sheet&quot;, CreateAttributeData(sValoreAtt) )
  Else
  
  &apos; Since this attribute was not present, create it.
- &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_computo&quot;) )
+ &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
  &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
  &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_Analisi&quot;) )
  oCustomXmlAttributes.insertByName( &quot;Tipo_sheet&quot;, CreateAttributeData(sValoreAtt) )
@@ -164,11 +165,11 @@ Function Trova_Attr_Sheet
 	oDoc = ThisComponent
 	oSheet = ThisComponent.currentController.activeSheet
  &apos; Get the collection of attributes. 
-	for icol = 0 to 2 &apos;cerca nel riquadro col &amp; rows)
-		For i = 0 to 5		
+	for icol = 0 to 1 &apos;cerca nel riquadro col &amp; rows)
+		For i = 0 to 1		
  			oCell = oSheet.getCellByPosition( i, icol )
  			oCustomXmlAttributes = oCell.UserDefinedAttributes
-			&apos;ThisComponent.CurrentController.Select( ocell) &apos;debug
+&apos;			ThisComponent.CurrentController.Select( ocell) &apos;debug
 		 &apos;print 
 		 &apos;xray oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
 		 	If oCustomXmlAttributes.hasElements = true then 

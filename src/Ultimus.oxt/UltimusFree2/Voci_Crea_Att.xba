@@ -361,6 +361,7 @@ end sub
 &apos;___________________________________________________________________________________________
 
 SUB Nuova_Voce_Computo_Att &apos;
+&apos;INIZIALIZZA_COMPUTO
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then &apos;gestione errori
 		on error goto Errore
 	end if
@@ -381,14 +382,7 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 	if lrow = -1 then		 
 		exit sub
 	end if
-&apos;	sAttributo = Trova_Attr_Sheet
-&apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
-&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
-&apos;			exit sub
-&apos;	end if
-	&apos;__________________________
-	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet) &apos;piviere
+	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet) &apos;piviere
 	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
 		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI4! &quot;
@@ -396,38 +390,42 @@ REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 		exit sub
 	end if 
 	lrowFine=oEnd.RangeAddress.EndRow
-	if lrow &lt;= 2 then
-		lrow = 3
-	end if 	
-	If lrowfine=3 Then
-		insRows (2, 2)
-&apos;		oSheet.getRows.insertByIndex(2, 2)
-		osheet.getCellRangeByPosition (0,2,45,3).CellStyle = &quot;Default&quot;
-		lrowfine = lrowfine+2
+	
+VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
+	iEndRow=oEnd.RangeAddress.EndRow
+	if lrow &gt;= iEndRow then &apos;SE OLTRE IL &quot;T O T A L E&quot;
+		lrow = iEndRow
+		goto Inserisci_voce
+	end if
+	if lRow &lt;= 3 then
 		lrow = 3
 		goto Inserisci_voce
 	end if
 
-	If lrowfine=4 Then
-		insRows (2, 1)
-&apos;		oSheet.getRows.insertByIndex(2, 1)
-		osheet.getCellRangeByPosition (0,2,45,2).CellStyle = &quot;Default&quot;
-		lrowfine = lrowfine+1
-		lrow = 3
-		goto Inserisci_voce
+REM se su firme
+	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then
+		lrow1=lrow-1
+		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot;
+			do while oSheet.getCellByPosition(23, lrow1).value = 0
+				lrow1=lrow1-1
+			loop
+			nSal = oSheet.getCellByPosition(23, lrow1).value
+		&apos;	if oSheet.getCellByPosition(22, lrow1).string = &quot;#reg&quot; then	nSal = nSal+1
+			lrow=lrow+1
+		loop
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow))
+		GoTo Inserisci_voce
 	end if
+	
+
  	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Ultimus_centro&quot; or lrow &gt;= lrowFine then
- 		sString$ = &quot;TOTALI COMPUTO&quot;
- 		oEnd=uFindString(sString$, oSheet)
+ 		oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
  		lrow=oEnd.RangeAddress.EndRow-1
  		goto Inserisci_voce
-	end if
-	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; then
-			print
-			osheet.getCellRangeByPosition (0,lrow+1,45,lrow+1).CellStyle = &quot;Default&quot;
-			lrow = lrow-1
-			goto Inserisci_voce
-	end if
+	end If
+	
+	
 	if 	oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp sotto Bianche&quot; then
 			lrow = lrow+1
 			goto Inserisci_voce
@@ -496,7 +494,7 @@ rem QUESTA SOTTO SERVE???
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 &apos;	lRow = Mettiti_esattamente_tra_due_VociC_Att (lRow)
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
- 	inserisci_voce:
+inserisci_voce:
 &apos;	print lrow
 	insRows (lrow, 4) &apos; numero di righe da inserire
 &apos;	oSheet.getRows.insertByIndex(lrow, 4)
@@ -535,6 +533,9 @@ rem QUESTA SOTTO SERVE???
 	oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lrow +4)
 	oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lrow +4)
 	oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+	oCell=oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4) &apos;seleziona la cella
+	ThisComponent.CurrentController.Select(oCell)
+ADATTA_ALTEZZA_RIGA
 	oCell=oSheet.getCellByPosition(1, lrow+1) &apos;seleziona la cella
 	ThisComponent.CurrentController.Select(oCell)
 
@@ -542,7 +543,7 @@ rem QUESTA SOTTO SERVE???
 	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
  	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _
  		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 ) and _
- 		sAttributo = &quot;Tipo_computo&quot; then 
+ 		sAttributo = &quot;Tipo_COMPUTO&quot; then 
  		Osheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
  	endif 	
  &apos;	oCtrlModel.Enabled = True

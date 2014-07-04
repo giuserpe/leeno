@@ -3,8 +3,9 @@
  xmlns="http://openoffice.org/extensions/description/2006"
  xmlns:dep="http://openoffice.org/extensions/description/2006"
  xmlns:xlink="http://www.w3.org/1999/xlink">
-	<identifier value="vnd.bartaimar.ultimusfree4"/>
-	<version value="3.9.2-nigthly_build"/>
+	<!-- <identifier value="vnd.bartaimar.ultimusfree4"/> -->
+	<identifier value="org.giuseppe-vizziello.leeno"/>
+	<version value="4.0.dev"/>
 	<!-- <dependencies>
 		<OpenOffice.org-minimal-version value="2.2" dep:name="OpenOffice.org 2.2"/>
 	</dependencies> -->

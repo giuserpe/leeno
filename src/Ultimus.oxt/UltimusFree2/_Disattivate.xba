@@ -615,7 +615,7 @@ print &quot;questo&quot;
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 &apos;	sAttributo = Trova_Attr_Sheet
-&apos; If sAttributo &lt;&gt; &quot;Tipo_computo&quot; Then	
+&apos; If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; Then	
 &apos;			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia...)&quot;
 &apos;			exit sub
 &apos;	end if

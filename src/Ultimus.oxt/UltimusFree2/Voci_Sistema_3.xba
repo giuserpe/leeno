@@ -23,7 +23,7 @@ dim lastUrow as long
 dim oSheet as object
 
 	sAttributo = Trova_Attr_Sheet
-	if sAttributo &lt;&gt; &quot;Tipo_computo&quot; then
+	if sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; then
 		msgbox &quot;Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
 		&amp; &quot;Eseguila su una tabella COMPUTO o similare!&quot;
 		exit sub
@@ -73,7 +73,7 @@ SUB COPIA_FORMULE()&apos; tentativo in progress per fare un solo comando da shor
 &apos; sia per singola voce che per tutte
 
 	sAttributo = Trova_Attr_Sheet
-	if sAttributo &lt;&gt; &quot;Tipo_computo&quot; then
+	if sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; then
 		msgbox &quot;Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
 		&amp; &quot;Eseguila su una tabella COMPUTO o similare!&quot;
 		exit sub

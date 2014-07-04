@@ -835,7 +835,7 @@ end if
 &apos; fine modulo di controllo e modifica stile di pagina
 
 Select Case sAttributo
-	Case &quot;Tipo_computo&quot;
+	Case &quot;Tipo_COMPUTO&quot;
 		Visualizza_PageBreak
 		Impagina_Computo_N
 	Case &quot;Tipo_CONTABILITA&quot;
@@ -1108,7 +1108,7 @@ dim lrowS as long
 			sAttributo = Trova_Attr_Sheet &apos;print sAttributo
 			If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 			 If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 and _
-			 	 sAttributo = &quot;Tipo_computo&quot;	 then 
+			 	 sAttributo = &quot;Tipo_COMPUTO&quot;	 then 
 					lrowC = oCell_k.CellAddress.row
 	&apos;	xray lrowc
 					&apos;	oSheet.getRows.insertByIndex(lrowC, 1)
@@ -1340,7 +1340,7 @@ SUB Set_solo_Righe_ripet
 	sAttributo = Trova_Attr_Sheet
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case sAttributo
-	 Case &quot;Tipo_computo&quot;
+	 Case &quot;Tipo_COMPUTO&quot;
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 0&apos; headstart - 1
@@ -1412,7 +1412,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	sAttributo = Trova_Attr_Sheet
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case sAttributo
-	 Case &quot;Tipo_computo&quot;
+	 Case &quot;Tipo_COMPUTO&quot;
 		&apos;print &quot;Tipo computo&quot;
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
 		sString$ = &quot;Fine Computo&quot;

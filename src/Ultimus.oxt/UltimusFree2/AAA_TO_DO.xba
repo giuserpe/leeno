@@ -18,7 +18,6 @@
 &apos;	BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
 
 
-
 sub Note_di_Versione
 &apos; uff
 xray thiscomponent&apos;.CodeName

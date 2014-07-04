@@ -1,6 +1,5 @@
-LeenO-3.9.2-nigthly_build
+LeenO-4.0.dev
 (c) 2014 Giuseppe Vizziello
-(c) 2001-2013 Bartolomeo Aimar
 
 LeenO - Computo metrico assistito
 * applicativo per computi metrici estimativi *

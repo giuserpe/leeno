@@ -212,7 +212,9 @@ Sub Svuota_CONTABILITA &apos;main
 	end if
 	Svuota_CONTABILITA_esegui
 	fissa (0,3)
-end sub
+end Sub
+
+
 Sub Svuota_CONTABILITA_esegui (optional sSommari as String) &apos;(C) Giuseppe Vizziello 2014 - riscritta totalmente
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	for i = 1 to 20 &apos;(questo 20 posso dedurlo dal quadro riepilogativo contabile)
@@ -255,6 +257,7 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
 	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
 	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
+	oSheet.GetCellByPosition(0,2).Rows.Height = 800
 Rem colore colonne riga di intestazione
 	oSheet.getCellRangeByPosition(0, 2, 35 , 2).cellstyle = &quot;comp Int_colonna_R&quot; &apos;do un fondo a tutte
 	oSheet.getCellByPosition(0, 2).cellstyle = &quot;comp Int_colonna_R_prima&quot;

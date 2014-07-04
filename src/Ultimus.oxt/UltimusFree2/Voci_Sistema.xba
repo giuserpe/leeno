@@ -941,7 +941,7 @@ dim ocell as object
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
 
 	sAttributo = Trova_Attr_Sheet
-	if sAttributo &lt;&gt; &quot;Tipo_computo&quot; then
+	if sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; then
 		msgbox &quot;Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
 		&amp; &quot;Eseguila su una tabella COMPUTO o similare!&quot;
 		exit sub

@@ -77,7 +77,7 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 	oSheet =ThisComponent.currentController.activeSheet
 	Select Case oSheet.CodeName
 		case = &quot;CONTABILITA&quot;
-		oSheet.getCellRangeByposition(13,0,1023,0).Columns.Width = 2000 &apos; larghezza colonne importi
+		oSheet.getCellRangeByposition(13,0,1023,0).Columns.Width = 1900 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 800 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(51,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
 &apos;	oSheet.getRows().getByIndex(&quot;1&quot;).Rows.Height = 850 &apos;altezza riga di intestazione
@@ -91,8 +91,20 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1300
 		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
 		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
-		case = &quot;F&quot;	
-			&apos;	oSheetD.GetCellByPosition(i, 2 ).Columns.IsVisible = False
+		case = &quot;COMPUTO&quot;
+	REM larghezza colonne
+		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
+		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
+		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 7800
+		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1300
+		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
+		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
+		oSheet.getColumns().getByName(&quot;S&quot;).Columns.Width = 1700
+		InsRow = fRow+1 &apos;prima riga inserimento in Registro	
+
 		case = &quot;&quot;
 	end select
 end sub

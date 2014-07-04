@@ -147,16 +147,16 @@ rem riga di intestazione
 		oSheetReg.GetCellByPosition(8,fRow).setstring(&quot;Importi&quot; + chr(13) + &quot;debito&quot;)
 		oSheetReg.GetCellByPosition(9,fRow).setstring(&quot;Importi&quot; + chr(13) + &quot;pagamento&quot;)
 REM larghezza colonne
-		oSheetReg.getColumns().getByName(&quot;A&quot;).Columns.Width = 1600
-		oSheetReg.getColumns().getByName(&quot;B&quot;).Columns.Width = 7300
-		oSheetReg.getColumns().getByName(&quot;C&quot;).Columns.Width = 700
-		oSheetReg.getColumns().getByName(&quot;D&quot;).Columns.Width = 700
-		oSheetReg.getColumns().getByName(&quot;E&quot;).Columns.Width = 1500
-		oSheetReg.getColumns().getByName(&quot;F&quot;).Columns.Width = 1800
-		oSheetReg.getColumns().getByName(&quot;G&quot;).Columns.Width = 1800
-		oSheetReg.getColumns().getByName(&quot;H&quot;).Columns.Width = 1400
-		oSheetReg.getColumns().getByName(&quot;I&quot;).Columns.Width = 1900
-		oSheetReg.getColumns().getByName(&quot;J&quot;).Columns.Width = 1900
+		oSheetReg.getColumns().getByName(&quot;A&quot;).Columns.Width = 1600 &apos;N. ord.
+		oSheetReg.getColumns().getByName(&quot;B&quot;).Columns.Width = 7300 &apos;LAVORAZIONI
+		oSheetReg.getColumns().getByName(&quot;C&quot;).Columns.Width = 700 &apos;Lib.N.
+		oSheetReg.getColumns().getByName(&quot;D&quot;).Columns.Width = 700 &apos;Lib.P.
+		oSheetReg.getColumns().getByName(&quot;E&quot;).Columns.Width = 1500 &apos;U.M.
+		oSheetReg.getColumns().getByName(&quot;F&quot;).Columns.Width = 1800 &apos;Positive
+		oSheetReg.getColumns().getByName(&quot;G&quot;).Columns.Width = 1800 &apos;Negative
+		oSheetReg.getColumns().getByName(&quot;H&quot;).Columns.Width = 1400 &apos;Prezzo
+		oSheetReg.getColumns().getByName(&quot;I&quot;).Columns.Width = 1900 &apos;debito
+		oSheetReg.getColumns().getByName(&quot;J&quot;).Columns.Width = 1900 &apos;pagamento
 		InsRow = fRow+1 &apos;prima riga inserimento in Registro
 	Case &gt;1
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)

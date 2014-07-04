@@ -1,14 +1,9 @@
 LeenO Ultimus - Applicativo per Computi Metrici su tabelle Calc
-
-	Version:3.9.xx	
-
-	Copyright 2001-2013 Bartolomeo Aimar
-		  2014 - Giuseppe Vizziello
 				
  E-Mail: supporto@leeno.org
 
 
-UltimusFree e' proprieta'   di Bartolomeo Aimar ed e' rilasciato alle 
+LeenO e' proprieta'   di Giuseppe Vizziello ed e' rilasciato alle 
 condizioni previste dalla licenca pubblica LPGL.
     Questa è una traduzione  italiana non ufficiale della  Licenza
     Pubblica Generica  Attenuata  GNU.   Non   è  pubblicata dalla

@@ -93,7 +93,7 @@ dim oSheetSRC as object
 &apos;	print &quot;Nuova_Voce_Computo_vecchia&quot;
 	oSheet = ThisComponent.currentController.activeSheet
 	sAttributo = Trova_Attr_Sheet
- If sAttributo &lt;&gt; &quot;Tipo_computo&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
+ If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
  			 msgbox &quot;Questa macro si può usare solo nella tabella di COMPUTO!&quot;
 			exit sub
 	end if

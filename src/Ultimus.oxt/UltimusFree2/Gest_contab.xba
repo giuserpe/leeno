@@ -201,6 +201,16 @@ Sub Nascondi_TUTTI_docs_e_Copertine
 	Visualizza_normale
 end sub
 
+Sub kjashkdjwsd
+oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+End Sub
+
+
+
 Sub Svuota_CONTABILITA &apos;main
 	&apos;_____________________
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
@@ -224,11 +234,7 @@ Sub Svuota_CONTABILITA_esegui (optional sSommari as String) &apos;(C) Giuseppe V
 	next
 		
  	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
-REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+
 	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 rem riga di intestazione
 	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
@@ -279,7 +285,11 @@ Rem riga del totale
 Rem riga rossa
 	oSheet.GetCellByPosition(0,4).setstring(&quot;Fine Computo&quot;)
 	oSheet.getCellRangeByPosition(0, 4, 35 , 4).cellstyle = &quot;Riga_rossa_Chiudi&quot;
-
+REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
 
 apri_libretto_misure
 Visualizza_normale_esegui

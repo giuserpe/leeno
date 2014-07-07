@@ -249,10 +249,10 @@ REM gli importi vanno tutti nella colonna DEBITO, anche se negativi
 			InsRow=InsRow+1
 	Next
 	InsRow=InsRow+1
-	oSheetReg.GetCellByPosition(InsCol+1, InsRow).setstring(&quot;Sommano i Lavori a Misura euro&quot;)
+	oSheetReg.GetCellByPosition(InsCol+1, InsRow).setstring(&quot;Sommano i Lavori a Misura €&quot;)
 	oSheetReg.GetCellByPosition(InsCol+8, InsRow).setformula(&quot;=ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; InsRow &amp; &quot;);2)&quot;)
 	rem .formula o .setformula() è uguale
-	oSheetReg.GetCellByPosition(InsCol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E  euro&quot;&quot;)&quot;
+	oSheetReg.GetCellByPosition(InsCol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E   €&quot;&quot;)&quot;
 	oSheetReg.GetCellByPosition(InsCol+8, InsRow+2).setformula(&quot;=ROUND(SUBTOTAL(9;$I$2:$I$&quot; &amp; InsRow+2 &amp; &quot;);2)&quot;)
 &apos;	fineMisure = InsRow
 	inizioFirme = InsRow+3

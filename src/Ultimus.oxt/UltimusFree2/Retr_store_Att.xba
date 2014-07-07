@@ -64,8 +64,9 @@ oSheet = ThisComponent.currentController.activeSheet
  &apos; xray oCustomXmlAttributes
  &apos;Print &quot;Attribute is: &quot;, oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
  sAttributo = oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
- &apos; print sAttributo
+  print sAttributo
 Trova_Attr = sAttributo
+
 End Function
 Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è sufficiente
 				&apos; copiare da una sheet all&apos;altra la cella A1 che contiene l&apos;attributo...
@@ -78,14 +79,14 @@ Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è
 	oCustomXmlAttributes = oCell.UserDefinedAttributes
 	If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
 		&apos; Change the value of the attribute.
-	&apos;	oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
-		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
-		 oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
+		oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
+&apos;		 oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
+		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
  		Else
  		&apos; Since this attribute was not present, create it.
- 		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
- 		 oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
- 	&apos;	oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
+ 	&apos;	 oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
+ 		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
+ 	oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
  	EndIf
 	&apos; Test to see if someone had previously set a &quot;Mark&quot; attribute on this paragraph....
 	&apos; Store the collection of attributes back to the property.
@@ -169,9 +170,9 @@ Function Trova_Attr_Sheet
 		For i = 0 to 1		
  			oCell = oSheet.getCellByPosition( i, icol )
  			oCustomXmlAttributes = oCell.UserDefinedAttributes
-&apos;			ThisComponent.CurrentController.Select( ocell) &apos;debug
-		 &apos;print 
-		 &apos;xray oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
+&apos; 			xray oCustomXmlAttributes
+			ThisComponent.CurrentController.Select( ocell) &apos;debug
+&apos;		 xray oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
 		 	If oCustomXmlAttributes.hasElements = true then 
 		 		if oCustomXmlAttributes.hasbyname( &quot;Tipo_sheet&quot; ) then
 	 				Trova_Attr_Sheet = oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value

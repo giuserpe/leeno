@@ -645,6 +645,7 @@ END SUB
 
 
 SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
+&apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree GG e G1G1 in CONTABILITA (servono per la formula somma.se)
 
 
@@ -676,7 +677,7 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 		&apos;	 sMiaStringa= &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
 			 sMiaStringa= &quot;$CONTABILITA.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow+1
 			oRanges.addNewByName(&quot;GG&quot;, sMiaStringa , oCellAddress, 0) rem SETTA LA COLONNA DEL SOMME.SE
-			sMiaStringa = &quot;$CONTABILITA.$Z$&quot; &amp; lrowInizio &amp; &quot;:$Z$&quot; &amp; lLastUrow+1
+			sMiaStringa = &quot;$CONTABILITA.$P$&quot; &amp; lrowInizio &amp; &quot;:$P$&quot; &amp; lLastUrow+1
 			oRanges.addNewByName(&quot;G1G1&quot;, sMiaStringa , oCellAddress, 0)	REM SETTA LA COLONNA DEGLI IMPORTI
 
 		&apos;POPOLARE L&apos;EP CON LE FORMULE DI SOMMA.SE
@@ -700,11 +701,11 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 
 			
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 					iScarto = 0 &apos;se ver. 3
-				else
-					iscarto = 2 &apos;se vers. 4
-			endif	
+&apos;				else
+&apos;					iscarto = 2 &apos;se vers. 4
+&apos;			endif	
 		
 			sCol= ColumnNameOf(lcolbase+iScarto)
 			sCol2= ColumnNameOf(lcolbase+iscarto+14)
@@ -712,33 +713,24 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 			
 			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
 			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = true
-
-			For I = 1 To lrowF-1 Step 1
 			
-				if oSheet.GetCellByPosition(lcolbase+0 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+1 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+2 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+4 , i).string = &quot;&quot; then 
-					sFormula = &quot;&quot;
-					oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
-					sFormula_q = &quot;&quot;
-					oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 
-					&apos;	Tutto questo If per svuotare e NON scrivere formule se la riga è vuota
-					
-					exit for
-				end if 		
-REM				Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot; &amp; i, 50)
-				Barra_Apri_Chiudi_5(&quot; #&quot;&amp; i &amp; &quot; di &quot; &amp; lrowF, 0)
-				
+	i=1
 				sFormula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
 				oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
 				oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
-				&apos;=L2/E2 =O2/E2
-		&apos;		sFormula_q = &quot;=O&quot; &amp; i+1 &amp; &quot;/E&quot; &amp; i+1 &amp; &quot; &quot;
+
 				sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot;&amp; sCol4 &amp; i+1 &amp; &quot; &quot;
 				oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 		
-				oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;		
-			Next I	
+				oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
+
+rem seleziono le formule
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 1,lcolbase+14 , 1))
+	copy_clip &apos; le copio
+rem seleziono la destinazione
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 1,lcolbase+13 , lrowf-1))
+	paste_clip &apos; incollo
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+		
 			
 			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;		
 			oSheet.GetCellByPosition(lcolbase+14 , lrowF).setformula(sFormula1)	
@@ -752,6 +744,7 @@ END SUB
 
 
 SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
+&apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree AA e BB nel computo (servono per la formula somma.se)
 
 
@@ -787,8 +780,7 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 		&apos;SE NON SI FA QUELLO NON VALE LA PENA FARE LE AREE AA ed BB
 
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-			sString$ = &quot;Fine elenco&quot;
-			oEnd=uFindString(sString$, oSheet)
+			oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
 			If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
 				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
 				msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
@@ -804,44 +796,40 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 			
 			
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 					iScarto = 0 &apos;se ver. 3
-				else
-					iscarto = 2 &apos;se vers. 4
-			endif	
+&apos;				else
+&apos;					iscarto = 2 &apos;se vers. 4
+&apos;			endif	
 		
 			sCol = ColumnNameOf(lcolbase+iScarto)
+
 			sCol2 = ColumnNameOf(lcolbase+iscarto+11) &apos;Col L
+
 			sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
+
 
 
 			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true
 			oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = true
 			
 			&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+	i=1
+	sFormula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
+	oSheet.GetCellByPosition(lcolbase+11 , i).setformula(sFormula)
+	oSheet.GetCellByPosition(lcolbase+11 , i).cellstyle = &quot;EP statistiche&quot;
 
-			For I = 1 To lrowF-1 Step 1
-				if oSheet.GetCellByPosition(lcolbase+0 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+1 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+2 , i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(lcolbase+4 , i).string = &quot;&quot; then 
-					sFormula = &quot;&quot;
-					oSheet.GetCellByPosition(lcolbase+11 , i).setformula(sFormula)
-					sFormula_q = &quot;&quot;
-					oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q) 
-					&apos;	Tutto questo If per svuotare e NON scrivere formule se la riga è vuota
-					&apos; print &quot;caso&quot; 
-					exit for
-				end if 		
-				Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot; &amp; i, 50)
-				sFormula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
-				oSheet.GetCellByPosition(lcolbase+11 , i).setformula(sFormula)
-				oSheet.GetCellByPosition(lcolbase+11 , i).cellstyle = &quot;EP statistiche&quot;
+	sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot; &amp; sCol4 &amp; i+1 &amp; &quot; &quot;
+	oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q) 
+	oSheet.GetCellByPosition(lcolbase+10 , i).cellstyle = &quot;EP statistiche_q&quot;
 
-				sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot; &amp; sCol4 &amp; i+1 &amp; &quot; &quot;
-				oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q) 
-				oSheet.GetCellByPosition(lcolbase+10 , i).cellstyle = &quot;EP statistiche_q&quot;
-			Next I	
+rem seleziono le formule
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , 1,lcolbase+11 , 1))
+	copy_clip &apos; le copio
+rem seleziono la destinazione
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , 1,lcolbase+10 , lrowf-1))
+	paste_clip &apos; incollo
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 			
 			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;
 			

@@ -524,11 +524,16 @@ END FUNCTION
 Sub Modulo_Lista_categorie_appalto &apos;Crea Il modulo per una lista generata dall&apos;Elenco Prezzi, ma senza i prezzi 
 	&apos;per richiesta di offerta
 	&apos;duplico la tabella nel doc stesso
-	
-	if 	thiscomponent.currentcontroller.activesheet.name &lt;&gt; &quot;Elenco Prezzi&quot; then
-		msgbox &quot;Iniziativa annullata! ... è previsto che si parta dal foglio &apos;Elenco Prezzi&apos; &quot;
-		exit sub
-	end if
+&apos;	vado su Elenco Prezzi
+	oSheet=ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	ocell = oSheet.GetCellbyPosition( 0, 0 ) &apos;una a caso
+	Thiscomponent.currentcontroller.select(ocell)
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+
+&apos;	if 	thiscomponent.currentcontroller.activesheet.name &lt;&gt; &quot;Elenco Prezzi&quot; then
+&apos;		msgbox &quot;Iniziativa annullata! ... è previsto che si parta dal foglio &apos;Elenco Prezzi&apos; &quot;
+&apos;		exit sub
+&apos;	end if
 
 	if msgbox (&quot;Sto per generare un Modulo con la:&quot; &amp; CHR$(10)_
 		&amp; &quot;LISTA DELLE LAVORAZIONI E FORNITURE PREVISTE PER L&apos;ESECUZIONE DELL&apos;APPALTO&quot; &amp; CHR$(10) &amp; CHR$(10)_

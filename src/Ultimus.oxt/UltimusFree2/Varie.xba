@@ -2025,8 +2025,6 @@ REM RIPULISCI COMPUTO
 inizializza_computo
 	
 
-
-Exit Sub
 	&apos;svuota CONTABILITA
 	Svuota_CONTABILITA_esegui 
 	

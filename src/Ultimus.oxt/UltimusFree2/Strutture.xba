@@ -153,7 +153,7 @@ inserisci_voce:
  			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 
 			&apos;oSrc = oSheetSRC.getCellRangeByPosition(72,45,113,47).RangeAddress
-			oSrc = oSheetSRC.getCellRangeByPosition(0,3,43,3).RangeAddress &apos;solo il rigo utile
+			oSrc = oSheetSRC.getCellRangeByPosition(0,3,41,3).RangeAddress &apos;solo il rigo utile
 	&apos;		ThisComponent.CurrentController.Select(oSheetSRC.getCellRangeByPosition(72,45,108,47))
 	&apos;		print
  		 oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
@@ -182,23 +182,23 @@ inserisci_voce:
 			ocellBaseR.value = numCap1 +1
 	&apos;dis_080217		ThisComponent.CurrentController.Select(ocellBaseA)
 	end if 
-&apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 then 
-&apos;	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
-&apos;			lrowProvv = lrow-1
-&apos;			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;			
-&apos;					If lrowProvv &gt; 4 then
-&apos;							lrowProvv = lrowProvv-1
-&apos;						else
-&apos;							exit do
-&apos;					end if
-&apos;			&apos;		print lrowProvv
-&apos;			loop
-&apos;			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
-&apos;		&apos;	dim numCap1 as long
-&apos;			numCap1 = numCap
-&apos;			ocellBaseR.value = numCap1 +1
-&apos;	&apos;dis_080217		ThisComponent.CurrentController.Select(ocellBaseA)
-&apos;	end if 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 then 
+	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
+			lrowProvv = lrow-1
+			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;			
+					If lrowProvv &gt; 4 then
+							lrowProvv = lrowProvv-1
+						else
+							exit do
+					end if
+			&apos;		print lrowProvv
+			loop
+			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
+		&apos;	dim numCap1 as long
+			numCap1 = numCap
+			ocellBaseR.value = numCap1 +1
+	&apos;dis_080217		ThisComponent.CurrentController.Select(ocellBaseA)
+	end if 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 0 then 
 			ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1, lRow+1)) &apos;31
 &apos;---------		
@@ -487,7 +487,7 @@ salta1:
  	next
 
 inserisci_voce:
-		lrow=nCurRow
+&apos;		lrow=nCurRow
 		if	oSheet.GetCellbyPosition( 5, lrow-1).cellstyle = &quot;Comp TOTALI&quot; then
 			lrow = lrow - 1
 		end if
@@ -501,7 +501,7 @@ inserisci_voce:
 	 oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 
 	 &apos;oSrc = oSheetSRC.getCellRangeByPosition(72,49,119,51).RangeAddress
-	 oSrc = oSheetSRC.getCellRangeByPosition(0,6,46,6).RangeAddress
+	 oSrc = oSheetSRC.getCellRangeByPosition(0,6,41,6).RangeAddress
  	 oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
  	 oSheet.copyRange(oDest, oSrc)
  		 
@@ -583,8 +583,7 @@ inserisci_voce:
 		&apos;	print
 	loop
 	&apos; se c&apos;è aggiorna la somma
-	Print
-	
+
 	SubSum_SottoCap (lrowProvv)
 
 	ThisComponent.CurrentController.Select(oCell) 

@@ -1410,9 +1410,11 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	&apos;Visualizza_normale &apos;per chi è ossessivo e con mania di controllo si consiglia la disattivazione
 	&apos;Set_Header_Footer &apos; meglio farlo ogni volta !!! ??
 	sAttributo = Trova_Attr_Sheet
+&apos;	Print sAttributo
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case sAttributo
 	 Case &quot;Tipo_COMPUTO&quot;
+	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800
 		&apos;print &quot;Tipo computo&quot;
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
 		sString$ = &quot;Fine Computo&quot;
@@ -1421,18 +1423,17 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 				msgbox &quot; ERRORE! Probabilemente manca la riga rossa di chiusura&quot;
 				exit sub
 		end if
-		lRowE=oEnd.CellAddress.Row 			
+		lRowE=oEnd.CellAddress.Row-1		
 &apos;		lLastUrow = getLastUsedRow(oSheet)
 		selArea(0).StartColumn = 0
-		selArea(0).StartRow = 0
-		sNomePart = Left (ThisComponent.currentcontroller.activesheet.name,5)
+		selArea(0).StartRow = 2
 		
 	&apos;		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 	&apos;	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
 	&apos;			right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
 	&apos;			right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
 	&apos;			right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
-		selArea(0).EndColumn = getLastUsedCol(oSheet)
+		selArea(0).EndColumn = 41&apos; getLastUsedCol(oSheet)
 	&apos;	end if	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	
 
@@ -1441,10 +1442,10 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	
 		oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
-		oTitles.startRow = 0&apos; headstart - 1
+		oTitles.startRow = 2&apos; headstart - 1
 		oTitles.EndRow = 2 &apos;headend - 1
 		oTitles.startColumn = 0
-		oTitles.EndColumn = 35
+		oTitles.EndColumn = 38
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
  
@@ -1462,7 +1463,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		&apos; nasconde la riga di Fine Elenco
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
-		
+		REM ALTEZZA riga di intestazione
 	 Case &quot;Tipo_Analisi&quot;
 		oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
 		sString$ = &quot;Fine ANALISI&quot;
@@ -1479,7 +1480,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		oTitles.startRow = 0&apos;
 		oTitles.EndRow = 0 
 		oTitles.startColumn = 0
-		oTitles.EndColumn = 35
+		oTitles.EndColumn = 30
 		oSheet.setPrintTitleRows (False) &apos;(true)
 		&apos;oSheet.setTitleRows(oTitles)
 		oSheet.setPrintareas(selArea())

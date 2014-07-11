@@ -239,11 +239,11 @@ Sub SegnaManinaVociUsate_Analisi
  
  End If 
 	&apos;______________________________________________-
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then 
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then 
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 
 	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lSrow = -1 then
@@ -285,11 +285,11 @@ Sub SegnaManinaVociUsate_EP &apos; segna manualmente le voci di EP da mantenere
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
 
 	&apos;______________________________________________-
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 
  If nome_sheet = &quot;Elenco Prezzi&quot; Then
  			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
@@ -1048,38 +1048,5 @@ SUB DOPPIONI_TROVA &apos; trova i codici doppi nell&apos;EP
 END SUB
 
 
-sub Cancella_dati &apos;da registratore macro
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 
-rem ----------------------------------------------------------------------
-dispatcher.executeDispatch(document, &quot;.uno:ClearContents&quot;, &quot;&quot;, 0, Array())
-
-
-end sub
-
-
-sub Elimina_righe &apos;da registratore macro
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem ----------------------------------------------------------------------
-dim args1(0) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;Flags&quot;
-args1(0).Value = &quot;R&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:DeleteCell&quot;, &quot;&quot;, 0, args1())
-end sub
 </script:module>

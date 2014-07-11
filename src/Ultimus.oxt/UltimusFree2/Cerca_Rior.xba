@@ -40,11 +40,11 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
  	
  			
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iScarto = 2 &apos;se vers. 4
-	endif 			
+&apos;		else
+&apos;			iScarto = 2 &apos;se vers. 4
+&apos;	endif 			
  	lcolbase = 	lcolbase + iScarto	
  	oCell = oSheet.GetCellByPosition(lcolbase, lrow)&apos; errata selezione di un range
 	oActiveCell1 = oCell.string &apos; registra la sigla dalla cella attiva 
@@ -177,11 +177,11 @@ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 				exit function
 	end if
 		
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iScarto = 2 &apos;se vers. 4
-	endif 			
+&apos;		else
+&apos;			iScarto = 2 &apos;se vers. 4
+&apos;	endif 			
  	lcolbase = 	lcolbase + iScarto	
 	lcolF=lcolbase+12
 

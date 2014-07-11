@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_da_registratore" script:language="StarBasic">REM  *****  BASIC  *****
+sub SBIANCA_celle &apos; da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:BackgroundColor&quot;, &quot;&quot;, 0, Array())
+end sub
+
+
+sub SBIANCA_ANNULLA &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:ResetAttributes&quot;, &quot;&quot;, 0, Array())
+end sub
+
+
+sub rimuovi_area_di_stampa &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:DeletePrintArea&quot;, &quot;&quot;, 0, Array())
+end Sub
+sub copy_clip &apos;registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
+
+
+end sub
+
+
+sub paste_clip &apos;registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
+
+
+end Sub
+sub bordo_sotto  &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(12) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;OuterBorder.LeftBorder&quot;
+args1(0).Value = Array(0,0,0,0,0,0)
+args1(1).Name = &quot;OuterBorder.LeftDistance&quot;
+args1(1).Value = 0
+args1(2).Name = &quot;OuterBorder.RightBorder&quot;
+args1(2).Value = Array(0,0,0,0,0,0)
+args1(3).Name = &quot;OuterBorder.RightDistance&quot;
+args1(3).Value = 0
+args1(4).Name = &quot;OuterBorder.TopBorder&quot;
+args1(4).Value = Array(0,0,0,0,0,0)
+args1(5).Name = &quot;OuterBorder.TopDistance&quot;
+args1(5).Value = 0
+args1(6).Name = &quot;OuterBorder.BottomBorder&quot;
+args1(6).Value = Array(0,0,2,0,0,2)
+args1(7).Name = &quot;OuterBorder.BottomDistance&quot;
+args1(7).Value = 0
+args1(8).Name = &quot;InnerBorder.Horizontal&quot;
+args1(8).Value = Array(0,0,0,0,0,0)
+args1(9).Name = &quot;InnerBorder.Vertical&quot;
+args1(9).Value = Array(0,0,0,0,0,0)
+args1(10).Name = &quot;InnerBorder.Flags&quot;
+args1(10).Value = 0
+args1(11).Name = &quot;InnerBorder.ValidFlags&quot;
+args1(11).Value = 66
+args1(12).Name = &quot;InnerBorder.DefaultDistance&quot;
+args1(12).Value = 0
+
+dispatcher.executeDispatch(document, &quot;.uno:SetBorderStyle&quot;, &quot;&quot;, 0, args1())
+
+
+end Sub
+sub Cancella_dati &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:ClearContents&quot;, &quot;&quot;, 0, Array())
+
+
+end sub
+
+
+sub Elimina_righe &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;Flags&quot;
+args1(0).Value = &quot;R&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:DeleteCell&quot;, &quot;&quot;, 0, args1())
+end Sub
+sub Raggruppa_righe &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;RowOrCol&quot;
+args1(0).Value = &quot;R&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:Group&quot;, &quot;&quot;, 0, args1())
+
+end sub
+
+sub insert_clip &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+rem dispatcher.executeDispatch(document, &quot;.uno:PasteSpecial&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+rem dispatcher.executeDispatch(document, &quot;.uno:PasteSpecial&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+dim args5(5) as new com.sun.star.beans.PropertyValue
+args5(0).Name = &quot;Flags&quot;
+args5(0).Value = &quot;A&quot;
+args5(1).Name = &quot;FormulaCommand&quot;
+args5(1).Value = 0
+args5(2).Name = &quot;SkipEmptyCells&quot;
+args5(2).Value = false
+args5(3).Name = &quot;Transpose&quot;
+args5(3).Value = false
+args5(4).Name = &quot;AsLink&quot;
+args5(4).Value = false
+args5(5).Name = &quot;MoveMode&quot;
+args5(5).Value = 0
+
+dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args5())
+
+
+end sub
+
+
+
+sub consolida_clip &apos;da registratore macro
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+
+dim args2(5) as new com.sun.star.beans.PropertyValue
+args2(0).Name = &quot;Flags&quot;
+args2(0).Value = &quot;SVDN&quot;
+args2(1).Name = &quot;FormulaCommand&quot;
+args2(1).Value = 0
+args2(2).Name = &quot;SkipEmptyCells&quot;
+args2(2).Value = false
+args2(3).Name = &quot;Transpose&quot;
+args2(3).Value = false
+args2(4).Name = &quot;AsLink&quot;
+args2(4).Value = false
+args2(5).Name = &quot;MoveMode&quot;
+args2(5).Value = 4
+
+dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args2())
+
+
+end sub
+</script:module>

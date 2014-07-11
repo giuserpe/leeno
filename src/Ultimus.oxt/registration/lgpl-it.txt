@@ -1,10 +1,11 @@
-LeenO Ultimus - Applicativo per Computi Metrici su tabelle Calc
+LeenO - Applicativo per Computi Metrici su tabelle Calc
 				
- E-Mail: supporto@leeno.org
-
+E-Mail: supporto@leeno.org
+Web: leeno.org
 
 LeenO e' proprieta'   di Giuseppe Vizziello ed e' rilasciato alle 
-condizioni previste dalla licenca pubblica LPGL.
+	condizioni previste dalla licenca pubblica LPGL.
+	
     Questa è una traduzione  italiana non ufficiale della  Licenza
     Pubblica Generica  Attenuata  GNU.   Non   è  pubblicata dalla
     Free    Software   Foundation    e   non   ha  valore   legale
@@ -539,58 +540,3 @@ SOFTWARE), ANCHE  NEL CASO IL DETENTORE  O LE ALTRE  PARTI SIANO STATE
 AVVISATE DELL'EVENTUALITÀ DI TALI DANNI.
 
 FINE DEI TERMINI E DELLE CONDIZIONI
-
-Come applicare questi termini a nuove librerie
-
-Se  si  sviluppa una  nuova  libreria, e  la  si  vuole rendere  della
-maggiore  utilità possibile  per tutti,  la cosa  migliore  è renderla
-libera, in modo che  chiunque possa ridistribuirla e modificarla sotto
-questi  termini (o,  alternativamente, sotto  i termini  della normale
-Licenza Pubblica Generica).
-
-Per  applicare  questi  termini,  basta  inserire  nella  libreria  le
-seguenti note.   La procedura migliore è inserirle  all'inizio di ogni
-file sorgente, per chiarire  nel modo più efficace possibile l'assenza
-di  garanzie; e  ciascun file  dovrebbe  contenere almeno  la nota  di
-copyright e l'indicazione di dove poter reperire la nota per esteso.
-
-una riga  per indicare il nome  della libreria e dare  un'idea di cosa
-faccia.
-
-Copyright (C) anno nome dell'autore
-
-Questa libreria è software libero;  ne è concessa la ridistribuzione o
-la  modifica  secondo  i   termini  della  Licenza  Pubblica  Generica
-Attenuata GNU  come pubblicata dalla Free Software  Foundation; si può
-scegliere  a  piacimento la  versione  2.1  della  Licenza oppure  una
-qualsiasi versione successiva.
-
-Questa libreria è distribuita nella speranza possa mostrarsi utile, ma
-SENZA  ALCUNA  GARANZIA;  senza   neppure  la  garanzia  implicita  di
-COMMERCIABILITÀ o APPLICABILITÀ PER UN PARTICOLARE SCOPO. Per maggiori
-dettagli si veda la Licenza Pubblica Generica Attenuata GNU.
-
-Insieme a questa libreria, l'utente dovrebbe aver ricevuto copia della
-Licenza  Pubblica Generica Attenuata  GNU; in  caso contrario,  si può
-contattare la  Free Software Foundation,  Inc., 51 Franklin  St, Fifth
-Floor, Boston, MA 02110-1301, USA
-
-È  inoltre  il  caso  di  aggiungere  informazioni  per  poter  essere
-contattati tramite posta elettronica e cartacea.
-
-Se necessario,  occorre far firmare  al proprio datore di  lavoro (per
-chi  lavora  come  programmatore)  o  al  proprio  istituto,  per  gli
-studenti, una "rinuncia al copyright" per la Libreria. Ecco un esempio
-contenente nomi fittizi:
-
-Yoyodinamica SPA rinuncia con questo documento ad ogni diritto sul
-
-copyright  della  libreria  'Orcaloca'  (una libreria  per  girarsi  i
-pollici) scritto da Giovanni Smanettone.
-
-firma di Pinco Pallino, 1 Aprile 1990
-
-Pinco Pallino, Presidente
-
-E questo è tutto!
-

@@ -409,12 +409,11 @@ REM LA VISTA A STRUTTURA NON PERMETTE IL SALVATAGGIO DEL FILE
 	oSheet.getRows().getByindex(Lrow).isvisible = false
 	ThisComponent.CurrentController.Select( osheet.getCellByPosition (3,iRowsInsert)
 	
-	REM COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
+REM COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
 	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
 
 	REM TROVO LA POSIZIONE DEL TITOLO
-	sString$ = &quot;SITUAZIONE CONTABILE&quot;
-	oEnd=uFindString(sString$, oSheet)
+	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oSheet)
 	Lrow=oEnd.RangeAddress.EndRow		&apos;riga
 	Lcol=oEnd.RangeAddress.EndColumn	&apos;colonna
 REM INPUT IMPORTO LAVORI SITUAZIONE CONTABILE

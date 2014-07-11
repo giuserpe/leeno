@@ -1159,11 +1159,11 @@ Sub figure_annotazioni_on_off
 	oSheet = ThisComponent.currentController.activeSheet
 	if sAttributo = &quot;Tipo_COMPUTO&quot; then
 	
-		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 				iScarto = 0 &apos;se ver. 3
-			else
-				iscarto = 2 &apos;se vers. 4
-		endif
+&apos;			else
+&apos;				iscarto = 2 &apos;se vers. 4
+&apos;		endif
 
 		If oSheet.getColumns.getByIndex(38+iScarto).isVisible = false then
 				oSheet.getColumns.getByIndex(38+iScarto).isVisible = true
@@ -1511,22 +1511,5 @@ sub Prova_viste_caselle &apos; accendi spegni
 END SUB
 
 
-sub Raggruppa_righe &apos;da registratore macro
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 
-rem ----------------------------------------------------------------------
-dim args1(0) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;RowOrCol&quot;
-args1(0).Value = &quot;R&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:Group&quot;, &quot;&quot;, 0, args1())
-
-end sub
 </script:module>

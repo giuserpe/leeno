@@ -79,11 +79,11 @@ Sub tag_usata_on_off
 				exit sub
 	end if
  	
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 	If oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = false then
 		oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
 	 else	 
@@ -114,11 +114,11 @@ Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 
 	If oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = false or _
 		oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = false then
@@ -166,11 +166,11 @@ Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 	If oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false or _
 		oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = false then
 			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
@@ -214,11 +214,11 @@ Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 
 	If oSheet.getColumns.getByIndex(lcolbase+5+iScarto).isVisible = false and _
 		oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = false then
@@ -252,11 +252,11 @@ Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 
 
 	&apos; la routine che segue serve a agire in modo diverso sulle analisi se si una un tempalte capace di gestire la sicurezza
@@ -308,11 +308,11 @@ If test &lt;&gt; &quot;Tipo_EP&quot; AND _
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
+&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 			iScarto = 0 &apos;se ver. 3
-		else
-			iscarto = 2 &apos;se vers. 4
-	endif
+&apos;		else
+&apos;			iscarto = 2 &apos;se vers. 4
+&apos;	endif
 	lrow= Range2Cell 
 	if lrow = -1 then			 
 			exit sub

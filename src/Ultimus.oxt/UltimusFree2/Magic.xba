@@ -50,18 +50,26 @@ dim lrow as long
 	&apos;ma prima vede se nella riga corrente c&apos;è una formula
 	iRowQ= Range2Cell
 	if iRowQ = -1 then
-		
 		exit sub
 	end if
-	Formula_magica(iRowQ) &apos; e la scrive in col C
+&apos;	Formula_magica(iRowQ) &apos; e la scrive in col C
 	
 	oSheet = ThisComponent.currentController.activeSheet
 	lLastUrow = getLastUsedRow(oSheet)
-&apos;	lrow = 3
-	For lrow=3 To lLastUrow
-	&apos;	if oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; then
- 	&apos;		Formula_magica (lrow)
-	&apos;	end if questo le aggiorna tutte
+	lrow = 3
+
+rem per circoscrivere l&apos;operazione alla singola voce di computo:
+&apos;	lrow=thisComponent.getCurrentSelection().RangeAddress.StartRow
+&apos;	sStRange = Circoscrive_Voce_Computo_Att (lRow)
+&apos;	With sStRange.RangeAddress
+&apos;		iVoce =.StartRow
+&apos;		fVoce =.EndRow
+&apos;	End With
+
+	For lrow=3 to lLastUrow &apos;lrow=iVoce To fVoce&apos;lLastUrow
+		if oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; then
+ 			Formula_magica (lrow)
+		end if&apos; questo le aggiorna tutte
 	
 			sSimbDividente = &quot; &gt;( &quot;
 
@@ -82,6 +90,7 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 					&apos;l&apos;eventuale testo già immesso per &quot;localizzare&quot; le misure
 					&apos; viene prelevato e accodato
 					&apos; &apos; (se si ripete la macro lo ripreleva)
+REM MODIFICATA Giuseppe Vizziello 2014
 	iRowQ = iRowQ0
 
 	oSheet = ThisComponent.currentController.activeSheet
@@ -102,19 +111,38 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 		sComp=oSheet.GetCellByPosition( 2, iRowQ ).string
 		if InStr(1, sComp, sSimbDividente) &lt;&gt; 0 then
 			sComp = Left(sComp,InStr(1, sComp, sSimbDividente)-1) &apos; Restituisce la stringa 
-		end if
-			sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
-			sProvv = Replace_G(sString4,&quot;=&quot;,&quot;&quot;)
-			iProvv = sProvv
-		 	if iProvv + 1.999958689 = 1.999958689 then
-		 			if oSheet.GetCellByPosition( 4, iRowQ ).value = 0 then
-		 					sString4 = &quot;&quot;
-		 				else
-		 			sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
-		 			end if
-		 	end if
+		end If
+&apos;la colonna E non è più In uso
+	&apos;		sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
+	&apos;		sProvv = Replace_G(sString4,&quot;=&quot;,&quot;&quot;)
+	&apos;		iProvv = sProvv
+	&apos;	 	if iProvv + 1.999958689 = 1.999958689 then
+	&apos;	 			if oSheet.GetCellByPosition( 4, iRowQ ).value = 0 then
+	&apos;	 					sString4 = &quot;&quot;
+	&apos;	 				else
+	&apos;	 			sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
+	&apos;	 			end if
+	&apos;	 	end if
+	If left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 1)=&quot;=&quot; Or _
+		left (oSheet.GetCellByPosition( 6, iRowQ ).formula, 1)=&quot;=&quot; Or _
+		left (oSheet.GetCellByPosition( 7, iRowQ ).formula, 1)=&quot;=&quot; Or _
+		left (oSheet.GetCellByPosition( 8, iRowQ ).formula, 1)=&quot;=&quot; Then
+		GoTo procedi:
+		Else
+		Exit Sub
+	End If
+	print
+	procedi:
+&apos;	Print left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 2)
+		If left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 2)=&quot;=$&quot; Or _
+			left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 3)=&quot;=-$&quot; Then
+			Exit Sub
+			
+		&apos;sString5 = oSheet.GetCellByPosition( 5, iRowQ ).value
 
+		Else
 		sString5 = oSheet.GetCellByPosition( 5, iRowQ ).formula
+		End If 
 			sProvv = Replace_G(sString5,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
 		 	if iProvv + 1.999958689 = 1.999958689 then

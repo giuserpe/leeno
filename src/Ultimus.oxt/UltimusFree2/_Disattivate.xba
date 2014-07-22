@@ -1,6 +1,162 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">REM ***** BASIC *****
+
+Sub Svuota_Computo_VECCHIA () &apos;svuota tutto (o quasi) il doc di computo &apos; doradora - da cancellare
+
+&apos;svuota Elenco prezzi
+&apos;xray ThisComponent.Sheets
+	if ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false then
+		msgbox &quot;questa macro si usa soltanto in UltimusFree...&quot;,48
+		Exit sub
+	end if
+	Ripristina_statusLine
+	barra_apri_chiudi_4
+
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Verifica_chiudi_preview
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	
+	if msgbox (&quot; La macchina sta per Svuotare questo computo,!&quot;&amp; CHR$(10)_
+			&amp; &quot; ma prima salvo il doc corrente, e poi ne salvo una copia con nuovo nome!&quot;&amp; CHR$(10)_
+			&amp; &quot; PROSEGUO? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
+		&apos;	&amp;&quot;&quot;,4, &quot;&quot;&amp; CHR$(10)) = 7 then
+			
+		exit sub	
+	end if
+ oDoc = ThisComponent
+ &apos; Get the document&apos;s controller.
+ oDocCtrl = oDoc.getCurrentController()
+ &apos; Get the frame from the controller.
+ oDocFrame = oDocCtrl.getFrame()	
+	
+	&apos; salviamo comunque il doc corrente
+	oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+	oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+ 
+ 	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;Sto svuotando questo documento... Pazienta... &quot;, 30)
+	&apos;svuota Elenco Prezzi	
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow-1
+	If lrowFine &gt; 2 then
+&apos;		oSheet.rows.removeByIndex (2, lrowFine)
+		oRange = osheet.getCellRangeByPosition (0,1,13,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+
+cancella_dati
+		oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+		elimina_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	end If
+
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;2 Sto svuotando questo documento... Pazienta... &quot;, 40)
+
+
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = 0
+
+&apos;	&apos;sString$ = &quot;Fine elenco&quot;
+&apos;	oEnd=uFindString(sString$, oSheet) 
+&apos;	lrowFine=oEnd.RangeAddress.EndRow-1
+&apos;	oRange = osheet.getCellRangeByPosition (0,1,10,lrowFine )
+&apos;	Flags = com.sun.star.sheet.CellFlags.STRING _
+&apos;			 + com.sun.star.sheet.CellFlags.HARDATTR _
+&apos;				+ com.sun.star.sheet.CellFlags.VALUE
+&apos;	oRange.clearContents(Flags)
+&apos;	Barra_chiudi_sempre_4
+&apos;	Barra_Apri_Chiudi_5(&quot;3 Sto svuotando questo documento... Pazienta... &quot;, 50)
+	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
+	lrowFine= getLastUsedRow(oSheet)
+	oCell=oSheet.getCellRangeByPosition(0, 0, 9, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona	
+&apos;	Adatta_h_riga_intera_tabella(&quot;Elenco Prezzi&quot;)
+fissa(0,1)
+
+&apos;&apos;svuota Analisi
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+&apos;	lrowFine= getLastUsedRow(oSheet)
+	oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow-1
+	If lrowFine &gt; 2 then
+&apos;		oSheet.rows.removeByIndex (2, lrowFine)
+		oRange = osheet.getCellRangeByPosition (0,1,0,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+		elimina_righe
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	end If
+	
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;4 Sto svuotando questo documento... Pazienta... &quot;, 60)
+
+	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
+	lrowFine= getLastUsedRow(oSheet)
+	oCell=oSheet.getCellRangeByPosition(0, 0, 10, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+fissa(0,1)
+
+&apos;svuota Computo
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet) 
+	lrowFine =oEnd.RangeAddress.EndRow-1
+
+&apos;	if oSheet.GetCellByPosition( 18, lrowfine ).cellstyle = &quot;Comp TOTALI num&quot; then
+&apos;		&apos;meglio sarebbe cancellarla... ma proviamo così...
+&apos;		osheet.getCellRangeByPosition (0,lrowfine,45,lrowfine).CellStyle = &quot;Default&quot;
+&apos;	end if
+
+	lrowFine = lrowFine-1 &apos;oEnd.RangeAddress.EndRow-2
+	If lrowFine &gt; 2 then
+&apos;		oSheet.rows.removeByIndex (2, lrowFine)
+		oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+		elimina_righe
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	end if	
+	Barra_chiudi_sempre_4	
+	Barra_Apri_Chiudi_5(&quot;5 Sto svuotando questo documento... Pazienta... &quot;, 70)
+
+	Rifa_Somme_TOT_Computo
+	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet) 
+	lrowFine =oEnd.RangeAddress.EndRow
+	oCell=oSheet.getCellRangeByPosition(0, 0, 43, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+fissa(0,1)
+
+	&apos;svuota CONTABILITA
+	Svuota_CONTABILITA_esegui 
+	
+	&apos;aggiunge una riga vuota &quot;quasi&quot; in testa e la formatta... NON è importante per il codice... ma pare ergonomico
+	insRows (2, 1)
+&apos;	oSheet.getRows.insertByIndex(2, 1)&apos;
+	oSheet.getCellRangeByPosition(0, 2, 49 , 2).cellstyle = &quot;Reg_prog&quot;
+	Adatta_h_riga_intera_tabella(&quot;CONTABILITA&quot;)
+	if	sState = &quot;chiusa&quot; then
+		osheet.isVisible = false
+	end if &apos;
+	
+	
+Ripristina_Validita_Lista	
+	salva_temp
+	
+	&apos;rendi correntexx
+	Scrivi_Globale
+	Ripristina_statusLine
+	Vai_a_M1
+
+	msgbox &quot;Questo documento è stato in gran parte svuotato dai sui dati!..!&quot;
+end Sub
 Function Rifa_Somma_Analisi (lCol as long, lrow as long) &apos;dopo che si è iinserita riga - NON USATA
 &apos; di % (Molto probab non serve più)
 &apos; 

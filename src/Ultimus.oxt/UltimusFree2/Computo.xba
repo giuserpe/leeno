@@ -23,6 +23,8 @@ Rem	riga di controllo importo
 	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
 	oSheet.getCellRangeByPosition(0, 1, 43 , 1).cellstyle = &quot;comp In testa&quot;
 
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
+
 REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
  	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A2&quot;)
@@ -135,8 +137,8 @@ procedi:
 		SelectedRange = &quot;ANNULLA&quot; or _
 		SelectedRange = &quot;GNente&quot; then
 		ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-	exit sub
-end if
+		exit Sub
+	end If
 riga_selezione = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di vedi voce da riportare
 &apos;print riga_selezione
 if riga_corrente &lt; riga_selezione or _
@@ -179,13 +181,18 @@ for i = 0 to 1000
 		riga_selezione = riga_selezione+1
 		i = i+1
 	end if
-next
+Next
+rem descrizione opzionale
+If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value=0 then 
 InputDesc = InputBox(&quot;Inserire descrizione:&quot;, &quot;Descrizione della misurazione&quot;, &quot; &quot;)
+Else
+InputDesc =&quot;&quot;
+End If 
 
 oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;&quot;&amp; InputDesc &amp;&quot;&quot;&quot;;&quot;&quot; - vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
 
 oSheet.GetCellByPosition(5 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
-oRange = oSheet.getCellRangeByPosition (2,riga_corrente,5,riga_corrente)
+oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
 oRange.CellBackColor = RGB(255,225,200)&apos;(255, 204, 153)
 oContr.setFirstVisibleRow(focus)
 fine:

@@ -249,17 +249,17 @@ Function Range2Cell (optional flag) &apos;NUOVA funzione da richiamare da altri 
 		end if
 		Range2Cell= -1
 		exit Function
-	end if 
- 
-	if HasUnoInterfaces( thisComponent.getCurrentSelection, &quot;com.sun.star.table.XCell&quot; ) = true then
-			Range2Cell= thisComponent.getCurrentSelection.celladdress.row
-			&apos;	print &quot;è una cella&quot;
-			exit Function
-		else
-			Range2Cell= thisComponent.getCurrentSelection.RangeAddress.startRow
-			&apos;	print &quot;è una RANGE&quot;	
-			exit Function
-	end if
+	end If
+Range2Cell= thisComponent.getCurrentSelection.RangeAddress.startRow
+&apos;	if HasUnoInterfaces( thisComponent.getCurrentSelection, &quot;com.sun.star.table.XCell&quot; ) = true then
+&apos;			Range2Cell= thisComponent.getCurrentSelection.celladdress.row
+&apos;				print &quot;è una cella&quot;
+&apos;			exit Function
+&apos;		else
+&apos;			Range2Cell= thisComponent.getCurrentSelection.RangeAddress.startRow
+&apos;				print &quot;è una RANGE&quot;	
+&apos;			exit Function
+&apos;	end if
 end Function
 
 

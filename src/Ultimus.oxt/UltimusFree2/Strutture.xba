@@ -1107,18 +1107,19 @@ Sub Struttura &apos;&apos;
 	&apos;_____________________
 
 	sAttributo = Trova_Attr_Sheet
+&apos;	Print sAttributo
 	Select case sAttributo 
-		Case &quot;Tipo_COMPUTO&quot;
+		Case &quot;Tipo_COMPUTO&quot;, &quot;Tipo_computo&quot;, &quot;Tipo_CONTABILITA&quot;
 			Struttura_ComputoM
 			exit sub
-		Case &quot;Tipo_CONTABILITA&quot;
-			Struttura_ComputoM
-			exit sub
+&apos;		Case &quot;Tipo_CONTABILITA&quot;
+&apos;			Struttura_ComputoM
+&apos;			exit sub
 		Case &quot;Tipo_Analisi&quot;
 			Struttura_Analisi
 			exit sub
 	End select
-	msgbox &quot;Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
+	msgbox &quot;#str Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
 				&amp; &quot;Eseguila su una tabella di tipo COMPUTO o di Tipo Analisi!&quot;
 end sub
 
@@ -1484,6 +1485,7 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;COMP_BASE&quot; or _
 			 	left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) = &quot;Reg-SAL&quot; or _
 			 	left((oSheet.GetCellByPosition(2 , (I)).CellStyle),7) = &quot;Reg-SAL&quot; then	 &apos;questa per usare stile gerarchico
+	&apos;		 	print
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
 	&apos;	print &quot;cap ________________________________cap -_________________________________________-cap __________________________________________________-_______________&quot; &amp; oSheet.GetCellByPosition(1 ,I ).CellStyle
 				goto prossima &apos; passa alla riga dopo&apos;
@@ -1493,8 +1495,6 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R OR _
 						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R OR _
 						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp sotto Bianche&quot; &amp; s_R &apos; &apos; prima avevo OR
-					&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-				&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
 						if oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R then
 							iRIs = I
 							Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R 

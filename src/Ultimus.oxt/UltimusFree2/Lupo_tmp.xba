@@ -95,7 +95,7 @@ Sub ExampleArray
  a(2,2) = &quot;barbatrucco 26SS&quot;
  a(2,3) = &quot;di più&quot;
 
- msgbox cerca_in_arrayD(a, &quot;Orco&quot;) 
+ msgbox cerca_in_arrayD(a, &quot;pippo&quot;) 
 End Sub
 
 function cerca_in_arrayD(anArrayD as object, aString as string) as string

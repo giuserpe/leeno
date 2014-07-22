@@ -1,6 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM ***** BASIC *****
+sub esporta_PDF_
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+oSheets =ThisComponent.Sheets
+For Each oSh In oSheets
+  If oSh.Name &lt;&gt; &quot;cP_Cop&quot; AND oSh.Name &lt;&gt; &quot;COMPUTO&quot; Then
+     oSh.IsVisible = False   
+  End If
+Next
+rem ----------------------------------------------------------------------
+dim args1(2) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;URL&quot;
+args1(0).Value = &quot;file:///C:/test.pdf&quot;
+args1(1).Name = &quot;FilterName&quot;
+args1(1).Value = &quot;calc_pdf_Export&quot;
+args1(2).Name = &quot;FilterData&quot;
+args1(2).Value = Array(Array(&quot;UseLosslessCompression&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Quality&quot;,0,90,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ReduceImageResolution&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;MaxImageResolution&quot;,0,300,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;UseTaggedPDF&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;SelectPdfVersion&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportNotes&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportBookmarks&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;OpenBookmarkLevels&quot;,0,-1,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;UseTransitionEffects&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;IsSkipEmptyPages&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;IsAddStream&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EmbedStandardFonts&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;FormsType&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportFormFields&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;AllowDuplicateFieldNames&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerToolbar&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerMenubar&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerWindowControls&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ResizeWindowToInitialPage&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;CenterWindow&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;OpenInFullScreenMode&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;DisplayPDFDocumentTitle&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;InitialView&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Magnification&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Zoom&quot;,0,100,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PageLayout&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;FirstPageOnLeft&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;InitialPage&quot;,0,1,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Printing&quot;,0,2,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Changes&quot;,0,4,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EnableCopyingOfContent&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EnableTextAccessForAccessibilityTools&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportLinksRelativeFsys&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PDFViewSelection&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ConvertOOoTargetToPDFTarget&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportBookmarksToPDFDestination&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;_OkButtonString&quot;,0,&quot;&quot;,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EncryptFile&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PreparedPasswords&quot;,0,,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;RestrictPermissions&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PreparedPermissionPassword&quot;,0,Array(),com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;&quot;,0,,com.sun.star.beans.PropertyState.DIRECT_VALUE))
+
+dispatcher.executeDispatch(document, &quot;.uno:ExportToPDF&quot;, &quot;&quot;, 0, args1())
+
+For Each oSh In oSheets
+   If oSh.Name &lt;&gt; &quot;cP_Cop&quot; AND oSh.Name &lt;&gt; &quot;COMPUTO&quot; Then
+     oSh.IsVisible = True
+  End If
+Next
+
+end Sub
+
+
+SUB esporta_Fogli_PDF &apos; nasconde i fogli da non stampare
+
+oDoc = ThisComponent
+oSheets = oDoc.Sheets()
+oActiveSheet = oDoc.CurrentController.ActiveSheet()
+For Each oSh In oSheets
+If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; &quot;COMPUTO&quot; Then
+     oSh.IsVisible = False   
+  End If
+Next
+&apos;parametri di esportazione
+   Dim mStoreOpts(1) As New com.sun.star.beans.PropertyValue
+   mStoreOpts(0).Name = &quot;Overwrite&quot;
+   mStoreOpts(0).Value = True
+   mStoreOpts(1).Name = &quot;FilterName&quot;
+   mStoreOpts(1).Value = &quot;calc_pdf_Export&quot;
+   sUrl = &quot;file:///C:/test.PDF&quot;
+   oDoc.storeToURL(sUrl, mStoreOpts())
+For Each oSh In oSheets
+     oSh.IsVisible = True
+Next   
+End Sub
+
+
+
 Sub Main
 rifa_nomearea (&quot;Foglio1&quot;,&quot;A1:A5&quot;,&quot;per_cortesia&quot;)
 End Sub

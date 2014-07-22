@@ -325,7 +325,7 @@ REM NUOVO NUMERO VERSIONE GIUSERPE
 	 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;UltimusFree2&quot; ) 
 	End If 
 	If NOT GlobalScope.DialogLibraries.isLibraryLoaded( &quot;UltimusFree2&quot; ) Then 
-	 	 GlobalScope.	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;) 
+	 	 GlobalScope.DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;) 
 	End If 
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
 	 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
@@ -444,6 +444,7 @@ REM NUOVO NUMERO VERSIONE GIUSERPE
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
 
 	Controlla_Somme_Componenti
+ 
 	
 	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
 		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)

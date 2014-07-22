@@ -619,37 +619,39 @@ end sub
 
 
 Sub Controlla_Somme_Componenti
+REM tocca capire se questa sub serve davvero (GV)
 
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 
 	lastUrow = getLastUsedRow(oSheet)
-	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then 
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI8! &quot;
-		exit sub
-	end if 
+&apos;	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
+&apos;	If isNull (oEnd) or isEmpty (oEnd) then 
+&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+&apos;		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI8! &quot;
+&apos;		exit sub
+&apos;	end if 
 	lRowE=oEnd.RangeAddress.EndRow 
 	for i =3 to lRowE
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
 			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; then
-				goto salta:
-				if (oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
-					oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;) and _
-				 (oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
-					oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;)then
-					ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , i))
-					msgbox &quot;1 in questa riga c&apos;è qualcosa che non va (non trovo gli stili previsti)&quot;
-					exit for
-				end if
-				salta:
+			&apos;	goto salta:
+			&apos;	if (oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
+			&apos;		oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;) and _
+			&apos;	 (oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
+			&apos;		oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;)then
+			&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , i))
+			&apos;		msgbox &quot;1 in questa riga c&apos;è qualcosa che non va (non trovo gli stili previsti)&quot;
+			&apos;		exit for
+			&apos;	end if
+			&apos;	salta:
 				lRow = i
 				do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp End Attributo&quot;
 						lRow = lRow+1
 				loop 
-				
-				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
+oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
+oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
+&apos;				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
 				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
 
 

@@ -763,30 +763,29 @@ Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
 	&apos;--------------------------------------------------
-sAttributo = Trova_Attr_Sheet &apos;Trova_Attr
-
-If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos;non consente l&apos;esec su tab originale
- sSheetName= ThisComponent.currentcontroller.activesheet.name
- If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 then 
-	If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
- 		 sSheetName=&quot;Analisi di Prezzo&quot; or _
- 		 sSheetName=&quot;FiltroTMP&quot; then
- 		&apos;scoperta e memento: se si usa print (invece di msgbox) insieme a &amp; CHR$(10)_ il messaggio
- 		&apos; viene spezzato in diverse finestre...
- 		msgbox &quot;Mi hai chiesto di impaginare questa tabella scrivendo i Totali di pagina su una tabella base (Originale)...&quot; &amp; CHR$(10)_
- 		&amp; &quot; Questo NON E&apos; CONSENTITO perche&apos; va ad alterare i dati&quot;
- 		msgbox	&quot;Se proprio vuoi rovinare il tuo computo fallo (&quot;&quot;con le tue manine&quot;&quot;)...&quot;&amp; CHR$(10)_
- 		&amp; &quot;Io invece ti consiglio di duplicare questa tabella creandone una copia (manipolabile impunemente) Menu Top ULTIMUS_3 &gt; STAMPA &gt; 1) Prepara il doc per la stampa!&quot;
- 		&apos; ne faccio una copia?
- 		exit sub
- 	end if
- end if
-end if
+	sAttributo = Trova_Attr_Sheet &apos;Trova_Attr
+	&apos;Print sAttributo
+	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos;non consente l&apos;esec su tab originale
+	 sSheetName= ThisComponent.currentcontroller.activesheet.name
+	 If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 then 
+		If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
+	 		 sSheetName=&quot;Analisi di Prezzo&quot; or _
+	 		 sSheetName=&quot;FiltroTMP&quot; then
+	 		&apos;scoperta e memento: se si usa print (invece di msgbox) insieme a &amp; CHR$(10)_ il messaggio
+	 		&apos; viene spezzato in diverse finestre...
+	 		msgbox &quot;Mi hai chiesto di impaginare questa tabella scrivendo i Totali di pagina su una tabella base (Originale)...&quot; &amp; CHR$(10)_
+	 		&amp; &quot; Questo NON E&apos; CONSENTITO perche&apos; va ad alterare i dati&quot;
+	 		msgbox	&quot;Se proprio vuoi rovinare il tuo computo fallo (&quot;&quot;con le tue manine&quot;&quot;)...&quot;&amp; CHR$(10)_
+	 		&amp; &quot;Io invece ti consiglio di duplicare questa tabella creandone una copia (manipolabile impunemente) Menu Top ULTIMUS_3 &gt; STAMPA &gt; 1) Prepara il doc per la stampa!&quot;
+	 		&apos; ne faccio una copia?
+	 		exit sub
+	 	end if
+	 end if
+	end If
 
 &apos;modulo che controlla se lo stile di pag ha pagina in altezza per pagine in lumgh.
 &apos; se è impostato in quel modo chiede se modificarlo
-	oSheet = ThisComponent.Sheets.getByName(_
-	ThisComponent.currentcontroller.activesheet.name)
+	oSheet = ThisComponent.Sheets.getByName(ThisComponent.currentcontroller.activesheet.name)
 &apos;	xray oSheet
 	sStile_Pag = oSheet.PageStyle &apos;registra il nome dello stile corrente della Sheet
 &apos;	print sStile_Pag 
@@ -833,29 +832,29 @@ end if
 	end sub
 
 &apos; fine modulo di controllo e modifica stile di pagina
-
-Select Case sAttributo
-	Case &quot;Tipo_COMPUTO&quot;
-		Visualizza_PageBreak
-		Impagina_Computo_N
-	Case &quot;Tipo_CONTABILITA&quot;
-		Visualizza_PageBreak
-		Impagina_Computo_N
-	Case &quot;Tipo_Analisi&quot;
-		Visualizza_PageBreak
-		Impagina_Analisi_N
-	&apos;	Visualizza_PageBreak
-	Case &quot;Tipo_ElencoP&quot; 
-		msgbox &quot;Questo sembra essere un Elenco prezzi, e non serve una impagninazione automatica dei salti pagina...&quot;
-		exit sub
-	Case &quot;&quot;
-		msgbox &quot;Non mi risulta che la tabella che vuoi impaginare sia del tipo Computo... o Analisi&quot;&amp; CHR(10) &amp; CHR(10)_
-			&amp;&quot;L&apos;informazione che cerco e&apos; scritta in modo invisibile nella cella A1&quot;&amp; CHR(10)_
-			&amp;&quot;Se sei certo che sia una tabella di Tipo Computo devi copiare la cella corrispondente da S1 e incollarla in A1 su questa tabella&quot;&amp; CHR(10)_
-			&amp;&quot;(copia da S1.E44 ed incolla in A1 su questa tabella.)&quot;&amp; CHR(10) &amp; CHR(10)_
-			&amp; &quot;Se invece ritieni sia di tipo Analisi (copia la cella S1.AL42 ed incolla in A1 su questa tabella.)&quot;
-		exit sub
-End select		
+	
+	Select Case sAttributo
+		Case &quot;Tipo_COMPUTO&quot;
+			Visualizza_PageBreak
+	&apos;		Impagina_Computo_N
+		Case &quot;Tipo_CONTABILITA&quot;
+			Visualizza_PageBreak
+	&apos;		Impagina_Computo_N
+		Case &quot;Tipo_Analisi&quot;
+			Visualizza_PageBreak
+			Impagina_Analisi_N
+		&apos;	Visualizza_PageBreak
+		Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_Elenco&quot; 
+	&apos;		msgbox &quot;Questo sembra essere un Elenco prezzi, e non serve una impagninazione automatica dei salti pagina...&quot;
+			exit sub
+		Case &quot;&quot;
+			msgbox &quot;Non mi risulta che la tabella che vuoi impaginare sia del tipo Computo... o Analisi&quot;&amp; CHR(10) &amp; CHR(10)_
+				&amp;&quot;L&apos;informazione che cerco e&apos; scritta in modo invisibile nella cella A1&quot;&amp; CHR(10)_
+				&amp;&quot;Se sei certo che sia una tabella di Tipo Computo devi copiare la cella corrispondente da S1 e incollarla in A1 su questa tabella&quot;&amp; CHR(10)_
+				&amp;&quot;(copia da S1.E44 ed incolla in A1 su questa tabella.)&quot;&amp; CHR(10) &amp; CHR(10)_
+				&amp; &quot;Se invece ritieni sia di tipo Analisi (copia la cella S1.AL42 ed incolla in A1 su questa tabella.)&quot;
+			exit sub
+	End Select		
 
 
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;EliminaColonne&apos; L&apos; ho spiegata su Output &apos; incasina l&apos;area di stampa
@@ -866,7 +865,7 @@ END SUB
 
 
 
-Sub Impagina_Computo_N &apos; versione nuova elaborata per la 3.2 su XP in vbox
+Sub Impagina_Computo_N &apos; non usata versione nuova elaborata per la 3.2 su XP in vbox
 &apos;NON USATA
 dim lLastUrow as long
 dim lrow as long
@@ -1217,13 +1216,12 @@ dim lLastUrow as long
 dim lrow as long
 dim I as long
 	oSheet = ThisComponent.currentController.activeSheet
-	
 	&apos; controllo e avvertimento riguardo all&apos;opportunità di lavorare su una tabella base (originale)
 	sSheetName= ThisComponent.currentcontroller.activesheet.name
-	If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
- 		 sSheetName=&quot;Analisi di Prezzo&quot; or _
- 		 sSheetName=&quot;CONTABILITA&quot; or _
- 		 sSheetName=&quot;FiltroTMP&quot; then
+&apos;	If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
+&apos;		 sSheetName=&quot;Analisi di Prezzo&quot; or _
+&apos; 		 sSheetName=&quot;CONTABILITA&quot; or _
+&apos; 		 sSheetName=&quot;FiltroTMP&quot; then
 	&apos; questo l&apos;ho disattivata perché guserpe si lamentava... (giuserpe fa l&apos;avvocato del diavolo 
  	&apos; e si è assunto l&apos;ingrato compito di rappresentare gli utenti &quot;bastian cuntrari&quot;)
  	&apos; la disattivazione rientra nell&apos;equiparazione fra la procedura di stampa classica (con duplicazione)
@@ -1236,12 +1234,8 @@ dim I as long
 &apos;			else
 &apos;				exit sub
  &apos;		end if
- 	end if	
-	If sSheetName=&quot;CONTABILITA&quot; then &apos; su contabilità non va proprio eseguito... altrimenti si incasina 
-				&apos; l&apos;eventuale libretto annotato li
-				&apos; In quel caso la numerazione viene fatta in altro modo 					
-		exit sub
-	END IF
+&apos; 	end if	
+
 	&apos;usa LeenO e il tuo computo sarà più burbanzoso che mai
 	oSheet.Rows.OptimalHeight= TRUE
 	&apos; ambaradan per togliere righe in eccesso in alto
@@ -1261,77 +1255,40 @@ dim I as long
 	&apos; fine eliminazione righe in alto
 	
 	&apos; elimina tutti pagebreak , mentre nell&apos;analisi chiede se ripartire... ?!
-	Visualizza_PageBreak
 	oSheet.removeAllManualPageBreaks
 	 
-
 	lLastUrow = getLastUsedRow(oSheet)
-&apos;	print lLastUrow
 	lrow = 5 &apos;
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
 &apos;	xray oCell
 &apos;	ThisComponent.CurrentController.Select(oCell)
-
+Set_Area_Stampa_N (&quot;&quot;)
 	for i = 1 to lLastUrow
 	oCell = oSheet.GetCellByPosition( 0 , i)
-	 If oCell.string = &quot;----&quot; then
-	 	i =i+1
-	 		oCell = oSheet.GetCellByPosition( 0 , i)
- oCell.rows.IsStartOfNewPage = &quot;true&quot;
- end if
+	If oCell.string = &quot;----&quot; Then
+	 	i =i+2
+	 	oCell = oSheet.GetCellByPosition( 0 , i)
+		oCell.rows.IsStartOfNewPage = &quot;true&quot;
+	end If
+		Visualizza_PageBreak
  next
 
 &apos;possibile che non ci sia il metodo removemanualpage... CONTROLLARE
 &apos;eccome se c&apos;è... vedi alcune righe sopra,,, ma per il momento lascio ancora la rimozione qui sotto
-
-
-goto fine REM DA QUI FINO A fine: SEMBRA TUTTO INUTILE PER LE ANALISI_AVCP 
-	For I = 1 To lLastUrow Step 1 &apos; ciclo di for riga per riga 
-		oCell = oSheet.GetCellByPosition( 0 , lrow)
-		if ocell.rows.IsManualPageBreak = true then
-			ocell.rows.IsManualPageBreak=False &apos;rimuovilo
-		end if 
-		if lrow &gt;= lLastUrow then
-		 	Exit For
-		end if&apos;
-		if oCell.rows.IsStartOfNewPage = True then &apos; se c&apos;è un salto
-			xA = oCell.string
-		 if oSheet.GetCellByPosition( 0, lrow-1).string = &quot;----&quot; then REM RIGA SALTO PAGINA ANALISI_BART
-		 		oCell.rows.IsStartOfNewPage = &quot;true&quot;
-		 		lrow = lrow+4
- 			&apos;		print lrow
-		 		goto saltarello
-		 end if
-		 
-		 lrow = lrow 
-
-		 Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;	or oSheet.GetCellByPosition( 0, lrow).string = &quot;----&quot; 
-		 			lrow = lrow-1
-		 	loop
-		 	oCell = oSheet.GetCellByPosition( 0 , lrow-1)
-			oCell.rows.IsStartOfNewPage = &quot;true&quot;			
-		 	lrow = lrow+1
-		 	oCell = oSheet.GetCellByPosition( 0 , lrow)
-
-		 	saltarello:
-
-		End If
-		lrow = I+1
-		oCell = oSheet.GetCellByPosition( 0 , lrow)
-	Next I
-fine:	
+	
 	&apos; questa serve per trovare e chiudere la riga rossa
-	sString$ = &quot;Fine ANALISI&quot;
-	oEnd=uFindString(sString$, oSheet)
+
+	oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) then
 		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI 26! &quot;
 		exit sub
 	end if 				
-	lRowE=oEnd.CellAddress.Row 
-	oRigaNascosta = oSheet.getRows().getByIndex (lrowE) 
-	oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine ANALISI	
+&apos;	lRowE=oEnd.CellAddress.Row 
+&apos;	oRigaNascosta = oSheet.getRows().getByIndex (lrowE) 
+&apos;	oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine ANALISI
+
 	msgbox &quot;Ho sistemato in automatico i Salti Pagina di questa tabella di Analisi!&quot;&amp; CHR$(10)_
-		&amp; &quot;in ogni caso controlla il risultato con Anteprima di Stampa&quot;
+		&amp; &quot;in ogni caso controlla il risultato con Anteprima di Stampa&quot;, 64, &quot;AVVISO!&quot;
 
 END SUB
 
@@ -1412,8 +1369,8 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	sAttributo = Trova_Attr_Sheet
 &apos;	Print sAttributo
 	oSheet = ThisComponent.currentController.activeSheet
-	Select Case sAttributo
-	 Case &quot;Tipo_COMPUTO&quot;
+	Select Case oSheet.Name &apos;sAttributo
+	 Case &quot;Tipo_COMPUTO&quot;, &quot;COMPUTO&quot;
 	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800
 		&apos;print &quot;Tipo computo&quot;
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
@@ -1464,14 +1421,12 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 		REM ALTEZZA riga di intestazione
-	 Case &quot;Tipo_Analisi&quot;
+	 Case &quot;Tipo_Analisi&quot;, &quot;Analisi di Prezzo&quot;
 		oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
-		sString$ = &quot;Fine ANALISI&quot;
-		oEnd=uFindString(sString$, oSheet)			
+		oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet)			
 		lRowE=oEnd.CellAddress.Row
-	
 		selArea(0).StartColumn = 0
-		selArea(0).StartRow = 2
+		selArea(0).StartRow = 1
 		selArea(0).EndColumn = 7
 		selArea(0).EndRow = lRowE-2 
 		&apos;xray selarea
@@ -1488,7 +1443,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 &apos;		Impagina_N REM TANTO è DA FARE
-	 Case &quot;Tipo_CONTABILITA&quot;
+	 Case &quot;Tipo_CONTABILITA&quot;, &quot;CONTABILITA&quot;
 	 	sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)	
 		If isNull (oEnd) or isEmpty (oEnd) 		then
@@ -1534,7 +1489,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;			oCRA.EndRow = lLastUrow
 &apos;			oSheet.group(oCRA,1,0)
 
-	 Case &quot;Tipo_ElencoP&quot; &apos;&quot;Tipo_EP&quot;
+	 Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_EP&quot;, &quot;Elenco Prezzi&quot;
 &apos;	 print &quot;Tipo_ElencoP&quot;
 		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe	
 		sString$ = &quot;Fine elenco&quot;
@@ -1567,6 +1522,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	REM RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
 	oPrimaCella.Rows.Height = 1200
+fissa (0,1)
 	 Case &quot;&quot;
 		msgbox &quot;Non riconosco questo tipo di documento... &quot; &amp; CHR$(10)_
 		&amp;&quot;Pertanto ho approssimato l&apos;area di stampa come pare a me! &quot; &amp; CHR$(10)_

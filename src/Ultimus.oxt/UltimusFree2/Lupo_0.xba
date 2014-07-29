@@ -268,7 +268,7 @@ REM NUOVO NUMERO VERSIONE GIUSERPE
 
 		Case 1
 		msgbox &quot;(1) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot;1 Questo documento è stato elaborato con una versione di LeenO più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		&amp; &quot;1 Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
 		&amp; &quot; &quot; &amp; CHR$(10)_
 		&amp; &quot; Sussistono gravi problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; LeenO è comunque attivo, ma usare le macro su questo documento potrebbe compromettere i dati!&quot; &amp; CHR$(10) &amp; CHR$(10)_
@@ -285,7 +285,7 @@ REM NUOVO NUMERO VERSIONE GIUSERPE
 	
 		Case 8
 		msgbox &quot;(8) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Questo documento è stato elaborato con una versione di LeenO più vecchia di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		&amp; &quot; Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
 		&amp; &quot; &quot; &amp; CHR$(10)_
 		&amp; &quot; Probabilmente non ci sono seri problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;Ma in quel periodo ho i rilasciato versioni in modo un po&apos; confuso! Consiglio quindi caldamente il trasferimento/riversamento dei dati di questo Doc in un Template aggiornato!&quot; &amp; CHR$(10) &amp; CHR$(10)	
@@ -294,7 +294,7 @@ REM NUOVO NUMERO VERSIONE GIUSERPE
  else
 		if sVerMinorDoc &lt; sVerMinorInstallata then
 			Select Case msgbox (&quot;(5) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-				 &amp; &quot; Questo documento è stato elaborato con una versione di LeenO più vecchia di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
+				 &amp; &quot; Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
 	 			 &amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				 &amp; &quot;Sussistono problemi di incompatibilità del Doc con la versione di libreria installata. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				 &amp; &quot;Vuoi tentare la PROCEDURA AUTOMATICA DI ADATTAMENTO di questo documento?&quot; &amp; CHR$(10)_

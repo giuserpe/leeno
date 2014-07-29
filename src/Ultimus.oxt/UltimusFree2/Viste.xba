@@ -26,13 +26,14 @@ Dim oDialogScenari_AN As Object
 
 Sub Scelta_Viste() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
+sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
 &apos;	print sAttributo
  If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; and _
  	sAttributo &lt;&gt; &quot;Tipo_CONTABILITA&quot; and _
  	sAttributo &lt;&gt; &quot;Tipo_Analisi&quot; and _
  	sAttributo &lt;&gt; &quot;TFiltroTMP&quot; and _
- 		sAttributo &lt;&gt; &quot;Tipo_ElencoP&quot; and _
+ 	sAttributo &lt;&gt; &quot;Tipo_ElencoP&quot; and _
  	sAttributo &lt;&gt; &quot;Tipo_EP&quot; Then
 
  	msgbox &quot;1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_

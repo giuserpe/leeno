@@ -4,7 +4,7 @@
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="2" dlg:background-color="0x55ff42"/>
+  <dlg:style dlg:style-id="2" dlg:background-color="0x98fb98"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="0" dlg:left="5" dlg:top="83" dlg:width="76" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Descrizione Corta on/off" dlg:multiline="true">

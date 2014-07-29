@@ -201,12 +201,25 @@ Sub Nascondi_TUTTI_docs_e_Copertine
 	Visualizza_normale
 end sub
 
-Sub kjashkdjwsd
-oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+Sub sistema_attributi_sheet
+&apos;print Trova_Attr_Sheet
+oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B2&quot;)
+	
+oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B2&quot;)
+	
+oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B2&quot;)
 End Sub
 
 

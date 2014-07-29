@@ -325,7 +325,7 @@ Sub Solo_Computo_ (anche_computo as boolean)
  	 	oSheets = ThisComponent.Sheets
  	 	oSheets.removeByName(&quot;COMPUTO_2&quot;)
  	 	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).string = 1 then
-			Rifa_Somme_TOT_Computo
+Rifa_Somme_TOT_Computo
 		end if
 &apos; 	 	End If 	
  	 &apos;oSheets = ThisComponent.Sheets

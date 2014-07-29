@@ -35,7 +35,7 @@ sub aggiorna_nome_CC &apos; aggiorna la cella con il nome del file di Contabilit
 	mycell.string = omycell
 End Sub
 
-sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello
+sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello 2013
 on error goto avviso
 &apos;	on error goto errore_apri
 	Dim mArgs()

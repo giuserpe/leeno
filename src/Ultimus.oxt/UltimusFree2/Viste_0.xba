@@ -97,15 +97,14 @@ End Sub
 
 
 Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
-
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet &lt;&gt; &quot;Tipo_ElencoP&quot; Then
+&apos;Print Trova_Attr_Sheet
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; OR &quot;Tipo_ElencoP&quot; Then
 		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
 				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
 				&amp; &quot;ANNULLO!&quot;
 				exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 
 	lcolbase = Colonna_giusta_EP (oSheet)
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then

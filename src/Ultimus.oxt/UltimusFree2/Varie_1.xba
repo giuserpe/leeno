@@ -15,6 +15,7 @@
 
 
 SUB DOPPIONI_TROVA_Durante (lrowPartenza as long, codice as string)&apos; _no_rior
+
  &apos;&apos;&apos;&apos;la registrazione della voce in EP
 &apos; cerca solo il doppione di quella voce in trasferimento
 	&apos;_____________________
@@ -41,16 +42,13 @@ SUB DOPPIONI_TROVA_Durante (lrowPartenza as long, codice as string)&apos; _no_ri
 
 lrow = 1
 lUltimaRiga = getLastUsedRow(oSheet)
-If lrow &gt;= lUltimaRiga then
-		goto Fine
-	end if
+If lrow &gt;= lUltimaRiga then	goto Fine
 do while oSheet.GetCellByPosition( lcolbase+0,lrow ).string = &quot;&quot;
 	lrow = lorw+1
 loop
 
-	sString$ = codice
 
-	oEnd=uFindString(sString$, oSheet) 
+	oEnd=uFindString(codice, oSheet) 
 
 	lrowSopra = oEnd.RangeAddress.StartRow
 	sSopra = oSheet.GetCellByPosition( lcolbase+0,lrowSopra ).string
@@ -62,7 +60,7 @@ loop
 	if sSotto = codice then		
 			ThisComponent.CurrentController.Select(oCell)	
 			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 1 then
-			print &quot;primuslike da doppioni&quot;
+&apos;			print &quot;primuslike da doppioni&quot;
 				Primus_like
 				exit sub
 			end if
@@ -74,28 +72,9 @@ loop
  if vScelta = 6 then
 			 	Dim oDisp as object
 					 oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
-					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
+					 For i = 1 To 23 &apos;23 è il n. di passi di UNDO
+ 					 	oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
+ 					 Next
  					 oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 					 ocell = oSheet.GetCellByPosition( 0,lrowPartenza)
 					 ThisComponent.CurrentController.Select(ocell )

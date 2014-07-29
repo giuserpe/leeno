@@ -4,87 +4,10 @@
 Sub inizializza_computo &apos;(C) Giuseppe Vizziello 2014
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
  	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
-
-	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
-Rem	riga di controllo importo
-	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
-	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
-	oSheet.GetCellByPosition(19,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;T3:T4);2)&quot; &apos;importo perizia di variante
-	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=ROUND(AE4/S4;2)&quot;  &apos;Incidenza manodopera %
-	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
-	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AK3:AK4);2)&quot; &apos; totale computo sole voci senza errori
-&apos;	oSheet.GetCellByPosition(39,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AN3:AN4);2)&quot; &apos; totale computo sole voci senza errori
-&apos;	oSheet.GetCellByPosition(40,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AO3:AO4);2)&quot; &apos; totale computo sole voci senza errori
-&apos;	oSheet.GetCellByPosition(41,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AP3:AP4);2)&quot; &apos; totale computo sole voci senza errori
-
-	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
-	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
-	oSheet.getCellRangeByPosition(0, 1, 43 , 1).cellstyle = &quot;comp In testa&quot;
-
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
-
-REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
- 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B2&quot;)
-&apos;print	Trova_Attr_Sheet
-rem riga di intestazione
-	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
-	oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
-	oSheet.GetCellByPosition(2,2).setstring(&quot;DESIGNAZIONE DEI LAVORI&quot;+ chr(13) + &quot;E DELLE SOMMINISTRAZIONI&quot;)
-	oSheet.GetCellByPosition(5,2).setstring(&quot;P.U.&quot;+ chr(13) + &quot;Coeff.&quot;)
-	oSheet.GetCellByPosition(6,2).setstring(&quot;Lung.&quot;)
-	oSheet.GetCellByPosition(7,2).setstring(&quot;Larg.&quot;)
-	oSheet.GetCellByPosition(8,2).setstring(&quot;Alt.&quot; + chr(13) +&quot;Peso&quot;)
-	oSheet.GetCellByPosition(9,2).setstring(&quot;Quantità&quot;)
-	oSheet.GetCellByPosition(10,2).setstring(&quot;Quantità perizia di variante&quot;)
-	oSheet.GetCellByPosition(11,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
-	oSheet.GetCellByPosition(17,2).setstring(&quot;di cui&quot; + chr(13) + &quot;sicurezza&quot;)
-	oSheet.GetCellByPosition(18,2).setstring(&quot;Importo €&quot;)
-	oSheet.GetCellByPosition(19,2).setstring(&quot;Importo totale&quot; + chr(13) +&quot;perizia di variante&quot;)
-	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
-	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
-	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
-	oSheet.GetCellByPosition(31,2).setstring(&quot;tag Cat&quot;)
-	oSheet.GetCellByPosition(32,2).setstring(&quot;tag&quot; + chr(13) +&quot;subCat&quot;)
-	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
-	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
-	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
-	oSheet.GetCellByPosition(36,2).setstring(&quot;importo totale computo&quot;+ chr(13) + &quot;sole voci senza errori&quot;)
-	oSheet.GetCellByPosition(38,2).setstring(&quot;Figure e&quot; + chr(13) +&quot;annotazioni&quot;)
-&apos;	oSheet.GetCellByPosition(39,2).setstring(&quot;Importo&quot; + chr(13) +&quot;SottoCategorie&quot;)
-&apos;	oSheet.GetCellByPosition(40,2).setstring(&quot;Importo&quot; + chr(13) +&quot;Categorie&quot;)
-&apos;	oSheet.GetCellByPosition(41,2).setstring(&quot;Importo MdO&quot;+ chr(13) +&quot;per categoria&quot;)
-	oSheet.GetCellByPosition(43,2).setstring(&quot;riservato per annotare&quot;+ chr(13) +&quot;il numero della voce&quot;)
-	oSheet.getCellRangeByPosition(0, 2, 43 , 2).cellstyle = &quot;comp Int_colonna&quot;
-	oSheet.getCellByPosition(19,2).cellstyle = &quot;COnt_noP&quot;
-	oSheet.getCellByPosition(36,2).cellstyle = &quot;COnt_noP&quot;
-	oSheet.getCellByPosition(43,2).cellstyle = &quot;COnt_noP&quot;
-	oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
-	ThisComponent.CurrentController.Select(oCell)
-	Adatta_Altezza_riga
-REM ALTEZZA riga di intestazione
-	oSheet.GetCellByPosition(0,2).Rows.Height = 800
-Rem riga del totale
+ 	Rem riga del totale
 	oSheet.GetCellByPosition(2,3).setstring(&quot;TOTALI COMPUTO&quot;)
-	oSheet.GetCellByPosition(17,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(18,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
-	oSheet.GetCellByPosition(19,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;T3:T4);2)&quot; &apos;importo perizia di variante
-	oSheet.GetCellByPosition(29,3).FORMULA=&quot;=ROUND(AE4/S4;2)&quot;  &apos;Incidenza manodopera %
-	oSheet.GetCellByPosition(30,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
-	oSheet.GetCellByPosition(36,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;AK3:AK4);2)&quot; &apos; totale computo sole voci senza errori
-&apos;	oSheet.GetCellByPosition(39,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;AN3:AN4);2)&quot; &apos; totale computo sole voci senza errori
-&apos;	oSheet.GetCellByPosition(40,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;AO3:AO4);2)&quot; &apos; totale computo sole voci senza errori
-&apos;	oSheet.GetCellByPosition(41,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;AP3:AP4);2)&quot; &apos; totale computo sole voci senza errori
-	oSheet.getCellRangeByPosition(0, 3, 43 , 3).cellstyle = &quot;Comp TOTALI&quot;
-Rem riga rossa
-	oSheet.GetCellByPosition(0,4).setstring(&quot;Fine Computo&quot;)
-	oSheet.getCellRangeByPosition(0, 4, 43 , 4).cellstyle = &quot;Riga_rossa_Chiudi&quot;
-set_larghezza_colonne
-fissa(0,3)
+Rifa_Somme_TOT_Computo &apos; crea la struttura del foglio
+Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
 End Sub
 
 
@@ -199,11 +122,10 @@ fine:
 end sub
 	
 Sub Firme_in_calce &apos;RIEPILOGO CATEGORIE (c) Giuseppe Vizziello 2014
-Rinumera_TUTTI_Capitoli2
+&apos;Rinumera_TUTTI_Capitoli2
 osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 &apos;xray osheet
- 	if oSheet.name = &quot;COMPUTO&quot; Or _
- 	 oSheet.name = &quot;CONTABILITA&quot; then
+ 	if oSheet.name = &quot;COMPUTO&quot; Or &quot;CONTABILITA&quot; then
  		sString$ = &quot;Fine Computo&quot;
  	end if
  	if oSheet.name = &quot;Elenco Prezzi&quot; then
@@ -212,7 +134,6 @@ osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
  	if oSheet.name = &quot;Analisi di Prezzo&quot; then
  		sString$ = &quot;Fine ANALISI&quot;
  	end if
-&apos; 	print sString
 	oEnd=uFindString(sString$, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) then
 		msgbox &quot;Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;
@@ -294,8 +215,7 @@ REM SE COMPUTO
 	If Trova_Attr_Sheet = &quot;Tipo_COMPUTO&quot; Then
 &apos;		msgbox (&quot;Il Riepilo Capitoli verrà inserito dopo la riga dei TOTALI COPUTO&quot;, 0, &quot;Avviso&quot;)
 		
-		sString$ = &quot;TOTALI COMPUTO&quot;
-		oInizioFirme=uFindString(sString$, oSheet)
+		oInizioFirme=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
 		lRowF=oInizioFirme.CellAddress.Row+1 REM INIZIO FIRME
 		lRowE=oEnd.CellAddress.Row
 &apos;		osheet = thisComponent.CurrentController.ActiveSheet
@@ -323,30 +243,37 @@ REM SE COMPUTO
 &apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
 		osheet.getCellRangeByPosition (0,inserisco_qui,41,inserisco_qui+15-1).CellStyle = &quot;ULTIMUS&quot;
 		riga_corrente = lRowE+3
-	REM INSERIMENTO TITOLO
+REM INSERIMENTO TITOLO
 		oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;Riepilogo Categorie&quot;)
+		oSheet.GetCellByPosition(11 , riga_corrente).setstring(&quot;Incidenze %&quot;)
+		oSheet.GetCellByPosition(18 , riga_corrente).setstring(&quot;Importi €&quot;)
+&apos;		osheet.getCellRangeByPosition (0,inserisco_qui,41,inserisco_qui+15-1).CellStyle = &quot;ULTIMUS&quot;
+		
+		osheet.getCellRangeByPosition (11,riga_corrente,18,riga_corrente).CellStyle = &quot;Ultimus_centro&quot;
+&apos;		Print riga_corrente
+					
 &apos;		osheet.getCellRangeByPosition (1,riga_corrente,19,riga_corrente).CellStyle = &quot;Riepilogo_Cap_titolo&quot;
 	inizio_gruppo = riga_corrente
 		For i =3 to lRowE
-	REM CAPITOLI
+REM CAPITOLI
 			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Livello-1-scritta&quot; Then
 		rem trovo e copio le rghe che contengono cat
 				id_cap = oSheet.GetCellByPosition(1,i).AbsoluteName 
 				str_cap = oSheet.GetCellByPosition(2,i).AbsoluteName
 				tot_cap = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
-&apos;				If Not gr_CAP_start then
-&apos;					gr_CAP_start = riga_corrente 
-&apos;				End If
 				insRows (riga_corrente,1) &apos;insertByIndex non funziona
 &apos;				oSheet.getRows.insertByIndex(riga_corrente,1)
 				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=TEXT(&quot; &amp; id_cap &amp;&quot;;&quot;&quot;@&quot;&quot;)&quot;) &apos;id categoria
-								oSheet.GetCellByPosition(1 , riga_corrente).cellstyle = &quot;Ultimus_destra&quot;
-&apos;				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle = &quot;Riepilogo_Cap&quot;
+				oSheet.GetCellByPosition(1 , riga_corrente).cellstyle = &quot;Ultimus_destra&quot;
 				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap) &apos; titoli
-				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap) &apos; importi
+				oSheet.GetCellByPosition(11, riga_corrente).setformula(&quot;=S&quot; &amp; riga_corrente+1 &amp; &quot;/S&quot;&amp; lRowE+1 &amp;&quot;*100&quot;) &apos; %
+				osheet.getCellByPosition(11,riga_corrente).CellStyle = &quot;Ultimus %&quot;
+				oSheet.GetCellByPosition(18, riga_corrente).setformula(&quot;=&quot; &amp; tot_cap) &apos; importi
+				osheet.getCellByPosition(18,riga_corrente).CellStyle = &quot;Ultimus_bordo&quot;
+&apos;				osheet.getCellRangeByPosition (11,riga_corrente,18,riga_corrente).CellStyle = &quot;ULTIMUS&quot;
 			end if
-	REM SOTTOCAPITOLI
+REM SOTTOCAPITOLI
 &apos;			riga_corrente =	riga_corrente +1
 			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;livello2 valuta&quot; then
 		rem trovo e copio le rghe che contengono subcat
@@ -358,10 +285,13 @@ REM SE COMPUTO
 &apos;				oSheet.getRows.insertByIndex(riga_corrente, 1)
 &apos;				osheet.getCellRangeByPosition (1,riga_corrente,18,riga_corrente).CellStyle = &quot;Riepilogo_SubCap&quot;
 				oSheet.GetCellByPosition(1 , riga_corrente).setformula(&quot;=&quot; &amp; id_cap) &apos;id subcat
-				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=&quot; &amp; str_cap) &apos;titoli subcat
-				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap) &apos;importi
+				oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;     &quot;&quot;;&quot; &amp; str_cap &amp; &quot;)&quot;) &apos;titoli subcat
+				oSheet.GetCellByPosition(11, riga_corrente).setformula(&quot;=S&quot; &amp; riga_corrente+1 &amp; &quot;/S&quot;&amp; lRowE+1 &amp;&quot;*100&quot;) &apos; %
+				osheet.getCellByPosition(11,riga_corrente).CellStyle = &quot;Ultimus %&quot;
+				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap) &apos;importi
+				osheet.getCellByPosition(18,riga_corrente).CellStyle = &quot;ULTIMUS&quot;
 			end if
-	REM TOTALE
+REM TOTALE
 			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Comp TOTALI&quot; then
 				tot_cap = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
@@ -369,7 +299,9 @@ REM SE COMPUTO
 &apos;				oSheet.getRows.insertByIndex(riga_corrente, 1)
 &apos;				oSheet.GetCellByPosition(11 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
 				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap)
-				oSheet.GetCellByPosition(18 , riga_corrente).cellstyle = &quot;Ultimus_destra_totali&quot;
+				oSheet.GetCellByPosition(18 , riga_corrente).cellstyle = &quot;Ultimus_totali&quot;
+				oSheet.GetCellByPosition(11, riga_corrente).setformula(&quot;=S&quot; &amp; riga_corrente+1 &amp; &quot;/S&quot;&amp; lRowE+1 &amp;&quot;*100&quot;) &apos; %
+				osheet.getCellByPosition(11,riga_corrente).CellStyle = &quot;Ultimus %&quot;
 				oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;T O T A L E   €&quot;)
 				oSheet.GetCellByPosition(2 , riga_corrente).cellstyle = &quot;Ultimus_destra&quot;
 &apos;				osheet.getCellRangeByPosition (1,riga_corrente,17,riga_corrente).CellStyle = &quot;Riepilogo_Cap_bold_tot&quot;
@@ -378,19 +310,19 @@ REM SE COMPUTO
 		fine_gruppo = riga_corrente
 		next i
 
-	REM INSERISCI LA DATA
+REM INSERISCI LA DATA
 		oSheet.GetCellByPosition(2 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
 		oSheet.GetCellByPosition(2 , riga_corrente+5).setformula(&quot;Il Progettista&quot;&amp; CHR$(10)&amp; _
 			&quot;(&quot; + thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2 , 12).getstring + &quot;)&quot;)
 		osheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+7).CellStyle = &quot;Ultimus_centro&quot;
 		oSheet.GetCellByPosition(2 , riga_corrente+3).cellstyle = &quot;ULTIMUS&quot; &apos;stile data
 		osheet.getCellRangeByPosition (0,riga_corrente+12,41,riga_corrente+12).CellStyle = &quot;Ultimus_destra_totali&quot;
-	REM CONSOLIDA LA DATA	
+REM CONSOLIDA LA DATA	
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
 		Flags = com.sun.star.sheet.CellFlags.FORMULA
 		aSaveData = oRange.getDataArray()
  		oRange.setDataArray( aSaveData )
-	REM RAGGRUPPA 
+REM RAGGRUPPA 
 		oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 		iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 		Dim oCRA As New com.sun.star.table.CellRangeAddress

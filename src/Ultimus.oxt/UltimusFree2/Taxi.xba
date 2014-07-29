@@ -805,12 +805,12 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		
 			&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	
 	end if
-	Barra_Apri_Chiudi_4 
+Barra_Apri_Chiudi_4 
 	&apos;print &quot;55555555 dovrei avere ls barra aperaa&quot;
-	Controlla_Validita_Lista(1)
-	Rifa_Somme_TOT_Computo
+Controlla_Validita_Lista(1)
+Rifa_Somme_TOT_Computo
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	Sel_Elenco_Prezzi
+Sel_Elenco_Prezzi
 	
 
 	&apos;elimino i collegamenti
@@ -858,7 +858,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Adatta_h_riga_intera_tabella(&quot;COMPUTO&quot;)
-	Rifa_Somme_TOT_Computo
+Rifa_Somme_TOT_Computo
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 	&apos;	Clessid_lock_End

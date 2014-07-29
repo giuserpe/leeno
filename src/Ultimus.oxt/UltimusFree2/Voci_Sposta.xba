@@ -300,7 +300,6 @@ dim xA as string
  	
 End Function
 
-
 FUNCTION CircoscrivileAnalisi_Att(ByVal lrow As Long) &apos;individua un record di Analisi
 &apos;---------------------------------------------------------------------------
 							&apos;restituisce il range

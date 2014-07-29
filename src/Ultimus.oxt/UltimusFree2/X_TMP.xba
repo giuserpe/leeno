@@ -331,10 +331,6 @@ Sub esporta_csw
 end sub
 
 
-sub rif &apos; solo per testare quella sotto
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	rifa_nomearea (&quot;CONTABILITA&quot;, &quot;G10:L20&quot; , &quot;prova&quot;)
-end sub
 
 SUB rifa_nomearea (sSheet as string, sRange as string, sName as string)
 	&apos; prova per avere un solo modulo richiamabile da al tre sub

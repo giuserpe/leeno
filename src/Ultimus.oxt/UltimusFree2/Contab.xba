@@ -638,7 +638,7 @@ rem recupero l&apos;ultimo documento in memoria
 	end If
 rem chiedo se posso procedere
 	domanda=msgbox (&quot;Stai per annullare il &quot;&amp; doc &amp;&quot; n.&quot; &amp; nSal &amp; CHR$(10) &amp; CHR$(10) _
-		&amp; &quot;Posso procedere?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 , &quot;ANNULLAMENTO ATTI CONTABILI&quot;)
+		&amp; &quot;Posso procedere?&quot; &amp; CHR$(10) &amp; CHR$(10), 32 , &quot;ANNULLAMENTO ATTI CONTABILI&quot;)
 		If domanda = 6 then &apos;scegli SI o NO
 			Select Case doc
 				Case &quot;Libretto&quot;

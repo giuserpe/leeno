@@ -14,35 +14,7 @@
 
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++
-SUB CREA_VOCE_ANALISI &apos; sceglie se usare la macro vecchia o nuova (ovvero cerca la presenza di attributi di cella)
-													&apos; TEMO SIA INUTILIZZATA
-oSheet = ThisComponent.currentController.activeSheet
 
-	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then
-			 
-			exit sub
-	end if
-
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	Do while oSheet.GetCellByPosition( 0, lrow).string = &quot;&quot;
-			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 0, lrow )
-		&apos;	ThisComponent.CurrentController.Select(oCell)&apos; debug
-		&apos;	print &quot;ecco&quot;
-	Loop
- &apos; 	end if
- 	oCell = oSheet.GetCellByPosition( 3 , lrow)
- oCustomXmlAttributes = oCell.UserDefinedAttributes
-&apos; xray oCustomXmlAttributes
- If oCustomXmlAttributes.hasElements = false then
-print 1
-				NuovaAnalisi
-		else
-print 2
-			NuovaAnalisi_Att
-	end if
-END SUB
 
 
 SUB CREA_VOCE_COMPUTO &apos; sceglie se usare la macro vecchia o nuova (ovvero cerca la presenza di attributi di cella)

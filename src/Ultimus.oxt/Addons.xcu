@@ -1288,8 +1288,8 @@ oor:package="org.openoffice.Office">
 								<value>_self</value>
 							</prop>
 						</node>
-						<!-- ROMOSSO PERCHE' RITENUTO INUTILE -->
-<!-- 						<node oor:name="m13S6" oor:op="replace">
+						<!-- Utile solo per le analisi -->
+						<node oor:name="m13S6" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>
 							</prop>
@@ -1300,12 +1300,12 @@ oor:package="org.openoffice.Office">
 								<value>%origin%/icons/image36b</value>
 							</prop>
 							<prop oor:name="Title" oor:type="xs:string">
-								<value>2) IMPOSTA (re-imposta) I SALTI PAGINA...  </value>
+								<value>2) Imposta i salti pagina... (solo Analisi)  </value>
 							</prop>
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
 							</prop>
-						</node> -->
+						</node>
 						<node oor:name="m13S7" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>

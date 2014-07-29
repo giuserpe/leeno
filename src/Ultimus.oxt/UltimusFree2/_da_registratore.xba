@@ -6,7 +6,7 @@ rem ----------------------------------------------------------------------
 rem define variables
 dim document   as object
 dim dispatcher as object
-rem ----------------------------------------------------------------------
+rem --------------------------------------------------------------------
 rem get access to the document
 document   = ThisComponent.CurrentController.Frame
 dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
@@ -63,6 +63,8 @@ dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 rem ----------------------------------------------------------------------
 dispatcher.executeDispatch(document, &quot;.uno:DeletePrintArea&quot;, &quot;&quot;, 0, Array())
 end Sub
+
+
 sub copy_clip &apos;registratore macro
 rem ----------------------------------------------------------------------
 rem define variables
@@ -298,4 +300,40 @@ dispatcher.executeDispatch(document, &quot;.uno:DefinePrintArea&quot;, &quot;&qu
 
 
 end sub
+
+
+sub ordina_colA
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(7) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;ByRows&quot;
+args1(0).Value = true
+args1(1).Name = &quot;HasHeader&quot;
+args1(1).Value = false
+args1(2).Name = &quot;CaseSensitive&quot;
+args1(2).Value = false
+args1(3).Name = &quot;NaturalSort&quot;
+args1(3).Value = false
+args1(4).Name = &quot;IncludeAttribs&quot;
+args1(4).Value = true
+args1(5).Name = &quot;UserDefIndex&quot;
+args1(5).Value = 0
+args1(6).Name = &quot;Col1&quot;
+args1(6).Value = 1
+args1(7).Name = &quot;Ascending1&quot;
+args1(7).Value = true
+
+dispatcher.executeDispatch(document, &quot;.uno:DataSort&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
 </script:module>

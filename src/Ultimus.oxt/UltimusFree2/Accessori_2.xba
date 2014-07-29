@@ -450,11 +450,117 @@ If thisComponent.Sheets.hasByName(&quot;namedRanges&quot;) Then &apos; se la she
  	 
 end if
 END SUB
+rem ----------------------------------------------------------------------
+SUB Rifa_Somme_TOT_Computo &apos;riscritta da zero (C) Giuseppe Vizziello 2014
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+rem ----------------------------------------------------------------------
+	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+rem ----------------------------------------------------------------------
+Rem	riga di controllo importo
+	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
+&apos;	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
+&apos;	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
+&apos;	oSheet.GetCellByPosition(19,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;T3:T4);2)&quot; &apos;importo perizia di variante
+	oSheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y4)&quot; &apos;importo manodopera
+	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=ROUND(AE4/S4;2)&quot;  &apos;Incidenza manodopera %
+	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
+	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AK3:AK4);2)&quot; &apos; totale computo sole voci senza errori
+&apos;	oSheet.GetCellByPosition(39,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AN3:AN4);2)&quot; &apos; totale computo sole voci senza errori
+&apos;	oSheet.GetCellByPosition(40,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AO3:AO4);2)&quot; &apos; totale computo sole voci senza errori
+&apos;	oSheet.GetCellByPosition(41,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AP3:AP4);2)&quot; &apos; totale computo sole voci senza errori
+
+	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
+	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
+	oSheet.getCellRangeByPosition(0, 1, 43 , 1).cellstyle = &quot;comp In testa&quot;
+	oSheet.getCellByPosition(24,1).cellstyle = &quot;Comp TOTALI %&quot;
+
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
+rem ----------------------------------------------------------------------
+REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
+ 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B2&quot;)
+&apos;print	Trova_Attr_Sheet
+rem riga di intestazione
+	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
+	oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
+	oSheet.GetCellByPosition(2,2).setstring(&quot;DESIGNAZIONE DEI LAVORI&quot;+ chr(13) + &quot;E DELLE SOMMINISTRAZIONI&quot;)
+	oSheet.GetCellByPosition(5,2).setstring(&quot;P.U.&quot;+ chr(13) + &quot;Coeff.&quot;)
+	oSheet.GetCellByPosition(6,2).setstring(&quot;Lung.&quot;)
+	oSheet.GetCellByPosition(7,2).setstring(&quot;Larg.&quot;)
+	oSheet.GetCellByPosition(8,2).setstring(&quot;Alt.&quot; + chr(13) +&quot;Peso&quot;)
+	oSheet.GetCellByPosition(9,2).setstring(&quot;Quantità&quot;)
+	oSheet.GetCellByPosition(10,2).setstring(&quot;Quantità perizia di variante&quot;)
+	oSheet.GetCellByPosition(11,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
+	oSheet.GetCellByPosition(17,2).setstring(&quot;di cui&quot; + chr(13) + &quot;sicurezza&quot;)
+	oSheet.GetCellByPosition(18,2).setstring(&quot;Importo €&quot;)
+	oSheet.GetCellByPosition(19,2).setstring(&quot;Importo totale&quot; + chr(13) +&quot;perizia di variante&quot;)
+	oSheet.GetCellByPosition(24,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;sul totale&quot;)
+	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
+	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
+	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
+	oSheet.GetCellByPosition(31,2).setstring(&quot;tag Cat&quot;)
+	oSheet.GetCellByPosition(32,2).setstring(&quot;tag&quot; + chr(13) +&quot;subCat&quot;)
+	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
+	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
+	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
+	oSheet.GetCellByPosition(36,2).setstring(&quot;importo totale computo&quot;+ chr(13) + &quot;sole voci senza errori&quot;)
+	oSheet.GetCellByPosition(38,2).setstring(&quot;Figure e&quot; + chr(13) +&quot;annotazioni&quot;)
+&apos;	oSheet.GetCellByPosition(39,2).setstring(&quot;Importo&quot; + chr(13) +&quot;SottoCategorie&quot;)
+&apos;	oSheet.GetCellByPosition(40,2).setstring(&quot;Importo&quot; + chr(13) +&quot;Categorie&quot;)
+&apos;	oSheet.GetCellByPosition(41,2).setstring(&quot;Importo MdO&quot;+ chr(13) +&quot;per categoria&quot;)
+	oSheet.GetCellByPosition(43,2).setstring(&quot;riservato per annotare&quot;+ chr(13) +&quot;il numero della voce&quot;)
+	oSheet.getCellRangeByPosition(0, 2, 43 , 2).cellstyle = &quot;comp Int_colonna&quot;
+	oSheet.getCellByPosition(19,2).cellstyle = &quot;COnt_noP&quot;
+	oSheet.getCellByPosition(36,2).cellstyle = &quot;COnt_noP&quot;
+	oSheet.getCellByPosition(43,2).cellstyle = &quot;COnt_noP&quot;
+	oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+REM ALTEZZA riga di intestazione
+	oSheet.GetCellByPosition(0,2).Rows.Height = 800
+rem ----------------------------------------------------------------------
+	oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
+	lRowE=oRow.CellAddress.Row
+Rem riga del totale
+	oSheet.GetCellByPosition(2,lRowE).setstring(&quot;TOTALI COMPUTO&quot;)
+	oSheet.GetCellByPosition(17,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo sicurezza
+	oSheet.GetCellByPosition(18,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(19,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;T3:T&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo perizia di variante
+	oSheet.GetCellByPosition(24,lRowE).FORMULA=&quot;=SUBTOTAL(9;Y3:Y&quot;&amp; lRowE+1 &amp;&quot;)&quot;  &apos;Incidenza manodopera %
+	oSheet.GetCellByPosition(29,lRowE).FORMULA=&quot;=AE&quot;&amp; lRowE+1 &amp;&quot;/S&quot;&amp; lRowE+1 &amp;&quot;&quot;  &apos;Incidenza manodopera %
+	oSheet.GetCellByPosition(30,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo manodopera
+	oSheet.GetCellByPosition(36,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;AK3:AK&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos; totale computo sole voci senza errori
+&apos;	oSheet.GetCellByPosition(39,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;AN3:AN&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos; totale computo sole voci senza errori
+&apos;	oSheet.GetCellByPosition(40,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;AO3:AO&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos; totale computo sole voci senza errori
+&apos;	oSheet.GetCellByPosition(41,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;AP3:AP&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos; totale computo sole voci senza errori
+	oSheet.getCellRangeByPosition(0, lRowE, 36 , lRowE).cellstyle = &quot;Comp TOTALI&quot;
+	oSheet.getCellByPosition(24,lRowE).cellstyle = &quot;Comp TOTALI %&quot;
+	oSheet.getCellByPosition(29,lRowE).cellstyle = &quot;Comp TOTALI %&quot;
+Rem riga rossa
+	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd) Then
+		If oSheet.getCellByPosition(0,lRowE+1).cellstyle = &quot;ULTIMUS&quot; Then
+			lRowE = lRowE+1
+		End If
+		oSheet.GetCellByPosition(0,lRowE+1).setstring(&quot;Fine Computo&quot;)
+		oSheet.getCellRangeByPosition(0,lRowE+1, 36 , lRowE+1).cellstyle = &quot;Riga_rossa_Chiudi&quot;
+&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+&apos;		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
+		exit sub
+	end if
+
+set_larghezza_colonne
+fissa(0,3)
+Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
+End Sub
 
 
 
-SUB Rifa_Somme_TOT_Computo &apos;&apos; rifà la riga delle somme in fondo e in testa al computo
-
+SUB Rifa_Somme_TOT_Computo___ &apos; non usata&apos;&apos; rifà la riga delle somme in fondo e in testa al computo
+Print &quot;basta!!!&quot;
 			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
 			sproteggi_sheet_TUTTE
 
@@ -825,9 +931,11 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 
 rem seleziono le formule
 	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , 1,lcolbase+11 , 1))
+	print
 	copy_clip &apos; le copio
 rem seleziono la destinazione
 	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , 1,lcolbase+10 , lrowf-1))
+	print
 	paste_clip &apos; incollo
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 			

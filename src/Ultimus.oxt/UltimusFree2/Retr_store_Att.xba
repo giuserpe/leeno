@@ -105,6 +105,7 @@ Sub Stora_Attr_sheet &apos;sub tipo_
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;A2&quot;)
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;B1&quot;)
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;B2&quot;)
+Print 	Trova_Attr_Sheet
 end sub
 
 

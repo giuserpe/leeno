@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Analisi" script:language="StarBasic">sub Genera_LISTA_ANALISI &apos;(C) Giuseppe Vizziello 2014
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Analisi" script:language="StarBasic">Sub inizializza_analisi &apos;(C) Giuseppe Vizziello 2014
+	domanda=msgbox (&quot;Stai per cancellare tutto il contenuto del&quot; &amp; CHR$(10) _
+		&amp; &quot;modulo di Analisi di Prezzo&quot; &amp; CHR$(10) &amp; CHR$(10) _
+		&amp; &quot;Posso procedere?&quot; &amp; CHR$(10) &amp; CHR$(10), 32 + 4, &quot;CANCELLAZIONE DATI!&quot;)
+	If domanda = 7 Then Exit Sub &apos;NO
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+ 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
+	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+	oSheet.getCellRangeByPosition(0, 0, 14 ,0 ).cellstyle = &quot;Analisi_Sfondo&quot;
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,1))
+Inserisci_Riga_rossa
+fissa (0,1)
+
+&apos;Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
+End sub
+
+sub Genera_LISTA_ANALISI &apos;(C) Giuseppe Vizziello 2014
 on error goto fine
 rem attivo le analisi
 	oSheet = ThisComponent

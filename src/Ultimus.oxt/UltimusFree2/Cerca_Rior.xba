@@ -14,6 +14,7 @@
 
 
 Sub Riordina_ElencoPrezzi &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
+&apos;seleziona_area (&quot;elenco_prezzi&quot;)
 Riordina_ElencoPrezzi_D	
 end sub
 
@@ -50,12 +51,16 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 	oActiveCell1 = oCell.string &apos; registra la sigla dalla cella attiva 
 	&apos; ho qualche dubbio se rifarla solo se manca....
 
-	sString$ = &quot;Fine elenco&quot;
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI20! &quot;
-		exit sub
+	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd) then
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)+1))
+		msgbox &quot;#20 Non avendo trovato la Riga Rossa di chiusura&quot;&amp; CHR$(10)_
+		&amp; &quot;provvedo ad inserirla infondo alla tabella.&quot;&amp; CHR$(10)_
+		&amp; &quot;Intanto continuo...&quot;&amp; CHR$(10)_
+		&amp; &quot;Alla fine controlla se ti sta bene. Al massimo ripeterai.&quot;, 64 , &quot;AVVISO!&quot;
+		Inserisci_riga_rossa
+		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+		&apos;exit sub
 	end if 
 &apos;	xray oend
 &apos;	exit sub
@@ -74,56 +79,54 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego	
-	end if
+			goto una_volta_sola_prego:
+	end If
 	oRangeEP = ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells.RangeAddress
 	lrowEPI = oRangeEP.StartRow 
 	lrowEPF = oRangeEP.EndRow 
 	lcolEPI = oRangeEP.StartColumn
 	lcolEPF = oRangeEP.EndColumn
-	
+	If lrowEPF = lrowF Then lrowEPF=lrowF-1
 	if lcolEPF &lt;&gt; getLastUsedCol(oSheet) then &apos; se ci sono colonne in più o in meno
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego	
+			goto una_volta_sola_prego:	
 	end if
-
-	 
 	If lcolEPF &lt; 10 then &apos; se template vecchio 
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego	
+			goto una_volta_sola_prego:
 	end if
 	
 	If lcolEPI &lt;&gt; lcolbase + 0 then &apos; se dopo +col
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego		
+			goto una_volta_sola_prego:		
 	end if
 
 	if (ThisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;))= false then &apos; a volte lo perde
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
 			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego
+			goto una_volta_sola_prego:
 	end if
 	If lrowEPI &lt; 1 then &apos; era If lrowEPI &lt; 2 .... bo?
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 		RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-		goto una_volta_sola_prego
+		goto una_volta_sola_prego:
 	end if
 	if lrowEPF &lt;&gt; lrowF-1 or lrowEPI &lt;&gt; 1 then &apos;(anche qui era 2, l&apos;ho messo a 1)&apos; se l&apos;area &quot;elenco_prezzi non copre l&apos;intero elenco
 								&apos; ridefinisce l&apos;elenco prezzi
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 		RiDefinisci_Area_Elenco_prezzi
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-		goto una_volta_sola_prego
+		goto una_volta_sola_prego:
 	end if
-	una_volta_sola_prego:
+una_volta_sola_prego:
 	sChiama = Riordina_0(lcolbase+0, TRUE) &apos; il numero è la colonna da riordinare
 	if sChiama = &quot;uscita forzata&quot; or _
  	sChiama = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
@@ -150,7 +153,6 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
  &apos;___________________
  	suona
 END SUB
-
 
 
 

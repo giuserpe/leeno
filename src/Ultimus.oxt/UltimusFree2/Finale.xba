@@ -1489,40 +1489,36 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;			oCRA.EndRow = lLastUrow
 &apos;			oSheet.group(oCRA,1,0)
 
-	 Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_EP&quot;, &quot;Elenco Prezzi&quot;
-&apos;	 print &quot;Tipo_ElencoP&quot;
-		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe	
-		sString$ = &quot;Fine elenco&quot;
-		oEnd=uFindString(sString$, oSheet)			
+	Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_EP&quot;, &quot;Elenco Prezzi&quot;
+
+		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
+		oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+		rIntest=oStart.CellAddress.Row
+		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)			
 		lRowE=oEnd.CellAddress.Row
 &apos;		lLastUrow = getLastUsedRow(oSheet) &apos;REM rigabart
 		lLastUrow = lRowE
 		&apos;lLastUrow = lRowE+10
 		selArea(0).StartColumn = 0
-		selArea(0).StartRow = 0
-		selArea(0).EndColumn = 8 &apos;7 &apos;6
+		selArea(0).StartRow = rIntest
+		selArea(0).EndColumn = 5
 		selArea(0).EndRow = lLastUrow-1 &apos;lRowE+10
 		
 		oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
-		oTitles.startRow = 0&apos; headstart - 1
-		oTitles.EndRow = 0&apos;headend - 1
+		oTitles.startRow = rIntest
+		oTitles.EndRow = rIntest
 		oTitles.startColumn = 0
 		oTitles.EndColumn = 35
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
 		
 		oSheet.setPrintareas(selArea())
-				
-	&apos;&apos;&apos;	oRange = oSheet.getCellRangeByName(&quot;A1:Q&quot; &amp; lRowE + 20)
-	&apos;&apos;&apos;	Pulisci_Tabella(oRange)
 
-	&apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE) 
-	&apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine computo	
 	REM RIDUCI ALTEZZA PRIMA RIGA
-	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
+	oPrimaCella = oSheet.GetCellByPosition( 0 , rIntest)
 	oPrimaCella.Rows.Height = 1200
-fissa (0,1)
+fissa (0,rIntest+1)
 	 Case &quot;&quot;
 		msgbox &quot;Non riconosco questo tipo di documento... &quot; &amp; CHR$(10)_
 		&amp;&quot;Pertanto ho approssimato l&apos;area di stampa come pare a me! &quot; &amp; CHR$(10)_

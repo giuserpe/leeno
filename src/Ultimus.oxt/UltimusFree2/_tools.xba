@@ -5,6 +5,8 @@
 &apos;		oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
 &apos;		oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
 &apos;		lSheetSRC = oRangeSRC.RangeAddress.sheet
+
+
 sub rir_
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	lLastUrow = getLastUsedRow(oSheet)

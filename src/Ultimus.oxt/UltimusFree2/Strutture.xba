@@ -1509,9 +1509,12 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
 	&apos;_____________________
 
 	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
+
 &apos;	sAttributo = Trova_Attr_Sheet
-sistema_attributi_sheet
-	Print sAttributo
+ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
+
+sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
+&apos;Print Trova_Attr_Sheet
 	Select Case sAttributo
  		Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_EP&quot;
  			Tronca_Altezza_Voci_EP
@@ -1529,7 +1532,8 @@ sistema_attributi_sheet
 		if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
 	 		MsgBox &quot;1 L&apos;opzione non è prevista su questo foglio!!!&quot;
 		end if
-	end if
+	end If
+	
 end sub
 
 

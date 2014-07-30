@@ -1,7 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM ***** BASIC *****
+
+Sub inizializza_elenco &apos;(C) Giuseppe Vizziello 2014
+	Dim oSheet As Object
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+&apos; 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
+	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
+REM ----------------------------------------------------------------------
+rem riga di intestazione
+Cscarto = 0
+rIntest = 1
+	oSheet.GetCellByPosition(0,rIntest).setstring(&quot;Codice&quot;+ chr(13) +&quot;Articolo&quot;
+	oSheet.GetCellByPosition(1,rIntest).setstring(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;)
+	oSheet.GetCellByPosition(2,rIntest).setstring(&quot;Unità di misura&quot;)
+	oSheet.GetCellByPosition(3,rIntest).setstring(&quot;Sicurezza&quot;+ chr(13) + &quot;inclusa&quot;)
+	oSheet.GetCellByPosition(4,rIntest).setstring(&quot;Prezzo&quot;+ chr(13) + &quot;unitario&quot;)
+	oSheet.GetCellByPosition(5,rIntest).setstring(&quot;Incidenza&quot;+ chr(13) + &quot;MdO&quot;)
+	oSheet.GetCellByPosition(6,rIntest).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
+	oSheet.GetCellByPosition(7,rIntest).setstring(&quot;Codice di origine prezzo&quot;)
+	oSheet.GetCellByPosition(8,rIntest).setstring(&quot;Flag&quot; + chr(13) +&quot;analisi&quot;)
+	oSheet.GetCellByPosition(9,rIntest).setstring(&quot;Usata&quot; + chr(13) + &quot;Non usata&quot;)
+	oSheet.GetCellByPosition(10,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;a computo&quot;)
+	oSheet.GetCellByPosition(11,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;a computo&quot;)
+	oSheet.GetCellByPosition(12,rIntest).setstring(&quot;&quot;)
+	oSheet.GetCellByPosition(13,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;contabilizzate&quot;)
+	oSheet.GetCellByPosition(14,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;contabilizzati&quot;)
+	oSheet.getCellRangeByPosition(0, rIntest, 14 , rIntest).cellstyle = &quot;EP-a -Top&quot;
+
+Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
+End Sub
+
 Sub inizializza_computo &apos;(C) Giuseppe Vizziello 2014
+	Dim oSheet As Object 
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
  	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
  	Rem riga del totale

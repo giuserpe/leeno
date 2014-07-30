@@ -201,25 +201,28 @@ Sub Nascondi_TUTTI_docs_e_Copertine
 	Visualizza_normale
 end sub
 
-Sub sistema_attributi_sheet
+Sub sistema_attributi_sheet&apos; (sSheet As string) rem renderla opzionale?
 &apos;print Trova_Attr_Sheet
-oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B2&quot;)
-	
-oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B2&quot;)
-	
-oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B2&quot;)
+&apos;	Select Case sSheet
+&apos;		Case &quot;Elenco Prezzi&quot;
+			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B2&quot;)
+&apos;		Case &quot;COMPUTO&quot;
+			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B2&quot;)
+&apos;		Case &quot;Analisi di Prezzo&quot;
+			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B2&quot;)
+&apos;	End Select 
 End Sub
 
 

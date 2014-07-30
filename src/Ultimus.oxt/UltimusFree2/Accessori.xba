@@ -328,8 +328,8 @@ Dim lcolorSRC as long
 		&apos; che restuisce un address come stringa	
 		if SelectedRange = &quot;&quot; or _
 	 		SelectedRange = &quot;ANNULLA&quot; then
-	 		&apos;oRangeSelectionListener.release()
-	 		&apos;xray oRangeSelectionListener
+oRangeSelectionListener.release()
+xray oRangeSelectionListener
 		 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 		 	exit sub
 	 	end if 	

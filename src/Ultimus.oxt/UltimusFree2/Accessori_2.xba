@@ -13,7 +13,7 @@
 
 
 
-
+&apos;Option Explicit
 
 
 sub SwitchDesign &apos;Bozza_on_off 101221 &apos; questo è lo switc
@@ -765,8 +765,10 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 			sString$ = &quot;T O T A L E&quot;
 			oEnd=uFindString(sString$, oSheet)
 			lLastUrow=oEnd.RangeAddress.EndRow
-			
-			lrowInizio = 2	
+	oStart=uFindString(&quot;LAVORAZIONI&quot; &amp; chr$(10) &amp; &quot;O PROVVISTE&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+	lLastUrow = getLastUsedRow(oSheet)
+	lrowInizio=oStart.CellAddress.Row+1	
 			If oRanges.hasByName(&quot;GG&quot;) Then
 			&apos;	oRanges.getByName(&quot;GG&quot;)
 				oRanges.removeByName(&quot;GG&quot;)
@@ -820,22 +822,23 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
 			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = true
 			
-	i=1
+	i=2
 				sFormula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
 				oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
 				oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
-
+Print &quot;va sistemata la posizione della formula&quot;
 				sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot;&amp; sCol4 &amp; i+1 &amp; &quot; &quot;
 				oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 		
 				oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
 
 rem seleziono le formule
-	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 1,lcolbase+14 , 1))
+
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 2,lcolbase+14 , 2))
 	copy_clip &apos; le copio
 rem seleziono la destinazione
-	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 1,lcolbase+13 , lrowf-1))
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 2,lcolbase+13 , lrowf-1))
 	paste_clip &apos; incollo
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 		
 			
 			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;		
@@ -850,77 +853,57 @@ END SUB
 
 
 SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
+Dim oSheet As Object
+
 &apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree AA e BB nel computo (servono per la formula somma.se)
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
+	&apos; con qualcosa che esegua sia se nome sia se Attributo ???
+rem ----------------------------------------------------------------------
+	oStart=uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+	lLastUrow = getLastUsedRow(oSheet)
+	&apos;_____________________
+	chiudi_dialoghi 
+	&apos;_____________________
+rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;AA&quot;)
+rifa_nomearea (&quot;COMPUTO&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;BB&quot;)
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
+		exit sub
+	end if 
+	lrowF=oEnd.RangeAddress.EndRow
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+
+	lcolbase = Colonna_giusta_EP (oSheet)
+	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+		print lcolbase
+		exit sub
+	end if
 
 
-&apos; È MOLTO LUNGA... SIA A CANCELLARLI PRIMA CHE A RIFARLI DOPO&quot;
-
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot;, 30)
-			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
-			oRanges = ThisComponent.NamedRanges
-			&apos; con qualcosa che esegua sia se nome sia se Attributo ???
-			
-			
-			lLastUrow = getLastUsedRow(oSheet)		
-			lrowInizio = 2	
-			If oRanges.hasByName(&quot;AA&quot;) Then
-				oRanges.getByName(&quot;AA&quot;)
-				oRanges.removeByName(&quot;AA&quot;)
-			End If
-			If oRanges.hasByName(&quot;BB&quot;) Then
-				oRanges.getByName(&quot;BB&quot;)
-				oRanges.removeByName(&quot;BB&quot;)
-			End If 
-			&apos;_____________________
-			chiudi_dialoghi 
-			&apos;_____________________
-			oCellAddress = oSheet.getCellRangeByName(&quot;Aj1&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
-			 sMiaStringa= &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
-			oRanges.addNewByName(&quot;AA&quot;, sMiaStringa , oCellAddress, 0)
-			 sMiaStringa= &quot;$&apos;COMPUTO&apos;.$S$&quot; &amp; lrowInizio &amp; &quot;:$S$&quot; &amp; lLastUrow
-			oRanges.addNewByName(&quot;BB&quot;, sMiaStringa , oCellAddress, 0)			
-
-		&apos;POPOLARE L&apos;EP CON LE FORMULE DI SOMMA.SE
-		&apos;SE NON SI FA QUELLO NON VALE LA PENA FARE LE AREE AA ed BB
-
-			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-			oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
-			If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
-				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-				msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
-				exit sub
-			end if 
-			lrowF=oEnd.RangeAddress.EndRow 
-
-			lcolbase = Colonna_giusta_EP (oSheet)
-			if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit sub
-			end if
-			
-			
-			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 &apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-					iScarto = 0 &apos;se ver. 3
+			iScarto = 0 &apos;se ver. 3
 &apos;				else
 &apos;					iscarto = 2 &apos;se vers. 4
 &apos;			endif	
-		
-			sCol = ColumnNameOf(lcolbase+iScarto)
 
-			sCol2 = ColumnNameOf(lcolbase+iscarto+11) &apos;Col L
+	sCol = ColumnNameOf(lcolbase+iScarto)
 
-			sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
+	sCol2 = ColumnNameOf(lcolbase+iscarto+11) &apos;Col L
 
+	sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
 
-
-			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true
-			oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = true
-			
+	oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true
+	oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = true
+	
 			&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-	i=1
+Print &quot;va sistemata la posizione della formula rIntest&quot;
+i=2
 	sFormula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
 	oSheet.GetCellByPosition(lcolbase+11 , i).setformula(sFormula)
 	oSheet.GetCellByPosition(lcolbase+11 , i).cellstyle = &quot;EP statistiche&quot;
@@ -928,34 +911,28 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 	sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot; &amp; sCol4 &amp; i+1 &amp; &quot; &quot;
 	oSheet.GetCellByPosition(lcolbase+10 , i).setformula(sFormula_q) 
 	oSheet.GetCellByPosition(lcolbase+10 , i).cellstyle = &quot;EP statistiche_q&quot;
-
+rem ----------------------------------------------------------------------
 rem seleziono le formule
-	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , 1,lcolbase+11 , 1))
-	print
-	copy_clip &apos; le copio
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , rIntest,lcolbase+11 , rIntest))
+
+copy_clip &apos; le copio
+rem ----------------------------------------------------------------------
 rem seleziono la destinazione
-	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , 1,lcolbase+10 , lrowf-1))
-	print
-	paste_clip &apos; incollo
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
-			
-			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;
-			
-			oSheet.GetCellByPosition(lcolbase+11 , lrowF).setformula(sFormula1)			
+
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , rIntest,lcolbase+10 , lrowf-1))
+paste_clip &apos; incollo
+	oSheet.GetCellByPosition(lcolbase+11 , lrowF).setformula(&quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; rIntest+1 &amp;&quot;:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;)
 		&apos;&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
 	&apos;		oSpalte1.isVisible = TRUE 
 		&apos;	Sel_Elenco_Prezzi
-			Ripristina_statusLine
+		&apos;	Ripristina_statusLine
 		&apos;	suona_1_2		
 		&apos;	Rifa_GG_G1G1_Contab
+ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
+&apos;thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
 END SUB
-
-
-
-
-
-
-
+rem ----------------------------------------------------------------------
+rem ----------------------------------------------------------------------
 Function TrovaFine_Computo (optional oSheet as object) as integer &apos; funzione chiave per trovare la fine del Computo
 		&apos; sostituisce gli ambaradan attorno alla riga rossa
 		on error goto errore

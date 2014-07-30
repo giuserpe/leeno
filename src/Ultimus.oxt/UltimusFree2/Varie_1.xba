@@ -1001,7 +1001,7 @@ sub Numera_Voci_Computo_vecia2 &apos;
  
 	sAttributo = Trova_Attr_Sheet
  If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;Questa macro si può usare solo nella tabella di COMPUTO!&quot;
+ 			 msgbox &quot;Questo comando si può usare solo nella tabella di COMPUTO!&quot;
 			exit sub
 	end if
 

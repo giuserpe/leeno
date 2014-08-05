@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Gestione_Var" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.9.1 
+&apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -28,7 +28,8 @@ sub salva_il_template &apos; per la pubblicazione del Template
  	If sPassw = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
  			exit sub		
  	end if	
- 	if sPassw &lt;&gt; &quot;UUU&quot; then
+ 	if sPassw &lt;&gt; &quot;UUU&quot; Then
+ 	msgbox &quot;Password errata!&quot;, 48, &quot;AVVISO!&quot;
  		exit sub
  	end if
  	sVer_templ = InputBox (&quot;&quot; &amp; CHR$(10)_
@@ -55,7 +56,8 @@ sub salva_il_template &apos; per la pubblicazione del Template
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).unprotect(&quot;&quot;)
  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value = sVer_templ 
  ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).value = sTemp_major 
- ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).value = sTemp_minor 
+ ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).value = sTemp_minor
+ Print sVer_templ &amp;&quot;-&quot;&amp; sTemp_major &amp;&quot;.&quot;&amp; sTemp_minor
  Setta_Var_Gen_Default
  store_info (sVer_templ, sTemp_major, sTemp_minor, 0 )
  Salva_Doc_con_nome (sVer_templ, sTemp_major, sTemp_minor )

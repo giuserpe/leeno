@@ -36,7 +36,7 @@ Sub Svuota_Computo_VECCHIA () &apos;svuota tutto (o quasi) il doc di computo &ap
 &apos;svuota Elenco prezzi
 &apos;xray ThisComponent.Sheets
 	if ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false then
-		msgbox &quot;questa macro si usa soltanto in UltimusFree...&quot;,48
+		msgbox &quot;questa macro si usa soltanto in LeenO...&quot;,48
 		Exit sub
 	end if
 	Ripristina_statusLine

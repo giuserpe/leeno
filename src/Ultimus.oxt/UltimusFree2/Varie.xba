@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.9.1 
+&apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -2009,7 +2009,6 @@ Sub Svuota_Computo ()
 &apos;modificata Giuseppe Vizziello 2014
 &apos;svuota tutto (o quasi) il doc di computo &apos; doradora
 &apos;xray ThisComponent.Sheets
-		Print 
 	if ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false then
 		msgbox &quot;Questo comando si usa soltanto in LeenO...&quot;,48, &quot;ATTENZIONE!&quot;
 		Exit sub
@@ -2035,7 +2034,7 @@ Sub Svuota_Computo ()
 	
 	&apos; salviamo comunque il doc corrente
 	oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
-	oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+&apos;	oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
  
  	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;Sto svuotando questo documento... Pazienta... &quot;, 30)
@@ -2044,7 +2043,8 @@ rem ----------------------------------------------------------------------
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet) 
 	lrowFine=oEnd.RangeAddress.EndRow-1
-	If lrowFine &gt; 2 then
+&apos;GoTo salta:
+	If lrowFine &gt; 2 Then
 &apos;		oSheet.rows.removeByIndex (2, lrowFine)
 		oRange = osheet.getCellRangeByPosition (0,1,13,lrowFine )
 		ThisComponent.CurrentController.Select(oRange)
@@ -2054,6 +2054,8 @@ cancella_dati
 		elimina_riga
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	end If
+salta:
+inizializza_elenco
 rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;2 Sto svuotando questo documento... Pazienta... &quot;, 40)
@@ -2079,7 +2081,7 @@ rem ----------------------------------------------------------------------
 	Adatta_Altezza_riga
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona	
 &apos;	Adatta_h_riga_intera_tabella(&quot;Elenco Prezzi&quot;)
-fissa(0,1)
+fissa(0,2)
 
 &apos;&apos;svuota Analisi
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
@@ -2103,7 +2105,7 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 	ThisComponent.CurrentController.Select(oCell)
 	Adatta_Altezza_riga
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
-fissa(0,1)
+fissa(0,2)
 
 REM RIPULISCI COMPUTO
 	Barra_chiudi_sempre_4
@@ -2128,7 +2130,7 @@ Ripristina_Validita_Lista
 	&apos;rendi correntexx
 	Scrivi_Globale
 	Ripristina_statusLine
-	Vai_a_M1
+&apos;	Vai_a_M1
 
 	msgbox &quot;Questo documento è stato in gran parte svuotato dai sui dati!..!&quot;
 end sub

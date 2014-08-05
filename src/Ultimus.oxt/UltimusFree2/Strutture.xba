@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Strutture" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.9.1 
+&apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -578,7 +578,7 @@ end Sub
 
 
 Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto il computo sistemando i subtotali di cap e sottocap
-Print &quot;da velocizzare&quot;
+&apos;Print &quot;da velocizzare&quot;
 	If isNull(oSheet1) or isEmpty (oSheet1) or isMissing(oSheet1) then
  			oSheet1 = ThisComponent.currentController.activeSheet
  	end If
@@ -1510,15 +1510,13 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
 
 	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
 
-&apos;	sAttributo = Trova_Attr_Sheet
 ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
 
 sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 &apos;Print Trova_Attr_Sheet
-	Select Case sAttributo
- 		Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_EP&quot;
+	Select Case Trova_Attr_Sheet
+ 		Case &quot;Tipo_EP&quot;
  			Tronca_Altezza_Voci_EP
- 			exit sub
 		Case &quot;Tipo_Analisi&quot;
  			Tronca_Altezza_Analisi
 		Case &quot;Tipo_COMPUTO&quot;, &quot;Tipo_CONTABILITA&quot;

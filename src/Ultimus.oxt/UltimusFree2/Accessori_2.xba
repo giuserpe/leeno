@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori_2" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.9.1 
+&apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -459,7 +459,7 @@ rem ----------------------------------------------------------------------
 Rem	riga di controllo importo
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 &apos;	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-&apos;	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
 &apos;	oSheet.GetCellByPosition(19,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;T3:T4);2)&quot; &apos;importo perizia di variante
 	oSheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y4)&quot; &apos;importo manodopera
 	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=ROUND(AE4/S4;2)&quot;  &apos;Incidenza manodopera %
@@ -754,107 +754,103 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 &apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree GG e G1G1 in CONTABILITA (servono per la formula somma.se)
 
-
-&apos; È MOLTO LUNGA... SIA A CANCELLARLI PRIMA CHE A RIFARLI DOPO&quot;
-
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(&quot;Dammi un momento che ci devo riflettere... &quot;, 0)
-			oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) &apos; da sostituire o integrare
-			oRanges = ThisComponent.NamedRanges
-			&apos; con qualcosa che esegua sia se nome sia se Attributo ???
-			sString$ = &quot;T O T A L E&quot;
-			oEnd=uFindString(sString$, oSheet)
-			lLastUrow=oEnd.RangeAddress.EndRow
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) &apos; da sostituire o integrare
+	oRanges = ThisComponent.NamedRanges
+	&apos; con qualcosa che esegua sia se nome sia se Attributo ???
+	sString$ = &quot;T O T A L E&quot;
+	oEnd=uFindString(sString$, oSheet)
+	lLastUrow=oEnd.RangeAddress.EndRow
 	oStart=uFindString(&quot;LAVORAZIONI&quot; &amp; chr$(10) &amp; &quot;O PROVVISTE&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
 	lLastUrow = getLastUsedRow(oSheet)
-	lrowInizio=oStart.CellAddress.Row+1	
-			If oRanges.hasByName(&quot;GG&quot;) Then
-			&apos;	oRanges.getByName(&quot;GG&quot;)
-				oRanges.removeByName(&quot;GG&quot;)
-			End If
-			If oRanges.hasByName(&quot;G1G1&quot;) Then
-			&apos;	oRanges.getByName(&quot;G1G1&quot;)
-				oRanges.removeByName(&quot;G1G1&quot;)
-			End If 
-			&apos;_____________________
-			chiudi_dialoghi 
-			&apos;_____________________
-			oCellAddress = oSheet.getCellRangeByName(&quot;AJ1&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
-&apos;			$CONTABILITA.$AJ$2:$AJ$540
-		&apos;	 sMiaStringa= &quot;$&apos;COMPUTO&apos;.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow
-			 sMiaStringa= &quot;$CONTABILITA.$AJ$&quot; &amp; lrowInizio &amp; &quot;:$AJ$&quot; &amp; lLastUrow+1
-			oRanges.addNewByName(&quot;GG&quot;, sMiaStringa , oCellAddress, 0) rem SETTA LA COLONNA DEL SOMME.SE
-			sMiaStringa = &quot;$CONTABILITA.$P$&quot; &amp; lrowInizio &amp; &quot;:$P$&quot; &amp; lLastUrow+1
-			oRanges.addNewByName(&quot;G1G1&quot;, sMiaStringa , oCellAddress, 0)	REM SETTA LA COLONNA DEGLI IMPORTI
+	lrowInizio=oStart.CellAddress.Row+1
+&apos;_____________________
+chiudi_dialoghi 
+&apos;_____________________
+rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;)
+rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;)
 
-		&apos;POPOLARE L&apos;EP CON LE FORMULE DI SOMMA.SE
-		&apos;SE NON SI FA QUELLO NON VALE LA PENA FARE LE AREE AA ed BB
 
-			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-			sString$ = &quot;Fine elenco&quot;
-			oEnd=uFindString(sString$, oSheet)
-			If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
-				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-				msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
-				exit sub
-			end if 
-			lrowF=oEnd.RangeAddress.EndRow 
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+	If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI ! &quot;
+		exit sub
+	end If 
+	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+		print lcolbase
+		exit sub
+	end If
+	lrowF=oEnd.RangeAddress.EndRow
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+	lcolbase = Colonna_giusta_EP (oSheet)
 
-			lcolbase = Colonna_giusta_EP (oSheet)
-			if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit sub
-			end if
-
-			
-			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 &apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-					iScarto = 0 &apos;se ver. 3
+			iScarto = 0 &apos; posizione prima colonna
 &apos;				else
 &apos;					iscarto = 2 &apos;se vers. 4
 &apos;			endif	
 		
-			sCol= ColumnNameOf(lcolbase+iScarto)
-			sCol2= ColumnNameOf(lcolbase+iscarto+14)
-			sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
+	sCol= ColumnNameOf(lcolbase+iScarto)
+	sCol2= ColumnNameOf(lcolbase+iscarto+14)
+	sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
 			
-			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
-			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = true
+	oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
+	oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = true
 			
-	i=2
-				sFormula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
-				oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
-				oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
-Print &quot;va sistemata la posizione della formula&quot;
-				sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot;&amp; sCol4 &amp; i+1 &amp; &quot; &quot;
-				oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 		
-				oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
+i=rIntest
+
+	sFormula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
+	oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
+	oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
+	sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot;&amp; sCol4 &amp; i+1 &amp; &quot; &quot;
+	oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 		
+	oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
 
 rem seleziono le formule
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , rIntest,lcolbase+14 , rIntest))
+&apos;
+&apos;copy_clip &apos; le copio
+	dim document   as Object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	rem ----------------------------------------------------------------------
+	dispatcher.executeDispatch(document, &quot;.uno:Cut&quot;, &quot;&quot;, 0, Array())
+	rem ----------------------------------------------------------------------
+	rem seleziono la destinazione
+	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , rIntest,lcolbase+13 , lrowf-1))
+&apos;paste_clip &apos; incollo
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	rem ----------------------------------------------------------------------
+	dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
+	rem ----------------------------------------------------------------------
+&apos;	paste_clip &apos; incollo
 
-	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 2,lcolbase+14 , 2))
-	copy_clip &apos; le copio
-rem seleziono la destinazione
-	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , 2,lcolbase+13 , lrowf-1))
-	paste_clip &apos; incollo
 &apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 		
 			
-			sFormula1 = &quot;=sum(&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;		
-			oSheet.GetCellByPosition(lcolbase+14 , lrowF).setformula(sFormula1)	
-					
-		&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
-		&apos;	oSpalte1.isVisible = TRUE 
-		&apos;	Sel_Elenco_Prezzi
-			Ripristina_statusLine
-			suona_1_2
+	sFormula1 = &quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;		
+	oSheet.GetCellByPosition(lcolbase+14 , lrowF).setformula(sFormula1)	
+	oSheet.GetCellByPosition(lcolbase+14 , lrowF).cellstyle = &quot;EP statistiche_Contab&quot;
+&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
+&apos;	oSpalte1.isVisible = TRUE 
+&apos;	Sel_Elenco_Prezzi
+	Ripristina_statusLine
+	suona_1_2
 END SUB
 
 
 SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 Dim oSheet As Object
-
 &apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree AA e BB nel computo (servono per la formula somma.se)
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
@@ -878,7 +874,6 @@ rifa_nomearea (&quot;COMPUTO&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S
 	lrowF=oEnd.RangeAddress.EndRow
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-
 	lcolbase = Colonna_giusta_EP (oSheet)
 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 		print lcolbase
@@ -887,7 +882,7 @@ rifa_nomearea (&quot;COMPUTO&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S
 
 
 &apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
+			iScarto = 0 &apos; posizione prima colonna
 &apos;				else
 &apos;					iscarto = 2 &apos;se vers. 4
 &apos;			endif	
@@ -902,8 +897,7 @@ rifa_nomearea (&quot;COMPUTO&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S
 	oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = true
 	
 			&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-Print &quot;va sistemata la posizione della formula rIntest&quot;
-i=2
+i=rIntest
 	sFormula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
 	oSheet.GetCellByPosition(lcolbase+11 , i).setformula(sFormula)
 	oSheet.GetCellByPosition(lcolbase+11 , i).cellstyle = &quot;EP statistiche&quot;
@@ -914,21 +908,39 @@ i=2
 rem ----------------------------------------------------------------------
 rem seleziono le formule
 	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , rIntest,lcolbase+11 , rIntest))
-
-copy_clip &apos; le copio
-rem ----------------------------------------------------------------------
-rem seleziono la destinazione
-
+rem copy_clip e paste_clip da sub non vanno
+&apos;copy_clip &apos; le copio
+	dim document   as Object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	rem ----------------------------------------------------------------------
+&apos;	il Copy funziona a volte alterne...
+&apos;	dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
+	dispatcher.executeDispatch(document, &quot;.uno:Cut&quot;, &quot;&quot;, 0, Array())
+	rem ----------------------------------------------------------------------
+	rem seleziono la destinazione
 	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , rIntest,lcolbase+10 , lrowf-1))
-paste_clip &apos; incollo
-	oSheet.GetCellByPosition(lcolbase+11 , lrowF).setformula(&quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; rIntest+1 &amp;&quot;:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;)
+&apos;paste_clip &apos; incollo
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	rem ----------------------------------------------------------------------
+	dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
+	rem ----------------------------------------------------------------------
+	oSheet.GetCellByPosition(lcolbase+11, lrowF).setformula(&quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; rIntest+1 &amp;&quot;:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;)
+	oSheet.GetCellByPosition(lcolbase+11, lrowF).cellstyle = &quot;EP statistiche&quot;
 		&apos;&apos;	oSpalte1 = oSheet.getColumns().getByName(sCol2) 
 	&apos;		oSpalte1.isVisible = TRUE 
 		&apos;	Sel_Elenco_Prezzi
 		&apos;	Ripristina_statusLine
 		&apos;	suona_1_2		
 		&apos;	Rifa_GG_G1G1_Contab
-ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
+&apos; in qualche modo la riga di deselezione sotto disturma il copy/paste - disattivo
+&apos;ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 &apos;thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
 END SUB
 rem ----------------------------------------------------------------------

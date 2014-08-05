@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.10.0
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
 
 Sub inizializza_elenco &apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object
@@ -28,6 +38,9 @@ rIntest = 1
 	oSheet.GetCellByPosition(13,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;contabilizzate&quot;)
 	oSheet.GetCellByPosition(14,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;contabilizzati&quot;)
 	oSheet.getCellRangeByPosition(0, rIntest, 14 , rIntest).cellstyle = &quot;EP-a -Top&quot;
+	oSheet.getCellRangeByName(&quot;I1:J1&quot;).Columns.IsVisible=false
+	oSheet.getCellRangeByName(&quot;M1:M1&quot;).Columns.IsVisible=false
+
 
 Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
 End Sub

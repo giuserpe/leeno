@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.9.1 
+&apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -961,7 +961,14 @@ oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),getLastUsedRow(oSheet
 
 
 END SUB
-
+rem ----------------------------------------------------------------------
+SUB mostra_tutte_le_sheet
+	oDoc = ThisComponent
+	oSheets = oDoc.Sheets()
+	For Each oSh In oSheets
+			oSh.IsVisible = True
+	next
+End Sub
 
 SUB Computo_Normale_b_vecchio
 	oPos = ThisComponent.getCurrentSelection()

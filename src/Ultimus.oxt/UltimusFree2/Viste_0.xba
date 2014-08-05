@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_0" script:language="StarBasic">REM ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.9.1 
+&apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -61,11 +61,16 @@ Sub sicurezza_Analisi_on_off &apos; chiude le col della manodopera su Analisi
 End Sub
 
 Sub tag_usata_on_off
-
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet &lt;&gt; &quot;Tipo_ElencoP&quot; Then 
-		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
-				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;
+&apos;print Trova_Attr_Sheet
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		if Trova_Attr_Sheet = &quot;&quot; Then
+			tabella=&quot;sconosciuto&quot;
+		Else
+			tabella= Trova_Attr_Sheet
+		End If 
+		msgbox &quot;#1 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
+				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (tag_usata_on_off)&quot;
 				exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
@@ -88,20 +93,26 @@ Sub tag_usata_on_off
 		oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
 	 else	 
 		oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = false			
-	end if
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-	ThisComponent.CurrentController().freezeAtPosition(lcolbase+11,1)
-	ThisComponent.CurrentController.Select( oPos )
+	end If
+rem ----------------------------------------------------------------------
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+fissa (0,rIntest)
 End Sub
 
 
 
 Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
 &apos;Print Trova_Attr_Sheet
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; OR &quot;Tipo_ElencoP&quot; Then
-		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
-				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		if Trova_Attr_Sheet = &quot;&quot; Then
+			tabella=&quot;sconosciuto&quot;
+		Else
+			tabella= Trova_Attr_Sheet
+		End If 
+		msgbox &quot;#2 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
+				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (Sommario_off)&quot;
 				exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
@@ -139,20 +150,24 @@ Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
 			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = false			
 			oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = false			
 	end if
-	If oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true and _
-		oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false then 
-			ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-			ThisComponent.CurrentController().freezeAtPosition(lcolbase+11,1)
-			ThisComponent.CurrentController.Select( oPos )
-	end if
+rem ----------------------------------------------------------------------
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+fissa (0,rIntest)
+
 End Sub
 
 
 Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet &lt;&gt; &quot;Tipo_ElencoP&quot; Then
-		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
-				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		if Trova_Attr_Sheet = &quot;&quot; Then
+			tabella=&quot;sconosciuto&quot;
+		Else
+			tabella= Trova_Attr_Sheet
+		End If 
+		msgbox &quot;#3 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
+				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (Sommario_Contab_off)&quot;
 				exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
@@ -178,7 +193,7 @@ Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
 		 	&amp;&quot;rigenero?&quot; ,35, &quot;&quot;)	
 		 	Select Case Adomanda
 		 		Case 6
-		 			wait 100 &apos; per chiudere subito msgbox	
+&apos;		 			wait 100 &apos; per chiudere subito msgbox	
 		 			chiudi_dialoghi	 
 							Rifa_GG_G1G1_Contab
 						Case 2
@@ -190,17 +205,22 @@ Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
 			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = false			
 			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false	
 	end if
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-	ThisComponent.CurrentController().freezeAtPosition(lcolbase+15,1)
-	ThisComponent.CurrentController.Select( oPos )
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+fissa (0,rIntest)
 End Sub
 
 
 Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet &lt;&gt; &quot;Tipo_ElencoP&quot; Then
-		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
-				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		if Trova_Attr_Sheet = &quot;&quot; Then
+			tabella=&quot;sconosciuto&quot;
+		Else
+			tabella= Trova_Attr_Sheet
+		End If 
+		msgbox &quot;#4 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
+				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (manodoperta_on_off)&quot;
 				exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
@@ -228,19 +248,24 @@ Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
 			oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = false			
 	end if
 	
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-	ThisComponent.CurrentController().freezeAtPosition(lcolbase+11,1)
-	ThisComponent.CurrentController.Select( oPos )
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+fissa (0,rIntest)
 End Sub
 
 
 
 
 Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; OR Trova_Attr_Sheet &lt;&gt; &quot;Tipo_ElencoP&quot; Then
-		msgbox &quot;questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
-				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		if Trova_Attr_Sheet = &quot;&quot; Then
+			tabella=&quot;sconosciuto&quot;
+		Else
+			tabella= Trova_Attr_Sheet
+		End If 
+		msgbox &quot;#5 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
+				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (manodoperta_on_off)&quot;
 				exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
@@ -276,28 +301,33 @@ Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
 			end if
 	 else	 
 			oSheet.getColumns.getByIndex(lcolbase+3+iScarto).isVisible = false				
-	end if
-
-
-	
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-	ThisComponent.CurrentController().freezeAtPosition(lcolbase+9+aggiungi,1)
-	ThisComponent.CurrentController.Select( oPos )
+	end If
+rem ----------------------------------------------------------------------
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+fissa (0,rIntest)
 End Sub
 
 
 Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
-DIM test as string
-	test = Trova_Attr_Sheet
-If test &lt;&gt; &quot;Tipo_EP&quot; AND _
-	test &lt;&gt; &quot;Tipo_ElencoP&quot; Then
-		msgbox &quot;Questa macro andrebbe eseguita su una tabella di Elenco Prezzi&quot;&amp; CHR$(10)_
-				&amp; &quot; (o un suo duplicato)&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;
+	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+		if Trova_Attr_Sheet = &quot;&quot; Then
+			tabella=&quot;sconosciuto&quot;
+		Else
+			tabella= Trova_Attr_Sheet
+		End If 
+		msgbox &quot;#6 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
+				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
+				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (Voce_EP_in_bianco)&quot;
 				exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
 	lcolbase = Colonna_giusta_EP (oSheet)
+rem ----------------------------------------------------------------------
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+fissa (0,rIntest)
+rem ----------------------------------------------------------------------
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase
 				exit sub
@@ -333,16 +363,7 @@ If test &lt;&gt; &quot;Tipo_EP&quot; AND _
 &apos;	oSheet.getCellByPosition(lcolbase+6,lrow).formula = &quot;=IF(E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp;&quot;)&quot; &apos;giovanna ColumnNameOf(lcolbase+
 	oSheet.getCellByPosition(lcolbase+6,lrow).formula = _
 	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;)&quot; 
-	&apos;&apos;	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+3) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+3) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+4) &amp; &quot;)&quot; 
-&apos;print &quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; &quot;)&quot;
 
-	&apos; iScarto è per la versione 4 (questo pezzo non è stato ancora testato)
-&apos;	if iscarto &lt;&gt; 0 then
-&apos;		oSheet.getCellByPosition(lcolbase+iscarto+5,lrow).CellStyle = &quot;EP-mezzo %&quot;
-&apos;		oSheet.getCellByPosition(lcolbase+iscarto+6,lrow).CellStyle = &quot;EP-mezzo&quot;
-&apos;			oSheet.getCellByPosition(lcolbase+6,lrow).formula = _
-&apos;			 &quot;=IF(E&quot; &amp; lrow+1 &amp; &quot;*H&quot; &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrow+1 &amp; &quot;*H&quot; &amp; lrow+1 &amp;&quot;)&quot;
-&apos;	end if &apos;=IF(E8*F8=0;&quot;&quot;;E8*F8)
 	
 	oSheet.getCellByPosition(lcolbase+iscarto+7,lrow).CellStyle = &quot;EP-mezzo&quot;
 	oSheet.getCellByPosition(lcolbase+iscarto+8,lrow).CellStyle = &quot;EP-sfondo&quot;

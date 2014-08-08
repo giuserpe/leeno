@@ -308,8 +308,8 @@ FUNCTION SE_contabilita
 		exit function
 	end if	
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 then
-			if msgbox ( &quot;Mi risulta che questo computo sia già chiuso e completato!&quot; &amp; CHR$(10)_
-					&amp; &quot;Si sta infatti lavorando sulla contabilità, e per questo mi pare una richiesta strana...&quot;&amp; CHR$(10)_
+			if msgbox ( &quot;#1 Mi risulta che il computo sia già chiuso e completato!&quot; &amp; CHR$(10)_
+					&amp; &quot;Si sta lavorando sulla contabilità, e per questo mi pare una richiesta strana...&quot;&amp; CHR$(10)_
 					&amp; &quot;Se Prosegui vai ad alterare i dati del Computo!&quot;&amp; CHR$(10)_
 					&amp; &quot; PROSEGUO comunque? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
 					SE_contabilita = 0

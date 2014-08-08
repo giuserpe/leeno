@@ -302,7 +302,7 @@ dispatcher.executeDispatch(document, &quot;.uno:DefinePrintArea&quot;, &quot;&qu
 end sub
 
 
-sub ordina_colA
+sub ordina_col(ncol As long)
 rem ----------------------------------------------------------------------
 rem define variables
 dim document   as object
@@ -327,7 +327,7 @@ args1(4).Value = true
 args1(5).Name = &quot;UserDefIndex&quot;
 args1(5).Value = 0
 args1(6).Name = &quot;Col1&quot;
-args1(6).Value = 1
+args1(6).Value = ncol
 args1(7).Name = &quot;Ascending1&quot;
 args1(7).Value = true
 
@@ -335,5 +335,4 @@ dispatcher.executeDispatch(document, &quot;.uno:DataSort&quot;, &quot;&quot;, 0,
 
 
 end sub
-
 </script:module>

@@ -12,8 +12,6 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-Global fRow As Integer
-Global fcol As Integer
 Sub partita (testo as string)
 	Dim test As String
 	Dim riga_selezione As Integer

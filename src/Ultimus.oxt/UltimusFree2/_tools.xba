@@ -7,6 +7,19 @@
 &apos;		lSheetSRC = oRangeSRC.RangeAddress.sheet
 
 
+Sub LeenO_Path
+rem ----------------------------------------------------------------------
+	Dim pip As Object, extensionLocation As String
+	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
+	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
+	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
+	extensionLocation = pip.getPackageLocation(extensionIdentifier)
+&apos;	display a human readable address
+&apos;	MsgBox(ConvertFromURL(extensionLocation)
+End Sub
+
+
+
 sub rir_
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	lLastUrow = getLastUsedRow(oSheet)

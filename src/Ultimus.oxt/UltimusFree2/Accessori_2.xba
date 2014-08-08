@@ -453,25 +453,28 @@ END SUB
 rem ----------------------------------------------------------------------
 SUB Rifa_Somme_TOT_Computo &apos;riscritta da zero (C) Giuseppe Vizziello 2014
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
+	lRowE=oRow.CellAddress.Row
 rem ----------------------------------------------------------------------
 	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 rem ----------------------------------------------------------------------
 Rem	riga di controllo importo
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 &apos;	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo sicurezza
+	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo lavori
 &apos;	oSheet.GetCellByPosition(19,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;T3:T4);2)&quot; &apos;importo perizia di variante
-	oSheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y4)&quot; &apos;importo manodopera
+	oSheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo manodopera
 	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=ROUND(AE4/S4;2)&quot;  &apos;Incidenza manodopera %
-	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
-	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AK3:AK4);2)&quot; &apos; totale computo sole voci senza errori
+	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo manodopera
+	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AK3:AK&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos; totale computo sole voci senza errori
 &apos;	oSheet.GetCellByPosition(39,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AN3:AN4);2)&quot; &apos; totale computo sole voci senza errori
 &apos;	oSheet.GetCellByPosition(40,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AO3:AO4);2)&quot; &apos; totale computo sole voci senza errori
 &apos;	oSheet.GetCellByPosition(41,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AP3:AP4);2)&quot; &apos; totale computo sole voci senza errori
 
-	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S4);2)&quot; &apos;importo lavori
-	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
+
+&apos;	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo manodopera
 	oSheet.getCellRangeByPosition(0, 1, 43 , 1).cellstyle = &quot;comp In testa&quot;
 	oSheet.getCellByPosition(24,1).cellstyle = &quot;Comp TOTALI %&quot;
 
@@ -522,8 +525,6 @@ rem riga di intestazione
 REM ALTEZZA riga di intestazione
 	oSheet.GetCellByPosition(0,2).Rows.Height = 800
 rem ----------------------------------------------------------------------
-	oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-	lRowE=oRow.CellAddress.Row
 Rem riga del totale
 	oSheet.GetCellByPosition(2,lRowE).setstring(&quot;TOTALI COMPUTO&quot;)
 	oSheet.GetCellByPosition(17,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo sicurezza
@@ -918,8 +919,9 @@ rem copy_clip e paste_clip da sub non vanno
 	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	rem ----------------------------------------------------------------------
 &apos;	il Copy funziona a volte alterne...
-&apos;	dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
 	dispatcher.executeDispatch(document, &quot;.uno:Cut&quot;, &quot;&quot;, 0, Array())
+	 wait 50
+&apos;Print 
 	rem ----------------------------------------------------------------------
 	rem seleziono la destinazione
 	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+10 , rIntest,lcolbase+10 , lrowf-1))

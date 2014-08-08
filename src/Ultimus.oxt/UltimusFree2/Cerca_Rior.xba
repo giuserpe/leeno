@@ -25,9 +25,7 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________ &apos;perbacco
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then
-		exit sub
-	end if
+	if lrow = -1 then exit Sub
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
 	
 	Barra_chiudi_sempre_4
@@ -38,7 +36,6 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 				print lcolbase
 				exit sub
 	end if
- 	
  			
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 &apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
@@ -82,7 +79,7 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 			goto una_volta_sola_prego:
 	end If
 	oRangeEP = ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells.RangeAddress
-	lrowEPI = oRangeEP.StartRow 
+	lrowEPI = oRangeEP.StartRow+1
 	lrowEPF = oRangeEP.EndRow 
 	lcolEPI = oRangeEP.StartColumn
 	lcolEPF = oRangeEP.EndColumn
@@ -126,13 +123,14 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 		goto una_volta_sola_prego:
 	end if
+rem ----------------------------------------------------------------------
 una_volta_sola_prego:
+
 	sChiama = Riordina_0(lcolbase+0, TRUE) &apos; il numero è la colonna da riordinare
 	if sChiama = &quot;uscita forzata&quot; or _
  	sChiama = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				exit sub
 	end if	
-	
 	Barra_chiudi_sempre_4
 	&apos;xray sritorno
 &apos;	if sRitorno (com.sun.star.awt.MouseEvent) then
@@ -158,7 +156,7 @@ END SUB
 
 Function Riordina_0 (ColdaRior, AscDesc as boolean )as variant &apos; Riordina l&apos;elenco prezzi con criteri
 &apos;Ritorna la riga finale 										 a scelta... (si usa richiamata da altra sub)
- &apos; 				
+rem manomessa 	Giuseppe Vizziello 2014
  dim lrowF as long
 oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 &apos;circoscrive l&apos;elenco
@@ -177,29 +175,12 @@ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				Riordina_0 = lcolbase
 				exit function
-	end if
-		
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iScarto = 2 &apos;se vers. 4
-&apos;	endif 			
- 	lcolbase = 	lcolbase + iScarto	
-	lcolF=lcolbase+12
-
-	oMioRange = osheet.getCellRangeByPosition (0,1,lcolF+1,lrowF-1)&apos;(lcolI,lrowI,lcolF,lrowF)
-&apos; e poi lo riordina 
- Dim oSheetDSC,oDSCRange As Object
- Dim aSortFields(0) As New com.sun.star.util.SortField
- Dim aSortDesc(0) As New com.sun.star.beans.PropertyValue
- 
- aSortFields(0).Field = ColdaRior &apos; 0
- aSortFields(0).SortAscending = AscDesc &apos;TRUE&apos;FALSE
-
- aSortDesc(0).Name = &quot;SortFields&quot;
- aSortDesc(0).Value = aSortFields()
-&apos; print &quot;intermedio&quot;
- oMioRange.Sort(aSortDesc())
+	end If
+ oRanges = ThisComponent.NamedRanges
+RiDefinisci_Area_Elenco_prezzi
+seleziona_area (&quot;elenco_prezzi&quot;)
+ordina_col (1)
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	Riordina_0 = lrowF
 End Function 
 
@@ -379,69 +360,29 @@ End Function
 
 
 Sub RiDefinisci_Area_Elenco_prezzi () &apos; viene richiamata da Riordina l&apos;elenco Prezzi
+rem riscritta (c) Giuseppe Vizziello 2014
 &apos; Nel Computo si è scelto di usare un namedRanges per il VlookUp... a false, eppure ci sono casi in cui 
 &apos; è necessario riordinare (???)
 &apos; IMPORTANTE ridefinisce anche il namedRanges che contiene la lista dei codici interni di comodo
 
-dim sMiaStringa as string
-dim lRow as long
-dim oSheet as object
+dim lRow as Long
 
- Barra_chiudi_sempre_4
- Barra_Apri_Chiudi_5(&quot;1 Pazienta... devo rifare il NamedRanges, e può essere cosa lunga...&quot;, 30)
-	
- oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
- oRanges = ThisComponent.NamedRanges
-
- If oRanges.hasByName(&quot;elenco_prezzi&quot;) Then
- oRanges.getByName(&quot;elenco_prezzi&quot;)
- oRanges.removeByName(&quot;elenco_prezzi&quot;)
- End If
- If oRanges.hasByName(&quot;elenco_prezzi_R&quot;) Then
- oRanges.getByName(&quot;elenco_prezzi_R&quot;)
- oRanges.removeByName(&quot;elenco_prezzi_R&quot;)
- End If
- Barra_chiudi_sempre_4
- Barra_Apri_Chiudi_5(&quot;2 Pazienta... devo rifare il NamedRanges, e può essere cosa lunga...&quot;, 40)
-
- If oRanges.hasByName(&quot;Lista&quot;) Then &apos; lista codici di validità dati
- oRanges.getByName(&quot;Lista&quot;)
- oRanges.removeByName(&quot;Lista&quot;)
- End If
- 
- Barra_chiudi_sempre_4
- Barra_Apri_Chiudi_5(&quot;3 Pazienta... devo rifare il NamedRanges, e può essere cosa lunga...&quot;, 50)
+dim oSheet as Object
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-&apos;circoscrive l&apos;elenco
-	sString$ = &quot;Fine elenco&quot;
-	oEnd=uFindString(sString$, oSheet)
-	lRowE=oEnd.RangeAddress.EndRow 
-
- oCellAddress = oSheet.getCellRangeByName(&quot;b10&quot;).getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
-
- lcolbase = Colonna_giusta_EP(osheet)
- if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-		print lcolbase
-		exit sub
- end if
- 	
- 
- sCol_R= ColumnNameOf(lcolbase)	
- 
- sCol= ColumnNameOf(getLastUsedCol(oSheet))
- sMiaStringa= &quot;$&apos;Elenco Prezzi&apos;.$&quot; &amp; sCol_R &amp; &quot;$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE+1 
- oRanges.addNewByName(&quot;elenco_prezzi&quot;, sMiaStringa , oCellAddress, 0)
- sMiaStringa= &quot;$&apos;Elenco Prezzi&apos;.$A$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE 
- sCol= ColumnNameOf(lcolbase)
- sMiaStringa= &quot;$&apos;Elenco Prezzi&apos;.$&quot; &amp; sCol &amp; &quot;$2:$&quot; &amp; sCol &amp; &quot;$&quot; &amp; lRowE 
- 
- Barra_chiudi_sempre_4
- Barra_Apri_Chiudi_5(&quot;Ora tocca alle liste...Pazienta ancora... &quot;, 25)
- 
- oRanges.addNewByName(&quot;Lista&quot;, sMiaStringa , oCellAddress, 0) &apos; lista codici di validità dati
- Barra_chiudi_sempre_4
-
+rem ----------------------------------------------------------------------
+rem prima riga
+	oEnd=uFindString((&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;), oSheet)
+	fRow=oEnd.RangeAddress.EndRow+1
+rem ----------------------------------------------------------------------
+rem ultima riga
+	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+	lRowE=oEnd.RangeAddress.EndRow
+rem ----------------------------------------------------------------------
+rem nome ultima colonna
+	lCol = ColumnNameOf(getLastUsedCol(oSheet)+2) &apos; aggiungo 3 colonne in più... non si sa mai
+	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow+1 &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
+	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow+1 &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici
 END SUB 
 
 

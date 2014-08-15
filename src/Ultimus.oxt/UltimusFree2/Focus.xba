@@ -548,7 +548,7 @@ Sub Vai_a_M1()
 
 	If sNomesheet = &quot;S1&quot; or sNomesheet =&quot;S2&quot; or sNomesheet = &quot;S3&quot; or sNomesheet = &quot;S4&quot; then 
 		oSheetCurrent.isVisible = false 
-	endif
+	EndIf 
 
 END SUB
 

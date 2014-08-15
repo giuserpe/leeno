@@ -222,6 +222,12 @@ Sub sistema_attributi_sheet&apos; (sSheet As string) rem renderla opzionale?
 			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A2&quot;)
 			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B1&quot;)
 			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B2&quot;)
+&apos;		Case &quot;CONTABILITA&quot;
+			oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
 &apos;	End Select 
 End Sub
 

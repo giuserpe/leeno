@@ -36,7 +36,7 @@ sistema_attributi_sheet
  	sAttributo &lt;&gt; &quot;Tipo_ElencoP&quot; and _
  	sAttributo &lt;&gt; &quot;Tipo_EP&quot; Then
 
- 	msgbox &quot;1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
+ 	msgbox &quot;#1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
 		 			&amp; &quot;&quot;
 		 	exit sub
  	end if &apos;

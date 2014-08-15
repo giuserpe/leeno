@@ -768,8 +768,22 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 &apos;_____________________
 chiudi_dialoghi 
 &apos;_____________________
-rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;)
-rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;)
+rem ----------------------------------------------------------------------
+REM Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
+	IF oRanges.hasByName(&quot;Lib#1&quot;) THEN
+		nSal=20
+		Do while nSal &gt; 0
+			IF oRanges.hasByName(&quot;Lib#&quot; &amp; nSal) THEN
+		&apos;			nSal=nSal-1
+				exit do
+			end if
+		nSal=nSal-1
+		Loop
+		oNamedRange=oRanges.getByName(&quot;Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
+		lLastUrow = oNamedRange.RangeAddress.EndRow
+	End If 
+rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
+rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
 
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
@@ -795,6 +809,7 @@ rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot
 &apos;			endif	
 		
 	sCol= ColumnNameOf(lcolbase+iScarto)
+	sCol1= ColumnNameOf(lcolbase+iscarto+13) &apos;quantità
 	sCol2= ColumnNameOf(lcolbase+iscarto+14)
 	sCol4 = ColumnNameOf(lcolbase+iscarto+4) &apos;col E
 			
@@ -803,12 +818,14 @@ rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot
 			
 i=rIntest
 
-	sFormula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
+	sFormula_q = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot;
+	oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) &apos; quantità
+	oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
+	sFormula = &quot;=&quot; &amp; sCol1 &amp; i+1 &amp; &quot;*&quot;&amp; sCol4 &amp; i+1 &amp; &quot; &quot;	
 	oSheet.GetCellByPosition(lcolbase+14 , i).setformula(sFormula)
 	oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
-	sFormula_q = &quot;=&quot; &amp; sCol2 &amp; i+1 &amp; &quot;/&quot;&amp; sCol4 &amp; i+1 &amp; &quot; &quot;
-	oSheet.GetCellByPosition(lcolbase+13 , i).setformula(sFormula_q) 		
-	oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
+
+
 
 rem seleziono le formule
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Attesa" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Attesa" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -11,11 +11,11 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-REM Questo modulo contiene il codice per segnalare all&apos;utente che la macro sta lavorando
-REM e bloccare la tastiera
-REM Per il blocco della tastiera i crediti vanno a Lorent Godard 
-REM Il resto de modulo è stato integralmente elaborato da Lido Bernardini 
-REM Se ritenete di riutilizzare questo codice sarebbe carino mantenere il suo nome in evidenza
+rem Questo modulo contiene il codice per segnalare all&apos;utente che la macro sta lavorando
+rem e bloccare la tastiera
+rem Per il blocco della tastiera i crediti vanno a Lorent Godard 
+rem Il resto de modulo è stato integralmente elaborato da Lido Bernardini 
+rem Se ritenete di riutilizzare questo codice sarebbe carino mantenere il suo nome in evidenza
 
 Global oKeyHandler As Object
 Global oMouseClickHandler As Object
@@ -340,16 +340,16 @@ end sub
 
 
 Sub Barra_Apri_leggera ()
-Barra_Apri_Chiudi_4
-exit sub
+&apos;Barra_Apri_Chiudi_4
+&apos;exit sub
 	if isNull (oProgressBar) or isEmpty (oProgressBar) then
-			print &quot;null&quot;
+&apos;			print &quot;null&quot;
 		 oProgressBar = ThisComponent.CurrentController.Frame.CreateStatusIndicator
 		 oProgressBar.Start(&quot;&quot;,100)&apos;
 		 oProgressBar.Value = 100
- 		 oProgressBar.Text = &quot; ....ELABORAZIONE IN CORSO..... ATTENDERE! &quot;
+ 		 oProgressBar.Text = &quot; ....ELABORAZIONE IN CORSO..... ATTENDERE! &quot; &amp; (now)
 		else
-			print &quot;not null&quot;
+		&apos;	print &quot;not null&quot;
 			oProgressBar.end
  			on error goto errorhandler
 	end if

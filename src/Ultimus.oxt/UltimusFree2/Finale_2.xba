@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Finale_2" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Finale_2" script:language="StarBasic">rem ***** BASIC *****
 
 rem https://forum.openoffice.org/it/forum/viewtopic.php?f=26&amp;t=5859
 SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
@@ -8,7 +8,7 @@ SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
  	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	Chiudi_o_elimina_tabelle_inutili
-REM nome e percorso file
+rem nome e percorso file
 	oDoc = ThisComponent
 	oSheets = oDoc.Sheets()
 	oSheet = oDoc.currentcontroller.activesheet
@@ -28,7 +28,7 @@ rem metto in ordine secondo la stampa
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
 	thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,2)
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,10,10))
-REM rimuovo le aree di stampa che non interessano
+rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
 		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
 			&apos;oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;)
@@ -132,7 +132,7 @@ Sub esporta_PDF_Foglio_Attivo
 					exit sub
 			end select	
 	end if
-REM L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&apos;ANAGRAFICA
+rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&apos;ANAGRAFICA
 &apos; 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 &apos;		iCaso = msgbox (&quot; Aggiorno in automatico le Intestazioni ed i Piè di Pagina?&quot; &amp; CHR$(10) &amp; CHR$(10)_
 &apos;				&amp; &quot; (...prelevandoli dalla schermata dei “Dati dl Documento”) &quot; &amp; CHR$(10)&amp; CHR$(10)_
@@ -455,7 +455,7 @@ Sub Computo_senza_prezzi &apos;Genera un Puro computo metrico senza i prezzi
 	&apos;Imposto lo stile di pagina
 
 &apos;	osheet.PageStyle = &quot;PageStyle_CompuM_NoP&quot;
-	osheet.PageStyle = &quot;PageStyle_COMPUTO_A4&quot; REM PREFERISCO...
+	osheet.PageStyle = &quot;PageStyle_COMPUTO_A4&quot; rem PREFERISCO...
 	Scrivi_header_moduli
 	Sbianca_e_o_consolida(1) &apos;NIETE PAURA, CON PARAMETRO 1 SBIANCA SOLTANTO
 	
@@ -713,7 +713,7 @@ Sub Modulo_Lista_categorie_appalto &apos;Crea Il modulo per una lista generata d
 	
 		&apos;impostare la Pagestyle
 &apos;	osheet.PageStyle = &quot;PageStyle_EP_LISTA&quot;
-	osheet.PageStyle = &quot;PageStyle_COMPUTO_A4&quot; REM PREFERISCO...
+	osheet.PageStyle = &quot;PageStyle_COMPUTO_A4&quot; rem PREFERISCO...
 
 	&apos;impostare l&apos;area di stampa
 	Dim selArea(0) as new com.sun.star.table.CellRangeAddress

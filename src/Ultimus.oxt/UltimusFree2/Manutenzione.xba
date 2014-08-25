@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Manutenzione" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Manutenzione" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -350,8 +350,8 @@ Function Cambia_d1 (oCell as object) &apos; finestra validation per cod. prezzo
  ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)
 end Function
  
-Function Cambia_d2_old (oCell as object) REM QUESTA NON VA - è riscritta sotto
-REM quanto segue sembra non funzionare
+Function Cambia_d2_old (oCell as object) rem QUESTA NON VA - è riscritta sotto
+rem quanto segue sembra non funzionare
 	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
 	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
  oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, False)
@@ -412,7 +412,7 @@ rem SU ANALISI AVCP
  	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)&apos;
 end Function
 
-sub qui REM SOLO PER CAPIRE 
+sub qui rem SOLO PER CAPIRE 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	for lrow = 0 to 140
  	if oSheet.GetCellbyPosition(3,lrow).string = &quot;Spese Generali (calcolate su F)&quot; OR _
@@ -619,7 +619,7 @@ end sub
 
 
 Sub Controlla_Somme_Componenti
-REM tocca capire se questa sub serve davvero (GV)
+rem tocca capire se questa sub serve davvero (GV)
 
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 

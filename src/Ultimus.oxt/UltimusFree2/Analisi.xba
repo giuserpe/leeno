@@ -88,7 +88,7 @@ rem recupero i dati dalle ANALISI DI PREZZO
 			prezzoU = oSheet.GetCellByPosition(6,i).getvalue() &apos;prezzoU
 			voce = array (art, desc, um, manodopera, materiali, noli, trasporti, prestazioni, totaleC, utili, spese, totaleCD, prezzoU)
 			rem*****************************************************************************************
-			REM INIZIO INSERIMENTO
+			rem INIZIO INSERIMENTO
 			oSheetS.GetCellByPosition(0, RigSomm).setvalue(id)
 	 	 oSheet.GetCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
 			oSheet.GetCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
@@ -121,7 +121,7 @@ rem riga di intestazione
 	oSheets.GetCellByPosition(11,0).setstring(&quot;H&quot; + chr(13) + chr(13) + &quot;U.I.&quot; + chr(13))
 	oSheets.GetCellByPosition(12,0).setstring(&quot;I&quot; + chr(13) + chr(13) + &quot;TOTALE COSTI INDIRETTI&quot;)
 	oSheets.GetCellByPosition(13,0).setstring(&quot;L&quot; + chr(13) + chr(13) + &quot;PREZZO UNITARIO OFFERTO&quot;)
-REM gli do il colore
+rem gli do il colore REGISTRO
 	oSheetS.getCellRangeByPosition(0, 1, 0, RigSomm-1).cellstyle = &quot;comp progress&quot;
 	oSheetS.getCellRangeByPosition(1, 1, 1, RigSomm-1).cellstyle = &quot;An-1v&quot;
 	oSheetS.getCellRangeByPosition(2, 1, 2, RigSomm-1).cellstyle = &quot;An-lavoraz-generica_1_rigo&quot;

@@ -31,14 +31,14 @@ Sub Prepara_un_Doc_per_la_stampa(optional sCosa as long)
 
 	If sSheetName=&quot;COMPUTO_print&quot; then &apos; or sSheetName=&quot;Analisi di Prezzo_print&quot; then
 	&apos;	print sSheetName
-REM NASCONDI RIGHE
+rem NASCONDI RIGHE
 		oRange = oSheet.getCellRangeByposition(0,1,0,1)
 		oRange.Rows.IsVisible=false
 	end if
-REM cancelliamo i pulsantoni
+rem cancelliamo i pulsantoni
 	iCellAttr =	com.sun.star.sheet.CellFlags.OBJECTS
 	osheet.getCellRangeByPosition (0,0,21,1).ClearContents(iCellAttr)
-REM RIDUCI ALTEZZA PRIMA RIGA
+rem RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
 	oPrimaCella.Rows.Height = 1200
 	Set_Area_Stampa_N
@@ -55,7 +55,7 @@ end sub
 
 
 
-REM ***** BASIC *****
+rem ***** BASIC *****
 
 
 
@@ -323,7 +323,7 @@ dispatcher.executeDispatch(oDoc, &quot;.uno:Move&quot;, &quot;&quot;, 0, args2()
 &apos;exit sub
 &apos;.............. fine pezzo in prova
 
-&apos;oDocumento.Sheets.RemoveByName(sTempSheet) &apos;thank&apos;s
+&apos;oDocumento.Sheets.removeByName(sTempSheet) &apos;thank&apos;s
 
 
 ThisComponent.CurrentController.ZoomValue = 65
@@ -480,7 +480,7 @@ dispatcher.executeDispatch(oDoc, &quot;.uno:Move&quot;, &quot;&quot;, 0, args2()
 &apos;exit sub
 &apos;.............. fine pezzo in prova
 
-&apos;oDocumento.Sheets.RemoveByName(sTempSheet) &apos;thank&apos;s
+&apos;oDocumento.Sheets.removeByName(sTempSheet) &apos;thank&apos;s
 
 
 ThisComponent.CurrentController.ZoomValue = 65
@@ -1420,7 +1420,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		&apos; nasconde la riga di Fine Elenco
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
-		REM ALTEZZA riga di intestazione
+		rem ALTEZZA riga di intestazione
 	 Case &quot;Tipo_Analisi&quot;, &quot;Analisi di Prezzo&quot;
 		oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
 		oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet)			
@@ -1442,7 +1442,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	&apos; osheet.getPrintAreas		
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
-&apos;		Impagina_N REM TANTO è DA FARE
+&apos;		Impagina_N rem TANTO è DA FARE
 	 Case &quot;Tipo_CONTABILITA&quot;, &quot;CONTABILITA&quot;
 	 	sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)	
@@ -1496,7 +1496,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		rIntest=oStart.CellAddress.Row
 		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)			
 		lRowE=oEnd.CellAddress.Row
-&apos;		lLastUrow = getLastUsedRow(oSheet) &apos;REM rigabart
+&apos;		lLastUrow = getLastUsedRow(oSheet) &apos;rem rigabart
 		lLastUrow = lRowE
 		&apos;lLastUrow = lRowE+10
 		selArea(0).StartColumn = 0
@@ -1515,7 +1515,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		
 		oSheet.setPrintareas(selArea())
 
-	REM RIDUCI ALTEZZA PRIMA RIGA
+	rem RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.GetCellByPosition( 0 , rIntest)
 	oPrimaCella.Rows.Height = 1200
 fissa (0,rIntest+1)
@@ -2014,7 +2014,7 @@ END SUB
 
 
 
-REM NON USATA
+rem NON USATA
 sub num_pag_libretto &apos;annota pagina e libretto su CONTABILITA (solo libretto dalla 3.9.2)
 	oSheet = ThisComponent.currentController.activeSheet
 	lLastUrowNN = getLastUsedRow(oSheet)

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Filtra_2" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Filtra_2" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -168,50 +168,50 @@ sub Crea_Filtro_EP_Computo (lcol as long) &apos;, sAttTipo as string) &apos;lcol
 &apos;CHR$(10)_
 
 &apos;print lcol
- REM If argument is True, creates an empty filter
- REM descriptor. If argument is False, create a 
- REM descriptor with the previous settings.
+ rem If argument is True, creates an empty filter
+ rem descriptor. If argument is False, create a 
+ rem descriptor with the previous settings.
  oFilterDesc = oSheet.createFilterDescriptor(True)
 &apos; sStringa = &quot;scavo&quot;
 &apos; xray oFilterDesc
  With oFields(0)
- REM I could use the Connection property to indicate 
- REM how to connect to the previous field. This is 
- REM the first field so this is not required.
+ rem I could use the Connection property to indicate 
+ rem how to connect to the previous field. This is 
+ rem the first field so this is not required.
  &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
  &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
- REM The Field property is the zero based column
- REM number to filter. If you have the cell, you
- REM can use .Field = oCell.CellAddress.Column.
+ rem The Field property is the zero based column
+ rem number to filter. If you have the cell, you
+ rem can use .Field = oCell.CellAddress.Column.
  .Field = lCol 
 
- REM Compare using a numeric or a string?
+ rem Compare using a numeric or a string?
  .IsNumeric = false &apos;True
 
- REM The NumericValue property is used 
- REM because .IsNumeric = True from above.
+ rem The NumericValue property is used 
+ rem because .IsNumeric = True from above.
  &apos;.NumericValue = 80
 	
 	
- REM If IsNumeric was False, then the 
- REM StringValue property would be used.
- REM .StringValue = &quot;what ever&quot;
+ rem If IsNumeric was False, then the 
+ rem StringValue property would be used.
+ rem .StringValue = &quot;what ever&quot;
  &apos; .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot; 
 	.StringValue =	sStrFilter
- REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
- REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
- REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
- REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ rem Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ rem NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ rem LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ rem BOTTOM_VALUES, and BOTTOM_PERCENT
  .Operator = com.sun.star.sheet.FilterOperator.EQUAL
  End With
  
- REM The filter descriptor supports the following
- REM properties: IsCaseSensitive, SkipDuplicates,
+ rem The filter descriptor supports the following
+ rem properties: IsCaseSensitive, SkipDuplicates,
  &apos;UseRegularExpressions
 &apos; XRAY oFilterDesc
- REM SaveOutputPosition, Orientation, ContainsHeader, 
- REM CopyOutputData, OutputPosition, and MaxFieldCount.
+ rem SaveOutputPosition, Orientation, ContainsHeader, 
+ rem CopyOutputData, OutputPosition, and MaxFieldCount.
  oFilterDesc.setFilterFields(oFields())
  oFilterDesc.UseRegularExpressions = TRUE
  &apos; oFilterDesc.UseRegularExpressions = false
@@ -246,85 +246,85 @@ lcol1 = lcol
  &apos;&apos;&apos; 	 oAddr = oSheet.getCellRangeByposition(0,0,lLastUcol,lLastUrowNN).getRangeAddress()
 
  
- REM If argument is True, creates an empty filter
- REM descriptor. If argument is False, create a 
- REM descriptor with the previous settings.
+ rem If argument is True, creates an empty filter
+ rem descriptor. If argument is False, create a 
+ rem descriptor with the previous settings.
  oFilterDesc = oSheet.createFilterDescriptor(True)
 &apos; sStringa = &quot;scavo&quot;
 &apos; xray oFilterDesc
  With oFields(0)
- REM I could use the Connection property to indicate 
- REM how to connect to the previous field. This is 
- REM the first field so this is not required.
+ rem I could use the Connection property to indicate 
+ rem how to connect to the previous field. This is 
+ rem the first field so this is not required.
  &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
  &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
- REM The Field property is the zero based column
- REM number to filter. If you have the cell, you
- REM can use .Field = oCell.CellAddress.Column.
+ rem The Field property is the zero based column
+ rem number to filter. If you have the cell, you
+ rem can use .Field = oCell.CellAddress.Column.
  &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
  .Field = lCol 
 
- REM Compare using a numeric or a string?
+ rem Compare using a numeric or a string?
  .IsNumeric = false &apos;True
 
- REM The NumericValue property is used 
- REM because .IsNumeric = True from above.
+ rem The NumericValue property is used 
+ rem because .IsNumeric = True from above.
  &apos;.NumericValue = 80
 	
 	
- REM If IsNumeric was False, then the 
- REM StringValue property would be used.
- REM .StringValue = &quot;what ever&quot;
+ rem If IsNumeric was False, then the 
+ rem StringValue property would be used.
+ rem .StringValue = &quot;what ever&quot;
  .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot; 
 
- REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
- REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
- REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
- REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ rem Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ rem NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ rem LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ rem BOTTOM_VALUES, and BOTTOM_PERCENT
  .Operator = com.sun.star.sheet.FilterOperator.EQUAL
  End With
 &apos;xray ofields
  With oFields(1)
- REM I could use the Connection property to indicate 
- REM how to connect to the previous field. This is 
- REM the first field so this is not required.
+ rem I could use the Connection property to indicate 
+ rem how to connect to the previous field. This is 
+ rem the first field so this is not required.
  &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
  &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
- REM The Field property is the zero based column
- REM number to filter. If you have the cell, you
- REM can use .Field = oCell.CellAddress.Column.
+ rem The Field property is the zero based column
+ rem number to filter. If you have the cell, you
+ rem can use .Field = oCell.CellAddress.Column.
  .Connection = com.sun.star.sheet.FilterConnection.AND
  .Field = lCol1 
 
- REM Compare using a numeric or a string?
+ rem Compare using a numeric or a string?
  .IsNumeric = false &apos;True
 
- REM The NumericValue property is used 
- REM because .IsNumeric = True from above.
+ rem The NumericValue property is used 
+ rem because .IsNumeric = True from above.
  &apos;.NumericValue = 80
 	
 	
- REM If IsNumeric was False, then the 
- REM StringValue property would be used.
- REM .StringValue = &quot;what ever&quot;
+ rem If IsNumeric was False, then the 
+ rem StringValue property would be used.
+ rem .StringValue = &quot;what ever&quot;
  .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot; 
 
- REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
- REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
- REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
- REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ rem Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ rem NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ rem LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ rem BOTTOM_VALUES, and BOTTOM_PERCENT
  .Operator = com.sun.star.sheet.FilterOperator.EQUAL
  End With
 
  print sStringa &amp; &quot; &quot; &amp; sStringa2
- REM The filter descriptor supports the following
- REM properties: IsCaseSensitive, SkipDuplicates,
+ rem The filter descriptor supports the following
+ rem properties: IsCaseSensitive, SkipDuplicates,
  &apos;UseRegularExpressions
 &apos; XRAY oFilterDesc
- REM SaveOutputPosition, Orientation, ContainsHeader, 
- REM CopyOutputData, OutputPosition, and MaxFieldCount.
+ rem SaveOutputPosition, Orientation, ContainsHeader, 
+ rem CopyOutputData, OutputPosition, and MaxFieldCount.
  oFilterDesc.setFilterFields(oFields())
  oFilterDesc.UseRegularExpressions = TRUE
  oFilterDesc.ContainsHeader = True
@@ -337,7 +337,7 @@ end sub
 
 
 
-Sub RemoveSheetFilter() &apos;non usata ... solo una prova superata
+Sub removeSheetFilter() &apos;non usata ... solo una prova superata
  Dim oSheet &apos; Sheet filtered.
  Dim oFilterDesc &apos; Filter descriptor.
  xray oFilterDesc
@@ -350,7 +350,7 @@ Sub RemoveSheetFilter() &apos;non usata ... solo una prova superata
  ThisComponent.CurrentController.Select(oActiveCell1)
 End Sub
 
-Sub RemoveSF() &apos;non usata ... solo una prova superata &apos;temp di prova &apos;RIMUOVE IL &quot;FILTRO STANDARD&quot; SULLA SHEET CORRENTE
+Sub removeSF() &apos;non usata ... solo una prova superata &apos;temp di prova &apos;RIMUOVE IL &quot;FILTRO STANDARD&quot; SULLA SHEET CORRENTE
  Dim oSheet &apos; Sheet filtered.
  Dim oFilterDesc &apos; Filter descriptor.
  
@@ -446,9 +446,9 @@ salto_2:
  &apos;&apos;&apos; Thiscomponent.currentcontroller.setactivesheet(oSheet)
 
 
- REM If argument is True, creates an empty filter
- REM descriptor. If argument is False, create a 
- REM descriptor with the previous settings.&apos;
+ rem If argument is True, creates an empty filter
+ rem descriptor. If argument is False, create a 
+ rem descriptor with the previous settings.&apos;
  oFilterDesc = oSheet.createFilterDescriptor(True)
 dim ssStrFilter as string
 &apos;sStringa = Replace_G (sStringa,&quot;&quot;&quot;&quot;,&quot;#&quot;)
@@ -473,28 +473,28 @@ sStrFilter = sStrFilter &amp; &quot;.*&quot;
 print &quot;&gt;&quot; &amp; sStrFilter &amp; &quot;&lt;&quot;
 &apos;exit sub
  With oFields(0)
- REM I could use the Connection property to indicate 
- REM how to connect to the previous field. This is 
- REM the first field so this is not required.
+ rem I could use the Connection property to indicate 
+ rem how to connect to the previous field. This is 
+ rem the first field so this is not required.
  &apos;.Connection = com.sun.star.sheet.FilterConnection.AND
  &apos;.Connection = com.sun.star.sheet.FilterConnection.OR
 
- REM The Field property is the zero based column
- REM number to filter. If you have the cell, you
- REM can use .Field = oCell.CellAddress.Column.
+ rem The Field property is the zero based column
+ rem number to filter. If you have the cell, you
+ rem can use .Field = oCell.CellAddress.Column.
  .Field = 4
 
- REM Compare using a numeric or a string?
+ rem Compare using a numeric or a string?
  .IsNumeric = false &apos;True
 
- REM The NumericValue property is used 
- REM because .IsNumeric = True from above.
+ rem The NumericValue property is used 
+ rem because .IsNumeric = True from above.
  &apos;.NumericValue = 80
 	
 	
- REM If IsNumeric was False, then the 
- REM StringValue property would be used.
- REM .StringValue = &quot;what ever&quot;
+ rem If IsNumeric was False, then the 
+ rem StringValue property would be used.
+ rem .StringValue = &quot;what ever&quot;
  
  &apos; .StringValue = &quot;.*&quot; &amp; sStringa &amp; &quot;.*&quot; 
  &apos; .StringValue = &quot;.*&quot; &amp; sStringa1 &amp; &quot;.*&quot; &amp; sStringa2 &amp; &quot;.*&quot;
@@ -502,18 +502,18 @@ print &quot;&gt;&quot; &amp; sStrFilter &amp; &quot;&lt;&quot;
 	.StringValue =	sStrFilter
 &apos;	oActiveCell1 &apos; questa provo a disattivarla?
 	
- REM Valid operators include EMPTY, NOT_EMPTY, EQUAL,
- REM NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
- REM LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
- REM BOTTOM_VALUES, and BOTTOM_PERCENT
+ rem Valid operators include EMPTY, NOT_EMPTY, EQUAL,
+ rem NOT_EQUAL, GREATER, GREATER_EQUAL, LESS,
+ rem LESS_EQUAL, TOP_VALUES, TOP_PERCENT,
+ rem BOTTOM_VALUES, and BOTTOM_PERCENT
  .Operator = com.sun.star.sheet.FilterOperator.EQUAL
  End With
- REM The filter descriptor supports the following
- REM properties: IsCaseSensitive, SkipDuplicates,
+ rem The filter descriptor supports the following
+ rem properties: IsCaseSensitive, SkipDuplicates,
  &apos;UseRegularExpressions
 &apos; XRAY oFilterDesc
- REM SaveOutputPosition, Orientation, ContainsHeader, 
- REM CopyOutputData, OutputPosition, and MaxFieldCount.
+ rem SaveOutputPosition, Orientation, ContainsHeader, 
+ rem CopyOutputData, OutputPosition, and MaxFieldCount.
  oFilterDesc.setFilterFields(oFields())
  oFilterDesc.UseRegularExpressions = TRUE
  oFilterDesc.ContainsHeader = True

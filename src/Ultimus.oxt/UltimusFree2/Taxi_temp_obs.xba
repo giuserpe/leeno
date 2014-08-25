@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_temp_obs" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_temp_obs" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -25,7 +25,7 @@ sub Elimina_Tutti_NomiArea_lido_______________________ &apos; comincia dall&apos
 	 &apos;	msgbox ThisComponent.NamedRanges.ElementNames (a - 1)
 		oNomiArea = oAree.ElementNames(a - 1)
 		msgbox oNomiArea
-	&apos;	oAree. RemoveByName(oNomiArea)
+	&apos;	oAree. removeByName(oNomiArea)
 		iNew = ((istep *i) +1 )
  oProgressbar.Value = iNew
 	next
@@ -48,14 +48,14 @@ dim n as integer
  For i = 0 to n 
  do	While oNomiArea(i) &lt;&gt; &quot;elenco_prezzi&quot; &apos; and oAree.Count &gt; 1 then
  	&apos;		msgbox oNomiArea(i) &amp; &quot;lo cancello&quot;
- oAree. RemoveByName(oNomiArea(i))
+ oAree. removeByName(oNomiArea(i))
  	
  iNew = ((istep *i) +1 )
  oProgressbar.Value = iNew
  loop
  If oAree.Count = 1 then
  	msgbox oNomiArea(i
- oAree. RemoveByName(oNomiArea(i))
+ oAree. removeByName(oNomiArea(i))
  end if
  next
  oProgressbar.reset()

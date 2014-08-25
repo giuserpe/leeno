@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_variabili" script:language="StarBasic">REM  *****  BASIC  *****
-REM qui ci metto tutte le variabili/COSTANTI globali
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_variabili" script:language="StarBasic">rem  *****  BASIC  *****
+rem qui ci metto tutte le variabili/COSTANTI globali
 
 option explicit
 
-Public const idxCol = 0		&apos;indice prima colonna
-Public const idxRow = 1		&apos;indice posizione intestazione di tabella
-
+Public Const idxCol = 0		&apos;indice prima colonna
+Public Const idxRow = 1		&apos;indice posizione intestazione di tabella
+Public Const idxSAL = 30 	&apos;numero massimo possibile di SAL
+Public Const idxdec = 2		&apos;numero cifre decimali per le approssimazioni
 </script:module>

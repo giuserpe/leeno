@@ -75,7 +75,8 @@
  <library:element library:name="celle"/>
  <library:element library:name="_tools"/>
  <library:element library:name="_Disattivate"/>
- <library:element library:name="ZIP"/>
+ <library:element library:name="file_gest"/>
  <library:element library:name="_da_registratore"/>
  <library:element library:name="_variabili"/>
+ <library:element library:name="Zip"/>
 </library:library>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenerMouse" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ListenerMouse" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -12,8 +12,8 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-REM Modulo alternativo per la cattura di un range selezionato in corsa dall&apos;utente
-REM Il codice è stato elaborato da Lido Bernardini
+rem Modulo alternativo per la cattura di un range selezionato in corsa dall&apos;utente
+rem Il codice è stato elaborato da Lido Bernardini
 
 
 Dim Sel As Boolean

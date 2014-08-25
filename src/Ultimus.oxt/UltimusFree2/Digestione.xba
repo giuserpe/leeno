@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Digestione" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Digestione" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -13,17 +13,17 @@
 &apos;_______________________________________________________________________________________
 
 &apos;_______________________________________________________________________________________
-REM Questo modulo serve sostanzialmente per elaborare listini con prezzi in formato testo
-REM Il codice è stato elaborato da Emanuele e Lido Bernardini (utenti@openoffice.org) su mia &quot;sollecitazione&quot;.
-REM Intendo dire che ho continuato per un paio di mesi a rompere l&apos;anima cambiando le specifiche e
-REM lamentandomi... :-)
-REM ma adesso il risultato mi sembra molto buono!
-REM la macro può essere usata anche per convertire listini, prezzari ed estratti conto in 
-REM formato testo (in genere i dati provenienti da file csv hanno quel problema)
-REM Se Ultimus è installato la macro funziona su qualsiasi file di calc semplicemente selezionando 
-REM una serie (verticale) di celle e premendo Ctrl-Alt-S.
+rem Questo modulo serve sostanzialmente per elaborare listini con prezzi in formato testo
+rem Il codice è stato elaborato da Emanuele e Lido Bernardini (utenti@openoffice.org) su mia &quot;sollecitazione&quot;.
+rem Intendo dire che ho continuato per un paio di mesi a rompere l&apos;anima cambiando le specifiche e
+rem lamentandomi... :-)
+rem ma adesso il risultato mi sembra molto buono!
+rem la macro può essere usata anche per convertire listini, prezzari ed estratti conto in 
+rem formato testo (in genere i dati provenienti da file csv hanno quel problema)
+rem Se Ultimus è installato la macro funziona su qualsiasi file di calc semplicemente selezionando 
+rem una serie (verticale) di celle e premendo Ctrl-Alt-S.
 
-REM Se pensate che un plugin autonomo possa essere utile fatemelo sapere.
+rem Se pensate che un plugin autonomo possa essere utile fatemelo sapere.
 &apos;_______________________________________________________________________________________
 Global Dlg2 as Object
 Global bContinua as boolean

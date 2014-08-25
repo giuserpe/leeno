@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_tmp" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_tmp" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.03.0.16 
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -153,7 +153,7 @@ Sub ExampleArray______________________
 Dim a(), i%
 a = Array(0, 1, 2)
 a = Array(&quot;Zero&quot;, 1, 2.0, Now)
-REM String, Integer, Double, Date
+rem String, Integer, Double, Date
 For i = LBound(a()) To UBound(a())
 Print TypeName(a(i))
 Next

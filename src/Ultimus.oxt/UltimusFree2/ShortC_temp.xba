@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ShortC_temp" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ShortC_temp" script:language="StarBasic">rem ***** BASIC *****
 
 Dim oShortCutMgr As Object
 
@@ -10,7 +10,7 @@ Sub rimmel
  If NOT IsNull(oUICfgMgr) Then
  oShortCutMgr = oUICfgMgr.getShortCutManager()
  
- &apos;RemoveKeyEvent(771,True,True) &apos; 771: F4
+ &apos;removeKeyEvent(771,True,True) &apos; 771: F4
  &apos; About command is assigned to F4 + Shift + Ctrl
  SetKeyEvent(771,&quot;.uno:About&quot;,True,True)
  
@@ -39,7 +39,7 @@ End Sub
 
 &apos; nKeyCode: com.sun.star.awt.KeyCode
 &apos; bShift: with Shift key, bCtrl: with Ctrl key
-Sub RemoveKeyEvent( nKeyCode As Long, _
+Sub removeKeyEvent( nKeyCode As Long, _
  Optional bShift As Boolean, Optional bCtrl As Boolean )
  If IsMissing(bShift) Then bShift = False
  If IsMissing(bCtrl) Then bCtrl = False

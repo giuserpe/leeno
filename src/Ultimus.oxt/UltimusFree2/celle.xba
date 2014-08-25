@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="celle" script:language="StarBasic">REM ***** BASIC *****
-REM questa funziona solo se la cella ha già una annotazione
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="celle" script:language="StarBasic">rem ***** BASIC *****
+rem questa funziona solo se la cella ha già una annotazione
 function add_nota &apos;(icol as integer, irow as integer, testo as string)
 	oSel = thisComponent.getCurrentSelection
 	&apos;isheet=oSel.celladdress.sheet

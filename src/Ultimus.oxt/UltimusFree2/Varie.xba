@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -644,7 +644,7 @@ rem ----------------------------------------------------------------------
 
 Global xa As string
 Function ANALISI_IN_ELENCOPREZZI_Der(optional flag_rior as string) &apos; manomessa (c) Giuseppe Vizziello 2014
-REM HO INIZIATO A LAVORARCI, MA TOCCA TENER CONTO DEGLI ACCODAMENTI (GV)
+rem HO INIZIATO A LAVORARCI, MA TOCCA TENER CONTO DEGLI ACCODAMENTI (GV)
 &apos;(optional flagrior as string)
 &apos;(flag_rior as string)
  &apos; copia l&apos;analisi e la inserisce in Elenco Prezzi come nuovo prezzo
@@ -743,7 +743,7 @@ oCelle = oSheet.GetCellByPosition( 0, lrow )
  xA = oCelle.String &apos;Cod./N.
 &apos; Print xA
 oCodAnalisi = xA
-REM costruisce riferimenti con indirizzo assoluto
+rem costruisce riferimenti con indirizzo assoluto
 rem ----------------------------------------------------------------------
 rem DESCRIZIONE
 oCelle = oSheet.GetCellByPosition( 1, lrow ) &apos;
@@ -1173,7 +1173,7 @@ Dim I as long
 Dim oSheet_num as integer
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
 &apos;--------------------------------------------
-REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
+rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 rem	oDpage = thisComponent.currentcontroller.activesheet.DrawPage
 rem	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
 rem	oCtrlModel = oform.getbyname(&quot;Pulsante 11&quot;) &apos; pulsante +RIGA
@@ -1284,12 +1284,12 @@ dim sFlag as string
 &apos;Print &quot;conviene cambiare la formula del subtotale sulla S5 per evitare il Controlla_Somma_locale&quot;
 	 Select case nome_sheet
 	 	Case &quot;COMPUTO&quot;
-REM i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
-REM ma tocca usare SUBTOTAL()
+rem i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
+rem ma tocca usare SUBTOTAL()
 &apos;	 	Controlla_Somma_locale (9, sRow)
 	 	Case &quot;CONTABILITA&quot;
-REM i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
-REM ma tocca usare SUBTOTAL()
+rem i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
+rem ma tocca usare SUBTOTAL()
 &apos;	 	Controlla_Somma_locale (9, sRow)
 &apos;	 	Controlla_Somma_locale (11, sRow)
 	 End Select 
@@ -2107,7 +2107,7 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 fissa(0,2)
 
-REM RIPULISCI COMPUTO
+rem RIPULISCI COMPUTO
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Sto svuotando questo documento... Pazienta... &quot;, 70)
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)

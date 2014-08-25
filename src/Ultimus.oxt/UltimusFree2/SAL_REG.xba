@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SAL_REG" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SAL_REG" script:language="StarBasic">rem ***** BASIC *****
 
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
@@ -179,7 +179,7 @@ Sub Chiudi_SAL_Principale
  			exit sub		
  	end if	
 
-REM STRANAMENTE NON TRADUCE LA FORMULA DALL&apos;INGLESE
+rem STRANAMENTE NON TRADUCE LA FORMULA DALL&apos;INGLESE
 &apos;	sStringa =&quot;=CONCATENATE(&quot;&quot;CHIUSURA S.A.L. &quot;&amp; sNumSal &amp; &quot; - &quot;&quot;;&quot; &amp;&quot;DOLLAR(SUBTOTAL(9;Z&quot; &amp; iTempRow+3 &amp; &quot;:Z&quot; &amp; iEndRow+1 &amp; &quot;)&quot;&amp;&quot;)&quot;&amp;&quot;)&quot;
 	sStringa =&quot;=CONCATENA(&quot;&quot;CHIUSURA S.A.L. &quot;&amp; sNumSal &amp; &quot; - &quot;&quot;;&quot; &amp;&quot;VALUTA(SUBTOTALE(9;Z&quot; &amp; iTempRow+3 &amp; &quot;:Z&quot; &amp; iEndRow+1 &amp; &quot;)&quot;&amp;&quot;)&quot;&amp;&quot;)&quot;
 
@@ -333,7 +333,7 @@ REM STRANAMENTE NON TRADUCE LA FORMULA DALL&apos;INGLESE
 	&apos; faccio la somma di questo SAL &apos;( spostamento a sin della somma per poter avere il totale generale di controllo)
 			&apos;ATTENZIONE CELLE UNITE!
 &apos;	sFormulaSomma =&quot;=SUM(Z&quot; &amp; iTempRow+3 &amp; &quot;:Z&quot; &amp; iEndRow+1 
-	REM SAL PARZIALE
+	rem SAL PARZIALE
 &apos;	sFormulaSomma =&quot;=SUBTOTAL(9;Z&quot; &amp; iTempRow+3 &amp; &quot;:Z&quot; &amp; iEndRow+1
 
 &apos;	sFormulaSomma =&quot;=SUM(Z&quot; &amp; iTempRow+3 &amp; &quot;:Z&quot; &amp; iEndRow 
@@ -360,17 +360,17 @@ REM STRANAMENTE NON TRADUCE LA FORMULA DALL&apos;INGLESE
 	sFormulaSomma =&quot;=SUBTOTAL(9;AE&quot; &amp; iTempRow+3 &amp; &quot;:AE&quot; &amp; iEndRow+1 
 	oSheet.GetCellByPosition(30,iRowsInsert).FORMULA = sFormulaSomma
 
-	REM SAL PROGRESSIVO
+	rem SAL PROGRESSIVO
 	sFormulaSomma =&quot;=ROUND(SUBTOTAL(9;Z3&quot; &amp; &quot;:Z&quot; &amp; iEndRow+1 &amp; &quot;);2)&quot;
 	oSheet.GetCellByPosition(25,iRowsInsert).FORMULA = sFormulaSomma
 	
-	REM CALCOLO RIBASSO
+	rem CALCOLO RIBASSO
 	sScritta =&quot;=CONCATENATE(&quot;&quot;Ribasso del &quot;&quot;;&quot; &amp; &quot;TEXT($S2.$C$11;&quot;&quot;0,00%&quot;&quot;)&quot;&amp; &quot;;&quot;&quot; su &quot;&quot;;&quot; &amp;&quot;DOLLAR(Z&quot; &amp; iRowsInsert+1 &amp; &quot;;2)&quot; &amp; &quot;)&quot;
 	oSheet.GetCellByPosition(2,iRowsInsert+1).FORMULA =sScritta
 	sFormulaSomma =&quot;=SUBTOTAL(6;Z&quot; &amp; iEndRow+1 &amp;&quot;;-$S2.$C$11&quot;
 	oSheet.GetCellByPosition(25,iRowsInsert+1).FORMULA = sFormulaSomma
 
-	REM IMPORTO NETTO SAL
+	rem IMPORTO NETTO SAL
 	oSheet.GetCellByPosition(2,iRowsInsert+2).FORMULA =&quot;I M P O R T O&quot;
 	sFormulaSomma =&quot;=DOLLAR(SUM(Z&quot; &amp; iRowsInsert+1 &amp; &quot;:Z&quot; &amp; iRowsInsert+2 &amp; &quot;)&quot;
 	oSheet.GetCellByPosition(25,iRowsInsert+2).FORMULA = sFormulaSomma
@@ -398,8 +398,8 @@ REM STRANAMENTE NON TRADUCE LA FORMULA DALL&apos;INGLESE
 	oSheet.getCellRangeByPosition (0,iRowsInsert,50,iRowsInsert+2).Rows.OptimalHeight = true5000
 
 &apos;	Struttura_ComputoM
-REM NSACONDE LE RIGHE INUTILI AL REGISTRO
-REM LA VISTA A STRUTTURA NON PERMETTE IL SALVATAGGIO DEL FILE
+rem NSACONDE LE RIGHE INUTILI AL REGISTRO
+rem LA VISTA A STRUTTURA NON PERMETTE IL SALVATAGGIO DEL FILE
 	RIR_
 	
 	rem NASCONDO LA RIGA DEL TOTALE
@@ -409,17 +409,17 @@ REM LA VISTA A STRUTTURA NON PERMETTE IL SALVATAGGIO DEL FILE
 	oSheet.getRows().getByindex(Lrow).isvisible = false
 	ThisComponent.CurrentController.Select( osheet.getCellByPosition (3,iRowsInsert)
 	
-REM COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
+rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
 	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
 
-	REM TROVO LA POSIZIONE DEL TITOLO
+	rem TROVO LA POSIZIONE DEL TITOLO
 	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oSheet)
 	Lrow=oEnd.RangeAddress.EndRow		&apos;riga
 	Lcol=oEnd.RangeAddress.EndColumn	&apos;colonna
-REM INPUT IMPORTO LAVORI SITUAZIONE CONTABILE
+rem INPUT IMPORTO LAVORI SITUAZIONE CONTABILE
 	sFormulaSomma =&quot;=$CONTABILITA.$Z$&quot; &amp; iEndRow+1 
 	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+3).FORMULA = sFormulaSomma
-REM INPUT IMPORTO MANODOPERA SITUAZIONE CONTABILE
+rem INPUT IMPORTO MANODOPERA SITUAZIONE CONTABILE
 	sFormulaSomma =&quot;=$CONTABILITA.$AE$&quot; &amp; iEndRow+1 
 	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+4).FORMULA = sFormulaSomma
 	

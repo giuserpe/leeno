@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="InLettereFunc" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="InLettereFunc" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -12,7 +12,7 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-REM TUTTO il codice di questo modulo è stato creato da Paolo Mantovani
+rem TUTTO il codice di questo modulo è stato creato da Paolo Mantovani
 
 
 
@@ -380,5 +380,5 @@ SUB In_Let
 	oBarra.End
 	msgbox &quot; La conversione in LETTERE è terminata!!&quot;
 end sub
-REM ***** BASIC *****
+rem ***** BASIC *****
 </script:module>

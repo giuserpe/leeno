@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="file_gest" script:language="StarBasic">rem ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.10.0
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+rem module per la gestione dei files
+
+Sub New_FILE (filepath As string)
+  Dim oDoc
+  Dim sPath$
+  Dim a(0) As New com.sun.star.beans.PropertyValue
+rem ----------------------------------------------------------------------
+	Dim pip As Object, extensionLocation As String
+	
+	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
+	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
+	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
+	extensionLocation = pip.getPackageLocation(extensionIdentifier)
+rem ----------------------------------------------------------------------
+	a(0).Name = &quot;AsTemplate&quot;
+	a(0).Value = true
+	sPath$ = extensionLocation &amp; filepath
+	oDoc = StarDesktop.LoadComponentFromUrl(sPath$, &quot;_blank&quot; , 0, a())
+End Sub
+
+Sub new_leeno
+New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
+End Sub
+
+Sub new_listino
+New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
+End Sub
+
+sub ExempleAppel
+  Dim oDoc
+  Dim sPath$
+  Dim a(0) As New com.sun.star.beans.PropertyValue
+rem ----------------------------------------------------------------------
+	Dim pip As Object, extensionLocation As String
+	
+	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
+	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
+	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
+	extensionLocation = pip.getPackageLocation(extensionIdentifier)
+rem ----------------------------------------------------------------------
+	nomeZip = &quot;C:\resultat_&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;
+	print ConvertToUrl(nomeZip)
+	Print extensionLocation
+&apos; call
+
+&apos; zipfolder(ConvertfromUrl (extensionLocation),nomeZip)
+ zipfolder(extensionLocation,ConvertToUrl(nomeZip))
+end Sub
+
+rem The paths should NOT be URLs.
+rem Warning, the created ZIP file contains two extra artifacts.
+rem (1) A Meta-Inf direction, which contains a manifest file.
+rem (2) A mime-type file of zero length.
+
+</script:module>

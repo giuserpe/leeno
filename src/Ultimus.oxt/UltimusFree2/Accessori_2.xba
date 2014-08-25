@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori_2" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Accessori_2" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -105,7 +105,7 @@ Sub setDesignModeOFF() &apos;evitarla...!!!
  If NOT isDesignModeOn() Then
  SwitchDesignMode()
  End If
- REM Set DesignMode ON for the next time the document is opened!
+ rem Set DesignMode ON for the next time the document is opened!
  &apos;Stardesktop.getCurrentComponent().ApplyFormDesignMode = True
  ThisComponent.ApplyFormDesignMode = True
 End Sub
@@ -115,12 +115,12 @@ Sub setDesignModeON()
  If isDesignModeOn() Then
  SwitchDesignMode()
  End If
- REM Set DesignMode OFF for the next time the document is opened!
+ rem Set DesignMode OFF for the next time the document is opened!
  &apos;Stardesktop.getCurrentComponent().ApplyFormDesignMode = False
  ThisComponent.ApplyFormDesignMode = False
 End Sub
 
-REM This function is only called when the DesignMode is off
+rem This function is only called when the DesignMode is off
 Sub SwitchDesignMode( )
  Dim sCommand
  Dim oFrame
@@ -140,24 +140,24 @@ Function isDesignModeOn() As Boolean
  Dim sListenerName &apos; The type of listener that is created
  Dim oUrl as New com.sun.star.util.URL
 
- REM Location 3 is used to prevent the state from being
- REM recorded more than once. Probably not really required.
+ rem Location 3 is used to prevent the state from being
+ rem recorded more than once. Probably not really required.
  repository(3, True)
 
- REM Parse the URL as required
- REM and then save it in the registry at location 0.
+ rem Parse the URL as required
+ rem and then save it in the registry at location 0.
  oUrl.Complete = &quot;.uno:SwitchControlDesignMode&quot;
  oParser = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
  oParser.parseStrict(oUrl)
  repository(0, oUrl)
 
- REM See if the current Frame supports this UNO command
- REM then save the dispatch in the registry.
+ rem See if the current Frame supports this UNO command
+ rem then save the dispatch in the registry.
  oFrame = ThisComponent.getCurrentController().getFrame()
  oDisp = oFrame.queryDispatch(oUrl,&quot;&quot;,0)
  repository(1, oDisp)
 
- REM Create the status listener and save a reference to it in the repository
+ rem Create the status listener and save a reference to it in the repository
  If (Not IsNull(oDisp)) Then
  sListenerName = &quot;com.sun.star.frame.XStatusListener&quot;
  oStatusListener = CreateUnoListener(&quot;Status_&quot;, sListenerName)
@@ -169,12 +169,12 @@ Function isDesignModeOn() As Boolean
  End If
 End Function
 
-REM The definition of the listener requires this, but we do not use this.
+rem The definition of the listener requires this, but we do not use this.
 Function Status_disposing(oEvt)
 End Function
 
-REM This is called whtn the status changes. In other words, when
-REM the design mode is toggled and when the listener is first created.
+rem This is called whtn the status changes. In other words, when
+rem the design mode is toggled and when the listener is first created.
 Function Status_statusChanged(oEvt)
  &apos;Print &quot;In status changed: &quot; &amp; oEvt.State
  If repository(3) Then
@@ -190,22 +190,22 @@ Function removeStatusListener()
  Dim oDisp &apos; The saved dispatcher object
  Dim x &apos; This is an empty variant variable!
 
- REM Verify that the dispatcher exists before trying to remove
- REM the status listener.
+ rem Verify that the dispatcher exists before trying to remove
+ rem the status listener.
  oDisp = repository(1)
  If NOT IsEmpty(oDisp) AND NOT IsNull(oDisp) Then
  oUrl = repository(0)
  oStatusListener = repository(2)
- repository(0, x) &apos; Remove the URL
- repository(1, x) &apos; Remove the dispatch
- repository(2, x) &apos; Remove the status listener
+ repository(0, x) &apos; remove the URL
+ repository(1, x) &apos; remove the dispatch
+ repository(2, x) &apos; remove the status listener
  oDisp.removeStatusListener(oStatusListener, oURL)
  End If
 End Function
 
-REM This is used to store a series of variables rather than pollute
-REM the global name space. If the optional argument is passed, then
-REM it is added to the array. Either way, the value is returned.
+rem This is used to store a series of variables rather than pollute
+rem the global name space. If the optional argument is passed, then
+rem it is added to the array. Either way, the value is returned.
 Function repository(n As Integer, Optional x)
  Static oObj(5) As Variant
  If Not IsMissing(x) Then oObj(n) = x
@@ -425,7 +425,7 @@ If thisComponent.Sheets.hasByName(&quot;namedRanges&quot;) Then &apos; se la she
 		 oNomiArea() = oAree.ElementNames() 
 		 n = oAree.Count - 1
  		 For i = 0 to n &apos; elimino i nomi fino ad elenco_prezzi (by Marco Caresia)
- 		 oAree. RemoveByName(oNomiArea(i)) 
+ 		 oAree. removeByName(oNomiArea(i)) 
  		 next
 		 oCell = oSheet.GetCellbyPosition( 0, 0 )
  			 oCursor = oSheet.createCursorByRange(oCell)
@@ -458,7 +458,7 @@ SUB Rifa_Somme_TOT_Computo &apos;riscritta da zero (C) Giuseppe Vizziello 2014
 rem ----------------------------------------------------------------------
 	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 rem ----------------------------------------------------------------------
-Rem	riga di controllo importo
+rem	riga di controllo importo
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 &apos;	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
 	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo lavori
@@ -480,7 +480,7 @@ Rem	riga di controllo importo
 
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
 rem ----------------------------------------------------------------------
-REM SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
+rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
  	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A2&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B1&quot;)
@@ -522,10 +522,10 @@ rem riga di intestazione
 	oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
 	ThisComponent.CurrentController.Select(oCell)
 	Adatta_Altezza_riga
-REM ALTEZZA riga di intestazione
+rem ALTEZZA riga di intestazione
 	oSheet.GetCellByPosition(0,2).Rows.Height = 800
 rem ----------------------------------------------------------------------
-Rem riga del totale
+rem riga del totale
 	oSheet.GetCellByPosition(2,lRowE).setstring(&quot;TOTALI COMPUTO&quot;)
 	oSheet.GetCellByPosition(17,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo sicurezza
 	oSheet.GetCellByPosition(18,lRowE).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo lavori
@@ -540,7 +540,7 @@ Rem riga del totale
 	oSheet.getCellRangeByPosition(0, lRowE, 36 , lRowE).cellstyle = &quot;Comp TOTALI&quot;
 	oSheet.getCellByPosition(24,lRowE).cellstyle = &quot;Comp TOTALI %&quot;
 	oSheet.getCellByPosition(29,lRowE).cellstyle = &quot;Comp TOTALI %&quot;
-Rem riga rossa
+rem riga rossa
 	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) Then
 		If oSheet.getCellByPosition(0,lRowE+1).cellstyle = &quot;ULTIMUS&quot; Then
@@ -716,7 +716,7 @@ Print &quot;basta!!!&quot;
 			oSheet.getCellRangeByPosition(18,lrowFin,41,lrowFin).cellstyle = &quot;Comp TOTALI num&quot;
 			oSheet.GetCellbyPosition(2, lrowFin ).setformula(&quot;TOTALI COMPUTO&quot;)
 &apos;			provo a sostituire la riga di Bart utilizzando il nome di area_dati - verificare compatibilità con altre versioni
-&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(importo_totale)&quot;) REM NON VALE LA PENA
+&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(importo_totale)&quot;) rem NON VALE LA PENA
 &apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
 &apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin &amp; &quot;)&quot;)
 
@@ -769,17 +769,17 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 chiudi_dialoghi 
 &apos;_____________________
 rem ----------------------------------------------------------------------
-REM Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
-	IF oRanges.hasByName(&quot;Lib#1&quot;) THEN
-		nSal=20
+rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
+	IF oRanges.hasByName(&quot;#Lib#1&quot;) THEN
+		nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 		Do while nSal &gt; 0
-			IF oRanges.hasByName(&quot;Lib#&quot; &amp; nSal) THEN
+			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) THEN
 		&apos;			nSal=nSal-1
 				exit do
 			end if
 		nSal=nSal-1
 		Loop
-		oNamedRange=oRanges.getByName(&quot;Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
+		oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
 		lLastUrow = oNamedRange.RangeAddress.EndRow
 	End If 
 rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo

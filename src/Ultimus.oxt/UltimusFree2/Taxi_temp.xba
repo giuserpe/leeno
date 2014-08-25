@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_temp" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi_temp" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -208,7 +208,7 @@ dim n as integer
  	 if oNomiArea(i) = &quot;elenco_prezzi&quot; then 
  			exit for
  	 end if
- oAree. RemoveByName(oNomiArea(i)) 	
+ oAree. removeByName(oNomiArea(i)) 	
  next
 &apos; nomi cancellati fino ad elenco_prezzi (escluso)
 &apos; Adesso inverto l&apos;ordine di cancellazione incominciando 
@@ -216,7 +216,7 @@ dim n as integer
 	For i = 0 to oAree.getCount() - 1
 	 	a = oAree.getCount()
 		oNomiArea = oAree.ElementNames(a - 1)
-		oAree. RemoveByName(oNomiArea)
+		oAree. removeByName(oNomiArea)
 	next
 &apos;print &quot;finito!!&quot;
 END SUB
@@ -243,7 +243,7 @@ sub Elimina_Tutti_NomiArea
 	
 	 For i = 0 to oAree.getCount() - 1
 			oNomiArea = oAree.ElementNames(n)
-			oAree. RemoveByName(oNomiArea)
+			oAree. removeByName(oNomiArea)
 			iNew = ((istep *i) +1 )
 		&apos;	If iNew = 0 then
 		&apos;		 inew = istep

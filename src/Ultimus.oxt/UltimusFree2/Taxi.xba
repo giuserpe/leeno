@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Taxi" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -1167,13 +1167,13 @@ sAreaName = sAreaName
 &apos;print 
 &apos;document = ThisComponent.CurrentController.Frame 
  dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;) 
- Rem ---- set param -------- 
+ rem ---- set param -------- 
  dim args2(2) as new com.sun.star.beans.PropertyValue 
  args2(0).Name = &quot;FileName&quot; 
  args2(0).Value = sSourceURL
  args2(1).Name = &quot;Source&quot; 
  args2(1).Value = sAreaName
- Rem --- Go, Get them ---- 
+ rem --- Go, Get them ---- 
  dispatcher.executeDispatch(oDocumentFrame, &quot;.uno:InsertExternalDataSource&quot;, &quot;&quot;, 0, args2()) 
 
 	Barra_chiudi_sempre_4 

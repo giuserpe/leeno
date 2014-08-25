@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi_reg_A" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pesca_mi_reg_A" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -57,7 +57,7 @@ SUB Pesca_cod__per_reg_A_1 &apos; per CONTABILITA
 		lrow=3
 		goto FAI
 	end if
-REM se su firme
+rem se su firme
 	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then
 		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot;
 			lrow=lrow+1
@@ -65,7 +65,7 @@ REM se su firme
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow))
 	end if
 
-REM se in una voce esistente
+rem se in una voce esistente
 	Select Case oSheet.GetCellByPosition( 0 , lRow).cellstyle
 		Case = &quot;Comp End Attributo_R&quot; , &quot;Comp Start Attributo_R&quot; , &quot;comp 10 s_R&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (lRow)
@@ -73,7 +73,7 @@ REM se in una voce esistente
 				iVoce =.StartRow
 				fVoce = .EndRow
 			End With
-REM controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate
+rem controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate
 			if 	oSheet.getCellByPosition(22, ivoce+1).string = &quot;#reg&quot; and _ 
 				oSheet.GetCellByPosition( 0 , fvoce+1).cellstyle &lt;&gt; &quot;Comp End Attributo_R&quot; then	
 					nSal = oSheet.getCellByPosition(23, ivoce+1).value
@@ -257,7 +257,7 @@ rem	oSheet.copyRange(oDest2, oSRC2)&apos; incolla n.ord. sulla colonna 44
 	End If
 &apos;	fissa (0,2)
 
-STILI:	REM attribuisco gli stili alla voce proveniente dal computo
+STILI:	rem attribuisco gli stili alla voce proveniente dal computo
 	oSheet.getCellRangeByPosition(1 , lrow, 35, lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; 		&apos;prima riga
 	oSheet.GetCellByPosition(0 , lrow).cellstyle = &quot;Comp Start Attributo_R&quot; 					&apos;prima cella sx
 	oSheet.GetCellByPosition(0 , sotto).cellstyle = &quot;Comp End Attributo_R&quot;						&apos;ultima cella sx

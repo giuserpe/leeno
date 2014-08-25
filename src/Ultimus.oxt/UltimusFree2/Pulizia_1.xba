@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_1" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_1" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -323,7 +323,7 @@ dim lrowS as long
 				print lcolbase
 				exit sub
 			end if
- 		REM RIORDINA SECONDO LA COLONNA 9
+ 		rem RIORDINA SECONDO LA COLONNA 9
 			sChiama = Riordina_0(lcolbase+9, false) &apos; esegue function di riordino dell&apos;elenco...&apos;8
 			if sChiama = &quot;uscita forzata&quot; or _
 			 	sChiama = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
@@ -341,7 +341,7 @@ dim lrowS as long
 &apos;			print xb
 &apos;			print &quot;Tagged &quot; &amp; Tagged &amp; &quot; e Tag &quot; &amp; Tag
 			do While oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string &lt;&gt; &quot;&quot; 
-				If oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string = Tagged then REM SE IL TAG E&apos; UC
+				If oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string = Tagged then rem SE IL TAG E&apos; UC
 				&apos;	print &quot; ecco Xa = &quot; &amp; Tagged
 					If oSheet.GetCellByPosition(lcolbase+ 8,lrow ).string = &quot;(AP)&quot; Then
 &apos;						 oSheet.GetCellByPosition(lcolbase+ 9,lrow ).string =&quot;=$&apos;&quot; then

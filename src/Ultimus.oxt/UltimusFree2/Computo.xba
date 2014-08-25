@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -12,38 +12,13 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-Sub New_FILE (filepath As string)
-  Dim oDoc
-  Dim sPath$
-  Dim a(0) As New com.sun.star.beans.PropertyValue
-rem ----------------------------------------------------------------------
-	Dim pip As Object, extensionLocation As String
-	
-	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
-	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
-	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
-	extensionLocation = pip.getPackageLocation(extensionIdentifier)
-rem ----------------------------------------------------------------------
-	a(0).Name = &quot;AsTemplate&quot;
-	a(0).Value = true
-	sPath$ = extensionLocation &amp; filepath
-	oDoc = StarDesktop.LoadComponentFromUrl(sPath$, &quot;_blank&quot; , 0, a())
-End Sub
-Sub new_leeno
-New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
-End Sub
-Sub new_listino
-New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
-End Sub
-
-
 Sub inizializza_elenco &apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 &apos; 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
 	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
-REM ----------------------------------------------------------------------
+rem ----------------------------------------------------------------------
 rem riga di intestazione
 Cscarto = 0
 rIntest = 1
@@ -74,14 +49,14 @@ Sub inizializza_computo &apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object 
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
  	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
- 	Rem riga del totale
+ 	rem riga del totale
 	oSheet.GetCellByPosition(2,3).setstring(&quot;TOTALI COMPUTO&quot;)
 Rifa_Somme_TOT_Computo &apos; crea la struttura del foglio
 Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
 End Sub
 
 
-sub vedi_voce REM &apos;(C) Giuseppe Vizziello 2013
+sub vedi_voce rem &apos;(C) Giuseppe Vizziello 2013
 	Dim test As String
 	Dim riga_selezione As Integer
 	Dim focus as integer
@@ -112,7 +87,7 @@ procedi:
 		&amp; &quot;Devi selezionare un rigo di misurazione.&quot;, 0,&quot;ERRORE!&quot;)
 		goto fine
 	end if
-	REM se è presente la &quot;PARTITA PROVVISORIA&quot; aggiungi riga e vai, ma non va
+	rem se è presente la &quot;PARTITA PROVVISORIA&quot; aggiungi riga e vai, ma non va
 	if oSheet.GetCellByPosition(2,riga_corrente).string = &quot;PARTITA PROVVISORIA&quot; OR _
 		oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
 		if oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
@@ -209,13 +184,13 @@ osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 		msgbox &quot;Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;
 		exit sub
 	end if
-	lRowE = oEnd.CellAddress.Row	REM TROVA LA POSIZIONE DELLA RIGA ROSSA
+	lRowE = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA ROSSA
 	ThisComponent.CurrentController.setFirstVisibleRow(lRowE)
 &apos;	print lRowE
 &apos;	PRINT Trova_Attr_Sheet
 &apos;	goto fine
 &apos;	xray osheet
-REM SE ANALISI PREZZI
+rem SE ANALISI PREZZI
 	If Trova_Attr_Sheet = &quot;Tipo_Analisi&quot; Then
 &apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
 		i = 0
@@ -235,19 +210,19 @@ REM SE ANALISI PREZZI
 &apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
 		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle = &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
-	REM INSERISCI LA DATA E IL PROGETTISTA
+	rem INSERISCI LA DATA E IL PROGETTISTA
 		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
 		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = &quot;Ultimus&quot;
 		oSheet.GetCellByPosition(5 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
 		oSheet.GetCellByPosition(5 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
 &apos;		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle = &quot;Ultimus_centro&quot;
-	REM CONSOLIDA LA DATA	
+	rem CONSOLIDA LA DATA	
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
 		Flags = com.sun.star.sheet.CellFlags.FORMULA
 		aSaveData = oRange.getDataArray()
  		oRange.setDataArray(aSaveData)
 	end if
-REM SE ELENCO PREZZI
+rem SE ELENCO PREZZI
 	If Trova_Attr_Sheet = &quot;Tipo_EP&quot; OR Trova_Attr_Sheet = &quot;Tipo_ElencoP&quot; Then
 &apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
 		i = 0
@@ -267,13 +242,13 @@ REM SE ELENCO PREZZI
 &apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
 		osheet.getCellRangeByPosition (0,inserisco_qui,100,inserisco_qui+15-1).CellStyle = &quot;Ultimus_centro&quot;
 		riga_corrente = lRowE+5
-	REM INSERISCI LA DATA E IL PROGETTISTA
+	rem INSERISCI LA DATA E IL PROGETTISTA
 		oSheet.GetCellByPosition(1 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
 		osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = &quot;Ultimus&quot;
 		oSheet.GetCellByPosition(2 , riga_corrente+6).setformula(&quot;Il progettista&quot;)
 		oSheet.GetCellByPosition(2 , riga_corrente+7).setformula(&quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;$S2.$C$13;&quot;&quot;)&quot;&quot;)&quot;)
 		osheet.getCellRangeByPosition (1,riga_corrente+3,2,riga_corrente+7).CellStyle = &quot;Ultimus_centro&quot;
-	REM CONSOLIDA LA DATA	
+	rem CONSOLIDA LA DATA	
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
 		Flags = com.sun.star.sheet.CellFlags.FORMULA
 		aSaveData = oRange.getDataArray()
@@ -281,12 +256,12 @@ REM SE ELENCO PREZZI
 
 		end if
 &apos;	goto fine
-REM SE COMPUTO
+rem SE COMPUTO
 	If Trova_Attr_Sheet = &quot;Tipo_COMPUTO&quot; Then
 &apos;		msgbox (&quot;Il Riepilo Capitoli verrà inserito dopo la riga dei TOTALI COPUTO&quot;, 0, &quot;Avviso&quot;)
 		
 		oInizioFirme=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-		lRowF=oInizioFirme.CellAddress.Row+1 REM INIZIO FIRME
+		lRowF=oInizioFirme.CellAddress.Row+1 rem INIZIO FIRME
 		lRowE=oEnd.CellAddress.Row
 &apos;		osheet = thisComponent.CurrentController.ActiveSheet
 		If lRowE &gt;lRowF+1 then
@@ -313,7 +288,7 @@ REM SE COMPUTO
 &apos;		oSheet.getRows.insertByIndex(inserisco_qui,15)
 		osheet.getCellRangeByPosition (0,inserisco_qui,41,inserisco_qui+15-1).CellStyle = &quot;ULTIMUS&quot;
 		riga_corrente = lRowE+3
-REM INSERIMENTO TITOLO
+rem INSERIMENTO TITOLO
 		oSheet.GetCellByPosition(2 , riga_corrente).setstring(&quot;Riepilogo Categorie&quot;)
 		oSheet.GetCellByPosition(11 , riga_corrente).setstring(&quot;Incidenze %&quot;)
 		oSheet.GetCellByPosition(18 , riga_corrente).setstring(&quot;Importi €&quot;)
@@ -325,7 +300,7 @@ REM INSERIMENTO TITOLO
 &apos;		osheet.getCellRangeByPosition (1,riga_corrente,19,riga_corrente).CellStyle = &quot;Riepilogo_Cap_titolo&quot;
 	inizio_gruppo = riga_corrente
 		For i =3 to lRowE
-REM CAPITOLI
+rem CAPITOLI
 			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Livello-1-scritta&quot; Then
 		rem trovo e copio le rghe che contengono cat
 				id_cap = oSheet.GetCellByPosition(1,i).AbsoluteName 
@@ -343,7 +318,7 @@ REM CAPITOLI
 				osheet.getCellByPosition(18,riga_corrente).CellStyle = &quot;Ultimus_bordo&quot;
 &apos;				osheet.getCellRangeByPosition (11,riga_corrente,18,riga_corrente).CellStyle = &quot;ULTIMUS&quot;
 			end if
-REM SOTTOCAPITOLI
+rem SOTTOCAPITOLI
 &apos;			riga_corrente =	riga_corrente +1
 			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;livello2 valuta&quot; then
 		rem trovo e copio le rghe che contengono subcat
@@ -361,7 +336,7 @@ REM SOTTOCAPITOLI
 				oSheet.GetCellByPosition(18 , riga_corrente).setformula(&quot;=&quot; &amp; tot_cap) &apos;importi
 				osheet.getCellByPosition(18,riga_corrente).CellStyle = &quot;ULTIMUS&quot;
 			end if
-REM TOTALE
+rem TOTALE
 			if oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Comp TOTALI&quot; then
 				tot_cap = oSheet.GetCellByPosition(18,i).AbsoluteName
 				riga_corrente =	riga_corrente +1
@@ -380,19 +355,19 @@ REM TOTALE
 		fine_gruppo = riga_corrente
 		next i
 
-REM INSERISCI LA DATA
+rem INSERISCI LA DATA
 		oSheet.GetCellByPosition(2 , riga_corrente+3).setformula(&quot;=CONCATENATE(&quot;&quot;Data, &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
 		oSheet.GetCellByPosition(2 , riga_corrente+5).setformula(&quot;Il Progettista&quot;&amp; CHR$(10)&amp; _
 			&quot;(&quot; + thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2 , 12).getstring + &quot;)&quot;)
 		osheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+7).CellStyle = &quot;Ultimus_centro&quot;
 		oSheet.GetCellByPosition(2 , riga_corrente+3).cellstyle = &quot;ULTIMUS&quot; &apos;stile data
 		osheet.getCellRangeByPosition (0,riga_corrente+12,41,riga_corrente+12).CellStyle = &quot;Ultimus_destra_totali&quot;
-REM CONSOLIDA LA DATA	
+rem CONSOLIDA LA DATA	
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente+3,2,riga_corrente+3)
 		Flags = com.sun.star.sheet.CellFlags.FORMULA
 		aSaveData = oRange.getDataArray()
  		oRange.setDataArray( aSaveData )
-REM RAGGRUPPA 
+rem RAGGRUPPA 
 		oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 		iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 		Dim oCRA As New com.sun.star.table.CellRangeAddress
@@ -404,7 +379,7 @@ REM RAGGRUPPA
 			oSheet.group(oCRA,1)
 			&apos;oSheet = ThisComponent.currentController.activeSheet
 &apos;		xray oSheet
-REM NASCONDE RIGHE
+rem NASCONDE RIGHE
 	oRange = oSheet.getCellRangeByposition(0,inizio_gruppo,0,fine_gruppo)
 &apos;	oRange.Rows.IsVisible=false
 Set_Area_Stampa_N

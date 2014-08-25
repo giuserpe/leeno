@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Strutture" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Strutture" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -26,7 +26,7 @@ Sub Inser_Capitolo
 	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	
-REM stabilisce il comportamento
+rem stabilisce il comportamento
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 		&apos;IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &lt;= 2 then	
 		IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string = 0 then
@@ -46,7 +46,7 @@ REM stabilisce il comportamento
 		exit sub	
 	end if
 rem ----------------------------------------------------------------------
-REM STABILISCE LA POSIZIONE DI INSERIMENTO
+rem STABILISCE LA POSIZIONE DI INSERIMENTO
 	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
 	lrowFine=oEnd.RangeAddress.EndRow 
  	&apos; se dopo il totale
@@ -335,7 +335,7 @@ Sub Inser_SottoCapitolo
 			exit sub
 	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
-REM stabilisce il comportamento
+rem stabilisce il comportamento
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 0 then 
 					Sincronizza_SottoCap_Tag_Capitolo_Cor(lrow, &quot;no_rinum&quot;)
@@ -359,7 +359,7 @@ REM stabilisce il comportamento
 		end If
 	end If
 rem ----------------------------------------------------------------------
-REM STABILISCE LA POSIZIONE DI INSERIMENTO
+rem STABILISCE LA POSIZIONE DI INSERIMENTO
 	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
 	lrowFine=oEnd.RangeAddress.EndRow 
  	&apos; se dopo il totale
@@ -651,7 +651,7 @@ Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 	&apos;importo lavori
 &apos;	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU-1 &amp; &quot;)&quot; rigabart
 	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot;
-	REM RINUNCIO ALL&apos;USO DELLA COLONNA AP
+	rem RINUNCIO ALL&apos;USO DELLA COLONNA AP
 &apos;	oSheet.GetCellByPosition(40 , lrowStart1).Formula = sFormula
 &apos;IMPORTO
 	oSheet.GetCellByPosition(18 , lrowStart1).Formula = sFormula
@@ -960,7 +960,7 @@ end sub
 
 
 
-Sub RemoveSheetFilter() &apos;RIMUOVE IL &quot;FILTRO STANDARD&quot; SULLA SHEET CORRENTE
+Sub removeSheetFilter() &apos;RIMUOVE IL &quot;FILTRO STANDARD&quot; SULLA SHEET CORRENTE
  Dim oSheet &apos; Sheet to filter.
  Dim oFilterDesc &apos; Filter descriptor.
  
@@ -1290,7 +1290,7 @@ next I
 end sub
 
 
-sub Struttura_ComputoM REM COPIA DI Struttura_ComputoM CHE RAGGRUPPA
+sub Struttura_ComputoM rem COPIA DI Struttura_ComputoM CHE RAGGRUPPA
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; per evitare che duplichi la struttura
 	 Togli_Struttura
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;

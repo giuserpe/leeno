@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_2" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_2" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -115,7 +115,7 @@ RIR_
 			sString$ = &quot;T O T A L E&quot;
 			oEnd=uFindString(sString$, oSheet)
 			iEndRow=oEnd.RangeAddress.EndRow
-	REM SAL PROGRESSIVO sul T O T A L E
+	rem SAL PROGRESSIVO sul T O T A L E
 	sFormulaSomma =&quot;=ROUND(SUBTOTAL(9;Z3&quot; &amp; &quot;:Z&quot; &amp; iEndRow+1 &amp; &quot;);2)&quot;
 	oSheet.GetCellByPosition(25,iEndRow).FORMULA = sFormulaSomma
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_0" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Lupo_0" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.9.0 3.0.16 
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -137,7 +137,7 @@ Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste ro
 	END IF
 &apos;print	SGenericoMemo
 
-REM on error goto ErrorHandler 
+rem on error goto ErrorHandler 
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Verifica_chiudi_preview
@@ -163,7 +163,7 @@ rem	end if
 	&apos;print sVer2
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-REM NUOVO NUMERO VERSIONE GIUSERPE
+rem NUOVO NUMERO VERSIONE GIUSERPE
 		oSheet.unprotect(&quot;&quot;)
  versioneUF_major= 3 &apos;4
  versioneUF_minor= 10 &apos;0
@@ -1110,17 +1110,17 @@ sub sListDocs_______________________________ &apos; va in giro su tutti i docume
 &apos; e in tal caso va a raccontare aquale è il computo corrente
 &apos; IN LAVORAZIONE
  Dim oDocs As Object, oDoc As Object
- REM Load the included &quot;Tools&quot; library
+ rem Load the included &quot;Tools&quot; library
 &apos; GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
  oDocs = StarDesktop.getComponents().createEnumeration()
  Do While oDocs.hasMoreElements()
  oDoc = oDocs.nextElement()
- REM Ignore any component that is not a document.
- REM The IDE, for example
+ rem Ignore any component that is not a document.
+ rem The IDE, for example
  If HasUnoInterfaces(oDoc, &quot;com.sun.star.frame.XModel&quot;) Then
- REM If there is no URL, then do not try to find it
+ rem If there is no URL, then do not try to find it
  If oDoc.hasLocation() Then
- REM Use the FileNameOutOfPath routine included with OOo
+ rem Use the FileNameOutOfPath routine included with OOo
  &apos;MsgBox FileNameOutOfPath(oDoc.getURL()) &amp;_
  &apos; &quot; is of type &quot; &amp; GetDocumentType(oDoc)
  FileNameOutOfPath(oDoc.getURL())

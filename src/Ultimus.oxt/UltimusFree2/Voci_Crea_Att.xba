@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Crea_Att" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Crea_Att" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -46,7 +46,7 @@ END SUB
 &apos;(anziché inserire direttamente la voce pescata sul computo)
 &apos; Si usa quando ci sono nuovi prezzi
 
-sub adegua_s5 REM ADEGUAMENTO DEL FILE DI ESEMPIO 3.9.xx
+sub adegua_s5 rem ADEGUAMENTO DEL FILE DI ESEMPIO 3.9.xx
 	dim oRangeData as object
 	riga=22
 	sStRange = Circoscrive_Voce_Computo_Att (riga)
@@ -149,7 +149,7 @@ VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 &apos;		lrow = 4
 &apos;		goto FAI
 &apos;	end If
-REM se su firme
+rem se su firme
 	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then
 		lrow1=lrow-1
 		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot;
@@ -163,7 +163,7 @@ REM se su firme
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow))
 		GoTo FAI
 	end if
-REM se in una voce esistente
+rem se in una voce esistente
 	Select Case oSheet.GetCellByPosition( 0 , lRow).cellstyle
 		Case = &quot;Comp End Attributo_R&quot; , &quot;Comp Start Attributo_R&quot; , &quot;comp 10 s_R&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (lRow)
@@ -171,7 +171,7 @@ REM se in una voce esistente
 				iVoce =.StartRow
 				fVoce = .EndRow
 			End With
-REM controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate
+rem controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate
 			if 	oSheet.getCellByPosition(22, ivoce+1).string = &quot;#reg&quot; and _ 
 				oSheet.GetCellByPosition( 0 , fvoce+1).cellstyle &lt;&gt; &quot;Comp End Attributo_R&quot; then	
 					nSal = oSheet.getCellByPosition(23, ivoce+1).value
@@ -229,12 +229,12 @@ NUMERO_SAL:
 &apos;print ivoce
 rem verifico l&apos;appartenenza della voce precedente ad un sal registrato
 &apos;print nSAL
-	if ThisComponent.NamedRanges.hasByName(&quot;Lib#&quot; &amp; nSal) then
-		rangeSal = oSheet.GetCellRangeByName(&quot;Lib#&quot; &amp; nSal).rangeaddress()
+	if ThisComponent.NamedRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) then
+		rangeSal = oSheet.GetCellRangeByName(&quot;#Lib#&quot; &amp; nSal).rangeaddress()
 		With rangeSal
 			lr_sal = .EndRow
 		End With
-REM verifico che l&apos;ultima riga della voce precedente coincide con l&apos;ultima riga del SAL registrato
+rem verifico che l&apos;ultima riga della voce precedente coincide con l&apos;ultima riga del SAL registrato
 rem in tal caso annoto il sal successivo
 		If lr_sal = lrow-1 then nSal=nSal+1	&apos;SE REGISTRATO SEGNA SAL SUCCESSIVO
 		else																&apos;altrimenti
@@ -372,7 +372,7 @@ SUB Nuova_Voce_Computo_Att &apos;
 	dim oSheetSRC as object
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;--------------------------------------------
-REM CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
+rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 &apos;	oDpage = oSheet.DrawPage
 &apos;	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
 &apos;	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
@@ -403,7 +403,7 @@ VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 		goto Inserisci_voce
 	end if
 
-REM se su firme
+rem se su firme
 	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then
 		lrow1=lrow-1
 		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot;
@@ -443,46 +443,46 @@ REM se su firme
 		end if
 	end if
  nCurRow = lrow
-REM PRIMA DI SOTTOCATEGORIA
+rem PRIMA DI SOTTOCATEGORIA
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello2 sopra&quot; then
 			lrow = nCurRow
 			goto Inserisci_voce
 	end if
-REM PRIMA DI CATEGORIA
+rem PRIMA DI CATEGORIA
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-1-sopra&quot; then
 			lrow = nCurRow
 			goto Inserisci_voce
 	end if
-REM DOPO DI CATEGORIA
+rem DOPO DI CATEGORIA
 	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;livello-1-sotto_&quot; then
 			lrow = lrow +1
 			goto Inserisci_voce
 	end if
 
-REM SOTTO CATEGORIA O SUBCATEGORIA
+rem SOTTO CATEGORIA O SUBCATEGORIA
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;Livello-1-scritta&quot; OR _
 		oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello2 valuta&quot; then
 			lrow = nCurRow +2
 			goto Inserisci_voce
 	end if
-REM SOTTO SUB CATEGORIA O SUBITO SOPRA AL TOTALE
+rem SOTTO SUB CATEGORIA O SUBITO SOPRA AL TOTALE
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-2-sotto_&quot; then &apos; or _
 			lrow = nCurRow +1
 			goto Inserisci_voce
 	end if
-REM SUL TOTALE
+rem SUL TOTALE
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;Comp TOTALI&quot; then 
 			lrow = nCurRow-1
 			goto Inserisci_voce
 	end if
-REM SUI RIGHI DI MISURAZIONE
+rem SUI RIGHI DI MISURAZIONE
 &apos;	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; then
 &apos;		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot;
 &apos;			lrow = lrow-1	
 &apos;		loop
 &apos;		goto Inserisci_voce
 &apos;	end if
-REM SUI RIGHI DI MISURAZIONE
+rem SUI RIGHI DI MISURAZIONE
 	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot; then
 		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot;
 			lrow = lrow+1	
@@ -607,7 +607,7 @@ end function
 
 
 SUB NuovaAnalisi_Att &apos;
-	REM CANCELLA DAL blocco_analisi la riga con &quot;Oneri di Sicurezza diretti&quot; 
+	rem CANCELLA DAL blocco_analisi la riga con &quot;Oneri di Sicurezza diretti&quot; 
 	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	if oSheet.GetCellByPosition(7,290).getvalue = 190 and _
 		oSheet.GetCellByPosition(8,290).getvalue = 3 and _

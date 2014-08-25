@@ -11,7 +11,7 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-REM ______________________________________________________
+rem ______________________________________________________
 
 Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette 
 							&apos; e lo riformatta decondo la maschera in S5

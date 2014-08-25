@@ -1,142 +1,132 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ZIP" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Zip" script:language="StarBasic">rem  *****  BASIC  *****
+&apos;______________________________________________________________________________
+&apos;	
+&apos;	BasicAddonBuilder - $ Version: 0.5.0 $ 
+&apos;	Copyright (C) 2006-2008 Paolo Mantovani
+&apos;	
+&apos;	A wizard to export basic libraries as Add on&apos;s
+&apos;	
+&apos;	This library is free software; you can redistribute it and/or
+&apos;	modify it under the terms of the GNU Lesser General Public
+&apos;	License as published by the Free Software Foundation.
+&apos;	
+&apos;	This library is distributed in the hope that it will be useful,
+&apos;	but WITHOUT ANY WARRANTY; without even the implied warranty of
+&apos;	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+&apos;	Lesser General Public License for more details.
+&apos;	
+&apos;	Please email me with any bug reports, questions or comments:
+&apos;	paolomantovani@openoffice.org
+&apos;______________________________________________________________________________
+&apos;	
+&apos;	Module ItemProperties:
+&apos;	
+&apos;______________________________________________________________________________
+&apos;
+&apos;
+&apos; Declarations:
+Option Explicit
 
-REM The paths should NOT be URLs.
-REM Warning, the created ZIP file contains two extra artifacts.
-REM (1) A Meta-Inf direction, which contains a manifest file.
-REM (2) A mime-type file of zero length.
-sub ZipDirectory(sSrcDir As String, sZipName As String) 
- &apos;Author: Laurent Godard - listes.godard@laposte.net 
- &apos;Modified: Andrew Pitonyak
- Dim sDirs() As String
- Dim oUcb &apos; com.sun.star.ucb.SimpleFileAccess
- Dim oZip &apos; com.sun.star.packages.Package
- Dim azipper
- Dim args(0) &apos; Initialize zip package to zip file name.
- Dim argsDir(0) &apos; Set to true to include directories in the zip
- Dim sBaseDir$
- Dim i%
- Dim chaine$
- Dim decoupe &apos; Each directory component in an array.
- Dim repZip
- Dim RepPere
- Dim RepPereZip
- Dim sFileName$
- Dim oFile &apos; File stream
- &apos;Create the package!
- oZip=createUnoService(&quot;com.sun.star.packages.Package&quot;)
- args(0)=ConvertToURL(sZipName)
- oZip.initialize(args())
- &apos;création de la structure des repertoires dans le zip
- call Recursedirectory(sSrcDir, sDirs())
- argsDir(0)=true
- &apos;on saute le premier --&gt; repertoire contenant
- &apos;Pourra etre une option a terme
- sBaseDir=sDirs(1)
-110 For i=2 To UBound(sDirs)
- chaine=mid(sDirs(i),len(sBaseDir)+2)
- decoupe=split(mid(sDirs(i),len(sBaseDir)+1),getPathSeparator())
- repZip=decoupe(UBound(decoupe))
- azipper=oZip.createInstanceWithArguments(argsDir())
- If len(chaine)&lt;&gt;len(repZip) then
- RepPere=left(chaine,len(chaine)-len(repZip)-1)
- RepPere=RemplaceChaine(reppere, getpathseparator, &quot;/&quot;, false)
- Else
- RepPere=&quot;&quot;
- Endif
- RepPereZip=oZip.getByHierarchicalName(RepPere)
- RepPereZip.insertbyname(repzip, azipper)
- Next i
- &apos;insertion des fichiers dans les bons repertoires
- dim args2(0)
- args2(0)=false
- oUcb = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
- for i=1 to UBound(sDirs)
- chaine=mid(sDirs(i),len(sBaseDir)+2)
- repzip=remplacechaine(chaine, getpathseparator, &quot;/&quot;, false) 
- sFileName=dir(sDirs(i)+getPathSeparator(), 0)
-&apos; msgbox sFileName
- While sFileName&lt;&gt;&quot;&quot;
- azipper=oZip.createInstanceWithArguments(args2())
- oFile = oUcb.OpenFileRead(ConvertToURL(sDirs(i)+&quot;/&quot;+sFileName))
- azipper.SetInputStream(ofile)
-print repZip
-&apos; xray oZip
- RepPere=oZip.getByHierarchicalName(repZip)
- RepPere.insertbyname(sFileName, azipper)
- sFileName=dir()
- Wend 
- next i
- &apos;Valide les changements
- oZip.commitChanges()
- MsgBox &quot;Finished&quot;
+&apos;______________________________________________________________________________
+Sub ZipFolder(sSourceDirUrl As String, sZipUrl As String) 
+Dim oFileAccess As Object
+Dim oPackage As Object
+Dim oZipRootFolder As Object
+Dim bIncludeFolders As Boolean
+Dim mFolderContents()
+Dim sContentUrl As String
+
+	oFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)	
+	oPackage = CreateUnoService(&quot;com.sun.star.packages.Package&quot;)
+
+	Dim aArg As New com.sun.star.beans.NamedValue
+	aArg.Name = &quot;PackageFormat&quot;
+	aArg.Value = False
+	
+	oPackage.initialize(Array(sZipUrl, aArg))
+	oZipRootFolder = oPackage.getByHierarchicalName(&quot;/&quot;)
+
+	bIncludeFolders = True
+	mFolderContents() = oFileAccess.getFolderContents(sSourceDirUrl, bIncludeFolders)
+	For Each sContentUrl In mFolderContents()
+		AddResourceToZip(sContentUrl, oZipRootFolder, oPackage )
+	Next
+	xray oPackage
+	&apos;commit
+	&apos;the second call avoids an unespected file locking in Windows (bug??)
+ 	oPackage.commitChanges()
+ 	oPackage.commitChanges()
 End Sub
-sub ExempleAppel
-	nomeZip = &quot;C:\resultat_&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;
-&apos;	print nomeZip
- call ZipDirectory(&quot;C:\Users\giuserpe\AppData\Roaming\LibreOffice\4\user\uno_packages\cache\uno_packages\luqr1d8.tmp_\LeenO-3.9.2-nigthly_build-2014-05-29.oxt&quot;,nomeZip)
-end sub
-REM Read the directory names
-Sub RecurseDirectory(sRootDir$, sDirs As Variant)
- &apos;Author: laurent Godard - listes.godard@laposte.net
- &apos;Modified: Andrew Pitonyak
- Redim Preserve sDirs(1 to 1) 
+
+
+&apos;______________________________________________________________________________
+Sub AddResourceToZip(sResourceUrl As String, oZipFolder As Object, oZipPackage As Object)
+Dim oFileAccess As Object
+Dim oUrlTransformer As Object
+Dim oZipSubFolder As Object
+Dim oZipFileStream As Object
+Dim oSrcFileStream As Object
+Dim mFolderContents()
+Dim sContentUrl
+Dim sResourceName As String
+Dim bIncludeFolders As Boolean
  
- Dim nNumDirs% &apos; Track the number of directories or files
- Dim nCurIndex% &apos; Current index into the directories or files
- Dim sCurDir$ &apos; Current directory.
-111 nNumDirs=1
- sDirs(1)=sRootDir
- nCurIndex=1
- sCurDir = dir(ConvertToUrl(sRootDir &amp; &quot;/&quot;), 16)
- 
- Do While sCurDir &lt;&gt; &quot;&quot;
- If sCurDir &lt;&gt; &quot;.&quot; AND sCurDir&lt;&gt; &quot;..&quot; Then
- nNumDirs=nNumDirs+1
- ReDim Preserve sDirs(1 to nNumDirs)
- sDirs(nNumDirs)=convertfromurl(sDirs(nCurIndex)+&quot;/&quot;+sCurDir)
- endif
- sCurDir=dir()
- 
- Do While sCurDir = &quot;&quot; AND nCurIndex &lt; nNumDirs
- nCurIndex = nCurIndex+1
- sCurDir=dir(convertToURL(sDirs(nCurIndex)+&quot;/&quot;),16)
- Loop
- Loop
+	&apos; create objects for later use
+	oFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+	oUrlTransformer = CreateUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
+	Dim aUrl As New com.sun.star.util.URL
+	
+	&apos;check params
+	aUrl.complete = FixFolderUrl(sResourceUrl)
+	oUrlTransformer.parseStrict(aUrl)
+	sResourceName = aUrl.Name
+	
+	If oFileAccess.isFolder(sResourceUrl) Then
+		&apos;create the subfolder inside the zip package
+		oZipSubFolder = oZipPackage.createInstanceWithArguments(Array(True)) &apos;true means &apos;create a folder&apos;
+		If Not oZipFolder.hasByName(sResourceName) Then
+			oZipFolder.insertByName(sResourceName, oZipSubFolder)
+		End If
+		
+		&apos;now add the subfolder contents to the zip package
+		bIncludeFolders = True
+		mFolderContents() = oFileAccess.getFolderContents(sResourceUrl, bIncludeFolders)
+		
+		&apos;call recursively this routine to add each contents
+		For Each sContentUrl In mFolderContents()
+			AddResourceToZip(sContentUrl, oZipSubFolder, oZipPackage)
+		Next
+		
+	Else
+		&apos; the given url is a file
+		oZipFileStream = oZipPackage.createInstanceWithArguments(Array(False)) &apos;false means &apos;create a file&apos;
+		oSrcFileStream = oFileAccess.OpenFileRead(sResourceUrl)
+		oZipFileStream.SetInputStream(oSrcFileStream)
+		
+		&apos;add the file content to the given folder
+		If Not oZipFolder.hasByName(sResourceName) Then
+			oZipFolder.insertByName(sResourceName, oZipFileStream)
+		End If
+		
+	End If
+
 End Sub
-Function RemplaceChaine(ByVal sSearchThis$, sFindThis$, dest$, bCase As Boolean)
- &apos;Auteurs: Laurent Godard &amp; Bernard Marcelly
- &apos; fournit une sSearchThis dont toutes les occurences de sFindThis ont 
- &apos; été remplacées par dest 
- &apos; bCase = true pour distinguer majuscules/minuscules, = false sinon
- Dim nSrcLen As Integer
- Dim i% &apos; Current index.
- Dim nUseCase% &apos; InStr Argument, determines if case sensitive.
- Dim sNewString As String
- sNewString=&quot;&quot;
- nUseCase = IIF(bCase, 0, 1)
- nSrcLen = len(sFindThis)
- i = instr(1, sSearchThis, sFindThis, nUseCase)
- REM While nSearchThis contains sFindThis
- Do While i&lt;&gt;0
- REM If the location is past 32K, remoe the first 32000 characters.
- REM This is done to prevent negative values.
- Do While i&lt;0
- sNewString = sNewString &amp; Left(sSearchThis,32000)
- sSearchThis = Mid(sSearchThis,32001)
- i=InStr(1, sSearchThis, sFindThis, nUseCase)
- Loop
- If i&gt;1 Then
- sNewString = sNewString &amp; Left(sSearchThis, i-1) &amp; dest
- else
- sNewString = sNewString &amp; dest
-112 endif 
- &apos; raccourcir en deux temps car risque : i+src &gt; 32767
- sSearchThis = Mid(sSearchThis, i) 
- sSearchThis = Mid(sSearchThis, 1+nSrcLen)
- i = instr(1, sSearchThis, sFindThis, nUseCase)
- Loop
- RemplaceChaine = sNewString &amp; sSearchThis
+
+&apos;______________________________________________________________________________
+Function FixFolderUrl(sFolderUrl As String) As String
+Dim sTemp As String
+
+	&apos;remove ending &quot;/&quot;
+	sTemp = ConvertToUrl(sFolderUrl)
+	If Len(sTemp) &gt; 0 Then
+		If Right(sTemp, 1) = &quot;/&quot; Then
+			sTemp = Left(sTemp, Len(sTemp)-1)
+		End If
+	End If
+	
+	FixFolderUrl = sTemp
+	
 End Function
 </script:module>

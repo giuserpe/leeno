@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Cerca_Rior" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Cerca_Rior" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -234,7 +234,7 @@ End sub
 
 
 
-REM Return the cell that contains the text
+rem Return the cell that contains the text
 Function uFindString(sString$, oSheet ) As Variant &apos; richiamata da diverse cose
 &apos;uFindString(sString$, oSheet)
 &apos;exit function
@@ -310,9 +310,9 @@ End Function
 
 
 
-REM Return the cell that contains the text
+rem Return the cell that contains the text
 Sub SearchARange &apos; questa mi sembra meglio...
- REM Author: Andrew Pitonyak
+ rem Author: Andrew Pitonyak
 	 Dim oSheet
 	 Dim oRange
 	 Dim oFoundCell
@@ -331,26 +331,26 @@ Function SimpleSheetSearch(sString$, oSheet, nStartCol, nStartRow, nEndCol, nEnd
  if isMissing ( bWholeWord) then
  	 bWholeWord = true
  end if
- REM Create a descriptor from a searchable document.
+ rem Create a descriptor from a searchable document.
  oDescriptor = oSheet.createSearchDescriptor()
- REM Set the text for which to search and other 
- REM http://api.openoffice.org/docs/common/ref/com/sun/star/util/SearchDescriptor.html 
+ rem Set the text for which to search and other 
+ rem http://api.openoffice.org/docs/common/ref/com/sun/star/util/SearchDescriptor.html 
  &apos;xray oDescriptor
  With oDescriptor
  .SearchString = sString$
- REM These all default to false
- REM SearchWords forces the entire cell to contain only the search string
+ rem These all default to false
+ rem SearchWords forces the entire cell to contain only the search string
  .SearchWords = bWholeWord
 &apos; .SearchWords = true
  .SearchCaseSensitive = False
  End With
  &apos; xray oDescriptor
- REM Find the first one
+ rem Find the first one
  oFound = oSheet.findFirst(oDescriptor)
  SimpleSheetSearch = oFound
  &apos;xray ofound
- REM Do you really want to find more instances
- REM You can continue the search using a cell if you want!
+ rem Do you really want to find more instances
+ rem You can continue the search using a cell if you want!
  &apos;Do While Not IsNull(oFound)
  &apos; Print oFound.getString()
  &apos; oFound = oSheet.findNext( oFound, oDescriptor)

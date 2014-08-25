@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Header_Footer" script:language="StarBasic">
-REM ***** BASIC *****
+rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
@@ -53,7 +53,7 @@ SUB Set_Header_Footer (optional sMessaggio as string)
 	END IF
 	
 	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
-		&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; REM DISATTIVATA GIUSERPE
+		&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; rem DISATTIVATA GIUSERPE
 		exit sub
 	END IF
 	Aggiorniamoli
@@ -183,7 +183,7 @@ If oBozza_8 &lt;&gt; &quot;&quot; Then
 oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
 oCentro = oCell.String
 
-&apos;==================================================
+rem ----------------------------------------------------------------------
 oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
 oController = oDesktop.CurrentFrame.Controller
 oDocument = oController.Model
@@ -448,7 +448,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	END IF
 	
 	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
-	&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; REM DISATTIVATA GIUSERPE
+	&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; rem DISATTIVATA GIUSERPE
 		exit sub
 	END IF
 	Aggiorniamoli
@@ -491,7 +491,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 &apos;	xray oDocument
 	oStyleFam = oDocument.StyleFamilies
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
-	REM CONTO IL NUMERO DEGLI STILI DI PAGINA
+	rem CONTO IL NUMERO DEGLI STILI DI PAGINA
 	dim i as integer
 	n_sty = oTablePageStyles.count
 	for i = 0 to n_sty-1
@@ -556,7 +556,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 	END SUB
 
-REM uscendo da S2 vengono aggiornati tutti gli stili esistenti
+rem uscendo da S2 vengono aggiornati tutti gli stili esistenti
 SUB set_header_auto
 
 	Set_HF_turbo (&quot;no messaggio&quot;)

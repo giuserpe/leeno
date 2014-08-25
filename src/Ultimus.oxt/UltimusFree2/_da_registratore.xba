@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_da_registratore" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_da_registratore" script:language="StarBasic">rem  *****  BASIC  *****
+rem Le macro di questo modulo sono generate con il registratore e qualche volta adattate
 sub SBIANCA_celle &apos; da registratore macro
 rem ----------------------------------------------------------------------
 rem define variables
@@ -43,7 +44,7 @@ dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 rem ----------------------------------------------------------------------
 dim args1(0) as new com.sun.star.beans.PropertyValue
 args1(0).Name = &quot;ToPoint&quot;
-args1(0).Value = nome_area&apos;&quot;Lib#1&quot;
+args1(0).Value = nome_area&apos;&quot;#Lib#1&quot;
 
 dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args1())
 
@@ -332,6 +333,109 @@ args1(7).Name = &quot;Ascending1&quot;
 args1(7).Value = true
 
 dispatcher.executeDispatch(document, &quot;.uno:DataSort&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
+
+
+
+sub txt_Bold
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;Bold&quot;
+args1(0).Value = true
+
+dispatcher.executeDispatch(document, &quot;.uno:Bold&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
+
+sub txt_UnderlinedD
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:UnderlineDouble&quot;, &quot;&quot;, 0, Array())
+
+
+end sub
+
+
+sub txt_Left
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;HorizontalAlignment&quot;
+args1(0).Value = com.sun.star.table.CellHoriJustify.LEFT
+
+dispatcher.executeDispatch(document, &quot;.uno:HorizontalAlignment&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
+
+sub txt_Italic
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;Italic&quot;
+args1(0).Value = true
+
+dispatcher.executeDispatch(document, &quot;.uno:Italic&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
+
+sub txt_Right
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;HorizontalAlignment&quot;
+args1(0).Value = com.sun.star.table.CellHoriJustify.RIGHT
+
+dispatcher.executeDispatch(document, &quot;.uno:HorizontalAlignment&quot;, &quot;&quot;, 0, args1())
 
 
 end sub

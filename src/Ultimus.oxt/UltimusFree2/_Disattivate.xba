@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">rem ***** BASIC *****
 SUB CREA_VOCE_ANALISI non usata &apos; sceglie se usare la macro vecchia o nuova (ovvero cerca la presenza di attributi di cella)
 													&apos; TEMO SIA INUTILIZZATA
 oSheet = ThisComponent.currentController.activeSheet

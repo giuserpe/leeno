@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">REM ***** BASIC *****
-&apos;		oDoc = thisComponent
-&apos;		oRangeSRC = ThisComponent.CurrentSelection &apos;CIRCA IL RANGE DA TRASFERIRE SRC
-&apos;		oSheetSRC = oDoc.Sheets.getByName(odoc.currentcontroller.activesheet.name)
-&apos;		lSheetSRC = oRangeSRC.RangeAddress.sheet
-
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
+rem racconta di utility di vario genere
+Function myround (MioNum As double, Dec As integer)&apos; (C) Giuseppe Vizziello 2014
+rem approssimazione di MioNum a n Dec
+rem visto che round() di Tools dà risultati inaspettati
+	smionum = CStr(MioNum)
+	ipos=instr(smionum,&quot;,&quot;)
+	reale=Left(smionum, ipos+Dec)
+	cifra=Mid(smionum, ipos+Dec+1,1)
+	reale=cdbl(reale)
+	If cint(cifra) &gt;=5 Then reale=reale+1/10^Dec
+	myround = reale
+End Function
 
 Sub LeenO_Path
 rem ----------------------------------------------------------------------
@@ -84,6 +91,7 @@ oSheet = ThisComponent.Sheets(0)
 oRangeAddress = oSheet.getCellRangeByName(&quot;A2:A14&quot;).getRangeAddress()
 oSheet.insertCells(oRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)
 End Sub
+
 Sub Protezione_area (foglio as string, nomearea as string) &apos;usato in annota_pagina_libretto
 	Dim rngClear As Object
 	Dim oSheet1 As Object
@@ -106,6 +114,7 @@ rem	+ com.sun.star.sheet.CellFlags.EDITATTR)
 	rngClear.CellProtection = CellProtStruc
 	oSheet1.Protect &quot;&quot;
 End Sub
+
 sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda della sheet
 	oSheet =ThisComponent.currentController.activeSheet
 	Select Case oSheet.CodeName
@@ -114,7 +123,7 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 800 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(51,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
 &apos;	oSheet.getRows().getByIndex(&quot;1&quot;).Rows.Height = 850 &apos;altezza riga di intestazione
-	REM larghezza colonne
+	rem larghezza colonne
 		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
 		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
 		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 7800
@@ -125,7 +134,7 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
 		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
 		case = &quot;COMPUTO&quot;
-	REM larghezza colonne
+	rem larghezza colonne
 		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
 		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
 		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 7800
@@ -140,7 +149,8 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 
 		case = &quot;&quot;
 	end select
-end sub
+end Sub
+
 Sub AddNamedRange(sName$ as string, s$ as String)
 Dim oRange &apos; The created range.
 Dim oRanges &apos; All named ranges.
@@ -159,14 +169,14 @@ for i = 1 to 5
  oCellAddress.Row = i + 1 &apos;Row i + 1..
  s$ = &quot;$Foglio3.$B$3:$e$10&quot;
 &apos; xray oCellAddress
- REM oRanges.addNewByName(nome_range, stringa_di_definiziones$, oCellAddress, 0)
+ rem oRanges.addNewByName(nome_range, stringa_di_definiziones$, oCellAddress, 0)
  oRanges.addNewByName(sName$, s$, oCellAddress, 0)
  End If
 next
 print &quot;fatto!&quot;
 End Sub
 
-sub stili_cella
+sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con relativo esempio
 	dim sty()
 	dim Doc as object
 	dim Sheet as object
@@ -187,7 +197,7 @@ sub stili_cella
 	for each el in BubbleSortlist(sty())
 		Sheet.GetCellByPosition( 0, i).setstring(el)
 		Sheet.GetCellByPosition( 1, i).cellstyle = el
-		Sheet.GetCellByPosition( 1, i).setvalue(20)
+		Sheet.GetCellByPosition( 1, i).setvalue(2000)
 	i=i+2
 	Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
 	next	
@@ -195,7 +205,7 @@ sub stili_cella
 print &quot;ok&quot;
 end sub
 
-sub studio_stile
+sub studio_stile &apos; serve a capire come influisce lo stile di testo sul numero di righe vvisualizzate nella cella
  &apos;  oCell=ThisComponent.Sheets.GetByName(&quot;Foglio1&quot;).getCellByPosition(1, 1)&apos;B2
  oCell=thiscomponent.currentselection
    
@@ -238,7 +248,7 @@ oCell.Rows.Height = nr*100*alt+(nr-1)*30*alt+topm
 &apos;print topm
 end sub
 
-SUB Elimina_Nomi_Area_errati
+SUB Elimina_Nomi_Area_errati &apos;nome eloquente
 	Dim Doc As Object
 	Dim Sheet As Object
 	Dim Cell As Object
@@ -268,21 +278,21 @@ ELIMINA_I_NOMI_DI_AREA_ERRATI:
  	if InStr(Contenuto, &quot;#REF!&quot;) or _
 			InStr(Contenuto, &quot;#rif!&quot;) then&apos;
 print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
-			oAree. RemoveByName(oNomiArea(i))
+			oAree. removeByName(oNomiArea(i))
  	end if
  next
 END SUB
 
-SUB DOLO REM SOLO MANUTENZIONE
+SUB DOLO rem SOLO MANUTENZIONE
 	&apos;if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$88:$L$88&quot; , &quot;manodopera&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$89:$L$89&quot; , &quot;materiali&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$90:$L$90&quot; , &quot;noli&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$91:$L$91&quot; , &quot;trasporti&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$92:$L$92&quot; , &quot;altre_forniture&quot;)
-		REM VECCHIO BLOCCO ANALISI_BART
+		rem VECCHIO BLOCCO ANALISI_BART
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$45:$N$51&quot; , &quot;blocco_analisi&quot;)
-		REM BLOCCO ANALISI AVCP
+		rem BLOCCO ANALISI AVCP
 		rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
 &apos;		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
@@ -292,8 +302,10 @@ SUB DOLO REM SOLO MANUTENZIONE
 &apos;xray oDoc
 
 	&apos;end if
-END SUB
+END Sub
+
 sub _listino_colora_capitoli&apos;(C) Giuseppe Vizziello 2014
+rem migliora la leggibilità dei listini
 	If thisComponent.Sheets.hasByName(&quot;Listino&quot;) Then &apos; se la sheet esiste
 		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 		else
@@ -310,7 +322,14 @@ sub _listino_colora_capitoli&apos;(C) Giuseppe Vizziello 2014
 			primariga = i+1
 		exit for
 		end if 
-	next
+	Next
+	oSheet.getCellRangeByPosition (0,primariga,5,lLastUrow).CellStyle = &quot;List-stringa-sin&quot;
+	oSheet.getCellRangeByPosition (6,primariga,6,lLastUrow).CellStyle = &quot;List-stringa-centro&quot;
+	oSheet.getCellRangeByPosition (7,primariga,7,lLastUrow).CellStyle = &quot;List-num-euro&quot;
+	oSheet.getCellRangeByPosition (8,primariga,8,lLastUrow).CellStyle = &quot;List-%&quot;
+	oSheet.getCellRangeByPosition (9,primariga,9,lLastUrow).CellStyle = &quot;List-num-euro&quot;
+	oSheet.getCellRangeByPosition (10,primariga,10,lLastUrow).CellStyle = &quot;List-%&quot;
+	oSheet.getCellRangeByPosition (11,primariga,11,lLastUrow).CellStyle = &quot;List-num-euro&quot;
 	for i = primariga to lLastUrow
 		if len(oSheet.GetCellbyPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
 		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
@@ -336,9 +355,6 @@ sub _listino_colora_capitoli&apos;(C) Giuseppe Vizziello 2014
 
 end sub
 
-
-
-
 sub ripara_computo
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	lLastUrow = getLastUsedRow(oSheet)
@@ -349,7 +365,8 @@ sub ripara_computo
 		end if
 	next
 	
-end sub
+end Sub
+
 sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lLastUrow = getLastUsedRow(oSheet)
@@ -370,8 +387,8 @@ sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
 			Print oSheet.GetCellByPosition(3 , inizio-2).value()
 			print oSheet.GetCellByPosition(3 , inizio-1).value()
 								
-&apos;			oSheet.GetCellByPosition(5 , fine+1).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine &amp;&quot;)*E&quot;&amp; fine+2 REM SPESE GENERALI
-&apos;			oSheet.GetCellByPosition(5 , fine+2).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine+2 &amp;&quot;)*E&quot;&amp; fine+3 REM UTILI D&apos;IMPRESA
+&apos;			oSheet.GetCellByPosition(5 , fine+1).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine &amp;&quot;)*E&quot;&amp; fine+2 rem SPESE GENERALI
+&apos;			oSheet.GetCellByPosition(5 , fine+2).setformula(&quot;=SUM(F&quot;&amp; inizio &amp; &quot;:F&quot;&amp; fine+2 &amp;&quot;)*E&quot;&amp; fine+3 rem UTILI D&apos;IMPRESA
 &apos;		oSheet.GetCellByPosition(11 , inizio-7).setformula(conta_a)
 &apos;		oSheet.GetCellByPosition(12 , inizio-7).setformula(&quot;=vlookup(A&quot;&amp; inizio-6 &amp;&quot;;base;3;)&quot;
 &apos;		oSheet.GetCellByPosition(13 , inizio-7).setformula(&quot;=(G&quot;&amp; inizio-6 &amp;&quot;-M&quot;&amp; inizio-6 &amp;&quot;)/M&quot;&amp; inizio-6
@@ -387,7 +404,8 @@ sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
 	next
 	Barra_chiudi_sempre_4
 &apos;	fine:
-end sub
+end Sub
+
 sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazioni
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lLastUrow = getLastUsedRow(oSheet)
@@ -404,8 +422,9 @@ sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazion
 	next
 	Barra_chiudi_sempre_4
 	fine:
-end sub
-SUB SERVIZIO &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
+end Sub
+
+SUB SERVIZIO &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta (Bart)
 	&apos;print &quot;partenza&quot;
 	oSheet = ThisComponent.currentController.activeSheet
 	ilastRow = getLastUsedRow(oSheet)

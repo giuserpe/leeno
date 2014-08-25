@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ShortCut" script:language="StarBasic">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ShortCut" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
 &apos; LeenO 3.10.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-REM Il codice contenuto in questo modulo è parte integrante del pacchettFo UltimusFree					
+rem Il codice contenuto in questo modulo è parte integrante del pacchettFo UltimusFree					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e
@@ -564,10 +564,10 @@ Sub Registra_Tasti_Global &apos; registra i tasti a livello globale (utente)
 	
 &apos;on error resume next
 	
-	REM *** Initialize constants. See IDL file
-	REM com.sun.star.awt.KeyEvent
-	REM com.sun.star.awt.KeyModifier
-	REM com.sun.star.awt.Key
+	rem *** Initialize constants. See IDL file
+	rem com.sun.star.awt.KeyEvent
+	rem com.sun.star.awt.KeyModifier
+	rem com.sun.star.awt.Key
 	MODIFIER_SHIFT = 1 &apos;refers to both shift keys
 	MODIFIER_MOD1 = 2 &apos;refers in the most cases to the &apos;Ctrl&apos; key
 	MODIFIER_MOD2 = 4 &apos;refers in the most cases to the &apos;Alt&apos; key
@@ -592,17 +592,17 @@ Sub Registra_Tasti_Global &apos; registra i tasti a livello globale (utente)
 	DELETE		 = 1286
 	
 	
-	REM *** Retrieve the global accelerator configuration manager
+	rem *** Retrieve the global accelerator configuration manager
 	oGlobalAccelCfgMgr = createUnoService(&quot;com.sun.star.ui.GlobalAcceleratorConfiguration&quot;)
 	
-	REM *** Retrieve the module configuration manager from central module configuration manager supplier
+	rem *** Retrieve the module configuration manager from central module configuration manager supplier
 	oModuleCfgMgrSupplier = createUnoService(&quot;com.sun.star.ui.ModuleUIConfigurationManagerSupplier&quot;)
 	
-	REM *** Retrieve the module configuration manager with module identifier
-	REM *** See com.sun.star.frame.ModuleManager for more information
+	rem *** Retrieve the module configuration manager with module identifier
+	rem *** See com.sun.star.frame.ModuleManager for more information
 	oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager( &quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) &apos;per calc
 &apos; oModuleCfgMgr = oModuleCfgMgrSupplier.getUIConfigurationManager(&quot;com.sun.star.text.TextDocument&quot; )&apos; per write
-	REM *** Retrieve the writer accelerator configuration manager
+	rem *** Retrieve the writer accelerator configuration manager
 	oWriterAccelCfgmgr = oModuleCfgMgr.getShortCutManager()
 	Dim aKeyEvent as new com.sun.star.awt.KeyEvent
 	
@@ -610,7 +610,7 @@ Sub Registra_Tasti_Global &apos; registra i tasti a livello globale (utente)
 &apos;________________________________________________________________________Ctrl Shift O (come Oscar)
 	aKeyEvent.Modifiers = MODIFIER_MOD1 + com.sun.star.awt.KeyModifier.SHIFT 
 	aKeyEvent.KeyCode = com.sun.star.awt.Key.O
-	REM *** Set our short cut at the Writer accelerator manager
+	rem *** Set our short cut at the Writer accelerator manager
 	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application&quot; )
 &apos;oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
 	oWriterAccelCfgMgr.store()
@@ -624,7 +624,7 @@ Sub Registra_Tasti_Global &apos; registra i tasti a livello globale (utente)
 	
 	aKeyEvent.Modifiers = 4 &apos; &apos;_____ Alt DELITE (CAnc)
 	aKeyEvent.KeyCode = 1286
-	REM *** Set our short cut at the Writer accelerator manager
+	rem *** Set our short cut at the Writer accelerator manager
 	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application&quot; )
 &apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
 	oWriterAccelCfgMgr.store()
@@ -845,13 +845,13 @@ END SUB
 &apos; gruppo di macro per ripulire (rimuovere?) il file di conf delle SC a livello di documento
 
 sub rimuovi_SC_Doc &apos; svuota il file Current .xml del documento Corrente
-	RemoveKeyConfigurationFromDoc(ConvertToUrl(ThisComponent.getURL()) 
+	removeKeyConfigurationFromDoc(ConvertToUrl(ThisComponent.getURL()) 
 end sub
 
 
 
 &apos; svuota il file Current .xml di un documento (file picker)
-Sub RemoveKeyConfigurationFromDoc(optional sFileURL as string)
+Sub removeKeyConfigurationFromDoc(optional sFileURL as string)
 	&apos;rimuove 
 &apos;exit sub
  if isnull(sFileURL) or isEmpty(sFileURL) Then
@@ -864,16 +864,16 @@ Sub RemoveKeyConfigurationFromDoc(optional sFileURL as string)
  If sFileURL = &quot;&quot; Then Exit Sub
  oSFAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
  If oSFAccess.exists(sFileURL) Then
- If RemoveZipFileContent(sFileURL,sKeyConfigFile) Then
+ If removeZipFileContent(sFileURL,sKeyConfigFile) Then
  	if sMs &lt;&gt; 0 then
-		 msgbox &quot;Removed.&quot;
+		 msgbox &quot;removed.&quot;
 		end if
  End If
  End If
 End Sub
 
 &apos; remove the key configuration file from zip
-Function RemoveZipFileContent( sZipURL As String, _
+Function removeZipFileContent( sZipURL As String, _
  sContentName As String )
  &apos;On Error GoTo Handler: 
  on error resume next
@@ -902,11 +902,11 @@ Function RemoveZipFileContent( sZipURL As String, _
  End If
  oPipe.closeInput()
  End If
- RemoveZipFileContent = True
+ removeZipFileContent = True
  Exit Function
  Handler:
  msgbox &quot;Please close the file.&quot;
- RemoveZipFileContent = False
+ removeZipFileContent = False
 End Function
 
 &apos; select a file

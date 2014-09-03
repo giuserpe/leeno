@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="DialogViste_A" dlg:left="207" dlg:top="177" dlg:width="211" dlg:height="161" dlg:help-text="Viste del Computo per Contabilità Merloni" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni su COMPUTO ">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="DialogViste_A" dlg:left="207" dlg:top="177" dlg:width="211" dlg:height="162" dlg:help-text="Viste del Computo per Contabilità Merloni" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni su COMPUTO ">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -47,7 +47,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="12" dlg:left="6" dlg:top="83" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne relative alla Manodopera" dlg:value="Gestione sicurezza on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Computo_Sicur?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton10" dlg:tab-index="13" dlg:left="110" dlg:top="-61" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne dei SubTot dei Capitoli e Sottocapitoli" dlg:default="true" dlg:value="Colonne Cap e sottoCap on/off">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton10" dlg:tab-index="13" dlg:left="109" dlg:top="142" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne dei SubTot dei Capitoli e Sottocapitoli" dlg:default="true" dlg:value="Colonne Cap e sottoCap on/off">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Col_Cap_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

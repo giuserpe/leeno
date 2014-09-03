@@ -61,8 +61,6 @@ dim sLib as string
 &apos; tenerlo per le palle? proviamo...
  sURL = ConvertToUrl(ThisComponent.getURL()) 
  StarDesktop.loadComponentFromURL(sURL, &quot;_default&quot;,0 , Array())
- &apos;spippe = &quot;queste sono VERE PIPPE&quot;
-&apos;print &quot;111111111 vediamo&quot;
 &apos;		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 &apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;)(getCellByPosition (3,15).string)
 	osheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)

@@ -2,11 +2,21 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
 rem racconta di utility di vario genere
+
+Sub gfdsa
+print myround(105,idxdec)
+End Sub
+
+
 Function myround (MioNum As double, Dec As integer)&apos; (C) Giuseppe Vizziello 2014
 rem approssimazione di MioNum a n Dec
 rem visto che round() di Tools dà risultati inaspettati
 	smionum = CStr(MioNum)
 	ipos=instr(smionum,&quot;,&quot;)
+	if ipos=0 Then
+		myround = MioNum
+		Exit Function
+	End if
 	reale=Left(smionum, ipos+Dec)
 	cifra=Mid(smionum, ipos+Dec+1,1)
 	reale=cdbl(reale)
@@ -197,7 +207,9 @@ sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con r
 	for each el in BubbleSortlist(sty())
 		Sheet.GetCellByPosition( 0, i).setstring(el)
 		Sheet.GetCellByPosition( 1, i).cellstyle = el
-		Sheet.GetCellByPosition( 1, i).setvalue(2000)
+		Sheet.GetCellByPosition( 3, i).cellstyle = el
+		Sheet.GetCellByPosition( 1, i).setvalue(2000,00)
+		Sheet.GetCellByPosition( 3, i).setstring(&quot;LeenO&quot;)
 	i=i+2
 	Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
 	next	

@@ -175,7 +175,7 @@ args1(0).Value = &quot;R&quot;
 
 dispatcher.executeDispatch(document, &quot;.uno:DeleteCell&quot;, &quot;&quot;, 0, args1())
 end Sub
-sub Raggruppa_righe &apos;da registratore macro
+sub Raggruppa_righe &apos;da registratore macro - questa blocca tutto in fase di salvataggio
 rem ----------------------------------------------------------------------
 rem define variables
 dim document   as object
@@ -437,6 +437,24 @@ args1(0).Value = com.sun.star.table.CellHoriJustify.RIGHT
 
 dispatcher.executeDispatch(document, &quot;.uno:HorizontalAlignment&quot;, &quot;&quot;, 0, args1())
 
+
+end sub
+
+
+sub MOSTRA_righe (switch As String)&apos; &quot;on&quot; per mostrare, &quot;off&quot; per nascondere
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+If switch =&quot;on&quot; Then azione =&quot;.uno:ShowRow&quot;
+If switch =&quot;off&quot; Then azione =&quot;.uno:HideRow&quot;
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, azione, &quot;&quot;, 0, Array())
 
 end sub
 </script:module>

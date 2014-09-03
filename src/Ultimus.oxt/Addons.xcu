@@ -332,7 +332,7 @@ oor:package="org.openoffice.Office">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>
 							</prop>
 							<prop oor:name="URL" oor:type="xs:string">
-								<value>vnd.sun.star.script:UltimusFree2.Computo.New_LeenO?language=Basic&amp;location=application</value>
+								<value>vnd.sun.star.script:UltimusFree2.file_gest.New_LeenO?language=Basic&amp;location=application</value>
 							</prop>
 							<prop oor:name="ImageIdentifier" oor:type="xs:string">
 								<value>%origin%/icons/image15</value>

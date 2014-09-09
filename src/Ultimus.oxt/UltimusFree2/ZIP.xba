@@ -53,7 +53,7 @@ Dim sContentUrl As String
 	For Each sContentUrl In mFolderContents()
 		AddResourceToZip(sContentUrl, oZipRootFolder, oPackage )
 	Next
-	xray oPackage
+&apos;xray oPackage
 	&apos;commit
 	&apos;the second call avoids an unespected file locking in Windows (bug??)
  	oPackage.commitChanges()

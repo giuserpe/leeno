@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_variabili" script:language="StarBasic">rem  *****  BASIC  *****
+&apos;_______________________________________________________________________________________	
+&apos; LeenO 3.10.1
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
 rem qui ci metto tutte le variabili/COSTANTI globali
 
 option explicit
@@ -9,4 +19,23 @@ Public Const idxCol = 0		&apos;indice prima colonna
 Public Const idxRow = 1		&apos;indice posizione intestazione di tabella
 Public Const idxSAL = 30 	&apos;numero massimo possibile di SAL
 Public Const idxdec = 2		&apos;numero cifre decimali per le approssimazioni
+
+rem ----------------------------------------------------------------------
+rem le seguenti identificano la versione del pacchetto
+Public Const versioneUF_major= 3&apos;4
+Public Const versioneUF_minor= 10&apos;0
+Public Const versioneUF_subversion= 1&apos;&quot;DEV&quot;
+
+rem ----------------------------------------------------------------------
+rem solo un appunto: clearContents()
+&apos;				(_
+&apos;				com.sun.star.sheet.CellFlags.VALUE OR _			1
+&apos;				com.sun.star.sheet.CellFlags.DATETIME OR _		2
+&apos;				com.sun.star.sheet.CellFlags.STRING OR _		4
+&apos;				com.sun.star.sheet.CellFlags.ANNOTATION OR _	8
+&apos;				com.sun.star.sheet.CellFlags.FORMULA OR _		16
+&apos;				com.sun.star.sheet.CellFlags.HARDATTR OR _		32
+&apos;				com.sun.star.sheet.CellFlags.STYLES OR _		64
+&apos;				com.sun.star.sheet.CellFlags.OBJECTS OR _		128
+&apos;				com.sun.star.sheet.CellFlags.EDITATTR)			256
 </script:module>

@@ -320,9 +320,9 @@ oor:package="org.openoffice.Office">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
-					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+<!-- 					<prop oor:name="ImageIdentifier" oor:type="xs:string">
 						<value>%origin%/icons/image14</value>
-					</prop>
+					</prop> -->
 					<prop oor:name="Title" oor:type="xs:string">
 						<value>Nuovo...</value>
 					</prop>
@@ -334,7 +334,7 @@ oor:package="org.openoffice.Office">
 							<prop oor:name="URL" oor:type="xs:string">
 								<value>vnd.sun.star.script:UltimusFree2.file_gest.New_LeenO?language=Basic&amp;location=application</value>
 							</prop>
-							<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<prop oor:name="ImageIdentifier" oor:type="xs:string">
 								<value>%origin%/icons/image15</value>
 							</prop>
 							<prop oor:name="Title" oor:type="xs:string">
@@ -344,6 +344,22 @@ oor:package="org.openoffice.Office">
 								<value>_self</value>
 							</prop>
 						</node>
+<!--vecchio menu per la generazione del file Computo_LeenO.ots-->
+<!-- 						<node oor:name="m0U02" oor:op="replace">
+							<prop oor:name="Context" oor:type="xs:string">
+								<value>com.sun.star.sheet.SpreadsheetDocument</value>
+							</prop>
+							<prop oor:name="URL" oor:type="xs:string">
+								<value>vnd.sun.star.script:UltimusFree2.Varie.Svuota_Computo?language=Basic&amp;location=application</value>
+							</prop>
+							<prop oor:name="Title" oor:type="xs:string">
+								<value>Crea Computo Vuoto da Questo Doc</value>
+							</prop>
+							<prop oor:name="Target" oor:type="xs:string">
+								<value>_self</value>
+							</prop>
+						</node> -->
+<!--fine vecchio menu-->
 					</node>
 				</node>
 				<node oor:name="m01" oor:op="replace">				
@@ -393,23 +409,6 @@ oor:package="org.openoffice.Office">
 					</prop>
 					<node oor:name="Submenu">
 					<node oor:name="m2U01" oor:op="replace">
-						<prop oor:name="Context" oor:type="xs:string">
-							<value>com.sun.star.sheet.SpreadsheetDocument</value>
-						</prop>
-						<prop oor:name="URL" oor:type="xs:string">
-							<value>vnd.sun.star.script:UltimusFree2.Computo.New_LeenO?language=Basic&amp;location=application</value>
-						</prop>
-						<prop oor:name="ImageIdentifier" oor:type="xs:string">
-							<value>%origin%/icons/image15</value>
-						</prop>
-						<prop oor:name="Title" oor:type="xs:string">
-							<value>Nuovo Computo</value>
-						</prop>
-						<prop oor:name="Target" oor:type="xs:string">
-							<value>_self</value>
-						</prop>
-					</node>
-					<node oor:name="m2U02" oor:op="replace">
 						<prop oor:name="Context" oor:type="xs:string">
 						<value></value>
 						</prop>

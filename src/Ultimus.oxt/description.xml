@@ -5,7 +5,7 @@
  xmlns:xlink="http://www.w3.org/1999/xlink">
 	<!-- <identifier value="vnd.bartaimar.ultimusfree4"/> -->
 	<identifier value="org.giuseppe-vizziello.leeno"/>
-	<version value="3.10.0"/>
+	<version value="3.10.1"/>
 	<!-- <dependencies>
 		<OpenOffice.org-minimal-version value="2.2" dep:name="OpenOffice.org 2.2"/>
 	</dependencies> -->

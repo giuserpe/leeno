@@ -1,5 +1,5 @@
-LeenO-3.10.0
+LeenO-3.10.1
 (c) 2014 Giuseppe Vizziello
 
 LeenO - Computo metrico assistito
-* applicativo per computi metrici estimativi *
+* software libero per computi metrici estimativi *

@@ -163,9 +163,12 @@ rem	end if
 		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
 rem NUOVO NUMERO VERSIONE GIUSERPE
 		oSheet.unprotect(&quot;&quot;)
- versioneUF_major= 3 &apos;4
- versioneUF_minor= 10 &apos;0
- versioneUF_subversion= 0 &apos;&quot;DEV&quot;
+rem ----------------------------------------------------------------------
+rem le tre che seguono sono settate in &quot;_variabili&quot;
+&apos;versioneUF_major=
+&apos;versioneUF_minor=
+&apos;versioneUF_subversion=
+rem ----------------------------------------------------------------------
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion
@@ -702,9 +705,12 @@ dim Esiste as boolean
 	oSheet.unprotect(&quot;&quot;)
 	&apos;xray oSheet
 	
- versioneUF_major= 3&apos;4
- versioneUF_minor= 10&apos;0
- versioneUF_subversion= 0&apos;&quot;DEV&quot;
+rem ----------------------------------------------------------------------
+rem le tre che seguono sono settate in &quot;_variabili&quot;
+&apos;versioneUF_major=
+&apos;versioneUF_minor=
+&apos;versioneUF_subversion=
+rem ----------------------------------------------------------------------
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion

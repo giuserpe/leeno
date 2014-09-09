@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="file_gest" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.0
+&apos; LeenO 3.10.1
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -33,13 +33,19 @@ End Sub
 
 Sub new_leeno
 New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
+	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
+		&amp; &quot;Provvedi subito a dare un nome al file di computo...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
+	salva_doc_come
 End Sub
 
 Sub new_listino
 New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
+	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
+		&amp; &quot;Provvedi subito a dare un nome al file di listino...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
+	salva_doc_come
 End Sub
 
-sub ExempleAppel
+sub make_pack
   Dim oDoc
   Dim sPath$
   Dim a(0) As New com.sun.star.beans.PropertyValue
@@ -51,11 +57,10 @@ rem ----------------------------------------------------------------------
 	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
 rem ----------------------------------------------------------------------
-	nomeZip = &quot;C:\resultat_&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;
-	print ConvertToUrl(nomeZip)
-	Print extensionLocation
-&apos; call
-
+rem le variabili di versione sono settate In &quot;_vaiabili&quot;
+	nomeZip = &quot;W:\_dwg\ULTIMUSFREE\_SRC\ultimus\src\Ultimus.oxt\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
+&apos;	print ConvertToUrl(nomeZip)
+&apos;	Print extensionLocation
 &apos; zipfolder(ConvertfromUrl (extensionLocation),nomeZip)
  zipfolder(extensionLocation,ConvertToUrl(nomeZip))
 end Sub

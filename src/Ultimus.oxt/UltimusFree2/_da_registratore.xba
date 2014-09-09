@@ -457,4 +457,44 @@ rem ----------------------------------------------------------------------
 dispatcher.executeDispatch(document, azione, &quot;&quot;, 0, Array())
 
 end sub
+
+
+sub _menu_pop
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:ConfigureDialog&quot;, &quot;&quot;, 0, Array())
+
+
+end sub
+
+
+sub salva_doc_come
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(1) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;URL&quot;
+&apos;args1(0).Value = &apos;&quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/ultimus/modelli/Senza%20nome%204.ods&quot;
+args1(1).Name = &quot;FilterName&quot;
+args1(1).Value = &quot;calc8&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:SaveAs&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
 </script:module>

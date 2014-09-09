@@ -130,7 +130,7 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 	Select Case oSheet.CodeName
 		case = &quot;CONTABILITA&quot;
 		oSheet.getCellRangeByposition(13,0,1023,0).Columns.Width = 1900 &apos; larghezza colonne importi
-		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 800 &apos; larghezza colonne importi
+		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 1000 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(51,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
 &apos;	oSheet.getRows().getByIndex(&quot;1&quot;).Rows.Height = 850 &apos;altezza riga di intestazione
 	rem larghezza colonne

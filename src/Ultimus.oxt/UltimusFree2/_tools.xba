@@ -2,11 +2,68 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
 rem racconta di utility di vario genere
+rem ----------------------------------------------------------------------
+rem induividua la natura del sistema operativo
+Function SpeechEngine()as string     
+  select case getGUIType
+  case 1: SpeechEngine=iif(fileExists (fsProgramDirectory &amp; &quot;eSpeak\command_line\espeak.exe&quot;),&quot;ESPEAK&quot;,&quot;SAPI&quot;) &apos;Win
+  case 3: SpeechEngine=iif((fileExists(&quot;/usr/bin/espeak&quot;) or ifileExists(&quot;/usr/local/bin/espeak&quot;)),&quot;ESPEAK&quot;,&quot;SAY&quot;) &apos;Old Mac
+  case else: SpeechEngine=iif((fileExists(&quot;/usr/bin/espeak&quot;) or fileExists(&quot;/usr/local/bin/espeak&quot;)),&quot;ESPEAK&quot;,&quot;SAY&quot;) &apos;Posix
+  end Select
+  Print SpeechEngine
+end Function
+rem ----------------------------------------------------------------------
+Function fsProgramDirectory
+Dim c as string
+c = environ(&quot;ProgramFiles&quot;)
+if instr(c, &quot;\&quot;) &lt;&gt; 0 then
+   fsProgramDirectory= c &amp; &quot;\&quot;
+else
+   fsProgramDirectory=&quot;/usr/bin/&quot;
+end If
+End Function
+rem ----------------------------------------------------------------------
+Function getOS()as String
+  Select Case getGUIType
+  Case 1: 
+    getOS=&quot;WINDOWS&quot;
+  Case 3: 
+    getOS=&quot;MAC&quot;
+  Case 4: 
+    If Instr(Environ(&quot;PATH&quot;),&quot;openoffice&quot;)=0 And Instr(Environ(&quot;PATH&quot;),Lcase(fsGetSetting(&quot;ooname&quot;)))=0 Then
+     getOS=&quot;OSX&quot;
+    Else
+     getOS=&quot;UNIX&quot;
+    Endif
+  End Select
+&apos;  Print getOS
+End Function
+rem ----------------------------------------------------------------------
+Function fsGetSetting(sA)
+   GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+   Dim oProdNameAccess As Object
+   oProdNameAccess=GetRegistryKeyContent(&quot;org.openoffice.Setup/Product&quot;)
+&apos;  xray oProdNameAccess
+    Select Case Lcase(sA)
+    Case &quot;language&quot;
+      fsGetSetting=GetStarOfficeLocale().language
+   Case &quot;country&quot;
+      fsGetSetting=GetStarOfficeLocale().country
+   Case &quot;ooname&quot;
+      fsGetSetting=oProdNameAccess.getByName(&quot;ooName&quot;)
+   Case &quot;ooversion&quot;
+      fsGetSetting=oProdNameAccess.getByName(&quot;ooSetupVersion&quot;)
+   Case Else
+      fsGetSetting=&quot;???&quot;
+   End Select
+End Function
+rem ----------------------------------------------------------------------
+
 
 Sub gfdsa
-print myround(105,idxdec)
+print fsGetSetting(&quot;language&quot;)
+&apos;print myround(105,idxdec)
 End Sub
-
 
 Function myround (MioNum As double, Dec As integer)&apos; (C) Giuseppe Vizziello 2014
 rem approssimazione di MioNum a n Dec

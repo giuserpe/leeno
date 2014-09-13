@@ -649,8 +649,7 @@ Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 		
 	next i
 	&apos;importo lavori
-&apos;	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU-1 &amp; &quot;)&quot; rigabart
-	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot;
+	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU+1 &amp; &quot;)&quot;
 	rem RINUNCIO ALL&apos;USO DELLA COLONNA AP
 &apos;	oSheet.GetCellByPosition(40 , lrowStart1).Formula = sFormula
 &apos;IMPORTO
@@ -720,7 +719,7 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 	For i = lrowStart1+1 To lRowE 
 		if oSheet.GetCellByPosition(18 , i).CellStyle = &quot;livello2 scritta mini&quot; Or _ 
 			oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Comp TOTALI&quot; or _
-			oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Livello-1-scritta mini&quot; or _
+			oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Livello-1-scritta mini val&quot; or _
 			lrowE &lt;= i-1 then
 			lRowU = i
 			exit for
@@ -730,7 +729,7 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 	&apos;sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;S&quot; &amp; lRowU-1 &amp; &quot;)&quot; &apos;rigabart
 	&apos;IMPORTO
 &apos;	Print lRowU
-	sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU &amp; &quot;)&quot; &apos;totale per categoria
+	sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU+1 &amp; &quot;)&quot; &apos;totale per categoria
 	oSheet.GetCellByPosition(18 , lrowStart1).Formula = sFormula
 	oSheet.GetCellByPosition(18 , lrowStart1).CellStyle = &quot;livello2 scritta mini&quot;
 	&apos;INCIDENZA IMPORTO
@@ -1525,7 +1524,8 @@ sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 	If ThisComponent.currentController.activeSheet.name = &quot;Listino&quot; Then	 		
  		Tronca_Altezza_Voci_Listino
  		exit sub
-	end if 
+	end If
+Exit sub
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 		if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
 	 		MsgBox &quot;1 L&apos;opzione non è prevista su questo foglio!!!&quot;

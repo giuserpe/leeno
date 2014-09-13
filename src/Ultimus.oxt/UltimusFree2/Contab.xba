@@ -846,7 +846,7 @@ sub testzzzzzzzz
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
 	Print thisComponent.getCurrentSelection().rows.IsStartOfNewPage
 &apos;	oSheetCont.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage = False
-	xray thisComponent.getCurrentSelection().rows&apos;ThisComponent.currentselection
+	xray StarDesktop&apos;thisComponent&apos;.getCurrentSelection().rows&apos;ThisComponent.currentselection
 end sub
 
 sub firme (lrow as long)&apos;, nr as long) &apos;(C) Giuseppe Vizziello 2014

@@ -24,7 +24,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3&apos;4
 Public Const versioneUF_minor= 10&apos;0
-Public Const versioneUF_subversion= 1&apos;&quot;DEV&quot;
+Public Const versioneUF_subversion= &quot;2.dev&quot;
 
 rem ----------------------------------------------------------------------
 rem solo un appunto: clearContents()

@@ -30,41 +30,54 @@ rem ----------------------------------------------------------------------
 	sPath$ = extensionLocation &amp; filepath
 	oDoc = StarDesktop.LoadComponentFromUrl(sPath$, &quot;_blank&quot; , 0, a())
 End Sub
-
+rem ----------------------------------------------------------------------
 Sub new_leeno
 New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
 	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 		&amp; &quot;Provvedi subito a dare un nome al file di computo...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
 	salva_doc_come
 End Sub
-
+rem ----------------------------------------------------------------------
 Sub new_listino
 New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
 	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 		&amp; &quot;Provvedi subito a dare un nome al file di listino...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
 	salva_doc_come
 End Sub
-
+rem ----------------------------------------------------------------------
+Sub new_usobollo
+New_FILE (&quot;/template/offmisc/UsoBollo.ott&quot;)
+	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
+		&amp; &quot;Provvedi subito a dare un nome al documento...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
+	salva_doc_come
+End Sub
+rem ----------------------------------------------------------------------
+rem pacchettizza l&apos;estensione direttamente nel mio archivio
 sub make_pack
-  Dim oDoc
-  Dim sPath$
-  Dim a(0) As New com.sun.star.beans.PropertyValue
 rem ----------------------------------------------------------------------
 	Dim pip As Object, extensionLocation As String
-	
 	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
 	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
 	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
 rem ----------------------------------------------------------------------
 rem le variabili di versione sono settate In &quot;_vaiabili&quot;
-	nomeZip = &quot;W:\_dwg\ULTIMUSFREE\_SRC\ultimus\src\Ultimus.oxt\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
-&apos;	print ConvertToUrl(nomeZip)
+	If getos()=&quot;WINDOWS&quot; Then
+		nomeZip = &quot;W:\_dwg\ULTIMUSFREE\_SRC\ultimus\src\Ultimus.oxt\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
+	Else 
+		nomeZip = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/ultimus/src/Ultimus.oxt/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
+	End If
 &apos;	Print extensionLocation
-&apos; zipfolder(ConvertfromUrl (extensionLocation),nomeZip)
  zipfolder(extensionLocation,ConvertToUrl(nomeZip))
 end Sub
-
+rem ----------------------------------------------------------------------
+rem l&apos;estensione va installata solo per l&apos;utente corrente
+sub make_LOportable
+	Dim appLocation As string, nomeZip As String 
+	appLocation = ConvertToUrl (&quot;W:\programmi\LibreOfficePortablePrevious&quot;)
+	nomeZip = ConvertToUrl (&quot;x:\LibreOfficePortablePrevious_4.2.6-secfix_LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;)
+	zipfolder(appLocation,nomeZip)
+end Sub
 rem The paths should NOT be URLs.
 rem Warning, the created ZIP file contains two extra artifacts.
 rem (1) A Meta-Inf direction, which contains a manifest file.

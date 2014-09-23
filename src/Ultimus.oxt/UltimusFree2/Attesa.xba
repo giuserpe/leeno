@@ -364,9 +364,9 @@ if sPG1 = 0 or isEmpty (sPG1) then
 &apos; oProgressBar.Start(&quot;&quot;,100)&apos;
  &apos; oProgressBar.Value = 100
  oProgressBar.Start(&quot;&quot;,100)&apos;
- oProgressBar.Value = 60
+ oProgressBar.Value = 20
 
- oProgressBar.Text = &quot; 4 Attendi pazientemente!&quot;
+ oProgressBar.Text = &quot;#4 Attendi...&quot;
  sPG1 = 1
  else
  &apos; print &quot;barra aperta! (la elimino)&quot;
@@ -557,16 +557,12 @@ SUB Ripristina_statusLine_______________ &apos;eseguendo questa &quot;magicament
 	oMioRange.Sort(aSortDesc())
 End SUB	
 
-sub provala
-&apos;i as string
-for i = 0 to 1000
+Sub barra_fatto
+Barra_Apri_Chiudi_5(&quot;Fatto!&quot;, 1000)
+	wait 1000
+Barra_chiudi_sempre_4 
+End Sub
 
-	Barra_Apri_Chiudi_5( &quot; Attendi... Pazienta...&quot;, 0)
-	next
-&apos;	 wait 4000	
-&apos;	Barra_Apri_Chiudi_5(&quot; Attendi... Pazienta...&quot;, 10)
-
-end sub
 
 Sub Main23456 
 &apos;	 fenDoc = ThisComponent.CurrentController.Frame.ContainerWindow 

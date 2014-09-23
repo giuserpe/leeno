@@ -19,13 +19,37 @@ Global oActiveCell1
 Global SGenericoMemo
 Global sMemoPesca
 
+Function cerca_riga_rossa(oNomeSheet) &apos; (c) Giuseppe Vizziello 2014
+&apos;	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
+	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
+	lastRow=getLastUsedRow(oSheet)
+	For i = 0 To lastRow
+&apos;	Print i
+&apos;print oSheet.GetCellByPosition(0,i).cellstyle
+		If oSheet.GetCellByPosition(0,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
+			oSheet.GetCellByPosition(1,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
+			oSheet.GetCellByPosition(2,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; Then
+	cerca_riga_rossa = i
+			Exit For 
+		End If
+	Next
+	if  cerca_riga_rossa = 0 Then
+		msgbox (&quot;Quasi certamente manca la riga rossa di chiusura della tabella!&quot;&amp; CHR(10)_
+		&amp; &quot;Controlla e PROVVEDI!&quot;, 16, &quot;ERRORE!&quot;)
+		Exit Function 
+	End If
+cerca_riga_rossa = i
+&apos;Print cerca_riga_rossa
+End Function
+
 FUNCTION Controllo_riga_rossa_EP () &apos; sperimentale... visto che ho contaop 24 controlli forse è
 &apos; meglio accentrarli?
 	sString$ = &quot;Fine elenco&quot;
 	oEnd=uFindString(sString$, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Quasi certamente manca la riga rossa di chiusura della tabella! Controlla e PROVVEDI! &quot;
+		msgbox (&quot;Quasi certamente manca la riga rossa di chiusura della tabella!&quot;&amp; CHR(10)_
+		&amp; &quot;Controlla e PROVVEDI!&quot;, 16, &quot;ERRORE!&quot;)
 		Controllo_riga_rossa_EP = &quot;assente&quot;
 	end if 
 End FUNCTION

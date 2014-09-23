@@ -11,10 +11,19 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-Sub Inser_Capitolo
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+Sub Inser_Capitolo  
+	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
+ 				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
+ 	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
+ 		exit sub
+ 	end If
+Inser_Capitolo_arg (sTesto)
+End Sub
+
+Sub Inser_Capitolo_arg (sTesto As string)
+
+Verifica_chiudi_preview
+
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then	exit sub
 	oSheet = ThisComponent.currentController.activeSheet
@@ -68,96 +77,33 @@ rem STABILISCE LA POSIZIONE DI INSERIMENTO
 	sStRange = Circoscrive_Voce_Computo_Att (lrow)
 &apos;			print i
 	lrow = sStRange.RangeAddress.EndRow+1
-	goto inserisci_voce
 rem ----------------------------------------------------------------------
-GoTo ooooooooooooooooooooooooooooooooooooooo:
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-	lrowFine=oEnd.RangeAddress.EndRow 
-	If lrow &gt; lrowFine Then
-		lrow = lrowFine
-		goto inserisci_voce
-&apos;		msgbox &quot;sei fuori dal seminato... non posso inserire una nuova Voce &quot;_
-&apos;		&amp; &quot;fuori dall&apos;area definita dalla riga rossa di chiusura...&quot;
-&apos;		exit sub
-	end if
-
-	if lrow = 0 then
-		lrow = 3&apos;+2
-	end If
-
-	
-	 For nCurRow = lrow To lrowFine &apos; SE LA TABELLA è SENZA VOCI, CIOé VUOTA
-&apos;	 ThisComponent.CurrentController.Select(oCell)&apos; debug
-	 	if oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;&quot; 	then
-	 	 	if 	nCurRow = lrowFine 	then
-	 					Select Case lrowFine
-	 						case &lt;= 3
-	 							insRows (lrowFine, 4)
-&apos;	 							 oSheet.getRows.insertByIndex(lrowFine, 4)
-	 							 lrowFine = lrowFine +4
-	 					&apos;	case &gt; 4
-	 				&apos;			print &quot;b&quot;
-	 					&apos;		ltogli = lrowFine-4
-	 						&apos;	oSheet.getRows.removeByIndex(1,ltogli)
-	 						&apos;	lrowFine = lrowFine-ltogli
-	 					end select
-	 					
-	 					lrow = lrowFine -2
-	 				&apos;	print 
-	 					goto Inserisci_voce 
-	 		 			exit for
-	 		 		else
-	 		 			exit for
-	 		 end if
-	 	end if 
-				&apos;nCurRow = nCurRow+1
-				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
-	next 
-&apos;..........................................................
-
-
-	oCell=oSheet.GetCellbyPosition( 0, lrow)&apos; lrow )
-	sAttributo_N = Trova_Attr_N (oCell, oSheet)
-	if sAttributo_N = &quot;Start_voce_COMPUTO&quot; then &apos; esattamente all&apos;inizio di una voce
-		nCurRow = lrow
-		goto inserisci_voce
-	end if
-	
-	
- 	For nCurRow = lrow To lrowFine
-		 oCell=oSheet.GetCellbyPosition( 0, nCurRow)&apos; lrow )
-		 sAttributo_N = Trova_Attr_N (oCell, oSheet)
-	
-			if sAttributo_N = &quot;Start_voce_COMPUTO&quot; then
-				lrow = ocell.celladdress.row
-				exit for
-			end if
-			if nCurRow = lrowFine then
-			&apos;	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;
-				Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;
-						nCurRow = nCurRow-1
-						oCell=oSheet.GetCellbyPosition( 0, nCurRow)
-				loop
-				lrow = ocell.celladdress.row+1
-				exit for
-			end if
- 	next
-ooooooooooooooooooooooooooooooooooooooo:
 inserisci_voce:
-&apos;			lrow= Range2Cell 
-	sTesto = InputBox (&quot;11 Inserisci il titolo:&quot;&amp; CHR$(10)_
- 				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
- 	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
- 		exit sub		
- 	end If
+&apos;	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
+&apos;				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
+&apos; 	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
+&apos; 		exit sub		
+&apos; 	end If
  	insRows (lrow, 1) &apos;inserisci riga
 	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
+rem ----------------------------------------------------------------------
+rem inserisco i valori e le formule
+oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;Livello-1-scritta&quot;
+oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = &quot;Livello-1-scritta mini&quot;
+oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = &quot;Livello-1-scritta mini val&quot;
+oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
+oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
+oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;Livello-1-scritta mini val&quot;
+oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1
+rem ----------------------------------------------------------------------
 	ThisComponent.CurrentController.Select(oCell)
 Adatta_Altezza_riga
-	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-	oSrc = oSheetSRC.getCellRangeByPosition(0,3,41,3).RangeAddress &apos;origine solo il rigo utile
-	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
-	oSheet.copyRange(oDest, oSrc) &apos;incolla
+rem ----------------------------------------------------------------------
+&apos;	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+&apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,3,41,3).RangeAddress &apos;origine solo il rigo utile
+&apos;	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
+&apos;	oSheet.copyRange(oDest, oSrc) &apos;incolla
+rem ----------------------------------------------------------------------
 	oCell=oSheet.GetCellbyPosition( 2, lRow)
  	oCell.string=sTesto &apos;scrive titolo
 
@@ -166,7 +112,7 @@ Adatta_Altezza_riga
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 or 1 then 
 	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
 			lrowProvv = lrow-1
-			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;			
+			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;
 					If lrowProvv &gt; 4 then
 							lrowProvv = lrowProvv-1
 						else
@@ -175,10 +121,8 @@ Adatta_Altezza_riga
 			&apos;		print lrowProvv
 			loop
 			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
-		&apos;	dim numCap1 as long
 			numCap1 = numCap
 			ocellBaseR.value = numCap1 +1
-	&apos;dis_080217		ThisComponent.CurrentController.Select(ocellBaseA)
 	end if 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 then 
 	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
@@ -198,7 +142,7 @@ Adatta_Altezza_riga
 	end if 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 0 then 
 			ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1, lRow+1)) &apos;31
-&apos;---------		
+rem ----------------------------------------------------------------------
 			lrowAlT = lRow &apos;-1
 			do while oSheet.GetCellByPosition(31 , lrowAlT).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot; 
 				If lrowAlT &gt; 1 then
@@ -219,14 +163,10 @@ Adatta_Altezza_riga
  			If sTesto2 = &quot;&quot; then &apos; se si preme annulla Inputbox restituisce una stringa vuota
  				exit sub		
  			end if
- 
-
  	end If
-&apos; 	oSheet.GetCellbyPosition( 31, lRow+1).string=&quot;sTesto2 &apos;31&quot;
-
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 1 then 
 			Inser_SottoCapitolo
-	end if
+	end If
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 1 or _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 2 then 
 		&apos;	PRINT &quot;Adesso Rinumera_TUTTI_Capitoli&quot;
@@ -236,10 +176,6 @@ Adatta_Altezza_riga
 	end if
 	ThisComponent.CurrentController.Select(ocellBaseA)
 End Sub
-
-
-
-
 
 
 SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row
@@ -275,7 +211,7 @@ SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che for
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&apos;rifà la riga delle somme in fondo e in testa al computo
 &apos;	print
-	Rifa_Somme_TOT_Computo
+Rifa_Somme_TOT_Computo
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
 	&apos; se la varg gen disattiva l&apos;automatismo
@@ -320,9 +256,18 @@ END SUB
 
 rem ----------------------------------------------------------------------
 Sub Inser_SottoCapitolo
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
+				&amp; &quot; &quot;,&quot; Nuova SottoCategoria&quot;, &quot;SottoCategoria ??&quot;)&apos; &amp; CHR$(10) 
+	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
+ 		exit sub		
+ 	end If
+Inser_SottoCapitolo_arg (sTesto)
+End Sub 
+
+Sub Inser_SottoCapitolo_arg (sTesto As String)
+
+Verifica_chiudi_preview
+
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then	 
 		exit sub
@@ -381,25 +326,29 @@ rem STABILISCE LA POSIZIONE DI INSERIMENTO
 	sStRange = Circoscrive_Voce_Computo_Att (lrow)
 &apos;			print i
 	lrow = sStRange.RangeAddress.EndRow+1
-	goto inserisci_voce
 rem ----------------------------------------------------------------------
 inserisci_voce:
-	sTesto = InputBox (&quot;11 Inserisci il titolo:&quot;&amp; CHR$(10)_
-				&amp; &quot; &quot;,&quot; Nuova SottoCategoria&quot;, &quot;SottoCategoria ??&quot;)&apos; &amp; CHR$(10) 
-	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
- 		exit sub		
- 	end If
  	insRows (lrow, 1) &apos;inserisci riga
 	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
+rem ----------------------------------------------------------------------
+rem inserisco i valori e le formule
+oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;livello2 valuta&quot;
+oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = &quot;livello2_&quot;
+oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = &quot;livello2 scritta mini&quot;
+oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = &quot;livello2 valuta mini %&quot;
+oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;livello2 valuta mini %&quot;
+oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;livello2 valuta mini&quot;
+oSheet.getCellRangeByPosition(31, lrow, 32, lrow).CellStyle = &quot;livello2_&quot;
+oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1 &amp; &quot;&amp;&quot;&quot;.&quot;&quot;&amp;AG&quot; &amp; lrow+1
+rem ----------------------------------------------------------------------
 	ThisComponent.CurrentController.Select(oCell)
 Adatta_Altezza_riga
-	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-
-	&apos;oSrc = oSheetSRC.getCellRangeByPosition(72,49,119,51).RangeAddress
-	oSrc = oSheetSRC.getCellRangeByPosition(0,6,41,6).RangeAddress &apos;origine
-	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
-	oSheet.copyRange(oDest, oSrc) &apos; incolla
-	 
+rem ----------------------------------------------------------------------
+&apos;	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+&apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,6,41,6).RangeAddress &apos;origine
+&apos;	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
+&apos;	oSheet.copyRange(oDest, oSrc) &apos; incolla
+rem ----------------------------------------------------------------------
 	oCell=oSheet.GetCellbyPosition( 2, lRow) &apos;+2)
 	oCell.string=sTesto &apos;scrive titolo
 	ocellBaseA = oSheet.GetCellbyPosition( 31, lRow) &apos;tag Cat
@@ -664,7 +613,7 @@ Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 	oSheet.GetCellByPosition(29 , lrowStart1).Formula = sFormula
 	oSheet.GetCellByPosition(29 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini %&quot;
 &apos;IMPORTO MANODOPERA
-	sFormula = &quot;=SUBTOTAL(9;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:AE&quot; &amp; lRowU &amp; &quot;)&quot; &apos;totale per categoria
+	sFormula = &quot;=SUBTOTAL(9;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:AE&quot; &amp; lRowU+1 &amp; &quot;)&quot; &apos;totale per categoria
 	oSheet.GetCellByPosition(30 , lrowStart1).Formula = sFormula
 	oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini val&quot;
 &apos;importo manodopera
@@ -742,7 +691,7 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 	oSheet.GetCellByPosition(29 , lrowStart1).CellStyle = &quot;livello2 valuta mini %&quot;
 	&apos;MANODOPERA in AE
 
-	sFormula = &quot;=SUBTOTAL(9;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:AE&quot; &amp; lRowU &amp; &quot;)&quot; &apos;totale per categoria
+	sFormula = &quot;=SUBTOTAL(9;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:AE&quot; &amp; lRowU+1 &amp; &quot;)&quot; &apos;totale per categoria
 	oSheet.GetCellByPosition(30 , lrowStart1).Formula = sFormula
 	oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;livello2 valuta mini&quot;
 	&apos;importo manodopera in col AP

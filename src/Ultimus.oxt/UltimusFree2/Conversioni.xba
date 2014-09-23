@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Conversioni" script:language="StarBasic">REM  *****  BASIC  *****
+
+Sub da_vecchio_template &apos; da template 189
+&apos;	oSheet=ThisComponent.currentController.activeSheet 
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+	
+	If oSheet.GetCellByPosition(9, 0).getString() = &quot;Quantità computo&quot; &amp; chr(10) &amp; &quot; progetto&quot; And _
+		oSheet.GetCellByPosition(5, 0).getString() = &quot;lungh / Sup.&quot; Then
+		GoTo avvia_processo:
+		Else
+msgbox &quot;Questo file sembra già in ordine!&quot;, 16, &quot;ATTENZIONE!&quot;
+		Exit Sub
+	endif
+avvia_processo:
+Colora_Tabs
+AutoCalc (0)
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+rem ----------------------------------------------------------------------
+rem sistema elenco prezzi
+Inizializza_elenco
+aggiorna_STILI
+rem ----------------------------------------------------------------------
+	&apos;Versione del template													versione di UltimusFree installata
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).String
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).String
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,294).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,294).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).string
+	
+rem ----------------------------------------------------------------------
+rem sistema computo
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+
+Computo_Normale_terra_terra
+Controlla_Somme_Componenti_conversioni
+Rifa_somme_tot_computo
+Togli_Struttura
+rem ----------------------------------------------------------------------
+rem elimina righe vuote
+Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 50)
+	i = getLastUsedRow(oSheet)
+	Do While i &gt; 0
+&apos;	Print i
+&apos;	Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
+			if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(0, i).cellstyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;Comp End Attributo&quot; And _
+				oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(2, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(3, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(4, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(5, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(6, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(7, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(8, i).string = &quot;&quot; Then
+				oSheet.getrows.removebyindex(i,1)
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(8, i))
+			end If
+	i=i-1
+	Loop
+
+AutoCalc (1)
+	msgbox &quot;FINITO&quot;
+barra_fatto
+End Sub
+
+sub aggiorna_STILI &apos;tutti in blocco e sovrascrive 
+	&apos; aggiorno gli stili di cella sulla base di quelli del template di riferimento
+	&apos; attenzione li sovrascrive tutti (modulo suggerito da dfrench - Nuova Zelanda)
+	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
+	extensionLocation = pip.getPackageLocation(extensionIdentifier)
+rem ----------------------------------------------------------------------
+rem fa riferimento all&apos;ultimo template
+	sSourceURL = extensionLocation &amp; &quot;/template/leeno/Computo_LeenO.ots&quot;
+&apos;	sSourceURL = GetFileURL( &quot;Cerca il file da cui prelevare gli stili.&quot;)
+&apos;	Print sSourceURL
+	If ismissing(sSourceURL ) or sSourceURL = &quot;&quot; Then &apos;sFileURL
+ 		exit sub
+	end If
+	
+	curl = ConvertToUrl(sSourceURL) &apos;sSourceURL
+	styles=thiscomponent.getStyleFamilies() &apos;get the interface to load styles
+	styles.loadStylesFromURL(curl,Array()) &apos; by default loads &amp; overrides all styles
+
+end Sub
+
+
+
+Sub Controlla_Somme_Componenti_conversioni &apos; serve per conversione Da_Vecchio_Template
+&apos;Dim val1 As Long , val2 As Long , val3 As Long , val4 As Long , val5
+	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+&apos;	lastUrow = getLastUsedRow(oSheet)
+&apos;	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
+&apos;	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
+&apos;	lRowE=oEnd.RangeAddress.EndRow 
+	lRowE=cerca_riga_rossa (&quot;COMPUTO&quot;)
+&apos;Print lRowE
+	for i =0 to lRowE
+rem ----------------------------------------------------------------------
+rem controlla i calcoli
+		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
+			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; then
+				lRow = i
+				do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp End Attributo&quot;
+						lRow = lRow+1
+				Loop
+				&apos;oSheet.GetCellByPosition( 9 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
+				oSheet.GetCellByPosition( 9 , i+1).string = &quot;&quot;
+				&apos;oSheet.GetCellByPosition( 10 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
+				oSheet.GetCellByPosition( 10 , i+1).string = &quot;&quot;
+				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
+				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
+				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
+&apos;				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
+				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
+				For ii = i+2 To lRow-1
+&apos;				Print ii
+&apos;goto SOLO_CONVERSIONI:
+				If oSheet.GetCellByPosition( 2 , ii).cellstyle = &quot;comp 1-a&quot; Then
+&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 2 , ii)) &apos;debug
+					if oSheet.GetCellByPosition( 4 , ii).getstring() &lt;&gt;&quot;&quot; Then
+						 val1= oSheet.GetCellByPosition( 4 , ii).getvalue()
+						 else
+						 val1= &quot;&quot;
+					EndIf 
+					if oSheet.GetCellByPosition( 5 , ii).getstring() &lt;&gt;&quot;&quot; Then
+						 val2= oSheet.GetCellByPosition( 5 , ii).getvalue()
+						 else
+						 val2= &quot;&quot;
+					EndIf
+					if oSheet.GetCellByPosition( 6 , ii).getstring() &lt;&gt;&quot;&quot; Then
+						 val3= oSheet.GetCellByPosition( 6 , ii).getvalue()
+						 else
+						 val3= &quot;&quot;
+					EndIf
+					if oSheet.GetCellByPosition( 7 , ii).getstring() &lt;&gt;&quot;&quot; Then
+						 val4= oSheet.GetCellByPosition( 7 , ii).getvalue()
+						 else
+						 val4= &quot;&quot;
+					EndIf
+					if oSheet.GetCellByPosition( 8 , ii).getstring() &lt;&gt;&quot;&quot; Then
+						 val5= oSheet.GetCellByPosition( 8 , ii).getvalue()
+						 else
+						 val5= &quot;&quot;
+					EndIf
+				&apos;	Print val1 &amp; &quot; &quot; &amp; val2 &amp; &quot; &quot; &amp; val3 &amp; &quot; &quot; &amp; val4 &amp; &quot; &quot; &amp; val5
+	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(4, ii, 8, ii))
+cancella_dati
+oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
+&apos;AutoCalc (0)
+					If val5 = &quot;&quot; And val1 = &quot;&quot; Then oSheet.GetCellByPosition( 5 , ii).string = &quot;&quot;
+&apos;Print clng (val1)
+					If val5 = &quot;&quot; And val1 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 5 , ii).value = val (join(split (join(split (val1,&quot;.&quot;), &quot;&quot;),&quot;,&quot;), &quot;.&quot;))
+					If val5 &lt;&gt; &quot;&quot; And val1 = &quot;&quot; Then oSheet.GetCellByPosition( 5 , ii).value = val (join(split (join(split (val5,&quot;.&quot;), &quot;&quot;),&quot;,&quot;), &quot;.&quot;))
+					
+					val1= join(split (join(split (val1,&quot;.&quot;), &quot;&quot;),&quot;,&quot;), &quot;.&quot;)
+					val5= join(split (join(split (val5,&quot;.&quot;), &quot;&quot;),&quot;,&quot;), &quot;.&quot;)
+					
+					stringaf = &quot;=&quot; &amp; val5 &amp; &quot;*&quot; &amp; val1
+					If val5 &lt;&gt; &quot;&quot; And val1 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 5 , ii).formula = stringaf
+					If val2 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 6 , ii).value = val (join(split (join(split (val2,&quot;.&quot;), &quot;&quot;),&quot;,&quot;), &quot;.&quot;))
+					If val3 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 7 , ii).value = val (join(split (join(split (val3,&quot;.&quot;), &quot;&quot;),&quot;,&quot;), &quot;.&quot;))
+					If val4 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 8 , ii).value = val (join(split (join(split (val4,&quot;.&quot;), &quot;&quot;),&quot;,&quot;), &quot;.&quot;))
+				End If
+
+ &apos;  ThisComponent.calculateAll()
+&apos;				Print 
+SOLO_CONVERSIONI: 
+				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+				i = lRow &apos;+ 1
+				Next 
+		end if
+	Next
+&apos;   ThisComponent.calculateAll()
+end sub
+
+</script:module>

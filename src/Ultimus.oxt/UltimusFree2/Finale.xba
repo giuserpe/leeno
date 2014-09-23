@@ -1384,17 +1384,8 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;		lLastUrow = getLastUsedRow(oSheet)
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 2
-		
-	&apos;		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-	&apos;	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
-	&apos;			right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
-	&apos;			right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
-	&apos;			right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
 		selArea(0).EndColumn = 41&apos; getLastUsedCol(oSheet)
 	&apos;	end if	
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	
-
-&apos;		selArea(0).EndRow = lLastUrow
 		selArea(0).EndRow = lRowE
 	
 		oSheet.setPrintTitleRows(True)
@@ -1494,10 +1485,13 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
 		oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 		rIntest=oStart.CellAddress.Row
-		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)			
-		lRowE=oEnd.CellAddress.Row
+&apos;		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+&apos;xray oEnd
+&apos;		lRowE=oEnd.CellAddress.Row
+&apos;oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
 &apos;		lLastUrow = getLastUsedRow(oSheet) &apos;rem rigabart
-		lLastUrow = lRowE
+&apos;		lLastUrow = lRowE
+	lLastUrow=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
 		&apos;lLastUrow = lRowE+10
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = rIntest

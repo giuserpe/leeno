@@ -618,47 +618,44 @@ end sub
 
 
 
-Sub Controlla_Somme_Componenti
-rem tocca capire se questa sub serve davvero (GV)
-
+Sub Controlla_Somme_Componenti &apos; serve per conversione Da_Vecchio_Template
+	fissa (0, 3)
+&apos;Dim val1 As Long , val2 As Long , val3 As Long , val4 As Long , val5
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
-
-	lastUrow = getLastUsedRow(oSheet)
+	ThisComponent.CurrentController.Select(oSheet)
+&apos;	lastUrow = getLastUsedRow(oSheet)
 &apos;	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-&apos;	If isNull (oEnd) or isEmpty (oEnd) then 
-&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-&apos;		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI8! &quot;
-&apos;		exit sub
-&apos;	end if 
-	lRowE=oEnd.RangeAddress.EndRow 
-	for i =3 to lRowE
+&apos;	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
+&apos;	lRowE=oEnd.RangeAddress.EndRow 
+	lRowE=cerca_riga_rossa (&quot;COMPUTO&quot;)
+&apos;Print lRowE
+	for i =0 to lRowE
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
 			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; then
-			&apos;	goto salta:
-			&apos;	if (oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
-			&apos;		oSheet.GetCellByPosition( 1 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;) and _
-			&apos;	 (oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; or _
-			&apos;		oSheet.GetCellByPosition( 3 , i).cellstyle &lt;&gt; &quot;Comp-Biance sopra&quot;)then
-			&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , i))
-			&apos;		msgbox &quot;1 in questa riga c&apos;è qualcosa che non va (non trovo gli stili previsti)&quot;
-			&apos;		exit for
-			&apos;	end if
-			&apos;	salta:
 				lRow = i
 				do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp End Attributo&quot;
 						lRow = lRow+1
-				loop 
-oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
-oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
+				Loop	
+				&apos;oSheet.GetCellByPosition( 9 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
+				oSheet.GetCellByPosition( 9 , i+1).string = &quot;&quot;
+				&apos;oSheet.GetCellByPosition( 10 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
+				oSheet.GetCellByPosition( 10 , i+1).string = &quot;&quot;
+				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
+				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
+				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
 &apos;				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
 				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
-
-
+				For ii = i+2 To lRow-1
+&apos;				Print ii
+oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
+				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
 				i = lRow &apos;+ 1
+				Next 
 		end if
-	next
-
+	Next
+	fissa (0, 3)
+	ThisComponent.calculateAll()
 end sub
 
 

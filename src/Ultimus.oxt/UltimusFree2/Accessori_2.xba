@@ -452,21 +452,42 @@ end if
 END SUB
 rem ----------------------------------------------------------------------
 SUB Rifa_Somme_TOT_Computo &apos;riscritta da zero (C) Giuseppe Vizziello 2014
+Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 40)
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
 	lRowE=oRow.CellAddress.Row
 rem ----------------------------------------------------------------------
+rem  &apos;ripulisco le prime tre righe
+GoTo anche_questa_sta_in_init_computo:
+	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0, 0, 100, 2))
+Cancella_dati
+	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(12, 0, 16, lRowE))
+Cancella_dati
+	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(22, 0, 23, lRowE))
+Cancella_dati
+	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(28, 0, 28, lRowE))
+Cancella_dati
 	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+	oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
+	oSheet.getCellRangeByPosition(44, 0, 100 , lRowE+10).cellstyle = &quot;Default&quot;
+anche_questa_sta_in_init_computo:
+	i=1+idxcol
+
+&apos;	Do While i &lt; 100
+&apos;	oSheet.GetCellByPosition(i,0).setstring(&quot;&quot;) &apos; tiene l&apos;altezza della riga
+&apos;	oSheet.GetCellByPosition(i,1).setstring(&quot;&quot;)
+&apos;	i=i+1
+&apos;	Loop
+	
 rem ----------------------------------------------------------------------
 rem	riga di controllo importo
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 &apos;	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo lavori
 	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo sicurezza
 	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo lavori
 &apos;	oSheet.GetCellByPosition(19,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;T3:T4);2)&quot; &apos;importo perizia di variante
-	oSheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo manodopera
-	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=ROUND(AE4/S4;2)&quot;  &apos;Incidenza manodopera %
+&apos;	Sheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;incidenza sul totale
+	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=AE2/S2&quot;  &apos;Incidenza manodopera %
 	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo manodopera
 	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AK3:AK&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos; totale computo sole voci senza errori
 &apos;	oSheet.GetCellByPosition(39,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AN3:AN4);2)&quot; &apos; totale computo sole voci senza errori
@@ -476,16 +497,17 @@ rem	riga di controllo importo
 
 &apos;	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE&quot;&amp; lRowE+1 &amp;&quot;);2)&quot; &apos;importo manodopera
 	oSheet.getCellRangeByPosition(0, 1, 43 , 1).cellstyle = &quot;comp In testa&quot;
-	oSheet.getCellByPosition(24,1).cellstyle = &quot;Comp TOTALI %&quot;
+	oSheet.getCellByPosition(29,1).cellstyle = &quot;Comp TOTALI %&quot;
 
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
+&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
 rem ----------------------------------------------------------------------
 rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
  	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A2&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B1&quot;)
 	Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B2&quot;)
-&apos;print	Trova_Attr_Sheet
+rem ----------------------------------------------------------------------
+GoTo questa_sta_in_init_computo:
 rem riga di intestazione
 	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
 	oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
@@ -525,6 +547,7 @@ rem riga di intestazione
 	Adatta_Altezza_riga
 rem ALTEZZA riga di intestazione
 	oSheet.GetCellByPosition(0,2).Rows.Height = 800
+questa_sta_in_init_computo:
 rem ----------------------------------------------------------------------
 rem riga del totale
 	oSheet.GetCellByPosition(2,lRowE).setstring(&quot;TOTALI COMPUTO&quot;)
@@ -555,199 +578,11 @@ rem riga rossa
 	end if
 
 set_larghezza_colonne
-fissa(0,3)
 Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
+fissa(0,3)
+Barra_fatto
+&apos;Rifa_Somme_TOT_Computo 
 End Sub
-
-
-
-SUB Rifa_Somme_TOT_Computo___ &apos; non usata&apos;&apos; rifà la riga delle somme in fondo e in testa al computo
-Print &quot;basta!!!&quot;
-			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
-			sproteggi_sheet_TUTTE
-
-			&apos; con qualcosa che esegua sia se nome sia se Attributo
-			lLastUrow = getLastUsedRow(oSheet)
-			lrowInizio = 3
-			&apos;print	lLastUrow
-			&apos; se non c&apos;è già crea una riga vuota e la formatta
-			flag_tempor = 0
-
-
-			if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(&quot;Comp TOTALI %&quot;)= false then
-				Set oStyleTesta = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)
-				Call Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(&quot;Comp TOTALI %&quot;, oStyleTesta )
-					&apos;	oStyleTesta.IsCellBackgroundTransparent = False
-					&apos;	oStyleTesta.CellBackColor = RGB(230,230,230)
-					&apos;	oStyleTesta.CharFontName = &quot;Arial&quot;
-						oStyleTesta.NumberFormat = 116
-					&apos;	oStyleTesta.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
-					&apos;	oStyleTesta.VertJustify = com.sun.star.table.CellVertJustify.CENTER 
-						oStyleTesta.ParentStyle = &quot;Comp TOTALI&quot; &apos;pseudo-prop 
-			
-			end if
-			
-			if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(&quot;comp In testa&quot;)= false then
-				&apos;	print &quot;non c&apos;é 00000000&quot;
-				 &apos; exit sub
-				 &apos;questa è una prova di creazione di stile di testo... funzia ... ma male
-					Set oStyleTesta = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)
-					Call Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(&quot;comp In testa&quot;, oStyleTesta )
-						oStyleTesta.IsCellBackgroundTransparent = False
-						oStyleTesta.CellBackColor = RGB(230,230,230)
-						oStyleTesta.CharFontName = &quot;Arial&quot;
-						oStyleTesta.CharHeight = 10
-						oStyleTesta.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
-						oStyleTesta.VertJustify = com.sun.star.table.CellVertJustify.CENTER 
-						oStyleTesta.ParentStyle = &quot;Comp No print&quot; &apos;pseudo-prop 
-				&apos; fine creazione stile funzionante (circa)
-
-				&apos; questo invece sembrava non funzionare
-				&apos;	With oStyleTesta
-				&apos;	 	.CellBackColor = RGB(230,230,230) &apos; 15132390 
-				&apos;	 	.CharFontName = &quot;Arial&quot; 
-				&apos;	 	.CharHeight = 20
-				&apos;	End With
-				&apos;		xray oStyleTesta &apos;
-				&apos;	Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(&quot;comp In testa&quot;, oStyleTesta )
-			end if 
-			dim lcolore as long
-			colore = RGB(230,230,230) 
-			lcolore = colore
-		&apos;	If NOT BasicLibraries.isLibraryLoaded( &quot;XrayTool&quot; ) Then 
- 		&apos;	 BasicLibraries.LoadLibrary( &quot;XrayTool&quot; ) 
-		&apos;	End If 
-		&apos;	xray lcolore
-			&apos; la riga seguente continuava a dare errore fino a quando non l&apos;ho dichiarata
-			Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(&quot;Comp No print&quot;).CellBackColor= lcolore 
-			&apos;crea la riga se non c&apos;è
-			&apos;probabilmente superata, serviva per modificare il template all&apos;insaputa dell&apos;utente Comp No print
-			If oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;comp In testa&quot;) AND _
-			 	oSheet.GetCellByPosition( 1, 1).cellstyle &lt;&gt;(&quot;Comp No print&quot;) Then
-			 		insRows (1, 1) &apos;insertByIndex non funziona
-&apos;					oSheet.getRows.insertByIndex(1, 1)
-					osheet.getCellRangeByPosition (0,1,41,1).CellStyle = &quot;comp In testa&quot;
-					osheet.getCellRangeByPosition (0,1,41,1).Rows.OptimalHeight = true
-			end if
-			&apos;salta:
-			if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(&quot;Comp TOTALI&quot;) = false _
-				or Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(&quot;Comp TOTALI num&quot;) = false then
-				&apos;	print &quot;non c&apos;é&quot;
-				if flag_tempor = 1 then
-				&apos;	goto salta
-				end if
-			end if 
-
-		&apos;	For i = 1 To lLastUrow Step 
-			For i = lLastUrow To 2 Step -1			
-				if oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Comp TOTALI sin&quot; or _
-					oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Comp TOTALI&quot; or _
-					oSheet.GetCellByPosition(0 , i).CellStyle = &quot;Comp TOTALI num&quot;or _
-					oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Comp TOTALI&quot; or oSheet.GetCellByPosition(1 , i).CellStyle = &quot;TOTALI&quot; or _
-					oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Comp TOTALI num&quot; or oSheet.GetCellByPosition(0 , i).CellStyle = &quot;TOTALI sin&quot; or _
-					oSheet.GetCellByPosition(1 , i).CellStyle = &quot;Comp TOTALI sin&quot; then
-					lrowFin = i
-					exit for
-				end if 
-			Next i 	
-				&apos;	print &quot;vediamo lrowfin alla fine del For &quot; &amp; lrowFin	
-			if isNull (lrowFin) or isEmpty (lrowFin) then			
-					sString$ = &quot;Fine Computo&quot;
-					oEnd=uFindString(sString$, oSheet) 
-					lrowFin=oEnd.RangeAddress.EndRow 
-				if oSheet.GetCellByPosition(0 ,lrowFin-1).CellStyle = &quot;Default&quot; _
-					And oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle &lt;&gt; &quot;Default&quot; then 
-					Situaz = 1
-				end if
-
-				if oSheet.GetCellByPosition(0 ,lrowFin-1).CellStyle = &quot;Default&quot; _
-					And oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle = &quot;Default&quot; then 
-					Situaz = 2
-				end if
-				if oSheet.GetCellByPosition(0 ,lrowFin-1).CellStyle &lt;&gt; &quot;Default&quot; _
-					And oSheet.GetCellByPosition(0 ,lrowFin-2).CellStyle &lt;&gt; &quot;Default&quot; then 
-					Situaz = 3
-				end if				
-			
-				select case Situaz
-					Case 1
-						insRows (lrowFin, 1) &apos;insertByIndex non funziona
-&apos;						oSheet.getRows.insertByIndex(lrowFin, 1)
-						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin).CellStyle = &quot;Default&quot;
-				&apos;		print &quot;una sola standard&quot;
-					Case 2
-				&apos;		print &quot;due righe standard, quindi vuote&quot;&apos;
-						lrowfin = lrowfin-1
-					Case 3
-						insRows (lrowFin, 2) &apos;insertByIndex non funziona
-&apos;						oSheet.getRows.insertByIndex(lrowFin, 2)
-						oSheet.getCellRangeByPosition (0,lrowFin,41,lrowFin+1).CellStyle = &quot;Default&quot;	
-						lrowfin = lrowfin+1				
-					&apos;	print &quot;nessuna riga&quot;
-				End Select
-		 end if
-
-			&apos;serie &quot;in testa&quot;
-			oSheet.getCellRangeByPosition(0,1,17,1).cellstyle = &quot;Comp No print&quot;
-			oSheet.getCellRangeByPosition(18,1,41,1).cellstyle = &quot;comp In testa&quot;
-			oSheet.GetCellbyPosition(29, 1 ).CellStyle = &quot;comp In testa %&quot;
-
-		&apos;	oSheet.GetCellbyPosition( 2, 1 ).setformula(&quot;=C&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition( 6, 1 ).setformula(&quot;Riassuntiva Totali computo (NB: non appare in stampa)&quot;)
-			oSheet.GetCellbyPosition(18, 1 ).setformula(&quot;=S&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(19, 1 ).setformula(&quot;=T&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(20, 1 ).setformula(&quot;=U&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(21, 1 ).setformula(&quot;=V&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(22, 1 ).setformula(&quot;=W&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(23, 1 ).setformula(&quot;=X&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(24, 1 ).setformula(&quot;=Y&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(25, 1 ).setformula(&quot;=Z&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(26, 1 ).setformula(&quot;=AA&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(27, 1 ).setformula(&quot;=AB&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(28, 1 ).setformula(&quot;=AC&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(29, 1 ).setformula(&quot;=AD&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(30, 1 ).setformula(&quot;=AE&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(36, 1 ).setformula(&quot;=AK&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(39, 1 ).setformula(&quot;=AN&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(40, 1 ).setformula(&quot;=AO&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(41, 1 ).setformula(&quot;=AP&quot; &amp; lrowFin+1)
-
-			&apos;serie totali in fondo
-			oSheet.getCellRangeByPosition(0,lrowFin,17,lrowFin).cellstyle = &quot;Comp TOTALI&quot;
-			oSheet.getCellRangeByPosition(18,lrowFin,41,lrowFin).cellstyle = &quot;Comp TOTALI num&quot;
-			oSheet.GetCellbyPosition(2, lrowFin ).setformula(&quot;TOTALI COMPUTO&quot;)
-&apos;			provo a sostituire la riga di Bart utilizzando il nome di area_dati - verificare compatibilità con altre versioni
-&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(importo_totale)&quot;) rem NON VALE LA PENA
-&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-&apos;			oSheet.GetCellbyPosition(18, lrowFin ).setformula(&quot;=Sum(S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin &amp; &quot;)&quot;)
-
-			sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowInizio &amp; &quot;:S&quot; &amp; lrowFin &amp; &quot;)&quot;		&apos;totali computo
-			oSheet.GetCellByPosition(18 , lrowFin).Formula = sFormula
-			oSheet.GetCellbyPosition(17, lrowFin ).setformula(&quot;=SUBTOTAL(9;R&quot; &amp; lrowInizio &amp; &quot;:R&quot; &amp; lrowFin &amp; &quot;)&quot;)			
-			oSheet.GetCellbyPosition(19, lrowFin ).setformula(&quot;=Sum(T&quot; &amp; lrowInizio &amp; &quot;:T&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(20, lrowFin ).setformula(&quot;=Sum(U&quot; &amp; lrowInizio &amp; &quot;:U&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(21, lrowFin ).setformula(&quot;=Sum(V&quot; &amp; lrowInizio &amp; &quot;:V&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(22, lrowFin ).setformula(&quot;=Sum(W&quot; &amp; lrowInizio &amp; &quot;:W&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(23, lrowFin ).setformula(&quot;=Sum(X&quot; &amp; lrowInizio &amp; &quot;:X&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(24, lrowFin ).setformula(&quot;=Sum(Y&quot; &amp; lrowInizio &amp; &quot;:Y&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(25, lrowFin ).setformula(&quot;=Sum(Z&quot; &amp; lrowInizio &amp; &quot;:Z&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(26, lrowFin ).setformula(&quot;=Sum(AA&quot; &amp; lrowInizio &amp; &quot;:AA&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(27, lrowFin ).setformula(&quot;=Sum(AB&quot; &amp; lrowInizio &amp; &quot;:AB&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(28, lrowFin ).setformula(&quot;=Sum(AC&quot; &amp; lrowInizio &amp; &quot;:AC&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(29, lrowFin ).setformula(&quot;=AE&quot; &amp; lrowFin+1 &amp; &quot;/S&quot; &amp; lrowFin+1)
-			oSheet.GetCellbyPosition(30, lrowFin ).setformula(&quot;=SUBTOTAL(9;AE&quot; &amp; lrowInizio &amp; &quot;:AE&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(36, lrowFin ).setformula(&quot;=Sum(AK&quot; &amp; lrowInizio &amp; &quot;:AK&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-&apos;			oSheet.GetCellbyPosition(39, lrowFin ).setformula(&quot;=Sum(AN&quot; &amp; lrowInizio &amp; &quot;:AN&quot; &amp; lrowFin-1 &amp; &quot;)&quot;) &apos;rigabart
-			oSheet.GetCellbyPosition(39, lrowFin ).setformula(&quot;=Sum(AN&quot; &amp; lrowInizio &amp; &quot;:AN&quot; &amp; lrowFin &amp; &quot;)&quot;)			
-&apos;			oSheet.GetCellbyPosition(40, lrowFin ).setformula(&quot;=Sum(AO&quot; &amp; lrowInizio &amp; &quot;:AO&quot; &amp; lrowFin-1 &amp; &quot;)&quot;) &apos;rigabart
-			oSheet.GetCellbyPosition(40, lrowFin ).setformula(&quot;=Sum(AO&quot; &amp; lrowInizio &amp; &quot;:AO&quot; &amp; lrowFin &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(41, lrowFin ).setformula(&quot;=Sum(AP&quot; &amp; lrowInizio &amp; &quot;:AP&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-			oSheet.GetCellbyPosition(29, lrowFin ).CellStyle = &quot;Comp TOTALI %&quot;
-
-				&apos; =AE120/S120		
-			&apos;in testa alla AK
-			&apos;oSheet.GetCellbyPosition(36, 0 ).setformula(&quot;=Sum(AK&quot; &amp; lrowInizio &amp; &quot;:AK&quot; &amp; lrowFin-1 &amp; &quot;)&quot;)
-END SUB
 
 
 
@@ -1155,8 +990,27 @@ end sub
 
 Sub elimina_righe_vuote
 	oSheet=ThisComponent.currentController.activeSheet 
-	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE 
+	i = getLastUsedRow(oSheet)
+
+	Do While i &gt; 2
+&apos;	Print i
+&apos;	Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
+				if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(0, i).cellstyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;Comp End Attributo&quot; And _
+				oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(3, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(4, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(5, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(6, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(7, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(8, i).string = &quot;&quot; Then
+				oSheet.getrows.removebyindex(i,1)
+			end If
+	i=i-1
+	Loop
+		goto oltre
+	for i = 2 to iRowE
+Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
 	&apos;	goto salta
 			if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _
@@ -1164,9 +1018,10 @@ Sub elimina_righe_vuote
 				oSheet.GetCellByPosition(5, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(6, i).string = &quot;&quot; then
 				oSheet.getrows.removebyindex(i,1)
-			end if
+			end If
+			i = i-1
 	&apos;	salta:
-	goto oltre
+
 			if oSheet.GetCellByPosition(4, i).string = &quot;&quot; or _
 				oSheet.GetCellByPosition(4, i).string = &quot; &quot; or _
 				oSheet.GetCellByPosition(4, i).string = &quot; &quot; or _
@@ -1174,8 +1029,8 @@ Sub elimina_righe_vuote
 				oSheet.getrows.removebyindex(i,1)
 			&apos;	i = i-1
 			end if
-			oltre:
-	next
+	Next
+oltre:
 	print &quot;FINITO&quot;
 end sub
 

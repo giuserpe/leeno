@@ -184,7 +184,7 @@ End Sub
 
 sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda della sheet
 	oSheet =ThisComponent.currentController.activeSheet
-	Select Case oSheet.CodeName
+	Select Case oSheet.Name
 		case = &quot;CONTABILITA&quot;
 		oSheet.getCellRangeByposition(13,0,1023,0).Columns.Width = 1900 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 1000 &apos; larghezza colonne importi
@@ -212,9 +212,23 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
 		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
 		oSheet.getColumns().getByName(&quot;S&quot;).Columns.Width = 1700
-		InsRow = fRow+1 &apos;prima riga inserimento in Registro	
-
-		case = &quot;&quot;
+&apos;		InsRow = fRow+1 &apos;prima riga inserimento in Registro	
+		case = &quot;Elenco Prezzi&quot;
+		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 2000
+		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 13000
+		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 2200
+		oSheet.getColumns().getByName(&quot;D&quot;).Columns.Width = 2200
+		oSheet.getColumns().getByName(&quot;E&quot;).Columns.Width = 2200
+		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 2200
+		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 2200
+		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 3000
+		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1200
+		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1200
+		oSheet.getColumns().getByName(&quot;K&quot;).Columns.Width = 2200
+		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 3000
+		oSheet.getColumns().getByName(&quot;M&quot;).Columns.Width = 3000
+		oSheet.getColumns().getByName(&quot;N&quot;).Columns.Width = 3000
+		oSheet.getColumns().getByName(&quot;O&quot;).Columns.Width = 3000
 	end select
 end Sub
 

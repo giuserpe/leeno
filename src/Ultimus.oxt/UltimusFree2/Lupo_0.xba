@@ -250,13 +250,13 @@ rem ----------------------------------------------------------------------
 				
 		select case sCaso
 		Case 3
-		msgbox &quot;(3) Questo documento è stato elaborato con una versione molto datata di LeenO &quot; &amp;CHR$(10)_
+		msgbox &quot;#3 Questo documento è stato elaborato con una versione molto datata di LeenO &quot; &amp;CHR$(10)_
 		&amp; &quot; e sussistono gravi problemi di incompatibilità con la Versione di LeenO attiva su questo PC. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Il trasferimento dei dati di questo Doc ad un Template adatto è complicato ma non impossibile... se hai problemi contattami &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Oppure installa una versione di LeenO datata e coerente con il tuo documento &quot; &amp; CHR$(10) &amp; CHR$(10)	
 
 		Case 2
-		msgbox &quot;(2) Questo documento è stato elaborato con una versione LeenO più recente di&quot; &amp;CHR$(10)_
+		msgbox &quot;#2 Questo documento è stato elaborato con una versione LeenO più recente di&quot; &amp;CHR$(10)_
 		&amp; &quot; quella installata e/o attiva su questo PC. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Sussistono gravi problemi di incompatibilità tra il documento e la Versione di LeenO. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; Il trasferimento dei dati di questo Doc in un Template adatto è complicato ma non impossibile... se hai problemi contattami &quot; &amp; CHR$(10) &amp; CHR$(10)_
@@ -268,8 +268,7 @@ rem ----------------------------------------------------------------------
 		goto No_Procedura
 
 		Case 1
-		msgbox &quot;(1) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot;1 Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		msgbox &quot;#1 Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
 		&amp; &quot; &quot; &amp; CHR$(10)_
 		&amp; &quot; Sussistono gravi problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot; LeenO è comunque attivo, ma usare le macro su questo documento potrebbe compromettere i dati!&quot; &amp; CHR$(10) &amp; CHR$(10)_
@@ -285,8 +284,7 @@ rem ----------------------------------------------------------------------
 		exit sub
 	
 		Case 8
-		msgbox &quot;(8) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
+		msgbox &quot;#8 Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata e/o attiva su questo PC.&quot; &amp;CHR$(10)_
 		&amp; &quot; &quot; &amp; CHR$(10)_
 		&amp; &quot; Probabilmente non ci sono seri problemi di incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;Ma in quel periodo ho i rilasciato versioni in modo un po&apos; confuso! Consiglio quindi caldamente il trasferimento/riversamento dei dati di questo Doc in un Template aggiornato!&quot; &amp; CHR$(10) &amp; CHR$(10)	
@@ -294,8 +292,7 @@ rem ----------------------------------------------------------------------
 		End select	
  else
 		if sVerMinorDoc &lt; sVerMinorInstallata then
-			Select Case msgbox (&quot;(5) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-				 &amp; &quot; Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
+			Select Case msgbox (&quot;#5 Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
 	 			 &amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				 &amp; &quot;Sussistono problemi di incompatibilità del Doc con la versione di libreria installata. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				 &amp; &quot;Vuoi tentare la PROCEDURA AUTOMATICA DI ADATTAMENTO di questo documento?&quot; &amp; CHR$(10)_
@@ -313,8 +310,7 @@ rem ----------------------------------------------------------------------
  	 end if &apos; cleo
  	 		
 		if sVerMinorDoc &gt; sVerMinorInstallata then 
-			msgbox &quot;(6) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot; Questo documento è stato elaborato con una versione di LeenO più recente di quella installata e/o attiva su questo PC. &quot; &amp;CHR$(10)_
+			msgbox &quot;#6 Questo documento è stato elaborato con una versione di LeenO più recente di quella installata e/o attiva su questo PC. &quot; &amp;CHR$(10)_
 			&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Sussistono problemi di incompatibilità tra questo documento e la Versione di LeenO. &quot; &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Installa una versione di LeenO pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot; &amp; CHR$(10) &amp; CHR$(10)	

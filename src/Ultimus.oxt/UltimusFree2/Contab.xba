@@ -842,7 +842,9 @@ End Sub
 
 
 sub testzzzzzzzz
+XRAY thisComponent.getCurrentSelection()
 	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
+	
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
 	Print thisComponent.getCurrentSelection().rows.IsStartOfNewPage
 &apos;	oSheetCont.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage = False

@@ -56,12 +56,13 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 		&amp; &quot;Intanto continuo...&quot;&amp; CHR$(10)_
 		&amp; &quot;Alla fine controlla se ti sta bene. Al massimo ripeterai.&quot;, 64 , &quot;AVVISO!&quot;
 		Inserisci_riga_rossa
-		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+&apos;		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
 		&apos;exit sub
 	end if 
 &apos;	xray oend
 &apos;	exit sub
-	lrowF=oEnd.RangeAddress.EndRow 
+&apos;	lrowF=oEnd.RangeAddress.EndRow
+	lrowF=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
 	lcolF=12 + iScarto
 
 	if thisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;) then 
@@ -376,8 +377,9 @@ rem prima riga
 	fRow=oEnd.RangeAddress.EndRow+1
 rem ----------------------------------------------------------------------
 rem ultima riga
-	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
-	lRowE=oEnd.RangeAddress.EndRow
+&apos;	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
+&apos;	lRowE=oEnd.RangeAddress.EndRow
+	lRowE=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
 rem ----------------------------------------------------------------------
 rem nome ultima colonna
 	lCol = ColumnNameOf(getLastUsedCol(oSheet)+2) &apos; aggiungo 3 colonne in più... non si sa mai

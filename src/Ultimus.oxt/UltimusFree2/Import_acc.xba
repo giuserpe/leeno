@@ -110,7 +110,7 @@ end function
 &apos;_______________________________________________________________________________________
 
 
-Sub Main_Conversione &apos;da pwe a OO
+Sub Main_Conversione &apos;da primus pwe a OO
  Clessid_lock_Start
 &apos;print &quot;1&quot;
 &apos;If ErroreDet = 1 then 

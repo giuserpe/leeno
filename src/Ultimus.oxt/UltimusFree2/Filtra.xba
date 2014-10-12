@@ -22,7 +22,7 @@ Sub Filtro_Comune(sCol as string, lColTagga as long, xTag as string) &apos;ovver
 	&apos;stefania ok
 
 	nome_t_c= sCol &amp; &quot;_&quot; &amp; xTag
-	sNuovoNome=	DuplicaSheetFiltroTMP(nome_t_c,4) &apos; il num indica la posizione della nuova tabella
+	sNuovoNome=	DuplicaSheeTFILTROTMP(nome_t_c,4) &apos; il num indica la posizione della nuova tabella
 	&apos; e torna con il nome della tabella modificata
 
 	oSheetDest = ThisComponent.Sheets.getByName(sNuovoNome)

@@ -38,7 +38,7 @@ fissa(0,idxRow+1)
 esegui:
 &apos; 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
 	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
-
+	oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
 rem ----------------------------------------------------------------------
 rem riga di intestazione
 Cscarto = 0
@@ -271,7 +271,7 @@ osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 &apos;	goto fine
 &apos;	xray osheet
 rem SE ANALISI PREZZI
-	If Trova_Attr_Sheet = &quot;Tipo_Analisi&quot; Then
+	If Trova_Attr_Sheet = &quot;TIPO_ANALISI&quot; Then
 &apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
 		i = 0
 		For i = 0 to 1000
@@ -303,7 +303,7 @@ rem SE ANALISI PREZZI
  		oRange.setDataArray(aSaveData)
 	end if
 rem SE ELENCO PREZZI
-	If Trova_Attr_Sheet = &quot;Tipo_EP&quot; OR Trova_Attr_Sheet = &quot;Tipo_ElencoP&quot; Then
+	If Trova_Attr_Sheet = &quot;TIPO_EP&quot; OR Trova_Attr_Sheet = &quot;TIPO_ELENCOP&quot; Then
 &apos; print 	oSheet.GetCellByPosition(0 , lRowE).CellStyle
 		i = 0
 		For i = 0 to 1000
@@ -337,7 +337,7 @@ rem SE ELENCO PREZZI
 		end if
 &apos;	goto fine
 rem SE COMPUTO
-	If Trova_Attr_Sheet = &quot;Tipo_COMPUTO&quot; Then
+	If Trova_Attr_Sheet = &quot;TIPO_COMPUTO&quot; Then
 &apos;		msgbox (&quot;Il Riepilo Capitoli verrà inserito dopo la riga dei TOTALI COPUTO&quot;, 0, &quot;Avviso&quot;)
 		
 		oInizioFirme=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
@@ -465,5 +465,6 @@ rem NASCONDE RIGHE
 Set_Area_Stampa_N
 	END IF
 	fine:
-end sub
+end Sub
+
 </script:module>

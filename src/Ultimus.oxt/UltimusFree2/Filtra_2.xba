@@ -57,7 +57,7 @@ Sub Filtro &apos;(Optional oSheetG as object)&apos; Filtro Standard semplificato
  Barra_apri_chiudi_4 
  sAttributo = Trova_Attr_Sheet
 
- If sAttributo &lt;&gt; &quot;Tipo_EP&quot; and sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; and _
+ If sAttributo &lt;&gt; &quot;TIPO_EP&quot; and sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
  		not thisComponent.Sheets.hasByName(&quot;Listino&quot;) then
  		&apos;print &quot;no&quot;
  		Barra_chiudi_sempre_4
@@ -87,8 +87,8 @@ on error resume next
  Next I 
  Barra_apri_chiudi_4 
 	sAttributo = Trova_Attr_Sheet
-	If sAttributo = &quot;Tipo_ElencoP&quot; OR _
-		sAttributo = &quot;Tipo_EP&quot; Then	
+	If sAttributo = &quot;TIPO_ELENCOP&quot; OR _
+		sAttributo = &quot;TIPO_EP&quot; Then	
 		&apos; questa invece trova automaticamente la colonna giusta +col
 		if oSheet.getCellByPosition(1,0).string = &quot; Descrizione &quot; or _
  			oSheet.getCellByPosition(1,0).string = &quot;Descrizione &quot; or _
@@ -110,7 +110,7 @@ on error resume next
  		Barra_chiudi_sempre_4
 		exit sub
 	end if
- If sAttributo = &quot;Tipo_COMPUTO&quot; Then	
+ If sAttributo = &quot;TIPO_COMPUTO&quot; Then	
 			Barra_Apri_Chiudi_4
  		Crea_Filtro_EP_Computo (2) &apos; (2, &quot;AttComp&quot;)
 			Barra_chiudi_sempre_4

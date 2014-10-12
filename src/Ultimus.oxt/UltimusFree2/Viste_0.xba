@@ -62,7 +62,7 @@ End Sub
 
 Sub tag_usata_on_off
 &apos;print Trova_Attr_Sheet
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
 			tabella=&quot;sconosciuto&quot;
 		Else
@@ -104,7 +104,7 @@ End Sub
 
 Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
 &apos;Print Trova_Attr_Sheet
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
 			tabella=&quot;sconosciuto&quot;
 		Else
@@ -159,7 +159,7 @@ End Sub
 
 
 Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
 			tabella=&quot;sconosciuto&quot;
 		Else
@@ -212,7 +212,7 @@ End Sub
 
 
 Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
 			tabella=&quot;sconosciuto&quot;
 		Else
@@ -257,7 +257,7 @@ End Sub
 
 
 Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
 			tabella=&quot;sconosciuto&quot;
 		Else
@@ -310,7 +310,7 @@ End Sub
 
 
 Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_EP&quot; Then 
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
 			tabella=&quot;sconosciuto&quot;
 		Else

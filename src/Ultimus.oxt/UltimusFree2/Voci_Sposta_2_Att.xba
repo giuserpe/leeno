@@ -266,107 +266,70 @@ if lrowDest &gt; lrowT then &apos; questo pasticcetto per visualizzare la voce s
 	oRange = oSheet.getCellRangeByposition (L3ColoumnS, L2RowS , L3ColoumnE, L2RowS+lrdif )
 end if
 ThisComponent.CurrentController.Select(oRange)
-END FUNCTION
+End Function
 
+Sub dddddd
+	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
+	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
+	oCell=thisComponent.getCurrentSelection()
+	cRow=oCell.RangeAddress.StartRow
+ThisComponent.CurrentController.Select(Circoscrive_Voce_Computo_Att (crow))
+End Sub
 
-FUNCTION Circoscrive_Voce_Computo_Att (ByVal lrow As Long) &apos;individua un record di Computo
-&apos;---------------------------------------------------------------------------
-							&apos;restituisce il range&apos;
+Function Circoscrive_Voce_Computo_Att (ByVal lrow As Long)
 dim lrowS as long
 dim lrowE as long
-	oSheet = ThisComponent.currentController.activeSheet 
-	lcol = 0
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	nCurRow = lrow
-	if templateTipo = &quot;ATT&quot; then lcol5 = 3
-	if templateTipo = &quot;5C&quot; then lcol5 = 2
-	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;_
-	and ((oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;&quot;)_
-			or	 (oSheet.GetCellByPosition( 0,nCurRow).string &lt;&gt;&quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 4,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 5,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 6,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 7,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 8,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or ((oSheet.GetCellByPosition( 1, nCurRow+1).string &lt;&gt; &quot;&quot;) = false)_
-			 or (oSheet.GetCellByPosition( 9,nCurRow).string &lt;&gt; &quot;&quot;))
-			 	if nCurRow &lt; 2 then
-			 		exit do
-			 	end if
-				nCurRow = nCurRow-1
-				oCell=oSheet.GetCellbyPosition(0 , nCurRow)
-			&apos;	 ThisComponent.CurrentController.Select(oCell) &apos;debug
-			&apos;	 print
-	loop
-&apos;print &quot;wow &quot; &amp; lrow	
-	lrowS = nCurRow
-	oCell = oSheet.GetCellByPosition( 0 , lrowS+1)
-	oCell2 = oSheet.GetCellByPosition( lcol5 , lrowS+1)
-	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;&apos;_
-		 &apos;And	oCell2.string &lt;&gt; &quot;SOMMANO &quot;
-				nCurRow = nCurRow+1
-				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
-				oCell2 = oSheet.GetCellByPosition( lcol5 , nCurRow)
-	loop
-	lrowE = nCurRow
+	oSheet = ThisComponent.currentController.activeSheet
 
- oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+	While osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
+			osheet.getCellByPosition (0, lrow).CellStyle = &quot;livello2 valuta&quot;
+			lrow=lrow+1
+	Wend
 
-	Circoscrive_Voce_Computo_Att= oRangeVoceC
-	
- &apos; dis_080212 ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
-
-end Function
-&apos;================================================================================= 
-
-
-FUNCTION Circoscrive_Voce_Computo_Att_________________________(ByVal lrow As Long) &apos;individua un record di Computo
-&apos;---------------------------------------------------------------------------
-							&apos;restituisce il range&apos;
-&apos;print lrow
-dim lrowS as long
-dim lrowE as long
-	 oSheet = ThisComponent.currentController.activeSheet 
-	lcol = 0
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	nCurRow = lrow
-	if templateTipo = &quot;ATT&quot; then lcol5 = 3
-	if templateTipo = &quot;5C&quot; then lcol5 = 2
-	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;_
-	and ((oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;&quot;)_
-			or	 (oSheet.GetCellByPosition( 0,nCurRow).string &lt;&gt;&quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 4,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 5,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 6,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 7,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or (oSheet.GetCellByPosition( 8,nCurRow).string &lt;&gt; &quot;&quot;)_
-			 or ((oSheet.GetCellByPosition( 1, nCurRow+1).string &lt;&gt; &quot;&quot;) = false)_
-			 or (oSheet.GetCellByPosition( 9,nCurRow).string &lt;&gt; &quot;&quot;))
-				nCurRow = nCurRow-1
-				oCell=oSheet.GetCellbyPosition(0 , nCurRow)
-			&apos;	 ThisComponent.CurrentController.Select(oCell) &apos;debug
-			&apos;	 print
-	loop
-&apos;print &quot;wow &quot; &amp; lrow	
-	lrowS = nCurRow
-	oCell = oSheet.GetCellByPosition( 0 , lrowS+1)
-	oCell2 = oSheet.GetCellByPosition( lcol5 , lrowS+1)
-	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot;&apos;_
-		 &apos;And	oCell2.string &lt;&gt; &quot;SOMMANO &quot;
-				nCurRow = nCurRow+1
-				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
-				oCell2 = oSheet.GetCellByPosition( lcol5 , nCurRow)
-	loop
-	lrowE = nCurRow
-
- oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
-
-	Circoscrive_Voce_Computo_Att= oRangeVoceC
-	
- &apos; dis_080212 ThisComponent.CurrentController.Select(oRangeVoceC) &apos;NON eliminare
-
-end Function
-&apos;================================================================================= 
-
-
+REM ----------------------------------------------------------------------
+	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot; Or _
+		osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp progress&quot; Or _
+		osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s&quot; Or _
+		osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then
+		GoTo procedo:
+		else
+		Exit Function
+	EndIf 
+procedo:
+REM ----------------------------------------------------------------------
+REM se non trova inizio voce, lo inserisce
+	Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot;
+		if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Or _
+			osheet.getCellByPosition (0, lrow).CellStyle = &quot;livello2 valuta&quot; Or _
+			osheet.getCellByPosition (0, lrow).CellStyle = &quot;Default&quot; Or _
+			osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Then
+			insRows (lrow+1, 1)
+			lrowE = lrowE + 1
+			lrow=lrow+1
+			osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot;
+			osheet.getCellRangeByPosition (1, lrow, 38, lrow).CellStyle = &quot;Comp-Bianche sopraS&quot;
+			osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
+&apos;ThisComponent.CurrentController.Select (osheet.getCellRangeByPosition (0, lrow)
+			ptIns = osheet.getCellByPosition (31, lrow).getCellAddress()
+			range = osheet.getCellRangeByPosition (31, lrow+1, 35, lrow+1).getRangeAddress
+			osheet.copyRange(ptIns, range)
+			Exit Do
+			&apos;		oSheet.getRows.insertByIndex(lDove, lrows)
+&apos;			msgbox  &quot;Dopo la riga n.&quot; &amp; lrow+1 &amp; &quot; mi aspetto di trovare una riga di Inizio Voce!&quot;
+		EndIf
+		lrow=lrow-1
+	Loop
+	lrows=lrow
+REM ----------------------------------------------------------------------
+REM cerca fine voce
+	Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
+		if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp TOTALI&quot; Then Exit Function
+		lrow=lrow+1
+	Loop
+	lrowE = lrow
+	lrow = lrowE-1
+REM ----------------------------------------------------------------------
+	oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+Circoscrive_Voce_Computo_Att= oRangeVoceC
+End FUNCTION
 </script:module>

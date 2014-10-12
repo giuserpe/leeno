@@ -149,7 +149,7 @@ una_volta_sola_prego:
 		&apos; toglie la selezione 
 		Barra_chiudi_sempre_4
 	end if
- &apos;___________________
+Set_Area_Stampa_N
  	suona
 END SUB
 
@@ -259,16 +259,17 @@ Function uFindString(sString$, oSheet ) As Variant &apos; richiamata da diverse 
  nEndCol = aAddress.EndColumn
 &apos;print nEndRow
  For nCurCol = 0 To nEndCol &apos;Go through the range column by column,
- For nCurRow = 0 To nEndRow &apos;row by row.
- oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
- sFind = oCell.String &apos;Get cell contents.
- If sFind = sString$ then
- 		 uFindString = oCell
- 	 Exit Function
- &apos; else 
- &apos;	uFindString = &quot;nulla&quot;
- End If
- Next
+	 For nCurRow = 0 To nEndRow &apos;row by row.
+		 oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+		 sFind = oCell.String &apos;Get cell contents.
+&apos;		 If sFind = sString$ then
+		 If inStr(sFind, sString$) Then
+		 		 uFindString = oCell
+		 	 Exit Function
+		 &apos; else 
+		 &apos;	uFindString = &quot;nulla&quot;
+		 End If
+	 Next
  Next
 End Function
 

@@ -255,7 +255,7 @@ SISTEMA_I_TAG:
 	loop
  	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _
  		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 ) and _
- 		sAttributo = &quot;Tipo_CONTABILITA&quot; then
+ 		sAttributo = &quot;TIPO_CONTABILITA&quot; then
  		print lrow
  		oSheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
  		Else
@@ -543,7 +543,7 @@ ADATTA_ALTEZZA_RIGA
 	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
  	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _
  		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 ) and _
- 		sAttributo = &quot;Tipo_COMPUTO&quot; then 
+ 		sAttributo = &quot;TIPO_COMPUTO&quot; then 
  		Osheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
  	endif 	
  &apos;	oCtrlModel.Enabled = True
@@ -672,7 +672,6 @@ inserisci:
 	oCelle= oCell.getCellAddress() &apos; indirizzo cella attiva (qui)
 
 	oQuellRangeAddresse = oRangeOrigine.RangeAddress &apos;CellRangeAddress
-
  oSheet2.copyRange(oCelle,oQuellRangeAddresse)
 
  thisComponent.currentController.Select(oSheet.GetCellByPosition( 0 , lrow+1))

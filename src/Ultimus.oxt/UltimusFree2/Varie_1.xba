@@ -356,16 +356,9 @@ Sub Salva_temp
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
  	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
-
 	sCartella = ThisComponent.getURL() &apos; file sorgente
- 
- sUrl= sCartella + &quot;_temp_&quot; + &quot;.ods&quot;
-
- &apos; salviamo comunque il doc corrente
- &apos; oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
- &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
- 
-
+ 	sName = Replace_G(sCartella, &quot;.ods&quot;, &quot;&quot;)
+	sUrl= sName + &quot;-tmp&quot; + &quot;.ods&quot;
 	&apos; get access to the document
 	oDocumentModel = ThisComponent
 	oDocumentView = oDocumentModel.getCurrentController()
@@ -386,8 +379,9 @@ Sub Salva_temp
 
 End Sub 
 
-Sub Salva_copia_data &apos; salva il doc corrente con nuovo nome con data
+Sub Salva_copia_data (Optional flag As Boolean) &apos;salva il doc corrente con nuovo nome con timestamp del salvataggio
  oDoc = ThisComponent
+&apos;xray oDoc 
  &apos; Get the document&apos;s controller.
  oDocCtrl = oDoc.getCurrentController()
  &apos; Get the frame from the controller.
@@ -396,119 +390,31 @@ Sub Salva_copia_data &apos; salva il doc corrente con nuovo nome con data
  Dim myProps(1) as New com.sun.star.beans.PropertyValue
  &apos;il valore di questo array va impostato a 1
  oSheet = ThisComponent.CurrentController.ActiveSheet
- 
  dim sUrl2, sNameDest as string
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
  	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 
-
 	sURL = ConvertToUrl(ThisComponent.getURL()) 
 	sName = FileNameoutofPath(sURL)
 	sPath = Replace_G(sURL, sName, &quot;&quot;) 
-	if len(sName) &gt; 50 then
-&apos;		sName = left(sName, 50)
-	end if
-	sNewURL = sPath &amp; sName &amp; &quot;.ods&quot;	
-	
-	
-	
-&apos;print gina_furbetta_2
-&apos;	print 	 InStr (SName,&quot;_U_&quot;)
-
-	if InStr (sName,&quot;_Utmp&quot;) &lt;&gt; 0 then
+	if InStr (sName,&quot;-backup&quot;) &lt;&gt; 0 then
 			&apos;elimino suffisso
 		iL = len (sName)
-		iPos = InStr (sName,&quot;_Utmp&quot;)
+		iPos = InStr (sName,&quot;-backup&quot;)-17 &apos;17 è il numero di caratteri dalla destra fino al nome originale del file
+		&apos;Print iPos
 		sName = left(sName,iPos)
-	end if
-	sName = Replace_G(sName, &quot;.ods&quot;, &quot;&quot;) 
-	sSuffX = gina_furbetta_2
-	sName = sName &amp; &quot;_Utmp&quot; &amp; sSuffX &amp; &quot;.ods&quot;
-	sNewURL = sPath &amp; sName 
+	end If
+	sName = Replace_G(sName, &quot;.ods&quot;, &quot;&quot;)
 
-&apos;	vecchio modo
-&apos;	sCartella = ConvertToUrl(ThisComponent.getURL()) 
-&apos;	sCartella = Replace_G(sCartella, &quot;.ods&quot;, &quot;&quot;) 
-&apos;	temp = gina_furbetta_2
-&apos;	sUrl = sCartella &amp; temp &amp; &quot;.ods&quot;
-
- &apos; salviamo comunque il doc corrente
- &apos; oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
- &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
- 
-	&apos; get access to the document
-	oDocumentModel = ThisComponent
-	oDocumentView = oDocumentModel.getCurrentController()
-	oDocumentFrame = oDocumentView.Frame
-
-	&apos; the dispatcher service is used to send commands from the 
-	&apos; document frame to the underlaying office application
-	oDispatcher = CreateUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-	Dim mArgs2(2) As New com.sun.star.beans.PropertyValue
-	mArgs2(0).Name = &quot;URL&quot;
-	mArgs2(0).Value = sNewURL
-	mArgs2(1).Name = &quot;FilterName&quot;
-	mArgs2(1).Value = &quot;calc8&quot;
-	mArgs2(2).Name = &quot;SelectionOnly&quot;
-	mArgs2(2).Value = True
-	oDispatcher.executeDispatch(oDocumentFrame, &quot;.uno:SaveAs&quot; ,&quot;&quot; ,0 ,mArgs2())
-End Sub 
-
-
-Sub Salva_copia_data__ &apos; salva il doc corrente con nuovo nome con data
- oDoc = ThisComponent
- &apos; Get the document&apos;s controller.
- oDocCtrl = oDoc.getCurrentController()
- &apos; Get the frame from the controller.
- oDocFrame = oDocCtrl.getFrame()
- oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
- Dim myProps(1) as New com.sun.star.beans.PropertyValue
- &apos;il valore di questo array va impostato a 1
- oSheet = ThisComponent.CurrentController.ActiveSheet
- 
- dim sUrl2, sNameDest as string
- GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-
-	sURL = ConvertToUrl(ThisComponent.getURL()) 
-	sName = FileNameoutofPath(sURL)
-	sPath = Replace_G(sURL, sName, &quot;&quot;) 
-	if len(sName) &gt; 50 then
-		sName = left(sName, 50)
-	end if
-	temp = gina_furbetta_2
-	sNewURL = sPath &amp; sName &amp; temp &amp; &quot;.ods&quot;
-
-&apos;	vecchio modo
-&apos;	sCartella = ConvertToUrl(ThisComponent.getURL()) 
-&apos;	sCartella = Replace_G(sCartella, &quot;.ods&quot;, &quot;&quot;) 
-&apos;	temp = gina_furbetta_2
-&apos;	sUrl = sCartella &amp; temp &amp; &quot;.ods&quot;
-
-
- &apos; salviamo comunque il doc corrente
- &apos; oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
- &apos; oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
- 
-
-	&apos; get access to the document
-	oDocumentModel = ThisComponent
-	oDocumentView = oDocumentModel.getCurrentController()
-	oDocumentFrame = oDocumentView.Frame
-
-	&apos; the dispatcher service is used to send commands from the 
-	&apos; document frame to the underlaying office application
-	oDispatcher = CreateUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-	Dim mArgs2(2) As New com.sun.star.beans.PropertyValue
-	mArgs2(0).Name = &quot;URL&quot;
-	mArgs2(0).Value = sNewURL
-	mArgs2(1).Name = &quot;FilterName&quot;
-	mArgs2(1).Value = &quot;calc8&quot;
-	mArgs2(2).Name = &quot;SelectionOnly&quot;
-	mArgs2(2).Value = True
-	oDispatcher.executeDispatch(oDocumentFrame, &quot;.uno:SaveAs&quot; ,&quot;&quot; ,0 ,mArgs2())
+	If flag = true Then 
+		sName = sName &amp; &quot;-backup&quot; &amp; &quot;-&quot; &amp; gina_furbetta_2 &amp; &quot;.ods&quot; &apos; con timestamp del salvataggio
+		Else
+		sName = sName &amp; &quot;-backup&quot; &amp; &quot;.ods&quot;
+	EndIf
+	sNewURL = sPath &amp; sName
+	&apos;	Print 	sNewURL
+	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;trasparente&quot;
 End Sub 
 
 FUNCTION gina_furbetta &apos; funzione che prende la data, minuti secondi di sistema e li assembla
@@ -1000,7 +906,7 @@ sub Numera_Voci_Computo_vecia2 &apos;
  ThisComponent.CurrentController.Select(oCell)&apos; spostamento tutto a sin (mai fidarsi dell&apos;utente...)
  
 	sAttributo = Trova_Attr_Sheet
- If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
+ If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; And ThisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; Then	
  			 msgbox &quot;Questo comando si può usare solo nella tabella di COMPUTO!&quot;
 			exit sub
 	end if

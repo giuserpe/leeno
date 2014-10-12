@@ -474,30 +474,6 @@ dispatcher.executeDispatch(document, &quot;.uno:ConfigureDialog&quot;, &quot;&qu
 
 
 end sub
-
-
-sub salva_doc_come
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem ----------------------------------------------------------------------
-dim args1(1) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;URL&quot;
-&apos;args1(0).Value = &apos;&quot;file:///W:/_dwg/ULTIMUSFREE/_SRC/ultimus/modelli/Senza%20nome%204.ods&quot;
-args1(1).Name = &quot;FilterName&quot;
-args1(1).Value = &quot;calc8&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:SaveAs&quot;, &quot;&quot;, 0, args1())
-
-
-end Sub
-
 sub AutoCalc (flag As Integer) &apos; Calcolo automatico &gt; 0 spento, 1 acceso
 rem ----------------------------------------------------------------------
 rem define variables
@@ -515,4 +491,180 @@ args1(0).Value = flag
 
 dispatcher.executeDispatch(document, &quot;.uno:AutomaticCalculation&quot;, &quot;&quot;, 0, args1())
 end sub
+
+sub salva_doc_come (Optional nomeurl As string)
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as Object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(1) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;URL&quot;
+
+If Not IsMissing(nomeurl) Then
+	Print convertToUrl (nomeurl)
+	args1(0).Value = convertToUrl (nomeurl)
+EndIf 
+&apos;args1(0).Value = &quot;file:///W:/_dwg/ULTIMUSFREE/_tmp/Senza.ods&quot;
+args1(1).Name = &quot;FilterName&quot;
+args1(1).Value = &quot;calc8&quot;
+dispatcher.executeDispatch(document, &quot;.uno:SaveAs&quot;, &quot;&quot;, 0, args1())
+
+end Sub
+
+Sub sdfasdfa
+Dim Doc As Object
+Dim Url As String
+Dim Dummy()
+Url = &quot;file:///W:/_dwg/ULTIMUSFREE/_tmp/aaa.ods&quot;
+Doc = StarDesktop.loadComponentFromURL(Url, &quot;_blank&quot;, 0, Dummy())
+End Sub
+
+
+sub apri_file
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+dim args1(1) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;URL&quot;
+args1(0).Value = &quot;file:///W:/_dwg/ULTIMUSFREE/_tmp/aaa.ods&quot;
+args1(1).Name = &quot;FilterName&quot;
+args1(1).Value = &quot;calc8&quot;
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:OpenFromCalc&quot;, &quot;&quot;, 0, args1())
+
+rem ----------------------------------------------------------------------
+
+
+end sub
+
+
+
+sub paste_objects
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(5) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;Flags&quot;
+args1(0).Value = &quot;&quot;
+args1(1).Name = &quot;FormulaCommand&quot;
+args1(1).Value = 0
+args1(2).Name = &quot;SkipEmptyCells&quot;
+args1(2).Value = false
+args1(3).Name = &quot;Transpose&quot;
+args1(3).Value = false
+args1(4).Name = &quot;AsLink&quot;
+args1(4).Value = false
+args1(5).Name = &quot;MoveMode&quot;
+args1(5).Value = 4
+
+dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
+
+
+sub paste_salta_vuote
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(5) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;Flags&quot;
+args1(0).Value = &quot;SVD&quot;
+args1(1).Name = &quot;FormulaCommand&quot;
+args1(1).Value = 0
+args1(2).Name = &quot;SkipEmptyCells&quot;
+args1(2).Value = true
+args1(3).Name = &quot;Transpose&quot;
+args1(3).Value = false
+args1(4).Name = &quot;AsLink&quot;
+args1(4).Value = false
+args1(5).Name = &quot;MoveMode&quot;
+args1(5).Value = 4
+
+dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
+
+sub subst_text_cell (testo1 As string, testo2 As string)
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(17) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;SearchItem.StyleFamily&quot;
+args1(0).Value = 2
+args1(1).Name = &quot;SearchItem.CellType&quot;
+args1(1).Value = 0
+args1(2).Name = &quot;SearchItem.RowDirection&quot;
+args1(2).Value = true
+args1(3).Name = &quot;SearchItem.AllTables&quot;
+args1(3).Value = false
+args1(4).Name = &quot;SearchItem.Backward&quot;
+args1(4).Value = false
+args1(5).Name = &quot;SearchItem.Pattern&quot;
+args1(5).Value = false
+args1(6).Name = &quot;SearchItem.Content&quot;
+args1(6).Value = false
+args1(7).Name = &quot;SearchItem.AsianOptions&quot;
+args1(7).Value = false
+args1(8).Name = &quot;SearchItem.AlgorithmType&quot;
+args1(8).Value = 0
+args1(9).Name = &quot;SearchItem.SearchFlags&quot;
+args1(9).Value = 65552
+args1(10).Name = &quot;SearchItem.SearchString&quot;
+args1(10).Value = testo1
+args1(11).Name = &quot;SearchItem.ReplaceString&quot;
+args1(11).Value = test22
+args1(12).Name = &quot;SearchItem.Locale&quot;
+args1(12).Value = 255
+args1(13).Name = &quot;SearchItem.ChangedChars&quot;
+args1(13).Value = 2
+args1(14).Name = &quot;SearchItem.DeletedChars&quot;
+args1(14).Value = 2
+args1(15).Name = &quot;SearchItem.InsertedChars&quot;
+args1(15).Value = 2
+args1(16).Name = &quot;SearchItem.TransliterateFlags&quot;
+args1(16).Value = 1024
+args1(17).Name = &quot;SearchItem.Command&quot;
+args1(17).Value = 3
+
+dispatcher.executeDispatch(document, &quot;.uno:ExecuteSearch&quot;, &quot;&quot;, 0, args1())
+
+
+end sub
+
 </script:module>

@@ -54,17 +54,6 @@ end sub
 
 
 
-
-rem ***** BASIC *****
-
-
-
-
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-
-
-
-
 Function Duplica_Sheet_in_Doc &apos;Questa sub duplica 
 &apos; un foglio e aggiunge un suffisso al nome
  	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -75,9 +64,6 @@ Verifica_chiudi_preview
 	Duplica_Sheet_in_Doc = DuplicaSheetinDoc
 	
 END Function
-
-
-
 
 
 
@@ -618,15 +604,18 @@ end sub
 
 SUB Copy_PageStyle
 
-oSheet = ThisComponent.Sheets.getByName(_
-ThisComponent.currentcontroller.activesheet.name)
+oSheet = ThisComponent.Sheets.getByName(ThisComponent.currentcontroller.activesheet.name)
 
 sStile_Pag = oSheet.PageStyle &apos;registra lo stile corrente della Sheet 
 &apos;xray sStile_Pag
-oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
-oController = oDesktop.CurrentFrame.Controller
-oDocument = oController.Model
-	oStyleFam = oDocument.StyleFamilies
+&apos;oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
+&apos;oController = oDesktop.CurrentFrame.Controller
+&apos;oDocument = oController.Model
+&apos;oDocument = thiscomponent
+&apos;xray oDocument
+&apos;print
+&apos;	oStyleFam = oDocument.StyleFamilies
+	oStyleFam = thiscomponent.StyleFamilies
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
 	oAktPage = oTablePageStyles.getByname(sStile_Pag) &apos;&quot;PageStyle_COMPUTO_A4&quot;)
 	aProperties = oAktPage.PropertySetInfo.Properties
@@ -834,17 +823,17 @@ Verifica_chiudi_preview
 &apos; fine modulo di controllo e modifica stile di pagina
 	
 	Select Case sAttributo
-		Case &quot;Tipo_COMPUTO&quot;
+		Case &quot;TIPO_COMPUTO&quot;
 			Visualizza_PageBreak
 	&apos;		Impagina_Computo_N
-		Case &quot;Tipo_CONTABILITA&quot;
+		Case &quot;TIPO_CONTABILITA&quot;
 			Visualizza_PageBreak
 	&apos;		Impagina_Computo_N
-		Case &quot;Tipo_Analisi&quot;
+		Case &quot;TIPO_ANALISI&quot;
 			Visualizza_PageBreak
 			Impagina_Analisi_N
 		&apos;	Visualizza_PageBreak
-		Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_Elenco&quot; 
+		Case &quot;TIPO_ELENCOP&quot;, &quot;Tipo_Elenco&quot; 
 	&apos;		msgbox &quot;Questo sembra essere un Elenco prezzi, e non serve una impagninazione automatica dei salti pagina...&quot;
 			exit sub
 		Case &quot;&quot;
@@ -1107,7 +1096,7 @@ dim lrowS as long
 			sAttributo = Trova_Attr_Sheet &apos;print sAttributo
 			If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 			 If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 and _
-			 	 sAttributo = &quot;Tipo_COMPUTO&quot;	 then 
+			 	 sAttributo = &quot;TIPO_COMPUTO&quot;	 then 
 					lrowC = oCell_k.CellAddress.row
 	&apos;	xray lrowc
 					&apos;	oSheet.getRows.insertByIndex(lrowC, 1)
@@ -1297,7 +1286,7 @@ SUB Set_solo_Righe_ripet
 	sAttributo = Trova_Attr_Sheet
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case sAttributo
-	 Case &quot;Tipo_COMPUTO&quot;
+	 Case &quot;TIPO_COMPUTO&quot;
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 0&apos; headstart - 1
@@ -1310,7 +1299,7 @@ SUB Set_solo_Righe_ripet
 		&apos;oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 		&apos;oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 		
-	 Case &quot;Tipo_Analisi&quot;
+	 Case &quot;TIPO_ANALISI&quot;
 		&apos;oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
 		&apos;oSheet.setPrintTitleRows(False)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1322,7 +1311,7 @@ SUB Set_solo_Righe_ripet
 		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 
-	 Case &quot;Tipo_CONTABILITA&quot;
+	 Case &quot;TIPO_CONTABILITA&quot;
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
 		oTitles.startRow = 1&apos; headstart - 1
@@ -1332,7 +1321,7 @@ SUB Set_solo_Righe_ripet
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
 
-	 Case &quot;Tipo_ElencoP&quot; 
+	 Case &quot;TIPO_ELENCOP&quot; 
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe	
 		&apos;oSheet.setPrintTitleRows(True)
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
@@ -1370,7 +1359,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;	Print sAttributo
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case oSheet.Name &apos;sAttributo
-	 Case &quot;Tipo_COMPUTO&quot;, &quot;COMPUTO&quot;
+	 Case &quot;TIPO_COMPUTO&quot;, &quot;COMPUTO&quot;
 	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800
 		&apos;print &quot;Tipo computo&quot;
 		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
@@ -1412,7 +1401,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 		rem ALTEZZA riga di intestazione
-	 Case &quot;Tipo_Analisi&quot;, &quot;Analisi di Prezzo&quot;
+	 Case &quot;TIPO_ANALISI&quot;, &quot;Analisi di Prezzo&quot;
 		oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
 		oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet)			
 		lRowE=oEnd.CellAddress.Row
@@ -1434,7 +1423,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
 &apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
 &apos;		Impagina_N rem TANTO è DA FARE
-	 Case &quot;Tipo_CONTABILITA&quot;, &quot;CONTABILITA&quot;
+	 Case &quot;TIPO_CONTABILITA&quot;, &quot;CONTABILITA&quot;
 	 	sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)	
 		If isNull (oEnd) or isEmpty (oEnd) 		then
@@ -1480,7 +1469,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 &apos;			oCRA.EndRow = lLastUrow
 &apos;			oSheet.group(oCRA,1,0)
 
-	Case &quot;Tipo_ElencoP&quot;, &quot;Tipo_EP&quot;, &quot;Elenco Prezzi&quot;
+	Case &quot;TIPO_ELENCOP&quot;, &quot;TIPO_EP&quot;, &quot;Elenco Prezzi&quot;
 
 		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
 		oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
@@ -1539,13 +1528,10 @@ fissa (0,rIntest+1)
 	&apos;			exit sub
 	&apos;	end if
 	end if
-	if sMessaggio &lt;&gt; &quot;NO_messaggio&quot; then
-		msgbox &quot;L&apos;area di stampa è stata ridefinita!&quot;&apos; ... Controlla che LeenO abbia correttamente interpretato&quot;_
-&apos;			&amp; &quot; la situazione... ma sopratutto, prima di sistemare i salti pagina, &quot; &amp; CHR$(10)_
-&apos;			&amp; &quot;devi controllare la Largezza della pagina... lavorando sulla larghezza delle colonne...&quot;&amp; CHR$(10)_
-&apos;			&amp;&quot;In ogni caso - usando lo stilista - puoi lavorare anche sullo stile pagina...&quot;
-	end if		
-	If sAttributo = &quot;Tipo_ElencoP&quot; Then 
+&apos;	if sMessaggio &lt;&gt; &quot;NO_messaggio&quot; then
+&apos;		msgbox &quot;L&apos;area di stampa è stata ridefinita!&quot;
+&apos;	end if		
+	If sAttributo = &quot;TIPO_ELENCOP&quot; Then 
 		Visualizza_normale&apos;Dal momento che Elenco_Prezzi non ha bisogno di passare per Impagina_bis una volta 
 		&apos;selezionate le aree di stampa si toglie il PageBreak	
 	 

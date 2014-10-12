@@ -17,13 +17,13 @@
 sub Verifica_Attributo
 	sAttributo = Trova_Attr_Sheet
 	print sAttributo
-&apos;	if sAttributo = &quot;Tipo_COMPUTO&quot; then
+&apos;	if sAttributo = &quot;TIPO_COMPUTO&quot; then
 &apos;		print &quot;Tipo computo&quot;
 &apos;	else
-&apos;		if sAttributo = &quot;Tipo_analisi&quot; then
+&apos;		if sAttributo = &quot;TIPO_ANALISI&quot; then
 &apos;			print &quot;tipo Analisi&quot;
 &apos;		else
-&apos;			if sAttributo = &quot;Tipo_ElencoP&quot; then
+&apos;			if sAttributo = &quot;TIPO_ELENCOP&quot; then
 &apos;				print &quot;tipo Analisi&quot;
 &apos;			else
 &apos;				exit sub
@@ -79,14 +79,14 @@ Sub Stora_Attr &apos; macro provvisoria... una volta settato l&apos;attributo è
 	oCustomXmlAttributes = oCell.UserDefinedAttributes
 	If oCustomXmlAttributes.hasByName( &quot;Tipo&quot; ) Then
 		&apos; Change the value of the attribute.
-		oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
-&apos;		 oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
-		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
+		oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_CONTABILITA&quot;) )
+&apos;		 oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_COMPUTO&quot;) )
+		&apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_EP&quot;) )
  		Else
  		&apos; Since this attribute was not present, create it.
- 	&apos;	 oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
- 		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
- 	oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_CONTABILITA&quot;) )
+ 	&apos;	 oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_COMPUTO&quot;) )
+ 		&apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_EP&quot;) )
+ 	oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_CONTABILITA&quot;) )
  	EndIf
 	&apos; Test to see if someone had previously set a &quot;Mark&quot; attribute on this paragraph....
 	&apos; Store the collection of attributes back to the property.
@@ -96,10 +96,10 @@ END SUB
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Sub Stora_Attr_sheet &apos;sub tipo_
 &apos;	sValoreAtt_p = &quot;Tipo_CronoP&quot;
-&apos;	sValoreAtt_p = &quot;Tipo_EP&quot;
-	sValoreAtt_p = &quot;Tipo_COMPUTO&quot;
-&apos;	sValoreAtt_p = &quot;Tipo_Analisi&quot;
-&apos;	sValoreAtt_p = &quot;Tipo_CONTABILITA&quot;
+&apos;	sValoreAtt_p = &quot;TIPO_EP&quot;
+	sValoreAtt_p = &quot;TIPO_COMPUTO&quot;
+&apos;	sValoreAtt_p = &quot;TIPO_ANALISI&quot;
+&apos;	sValoreAtt_p = &quot;TIPO_CONTABILITA&quot;
 	 oSheet_p = ThisComponent.currentController.activeSheet
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(sValoreAtt_p, oSheet_p, &quot;A2&quot;)
@@ -122,16 +122,16 @@ Function Stora_Attr_sheet_generico(sValoreAtt as string, optional oSheet as obje
  
  If oCustomXmlAttributes.hasByName( &quot;Tipo_sheet&quot; ) Then
  &apos; Change the value of the attribute.
- &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
- &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
- &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_Analisi&quot;) )
+ &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_COMPUTO&quot;) )
+ &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_EP&quot;) )
+ &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_ANALISI&quot;) )
  oCustomXmlAttributes.replaceByName( &quot;Tipo_sheet&quot;, CreateAttributeData(sValoreAtt) )
  Else
  
  &apos; Since this attribute was not present, create it.
- &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_COMPUTO&quot;) )
- &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_EP&quot;) )
- &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;Tipo_Analisi&quot;) )
+ &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_COMPUTO&quot;) )
+ &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_EP&quot;) )
+ &apos; oCustomXmlAttributes.insertByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_ANALISI&quot;) )
  oCustomXmlAttributes.insertByName( &quot;Tipo_sheet&quot;, CreateAttributeData(sValoreAtt) )
  EndIf
  &apos; xray oCustomXmlAttributes
@@ -188,8 +188,8 @@ Function Trova_Attr_Sheet
 				end if	
 		 	end if
 		next
-	next
-&apos;	print Trova_Attr_Sheet
+	Next
+	Trova_Attr_Sheet = ucase (Trova_Attr_Sheet)
 End Function
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -252,7 +252,7 @@ sAttAtt = &quot;&quot;
 &apos; sAttAtt = &quot;End_voce_COMPUTO&quot;
 &apos; sAttAtt = &quot;Capitolo&quot;
 &apos; sAttAtt = &quot;SottoCapitolo&quot;
-&apos; sAttAtt =	&quot;Tipo_Analisi&quot;
+&apos; sAttAtt =	&quot;TIPO_ANALISI&quot;
 &apos;sAttAtt = &quot;Cod_Prezzo_scelta&quot;
 &apos;sAttAtt = &quot;UM_scelta&quot;
 &apos; sAttAtt = &quot;CompDesc&quot;
@@ -333,7 +333,7 @@ sAttTipo = &quot;Tipo&quot;
 
  &apos;sAttAtt = &quot;Start_voce_COMPUTO&quot;
  sAttAtt = &quot;End_voce_COMPUTO&quot;
- sAttAtt =	&quot;Tipo_Analisi&quot;
+ sAttAtt =	&quot;TIPO_ANALISI&quot;
 &apos;sAttAtt = &quot;Cod_Prezzo_scelta&quot;
 &apos;sAttAtt = &quot;UM_scelta&quot;
 &apos; sAttAtt = &quot;CompDesc&quot;

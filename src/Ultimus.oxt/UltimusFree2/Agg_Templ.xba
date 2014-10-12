@@ -297,9 +297,6 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
  GsTemp_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
  &apos; numero del template... lo leggo nelle var
  GsVer_templ = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value
-
-
-	
 	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;.. Sto lavorando...(metto le tab tutte in fila...&quot;, 30)

@@ -387,7 +387,7 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	&apos;salvo il file con i nomeRanges definiti
 	&apos; è indispensabile salvare altrimenti non vede i name nuovi
 &apos;print &quot;salvo il sorgente&quot;
-	Salva_copia_data 
+	Salva_copia_data (1) &apos; 1 = con timestamp		0 = solo con bak
 &apos;print &quot;sorgente salvato, ora passo su target&quot;
 		msgbox &quot; Ho appena salvato il documento SORGENTE:&quot;&amp; CHR$(10)_
 				&amp;&quot; &quot; &amp; sNomeSrc &amp; &quot; &quot; &amp; CHR$(10)_
@@ -1353,8 +1353,6 @@ Function Trova_rangeSRC_Computo (oSheet as object)&apos;(anche_computo as boolea
 end function
 
 
-
-
 Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarget as string, _
 							optional sRangeTarget as string, optional sStringa as string, optional sFrName as string )
 				
@@ -1454,6 +1452,7 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
 &apos;	 sStringa
 &apos; &quot;Ho scritto veramente sulla tab &quot;&quot;leo&quot;&quot; nel doc &quot;&quot;Pippo&quot;&quot;?&quot; 
  &apos;end if
+ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 end Function
 
 

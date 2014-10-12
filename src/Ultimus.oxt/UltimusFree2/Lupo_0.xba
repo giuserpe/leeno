@@ -105,11 +105,11 @@ Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste ro
 
 	Barra_chiudi_sempre_4 
 	Barra_apri_chiudi_4 
-	dim sVerMinorDoc as long &apos;as string	&apos;Non mettere MAI queste dischiarazioni insieme sulla stessa riga
-	dim sURLOO as string &apos;Non mettere MAI queste dischiarazioni insieme sulla stessa riga
+	dim sVerMinorDoc as long
+	dim sURLOO as string
 	dim iCasuale as long
 	
-	sURLOO = ConvertToUrl(ThisComponent.getURL()) 
+	sURLOO = ConvertToUrl(ThisComponent.getURL())
 &apos;print sURLOO &apos;dbgbart
 
 	iCasuale = Int((10000 * Rnd) -2)&apos; genera numero random
@@ -120,7 +120,6 @@ Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste ro
 
 &apos;	on error goto next
 	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
-		&apos;	sDoc =
 	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	ThisComponent.unlockControllers 
 	 
@@ -152,11 +151,6 @@ rem on error goto ErrorHandler
 	end if 
 	Barra_chiudi_sempre_4
 	Barra_apri_chiudi_4 
-	
-rem	If thisComponent.Sheets.hasByName(&quot;S5&quot;) Then
-rem		Logo_Avvio
-rem		thisComponent.Sheets.GetByName(&quot;S1&quot;).GetCellByPosition(2,410).rows.OptimalHeight = true 
-rem	end if
 	&apos;	sVer2 = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion &apos; versione di questo codice
 	&apos;print sVer2
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
@@ -242,11 +236,7 @@ rem ----------------------------------------------------------------------
 		&apos;		print &quot;beta&quot;
 				sCaso= 2
 			end if
-	
-
-	
-		
-		fine_defCaso:
+	fine_defCaso:
 				
 		select case sCaso
 		Case 3
@@ -291,16 +281,25 @@ rem ----------------------------------------------------------------------
 
 		End select	
  else
-		if sVerMinorDoc &lt; sVerMinorInstallata then
-			Select Case msgbox (&quot;#5 Questo documento è stato elaborato con una versione di LeenO meno aggiornata di quella installata ed attiva su questa macchina. &quot; &amp;CHR$(10)_
-	 			 &amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
-				 &amp; &quot;Sussistono problemi di incompatibilità del Doc con la versione di libreria installata. &quot; &amp; CHR$(10) &amp; CHR$(10)_
-				 &amp; &quot;Vuoi tentare la PROCEDURA AUTOMATICA DI ADATTAMENTO di questo documento?&quot; &amp; CHR$(10)_
-				 &amp; &quot;(verrà eseguita su un duplicato di questo doc e non corri nessun rischio)&quot; &amp; CHR$(10) &amp; CHR$(10)_
-				 &amp; &quot; (se rispondi NO procedo CON Il normale caricamento)&quot; &amp; CHR$(10)_
-				 &amp; &quot; &quot;, 35, &quot;Lieve Incompatibilità tra il Doc e la Libreria&quot;) 
+		if sVerMinorDoc &gt; sVerMinorInstallata Then
+			Select Case msgbox (&quot;#5&quot; &amp; CHR$(10)_
+				&amp; &quot;Questo file è stato elaborato con una versione di&quot; &amp; CHR$(10)_
+				&amp; &quot;LeenO precedente a quella ora in uso.&quot; &amp;CHR$(10)_
+	 			&amp; &quot; &quot; &amp; CHR$(10)_
+	 			&amp; &quot;Versione &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot; ***Documento corrente***&quot;&amp; CHR$(10)_
+	 			&amp; &quot;Versione &quot; &amp; sVerMaiorInstallata &amp; &quot;.&quot; &amp; sVerMinorInstallata &amp; &quot; ***In uso***&quot; &amp; CHR$(10)_
+	 			&amp; &quot; &quot; &amp; CHR$(10)_
+				&amp; &quot;Vuoi procedere con la CONVERSIONE?&quot; &amp; CHR$(10)_
+				&amp; &quot;(Sarà conservata una copia del file)&quot; &amp; CHR$(10)_
+			 	&amp; CHR$(10)_
+				&amp; &quot; &quot;, 32+4, &quot;ATTENZIONE: CONVERSIONE?&quot;
 				Case 6
-					AGGIORNA_TEMPLATE
+				&apos;&quot;Sussistono problemi di incompatibilità.&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&apos;&amp; &quot;- se rispondi NO procedo CON Il normale caricamento del file&quot; &amp; CHR$(10)_
+				&apos;&amp; &quot;Sarà conservata una copia del file con nome:&quot; &amp; CHR$(10)_
+				&apos;&amp; sURL &amp; CHR$(10)_
+					da_vecchi_template_a_192
+					&apos;AGGIORNA_TEMPLATE
 					Barra_chiudi_sempre_4 
 					&apos;Ripristina_statusLine
 					exit sub	
@@ -308,12 +307,16 @@ rem ----------------------------------------------------------------------
 					exit sub
 			end select
  	 end if &apos; cleo
- 	 		
 		if sVerMinorDoc &gt; sVerMinorInstallata then 
-			msgbox &quot;#6 Questo documento è stato elaborato con una versione di LeenO più recente di quella installata e/o attiva su questo PC. &quot; &amp;CHR$(10)_
-			&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;Sussistono problemi di incompatibilità tra questo documento e la Versione di LeenO. &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;Installa una versione di LeenO pari o superiore alla &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot;.&quot; &amp; &quot;0&quot; &amp; CHR$(10) &amp; CHR$(10)	
+			msgbox &quot;#6&quot; &amp; CHR$(10)_
+			&amp; &quot;Questo documento è stato elaborato con&quot; &amp; CHR$(10)_
+			&amp; &quot;LeenO &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; CHR$(10)_
+			&amp; &quot; &quot; &amp; CHR$(10)_
+			&amp; &quot;* Possibile incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Prendi una versione di LeenO aggiornata da&quot; &amp; CHR$(10)_
+			&amp; &quot;http://leeno.org&quot; &amp; CHR$(10)_
+			&amp; CHR$(10)_
+			&amp; &quot; &quot;, 48, &quot;ATTENZIONE: Incompatibilità!&quot;
 		end if
  end if
 
@@ -327,30 +330,6 @@ rem ----------------------------------------------------------------------
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
 	 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
-
-	&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-	&apos;sezione riservata per aggiornamenti agli stili di celle
-	&apos;ricordarsi ogni tanto di controllare
-&apos;	modifiche_al_template disattivata rimandando alla &quot;scelta sopra&quot;
-	 &apos;Aggiorna_stile &apos;(questa sub ha dei comportamenti strani ed è inaffidabile)
-
-&apos;	 iTempo=400
-&apos;	 do while ConvertToUrl(ThisComponent.getURL()) &lt;&gt; sURLOO	
-&apos;	 	itempo = iTempo+iTempo
- &apos;	 	if iTempo &gt;15000 then
-&apos;				exit do
-&apos;		end if
- &apos;		wait iTempo
-&apos;	 loop	 
-	&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-&apos;&apos;	StarDesktop.loadComponentFromURL(sURLOO, &quot;_default&quot;,0 , Array())
-	
-&apos;	oEnum = StarDesktop.Components.createEnumeration
-&apos;	While oEnum.hasMoreElements
-
-&apos;	 oDoc = oEnum.NextElement
-	 &apos; If thiscomponent.oDoc.sURLOO Then
-&apos;print &quot;2222222222222&quot;
 
 	&apos; se non è il documento giusto, ovvero in caso di 
 	&apos; ripristino o di apertura simultanea di diversi doc
@@ -402,14 +381,11 @@ rem ----------------------------------------------------------------------
  &apos; mettere qui le leggere modifiche al template
  &apos; si fanno e si rifanno senza dire niente a nessuno
 	sproteggi_sheet_TUTTE
-&apos; oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-&apos;	sFormula = &quot;=sumif(AA;&quot; &amp; 47 &amp; 55 &amp; &quot;;BB)&quot;
-&apos;	oSheet.GetCellByPosition(47 , 55).setformula(sFormula)
  	
 	crea_stile_cella_1 &apos; inserisce uno stile di cella per distingere le voci che sono in contab direttamente dall&apos;EP
 	crea_stile_cella_2 &apos; modifica lo stile &quot;data_bianca&quot; da 01/01/2011 a 01/01/11
 	crea_stile_cella_3 &apos; nuovo stile creato per evidenziare importi in eccesso rispetto al Computo 01/06/2013
-	
+
 	&apos;assegna una macro ad un evento (chiusura file)
 	setDocEventOnClose &apos;
 
@@ -562,28 +538,7 @@ rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;2 ok proseguo!&quot;, 60)	
 
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(6,335).value = 1 then
-&apos;			ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;).GetCellByPosition(7,327).
-&apos;		else
-			&apos; rimetti le cose come stavano	
-&apos;	end if
-
-	Protect_alcune_tabelle
-&apos; disatt 080604	Clessid_lock_End
-
-		&apos; elimina eventuali filtri su queste tabelle 
-&apos;		disativata perché fa casino... non sa su quale frame s trova...
-&apos;	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
-		&apos;Osheet = thisComponent.sheets.getbyname(&quot;computo&quot;)
-	&apos;	ThisComponent.CurrentController.Select(thisComponent.sheets.getbyname(&quot;computo&quot;)
-	&apos;	Filtro &apos;(ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;))
-&apos;	end if
-
-&apos;	If thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) Then	
-	&apos;	Osheet = thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;)
-	&apos;	ThisComponent.CurrentController.Select(thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;))
-	&apos;	Filtro &apos;(ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;))
-&apos;	end if	
+Protect_alcune_tabelle
 	
 &apos;	suona_1_2 
 	SetDesignModeON &apos; superflua... già messo all&apos;inizio
@@ -827,22 +782,22 @@ Sub Scrivi_Globale &apos; versione semplice
 &apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
 &apos; dove è scritta la variabile globale
 &apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-dim xA as string
+	dim xA as string
 &apos; print sUltimus
-
-If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-End If 
-
-
+	
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+		GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+	End If 
+	
+	
 &apos;azzera il nome del frame
 &apos;dis 2/01/09 &apos; ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; serve? mmm. pare di no
-
-oDoc = ThisComponent 
-if not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
-		thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) and _
-		thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) then
-		exit sub
+	
+	oDoc = ThisComponent 
+	if not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
+	thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) and _
+	thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) then
+	exit sub
 end if
 
 setDocEventOnClose
@@ -853,26 +808,25 @@ oSheet = ThisComponent.currentcontroller.activesheet
 
 &apos;xA=oNome
 
- UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) &apos;xA &apos; variabile globale registrata
-
- &apos; adesso scrive il nome della variabile globale nella ???cella???
+UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) &apos;xA &apos; variabile globale registrata
+&apos; adesso scrive il nome della variabile globale nella ???cella???
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
 
 &apos;xray omycell
 &apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
- &apos;	lcolS = oNomeRange.Column
+&apos;	lcolS = oNomeRange.Column
 &apos;	lrowS = oNomeRange.Row 
-	if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
-		exit sub
-	end if
-	&apos;oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(4,11)
-	oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27)
-	oMycell2.string = sUltimus
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Scrivi_Globale2 
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	Colora_M1(URLStr)
+if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
+	exit sub
+end if
+&apos;oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(4,11)
+ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string = sUltimus
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+Scrivi_Globale2 
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+Colora_M1(URLStr)
 END SUB 
+
 
 Sub Scrivi_Globale______________ &apos;(optional URLStr as string) &apos; versione semplice
 &apos;Il file attivo diventa il &quot;Computo Corrente&quot;
@@ -904,7 +858,6 @@ xray URLStr
 URLStr = ThisComponent.getURL() 
 &apos; regista la variabile globale sUltimus
 UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) 
-
  &apos; adesso scrive il nome della variabile globale nella ???cella???
 &apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
 
@@ -930,7 +883,7 @@ Sub Scrivi_Globale2 &apos; serve veramente? sembra dis-utile...
 	sUltimus2 = RTrimStr (sUltimus2, &quot; - OpenOffice.org Calc&quot;)
 	If ThisComponent.DocumentInfo.Title &lt;&gt; &quot;&quot; then
 			sUltimus2= ThisComponent.DocumentInfo.Title
-	end if
+	end If
 &apos;	sUltimus2 = sUltimus2 &amp; &quot;.ods&quot;
 End sub
 
@@ -939,7 +892,7 @@ sub su_salva_0 &apos; tentativi per portare su doc salvato il proivilegio di DCC
 if convertFromUrl(ThisComponent.getURL()) = sUltimus then
 sTemp = true
 end if
-print sTemp
+print sUltimus
 end sub
 
  &apos;
@@ -1024,10 +977,6 @@ END SUB
  &apos; ThisComponent.addActionLock
 &apos; ThisComponent.LockControllers
 &apos;END SUB 
-
-
-
-
 
 
 Function OpenDocument(DocPath as String, Args(), Optional bDisposable as Boolean)

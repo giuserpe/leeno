@@ -61,7 +61,7 @@ end sub
 Sub ANALISI_IN_ELENCOPREZZI
 sistema_attributi_sheet
 &apos;Print Trova_Attr_Sheet
-	if Trova_Attr_Sheet &lt;&gt; &quot;Tipo_Analisi&quot; then
+	if Trova_Attr_Sheet &lt;&gt; &quot;TIPO_ANALISI&quot; then
 		exit sub
 	end if
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
@@ -1184,9 +1184,9 @@ rem	oCtrlModel.Enabled = False &apos; disabilita
 		exit sub
 	end If
 		Select Case Trova_Attr_Sheet
-		Case &quot;Tipo_COMPUTO&quot; , &quot;Tipo_CONTABILITA&quot;
+		Case &quot;TIPO_COMPUTO&quot; , &quot;TIPO_CONTABILITA&quot;
 			copia_riga_C
-		Case &quot;Tipo_Analisi&quot;
+		Case &quot;TIPO_ANALISI&quot;
 			copia_riga_A
 	end select
 rem		oCtrlModel.Enabled = True &apos;riabilita il pulsante +RIGA
@@ -1891,7 +1891,7 @@ sistema_attributi_sheet
  &apos; lrow = oCell.CellAddress.row
 &apos;	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	Select Case sAttributo
-		case &quot;Tipo_COMPUTO&quot;
+		case &quot;TIPO_COMPUTO&quot;
  			oCell = oSheet.GetCellByPosition( 0, lrow)
  			oCell.string = &quot;Fine Computo&quot;
  	 		oCell = oSheet.GetCellByPosition( 3, lrow)
@@ -1901,7 +1901,7 @@ sistema_attributi_sheet
 	 		oRange = oSheet.getCellRangeByPosition(0,lrow,34,lrow)
  		 	&apos;oRange.CellBackColor = RGB(255,0,0)
  	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 	 	 
-		case &quot;Tipo_Analisi&quot;
+		case &quot;TIPO_ANALISI&quot;
  			oCell = oSheet.GetCellByPosition( 0, lrow)
  			oCell.string = &quot;Fine ANALISI&quot;
  	 		oCell = oSheet.GetCellByPosition( 2, lrow)
@@ -1913,7 +1913,7 @@ sistema_attributi_sheet
  			oRange = oSheet.getCellRangeByPosition(0,lrow,8,lrow)
  	 		&apos;oRange.CellBackColor = RGB(255,0,0) 
  	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 		
-		case &quot;Tipo_EP&quot;, &quot;Tipo_ElencoP&quot;
+		case &quot;TIPO_EP&quot;, &quot;TIPO_ELENCOP&quot;
 			oCell = oSheet.GetCellByPosition( 1, lrow)
  			oCell.string = &quot;Questa riga NON deve essere cancellata, MAI!!!  (ma può rimanere tranquillamente NASCOSTA!)&quot;
  			dim lH as long
@@ -1934,8 +1934,8 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 &apos;	sAttributo = Trova_Attr_Sheet
-&apos; If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; and _
-&apos; 	sAttributo &lt;&gt; &quot;Tipo_CONTABILITA&quot; Then 
+&apos; If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
+&apos; 	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; Then 
 &apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia... o comunque di &quot;&quot;tipo computo&quot;&quot;)&quot;
 &apos; 			 Clessid_lock_End
 &apos;			exit sub
@@ -1943,7 +1943,7 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
  	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 and _
- 		sAttributo = &quot;Tipo_COMPUTO&quot; then
+ 		sAttributo = &quot;TIPO_COMPUTO&quot; then
 		msgbox &quot;La rinumerazione è disabilitata perché è stata abilitata la Contabilità&quot;
  		&apos; inibisce anche se la var apposita è diversa da 0
  		exit sub
@@ -1951,7 +1951,7 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 
 	&apos;inibisce la rinumerazione se la var apposita è diversa da 0
  	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 and _
- 		sAttributo = &quot;Tipo_COMPUTO&quot; then
+ 		sAttributo = &quot;TIPO_COMPUTO&quot; then
 		msgbox &quot;La rinumerazione è disabilitata: controlla la Variabile Generale H335&quot;&amp; CHR$(10)_
 			&amp; &quot;dal Menu Principale&gt;Variabili Generali&quot;
  		exit sub

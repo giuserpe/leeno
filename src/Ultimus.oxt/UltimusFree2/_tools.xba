@@ -86,7 +86,8 @@ rem ----------------------------------------------------------------------
 	Dim pip As Object, extensionLocation As String
 	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
 	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
-	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
+&apos;	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
+	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
 &apos;	display a human readable address
 &apos;	MsgBox(ConvertFromURL(extensionLocation)
@@ -112,44 +113,34 @@ Sub Main
 rifa_nomearea (&quot;Foglio1&quot;,&quot;A1:A5&quot;,&quot;per_cortesia&quot;)
 End Sub
 Sub _listino_accoda_in_unico
- &apos;ACCODA PIù FILE DI CALC IN UNO SOLO
-Dim DocName as object, DocUlr as string, dummy()
-Doc = ThisComponent
-Sheet = Doc.Sheets(0) 
-sPath =&quot;C:\Users\giuserpe\Desktop\2013\&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
-sFileName = Dir(sPath &amp; &quot;*.ods&quot;, 0)
-Barra_Apri_Chiudi_5(&quot;.......................Sto lavorando su &quot;&amp; sFileName, 0)
-Do While (sFileName &lt;&gt; &quot;&quot;)
-  c = Sheet.createCursor
-  c.gotoEndOfUsedArea(false)
-  LastRow = c.RangeAddress.EndRow + 1
-  DocUrl = ConvertToURL(sPath &amp; sFileName)
+&apos;ACCODA PIù FILE DI CALC IN UNO SOLO
+	Dim DocName as object, DocUlr as string, dummy()
+	Doc = ThisComponent
+	Sheet = Doc.Sheets(0) 
+	sPath =&quot;C:\Users\giuserpe\Desktop\2013\&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
+	sFileName = Dir(sPath &amp; &quot;*.ods&quot;, 0)
+	Barra_Apri_Chiudi_5(&quot;.......................Sto lavorando su &quot;&amp; sFileName, 0)
+	Do While (sFileName &lt;&gt; &quot;&quot;)
+		c = Sheet.createCursor
+		c.gotoEndOfUsedArea(false)
+		LastRow = c.RangeAddress.EndRow + 1
+		DocUrl = ConvertToURL(sPath &amp; sFileName)
 &apos;on error goto errore
-  DocName = StarDesktop.loadComponentFromURL (DocUrl, &quot;_blank&quot;,0, Dummy() )
-  Sheet1 = DocName.Sheets(1) &apos; questo indica l&apos;index del foglio da copiare
-  c = Sheet1.createCursor
-  c.gotoEndOfUsedArea(false)
-  LastRow1 = c.RangeAddress.EndRow
-	oStart=uFindString(&quot;ATTENZIONE!&quot;, Sheet1)
-	Srow=oStart.RangeAddress.EndRow+1
-  Range = Sheet1.getCellRangeByPosition(1, Srow,  12, LastRow1).getDataArray &apos;(1^ colonna, 1^ riga, 10^ colonna, ultima riga)
-  DocName.dispose
-  dRange  = Sheet.getCellRangeByPosition(1, LastRow, 12, LastRow1 + LastRow-Srow)
-  dRange.setDataArray(Range)
-    sFileName = Dir()
-
-
-&apos;   	oStart=uFindString(&quot;Elenco prezzi Regione Umbria 2013&quot;, Sheet)
-&apos;   	Srow=oStart.RangeAddress.EndRow
-&apos;   	oStart=uFindString(&quot;ATTENZIONE!&quot;, Sheet)
-&apos;	Srow1=oStart.RangeAddress.EndRow
-&apos;	print Srow
-&apos;	print Srow1
-&apos;	Sheet.getrows.removebyindex(Srow,Srow1-Srow+1)
-
-Loop
-print &quot;fatto!&quot;
-		errore:
+		DocName = StarDesktop.loadComponentFromURL (DocUrl, &quot;_blank&quot;,0, Dummy() )
+		Sheet1 = DocName.Sheets(1) &apos; questo indica l&apos;index del foglio da copiare
+		c = Sheet1.createCursor
+		c.gotoEndOfUsedArea(false)
+		LastRow1 = c.RangeAddress.EndRow
+		oStart=uFindString(&quot;ATTENZIONE!&quot;, Sheet1)
+		Srow=oStart.RangeAddress.EndRow+1
+		Range = Sheet1.getCellRangeByPosition(1, Srow,  12, LastRow1).getDataArray &apos;(1^ colonna, 1^ riga, 10^ colonna, ultima riga)
+		DocName.dispose
+		dRange  = Sheet.getCellRangeByPosition(1, LastRow, 12, LastRow1 + LastRow-Srow)
+		dRange.setDataArray(Range)
+		sFileName = Dir()
+	Loop
+	print &quot;fatto!&quot;
+	errore:
 End Sub
 
 Sub inseriscirighe
@@ -376,9 +367,9 @@ SUB DOLO rem SOLO MANUTENZIONE
 		rem VECCHIO BLOCCO ANALISI_BART
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$45:$N$51&quot; , &quot;blocco_analisi&quot;)
 		rem BLOCCO ANALISI AVCP
-		rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
-&apos;		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
+		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
 &apos;rifa_nomearea (&quot;Foglio1&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
  oDoc = ThisComponent
  oAree=oDoc.NamedRanges&apos;
@@ -397,9 +388,6 @@ rem migliora la leggibilità dei listini
 	END IF
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
 	Barra_Apri_Chiudi_5(&quot; Eseguo ...&quot;, 0)
-&apos;	sString$ = &quot;ATTENZIONE!&quot;
-&apos;	oEnd=uFindString(sString$, oSheet)
-&apos;	primariga=oEnd.RangeAddress.EndRow
 	for i = 0 to lLastUrow
 		if oSheet.GetCellByPosition( 5,i).getstring = &quot;ATTENZIONE!&quot; then
 			primariga = i+1
@@ -414,18 +402,22 @@ rem migliora la leggibilità dei listini
 	oSheet.getCellRangeByPosition (10,primariga,10,lLastUrow).CellStyle = &quot;List-%&quot;
 	oSheet.getCellRangeByPosition (11,primariga,11,lLastUrow).CellStyle = &quot;List-num-euro&quot;
 	for i = primariga to lLastUrow
-		if len(oSheet.GetCellbyPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
-		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
-		oRange.CellBackColor = RGB(255, 255, 204)
+		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 3 then 
+			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
+			oRange.CellBackColor = RGB(255, 255, 0)
+			GoTo vai:
 		end if
-	&apos;	if len(oSheet.GetCellbyPosition( 2, i ).string) = 3 then 
-	&apos;	oRange = oSheet.getCellRangeByPosition (0,i,11,i)
-	&apos;	oRange.CellBackColor = RGB(255, 255, 0)
-	&apos;	end if
 		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 5 then 
-		oRange = oSheet.getCellRangeByPosition (0,i,11,i)
-		oRange.CellBackColor = RGB(230, 230, 76)
+			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
+			oRange.CellBackColor = RGB(230, 230, 76)
+			GoTo vai:
 		end if
+		if len(oSheet.GetCellbyPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
+			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
+			oRange.CellBackColor = RGB(255, 255, 204)
+			GoTo vai:
+		end If
+vai:
 	Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; lLastUrow-i &amp;&quot; righe...&quot;, 0)
 	next
 	oSheet.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne
@@ -538,8 +530,6 @@ SUB SERVIZIO &apos; una macro per mio uso e consumo che modifico e adatto doi vo
 	print &quot;FINITO:::::!&quot;
 END SUB
 
-
-
 SUB SERVIZIO__ &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
 	&apos;print &quot;partenza&quot;
 	oSheet = ThisComponent.currentController.activeSheet
@@ -562,7 +552,4 @@ SUB SERVIZIO__ &apos; una macro per mio uso e consumo che modifico e adatto doi 
 	loop
 &apos;puttana
 END SUB
-
-
-
 </script:module>

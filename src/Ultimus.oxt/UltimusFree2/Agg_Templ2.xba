@@ -503,9 +503,6 @@ Filecopy sSourceFile, sURLmem
 &apos;lo copia in un altro (sURLmem), verifica che il file copiato esista e cancella il primo: non so se é quello che cerchi ma io ci provo...
 end sub
 
-
-
-
 Sub Elimina_copia_aPerdere (sUrl)
 	if not isnull(sURL) or not ismissing(sURL) then
 		kill(sURL)

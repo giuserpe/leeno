@@ -447,7 +447,6 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Header_Footer.Set_Header_Footer?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.removeKeyEvent(aKeyEvent)
 	shortCuts.store() 
-
 	
 &apos;______________ Ctrl Shift U __________Ctrl maiusc U
 	with aKeyEvent 
@@ -544,19 +543,6 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	
 END SUB
 
-
-
-
-
-
-
-
-
-
-
-&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Sub Registra_Tasti_Global &apos; registra i tasti a livello globale (utente)
 &apos;by Carsten Driesner - carsten.driesner@sun.com
@@ -614,6 +600,14 @@ Sub Registra_Tasti_Global &apos; registra i tasti a livello globale (utente)
 	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application&quot; )
 &apos;oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
 	oWriterAccelCfgMgr.store()
+	
+rem ----------------------------------------------------------------------
+&apos;Ctrl shifT R
+&apos;	aKeyEvent.Modifiers = MODIFIER_MOD1 +MODIFIER_SHIFT
+&apos;	aKeyEvent.KeyCode = com.sun.star.awt.Key.R
+&apos;	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.file_gest.avvia_IDE?language=Basic&amp;location=application&quot; )
+&apos;&apos;	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
+&apos;	oWriterAccelCfgMgr.store()
 	
 &apos;_____ Ctrl shitf H
 	aKeyEvent.Modifiers = MODIFIER_MOD1 + com.sun.star.awt.KeyModifier.SHIFT

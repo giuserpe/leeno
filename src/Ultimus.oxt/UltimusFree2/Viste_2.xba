@@ -14,7 +14,7 @@
 
 Sub Scelta_Viste_2()
 &apos;	sAttributo = Trova_Attr_Sheet
- &apos; If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; Then
+ &apos; If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; Then
  &apos; 	msgbox &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
 &apos;&apos;		 			&amp; &quot;Sei certo di essere su una tabella di computo?&quot;
 	&apos;	 	exit sub
@@ -275,7 +275,7 @@ Mostra_Tutto
 	Carica_vista_da_schema(Tabella1, Config1)
 	oSheet = ThisComponent.currentController.activeSheet
 	iLastRow = getLastUsedRow(oSheet)
-print
+
 set_larghezza_colonne
 end sub
 

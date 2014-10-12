@@ -172,15 +172,14 @@ dim cSheetName2 as string
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()&apos; pare vada ri-letta
 	For i = LBound( aSheetNames ) To UBound( aSheetNames )
- cSheetName2 = aSheetNames( i ) &apos; get string from array 
- If left(cSheetName2,3) = &quot;cP_&quot; Then
- 		oSheet = ThisComponent.Sheets.getByIndex(i)
- 		thisComponent.Sheets.moveByName(cSheetName2 ,7)
+	 cSheetName2 = aSheetNames( i ) &apos; get string from array 
+	 If left(cSheetName2,3) = &quot;cP_&quot; Then
+	 		oSheet = ThisComponent.Sheets.getByIndex(i)
+	 		thisComponent.Sheets.moveByName(cSheetName2 ,7)
 			oSheet.isVisible = False
-			&apos;Thiscomponent.currentcontroller.setactivesheet(Osheet)
- EndIf
+				&apos;Thiscomponent.currentcontroller.setactivesheet(Osheet)
+	 EndIf
 	Next 
-
 End Sub
 
 
@@ -206,28 +205,28 @@ Sub sistema_attributi_sheet&apos; (sSheet As string) rem renderla opzionale?
 &apos;	Select Case sSheet
 &apos;		Case &quot;Elenco Prezzi&quot;
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;A2&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_EP&quot;, oSheet, &quot;B2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_EP&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_EP&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_EP&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_EP&quot;, oSheet, &quot;B2&quot;)
 &apos;		Case &quot;COMPUTO&quot;
 			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;A2&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_COMPUTO&quot;, oSheet, &quot;B2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;B2&quot;)
 &apos;		Case &quot;Analisi di Prezzo&quot;
 			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;A2&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_Analisi&quot;, oSheet, &quot;B2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;B2&quot;)
 &apos;		Case &quot;CONTABILITA&quot;
 			oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
-			Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
 &apos;	End Select 
 End Sub
 
@@ -308,10 +307,10 @@ rem riga rossa
 	oSheet.GetCellByPosition(0,4).setstring(&quot;Fine Computo&quot;)
 	oSheet.getCellRangeByPosition(0, 4, 35 , 4).cellstyle = &quot;Riga_rossa_Chiudi&quot;
 rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;Tipo_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
+	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
+	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
+	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
 
 apri_libretto_misure
 Visualizza_normale_esegui

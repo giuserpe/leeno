@@ -11,7 +11,7 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-Sub Inser_Capitolo  
+Sub Inser_Capitolo
 	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
  				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
  	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
@@ -84,7 +84,11 @@ inserisci_voce:
 &apos; 	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
 &apos; 		exit sub		
 &apos; 	end If
- 	insRows (lrow, 1) &apos;inserisci riga
+
+	If sTesto &lt;&gt; &quot;&quot; Then
+		insRows (lrow, 1) &apos;inserisci riga
+		oSheet.GetCellbyPosition( 2, lRow).string=sTesto &apos;scrive titolo
+	EndIf
 	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
 rem ----------------------------------------------------------------------
 rem inserisco i valori e le formule
@@ -104,8 +108,7 @@ rem ----------------------------------------------------------------------
 &apos;	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
 &apos;	oSheet.copyRange(oDest, oSrc) &apos;incolla
 rem ----------------------------------------------------------------------
-	oCell=oSheet.GetCellbyPosition( 2, lRow)
- 	oCell.string=sTesto &apos;scrive titolo
+
 
 	ocellBaseA = oSheet.GetCellbyPosition( 1, lRow)
 	ocellBaseR = oSheet.GetCellbyPosition( 31, lRow)
@@ -328,7 +331,10 @@ rem STABILISCE LA POSIZIONE DI INSERIMENTO
 	lrow = sStRange.RangeAddress.EndRow+1
 rem ----------------------------------------------------------------------
 inserisci_voce:
- 	insRows (lrow, 1) &apos;inserisci riga
+	If sTesto &lt;&gt; &quot;&quot; Then
+		insRows (lrow, 1) &apos;inserisci riga
+		oSheet.GetCellbyPosition( 2, lRow).string=sTesto &apos;scrive titolo
+	EndIf
 	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
 rem ----------------------------------------------------------------------
 rem inserisco i valori e le formule
@@ -349,8 +355,6 @@ rem ----------------------------------------------------------------------
 &apos;	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
 &apos;	oSheet.copyRange(oDest, oSrc) &apos; incolla
 rem ----------------------------------------------------------------------
-	oCell=oSheet.GetCellbyPosition( 2, lRow) &apos;+2)
-	oCell.string=sTesto &apos;scrive titolo
 	ocellBaseA = oSheet.GetCellbyPosition( 31, lRow) &apos;tag Cat
 	ocellBaseB = oSheet.GetCellbyPosition( 32, lRow) &apos;tag SubCat
 
@@ -532,7 +536,7 @@ Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto i
  			oSheet1 = ThisComponent.currentController.activeSheet
  	end If
 &apos;Print Trova_Attr_Sheet
-	If Trova_Attr_Sheet &lt;&gt; &quot;Tipo_COMPUTO&quot; Then
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_COMPUTO&quot; Then
 		 msgbox &quot;#1 Questa non mi pare una tabella di Computo...!&quot;
 		 	exit sub
 	end if
@@ -555,7 +559,7 @@ Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto i
 		if oSheet1.GetCellByPosition(39 , i).CellStyle = &quot;livello2 valuta mini&quot; or _
 			oSheet1.GetCellByPosition(39 , i).CellStyle = &quot;livello2 valuta&quot; then
 			Barra_chiudi_sempre_4
-			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali dei SottoCat.....&quot;, 80)
+			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali di SottoCat...&quot;, 80)
 			SubSum_SottoCap (i)
 		end if
 	next i
@@ -959,13 +963,13 @@ Sub Struttura &apos;&apos;
 	sAttributo = Trova_Attr_Sheet
 &apos;	Print sAttributo
 	Select case sAttributo 
-		Case &quot;Tipo_COMPUTO&quot;, &quot;Tipo_computo&quot;, &quot;Tipo_CONTABILITA&quot;
+		Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;
 			Struttura_ComputoM
 			exit sub
-&apos;		Case &quot;Tipo_CONTABILITA&quot;
+&apos;		Case &quot;TIPO_CONTABILITA&quot;
 &apos;			Struttura_ComputoM
 &apos;			exit sub
-		Case &quot;Tipo_Analisi&quot;
+		Case &quot;TIPO_ANALISI&quot;
 			Struttura_Analisi
 			exit sub
 	End select
@@ -1463,11 +1467,11 @@ ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
 sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 &apos;Print Trova_Attr_Sheet
 	Select Case Trova_Attr_Sheet
- 		Case &quot;Tipo_EP&quot;
+ 		Case &quot;TIPO_EP&quot;
  			Tronca_Altezza_Voci_EP
-		Case &quot;Tipo_Analisi&quot;
+		Case &quot;TIPO_ANALISI&quot;
  			Tronca_Altezza_Analisi
-		Case &quot;Tipo_COMPUTO&quot;, &quot;Tipo_CONTABILITA&quot;
+		Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;
 		 Tronca_Altezza_Voci_Computo
 	End Select
 	If ThisComponent.currentController.activeSheet.name = &quot;Listino&quot; Then	 		

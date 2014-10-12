@@ -8,6 +8,7 @@ SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
  	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	Chiudi_o_elimina_tabelle_inutili
+rem ----------------------------------------------------------------------
 rem nome e percorso file
 	oDoc = ThisComponent
 	oSheets = oDoc.Sheets()

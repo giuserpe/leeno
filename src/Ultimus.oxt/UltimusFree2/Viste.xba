@@ -19,22 +19,18 @@ Dim oDialogScenari As Object &apos; Questa variabile va dichiarata perchè viene
 Dim oDialogScenari_2 As Object &apos; Questa variabile va dichiarata perchè viene utilizzata
 							 &apos; dalle altre sub per chiudere il dialogo
 Dim oDialogScenari_A As Object &apos; Questa variabile va dichiarata perchè viene utilizzata
-
 Dim oDialogScenari_EP As Object
-
 Dim oDialogScenari_AN As Object
-
 Sub Scelta_Viste() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
 sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
-&apos;	print sAttributo
- If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; and _
- 	sAttributo &lt;&gt; &quot;Tipo_CONTABILITA&quot; and _
- 	sAttributo &lt;&gt; &quot;Tipo_Analisi&quot; and _
- 	sAttributo &lt;&gt; &quot;TFiltroTMP&quot; and _
- 	sAttributo &lt;&gt; &quot;Tipo_ElencoP&quot; and _
- 	sAttributo &lt;&gt; &quot;Tipo_EP&quot; Then
+ If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
+ 	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; and _
+ 	sAttributo &lt;&gt; &quot;TIPO_ANALISI&quot; and _
+ 	sAttributo &lt;&gt; &quot;TFILTROTMP&quot; and _
+ 	sAttributo &lt;&gt; &quot;TIPO_ELENCOP&quot; and _
+ 	sAttributo &lt;&gt; &quot;TIPO_EP&quot; Then
 
  	msgbox &quot;#1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
 		 			&amp; &quot;&quot;
@@ -47,7 +43,7 @@ sistema_attributi_sheet
 	End If 
 
 	Select case sAttributo
- 		case &quot;Tipo_COMPUTO&quot;
+ 		case &quot;TIPO_COMPUTO&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
  			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 AND _
  				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
@@ -66,20 +62,20 @@ sistema_attributi_sheet
 			END IF
 
 
- 		case &quot;Tipo_CONTABILITA&quot;
+ 		case &quot;TIPO_CONTABILITA&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.Dialogviste_N) &apos; Inizializza il dialogo
 			oDialogScenari_2.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 	
-		case &quot;Tipo_ElencoP&quot;
+		case &quot;TIPO_ELENCOP&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_EP = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
 			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 			
-		case &quot;Tipo_EP&quot;
+		case &quot;TIPO_EP&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_EP = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
 			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
 
-		case &quot;Tipo_Analisi&quot;
+		case &quot;TIPO_ANALISI&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
 			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
@@ -92,11 +88,11 @@ Sub Scelta_Viste____() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
 	sAttributo = Trova_Attr_Sheet
 	&apos;print sAttributo
- If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; and _
- 	sAttributo &lt;&gt; &quot;Tipo_CONTABILITA&quot; and _
- 	sAttributo &lt;&gt; &quot;Tipo_Analisi&quot; and _
- 	sAttributo &lt;&gt; &quot;TFiltroTMP&quot; and _
- 	sAttributo &lt;&gt; &quot;Tipo_ElencoP&quot; Then
+ If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
+ 	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; and _
+ 	sAttributo &lt;&gt; &quot;TIPO_ANALISI&quot; and _
+ 	sAttributo &lt;&gt; &quot;TFILTROTMP&quot; and _
+ 	sAttributo &lt;&gt; &quot;TIPO_ELENCOP&quot; Then
  	msgbox &quot;1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
 		 			&amp; &quot;&quot;
 		 	exit sub
@@ -108,7 +104,7 @@ Sub Scelta_Viste____() &apos;nuova versione universale
 	End If 
 
 	Select case sAttributo
- 		case &quot;Tipo_COMPUTO&quot;
+ 		case &quot;TIPO_COMPUTO&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
  			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 or _
  				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
@@ -119,17 +115,17 @@ Sub Scelta_Viste____() &apos;nuova versione universale
 					oDialogScenari.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 			end if
 
- 		case &quot;Tipo_CONTABILITA&quot;
+ 		case &quot;TIPO_CONTABILITA&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.Dialogviste_N) &apos; Inizializza il dialogo
 			oDialogScenari_2.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 	
 			
-		case &quot;Tipo_ElencoP&quot;
+		case &quot;TIPO_ELENCOP&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_EP = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
 			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
 
-		case &quot;Tipo_Analisi&quot;
+		case &quot;TIPO_ANALISI&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
 			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
@@ -142,7 +138,7 @@ END SUB
 
 Sub Scelta_____Viste()
 	sAttributo = Trova_Attr_Sheet
- If sAttributo &lt;&gt; &quot;Tipo_COMPUTO&quot; Then
+ If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; Then
  	msgbox &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
 		 			&amp; &quot;Sei certo di essere su una tabella di computo?&quot;
 		 	exit sub
@@ -175,24 +171,23 @@ sub Importi_Computo_su_Computo
 			oSheet.getColumns().getByName(&quot;S&quot;).isVisible = false 
 	end if
 end sub
-
 Function Scenari () &apos; in realtà sono solo visualizzazioni
 &apos; cioè colonne nascote o mostrate a seconda delle diverse configurazionmi richieste
-
- Dim nome_sheet as string
- 
+	Dim nome_sheet as string
+	
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
 	sAttributo = Trova_Attr_Sheet &apos;brigante
-	If sAttributo = &quot;Tipo_COMPUTO&quot; or _
-		sAttributo = &quot;Tipo_CONTABILITA&quot; Then
-
- 			Scenari = &quot;si&quot;
-				else
-		 			Scenari = &quot;no&quot;
-		 			Print &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
-		 			&amp; &quot;Sei certo di essere su una tabella di computo?&quot;
- 	end if &apos;
-End Function 
+	If sAttributo = &quot;TIPO_COMPUTO&quot; or _
+		sAttributo = &quot;TIPO_CONTABILITA&quot; Then
+		Scenari = &quot;si&quot;
+	Else
+		Scenari = &quot;no&quot;
+		Exit Function
+&apos;		Print &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
+&apos;		&amp; &quot;Sei certo di essere su una tabella di computo?&quot;
+	end if &apos;
+End Function
+ 
 
 
 
@@ -1086,7 +1081,7 @@ END SUB
 
 
 
-FUNCTION DuplicaSheetFiltroTMP(Optional sSuffix as string, Optional lnumSheet as long )&apos;Questa sub duplica 
+FUNCTION DuplicaSheeTFILTROTMP(Optional sSuffix as string, Optional lnumSheet as long )&apos;Questa sub duplica 
 &apos; un foglio e aggiunge un suffisso al nome
 dim iNumInser as integer
 
@@ -1151,7 +1146,7 @@ dim iNumInser as integer
 
 	ocell = oSheet.GetCellbyPosition( 0, 3 )
 	Thiscomponent.currentcontroller.select(ocell)
-	DuplicaSheetFiltroTMP=sNuovoNome
+	DuplicaSheeTFILTROTMP=sNuovoNome
 	Clessid_lock_End
 END FUNCTION
 
@@ -1165,7 +1160,7 @@ Sub figure_annotazioni_on_off
 &apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
 	sAttributo = Trova_Attr_Sheet
 	oSheet = ThisComponent.currentController.activeSheet
-	if sAttributo = &quot;Tipo_COMPUTO&quot; then
+	if sAttributo = &quot;TIPO_COMPUTO&quot; then
 	
 &apos;		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
 				iScarto = 0 &apos;se ver. 3

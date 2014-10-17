@@ -16,7 +16,7 @@ rem qui ci metto tutte le variabili/COSTANTI globali
 option explicit
 
 Public Const idxCol = 0		&apos;indice prima colonna
-Public Const idxRow = 1		&apos;indice posizione intestazione di tabella
+Public Const idxRow = 2		&apos;indice posizione intestazione di tabella
 Public Const idxSAL = 30 	&apos;numero massimo possibile di SAL
 Public Const idxdec = 2		&apos;numero cifre decimali per le approssimazioni
 

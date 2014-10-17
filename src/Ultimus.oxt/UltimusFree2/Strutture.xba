@@ -92,15 +92,16 @@ inserisci_voce:
 	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
 rem ----------------------------------------------------------------------
 rem inserisco i valori e le formule
-oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;Livello-1-scritta&quot;
-oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = &quot;Livello-1-scritta mini&quot;
-oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = &quot;Livello-1-scritta mini val&quot;
-oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
-oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
-oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;Livello-1-scritta mini val&quot;
-oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1
+	oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;Livello-1-scritta&quot;
+	oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = &quot;Livello-1-scritta mini&quot;
+	oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = &quot;Livello-1-scritta mini val&quot;
+	oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
+	oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
+	oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;Livello-1-scritta mini val&quot;
+	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
+	oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1
 rem ----------------------------------------------------------------------
-	ThisComponent.CurrentController.Select(oCell)
+&apos;	ThisComponent.CurrentController.Select(oCell)
 Adatta_Altezza_riga
 rem ----------------------------------------------------------------------
 &apos;	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
@@ -143,8 +144,10 @@ rem ----------------------------------------------------------------------
 			numCap1 = numCap
 			ocellBaseR.value = numCap1 +1
 	end if 
+
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 0 then 
-			ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1, lRow+1)) &apos;31
+	&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1, lRow+1)) &apos;31
+	Print 
 rem ----------------------------------------------------------------------
 			lrowAlT = lRow &apos;-1
 			do while oSheet.GetCellByPosition(31 , lrowAlT).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot; 
@@ -338,14 +341,15 @@ inserisci_voce:
 	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
 rem ----------------------------------------------------------------------
 rem inserisco i valori e le formule
-oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;livello2 valuta&quot;
-oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = &quot;livello2_&quot;
-oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = &quot;livello2 scritta mini&quot;
-oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = &quot;livello2 valuta mini %&quot;
-oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;livello2 valuta mini %&quot;
-oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;livello2 valuta mini&quot;
-oSheet.getCellRangeByPosition(31, lrow, 32, lrow).CellStyle = &quot;livello2_&quot;
-oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1 &amp; &quot;&amp;&quot;&quot;.&quot;&quot;&amp;AG&quot; &amp; lrow+1
+	oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;livello2 valuta&quot;
+	oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = &quot;livello2_&quot;
+	oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = &quot;livello2 scritta mini&quot;
+	oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = &quot;livello2 valuta mini %&quot;
+	oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;livello2 valuta mini %&quot;
+	oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;livello2 valuta mini&quot;
+	oSheet.getCellRangeByPosition(31, lrow, 32, lrow).CellStyle = &quot;livello2_&quot;
+	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
+	oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1 &amp; &quot;&amp;&quot;&quot;.&quot;&quot;&amp;AG&quot; &amp; lrow+1
 rem ----------------------------------------------------------------------
 	ThisComponent.CurrentController.Select(oCell)
 Adatta_Altezza_riga

@@ -1352,6 +1352,14 @@ Function Trova_rangeSRC_Computo (oSheet as object)&apos;(anche_computo as boolea
 		Trova_rangeSRC_Computo = oSheet.getCellRangeByPosition(0,lrowInizio,250,lrowEnd).RangeAddress
 end function
 
+Sub focus_doc (sUrl As String)
+rem ----------------------------------------------------------------------
+	Target = StarDesktop.loadComponentFromURL(sUrl, &quot;_default&quot;,0 , Array()) 
+	aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
+	Target.getCurrentController().getFrame().focusGained(aFocusEvent)
+rem ----------------------------------------------------------------------
+End Sub
+
 
 Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarget as string, _
 							optional sRangeTarget as string, optional sStringa as string, optional sFrName as string )

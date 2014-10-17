@@ -664,7 +664,25 @@ args1(17).Value = 3
 
 dispatcher.executeDispatch(document, &quot;.uno:ExecuteSearch&quot;, &quot;&quot;, 0, args1())
 
-
 end sub
 
+
+sub visualizza_normale
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;NormalViewMode&quot;
+args1(0).Value = true
+
+dispatcher.executeDispatch(document, &quot;.uno:NormalViewMode&quot;, &quot;&quot;, 0, args1())
+
+end sub
 </script:module>

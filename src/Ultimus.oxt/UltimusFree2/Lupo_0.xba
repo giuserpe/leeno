@@ -102,7 +102,8 @@ end sub
 &apos;_____________________________________________________________
 
 Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste routine
-
+	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
+Visualizza_normale 
 	Barra_chiudi_sempre_4 
 	Barra_apri_chiudi_4 
 	dim sVerMinorDoc as long
@@ -416,7 +417,7 @@ rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
 
-	Controlla_Somme_Componenti
+Controlla_Somme_Componenti
  
 	
 	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then

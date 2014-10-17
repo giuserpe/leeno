@@ -25,7 +25,6 @@ Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 20)
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,idxRow+1))
 fissa(0,idxRow+1)
 &apos;print	Trova_Attr_Sheet
-
 	oEnd=uFindString(&quot;Cod.Voce&quot;, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) Then
 		GoTo esegui:
@@ -33,7 +32,7 @@ fissa(0,idxRow+1)
 			test1 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
 			oEnd=uFindString(&quot;tag usata/non usata&quot;, oSheet)
 			test2 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
-		If test1=0 And test2=0 Then insRows (test1, 1) &apos;insertByIndex non funziona 	
+		If test1=0 And test2=0 Then insRows (test1, 2) &apos;insertByIndex non funziona 	
 	End If
 esegui:
 &apos; 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
@@ -42,7 +41,7 @@ esegui:
 rem ----------------------------------------------------------------------
 rem riga di intestazione
 Cscarto = 0
-rIntest = 1
+rIntest = 2
 	oSheet.GetCellByPosition(0,rIntest).setstring(&quot;Codice&quot;+ chr(13) +&quot;Articolo&quot;
 	oSheet.GetCellByPosition(1,rIntest).setstring(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;)
 	oSheet.GetCellByPosition(2,rIntest).setstring(&quot;Unità di misura&quot;)
@@ -61,11 +60,47 @@ rIntest = 1
 	oSheet.getCellRangeByPosition(0, rIntest, 14 , rIntest).cellstyle = &quot;EP-a -Top&quot;
 	oSheet.getCellRangeByName(&quot;I1:J1&quot;).Columns.IsVisible=false
 	oSheet.getCellRangeByName(&quot;M1:M1&quot;).Columns.IsVisible=false
+	
+rem ----------------------------------------------------------------------
+&apos;insRows (1,1)
+lRowE = uFindString(&quot;Fine elenco&quot;, oSheet).CellAddress.Row
+rem	riga di controllo importo
+	oSheet.GetCellByPosition(1,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
+	oSheet.GetCellByPosition(11,1).FORMULA=&quot;=SUBTOTAL(9;L3:L&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale computo
+	oSheet.GetCellByPosition(14,1).FORMULA=&quot;=SUBTOTAL(9;O3:O&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale contabilità
+	oSheet.GetCellByPosition(10,lRowE).STRING=&quot;TOTALE&quot; &apos;totale computo
+	oSheet.GetCellByPosition(10,lRowE).cellstyle=&quot;EP statistiche_q&quot; &apos;totale computo
+	oSheet.GetCellByPosition(11,lRowE).FORMULA=&quot;=SUBTOTAL(9;L3:L&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale computo
+	oSheet.GetCellByPosition(11,lRowE).cellstyle=&quot;EP statistiche&quot; &apos;totale computo
+	oSheet.GetCellByPosition(13,lRowE).STRING=&quot;TOTALE&quot; &apos;totale computo
+	oSheet.GetCellByPosition(13,lRowE).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
+	oSheet.GetCellByPosition(14,lRowE).FORMULA=&quot;=SUBTOTAL(9;O3:O&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale contabilità
+	oSheet.GetCellByPosition(14,lRowE).cellstyle=&quot;EP statistiche_Contab&quot; &apos;totale computo
 
-sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
+
+	oSheet.getCellRangeByPosition(0, 1, 14 , 1).cellstyle = &quot;comp In testa&quot;
+	oSheet.getCellByPosition(29,1).cellstyle = &quot;Comp TOTALI %&quot;
+
+&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
+rem ----------------------------------------------------------------------	
+	
+	
+	Rifa_AA_BB_Computo
+
 set_larghezza_colonne
+rem ----------------------------------------------------------------------
+rem cancello fomrattazioni dirette	
+	Flag = com.sun.star.sheet.CellFlags.HARDATTR
+	oSheet.getCellRangeByPosition(0, 0, 250, lRowE+10).clearContents(Flag)
+rem ----------------------------------------------------------------------
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
+	If Not isNull (oEnd) or isEmpty (oEnd) Then Rifa_GG_G1G1_Contab
+	
+sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
- Barra_chiudi_sempre_4 
+
+Barra_chiudi_sempre_4 
 barra_fatto
 End Sub
 

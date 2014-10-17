@@ -47,7 +47,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="12" dlg:left="6" dlg:top="83" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne relative alla Manodopera" dlg:value="Gestione sicurezza on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Computo_Sicur?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton10" dlg:tab-index="13" dlg:left="112" dlg:top="169" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne dei SubTot dei Capitoli e Sottocapitoli" dlg:default="true" dlg:value="Colonne Cap e sottoCap on/off">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton10" dlg:tab-index="13" dlg:left="22" dlg:top="189" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/nasconde le colonne dei SubTot dei Capitoli e Sottocapitoli" dlg:default="true" dlg:value="Colonne Cap e sottoCap on/off">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Col_Cap_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

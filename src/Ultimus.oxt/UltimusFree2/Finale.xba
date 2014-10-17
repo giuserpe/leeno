@@ -1708,7 +1708,7 @@ sub Visualizza_normale_esegui &apos; nel senso di Menu Visualizza &gt; normale
 	dispatcher.executeDispatch(document, &quot;.uno:NormalViewMode&quot;, &quot;&quot;, 0, args1())
 &apos; end if
 
-END SUB
+END Sub
 
 &apos;**************************************************************************************************
 SUB Visualizza_PageBreak
@@ -1787,76 +1787,48 @@ END SUB
 
 Sub Ri_Formatta_Capitoli &apos; duplica sul computo gli stili di cella delle intestazioni (capitoli e sottoCapitoli)
 &apos; la ricerca e l&apos;individuazione viene fatta sullo stile di cella della colonna A
-
+rem adeguata a LeenO 3.10.2
 Clessid_lock_Start 
  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	lcol5 = 0
  oCell = oSheet.GetCellByPosition(lcol5 , 1)
  ilastRow = getLastUsedRow(oSheet)
- 
- oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
- ThisComponent.CurrentController.Select(oCell)
-&apos; exit sub
- dim lrow as long
- lrow = 2
-Do while lrow &lt; ilastRow-5
-	 if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-1-sopra&quot; then 
-	 	oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 45, 107,45)
-		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
-		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 45, 72,45).rangeaddress
-		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
- 		oSheet.copyRange(oDest,oRangeSRC)
-		
-	end if
-	
-	 if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;Livello-1-scritta&quot; then
-	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,46,107,46)
-		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
-		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 46, 72,46).rangeaddress
-		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
- 		oSheet.copyRange(oDest,oRangeSRC)		
-	end if
-
-	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
-	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,47,107,47)
-		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
-		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 47, 72,47).rangeaddress
-		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
- 		oSheet.copyRange(oDest,oRangeSRC)
-	end if
-	
-	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-2-sotto&quot; then
-	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,49,107,49)
-		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
-		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 49, 72,49).rangeaddress
-		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
- 		oSheet.copyRange(oDest,oRangeSRC)
-	end if
-	
-	
-	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello2 valuta&quot; then
-	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,50,107,50)
-		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
-		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 50, 72,50).rangeaddress
-		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
- 		oSheet.copyRange(oDest,oRangeSRC)
-	end if
-
-	if oSheet.GetCellbyPosition( lcol5, lrow ).CellStyle = &quot;livello-2-sotto&quot; then
-	 	oRangeSRC = oSheetSRC.getCellRangeByPosition (72,51,107,51)
-		oRangeDest = oSheet.getCellRangeByPosition(0, lrow ,35 ,lrow ) 	
-		cella_cella_cella(oSheetSRC , oSheet, oRangeSRC , oRangeDest, 0) 
-		oRangeSRC = oSheetSRC.getCellRangeByPosition(72, 51, 72,51).rangeaddress
-		oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress
- 		oSheet.copyRange(oDest,oRangeSRC)
-	end if
-	lrow = lrow+1
-loop
+ &apos; exit sub
+ dim i as long
+For i = 0 to ilastRow
+rem ----------------------------------------------------------------------
+rem sistemo le categorie
+			If 	oSheet.GetCellByPosition(1, i).cellstyle =&quot;Livello-1-scritta&quot; Then
+				rem ----------------------------------------------------------------------
+				rem correggo gli stili
+				oSheet.getCellRangeByPosition(0, i, 41, i).CellStyle = &quot;Livello-1-scritta&quot;
+				oSheet.getCellRangeByPosition(2, i, 17, i).CellStyle = &quot;Livello-1-scritta mini&quot;
+				oSheet.getCellByPosition(18, i).CellStyle = &quot;Livello-1-scritta mini val&quot;
+				oSheet.getCellByPosition(24, i).CellStyle = &quot;Livello-1-scritta mini %&quot;
+				oSheet.getCellByPosition(29, i).CellStyle = &quot;Livello-1-scritta mini %&quot;
+				oSheet.getCellByPosition(30, i).CellStyle = &quot;Livello-1-scritta mini val&quot;
+				oSheet.getCellbyPosition(1, i).formula = &quot;=AF&quot; &amp; i+1
+				osheet.getCellRangeByPosition (2, i, 8, i).merge(True)
+				rem ----------------------------------------------------------------------
+			EndIf
+			&apos;Print 
+rem ----------------------------------------------------------------------
+rem sistemo le subcategorie
+			If 	oSheet.GetCellByPosition(1, i).cellstyle =&quot;livello2 valuta&quot; Then
+				rem ----------------------------------------------------------------------
+				rem correggo gli stili
+				oSheet.getCellRangeByPosition(0, i, 41, i).CellStyle = &quot;livello2 valuta&quot;
+				oSheet.getCellRangeByPosition(2, i, 17, i).CellStyle = &quot;livello2_&quot;
+				oSheet.getCellByPosition(18, i).CellStyle = &quot;livello2 scritta mini&quot;
+				oSheet.getCellByPosition(24, i).CellStyle = &quot;livello2 valuta mini %&quot;
+				oSheet.getCellByPosition(29, i).CellStyle = &quot;livello2 valuta mini %&quot;
+				oSheet.getCellByPosition(30, i).CellStyle = &quot;livello2 valuta mini&quot;
+				oSheet.getCellByPosition(31, i).CellStyle = &quot;livello2_&quot;
+				oSheet.getCellbyPosition(1, i).formula = &quot;=AF&quot; &amp; i+1 &amp; &quot;&amp;&quot;&quot;.&quot;&quot;&amp;AG&quot; &amp; i+1
+				osheet.getCellRangeByPosition (2, i, 8, i).merge(True)
+				rem ----------------------------------------------------------------------
+			EndIf
+Next
 	Clessid_lock_End
  print &quot;ok ! FATTO!&quot;
 end sub

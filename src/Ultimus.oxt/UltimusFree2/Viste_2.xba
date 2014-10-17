@@ -116,7 +116,7 @@ RIR_
 			oEnd=uFindString(sString$, oSheet)
 			iEndRow=oEnd.RangeAddress.EndRow
 	rem SAL PROGRESSIVO sul T O T A L E
-	sFormulaSomma =&quot;=ROUND(SUBTOTAL(9;Z3&quot; &amp; &quot;:Z&quot; &amp; iEndRow+1 &amp; &quot;);2)&quot;
+	sFormulaSomma =&quot;=SUBTOTAL(9;Z3&quot; &amp; &quot;:Z&quot; &amp; iEndRow+1 &amp; &quot;)&quot;
 	oSheet.GetCellByPosition(25,iEndRow).FORMULA = sFormulaSomma
 
 end sub

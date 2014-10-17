@@ -1019,10 +1019,10 @@ Dim osheet as object
 	 Select Case nome_sheet
 	 	Case &quot;COMPUTO&quot;
 	 	oCell = oSheet.GetCellByPosition( lcol , lrowb)
-	 		 sFormula = &quot;=ROUND(SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb+1 &amp; &quot;);2)&quot;
+	 		 sFormula = &quot;=SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb+1 &amp; &quot;)&quot;
 	 	Case &quot;CONTABILITA&quot;
 	 	oCell = oSheet.GetCellByPosition( lcol , lrowb-1)
-	 		 sFormula = &quot;=ROUND(IF(SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;)&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;));2)&quot;
+	 		 sFormula = &quot;=IF(SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;)&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;))&quot;
 	 End select
 
 &apos;	 sFormula = &quot;=SUM(&quot; &amp; sCol &amp; lrowB &amp; &quot;:&quot; &amp; sCol &amp; lrow-1 &amp; &quot;)&quot;

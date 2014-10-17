@@ -293,15 +293,15 @@ rem colore colonne riga di intestazione
 	oSheet.getCellRangeByPosition(0,0,0,3).rows.OptimalHeight = true &apos; ottimizza altezze
 rem	riga di controllo importo
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
-	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot; &apos;importo lavori
-	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
+	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=SUBTOTAL(9;P3:P4)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=SUBTOTAL(9;R3:R4)&quot; &apos;importo sicurezza
+	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=SUBTOTAL(9;AE3:AE4)&quot; &apos;importo manodopera
 	oSheet.getCellRangeByPosition(0, 1, 35 , 1).cellstyle = &quot;Reg_prog&quot;
 rem riga del totale
 	oSheet.GetCellByPosition(2,3).setstring(&quot;T O T A L E&quot;)
-	oSheet.GetCellByPosition(15,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;P3:P4);2)&quot; &apos;importo lavori
-	oSheet.GetCellByPosition(17,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;R3:R4);2)&quot; &apos;importo sicurezza
-	oSheet.GetCellByPosition(30,3).FORMULA=&quot;=ROUND(SUBTOTAL(9;AE3:AE4);2)&quot; &apos;importo manodopera
+	oSheet.GetCellByPosition(15,3).FORMULA=&quot;=SUBTOTAL(9;P3:P4)&quot; &apos;importo lavori
+	oSheet.GetCellByPosition(17,3).FORMULA=&quot;=SUBTOTAL(9;R3:R4)&quot; &apos;importo sicurezza
+	oSheet.GetCellByPosition(30,3).FORMULA=&quot;=SUBTOTAL(9;AE3:AE4)&quot; &apos;importo manodopera
 	oSheet.getCellRangeByPosition(0, 3, 35 , 3).cellstyle = &quot;Comp TOTALI&quot;
 rem riga rossa
 	oSheet.GetCellByPosition(0,4).setstring(&quot;Fine Computo&quot;)

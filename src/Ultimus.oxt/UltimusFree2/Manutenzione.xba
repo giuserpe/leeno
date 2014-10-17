@@ -641,13 +641,14 @@ Sub Controlla_Somme_Componenti &apos; serve per conversione Da_Vecchio_Template
 				&apos;oSheet.GetCellByPosition( 10 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
 				oSheet.GetCellByPosition( 10 , i+1).string = &quot;&quot;
 				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
-				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
-				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
+				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
+				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
 &apos;				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
 				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
 				For ii = i+2 To lRow-1
 &apos;				Print ii
 oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
+				If oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a&quot; Then oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a peso&quot;
 				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
 				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
 				i = lRow &apos;+ 1

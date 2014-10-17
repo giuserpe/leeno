@@ -326,7 +326,7 @@ Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-fissa (0,rIntest)
+fissa (0,idxRow+1)
 rem ----------------------------------------------------------------------
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase
@@ -338,19 +338,15 @@ rem ----------------------------------------------------------------------
 	&apos;_____________________
 	
 &apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
+&apos;			iScarto = 0 &apos;se ver. 3
 &apos;		else
 &apos;			iscarto = 2 &apos;se vers. 4
 &apos;	endif
-	lrow= Range2Cell 
-	if lrow = -1 then			 
-			exit sub
-	end if
+&apos;	lrow= Range2Cell 
+	if lrow = -1 then exit Sub
 	oSheet.unprotect(&quot;&quot;) &apos;non si sa mai..
-	
-	if lrow = 0 then &apos; se è la prima...
-		lrow = 1
-	end if
+	lrow = idxRow+1
+&apos;	if lrow = 0 then lrow = 1
 	insRows (lrow,1)
 &apos;	oSheet.getRows.insertByIndex(lrow,1)
 	oSheet.getCellByPosition(lcolbase+0,lrow).CellStyle = &quot;EP-aS&quot;
@@ -363,12 +359,24 @@ rem ----------------------------------------------------------------------
 &apos;	oSheet.getCellByPosition(lcolbase+6,lrow).formula = &quot;=IF(E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp;&quot;)&quot; &apos;giovanna ColumnNameOf(lcolbase+
 	oSheet.getCellByPosition(lcolbase+6,lrow).formula = _
 	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;)&quot; 
-
-	
+rem ----------------------------------------------------------------------
 	oSheet.getCellByPosition(lcolbase+iscarto+7,lrow).CellStyle = &quot;EP-mezzo&quot;
 	oSheet.getCellByPosition(lcolbase+iscarto+8,lrow).CellStyle = &quot;EP-sfondo&quot;
 	oSheet.getCellByPosition(lcolbase+iscarto+9,lrow).CellStyle = &quot;EP-sfondo&quot;
-	oSheet.getCellByPosition(lcolbase+iscarto+10,lrow).CellStyle = &quot;EP statistiche&quot;
+rem ----------------------------------------------------------------------
+rem sommario computo
+	oSheet.getCellByPosition(lcolbase+iscarto+10,lrow).CellStyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(lcolbase+iscarto+10,lrow).formula = &quot;=L&quot; &amp; lrow+1 &amp; &quot;/E&quot; &amp; lrow+1
+	oSheet.getCellByPosition(lcolbase+iscarto+11,lrow).CellStyle = &quot;EP statistiche&quot;
+rem ----------------------------------------------------------------------
+	oSheet.GetCellByPosition(lcolbase+iscarto+11,lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot; &apos; somma importi
+	oSheet.getCellByPosition(lcolbase+iscarto+13,lrow).CellStyle = &quot;EP statistiche_Contab_q&quot;
+	oSheet.GetCellByPosition(lcolbase+iscarto+13,lrow).formula = &quot;=SUMIF(GG;A&quot; &amp; lrow+1 &amp; &quot;;G1G1)&quot;
+	oSheet.getCellByPosition(lcolbase+iscarto+14,lrow).CellStyle = &quot;EP statistiche_Contab&quot;
+	oSheet.GetCellByPosition(lcolbase+iscarto+14,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;*E&quot;&amp; Lrow+1
+rem ----------------------------------------------------------------------
+rem sommario contabilità	
+	
 	oMioRange=thisComponent.getCurrentSelection()
 	oMioRange.Rows.OptimalHeight = true
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)

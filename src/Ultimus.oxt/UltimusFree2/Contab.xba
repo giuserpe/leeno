@@ -390,7 +390,7 @@ rem gli importi vanno tutti nella colonna DEBITO, anche se negativi
 	InsRow=InsRow+1
 	oSheetReg.GetCellByPosition(fcol+1, InsRow).setstring(&quot;Parziale dei Lavori a Misura €&quot;)
 	ncol=ColumnNameOf(fcol+8)
-	oSheetReg.GetCellByPosition(fcol+8, InsRow).setformula(&quot;=ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2)&quot;)
+	oSheetReg.GetCellByPosition(fcol+8, InsRow).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
 	rem .formula o .setformula() è uguale
 	oSheetReg.GetCellByPosition(fcol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E   €&quot;&quot;)&quot;
 
@@ -399,7 +399,7 @@ copy_clip
 consolida_clip &apos; consolida la data
 	ncol=ColumnNameOf(fcol+8)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
-	oSheetReg.GetCellByPosition(fcol+8, InsRow+2).setformula(&quot;=ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;);2)&quot;)
+	oSheetReg.GetCellByPosition(fcol+8, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
 	
 &apos;	fineMisure = InsRow
 	inizioFirme = InsRow+3
@@ -547,7 +547,7 @@ rem ci metto un po&apos; di informazioni
 	oSheetReg.GetCellByPosition(3,ins).value = inumPag &apos;ultimo numero pagina
 	oSheetReg.GetCellByPosition(2, ins).value= nLib &apos;1 &apos; numero libretto
 &apos;	oSheetReg.GetCellByPosition(23, ins).value= nSal &apos; numero SAL
-	oSheetReg.GetCellByPosition(8, ins).formula = &quot;=ROUND(SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;);2)&quot;
+	oSheetReg.GetCellByPosition(8, ins).formula = &quot;=SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;)&quot;
 	oSheetReg.GetCellByPosition(8, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
@@ -643,7 +643,7 @@ rem ----------------------------------------------------------------------
 	InsRow=ariga+2
 	oSheetSal.GetCellByPosition(fcol+1, InsRow).setstring(&quot;Parziale dei Lavori a Misura €&quot;)
 	ncol=ColumnNameOf(fcol+5)
-	oSheetSal.GetCellByPosition(fcol+5, InsRow).setformula(&quot;=ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2)&quot;)
+	oSheetSal.GetCellByPosition(fcol+5, InsRow).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
 Row_Misura=InsRow &apos; posizione che serve per la pagina di riepilogo
 	rem .formula o .setformula() è uguale
 	oSheetSal.GetCellByPosition(fcol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E   €&quot;&quot;)&quot;
@@ -653,7 +653,7 @@ copy_clip
 consolida_clip &apos; consolida la data
 	ncol=ColumnNameOf(fcol+5)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+2).setformula(&quot;=ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;);2)&quot;)
+	oSheetSal.GetCellByPosition(fcol+5, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
 
 &apos;	inizioFirme = InsRow+7
 &apos;firme (inizioFirme)
@@ -1190,7 +1190,7 @@ Visualizza_PageBreak
 	nomearea=&quot;#Lib#&quot;+nsal
 rem annota importo parziale SAL
 	oSheetCont.GetCellByPosition(25, ultimariga-1).string = &quot;SAL n.&quot; &amp; nSal
-	oSheetCont.GetCellByPosition(25, ultimariga).formula = &quot;=ROUND(SUBTOTAL(9;P&quot; &amp; primariga+1 &amp; &quot;:P&quot; &amp; ultimariga+1 &amp; &quot;);2)&quot;
+	oSheetCont.GetCellByPosition(25, ultimariga).formula = &quot;=SUBTOTAL(9;P&quot; &amp; primariga+1 &amp; &quot;:P&quot; &amp; ultimariga+1 &amp; &quot;)&quot;
 	oSheetCont.GetCellByPosition(25, ultimariga).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem immetti le firme
 	inizioFirme = ultimariga+1
@@ -1376,14 +1376,14 @@ rem ci metto un po&apos; di informazioni
 	oSheetCont.GetCellByPosition(20,ins).value =  UBound(IntPag) &apos;ultimo numero pagina
 	oSheetCont.GetCellByPosition(19, ins).value= nLib &apos;1 &apos; numero libretto
 	oSheetCont.GetCellByPosition(23, ins).value= nSal &apos; numero SAL
-	oSheetCont.GetCellByPosition(25, ins).formula = &quot;=ROUND(SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;);2)&quot;
+	oSheetCont.GetCellByPosition(25, ins).formula = &quot;=SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
 	oSheetCont.GetCellByPosition(25, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem ----------------------------------------------------------------------
 rem annoto il sal corrente sulla riga di intestazione
 	ins =uFindString(&quot;LAVORAZIONI&quot;+ chr(10) + &quot;O PROVVISTE&quot;, oSheetCont).RangeAddress.EndRow
 	oSheetCont.getCellByPosition(25,ins).value = nSal
 	oSheetCont.GetCellByPosition(25, ins).cellstyle = &quot;Menu_sfondo _input_grasBig&quot;
-	oSheetCont.GetCellByPosition(25, ins-1).formula = &quot;=ROUND(SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;);2)&quot;
+	oSheetCont.GetCellByPosition(25, ins-1).formula = &quot;=SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
 rem ----------------------------------------------------------------------
 end Sub 
 </script:module>

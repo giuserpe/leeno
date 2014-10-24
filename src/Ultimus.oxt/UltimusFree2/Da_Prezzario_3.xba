@@ -187,20 +187,12 @@ on error resume next &apos;da tenere attivo escluso debug
 	&apos; sCol= ColumnNameOf(lcolbase+11)
 	oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
 	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;)&quot; 
-	&apos; iScarto è per la versione 4 (questo pezzo non è stato ancora testato)
-&apos;	if iscarto &lt;&gt; 0 then
-&apos;		oSheet.getCellByPosition(lcolbase+iscarto+5,lrowI).CellStyle = &quot;EP-mezzo %&quot;
-&apos;		oSheet.getCellByPosition(lcolbase+iscarto+6,lrowI).CellStyle = &quot;EP-mezzo&quot;
-&apos;			oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
-&apos;			 &quot;=IF(E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp;&quot;)&quot; 
-			&apos; oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
-			&apos; &quot;=IF(E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrowI+1 &amp; &quot;*H&quot; &amp; lrowI+1 &amp;&quot;)&quot;
-&apos;	end if
+
 	
-	oSheet.getCellByPosition(lcolbase+iscarto+7,lrowI).CellStyle = &quot;EP-mezzo&quot;
-	oSheet.getCellByPosition(lcolbase+iscarto+8,lrowI).CellStyle = &quot;EP-sfondo&quot;
-	oSheet.getCellByPosition(lcolbase+iscarto+9,lrowI).CellStyle = &quot;EP-sfondo&quot;
-	oSheet.getCellByPosition(lcolbase+iscarto+10,lrowI).CellStyle = &quot;EP statistiche&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+7,lrowI).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+8,lrowI).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+9,lrowI).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+10,lrowI).CellStyle = &quot;EP statistiche&quot;
 		
 
 	&apos; scrivo in EP i dati delle variabili prelevate dal listino,

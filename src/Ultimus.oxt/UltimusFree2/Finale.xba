@@ -1532,7 +1532,7 @@ fissa (0,rIntest+1)
 &apos;		msgbox &quot;L&apos;area di stampa è stata ridefinita!&quot;
 &apos;	end if		
 	If sAttributo = &quot;TIPO_ELENCOP&quot; Then 
-		Visualizza_normale&apos;Dal momento che Elenco_Prezzi non ha bisogno di passare per Impagina_bis una volta 
+Visualizza_normale&apos;Dal momento che Elenco_Prezzi non ha bisogno di passare per Impagina_bis una volta 
 		&apos;selezionate le aree di stampa si toglie il PageBreak	
 	 
 	&apos;	EliminaColonne&apos; Questa sub elimina le colonne nascoste, queste non danno noia in caso di stampa

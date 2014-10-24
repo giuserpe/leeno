@@ -2,194 +2,231 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Conversioni" script:language="StarBasic">REM  *****  BASIC  *****
 &apos;Option Explicit
-
-Sub da_vecchi_template_a_192 &apos; da template 189 &apos;(C) Giuseppe Vizziello 2014
+Sub da_vecchio_template
 &apos;attivo dalla versione 3.10.2
-Dim sURL As String
-Dim sName As String
-Dim sUrlbak As String
-Dim sSheetTarget As String 
-Dim sRangeTarget As String 
-Dim sFrameSRC As String
-Dim i As Long
-	sURL = ConvertToUrl(ThisComponent.getURL())
- 	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
-	sUrl= sName + &quot;-tmp&quot; + &quot;.ods&quot;
-	sUrlbak= ConvertFromUrl (sName + &quot;-backup&quot; + &quot;.ods&quot;)
-&apos;		&amp; sUrlbak &amp; chr(10)_	
-	msgbox &quot;Eseguo la conversione del Computo.&quot; &amp; chr(10)_
-		&amp; &quot;L&apos;operazione potrà richiedere qualche minuto.&quot; &amp; chr(10) &amp; chr(10)_
-		&amp; &quot;Conserverò una copia di sicurezza del tuo lavoro.&quot; &amp; chr(10) &amp; chr(10)_
-		&amp; &quot;Attendi il messaggio di completamento&quot;&amp; chr(10)_
-		&amp; &quot;senza interferire con mouse e/o tastiera!&quot;&amp; chr(10)_
-		&amp; CHR$(10)_
-		&amp; &quot;&quot;, 48, &quot;Conversione file...&quot;
-
-now1=now
-&apos;	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
-AutoCalc (0)
-&apos;Mostra_Tutto
-Verifica_chiudi_preview
+	Dim sURL As String
+	Dim sName As String
+	Dim sUrlbak As String
+	Dim sSheetTarget As String 
+	Dim sRangeTarget As String 
+	Dim sFrameSRC As String
+	Dim i As Long
+		sURL = ConvertToUrl(ThisComponent.getURL())
+	 	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
+		sUrl= sName + &quot;-tmp&quot; + &quot;.ods&quot;
+		nomeTMP = Replace_G(ThisComponent.gettitle, &quot;.ods&quot;, &quot;&quot;) + &quot;-tmp&quot; + &quot;.ods&quot;
+		sUrlbak= ConvertFromUrl (sName + &quot;-backup&quot; + &quot;.ods&quot;)
+rem ----------------------------------------------------------------------
+		msgbox &quot;Eseguo la conversione del Computo.&quot; &amp; chr(10)_
+			&amp; &quot;L&apos;operazione potrà richiedere qualche minuto.&quot; &amp; chr(10) &amp; chr(10)_
+			&amp; &quot;Conserverò una copia di sicurezza di questo file.&quot; &amp; chr(10) &amp; chr(10)_
+			&amp; &quot;Attendi il messaggio di &quot;&quot;OPERAZIONE COMPLETATA!&quot;&quot;&quot;&amp; chr(10)_
+			&amp; &quot;senza interferire con mouse e/o tastiera!&quot;&amp; chr(10)_
+			&amp; CHR$(10)_
+			&amp; &quot;&quot;, 48, &quot;Conversione file...&quot;
 rem ----------------------------------------------------------------------
 rem faccio il backup del file e riporto il focus sul file -tmp
-
-backup_tmp &apos;questa lascia il focus sul nuovo doc
-Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+	&apos; ID del template di partenza:
+	idxtemplate = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 290).value
+	
+backup_tmp &apos;questa lascia il focus sul nuovo doc-tmp
+aggiorna_STILI
+rem ----------------------------------------------------------------------
+rem torno sul file di partenza
+Focus_su_altro_Doc (sUrl)
+rem ----------------------------------------------------------------------
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
 	ThisComponent.CurrentController.ZoomValue = 100
-	
-	If oSheet.GetCellByPosition(9, 0).getString() = &quot;Quantità computo&quot; &amp; chr(10) &amp; &quot; progetto&quot; And _
-		oSheet.GetCellByPosition(5, 0).getString() = &quot;lungh / Sup.&quot; Then
-		insRows (0, 1) &apos;insertByIndex non funziona
-		Else
-		msgbox &quot;Questo file sembra già in ordine!&quot;, 48, &quot;ATTENZIONE!&quot;
-		Exit Sub
-	endif
-aggiorna_STILI
-	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	ThisComponent.CurrentController.Select(oSheet)
-rem ----------------------------------------------------------------------
-rem sistema elenco prezzi
-Inizializza_elenco
-rem ----------------------------------------------------------------------
-rem correggo il numero di versione
-&apos;###Versione del template##################################################Versione di LeenO installata
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).String
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).String
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,294).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,294).String = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).String
-rem ----------------------------------------------------------------------
-rem sistema computo
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	ThisComponent.CurrentController.Select(oSheet)
-rem ----------------------------------------------------------------------
 Computo_Normale_terra_terra
 Togli_Struttura
-	oSheet.Columns.removeByIndex(44, 10)
+	Select Case idxtemplate
+		Case 191, 192
+		lRowE=cerca_riga_rossa (&quot;COMPUTO&quot;)
+		x = 0
+			While osheet.getCellByPosition (0, x).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;comp progress&quot;
+				x=x+1
+			Wend
+			For i =x to lRowE
+		rem ----------------------------------------------------------------------
+		rem controlla i calcoli
+			sStRange = Circoscrive_Voce_Computo_Att (I)
+		&apos;	xray sStRange
+			With sStRange.RangeAddress
+				lRowI = .StartRow
+				lRow = .EndRow
+			End With
+		rem ----------------------------------------------------------------------
+		rem solo per movimentare
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, lRow))
+		rem ----------------------------------------------------------------------
+				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; lRowI+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
+				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
+				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
+				oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+4
+				i=lRow+1
+			If oSheet.GetCellByPosition( 2 , lRow+1).cellstyle = &quot;Comp TOTALI&quot; Then Exit For
+			Next
+	Case &lt; 191
 rem ----------------------------------------------------------------------
-	ReplaceDescriptor = oSheet.createReplaceDescriptor()
-	ReplaceDescriptor.SearchString = &quot;€&quot;
-	ReplaceDescriptor.ReplaceString = &quot;&quot;
-	oSheet.ReplaceAll(ReplaceDescriptor)
-	
-	i = GetLastUsedRow(oSheet)
-rem ----------------------------------------------------------------------
-rem cancello fomrattazioni dirette	
-	Flag = com.sun.star.sheet.CellFlags.HARDATTR
-	oSheet.getCellRangeByPosition(0, 0, 250, i).clearContents(Flag)
-rem ----------------------------------------------------------------------
-rem cancello un po&apos; di dati
-	Flags = com.sun.star.sheet.CellFlags.STRING + _
-			com.sun.star.sheet.CellFlags.VALUE + _
-			com.sun.star.sheet.CellFlags.FORMULA
-	oSheet.getCellRangeByPosition(9, 0, 10, i).clearContents(Flags)
-	oSheet.getCellRangeByPosition(12, 0, 16, i).clearContents(Flags)
-	oSheet.getCellRangeByPosition(20, 0, 26, i).clearContents(Flags)
-	oSheet.getCellRangeByPosition(39, 0, 42, i).clearContents(Flags)
-	oSheet.getCellRangeByPosition(44, 0, 100, i).clearContents(Flags)
-rem ----------------------------------------------------------------------
-rem elimina righe vuote
-	Do While i &gt; 0
-&apos;	Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
-rem ----------------------------------------------------------------------
-rem solo per intrattenere l&apos;utente
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, i))
-rem ----------------------------------------------------------------------
-			if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(0, i).cellstyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;Comp End Attributo&quot; And _
-				oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(2, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(3, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(4, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(5, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(6, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(7, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(8, i).string = &quot;&quot; Then
-				oSheet.getrows.removebyindex(i,1)
-			EndIf
-rem ----------------------------------------------------------------------
-rem sistemo le categorie
-			If oSheet.GetCellByPosition(0, i).cellstyle =&quot;Default&quot; And _
-				oSheet.GetCellByPosition(1, i).cellstyle =&quot;Livello-1-scritta&quot; And _
-				oSheet.GetCellByPosition(9, i).cellstyle =&quot;Livello-1-scritta mini&quot; Then
-				rem ----------------------------------------------------------------------
-				rem elimino i dati inutili
-				oSheet.getCellRangeByPosition(0, i, 1, i).clearContents(Flags)
-				oSheet.getCellRangeByPosition(3, i, 18, i).clearContents(Flags)
-				oSheet.getCellRangeByPosition(24, i, 24, i).clearContents(Flags)
-				oSheet.getCellRangeByPosition(29, i, 30, i).clearContents(Flags)
-				rem ----------------------------------------------------------------------
-				rem correggo gli stili
-				oSheet.getCellRangeByPosition(0, i, 41, i).CellStyle = &quot;Livello-1-scritta&quot;
-				oSheet.getCellRangeByPosition(2, i, 17, i).CellStyle = &quot;Livello-1-scritta mini&quot;
-				oSheet.getCellByPosition(18, i).CellStyle = &quot;Livello-1-scritta mini val&quot;
-				oSheet.getCellByPosition(24, i).CellStyle = &quot;Livello-1-scritta mini %&quot;
-				oSheet.getCellByPosition(29, i).CellStyle = &quot;Livello-1-scritta mini %&quot;
-				oSheet.getCellByPosition(30, i).CellStyle = &quot;Livello-1-scritta mini val&quot;
-				oSheet.getCellbyPosition(1, i).formula = &quot;=AF&quot; &amp; i+1
-				osheet.getCellRangeByPosition (2, i, 8, i).merge(True)
-				rem ----------------------------------------------------------------------
-			EndIf
-rem ----------------------------------------------------------------------
-rem sistemo le subcategorie
-			If oSheet.GetCellByPosition(0, i).cellstyle =&quot;Default&quot; And _
-				oSheet.GetCellByPosition(1, i).cellstyle =&quot;livello2 valuta&quot; And _
-				oSheet.GetCellByPosition(9, i).cellstyle =&quot;livello2 scritta mini&quot; Then
-				rem ----------------------------------------------------------------------
-				rem elimino i dati inutili
-				oSheet.getCellRangeByPosition(0, i, 1, i).clearContents(Flags)
-				oSheet.getCellRangeByPosition(3, i, 18, i).clearContents(Flags)
-				oSheet.getCellRangeByPosition(24, i, 24, i).clearContents(Flags)
-				oSheet.getCellRangeByPosition(29, i, 30, i).clearContents(Flags)
-				rem ----------------------------------------------------------------------
-				rem correggo gli stili
-				oSheet.getCellRangeByPosition(0, i, 41, i).CellStyle = &quot;livello2 valuta&quot;
-				oSheet.getCellRangeByPosition(2, i, 17, i).CellStyle = &quot;livello2_&quot;
-				oSheet.getCellByPosition(18, i).CellStyle = &quot;livello2 scritta mini&quot;
-				oSheet.getCellByPosition(24, i).CellStyle = &quot;livello2 valuta mini %&quot;
-				oSheet.getCellByPosition(29, i).CellStyle = &quot;livello2 valuta mini %&quot;
-				oSheet.getCellByPosition(30, i).CellStyle = &quot;livello2 valuta mini&quot;
-				oSheet.getCellByPosition(31, i).CellStyle = &quot;livello2_&quot;
-				oSheet.getCellbyPosition(1, i).formula = &quot;=AF&quot; &amp; i+1 &amp; &quot;&amp;&quot;&quot;.&quot;&quot;&amp;AG&quot; &amp; i+1
-				osheet.getCellRangeByPosition (2, i, 8, i).merge(True)
-				rem ----------------------------------------------------------------------
-			EndIf
-	i=i-1
-	Loop
+			oSheet.Columns.removeByIndex(44, 10)
+		rem ----------------------------------------------------------------------
+			ReplaceDescriptor = oSheet.createReplaceDescriptor()
+			ReplaceDescriptor.SearchString = &quot;€&quot;
+			ReplaceDescriptor.ReplaceString = &quot;&quot;
+			oSheet.ReplaceAll(ReplaceDescriptor)
+			
+			i = cerca_riga_rossa (&quot;COMPUTO&quot;)
+&apos;			i = GetLastUsedRow(oSheet)
+		rem ----------------------------------------------------------------------
+		rem cancello fomrattazioni dirette	
+			Flag = com.sun.star.sheet.CellFlags.HARDATTR
+			oSheet.getCellRangeByPosition(0, 0, 250, i).clearContents(Flag)
+		rem ----------------------------------------------------------------------
+		rem cancello un po&apos; di dati
+			Flags = com.sun.star.sheet.CellFlags.STRING + _
+					com.sun.star.sheet.CellFlags.VALUE + _
+					com.sun.star.sheet.CellFlags.FORMULA
+			oSheet.getCellRangeByPosition(9, 0, 10, i).clearContents(Flags)
+			oSheet.getCellRangeByPosition(12, 0, 16, i).clearContents(Flags)
+			oSheet.getCellRangeByPosition(20, 0, 26, i).clearContents(Flags)
+			oSheet.getCellRangeByPosition(39, 0, 42, i).clearContents(Flags)
+			oSheet.getCellRangeByPosition(44, 0, 100, i).clearContents(Flags)
+		rem ----------------------------------------------------------------------
+		rem elimina righe vuote
+			Do While i &gt; 0
+		&apos;	Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
+		rem ----------------------------------------------------------------------
+		rem solo per intrattenere l&apos;utente
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, i))
+		rem ----------------------------------------------------------------------
+					if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(0, i).cellstyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;Comp End Attributo&quot; And _
+						oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(2, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(3, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(4, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(5, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(6, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(7, i).string = &quot;&quot; and _
+						oSheet.GetCellByPosition(8, i).string = &quot;&quot; Then
+						oSheet.getrows.removebyindex(i,1)
+					EndIf
+		rem ----------------------------------------------------------------------
+		rem sistemo le categorie
+					If oSheet.GetCellByPosition(0, i).cellstyle =&quot;Default&quot; And _
+						oSheet.GetCellByPosition(1, i).cellstyle =&quot;Livello-1-scritta&quot; And _
+						oSheet.GetCellByPosition(9, i).cellstyle =&quot;Livello-1-scritta mini&quot; Then
+						rem ----------------------------------------------------------------------
+						rem elimino i dati inutili
+						oSheet.getCellRangeByPosition(0, i, 1, i).clearContents(Flags)
+						oSheet.getCellRangeByPosition(3, i, 18, i).clearContents(Flags)
+						oSheet.getCellRangeByPosition(24, i, 24, i).clearContents(Flags)
+						oSheet.getCellRangeByPosition(29, i, 30, i).clearContents(Flags)
+						rem ----------------------------------------------------------------------
+						rem correggo gli stili
+						oSheet.getCellRangeByPosition(0, i, 41, i).CellStyle = &quot;Livello-1-scritta&quot;
+						oSheet.getCellRangeByPosition(2, i, 17, i).CellStyle = &quot;Livello-1-scritta mini&quot;
+						oSheet.getCellByPosition(18, i).CellStyle = &quot;Livello-1-scritta mini val&quot;
+						oSheet.getCellByPosition(24, i).CellStyle = &quot;Livello-1-scritta mini %&quot;
+						oSheet.getCellByPosition(29, i).CellStyle = &quot;Livello-1-scritta mini %&quot;
+						oSheet.getCellByPosition(30, i).CellStyle = &quot;Livello-1-scritta mini val&quot;
+						oSheet.getCellbyPosition(1, i).formula = &quot;=AF&quot; &amp; i+1
+						osheet.getCellRangeByPosition (2, i, 8, i).merge(True)
+						rem ----------------------------------------------------------------------
+					EndIf
+		rem ----------------------------------------------------------------------
+		rem sistemo le subcategorie
+					If oSheet.GetCellByPosition(0, i).cellstyle =&quot;Default&quot; And _
+						oSheet.GetCellByPosition(1, i).cellstyle =&quot;livello2 valuta&quot; And _
+						oSheet.GetCellByPosition(9, i).cellstyle =&quot;livello2 scritta mini&quot; Then
+						rem ----------------------------------------------------------------------
+						rem elimino i dati inutili
+						oSheet.getCellRangeByPosition(0, i, 1, i).clearContents(Flags)
+						oSheet.getCellRangeByPosition(3, i, 18, i).clearContents(Flags)
+						oSheet.getCellRangeByPosition(24, i, 24, i).clearContents(Flags)
+						oSheet.getCellRangeByPosition(29, i, 30, i).clearContents(Flags)
+						rem ----------------------------------------------------------------------
+						rem correggo gli stili
+						oSheet.getCellRangeByPosition(0, i, 41, i).CellStyle = &quot;livello2 valuta&quot;
+						oSheet.getCellRangeByPosition(2, i, 17, i).CellStyle = &quot;livello2_&quot;
+						oSheet.getCellByPosition(18, i).CellStyle = &quot;livello2 scritta mini&quot;
+						oSheet.getCellByPosition(24, i).CellStyle = &quot;livello2 valuta mini %&quot;
+						oSheet.getCellByPosition(29, i).CellStyle = &quot;livello2 valuta mini %&quot;
+						oSheet.getCellByPosition(30, i).CellStyle = &quot;livello2 valuta mini&quot;
+						oSheet.getCellByPosition(31, i).CellStyle = &quot;livello2_&quot;
+						oSheet.getCellbyPosition(1, i).formula = &quot;=AF&quot; &amp; i+1 &amp; &quot;&amp;&quot;&quot;.&quot;&quot;&amp;AG&quot; &amp; i+1
+						osheet.getCellRangeByPosition (2, i, 8, i).merge(True)
+						rem ----------------------------------------------------------------------
+					EndIf
+			i=i-1
+			Loop
+&apos;Print &quot;000&quot;
 rem ----------------------------------------------------------------------
 Controlla_Componenti_conversioni
 rem ----------------------------------------------------------------------
+&apos;Print &quot;001&quot;
 Rinumera_TUTTI_Capitoli2
+&apos;Print &quot;002&quot;
 &apos;Svuota_CONTABILITA
 sproteggi_sheet_TUTTE
 Visualizza_sheet_TUTTE
-	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
-	ThisComponent.CurrentController.Select(oSheet)
-	oSheet.unprotect(&quot;&quot;)
+			oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
+			ThisComponent.CurrentController.Select(oSheet)
+			oSheet.unprotect(&quot;&quot;)
 insRows (50, 2)
 AutoCalc (1)
-	UrlSrc = ThisComponent.getURL()
+			UrlSrc = ThisComponent.getURL()
+	end Select
 rem ----------------------------------------------------------------------
-rem trasmetto i dati al DCC
-rem ----------------------------------------------------------------------
+rem trasferisco le tabelle corrette
 Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-Barra_Apri_Chiudi_5(&quot;1/3&quot;, 20)
+Barra_Apri_Chiudi_5(&quot;1/4&quot;, 10)
 	sheet_to_doc (UrlSrc, &quot;S2&quot;)
 rem ----------------------------------------------------------------------
 Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-Barra_Apri_Chiudi_5(&quot;2/3&quot;, 40)
-sheet_to_doc (UrlSrc, &quot;Elenco Prezzi&quot;)
-sbianca_annulla
-Riordina_ElencoPrezzi
-rem ----------------------------------------------------------------------
-Barra_Apri_Chiudi_5(&quot;3/3&quot;, 60)
-Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Barra_Apri_Chiudi_5(&quot;2/4&quot;, 40)
 	sheet_to_doc (UrlSrc, &quot;COMPUTO&quot;)
-Visualizza_normale_esegui
+Firme_in_calce
 	ThisComponent.CalcAsShown = true 
 Numera_Voci_Computo (&quot;niente prompt&quot;) &apos; NON CHIEDE CONFERMA
 Chiudi_o_elimina_tabelle_inutili
+rem ----------------------------------------------------------------------
+Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Barra_Apri_Chiudi_5(&quot;3/4&quot;, 60)
+sheet_to_doc (UrlSrc, &quot;Analisi di Prezzo&quot;)
+	rem ----------------------------------------------------------------------
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	lastrow = getLastUsedrow(oSheet)
+	For i = idxrow+1 To lastrow
+		If oSheet.getCellByPosition(3, i).cellstyle = &quot;An-lavoraz-%&quot; Or _
+			oSheet.getCellByPosition(4, i).cellstyle = &quot;An-lavoraz-%&quot; Then
+	 		For j = idxcol+3 To idxcol+4
+				stringa = oSheet.getCellByPosition(j, i).getformula()
+				oSheet.getCellByPosition(j, i).FORMULA = Replace_G(stringa, &quot;&apos;&quot; + surl + &quot;&apos;#&quot;, &quot;&quot;)
+			next
+		EndIf
+	next
+rem ----------------------------------------------------------------------
+Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Barra_Apri_Chiudi_5(&quot;4/4&quot;, 80)
+sheet_to_doc (UrlSrc, &quot;Elenco Prezzi&quot;)
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+sbianca_annulla
+Inizializza_elenco
+Riordina_ElencoPrezzi
+rem elimino i link dalle formule
+	lastrow = getLastUsedrow(oSheet)
+	For i = idxrow+1 To lastrow
+&apos;		thiscomponent.getCurrentController.select(oSheet.getCellByPosition(4, i))
+		If oSheet.getCellByPosition(0, i).cellstyle = &quot;EP-Cs&quot; Then
+	 		For j = idxcol+1 To idxcol+7
+&apos;				thiscomponent.getCurrentController.select(oSheet.getCellByPosition(j, i))
+	 			stringa = oSheet.getCellByPosition(j, i).getformula()
+				oSheet.getCellByPosition(j, i).FORMULA = Replace_G(stringa, &quot;&apos;&quot; + surl + &quot;&apos;#&quot;, &quot;&quot;)
+		 	Next 
+		EndIf
+	next
 rem ----------------------------------------------------------------------
 rem torno sul -tmp e lo chiudo
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
@@ -198,42 +235,47 @@ rem torno sul -tmp e lo chiudo
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 rem ----------------------------------------------------------------------
 &apos; salvo il doc corrente
+Visualizza_normale_esegui
 	oDocFrame = ThisComponent.getCurrentController().getFrame()
 	oDispatchHelper = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	oDispatchHelper.executeDispatch(oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array())
 rem ----------------------------------------------------------------------
 rem torno su -tmp
 Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-&apos;	Target = StarDesktop.loadComponentFromURL(sUrl, &quot;_default&quot;,0 , Array()) 
-&apos;	aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
-&apos;	Target.getCurrentController().getFrame().focusGained(aFocusEvent)
 rem ----------------------------------------------------------------------
 rem chiudo -tmp
-	If HasUnoInterfaces(thisComponent, &quot;com.sun.star.util.XCloseable&quot;) Then
-		thisComponent.close(true)
-	Else
-		thisComponent.dispose()
-	End If
-rem ----------------------------------------------------------------------
-&apos; cancello -tmp
-&apos;	Kill(sUrl) questa rompe le palle...
+&apos;Print nomeTMP
+	oEnum=stardesktop.components.createEnumeration()
+	do
+	   if not oEnum.hasmoreElements() then exit do
+	   oComp=oEnum.nextelement()
+	   iF oComp.title=nomeTMP then
+	      oComp.CurrentController.getFrame().close(true)
+	   end if
+	Loop
 rem ----------------------------------------------------------------------
 rem Saluti
-Print now &amp; &quot; - &quot; &amp; now1
-	msgbox &quot;Ho conservato una copia di sicurezza del file non convertito come:&quot; &amp; chr(10) &amp; chr(10)_
-			&amp; sUrlbak &amp; chr(10 &amp; chr(10)_
+&apos;Print now &amp; &quot; - &quot; &amp; now1
+rem ----------------------------------------------------------------------
+	msgbox &quot;Ho conservato una copia di sicurezza del vecchio file come:&quot; &amp; chr(10) &amp; chr(10)_
+			&amp; sUrlbak &amp; chr(10) &amp; chr(10)_
+			&amp; &quot;Eventuali discrepanze tra gli importi sono da ricercarsi nella&quot;&amp; chr(10)_
+			&amp; &quot;differnza del numero di cifre visualizzate dopo la virgola.&quot; &amp; chr(10)_
 			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
 &apos;	msgbox &quot;Ho conservato una copia di sicurezza del file non convertito,&quot; &amp; chr(10) &amp; chr(10)_
 &apos;			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
+rem ----------------------------------------------------------------------
+&apos; cancello -tmp
+&apos;	Kill(sUrl)&apos; questa rompe le palle...
 rem ----------------------------------------------------------------------
 rem prova dialogo
 &apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 &apos;	oDlg = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgConversioneCompleta) &apos; Inizializza il dialogo
 &apos;	oDlg.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 rem ----------------------------------------------------------------------
-barra_fatto
-beep
+&apos;barra_fatto
 End Sub
+
 
 
 sub aggiorna_STILI &apos;tutti in blocco e sovrascrive 
@@ -245,7 +287,6 @@ sub aggiorna_STILI &apos;tutti in blocco e sovrascrive
 rem ----------------------------------------------------------------------
 rem fa riferimento al template corrente
 	sSourceURL = extensionLocation &amp; &quot;/template/leeno/Computo_LeenO.ots&quot;
-&apos;	Print sSourceURL
 	If ismissing(sSourceURL ) or sSourceURL = &quot;&quot; Then &apos;sFileURL
  		exit sub
 	end If
@@ -256,17 +297,15 @@ end Sub
 
 sub crea_molte_copie_file
 	Dim sURL, sNewURL, sName As String
-
 &apos;	sURL = ConvertToUrl(ThisComponent.getURL())
-	sURL = ConvertToUrl(&quot;W:\_dwg\ULTIMUSFREE\_tmp\000.ods&quot;)
+	sURL = ConvertToUrl(&quot;W:\_dwg\ULTIMUSFREE\_tmp\189.ods&quot;)
  	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
-	For i=1 To 9
+	For i=0 To 9
 		sNewURL= sName + i + &quot;.ods&quot;
 		Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
 	Next i
 
 End Sub
-
 
 Sub backup_tmp rem fa il -backup e il saveas -tmp
 	Dim sURL As String
@@ -275,12 +314,7 @@ Sub backup_tmp rem fa il -backup e il saveas -tmp
 	Dim Dummy()
 
 	sURL = ConvertToUrl(ThisComponent.getURL())
-&apos;	Print sURL
-	If InStr (sURL,&quot;-tmp&quot;) &lt;&gt; 0 Or InStr (sURL,&quot;-backup&quot;) &lt;&gt; 0 Then
-		msgbox &quot;Non è corretto partire da un file &quot;&quot;-tmp&quot;&quot; o &quot;&quot;-backup&quot;&quot;!&quot;  &amp; chr(10) &amp; _ 
-		&quot;Prova con un file che abbia un nome diverso.&quot; , 16, &quot;ATTENZIONE!&quot;
-		Exit sub
-	EndIf
+
 Salva_copia_data (0)&apos; salva una copia di backup
 Salva_temp	&apos; salva una copia tmp di lavoro
 New_LeenO_to (sURL) &apos;ricrea il file partendo dal template
@@ -293,16 +327,7 @@ UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (sUrl)
  	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
 	sUrl= sName + &quot;-tmp&quot; + &quot;.ods&quot;
 rem ----------------------------------------------------------------------
-&apos; Target = StarDesktop.loadComponentFromURL(sUrl, &quot;_default&quot;,0 , Array()) 
-&apos; 
-&apos; &apos; e poi ho aggiunto questo... ma non sono certo se serve.
-&apos; &apos; o se rallenta
-&apos; aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
-&apos; Target.getCurrentController().getFrame().focusGained(aFocusEvent)
-rem ----------------------------------------------------------------------
 Focus_su_altro_Doc (sUrl , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-&apos;ThisComponent.CurrentController.Frame.getContainerWindow.setFocus()
-&apos;ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 End Sub
 
 Sub sheet_to_doc (UrlSrc As String, sSheetSRC As String)
@@ -347,7 +372,6 @@ rem ----------------------------------------------------------------------
 	sproteggi_sheet_TUTTE
 	Visualizza_sheet_TUTTE
 rem ----------------------------------------------------------------------
-	
 &apos;	Barra_chiudi_sempre_4
 &apos;	Barra_Apri_Chiudi_5(&quot;5 Pazienta... &quot;, 40)
 
@@ -384,26 +408,12 @@ rem seleziono il range da trasferire
 copy_clip	
 &apos;	print
 rem ----------------------------------------------------------------------
-&apos;	seleziono la sheet da trasferire
-&apos;	thiscomponent.getCurrentController.select(thiscomponent.getSheets().getByName(sSheetSRC))
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;6 Pazienta... &quot;, 50)
-rem ----------------------------------------------------------------------
 rem copia lo stile di pagina del foglio
 Copy_PageStyle 	
-rem e gli altri amenicoli collegati
-&apos;	print_area= oSheetSRC.getPrintAreas &apos; registro l&apos;area di stampa
-&apos;	RepeatRows = oSheetSRC.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
-&apos;	PrintRepeatRows = oSheetSRC.PrintTitleRows	
-rem ----------------------------------------------------------------------
-rem copia la tabella nella clip board
-&apos;	dispatchURL(firstDoc,&quot;.uno:SelectAll&quot;)
-&apos;	dispatchURL(firstDoc,&quot;.uno:Copy&quot;)
 	sSheetTarget = sSheetSRC
 &apos;	Barra_chiudi_sempre_4
-&apos;	print &quot;prima di lanciare &quot; &amp; sFrameSRC
 rem ----------------------------------------------------------------------
-	&apos; vado sul TARGET
+&apos; vado sul TARGET
 rem ----------------------------------------------------------------------
 &apos;	sFrName = &quot;Sorgente&quot;
 &apos;	Barra_chiudi_sempre_4
@@ -415,7 +425,6 @@ rem mi sposto sul doc di destinazione
 	Visualizza_sheet_TUTTE
 &apos;	Barra_chiudi_sempre_4
 &apos;	Barra_Apri_Chiudi_5(&quot;7 Pazienta... &quot;, 70)
-
 rem ----------------------------------------------------------------------
 rem definisco l&apos;indirizzo di destinazione
 	oDest = ThisComponent.Sheets.getByName(sSheetTarget).GetCellByPosition(0, 0).CellAddress
@@ -428,133 +437,6 @@ rem definisco l&apos;indirizzo di destinazione
 rem ----------------------------------------------------------------------
 rem ...e copio 
 &apos;	ThisComponent.Sheets.getByName(sSheetTarget).copyRange(oDest, oSrc)
-Exit sub
-rem ----------------------------------------------------------------------
-rem modulino furbo che Registra la posizione delle tabs
-&apos;	oSheets = ThisComponent.getSheets()
-&apos;	aSheetNames = oSheets.getElementNames()
-&apos; fine registrazione... prima o poi usando aSheetNames si ripristina la situazione com&apos;era
-sproteggi_sheet_TUTTE
-Visualizza_sheet_TUTTE
-	
-	&apos; controlla se sul Target esiste la tab
-	if thisComponent.Sheets.hasByName(sSheetSRC) Then
-		oSheetRinom = ThisComponent.Sheets.getByName(sSheetSRC)
- 		sSheetRinom = sSheetSRC &amp; &quot;-TMP&quot;
- 		oSheetRinom.setName (sSheetRinom) 
- 	end if 	
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;8 Pazienta... &quot;, 80)
-	if sLinkata_0 &lt;&gt; &quot;&quot; and sLinkata_0 &lt;&gt; sSheetSRC then &apos;&lt;&gt; sSheetSRC perché a volte ci sono link interni alla tabella
-			if not thisComponent.Sheets.hasByName(sLinkata_0) then
-					msgbox &quot;Il foglio in trasferimento ha uno o più link a &quot; &amp; sLinkata_0 &amp; &quot; che non esite sul doc di destinazione!&quot; &amp; CHR$(10)_
-						&amp; &quot;Dovrai poi provvedere a manina... &quot; &amp; CHR$(10)_
-						&amp; &quot;intanto io proseguo!&quot;
-				else
-					msgbox &quot;Un foglio con nome &quot; &amp; sLinkata_0 &amp; &quot; già esiste sul doc di destinazione!&quot; &amp; CHR$(10)_
-						&amp; &quot;e potrebbe non contenere i dati che &quot; &amp; CHR$(10)_
-						&amp; sSheetSRC &amp; &quot; si aspetta...&quot; &amp; CHR$(10)_
-						&amp; &quot;Nel caso dovrai provvedere poi accodando anche &quot; &amp; sLinkata_0 &amp; CHR$(10) &amp; CHR$(10)_
-						&amp; &quot; ...intanto io proseguo!&quot;						
-					thisComponent.Sheets.moveByName(sLinkata_0 ,0)
-			end if
-	end if
-rem ----------------------------------------------------------------------		
-	if sLinkata_1 &lt;&gt; &quot;&quot; and sLinkata_1 &lt;&gt; sSheetSRC then
-			if not thisComponent.Sheets.hasByName(sLinkata_1) then
-					msgbox &quot;Il foglio in trasferimento ha uno o più link a &quot; &amp; sLinkata_1 &amp; &quot; che non esite sul doc di destinazione!&quot; &amp; CHR$(10)_
-						&amp; &quot;Dovrai poi provvedere a manina... &quot; &amp; CHR$(10)_
-						&amp; &quot;intanto io proseguo!&quot;
-				else 
-					msgbox &quot;Un foglio con nome &quot; &amp; sLinkata_1 &amp; &quot; già esiste sul doc di destinazione&quot; &amp; CHR$(10)_
-						&amp; &quot;e potrebbe non contenere i dati che &quot; &amp; sSheetSRC &amp; CHR$(10)_
-						&amp; &quot;si aspetta...&quot; &amp; CHR$(10)_
-						&amp; &quot;Nel caso dovrai provvedere poi accodando anche &quot; &amp; sLinkata_1 &amp; CHR$(10) &amp; CHR$(10)_
-						&amp; &quot; ...intanto io proseguo!&quot;						
-					thisComponent.Sheets.moveByName(sLinkata_1 ,1)
-			end if
-	end if
-rem ----------------------------------------------------------------------
-	if sLinkata_2 &lt;&gt; &quot;&quot; and sLinkata_2 &lt;&gt; sSheetSRC then
-			if not thisComponent.Sheets.hasByName(sLinkata_2) then
-					msgbox &quot;Il foglio in trasferimento ha uno o più link a &quot; &amp; sLinkata_0 &amp; &quot; che non esite sul doc di destinazione&quot; &amp; CHR$(10)_
-						&amp; &quot;Per i link a quella tabella dovrai poi provvedere a manina... &quot; &amp; CHR$(10)_
-						&amp; &quot;intanto io proseguo!&quot;
-				else
-					msgbox &quot;Il foglio in trasferimento ha dei link a &quot; &amp; sLinkata_2 &amp; &quot; che già esite sul doc di destinazione&quot; &amp; CHR$(10)_
-						&amp; &quot;e potrebbe non contenere i dati che &quot; &amp; sSheetSRC &amp; CHR$(10)_
-						&amp; &quot;si aspetta...&quot; &amp; CHR$(10)_
-						&amp; &quot;Dovrai provvedere poi accodando anche &quot; &amp; sLinkata_2 &amp; CHR$(10)_
-						&amp; &quot;...intanto io proseguo!&quot;						
-			
-					thisComponent.Sheets.moveByName(sLinkata_2 ,2)
-			end if
-	end if
-&apos;Barra_Apri_Chiudi_5(&quot;9 Pazienta... &quot;, 90)
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-&apos;	if 	ThisComponent.CurrentController.Frame.Name = sFrameSRC then
-&apos;		&apos;	secondDoc = stardesktop.LoadComponentFromUrl(sTargetURL, &quot;_default&quot;, 0, Array())
-&apos;			secondDoc = ThisComponent
-&apos;			&apos;direi che è un caso impossibile... o no???
-&apos; 	else
- 		secondDoc = ThisComponent
-&apos;end if
-rem ----------------------------------------------------------------------
-rem creo la sheet
-Print sSheetSRC
-Exit sub
-	secondDoc.getSheets().insertNewByName(sSheetSRC, 0)
-
- 	selectSheetByName(secondDoc, sSheetSRC)
- 	dispatchURL(secondDoc,&quot;.uno:Paste&quot;)
-&apos; per incolla speciale no oggetti (no insert)
-
-Computo_Normale_terra_terra
- 	oSheet = ThisComponent.currentController.activeSheet
-&apos;	Write_PageStyle
-	oSheet.setPrintAreas(print_area)
-	oSheet.setTitleRows(RepeatRows)
-	oSheet.setPrintTitleRows(PrintRepeatRows) 
-rem ----------------------------------------------------------------------
-rem modulino furbo che Rripristina la posizione delle tabs (registrata nella var aSheetNames) 
-	oSheets = ThisComponent.getSheets()
-	bSheetNames = oSheets.getElementNames()
-	For i = LBound( bSheetNames ) To UBound( bSheetNames )
-		sSheetName = bSheetNames( i )
-		For n = LBound( aSheetNames ) To UBound( aSheetNames )
-			if aSheetNames( n )	= sSheetName then
-				thisComponent.Sheets.moveByName(sSheetName ,n)
-			end if
-		next
-	Next 
-	&apos; fine modulino furbo che ripristina la sequenza/posizione delle tabs 
-rem ----------------------------------------------------------------------
-	&apos;servirebbe anche un modulino furbo che ripristini lo stato di visibilità
-	&apos; delle sheet come prima dell&apos;importazione
-rem ----------------------------------------------------------------------
-	&apos; Adesso accontentiamo giuserpe che non la vuole al fondo
- 	thisComponent.Sheets.moveByName (sSheetSRC ,7)
-	if thisComponent.Sheets.hasByName(sSheetRinom) Then
-		thisComponent.Sheets.moveByName (sSheetRinom ,8) 	
-	end if
- 
-Chiudi_o_elimina_tabelle_inutili
-&apos;	Barra_chiudi_sempre_4
-rem ----------------------------------------------------------------------
-Print sSheetRinom
-	oSheet = ThisComponent.getSheets().getByName(sSheetRinom)
-	iCellAttr = com.sun.star.sheet.CellFlags.OBJECTS
-	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,200,2))
-copy_clip
-	oSheet = ThisComponent.getSheets().getByName(sSheetSRC)
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,0))
-paste_clip&apos;objects
-rem ----------------------------------------------------------------------
-rem elimino la vecchia sheet d&apos;appoggio
-	ThisComponent.Sheets.removeByName(sSheetRinom) &apos;thank&apos;s
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-	&apos; toglie la selezione
-Rimetti_in_ordine_tab
 end sub
 
 rem ----------------------------------------------------------------------
@@ -596,7 +478,10 @@ rem ----------------------------------------------------------------------
 		oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
 &apos;		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
 		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
-		oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
+		oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+4
+		oSheet.GetCellByPosition( 18 , lRow).formula = &quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
+
+
 			For ii = lRowI+2 To lRow-1
 
 				If oSheet.GetCellByPosition( 2 , ii).cellstyle = &quot;comp 1-a&quot; Then
@@ -609,6 +494,7 @@ rem ----------------------------------------------------------------------
 					oSheet.getCellRangeByPosition(4, ii, 8, ii).clearContents(Flags)
 					oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
 					If Instr (val1, &quot;=&quot;) &lt;&gt;0 Then val1 = &quot;(&quot; + Replace_G(val1, &quot;=&quot;, &quot;&quot;) + &quot;)&quot;
+&apos;					If Instr (val1, &quot;$&quot;) &lt;&gt;0 Then val1 = &quot;=&quot; &amp; val1
 					If Instr (val5, &quot;=&quot;) &lt;&gt;0 Then val5 = &quot;(&quot; + Replace_G(val5, &quot;=&quot;, &quot;&quot;) + &quot;)&quot;
 					If val5 = &quot;&quot; And val1 = &quot;&quot; Then
 						oSheet.GetCellByPosition( 5 , ii).string = &quot;&quot;
@@ -616,6 +502,7 @@ rem ----------------------------------------------------------------------
 					EndIf 
 	
 					If val5 = &quot;&quot; And val1 &lt;&gt; &quot;&quot; Then
+						If Instr (val1, &quot;$&quot;) &lt;&gt;0 Then val1 = &quot;=&quot; &amp; val1
 						oSheet.GetCellByPosition( 5 , ii).formula = val1
 						GoTo vai:
 					EndIf 
@@ -624,8 +511,7 @@ rem ----------------------------------------------------------------------
 						GoTo vai:
 					EndIf 
 	
-					stringaf = &quot;=&quot; &amp; val5 &amp; &quot;*&quot; &amp; val1
-					oSheet.GetCellByPosition( 5 , ii).formula = stringaf
+					oSheet.GetCellByPosition( 5 , ii).formula = &quot;=&quot; &amp; val5 &amp; &quot;*&quot; &amp; val1
 	vai:
 					If val2 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 6 , ii).formula = val2
 					If val3 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 7 , ii).formula = val3
@@ -636,7 +522,7 @@ rem ----------------------------------------------------------------------
 				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
 			Next
 			i = lRow + 1
-If oSheet.GetCellByPosition( 2 , i).cellstyle = &quot;Comp TOTALI&quot; Then Exit For
+			If oSheet.GetCellByPosition( 2 , i).cellstyle = &quot;Comp TOTALI&quot; Then Exit For
 	Next
 end Sub
 </script:module>

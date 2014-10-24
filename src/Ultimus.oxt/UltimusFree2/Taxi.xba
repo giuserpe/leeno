@@ -2073,7 +2073,12 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 				exit sub
 	end if
  	
-	
+rem ----------------------------------------------------------------------
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	rIntest=oStart.CellAddress.Row+1
+	Print rIntest
+	fissa (0,idxRow+1)
+rem ----------------------------------------------------------------------	
  oCell = oSheet.GetCellByPosition( lcolbase+0,3 ) 
  ThisComponent.CurrentController.Select(oCell)&apos;@
  
@@ -2085,6 +2090,15 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 	oCell.CellStyle=&quot;EP-Cs&quot;
 					
 	oCell.string= oCodAnalisi
+
+rem ----------------------------------------------------------------------
+rem sistemo i sommari
+	oSheet.GetCellByPosition(lcolbase+10 , lrow).formula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
+	oSheet.GetCellByPosition(lcolbase+10 , lrow).cellstyle = &quot;EP statistiche_q&quot;
+
+	oSheet.GetCellByPosition(lcolbase+11 , lrow).formula = &quot;=K&quot; &amp; i+1 &amp; &quot;*E&quot; &amp; i+1
+	oSheet.GetCellByPosition(lcolbase+11 , lrow).cellstyle = &quot;EP statistiche&quot;
+rem ----------------------------------------------------------------------
 
 	lscarto	= 0 &apos; dA USARE PER LA vER. 4
 

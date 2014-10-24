@@ -94,7 +94,8 @@ end Sub
 
 rem ----------------------------------------------------------------------
 Sub avvia_IDE
-Print &quot;inserire il &quot;&quot;Serve per avere le quantità realizzate “pulite” e sommabili&quot;&quot; in COMPUTO ed adeguare il sommario come per la contabilità&quot;
+Print &quot;Sistemare l&apos;importazione delle voci da listito per la storia dei sommari in EP&quot;
+Print &quot;SUB Elimina_doppione &apos; _no_rior&quot;
 	Prind &quot;avvio!&quot;
 End Sub
 

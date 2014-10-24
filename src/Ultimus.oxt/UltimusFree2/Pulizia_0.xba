@@ -238,12 +238,6 @@ Sub SegnaManinaVociUsate_Analisi
 			&amp;&quot;nella tabella ELENCO PREZZI o &quot;&quot;Analisi di Prezzo&quot;&quot;!___ (Prima di Eliminare ricordati comunque di RI-passare ancora &lt;Segna le voci di Elenco Prezzi e Analisi utilizzate nel computo&gt; &quot;
  
  End If 
-	&apos;______________________________________________-
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then 
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
 
 	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lSrow = -1 then
@@ -264,14 +258,13 @@ Sub SegnaManinaVociUsate_Analisi
 	&apos;		StartRow = getRigaIniziale(SelectedRange)
 	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-&apos;	oCell = oSheet.GetCellByPosition( 9+iScarto, lrow) &apos;8
 	if getLastUsedCol(oSheet)&gt; 9 And _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
 			 	aggiungi=2
 			 else
 			 	aggiungi=0			 	
 	end if
-	oCell = oSheet.GetCellByPosition( 9 + aggiungi + iScarto, lrow) &apos;9
+	oCell = oSheet.GetCellByPosition( 9 + aggiungi + idxcol, lrow) &apos;9
 	oCell.string = &quot;usata&quot;
 
 	oCell.cellStyle= &quot;Analisi tag manuale&quot;
@@ -283,13 +276,6 @@ END SUB
 
 Sub SegnaManinaVociUsate_EP &apos; segna manualmente le voci di EP da mantenere
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
-
-	&apos;______________________________________________-
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
 
  If nome_sheet = &quot;Elenco Prezzi&quot; Then
  			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
@@ -305,19 +291,16 @@ Sub SegnaManinaVociUsate_EP &apos; segna manualmente le voci di EP da mantenere
 					exit sub
 			end if
  	
-			oCell = oSheet.GetCellByPosition(lcolbase+ 9+iScarto, lrow) &apos;8
+			oCell = oSheet.GetCellByPosition(lcolbase+ 9+idxcol, lrow) &apos;8
 			oCell.string = &quot;UC&quot;
 			oCell.cellstyle= &quot;EP tag manuale&quot;
 
-		&apos;	oCell = oSheet.GetCellByPosition( 8+iScarto, lrow) &apos; non ricordo perché voglio colorare
-			&apos;anche la col I (la 8) ???
-		&apos;	oCell.Cellbackcolor= RGB(203,72,46)
 	 Else	
 			MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ se vuoi segnare delle voci a manina lo devi fare&quot;_
 			&amp;&quot;nella tabella ELENCO PREZZI o ANALISI di PREZZO!!___ (Prima di Eliminare ricordati comunque di RI-passare ancora &lt;Segna le voci di Elenco Prezzi e Analisi utilizzate nel computo&gt; &quot;
 			exit sub
  End If
- 	oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
+ 	oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = true
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(lcolbase+ 1, lrow+1)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 	

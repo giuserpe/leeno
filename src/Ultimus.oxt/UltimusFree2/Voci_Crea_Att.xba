@@ -25,7 +25,7 @@ Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 		Case = &quot;COMPUTO&quot;
  		Nuova_Voce_Computo_Att
  	Case = 	&quot;Analisi di Prezzo&quot; 
- 	NuovaAnalisi_Att
+		NuovaAnalisi_Att
  	Case = 	&quot;CONTABILITA&quot;
 			nuova_voce_contab
 		&apos;	msgbox &quot;L&apos;inserimento di una Nuova Voce non è prevista su questa tabella!&quot; &amp; CHR$(10)_
@@ -443,45 +443,18 @@ rem se su firme
 		end if
 	end if
  nCurRow = lrow
-rem PRIMA DI SOTTOCATEGORIA
-	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello2 sopra&quot; then
-			lrow = nCurRow
-			goto Inserisci_voce
-	end if
-rem PRIMA DI CATEGORIA
-	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-1-sopra&quot; then
-			lrow = nCurRow
-			goto Inserisci_voce
-	end if
-rem DOPO DI CATEGORIA
-	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;livello-1-sotto_&quot; then
-			lrow = lrow +1
-			goto Inserisci_voce
-	end if
-
 rem SOTTO CATEGORIA O SUBCATEGORIA
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;Livello-1-scritta&quot; OR _
 		oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello2 valuta&quot; then
-			lrow = nCurRow +2
-			goto Inserisci_voce
-	end if
-rem SOTTO SUB CATEGORIA O SUBITO SOPRA AL TOTALE
-	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;livello-2-sotto_&quot; then &apos; or _
 			lrow = nCurRow +1
 			goto Inserisci_voce
 	end if
+
 rem SUL TOTALE
 	if oSheet.GetCellByPosition( 1, nCurRow).cellstyle = &quot;Comp TOTALI&quot; then 
 			lrow = nCurRow-1
 			goto Inserisci_voce
 	end if
-rem SUI RIGHI DI MISURAZIONE
-&apos;	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; then
-&apos;		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot;
-&apos;			lrow = lrow-1	
-&apos;		loop
-&apos;		goto Inserisci_voce
-&apos;	end if
 rem SUI RIGHI DI MISURAZIONE
 	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot; then
 		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot;
@@ -490,10 +463,6 @@ rem SUI RIGHI DI MISURAZIONE
 		lrow = lrow+1
 		goto Inserisci_voce
 	end if
-rem QUESTA SOTTO SERVE???
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-&apos;	lRow = Mettiti_esattamente_tra_due_VociC_Att (lRow)
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 inserisci_voce:
 &apos;	print lrow
 	insRows (lrow, 4) &apos; numero di righe da inserire
@@ -516,7 +485,7 @@ inserisci_voce:
 		 Do while (Trova_Attr_N (oSheet.GetCellByPosition( 0, lrow ), oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
 			lRow = lRow-1 
 				oCell=oSheet.GetCellbyPosition( 0, lRow)
- 		 Loop		 
+ 		 Loop
 &apos; modulo che sistema i LINK DAI tagG nelle righe sopra al tag vero e prorio...
 	oSheet.getCellByPosition(31, lrow+2).setformula(&quot;=AF$&quot; &amp; lrow +4)
 	oSheet.getCellByPosition(32, lrow+2).setformula(&quot;=AG$&quot; &amp; lrow +4)
@@ -536,8 +505,9 @@ inserisci_voce:
 	oCell=oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4) &apos;seleziona la cella
 	ThisComponent.CurrentController.Select(oCell)
 ADATTA_ALTEZZA_RIGA
-	oCell=oSheet.getCellByPosition(1, lrow+1) &apos;seleziona la cella
-	ThisComponent.CurrentController.Select(oCell)
+&apos;	oCell=oSheet.getCellByPosition(1, lrow+1) &apos;seleziona la cella
+&apos;	oSheet.GetCellByPosition( 13 , lRow+3).formula = &quot;=J&quot; &amp; lrow+4
+&apos;	ThisComponent.CurrentController.Select(oCell)
 
  	Numera_Voci_Computo (&quot;niente prompt&quot;)
 	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
@@ -550,7 +520,6 @@ ADATTA_ALTEZZA_RIGA
  	
  thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione
-&apos;	Pesca_cod
  	exit sub
 errore:
 

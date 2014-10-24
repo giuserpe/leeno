@@ -25,17 +25,43 @@ Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 20)
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,idxRow+1))
 fissa(0,idxRow+1)
 &apos;print	Trova_Attr_Sheet
-	oEnd=uFindString(&quot;Cod.Voce&quot;, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) Then
+rem ----------------------------------------------------------------------
+	If oSheet.GetCellByPosition(0,0).cellstyle = &quot;EP-a Top ATT&quot; And _
+		oSheet.GetCellByPosition(1,0).cellstyle = &quot;EP-a -Top&quot; And _
+		oSheet.GetCellByPosition(2,0).cellstyle = &quot;EP-a -Top&quot; Then 
+		insrows (0, 2)
 		GoTo esegui:
-		Else
-			test1 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
-			oEnd=uFindString(&quot;tag usata/non usata&quot;, oSheet)
-			test2 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
-		If test1=0 And test2=0 Then insRows (test1, 2) &apos;insertByIndex non funziona 	
-	End If
+	EndIf
+	If 	oSheet.GetCellByPosition(1,1).cellstyle = &quot;EP-a -Top&quot; And _
+		oSheet.GetCellByPosition(2,1).cellstyle = &quot;EP-a -Top&quot; Then 
+		insrows (0, 1)
+		GoTo esegui:
+	&apos;	Else
+	&apos;	Print
+	&apos;	Exit Sub
+	EndIf
+rem ----------------------------------------------------------------------
+&apos;	oEnd=uFindString(&quot;Cod.Voce&quot;, oSheet)	
+&apos;	If isNull (oEnd) or isEmpty (oEnd) Then
+&apos;		GoTo esegui:
+&apos;		Else
+&apos;			test1 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
+&apos;			oEnd=uFindString(&quot;tag usata/non usata&quot;, oSheet)
+&apos;			test2 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
+&apos;		If test1=0 And test2=0 Then insRows (test1, 2) &apos;insertByIndex non funziona 	
+&apos;	End If
+rem ----------------------------------------------------------------------
 esegui:
 &apos; 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
+
+rem ----------------------------------------------------------------------
+REM PLUSCI LE PRIME DUE RIGHE
+	Flags = com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.HARDATTR + _
+			com.sun.star.sheet.CellFlags.FORMULA
+	oSheet.getCellRangeByPosition(0, 0, 100, 1).clearContents(Flags)
+rem ----------------------------------------------------------------------
 	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 	oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
 rem ----------------------------------------------------------------------
@@ -63,7 +89,13 @@ rIntest = 2
 	
 rem ----------------------------------------------------------------------
 &apos;insRows (1,1)
-lRowE = uFindString(&quot;Fine elenco&quot;, oSheet).CellAddress.Row
+oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
+If isNull (oDoc) or isEmpty (oDoc) Then
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,getLastUsedRow(oSheet)+1))
+	Inserisci_Riga_rossa
+	oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
+	EndIf
+lRowE = oDoc.CellAddress.Row
 rem	riga di controllo importo
 	oSheet.GetCellByPosition(1,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 	oSheet.GetCellByPosition(11,1).FORMULA=&quot;=SUBTOTAL(9;L3:L&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale computo
@@ -83,9 +115,9 @@ rem	riga di controllo importo
 
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
 rem ----------------------------------------------------------------------	
-	
-	
-	Rifa_AA_BB_Computo
+rem rigenera i sommari
+Rifa_AA_BB_Computo
+Rifa_GG_G1G1_Contab
 
 set_larghezza_colonne
 rem ----------------------------------------------------------------------
@@ -98,76 +130,71 @@ rem ----------------------------------------------------------------------
 	If Not isNull (oEnd) or isEmpty (oEnd) Then Rifa_GG_G1G1_Contab
 	
 sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
-Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
+&apos;Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
 
-Barra_chiudi_sempre_4 
+&apos;Barra_chiudi_sempre_4 
 barra_fatto
 End Sub
 
 Sub inizializza_computo &apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object 
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	Computo_Normale_terra_terra
+
  	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
  	rem riga del totale
 &apos;	oSheet.GetCellByPosition(2,lRowE).setstring(&quot;TOTALI COMPUTO&quot;)
 	oSheet.GetCellByPosition(2,3).setstring(&quot;TOTALI COMPUTO&quot;)
 rem ----------------------------------------------------------------------
-GoTo questa_forse_non_serve:
-	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0, 0, 100, 2))
-Cancella_dati
-	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(12, 0, 16, lRowE))
-Cancella_dati
-	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(22, 0, 23, lRowE))
-Cancella_dati
-	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(28, 0, 28, lRowE))
-Cancella_dati
-questa_forse_non_serve:
-	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
-	oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
-	oSheet.getCellRangeByPosition(44, 0, 100 , lRowE+10).cellstyle = &quot;Default&quot;
-rem riga di intestazione
-	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
-	oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
-	oSheet.GetCellByPosition(2,2).setstring(&quot;DESIGNAZIONE DEI LAVORI&quot;+ chr(13) + &quot;E DELLE SOMMINISTRAZIONI&quot;)
-	oSheet.GetCellByPosition(5,2).setstring(&quot;P.U.&quot;+ chr(13) + &quot;Coeff.&quot;)
-	oSheet.GetCellByPosition(6,2).setstring(&quot;Lung.&quot;)
-	oSheet.GetCellByPosition(7,2).setstring(&quot;Larg.&quot;)
-	oSheet.GetCellByPosition(8,2).setstring(&quot;Alt.&quot; + chr(13) +&quot;Peso&quot;)
-	oSheet.GetCellByPosition(9,2).setstring(&quot;Quantità&quot;)
-	oSheet.GetCellByPosition(10,2).setstring(&quot;Quantità perizia di variante&quot;)
-	oSheet.GetCellByPosition(11,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
-	oSheet.GetCellByPosition(17,2).setstring(&quot;di cui&quot; + chr(13) + &quot;sicurezza&quot;)
-	oSheet.GetCellByPosition(18,2).setstring(&quot;Importo €&quot;)
-	oSheet.GetCellByPosition(19,2).setstring(&quot;Importo totale&quot; + chr(13) +&quot;perizia di variante&quot;)
-	oSheet.GetCellByPosition(24,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;sul totale&quot;)
-	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
-	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
-	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
-	oSheet.GetCellByPosition(31,2).setstring(&quot;tag Cat&quot;)
-	oSheet.GetCellByPosition(32,2).setstring(&quot;tag&quot; + chr(13) +&quot;subCat&quot;)
-	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
-	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
-	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
-	oSheet.GetCellByPosition(36,2).setstring(&quot;importo totale computo&quot;+ chr(13) + &quot;sole voci senza errori&quot;)
-	oSheet.GetCellByPosition(38,2).setstring(&quot;Figure e&quot; + chr(13) +&quot;annotazioni&quot;)
-&apos;	oSheet.GetCellByPosition(39,2).setstring(&quot;Importo&quot; + chr(13) +&quot;SottoCategorie&quot;)
-&apos;	oSheet.GetCellByPosition(40,2).setstring(&quot;Importo&quot; + chr(13) +&quot;Categorie&quot;)
-&apos;	oSheet.GetCellByPosition(41,2).setstring(&quot;Importo MdO&quot;+ chr(13) +&quot;per categoria&quot;)
-	oSheet.GetCellByPosition(43,2).setstring(&quot;riservato per annotare&quot;+ chr(13) +&quot;il numero della voce&quot;)
-	oSheet.getCellRangeByPosition(0, 2, 43 , 2).cellstyle = &quot;comp Int_colonna&quot;
-	oSheet.getCellByPosition(19,2).cellstyle = &quot;COnt_noP&quot;
-	oSheet.getCellByPosition(36,2).cellstyle = &quot;COnt_noP&quot;
-	oSheet.getCellByPosition(43,2).cellstyle = &quot;COnt_noP&quot;
-	oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
+REM GoTo questa_forse_non_serve:
+	REM oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+	REM oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
+	REM oSheet.getCellRangeByPosition(44, 0, 100 , lRowE+10).cellstyle = &quot;Default&quot;
+	rem riga di intestazione
+	REM oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
+	REM oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
+	REM oSheet.GetCellByPosition(2,2).setstring(&quot;DESIGNAZIONE DEI LAVORI&quot;+ chr(13) + &quot;E DELLE SOMMINISTRAZIONI&quot;)
+	REM oSheet.GetCellByPosition(5,2).setstring(&quot;P.U.&quot;+ chr(13) + &quot;Coeff.&quot;)
+	REM oSheet.GetCellByPosition(6,2).setstring(&quot;Lung.&quot;)
+	REM oSheet.GetCellByPosition(7,2).setstring(&quot;Larg.&quot;)
+	REM oSheet.GetCellByPosition(8,2).setstring(&quot;Alt.&quot; + chr(13) +&quot;Peso&quot;)
+	REM oSheet.GetCellByPosition(9,2).setstring(&quot;Quantità&quot;)
+	REM oSheet.GetCellByPosition(10,2).setstring(&quot;Quantità perizia di variante&quot;)
+	REM oSheet.GetCellByPosition(11,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
+	REM oSheet.GetCellByPosition(13,2).setstring(&quot;Serve per avere le quantità&quot; + chr(13) + &quot;realizzate “pulite” e sommabili&quot;)
+	REM oSheet.GetCellByPosition(17,2).setstring(&quot;di cui&quot; + chr(13) + &quot;sicurezza&quot;)
+	REM oSheet.GetCellByPosition(18,2).setstring(&quot;Importo €&quot;)
+	REM oSheet.GetCellByPosition(19,2).setstring(&quot;Importo totale&quot; + chr(13) +&quot;perizia di variante&quot;)
+	REM oSheet.GetCellByPosition(24,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;sul totale&quot;)
+	REM oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
+	REM oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
+	REM oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
+	REM oSheet.GetCellByPosition(31,2).setstring(&quot;tag Cat&quot;)
+	REM oSheet.GetCellByPosition(32,2).setstring(&quot;tag&quot; + chr(13) +&quot;subCat&quot;)
+	REM oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
+	REM oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
+	REM oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
+	REM oSheet.GetCellByPosition(36,2).setstring(&quot;importo totale computo&quot;+ chr(13) + &quot;sole voci senza errori&quot;)
+	REM oSheet.GetCellByPosition(38,2).setstring(&quot;Figure e&quot; + chr(13) +&quot;annotazioni&quot;)
+REM &apos;	oSheet.GetCellByPosition(39,2).setstring(&quot;Importo&quot; + chr(13) +&quot;SottoCategorie&quot;)
+REM &apos;	oSheet.GetCellByPosition(40,2).setstring(&quot;Importo&quot; + chr(13) +&quot;Categorie&quot;)
+REM &apos;	oSheet.GetCellByPosition(41,2).setstring(&quot;Importo MdO&quot;+ chr(13) +&quot;per categoria&quot;)
+	REM oSheet.GetCellByPosition(43,2).setstring(&quot;riservato per annotare&quot;+ chr(13) +&quot;il numero della voce&quot;)
+	REM oSheet.getCellRangeByPosition(0, 2, 43 , 2).cellstyle = &quot;comp Int_colonna&quot;
+	REM oSheet.getCellByPosition(13,2).cellstyle = &quot;COnt_noP&quot;
+	REM oSheet.getCellByPosition(19,2).cellstyle = &quot;COnt_noP&quot;
+	REM oSheet.getCellByPosition(36,2).cellstyle = &quot;COnt_noP&quot;
+	REM oSheet.getCellByPosition(43,2).cellstyle = &quot;COnt_noP&quot;
+	REM oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
 	
-	ThisComponent.CurrentController.Select(oCell)
-	Adatta_Altezza_riga
+	REM ThisComponent.CurrentController.Select(oCell)
+	REM Adatta_Altezza_riga
 rem ALTEZZA riga di intestazione
-	oSheet.GetCellByPosition(0,2).Rows.Height = 800
+	REM oSheet.GetCellByPosition(0,2).Rows.Height = 800
+REM questa_forse_non_serve:
 Rifa_Somme_TOT_Computo &apos; crea la struttura del foglio
 &apos;Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
-fissa(0,3)
+fissa(0,idxRow+1)
+Computo_Normale_terra_terra
 End Sub
 
 
@@ -497,7 +524,7 @@ rem RAGGRUPPA
 rem NASCONDE RIGHE
 	oRange = oSheet.getCellRangeByposition(0,inizio_gruppo,0,fine_gruppo)
 &apos;	oRange.Rows.IsVisible=false
-Set_Area_Stampa_N
+&apos;Set_Area_Stampa_N
 	END IF
 	fine:
 end Sub

@@ -181,7 +181,8 @@ rem ----------------------------------------------------------------------
 		end if
 	end if	
 
-	&apos;Versione del template
+	&apos;Versione prevista per il doc
+	idxtemplate = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value
 	sVerMajorDoc = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,294).string	
 	sVerMinorDoc = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,294).string
 	
@@ -281,14 +282,15 @@ rem ----------------------------------------------------------------------
 		&amp; &quot;Ma in quel periodo ho i rilasciato versioni in modo un po&apos; confuso! Consiglio quindi caldamente il trasferimento/riversamento dei dati di questo Doc in un Template aggiornato!&quot; &amp; CHR$(10) &amp; CHR$(10)	
 
 		End select	
- else
-		if sVerMinorDoc &gt; sVerMinorInstallata Then
+ Else
+		if sVerMinorDoc &gt; sVerMinorInstallata Or _
+			idxtemplate &lt; 193 Then
 			Select Case msgbox (&quot;#5&quot; &amp; CHR$(10)_
-				&amp; &quot;Questo file è stato elaborato con una versione di&quot; &amp; CHR$(10)_
-				&amp; &quot;LeenO precedente a quella ora in uso.&quot; &amp;CHR$(10)_
-	 			&amp; &quot; &quot; &amp; CHR$(10)_
-	 			&amp; &quot;Versione &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; &quot; ***Documento corrente***&quot;&amp; CHR$(10)_
-	 			&amp; &quot;Versione &quot; &amp; sVerMaiorInstallata &amp; &quot;.&quot; &amp; sVerMinorInstallata &amp; &quot; ***In uso***&quot; &amp; CHR$(10)_
+				&amp; &quot;Questo file è stato elaborato con una versione&quot; &amp; CHR$(10)_
+				&amp; &quot;di LeenO precedente a quella ora in uso.&quot; &amp; CHR$(10)_
+	 			&amp; &quot;Versione &quot; &amp; CHR$(9) &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; CHR$(9) &amp; &quot;Documento corrente&quot; &amp; CHR$(10)_
+	 			&amp; &quot;Versione &quot; &amp; CHR$(9) &amp; sVerMaiorInstallata &amp; &quot;.&quot; &amp; sVerMinorInstallata &amp; CHR$(9) &amp; &quot;In uso&quot; &amp; CHR$(10)_
+	 			&amp; &quot;ID templ.&quot; &amp; CHR$(9) &amp; idxtemplate  &amp; CHR$(9) &amp; &quot; &lt; 193&quot; &amp; CHR$(9) &amp; CHR$(10)_
 	 			&amp; &quot; &quot; &amp; CHR$(10)_
 				&amp; &quot;Vuoi procedere con la CONVERSIONE?&quot; &amp; CHR$(10)_
 				&amp; &quot;(Sarà conservata una copia del file)&quot; &amp; CHR$(10)_
@@ -299,7 +301,7 @@ rem ----------------------------------------------------------------------
 				&apos;&amp; &quot;- se rispondi NO procedo CON Il normale caricamento del file&quot; &amp; CHR$(10)_
 				&apos;&amp; &quot;Sarà conservata una copia del file con nome:&quot; &amp; CHR$(10)_
 				&apos;&amp; sURL &amp; CHR$(10)_
-					da_vecchi_template_a_192
+					da_vecchio_template
 					&apos;AGGIORNA_TEMPLATE
 					Barra_chiudi_sempre_4 
 					&apos;Ripristina_statusLine
@@ -310,11 +312,10 @@ rem ----------------------------------------------------------------------
  	 end if &apos; cleo
 		if sVerMinorDoc &gt; sVerMinorInstallata then 
 			msgbox &quot;#6&quot; &amp; CHR$(10)_
-			&amp; &quot;Questo documento è stato elaborato con&quot; &amp; CHR$(10)_
-			&amp; &quot;LeenO &quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; CHR$(10)_
-			&amp; &quot; &quot; &amp; CHR$(10)_
-			&amp; &quot;* Possibile incompatibilità! &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;Prendi una versione di LeenO aggiornata da&quot; &amp; CHR$(10)_
+			&amp; &quot;Questo documento è stato elaborato con&quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;LeenO r.&quot; &amp; sVerMajorDoc &amp; &quot;.&quot; &amp; sVerMinorDoc &amp; CHR$(9) &amp;&quot;su template n.&quot; &amp; idxtemplate &amp; CHR$(10)_
+			&amp; &quot;***POSSIBILE INCOMPATIBILITA&apos;***&quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Prendi una versione di LeenO aggiornata&quot; &amp; CHR$(10)_
 			&amp; &quot;http://leeno.org&quot; &amp; CHR$(10)_
 			&amp; CHR$(10)_
 			&amp; &quot; &quot;, 48, &quot;ATTENZIONE: Incompatibilità!&quot;

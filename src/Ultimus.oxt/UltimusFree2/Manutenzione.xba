@@ -623,26 +623,28 @@ Sub Controlla_Somme_Componenti &apos; serve per conversione Da_Vecchio_Template
 &apos;Dim val1 As Long , val2 As Long , val3 As Long , val4 As Long , val5
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
-&apos;	lastUrow = getLastUsedRow(oSheet)
-&apos;	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
-&apos;	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-&apos;	lRowE=oEnd.RangeAddress.EndRow 
 	lRowE=cerca_riga_rossa (&quot;COMPUTO&quot;)
-&apos;Print lRowE
 	for i =0 to lRowE
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
 			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; then
 				lRow = i
 				do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp End Attributo&quot;
 						lRow = lRow+1
-				Loop	
+				Loop
+rem ----------------------------------------------------------------------
+rem intrattenimento
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , lRow))
+rem ----------------------------------------------------------------------
 				&apos;oSheet.GetCellByPosition( 9 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
 				oSheet.GetCellByPosition( 9 , i+1).string = &quot;&quot;
 				&apos;oSheet.GetCellByPosition( 10 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
 				oSheet.GetCellByPosition( 10 , i+1).string = &quot;&quot;
 				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
 				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
+				oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+1
 				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
+				
+				oSheet.GetCellByPosition( 11 , lRow).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;
 &apos;				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
 				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
 				For ii = i+2 To lRow-1

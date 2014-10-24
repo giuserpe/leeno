@@ -83,16 +83,11 @@ Sub tag_usata_on_off
 				print lcolbase
 				exit sub
 	end if
- 	
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
-	If oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = false then
-		oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = true
+
+	If oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = false then
+		oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = true
 	 else	 
-		oSheet.getColumns.getByIndex(lcolbase+9+iScarto).isVisible = false			
+		oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = false			
 	end If
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
@@ -124,16 +119,12 @@ Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
 
-	If oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = false or _
-		oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = false then
-			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = true
-			oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = true
+
+	If oSheet.getColumns.getByIndex(lcolbase+10+idxcol).isVisible = false or _
+		oSheet.getColumns.getByIndex(lcolbase+11+idxcol).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+10+idxcol).isVisible = true
+			oSheet.getColumns.getByIndex(lcolbase+11+idxcol).isVisible = true
 			Adomanda = msgbox ( &quot;Rigenero il sommario?&quot;&amp; CHR$(10)_
 		 	&amp;&quot;rigenero?&quot; ,35, &quot;&quot;)	
 		 	Select Case Adomanda
@@ -147,8 +138,8 @@ Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
 						&apos;&apos;&apos;
 					end select	
 	 else	 
-			oSheet.getColumns.getByIndex(lcolbase+10+iScarto).isVisible = false			
-			oSheet.getColumns.getByIndex(lcolbase+11+iScarto).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+10+idxcol).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+11+idxcol).isVisible = false			
 	end if
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
@@ -180,15 +171,11 @@ Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
-	If oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false or _
-		oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = false then
-			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = true
-			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = true
+
+	If oSheet.getColumns.getByIndex(lcolbase+14+idxcol).isVisible = false or _
+		oSheet.getColumns.getByIndex(lcolbase+13+idxcol).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+13+idxcol).isVisible = true
+			oSheet.getColumns.getByIndex(lcolbase+14+idxcol).isVisible = true
 			Adomanda = msgbox ( &quot;Rigenero il sommario?&quot;&amp; CHR$(10)_
 		 	&amp;&quot;rigenero?&quot; ,35, &quot;&quot;)	
 		 	Select Case Adomanda
@@ -202,8 +189,8 @@ Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
 						&apos;&apos;&apos;
 					end select	
 	 else	 
-			oSheet.getColumns.getByIndex(lcolbase+13+iScarto).isVisible = false			
-			oSheet.getColumns.getByIndex(lcolbase+14+iScarto).isVisible = false	
+			oSheet.getColumns.getByIndex(lcolbase+13+idxcol).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+14+idxcol).isVisible = false	
 	end if
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
@@ -233,19 +220,14 @@ Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
 
-	If oSheet.getColumns.getByIndex(lcolbase+5+iScarto).isVisible = false and _
-		oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = false then
-			oSheet.getColumns.getByIndex(lcolbase+5+iScarto).isVisible = true
-			oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = true
+	If oSheet.getColumns.getByIndex(lcolbase+5+idxcol).isVisible = false and _
+		oSheet.getColumns.getByIndex(lcolbase+6+idxcol).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+5+idxcol).isVisible = true
+			oSheet.getColumns.getByIndex(lcolbase+6+idxcol).isVisible = true
 	 else	 
-			oSheet.getColumns.getByIndex(lcolbase+5+iScarto).isVisible = false			
-			oSheet.getColumns.getByIndex(lcolbase+6+iScarto).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+5+idxcol).isVisible = false			
+			oSheet.getColumns.getByIndex(lcolbase+6+idxcol).isVisible = false			
 	end if
 	
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
@@ -276,13 +258,6 @@ Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
 	end if
  	
 	oPos = ThisComponent.getCurrentSelection()
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
-
-
 	&apos; la routine che segue serve a agire in modo diverso sulle analisi se si una un tempalte capace di gestire la sicurezza
 	if getLastUsedCol(oSheet)&gt; 9 and _
 			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
@@ -292,15 +267,15 @@ Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
 				 	&apos;goto fissala			 	
 	end if	
 
-	If oSheet.getColumns.getByIndex(lcolbase +3+iScarto).isVisible = false then
-			oSheet.getColumns.getByIndex(lcolbase+3+iScarto).isVisible = true
+	If oSheet.getColumns.getByIndex(lcolbase +3+idxcol).isVisible = false then
+			oSheet.getColumns.getByIndex(lcolbase+3+idxcol).isVisible = true
 			if aggiungi=0 then &apos; il num delle le colonne da aggiungere è usato solo come tag
 				msgbox &quot;Questo template è inferiore al 178. E la gestione della Sicurezza NON è gestibile su questa versione del template!&quot;&amp; CHR$(10)_
 					&amp; &quot;Se vuoi gestire la sicurezza devi usare un template più recente (178 o superiore) &quot;&amp; CHR$(10)_
 					&amp; &quot;oppure usare la procedura di aggiornarnamento del tuo template.&quot;
 			end if
 	 else	 
-			oSheet.getColumns.getByIndex(lcolbase+3+iScarto).isVisible = false				
+			oSheet.getColumns.getByIndex(lcolbase+3+idxcol).isVisible = false				
 	end If
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
@@ -335,13 +310,6 @@ rem ----------------------------------------------------------------------
  	
 	&apos;_____________________
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = 3 then
-&apos;			iScarto = 0 &apos;se ver. 3
-&apos;		else
-&apos;			iscarto = 2 &apos;se vers. 4
-&apos;	endif
 &apos;	lrow= Range2Cell 
 	if lrow = -1 then exit Sub
 	oSheet.unprotect(&quot;&quot;) &apos;non si sa mai..
@@ -360,27 +328,28 @@ rem ----------------------------------------------------------------------
 	oSheet.getCellByPosition(lcolbase+6,lrow).formula = _
 	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;)&quot; 
 rem ----------------------------------------------------------------------
-	oSheet.getCellByPosition(lcolbase+iscarto+7,lrow).CellStyle = &quot;EP-mezzo&quot;
-	oSheet.getCellByPosition(lcolbase+iscarto+8,lrow).CellStyle = &quot;EP-sfondo&quot;
-	oSheet.getCellByPosition(lcolbase+iscarto+9,lrow).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+7,lrow).CellStyle = &quot;EP-mezzo&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+8,lrow).CellStyle = &quot;EP-sfondo&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+9,lrow).CellStyle = &quot;EP-sfondo&quot;
 rem ----------------------------------------------------------------------
 rem sommario computo
-	oSheet.getCellByPosition(lcolbase+iscarto+10,lrow).CellStyle = &quot;EP statistiche_q&quot;
-	oSheet.GetCellByPosition(lcolbase+iscarto+10,lrow).formula = &quot;=L&quot; &amp; lrow+1 &amp; &quot;/E&quot; &amp; lrow+1
-	oSheet.getCellByPosition(lcolbase+iscarto+11,lrow).CellStyle = &quot;EP statistiche&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+10,lrow).CellStyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(lcolbase+idxcol+10,lrow).formula = &quot;=L&quot; &amp; lrow+1 &amp; &quot;/E&quot; &amp; lrow+1
+	oSheet.getCellByPosition(lcolbase+idxcol+11,lrow).CellStyle = &quot;EP statistiche&quot;
+	oSheet.GetCellByPosition(lcolbase+idxcol+11,lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot;
 rem ----------------------------------------------------------------------
-	oSheet.GetCellByPosition(lcolbase+iscarto+11,lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot; &apos; somma importi
-	oSheet.getCellByPosition(lcolbase+iscarto+13,lrow).CellStyle = &quot;EP statistiche_Contab_q&quot;
-	oSheet.GetCellByPosition(lcolbase+iscarto+13,lrow).formula = &quot;=SUMIF(GG;A&quot; &amp; lrow+1 &amp; &quot;;G1G1)&quot;
-	oSheet.getCellByPosition(lcolbase+iscarto+14,lrow).CellStyle = &quot;EP statistiche_Contab&quot;
-	oSheet.GetCellByPosition(lcolbase+iscarto+14,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;*E&quot;&amp; Lrow+1
+rem sommario contabilità
+	oSheet.getCellByPosition(lcolbase+idxcol+13,lrow).CellStyle = &quot;EP statistiche_Contab_q&quot;
+	oSheet.GetCellByPosition(lcolbase+idxcol+13,lrow).formula = &quot;=SUMIF(GG;A&quot; &amp; lrow+1 &amp; &quot;;G1G1)&quot;
+	oSheet.getCellByPosition(lcolbase+idxcol+14,lrow).CellStyle = &quot;EP statistiche_Contab&quot;
+	oSheet.GetCellByPosition(lcolbase+idxcol+14,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;*E&quot;&amp; Lrow+1
 rem ----------------------------------------------------------------------
-rem sommario contabilità	
+
 	
 	oMioRange=thisComponent.getCurrentSelection()
 	oMioRange.Rows.OptimalHeight = true
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)
-	ThisComponent.CurrentController.Select (oSheet.getCellByPosition(lcolbase+iscarto,lrow)
+	ThisComponent.CurrentController.Select (oSheet.getCellByPosition(lcolbase+idxcol,lrow)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then	

@@ -309,7 +309,7 @@ dim lrowE as long
 					lrow=lrow+1
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot;
 					osheet.getCellRangeByPosition (1, lrow, 38, lrow).CellStyle = &quot;Comp-Bianche sopraS&quot;
-					osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
+				&apos;minghia	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
 		&apos;ThisComponent.CurrentController.Select (osheet.getCellRangeByPosition (0, lrow)
 					ptIns = osheet.getCellByPosition (31, lrow).getCellAddress()
 					range = osheet.getCellRangeByPosition (31, lrow+1, 35, lrow+1).getRangeAddress

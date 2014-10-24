@@ -216,7 +216,6 @@ SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che for
 	Barra_Apri_Chiudi_5(&quot;Rinumero la gerarchia dei Capitoli..... pazienta....&quot;, 60)
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&apos;rifà la riga delle somme in fondo e in testa al computo
-&apos;	print
 Rifa_Somme_TOT_Computo
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 

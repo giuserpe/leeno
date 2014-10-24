@@ -69,10 +69,11 @@ sub Apri_Sommario
 	Carica_vista_da_schema(Tabella1, Config1)
 end sub
 
-Sub fixme
-	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-		ThisComponent.CurrentController().freezeAtPosition(0,2)
-	end if
+Sub fixme &apos; questa è appiccicata ad eventi di Analisi di Prezzo
+&apos;Print &quot;lkl&quot;
+&apos;	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
+&apos;		ThisComponent.CurrentController().freezeAtPosition(0,2)
+&apos;	end if
 &apos;		
 end sub
 

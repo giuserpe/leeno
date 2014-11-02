@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie_1" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -12,86 +12,74 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-
-
 SUB DOPPIONI_TROVA_Durante (lrowPartenza as long, codice as string)&apos; _no_rior
+&apos;la registrazione della voce in EP cerca solo il doppione di quella voce in trasferimento
+chiudi_dialoghi &apos; chiude tutti i dialoghi
+On Error Resume Next 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0 And _
+		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = 0 then
+		Riordina_ElencoPrezzi 
+	end If
 
- &apos;&apos;&apos;&apos;la registrazione della voce in EP
-&apos; cerca solo il doppione di quella voce in trasferimento
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
 
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
- If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0 And _
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = 0 then
-	 Riordina_ElencoPrezzi 
- end if
-
- oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
- 
- lcolbase = Colonna_giusta_EP (oSheet)
- if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit sub
- end if
- 	 
- 
- lscarto = 0 &apos;per la 4
-			
-
-lrow = 1
-lUltimaRiga = getLastUsedRow(oSheet)
-If lrow &gt;= lUltimaRiga then	goto Fine
-do while oSheet.GetCellByPosition( lcolbase+0,lrow ).string = &quot;&quot;
-	lrow = lorw+1
-loop
-
-
+	lrow = idxrow
+	lUltimaRiga = getLastUsedRow(oSheet)
+	
+	If lrow &gt;= lUltimaRiga Then Exit Sub
+		
+	do while oSheet.GetCellByPosition(idxcol,lrow).string = &quot;&quot;
+		lrow = lorw+1
+	Loop
 	oEnd=uFindString(codice, oSheet) 
 
 	lrowSopra = oEnd.RangeAddress.StartRow
-	sSopra = oSheet.GetCellByPosition( lcolbase+0,lrowSopra ).string
+	sSopra = oSheet.GetCellByPosition(idxcol,lrowSopra).String
 	lrowSotto = oEnd.RangeAddress.StartRow+1
-	sSotto = oSheet.GetCellByPosition( lcolbase+0,lrowSotto).string
-	oCell = oSheet.GetCellByPosition( lcolbase+0,lrowSotto)
+	sSotto = oSheet.GetCellByPosition(idxcol,lrowSotto).String
 
+	oCell = oSheet.GetCellByPosition(idxcol,lrowSotto)
 &apos;	if sSotto = codice or sSopra = codice then
 	if sSotto = codice then		
-			ThisComponent.CurrentController.Select(oCell)	
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 1 then
+		ThisComponent.CurrentController.Select(oCell)	
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 1 then
 &apos;			print &quot;primuslike da doppioni&quot;
-				Primus_like
-				exit sub
-			end if
-			vScelta = msgbox( &quot;(111) Come puoi vedere il codice di questa voce: &quot; &amp; CHR$(10) _
-				&amp; &quot; &quot; &amp; codice &amp; &quot; &quot; &amp; CHR$(10) _
-				&amp; xA &amp; &quot; è già presente nell&apos;Elenco Prezzi! &quot;&amp; CHR$(10) _
-				&amp; &quot; &quot;&amp; CHR$(10)_
-				&amp; &quot; Annullo l&apos;operazione? &quot;, 36)
- if vScelta = 6 then
-			 	Dim oDisp as object
-					 oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-					 For i = 1 To 23 &apos;23 è il n. di passi di UNDO
- 					 	oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
- 					 Next
- 					 oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-					 ocell = oSheet.GetCellByPosition( 0,lrowPartenza)
-					 ThisComponent.CurrentController.Select(ocell )
-					exit SUB
-				else
-					 exit sub
-					 
-			end if
-		end if	
-		exit sub
-			lrow = lrow+1
-			oCell = oSheet.GetCellByPosition( lcolbase+0,lrow ) 
-			Xa = oCell.string
-			oCellB = oSheet.GetCellByPosition( lcolbase+0,lrow+1 )
-			xB = oCellB.string &apos;
+			Primus_like
+			exit Sub
+		end If
+&apos;		vScelta = msgbox (&quot;Il Codice Articolo: [ &quot; &amp; codice &amp; &quot; ]&quot; &amp; CHR$(10) &amp; CHR$(10) _
+		vScelta = msgbox (&quot;Il Codice Articolo: &quot; &amp; codice &amp; CHR$(10) &amp; CHR$(10) _
+		&amp; &quot;è già presente in Elenco Prezzi! &quot;&amp; CHR$(10) _
+		&amp; CHR$(9) &amp; &quot;Annullo l&apos;operazione?&quot;, 36, &quot;ATTENZIONE!&quot;)
+		if vScelta = 6 Then
+rem ----------------------------------------------------------------------
+rem UNDO di pochi passi
+			Dim oDisp as object
+			oDisp = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+			For i = 1 To 15 &apos;n. di passi di UNDO
+		 		oDisp.executeDispatch(ThisComponent.CurrentController.Frame,&quot;.uno:Undo&quot;, &quot;&quot;, 0, Array())
+			Next
+rem ----------------------------------------------------------------------
+rem elimina la riga &apos;quelle sopra sarebbero inutili, ma fanno scena
+			oSheet.getrows.removebyindex(lRow+1,1)
+			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+			ocell = oSheet.GetCellByPosition( 0,lrowPartenza)
+			ThisComponent.CurrentController.Select(ocell )
+			exit SUB
+		Else
+			exit sub
+		end If
+	end If
+fissa (0, idxrow+1)
+exit sub
+lrow = lrow+1
+oCell = oSheet.GetCellByPosition( lcolbase+0,lrow ) 
+Xa = oCell.string
+oCellB = oSheet.GetCellByPosition( lcolbase+0,lrow+1 )
+xB = oCellB.string &apos;
 fine:
 END SUB
+
 
 FUNCTION Controllo_riga_rossa() 
 
@@ -1050,23 +1038,22 @@ Dim iflag
 	lrow = lrow-1			
 END SUB
 
-
-
-Sub Aggiorna_formula_sommase(lrow as long)
-			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-			lcolbase = Colonna_giusta_EP (oSheet)
- 			if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-					print lcolbase
-					exit sub
-			end if
- 	
-			lscarto = 0
-			sCol= ColumnNameOf(lcolbase)	
-			sCol2= ColumnNameOf(lcolbase + lscarto + 10)
-			sFormula = &quot;=sumif(AA;&quot; &amp; sCol &amp; lrow+1 &amp; &quot;;BB)&quot;
-			oSheet.GetCellByPosition(lcolbase + lscarto + 10 , lrow).setformula(sFormula)
-end sub
-
+Sub Aggiorna_formula_sommase (lrow as long) &apos; Giuseppe Vizziello 2014
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+rem ----------------------------------------------------------------------
+rem sommario computo
+	oSheet.GetCellByPosition(idxcol+10, lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot;
+	oSheet.GetCellByPosition(idxcol+10, lrow).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(idxcol+11, lrow).formula = &quot;=K&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp; lrow+1
+	oSheet.GetCellByPosition(idxcol+11, lrow).cellstyle = &quot;EP statistiche&quot;
+rem ----------------------------------------------------------------------
+rem sommario contabilità
+	oSheet.getCellByPosition(idxcol+13,lrow).CellStyle = &quot;EP statistiche_Contab_q&quot;
+	oSheet.GetCellByPosition(idxcol+13,lrow).formula = &quot;=SUMIF(GG;A&quot; &amp; lrow+1 &amp; &quot;;G1G1)&quot;
+	oSheet.getCellByPosition(idxcol+14,lrow).CellStyle = &quot;EP statistiche_Contab&quot;
+	oSheet.GetCellByPosition(idxcol+14,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;*E&quot;&amp; Lrow+1
+rem ----------------------------------------------------------------------
+End Sub
 
 
 </script:module>

@@ -220,7 +220,8 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;M&quot;).Columns.Width = 3000
 		oSheet.getColumns().getByName(&quot;N&quot;).Columns.Width = 3000
 		oSheet.getColumns().getByName(&quot;O&quot;).Columns.Width = 3000
-	end select
+	end Select
+	fissa (0,idxrow+1)
 end Sub
 
 Sub AddNamedRange(sName$ as string, s$ as String)

@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Sposta" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -21,6 +21,7 @@ On Error GoTo fine:
 	cRow=oCell.RangeAddress.StartRow
 	Select Case oNomeSheet
 		Case &quot;Analisi di Prezzo&quot;
+		If oSheet.GetCellByPosition( 0, cRow).cellstyle	= &quot;Analisi_Sfondo&quot; Then Exit Sub 
 			sStRange = CircoscrivileAnalisi_Att (cRow)
 		Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (cRow)
@@ -333,48 +334,7 @@ dim lrowE as long
 end Function
 &apos;================================================================================= 
 
-FUNCTION CircoscrivileAnalisi_Att__________________________(ByVal lrow As Long) &apos;individua un record di Analisi
-&apos;---------------------------------------------------------------------------
-							&apos;restituisce il range
 
-dim lrowS as long
-dim lrowE as long
-
-on error goto Altra_macro 
-	oSheet = ThisComponent.currentController.activeSheet 
-	lcol = 0
-	oCell = oSheet.GetCellByPosition( 3 , lrow)
-	nCurRow = lrow
-&apos;	print lrow
-	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot; &apos;or oSheet.GetCellByPosition( 5, nCurRow).string &lt;&gt; &quot;TOTALE&quot;
-				nCurRow = nCurRow-1
-				oCell=oSheet.GetCellbyPosition( 3, nCurRow)
-			&apos;	ThisComponent.CurrentController.Select(oCell)
-			&apos;	print &quot;vai&quot;
-	loop
-	lrowS = nCurRow
-&apos;	print nCurRow
-	Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot;
-				nCurRow = nCurRow+1
-				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
-				&apos;	ThisComponent.CurrentController.Select(oCell)
-			&apos;	print &quot;vai&quot;
-
-	loop
-	lrowE = nCurRow+1
-
- oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
-
-
- 	ThisComponent.CurrentController.Select(oRangeVoceC)
- 	print
-	CircoscrivileAnalisi_Att= oRangeVoceC
- 	exit FUNCTION
-	Altra_macro:
-			print &quot;er&quot; &apos;???????????????
-	CircoscrivileAnalisi_Att = &quot;Falso&quot;
-end Function
-&apos;================================================================================= 
 		
 
 &apos;__________________________________________________________________________

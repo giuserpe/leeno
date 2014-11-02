@@ -303,7 +303,7 @@ dispatcher.executeDispatch(document, &quot;.uno:DefinePrintArea&quot;, &quot;&qu
 end sub
 
 
-sub ordina_col(ncol As long)
+sub ordina_col (ncol As long) &apos; riordina secondo colonna
 rem ----------------------------------------------------------------------
 rem define variables
 dim document   as object
@@ -328,7 +328,7 @@ args1(4).Value = true
 args1(5).Name = &quot;UserDefIndex&quot;
 args1(5).Value = 0
 args1(6).Name = &quot;Col1&quot;
-args1(6).Value = ncol
+args1(6).Value = ncol &apos;&lt; ID COLONNA DI ORDINAMENTO
 args1(7).Name = &quot;Ascending1&quot;
 args1(7).Value = true
 
@@ -516,15 +516,6 @@ args1(1).Value = &quot;calc8&quot;
 dispatcher.executeDispatch(document, &quot;.uno:SaveAs&quot;, &quot;&quot;, 0, args1())
 
 end Sub
-
-Sub sdfasdfa
-Dim Doc As Object
-Dim Url As String
-Dim Dummy()
-Url = &quot;file:///W:/_dwg/ULTIMUSFREE/_tmp/aaa.ods&quot;
-Doc = StarDesktop.loadComponentFromURL(Url, &quot;_blank&quot;, 0, Dummy())
-End Sub
-
 
 sub apri_file
 rem ----------------------------------------------------------------------

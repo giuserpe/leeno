@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="VarGlobal" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -23,9 +23,10 @@ Function cerca_riga_rossa(oNomeSheet) &apos; (c) Giuseppe Vizziello 2014
 &apos;	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
 	lastRow=getLastUsedRow(oSheet)
+
 	For i = 0 To lastRow
-&apos;	Print i
 &apos;print oSheet.GetCellByPosition(0,i).cellstyle
+&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i)
 		If oSheet.GetCellByPosition(0,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
 			oSheet.GetCellByPosition(1,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
 			oSheet.GetCellByPosition(2,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; Then
@@ -34,12 +35,13 @@ Function cerca_riga_rossa(oNomeSheet) &apos; (c) Giuseppe Vizziello 2014
 		End If
 	Next
 	if  cerca_riga_rossa = 0 Then
-		msgbox (&quot;Quasi certamente manca la riga rossa di chiusura della tabella!&quot;&amp; CHR(10)_
-		&amp; &quot;Controlla e PROVVEDI!&quot;, 16, &quot;ERRORE!&quot;)
-		Exit Function 
+&apos;		msgbox (&quot;Quasi certamente manca la riga rossa di chiusura della tabella!&quot;&amp; CHR(10)_
+&apos;		&amp; &quot;Controlla e PROVVEDI!&quot;, 16, &quot;ERRORE!&quot;)
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)+1))
+inserisci_riga_rossa
+&apos;		Exit Function 
 	End If
 cerca_riga_rossa = i
-&apos;Print cerca_riga_rossa
 End Function
 
 FUNCTION Controllo_riga_rossa_EP () &apos; sperimentale... visto che ho contaop 24 controlli forse è

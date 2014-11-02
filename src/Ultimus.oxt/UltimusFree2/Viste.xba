@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -66,15 +66,10 @@ sistema_attributi_sheet
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.Dialogviste_N) &apos; Inizializza il dialogo
 			oDialogScenari_2.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 	
-		case &quot;TIPO_ELENCOP&quot;
+		case &quot;TIPO_ELENCOP&quot;,&quot;TIPO_EP&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_EP = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
 			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 			
-		case &quot;TIPO_EP&quot;
-	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
-			oDialogScenari_EP = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
-			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
-
 		case &quot;TIPO_ANALISI&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
@@ -83,6 +78,8 @@ sistema_attributi_sheet
  	end select
 
 END SUB
+
+
 
 Sub Scelta_Viste____() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
@@ -724,8 +721,8 @@ sub Det_quantita_toggle &apos; accendi spegni dettagli quantità
 	end if
 	oSpalte2 = oSheet.getColumns().getByName(&quot;F&quot;) 
 		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;E&quot;) 
-			oSpalte2.isVisible = TRUE
+		&apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;E&quot;) 
+		&apos;	oSpalte2.isVisible = TRUE
 			oSpalte2 = oSheet.getColumns().getByName(&quot;F&quot;) 
 			oSpalte2.isVisible = TRUE 
 			oSpalte1 = oSheet.getColumns().getByName(&quot;G&quot;) 
@@ -840,21 +837,16 @@ sub Libretto_Misure &apos; accendi spegni la col del REgistro di contabilità su
 END SUB
 
 
-Sub fissa(lColFix as long, lrowFix as long, optional lcol as long, optional lrow as long)
+Sub fissa (lColFix as long, lrowFix as long, optional lcol as long, optional lrow as long)
 
-	If isMissing (lcol) then
-		lcol=0
-	end if 	
-	If isMissing (lrow) then
-		lrow= 8
-	end if 
+	If isMissing (lcol) then lcol=0
+	If isMissing (lrow) then lrow=8
 
 	oSheet = ThisComponent.currentController.activeSheet
-
 	&apos; spostarsi un poll position prima del &quot;fissa&quot;
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))
+&apos;	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))
 	ThisComponent.CurrentController().freezeAtPosition(lcolFix,lrowFix)
-	ThisComponent.CurrentController.Select(oPos)
+&apos;	ThisComponent.CurrentController.Select(oPos)
 end sub
 
 
@@ -944,12 +936,10 @@ END FUNCTION
 
 
 SUB Mostra_Tutto
-
+fissa (0,idxrow+1)
 &apos;ColRid_on
 	&apos;_____________________
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-&apos;print &quot;quesrto?&quot;
 oSheetD = ThisComponent.currentController.activeSheet
 oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),10,).Columns.IsVisible=true
 oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),getLastUsedRow(oSheetD),).Rows.IsVisible=true
@@ -1172,7 +1162,9 @@ end sub
 
 
 sub Computo_Normale_terra_terra
-	oSheet = ThisComponent.currentController.activeSheet
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	Thiscomponent.currentcontroller.select(oSheet)
+&apos;	oSheet = ThisComponent.currentController.activeSheet
 	oRange = oSheet.getCellRangeByposition(33,0,1023,0) &apos;nascondi il resto delle colonne
 	oRange.Columns.IsVisible=false	
 	&apos;registro la posizione attuale del cursore

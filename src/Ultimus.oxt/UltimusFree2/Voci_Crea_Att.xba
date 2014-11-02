@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Voci_Crea_Att" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -486,22 +486,26 @@ inserisci_voce:
 			lRow = lRow-1 
 				oCell=oSheet.GetCellbyPosition( 0, lRow)
  		 Loop
+rem ----------------------------------------------------------------------
+rem colonna per quantità pulite
+	oSheet.getCellByPosition(13, lrow+3).formula =&quot;=J&quot; &amp; lrow +4
+rem ----------------------------------------------------------------------
 &apos; modulo che sistema i LINK DAI tagG nelle righe sopra al tag vero e prorio...
-	oSheet.getCellByPosition(31, lrow+2).setformula(&quot;=AF$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(32, lrow+2).setformula(&quot;=AG$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(33, lrow+2).setformula(&quot;=AH$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(34, lrow+2).setformula(&quot;=AI$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(35, lrow+2).setformula(&quot;=AJ$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(31, lrow+1).setformula(&quot;=AF$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(32, lrow+1).setformula(&quot;=AG$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(33, lrow+1).setformula(&quot;=AH$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(34, lrow+1).setformula(&quot;=AI$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(35, lrow+1).setformula(&quot;=AJ$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lrow +4)
-	oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lrow +4)
+	oSheet.getCellByPosition(31, lrow+2).formula = &quot;=AF$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(32, lrow+2).formula = &quot;=AG$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(33, lrow+2).formula = &quot;=AH$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(34, lrow+2).formula = &quot;=AI$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(35, lrow+2).formula = &quot;=AJ$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(31, lrow+1).formula = &quot;=AF$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(32, lrow+1).formula = &quot;=AG$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(33, lrow+1).formula = &quot;=AH$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(34, lrow+1).formula = &quot;=AI$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(35, lrow+1).formula = &quot;=AJ$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(31, lrow).formula = &quot;=AF$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(32, lrow).formula = &quot;=AG$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(33, lrow).formula = &quot;=AH$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(34, lrow).formula = &quot;=AI$&quot; &amp; lrow+4
+	oSheet.getCellByPosition(35, lrow).formula = &quot;=AJ$&quot; &amp; lrow+4
 	oCell=oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4) &apos;seleziona la cella
 	ThisComponent.CurrentController.Select(oCell)
 ADATTA_ALTEZZA_RIGA

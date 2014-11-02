@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Cerca_Rior" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -16,11 +16,9 @@
 Sub Riordina_ElencoPrezzi &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
 &apos;seleziona_area (&quot;elenco_prezzi&quot;)
 Riordina_ElencoPrezzi_D	
-end sub
+end Sub
 
-
-Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
-
+Sub Riordina_ElencoPrezzi_D (optional sRitorno) &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
 	&apos;_____________________
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________ &apos;perbacco
@@ -37,118 +35,26 @@ Sub Riordina_ElencoPrezzi_D(optional sRitorno) &apos;Riordina l&apos;elenco prez
 				exit sub
 	end if
  			
-	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
- 			
- 	lcolbase = 	lcolbase + idxcol	
- 	oCell = oSheet.GetCellByPosition(lcolbase, lrow)&apos; errata selezione di un range
-	oActiveCell1 = oCell.string &apos; registra la sigla dalla cella attiva 
-	&apos; ho qualche dubbio se rifarla solo se manca....
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+RiDefinisci_Area_Elenco_prezzi
 
-	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)+1))
-		msgbox &quot;#20 Non avendo trovato la Riga Rossa di chiusura&quot;&amp; CHR$(10)_
-		&amp; &quot;provvedo ad inserirla infondo alla tabella.&quot;&amp; CHR$(10)_
-		&amp; &quot;Intanto continuo...&quot;&amp; CHR$(10)_
-		&amp; &quot;Alla fine controlla se ti sta bene. Al massimo ripeterai.&quot;, 64 , &quot;AVVISO!&quot;
-		Inserisci_riga_rossa
-&apos;		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
-		&apos;exit sub
-	end if 
-&apos;	xray oend
-&apos;	exit sub
-&apos;	lrowF=oEnd.RangeAddress.EndRow
-	lrowF=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
-	lcolF=12 + idxcol
-
-	if thisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;) then 
-		if isNull(ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).ReferredCells) then
-		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; &apos; nel caso ci siano dei #REF! o analoghi
-			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
-			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego	
-		end if
-	end if
-	If Not thisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;) then &apos; se manca proprio anche il nome
-			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
-			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego:
-	end If
 	oRangeEP = ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells.RangeAddress
+
 	lrowEPI = oRangeEP.StartRow+1
-	lrowEPF = oRangeEP.EndRow 
+	lrowEPF = oRangeEP.EndRow-1
 	lcolEPI = oRangeEP.StartColumn
 	lcolEPF = oRangeEP.EndColumn
+
 	If lrowEPF = lrowF Then lrowEPF=lrowF-1
-	if lcolEPF &lt;&gt; getLastUsedCol(oSheet) then &apos; se ci sono colonne in più o in meno
-			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
-			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego:	
-	end if
-	If lcolEPF &lt; 10 then &apos; se template vecchio 
-			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
-			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego:
-	end if
-	
-	If lcolEPI &lt;&gt; lcolbase + 0 then &apos; se dopo +col
-			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
-			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego:		
-	end if
 
-	if (ThisComponent.NamedRanges.hasByName(&quot;elenco_prezzi&quot;))= false then &apos; a volte lo perde
-			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
-			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-			goto una_volta_sola_prego:
-	end if
-	If lrowEPI &lt; 1 then &apos; era If lrowEPI &lt; 2 .... bo?
-		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-		RiDefinisci_Area_Elenco_prezzi &apos;allora lo rifiamo...
-		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-		goto una_volta_sola_prego:
-	end if
-	if lrowEPF &lt;&gt; lrowF-1 or lrowEPI &lt;&gt; 1 then &apos;(anche qui era 2, l&apos;ho messo a 1)&apos; se l&apos;area &quot;elenco_prezzi non copre l&apos;intero elenco
-								&apos; ridefinisce l&apos;elenco prezzi
-		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-		RiDefinisci_Area_Elenco_prezzi
-		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-		goto una_volta_sola_prego:
-	end if
-rem ----------------------------------------------------------------------
-una_volta_sola_prego:
-
-	sChiama = Riordina_0(lcolbase+0, TRUE) &apos; il numero è la colonna da riordinare
-	if sChiama = &quot;uscita forzata&quot; or _
- 	sChiama = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				exit sub
-	end if	
-	Barra_chiudi_sempre_4
-	&apos;xray sritorno
-&apos;	if sRitorno (com.sun.star.awt.MouseEvent) then
-&apos;		print &quot;devo uscire ora&quot;
-&apos;		exit sub
-&apos;	end if
-&apos;	exit sub
-	If isNull(sRitorno) or isEmpty (sRitorno) or isMissing(sRitorno) or sRitorno = 0 or sRitorno = &quot;&quot; then
-		Barra_Apri_Chiudi_5(&quot;Riordino l&apos;Elenco Prezzi... ci siamo quasi......&quot;, 65)
-		&apos; cerca la sigla di partenza
-		sString$ = oActiveCell1
-		oOrigine=uFindString_1(sString$, oSheet,lcolbase )
-		ThisComponent.CurrentController.Select(oOrigine) 
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-		&apos; toglie la selezione 
-		Barra_chiudi_sempre_4
-	end if
-Set_Area_Stampa_N
-&apos; 	suona
-END SUB
-
+&apos;On Error Resume Next 
+	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
+ordina_col (lcolEPI+1)
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+&apos;	Print idxcol
+&apos;	Print idxrow
+fissa (idxcol,idxrow)
+End Sub
 
 
 Function Riordina_0 (ColdaRior, AscDesc as boolean )as variant &apos; Riordina l&apos;elenco prezzi con criteri
@@ -176,6 +82,7 @@ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
  oRanges = ThisComponent.NamedRanges
 RiDefinisci_Area_Elenco_prezzi
 seleziona_area (&quot;elenco_prezzi&quot;)
+print
 ordina_col (1)
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	Riordina_0 = lrowF
@@ -376,12 +283,12 @@ rem ----------------------------------------------------------------------
 rem ultima riga
 &apos;	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
 &apos;	lRowE=oEnd.RangeAddress.EndRow
-	lRowE=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
+	lRowE=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)+1
 rem ----------------------------------------------------------------------
 rem nome ultima colonna
 	lCol = ColumnNameOf(getLastUsedCol(oSheet)+2) &apos; aggiungo 3 colonne in più... non si sa mai
-	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow+1 &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
-	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow+1 &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici
+	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
+	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici
 END SUB 
 
 

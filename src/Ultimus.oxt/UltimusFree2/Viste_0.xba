@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_0" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -332,32 +332,21 @@ rem ----------------------------------------------------------------------
 	oSheet.getCellByPosition(lcolbase+idxcol+8,lrow).CellStyle = &quot;EP-sfondo&quot;
 	oSheet.getCellByPosition(lcolbase+idxcol+9,lrow).CellStyle = &quot;EP-sfondo&quot;
 rem ----------------------------------------------------------------------
-rem sommario computo
-	oSheet.getCellByPosition(lcolbase+idxcol+10,lrow).CellStyle = &quot;EP statistiche_q&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+10,lrow).formula = &quot;=L&quot; &amp; lrow+1 &amp; &quot;/E&quot; &amp; lrow+1
-	oSheet.getCellByPosition(lcolbase+idxcol+11,lrow).CellStyle = &quot;EP statistiche&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+11,lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot;
-rem ----------------------------------------------------------------------
-rem sommario contabilità
-	oSheet.getCellByPosition(lcolbase+idxcol+13,lrow).CellStyle = &quot;EP statistiche_Contab_q&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+13,lrow).formula = &quot;=SUMIF(GG;A&quot; &amp; lrow+1 &amp; &quot;;G1G1)&quot;
-	oSheet.getCellByPosition(lcolbase+idxcol+14,lrow).CellStyle = &quot;EP statistiche_Contab&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+14,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;*E&quot;&amp; Lrow+1
-rem ----------------------------------------------------------------------
+rem aggiorna sommari
+Aggiorna_formula_sommase (lrow)
 
-	
 	oMioRange=thisComponent.getCurrentSelection()
 	oMioRange.Rows.OptimalHeight = true
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)
 	ThisComponent.CurrentController.Select (oSheet.getCellByPosition(lcolbase+idxcol,lrow)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
-
+Exit Sub 
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then	
 		msgbox &quot;In questo modo il &apos;prezzo&apos; lo devi compilare a mano!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;Se invece vuoi acquisire dei prezzi da un Prezzario devi aprire un file prezziario e da quello inviare qui la voce...&quot; &amp; CHR$(10)_
 				&amp; &quot; (Eventualmente consulta il &apos;Tutorial per iniziare&apos; al cap. &apos;5.6 Inserire un nuovo prezzo in “Elenco Prezzi&apos;) &quot;
 	end if
-END SUB
+End Sub
 
 
 

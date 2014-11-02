@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pulizia_0" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -494,20 +494,11 @@ Sub Pulisci_Colonne_tag &apos;elimina tutti i tag da EP e dalle Analisi
 		exit sub
 	end if
 	oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lrow=2 
-	
-	&apos; la routine che segue serve a agire in modo diverso sulle analisi se si una un tempalte capace di gestire la sicurezza
-	if getLastUsedCol(oSheetAnalisi)&gt; 9 and _
-			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 177 then 
-				 	aggiungi=2
-				 else
-				 	aggiungi=0			 	
-	end if	
+	lrow=idxrow
 
-	ocell = oSheetAnalisi.GetCellByPosition( 9 + aggiungi ,lrow) &apos;9 &apos;orecchione
-	lUltimaRiga = getLastUsedRow(oSheetAnalisi)	
-	oMioRange = oSheetAnalisi.getCellRangeByPosition (9+ aggiungi ,lrow,9 + aggiungi ,lUltimaRiga)
-&apos;	oMioRange = oSheetAnalisi.getCellRangeByPosition (10+ aggiungi ,lrow,10 + aggiungi ,lUltimaRiga)
+	ocell = oSheetAnalisi.GetCellByPosition( 11 ,lrow) &apos;9 &apos;orecchione
+	lUltimaRiga = getLastUsedRow(oSheetAnalisi)
+	oMioRange = oSheetAnalisi.getCellRangeByPosition (11 ,lrow,11 ,lUltimaRiga)
 		
 	iCellAttr = _
 	com.sun.star.sheet.CellFlags.VALUE + _
@@ -535,10 +526,11 @@ Sub Pulisci_Colonne_tag &apos;elimina tutti i tag da EP e dalle Analisi
 	end if
  		
 	
-	ocell = oSheet.GetCellByPosition( lcolbase + 9 ,lrow)
-&apos;	lUltimaRiga = getLastUsedRow(oSheetAnalisi)
+	ocell = oSheet.GetCellByPosition(9 ,lrow)
+
 	lUltimaRiga = getLastUsedRow(oSheet)	
-	oMioRange = oSheet.getCellRangeByPosition (lcolbase+9,lrow,lcolbase+9,lUltimaRiga)
+	oMioRange = oSheet.getCellRangeByPosition (9,lrow+1,9,lUltimaRiga-1)
+		ThisComponent.CurrentController.Select(oMioRange)
 	oMioRange.ClearContents(iCellAttr)
 	oMioRange.CellStyle = &quot;EP-sfondo&quot;
 &apos;	ocell = oSheetAnalisi.GetCellByPosition( 1,lrow)

@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Da_prezzario" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -70,15 +70,15 @@ on error goto avviso
 &apos;	MsgBox sFile
 	oDocument = StarDesktop.loadComponentFromURL( sFile, &quot;_blank&quot;, lFlags, mArgs())
  	oSheet = ThisComponent.Sheets.getByName(&quot;listino&quot;)
-	oCell = oSheet.GetCellByPosition( 0, 4 ) 
- ThisComponent.CurrentController.Select(oCell)
+ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 4))
 	oDoc.close(true)
 	goto fine
 	errore_apri:
 	msgbox &quot;Devi selezionare il nome file del Capitolo, oppure il file è inesistente!&quot;
 	exit sub
 	avviso:
-	msgbox &quot;Seleziona il nome di un Capitolo&quot;
+ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 4))
+	msgbox &quot;Seleziona il nome di un Capitolo&quot;,48,&quot;ATTENZIONE!&quot;
 	fine:
 	&apos;Close sDocURL
 End Sub

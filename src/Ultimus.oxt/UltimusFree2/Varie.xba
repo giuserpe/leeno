@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -46,7 +46,7 @@ do while oSheetANAP.GetCellByPosition( 0,lrow ).string &lt;&gt; &quot;Fine ANALI
 		if lrow &gt; lUltimaRiga then
 &apos;		print &quot;adesso esco2&quot;
 			exit do
-		end if
+		end If
 		ANALISI_IN_ELENCOPREZZI_AVCP (lrow)
 &apos;		ANALISI_IN_ELENCOPREZZI_Taxi (lrow)
 &apos;		ThisComponent.CurrentController.Select(oSheetANAP.GetCellbyPosition( 0, lrow ))
@@ -67,26 +67,23 @@ sistema_attributi_sheet
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	range2Cell &apos; per uscire dal modo editazione
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 1 then
-		Quale = 1
+&apos;		Print &quot;caso1&quot;
+		Elimina_doppione &apos; primus like ma solo se quella già in EP non e (AP)
 	end if
 	If 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0 or _
-				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).string = &quot;&quot; then
-		Quale = 2
-	end if
-	Select Case Quale
-		Case 1 &apos;1: elimina/sostituisce la vecchia voce (ma senza effettuare controlli sui doppioni)
-Print &quot;case 1&quot;
-			Elimina_doppione &apos; primus like ma solo se quella già in EP non e (AP)
-			&apos;qui c&apos;è un problema... ma non è chiaro	&apos;continuare con i test
-		Case 2 &apos;0: NON modifica la Voce di prezzo  esistente    (comportamento “classico”)
-		 	ANALISI_IN_ELENCOPREZZI_classica
-	end select
+		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).string = &quot;&quot; Then
+&apos;		Print &quot;caso2&quot;
+	 	ANALISI_IN_ELENCOPREZZI_classica
+	end If
+
 END SUB
 
 
 
 Sub ANALISI_IN_ELENCOPREZZI_classica
-
+&apos;	oSheet = thiscomponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+&apos;	Print &quot;sdzcasdavcased&quot;
+&apos;	lrowPartenza = 	range2Cell
 	oSheet = thiscomponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	sflag = &quot;no&quot; &apos; temporaneo per importare 
 
@@ -113,70 +110,26 @@ SUB Elimina_doppione &apos; _no_rior
  &apos;Lo elimina solo se non AP, e poi inserisce la nuova 
 &apos;se AP chiede cosa fare
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	&apos; errata selezione di un range
-	if lrow = -1 then exit Sub
-	If lrow = 0 then lrow = 1
+	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale errata selezione di un range
 	lrowPartenza = lrow &apos; registra la posizione della riga di partenza
- oPartenza_D = thiscomponent.getcurrentselection
+	oSelection = CircoscrivileAnalisi_Att (lRow)
+	lrow = oSelection.RangeAddress.startRow+1
+	oPartenza_D = thiscomponent.getcurrentselection
+
 	oSheet = ThisComponent.currentController.activeSheet
+
 	codice = oSheet.GetCellByPosition( 0 , lrow).string &apos; ma come fa a funzionre qui?
 
-	oCell = oSheet.GetCellByPosition( 5 , lrow)
-	oCell1 = oSheet.GetCellByPosition( 3 , lrow)
-	oCell3 = oSheet.GetCellByPosition( 4 , lrow)
-
- 	if flag_rior = &quot;&quot; then &apos; se arriva da concatena salta il ciclo
-			if oSheet.GetCellByPosition( 1 , lrow).string = &quot;&quot; AND oSheet.GetCellByPosition( 2 , lrow).string=&quot;&quot; _
-				AND oSheet.GetCellByPosition( 4 , lrow).string = &quot;&quot; _
-				AND oSheet.GetCellByPosition( 5 , lrow).string = &quot;&quot; then
-					msgbox &quot;Hai selezionato una riga di separazione...&quot; &amp; CHR(10)_
-					&amp; &quot; E non posso sapere quale voce volevi manipolare!&quot; &amp; CHR(10)_
-					&amp; &quot;Riprova!&quot; , 128 + 32 + 0 , &quot; ERRORE DI SELEZIONE &quot;
-					oCell = oSheet.GetCellByPosition( 1 , lrow)
-					ThisComponent.CurrentController.Select(oCell)
-					exit Sub
-			end if
-		else
-			Do While (oSheet.GetCellByPosition( 4 , lrow).string &lt;&gt; &quot;TOTALE&quot;)_
-			 	and (oSheet.GetCellByPosition( 5 , lrow).string &lt;&gt; &quot;TOTALE&quot;)_
-			 and ((Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		 lrow = lrow - 1
-	loop
+&apos;	oCell = oSheet.GetCellByPosition( 5 , lrow)
+&apos;	oCell1 = oSheet.GetCellByPosition( 3 , lrow)
+&apos;	oCell3 = oSheet.GetCellByPosition( 4 , lrow)
 	
- 	end if
-
- 	if oCell.string = &quot;TOTALE&quot; OR (Trova_Attr_N (oCell1, oSheet)) = &quot;End_voce_ANALISI&quot; then
- 		goto saltarello
- 	end if
-	Do While (oSheet.GetCellByPosition( 4 , lrow).string &lt;&gt; &quot;TOTALE&quot;) and _
-		(oSheet.GetCellByPosition( 5 , lrow).string &lt;&gt; &quot;TOTALE&quot;) and _
-		((Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		 lrow = lrow - 1
-	loop
-		&apos;print lrow &amp; &quot; 2&quot;
-	oCell1 = oSheet.GetCellByPosition( 3 , lrow)
-	
-	
-	saltarello:
 	lrowRisel = lrow
-
-	oCell = oSheet.GetCellByPosition( 0, lrow ) 
 
 	lRowAna = lrow
 	
- &apos; ..................vede se analisi vechia o nuova...
- oCell1 = oSheet.GetCellByPosition( 3 , lrow)
- if Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet) = &quot;Start_voce_ANALISI&quot; then
-		&apos;	print &quot;Attributi&quot;
-			iflag = 6
-		else
-		&apos;	print &quot;Vai liscio&quot;
-			iflag = 7
-	end if
-	&apos;......................................
 	
- 	xA = oCell.string
+ 	xA = oSheet.GetCellByPosition( 0, lrow ).String
  	if flag_rior = &quot;&quot; then &apos; se arriva da concatena salta...
  		 	If xA = &quot;AP&quot; OR xA = &quot;&quot; Then
  				 ThisComponent.CurrentController.Select(oCell)
@@ -189,8 +142,7 @@ SUB Elimina_doppione &apos; _no_rior
 	
 	&apos;modulino di eliminazione...
 	oSheet = ThisComponent.currentController.activeSheet
-	codice = oSheet.GetCellByPosition( 0 , lrow).string
-	
+
 	&apos;passo su El. Prezzi
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
 	lrow = 2
@@ -203,12 +155,7 @@ SUB Elimina_doppione &apos; _no_rior
  	
 	lscarto = 0 &apos;per la 4
 
-	If lrow &gt;= lUltimaRiga then
-		goto Fine
-	end if
-	do while oSheet.GetCellByPosition( 0,lrow ).string = &quot;&quot;
-		lrow = lorw+1
-	loop
+	If lrow &gt;= lUltimaRiga then	goto Fine
 
 	For i = 1 to 7 &apos;non mi è chiaro perché cercare solo nelle prime 7
 		&apos;	print &quot;nel for&quot;
@@ -233,42 +180,48 @@ SUB Elimina_doppione &apos; _no_rior
 	saltino:
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-DOPPIONI_TROVA_Durante(lrowPartenza)
+DOPPIONI_TROVA_Durante (lrowPartenza, xA)
 	lrow = lRowAna 
 	oCodAnalisi = codice
-
+rem ----------------------------------------------------------------------
+rem descrizione
 	oCelle = oSheet.GetCellByPosition( 1, lrow ) 
- 	xA = oCell.string
-
+ 	xA = oCelle.string
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oLdescAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
-	 &apos; print oLdescAnalisi
- 
+rem ----------------------------------------------------------------------
+rem unità di misura
 	oCelle = oSheet.GetCellByPosition( 2, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oLumAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
- 
- 	
-	oCelle = oSheet.GetCellByPosition( iflag, lrow ) &apos; iflag è la colonna del prezzo
- &apos; diversa dopo la modifica della struttura della voce di analisi
+rem ----------------------------------------------------------------------
+rem prezzo
+	oCelle = oSheet.GetCellByPosition(6, lrow )
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oLprezzoAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
- 
- 
- oCelle = oSheet.GetCellByPosition( 7, lrow ) 
+rem ----------------------------------------------------------------------
+rem incidenza MdO
+ oCelle = oSheet.GetCellByPosition( 8, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oIncidAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
-
-	oCelle = oSheet.GetCellByPosition( 8, lrow ) 
+rem ----------------------------------------------------------------------
+rem importo MdO
+	oCelle = oSheet.GetCellByPosition( 9, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oImpManAn = &quot;=$&quot; + oConv.UserInterfaceRepresentation
-
-	
+rem ----------------------------------------------------------------------
+rem importo sicurezza
+	oCelle = oSheet.GetCellByPosition( 10, lrow ) 
+	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
+	oConv.Address = oCelle.getCellAddress
+	sicurezza = &quot;=$&quot; + oConv.UserInterfaceRepresentation
+rem ----------------------------------------------------------------------
+rem codice
 	oCelle = oSheet.GetCellByPosition( 0, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
@@ -282,69 +235,76 @@ DOPPIONI_TROVA_Durante(lrowPartenza)
  	&apos; .... per quando si torna sulla tab 
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
-
 	
-	oCell = oSheet.GetCellByPosition( lcolbase,3 ) 
-	ThisComponent.CurrentController.Select(oCell)&apos;@
-	
-	
- 
-	lrow = 3
-	insRows (lrow,1)
-&apos;	oSheet.getRows.insertByIndex(lrow,1)
-	oCell = oSheet.GetCellByPosition( lcolbase , lrow)
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(lcolbase,3))
+rem ----------------------------------------------------------------------
+rem crea la riga
+	lrow = idxrow+1
+	insRows (lrow,1) &apos;	oSheet.getRows.insertByIndex(lrow,1)
+	oSheet.GetCellRangeByPosition(idxrow, lrow,14,lrow).cellstyle = &quot;EP-sfondo&quot;
+rem ----------------------------------------------------------------------
+rem codice
+	oCell = oSheet.GetCellByPosition(lcolbase, lrow)
 	oCell.CellStyle=&quot;EP-Cs&quot;
 	oCell.string= oCodAnalisi
 	codice = oCodAnalisi
-
+rem ----------------------------------------------------------------------
+rem descrizione
 	oCell = oSheet.GetCellByPosition(lcolbase + lscarto +1 , lrow) 
  oCell.formula = oLdescAnalisi
 	oCell.CellStyle=&quot;EP-C&quot;
- 					
+rem ----------------------------------------------------------------------
+rem unità di misura
  oCell = oSheet.GetCellByPosition( lcolbase + lscarto +2 , lrow)
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
  	oCell.formula = oLumAnalisi
- 	
+rem ----------------------------------------------------------------------
+rem unità di misura
+ oCell = oSheet.GetCellByPosition( lcolbase + lscarto +3 , lrow)
+	oCell.CellStyle=&quot;EP-C mezzo&quot;
+ 	oCell.formula = sicurezza
+rem ----------------------------------------------------------------------
+rem prezzo
 	oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 4 , lrow)
  	 oCell.CellStyle=&quot;EP-C mezzo&quot;
  	 oCell.formula = oLprezzoAnalisi 
-
+rem ----------------------------------------------------------------------
+rem incidenza MdO
 	oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 5 , lrow)&apos;@@@@
 	 oCell.formula = oIncidAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo %&quot;
-	 					 
+rem ----------------------------------------------------------------------
+rem importo MdO
 	oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 6 , lrow)&apos;@@@@
-
 	 oCell.formula = oImpManAn &apos; &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp; lrow+1
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-	 		 					 
+rem ----------------------------------------------------------------------
+rem codice
 	oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 7 , lrow)
 	 oCell.formula = oLOrigPAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
-	 
- oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 8 , lrow)
- oCell.string = oAP 
+rem ----------------------------------------------------------------------
+rem Flag
+	oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 8 , lrow)
+	oCell.string = oAP 
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
-	
- oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 9 , lrow)
+rem ----------------------------------------------------------------------
+rem flag Uso
+	oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 9 , lrow)
  	&apos; oCell.CellBackColor = RGB(0,0,139)
- oCell.CellStyle=&quot;EP-sfondo&quot;
- 
- 
-	Aggiorna_formula_sommase(lrow)
-
- 		 	Print
+	oCell.CellStyle=&quot;EP-sfondo&quot;
+Aggiorna_formula_sommase(lrow)
+DOPPIONI_TROVA_Durante(lrowPartenza, codice)
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0 then
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
  		&apos;	 Riordina_ElencoPrezzi
  		 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
- 		 	Print 
 	 		DOPPIONI_TROVA_Durante(lrowPartenza, codice)
 	end if 		 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
  	Adatta_Altezza_riga 
 		 &apos; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 		 
-	 ThisComponent.CurrentController.Select(oPartenza_D)
+	 ThisComponent.CurrentController.Select (oPartenza_D)
 	osheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lrow = Range2Cell
 	if lrow = -1 then
@@ -358,9 +318,7 @@ DOPPIONI_TROVA_Durante(lrowPartenza)
 		 lrow = lrow + 1
 	loop
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , lrow)
-
-&apos;	DOPPIONI_TROVA_Durante(lrowPartenza)
-	
+print
 fine:
 END SUB
 
@@ -747,12 +705,14 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	lrow=oStart.CellAddress.Row+1
-	fissa (0,idxRow+1)
+	fissa (0,idxRow)
 rem ----------------------------------------------------------------------
- insRows (lrow,1)
-&apos; oSheet.getRows.insertByIndex(lrow,1)
+insRows (lrow,1)
+ 
+oSheet.getCellRangeByPosition (idxcol,lrow,14,lrow).cellstyle = &quot;EP-sfondo&quot;
+
 rem Codice
- oCell = oSheet.GetCellByPosition(lcolbase+0 , lrow)
+oCell = oSheet.GetCellByPosition(lcolbase+0 , lrow)
 				&apos;	oCell.CellBackColor = RGB(255,220,130) &apos;238;233;191
 					oCell.CellStyle=&quot;EP-Cs&quot;
 &apos;					Print oCodAnalisi
@@ -814,20 +774,9 @@ rem Codice
  					 oCell.CellBackColor = RGB(0,0,139)
  					 oCell.CellStyle=&quot;EP-C mezzo&quot;
 rem ----------------------------------------------------------------------
-rem sommario computo
-	oSheet.getCellByPosition(lcolbase+idxcol+10,lrow).CellStyle = &quot;EP statistiche_q&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+10,lrow).formula = &quot;=L&quot; &amp; lrow+1 &amp; &quot;/E&quot; &amp; lrow+1
-	oSheet.getCellByPosition(lcolbase+idxcol+11,lrow).CellStyle = &quot;EP statistiche&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+11,lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot;
-rem ----------------------------------------------------------------------
-rem sommario contabilità
-	oSheet.getCellByPosition(lcolbase+idxcol+13,lrow).CellStyle = &quot;EP statistiche_Contab_q&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+13,lrow).formula = &quot;=SUMIF(GG;A&quot; &amp; lrow+1 &amp; &quot;;G1G1)&quot;
-	oSheet.getCellByPosition(lcolbase+idxcol+14,lrow).CellStyle = &quot;EP statistiche_Contab&quot;
-	oSheet.GetCellByPosition(lcolbase+idxcol+14,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;*E&quot;&amp; Lrow+1
-rem ----------------------------------------------------------------------
-
+rem aggiorna sommari
 Aggiorna_formula_sommase(lrow)
+
 	if ismissing (flag_rior) then &apos;= &quot;&quot; then
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
  	&apos;	 Riordina_ElencoPrezzi
@@ -1871,7 +1820,22 @@ sistema_attributi_sheet
  		 	&apos;oRange.CellBackColor = RGB(255,0,0) 
  	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 	
  	 		oRange = oSheet.getCellRangeByPosition(0, lrow,255,lrow)
- 	 		oRange.rows.Height = 475
+ 	 		rem ----------------------------------------------------------------------
+ 	 		
+rem totale computo
+	oSheet.GetCellByPosition(10,lrow).STRING=&quot;TOTALE&quot; &apos;totale computo
+	oSheet.GetCellByPosition(10,lrow).cellstyle=&quot;EP statlrowstlrowche_q&quot; &apos;totale computo
+rem ----------------------------------------------------------------------
+	oSheet.GetCellByPosition(lcolbase+11, lrow).setformula(&quot;=SUBTOTAL(9;L&quot; &amp; idxrow &amp;&quot;:L&quot; &amp; lrow &amp; &quot;)&quot;)
+	oSheet.GetCellByPosition(lcolbase+11, lrow).cellstyle = &quot;EP statlrowstlrowche&quot;	
+rem ----------------------------------------------------------------------
+rem totale contabilità
+	oSheet.GetCellByPosition(13,lrow).STRING=&quot;TOTALE&quot; &apos;totale contabilità
+	oSheet.GetCellByPosition(13,lrow).cellstyle=&quot;EP statlrowstlrowche_Contab_q&quot; &apos;totale contabilità
+rem ----------------------------------------------------------------------
+	oSheet.GetCellByPosition(14 , lrow).formula = &quot;=SUBTOTAL(9;O&quot; &amp; idxrow &amp;&quot;:O&quot; &amp; lrow
+	oSheet.GetCellByPosition(14 , lrow).cellstyle = &quot;EP statlrowstlrowche_Contab_q&quot;
+&apos;	 		oRange.rows.Height = 475
  	End Select  
 END SUB
 
@@ -2001,8 +1965,6 @@ cancella_dati
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	end If
 salta:
-inizializza_elenco
-
 
 rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
@@ -2078,6 +2040,7 @@ Ripristina_Validita_Lista
 	Ripristina_statusLine
 &apos;	Vai_a_M1
 Visualizza_normale_esegui
+inizializza_elenco
 	msgbox &quot;Questo documento è stato in gran parte svuotato dai sui dati!..!&quot;
 end sub
 </script:module>

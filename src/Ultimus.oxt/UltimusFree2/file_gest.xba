@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="file_gest" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -93,9 +93,8 @@ rem le variabili di versione sono settate In &quot;_vaiabili&quot;
 end Sub
 
 rem ----------------------------------------------------------------------
+
 Sub avvia_IDE
-Print &quot;Sistemare l&apos;importazione delle voci da listito per la storia dei sommari in EP&quot;
-Print &quot;SUB Elimina_doppione &apos; _no_rior&quot;
 	Prind &quot;avvio!&quot;
 End Sub
 

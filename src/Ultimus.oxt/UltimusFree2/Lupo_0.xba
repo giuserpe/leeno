@@ -355,7 +355,6 @@ rem ----------------------------------------------------------------------
  		sSMS = &quot;Se invece rispondi NO verranno saltati i controlli e il doc si aprirà normalmente. Proseguo con i controlli? &quot;
 	end if
 
- &apos;	If MsgBox (&quot; Sto per eseguire la procedura di controllo su questo doc &quot;&amp; CHR$(10)_
  	Select case MsgBox ( &quot;Sto per eseguire la procedura di controllo su questo doc: &quot; &amp; CHR$(10) &amp; CHR$(10)_
  		&amp; ConvertFromUrl(sURLOO) &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;Se rispondi Sì e prosegui dovrai attendere il caricamento&quot; &amp; CHR$(10)_

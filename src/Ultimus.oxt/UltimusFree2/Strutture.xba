@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Strutture" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -1447,14 +1447,6 @@ next I
 end sub
 
 
-
-
-
-
-
-
-
-
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 
 Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
@@ -1508,8 +1500,7 @@ SUB Tronca_Altezza_Voci_Computo &apos;1 e Contabilità
 	numV = 1
 	
 	&apos;trovo la fine dei dati
-	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet) 
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
 	If isNull (oEnd) or isEmpty (oEnd) then 
 			lLastUrowNN = getLastUsedRow(oSheet)
 		else
@@ -1517,9 +1508,9 @@ SUB Tronca_Altezza_Voci_Computo &apos;1 e Contabilità
 	end if
 	
 	lrow= Range2Cell
-	if lrow = -1 then
-			exit sub
-	end if	
+	if lrow = -1 then exit Sub
+	if lrow &gt; lLastUrowNN Then lrow = lLastUrowNN-3
+
 	for i = lrow to lLastUrowNN
 			if oSheet.GetCellByPosition(1 ,i).CellStyle = &quot;comp Art-EP&quot; then 
 				lrow =i
@@ -1637,8 +1628,7 @@ sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descriz
 	oSheet = ThisComponent.currentController.activeSheet		
 		 	Barra_chiudi_sempre_4	
 			Barra_Apri_Chiudi_5(&quot;..Solo un attimo... Pazienta... &quot;, 30)
-	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet) 
+	oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet) 
 	If isNull (oEnd) or isEmpty (oEnd) then 
 			lLastUrowNN = getLastUsedRow(oSheet)
 		else
@@ -1691,7 +1681,8 @@ sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descriz
  	Barra_chiudi_sempre_4 	
 	ThisComponent.CurrentController.Select(oActiveCell1) 
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-	&apos; toglie la selezione 	
+	&apos; toglie la selezione 
+fissa (0, idxrow)
 end sub
 
 

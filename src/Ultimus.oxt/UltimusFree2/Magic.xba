@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Magic" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.1
+&apos; LeenO 3.10.2
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -49,9 +49,7 @@ dim lrow as long
 	
 	&apos;ma prima vede se nella riga corrente c&apos;è una formula
 	iRowQ= Range2Cell
-	if iRowQ = -1 then
-		exit sub
-	end if
+	if iRowQ = -1 then exit Sub
 &apos;	Formula_magica(iRowQ) &apos; e la scrive in col C
 	
 	oSheet = ThisComponent.currentController.activeSheet
@@ -71,17 +69,32 @@ rem per circoscrivere l&apos;operazione alla singola voce di computo:
  			Formula_magica (lrow)
 		end if&apos; questo le aggiorna tutte
 	
-			sSimbDividente = &quot; &gt;( &quot;
-
+		sSimbDividente = &quot; &gt;( &quot;
 &apos;	print 	InStr((oSheet.GetCellbyPosition( 2, lrow ).string) , sSimbDividente)
 		if oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; and _
 			InStr((oSheet.GetCellbyPosition( 2, lrow ).string) , sSimbDividente) &lt;&gt; 0 then
  			Formula_magica (lrow)
 		end if
- next	
+	next	
 
 
-end sub
+end Sub
+
+Sub Formula_magica_off
+&apos;	oEnd=uFindString(&quot; &gt;( &quot;, oSheet)
+&apos;	If ismissing(oEnd) Or isNull(oEnd) Then
+	oSheet = ThisComponent.currentController.activeSheet
+	lLastUrow = getLastUsedRow(oSheet)
+	lrow = 3
+	For lrow=3 to lLastUrow &apos;lrow=iVoce To fVoce&apos;lLastUrow
+		If oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; Then
+
+			stringa = oSheet.GetCellbyPosition(2, lrow ).getString()
+&apos;			Print stringa
+			If instr (stringa , &quot; &gt;( &quot;) &lt;&gt; 0 Then oSheet.GetCellbyPosition(2, lrow ).String = left (stringa, (instr (stringa , &quot; &gt;( &quot;)))
+		EndIf 
+	Next
+End Sub
 
 
 
@@ -92,7 +105,6 @@ Sub Formula_magica (optional iRowQ0 as long)&apos; scrive (sotto forma di testo 
 					&apos; &apos; (se si ripete la macro lo ripreleva)
 rem MODIFICATA Giuseppe Vizziello 2014
 	iRowQ = iRowQ0
-
 	oSheet = ThisComponent.currentController.activeSheet
 
 	IF IsMissing (iRowQ) then 
@@ -262,7 +274,4 @@ rem MODIFICATA Giuseppe Vizziello 2014
 	end if&apos;
 
 End Sub
-
-
-
 </script:module>

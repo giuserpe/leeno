@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Conversioni" script:language="StarBasic">REM  *****  BASIC  *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Conversioni" script:language="StarBasic">rem ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.10.2
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
 &apos;Option Explicit
-Sub da_vecchio_template
+Sub da_vecchio_template &apos;Giuseppe Vizziello 2014
 &apos;attivo dalla versione 3.10.2
 	Dim sURL As String
 	Dim sName As String
@@ -25,6 +35,8 @@ rem ----------------------------------------------------------------------
 			&amp; CHR$(10)_
 			&amp; &quot;&quot;, 48, &quot;Conversione file...&quot;
 rem ----------------------------------------------------------------------
+&apos;					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DlgAttesa ) &apos; Inizializza il dialogo
+&apos;					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 rem faccio il backup del file e riporto il focus sul file -tmp
 	&apos; ID del template di partenza:
 	idxtemplate = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 290).value
@@ -257,6 +269,8 @@ rem ----------------------------------------------------------------------
 rem Saluti
 &apos;Print now &amp; &quot; - &quot; &amp; now1
 rem ----------------------------------------------------------------------
+Computo_Normale_terra_terra
+chiudi_dialoghi &apos; chiude tutti i dialoghi
 	msgbox &quot;Ho conservato una copia di sicurezza del vecchio file come:&quot; &amp; chr(10) &amp; chr(10)_
 			&amp; sUrlbak &amp; chr(10) &amp; chr(10)_
 			&amp; &quot;Eventuali discrepanze tra gli importi sono da ricercarsi nella&quot;&amp; chr(10)_
@@ -273,12 +287,14 @@ rem prova dialogo
 &apos;	oDlg = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgConversioneCompleta) &apos; Inizializza il dialogo
 &apos;	oDlg.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 rem ----------------------------------------------------------------------
+
 &apos;barra_fatto
 End Sub
 
 
 
-sub aggiorna_STILI &apos;tutti in blocco e sovrascrive 
+sub aggiorna_STILI 
+ &apos;tutti in blocco e sovrascrive 
 	&apos; aggiorno gli stili di cella sulla base di quelli del template di riferimento
 	&apos; attenzione li sovrascrive tutti (modulo suggerito da dfrench - Nuova Zelanda)
 &apos;	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
@@ -295,7 +311,7 @@ rem fa riferimento al template corrente
 	styles.loadStylesFromURL(curl,Array()) &apos; by default loads &amp; overrides all styles
 end Sub
 
-sub crea_molte_copie_file
+sub crea_molte_copie_file &apos;Giuseppe Vizziello 2014
 	Dim sURL, sNewURL, sName As String
 &apos;	sURL = ConvertToUrl(ThisComponent.getURL())
 	sURL = ConvertToUrl(&quot;W:\_dwg\ULTIMUSFREE\_tmp\189.ods&quot;)
@@ -307,7 +323,7 @@ sub crea_molte_copie_file
 
 End Sub
 
-Sub backup_tmp rem fa il -backup e il saveas -tmp
+Sub backup_tmp rem fa il -backup e il saveas -tmp &apos;Giuseppe Vizziello 2014
 	Dim sURL As String
 	Dim sName As String
 	Dim Doc As Object
@@ -330,7 +346,7 @@ rem ----------------------------------------------------------------------
 Focus_su_altro_Doc (sUrl , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
 End Sub
 
-Sub sheet_to_doc (UrlSrc As String, sSheetSRC As String)
+Sub sheet_to_doc (UrlSrc As String, sSheetSRC As String) 
 rem ----------------------------------------------------------------------
 rem UrlSrc è l&apos;url di partenza
 rem nSheet è la sheet da inviare

@@ -70,7 +70,7 @@ dim sLib as string
 &apos;	print &quot;oooooo &quot; &amp; sVer1doc &amp; &quot;=&quot; &amp; &quot;UF2&quot; 
 &apos;	If sVer1doc = &quot;UF2&quot; then
 &apos;		print &quot;risultano uguali&quot;
-	 sLib = &quot;UltimusFree2&quot;
+&apos;	 sLib = &quot;UltimusFree2&quot;
 &apos;	 print sLib
 &apos;	 else
 	 &apos; 	print &quot;NON risultano uguali -&quot; &amp; sVer1doc &amp; &quot; = &quot; &amp; &quot;UF2&quot; &apos;&amp; &quot;-&quot;
@@ -645,7 +645,7 @@ dim Esiste as boolean
 &apos;xray thiscomponent.URL
  &apos; GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa
  &apos; GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-	sLib = &quot;UltimusFree2&quot; 
+&apos;	sLib = &quot;UltimusFree2&quot; 
 	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
 &apos;	print &quot;libcontain &quot; &amp; oLibCont.hasByName(sLib)
  If oLibCont.hasByName(sLib)= false Then

@@ -14,7 +14,7 @@
 rem qui ci metto tutte le variabili/COSTANTI globali
 
 option explicit
-
+Public Const sLib = &quot;UltimusFree2&quot; &apos;nome libreria
 Public Const idxCol = 0		&apos;indice prima colonna
 Public Const idxRow = 2		&apos;indice posizione intestazione di tabella
 Public Const idxSAL = 30 	&apos;numero massimo possibile di SAL
@@ -24,7 +24,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3&apos;4
 Public Const versioneUF_minor= 10&apos;0
-Public Const versioneUF_subversion= &quot;2&quot;
+Public Const versioneUF_subversion= &quot;3.dev&quot;
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;

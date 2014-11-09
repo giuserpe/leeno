@@ -333,7 +333,7 @@ Sub backup_tmp rem fa il -backup e il saveas -tmp &apos;Giuseppe Vizziello 2014
 
 Salva_copia_data (0)&apos; salva una copia di backup
 Salva_temp	&apos; salva una copia tmp di lavoro
-New_LeenO_to (sURL) &apos;ricrea il file partendo dal template
+New_LeenO_to (&quot;computo&quot;, sURL) &apos;ricrea il file partendo dal template
 rem ----------------------------------------------------------------------
 rem apri il file
 	Doc = StarDesktop.loadComponentFromURL(sUrl, &quot;_blank&quot;, 0, Dummy())

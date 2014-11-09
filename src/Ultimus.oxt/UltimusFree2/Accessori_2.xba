@@ -910,18 +910,57 @@ Sub Sistema_il_listino
 		&apos;	end if
 	next
 	print &quot;FINITO&quot;
-end sub
+end Sub
+Sub sdfgh
+	oSheet=ThisComponent.currentController.activeSheet 
+	print	oSheet.GetCellByPosition(0, 21899).String
+End Sub
+rem ----------------------------------------------------------------------
+Sub listino_venezia_2014 &apos;Giuseppe Vizziello 2014
+&apos; accorpa le celle di descrizione in senso verticale
+	oSheet=ThisComponent.currentController.activeSheet 
+	i = getLastUsedRow(oSheet)
+	Do While i &gt; 0
+		if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
+			oSheet.GetCellByPosition(1, i).string &lt;&gt; &quot;&quot; and _
+			oSheet.GetCellByPosition(2, i).string = &quot;&quot; and _
+			oSheet.GetCellByPosition(3, i).string = &quot;&quot; Then
+			testo = oSheet.GetCellByPosition(1, i-1).String &amp; CHR$(10) &amp; oSheet.GetCellByPosition(1, i).String
+&apos;	Print testo
+			oSheet.GetCellByPosition(1, i-1).String = testo
+			oSheet.GetCellByPosition(1, i).String = &quot;&quot;
+		EndIf
+	i=i-1
+	Loop 
+End Sub
+rem ----------------------------------------------------------------------
+Sub listino_venezia_2014_codici &apos;Giuseppe Vizziello 2014
+&apos; accorpa i sottocodici
+	oSheet=ThisComponent.currentController.activeSheet 
+	uRow = getLastUsedRow(oSheet)
+	For i = 3 To uRow 
+Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; urow-i &amp;&quot; righe...&quot;, 0)
+		if len(oSheet.GetCellByPosition(2, i).string) &gt; 5 Then
+			testo = oSheet.GetCellByPosition(2, i).String
+			Else 
+			if len(oSheet.GetCellByPosition(2, i).string) &lt;= 3 and _
+				len(oSheet.GetCellByPosition(2, i).string) &gt; 0 Then
 
+				oSheet.GetCellByPosition(1, i).String = testo &amp; &quot;.&quot; &amp;	oSheet.GetCellByPosition(2, i).String
+			EndIf 
+		EndIf
+	next 
+End Sub
+rem ----------------------------------------------------------------------
 Sub elimina_righe_vuote
 	oSheet=ThisComponent.currentController.activeSheet 
 	i = getLastUsedRow(oSheet)
-
 	Do While i &gt; 2
-&apos;	Print i
-&apos;	Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
 				if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(0, i).cellstyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;Comp End Attributo&quot; And _
+				oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _
+				oSheet.GetCellByPosition(2, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(3, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(4, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(5, i).string = &quot;&quot; and _
@@ -929,12 +968,13 @@ Sub elimina_righe_vuote
 				oSheet.GetCellByPosition(7, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(8, i).string = &quot;&quot; Then
 				oSheet.getrows.removebyindex(i,1)
+	Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
 			end If
 	i=i-1
 	Loop
 		goto oltre
 	for i = 2 to iRowE
-Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
+&apos;Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
 	&apos;	goto salta
 			if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(1, i).string = &quot;&quot; and _

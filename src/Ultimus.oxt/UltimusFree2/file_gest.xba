@@ -32,7 +32,7 @@ rem ----------------------------------------------------------------------
 End Sub
 
 rem ----------------------------------------------------------------------
-Sub New_LeenO_to (sNewURL$ As string)
+Sub New_LeenO_to (flag As String, sNewURL$ As string)
   Dim oDoc
 rem ----------------------------------------------------------------------
 	Dim pip As Object, extensionLocation As String
@@ -42,7 +42,12 @@ REM vedi in &quot;_variabili&quot;
 	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
 rem ----------------------------------------------------------------------
-	sURL$ = extensionLocation &amp; &quot;/template/leeno/Computo_LeenO.ots&quot;
+	Select Case flag
+		Case &quot;listino&quot;
+		sURL$ = extensionLocation &amp; &quot;/template/leeno/Listino_LeenO.ots&quot;
+		Case &quot;computo&quot;
+		sURL$ = extensionLocation &amp; &quot;/template/leeno/Computo_LeenO.ots&quot;
+	End Select
 	Filecopy sURL$, sNewURL$ &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
 End Sub
 

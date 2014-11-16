@@ -105,7 +105,7 @@ sub Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri(optional oRange as object)
 	f = oMyRange.EndRow &apos;getRigaFinale(a)
 	NumCol = oMyRange.StartColumn &apos; definisce il numero della colonna
 	oFoglio.unprotect(&quot;&quot;)
-	oFoglio.Columns.insertbyindex (d+1,1)
+&apos;	oFoglio.Columns.insertbyindex (d+1,1)
 
 	oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
 	oBarra.Start(&quot; Conversione in corso...&quot;, Val(f))
@@ -113,7 +113,8 @@ sub Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri(optional oRange as object)
 	For g = Val(e) to Val(f) &apos; Inizia il ciclo
 		oBarra.setValue(g)
 		Cell = oFoglio.getCellByPosition(NumCol, g)
-		oMycell = oFoglio.getCellByPosition(NumCol+1, g )
+&apos;		oMycell = oFoglio.getCellByPosition(NumCol+1, g )
+		oMycell = oFoglio.getCellByPosition(NumCol, g )
 &apos;xray oMycell
 		if (Cell.Type = com.sun.star.table.CellContentType.VALUE) then
 &apos;		print &quot;valore&quot;
@@ -141,7 +142,7 @@ sub Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri(optional oRange as object)
 					Tipo5 = CDbl(Tipo2)
 					Tipo5 = Tipo5 /100
 					oMycell.setValue(Tipo5)
-					goto Salta
+goto Salta
 				end if
 				
 				if not contieneTesto(Tipo2) then
@@ -163,7 +164,7 @@ sub Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri(optional oRange as object)
 			end if
 		end if
 		end if
-		Salta:
+Salta:
 	Next
 
 	oBarra.End
@@ -321,7 +322,6 @@ sub starExecution
 		Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri
 	end if
 end sub
-
 
 sub Converti_stringhe
 	a3 = -1

@@ -80,4 +80,5 @@
  <library:element library:name="_variabili"/>
  <library:element library:name="Zip"/>
  <library:element library:name="Conversioni"/>
+ <library:element library:name="ConversioneDaListiniEsterni"/>
 </library:library>

@@ -521,8 +521,8 @@ ADATTA_ALTEZZA_RIGA
  		Osheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
  	endif 	
  &apos;	oCtrlModel.Enabled = True
- 	
- thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+ 	thisComponent.currentController.Select(oSheet.getCellByPosition(1, lrow+1)) &apos;unselect ranges 	
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione
  	exit sub
 errore:

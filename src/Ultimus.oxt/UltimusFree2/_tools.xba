@@ -109,9 +109,6 @@ sub rir_
 &apos;	fine:
 end sub
 
-Sub Main
-rifa_nomearea (&quot;Foglio1&quot;,&quot;A1:A5&quot;,&quot;per_cortesia&quot;)
-End Sub
 Sub _accoda_files_in_unico
 &apos;ACCODA PIù FILE DI CALC IN UNO SOLO
 	Dim DocName as object, DocUlr as string, dummy()
@@ -380,6 +377,11 @@ SUB DOLO rem SOLO MANUTENZIONE
 	&apos;end if
 END Sub
 
+Sub sdcs
+xray thiscomponent.currentselection
+End Sub
+
+
 sub _Listino_Crea_Capitoli&apos;(C) Giuseppe Vizziello 2014
 rem migliora la leggibilità dei listini e crea i file di capitolo
 	Dim elCap()
@@ -403,6 +405,10 @@ rem migliora la leggibilità dei listini e crea i file di capitolo
 			exit for
 		end if 
 	Next
+rem ----------------------------------------------------------------------
+	Flag = com.sun.star.sheet.CellFlags.HARDATTR
+	oSheet.getCellRangeByPosition (0,primariga,11,lLastUrow).clearContents(Flag)
+rem ----------------------------------------------------------------------
 	oSheet.getCellRangeByPosition (0,primariga,5,lLastUrow).CellStyle = &quot;List-stringa-sin&quot;
 	oSheet.getCellRangeByPosition (6,primariga,6,lLastUrow).CellStyle = &quot;List-stringa-centro&quot;
 	oSheet.getCellRangeByPosition (7,primariga,7,lLastUrow).CellStyle = &quot;List-num-euro&quot;
@@ -436,7 +442,7 @@ rem verde
 &apos;					AppendItem(elRow(), array (i))
 			GoTo vai:
 		end if
-		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 5 then 
+		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 6 then 
 			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
 			oRange.CellBackColor = colore2 &apos;RGB(255, 255, 160) &apos;giallo
 			GoTo vai:
@@ -475,7 +481,7 @@ rem ----------------------------------------------------------------------
 rem scrive indice capitoli
 	Dim test As Integer 
 	test=1
-	Flag = com.sun.star.sheet.CellFlags.HARDATTR
+&apos;	Flag = com.sun.star.sheet.CellFlags.HARDATTR
 rem ----------------------------------------------------------------------
 rem colora indice capitoli
 	For Each el In elCap()
@@ -498,25 +504,17 @@ rem colora indice capitoli
 
 	riga2 = primariga-1
 	k= riga2-riga1+1
-&apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByposition(1 ,riga1, 1, riga2))
 &apos;Raggruppa_righe
 rem ----------------------------------------------------------------------
-&apos;ReDim Preserve elCap(ubound(elCap)-1)
-&apos;Print ubound(elCap())
 	test = UBound(elCap()) -1
 	For i = 0 To test
 Focus_su_altro_Doc (completo) &apos; torno sul listino completo
 		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
-&apos;		oSrc = oSheet.getCellRangeByposition(1 ,riga1, 4, riga2).RangeAddress
-&apos;		ThisComponent.CurrentController.Select(oSheet.getCellRangeByposition(1 ,riga1, 4, riga2))
 		ThisComponent.CurrentController.Select(oSheet.getCellRangeByposition(0 , 0, 100, riga2))
 copy_clip
 rem ----------------------------------------------------------------------
 rem creo il file
 		newCap = path &amp; elCap(i)(1) &amp; &quot;.ods&quot;
-&apos;		Print newCap
-&apos;Focus_su_altro_Doc (completo) &apos; torno sul listino completo
-&apos;		print
 New_LeenO_to (&quot;listino&quot;, newCap) &apos; creo un nuovo listino vuoto
 Focus_su_altro_Doc (newCap)
 		oSheetDest = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
@@ -524,7 +522,6 @@ Focus_su_altro_Doc (newCap)
 insrows (riga1, riga2-riga1)
 		oDest = oSheetDest.GetCellByPosition(1,riga1).CellAddress
 		ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0, 0))
-&apos;		ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(1,riga1))
 rem ----------------------------------------------------------------------
 rem incollo l&apos;indice
 paste_noOBJ
@@ -548,9 +545,16 @@ rem copia/incolla le voci
 copy_clip
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 Focus_su_altro_Doc (newCap)
-	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0,getLastUsedRow(oSheetDest)+1))
+uriga=getLastUsedRow(oSheetDest)+1
+	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0,uriga))
 paste_clip
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+rem ----------------------------------------------------------------------
+rem inserisce il numero di prezzi
+oSheetDest.GetCellByPosition(5, riga1+ics-1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+&apos;oSheetDest.GetCellByPosition(6, riga1-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;)&quot;
+&apos;oSheetDest.GetCellByPosition(6, uriga-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;)&quot;
+&apos;Print 
 rem ----------------------------------------------------------------------
 rem copia/incolla Note
 Focus_su_altro_Doc (completo) &apos; torno sul listino completo
@@ -594,7 +598,9 @@ rem stranamente non va
 rem ----------------------------------------------------------------------
 	Next i
 	oSheet.getCellByPosition (3,riga2).CellBackColor = RGB(255, 0, 0)
-
+	oSheet.GetCellByPosition(5, riga2).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+&apos;oSheet.GetCellByPosition(6, riga2+2).formula = &quot;=COUNT(H&quot;&amp; riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;)&quot;
+&apos;oSheet.GetCellByPosition(6, riga1-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;)&quot;
 end Sub
 
 

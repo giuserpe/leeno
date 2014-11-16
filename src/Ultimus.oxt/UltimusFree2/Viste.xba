@@ -702,7 +702,7 @@ sub Col_Cap_on_off &apos; spegni dettagli quantità
 		else
 			oRange.Columns.IsVisible=False
 	end if
-	fissa (39,3)&apos; optional icol as long, optional irow as long)
+	fissa (39,3)&apos;
 end sub
 
 &apos;----------------------------------------------------------------

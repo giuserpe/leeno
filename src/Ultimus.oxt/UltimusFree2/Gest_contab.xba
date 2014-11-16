@@ -242,7 +242,7 @@ Sub Svuota_CONTABILITA &apos;main
 		exit sub
 	end if
 	Svuota_CONTABILITA_esegui
-	fissa (0,3)
+fissa (0,idxrow+1)
 end Sub
 
 

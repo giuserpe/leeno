@@ -255,7 +255,7 @@ rem	oSheet.copyRange(oDest2, oSRC2)&apos; incolla n.ord. sulla colonna 44
 	If isEmpty (data_misura) then
 		oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
 	End If
-&apos;	fissa (0,2)
+
 
 STILI:	rem attribuisco gli stili alla voce proveniente dal computo
 	oSheet.getCellRangeByPosition(1 , lrow, 35, lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; 		&apos;prima riga

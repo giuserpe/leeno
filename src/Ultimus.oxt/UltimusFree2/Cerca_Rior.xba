@@ -53,7 +53,7 @@ ordina_col (lcolEPI+1)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 &apos;	Print idxcol
 &apos;	Print idxrow
-fissa (idxcol,idxrow)
+fissa (0,idxrow+1)
 End Sub
 
 

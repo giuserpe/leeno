@@ -650,8 +650,8 @@ rem seleziono le formule
 
 rem seleziono le formule
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
-&apos;	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , rIntest,lcolbase+14 , rIntest))		
-	sFormula1 = &quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; &quot;2:&quot; &amp; sCol2 &amp; lrowF &amp; &quot;)&quot;		
+&apos;	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , rIntest,lcolbase+14 , rIntest))
+	sFormula1 = &quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; idxrow+1 &amp; &quot;:&quot; &amp; sCol2 &amp; lrowF+1 &amp; &quot;)&quot;		
 	oSheet.GetCellByPosition(lcolbase+14 , lrowF).setformula(sFormula1)	
 	oSheet.GetCellByPosition(lcolbase+14 , lrowF).cellstyle = &quot;EP statistiche_Contab&quot;
 	Ripristina_statusLine
@@ -683,7 +683,7 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 	end if 
 	lrowF=oEnd.RangeAddress.EndRow
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
-	rIntest=oStart.CellAddress.Row+1
+&apos;	rIntest=oStart.CellAddress.Row+1
 	lcolbase = Colonna_giusta_EP (oSheet)
 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 		print lcolbase
@@ -707,7 +707,7 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 
 	rem ----------------------------------------------------------------------
 	rem seleziono le formule
-	oSrc = oSheet.getCellRangeByPosition(lcolbase+10, rIntest, lcolbase+11, rIntest).RangeAddress
+	oSrc = oSheet.getCellRangeByPosition(lcolbase+10, idxrow+1, lcolbase+11, rIntest).RangeAddress
 	For i=rIntest To lrowf-2
 		oDest = oSheet.getCellByPosition(lcolbase+10, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
 		oSheet.copyRange(oDest, oSrc)
@@ -715,8 +715,7 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 	Next
 	oSheet.GetCellByPosition(10,lRowF).STRING=&quot;TOTALE&quot; &apos;totale computo
 	oSheet.GetCellByPosition(10,lRowF).cellstyle=&quot;EP statistiche_q&quot; &apos;totale computo
-	
-	oSheet.GetCellByPosition(lcolbase+11, lrowF).setformula(&quot;=SUBTOTAL(9;L&quot; &amp; rIntest+1 &amp;&quot;:L&quot; &amp; lrowF &amp; &quot;)&quot;)
+	oSheet.GetCellByPosition(lcolbase+11, lrowF).setformula(&quot;=SUBTOTAL(9;L&quot; &amp; rIntest &amp;&quot;:L&quot; &amp; lrowF+1 &amp; &quot;)&quot;)
 	oSheet.GetCellByPosition(lcolbase+11, lrowF).cellstyle = &quot;EP statistiche&quot;	
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
@@ -915,42 +914,7 @@ Sub sdfgh
 	oSheet=ThisComponent.currentController.activeSheet 
 	print	oSheet.GetCellByPosition(0, 21899).String
 End Sub
-rem ----------------------------------------------------------------------
-Sub listino_venezia_2014 &apos;Giuseppe Vizziello 2014
-&apos; accorpa le celle di descrizione in senso verticale
-	oSheet=ThisComponent.currentController.activeSheet 
-	i = getLastUsedRow(oSheet)
-	Do While i &gt; 0
-		if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
-			oSheet.GetCellByPosition(1, i).string &lt;&gt; &quot;&quot; and _
-			oSheet.GetCellByPosition(2, i).string = &quot;&quot; and _
-			oSheet.GetCellByPosition(3, i).string = &quot;&quot; Then
-			testo = oSheet.GetCellByPosition(1, i-1).String &amp; CHR$(10) &amp; oSheet.GetCellByPosition(1, i).String
-&apos;	Print testo
-			oSheet.GetCellByPosition(1, i-1).String = testo
-			oSheet.GetCellByPosition(1, i).String = &quot;&quot;
-		EndIf
-	i=i-1
-	Loop 
-End Sub
-rem ----------------------------------------------------------------------
-Sub listino_venezia_2014_codici &apos;Giuseppe Vizziello 2014
-&apos; accorpa i sottocodici
-	oSheet=ThisComponent.currentController.activeSheet 
-	uRow = getLastUsedRow(oSheet)
-	For i = 3 To uRow 
-Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; urow-i &amp;&quot; righe...&quot;, 0)
-		if len(oSheet.GetCellByPosition(2, i).string) &gt; 5 Then
-			testo = oSheet.GetCellByPosition(2, i).String
-			Else 
-			if len(oSheet.GetCellByPosition(2, i).string) &lt;= 3 and _
-				len(oSheet.GetCellByPosition(2, i).string) &gt; 0 Then
 
-				oSheet.GetCellByPosition(1, i).String = testo &amp; &quot;.&quot; &amp;	oSheet.GetCellByPosition(2, i).String
-			EndIf 
-		EndIf
-	next 
-End Sub
 rem ----------------------------------------------------------------------
 Sub elimina_righe_vuote
 	oSheet=ThisComponent.currentController.activeSheet 

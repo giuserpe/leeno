@@ -619,7 +619,7 @@ end sub
 
 
 Sub Controlla_Somme_Componenti &apos; serve per conversione Da_Vecchio_Template
-	fissa (0, 3)
+fissa (0,idxrow+1)
 &apos;Dim val1 As Long , val2 As Long , val3 As Long , val4 As Long , val5
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
@@ -657,7 +657,7 @@ oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in me
 				Next 
 		end if
 	Next
-	fissa (0, 3)
+fissa (0,idxrow+1)
 	ThisComponent.calculateAll()
 end sub
 

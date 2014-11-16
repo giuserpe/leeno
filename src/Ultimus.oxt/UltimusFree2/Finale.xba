@@ -1501,7 +1501,7 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	rem RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.GetCellByPosition( 0 , rIntest)
 	oPrimaCella.Rows.Height = 1200
-fissa (0,rIntest+1)
+fissa (0,idxrow+1)
 	 Case &quot;&quot;
 		msgbox &quot;Non riconosco questo tipo di documento... &quot; &amp; CHR$(10)_
 		&amp;&quot;Pertanto ho approssimato l&apos;area di stampa come pare a me! &quot; &amp; CHR$(10)_

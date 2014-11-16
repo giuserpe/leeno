@@ -92,7 +92,7 @@ Sub tag_usata_on_off
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-fissa (0,rIntest)
+fissa (0,idxrow+1)
 End Sub
 
 
@@ -144,7 +144,7 @@ Sub Sommario_off &apos; chiude/apre la col del sommario del Computo
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-fissa (0,rIntest)
+fissa (0,idxrow+1)
 
 End Sub
 
@@ -194,7 +194,7 @@ Sub Sommario_Contab_off &apos; chiude/apre la col del sommario del Computo
 	end if
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-fissa (0,rIntest)
+fissa (0,idxrow+1)
 End Sub
 
 
@@ -232,7 +232,7 @@ Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
 	
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-fissa (0,rIntest)
+ffissa (0,idxrow+1)
 End Sub
 
 
@@ -280,7 +280,7 @@ Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-fissa (0,rIntest)
+fissa (0,idxrow+1)
 End Sub
 
 
@@ -301,7 +301,7 @@ Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-fissa (0,idxRow+1)
+fissa (0,idxrow+1)
 rem ----------------------------------------------------------------------
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase

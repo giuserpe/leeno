@@ -37,7 +37,7 @@ Sub partita (testo as string)
 		oSheet.GetCellByPosition(2 , riga_corrente).setstring(testo)
 		oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
 		oRange.CellBackColor = RGB(255, 255, 153)
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,riga_corrente))
+		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(5,riga_corrente))
  	fine:
 end Sub
 
@@ -164,7 +164,7 @@ rem chiudo il vecchio registro
 &apos;		oCell.Rows.IsVisible=false &apos; chiudi gruppo
 
 End Select
-	fissa (0,fRow+1)
+	fissa (0,idxrow+1)
 &apos;	Print InsRow
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 &apos;xray oSheet
@@ -611,7 +611,7 @@ rem chiudo il vecchio SAL
 		oCell.Rows.IsVisible=false &apos; chiudi gruppo
 	End Select
 &apos;fissa (0,fRow+1)
-fissa (0,3)
+fissa (0,idxrow+1)
 &apos;vociSAL(), array (art, desc, um,  quant, prezzo, importo, sicurezza, mdo)
 &apos;Print &quot;qui&quot;
 &apos;xray vociSAL()
@@ -1021,7 +1021,7 @@ rem ----------------------------------------------------------------------
 elimina_firme
 rem ----------------------------------------------------------------------
 rem setta area precedente
-					ins =uFindString(&quot;LAVORAZIONI&quot;+ chr(10) + &quot;O PROVVISTE&quot;, oSheet).RangeAddress.EndRow
+					ins = uFindString(&quot;LAVORAZIONI&quot;+ chr(10) + &quot;O PROVVISTE&quot;, oSheet).RangeAddress.EndRow
 					If nSal-1&lt;&gt;0 Then
 						oNamedRange=oRanges.getByName(prefix &amp; nSal-1).referredCells
 rem recupero l&apos;ultima riga del documento
@@ -1361,7 +1361,7 @@ rem annoto ultimo numero di pagina
 	oSheetCont.GetCellByPosition(20 , fineFirme+1).value = UBound(IntPag)&apos;inumPag
 	oSheetCont.GetCellByPosition(20 , fineFirme+1).CellStyle = &quot;num centro&quot;
 rem ----------------------------------------------------------------------
-fissa (0,3)
+fissa (0,idxrow+1)
 APPROSSIMA_ZOOM &apos; ripristina il fattore di zoom scelto dall&apos;utente
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	rem ----------------------------------------------------------------------

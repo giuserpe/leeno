@@ -12,7 +12,6 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-
 Sub Riordina_ElencoPrezzi &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
 &apos;seleziona_area (&quot;elenco_prezzi&quot;)
 Riordina_ElencoPrezzi_D	
@@ -49,6 +48,7 @@ RiDefinisci_Area_Elenco_prezzi
 
 &apos;On Error Resume Next 
 	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
+
 ordina_col (lcolEPI+1)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 &apos;	Print idxcol

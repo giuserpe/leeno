@@ -40,4 +40,10 @@ rem solo un appunto: clearContents()
 &apos;				com.sun.star.sheet.CellFlags.STYLES OR _		64
 &apos;				com.sun.star.sheet.CellFlags.OBJECTS OR _		128
 &apos;				com.sun.star.sheet.CellFlags.EDITATTR)			256
+
+Sub autoexec &apos; questa la faccio partire sempre
+Elimina_Nomi_Area_errati
+Sel_Altre_Opz
+End Sub
+
 </script:module>

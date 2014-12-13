@@ -264,7 +264,7 @@ for i = 0 to 1000
 	if test = &quot;Comp Start Attributo&quot; or test = &quot;Comp Start Attributo_R&quot; then
 	riga_selezione = riga_selezione+1
 		art = oSheet.GetCellByPosition(1,riga_selezione).AbsoluteName
-		id = oSheet.GetCellByPosition(0,riga_selezione).AbsoluteName
+		idvoce = oSheet.GetCellByPosition(0,riga_selezione).AbsoluteName
 &apos;		um = oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
 		&apos;print art
 		i = i+10000
@@ -303,7 +303,7 @@ rem [&quot;;CERCA.VERT(B5;elenco_prezzi;3;FALSO());&quot;]
 
 id = Circoscrive_Voce_Computo_Att (riga_corrente).RangeAddress.StartRow+2
 um =&quot;VLOOKUP(B&quot; &amp; id &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
-oSheet.GetCellByPosition(2 , riga_corrente).formula=&quot;=CONCATENATE(&quot;&quot;&quot;&amp; InputDesc &amp;&quot;&quot;&quot;;&quot;&quot; - vedi voce n.&quot;&quot;;TEXT(&quot; &amp; id &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
+oSheet.GetCellByPosition(2 , riga_corrente).formula=&quot;=CONCATENATE(&quot;&quot;&quot;&amp; InputDesc &amp;&quot;&quot;&quot;;&quot;&quot; - vedi voce n.&quot;&quot;;TEXT(&quot; &amp; idvoce &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
 
 oSheet.GetCellByPosition(5 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
 oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)

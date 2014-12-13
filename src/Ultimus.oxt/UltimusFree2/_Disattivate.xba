@@ -2,5 +2,4 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_Disattivate" script:language="StarBasic">rem ***** BASIC *****
 REM QUI CI METTO LE SUB NON PIU&apos; IN USO E POI LE PASSO IN W:\_dwg\ULTIMUSFREE\_SRC\ultimus\src\MACRO_NON_USATE.TXT
-
 </script:module>

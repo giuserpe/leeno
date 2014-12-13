@@ -62,7 +62,7 @@ on error goto avviso
 	oSelezione = ThisComponent.getCurrentSelection()
 	oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 	lrow= oSelezione.CellAddress.Row
-	sName = oSheet.GetCellbyPosition( 4, lrow ).string
+	sName = oSheet.GetCellbyPosition( 4, lrow ).String
 	sFile = sUrl + &quot;/&quot; + sName + &quot;.ods&quot;
 	lFlags = com.sun.star.frame.FrameSearchFlag.CREATE + _
 	com.sun.star.frame.FrameSearchFlag.ALL
@@ -397,7 +397,9 @@ oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
 	if tipologia = &quot;SCNVA&quot; then
 	&apos;	print &quot;SCNVA&quot; &apos; per il prezziario ambientale Trento che ha le descrizioni senza codici
 		Accoda_SCNVA(livelli, lrow)
-	end if
+	end If
+
+Voce_a_ElencoPrezzi_cod_orig
 end sub
 
 

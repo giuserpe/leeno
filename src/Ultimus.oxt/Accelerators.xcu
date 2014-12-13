@@ -9,8 +9,28 @@
         </prop>
       </node>
     </node>
-
-    <node oor:name="Modules">
+<!--CTRL-ALT-F3
+-->	<node oor:name="Modules">
+      <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
+        <node oor:name="F3_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
+          </prop>
+        </node>
+      </node>
+    </node>	
+<!--CTRL-ALT-R
+-->	<node oor:name="Modules">
+      <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
+        <node oor:name="R_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.file_gest.avvia_IDE?language=Basic&amp;location=application</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+	
+	<node oor:name="Modules">
       <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
         <node oor:name="F5_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">

@@ -93,22 +93,6 @@ rem ----------------------------------------------------------------------
 &apos;	MsgBox(ConvertFromURL(extensionLocation)
 End Sub
 
-
-
-sub rir_
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	lLastUrow = getLastUsedRow(oSheet)
-	&apos;print lLastUrow
-		conta_a = 0
-	for i = 1 to lLastUrow
-		IF oSheet.GetCellByPosition(1 , I).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; then
-						oSheet.getRows().getByindex(I).isvisible = False
-		end if
-	next
-	Barra_chiudi_sempre_4
-&apos;	fine:
-end sub
-
 Sub _accoda_files_in_unico
 &apos;ACCODA PIù FILE DI CALC IN UNO SOLO
 	Dim DocName as object, DocUlr as string, dummy()
@@ -350,7 +334,7 @@ SUB Elimina_Nomi_Area_errati &apos;nome eloquente
 ELIMINA_I_NOMI_DI_AREA_ERRATI:
  	if InStr(Contenuto, &quot;#REF!&quot;) or _
 			InStr(Contenuto, &quot;#rif!&quot;) then&apos;
-print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
+&apos;print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
 			oAree. removeByName(oNomiArea(i))
  	end if
  next
@@ -368,7 +352,10 @@ SUB DOLO rem SOLO MANUTENZIONE
 		rem BLOCCO ANALISI AVCP
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
-		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
+&apos;		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
+		
+		rifa_nomearea (&quot;S5&quot;, &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;) &apos;blocco_contabilità
+
 &apos;rifa_nomearea (&quot;Foglio1&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
  oDoc = ThisComponent
  oAree=oDoc.NamedRanges&apos;
@@ -380,229 +367,6 @@ END Sub
 Sub sdcs
 xray thiscomponent.currentselection
 End Sub
-
-
-sub _Listino_Crea_Capitoli&apos;(C) Giuseppe Vizziello 2014
-rem migliora la leggibilità dei listini e crea i file di capitolo
-	Dim elCap()
-	Dim elRow()
-	completo = ThisComponent.getURL()
- 	sName = Replace_G(thiscomponent.title, &quot;-leeno.ods&quot;, &quot;&quot;)
-	path = Replace_G(completo, thiscomponent.title, &quot;&quot;) 
-	If thisComponent.Sheets.hasByName(&quot;Listino&quot;) Then &apos; se la sheet esiste
-		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
-		ThisComponent.CurrentController.Select(oSheet)
-&apos;			xray oSheet
-		else
-		msgbox &quot;Sei certo di lavorare su di un file di Listino?&quot;, 0, &quot;AVVISO!&quot;
-	exit sub
-	END IF
-	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
-	Barra_Apri_Chiudi_5(&quot;Preparazione del lavoro in corso...&quot;, 0)
-	for i = 0 to lLastUrow
-		if oSheet.GetCellByPosition( 5,i).getstring = &quot;ATTENZIONE!&quot; then
-			primariga = i+1
-			exit for
-		end if 
-	Next
-rem ----------------------------------------------------------------------
-	Flag = com.sun.star.sheet.CellFlags.HARDATTR
-	oSheet.getCellRangeByPosition (0,primariga,11,lLastUrow).clearContents(Flag)
-rem ----------------------------------------------------------------------
-	oSheet.getCellRangeByPosition (0,primariga,5,lLastUrow).CellStyle = &quot;List-stringa-sin&quot;
-	oSheet.getCellRangeByPosition (6,primariga,6,lLastUrow).CellStyle = &quot;List-stringa-centro&quot;
-	oSheet.getCellRangeByPosition (7,primariga,7,lLastUrow).CellStyle = &quot;List-num-euro&quot;
-	oSheet.getCellRangeByPosition (8,primariga,8,lLastUrow).CellStyle = &quot;List-%&quot;
-	oSheet.getCellRangeByPosition (9,primariga,9,lLastUrow).CellStyle = &quot;List-num-euro&quot;
-	oSheet.getCellRangeByPosition (10,primariga,10,lLastUrow).CellStyle = &quot;List-%&quot;
-	oSheet.getCellRangeByPosition (11,primariga,11,lLastUrow).CellStyle = &quot;List-num-euro&quot;
-rem ----------------------------------------------------------------------
-rem giallo
-	colore1 = RGB(255, 255, 112)
-	colore2 = RGB(255, 255, 160)
-	colore3 = RGB(255, 255, 208)
-rem ----------------------------------------------------------------------
-rem viola
-&apos;	colore1 = RGB(192, 192, 255)
-&apos;	colore2 = RGB(208, 208, 255)
-&apos;	colore3 = RGB(240, 240, 255)
-rem ----------------------------------------------------------------------
-rem verde
-&apos;	colore1 = RGB(144, 255, 144)
-&apos;	colore2 = RGB(208, 255, 208)
-&apos;	colore3 = RGB(240, 255, 240)
-	
-	for i = primariga to lLastUrow
-		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 3 Then
-			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
-			oRange.CellBackColor = colore1 &apos;RGB(255, 255, 112) &apos; giallo
-&apos;					Print oSheet.GetCellbyPosition( 2, i ).String &amp; &quot; &quot; &amp; oSheet.GetCellbyPosition( 4, i ).String
-					AppendItem(elCap(), array ( oSheet.GetCellbyPosition( 2, i ).String &amp; &quot; &quot; &amp; oSheet.GetCellbyPosition( 4, i ).string, _
-												sname &amp; &quot;-&quot; &amp;  oSheet.GetCellbyPosition( 2, i ).String &amp; &quot;-leeno&quot;, i))
-&apos;					AppendItem(elRow(), array (i))
-			GoTo vai:
-		end if
-		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 6 then 
-			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
-			oRange.CellBackColor = colore2 &apos;RGB(255, 255, 160) &apos;giallo
-			GoTo vai:
-		end if
-		if len(oSheet.GetCellbyPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
-			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
-			oRange.CellBackColor = colore3 &apos;RGB(255, 255, 208) &apos; giallo
-			GoTo vai:
-		end If
-vai:
-Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; lLastUrow-i &amp;&quot; righe...&quot;, 0)
-	Next
-&apos;	AppendItem(elRow(), array (lLastUrow))
-	AppendItem(elCap(), array ( &quot;ELENCO COMPLETO&quot;, sname &amp; &quot;-leeno&quot;),(lLastUrow))
-	oSheet.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne
-	oSheet.getCellRangeByposition(12,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
-	oSheet.getCellRangeByposition(0,lLastUrow+1,0,1048575).Rows.IsVisible=false &apos; nascondi righe
-	oSheet = ThisComponent.Sheets.getByName(&quot;Temp&quot;)
-	oSheet.getCellRangeByPosition (0,0,8,0).Columns.IsVisible=True &apos; mostra colonne
-	oSheet.getCellRangeByposition(9,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
-	oSheet.getCellRangeByposition(0,getLastUsedRow(oSheet)-15,0,1048575).Rows.IsVisible=false &apos; nascondi righe
-rem ----------------------------------------------------------------------
-rem torna su Listino
-	oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
-	for i = 0 to lLastUrow
-&apos;	Print i
-&apos;	Print oSheet.GetCellByPosition(1 ,i).getstring
-&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,i))
-		if oSheet.GetCellByPosition(1 ,i).getstring = &quot;Capitoli:&quot; then
-			primariga = i+1
-			exit for
-		end If
-	Next
-	riga1 = primariga
-rem ----------------------------------------------------------------------
-rem scrive indice capitoli
-	Dim test As Integer 
-	test=1
-&apos;	Flag = com.sun.star.sheet.CellFlags.HARDATTR
-rem ----------------------------------------------------------------------
-rem colora indice capitoli
-	For Each el In elCap()
-		insrows (primariga, 1)
-		oSheet.getCellRangeByPosition(1,primariga,4,primariga).clearContents(Flag)
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,primariga ))
-		oSheet.GetCellbyPosition(1, primariga).String = el(0)
-		oSheet.getCellRangeByposition(1,primariga,2,primariga).Merge(True)
-		oSheet.GetCellbyPosition(4, primariga).String = el(1)
-		If test=1 Then
-			oSheet.getCellRangeByPosition (1,primariga,4,primariga).CellBackColor = colore1 &apos; RGB(255, 255, 112)
-			test=0
-			Else
-			oSheet.getCellRangeByPosition (1,primariga,4,primariga).CellBackColor = colore3 &apos; RGB(255, 255, 208)
-			test=1
-		EndIf
-
-		primariga = primariga+1
-	Next
-
-	riga2 = primariga-1
-	k= riga2-riga1+1
-&apos;Raggruppa_righe
-rem ----------------------------------------------------------------------
-	test = UBound(elCap()) -1
-	For i = 0 To test
-Focus_su_altro_Doc (completo) &apos; torno sul listino completo
-		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
-		ThisComponent.CurrentController.Select(oSheet.getCellRangeByposition(0 , 0, 100, riga2))
-copy_clip
-rem ----------------------------------------------------------------------
-rem creo il file
-		newCap = path &amp; elCap(i)(1) &amp; &quot;.ods&quot;
-New_LeenO_to (&quot;listino&quot;, newCap) &apos; creo un nuovo listino vuoto
-Focus_su_altro_Doc (newCap)
-		oSheetDest = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
-		ThisComponent.CurrentController.Select(oSheetDest)
-insrows (riga1, riga2-riga1)
-		oDest = oSheetDest.GetCellByPosition(1,riga1).CellAddress
-		ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0, 0))
-rem ----------------------------------------------------------------------
-rem incollo l&apos;indice
-paste_noOBJ
-rem ----------------------------------------------------------------------
-rem tag rosso 
-		oSheetDest.getCellByPosition (3,riga1+ics).CellBackColor = RGB(255, 0, 0)
-		ics=ics+1
-rem ----------------------------------------------------------------------
-rem torno su elenco completo
-Focus_su_altro_Doc (completo)
-	oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
-	primaR = elCap(i)(2)+k
-	If i = test Then
-		ultimaR = getLastUsedRow(oSheet)
-		Else
-		ultimaR = elCap(i+1)(2)+k-1
-	EndIf
-rem ----------------------------------------------------------------------
-rem copia/incolla le voci
-	ThisComponent.CurrentController.Select(oSheet.getCellRangeByposition(0, primaR, 100, ultimaR))
-copy_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-Focus_su_altro_Doc (newCap)
-uriga=getLastUsedRow(oSheetDest)+1
-	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0,uriga))
-paste_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
-rem ----------------------------------------------------------------------
-rem inserisce il numero di prezzi
-oSheetDest.GetCellByPosition(5, riga1+ics-1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
-&apos;oSheetDest.GetCellByPosition(6, riga1-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;)&quot;
-&apos;oSheetDest.GetCellByPosition(6, uriga-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;)&quot;
-&apos;Print 
-rem ----------------------------------------------------------------------
-rem copia/incolla Note
-Focus_su_altro_Doc (completo) &apos; torno sul listino completo
-	oSheetNote = ThisComponent.Sheets.getByName(&quot;Note&quot;)
-	ThisComponent.CurrentController.Select(oSheetNote.getCellRangeByposition(0, 0, 100, 100))
-copy_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-Focus_su_altro_Doc (newCap)
-	oSheetNote = ThisComponent.Sheets.getByName(&quot;Note&quot;)
-	ThisComponent.CurrentController.Select(oSheetNote.GetCellByPosition(0,0)
-paste_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
-	nomeCap =thisComponent.currentController.title
-rem ----------------------------------------------------------------------		
-	oSheetDest.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne
-	oSheetDest.getCellRangeByposition(12,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
-	oSheetDest.getCellRangeByposition(0,getLastUsedRow(oSheetDest)+1,0,1048575).Rows.IsVisible=false &apos; nascondi righe
-	ThisComponent.CurrentController.ZoomType = 3 
-	ThisComponent.CurrentController.ZoomValue = 65
-rem ----------------------------------------------------------------------
-&apos; salvo il capitolo corrente
-	oDocFrame = ThisComponent.getCurrentController().getFrame()
-	oDispatchHelper = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	oDispatchHelper.executeDispatch(oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array())
-rem ----------------------------------------------------------------------
-rem chiudo il capitolo
-&apos;Print nomeTMP
-	oEnum=stardesktop.components.createEnumeration()
-	do
-	   if not oEnum.hasmoreElements() then exit do
-	   oComp=oEnum.nextelement()
-	   iF oComp.title=nomeCap then
-	      oComp.CurrentController.getFrame().close(true)
-	   end if
-	Loop
-rem ----------------------------------------------------------------------
-rem stranamente non va
-&apos;	oSrc = oSheet.getCellRangeByPosition(0, primaR, 100, ultimaR).RangeAddress
-&apos;	oDest = oSheetDest.GetCellByPosition(0,getLastUsedRow(oSheetDest)+1).CellAddress
-&apos;	oSheetDest.copyRange(oDest, oSrc)
-rem ----------------------------------------------------------------------
-	Next i
-	oSheet.getCellByPosition (3,riga2).CellBackColor = RGB(255, 0, 0)
-	oSheet.GetCellByPosition(5, riga2).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
-&apos;oSheet.GetCellByPosition(6, riga2+2).formula = &quot;=COUNT(H&quot;&amp; riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;)&quot;
-&apos;oSheet.GetCellByPosition(6, riga1-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;)&quot;
-end Sub
-
 
 sub ripara_computo
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)

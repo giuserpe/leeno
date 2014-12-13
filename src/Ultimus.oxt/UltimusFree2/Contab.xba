@@ -54,11 +54,12 @@ sub detrai_partita_provvisoria
 end Sub
 
 sub GENERA_Atti_Contabili &apos;(C) Giuseppe Vizziello 2014
-Barra_Apri_leggera
+&apos;Barra_Apri_leggera
 	testa = msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 	&amp; &quot;Puoi continuare, ma a tuo rischio!&quot; &amp; CHR$(10) &amp; CHR$(10) _
+	&amp; &quot;Se decidi di continuare, devi attendere il messaggio di procedura completata senza interferire con mouse e/o tastiera.&quot; &amp; CHR$(10) &amp; CHR$(10) _
 	&amp; &quot;Procedo senza salvare?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 +32 , &quot;AVVISO!&quot;)
-
+print
 	if testa = 7 Then goto fine:
 	oRanges = ThisComponent.NamedRanges
 GoTo salta: &apos;solo per debug
@@ -80,19 +81,22 @@ GoTo salta: &apos;solo per debug
 salta:
 	Genera_LIBRETTO
 	Genera_REGISTRO
-	msgbox (&quot;Fatto. Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
+	msgbox (&quot;La generazione degli allegati contabili è stata completata.&quot; &amp; CHR$(10) _
+			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
 	fine:
-Barra_Chiudi
+&apos;Barra_Chiudi
 end Sub
-
 sub Genera_REGISTRO &apos;(C) Giuseppe Vizziello 2014
-		Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Registro di Contabilità...&quot;, 50)
+&apos;		Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Registro di Contabilità...&quot;, 50)
 	oRanges = ThisComponent.NamedRanges
-&apos;	Annulla_atto_contabile(&quot;Registro&quot;)
+&apos;	Annulla_atto_contabile(&quot;Registro&quot;) &apos; annulla registro
+&apos;print
 &apos;	Exit Sub 
 rem ----------------------------------------------------------------------
 rem idxCol e idxRow sono costanti settate nel modulo &quot;_variabili&quot;
 rem ----------------------------------------------------------------------
+	ThisComponent.CurrentController.ZoomValue = 100
+
 fRow = idxRow rem prima riga tabella
 fcol = idxCol rem prima colonna
 	Dim elVoci()&apos; elenco voci
@@ -107,7 +111,7 @@ fcol = idxCol rem prima colonna
 		Exit Sub
 &apos;		nSal=1
 		else
-		nSal=idxSAL &apos;variabile impostata nel modulo _variabili
+		nSal=3&apos;idxSAL &apos;variabile impostata nel modulo _variabili
 		Do while nSal &gt; 0
 			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) THEN
 				exit do
@@ -119,10 +123,11 @@ rem ----------------------------------------------------------------------
 rem attivo il registro di contabilità
 	Select Case nSal
 	Case = 1
-		If not thisComponent.Sheets.hasByName(&quot;Registro&quot;) Then &apos; se la sheet esiste
-			thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,5,0) &apos; ricreala ALLA POSIZIONE 4
+		If not thisComponent.Sheets.hasByName(&quot;Registro&quot;) Then &apos; se la sheet non esiste
+			thisComponent.getSheets().insertNewByName(&quot;Registro&quot;,5,0) &apos; creala ALLA POSIZIONE 4
 		End If
 		oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
+		ThisComponent.CurrentController.Select(oSheetReg)
 rem riga di intestazione
 		oSheetReg.getCellRangeByPosition(fcol+0,fRow,10,fRow).CellStyle=&quot;An.1v-Att Start&quot; &apos;STILE
 		oSheetReg.GetCellByPosition(fcol+0,fRow).setstring(&quot;N. ord.&quot;+ chr(13) +&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
@@ -164,11 +169,12 @@ rem chiudo il vecchio registro
 &apos;		oCell.Rows.IsVisible=false &apos; chiudi gruppo
 
 End Select
+oSheetReg.PageStyle = &quot;PageStyle_COMPUTO_A4&quot;
 	fissa (0,idxrow+1)
 &apos;	Print InsRow
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 &apos;xray oSheet
-	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,0,0))
+	ThisComponent.CurrentController.Select(oSheet)&apos;.getCellRangeByPosition(0,0,0,0))
 rem ----------------------------------------------------------------------
 rem Recupero i dati dal libretto
 &apos;	oNamedRange=oRanges.getByName(&quot;#Lib#1&quot;).referredCells &apos; dal primo libretto
@@ -202,10 +208,13 @@ rem Recupero i dati dal libretto
 		&apos;voce = array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo)
 rem ----------------------------------------------------------------------
 rem approssimazione dei valori a idxdec dopo la virgola
+rem con ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
+GoTo provo_ed_evitare:
 		quant=myround(quant,idxdec)
 		importo=myround(importo,idxdec)
 		sicurezza=myround(sicurezza,idxdec)
 		mdo=myround(mdo,idxdec)
+provo_ed_evitare:
 rem ----------------------------------------------------------------------
 		AppendItem(elVoci(), array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo, sicurezza, mdo))
 &apos;		Barra_Apri_Chiudi_5(&quot;                                Restano &quot;&amp; aRiga-i &amp;&quot; righe...&quot;, 0)
@@ -260,11 +269,17 @@ rem PREPARO I DATI PER IL SAL
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	lista()=BubbleSortlist(BubbleSortlist(lista()) &apos; riordino
 
+rem serve ad allungare la lista
+rem non viene preso in considerazione  per il FOR successivo, ma è necessario che ci sia per non mandarlo in errore
+rem evito il resume next perché impedisce il debug
+	&apos;On Error Resume Next 
+	Appenditem (lista(), &quot;bart.giuserpe&quot;)
 rem ELIMINA I DOPPIONI e trasferisco i dati puliti in articoli()
+&apos;xray lista
 	For I = 0 To UBound(lista) -1
 		If lista(I) &lt;&gt; lista(I + 1) Then 	Appenditem (articoli(), lista(I))
 	Next I
-	Appenditem (articoli(), lista(UBound(lista))) &apos; aggiungo ultimo elemento
+	
 rem ----------------------------------------------------------------------
 rem CALCOLO IMPORTI TOTALI
 	For Each el In vociSAL()
@@ -273,9 +288,9 @@ rem CALCOLO IMPORTI TOTALI
 		SALmdo = SALmdo+el(11)
 	Next
 
+
 lista()=vociSAL()
 ReDim vociSAL(0)
-
 rem ----------------------------------------------------------------------
 rem sommo i valori degli articoli ricorrenti
 	For Each art In articoli()
@@ -295,13 +310,13 @@ rem sommo i valori degli articoli ricorrenti
 				mdo=mdo+i(11)
 &apos;	Print i(7) &amp;&quot; - &quot;&amp; i(9) &amp;&quot; - &quot;&amp; i(10) &amp;&quot; - &quot;&amp; i(11)	
 &apos;	Print  i(1) &amp;&quot; - &quot;&amp; quant &amp;&quot; - &quot;&amp; importo &amp;&quot; - &quot;&amp; sicurezza &amp;&quot; - &quot;&amp; mdo
-
 			End If
 &apos;Print i(1) &amp;&quot; - &quot;&amp; quant &amp;&quot; - &quot;&amp; importo &amp;&quot; - &quot;&amp; sicurezza &amp;&quot; - &quot;&amp; mdo
 		Next
 		AppendItem (vociSAL(), array (art, desc, um,  quant, prezzo, importo, sicurezza, mdo)
 &apos;		AppendItem (vociSAL(), array (art, i(3), i(4),  quant, i(8), importo, sicurezza, mdo)
 	Next
+&apos;Print ubound (vociSAL())
 &apos; Print &quot;vocisal&quot;
 &apos;xray (vocisal())
 &apos;For Each el In vocisal
@@ -312,14 +327,16 @@ rem sommo i valori degli articoli ricorrenti
 &apos;num,	art,	data,	desc, 	um, 	Nlib,	Plib,	quant,	prezzo, importo,	sicurezza,	mdo 
 rem ----------------------------------------------------------------------
 rem elimino i doppioni
+
 	lista()=vociSAL()
 	ReDim vociSAL()
 	nn = UBound(lista)+1
 	ReDim Preserve lista(nn)
-
+&apos;xray lista
+&apos;Print UBound(lista()) 
 i=0
 	Do While I &lt; UBound(lista) &apos;-1
-	&apos;	Print lista(I-1)(0)
+&apos;		Print lista(I)(0)
 		If lista(I)(0) = lista(I+1)(0) Then
 			If Not isempty (lista(I+1)) Then Appenditem (vocisal(), lista(I+1))
 			i=i+1
@@ -329,8 +346,8 @@ i=0
 		End If
 		i=i+1
 	Loop 	
-&apos;Print &quot;vocisal&quot;
 &apos;xray vocisal()
+&apos;Print ubound (vociSAL())
 &apos;Exit Sub
 rem ----------------------------------------------------------------------
 rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
@@ -349,7 +366,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	oS2.GetCellByPosition(xS2+nSal,yS2+11).value = SALmdo &apos; di cui importo per la mdo
 rem ----------------------------------------------------------------------
 initRegistro: rem INIZIO COMPILAZIONE REGISTRO
-&apos;GoTo initSal:
+&apos;GoTo initSal: &apos; salto direttamente al SAL evitando il registro se già presente nel documento - solo debug
 
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
 	ThisComponent.CurrentController.Select(oSheetReg)
@@ -442,8 +459,8 @@ rem area di stampa
 &apos;		xray xxx()
 rem set intestazione area di stampa
 		oTitles = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
-		oTitles.startRow = 1
-		oTitles.EndRow = 1 
+		oTitles.startRow = 2 &apos; riga dell&apos;intestazione
+		oTitles.EndRow = 2 
 		oTitles.startColumn = daColonna
 		oTitles.EndColumn = aColonna
 		oSheetReg.setTitleRows(oTitles)
@@ -552,9 +569,9 @@ rem ci metto un po&apos; di informazioni
 rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
-&apos;Exit Sub 
+&apos;Exit Sub &apos; mi fermo al registro - solo debug
 initSal:
-Annulla_atto_contabile(&quot;SAL&quot;)
+&apos;Annulla_atto_contabile(&quot;SAL&quot;)
 &apos;Exit sub
 		Barra_Apri_Chiudi_5(&quot;                         Sto elaborando Stato di Avanzamento Lavori...&quot;, 75)
 	If oRanges.hasByName(&quot;#SAL#&quot; &amp; nSal) Then
@@ -619,16 +636,15 @@ rem ----------------------------------------------------------------------
 rem inserimento dati SAL
 	fRow=precRowSAL&apos;+1
 	If fRow &lt; 2 Then frow=2
-	Print frow
 	num = 1
+&apos;	Print ubound (vociSAL())
 	for each el in vociSAL()
 		oSheetSAL.GetCellByPosition(idxCol, frow+num).String = num &amp; chr(13) &amp; el(0)&apos; num, art
 		oSheetSAL.GetCellByPosition(idxCol+1, frow+num).String = el(1)&apos; descrizione
 		oSheetSAL.GetCellByPosition(idxCol+2, frow+num).String = el(2)&apos; um
-		oSheetSAL.GetCellByPosition(idxCol+3, frow+num).value = el(3)&apos;myround(el(3),idxdec)&apos; quant
+		oSheetSAL.GetCellByPosition(idxCol+3, frow+num).value = el(3)&apos; quant
 		oSheetSAL.GetCellByPosition(idxCol+4, frow+num).value = el(4)&apos; prezzo
-&apos;	Print myround(el(5),idxdec)
-		oSheetSAL.GetCellByPosition(idxCol+5, frow+num).value = el(5)&apos;myround(el(5),idxdec)&apos; importo
+		oSheetSAL.GetCellByPosition(idxCol+5, frow+num).value = el(5)&apos; importo
 		num=1+num
 	Next
 	dariga=frow
@@ -687,8 +703,8 @@ rem area di stampa
 &apos;		xray xxx()
 rem set intestazione area di stampa
 		oTitlesSAL = createUnoStruct(&quot;com.sun.star.table.CellRangeAddress&quot;)
-		oTitlesSAL.startRow = 1
-		oTitlesSAL.EndRow = 1 
+		oTitlesSAL.startRow = 2&apos; riga dell&apos;intestazione
+		oTitlesSAL.EndRow = 2&apos; riga dell&apos;intestazione
 		oTitlesSAL.startColumn = daColonna
 		oTitlesSAL.EndColumn = aColonna
 		oSheetSal.setTitleRows(oTitlesSAL)
@@ -809,7 +825,7 @@ firme (InsRow+17)
 
 	seleziona_area(&quot;#SAL#&quot; &amp; nSal)
 &apos;Raggruppa_righe
-MOSTRA_righe (&quot;off&quot;)
+&apos;MOSTRA_righe (&quot;off&quot;)
 	oSheetSal.GetCellByPosition(fcol+1, InsRow+27).setstring(&quot;====================&quot;)
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, InsRow+27))
 copy_clip
@@ -817,12 +833,31 @@ copy_clip
 paste_clip
 	oSheetSal.rows.removeByIndex (InsRow+27,1)
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
-barra_chiudi
-
+Barra_chiudi_sempre_4
+&apos;RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene sminchiata succede con LIBREOFFICE 4.3.*
+&apos;Exit Sub
+rem ----------------------------------------------------------------------
+rem inserisco la prima riga del documento
+	oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal).referredCells
+&apos;	oNamedRange=oRanges.getByName(nomearea).referredCells
+	ins = oNamedRange.RangeAddress.StartRow
+	insRows (ins, 1) &apos;insertByIndex non funziona
+	oSheetSal.getCellRangeByPosition (0,ins,10,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
+rem ----------------------------------------------------------------------
+rem ci metto un po&apos; di informazioni
+	davoce=elVoci(0)(0) &apos;ultima voce
+	avoce=elVoci(ubound(elvoci()))(0) &apos;ultima voce
+	oSheetSal.getCellByPosition(1,ins).string = &quot;segue Stato di Avanzamento Lavori n.&quot; &amp; nSal &amp; &quot; - &quot; &amp; davoce &amp; &quot;÷&quot; &amp; avoce
+	oSheetSal.GetCellByPosition(3,ins).value = inumPag &apos;ultimo numero pagina
+	oSheetSal.GetCellByPosition(2, ins).value= nLib &apos;1 &apos; numero libretto
+&apos;	oSheetSal.GetCellByPosition(23, ins).value= nSal &apos; numero SAL
+&apos;	oSheetSal.GetCellByPosition(8, ins).formula = &quot;=SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;)&quot;
+	oSheetSal.GetCellByPosition(fcol+5, ins).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
+	oSheetSal.GetCellByPosition(fcol+5, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
+	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol, ins))
+rem ----------------------------------------------------------------------
 end Sub &apos;genera_registro
-
-
-
+rem ----------------------------------------------------------------------
 
 Sub situazione_contabile
 rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
@@ -849,6 +884,7 @@ XRAY thisComponent.getCurrentSelection()
 	Print thisComponent.getCurrentSelection().rows.IsStartOfNewPage
 &apos;	oSheetCont.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage = False
 	xray StarDesktop&apos;thisComponent&apos;.getCurrentSelection().rows&apos;ThisComponent.currentselection
+Barra_chiudi_sempre_4
 end sub
 
 sub firme (lrow as long)&apos;, nr as long) &apos;(C) Giuseppe Vizziello 2014
@@ -946,14 +982,17 @@ sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 end Sub
 
 Sub annulla_tutti_gli_atti
-	Annulla_atto_contabile(&quot;SAL&quot;,1)
-	Annulla_atto_contabile(&quot;Registro&quot;,1)
-	Annulla_atto_contabile(&quot;CONTABILITA&quot;,1)
+&apos;	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;SAL&quot;))
+	Annulla_atto_contabile(&quot;SAL&quot;, 1)
+&apos;	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Registro&quot;))
+&apos;	Annulla_atto_contabile(&quot;Registro&quot;, 1)
+&apos;	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;))
+&apos;	Annulla_atto_contabile(&quot;CONTABILITA&quot;, 1)
 End Sub
 
 Function Annulla_atto_contabile (oNomeSheet As String, Optional msg As Integer)&apos; (C) Giuseppe Vizziello 2014
-	oRanges = ThisComponent.NamedRanges
 &apos;	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
+	oRanges = ThisComponent.NamedRanges
 	If ThisComponent.Sheets.hasByName(oNomeSheet) Then
 		GoTo procedi:
 	Else
@@ -987,7 +1026,7 @@ rem recupero l&apos;ultimo documento in memoria
 		nSal=nSal-1
 		Loop
 	end If
-					Barra_Apri_Chiudi_5(&quot;                         Sto eliminando &quot;&amp; (prefix &amp; nSal), 100)
+&apos;					Barra_Apri_Chiudi_5(&quot;                         Sto eliminando &quot;&amp; (prefix &amp; nSal), 100)
 rem chiedo se posso procedere
 	If msg = 1 Then &apos;procede senza conferma
 		domanda=6
@@ -999,12 +1038,15 @@ rem chiedo se posso procedere
 			Select Case doc
 				Case &quot;Libretto&quot;
 					oNamedRange=oRanges.getByName(prefix &amp; nSal).referredCells
+&apos;ThisComponent.CurrentController.Select(oNamedRange)
+&apos;Print 
 rem recupero l&apos;ultima riga del documento
 					With oNamedRange.RangeAddress
 						daVoce = .StartRow
 						aVoce = .EndRow
 					End With
 seleziona_area (prefix &amp; nSal)
+&apos;Print davoce &amp;&quot; &quot;&amp; avoce 
 MOSTRA_righe (&quot;on&quot;)
 rem ripulisco le colonne da VALUE+STRING+FORMULA
 					oSheet.getCellRangeByPosition(19, daVoce, 25, aVoce).ClearContents(1+4+16)
@@ -1051,6 +1093,10 @@ rem cancello i riepiloghi ini intestazione
 
 				Case &quot;Registro&quot;, &quot;Stato di Avanzamento&quot;
 					oNamedRange=oRanges.getByName(prefix &amp; nSal).referredCells
+				If nsal = 1 Then
+					ThisComponent.Sheets.removeByName(oSheet.Name)
+					goto fineSelect:
+				endif
 rem recupero prima e ultima riga del documento
 					With oNamedRange.RangeAddress
 						daVoce = .StartRow
@@ -1076,20 +1122,30 @@ rem recupero l&apos;ultima riga del documento
 definisci_area_di_stampa
 sbianca_celle
 					End If
+fineSelect:
 		End Select
+ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).getCellByPosition(0,2))
+fissa (0,idxrow+1)
 rem cancello il range ormai inutile
 			oRanges.removeByName(prefix + nSal)	
 				If msg &lt;&gt; 1 Then
+					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
 					msgBox (&quot;Hai annullato il &quot;&amp; doc &amp;&quot; n.&quot; &amp; nSal, 64 , &quot;ANNULLAMENTO ATTI CONTABILI&quot;)
 &apos;				Else
 &apos;					msgBox (&quot;Hai annullato i documenti del SAL n.&quot; &amp; nSal, 64 , &quot;ANNULLAMENTO ATTI CONTABILI&quot;)
 				End If 
 		end If
-barra_chiudi
+&apos;barra_chiudi
 		If domanda = 7 Then Exit Function &apos;se scegli ANNULLA esco
 		ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
+&apos;RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene cambiata
+Barra_chiudi_sempre_4 
 End Function
-
+Sub akrfjhe
+	oSheetCont= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
+	Print oSheetCont.PageStyle
+	oSheetCont.PageStyle = &quot;Page_Style_Libretto_Misure2&quot; 
+End Sub
 
 
 sub Genera_LIBRETTO&apos; (C) Giuseppe Vizziello 2014
@@ -1100,16 +1156,21 @@ sub Genera_LIBRETTO&apos; (C) Giuseppe Vizziello 2014
 	Dim ultimariga as long
 	Dim daVoce as string
 	Dim aVoce as String
-Annulla_atto_contabile (&quot;CONTABILITA&quot;)
+&apos;Barra_chiudi_sempre_4 
+&apos;Annulla_atto_contabile (&quot;CONTABILITA&quot;) &apos; annulla libretto
+&apos;Print 
 &apos;xray ThisComponent.CurrentController
-ThisComponent.CurrentController.ZoomValue = 100
-
 	oSheetCont= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
+	ThisComponent.CurrentController.Select(oSheetCont)
+	ThisComponent.CurrentController.ZoomValue = 100
+	oSheetCont.PageStyle = &quot;Page_Style_Libretto_Misure2&quot; 
 Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Libetto delle Misure...&quot;, 25)
 rem MI SPOSTO SUL FOGLIO GIUSTO
 &apos;NON DOVREBBE ESSERE PIU&apos; NECESSARIO QUANDO PERMETTERO&apos; L&apos;USO DEL COMANDO SOLO DA QUEL FOGLIO
-	ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(0, 0))
-	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+
+&apos;	ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(0, 0))
+&apos;	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+
 &apos;	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).protect(&quot;&quot;)
 	oRanges = ThisComponent.NamedRanges
 rem ----------------------------------------------------------------------
@@ -1117,7 +1178,7 @@ rem Recupero il nome del SAL da registrare
 	IF not oRanges.hasByName(&quot;#Lib#1&quot;) THEN
 		nSal=1
 		else
-		nSal=3&apos;idxSAL &apos;variabile impostata nel modulo _variabili
+		nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 		Do while nSal &gt; 0
 			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) THEN
 		&apos;			nSal=nSal-1
@@ -1189,6 +1250,7 @@ Visualizza_PageBreak
 
 	nomearea=&quot;#Lib#&quot;+nsal
 rem annota importo parziale SAL
+&apos;Print ultimariga &amp; &quot; - &quot; &amp; &quot;SAL n.&quot; &amp; nSal
 	oSheetCont.GetCellByPosition(25, ultimariga-1).string = &quot;SAL n.&quot; &amp; nSal
 	oSheetCont.GetCellByPosition(25, ultimariga).formula = &quot;=SUBTOTAL(9;P&quot; &amp; primariga+1 &amp; &quot;:P&quot; &amp; ultimariga+1 &amp; &quot;)&quot;
 	oSheetCont.GetCellByPosition(25, ultimariga).cellstyle = &quot;comp sotto Euro 3_R&quot;
@@ -1199,6 +1261,7 @@ firme (ultimariga+1)&apos; riga di inserimento
 &apos;	Print finefirme
 rem definisci il range del #Lib#
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
+&apos;Print area 
 	rifa_nomearea (&quot;CONTABILITA&quot;, area , nomearea)
 	
 	oSheetCont.getCellRangeByPosition (0,inizioFirme,32,finefirme).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
@@ -1252,10 +1315,11 @@ rem cancella l&apos;ultima riga
 fineFirme = fineFirme-1
 	If daqui&lt;&gt;0 then
 		ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(2, daqui))
-	copy_clip
-&apos;	Print daqui
+copy_clip
+Print daqui
 		ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(2, daqui, 2, finefirme-1))
-	paste_clip
+Print finefirme-1
+paste_clip
 	End If
 
 rem ----------------------------------------------------------------------
@@ -1295,7 +1359,6 @@ rem ----------------------------------------------------------------------
 &apos;End If
 
 &apos;	Protezione_area (&quot;CONTABILITA&quot;,nomearea)
-	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
 	oS2 = ThisComponent.Sheets.getByName(&quot;S2&quot;)
 rem TROVO LA POSIZIONE DEL TITOLO
@@ -1308,7 +1371,8 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	oS2.GetCellByPosition(yS2+nSal,xS2+3).value = aVoce &apos; ultima voce libretto
 	oS2.GetCellByPosition(yS2+nSal,xS2+4).value = inumPag &apos; ultima pagina libretto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-BARRA_chiudi
+&apos;BARRA_chiudi
+Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Libetto delle Misure...&quot;, 75)
 
 	Dim IntPag()
 	IntPag() = oSheetCont.RowPageBreaks
@@ -1361,7 +1425,7 @@ rem annoto ultimo numero di pagina
 	oSheetCont.GetCellByPosition(20 , fineFirme+1).value = UBound(IntPag)&apos;inumPag
 	oSheetCont.GetCellByPosition(20 , fineFirme+1).CellStyle = &quot;num centro&quot;
 rem ----------------------------------------------------------------------
-fissa (0,idxrow+1)
+&apos;fissa (0,idxrow+1)
 APPROSSIMA_ZOOM &apos; ripristina il fattore di zoom scelto dall&apos;utente
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	rem ----------------------------------------------------------------------
@@ -1385,5 +1449,16 @@ rem annoto il sal corrente sulla riga di intestazione
 	oSheetCont.GetCellByPosition(25, ins).cellstyle = &quot;Menu_sfondo _input_grasBig&quot;
 	oSheetCont.GetCellByPosition(25, ins-1).formula = &quot;=SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
 rem ----------------------------------------------------------------------
-end Sub 
+rem fisso la riga alla prima voce
+For i= 2 To 100
+	If oSheetCont.getCellbyPosition(1,i).CellStyle = &quot;Comp-Bianche sopra_R&quot; Then
+	Exit For
+	EndIf
+	
+Next
+&apos;fissa (0,idxRow)
+ThisComponent.CurrentController().freezeAtPosition(0,idxRow+1)
+Barra_chiudi_sempre_4
+RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene cambiata
+end Sub
 </script:module>

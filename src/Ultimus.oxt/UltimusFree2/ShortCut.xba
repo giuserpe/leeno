@@ -36,6 +36,7 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	End with
 	UIcfgMgr = thisComponent.UIConfigurationManager
 	shortCuts = UicfgMgr.ShortCutManager
+&apos;	shortCuts.setKeyEvent( aKeyEvent, &quot;service:vnd.pycalendar?execute&quot; ) &apos;provato e funziona
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.removeKeyEvent(aKeyEvent)
 	shortCuts.store() 
@@ -931,8 +932,9 @@ Dim sMsg As String
 Dim iMsgResult As Integer
 print sModifier
 	 &apos; Initialize strings
+	 sCommand = &quot;service:vnd.pycalendar?execute&quot;
 &apos;	 sCommand = &quot;vnd.sun.star.script:Standard.Module1.Main?language=Basic&amp;location=application&quot;
- 	 sCommand = &quot;vnd.sun.star.script:UltimusFree2.AAA_TO_DO.Ciao_Mondo?language=Basic&amp;location=application&quot;
+&apos; 	 sCommand = &quot;vnd.sun.star.script:UltimusFree2.AAA_TO_DO.Ciao_Mondo?language=Basic&amp;location=application&quot;
 	&apos; Retrieve the module configuration manager from central module configuration manager supplier
 &apos;	oModuleCfgMgrSupplier = createUnoService(&quot;com.sun.star.ui.ModuleUIConfigurationManagerSupplier&quot;)
 &apos;xray thiscomponent

@@ -651,7 +651,7 @@ rem seleziono le formule
 rem seleziono le formule
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 &apos;	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , rIntest,lcolbase+14 , rIntest))
-	sFormula1 = &quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; idxrow+1 &amp; &quot;:&quot; &amp; sCol2 &amp; lrowF+1 &amp; &quot;)&quot;		
+	sFormula1 = &quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; idxrow+1 &amp; &quot;:&quot; &amp; sCol2 &amp; lrowF+2 &amp; &quot;)&quot;		
 	oSheet.GetCellByPosition(lcolbase+14 , lrowF).setformula(sFormula1)	
 	oSheet.GetCellByPosition(lcolbase+14 , lrowF).cellstyle = &quot;EP statistiche_Contab&quot;
 	Ripristina_statusLine

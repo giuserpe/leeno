@@ -285,6 +285,7 @@ End Sub
 
 
 Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
+sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
 			tabella=&quot;sconosciuto&quot;

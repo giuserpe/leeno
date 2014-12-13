@@ -12,10 +12,14 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
+
+
+
+
 SUB DOPPIONI_TROVA_Durante (lrowPartenza as long, codice as string)&apos; _no_rior
 &apos;la registrazione della voce in EP cerca solo il doppione di quella voce in trasferimento
 chiudi_dialoghi &apos; chiude tutti i dialoghi
-On Error Resume Next 
+&apos;On Error Resume Next 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0 And _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = 0 then
 		Riordina_ElencoPrezzi 

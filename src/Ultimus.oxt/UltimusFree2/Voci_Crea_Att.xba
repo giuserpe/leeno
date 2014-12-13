@@ -122,6 +122,7 @@ sub adegua_s5 rem ADEGUAMENTO DEL FILE DI ESEMPIO 3.9.xx
 	
 	
 end sub
+
 sub nuova_voce_contab &apos;correzioni (C) Giuseppe Vizziello 2014
 &apos;	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).getCellByPosition(14,1).string = &quot;QUANTITA&apos; IN MENO&quot; &apos; integro intestazione tabella
 MAIN:	
@@ -201,7 +202,7 @@ rem controllo se in punto di inserimmento della nuova misura è compreso tra due
 &apos;LO Bug #77080
 	insRows (lrow, 5) &apos;insertByIndex non funziona
 &apos;	oSheet.getRows.insertByIndex(lrow, 5) &apos;inserisce 5 righe
-	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen_cont&quot;) then &apos; eventualmente rifa il nome di area
+	if Not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen_cont&quot;) then &apos; eventualmente rifa il nome di area
 		rifa_nomearea (&quot;S5&quot;, &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;) &apos;blocco_contabilità
 	end if
 	&apos; copia il blocco delle voce (formati + formule + numeri)

@@ -95,8 +95,9 @@ Sub ANALISI_IN_ELENCOPREZZI_classica
 &apos;	
 &apos;		Else
 &apos;		
-			lrowPartenza = ANALISI_IN_ELENCOPREZZI_Der&apos;	(sflag) &apos; 
+			lrowPartenza = ANALISI_IN_ELENCOPREZZI_Der&apos;	(sflag) &apos;
 &apos;	end if
+exit sub  
 		DOPPIONI_TROVA_Durante(lrowPartenza, xA)
 END SUB
 

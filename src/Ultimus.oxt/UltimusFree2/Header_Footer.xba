@@ -436,8 +436,9 @@ ErrorHandler:
  msgbox Erl &amp; &quot; &quot; &amp; Error &amp; &quot; &quot; &amp; Err 
  Resume Next
 End Sub
+rem ----------------------------------------------------------------------
 SUB Set_HF_turbo (optional sMessaggio as string)
-	
+Print 
 &apos; initialize &apos;
 &apos;On Error Goto ErrorHandler
 &apos;Call SetModuleVars 
@@ -451,25 +452,21 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; rem DISATTIVATA GIUSERPE
 		exit sub
 	END IF
-	Aggiorniamoli
+Aggiorniamoli
 	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
 	
 	if osheet.isvisible=false then
 		osheet.isvisible=true
 		sHide=&quot;Nascosta&quot;
 	end if
-	
-	oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
-	DX = oCell.String
-	
-	oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
-	oProgetto_8 = oCell.String
-	
-	oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
-	oData= oCell.String
-	
-	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
-	oBozza_8 = oCell.String
+rem ----------------------------------------------------------------------
+rem dati di questo doc
+	DXX = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;).String			&apos;committente
+&apos;	oProgetto_8 = oSheet.getCellRangeByName(&quot;Progetto_8&quot;).String	&apos;titolo
+&apos;	oData = oSheet.getCellRangeByName(&quot;oData_8&quot;).String				&apos;data
+	oData = &quot;LeenO.org&quot;
+	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;).String				&apos;intestazione destra
+rem ----------------------------------------------------------------------
 	If oBozza_8 &lt;&gt; &quot;&quot; Then
 		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
 	End If
@@ -482,8 +479,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	if sPrima =&quot;Attiva&quot; then
 		wait 5000
 	end if	
-	oSheetCur = ThisComponent.Sheets.getByName(_
-	ThisComponent.currentcontroller.activesheet.name)
+	oSheetCur = ThisComponent.Sheets.getByName(ThisComponent.currentcontroller.activesheet.name)
 	sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
 	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
 	oController = oDesktop.CurrentFrame.Controller
@@ -497,11 +493,19 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 	for i = 0 to n_sty-1
 &apos;	print i
 		oAktPage = oTablePageStyles.getByIndex(i)
-		If oAktPage.DisplayName = &quot;Page_Style_COPERTINE&quot; then
-	goto salta
-		&apos;print oAktPage.DisplayName
-		end if
-		
+	Dim test As string
+	test = oAktPage.DisplayName
+	oCentro = &quot;&quot;
+	Select Case test
+		Case &quot;Page_Style_COPERTINE&quot;
+			goto salta
+		Case &quot;Page_Style_Libretto_Misure2&quot;
+			dx = dxx &amp; CHR$(10) &amp; &quot;Libretto delle misure n.&quot;
+			oCentro = &quot;L&apos;IMPRESA						IL DIRETTORE DEI LAVORI&quot; &amp; CHR$(10)	&amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)
+		Case &quot;PageStyle_COMPUTO_A4&quot;
+			dx = dxx &amp; CHR$(10) &amp; &quot;Registro di contabilità n.&quot;
+	End Select
+
 		oAktPage.HeaderIsOn = True 
 		oHeader = oAktPage.RightPageHeaderContent
 		
@@ -514,18 +518,19 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 &apos; update header
 		oAktPage.RightPageHeaderContent = oHeader
 	salta:
-		If oAktPage.DisplayName = &quot;Page_Style_Libretto_Misure2&quot; then
-			oCentro = &quot;L&apos;IMPRESA						IL DIRETTORE DEI LAVORI&quot; &amp; CHR$(10)_
-			&amp; CHR$(10)			&amp; CHR$(10)			&amp; CHR$(10) else 
-			oCentro = &quot;&quot;
-			&apos;print oCentro
-		END IF
+&apos;		If oAktPage.DisplayName = &quot;Page_Style_Libretto_Misure2&quot; then
+&apos;			oCentro = &quot;L&apos;IMPRESA						IL DIRETTORE DEI LAVORI&quot; &amp; CHR$(10)	&amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)
+&apos;			else
+&apos;
+&apos;			&apos;print oCentro
+&apos;		END IF
 		oAktPage.FooterIsOn = True 
 		oFooter = oAktPage.RightPageFooterContent
 		oHLText = oFooter.CenterText.text
 		oHLText.String = oCentro
-	&apos;	oHLText = oFooter.LeftText.text
-	&apos;	oHLText.String = &quot;LeenO.org&quot;
+
+&apos;		oHLText = oFooter.LeftText.text
+&apos;		oHLText.String = &quot;LeenO.org&quot;
 &apos; update footer
 		oAktPage.RightPageFooterContent= oFooter
 	next i

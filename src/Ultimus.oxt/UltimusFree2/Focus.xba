@@ -671,18 +671,6 @@ dim osheet as object
 &apos;		Seleziona_Cella (sQualeCella)
 END SUB
 
-
-
-Sub Nascondi_tab_corrente
-	oSheet = ThisComponent.currentController.activeSheet
- 	oSheet.isVisible = false
-end sub
-
-
-
-
-
-
 FUNCTION ZOOMMATA (iRowMax as long, iColMax as long) &apos; APPROSSIMA LO ZOOM AD UNA DETERMINATA ALTEZZA DI RIGA
  &apos; da cancellare
 

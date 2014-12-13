@@ -446,6 +446,9 @@ a(3,	9	) =	&quot;B54&quot;
 	 Riordina_ElencoPrezzi(1)
 	Barra_chiudi_sempre_4
 end sub&apos;
+Sub py
+&apos;com.sun.star.uno &quot;service:vnd.pycalendar?execute&quot;
+End Sub
 
 
 

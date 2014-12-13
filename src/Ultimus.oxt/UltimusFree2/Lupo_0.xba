@@ -84,8 +84,8 @@ dim sLib as string
  	GlobalScope.Basiclibraries.LoadLibrary(sLib)
  	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 		UltimusFree2.Lupo_0.Su_Apertura_Doc 
-	end if
-End sub
+	end If
+End Sub
 
 sub Procedura_di_Controllo &apos; eseguita da menu con il doc già aperto
 	If not thisComponent.Sheets.hasByName(&quot;S1&quot;) and _
@@ -113,8 +113,8 @@ Visualizza_normale
 	sURLOO = ConvertToUrl(ThisComponent.getURL())
 &apos;print sURLOO &apos;dbgbart
 
-	iCasuale = Int((10000 * Rnd) -2)&apos; genera numero random
-	ThisComponent.CurrentController.Frame.Name = iCasuale &apos; per il momento non lo sto usando
+&apos;	iCasuale = Int((10000 * Rnd) -2)&apos; genera numero random
+&apos;	ThisComponent.CurrentController.Frame.Name = iCasuale &apos; per il momento non lo sto usando
 	&apos; ma forse l&apos;unico modo per tenere il doc per palle
 	&apos; iterando tra i frame si verca quello giusto (prima di proseguire)
 	 &apos;StarDesktop.loadComponentFromURL(sURL, &quot;_default&quot;,0 , Array())
@@ -126,6 +126,7 @@ Visualizza_normale
 	 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		osheet = ThisComponent.Sheets.getByName(&quot;S1&quot;) &apos; rigagiuserpe
+&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,190)) &apos; visualizza subito il cruscotto
 		oRange = oSheet.getCellRangeByposition(0,0,0,189)
 		oRange.Rows.IsVisible=false
 		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 

@@ -80,7 +80,6 @@ rem pacchettizza l&apos;estensione direttamente nel mio archivio
 sub make_pack
 rem ----------------------------------------------------------------------
 	Dim pip As Object, extensionLocation As String
-
 &apos;	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot; REM vedi in &quot;_variabili&quot;
 	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
@@ -100,7 +99,7 @@ end Sub
 rem ----------------------------------------------------------------------
 
 Sub avvia_IDE
-Set_HF_turbo
+GENERA_Atti_Contabili
 PRIND 
 End Sub
 

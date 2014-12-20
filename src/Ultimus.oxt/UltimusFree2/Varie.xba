@@ -587,13 +587,6 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string) &apos;ada
 	end if
  	ANALISI_IN_ELENCOPREZZI_Der_TV = lrowRisel
 END FUNCTION
-rem ----------------------------------------------------------------------
-Sub ggggg
-	lrow= Range2Cell
-	Print lrow
-	orange=CircoscrivileAnalisi_Att(lrow)
-xray orange.RangeAddress.StartRow
-End Sub
 
 rem ----------------------------------------------------------------------
 

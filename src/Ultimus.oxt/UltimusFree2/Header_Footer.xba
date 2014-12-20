@@ -438,7 +438,7 @@ ErrorHandler:
 End Sub
 rem ----------------------------------------------------------------------
 SUB Set_HF_turbo (optional sMessaggio as string)
-Print 
+&apos;Print 
 &apos; initialize &apos;
 &apos;On Error Goto ErrorHandler
 &apos;Call SetModuleVars 

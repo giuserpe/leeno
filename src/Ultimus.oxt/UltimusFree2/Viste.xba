@@ -41,7 +41,6 @@ sistema_attributi_sheet
  	If NOT DialogLibraries.isLibraryLoaded(&quot;UltimusFree2&quot;) Then &apos; dovrebbe essere ridondante
  	 DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 	End If 
-
 	Select case sAttributo
  		case &quot;TIPO_COMPUTO&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )

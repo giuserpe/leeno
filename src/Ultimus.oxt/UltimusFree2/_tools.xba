@@ -58,31 +58,7 @@ Function fsGetSetting(sA)
    End Select
 End Function
 rem ----------------------------------------------------------------------
-
-
-Sub gfdsa
-print fsGetSetting(&quot;language&quot;)
-&apos;print myround(105,idxdec)
-End Sub
-
-Function myround (MioNum As double, Dec As integer)&apos; (C) Giuseppe Vizziello 2014
-rem approssimazione di MioNum a n Dec
-rem visto che round() di Tools dà risultati inaspettati
-	smionum = CStr(MioNum)
-	ipos=instr(smionum,&quot;,&quot;)
-	if ipos=0 Then
-		myround = MioNum
-		Exit Function
-	End if
-	reale=Left(smionum, ipos+Dec)
-	cifra=Mid(smionum, ipos+Dec+1,1)
-	reale=cdbl(reale)
-	If cint(cifra) &gt;=5 Then reale=reale+1/10^Dec
-	myround = reale
-End Function
-
 Sub LeenO_Path
-rem ----------------------------------------------------------------------
 	Dim pip As Object, extensionLocation As String
 	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
 	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
@@ -92,7 +68,7 @@ rem ----------------------------------------------------------------------
 &apos;	display a human readable address
 &apos;	MsgBox(ConvertFromURL(extensionLocation)
 End Sub
-
+rem ----------------------------------------------------------------------
 Sub _accoda_files_in_unico
 &apos;ACCODA PIù FILE DI CALC IN UNO SOLO
 	Dim DocName as object, DocUlr as string, dummy()
@@ -311,6 +287,7 @@ SUB Elimina_Nomi_Area_errati &apos;nome eloquente
 	Dim Cell As Object
 
 	Doc = ThisComponent
+
 	If Doc.Sheets.hasByName(&quot;duplicati&quot;) Then
 		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)
 		Else
@@ -323,14 +300,13 @@ SUB Elimina_Nomi_Area_errati &apos;nome eloquente
  		oNomiArea() = oAree.ElementNames()
 		n = oAree.Count - 1
 		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)&apos;
-		
+&apos;xray oNomiArea
  For i = 0 to n
 		Cell = Sheet.getCellByPosition(0, i)				&apos;prima colonna
 		Cell.String = oNomiArea(i)							&apos;inserisce nome area
 		Cell = Sheet.getCellByPosition(1, i)				&apos;seconda colonna
 		Contenuto=oAree.getbyname(oNomiArea(i)).content
 		Cell.String = Contenuto								&apos;inserisce il contenuto
-
 ELIMINA_I_NOMI_DI_AREA_ERRATI:
  	if InStr(Contenuto, &quot;#REF!&quot;) or _
 			InStr(Contenuto, &quot;#rif!&quot;) then&apos;

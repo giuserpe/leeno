@@ -950,36 +950,70 @@ sub subTurnOffAutoFilter_
 				&apos;	oContr.setFirstVisibleColumn (oCellStart.cellAddress.row)
 					oContr.setFirstVisibleRow (oCellStart.cellAddress.row)
 end sub
+rem fine filtri
+rem ----------------------------------------------------------------------
 
-
-
-
-&apos;______________ fine filtri
-
-
-
-Sub Struttura &apos;&apos;
+Sub Struttura
 	&apos;_____________________
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
-
+sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
 &apos;	Print sAttributo
 	Select case sAttributo 
-		Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;
+		Case &quot;TIPO_COMPUTO&quot;
 			Struttura_ComputoM
 			exit sub
-&apos;		Case &quot;TIPO_CONTABILITA&quot;
-&apos;			Struttura_ComputoM
-&apos;			exit sub
+		Case &quot;TIPO_CONTABILITA&quot;
+			Struttura_Contab (&quot;#Lib#&quot;)
+			exit Sub
+		Case &quot;TIPO_REGISTRO&quot;
+			Struttura_Contab (&quot;#Reg#&quot;)
+			exit Sub
+		Case &quot;TIPO_SAL&quot;
+			Struttura_Contab (&quot;#Sal#&quot;)
+			exit Sub
 		Case &quot;TIPO_ANALISI&quot;
 			Struttura_Analisi
 			exit sub
 	End select
-	msgbox &quot;#str Questa macro non lavora su questa tipologia di tabella!&quot;&amp; CHR(10)_
-				&amp; &quot;Eseguila su una tabella di tipo COMPUTO o di Tipo Analisi!&quot;
-end sub
-
+	msgbox (&quot;#str Questa macro non lavora su questa tipologia di tabella!&quot;, 25, &quot;AVVISO!&quot;)
+end Sub
+rem ----------------------------------------------------------------------
+Sub Struttura_Contab (tag As string) &apos; (c) Giuseppe Vizziello 2014
+	Dim nSaln As Integer
+	Dim LSaln As Integer
+	Dim oSheet As Object
+	Dim oRanges As Object
+	Togli_Struttura
+	ThisComponent.CurrentController.ZoomValue = 100
+	oSheet = ThisComponent.currentController.activeSheet
+	oRanges = ThisComponent.NamedRanges
+rem ----------------------------------------------------------------------
+	IF not oRanges.hasByName(tag &amp; &quot;1&quot;) Then 
+		msgbox (&quot;Nel Libretto non è presente nessuna misura registrata!&quot;, 48 + 1, &quot;AVVISO!&quot;)
+		Exit Sub
+		else
+		nSaln=idxSAL &apos;variabile impostata nel modulo _variabili
+		Do while nSaln &gt; 0
+			IF oRanges.hasByName(tag &amp; nSaln) THEN
+				exit do
+			end if
+		nSaln=nSaln-1
+		Loop
+	end If
+	Lsal = nSALn
+oNamedRange=oRanges.getByName(tag &amp; nSaln).referredCells
+	ThisComponent.CurrentController.Select(oNamedRange)
+	Do while nSaln &gt; 0
+		ThisComponent.CurrentController.Select(oRanges.getByName(tag &amp; nSaln).referredCells)
+Raggruppa_righe &apos; raggruppo 
+		oRanges.getByName(tag &amp; nSaln).referredCells.Rows.IsVisible=false
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+		nSaln=nSaln-1
+	Loop
+	oRanges.getByName(tag &amp; LSal).referredCells.Rows.IsVisible=True
+End Sub
 
 Sub Struttura_Analisi ()
 	dim oCelle as object
@@ -1027,7 +1061,6 @@ End sub
 
 
 Sub Togli_Struttura ()
-
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 &apos;	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	&apos;_____________________
@@ -1058,190 +1091,6 @@ Sub Togli_Struttura ()
 	end if
 
 	ThisComponent.CurrentController.Select(ocelle)
-end sub
-
-sub Struttura_ComputoM____OK &apos; sul computo (ok sulla 3.7)
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; per evitare che duplichi la struttura
-	 Togli_Struttura
-	 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	Ripristina_statusLine
-	Barra_Apri_Chiudi_5(&quot;1 Sto creando le strutture... Pazienta...&quot;, 10)
-	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
-	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-&apos;	sAttributo = Trova_Attr_Sheet
- If osheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;#5 Questo comando si può usare solo&quot; &amp; CHR$(10)_
- 			 &amp;&quot; in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
-			exit sub
-	end if
- 	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
-		s_R = &quot;&quot;
-	end if
-	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-		s_R = &quot;_R&quot;
-	end if		
-	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
-				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
-				s_R = &quot;_R&quot;	
-	end if	
-
-	
-	lStartRow = oSheet.GetCellByPosition( 0 , 0)
-&apos;	lLastUrowNN = getLastUsedRow(oSheet)
-	
-	sString$ = &quot;Fine Computo&quot;
-	
-	oEnd=uFindString(sString$, oSheet) 
-	If isNull (oEnd) or isEmpty (oEnd) then 
-						lLastUrowNN = getLastUsedRow(oSheet)-1
-					else
-						lLastUrowNN=oEnd.RangeAddress.EndRow -1
-	end if
-	IF lLastUrowNN	&gt;= 600 and lLastUrowNN	&lt;= 1000 then
-		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo! &quot; &amp; CHR$(10)_
-		 	&amp; &quot; (alcuni minuti...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
- 			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
- 			exit sub
- 	end if
-	end if
-	IF lLastUrowNN	&gt; 1001 then
-		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo! &quot; &amp; CHR$(10)_
-			&amp; &quot; ( Parecchi minuti...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
- 			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
- 			exit sub
- 	end if
-	end if
-	&apos;lLastUrowNN=oEnd.RangeAddress.EndRow-1
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,280).string = NOW &apos;debug
-	Ripristina_statusLine
-	Barra_Apri_Chiudi_5(&quot;2 Sto creando le strutture... Pazienta...&quot;, 15)
-	iLivelliVisibili = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value 
-	if iLivelliVisibili=0 then &apos;per avere comunque un valore di default nel caso il riferimento sia vuoto
-			iLivelliVisibili = 2
-	end if
-For I = 3 to lLastUrowNN
-Dim oCRA As New com.sun.star.table.CellRangeAddress
-		&apos;		print left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) &apos;debug
-		&apos; se è dentro una intestazione di capito o sottoCap
-		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-1-sopra&quot; &amp; s_R or _
-		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Livello-1-scritta&quot; &amp; s_R or _
-		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-1-sotto_&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 valuta&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-2-sotto_&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 sopra&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Reg_prog&quot; or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Default&quot; or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;COMP_BASE&quot; or _
-			 	left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) = &quot;Reg-SAL&quot; then	 &apos;questa per usare stile gerarchico
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-	&apos;	print &quot;cap &quot; &amp; oSheet.GetCellByPosition(1 ,I ).CellStyle
-				goto prossima &apos; passa alla riga dopo
-			else 
-				iRI=I
-				Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche sopra&quot; &amp; s_R OR _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R OR _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R OR _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp sotto Bianche&quot; &amp; s_R &apos; &apos; prima avevo OR
-				&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-				&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
-						if oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R then
-							iRIs = I
-							Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R 
-								&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug
-								&apos;print &apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )).CellStyle&apos;debug
-								I = I + 1 
-							loop
-							if iRIs &gt; I-1 then
-									ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
-									beep
-									oCRA.EndRow = iRIs 
-									
-									Select case msgbox (&quot;Da queste parti lo stile delle righe non sembra ordinato! &quot;&amp; CHR$(10)_
-											&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;_
-											&amp;&quot; &quot; &amp; CHR$(10) _
- 											&amp; CHR$(10) &amp; &quot;&quot;,49, &quot;&quot;) 				
-										case 6 &apos;SI
-										case 7
-							 				exit sub
-						 	 			case 2
-						 					exit sub
- 								 	end select	
-								else
-									oCRA.EndRow = I-1	
-							end if
-							oCRA.Sheet =iSheet
-							oCRA.StartColumn = 	4
-							oCRA.StartRow = iRIs
-							oCRA.EndColumn = 9
-							oSheet.group(oCRA,1,1)
-							&apos; magari provare autoOutline (sarà + veloce?)
-							oSheet.showLevel(iLivelliVisibili-1,1)
-							&apos;oSheet.hideDetail(oCRA)
-						end if
-						I=I+1
-				loop
-				if iRI &gt; I-1 then
-						ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
-						beep
-						oCRA.EndRow = iRi
-						msgbox &quot;In questo punto lo stile delle righe non sembra ordinato! &quot;&amp; CHR$(10)_
-								&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;	
-					else
-						oCRA.EndRow = I-1	
-				end if
-				oCRA.Sheet =iSheet
-				oCRA.StartColumn = 	5
-				oCRA.StartRow = iRI
-				oCRA.EndColumn = 5
-				&apos;oCRA.EndRow = I-1
-				oSheet.group(oCRA,1)
-			&apos;	oSheet.hideDetail(oCRA)
-				oSheet.showLevel(iLivelliVisibili-1,1)
-			&apos;	oSheet.showLevel(1,1)
-
-				I = I+1 
-		end if
-		prossima:
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-	&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
-	&apos;	if i = 10 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
-		&apos;	Ripristina_statusLine
-		Barra_Apri_Chiudi_5( stxt, 50)
-			sTxt = &quot;Sto creando le strutture e sono alla riga &quot; &amp; i
-			Barra_Apri_Chiudi_5( stxt, 50)
-	&apos;	end if
-		goto salta_debug
-
-		Ripristina_statusLine
-		Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/5*100/lLastUrowNN)
-		if i &gt;= lLastUrowNN / 4 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*100/lLastUrowNN)
-		end if
-		if i &gt;= lLastUrowNN/4*2 then &apos;and i &lt;= lLastUrowNN/4*2 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt , lLastUrowNN/4*2*100/lLastUrowNN)
-		end if
-		if i &gt;= lLastUrowNN/4*3 then &apos;and i &lt;= lLastUrowNN/4*3 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*3*100/lLastUrowNN)
-		end if
-
-		salta_debug:
-next I
-
-	oCRA.Sheet =iSheet
-	oCRA.StartColumn = 	4
-	oCRA.StartRow = 1
-	oCRA.EndColumn = 8
-	oCRA.EndRow = 100
-	oSheet.group(oCRA,0)
-	Ripristina_statusLine
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,281).string = NOW &apos;debug
 end sub
 
 

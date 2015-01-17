@@ -917,6 +917,9 @@ Function GetFileURL( sTitle As String )
  End Function
  GetFileURL = sFileURL
 End Function 
+Sub miomio
+sCommand = &quot;service:vnd.mio?execute&quot;
+End Sub
 
 
 Sub SetUpKeyBinding&apos;(sModifier as string, sChiave as string, sAzione as string)
@@ -932,7 +935,7 @@ Dim sMsg As String
 Dim iMsgResult As Integer
 print sModifier
 	 &apos; Initialize strings
-	 sCommand = &quot;service:vnd.pycalendar?execute&quot;
+	 sCommand = &quot;service:vnd.pycalendar?execute&quot; &apos;python
 &apos;	 sCommand = &quot;vnd.sun.star.script:Standard.Module1.Main?language=Basic&amp;location=application&quot;
 &apos; 	 sCommand = &quot;vnd.sun.star.script:UltimusFree2.AAA_TO_DO.Ciao_Mondo?language=Basic&amp;location=application&quot;
 	&apos; Retrieve the module configuration manager from central module configuration manager supplier

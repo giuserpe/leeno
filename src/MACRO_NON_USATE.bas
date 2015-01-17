@@ -1,5 +1,193 @@
 
 rem ***** BASIC *****
+
+sub Struttura_ComputoM____OK ' sul computo (ok sulla 3.7)
+	'>>>>>>>>>>>>>>>>>>>>>>>>>>> per evitare che duplichi la struttura
+	 Togli_Struttura
+	 '<<<<<<<<<<<<<<<<<<<<<<<<<<<
+	Ripristina_statusLine
+	Barra_Apri_Chiudi_5("1 Sto creando le strutture... Pazienta...", 10)
+	oSheet = ThisComponent.currentController.activeSheet 'oggetto sheet
+	iSheet = oSheet.RangeAddress.sheet ' index della sheet
+'	sAttributo = Trova_Attr_Sheet
+ If osheet.Name <> "COMPUTO" Then	
+ 			 msgbox "#5 Questo comando si può usare solo" & CHR$(10)_
+ 			 &" in una tabella di COMPUTO!", 16, "AVVISO!"
+			exit sub
+	end if
+ 	if ThisComponent.currentcontroller.activesheet.name = "COMPUTO" then
+		s_R = ""
+	end if
+	if ThisComponent.currentcontroller.activesheet.name = "CONTABILITA" then
+		s_R = "_R"
+	end if		
+	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = "_R" or	_
+				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = "_R" or _
+				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = "_R" or _
+				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = "_R" then
+				s_R = "_R"	
+	end if	
+
+	
+	lStartRow = oSheet.GetCellByPosition( 0 , 0)
+'	lLastUrowNN = getLastUsedRow(oSheet)
+	
+	sString$ = "Fine Computo"
+	
+	oEnd=uFindString(sString$, oSheet) 
+	If isNull (oEnd) or isEmpty (oEnd) then 
+						lLastUrowNN = getLastUsedRow(oSheet)-1
+					else
+						lLastUrowNN=oEnd.RangeAddress.EndRow -1
+	end if
+	IF lLastUrowNN	>= 600 and lLastUrowNN	<= 1000 then
+		if msgbox ("Questa tabella è piuttosto corposa e ci vorrà un po' di tempo! " & CHR$(10)_
+		 	& " (alcuni minuti...) " & CHR$(10) & CHR$(10)_
+			&" PROSEGUO ?... " & CHR$(10) _
+ 			& CHR$(10) & "",36, "Creazione STRUTTURE") = 7 then
+ 			exit sub
+ 	end if
+	end if
+	IF lLastUrowNN	> 1001 then
+		if msgbox ("Questa tabella è piuttosto corposa e ci vorrà un po' di tempo! " & CHR$(10)_
+			& " ( Parecchi minuti...) " & CHR$(10) & CHR$(10)_
+			&" PROSEGUO ?... " & CHR$(10) _
+ 			& CHR$(10) & "",36, "Creazione STRUTTURE") = 7 then
+ 			exit sub
+ 	end if
+	end if
+	'lLastUrowNN=oEnd.RangeAddress.EndRow-1
+	ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,280).string = NOW 'debug
+	Ripristina_statusLine
+	Barra_Apri_Chiudi_5("2 Sto creando le strutture... Pazienta...", 15)
+	iLivelliVisibili = ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,297).value 
+	if iLivelliVisibili=0 then 'per avere comunque un valore di default nel caso il riferimento sia vuoto
+			iLivelliVisibili = 2
+	end if
+For I = 3 to lLastUrowNN
+Dim oCRA As New com.sun.star.table.CellRangeAddress
+		'		print left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) 'debug
+		' se è dentro una intestazione di capito o sottoCap
+		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = "livello-1-sopra" & s_R or _
+		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = "Livello-1-scritta" & s_R or _
+		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = "livello-1-sotto_" & s_R or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = "livello2 valuta" & s_R or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = "livello-2-sotto_" & s_R or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = "livello2 sopra" & s_R or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = "Reg_prog" or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = "Default" or _
+			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = "COMP_BASE" or _
+			 	left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) = "Reg-SAL" then	 'questa per usare stile gerarchico
+	'	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) 'debug	
+	'	print "cap " & oSheet.GetCellByPosition(1 ,I ).CellStyle
+				goto prossima ' passa alla riga dopo
+			else 
+				iRI=I
+				Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = "Comp-Bianche sopra" & s_R OR _
+						oSheet.GetCellByPosition(1 , (I)).CellStyle = "comp Art-EP" & s_R OR _
+						oSheet.GetCellByPosition(1 , (I)).CellStyle = "Comp-Bianche in mezzo" & s_R OR _
+						oSheet.GetCellByPosition(1 , (I)).CellStyle = "comp sotto Bianche" & s_R ' ' prima avevo OR
+				'	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) 'debug	
+				'	print oSheet.GetCellByPosition(1 ,I ).CellStyle
+						if oSheet.GetCellByPosition(1 , (I)).CellStyle = "Comp-Bianche in mezzo" & s_R then
+							iRIs = I
+							Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = "Comp-Bianche in mezzo" & s_R 
+								'ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) 'debug
+								'print 'ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )).CellStyle'debug
+								I = I + 1 
+							loop
+							if iRIs > I-1 then
+									ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
+									beep
+									oCRA.EndRow = iRIs 
+									
+									Select case msgbox ("Da queste parti lo stile delle righe non sembra ordinato! "& CHR$(10)_
+											& "Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)"_
+											&" " & CHR$(10) _
+ 											& CHR$(10) & "",49, "") 				
+										case 6 'SI
+										case 7
+							 				exit sub
+						 	 			case 2
+						 					exit sub
+ 								 	end select	
+								else
+									oCRA.EndRow = I-1	
+							end if
+							oCRA.Sheet =iSheet
+							oCRA.StartColumn = 	4
+							oCRA.StartRow = iRIs
+							oCRA.EndColumn = 9
+							oSheet.group(oCRA,1,1)
+							' magari provare autoOutline (sarà + veloce?)
+							oSheet.showLevel(iLivelliVisibili-1,1)
+							'oSheet.hideDetail(oCRA)
+						end if
+						I=I+1
+				loop
+				if iRI > I-1 then
+						ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
+						beep
+						oCRA.EndRow = iRi
+						msgbox "In questo punto lo stile delle righe non sembra ordinato! "& CHR$(10)_
+								& "Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)"	
+					else
+						oCRA.EndRow = I-1	
+				end if
+				oCRA.Sheet =iSheet
+				oCRA.StartColumn = 	5
+				oCRA.StartRow = iRI
+				oCRA.EndColumn = 5
+				'oCRA.EndRow = I-1
+				oSheet.group(oCRA,1)
+			'	oSheet.hideDetail(oCRA)
+				oSheet.showLevel(iLivelliVisibili-1,1)
+			'	oSheet.showLevel(1,1)
+
+				I = I+1 
+		end if
+		prossima:
+	'	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) 'debug	
+	'	print oSheet.GetCellByPosition(1 ,I ).CellStyle
+	'	if i = 10 then ' and i <= lLastUrowNN / 4 + 1 then
+		'	Ripristina_statusLine
+		Barra_Apri_Chiudi_5( stxt, 50)
+			sTxt = "Sto creando le strutture e sono alla riga " & i
+			Barra_Apri_Chiudi_5( stxt, 50)
+	'	end if
+		goto salta_debug
+
+		Ripristina_statusLine
+		Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/5*100/lLastUrowNN)
+		if i >= lLastUrowNN / 4 then ' and i <= lLastUrowNN / 4 + 1 then
+			Ripristina_statusLine
+			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*100/lLastUrowNN)
+		end if
+		if i >= lLastUrowNN/4*2 then 'and i <= lLastUrowNN/4*2 + 1 then
+			Ripristina_statusLine
+			Barra_Apri_Chiudi_5(sTxt , lLastUrowNN/4*2*100/lLastUrowNN)
+		end if
+		if i >= lLastUrowNN/4*3 then 'and i <= lLastUrowNN/4*3 + 1 then
+			Ripristina_statusLine
+			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*3*100/lLastUrowNN)
+		end if
+
+		salta_debug:
+next I
+
+	oCRA.Sheet =iSheet
+	oCRA.StartColumn = 	4
+	oCRA.StartRow = 1
+	oCRA.EndColumn = 8
+	oCRA.EndRow = 100
+	oSheet.group(oCRA,0)
+	Ripristina_statusLine
+	ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,281).string = NOW 'debug
+end sub
+
+
+
+
 FUNCTION Circoscrive_Voce_Computo_Att___ (ByVal lrow As Long) 'individua un record di Computo
 
 '---------------------------------------------------------------------------

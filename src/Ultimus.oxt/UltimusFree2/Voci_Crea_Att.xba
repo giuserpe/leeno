@@ -308,11 +308,15 @@ FUNCTION SE_contabilita
 		SE_contabilita = 1
 		exit function
 	end if	
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 then
+rem ----------------------------------------------------------------------
+&apos;L&apos;inibizione dell&apos;inserimento di voci in computo, in presenza di misure nel libretto, è legata all&apos;esistenza di #Lib#1
+&apos;	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 Then
+	if	ThisComponent.NamedRanges.hasByName(&quot;#Lib#1&quot;) Then
+&apos;		Print (&quot;prova chiappali&quot;)
 			if msgbox ( &quot;#1 Mi risulta che il computo sia già chiuso e completato!&quot; &amp; CHR$(10)_
 					&amp; &quot;Si sta lavorando sulla contabilità, e per questo mi pare una richiesta strana...&quot;&amp; CHR$(10)_
 					&amp; &quot;Se Prosegui vai ad alterare i dati del Computo!&quot;&amp; CHR$(10)_
-					&amp; &quot; PROSEGUO comunque? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
+					&amp; &quot; PROSEGUI comunque? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
 					SE_contabilita = 0
 					exit function
 				ELSE
@@ -469,9 +473,13 @@ inserisci_voce:
 	insRows (lrow, 4) &apos; numero di righe da inserire
 &apos;	oSheet.getRows.insertByIndex(lrow, 4)
 	&apos; eventualmente rifa il nome di area
-	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
-		rifa_nomearea (&quot;S5&quot;, &quot;$A$9:$AP$12&quot; , &quot;Serv_gen1_8&quot;)
-	end if
+&apos;	if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
+&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$A$9:$AP$12&quot; , &quot;Serv_gen1_8&quot;)
+&apos;	end if
+rem ----------------------------------------------------------------------
+&apos; per eliminare il rifa_nomearea, tocca fare a meno dell&apos;area dati &quot;Serv_gen1_8&quot; affidando la creazione della nuova voce interamente al codice
+	rifa_nomearea (&quot;S5&quot;, &quot;$A$9:$AP$12&quot; , &quot;Serv_gen1_8&quot;)
+rem ----------------------------------------------------------------------
 	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia il blocco delle voce (formati + formule + numeri)
 	oDoc = ThisComponent
 	DocView=oDoc.getCurrentController()
@@ -517,7 +525,7 @@ ADATTA_ALTEZZA_RIGA
  	Numera_Voci_Computo (&quot;niente prompt&quot;)
 	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
  	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _
- 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 ) and _
+ 		ThisComponent.NamedRanges.hasByName(&quot;#Lib#1&quot;)) and _
  		sAttributo = &quot;TIPO_COMPUTO&quot; then 
  		Osheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
  	endif 	

@@ -29,10 +29,10 @@
         </node>
       </node>
     </node>
-	<!--CTRL-ALT-R
+	<!--CTRL-ALT-T
 -->	<node oor:name="Modules">
       <node oor:name="com.sun.star.text.Text">
-        <node oor:name="R_SHIFT_MOD1" oor:op="replace">
+        <node oor:name="T_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.mio?language=python</value>
           </prop>

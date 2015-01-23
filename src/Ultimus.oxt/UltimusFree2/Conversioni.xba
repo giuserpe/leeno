@@ -22,6 +22,7 @@ Sub da_vecchio_template &apos;Giuseppe Vizziello 2014
 	Dim sFrameSRC As String
 	Dim i As Long
 		sURL = ConvertToUrl(ThisComponent.getURL())
+primo_sURL = sURL
 	 	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
 		sUrl= sName + &quot;-tmp&quot; + &quot;.ods&quot;
 		nomeTMP = Replace_G(ThisComponent.gettitle, &quot;.ods&quot;, &quot;&quot;) + &quot;-tmp&quot; + &quot;.ods&quot;
@@ -269,6 +270,7 @@ rem ----------------------------------------------------------------------
 rem Saluti
 &apos;Print now &amp; &quot; - &quot; &amp; now1
 rem ----------------------------------------------------------------------
+Focus_su_altro_Doc (primo_sURL) 
 Computo_Normale_terra_terra
 chiudi_dialoghi &apos; chiude tutti i dialoghi
 	msgbox &quot;Ho conservato una copia di sicurezza del vecchio file come:&quot; &amp; chr(10) &amp; chr(10)_
@@ -287,7 +289,7 @@ rem prova dialogo
 &apos;	oDlg = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgConversioneCompleta) &apos; Inizializza il dialogo
 &apos;	oDlg.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 rem ----------------------------------------------------------------------
-
+Adatta_Altezza_riga
 &apos;barra_fatto
 End Sub
 
@@ -314,7 +316,7 @@ end Sub
 sub crea_molte_copie_file &apos;Giuseppe Vizziello 2014
 	Dim sURL, sNewURL, sName As String
 &apos;	sURL = ConvertToUrl(ThisComponent.getURL())
-	sURL = ConvertToUrl(&quot;W:\_dwg\ULTIMUSFREE\_tmp\189.ods&quot;)
+	sURL = ConvertToUrl(&quot;C:\Users\giuserpe\Desktop\debug_leeno\aaaaa.ods&quot;)
  	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
 	For i=0 To 9
 		sNewURL= sName + i + &quot;.ods&quot;
@@ -510,7 +512,7 @@ rem ----------------------------------------------------------------------
 					oSheet.getCellRangeByPosition(4, ii, 8, ii).clearContents(Flags)
 					oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
 					If Instr (val1, &quot;=&quot;) &lt;&gt;0 Then val1 = &quot;(&quot; + Replace_G(val1, &quot;=&quot;, &quot;&quot;) + &quot;)&quot;
-&apos;					If Instr (val1, &quot;$&quot;) &lt;&gt;0 Then val1 = &quot;=&quot; &amp; val1
+
 					If Instr (val5, &quot;=&quot;) &lt;&gt;0 Then val5 = &quot;(&quot; + Replace_G(val5, &quot;=&quot;, &quot;&quot;) + &quot;)&quot;
 					If val5 = &quot;&quot; And val1 = &quot;&quot; Then
 						oSheet.GetCellByPosition( 5 , ii).string = &quot;&quot;
@@ -526,13 +528,30 @@ rem ----------------------------------------------------------------------
 						oSheet.GetCellByPosition( 5 , ii).formula = val5
 						GoTo vai:
 					EndIf 
-	
 					oSheet.GetCellByPosition( 5 , ii).formula = &quot;=&quot; &amp; val5 &amp; &quot;*&quot; &amp; val1
+					
 	vai:
-					If val2 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 6 , ii).formula = val2
-					If val3 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 7 , ii).formula = val3
-					If val4 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 8 , ii).formula = val4
-				End If
+rem ----------------------------------------------------------------------
+rem traslo anche evntuali collegamenti ad altre celle
+					If Instr (val2, &quot;=F&quot;) &lt;&gt; 0 Then
+						val2 = Replace_G (val2, &quot;=F&quot;, &quot;=G&quot;)
+						oSheet.GetCellByPosition( 6 , ii).formula = val2
+						Else
+						If val2 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 6 , ii).formula = val2
+					EndIf
+					If Instr (val3, &quot;=G&quot;) &lt;&gt; 0 Then
+						val3 = Replace_G (val3, &quot;=G&quot;, &quot;=H&quot;)
+						oSheet.GetCellByPosition( 7 , ii).formula = val3
+						Else
+						If val3 &lt;&gt; &quot;&quot; Then	oSheet.GetCellByPosition( 7 , ii).formula = val3
+					EndIf
+					If Instr (val4, &quot;=H&quot;) &lt;&gt; 0 Then
+						val4 = Replace_G (val4, &quot;=H&quot;, &quot;=I&quot;)
+						oSheet.GetCellByPosition( 8 , ii).formula = val4
+						Else
+						If val4 &lt;&gt; &quot;&quot; Then oSheet.GetCellByPosition( 8 , ii).formula = val4
+					EndIf 
+				End If 
 				If oSheet.GetCellByPosition( 8 , ii).cellstyle = &quot;comp 1-a&quot; Then oSheet.GetCellByPosition( 8 , ii).cellstyle = &quot;comp 1-a peso&quot;
 				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
 				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;

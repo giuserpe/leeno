@@ -268,14 +268,7 @@ end if
 ThisComponent.CurrentController.Select(oRange)
 End Function
 
-Sub dddddd
-	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
-	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
-	oCell=thisComponent.getCurrentSelection()
-	cRow=oCell.RangeAddress.StartRow
-ThisComponent.CurrentController.Select(Circoscrive_Voce_Computo_Att (crow))
-End Sub
-
+rem ----------------------------------------------------------------------
 Function Circoscrive_Voce_Computo_Att (ByVal lrow As Long)
 dim lrowS as long
 dim lrowE as long

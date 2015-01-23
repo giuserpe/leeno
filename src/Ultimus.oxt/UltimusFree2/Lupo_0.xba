@@ -304,7 +304,7 @@ rem ----------------------------------------------------------------------
 				&apos;&amp; sURL &amp; CHR$(10)_
 					da_vecchio_template
 					&apos;AGGIORNA_TEMPLATE
-					Barra_chiudi_sempre_4 
+					Barra_chiudi_sempre_4
 					&apos;Ripristina_statusLine
 					exit sub	
 				Case 2 
@@ -323,10 +323,6 @@ rem ----------------------------------------------------------------------
 		end if
  end if
 
-
-	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;UltimusFree2&quot; ) Then 
-	 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;UltimusFree2&quot; ) 
-	End If 
 	If NOT GlobalScope.DialogLibraries.isLibraryLoaded( &quot;UltimusFree2&quot; ) Then 
 	 	 GlobalScope.DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;) 
 	End If 
@@ -489,7 +485,7 @@ Controlla_Somme_Componenti
 					oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
 					oSpalte1.isVisible = false
 				&apos;	Sel_Computo
-				&apos;	Computo_Normale_terra_terra
+					Computo_Normale_terra_terra
 					Sel_Altre_Opz
 			end if		
 	 	else

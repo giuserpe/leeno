@@ -29,12 +29,12 @@
         </node>
       </node>
     </node>
-	<!--CTRL-ALT-T
+	<!--CTRL-ALT-Q
 -->	<node oor:name="Modules">
       <node oor:name="com.sun.star.text.Text">
-        <node oor:name="T_SHIFT_MOD1" oor:op="replace">
+        <node oor:name="Q_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.mio?language=python</value>
+			<value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
           </prop>
         </node>
       </node>

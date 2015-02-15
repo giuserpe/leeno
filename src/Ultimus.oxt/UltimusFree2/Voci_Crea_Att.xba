@@ -489,6 +489,7 @@ rem ----------------------------------------------------------------------
 	oQuellRangeAddresse = oSheetSRC.getRangeAddress &apos;
  oSheet2.copyRange(oCell,oQuellRangeAddresse)
 	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
+
 	osheet2.getCellRangeByPosition (39,lrow,41,lrow+lrownum).CellStyle = &quot;Default&quot;
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
 		 Do while (Trova_Attr_N (oSheet.GetCellByPosition( 0, lrow ), oSheet)) &lt;&gt; &quot;Start_voce_COMPUTO&quot;

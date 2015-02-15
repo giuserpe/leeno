@@ -1250,15 +1250,16 @@ sRangeTarget = sRangeTarget
  oDispatcher.executeDispatch(tFrame, &quot;.uno:JumpToTable&quot; ,&quot;&quot; ,0 ,mArgs2())
  
 
- iTempo=100
- do while ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; or iTempo=10000
+GoTo zumba:
+ do while ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; or iTempo=10
  	itempo = iTempo+iTempo
  	wait iTempo
  loop	
  if ThisComponent.CurrentController.Frame.Name = &quot;Sorgente&quot; then
  	print &quot;adesso mi fermo 5 secondi&quot; &apos; solo per verifica... poi togliere
  	wait 5000
- end if
+ end If
+ zumba:
  
  
  &apos;per copiare 

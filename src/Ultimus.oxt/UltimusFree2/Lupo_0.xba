@@ -770,60 +770,61 @@ end sub
 
 &apos; originale funzionante...
 Sub Scrivi_Globale &apos; versione semplice
-&apos;Il file attivo diventa il &quot;Computo Corrente&quot;
-&apos; ovvero il file dove dei prezzari andranno a scrivere le voci selezionate 
-&apos; Ovvero quando dal file prezzario si è individuata una voce da scrivere 
-&apos; sull&apos;elenco prezzi, la macro del file prezziario andrà a leggersi la 
-&apos; variabile globale &quot;sUltimus&quot; per sapere dove scriverlo.
-&apos;+++++++++++FUNZIONA
-&apos;ThisComponent.unlockControllers()
-&apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
-&apos; dove è scritta la variabile globale
-&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-	dim xA as string
-&apos; print sUltimus
+	&apos;Il file attivo diventa il &quot;Computo Corrente&quot;
+	&apos; ovvero il file dove dei prezzari andranno a scrivere le voci selezionate 
+	&apos; Ovvero quando dal file prezzario si è individuata una voce da scrivere 
+	&apos; sull&apos;elenco prezzi, la macro del file prezziario andrà a leggersi la 
+	&apos; variabile globale &quot;sUltimus&quot; per sapere dove scriverlo.
+	&apos;+++++++++++FUNZIONA
+	&apos;ThisComponent.unlockControllers()
+	&apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
+	&apos; dove è scritta la variabile globale
+	&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+		dim xA as string
+	&apos; print sUltimus
+		
+		If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+			GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+		End If 
+		
+		
+	&apos;azzera il nome del frame
+	&apos;dis 2/01/09 &apos; ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; serve? mmm. pare di no
+		
+		oDoc = ThisComponent 
+		if not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) and _
+		thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) then
+		exit sub
+	end if
 	
-	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
-		GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-	End If 
+	setDocEventOnClose
 	
+	URLStr = ThisComponent.getURL() &apos; con queste 2 righe si preleva il nome del file
 	
-&apos;azzera il nome del frame
-&apos;dis 2/01/09 &apos; ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; serve? mmm. pare di no
+	oSheet = ThisComponent.currentcontroller.activesheet 
 	
-	oDoc = ThisComponent 
-	if not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
-	thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) and _
-	thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) then
-	exit sub
-end if
-
-setDocEventOnClose
-
-URLStr = ThisComponent.getURL() &apos; con queste 2 righe si preleva il nome del file
-
-oSheet = ThisComponent.currentcontroller.activesheet 
-
-&apos;xA=oNome
-
-UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) &apos;xA &apos; variabile globale registrata
-&apos; adesso scrive il nome della variabile globale nella ???cella???
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
-
-&apos;xray omycell
-&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
-&apos;	lcolS = oNomeRange.Column
-&apos;	lrowS = oNomeRange.Row 
-if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
-	exit sub
-end if
-&apos;oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(4,11)
-ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string = sUltimus
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-Scrivi_Globale2 
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-Colora_M1(URLStr)
+	&apos;xA=oNome
+	
+	UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) &apos;xA &apos; variabile globale registrata
+	&apos; adesso scrive il nome della variabile globale nella ???cella???
+	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
+	
+	&apos;xray omycell
+	&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
+	&apos;	lcolS = oNomeRange.Column
+	&apos;	lrowS = oNomeRange.Row 
+	if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
+		exit sub
+	end if
+	&apos;oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(4,11)
+	ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string = sUltimus
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Scrivi_Globale2 
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	Colora_M1(URLStr)
 END SUB 
+
 
 
 Sub Scrivi_Globale______________ &apos;(optional URLStr as string) &apos; versione semplice

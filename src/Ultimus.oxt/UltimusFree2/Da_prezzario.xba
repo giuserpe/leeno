@@ -399,7 +399,8 @@ oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
 		Accoda_SCNVA(livelli, lrow)
 	end If
 
-Voce_a_ElencoPrezzi_cod_orig
+	oSheetListino = thisComponent.sheets.getbyname(&quot;Listino&quot;)
+	If oSheetListino.GetCellByPosition(8, 0).getstring = &quot;sì&quot; Then Voce_a_ElencoPrezzi_cod_orig
 end sub
 
 

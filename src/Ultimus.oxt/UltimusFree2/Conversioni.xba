@@ -21,23 +21,21 @@ Sub da_vecchio_template &apos;Giuseppe Vizziello 2014
 	Dim sRangeTarget As String 
 	Dim sFrameSRC As String
 	Dim i As Long
-		sURL = ConvertToUrl(ThisComponent.getURL())
-primo_sURL = sURL
-	 	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
-		sUrl= sName + &quot;-tmp&quot; + &quot;.ods&quot;
-		nomeTMP = Replace_G(ThisComponent.gettitle, &quot;.ods&quot;, &quot;&quot;) + &quot;-tmp&quot; + &quot;.ods&quot;
-		sUrlbak= ConvertFromUrl (sName + &quot;-backup&quot; + &quot;.ods&quot;)
+Scrivi_Globale &apos; definisce il documento come DCC
+	sURL = ConvertToUrl(ThisComponent.getURL())
+ 	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
+	sUrl_tmp= sName + &quot;-tmp&quot; + &quot;.ods&quot;
+	nomeTMP = Replace_G(ThisComponent.gettitle, &quot;.ods&quot;, &quot;&quot;) + &quot;-tmp&quot; + &quot;.ods&quot;
+	sUrlbak= ConvertFromUrl (sName + &quot;-backup&quot; + &quot;.ods&quot;)
 rem ----------------------------------------------------------------------
-		msgbox &quot;Eseguo la conversione del Computo.&quot; &amp; chr(10)_
-			&amp; &quot;L&apos;operazione potrà richiedere qualche minuto.&quot; &amp; chr(10) &amp; chr(10)_
-			&amp; &quot;Conserverò una copia di sicurezza di questo file.&quot; &amp; chr(10) &amp; chr(10)_
-			&amp; &quot;Attendi il messaggio di &quot;&quot;OPERAZIONE COMPLETATA!&quot;&quot;&quot;&amp; chr(10)_
-			&amp; &quot;senza interferire con mouse e/o tastiera!&quot;&amp; chr(10)_
-			&amp; CHR$(10)_
-			&amp; &quot;&quot;, 48, &quot;Conversione file...&quot;
+	msgbox &quot;Eseguo la conversione del Computo.&quot; &amp; chr(10)_
+		&amp; &quot;L&apos;operazione potrà richiedere qualche minuto.&quot; &amp; chr(10) &amp; chr(10)_
+		&amp; &quot;Conserverò una copia di sicurezza di questo file.&quot; &amp; chr(10) &amp; chr(10)_
+		&amp; &quot;Attendi il messaggio di &quot;&quot;OPERAZIONE COMPLETATA!&quot;&quot;&quot;&amp; chr(10)_
+		&amp; &quot;senza interferire con mouse e/o tastiera!&quot;&amp; chr(10)_
+		&amp; CHR$(10)_
+		&amp; &quot;&quot;, 48, &quot;Conversione file...&quot;
 rem ----------------------------------------------------------------------
-&apos;					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DlgAttesa ) &apos; Inizializza il dialogo
-&apos;					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 rem faccio il backup del file e riporto il focus sul file -tmp
 	&apos; ID del template di partenza:
 	idxtemplate = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 290).value
@@ -46,7 +44,7 @@ backup_tmp &apos;questa lascia il focus sul nuovo doc-tmp
 aggiorna_STILI
 rem ----------------------------------------------------------------------
 rem torno sul file di partenza
-Focus_su_altro_Doc (sUrl)
+Focus_su_altro_Doc (sUrl_tmp)
 rem ----------------------------------------------------------------------
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
@@ -174,13 +172,10 @@ rem ----------------------------------------------------------------------
 					EndIf
 			i=i-1
 			Loop
-&apos;Print &quot;000&quot;
 rem ----------------------------------------------------------------------
 Controlla_Componenti_conversioni
 rem ----------------------------------------------------------------------
-&apos;Print &quot;001&quot;
 Rinumera_TUTTI_Capitoli2
-&apos;Print &quot;002&quot;
 &apos;Svuota_CONTABILITA
 sproteggi_sheet_TUTTE
 Visualizza_sheet_TUTTE
@@ -189,41 +184,14 @@ Visualizza_sheet_TUTTE
 			oSheet.unprotect(&quot;&quot;)
 insRows (50, 2)
 AutoCalc (1)
-			UrlSrc = ThisComponent.getURL()
 	end Select
 rem ----------------------------------------------------------------------
-rem trasferisco le tabelle corrette
-Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-Barra_Apri_Chiudi_5(&quot;1/4&quot;, 10)
-	sheet_to_doc (UrlSrc, &quot;S2&quot;)
+ 	sURL = UltimusFree2.Lupo_0.sUltimus 
+ 	sUrlDCC = ConvertToUrl (SUrl)
 rem ----------------------------------------------------------------------
-Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-Barra_Apri_Chiudi_5(&quot;2/4&quot;, 40)
-	sheet_to_doc (UrlSrc, &quot;COMPUTO&quot;)
-Firme_in_calce
-	ThisComponent.CalcAsShown = true 
-Numera_Voci_Computo (&quot;niente prompt&quot;) &apos; NON CHIEDE CONFERMA
-Chiudi_o_elimina_tabelle_inutili
-rem ----------------------------------------------------------------------
-Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-Barra_Apri_Chiudi_5(&quot;3/4&quot;, 60)
-sheet_to_doc (UrlSrc, &quot;Analisi di Prezzo&quot;)
-	rem ----------------------------------------------------------------------
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lastrow = getLastUsedrow(oSheet)
-	For i = idxrow+1 To lastrow
-		If oSheet.getCellByPosition(3, i).cellstyle = &quot;An-lavoraz-%&quot; Or _
-			oSheet.getCellByPosition(4, i).cellstyle = &quot;An-lavoraz-%&quot; Then
-	 		For j = idxcol+3 To idxcol+4
-				stringa = oSheet.getCellByPosition(j, i).getformula()
-				oSheet.getCellByPosition(j, i).FORMULA = Replace_G(stringa, &quot;&apos;&quot; + surl + &quot;&apos;#&quot;, &quot;&quot;)
-			next
-		EndIf
-	next
-rem ----------------------------------------------------------------------
-Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
 Barra_Apri_Chiudi_5(&quot;4/4&quot;, 80)
-sheet_to_doc (UrlSrc, &quot;Elenco Prezzi&quot;)
+sheet_to_doc (sUrlDCC, &quot;Elenco Prezzi&quot;)
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 sbianca_annulla
 Inizializza_elenco
@@ -236,8 +204,38 @@ rem elimino i link dalle formule
 	 		For j = idxcol+1 To idxcol+7
 &apos;				thiscomponent.getCurrentController.select(oSheet.getCellByPosition(j, i))
 	 			stringa = oSheet.getCellByPosition(j, i).getformula()
-				oSheet.getCellByPosition(j, i).FORMULA = Replace_G(stringa, &quot;&apos;&quot; + surl + &quot;&apos;#&quot;, &quot;&quot;)
+				oSheet.getCellByPosition(j, i).FORMULA = Replace_G(stringa, &quot;&apos;&quot; + sUrl_tmp + &quot;&apos;#&quot;, &quot;&quot;)
 		 	Next 
+		EndIf
+	next
+rem ----------------------------------------------------------------------
+rem trasferisco le tabelle corrette
+Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Barra_Apri_Chiudi_5(&quot;1/4&quot;, 10)
+	sheet_to_doc (sUrlDCC, &quot;S2&quot;)
+rem ----------------------------------------------------------------------
+Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Barra_Apri_Chiudi_5(&quot;2/4&quot;, 40)
+	sheet_to_doc (sUrlDCC, &quot;COMPUTO&quot;)
+Controlla_Somme_Componenti
+Firme_in_calce
+	ThisComponent.CalcAsShown = true 
+Numera_Voci_Computo (&quot;niente prompt&quot;) &apos; NON CHIEDE CONFERMA
+Chiudi_o_elimina_tabelle_inutili
+rem ----------------------------------------------------------------------
+Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Barra_Apri_Chiudi_5(&quot;3/4&quot;, 60)
+sheet_to_doc (sUrlDCC, &quot;Analisi di Prezzo&quot;)
+rem ----------------------------------------------------------------------
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	lastrow = getLastUsedrow(oSheet)
+	For i = idxrow+1 To lastrow
+		If oSheet.getCellByPosition(3, i).cellstyle = &quot;An-lavoraz-%&quot; Or _
+			oSheet.getCellByPosition(4, i).cellstyle = &quot;An-lavoraz-%&quot; Then
+	 		For j = idxcol+3 To idxcol+4
+				stringa = oSheet.getCellByPosition(j, i).getformula()
+				oSheet.getCellByPosition(j, i).FORMULA = Replace_G(stringa, &quot;&apos;&quot; + sUrl_tmp + &quot;&apos;#&quot;, &quot;&quot;)
+			next
 		EndIf
 	next
 rem ----------------------------------------------------------------------
@@ -252,9 +250,28 @@ Visualizza_normale_esegui
 	oDocFrame = ThisComponent.getCurrentController().getFrame()
 	oDispatchHelper = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	oDispatchHelper.executeDispatch(oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array())
+Computo_Normale_terra_terra
+Adatta_Altezza_riga
+chiudi_dialoghi &apos; chiude tutti i dialoghi
+	msgbox &quot;Ho conservato una copia di sicurezza del vecchio file come:&quot; &amp; chr(10) &amp; chr(10)_
+			&amp; sUrlbak &amp; chr(10) &amp; chr(10)_
+			&amp; &quot;Eventuali discrepanze tra gli importi sono da ricercarsi nella&quot;&amp; chr(10)_
+			&amp; &quot;differenza del numero di cifre visualizzate dopo la virgola.&quot; &amp; chr(10) &amp; chr(10)_
+			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
+&apos;	msgbox &quot;Ho conservato una copia di sicurezza del file non convertito,&quot; &amp; chr(10) &amp; chr(10)_
+&apos;			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
 rem ----------------------------------------------------------------------
+&apos; cancello -tmp
+&apos;	Kill(sUrl)&apos; questa rompe le palle...
+rem ----------------------------------------------------------------------
+rem prova dialogo
+&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
+&apos;	oDlg = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgConversioneCompleta) &apos; Inizializza il dialogo
+&apos;	oDlg.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
+rem ----------------------------------------------------------------------
+
 rem torno su -tmp
-Focus_su_altro_Doc (sUrl)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
+Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
 rem ----------------------------------------------------------------------
 rem chiudo -tmp
 &apos;Print nomeTMP
@@ -270,32 +287,11 @@ rem ----------------------------------------------------------------------
 rem Saluti
 &apos;Print now &amp; &quot; - &quot; &amp; now1
 rem ----------------------------------------------------------------------
-Focus_su_altro_Doc (primo_sURL) 
-Computo_Normale_terra_terra
-chiudi_dialoghi &apos; chiude tutti i dialoghi
-	msgbox &quot;Ho conservato una copia di sicurezza del vecchio file come:&quot; &amp; chr(10) &amp; chr(10)_
-			&amp; sUrlbak &amp; chr(10) &amp; chr(10)_
-			&amp; &quot;Eventuali discrepanze tra gli importi sono da ricercarsi nella&quot;&amp; chr(10)_
-			&amp; &quot;differnza del numero di cifre visualizzate dopo la virgola.&quot; &amp; chr(10)_
-			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
-&apos;	msgbox &quot;Ho conservato una copia di sicurezza del file non convertito,&quot; &amp; chr(10) &amp; chr(10)_
-&apos;			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
-rem ----------------------------------------------------------------------
-&apos; cancello -tmp
-&apos;	Kill(sUrl)&apos; questa rompe le palle...
-rem ----------------------------------------------------------------------
-rem prova dialogo
-&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-&apos;	oDlg = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgConversioneCompleta) &apos; Inizializza il dialogo
-&apos;	oDlg.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
-rem ----------------------------------------------------------------------
-Adatta_Altezza_riga
-&apos;barra_fatto
 End Sub
 
 
 
-sub aggiorna_STILI 
+ sub aggiorna_STILI 
  &apos;tutti in blocco e sovrascrive 
 	&apos; aggiorno gli stili di cella sulla base di quelli del template di riferimento
 	&apos; attenzione li sovrascrive tutti (modulo suggerito da dfrench - Nuova Zelanda)
@@ -316,7 +312,7 @@ end Sub
 sub crea_molte_copie_file &apos;Giuseppe Vizziello 2014
 	Dim sURL, sNewURL, sName As String
 &apos;	sURL = ConvertToUrl(ThisComponent.getURL())
-	sURL = ConvertToUrl(&quot;C:\Users\giuserpe\Desktop\debug_leeno\aaaaa.ods&quot;)
+	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.ods&quot;)
  	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
 	For i=0 To 9
 		sNewURL= sName + i + &quot;.ods&quot;
@@ -351,7 +347,6 @@ End Sub
 Sub sheet_to_doc (UrlSrc As String, sSheetSRC As String) 
 rem ----------------------------------------------------------------------
 rem UrlSrc è l&apos;url di partenza
-rem nSheet è la sheet da inviare
 rem sUltimus è il DCC impostato come variabile globale
 rem detivata dalla sub gina&apos; trasferisce una sheet da un doc ad un altro
 rem verifcando e trasferendo sino a a 3 link
@@ -360,102 +355,85 @@ rem verifcando e trasferendo sino a a 3 link
 	dim sTargetURL as string
 	dim sRangeSRC as string
 	dim iSheetSRC as integer
-	dim oRanges as object
-	dim sSheetRinom as string
-	DlgAcAnnulla
+DlgAcAnnulla
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
  		GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If
 rem ----------------------------------------------------------------------
-	UrlSrc = ThisComponent.getURL() &apos; path file sorgente
-&apos;	Print UrlSrc
+	oDocSrc =ThisComponent
+&apos;	UrlSrc = UrlSrc&apos; path file sorgente
 	sNomeSrc = FileNameoutofPath(UrlSrc) &apos;nome file
-&apos;	Print sNomeSrc
 	sSourceURL = ConvertToUrl(ThisComponent.getURL()) &apos; path file sorgente
-&apos;	Print sSourceURL
 	sTargetURL = ConvertToURL (sUltimus) &apos; file destinazione DCC
-&apos;	Print sTargetURL
-&apos;	sNomeSrc = FileNameoutofPath(UrlSrc)
-	&apos; acchiappiamo il sorgente
-&apos;Print  sFrameSRC
- 	ThisComponent.CurrentController.Frame.Name = sNomeSrc
-	&apos; la tab corrente (quella da accodare)
-	oSheetSRC = ThisComponent.currentController.activeSheet
-&apos;	sSheetSRC = &quot;COMPUTO&quot;&apos;ThisComponent.currentController.activeSheet.Name &apos;Nome del Foglio
-	iSheetSRC = ThisComponent.currentController.activeSheet.RangeAddress.Sheet &apos;id del foglio
-	sNameDest = FileNameoutofPath(sUltimus)
+&apos;per chiarimenti sul frame: https://www.mail-archive.com/dev@it.openoffice.org/msg00967.html
+&apos; 	oDocSrc.CurrentController.Frame.Name = sNomeSrc &apos; nome file sorgente 
+&apos; la tab corrente (quella da accodare)
+	oSheetSRC = oDocSrc.currentController.activeSheet
 rem ----------------------------------------------------------------------
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;4 Pazienta... &quot;, 40)
-	sproteggi_sheet_TUTTE
-	Visualizza_sheet_TUTTE
+sproteggi_sheet_TUTTE
+Visualizza_sheet_TUTTE
 rem ----------------------------------------------------------------------
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;5 Pazienta... &quot;, 40)
-
-	&apos;cerca in SRC le tab linkate
 	tabLinked = Cerca_riferimenti (oSheetSRC)
-&apos;print &quot;2&quot;
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_4
 	&apos;estraggo i nomi delle tab linkate
 	sLinkata_0 =	tabLinked(0)
 	sLinkata_1 =	tabLinked(1)
 	sLinkata_2 =	tabLinked(2)
 	&apos; sposto le tab linkate in ordine progressivo
 	if sLinkata_0 &lt;&gt; &quot;&quot; then
-		thisComponent.Sheets.moveByName(sLinkata_0 ,1)
+		oDocSrc.Sheets.moveByName(sLinkata_0 ,1)
 	end if
 	if sLinkata_1 &lt;&gt; &quot;&quot; then
-		thisComponent.Sheets.moveByName(sLinkata_1 ,2)
+		oDocSrc.Sheets.moveByName(sLinkata_1 ,2)
 	end if
 	if sLinkata_2 &lt;&gt; &quot;&quot; then
-		thisComponent.Sheets.moveByName(sLinkata_2 ,3)
+		oDocSrc.Sheets.moveByName(sLinkata_2 ,3)
 	end if
-rem ----------------------------------------------------------------------
-	firstDoc = ThisComponent &apos;file sorgente
 rem ----------------------------------------------------------------------
 rem elimino i pulsanti prima di copiare
 	iCellAttr = com.sun.star.sheet.CellFlags.OBJECTS
-	oSheetSRC = ThisComponent.Sheets.getByName(sSheetSRC)
+	oSheetSRC = oDocSrc.Sheets.getByName(sSheetSRC)
 	oSheetSRC.getCellRangeByPosition (0,0,140,3).ClearContents(iCellAttr)
 rem ----------------------------------------------------------------------
 rem seleziono il range da trasferire
-	oSRC=oSheetSRC.getCellRangeByPosition (0, 0, getLastUsedCol(oSheetSRC), getLastUsedRow(oSheetSRC)).RangeAddress
-	thiscomponent.getCurrentController.select(oSheetSRC.getCellRangeByPosition (0, 0, getLastUsedCol(oSheetSRC), getLastUsedRow(oSheetSRC)))
+	oSRC=oSheetSRC.getCellRangeByPosition (0, 0, getLastUsedCol(oSheetSRC), getLastUsedRow(oSheetSRC)).getRangeAddress
+	oDocSrc.getCurrentController.select(oSheetSRC.GetCellRangeByPosition(0, 0, getLastUsedCol(oSheetSRC), getLastUsedRow(oSheetSRC)))
 copy_clip	
-&apos;	print
 rem ----------------------------------------------------------------------
 rem copia lo stile di pagina del foglio
 Copy_PageStyle 	
-	sSheetTarget = sSheetSRC
-&apos;	Barra_chiudi_sempre_4
 rem ----------------------------------------------------------------------
 &apos; vado sul TARGET
-rem ----------------------------------------------------------------------
-&apos;	sFrName = &quot;Sorgente&quot;
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;Sto facendo un po&apos; di fatica... Pazienta... &quot;, 60)
-rem ----------------------------------------------------------------------
-rem mi sposto sul doc di destinazione
-	Focus_su_altro_Doc (sTargetURL , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
-	sproteggi_sheet_TUTTE
-	Visualizza_sheet_TUTTE
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;7 Pazienta... &quot;, 70)
+&apos;#########################################################################
+ 	SUrl = UltimusFree2.Lupo_0.sUltimus 
+ 	sUrlDCC = ConvertToUrl (SUrl)
+&apos; vado sul DCC
+	oTargetDoc= StarDesktop.LoadComponentFromUrl(sUrlDCC, &quot;_default&quot;, 0, Array())
+rem-----------------------------------------------------------------------
+rem senza questo non acchiappa il focus del DCC
+	iTemp = 200 &apos; tantra techniquespirlo
+		do while thisComponent.Sheets.hasByName(sSheetSRC)
+			iTemp = iTemp +Itemp
+			if iTemp &gt;3000 then
+				exit do
+			end if
+			wait iTemp
+		loop			
+	wait 100
+rem-----------------------------------------------------------------------
+&apos; Ho cambiato ThisComponent con oTargetDoc che è la variabile che contiene gia l&apos; oggetto documento
+&apos; cioè Ultimus ( vedi sopra oTargetDoc = ...), così non si ferma
+	oSheet = oTargetDoc.Sheets.getByName(sSheetSRC)													 
+	ThisComponent.currentcontroller.setactivesheet(oSheet)
+	Osheet.isVisible = true	
+&apos;#########################################################################
+sproteggi_sheet_TUTTE
+Visualizza_sheet_TUTTE
 rem ----------------------------------------------------------------------
 rem definisco l&apos;indirizzo di destinazione
-	oDest = ThisComponent.Sheets.getByName(sSheetTarget).GetCellByPosition(0, 0).CellAddress
-	thiscomponent.getCurrentController.select(ThisComponent.Sheets.getByName(sSheetTarget).GetCellByPosition(0, 0))
-	if sSheetSRC = &quot;S2&quot; Then
-		paste_salta_vuote
-	Else
-		paste_clip
-	EndIf 
-rem ----------------------------------------------------------------------
-rem ...e copio 
-&apos;	ThisComponent.Sheets.getByName(sSheetTarget).copyRange(oDest, oSrc)
-end sub
+	oDest = oSheet.GetCellByPosition(0, 0).CellAddress
+	oTargetDoc.getCurrentController.select(oSheet.GetCellByPosition(0, 0))
+paste_clip
+end Sub
 
 rem ----------------------------------------------------------------------
 Sub Controlla_Componenti_conversioni &apos; serve per conversione Da_Vecchio_Template
@@ -472,7 +450,6 @@ rem cancella dati
 	oSheet.getCellRangeByPosition(12, 0,19,lRowE).clearContents(Flags)
 		ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(12, 0,19,lRowE))
 &apos;cancella_dati
-
 x = 0
 	While osheet.getCellByPosition (0, x).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;comp progress&quot;
 		x=x+1

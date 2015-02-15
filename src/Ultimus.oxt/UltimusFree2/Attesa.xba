@@ -357,26 +357,27 @@ Sub Barra_Apri_leggera ()
 End Sub
 
 Sub Barra_Apri_Chiudi_4
-if sPG1 = 0 or isEmpty (sPG1) then
- &apos; print &quot;nessuna barra (la creo!)&quot;
- oProgressBar = _
- ThisComponent.CurrentController.Frame.CreateStatusIndicator
+	if sPG1 = 0 or isEmpty (sPG1) then
+&apos; print &quot;nessuna barra (la creo!)&quot;
+		oProgressBar = _
+		ThisComponent.CurrentController.Frame.CreateStatusIndicator
 &apos; oProgressBar.Start(&quot;&quot;,100)&apos;
- &apos; oProgressBar.Value = 100
- oProgressBar.Start(&quot;&quot;,100)&apos;
- oProgressBar.Value = 20
-
- oProgressBar.Text = &quot;#4 Attendi...&quot;
- sPG1 = 1
- else
- &apos; print &quot;barra aperta! (la elimino)&quot;
-	if not isNull (oProgressBar) then
- 		 oProgressBar.end
- 		 oProgressBar = nothing
-		 spg1=0
+&apos; oProgressBar.Value = 100
+		oProgressBar.Start(&quot;&quot;,100)&apos;
+		oProgressBar.Value = 20
+		
+		oProgressBar.Text = &quot;#4 Attendi...&quot;
+		sPG1 = 1
+	else
+&apos; print &quot;barra aperta! (la elimino)&quot;
+		if not isNull (oProgressBar) then
+					 oProgressBar.end
+					 oProgressBar = nothing
+			spg1=0
+		end if
 	end if
-end if
 End sub 
+
 
 sub prova 
  Barra_chiudi_sempre_4 

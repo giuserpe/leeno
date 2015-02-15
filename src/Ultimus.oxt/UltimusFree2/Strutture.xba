@@ -990,6 +990,9 @@ Sub Struttura_Contab (tag As string) &apos; (c) Giuseppe Vizziello 2014
 	oSheet = ThisComponent.currentController.activeSheet
 	oRanges = ThisComponent.NamedRanges
 rem ----------------------------------------------------------------------
+rem PROTEZIONE SHEET
+&apos;	thisComponent.Sheets.getByName(oSheet.name).protect(&quot;&quot;)
+
 	IF not oRanges.hasByName(tag &amp; &quot;1&quot;) Then 
 		msgbox (&quot;Nel Libretto non è presente nessuna misura registrata!&quot;, 48 + 1, &quot;AVVISO!&quot;)
 		Exit Sub

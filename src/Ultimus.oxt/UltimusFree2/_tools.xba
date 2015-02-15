@@ -4,6 +4,31 @@
 rem racconta di utility di vario genere
 rem ----------------------------------------------------------------------
 rem induividua la natura del sistema operativo
+    Sub Mainpy
+      Dim MasterScriptProviderFactory as Object
+      Dim MasterScriptProvider as Object
+      Dim Script as Object
+      Dim Url as String
+      Dim PythonResult as String
+      
+&apos;      sName = Replace_G(LeenO_Path, &quot;.oxt&quot;, &quot;&quot;)
+      sName = LeenO_Path
+       Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyleeno.py$xmlsix2ods?language=Python&amp;location=share:uno_packages&quot;
+       &apos; &quot;vnd.sun.star.script:yokogawa.py$YokoCalcPython?language=Python&amp;location=share&quot;
+       &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=user
+       &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=share
+       &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=document
+
+       &apos;
+
+       MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
+       MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
+
+       Script = MasterScriptProvider.getScript(Url)
+       PythonResult = Script.invoke(Array(),Array(),Array())
+
+       MsgBox PythonResult
+    End Sub
 Function SpeechEngine()as string     
   select case getGUIType
   case 1: SpeechEngine=iif(fileExists (fsProgramDirectory &amp; &quot;eSpeak\command_line\espeak.exe&quot;),&quot;ESPEAK&quot;,&quot;SAPI&quot;) &apos;Win
@@ -58,16 +83,32 @@ Function fsGetSetting(sA)
    End Select
 End Function
 rem ----------------------------------------------------------------------
-Sub LeenO_Path
+Function LeenO_Path
 	Dim pip As Object, extensionLocation As String
 	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
 	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
-&apos;	pip = GetDefaultContext.getByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
 &apos;	display a human readable address
 &apos;	MsgBox(ConvertFromURL(extensionLocation)
-End Sub
+	sURL = (ConvertFromURL(extensionLocation))
+	LeenO_Path = FileNameoutofPath(sURL)
+&apos;	Print sName 
+End Function
+rem ----------------------------------------------------------------------
+sub rir_
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+	lLastUrow = getLastUsedRow(oSheet)
+	&apos;print lLastUrow
+		conta_a = 0
+	for i = 1 to lLastUrow
+		IF oSheet.GetCellByPosition(1 , I).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; then
+						oSheet.getRows().getByindex(I).isvisible = False
+		end if
+	next
+	Barra_chiudi_sempre_4
+&apos;	fine:
+end sub
 rem ----------------------------------------------------------------------
 Sub _accoda_files_in_unico
 &apos;ACCODA PIù FILE DI CALC IN UNO SOLO
@@ -472,7 +513,6 @@ SUB SERVIZIO__ &apos; una macro per mio uso e consumo che modifico e adatto doi 
 		lrow = lrow + 1
 		&apos;oCell = Osheet.GetCellByPosition(lcol, lrow)
 	loop
-&apos;puttana
 END SUB
 
 
@@ -505,4 +545,5 @@ dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quo
 
 
 end sub
+
 </script:module>

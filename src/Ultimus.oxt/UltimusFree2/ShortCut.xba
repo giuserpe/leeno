@@ -445,7 +445,7 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	End with
 	UIcfgMgr = thisComponent.UIConfigurationManager
 	shortCuts = UicfgMgr.ShortCutManager
-	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Header_Footer.Set_Header_Footer?language=Basic&amp;location=application&quot; )
+	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.removeKeyEvent(aKeyEvent)
 	shortCuts.store() 
 	

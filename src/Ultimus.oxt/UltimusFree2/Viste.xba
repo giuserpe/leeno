@@ -23,6 +23,12 @@ Dim oDialogScenari_EP As Object
 Dim oDialogScenari_AN As Object
 Sub Scelta_Viste() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
+	osheet = thisComponent.CurrentController.ActiveSheet
+	If osheet.Name = &quot;Registro&quot; Or _
+		osheet.Name = &quot;SAL&quot; Then
+		sAttributo = &quot;TIPO_CONTABILITA&quot;
+		GoTo esegui:
+	End If
 sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
  If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
@@ -31,12 +37,12 @@ sistema_attributi_sheet
  	sAttributo &lt;&gt; &quot;TFILTROTMP&quot; and _
  	sAttributo &lt;&gt; &quot;TIPO_ELENCOP&quot; and _
  	sAttributo &lt;&gt; &quot;TIPO_EP&quot; Then
-
+		 	exit sub
  	msgbox &quot;#1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
 		 			&amp; &quot;&quot;
-		 	exit sub
- 	end if &apos;
 
+ 	end if &apos;
+esegui:
  	&apos; verica e caricamento prob. ridondanti (lo esegue in apertura del doc)
  	If NOT DialogLibraries.isLibraryLoaded(&quot;UltimusFree2&quot;) Then &apos; dovrebbe essere ridondante
  	 DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
@@ -44,11 +50,11 @@ sistema_attributi_sheet
 	Select case sAttributo
  		case &quot;TIPO_COMPUTO&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
- 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 AND _
- 				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
-					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A2 ) &apos; Inizializza il dialogo
-					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
-			END IF
+&apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 AND _
+&apos;				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
+&apos;					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A2 ) &apos; Inizializza il dialogo
+&apos;					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
+&apos;			END IF
  			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 AND _
  				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
 					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A ) &apos; Inizializza il dialogo
@@ -59,7 +65,6 @@ sistema_attributi_sheet
 					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste) &apos; Inizializza il dialogo
 					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
 			END IF
-
 
  		case &quot;TIPO_CONTABILITA&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
@@ -73,7 +78,6 @@ sistema_attributi_sheet
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
 			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
-
  	end select
 
 END SUB

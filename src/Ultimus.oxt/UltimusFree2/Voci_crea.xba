@@ -239,7 +239,7 @@ END SUB
 
 
 
-&apos;########################################################################
+
 rem NON USATA - E&apos; IN USO NuovaAnalisi_Att	
 sub NuovaAnalisi &apos; Inserisce una Nuova analisi di prezzo VERSIONE che usa il circoscrivi
 			&apos; sotto l&apos;analisi su cui si è posizionati

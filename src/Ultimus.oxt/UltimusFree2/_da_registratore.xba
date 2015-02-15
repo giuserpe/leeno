@@ -80,24 +80,8 @@ rem ----------------------------------------------------------------------
 dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
 
 
-end sub
+End Sub
 
-
-sub paste_clip &apos;registratore macro
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem ----------------------------------------------------------------------
-dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
-
-
-end Sub
 sub bordo_sotto  &apos;da registratore macro
 rem ----------------------------------------------------------------------
 rem define variables
@@ -704,7 +688,21 @@ args1(5).Name = &quot;MoveMode&quot;
 args1(5).Value = 4
 
 dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args1())
-
-
 end sub
+
+
+sub paste_clip
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
+
+end Sub 
 </script:module>

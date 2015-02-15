@@ -1,4 +1,4 @@
 LeenO - Computo metrico assistito
-Copyright (C) 2014 Giuseppe Vizziello
+Copyright (C) 2014-2015 Giuseppe Vizziello
 
 Software Libero per computi metrici estimativi

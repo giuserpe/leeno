@@ -1363,106 +1363,91 @@ End Sub
 
 
 Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarget as string, _
-							optional sRangeTarget as string, optional sStringa as string, optional sFrName as string )
-				
+	optional sRangeTarget as string, optional sStringa as string, optional sFrName as string )
+	
 &apos; parametri INDISPENSABILI (sTargetURL , sFrName )
-
-
+	
+	
 &apos; GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 &apos;xray sTargetURL
-
- sTargetURL = sTargetURL 
- sSheetTarget = sSheetTarget 
- sRangeTarget = sRangeTarget 
- sStringa = sStringa
- sFrName = sFrName 
- if isnull(sSheetTarget) or ismissing(sSheetTarget) or sSheetTarget = &quot;&quot; then
- 		iSheetnumTarget = 1
- 	else
- 		 iSheetnumTarget = SheetNameToNumber (sSheetTarget)+1
- end if
- 
- 
- dim target as object
-&apos; questa funzionava
- Target = StarDesktop.loadComponentFromURL(sTargetURL, &quot;_default&quot;,0 , Array()) 
- 
- &apos; e poi ho aggiunto questo... ma non sono certo se serve.
- &apos; o se rallenta
- aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
- Target.getCurrentController().getFrame().focusGained(aFocusEvent)
-
-
-&apos;ma facciamo sta prova
-&apos;oEnum = StarDesktop.Components.createEnumeration
-&apos;While oEnum.hasMoreElements
-&apos; oDoc = oEnum.NextElement
-&apos; If Verifica_who(oDoc) Then
-&apos; sUrl = oDoc.URL							 
-&apos; Doc2 = StarDesktop.loadComponentFromURL( sUrl,&quot;_default&quot;,0 , Array() )
-&apos;&apos; aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
- &apos; 		Doc2.getCurrentController().getFrame().focusGained(aFocusEvent)
- &apos; xray odoc
-&apos; End If 
-&apos;Wend
-&apos; fine prova
-
-
-
- iTempo=400
- do while ThisComponent.CurrentController.Frame.Name = sFrName 
- 	itempo = iTempo+iTempo
- 	if iTempo &gt;10000 then
-			exit do
+	
+	sTargetURL = sTargetURL 
+	sSheetTarget = sSheetTarget 
+	sRangeTarget = sRangeTarget 
+	sStringa = sStringa
+	sFrName = sFrName 
+	if isnull(sSheetTarget) or ismissing(sSheetTarget) or sSheetTarget = &quot;&quot; then
+				iSheetnumTarget = 1
+		else
+				 iSheetnumTarget = SheetNameToNumber (sSheetTarget)+1
 	end if
- 	wait iTempo
- loop	
- 
-
-&apos;print &quot;ne sto per uscire bene? &quot; &amp; ThisComponent.CurrentController.Frame.Name
-
-
- tFrame = Target.CurrentController.Frame 
- iSheetnumTarget = SheetNameToNumber (sSheetTarget)+1
-
-	&apos; già siamo sul doc
-
- oDispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;) 
-
+	
+	
+	dim target as object
+&apos; questa funzionava
+	Target = StarDesktop.loadComponentFromURL(sTargetURL, &quot;_default&quot;,0 , Array()) 
+	
+&apos; e poi ho aggiunto questo... ma non sono certo se serve.
+&apos; o se rallenta
+	aFocusEvent = CreateUnoStruct(&quot;com.sun.star.awt.FocusEvent&quot;)
+	Target.getCurrentController().getFrame().focusGained(aFocusEvent)
+	
+&apos;now1 = now
+	iTempo=400
+	on error resume next
+	do while ThisComponent.CurrentController.Frame.Name&apos; = sFrName
+		itempo = iTempo+iTempo
+		if iTempo &gt;10000 then
+			exit do
+		end if
+		wait iTempo
+	Loop
+		wait 100
+&apos;now2 = now
+&apos;Print now2-now1
+	
+	tFrame = Target.CurrentController.Frame 
+	iSheetnumTarget = SheetNameToNumber (sSheetTarget)+1
+	
+&apos; già siamo sul doc
+	
+	oDispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;) 
+	
 &apos; salta nella tab
- Dim mArgs2(0) As New com.sun.star.beans.PropertyValue
- mArgs2(0).Name = &quot;Nr&quot;
- mArgs2(0).Value = iSheetnumTarget
- oDispatcher.executeDispatch(tFrame, &quot;.uno:JumpToTable&quot; ,&quot;&quot; ,0 ,mArgs2())
- 
- &apos;controllo...
- &apos;print ConvertToUrl(ThisComponent.getURL()) &amp; &quot; &quot; &amp; sTargetURL 
+	Dim mArgs2(0) As New com.sun.star.beans.PropertyValue
+	mArgs2(0).Name = &quot;Nr&quot;
+	mArgs2(0).Value = iSheetnumTarget
+	oDispatcher.executeDispatch(tFrame, &quot;.uno:JumpToTable&quot; ,&quot;&quot; ,0 ,mArgs2())
+	
+&apos;controllo...
+&apos;print ConvertToUrl(ThisComponent.getURL()) &amp; &quot; &quot; &amp; sTargetURL 
 &apos; if ConvertToUrl(ThisComponent.getURL()) &lt;&gt; sTargetURL then
- &apos;	print &quot; ho fallito lo spostamento (di Focus) al doc: &quot; &amp; sTargetURL
- &apos;	Focus_su_altro_Doc = &quot;fallito&quot;
- &apos;	exit Function
- 	&apos;	iWait = iWait * 5
- &apos;	goto riprova
- &apos;end if
- 
- &apos; se vogliamo andare in un posto preciso
- Dim Args3(0) As New com.sun.star.beans.PropertyValue
- Args3(0).Name = &quot;ToPoint&quot;
- Args3(0).Value = &quot;$D$15&quot; &apos; range destinazione
+&apos;	print &quot; ho fallito lo spostamento (di Focus) al doc: &quot; &amp; sTargetURL
+&apos;	Focus_su_altro_Doc = &quot;fallito&quot;
+&apos;	exit Function
+		&apos;	iWait = iWait * 5
+&apos;	goto riprova
+&apos;end if
+	
+&apos; se vogliamo andare in un posto preciso
+	Dim Args3(0) As New com.sun.star.beans.PropertyValue
+	Args3(0).Name = &quot;ToPoint&quot;
+	Args3(0).Value = &quot;$D$15&quot; &apos; range destinazione
 &apos; oDispatcher.executeDispatch(tFrame,&quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args3()) 
-
-
+	
+	
 &apos; se ci voglio incollare
 &apos; oDispatcher.executeDispatch(tFrame, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array() 
-
+	
 &apos; e se ci voglio scrivere
 &apos; if isnotNull(sStringa) then
 &apos;	 ThisComponent.Sheets.getByName(sSheetTarget).GetCellByPosition( 0,1).string =_
 &apos;	 sStringa
 &apos; &quot;Ho scritto veramente sulla tab &quot;&quot;leo&quot;&quot; nel doc &quot;&quot;Pippo&quot;&quot;?&quot; 
- &apos;end if
-ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
+&apos;end if
+	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 end Function
+
 
 
 

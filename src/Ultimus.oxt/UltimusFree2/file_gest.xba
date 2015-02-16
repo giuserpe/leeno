@@ -86,11 +86,11 @@ rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 rem le variabili di versione sono settate In &quot;_vaiabili&quot;
 	If getos()=&quot;WINDOWS&quot; Then
-		nomeZip = &quot;W:\_dwg\ULTIMUSFREE\_SRC\ultimus\src\Ultimus.oxt\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
-		nomeZip2 = &quot;W:\_dwg\ULTIMUSFREE\_SRC\ultimus\src\Ultimus.oxt\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
+		nomeZip = &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
+		nomeZip2 = &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
 	Else 
-		nomeZip = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/ultimus/src/Ultimus.oxt/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
-		nomeZip2 = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/ultimus/src/Ultimus.oxt/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
+		nomeZip = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
+		nomeZip2 = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
 	End If
 &apos;	Print extensionLocation
 	zipfolder(extensionLocation,ConvertToUrl(nomeZip))

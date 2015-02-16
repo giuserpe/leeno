@@ -49,22 +49,24 @@ esegui:
 	End If 
 	Select case sAttributo
  		case &quot;TIPO_COMPUTO&quot;
+			oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A) &apos; Inizializza il dialogo
+			oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
 &apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 AND _
 &apos;				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
 &apos;					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A2 ) &apos; Inizializza il dialogo
 &apos;					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
 &apos;			END IF
- 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 AND _
- 				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
-					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A ) &apos; Inizializza il dialogo
-					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
-			END IF
- 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 AND _
- 				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 0	then &apos; carica la dialog appropriata
-					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste) &apos; Inizializza il dialogo
-					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
-			END IF
+&apos; 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 AND _
+&apos;				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
+&apos;&apos;					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A) &apos; Inizializza il dialogo
+&apos;					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
+&apos;			END IF
+ &apos;			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 AND _
+ &apos;				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 0	then &apos; carica la dialog appropriata
+&apos;					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste) &apos; Inizializza il dialogo
+&apos;					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
+&apos;			END IF
 
  		case &quot;TIPO_CONTABILITA&quot;
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
@@ -942,7 +944,7 @@ SUB Mostra_Tutto
 fissa (0,idxrow+1)
 &apos;ColRid_on
 	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
+chiudi_dialoghi &apos; chiude tutti i dialoghi
 oSheetD = ThisComponent.currentController.activeSheet
 oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),10,).Columns.IsVisible=true
 oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),getLastUsedRow(oSheetD),).Rows.IsVisible=true

@@ -970,14 +970,7 @@ saltarello:
 	end if
  	ANALISI_IN_ELENCOPREZZI_Der = lrowRisel
 END FUNCTION
-
-&apos;==============================================================
-
-Sub elimina_riga_Scorciatoia 
-	limina_riga
-	wait 2000
-end sub
-
+rem ######################################################################
 
 Sub elimina_riga &apos; FUNZIONA su una riga o più righe...
 	dim nome as string
@@ -1042,48 +1035,47 @@ chiudi_dialoghi &apos; chiude tutti i dialoghi
 	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
 	ThisComponent.CurrentController.Select(oRangeSel)
 END SUB
+rem ######################################################################
 
 Sub copia_riga_Ent &apos; capisce su quale tipologia di tabelle è
 &apos; e reinvia ad _C or a _A 
 &apos; aggiunta per la scorciatoia... i bottoni vanno direttamente alle specifiche macro
-dim nome as string
-Dim oDoc As Object
-Dim oSheets As Object
-dim oCelle As Object
-Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
-Dim CellAddress As New com.sun.star.table.CellAddress
-dim lrow as integer
-dim lcol as integer
-dim lrow2 as integer
-Dim oView As Object
-Dim nome_sheet as string
-Dim OcalcSheet as Object
-Dim I as long
-Dim oSheet_num as integer
+	dim nome as string
+	Dim oDoc As Object
+	Dim oSheets As Object
+	dim oCelle As Object
+	Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
+	Dim CellAddress As New com.sun.star.table.CellAddress
+	dim lrow as integer
+	dim lcol as integer
+	dim lrow2 as integer
+	Dim oView As Object
+	Dim nome_sheet as string
+	Dim OcalcSheet as Object
+	Dim I as long
+	Dim oSheet_num as integer
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
-&apos;--------------------------------------------
-rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
-rem	oDpage = thisComponent.currentcontroller.activesheet.DrawPage
-rem	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
-rem	oCtrlModel = oform.getbyname(&quot;Pulsante 11&quot;) &apos; pulsante +RIGA
-rem	oCtrlModel.Enabled = False &apos; disabilita
-&apos;--------------------------------------------
-
+&apos;-------------------------------------------------------------------------
+	rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
+	rem	oDpage = thisComponent.currentcontroller.activesheet.DrawPage
+	rem	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
+	rem	oCtrlModel = oform.getbyname(&quot;Pulsante 11&quot;) &apos; pulsante +RIGA
+	rem	oCtrlModel.Enabled = False &apos; disabilita
+&apos;-------------------------------------------------------------------------
 	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
 		exit sub
 	end If
-		Select Case Trova_Attr_Sheet
-		Case &quot;TIPO_COMPUTO&quot; , &quot;TIPO_CONTABILITA&quot;
-			copia_riga_C
-		Case &quot;TIPO_ANALISI&quot;
-			copia_riga_A
+	Select Case Trova_Attr_Sheet
+	Case &quot;TIPO_COMPUTO&quot; , &quot;TIPO_CONTABILITA&quot;
+		copia_riga_C
+	Case &quot;TIPO_ANALISI&quot;
+		copia_riga_A
 	end select
-rem		oCtrlModel.Enabled = True &apos;riabilita il pulsante +RIGA
+	rem		oCtrlModel.Enabled = True &apos;riabilita il pulsante +RIGA
 end sub
-&apos;#####################################
+rem ######################################################################
 
 Sub copia_riga_C &apos; specifica per Computo e CONTABILITA
-&apos;copia una riga e il suo contenuto, spostanto l&apos;originale in SU???
 &apos; a me sembra in GIU&apos;....
 &apos; in pratica aggiunge un componente
 &apos; modificata alla 3.5.189 ma non ancora unificata (cioè sull&apos;analisi è ancora altra macro)
@@ -1205,10 +1197,7 @@ rem ma tocca usare SUBTOTAL()
 	ThisComponent.CurrentController.Select(oRanges)
 	&apos; cambia anche il comportamento... dopo aver digitato enter e tab fanno quello che devono...
 END SUB
-
-
-
-&apos;#####################################
+rem ######################################################################
 
 Sub copia_riga_A &apos; Specifica per Analisi
  &apos; copia una riga e il suo contenuto, spostanto l&apos;originale in giù

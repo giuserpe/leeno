@@ -59,7 +59,7 @@ Togli_Struttura
 				x=x+1
 			Wend
 			For i =x to lRowE
-		rem ----------------------------------------------------------------------
+rem ----------------------------------------------------------------------
 		rem controlla i calcoli
 			sStRange = Circoscrive_Voce_Computo_Att (I)
 		&apos;	xray sStRange
@@ -67,10 +67,10 @@ Togli_Struttura
 				lRowI = .StartRow
 				lRow = .EndRow
 			End With
-		rem ----------------------------------------------------------------------
+rem ----------------------------------------------------------------------
 		rem solo per movimentare
 				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, lRow))
-		rem ----------------------------------------------------------------------
+rem ----------------------------------------------------------------------
 				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; lRowI+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
 				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
 				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;

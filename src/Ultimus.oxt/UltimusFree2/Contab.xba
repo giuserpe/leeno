@@ -40,6 +40,7 @@ Sub partita (testo as string)
 		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(5,riga_corrente))
  	fine:
 end Sub
+rem ######################################################################
 
 sub partita_provvisoria
 	dim testo as string
@@ -52,8 +53,7 @@ sub detrai_partita_provvisoria
 	testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
 	partita (testo)
 end Sub
-
-
+rem ######################################################################
 
 sub GENERA_Atti_Contabili &apos;(C) Giuseppe Vizziello 2014
 chiudi_dialoghi
@@ -87,6 +87,8 @@ salta:
 	fine:
 &apos;Barra_Chiudi
 end Sub
+rem ######################################################################
+
 sub Genera_REGISTRO &apos;(C) Giuseppe Vizziello 2014
 &apos; genera il registro ed il SAL
 	Dim elVoci()&apos; elenco voci
@@ -859,7 +861,7 @@ rem ci metto un po&apos; di informazioni
 rem ----------------------------------------------------------------------
 Struttura_Contab (&quot;#SAL#&quot;)
 end Sub &apos;genera_registro
-rem ----------------------------------------------------------------------
+rem ######################################################################
 
 Sub situazione_contabile
 rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
@@ -874,9 +876,8 @@ rem INPUT IMPORTO LAVORI SITUAZIONE CONTABILE
 rem INPUT IMPORTO MANODOPERA SITUAZIONE CONTABILE
 	sFormulaSomma =&quot;=$CONTABILITA.$AE$&quot; &amp; iEndRow+1 
 	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+4).FORMULA = sFormulaSomma
-
 End Sub
-
+rem ######################################################################
 
 sub testzzzzzzzz
 XRAY thisComponent.getCurrentSelection()
@@ -888,6 +889,7 @@ XRAY thisComponent.getCurrentSelection()
 	xray StarDesktop&apos;thisComponent&apos;.getCurrentSelection().rows&apos;ThisComponent.currentselection
 Barra_chiudi_sempre_4
 end sub
+rem ######################################################################
 
 sub firme (lrow as long)&apos;, nr as long) &apos;(C) Giuseppe Vizziello 2014
 &apos;print &quot;idxrow &quot;&amp; idxrow 
@@ -949,10 +951,9 @@ consolida_clip &apos; consolida la data
 			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+12).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
 				&quot;(&quot; + oSheet_S2.GetCellByPosition(idxcol+2 , 15).getstring + &quot;)&quot;)
 			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+13).setformula(&quot;pezza&quot;) &apos;senza questa cancella la riga precedente
-
 	end select
 end sub
-
+rem ######################################################################
 
 sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
@@ -982,8 +983,11 @@ sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 	end if
 		oSheet.rows.removeByIndex (urow, drow-urow+1)
 end Sub
+rem ######################################################################
 
 Sub annulla_tutti_gli_atti
+	oSheetCont= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
+oSheetCont.Unprotect &quot;&quot;
 chiudi_dialoghi
 	oRanges = ThisComponent.NamedRanges
 	nSal=idxSAL &apos;variabile impostata nel modulo _variabili
@@ -998,14 +1002,13 @@ chiudi_dialoghi
 	&amp; &quot;di TUTTI gli atti contabili relativi al SAL n.&quot; &amp; nSal &amp; CHR$(10) &amp; CHR$(10) _
 	&amp; &quot;Sei veramente sicuro di voler procedere?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 +32 , &quot;AVVISO!&quot;)
 	if testa = 7 Then goto fine:
-&apos;	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;SAL&quot;))
 	Annulla_atto_contabile(&quot;SAL&quot;, 1)
-&apos;	ThisComponet.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Registro&quot;))
 	Annulla_atto_contabile(&quot;Registro&quot;, 1)
-&apos;	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;))
 	Annulla_atto_contabile(&quot;CONTABILITA&quot;, 1)
+oSheetCont.protect &quot;&quot;
 fine:
 End Sub
+rem ######################################################################
 
 Function Annulla_atto_contabile (oNomeSheet As String, Optional msg As Integer)&apos; (C) Giuseppe Vizziello 2014
 &apos;	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
@@ -1160,14 +1163,14 @@ rem cancello il range ormai inutile
 &apos;RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene cambiata
 Barra_chiudi_sempre_4 
 End Function
-
+rem ######################################################################
 
 Sub akrfjhe
 	oSheet= thisComponent.sheets.getbyname(&quot;Registro&quot;)
 &apos;	oSheet =ThisComponent.currentController.activeSheet
 	oSheet.PageStyle = &quot;PageStyle_REGISTRO_A4&quot; 
 End Sub
-
+rem ######################################################################
 
 sub Genera_LIBRETTO&apos; (C) Giuseppe Vizziello 2014
 	Dim oSheetCont as object

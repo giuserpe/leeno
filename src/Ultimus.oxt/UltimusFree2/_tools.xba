@@ -143,10 +143,10 @@ Sub _accoda_files_in_unico
 End Sub
 
 Sub inseriscirighe
-Dim oSheet, oRangeAddress
-oSheet = ThisComponent.Sheets(0)
-oRangeAddress = oSheet.getCellRangeByName(&quot;A2:A14&quot;).getRangeAddress()
-oSheet.insertCells(oRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)
+	Dim oSheet, oRangeAddress
+	oSheet = ThisComponent.Sheets(0)
+	oRangeAddress = oSheet.getCellRangeByName(&quot;A2:A14&quot;).getRangeAddress()
+	oSheet.insertCells(oRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)
 End Sub
 
 Sub Protezione_area (foglio as string, nomearea as string) &apos;usato in annota_pagina_libretto

@@ -400,7 +400,10 @@ oUltimo_indirizzo_conosciuto = ThisComponent.CurrentSelection
 	end If
 
 	oSheetListino = thisComponent.sheets.getbyname(&quot;Listino&quot;)
-	If oSheetListino.GetCellByPosition(8, 0).getstring = &quot;sì&quot; Then Voce_a_ElencoPrezzi_cod_orig
+	
+	If ucase(oSheetListino.GetCellByPosition(8, 0).getstring) = &quot;SÌ&quot; Or _
+		ucase(oSheetListino.GetCellByPosition(8, 0).getstring) = &quot;SI&quot; Or _
+		ucase(oSheetListino.GetCellByPosition(8, 0).getstring) = &quot;SI&apos;&quot; Then Voce_a_ElencoPrezzi_cod_orig
 end sub
 
 

@@ -199,54 +199,91 @@ Computo_Normale_terra_terra
 End Sub
 rem ######################################################################
 
-Sub parziale rem &apos;(C) Giuseppe Vizziello 2015
-	Dim test As String
-	Dim riga_selezione As Integer
-	Dim focus as integer
-	osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
-&apos;xray osheet
-	if oSheet.name = &quot;COMPUTO&quot; Or _
-		oSheet.name = &quot;CONTABILITA&quot; Then
-	 	goto procedi
+Sub core_parziale rem &apos;(C) Giuseppe Vizziello 2015
+rem inserisce una somma parziale sul rigo selezionato
+	Dim osheet As Object
+	Dim sStRange As Object
+	Dim lrow As Long
+	Dim oSrc As Object
+	Dim oDest As Object
+	Dim i As Long
+	osheet = thisComponent.CurrentController.ActiveSheet
+	lrow = range2cell
+	if oSheet.Name = &quot;COMPUTO&quot; Or _
+		oSheet.Name = &quot;CONTABILITA&quot;  Then
+		If osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
+			osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
+			osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
+			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
+copia_riga_C
+			GoTo procedi
+			ElseIf osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
+				osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp sotto centro_R&quot; And _
+				osheet.getCellByPosition (11, lrow).CellStyle = &quot;Comp-Variante&quot; Then
+			GoTo procedi
+		Else
+			GoTo fine
+		EndIf
 	Else
-		goto fine
-	end If
+		GoTo fine
+	EndIf
 procedi:
 rem ----------------------------------------------------------------------
-	 &apos;oAddress.row
 	sStRange = Circoscrive_Voce_Computo_Att (range2cell)
-&apos;	xray sStRangexb
 	With sStRange.RangeAddress
 		lRowI = .StartRow
 		lRowE = .EndRow
 	End With
-
 rem ---------------------------------------------------------------------
-	lrow = range2cell &apos;oAddress.row
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
-copia_riga_C
+
 	oSrc = oSheet.getCellRangeByPosition(2, lRowE, 9, lRowE).RangeAddress
 	oDest = oSheet.GetCellByPosition(2,lrow).CellAddress
 	oSheet.copyRange(oDest, oSrc)
 	oSheet.getCellByPosition(8, lrow).setformula(&quot;=CONCATENATE(&quot;&quot;Parziale [&quot;&quot;;VLOOKUP(B&quot; &amp; lrowi+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
 	i = lrow
-	
-	Do while i &gt; 0
-		Print osheet.getCellByPosition (9, i-1).CellStyle &amp;&quot; &quot;&amp; i-1
+	Do While i &gt; 0
 		If osheet.getCellByPosition (9, i-1).CellStyle = &quot;vuote2&quot; Or _
 			osheet.getCellByPosition (9, i-1).CellStyle = &quot;Comp-Variante num sotto&quot; Then
+			dariga=i
 			Exit Do
-		Else 
-		Print &quot;pippa&quot;
-			i=i-1
-		EndIf		
+		EndIf
+		i=i-1
 	Loop 
-&apos;Print osheet.getCellByPosition (9, i-1).CellStyle &amp;&quot; &quot;&amp; i-1
-Print i
-	oSheet.GetCellByPosition(9, lrow).setformula(&quot;=IF(SUBTOTAL(9;J&quot; &amp; i &amp; &quot;:J&quot; &amp; lrow &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;J&quot; &amp; i &amp;&quot;:J&quot; &amp; lrow &amp;&quot;))&quot;) &apos;Somma positivi
-	oSheet.GetCellByPosition(11, lrow).setformula(&quot;=IF(SUBTOTAL(9;L&quot; &amp; i &amp; &quot;:L&quot; &amp; lrow &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;L&quot; &amp; i &amp;&quot;:L&quot; &amp; lrow &amp;&quot;))&quot;) &apos;Somma negativi
+	oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma positivi
 rem ----------------------------------------------------------------------
 fine:
+End Sub
+rem ######################################################################
+
+Sub verifica_parziali rem &apos;(C) Giuseppe Vizziello 2015
+rem questa è inserita anche alla fine della sub elimina_riga
+	osheet = thisComponent.CurrentController.ActiveSheet
+	lrow = range2cell
+&apos;	parziale
+rem ----------------------------------------------------------------------
+	sStRange = Circoscrive_Voce_Computo_Att (lrow)
+	With sStRange.RangeAddress
+		lRowI = .StartRow
+		lRowE = .EndRow
+	End With
+rem ---------------------------------------------------------------------
+	For i = lRowI To lRowE
+		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, i))
+		If osheet.getCellByPosition (1, i).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
+			osheet.getCellByPosition (2, i).CellStyle = &quot;comp sotto centro_R&quot; And _
+			osheet.getCellByPosition (11, i).CellStyle = &quot;Comp-Variante&quot; Then
+			core_parziale
+		EndIf
+	Next
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
+End Sub
+rem ######################################################################
+
+Sub parziale rem &apos;(C) Giuseppe Vizziello 2015
+rem inserisce un parziale e corregge altri parziali della stessa voce
+core_parziale
+verifica_parziali
+Print &quot;sistemare il [+Riga]&quot;
 End Sub
 
 rem ######################################################################
@@ -257,108 +294,109 @@ sub vedi_voce rem &apos;(C) Giuseppe Vizziello 2013
 	Dim focus as integer
 	osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 &apos;xray osheet
-		if oSheet.name = &quot;COMPUTO&quot; Or _
-		 oSheet.name = &quot;CONTABILITA&quot; then
-		 goto procedi
-	 Else
+	if oSheet.name = &quot;COMPUTO&quot; Or _
+	oSheet.name = &quot;CONTABILITA&quot; then
+	goto procedi
+Else
 	goto fine
-		 	msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
+		msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
 	&amp; &quot;Devi trovarti in COMPUTO o CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
-
-	end if
+	
+end if
 procedi:
-	oContr = ThisComponent.CurrentController
-	focus = oContr.getFirstVisibleRow
-	
-	riga_corrente = range2cell &apos;oAddress.row
-	if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
-		exit sub
-		msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi selezionare un rigo di misurazione.&quot;, 0,&quot;ERRORE!&quot;)
-		goto fine
-	end if
-	rem se è presente la &quot;PARTITA PROVVISORIA&quot; aggiungi riga e vai, ma non va
-	if oSheet.GetCellByPosition(2,riga_corrente).string = &quot;PARTITA PROVVISORIA&quot; OR _
-	oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
-	if oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
-		segno=&quot;-&quot;
-	else
-		segno=&quot;&quot;
-	end if
-	riga_corrente=riga_corrente+1
-	copia_riga_Ent
-	&apos;	print &quot;PARTITA PROVVISORIA&quot;
-	end if
-	sTitolo = &quot;Selezionare una voce precedente...&quot;
-	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
-	if SelectedRange = &quot;&quot; or _
-	SelectedRange = &quot;ANNULLA&quot; or _
-	SelectedRange = &quot;GNente&quot; then
-	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-	exit Sub
-	end If
-	riga_selezione = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di vedi voce da riportare
-	&apos;print riga_selezione
-	if riga_corrente &lt; riga_selezione or _
-	riga_corrente = riga_selezione then
-	msgbox (&quot;Devi selezioanre una voce precendente alla attuale.&quot;, 0,&quot;ERRORE!&quot;
-	goto fine:
-	end if
-	test = &quot;style_cella&quot;
-	i = 0
-	for i = 0 to 1000
-	test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
-	&apos;	if test = &quot;comp progress&quot; or test = &quot;comp 10 s_R&quot; then
-	if test = &quot;Comp Start Attributo&quot; or test = &quot;Comp Start Attributo_R&quot; then
-	riga_selezione = riga_selezione+1
-	art = oSheet.GetCellByPosition(1,riga_selezione).AbsoluteName
-	idvoce = oSheet.GetCellByPosition(0,riga_selezione).AbsoluteName
-	&apos;		um = oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
-	&apos;print art
-	i = i+10000
-	else
-	riga_selezione = riga_selezione-1
-	i = i+1
-	end if
-	next
-	i = 0 
-	For i = 0 to 1000
-		test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
-		if test = &quot;Comp End Attributo&quot; or test = &quot;Comp End Attributo_R&quot; then
-	&apos;		if test = &quot;Comp End Attributo&quot; then
-	&apos;			x=9
-	&apos;			else 
-	&apos;			x=10
-	&apos;		end if
-			quantity= oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
-			oRange = oSheet.getCellRangeByPosition (9,riga_selezione,9,riga_selezione)
-			oRange.CellBackColor = RGB(255,225,200)&apos;(255, 204, 153)
-		
-			i = i+10000
-		Else
-			riga_selezione = riga_selezione+1
-			i = i+1
-		end If
-	Next
-	rem descrizione opzionale
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value=0 then 
-		InputDesc = InputBox(&quot;Inserire descrizione:&quot;, &quot;Descrizione della misurazione&quot;, &quot; &quot;)
-	Else
-		InputDesc =&quot;&quot;
-	End If 
-	
-	rem [&quot;;CERCA.VERT(B5;elenco_prezzi;3;FALSO());&quot;]
-	
-	id = Circoscrive_Voce_Computo_Att (riga_corrente).RangeAddress.StartRow+2
-	um =&quot;VLOOKUP(B&quot; &amp; id &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
-	oSheet.GetCellByPosition(2 , riga_corrente).formula=&quot;=CONCATENATE(&quot;&quot;&quot;&amp; InputDesc &amp;&quot;&quot;&quot;;&quot;&quot; - vedi voce n.&quot;&quot;;TEXT(&quot; &amp; idvoce &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
-	
-	oSheet.GetCellByPosition(5 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
-	oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
-	oRange.CellBackColor = RGB(255,225,200)&apos;(255, 204, 153)
-	oContr.setFirstVisibleRow(focus)
-	fine:
+oContr = ThisComponent.CurrentController
+focus = oContr.getFirstVisibleRow
+
+riga_corrente = range2cell &apos;oAddress.row
+if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
+	exit sub
+	msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
+	&amp; &quot;Devi selezionare un rigo di misurazione.&quot;, 0,&quot;ERRORE!&quot;)
+	goto fine
+end if
+rem se è presente la &quot;PARTITA PROVVISORIA&quot; aggiungi riga e vai, ma non va
+if oSheet.GetCellByPosition(2,riga_corrente).string = &quot;PARTITA PROVVISORIA&quot; OR _
+oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
+if oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
+	segno=&quot;-&quot;
+else
+	segno=&quot;&quot;
+end if
+riga_corrente=riga_corrente+1
+copia_riga_Ent
+&apos;	print &quot;PARTITA PROVVISORIA&quot;
+end if
+sTitolo = &quot;Selezionare una voce precedente...&quot;
+SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+if SelectedRange = &quot;&quot; or _
+SelectedRange = &quot;ANNULLA&quot; or _
+SelectedRange = &quot;GNente&quot; then
+ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+exit Sub
+end If
+riga_selezione = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di vedi voce da riportare
+&apos;print riga_selezione
+if riga_corrente &lt; riga_selezione or _
+riga_corrente = riga_selezione then
+msgbox (&quot;Devi selezioanre una voce precendente alla attuale.&quot;, 0,&quot;ERRORE!&quot;
+goto fine:
+end if
+test = &quot;style_cella&quot;
+i = 0
+for i = 0 to 1000
+test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
+&apos;	if test = &quot;comp progress&quot; or test = &quot;comp 10 s_R&quot; then
+if test = &quot;Comp Start Attributo&quot; or test = &quot;Comp Start Attributo_R&quot; then
+riga_selezione = riga_selezione+1
+art = oSheet.GetCellByPosition(1,riga_selezione).AbsoluteName
+idvoce = oSheet.GetCellByPosition(0,riga_selezione).AbsoluteName
+&apos;		um = oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
+&apos;print art
+i = i+10000
+else
+riga_selezione = riga_selezione-1
+i = i+1
+end if
+next
+i = 0 
+For i = 0 to 1000
+test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
+if test = &quot;Comp End Attributo&quot; or test = &quot;Comp End Attributo_R&quot; then
+&apos;		if test = &quot;Comp End Attributo&quot; then
+&apos;			x=9
+&apos;			else 
+&apos;			x=10
+&apos;		end if
+quantity= oSheet.GetCellByPosition(9,riga_selezione).AbsoluteName
+oRange = oSheet.getCellRangeByPosition (9,riga_selezione,9,riga_selezione)
+oRange.CellBackColor = RGB(255,225,200)&apos;(255, 204, 153)
+
+i = i+10000
+Else
+riga_selezione = riga_selezione+1
+i = i+1
+end If
+Next
+rem descrizione opzionale
+If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value=0 then 
+InputDesc = InputBox(&quot;Inserire descrizione:&quot;, &quot;Descrizione della misurazione&quot;, &quot; &quot;)
+Else
+InputDesc =&quot;&quot;
+End If 
+
+rem [&quot;;CERCA.VERT(B5;elenco_prezzi;3;FALSO());&quot;]
+
+id = Circoscrive_Voce_Computo_Att (riga_corrente).RangeAddress.StartRow+2
+um =&quot;VLOOKUP(B&quot; &amp; id &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
+oSheet.GetCellByPosition(2 , riga_corrente).formula=&quot;=CONCATENATE(&quot;&quot;&quot;&amp; InputDesc &amp;&quot;&quot;&quot;;&quot;&quot; - vedi voce n.&quot;&quot;;TEXT(&quot; &amp; idvoce &amp;&quot;;&quot;&quot;@&quot;&quot;);&quot;&quot; - art. &quot;&quot;;&quot; &amp; art &amp; &quot;;&quot;&quot; [&quot;&quot;;&quot; &amp; um &amp; &quot;;&quot;&quot;]&quot;&quot;&quot;
+
+oSheet.GetCellByPosition(5 , riga_corrente).setformula(&quot;=&quot; &amp; segno &amp; quantity)
+oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
+oRange.CellBackColor = RGB(255,225,200)&apos;(255, 204, 153)
+oContr.setFirstVisibleRow(focus)
+fine:
 end sub
+
 
 
 rem ######################################################################

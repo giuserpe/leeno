@@ -1034,6 +1034,7 @@ chiudi_dialoghi &apos; chiude tutti i dialoghi
 &apos;	CellRangeAddress.StartColumn = 	lcolStart
 	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
 	ThisComponent.CurrentController.Select(oRangeSel)
+verifica_parziali
 END SUB
 rem ######################################################################
 

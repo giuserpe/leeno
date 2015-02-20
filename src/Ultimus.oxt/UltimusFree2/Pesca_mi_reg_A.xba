@@ -305,8 +305,8 @@ AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
 IMPOSTO_VALORI_E_FORMULE:
 	i=2
 	do while lrow+i &lt; sotto-1
-		oSheet.GetCellByPosition(9, lrow+i).setformula(&quot;=IF(PRODUCT(E&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(E&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;))&quot;) &apos;riga positivi
-		oSheet.GetCellByPosition(11, lrow+i).setformula(&quot;=IF(PRODUCT(E&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(E&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;)*-1)&quot;) &apos;riga negativi
+		oSheet.GetCellByPosition(9, lrow+i).setformula(&quot;=IF(PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;))&quot;) &apos;riga positivi
+		oSheet.GetCellByPosition(11, lrow+i).setformula(&quot;=IF(PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;)*-1)&quot;) &apos;riga negativi
 		i=i+1
 	loop
 	oSheet.GetCellByPosition(9, lrow+1).setformula(&quot;=VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE())&quot;) &apos;Unità di misura

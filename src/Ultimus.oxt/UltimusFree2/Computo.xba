@@ -199,7 +199,7 @@ Computo_Normale_terra_terra
 End Sub
 rem ######################################################################
 
-Sub core_parziale rem &apos;(C) Giuseppe Vizziello 2015
+Sub parziale_core rem &apos;(C) Giuseppe Vizziello 2015
 rem inserisce una somma parziale sul rigo selezionato
 	Dim osheet As Object
 	Dim sStRange As Object
@@ -249,13 +249,14 @@ rem ---------------------------------------------------------------------
 		EndIf
 		i=i-1
 	Loop 
-	oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma positivi
+	oSheet.GetCellByPosition(11, lrow).string = &quot;&quot;
+	oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma
 rem ----------------------------------------------------------------------
 fine:
 End Sub
 rem ######################################################################
 
-Sub verifica_parziali rem &apos;(C) Giuseppe Vizziello 2015
+Sub parziale_verifica rem &apos;(C) Giuseppe Vizziello 2015
 rem questa è inserita anche alla fine della sub elimina_riga
 	osheet = thisComponent.CurrentController.ActiveSheet
 	lrow = range2cell
@@ -272,7 +273,7 @@ rem ---------------------------------------------------------------------
 		If osheet.getCellByPosition (1, i).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
 			osheet.getCellByPosition (2, i).CellStyle = &quot;comp sotto centro_R&quot; And _
 			osheet.getCellByPosition (11, i).CellStyle = &quot;Comp-Variante&quot; Then
-			core_parziale
+			parziale_core
 		EndIf
 	Next
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
@@ -281,9 +282,8 @@ rem ######################################################################
 
 Sub parziale rem &apos;(C) Giuseppe Vizziello 2015
 rem inserisce un parziale e corregge altri parziali della stessa voce
-core_parziale
-verifica_parziali
-Print &quot;sistemare il [+Riga]&quot;
+parziale_core
+parziale_verifica
 End Sub
 
 rem ######################################################################

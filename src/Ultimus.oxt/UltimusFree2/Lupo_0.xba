@@ -111,15 +111,7 @@ Visualizza_normale
 	dim iCasuale as long
 	
 	sURLOO = ConvertToUrl(ThisComponent.getURL())
-&apos;print sURLOO &apos;dbgbart
 
-&apos;	iCasuale = Int((10000 * Rnd) -2)&apos; genera numero random
-&apos;	ThisComponent.CurrentController.Frame.Name = iCasuale &apos; per il momento non lo sto usando
-	&apos; ma forse l&apos;unico modo per tenere il doc per palle
-	&apos; iterando tra i frame si verca quello giusto (prima di proseguire)
-	 &apos;StarDesktop.loadComponentFromURL(sURL, &quot;_default&quot;,0 , Array())
-
-&apos;	on error goto next
 	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
 	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	ThisComponent.unlockControllers 
@@ -415,6 +407,7 @@ rem ----------------------------------------------------------------------
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
 
 Controlla_Somme_Componenti
+parziale_verifica
  
 	
 	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then

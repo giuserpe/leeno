@@ -1034,7 +1034,7 @@ chiudi_dialoghi &apos; chiude tutti i dialoghi
 &apos;	CellRangeAddress.StartColumn = 	lcolStart
 	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
 	ThisComponent.CurrentController.Select(oRangeSel)
-verifica_parziali
+parziale_verifica
 END SUB
 rem ######################################################################
 
@@ -1141,12 +1141,16 @@ dim sFlag as string
 	end if
 	insRows (lrow + 1,1)
 &apos;	oSheet.getRows.insertByIndex(lrow + 1,1) &apos; inserisci 1 riga sotto
-	oSRC = oSheet.getCellRangeByPosition (2,lrow,250,lrow ).RangeAddress &apos; seleziona la riga sorgente
-	oDest = oSheet.GetCellByPosition(2, lrow+1).CellAddress &apos;stabilisce la destinazione
-	oSheet.copyRange(oDest,oSRC)&apos;copia sorgente su destinazione
-
+&apos;	oSRC = oSheet.getCellRangeByPosition (2,lrow,250,lrow ).RangeAddress &apos; seleziona la riga sorgente
+&apos;	oDest = oSheet.GetCellByPosition(2, lrow+1).CellAddress &apos;stabilisce la destinazione
+&apos;	oSheet.copyRange(oDest,oSRC)&apos;copia sorgente su destinazione
+	oSheet.GetCellByPosition( 9 , lrow+1).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;)&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;))&quot;
+	oSheet.GetCellByPosition( 11 , lrow+1).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;)&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;)*-1)&quot;
+	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
 	lrow=lrow+1
-	oSheet.getCellRangeByPosition (2,lrow,8,lrow).CellStyle = &quot;comp 1-a&quot; &apos; imposta lo stile
+	oSheet.getCellByPosition (2,lrow).CellStyle = &quot;comp 1-a&quot; &apos; imposta lo stile
+	oSheet.getCellRangeByPosition (5,lrow,8,lrow).CellStyle = &quot;comp 1-a&quot; &apos; imposta lo stile
+	oSheet.getCellByPosition (9,lrow).CellStyle = &quot;Comp-Variante&quot;&apos; imposta lo stile
 	lrow=lrow-1
 	oRange = oSheet.getCellRangeByPosition (2,lrow+1,150,lrow+1)
 	oRange.Rows.OptimalHeight = true

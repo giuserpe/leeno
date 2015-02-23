@@ -623,48 +623,59 @@ fissa (0,idxrow+1)
 &apos;Dim val1 As Long , val2 As Long , val3 As Long , val4 As Long , val5
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
-	lRowE=cerca_riga_rossa (&quot;COMPUTO&quot;)
+&apos;	lRowE=cerca_riga_rossa (&quot;COMPUTO&quot;)
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
+	lrowE=oEnd.RangeAddress.EndRow 
+
 	for i =0 to lRowE
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
-			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; then
+			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; Then
 				lRow = i
 				do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp End Attributo&quot;
 						lRow = lRow+1
 				Loop
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , i+1))
+&apos;				Print 
+&apos;			parziale_core
+&apos;			Print 
 rem ----------------------------------------------------------------------
 rem intrattenimento
 				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , lRow))
 rem ----------------------------------------------------------------------
 				&apos;oSheet.GetCellByPosition( 9 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
 				oSheet.GetCellByPosition( 9 , i+1).string = &quot;&quot;
+				oSheet.GetCellByPosition( 9 , i+1).cellstyle = &quot;vuote2&quot;
 				&apos;oSheet.GetCellByPosition( 10 , i+1).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;3;FALSE())&quot;
 				oSheet.GetCellByPosition( 10 , i+1).string = &quot;&quot;
 				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
 				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
+				oSheet.GetCellByPosition( 9 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
 				oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+1
 				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; i+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
-				
+				oSheet.GetCellByPosition( 10 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
 				oSheet.GetCellByPosition( 11 , lRow).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;
+				oSheet.GetCellByPosition( 11 , lRow).cellstyle = &quot;comp sotto Unitario&quot;
 &apos;				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
 				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
 				For ii = i+2 To lRow-1
 &apos;				Print ii
+&apos;		Print &quot;Parziale &quot; &amp; ii
+&apos;		If InStr (&quot;Parziale [&quot;, oSheet.GetCellByPosition(8 , ii).string)  Then
+&apos;			Print &quot;dddd&quot;
+&apos;			parziale_core
+&apos;		EndIf 
+
 oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
-				If oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a&quot; Then oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a peso&quot;
-				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
-				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+				If oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a&quot; Then
+					oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a peso&quot;
+					oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+					oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+				EndIf
 				i = lRow &apos;+ 1
 				Next 
-		end if
+		EndIf
 	Next
 fissa (0,idxrow+1)
 	ThisComponent.calculateAll()
-end sub
-
-
-
-
-
-
-
+End Sub
 </script:module>

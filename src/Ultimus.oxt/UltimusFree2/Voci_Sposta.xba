@@ -82,7 +82,6 @@ dim lrow as long
 		 
 		exit sub
 	end if
-print &quot;UUUU&quot;
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
  	ThisComponent.CurrentController.Select(oCell)

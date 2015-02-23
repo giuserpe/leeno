@@ -289,10 +289,14 @@ dim lrowE as long
 				Exit Function
 			EndIf 
 		procedo:
-		REM ----------------------------------------------------------------------
+REM ----------------------------------------------------------------------
 		REM se non trova inizio voce, lo inserisce
 			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot;
-				if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Or _
+REM ----------------------------------------------------------------------
+				If	osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; And _
+					osheet.getCellByPosition (0, lrow+1).CellStyle = &quot;Comp Start Attributo&quot; Then Exit Do
+REM ----------------------------------------------------------------------
+				if 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;livello2 valuta&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Default&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
@@ -302,8 +306,7 @@ dim lrowE as long
 					lrow=lrow+1
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot;
 					osheet.getCellRangeByPosition (1, lrow, 38, lrow).CellStyle = &quot;Comp-Bianche sopraS&quot;
-				&apos;minghia	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
-		&apos;ThisComponent.CurrentController.Select (osheet.getCellRangeByPosition (0, lrow)
+					oSheet.getCellRangeByposition(2,lrow,8,lrow).merge(true)
 					ptIns = osheet.getCellByPosition (31, lrow).getCellAddress()
 					range = osheet.getCellRangeByPosition (31, lrow+1, 35, lrow+1).getRangeAddress
 					osheet.copyRange(ptIns, range)

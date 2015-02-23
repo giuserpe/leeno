@@ -49,14 +49,12 @@ dim oSheet as object
  						oCell = oSheet.GetCellByPosition( lcol5 , lrow)
  						xA = oCell.string
 		 		Loop
-&apos;________________________________________________________________________
+rem ----------------------------------------------------------------------
  		 Copia_Formule_Su_Computo_Sing_Voce (lrow)	
-&apos;______________________________________________________________________________
-&apos; 		
-&apos;_____________________________________________________________________________
+rem ----------------------------------------------------------------------
  		&apos; Copia_superTag (lrow)
  	&apos;	 Copia_superTag_tutto(lrow)
- &apos;_______________________________________________________________
+rem ----------------------------------------------------------------------
  	&apos;	 exit sub
  		 oCell = oSheet.GetCellByPosition( lcol5 , lrow)
  		 Do while oSheet.GetCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;
@@ -139,13 +137,11 @@ dim sString$, xA, sTag as string
  &apos;		 print &quot;prima &quot; &amp; iRow
  &apos;		print &quot;lrow1 &quot; &amp; lrow 		 
  		 Copia_Formule_Su_Computo_Sing_Voce (iRow)	
-&apos;______________________________________________________________________________
-&apos; 		
-&apos;_____________________________________________________________________________
+rem ----------------------------------------------------------------------
  		&apos; Copia_superTag (iRow)
  	&apos;	print &quot;lrow &quot; &amp; lrow
  		&apos; Copia_superTag_tutto(iRow)
- &apos;______________________________________________________________
+rem ----------------------------------------------------------------------
  
 		Do while oSheet.GetCellByPosition( 2, iRow).string &lt;&gt; &quot;SOMMANO &quot;
 			iRow = iRow+1

@@ -347,7 +347,7 @@ rem ----------------------------------------------------------------------
  	Select case MsgBox ( &quot;Sto per eseguire la procedura di controllo su questo doc: &quot; &amp; CHR$(10) &amp; CHR$(10)_
  		&amp; ConvertFromUrl(sURLOO) &amp; CHR$(10) &amp; CHR$(10)_
 		&amp; &quot;Se rispondi Sì e prosegui dovrai attendere il caricamento&quot; &amp; CHR$(10)_
-		&amp; &quot;SENZA TOCCARE IL MOUSE O LA TASTIERA!&quot; &amp; CHR$(10)_
+		&amp; &quot;SENZA INTERFERIRE CON MOUSE O TASTIERA!&quot; &amp; CHR$(10)_
 		&amp; sSMS , 35, &quot;Controllo del documento&quot;) &apos; = 7 then
 		Case 7
 
@@ -402,14 +402,12 @@ rem ----------------------------------------------------------------------
 
 
 	Colora_Tabs
- &apos;_______________________________________________
+rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
-
+Print &quot;1&quot;
 Controlla_Somme_Componenti
-parziale_verifica
- 
-	
+Print &quot;2&quot;
 	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
 		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 		ThisComponent.CurrentController.Select(oSheet)
@@ -586,7 +584,6 @@ Protect_alcune_tabelle
 &apos;	&amp; &quot; Se hai &quot;&quot;disturbato&quot;&quot; l&apos;apertura del documento pasticciando con il mouse o la tastiera c&apos;era da aspettarselo...&quot; &amp; CHR$(10)_
 &apos;	&amp; &quot; Prova a chiudere e riaprire il documento!&quot;
 &apos;	Altro_Detentore_generale_errore
-	exit sub
 END SUB
 
 

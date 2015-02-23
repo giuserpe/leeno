@@ -1034,6 +1034,9 @@ chiudi_dialoghi &apos; chiude tutti i dialoghi
 &apos;	CellRangeAddress.StartColumn = 	lcolStart
 	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
 	ThisComponent.CurrentController.Select(oRangeSel)
+rem ----------------------------------------------------------------------
+
+	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
 parziale_verifica
 END SUB
 rem ######################################################################
@@ -1118,8 +1121,8 @@ dim sFlag as string
 
 				Else
 				&apos;	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
-					Msgbox (&quot;#1 L&apos;eventualità di copiare questa riga non è prevista!&quot; &amp; CHR$(10) _
-		 				&amp; &quot;Riprova da una posizione diversa...&quot;, 48 , &quot;Errore!&quot;
+				&apos;	Msgbox (&quot;#1 L&apos;eventualità di copiare questa riga non è prevista!&quot; &amp; CHR$(10) _
+		 		&apos;		&amp; &quot;Riprova da una posizione diversa...&quot;, 48 , &quot;Errore!&quot;
 					exit sub
 			end if
 		else

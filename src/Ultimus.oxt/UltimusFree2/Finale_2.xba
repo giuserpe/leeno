@@ -5,52 +5,52 @@
 rem https://forum.openoffice.org/it/forum/viewtopic.php?f=26&amp;t=5859
 SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+			 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	Chiudi_o_elimina_tabelle_inutili
-rem ----------------------------------------------------------------------
-rem nome e percorso file
+	rem ----------------------------------------------------------------------
+	rem nome e percorso file
 	oDoc = ThisComponent
 	oSheets = oDoc.Sheets()
 	oSheet = oDoc.currentcontroller.activesheet
 	print_area= oSheet.getPrintAreas
 	oActiveSheet = oDoc.CurrentController.ActiveSheet().Name
-
+	
 	sDocURL =oDoc.getURL() &apos; file sorgente
 	sUrl = DirectoryNameoutofPath(sDocURL, &quot;/&quot;) &apos;path
 	sFileName = GetFileNameWithoutExtension(sDocURL, &quot;/&quot;) &apos;file
 &apos;	oActiveSheet = &quot;COMPUTO&quot;
 	sFile = sUrl + &quot;/&quot; + sFileName + &quot;_&quot; + oActiveSheet + &quot;.pdf&quot;
-
-rem metto in ordine secondo la stampa
+	
+	rem metto in ordine secondo la stampa
 	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;) &apos;questa serve a conservare l&apos;area di stampa dell&apos;ulima sheet utile
 	oSheet.IsVisible = True
 	thisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
 	thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,2)
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,10,10))
-rem rimuovo le aree di stampa che non interessano
+	rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
 		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
-			&apos;oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;)
+&apos;oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;)
 			ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).GetCellByPosition(0,0))
-			&apos;	Print  
+&apos;	Print  
 			rimuovi_area_di_stampa
 			oSh.IsVisible = False
 		Else
-	&apos;		If 	ubound(print_area)=0 and oSh.Name = oActiveSheet Then &apos; se è definista un&apos;area di stampa
-	&apos;			With print_area(0)
-	&apos;				ecol=.EndColumn
-	&apos;				erow=.EndRow
-	&apos;				esh=.Sheet
-	&apos;				scol=.StartColumn
-	&apos;				srow=.StartRow
-	&apos;			End With
+&apos;		If 	ubound(print_area)=0 and oSh.Name = oActiveSheet Then &apos; se è definista un&apos;area di stampa
+&apos;			With print_area(0)
+&apos;				ecol=.EndColumn
+&apos;				erow=.EndRow
+&apos;				esh=.Sheet
+&apos;				scol=.StartColumn
+&apos;				srow=.StartRow
+&apos;			End With
 			If 	oSh.Name = oActiveSheet Then 
 				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
 				SBIANCA_celle
 				thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-
+				
 &apos;				Print scol &amp;&quot; &quot;&amp; srow &amp;&quot; &quot;&amp; ecol &amp;&quot; &quot;&amp; erow
 &apos;				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(scol,srow,ecol,erow))
 &apos;				SBIANCA_celle
@@ -58,44 +58,45 @@ rem rimuovo le aree di stampa che non interessano
 			Else
 				Set_Area_Stampa_N(&quot;NO_messaggio&quot;)
 			End If
-
+			
 		End If
 	Next
 &apos;parametri di esportazione
-dim dispatcher as Object
-dim document as Object
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	dim dispatcher as Object
+	dim document as Object
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 &apos;   Dim mStoreOpts(1) As New com.sun.star.beans.PropertyValue
 &apos;   mStoreOpts(0).Name = &quot;Overwrite&quot;
 &apos;   mStoreOpts(0).Value = True
 &apos;   mStoreOpts(1).Name = &quot;FilterName&quot;
 &apos;   mStoreOpts(1).Value = &quot;calc_pdf_Export&quot;
 &apos;   sFile = &quot;file:///C:/test1.PDF&quot;
-
+	
 &apos;   oDoc.storeToURL(sFile, mStoreOpts())
-
-rem ----------------------------------------------------------------------
-dim args1(2) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;URL&quot;
-args1(0).Value = sFile &apos;&quot;file:///C:/test.pdf&quot;
-args1(1).Name = &quot;FilterName&quot;
-args1(1).Value = &quot;calc_pdf_Export&quot;
-args1(2).Name = &quot;FilterData&quot;
-args1(2).Value = Array(Array(&quot;UseLosslessCompression&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Quality&quot;,0,90,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ReduceImageResolution&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;MaxImageResolution&quot;,0,300,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;UseTaggedPDF&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;SelectPdfVersion&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportNotes&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportBookmarks&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;OpenBookmarkLevels&quot;,0,-1,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;UseTransitionEffects&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;IsSkipEmptyPages&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;IsAddStream&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EmbedStandardFonts&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;FormsType&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportFormFields&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;AllowDuplicateFieldNames&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerToolbar&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerMenubar&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerWindowControls&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ResizeWindowToInitialPage&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;CenterWindow&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;OpenInFullScreenMode&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;DisplayPDFDocumentTitle&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;InitialView&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Magnification&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Zoom&quot;,0,100,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PageLayout&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;FirstPageOnLeft&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;InitialPage&quot;,0,1,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Printing&quot;,0,2,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Changes&quot;,0,4,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EnableCopyingOfContent&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EnableTextAccessForAccessibilityTools&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportLinksRelativeFsys&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PDFViewSelection&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ConvertOOoTargetToPDFTarget&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportBookmarksToPDFDestination&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;_OkButtonString&quot;,0,&quot;&quot;,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EncryptFile&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PreparedPasswords&quot;,0,,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;RestrictPermissions&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PreparedPermissionPassword&quot;,0,Array(),com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;&quot;,0,,com.sun.star.beans.PropertyState.DIRECT_VALUE))
-
-dispatcher.executeDispatch(document, &quot;.uno:ExportToPDF&quot;, &quot;&quot;, 0, args1())
-
+	
+	rem ----------------------------------------------------------------------
+	dim args1(2) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = &quot;URL&quot;
+	args1(0).Value = sFile &apos;&quot;file:///C:/test.pdf&quot;
+	args1(1).Name = &quot;FilterName&quot;
+	args1(1).Value = &quot;calc_pdf_Export&quot;
+	args1(2).Name = &quot;FilterData&quot;
+	args1(2).Value = Array(Array(&quot;UseLosslessCompression&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Quality&quot;,0,90,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ReduceImageResolution&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;MaxImageResolution&quot;,0,300,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;UseTaggedPDF&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;SelectPdfVersion&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportNotes&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportBookmarks&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;OpenBookmarkLevels&quot;,0,-1,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;UseTransitionEffects&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;IsSkipEmptyPages&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;IsAddStream&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EmbedStandardFonts&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;FormsType&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportFormFields&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;AllowDuplicateFieldNames&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerToolbar&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerMenubar&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;HideViewerWindowControls&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ResizeWindowToInitialPage&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;CenterWindow&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;OpenInFullScreenMode&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;DisplayPDFDocumentTitle&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;InitialView&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Magnification&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Zoom&quot;,0,100,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PageLayout&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;FirstPageOnLeft&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;InitialPage&quot;,0,1,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Printing&quot;,0,2,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;Changes&quot;,0,4,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EnableCopyingOfContent&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EnableTextAccessForAccessibilityTools&quot;,0,true,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportLinksRelativeFsys&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PDFViewSelection&quot;,0,0,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ConvertOOoTargetToPDFTarget&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;ExportBookmarksToPDFDestination&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;_OkButtonString&quot;,0,&quot;&quot;,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;EncryptFile&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PreparedPasswords&quot;,0,,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;RestrictPermissions&quot;,0,false,com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;PreparedPermissionPassword&quot;,0,Array(),com.sun.star.beans.PropertyState.DIRECT_VALUE),Array(&quot;&quot;,0,,com.sun.star.beans.PropertyState.DIRECT_VALUE))
+	
+	dispatcher.executeDispatch(document, &quot;.uno:ExportToPDF&quot;, &quot;&quot;, 0, args1())
+	
 &apos;For Each oSh In oSheets
 &apos;     oSh.IsVisible = True
 &apos;Next
-
-Rimetti_in_ordine_tab
-Chiudi_o_elimina_tabelle_inutili
-oSheet = ThisComponent.Sheets.getByName(oActiveSheet)
-oSheet.IsVisible = True
-ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
+	
+	Rimetti_in_ordine_tab
+	Chiudi_o_elimina_tabelle_inutili
+	oSheet = ThisComponent.Sheets.getByName(oActiveSheet)
+	oSheet.IsVisible = True
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
 End Sub
+
 
 
 Sub esporta_PDF_Foglio_Attivo

@@ -209,24 +209,56 @@ rem inserisce una somma parziale sul rigo selezionato
 	Dim i As Long
 	osheet = thisComponent.CurrentController.ActiveSheet
 	lrow = range2cell
-	if oSheet.Name = &quot;COMPUTO&quot; Or _
-		oSheet.Name = &quot;CONTABILITA&quot;  Then
-		If osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
-			osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
-			osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
+	
+	Select Case oSheet.Name
+		Case &quot;COMPUTO&quot;
+			If 	InStr (oSheet.GetCellByPosition(8 , lrow).String, &quot;SOMMANO [&quot;) &gt; 0  Then 
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
 copia_riga_C
-			GoTo procedi
-			ElseIf osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
-				osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp sotto centro_R&quot; And _
-				osheet.getCellByPosition (11, lrow).CellStyle = &quot;Comp-Variante&quot; Then
-			GoTo procedi
-		Else
-			GoTo fine
-		EndIf
-	Else
-		GoTo fine
-	EndIf
+				GoTo procedi
+			EndIf
+			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot; OR _
+				osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp progress&quot; Then Exit Sub
+			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s&quot; And _
+					osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; And _
+					osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
+&apos;					If InStr (oSheet.GetCellByPosition(8 , lrow).String, &quot;Parziale [&quot;)  Then 
+						ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
+copia_riga_C
+&apos;					EndIf
+				GoTo procedi
+	&apos;			ElseIf 	osheet.getCellByPosition (1, lrow).CellStyle = &quot;comp sotto Bianche&quot; And _
+	&apos;				osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp sotto centro&quot; And _
+	&apos;				osheet.getCellByPosition (9, lrow).CellStyle = &quot;Comp-Variante num sotto&quot; Then
+			EndIf
+		Case &quot;CONTABILITA&quot;
+			If InStr (oSheet.GetCellByPosition(8 , lrow).String, &quot;Somma positivi e negativi [&quot;) &gt; 0  Then 
+				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
+copia_riga_C
+					GoTo procedi
+			EndIf
+			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
+					osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
+					osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
+					ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
+copia_riga_C
+					GoTo procedi
+				ElseIf osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
+					osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp sotto centro_R&quot; And _
+					osheet.getCellByPosition (11, lrow).CellStyle = &quot;Comp-Variante&quot; Then
+					GoTo procedi
+				ElseIf osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
+					osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp sotto centro_R&quot; And _
+					osheet.getCellByPosition (11, lrow).CellStyle = &quot;Comp-Variante num sotto&quot; Then
+					If InStr (oSheet.GetCellByPosition(8 , lrow).String, &quot;Parziale [&quot;) &gt; 0  Then 
+						ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
+copia_riga_C
+					EndIf
+			EndIf
+		Case Else
+			Exit Sub
+	End Select
+rem ----------------------------------------------------------------------
 procedi:
 rem ----------------------------------------------------------------------
 	sStRange = Circoscrive_Voce_Computo_Att (range2cell)
@@ -235,22 +267,37 @@ rem ----------------------------------------------------------------------
 		lRowE = .EndRow
 	End With
 rem ---------------------------------------------------------------------
-
 	oSrc = oSheet.getCellRangeByPosition(2, lRowE, 9, lRowE).RangeAddress
 	oDest = oSheet.GetCellByPosition(2,lrow).CellAddress
 	oSheet.copyRange(oDest, oSrc)
 	oSheet.getCellByPosition(8, lrow).setformula(&quot;=CONCATENATE(&quot;&quot;Parziale [&quot;&quot;;VLOOKUP(B&quot; &amp; lrowi+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
-	i = lrow
-	Do While i &gt; 0
-		If osheet.getCellByPosition (9, i-1).CellStyle = &quot;vuote2&quot; Or _
-			osheet.getCellByPosition (9, i-1).CellStyle = &quot;Comp-Variante num sotto&quot; Then
-			dariga=i
-			Exit Do
-		EndIf
-		i=i-1
-	Loop 
-	oSheet.GetCellByPosition(11, lrow).string = &quot;&quot;
-	oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma
+	Select Case oSheet.Name
+		Case &quot;COMPUTO&quot;
+			i = lrow
+			Do While i &gt; 0
+				If osheet.getCellByPosition (9, i-1).CellStyle = &quot;vuote2&quot; Or _
+					osheet.getCellByPosition (9, i-1).CellStyle = &quot;Comp-Variante num sotto&quot; Then
+					dariga=i
+					Exit Do
+				EndIf
+				i=i-1
+			Loop 
+			oSheet.GetCellByPosition(11, lrow).string = &quot;&quot;
+&apos;Print 			dariga
+			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma
+		Case &quot;CONTABILITA&quot;
+			i = lrow
+			Do While i &gt; 0
+				If osheet.getCellByPosition (9, i-1).CellStyle = &quot;vuote2&quot; Or _
+					osheet.getCellByPosition (9, i-1).CellStyle = &quot;Comp-Variante num sotto&quot; Then
+					dariga=i
+					Exit Do
+				EndIf
+				i=i-1
+			Loop 
+			oSheet.GetCellByPosition(11, lrow).string = &quot;&quot;
+			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma
+	End Select 
 rem ----------------------------------------------------------------------
 fine:
 End Sub
@@ -259,24 +306,45 @@ rem ######################################################################
 Sub parziale_verifica rem &apos;(C) Giuseppe Vizziello 2015
 rem questa è inserita anche alla fine della sub elimina_riga
 	osheet = thisComponent.CurrentController.ActiveSheet
+	If osheet.Name = &quot;COMPUTO&quot; Or osheet.Name = &quot;CONTABILITA&quot; Then
+	Else
+		Exit Sub
+	endif
+rem ----------------------------------------------------------------------
 	lrow = range2cell
-&apos;	parziale
 rem ----------------------------------------------------------------------
 	sStRange = Circoscrive_Voce_Computo_Att (lrow)
+	If isNull (sStRange) Or isEmpty (sStRange) Then Exit Sub
 	With sStRange.RangeAddress
 		lRowI = .StartRow
 		lRowE = .EndRow
 	End With
 rem ---------------------------------------------------------------------
-	For i = lRowI To lRowE
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, i))
-		If osheet.getCellByPosition (1, i).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
-			osheet.getCellByPosition (2, i).CellStyle = &quot;comp sotto centro_R&quot; And _
-			osheet.getCellByPosition (11, i).CellStyle = &quot;Comp-Variante&quot; Then
-			parziale_core
-		EndIf
-	Next
+	Select Case oSheet.Name
+		Case &quot;COMPUTO&quot;
+		For i = lRowI+2 To lRowE-1
+			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, i))
+		If InStr (&quot;Parziale [&quot;, oSheet.GetCellByPosition(8 , ii).string)  Then parziale_verifica
+&apos; print osheet.getCellByPosition (0, i).CellStyle
+			If 	osheet.getCellByPosition (0, i).CellStyle = &quot;Comp End Attributo&quot; Then GoTo fine:
+			If  osheet.getCellByPosition (1, i).CellStyle = &quot;Comp-Bianche in mezzo&quot; And _
+				osheet.getCellByPosition (2, i).CellStyle = &quot;comp sotto centro&quot; And _
+				osheet.getCellByPosition (11, i).CellStyle = &quot;Comp-Bianche in mezzo&quot; Then
+				parziale_core
+			EndIf
+		Next
+		Case &quot;CONTABILITA&quot;
+		For i = lRowI+2 To lRowE-2
+			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, i))
+			If osheet.getCellByPosition (1, i).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; And _
+				osheet.getCellByPosition (2, i).CellStyle = &quot;comp sotto centro_R&quot; And _
+				osheet.getCellByPosition (11, i).CellStyle = &quot;Comp-Variante&quot; Then
+				parziale_core
+			EndIf
+		Next
+	End Select
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
+fine:
 End Sub
 rem ######################################################################
 
@@ -285,10 +353,9 @@ rem inserisce un parziale e corregge altri parziali della stessa voce
 parziale_core
 parziale_verifica
 End Sub
-
 rem ######################################################################
 
-sub vedi_voce rem &apos;(C) Giuseppe Vizziello 2013
+Sub vedi_voce rem &apos;(C) Giuseppe Vizziello 2013
 	Dim test As String
 	Dim riga_selezione As Integer
 	Dim focus as integer
@@ -302,7 +369,7 @@ Else
 		msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
 	&amp; &quot;Devi trovarti in COMPUTO o CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
 	
-end if
+End If 
 procedi:
 oContr = ThisComponent.CurrentController
 focus = oContr.getFirstVisibleRow

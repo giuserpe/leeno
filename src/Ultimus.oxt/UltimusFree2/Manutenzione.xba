@@ -614,9 +614,7 @@ if sTrovato = 0 then
 		print &quot;lo stile di cella &apos; &quot; &amp; sNome_stile &amp; &quot; &apos; non è usato in questa sheet&quot;
 end if
 end sub
-
-
-
+rem ######################################################################
 
 Sub Controlla_Somme_Componenti &apos; serve per conversione Da_Vecchio_Template
 fissa (0,idxrow+1)
@@ -627,7 +625,19 @@ fissa (0,idxrow+1)
 	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
 	lrowE=oEnd.RangeAddress.EndRow 
 
-	for i =0 to lRowE
+	for i =0 to lrowE
+rem ----------------------------------------------------------------------
+rem controllo singoli righi
+		If InStr (oSheet.GetCellByPosition(8, i).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then parziale_core  (i)
+		if oSheet.GetCellByPosition( 2 , i).cellstyle = &quot;comp 1-a&quot; and _
+			oSheet.GetCellByPosition( 5 , i).cellstyle = &quot;comp 1-a&quot; and _
+			oSheet.GetCellByPosition( 8 , i).cellstyle = &quot;comp 1-a peso&quot; Then
+			oSheet.GetCellByPosition( 9 , i).formula = &quot;=IF(PRODUCT(F&quot; &amp; i+1 &amp; &quot;:I&quot; &amp; i+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; i+1 &amp; &quot;:I&quot; &amp; i+1 &amp; &quot;))&quot;
+			oSheet.GetCellByPosition( 10 , i).formula = &quot;=IF(PRODUCT(F&quot; &amp; i+1 &amp; &quot;:I&quot; &amp; i+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; i+1 &amp; &quot;:I&quot; &amp; i+1 &amp; &quot;))&quot;
+		EndIf	
+	Next
+	for i =0 to lrowE
+rem ----------------------------------------------------------------------
 		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
 			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; Then
 				lRow = i
@@ -635,9 +645,6 @@ fissa (0,idxrow+1)
 						lRow = lRow+1
 				Loop
 				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , i+1))
-&apos;				Print 
-&apos;			parziale_core
-&apos;			Print 
 rem ----------------------------------------------------------------------
 rem intrattenimento
 				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , lRow))
@@ -658,21 +665,15 @@ rem ----------------------------------------------------------------------
 &apos;				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUM(J&quot; &amp; i+3 &amp; &quot;:J&quot; &amp; lrow &amp; &quot;)&quot; 
 				oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
 				For ii = i+2 To lRow-1
-&apos;				Print ii
-&apos;		Print &quot;Parziale &quot; &amp; ii
-&apos;		If InStr (&quot;Parziale [&quot;, oSheet.GetCellByPosition(8 , ii).string)  Then
-&apos;			Print &quot;dddd&quot;
-&apos;			parziale_core
-&apos;		EndIf 
-
-oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
-				If oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a&quot; Then
-					oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a peso&quot;
-					oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
-					oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
-				EndIf
-				i = lRow &apos;+ 1
-				Next 
+					oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
+					If oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a&quot; Then
+						oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a peso&quot;
+						oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+						oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+					EndIf
+					
+					i = lRow &apos;+ 1
+				Next
 		EndIf
 	Next
 fissa (0,idxrow+1)

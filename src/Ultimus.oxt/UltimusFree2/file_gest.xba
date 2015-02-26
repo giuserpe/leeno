@@ -100,7 +100,6 @@ end Sub
 rem ----------------------------------------------------------------------
 
 Sub avvia_IDE
-GENERA_Atti_Contabili
 PRIND 
 End Sub
 

@@ -24,7 +24,7 @@ oor:package="org.openoffice.Office">
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
 					</prop>
-				</node>					
+				</node>
 				<node oor:name="mT01" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -229,40 +229,6 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>
-				<node oor:name="mT13" oor:op="replace">
-					<prop oor:name="Context" oor:type="xs:string">
-						<value>com.sun.star.sheet.SpreadsheetDocument</value>
-					</prop>
-					<prop oor:name="URL" oor:type="xs:string">
-						<value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
-					</prop>
-					<prop oor:name="ImageIdentifier" oor:type="xs:string">
-						<value>%origin%/icons/image19</value>
-					</prop>
-					<prop oor:name="Title" oor:type="xs:string">
-						<value>Inserisci Categoria</value>
-					</prop>
-					<prop oor:name="Target" oor:type="xs:string">
-						<value>_self</value>
-					</prop>
-				</node>
-				<node oor:name="mT14" oor:op="replace">
-					<prop oor:name="Context" oor:type="xs:string">
-						<value>com.sun.star.sheet.SpreadsheetDocument</value>
-					</prop>
-					<prop oor:name="URL" oor:type="xs:string">
-						<value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
-					</prop>
-					<prop oor:name="ImageIdentifier" oor:type="xs:string">
-						<value>%origin%/icons/image20</value>
-					</prop>
-					<prop oor:name="Title" oor:type="xs:string">
-						<value>Inserisci SottoCategoria</value>
-					</prop>
-					<prop oor:name="Target" oor:type="xs:string">
-						<value>_self</value>
-					</prop>
-				</node>
 				<node oor:name="mT15" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -288,34 +254,135 @@ oor:package="org.openoffice.Office">
 						<value>private:separator</value>
 					</prop>
 				</node>	
-				<node oor:name="mT17" oor:op="replace">
+			</node>
+		</node>
+<!--COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO -->
+		<node oor:name="OfficeToolBar">
+			<node oor:name="ULTIMUS_3.OfficeToolBar_COMPUTO" oor:op="replace">
+				<node oor:name="m000" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
 					<prop oor:name="URL" oor:type="xs:string">
-						<value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Ricicla_misure?language=Basic&amp;location=application</value>
+						<value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
 					</prop>
 					<prop oor:name="ImageIdentifier" oor:type="xs:string">
-						<value>%origin%/icons/ricicla</value>
+						<value>%origin%/icons/image19</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Ricicla voce computo</value>
+						<value>Inserisci Categoria</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
 					</prop>
 				</node>
-<!-- IMPORTA-->
-				<node oor:name="mT18" oor:op="replace">
+				<node oor:name="m010" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<value>%origin%/icons/image20</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>Inserisci SottoCategoria</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
+				<node oor:name="m100" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.Computo.parziale?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<value>%origin%/icons/parz</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>Inserisci parziale</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
+			</node>
+		</node>
+<!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
+		<node oor:name="OfficeToolBar">
+			<node oor:name="ULTIMUS_3.OfficeToolBar_CONTABILITA" oor:op="replace">
+				<node oor:name="m100" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.Computo.parziale?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<value>%origin%/icons/parz</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>Inserisci parziale</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
+				<node oor:name="m100" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Ricicla_Misure?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<value>%origin%/icons/ricicla</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>Riusa una misura del computo</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
+			</node>
+		</node>
+<!--DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV -->
+		<node oor:name="OfficeToolBar">
+			<node oor:name="ULTIMUS_3.OfficeToolBar_DEV" oor:op="replace">
+<!-- crea il pacchetto -->
+				<node oor:name="m001" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+						<value>%origin%/icons/zip</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>pack.OXT</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
+				<!-- IMPORTA-->
+				<node oor:name="m100" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
 					<prop oor:name="URL" oor:type="xs:string">
 <!--						<value>service:vnd.pyleeno$xmlsix2ods?execute</value>
-                        <value>vnd.sun.star.script:LeenO-3.10.3.dev.oxt|pyleeno.py$xmlsix2ods?language=Python&amp;location=share:uno_packages</value> -->
-                        <value>vnd.sun.star.script:pyleeno.py$xmlsix2ods?language=Python&amp;location=user</value>
+						<value>vnd.sun.star.script:LeenO-3.10.3.dev.oxt|pyleeno.py$xmlsix2ods?language=Python&amp;location=share:uno_packages</value> -->
+						<value>vnd.sun.star.script:pyleeno.py$xmlsix2ods?language=Python&amp;location=user</value>
 <!--                        <value>vnd.sun.star.script:LeenO-3.10.3.dev.oxt|pyleeno.py$xmlsix2ods?language=Python&amp;location=user:uno_packages</value> -->
-                    </prop>
+					</prop>
 					<prop oor:name="ImageIdentifier" oor:type="xs:string">
 						<value>%origin%/icons/image300</value>
 					</prop>
@@ -326,9 +393,9 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>
-<!---->
+<!-- -->
 <!-- PROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVA-->
-				<node oor:name="mT19" oor:op="replace">
+				<node oor:name="m200" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value>com.sun.star.sheet.SpreadsheetDocument</value>
 					</prop>
@@ -345,28 +412,9 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>
-<!---->
-<!-- crea il pacchetto
-				<node oor:name="mT19" oor:op="replace">
-					<prop oor:name="Context" oor:type="xs:string">
-						<value>com.sun.star.sheet.SpreadsheetDocument</value>
-					</prop>
-					<prop oor:name="URL" oor:type="xs:string">
-						<value>vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
-					</prop>
-					<prop oor:name="ImageIdentifier" oor:type="xs:string">
-						<value>%origin%/icons/image3000</value>
-					</prop>
-					<prop oor:name="Title" oor:type="xs:string">
-						<value>pack.OXT</value>
-					</prop>
-					<prop oor:name="Target" oor:type="xs:string">
-						<value>_self</value>
-					</prop>
-				</node>
--->
 			</node>
 		</node>
+<!--																						-->
 		<node oor:name="OfficeMenuBar">
 			<node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
 				<prop oor:name="Context" oor:type="xs:string">

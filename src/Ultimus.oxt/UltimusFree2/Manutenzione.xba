@@ -14,7 +14,6 @@
 
 &apos;Global sNome_stile as string
 
-
 Public Const sList as string = &quot;lista&quot; &apos;as string
 Public Const sPerduta as string = &quot;#NOME?&quot; &apos;as string
 Public Const sMessaggioErr as string = &quot;Attento!!!&quot;&apos; as string

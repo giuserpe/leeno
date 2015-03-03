@@ -79,6 +79,12 @@ rem ----------------------------------------------------------------------
 rem pacchettizza l&apos;estensione direttamente nel mio archivio
 sub make_pack
 rem ----------------------------------------------------------------------
+	Dim oLayout
+	oDoc = thiscomponent
+	oLayout = oDoc.CurrentController.getFrame().LayoutManager
+	oDoc.currentcontroller.activesheet.Name
+	oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
+rem ----------------------------------------------------------------------
 	Dim pip As Object, extensionLocation As String
 &apos;	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot; REM vedi in &quot;_variabili&quot;
 	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
@@ -100,6 +106,12 @@ end Sub
 rem ----------------------------------------------------------------------
 
 Sub avvia_IDE
+	Dim oLayout
+	oDoc = thiscomponent
+	oLayout = oDoc.CurrentController.getFrame().LayoutManager
+	oDoc.currentcontroller.activesheet.Name
+&apos;	oLayout.isElementFloating(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
+	oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 PRIND 
 End Sub
 

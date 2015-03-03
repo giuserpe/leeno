@@ -399,18 +399,20 @@ rem ----------------------------------------------------------------------
 
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;4........&quot;, 50)
+
+
 	Colora_Tabs
+rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
-rem ----------------------------------------------------------------------
-&apos;GoTo oltre:
+Controlla_Somme_Componenti
 	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
 		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 		ThisComponent.CurrentController.Select(oSheet)
 		&apos; questa è lunga da eseguire...
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-&apos;		Tutti_Subtotali (oSheet)
-Controlla_Somme_Componenti		
+		Tutti_Subtotali (oSheet)
+		
 		&apos;Numera_Voci_Computo (&quot;niente prompt&quot;) &apos;meglio non eseguire in automatico
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)
@@ -419,10 +421,10 @@ Controlla_Somme_Componenti
  		oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
  		oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
 		oCtrlModel.Enabled = true	
-aggiorniamoli
-Visualizza_normale
+		aggiorniamoli
+		Visualizza_normale
 	end if
-&apos;oltre:
+	
 	If thisComponent.Sheets.hasByName(&quot;S5&quot;) Then
 		Logo_Avvio
 	end if
@@ -459,20 +461,21 @@ Visualizza_normale
 					End select
 				else
 					&apos; PRIMO APPROCCIO&quot;
-rem ----------------------------------------------------------------------
-&apos;					Computo_Normale_terra_terraDIRETTO
-&apos;					If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-&apos;				&apos;	oSheet = ThisComponent.currentController.activeSheet
-&apos;					oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
-&apos;					oPrimaCella.Rows.Height = 2200
-&apos;					ThisComponent.CurrentController.Select(oPrimaCella)
-rem ----------------------------------------------------------------------
+					
+					Computo_Normale_terra_terraDIRETTO
+					If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
+						oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+					end if
+				&apos;	oSheet = ThisComponent.currentController.activeSheet
+					oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
+					oPrimaCella.Rows.Height = 2200
+					ThisComponent.CurrentController.Select(oPrimaCella)
 					oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-&apos;					oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
-&apos;					oSpalte1.isVisible = false
+					oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
+					oSpalte1.isVisible = false
 				&apos;	Sel_Computo
 					Computo_Normale_terra_terra
-&apos;					Sel_Altre_Opz
+					Sel_Altre_Opz
 			end if		
 	 	else
 	 		Sel_Altre_Opz

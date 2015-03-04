@@ -44,6 +44,9 @@ rem solo un appunto: clearContents()
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
 Elimina_Nomi_Area_errati
 Sel_Altre_Opz
+&apos;assegna le macro agli eventi di ogni foglio:
+assegnaMacro (&quot;COMPUTO&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.vedi_toolbar?language=Basic&amp;location=application&quot;)
+assegnaMacro (&quot;CONTABILITA&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.vedi_toolbar?language=Basic&amp;location=application&quot;)
 End Sub
 
 </script:module>

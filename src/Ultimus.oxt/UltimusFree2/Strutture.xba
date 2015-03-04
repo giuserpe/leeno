@@ -539,6 +539,7 @@ Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto i
  			oSheet1 = ThisComponent.currentController.activeSheet
  	end If
 &apos;Print Trova_Attr_Sheet
+sistema_attributi_sheet
 	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_COMPUTO&quot; Then
 		 msgbox &quot;#1 Questa non mi pare una tabella di Computo...!&quot;
 		 	exit sub

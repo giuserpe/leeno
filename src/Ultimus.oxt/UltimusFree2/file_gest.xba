@@ -108,6 +108,8 @@ rem ----------------------------------------------------------------------
 Sub avvia_IDE
 	Dim oLayout
 	oDoc = thiscomponent
+&apos;xray oDoc
+&apos;Print 
 	oLayout = oDoc.CurrentController.getFrame().LayoutManager
 	oDoc.currentcontroller.activesheet.Name
 &apos;	oLayout.isElementFloating(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)

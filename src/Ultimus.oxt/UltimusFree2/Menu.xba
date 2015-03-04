@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Menu" script:language="StarBasic">rem ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO 3.10.2
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+rem ######################################################################
+rem buona parte delle macro in questo modulo sono tratte da
+rem http://www.pitonyak.org/AndrewMacro.odt
+rem ######################################################################
+
+Sub myTestToolBarVisible
+	Dim s$, sName$
+
+	For Each sName In GetmyToolBarNames()
+		s = s &amp; IsToolbarVisible(ThisComponent, sName) &amp; _
+		&quot;: &quot; &amp; sName &amp; CHR$(10)
+	Next
+	MsgBox s, 0, &quot;Toolbar Is Visible&quot;
+End Sub
+
+Function IsToolbarVisible(oDoc, sURL) As Boolean
+	Dim oFrame
+	Dim oLayout
+	oFrame = oDoc.getCurrentController().getFrame()
+	oLayout = oFrame.LayoutManager
+	IsToolbarVisible = oLayout.isElementVisible(sURL)
+End Function
+rem ######################################################################
+
+Sub SeeComponentsElements()
+	Dim oDoc, oFrame
+	Dim oCfgManager
+	Dim oToolInfo
+	Dim x
+	Dim s$
+	Dim iToolType as Integer
+	oDoc = ThisComponent
+	REM This is the integer value three.
+	iToolType = com.sun.star.ui.UIElementType.TOOLBAR
+	oFrame = oDoc.getCurrentController().getFrame()
+	oCfgManager = oDoc.getUIConfigurationManager()
+	oToolInfo = oCfgManager.getUIElementsInfo( iToolType )
+&apos;xray	ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(5)&apos;.RealInterface.isFloating 
+&apos;ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(5).RealInterface.isFloating = False
+&apos;Print 	ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(5).RealInterface.isFloating
+	For Each x in oFrame.LayoutManager.getElements()
+		s = s &amp; x.ResourceURL &amp; CHR$(10)
+	Next
+	MsgBox s, 0, &quot;Toolbars in Component&quot;
+End Sub
+rem ######################################################################
+
+Function GetmyToolBarNames()
+	GetmyToolBarNames = Array ( _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;, _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, _
+	)
+&apos;	&quot;private:resource/toolbar/alignmentbar&quot;, _
+&apos;	&quot;private:resource/toolbar/arrowshapes&quot;, _
+&apos;	&quot;private:resource/toolbar/basicshapes&quot;, _
+&apos;	&quot;private:resource/toolbar/calloutshapes&quot;, _
+&apos;	&quot;private:resource/toolbar/colorbar&quot;, _
+&apos;	&quot;private:resource/toolbar/drawbar&quot;, _
+&apos;	&quot;private:resource/toolbar/drawobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/extrusionobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/fontworkobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/fontworkshapetypes&quot;, _
+&apos;	&quot;private:resource/toolbar/formatobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/formcontrols&quot;, _
+&apos;	&quot;private:resource/toolbar/formdesign&quot;, _
+&apos;	&quot;private:resource/toolbar/formsfilterbar&quot;, _
+&apos;	&quot;private:resource/toolbar/formsnavigationbar&quot;, _
+&apos;	&quot;private:resource/toolbar/formsobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/formtextobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/fullscreenbar&quot;, _
+&apos;	&quot;private:resource/toolbar/graphicobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/insertbar&quot;, _
+&apos;	&quot;private:resource/toolbar/insertcellsbar&quot;, _
+&apos;	&quot;private:resource/toolbar/insertobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/mediaobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/moreformcontrols&quot;, _
+&apos;	&quot;private:resource/toolbar/previewbar&quot;, _
+&apos;	&quot;private:resource/toolbar/standardbar&quot;, _
+&apos;	&quot;private:resource/toolbar/starshapes&quot;, _
+&apos;	&quot;private:resource/toolbar/symbolshapes&quot;, _
+&apos;	&quot;private:resource/toolbar/textobjectbar&quot;, _
+&apos;	&quot;private:resource/toolbar/toolbar&quot;, _
+&apos;	&quot;private:resource/toolbar/viewerbar&quot;, _
+&apos;	&quot;private:resource/menubar/menubar&quot;, _
+&apos;	&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, _
+
+End Function
+rem ######################################################################
+
+Sub vedi_Toolbar&apos;(oDoc, sURL)
+	Dim oLayout
+	oDoc = thiscomponent
+
+	oLayout = oDoc.CurrentController.getFrame().LayoutManager
+	Select Case oDoc.currentcontroller.activesheet.Name
+		Case &quot;COMPUTO&quot;
+			oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;)
+			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;)
+		Case &quot;CONTABILITA&quot;
+			oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;)
+			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;)
+		Case Else
+			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;)
+			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;)
+	End Select
+Exit Sub 	
+&apos;	xray oLayout&apos;.floatWindow(sURL)
+	If oLayout.isElementVisible(sURL) Then
+&apos;		oLayout.isElementDocked (sURL)
+&apos;		oLayout.isElementFloating  (sURL)
+		oLayout.hideElement(sURL)
+	Else
+		oLayout.showElement(sURL)
+	End If
+End Sub
+rem ######################################################################
+	
+Sub toolbar_on (toolbarURL As string, optional flag As Integer) &apos;(C) Giuseppe Vizziello 2015
+rem se il flag è 0 (zero) la toolbarURL viene nascosta
+	Dim oDoc 	:	oDoc = thiscomponent
+	Dim oLayout :	oLayout = oDoc.CurrentController.getFrame().LayoutManager
+	If flag = 0 Then
+		oLayout.hideElement(toolbarURL)
+	else
+		oLayout.showElement(toolbarURL)
+	EndIf
+End Sub
+rem ######################################################################
+
+Sub set_event
+	Dim oDoc 	:	oDoc = thiscomponent
+	&apos;Dim evento
+	evento = oDoc.CurrentController.ActiveSheet.Events.getbyname(&quot;OnUnfocus&quot;)&apos;(0).value
+
+&apos;	oDoc.CurrentController.ActiveSheet.Events.getbyname(&quot;OnFocus&quot;)(0).value = &quot;Script&quot;
+&apos;	oDoc.CurrentController.ActiveSheet.Events.getbyname(&quot;OnFocus&quot;)(1).value = &quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;
+&apos;	&quot;OnFocus&quot;
+&apos;	&quot;Script&quot;
+&apos;	&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;
+	xray evento
+End Sub
+rem ######################################################################
+
+Sub assegnaMacro(nome As String, nomeEvento As string, miamacro As String)
+rem http://bit.ly/1EgROQt
+rem esempio: assegnaMacro (&quot;COMPUTO&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
+rem ----------------------------------------------------------------------
+rem nomeEvento:
+rem &quot;OnFocus&quot;			entrando nel foglio
+rem &quot;OnUnfocus&quot;			uscendo dal foglio
+rem &quot;OnSelect&quot;			selezionando
+rem &quot;OnDoubleClick&quot;		doppio click
+rem &quot;OnRightClick&quot;		click destro
+rem &quot;OnChange&quot;			modificando il contenuto
+rem &quot;OnCalculate&quot;		mboh...
+rem ----------------------------------------------------------------------
+	Dim oDoc As Object, oFeuille As Object, oEve
+	Dim PropEve(1) As New com.sun.star.beans.PropertyValue
+	PropEve(0).Name = &quot;EventType&quot;
+	PropEve(0).Value = &quot;Script&quot;
+	PropEve(1).Name = &quot;Script&quot;
+	PropEve(1).Value = miamacro &apos; persorso macro da assegnare
+	oDoc = ThisComponent
+	oFeuille = oDoc.Sheets.getbyname(nome) &apos;nome foglio
+	oEve = oFeuille.Events
+	oEve.replaceByName(nomeEvento, PropEve()) &apos; nome evento
+End Sub
+
+
+</script:module>

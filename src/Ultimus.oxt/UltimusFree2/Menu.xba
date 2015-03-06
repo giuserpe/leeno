@@ -16,7 +16,40 @@ rem ######################################################################
 rem buona parte delle macro in questo modulo sono tratte da
 rem http://www.pitonyak.org/AndrewMacro.odt
 rem ######################################################################
+Sub _nuove_icone
+&apos;	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.png&quot;)
+	sURL = LeenO_path +&quot;/icons/image35m.png&quot;
+	sName = Replace_G(sURL, &quot;.png&quot;, &quot;&quot;)
+	sNewURL= sName + &quot;_26h.bmp&quot;
+	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	sNewURL= sName + &quot;_26.bmp&quot;
+	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	sNewURL= sName + &quot;_16h.bmp&quot;
+	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	sNewURL= sName + &quot;_16.bmp&quot;
+	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	kill (sURL)
+End Sub
 
+sub cdfghsfrea_molte_copie_file &apos;Giuseppe Vizziello 2014
+	Dim sURL, sNewURL, sName As String
+&apos;	sURL = ConvertToUrl(ThisComponent.getURL())
+	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.ods&quot;)
+ 	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
+	For i=0 To 9
+		sNewURL= sName + i + &quot;.ods&quot;
+		Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	Next i
+
+End Sub
+
+
+
+
+
+
+
+rem ######################################################################
 Sub myTestToolBarVisible
 	Dim s$, sName$
 
@@ -156,9 +189,9 @@ Sub set_event
 End Sub
 rem ######################################################################
 
-Sub assegnaMacro(nome As String, nomeEvento As string, miamacro As String)
+Sub assegnaMacro_SHEET(nome As String, nomeEvento As string, miamacro As String)
 rem http://bit.ly/1EgROQt
-rem esempio: assegnaMacro (&quot;COMPUTO&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
+rem esempio: assegnaMacro_SHEET (&quot;COMPUTO&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
 rem ----------------------------------------------------------------------
 rem nomeEvento:
 rem &quot;OnFocus&quot;			entrando nel foglio
@@ -181,5 +214,33 @@ rem ----------------------------------------------------------------------
 	oEve.replaceByName(nomeEvento, PropEve()) &apos; nome evento
 End Sub
 
+Sub jhfds
+assegnaMacro_doc(&quot;OnPrepareUnload&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
+End Sub
+
+
+Sub assegnaMacro_doc( nomeEvento As string, miamacro As String)
+rem http://bit.ly/1EgROQt
+rem esempio: assegnaMacro_doc(&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
+rem ----------------------------------------------------------------------
+rem nomeEvento:
+rem &quot;OnFocus&quot;			entrando nel foglio
+rem &quot;OnUnfocus&quot;			uscendo dal foglio
+rem &quot;OnSelect&quot;			selezionando
+rem &quot;OnDoubleClick&quot;		doppio click
+rem &quot;OnRightClick&quot;		click destro
+rem &quot;OnChange&quot;			modificando il contenuto
+rem &quot;OnCalculate&quot;		mboh...
+rem ----------------------------------------------------------------------
+	Dim oDoc As Object, oFeuille As Object, oEve
+	Dim PropEve(1) As New com.sun.star.beans.PropertyValue
+	PropEve(0).Name = &quot;EventType&quot;
+	PropEve(0).Value = &quot;Script&quot;
+	PropEve(1).Name = &quot;Script&quot;
+	PropEve(1).Value = miamacro &apos; persorso macro da assegnare
+	oDoc = ThisComponent
+	oEve = oDoc.Events
+	oEve.replaceByName(nomeEvento, PropEve()) &apos; nome evento
+End Sub
 
 </script:module>

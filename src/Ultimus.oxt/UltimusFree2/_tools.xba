@@ -10,16 +10,17 @@ rem induividua la natura del sistema operativo
       Dim Script as Object
       Dim Url as String
       Dim PythonResult as String
-      
-&apos;      sName = Replace_G(LeenO_Path, &quot;.oxt&quot;, &quot;&quot;)
-      sName = LeenO_Path
+
+&apos;	sURL = (ConvertFromURL(extensionLocation))
+	sURL = (ConvertFromURL(LeenO_Path))
+
+      sName = FileNameoutofPath(sURL) &apos;nome file
+      Print sName
        Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyleeno.py$xmlsix2ods?language=Python&amp;location=share:uno_packages&quot;
        &apos; &quot;vnd.sun.star.script:yokogawa.py$YokoCalcPython?language=Python&amp;location=share&quot;
        &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=user
        &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=share
        &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=document
-
-       &apos;
 
        MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
        MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
@@ -29,7 +30,7 @@ rem induividua la natura del sistema operativo
 
        MsgBox PythonResult
     End Sub
-    
+
 Function SpeechEngine()as string     
   select case getGUIType
   case 1: SpeechEngine=iif(fileExists (fsProgramDirectory &amp; &quot;eSpeak\command_line\espeak.exe&quot;),&quot;ESPEAK&quot;,&quot;SAPI&quot;) &apos;Win
@@ -85,6 +86,9 @@ Function fsGetSetting(sA)
 End Function
 rem ----------------------------------------------------------------------
 Function LeenO_Path
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+ 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+	End If
 	Dim pip As Object, extensionLocation As String
 	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
 	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
@@ -93,8 +97,8 @@ Function LeenO_Path
 &apos;	display a human readable address
 &apos;	MsgBox(ConvertFromURL(extensionLocation)
 	sURL = (ConvertFromURL(extensionLocation))
-	LeenO_Path = FileNameoutofPath(sURL)
-&apos;	Print sName 
+&apos;	LeenO_Path = FileNameoutofPath(sURL)
+	LeenO_Path = extensionLocation &apos; full path
 End Function
 rem ----------------------------------------------------------------------
 sub rir_

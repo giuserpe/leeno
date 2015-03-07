@@ -45,47 +45,40 @@ end sub
 
 
 Sub Filtro &apos;(Optional oSheetG as object)&apos; Filtro Standard semplificato
-
- Dim oSheet &apos; Sheet filtered.
- Dim oFilterDesc &apos; Filter descriptor.
- 
-
+	Dim oSheet &apos; Sheet filtered.
+	Dim oFilterDesc &apos; Filter descriptor.
 	oSheet = ThisComponent.currentController.activeSheet
-
- lLastUrow = getLastUsedRow(oSheet)
-
- Barra_apri_chiudi_4 
- sAttributo = Trova_Attr_Sheet
-
- If sAttributo &lt;&gt; &quot;TIPO_EP&quot; and sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
- 		not thisComponent.Sheets.hasByName(&quot;Listino&quot;) then
- 		&apos;print &quot;no&quot;
+	lLastUrow = getLastUsedRow(oSheet)
+Barra_apri_chiudi_4 
+	sAttributo = Trova_Attr_Sheet
+	If sAttributo &lt;&gt; &quot;TIPO_EP&quot; and sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; and _
+ 		not thisComponent.Sheets.hasByName(&quot;Listino&quot;) Then
  		Barra_chiudi_sempre_4
  		exit sub
- end if
-on error resume next
+	end If
+	on error resume Next
 &apos; il ciclo di for che segue serve ad eliminare il filtro
 &apos; per impostare un nuovo filtro questo ciclo è inutile (un filtro sostituisce l&apos;altro)
 &apos; ma se si vuole avere una sola shortcut per attivare e disattivare un filtro non vedo alternative...
 &apos; qualche idea in merito?
- For i = 3 to lLastUrow
-				if	oSheet.getRows().getByIndex(i).IsFiltered = true then
-					oActiveCell1 = thisComponent.getCurrentSelection()
-					oFilterDesc = oSheet.createFilterDescriptor(True)
- 					oSheet.filter(oFilterDesc)
- 					if oActiveCell1.CellAddress.Row &lt; lLastUrow then 
- 							ThisComponent.CurrentController.Select(oActiveCell1)
- 						else							
- 							if lLastUrow-10 &gt; 0 then
- 								lLastUrow=lLastUrow-10
- 							end if
- 							ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1, lLastUrow))
- 					end if
- 					Barra_chiudi_sempre_4
- 					exit sub
-				end if
- Next I 
- Barra_apri_chiudi_4 
+	For i = 3 to lLastUrow
+		If	oSheet.getRows().getByIndex(i).IsFiltered = true then
+			oActiveCell1 = thisComponent.getCurrentSelection()
+			oFilterDesc = oSheet.createFilterDescriptor(True)
+ 			oSheet.filter(oFilterDesc)
+ 			if oActiveCell1.CellAddress.Row &lt; lLastUrow then 
+ 				ThisComponent.CurrentController.Select(oActiveCell1)
+ 				Else
+ 				if	lLastUrow-10 &gt; 0 Then
+ 					lLastUrow=lLastUrow-10
+ 				end if
+ 				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1, lLastUrow))
+ 				end if
+Barra_chiudi_sempre_4
+			exit sub
+		end if
+	Next I 
+Barra_apri_chiudi_4 
 	sAttributo = Trova_Attr_Sheet
 	If sAttributo = &quot;TIPO_ELENCOP&quot; OR _
 		sAttributo = &quot;TIPO_EP&quot; Then	
@@ -110,13 +103,12 @@ on error resume next
  		Barra_chiudi_sempre_4
 		exit sub
 	end if
- If sAttributo = &quot;TIPO_COMPUTO&quot; Then	
-			Barra_Apri_Chiudi_4
- 		Crea_Filtro_EP_Computo (2) &apos; (2, &quot;AttComp&quot;)
-			Barra_chiudi_sempre_4
-			exit sub
+	If sAttributo = &quot;TIPO_COMPUTO&quot; Or sAttributo = &quot;TIPO_CONTABILITA&quot; Then	
+Barra_Apri_Chiudi_4
+Crea_Filtro_EP_Computo (2) &apos; (2, &quot;AttComp&quot;)
+Barra_chiudi_sempre_4
+		exit sub
 	end if
-
 	If 	thisComponent.Sheets.hasByName(&quot;Listino&quot;) and thisComponent.Sheets.hasByName(&quot;Temp&quot;) Then
 			sAperto = 1
 			Barra_Apri_Chiudi_4

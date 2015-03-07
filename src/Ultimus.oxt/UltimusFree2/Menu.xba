@@ -18,7 +18,7 @@ rem http://www.pitonyak.org/AndrewMacro.odt
 rem ######################################################################
 Sub _nuove_icone
 &apos;	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.png&quot;)
-	sURL = LeenO_path +&quot;/icons/image35m.png&quot;
+	sURL = LeenO_path +&quot;/icons/part_det.png&quot;
 	sName = Replace_G(sURL, &quot;.png&quot;, &quot;&quot;)
 	sNewURL= sName + &quot;_26h.bmp&quot;
 	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
@@ -30,8 +30,9 @@ Sub _nuove_icone
 	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
 	kill (sURL)
 End Sub
+rem ######################################################################
 
-sub cdfghsfrea_molte_copie_file &apos;Giuseppe Vizziello 2014
+sub _molte_copie_file &apos;Giuseppe Vizziello 2014
 	Dim sURL, sNewURL, sName As String
 &apos;	sURL = ConvertToUrl(ThisComponent.getURL())
 	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.ods&quot;)
@@ -42,23 +43,7 @@ sub cdfghsfrea_molte_copie_file &apos;Giuseppe Vizziello 2014
 	Next i
 
 End Sub
-
-
-
-
-
-
-
 rem ######################################################################
-Sub myTestToolBarVisible
-	Dim s$, sName$
-
-	For Each sName In GetmyToolBarNames()
-		s = s &amp; IsToolbarVisible(ThisComponent, sName) &amp; _
-		&quot;: &quot; &amp; sName &amp; CHR$(10)
-	Next
-	MsgBox s, 0, &quot;Toolbar Is Visible&quot;
-End Sub
 
 Function IsToolbarVisible(oDoc, sURL) As Boolean
 	Dim oFrame
@@ -89,77 +74,51 @@ Sub SeeComponentsElements()
 		s = s &amp; x.ResourceURL &amp; CHR$(10)
 	Next
 	MsgBox s, 0, &quot;Toolbars in Component&quot;
+daVoce = InputBox (&quot;Da voce n.:&quot;, &quot;REGISTRA&quot;, daVoce)
+xray	ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(daVoce)&apos;.ResourceURL()
+
+End Sub
+rem ######################################################################
+Sub myTestToolBarVisible
+	Dim s$, sName$
+	For Each sName In GetmyToolBarNames()
+		s = s &amp; IsToolbarVisible(ThisComponent, sName) &amp; _
+		&quot;: &quot; &amp; sName &amp; CHR$(10)
+	Next
+	MsgBox s, 0, &quot;Toolbar Is Visible&quot;
 End Sub
 rem ######################################################################
 
-Function GetmyToolBarNames()
-	GetmyToolBarNames = Array ( _
-		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, _
-		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;, _
-		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, _
-	)
-&apos;	&quot;private:resource/toolbar/alignmentbar&quot;, _
-&apos;	&quot;private:resource/toolbar/arrowshapes&quot;, _
-&apos;	&quot;private:resource/toolbar/basicshapes&quot;, _
-&apos;	&quot;private:resource/toolbar/calloutshapes&quot;, _
-&apos;	&quot;private:resource/toolbar/colorbar&quot;, _
-&apos;	&quot;private:resource/toolbar/drawbar&quot;, _
-&apos;	&quot;private:resource/toolbar/drawobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/extrusionobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/fontworkobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/fontworkshapetypes&quot;, _
-&apos;	&quot;private:resource/toolbar/formatobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/formcontrols&quot;, _
-&apos;	&quot;private:resource/toolbar/formdesign&quot;, _
-&apos;	&quot;private:resource/toolbar/formsfilterbar&quot;, _
-&apos;	&quot;private:resource/toolbar/formsnavigationbar&quot;, _
-&apos;	&quot;private:resource/toolbar/formsobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/formtextobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/fullscreenbar&quot;, _
-&apos;	&quot;private:resource/toolbar/graphicobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/insertbar&quot;, _
-&apos;	&quot;private:resource/toolbar/insertcellsbar&quot;, _
-&apos;	&quot;private:resource/toolbar/insertobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/mediaobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/moreformcontrols&quot;, _
-&apos;	&quot;private:resource/toolbar/previewbar&quot;, _
-&apos;	&quot;private:resource/toolbar/standardbar&quot;, _
-&apos;	&quot;private:resource/toolbar/starshapes&quot;, _
-&apos;	&quot;private:resource/toolbar/symbolshapes&quot;, _
-&apos;	&quot;private:resource/toolbar/textobjectbar&quot;, _
-&apos;	&quot;private:resource/toolbar/toolbar&quot;, _
-&apos;	&quot;private:resource/toolbar/viewerbar&quot;, _
-&apos;	&quot;private:resource/menubar/menubar&quot;, _
-&apos;	&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, _
-
-End Function
-rem ######################################################################
-
-Sub vedi_Toolbar&apos;(oDoc, sURL)
+Sub Toolbar_vedi&apos;(oDoc, sURL)
 	Dim oLayout
 	oDoc = thiscomponent
-
-	oLayout = oDoc.CurrentController.getFrame().LayoutManager
-	Select Case oDoc.currentcontroller.activesheet.Name
-		Case &quot;COMPUTO&quot;
-			oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;)
-			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;)
-		Case &quot;CONTABILITA&quot;
-			oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;)
-			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;)
-		Case Else
-			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;)
-			oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;)
-	End Select
-Exit Sub 	
-&apos;	xray oLayout&apos;.floatWindow(sURL)
-	If oLayout.isElementVisible(sURL) Then
-&apos;		oLayout.isElementDocked (sURL)
-&apos;		oLayout.isElementFloating  (sURL)
-		oLayout.hideElement(sURL)
+	oLayout = oDoc.CurrentController.getFrame().LayoutManager	
+rem stabilisce il comportamento
+rem se il livelli di difficoltà è impostato su 0 (primo approccio), tutte le toolbars restano visibili
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 Then
+rem SEMPRE VISIBILI
+		Dim s$, sName$
+		For Each sName In GetmyToolBarNames()
+			toolbar_on (sName, 1)
+		Next
 	Else
-		oLayout.showElement(sURL)
-	End If
+rem CONTESTUALIZZATE
+		For Each sName In GetmyToolBarNames()
+			toolbar_on (sName, 0)
+		Next
+		toolbar_on (&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, 1)
+		Select Case oDoc.currentcontroller.activesheet.Name
+			Case &quot;Elenco Prezzi&quot;
+				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO&quot;, 1)
+			Case &quot;Analisi di Prezzo&quot;
+				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI&quot;, 1)
+			Case &quot;COMPUTO&quot;
+				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;, 1)
+			Case &quot;CONTABILITA&quot;
+				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, 1)
+			Case Else
+		End Select
+	EndIf
 End Sub
 rem ######################################################################
 	
@@ -175,21 +134,87 @@ rem se il flag è 0 (zero) la toolbarURL viene nascosta
 End Sub
 rem ######################################################################
 
-Sub set_event
+Sub set_eventi_doc &apos;Giuseppe Vizziello 2014
+rem controlla che il file sia un template LeenO
 	Dim oDoc 	:	oDoc = thiscomponent
-	&apos;Dim evento
-	evento = oDoc.CurrentController.ActiveSheet.Events.getbyname(&quot;OnUnfocus&quot;)&apos;(0).value
-
-&apos;	oDoc.CurrentController.ActiveSheet.Events.getbyname(&quot;OnFocus&quot;)(0).value = &quot;Script&quot;
-&apos;	oDoc.CurrentController.ActiveSheet.Events.getbyname(&quot;OnFocus&quot;)(1).value = &quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;
-&apos;	&quot;OnFocus&quot;
-&apos;	&quot;Script&quot;
-&apos;	&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;
-	xray evento
+rem ----------------------------------------------------------------------
+rem controllo esistenza proprietà definita dall&apos;utente
+	Dim test() As Object 
+	test() =oDoc.DocumentProperties.UserDefinedProperties.PropertyValues()
+	If ubound(test()) &gt;= 2 Then 
+		If oDoc.DocumentProperties.UserDefinedProperties.PropertyValues(2).name = &quot;Versione LeenO&quot; Then
+			eventi_assegna
+		EndIf	
+	EndIf 
 End Sub
 rem ######################################################################
 
-Sub assegnaMacro_SHEET(nome As String, nomeEvento As string, miamacro As String)
+Sub eventi_pulisci &apos;Giuseppe Vizziello 2014
+rem elimina tutte le macro legate agli eventi in ogni foglio e per l&apos;intero documento
+rem da mettere in uscita
+	Dim oDoc 				:	oDoc = thiscomponent
+	Dim elenco_sheets() 	:	elenco_sheets() = oDoc.sheets.elementnames
+	Dim eventi_sheet()		:	eventi_sheet() = oDoc.CurrentController.ActiveSheet.Events.ElementNames
+	Dim eventi_doc() 		:	eventi_doc() = oDoc.Events.ElementNames
+	For Each foglio In elenco_sheets()
+		For Each evento In eventi_sheet() 
+			Macro_SHEET (foglio, evento, &quot;&quot;)
+		next
+	Next
+	For Each evento In eventi_doc()
+		Macro_doc (evento, &quot;&quot;)
+&apos;		s = s &amp; &quot;&apos;&quot; &amp; evento &amp; CHR$(10)
+	Next
+&apos;	msgbox s
+End Sub
+rem ######################################################################
+
+Sub eventi_assegna
+&apos; (flag As integer)
+&apos;	Dim oDoc 				:	oDoc = thiscomponent
+&apos;	xray eventi_doc()
+&apos;	If flag = 0 Then	Exit Sub
+Macro_SHEET (&quot;Elenco Prezzi&quot;,		&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;Elenco Prezzi&quot;, 		&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,				&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,				&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;CONTABILITA&quot;,			&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;CONTABILITA&quot;,			&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;S2&quot;,					&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
+&apos;OnStartApp
+&apos;OnCloseApp
+&apos;OnCreate
+Macro_Doc (&quot;OnNew&quot;,				&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=application&quot;)
+&apos;OnLoadFinished
+Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=application&quot;)
+Macro_Doc (&quot;OnPrepareUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&amp;location=application&quot;)
+Macro_Doc (&quot;OnUnload&quot;,			&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
+&apos;OnSave
+&apos;OnSaveDone
+&apos;OnSaveFailed
+Macro_Doc (&quot;OnSaveAs&quot;,			&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
+&apos;OnSaveAsDone
+Macro_Doc (&quot;OnSaveAsFailed&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec?language=Basic&amp;location=application&quot;)
+&apos;Macro_doc (&quot;OnCopyTo&quot;, &quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
+&apos;OnCopyToDone
+&apos;OnCopyToFailed
+&apos;OnFocus
+&apos;OnUnfocus
+&apos;OnPrint
+&apos;OnViewCreated
+&apos;OnPrepareViewClosing
+&apos;OnViewClosed
+&apos;OnModifyChanged
+&apos;OnTitleChanged
+&apos;OnVisAreaChanged
+&apos;OnModeChanged
+&apos;OnStorageChanged
+End Sub
+rem ######################################################################
+
+Sub Macro_SHEET(nome As String, nomeEvento As string, miamacro As String)
 rem http://bit.ly/1EgROQt
 rem esempio: assegnaMacro_SHEET (&quot;COMPUTO&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
 rem ----------------------------------------------------------------------
@@ -214,23 +239,11 @@ rem ----------------------------------------------------------------------
 	oEve.replaceByName(nomeEvento, PropEve()) &apos; nome evento
 End Sub
 
-Sub jhfds
-assegnaMacro_doc(&quot;OnPrepareUnload&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
-End Sub
 
-
-Sub assegnaMacro_doc( nomeEvento As string, miamacro As String)
+Sub Macro_Doc (nomeEvento As string, miamacro As String)
 rem http://bit.ly/1EgROQt
 rem esempio: assegnaMacro_doc(&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&amp;location=application&quot;)
 rem ----------------------------------------------------------------------
-rem nomeEvento:
-rem &quot;OnFocus&quot;			entrando nel foglio
-rem &quot;OnUnfocus&quot;			uscendo dal foglio
-rem &quot;OnSelect&quot;			selezionando
-rem &quot;OnDoubleClick&quot;		doppio click
-rem &quot;OnRightClick&quot;		click destro
-rem &quot;OnChange&quot;			modificando il contenuto
-rem &quot;OnCalculate&quot;		mboh...
 rem ----------------------------------------------------------------------
 	Dim oDoc As Object, oFeuille As Object, oEve
 	Dim PropEve(1) As New com.sun.star.beans.PropertyValue

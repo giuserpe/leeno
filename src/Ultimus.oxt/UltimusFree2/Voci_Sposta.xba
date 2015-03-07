@@ -41,157 +41,49 @@ On Error GoTo fine:
 	End If
 fine:
 end sub
-
-
+rem ######################################################################
 
 Sub spostaVCA() &apos; assegnata a ALT-X??
 &apos; decide se attivare sposta analisi o sposta voce-computo
- Dim nome_sheet as string
-
-nome_sheet = thisComponent.currentcontroller.activesheet.name
-
- If nome_sheet = &quot;COMPUTO&quot; Then
-		&apos;	Sposta_Voce_Computo
- Sposta_Voce_Computo_Att
- Else
- If nome_sheet = &quot;Analisi di Prezzo&quot; Then
- &apos; print &quot; Sposta_Voce_Analisi&quot;
- &apos; sFunzia = 
- Sposta_Voce_Analisi_Att 
- &apos; if sFunzia = &quot;Falso&quot; then
- 	&apos;	 print &quot;altern 2&quot;
- &apos; 		 Sposta_Voce_Analisi
- &apos;end if
- Else
- MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ e questa Macro si usa soltanto nel COMPUTO e nelle ANALISI !!!! 2___&quot;
- End If
- End If
+	Dim nome_sheet as string
+	nome_sheet = thisComponent.currentcontroller.activesheet.Name
+	Select Case nome_sheet
+		Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
+			Sposta_Voce_Computo_Att
+		Case &quot;Analisi di Prezzo&quot;
+			Sposta_Voce_Analisi_Att
+		Case Else
+&apos;			MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ e questa  nelle ANALISI !!!! 2___&quot;
+	End Select
 END SUB
-&apos;_____________________________________________________________________
+rem ######################################################################
 
-
-
-&apos;==========================================================================
-Sub Sposta_Voce_Analisi &apos; riferita alla ver 6 di circoscrivi&apos; &apos; sposta una analisi di prezzo in nuova posizione...
-dim lSRow as long
-dim oErow as long
-dim StartRow as long
-dim lrow as long
-	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then
-		 
-		exit sub
-	end if
-	oSheet = ThisComponent.currentController.activeSheet
-	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
- 	ThisComponent.CurrentController.Select(oCell)
-&apos;	print &quot;alt&quot;
-	
-	sStRange = CircoscrivileAnalisi_555 (lrow)
-&apos;	oRangeVoce = CircoscrivileAnalisi_6$ (lrow)
-&apos;xray sStRange
-	If IsNull(sStRange) Then 
- 		ThisComponent.CurrentController.Select(oCell)
-		msgbox &quot;Devi essere all&apos;interno di una voce... Altrimenti non so che cosa vuoi spostare... RIPROVA!!++ &quot;
-		exit sub
-	end if
-
-&apos;	lrowS = oRangeVoce.RangeAddress.Startrow &apos;+1
-&apos;	lrowE = oRangeVoce.RangeAddress.Endrow
-	
-&apos;	ThisComponent.CurrentController.Select(oRangeVoce)
-	
-&apos;	oOldSelection = ThisComponent.CurrentSelection
-	
-&apos;	Riprova:
-&apos;______________________________________________________-	
-	sTitolo = &quot; Click sulla riga dove spostare l&apos;analisi (ESC per Annullare, NO Click su X ) &quot;
-	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
- 	if SelectedRange = &quot;&quot; or _
- 	 	SelectedRange = &quot;ANNULLA&quot; then
- 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
- 	 	exit sub
- 	end if
-	StartRow = getRigaIniziale(SelectedRange)
-	
-	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
- 	sString$ = &quot;Fine ANALISI&quot; &apos; in caso di click fuori zona...
-	oEnd=uFindString(sString$, oSheet)
-	lrowF=oEnd.CellAddress.Row 
-
-	If lrowF &lt; StartRow-1 then
-		oCellK = oSheet.GetCellByPosition( 0 , StartRow)
-		ThisComponent.CurrentController.Select(oCellK)
-		msgbox &quot; Hai selezionato una destinazione ESTERNA all&apos;area &quot; &amp; CHR$(10)_
-		&amp; &quot; definita dalla riga rossa di chiusura... &quot;&amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; e questo non è consentito!...&quot;
-		ThisComponent.CurrentController.Select(sStRange)
-		exit sub
-	end if
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	StartRowM = Mettiti_esattamente_tra_due_Analisi (StartRow)
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-print &quot;alfa &quot; &amp; StartRowM 
-&apos;xray sStRange
-ThisComponent.CurrentController.Select(sStRange)
-&apos;print
-	Sposta_range_buono (StartRowM) &apos;,sStRange)
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-&apos;	StartRowM = Mettiti_esattamente_tra_due_Analisi (StartRow)
-&apos;	if StartRowM = &quot;ciucca&quot; then
-&apos;		Print &quot;Cerca di mirare meglio...&quot;
-&apos;		goto Riprova
-&apos;	end if
-&apos;	if StartRowM = 0 then
-&apos;		oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- &apos;&apos;		oCell = oSheet.GetCellByPosition( 0, StartRow-1 )
-&apos; 		ThisComponent.CurrentController.Select(oCell)
-&apos;		msgbox (&quot;Errore! Credo tu abbia selezionato DENTRO una analisi... &quot;_
-&apos;				&amp;&quot;Devi essere più preciso... clicca TRA due analisi... &quot;_
-&apos;				&amp;&quot;Altrimenti non so dove vuoi spostare.. RIPROVA!! &quot;, &quot;Guarda dove clikki!&quot;)
-&apos;		goto Riprova
-&apos;		ThisComponent.CurrentController.Select(oOldSelection)			
-&apos;	end if
-&apos;	ThisComponent.CurrentController.Select(oOldSelection)	
-&apos;	StartRow = StartRowM &apos;&apos;&apos;&apos;
- &apos; 	Sposta_range_buono(StartRow+1)
-	&apos;----------------------------------------------------------
-END SUB
-
-&apos;==========================================================================
 FUNCTION Sposta_Voce_Analisi_Att &apos; sposta una analisi di prezzo in nuova posizione...
-dim lSRow as long
-dim oErow as long
-dim StartRow as long
-
-
-&apos;.........................................................................................................
-&apos;	test = Controllo_riga_rossa
-&apos;	If test = &quot;Fallito&quot; then
-&apos;		msgbox &quot; la riga rossa di chiusura della tabella sembra mancante...&quot; &amp; CHR$(10)_
-&apos;			&amp; &quot; oppure è incompleta o corrotta!&quot; &amp; CHR$(10) &amp; CHR$(10)_
-&apos;&apos;			&amp; &quot; Per ripristinarla posizionati su una riga &quot;&quot;giusta&quot;&quot; in fondo&quot;&amp; CHR$(10)_
-&apos;			&amp; &quot; alla tabella e premi Ctrl-Alt-P &quot;, 128 + 32 + 0 , &quot; ERRORE!!!!!!!!!&quot;
-&apos;		exit FUNCTION
-&apos;	end if 
-&apos;.......................................................................................................
-
+	dim lSRow as Long
+	dim oErow as Long
+	dim StartRow as Long
+&apos;rem ---------------------------------------------------------------------
 	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lSrow = -1 then		 
-		exit FUNCTION
-	end if
+	If lSrow = -1 Then Exit Function
+&apos;rem ---------------------------------------------------------------------
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0 , lSrow)&apos; errata selezione di un range
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	sStRange = CircoscrivileAnalisi_Att (lSrow)
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+	Select Case oCell.cellstyle
+		Case &quot;An.1v-Att Start&quot;, &quot;An-1_sigla&quot;, &quot;An-lavoraz-desc&quot;, &quot;An-lavoraz-Cod-sx&quot;, &quot;An-lavoraz-desc-CEN&quot;, &quot;An-sfondo-basso Att End&quot;
+			GoTo procedi:
+		Case Else
+			Exit Function
+	End Select
+procedi:
+&apos;rem ---------------------------------------------------------------------
+sStRange = CircoscrivileAnalisi_Att (lSrow)
+ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
+&apos;rem ---------------------------------------------------------------------
 &apos;xray sStRange
 
 	oOldSelection = sStRange
 
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;		
+&apos;rem ---------------------------------------------------------------------
 	sTitolo = &quot; Click sulla riga dove spostare l&apos;analisi (ESC per Annullare, NO Click su X ) &quot;
 	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  	if SelectedRange = &quot;&quot; or _
@@ -200,9 +92,8 @@ dim StartRow as long
  	 	exit function
  	end if
 	StartRow = getRigaIniziale(SelectedRange)
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+rem ----------------------------------------------------------------------
 
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
  	sString$ = &quot;Fine ANALISI&quot; &apos; in caso di click fuori zona...
 	oEnd=uFindString(sString$, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) then 
@@ -221,42 +112,34 @@ dim StartRow as long
 		ThisComponent.CurrentController.Select(sStRange)
 		exit FUNCTION
 	end if
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+rem ----------------------------------------------------------------------
 	StartRowM = Mettiti_esattamente_tra_due_Analisi_Att (StartRow)
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-&apos;dis_080212 ThisComponent.CurrentController.Select(sStRange)
-
-&apos;dis_080212	Sposta_range_buono_Att(StartRowM) &apos;,sStRange)
 	Sposta_range_buono_Att(StartRowM,sStRange) &apos;mod_080212
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-
+rem ----------------------------------------------------------------------
 	
-END FUNCTION
+End Function
 
-&apos;==========================================================================
 
 Function Mettiti_esattamente_tra_due_Analisi_Att(ByVal lrow As Long)&apos;as string&apos;As Long &apos;as string &apos; trova il punto di inserimanto
 &apos; nel caso l&apos;utente non si sia posizionato bene... &apos; specifico per voci di Analisi
 &apos; (mai fidarsi dell&apos;utente...)
 &apos;--------------------------------------------------------------
 &apos;--------------------------------------------------------------
-dim xdocument as object
-dim xdispatcher as object
-dim xA as string
-
+	dim xdocument as object
+	dim xdispatcher as object
+	dim xA as string
+	
 &apos;ThisComponent.lockControllers() &apos;disattiva l&apos;eco a schermo
-
- Dim oSheet
- Dim oCell
- &apos; lrow = lrow -1 &apos; per tararlo 
- oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
-
- oCell = oSheet.GetCellByPosition( 1, lrow )
+	
+	Dim oSheet
+	Dim oCell
+&apos; lrow = lrow -1 &apos; per tararlo 
+	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
+	
+	oCell = oSheet.GetCellByPosition( 1, lrow )
 	xA = oCell.string
- 	sString$ = &quot;Fine ANALISI&quot;
-
+		sString$ = &quot;Fine ANALISI&quot;
+	
 	oEnd=uFindString(sString$, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
@@ -266,39 +149,40 @@ dim xA as string
 	lrowF=oEnd.CellAddress.Row 
 	oCell=oSheet.GetCellbyPosition( 3, lrow)
 	sAttributo_N = Trova_Attr_N (oCell, oSheet)
-
-	&apos;	ThisComponent.CurrentController.Select(oCell)
-
+	
+&apos;	ThisComponent.CurrentController.Select(oCell)
+	
 	if sAttributo_N = &quot;Start_voce_ANALISI&quot; then &apos; esattamente all&apos;inizio di una voce
 		Mettiti_esattamente_tra_due_Analisi_Att = lrow&apos;+1
 		exit function
 	end if
 	
 	For nCurRow = lrow To lrowF
-		 oCell=oSheet.GetCellbyPosition( 3, nCurRow)&apos; lrow )
-		 			&apos;			ThisComponent.CurrentController.Select(oCell)
-					&apos;	print
-
-		 sAttributo_N = Trova_Attr_N (oCell, oSheet)
-			if sAttributo_N = &quot;Start_voce_ANALISI&quot; then
-				lrow = ocell.celladdress.row
-				Mettiti_esattamente_tra_due_Analisi_Att = lrow
-				exit function &apos;for
-			end if
-			if nCurRow = lrowF then
-				Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot;
-						nCurRow = nCurRow-1
-						oCell=oSheet.GetCellbyPosition( 0, nCurRow)
-		&apos;			ThisComponent.CurrentController.Select(oCell)
-		&apos;			print
-				loop
-				lrow = ocell.celladdress.row+2 &apos;+1
-				Mettiti_esattamente_tra_due_Analisi_Att = lrow
-				exit for
-			end if
- 	next
- 	
+		oCell=oSheet.GetCellbyPosition( 3, nCurRow)&apos; lrow )
+					&apos;			ThisComponent.CurrentController.Select(oCell)
+&apos;	print
+		
+		sAttributo_N = Trova_Attr_N (oCell, oSheet)
+		if sAttributo_N = &quot;Start_voce_ANALISI&quot; then
+			lrow = ocell.celladdress.row
+			Mettiti_esattamente_tra_due_Analisi_Att = lrow
+			exit function &apos;for
+		end if
+		if nCurRow = lrowF then
+			Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot;
+				nCurRow = nCurRow-1
+				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
+&apos;			ThisComponent.CurrentController.Select(oCell)
+&apos;			print
+			loop
+			lrow = ocell.celladdress.row+2 &apos;+1
+			Mettiti_esattamente_tra_due_Analisi_Att = lrow
+			exit for
+		end if
+		next
+		
 End Function
+
 
 FUNCTION CircoscrivileAnalisi_Att(ByVal lrow As Long) &apos;individua un record di Analisi
 &apos;---------------------------------------------------------------------------

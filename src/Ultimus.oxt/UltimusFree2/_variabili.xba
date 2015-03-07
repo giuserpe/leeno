@@ -40,13 +40,40 @@ rem solo un appunto: clearContents()
 &apos;				com.sun.star.sheet.CellFlags.STYLES OR _		64
 &apos;				com.sun.star.sheet.CellFlags.OBJECTS OR _		128
 &apos;				com.sun.star.sheet.CellFlags.EDITATTR)			256
+rem ######################################################################
+
+Function GetmyToolBarNames()
+		GetmyToolBarNames = Array ( _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;, _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI&quot;, _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO&quot;, _
+	)
+&apos;		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, _
+End Function
+rem ######################################################################
 
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
-Elimina_Nomi_Area_errati
-Sel_Altre_Opz
-&apos;assegna le macro agli eventi di ogni foglio:
-assegnaMacro_SHEET (&quot;COMPUTO&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.vedi_toolbar?language=Basic&amp;location=application&quot;)
-assegnaMacro_SHEET (&quot;CONTABILITA&quot;, &quot;OnFocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.Menu.vedi_toolbar?language=Basic&amp;location=application&quot;)
+	Sel_Altre_Opz
+	eventi_assegna
+	Elimina_Nomi_Area_errati
+&apos;assegna le macro agli eventi di ogni foglio e del documento:
+rem ----------------------------------------------------------------------
+rem visualizza le toolbar leeno
+	Dim sName$
+	For Each sName In GetmyToolBarNames()
+		toolbar_on (sName, 1)
+	Next
+End Sub
+rem ######################################################################
+Sub autoexec_off
+rem chiudo le toolbars
+	Dim sName As String
+	For Each sName In GetmyToolBarNames()
+		toolbar_on (sName, 0)
+	Next
+	eventi_pulisci
 End Sub
 
 </script:module>

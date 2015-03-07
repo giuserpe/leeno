@@ -1303,38 +1303,36 @@ end sub
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 
 Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
-
-	&apos;_____________________
+	
+&apos;_____________________
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-
+&apos;_____________________
+	
 	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
-
-ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
-
-sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
+	
+	ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
+	
+	sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 &apos;Print Trova_Attr_Sheet
 	Select Case Trova_Attr_Sheet
- 		Case &quot;TIPO_EP&quot;
- 			Tronca_Altezza_Voci_EP
-		Case &quot;TIPO_ANALISI&quot;
- 			Tronca_Altezza_Analisi
-		Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;
-		 Tronca_Altezza_Voci_Computo
+	Case &quot;TIPO_EP&quot;
+		Tronca_Altezza_Voci_EP
+	Case &quot;TIPO_ANALISI&quot;
+		Tronca_Altezza_Analisi
+	Case &quot;TIPO_COMPUTO&quot;&apos;, &quot;TIPO_CONTABILITA&quot; disattivata in contabilità
+		Tronca_Altezza_Voci_Computo
 	End Select
 	If ThisComponent.currentController.activeSheet.name = &quot;Listino&quot; Then	 		
- 		Tronca_Altezza_Voci_Listino
- 		exit sub
+		Tronca_Altezza_Voci_Listino
+		exit sub
 	end If
 Exit sub
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-		if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
-	 		MsgBox &quot;1 L&apos;opzione non è prevista su questo foglio!!!&quot;
+		if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 Then
+			MsgBox &quot;1 L&apos;opzione non è prevista su questo foglio!!!&quot;
 		end if
 	end If
-	
 end sub
-
 
 
 SUB Tronca_Altezza_Voci_Computo &apos;1 e Contabilità

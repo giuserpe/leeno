@@ -1468,3 +1468,92 @@ print sAlfac1
  Adatta_Altezza_riga 	
  ' pRINT "ACCODA NORMAL"
 end sub
+Sub Sposta_Voce_Analisi ' riferita alla ver 6 di circoscrivi' ' sposta una analisi di prezzo in nuova posizione...
+dim lSRow as long
+dim oErow as long
+dim StartRow as long
+dim lrow as long
+	lrow= Range2Cell ' queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 then
+		 
+		exit sub
+	end if
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell = oSheet.GetCellByPosition( 0 , lrow)' errata selezione di un range
+ 	ThisComponent.CurrentController.Select(oCell)
+'	print "alt"
+	
+	sStRange = CircoscrivileAnalisi_555 (lrow)
+'	oRangeVoce = CircoscrivileAnalisi_6$ (lrow)
+'xray sStRange
+	If IsNull(sStRange) Then 
+ 		ThisComponent.CurrentController.Select(oCell)
+		msgbox "Devi essere all'interno di una voce... Altrimenti non so che cosa vuoi spostare... RIPROVA!!++ "
+		exit sub
+	end if
+
+'	lrowS = oRangeVoce.RangeAddress.Startrow '+1
+'	lrowE = oRangeVoce.RangeAddress.Endrow
+	
+'	ThisComponent.CurrentController.Select(oRangeVoce)
+	
+'	oOldSelection = ThisComponent.CurrentSelection
+	
+'	Riprova:
+'______________________________________________________-	
+	sTitolo = " Click sulla riga dove spostare l'analisi (ESC per Annullare, NO Click su X ) "
+	SelectedRange = getRange(sTitolo) ' richiama il listeners
+ 	if SelectedRange = "" or _
+ 	 	SelectedRange = "ANNULLA" then
+ 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+ 	 	exit sub
+ 	end if
+	StartRow = getRigaIniziale(SelectedRange)
+	
+	'''''''''''''''''''''''''''''''''''''''''''''
+ 	sString$ = "Fine ANALISI" ' in caso di click fuori zona...
+	oEnd=uFindString(sString$, oSheet)
+	lrowF=oEnd.CellAddress.Row 
+
+	If lrowF < StartRow-1 then
+		oCellK = oSheet.GetCellByPosition( 0 , StartRow)
+		ThisComponent.CurrentController.Select(oCellK)
+		msgbox " Hai selezionato una destinazione ESTERNA all'area " & CHR$(10)_
+		& " definita dalla riga rossa di chiusura... "& CHR$(10) & CHR$(10)_
+		& " e questo non è consentito!..."
+		ThisComponent.CurrentController.Select(sStRange)
+		exit sub
+	end if
+''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+	StartRowM = Mettiti_esattamente_tra_due_Analisi (StartRow)
+'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+print "alfa " & StartRowM 
+'xray sStRange
+ThisComponent.CurrentController.Select(sStRange)
+'print
+	Sposta_range_buono (StartRowM) ',sStRange)
+'>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+'	StartRowM = Mettiti_esattamente_tra_due_Analisi (StartRow)
+'	if StartRowM = "ciucca" then
+'		Print "Cerca di mirare meglio..."
+'		goto Riprova
+'	end if
+'	if StartRowM = 0 then
+'		oSheet = ThisComponent.currentController.activeSheet ' sheet corrente 
+ ''		oCell = oSheet.GetCellByPosition( 0, StartRow-1 )
+' 		ThisComponent.CurrentController.Select(oCell)
+'		msgbox ("Errore! Credo tu abbia selezionato DENTRO una analisi... "_
+'				&"Devi essere più preciso... clicca TRA due analisi... "_
+'				&"Altrimenti non so dove vuoi spostare.. RIPROVA!! ", "Guarda dove clikki!")
+'		goto Riprova
+'		ThisComponent.CurrentController.Select(oOldSelection)			
+'	end if
+'	ThisComponent.CurrentController.Select(oOldSelection)	
+'	StartRow = StartRowM ''''
+ ' 	Sposta_range_buono(StartRow+1)
+	'----------------------------------------------------------
+END SUB
+
+'==========================================================================

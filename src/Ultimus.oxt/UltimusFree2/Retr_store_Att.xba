@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Retr_store_Att" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.2
+&apos; LeenO 3.11.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -171,7 +171,7 @@ Function Trova_Attr_Sheet
 		For i = 0 to 1		
  			oCell = oSheet.getCellByPosition( i, icol )
  			oCustomXmlAttributes = oCell.UserDefinedAttributes
-&apos; 			xray oCustomXmlAttributes
+&apos;			xray oCustomXmlAttributes
 &apos;			ThisComponent.CurrentController.Select( ocell) &apos;debug
 &apos;		 xray oCustomXmlAttributes.getByName( &quot;Tipo&quot; ).Value
 		 	If oCustomXmlAttributes.hasElements = true then 

@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Computo" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.2
+&apos; LeenO 3.11.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -62,7 +62,7 @@ REM PLUSCI LE PRIME DUE RIGHE
 			com.sun.star.sheet.CellFlags.FORMULA
 	oSheet.getCellRangeByPosition(0, 0, 100, 1).clearContents(Flags)
 rem ----------------------------------------------------------------------
-	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+&apos;	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 	oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
 rem ----------------------------------------------------------------------
 rem riga di intestazione

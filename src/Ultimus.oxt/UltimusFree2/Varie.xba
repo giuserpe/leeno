@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Varie" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.2
+&apos; LeenO 3.11.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -1038,6 +1038,7 @@ rem ----------------------------------------------------------------------
 
 	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
 parziale_verifica
+Rinumera_TUTTI_Capitoli2
 END SUB
 rem ######################################################################
 

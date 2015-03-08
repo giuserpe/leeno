@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Strutture" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.2
+&apos; LeenO 3.11.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -216,7 +216,7 @@ SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che for
 	Barra_Apri_Chiudi_5(&quot;Rinumero la gerarchia dei Capitoli..... pazienta....&quot;, 60)
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&apos;rifà la riga delle somme in fondo e in testa al computo
-Rifa_Somme_TOT_Computo
+&apos;Rifa_Somme_TOT_Computo
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
 	&apos; se la varg gen disattiva l&apos;automatismo

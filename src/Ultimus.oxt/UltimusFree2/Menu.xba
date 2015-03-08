@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Menu" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.2
+&apos; LeenO 3.11.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -141,9 +141,10 @@ rem ----------------------------------------------------------------------
 rem controllo esistenza proprietà definita dall&apos;utente
 	Dim test() As Object 
 	test() =oDoc.DocumentProperties.UserDefinedProperties.PropertyValues()
+xray test(1).value
 	If ubound(test()) &gt;= 2 Then 
 		If oDoc.DocumentProperties.UserDefinedProperties.PropertyValues(2).name = &quot;Versione LeenO&quot; Then
-			eventi_assegna
+&apos;			eventi_assegna
 		EndIf	
 	EndIf 
 End Sub
@@ -165,6 +166,8 @@ rem da mettere in uscita
 		Macro_doc (evento, &quot;&quot;)
 &apos;		s = s &amp; &quot;&apos;&quot; &amp; evento &amp; CHR$(10)
 	Next
+Macro_Doc (&quot;OnNew&quot;,				&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
+Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 &apos;	msgbox s
 End Sub
 rem ######################################################################
@@ -186,9 +189,9 @@ Macro_SHEET (&quot;S2&quot;,					&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script
 &apos;OnStartApp
 &apos;OnCloseApp
 &apos;OnCreate
-Macro_Doc (&quot;OnNew&quot;,				&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=application&quot;)
+Macro_Doc (&quot;OnNew&quot;,				&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 &apos;OnLoadFinished
-Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=application&quot;)
+Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 Macro_Doc (&quot;OnPrepareUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&amp;location=application&quot;)
 Macro_Doc (&quot;OnUnload&quot;,			&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
 &apos;OnSave

@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Contab" script:language="StarBasic">rem ***** BASIC *****
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.10.2
+&apos; LeenO 3.11.0
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -541,13 +541,12 @@ rem ----------------------------------------------------------------------
 barra_chiudi
 rem ----------------------------------------------------------------------
 rem inserisco la prima riga GIALLA del REGISTRO
-	Print &quot;GIALLO REGISTRO&quot;
+&apos;	Print &quot;GIALLO REGISTRO&quot;
 	oNamedRange=oRanges.getByName(nomearea).referredCells
 	ins = oNamedRange.RangeAddress.StartRow
 	insRows (ins, 1) &apos;insertByIndex non funziona
 	oSheetReg.getCellRangeByPosition (0,ins,10,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
 fissa (0, ins+1)
-print
 rem ----------------------------------------------------------------------
 rem ci metto un po&apos; di informazioni
 	davoce=elVoci(0)(0) &apos;ultima voce
@@ -606,7 +605,7 @@ rem riga di intestazione SAL
 rem larghezza colonne SAL
 &apos;xray oSheetSAL
 			oSheetSAL.GetCellByPosition(idxCol,idxRow).Columns.Width = 1600 &apos;N. ord.
-			oSheetSAL.GetCellByPosition(idxCol+1,idxRow).Columns.Width = 12000 &apos;LAVORAZIONI
+			oSheetSAL.GetCellByPosition(idxCol+1,idxRow).Columns.Width = 10100 &apos;LAVORAZIONI
 			oSheetSAL.GetCellByPosition(idxCol+2,idxRow).Columns.Width = 1500 &apos;U.M.
 			oSheetSAL.GetCellByPosition(idxCol+3,idxRow).Columns.Width = 1800 &apos;Quantità
 			oSheetSAL.GetCellByPosition(idxCol+4,idxRow).Columns.Width = 1400 &apos;Prezzo
@@ -639,7 +638,7 @@ fissa (0,idxrow+1)
 rem ----------------------------------------------------------------------
 rem inserimento dati SAL
 	fRow=precRowSAL&apos;+1
-Print &quot;vai&quot; &amp; frow
+&apos;Print &quot;vai&quot; &amp; frow
 	If fRow &lt; 2 Then frow=2
 	num = 1
 &apos;	Print ubound (vociSAL())
@@ -848,7 +847,7 @@ rem inserisco la prima riga del documento
 	insRows (ins, 1) &apos;insertByIndex non funziona
 	oSheetSal.getCellRangeByPosition (0,ins,10,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
 fissa (0, ins + 1)
-print
+&apos;print
 rem ----------------------------------------------------------------------
 rem ci metto un po&apos; di informazioni
 	davoce=elVoci(0)(0) &apos;ultima voce
@@ -1451,7 +1450,6 @@ rem inserisco la prima riga GIALLA del LIBRETTO
 	insRows (ins, 1) &apos;insertByIndex non funziona
 	oSheetCont.getCellRangeByPosition (0,ins,25,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
 fissa (0, ins + 1)
-print
 rem ----------------------------------------------------------------------
 rem ci metto un po&apos; di informazioni
 	oSheetCont.getCellByPosition(2,ins).string = &quot;segue Libretto delle Misure n.&quot; &amp; nSal &amp; &quot; - &quot; &amp; davoce &amp; &quot;÷&quot; &amp; avoce

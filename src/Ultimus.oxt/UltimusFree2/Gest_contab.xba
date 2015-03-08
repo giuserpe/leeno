@@ -204,6 +204,12 @@ Sub sistema_attributi_sheet&apos; (sSheet As string) rem renderla opzionale?
 &apos;print Trova_Attr_Sheet
 &apos;	Select Case sSheet
 &apos;		Case &quot;Elenco Prezzi&quot;
+&apos;			oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+&apos;			Stora_Attr_sheet_generico(&quot;&quot;, oSheet, &quot;A1&quot;)
+&apos;			Stora_Attr_sheet_generico(&quot;&quot;, oSheet, &quot;A2&quot;)
+&apos;			Stora_Attr_sheet_generico(&quot;&quot;, oSheet, &quot;B1&quot;)
+&apos;			Stora_Attr_sheet_generico(&quot;&quot;, oSheet, &quot;B2&quot;)
+&apos;		Case &quot;Elenco Prezzi&quot;
 			oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_EP&quot;, oSheet, &quot;A1&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_EP&quot;, oSheet, &quot;A2&quot;)

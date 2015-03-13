@@ -62,7 +62,7 @@ rem verde
 &apos;	colore2 = RGB(208, 255, 208)
 &apos;	colore3 = RGB(240, 255, 240)
 	for i = primariga to lLastUrow
-		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 2 Then
+		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 5 Then
 rem UPPERCASE			oSheet.getCellByPosition (4,i).setstring(Ucase(oSheet.getCellByPosition (4,i).getstring()))
 			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
 			oRange.CellBackColor = colore1 

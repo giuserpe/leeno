@@ -27,7 +27,6 @@ Global RigaVoceGlobal as long
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 Sub Ricicla_Misure
 	If ThisComponent.currentcontroller.activesheet.Name = &quot;CONTABILITA&quot; then
-		sGVV = &quot;va&quot;
 		lrow = range2cell &apos;cerca_partenza
 		sGDove = &quot;COMPUTO&quot;
  		sGVV = &quot;va&quot;	

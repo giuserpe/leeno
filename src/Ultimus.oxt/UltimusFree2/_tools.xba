@@ -2,34 +2,36 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
 rem racconta di utility di vario genere
-rem ----------------------------------------------------------------------
-rem induividua la natura del sistema operativo
-    Sub Mainpy
-      Dim MasterScriptProviderFactory as Object
-      Dim MasterScriptProvider as Object
-      Dim Script as Object
-      Dim Url as String
-      Dim PythonResult as String
 
+Sub Mainpy
+	rem RIF: http://bit.ly/1b4d3dF
+	Dim MasterScriptProviderFactory as Object
+	Dim MasterScriptProvider as Object
+	Dim Script as Object
+	Dim Url as String
+	Dim PythonResult as String
+	
 &apos;	sURL = (ConvertFromURL(extensionLocation))
-	sURL = (ConvertFromURL(LeenO_Path))
-
-      sName = FileNameoutofPath(sURL) &apos;nome file
-      Print sName
-       Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyleeno.py$xmlsix2ods?language=Python&amp;location=share:uno_packages&quot;
-       &apos; &quot;vnd.sun.star.script:yokogawa.py$YokoCalcPython?language=Python&amp;location=share&quot;
-       &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=user
-       &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=share
-       &apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=document
-
-       MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
-       MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
-
-       Script = MasterScriptProvider.getScript(Url)
-       PythonResult = Script.invoke(Array(),Array(),Array())
-
-       MsgBox PythonResult
-    End Sub
+&apos;	sURL = (ConvertFromURL(LeenO_Path))
+	
+	sName = FileNameoutofPath(LeenO_Path) &apos;nome file
+	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyLeenO|pyleeno.py$xmlsix2ods?language=Python&amp;location=user:uno_packages&quot;
+&apos;       Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyleeno.py$xmlsix2ods?language=Python&amp;location=share:uno_packages&quot;
+&apos; &quot;vnd.sun.star.script:yokogawa.py$YokoCalcPython?language=Python&amp;location=share&quot;
+&apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=user
+&apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=share
+&apos; vnd.sun.star.script:myModule.py$myFunction?language=Python&amp;location=document
+	Print Url
+	MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
+xray MasterScriptProviderFactory
+	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
+xray MasterScriptProvider 
+	Script = MasterScriptProvider.getScript(Url)
+	PythonResult = Script.invoke(Array(),Array(),Array())
+	
+	MsgBox PythonResult
+End Sub
+rem ######################################################################
 
 Function SpeechEngine()as string     
   select case getGUIType
@@ -50,6 +52,7 @@ else
 end If
 End Function
 rem ----------------------------------------------------------------------
+rem induividua la natura del sistema operativo
 Function getOS()as String
   Select Case getGUIType
   Case 1: 

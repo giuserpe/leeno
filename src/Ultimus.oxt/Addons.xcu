@@ -753,7 +753,7 @@ oor:package="org.openoffice.Office">
 							<value>_self</value>
 						</prop>
 					</node>
-					<node oor:name="m2U04" oor:op="replace">
+<!--					<node oor:name="m2U04" oor:op="replace">
 						<prop oor:name="Context" oor:type="xs:string">
 							<value>com.sun.star.sheet.SpreadsheetDocument</value>
 						</prop>
@@ -770,6 +770,7 @@ oor:package="org.openoffice.Office">
 							<value>_self</value>
 						</prop>
 					</node>
+-->
 					<node oor:name="m2U05" oor:op="replace">
 						<prop oor:name="Context" oor:type="xs:string">
 						<value></value>

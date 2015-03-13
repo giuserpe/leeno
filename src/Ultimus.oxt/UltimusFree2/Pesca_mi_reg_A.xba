@@ -289,6 +289,7 @@ AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
 	sotto = sotto+1
 	oSheet.getCellByPosition(1, sotto-1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
 	oSheet.getCellRangeByPosition(2, sotto-1, 7, sotto-1).cellstyle = &quot;comp sotto centro_R&quot;
+	Print 
 	oSheet.getCellByPosition(8, sotto-1).setformula(&quot;=CONCATENATE(&quot;&quot;Somma positivi e negativi [&quot;&quot;;VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
 	oSheet.getCellByPosition(8, sotto-1).cellstyle = &quot;comp sotto BiancheS_R&quot;
 	oSheet.getCellRangeByPosition(9, lrow+2, 9, sotto-2).cellstyle = &quot;Comp-Variante&quot;			&apos;righe positivi
@@ -312,11 +313,11 @@ IMPOSTO_VALORI_E_FORMULE:
 	oSheet.GetCellByPosition(9, lrow+1).setformula(&quot;=VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE())&quot;) &apos;Unità di misura
 	oSheet.GetCellByPosition(28, sotto).string = &quot;&quot;
 	oSheet.GetCellByPosition(37, sotto).string = &quot;&quot;
-	oSheet.GetCellByPosition(9, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;J&quot; &amp; lrow+3 &amp; &quot;:J&quot; &amp; sotto-1 &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;J&quot; &amp; lrow+3 &amp;&quot;:J&quot; &amp; sotto-1 &amp;&quot;))&quot;) &apos;Somma positivi
+	oSheet.GetCellByPosition(9, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;J&quot; &amp; lrow+3 &amp; &quot;:J&quot; &amp; sotto &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;J&quot; &amp; lrow+3 &amp;&quot;:J&quot; &amp; sotto &amp;&quot;))&quot;) &apos;Somma positivi
 	oSheet.GetCellByPosition(9, sotto).setformula(&quot;=J&quot; &amp; sotto &amp; &quot;-L&quot; &amp; sotto) &apos;SOMMANO
 	oSheet.GetCellByPosition(18, sotto).setformula(&quot;=J&quot; &amp; sotto+1) &apos;SOMMANO
 	oSheet.GetCellByPosition(18 , sotto).cellstyle = &quot;Comp-Variante num sotto&quot;						&apos;importi
-	oSheet.GetCellByPosition(11, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;L&quot; &amp; lrow+3 &amp; &quot;:L&quot; &amp; sotto-1 &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;L&quot; &amp; lrow+3 &amp;&quot;:L&quot; &amp; sotto-1 &amp;&quot;))&quot;) &apos;Somma negativi
+	oSheet.GetCellByPosition(11, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;L&quot; &amp; lrow+3 &amp; &quot;:L&quot; &amp; sotto &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;L&quot; &amp; lrow+3 &amp;&quot;:L&quot; &amp; sotto &amp;&quot;))&quot;) &apos;Somma negativi
 	oSheet.getCellByPosition(11, sotto-1).cellstyle = &quot;Comp-Variante num sotto&quot;
 	oSheet.getCellByPosition(13, sotto).setformula(&quot;=VLOOKUP(B&quot; &amp; LROW+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;) &apos;SOMMANO
 	oSheet.getCellByPosition(13, sotto).cellstyle = &quot;comp sotto Unitario&quot;

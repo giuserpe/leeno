@@ -37,8 +37,8 @@ end sub
 sub AGGIORNA_TEMPLATE &apos;main
 &apos;	on error goto errore
 	&apos; versione oxt installata
-	versioneUF_major = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value
-	versioneUF_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
+&apos;	versioneUF_major = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value
+&apos;	versioneUF_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
 
 &apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 163 and _
 &apos;		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &lt; 169 then	

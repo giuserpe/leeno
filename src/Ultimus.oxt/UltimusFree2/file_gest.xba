@@ -117,7 +117,7 @@ Sub avvia_IDE
 	oDoc.currentcontroller.activesheet.Name
 &apos;	oLayout.isElementFloating(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 	oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
-PRIND 
+Print convertfromurl(leeno_path)
 End Sub
 
 rem ----------------------------------------------------------------------

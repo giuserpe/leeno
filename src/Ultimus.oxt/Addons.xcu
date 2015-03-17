@@ -463,7 +463,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/ricicla</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Riusa una misura del computo</value>
+						<value>Ricicla una voce dal Computo</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>

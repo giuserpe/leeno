@@ -211,12 +211,15 @@ Sub clickCommandButton1_________________
  
 &apos; oPage = oDoc.getDrawPages().getByIndex( nPageToDelete )
  &apos; Tell the document to remove it.
- &apos; ThisComponent.getDrawPages().remove( oPage ) 
-
-		oDpage = oSheet.DrawPage
- 		oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
- 		oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
-		oCtrlModel.Enabled = true	
+ &apos; ThisComponent.getDrawPages().remove( oPage )
+ 
+&apos;-------------------------------------------------------------------------
+&apos;	rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
+&apos;		oDpage = oSheet.DrawPage
+&apos;		oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
+&apos;		oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
+&apos;		oCtrlModel.Enabled = true
+&apos;-------------------------------------------------------------------------
  
  &apos;exit sub 
  

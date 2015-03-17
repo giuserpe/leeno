@@ -303,6 +303,7 @@ REM ----------------------------------------------------------------------
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Default&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp Int_colonna&quot; Then
+					if 	osheet.getCellByPosition (0, lrow+1).CellStyle = &quot;Comp TOTALI&quot; Then Exit Function
 					insRows (lrow+1, 1)
 					lrowE = lrowE + 1
 					lrow=lrow+1

@@ -972,6 +972,7 @@ saltarello:
 END FUNCTION
 rem ######################################################################
 
+
 Sub elimina_riga &apos; FUNZIONA su una riga o più righe...
 	dim nome as string
 	Dim oDoc As Object
@@ -988,57 +989,99 @@ Sub elimina_riga &apos; FUNZIONA su una riga o più righe...
 	Dim I as long
 	Dim oSheet_num as integer
 	dim oSelection As Object
-	nome_sheet = thisComponent.currentcontroller.activesheet.name
-	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
-		exit sub
-	end if
+	nome_sheet = thisComponent.currentcontroller.activesheet.Name
+&apos;	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
+&apos;		exit sub
+&apos;	end if
 &apos;_____________________
 chiudi_dialoghi &apos; chiude tutti i dialoghi
 &apos;_____________________
 
-
 	If Constrolla_se_M1 = true then
-		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value = 1 then
+		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value = 1 Then
 				on error resume next
 		end if
 	end if	
-	lrow = range2cell
-	if lrow = -1 then
-			exit sub
-	end if	&apos; solo per evitare errore se ha selezionato altri oggetti
+	lrow = range2Cell
+
+	if lrow = -1 Or lrow = 0 Then Exit Sub &apos; solo per evitare errore se ha selezionato altri oggetti
 	oDoc = thisComponent
 	oSelection = oDoc.CurrentSelection
 	lcolStart = oSelection.RangeAddress.StartColumn
-	
-	
-	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
+
+&apos;	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
 	with oSelection.RangeAddress
 		lrowStart= .startRow
 		lrowEnd= .Endrow
 	end with
 	oSheets = odoc.Sheets
 	oView = ThisComponent.CurrentController
+	oSheet=ThisComponent.currentController.activeSheet
+rem ----------------------------------------------------------------------
+rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONTABILITA or COMPUTO or ANALISI or ELENCO
+
+	Select Case nome_sheet
+		Case &quot;CONTABILITA&quot;
+				If oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Data_bianca&quot; Then
+					CellAddress = oSheet.GetCellByPosition(1, lrow+1).CellAddress
+					
+					CellRangeAddress.Sheet = oSheet.RangeAddress.sheet
+					CellRangeAddress.StartColumn = 	1
+					CellRangeAddress.StartRow = lrow
+					CellRangeAddress.EndColumn = 1 &apos;espediente vomitevole...
+					CellRangeAddress.EndRow = lrow
+					
+					oSheet.copyRange(CellAddress, CellRangeAddress)
+					GoTo vai:
+				EndIf
+			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
+				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; Then
+				If InStr (oSheet.GetCellByPosition(8, lrow).string, &quot;Somma positivi e negativi [&quot;) &lt;&gt; 0 Then Exit Sub
+			Else 
+				Exit Sub
+			EndIf
+		Case &quot;COMPUTO&quot;
+			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot; And _
+				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; Or _
+				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
+				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;livello2 valuta&quot; Then
+			Else
+				Exit Sub
+			EndIf
+		Case &quot;Analisi di Prezzo&quot;
+			If oSheet.GetCellByPosition(0, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; And _
+				oSheet.GetCellByPosition(1, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-generica&quot; Then Exit Sub
+		Case &quot;Elenco Prezzi&quot;
+			If 	oSheet.GetCellByPosition(0, lrow).CellStyle &lt;&gt; &quot;EP-aS&quot; And _
+				oSheet.GetCellByPosition(1, lrow).CellStyle &lt;&gt; &quot;EP-a&quot; Then Exit Sub
+	End Select
+vai:
+	Dim test As String
+	If oSheet.name = &quot;COMPUTO&quot; Then
+		If  oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;livello2 valuta&quot; Or _
+			oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;Livello-1-scritta&quot; Then 
+			test = &quot;è Computo&quot;
+		EndIf
+	EndIf
 	
-	oSheet=ThisComponent.currentController.activeSheet 
 	iSheet_num = oSheet.RangeAddress.sheet 
 	nome_sheet = oView.GetActiveSheet.Name
 	CellRangeAddress.Sheet = iSheet_num 
 	CellRangeAddress.StartColumn = 	0
 	CellRangeAddress.StartRow = lrowStart
-	CellRangeAddress.EndColumn = 250 &apos;espediente vomitevole...
+	CellRangeAddress.EndColumn = 1 &apos;espediente vomitevole...
 	CellRangeAddress.EndRow = lrowEnd
 
-	oSheet.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.UP)
+	oSheet.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.ROWS)
 &apos;	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )
 	oSheet=ThisComponent.currentController.activeSheet 	
 &apos;	CellRangeAddress.StartColumn = 	lcolStart
 	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
 	ThisComponent.CurrentController.Select(oRangeSel)
 rem ----------------------------------------------------------------------
-
-	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
 parziale_verifica
-Rinumera_TUTTI_Capitoli2
+	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
+	If test = &quot;è Computo&quot; Then Rinumera_TUTTI_Capitoli2
 END SUB
 rem ######################################################################
 
@@ -1067,145 +1110,79 @@ Sub copia_riga_Ent &apos; capisce su quale tipologia di tabelle è
 	rem	oCtrlModel = oform.getbyname(&quot;Pulsante 11&quot;) &apos; pulsante +RIGA
 	rem	oCtrlModel.Enabled = False &apos; disabilita
 &apos;-------------------------------------------------------------------------
-	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
-		exit sub
-	end If
-	Select Case Trova_Attr_Sheet
-	Case &quot;TIPO_COMPUTO&quot; , &quot;TIPO_CONTABILITA&quot;
-		copia_riga_C
-	Case &quot;TIPO_ANALISI&quot;
+&apos;	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
+&apos;		exit sub
+&apos;	end If
+	oSheet=ThisComponent.currentController.activeSheet
+	lrow= Range2Cell &apos;righe per ridurre a cella iniziale una eventuale
+	if lrow = -1 then	exit Sub
+&apos;	If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Or _
+&apos;		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;An-lavoraz-Cod-sx&quot; Or _
+&apos;		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;An-lavoraz-desc-CEN&quot; And _
+&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;A&quot; Or _
+&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;B&quot; Or _
+&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;C&quot; Or _
+&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;D&quot; Or _
+&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;E&quot; Or _
+&apos;		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro&quot; Or _
+&apos;		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro_R&quot;	Then
+&apos;		oSheet.getRows.insertByIndex(lrow,1)
+&apos;	Else
+&apos;		Exit Sub
+&apos;	EndIf
+	sStRange = Circoscrive_Voce_Computo_Att (lRow)
+	With sStRange.RangeAddress
+		sopra =.StartRow
+		sotto =.EndRow
+	End With		
+	Select Case nome_sheet &apos; Trova_Attr_Sheet
+	Case &quot;COMPUTO&quot; &apos;&quot;TIPO_COMPUTO&quot;
+	If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Or _
+		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro&quot; Then
+		oSheet.getRows.insertByIndex(lrow,1)
+	Else
+		Exit Sub
+	EndIf
+rem immissione tags cat/subcat
+		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
+rem imposto gli stili
+		oSheet.getCellRangeByPosition(5, lrow, 7, lrow,).CellStyle = &quot;comp 1-a&quot;
+		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot;
+		oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot;
+		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot;
+		oSheet.GetCellByPosition(8, lrow).CellStyle = &quot;comp 1-a peso&quot;
+		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Blu&quot;
+		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
+		oSheet.GetCellByPosition( 10 , lrow).formula = &quot;&quot;
+		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 , lrow))
+&apos;		Print 
+	Case &quot;CONTABILITA&quot; &apos;&quot;TIPO_CONTABILITA&quot;
+	If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Or _
+		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
+		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro_R&quot;	Then
+		oSheet.getRows.insertByIndex(lrow,1)
+	Else
+		Exit Sub
+	EndIf
+rem immissione tags cat/subcat
+		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
+		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
+rem imposto gli stili
+		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
+		oSheet.GetCellByPosition( 11 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)*-1)&quot;
+		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
+	Case &quot;Analisi di Prezzo&quot; &apos;&quot;TIPO_ANALISI&quot;
 		copia_riga_A
 	end select
 	rem		oCtrlModel.Enabled = True &apos;riabilita il pulsante +RIGA
 end sub
-rem ######################################################################
-
-Sub copia_riga_C &apos; specifica per Computo e CONTABILITA
-&apos; a me sembra in GIU&apos;....
-&apos; in pratica aggiunge un componente
-&apos; modificata alla 3.5.189 ma non ancora unificata (cioè sull&apos;analisi è ancora altra macro)
-dim nome as string
-Dim oDoc As Object
-Dim oSheets As Object
-dim oCelle As Object
-Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
-Dim CellAddress As New com.sun.star.table.CellAddress
-dim lrow as integer
-dim lcol as integer
-dim lrow2 as integer
-Dim oView As Object
-Dim nome_sheet as string
-Dim OcalcSheet as Object
-Dim I as long
-Dim oSheet_num as integer
-Dim iflag as integer
-dim sFlag as string
-	nome_sheet = thisComponent.currentcontroller.activesheet.name
-	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
-		exit sub
-	end if
-&apos;	oDoc=thisComponent
-&apos;	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
-	lrow= Range2Cell &apos;righe per ridurre a cella iniziale una eventuale
-	if lrow = -1 then	exit Sub
-	oSheet = ThisComponent.currentController.activeSheet
-	nome_sheet = oSheet.name
-	if oSheet.GetCellByPosition(5 , 1).getCOLUMNS.IsVisible=false then
-		oSheet.clearOutline()
-		Else
-		oSheet.clearOutline()		
-	end if	
-	
-	if nome_sheet = &quot;COMPUTO&quot; or &quot;CONTABILITA&quot; Then &apos;nome_sheet = &quot;CONTABILITA&quot; then
-			if oSheet.GetCellByPosition( 2 , lrow).CellStyle = &quot;comp 1-a&quot; then
-					iflag = 0
-
-				Else
-				&apos;	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
-				&apos;	Msgbox (&quot;#1 L&apos;eventualità di copiare questa riga non è prevista!&quot; &amp; CHR$(10) _
-		 		&apos;		&amp; &quot;Riprova da una posizione diversa...&quot;, 48 , &quot;Errore!&quot;
-					exit sub
-			end if
-		else
-			If nome_sheet = &quot;Analisi di Prezzo&quot; then &apos; questa non è testata
-			&apos; infatti da analisi viene eseguita copia_riga_A - UNIFICARLE ??
-				if oSheet.GetCellByPosition( 1 , lrow).CellStyle = &quot;An-lavoraz-desc&quot; then
-						iflag = 0
-					else
-						Msgbox &quot;Sei sicuro di voler copiare questa riga? &quot;&amp; CHR$(10) _
-		 			&amp; &quot; (L&apos;eventualità di copiare questa riga non era prevista...) Controlla e riprova...&quot;
-						exit sub
-				end if			
-				sFlag = &quot;A&quot;
-			end if
-	end if
-
-	if iflag = &quot;1&quot; then &apos; questa non so a cosa serve, perché iflag è sempre a 0
-		exit sub
-	end if
-	insRows (lrow + 1,1)
-&apos;	oSheet.getRows.insertByIndex(lrow + 1,1) &apos; inserisci 1 riga sotto
-&apos;	oSRC = oSheet.getCellRangeByPosition (2,lrow,250,lrow ).RangeAddress &apos; seleziona la riga sorgente
-&apos;	oDest = oSheet.GetCellByPosition(2, lrow+1).CellAddress &apos;stabilisce la destinazione
-&apos;	oSheet.copyRange(oDest,oSRC)&apos;copia sorgente su destinazione
-	oSheet.GetCellByPosition( 9 , lrow+1).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;)&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;))&quot;
-	oSheet.GetCellByPosition( 11 , lrow+1).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;)&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+2 &amp; &quot;:I&quot; &amp; lrow+2 &amp; &quot;)*-1)&quot;
-	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
-	lrow=lrow+1
-	oSheet.getCellByPosition (2,lrow).CellStyle = &quot;comp 1-a&quot; &apos; imposta lo stile
-	oSheet.getCellRangeByPosition (5,lrow,8,lrow).CellStyle = &quot;comp 1-a&quot; &apos; imposta lo stile
-	oSheet.getCellByPosition (9,lrow).CellStyle = &quot;Comp-Variante&quot;&apos; imposta lo stile
-	lrow=lrow-1
-	oRange = oSheet.getCellRangeByPosition (2,lrow+1,150,lrow+1)
-	oRange.Rows.OptimalHeight = true
-	
-	&apos; se la variabile lo richiede svuota i contenuti
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,301).value = 0 then 
-	 	 oSheet.GetCellByPosition( 2 , lrow+1).string = &quot;&quot;
-	 	 oSheet.GetCellByPosition( 4 , lrow+1).string = &quot;&quot;
-	 	 oSheet.GetCellByPosition( 5 , lrow+1).string = &quot;&quot;
-	 	 oSheet.GetCellByPosition( 6 , lrow+1).string = &quot;&quot;
-	 	 oSheet.GetCellByPosition( 7 , lrow+1).string = &quot;&quot;
-	 	 oSheet.GetCellByPosition( 8 , lrow+1).string = &quot;&quot;
-	 end If
-	oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
-	sRow = oRangeVC.RangeAddress.EndRow
-&apos;	Print sRow
-&apos;Print &quot;conviene cambiare la formula del subtotale sulla S5 per evitare il Controlla_Somma_locale&quot;
-	 Select case nome_sheet
-	 	Case &quot;COMPUTO&quot;
-rem i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
-rem ma tocca usare SUBTOTAL()
-&apos;	 	Controlla_Somma_locale (9, sRow)
-	 	Case &quot;CONTABILITA&quot;
-rem i controlli sono inutili se il range della formula prende anche la cella della somma stessa 
-rem ma tocca usare SUBTOTAL()
-&apos;	 	Controlla_Somma_locale (9, sRow)
-&apos;	 	Controlla_Somma_locale (11, sRow)
-	 End Select 
-
-	 
-&apos;Attenzione ho inserito questo richiamo percHé perdeva il focus nel viaggio
-&apos;cioè tornava inspiegabilmente come &quot;elenco Prezzi&quot; ....
- &apos;	oSheet = ThisComponent.currentController.activeSheet
- &apos; cos&apos; funziona... occhio potrebbe succedere ancora
- &apos; frase magica per togliere il focus dal pulsante...!
-	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
-	ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow+1))
-	Select case nome_sheet
-	 	Case &quot;COMPUTO&quot;
-	 		oSheet.GetCellByPosition(1 , lrow+1).CellStyle = &quot;Comp-Bianche in mezzo&quot; &apos; imposta lo stile
-	 	Case &quot;CONTABILITA&quot;
-	 		oSheet.GetCellByPosition(1 , lrow+1).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; &apos; imposta lo stile
-	 End Select 
-
-&apos;	ThisComponent.CurrentController.Frame.getContainerWindow.setFocus(TRUE)
-&apos;exit sub
-	&apos;queste due tolgono il nero dello sfondo della cella selezionata
-	oRanges = ThisComponent.createInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)
-	ThisComponent.CurrentController.Select(oRanges)
-	&apos; cambia anche il comportamento... dopo aver digitato enter e tab fanno quello che devono...
-END SUB
 rem ######################################################################
 
 Sub copia_riga_A &apos; Specifica per Analisi
@@ -1227,9 +1204,9 @@ Dim I as long
 Dim oSheet_num as integer
 Dim iflag
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
-	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
-		exit sub
-	end if
+&apos;	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
+&apos;		exit sub
+&apos;	end if
 	&apos;_____________________
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
@@ -1238,30 +1215,27 @@ Dim iflag
 	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
 	
 	lrow= Range2Cell &apos;righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then
-			 
-			exit sub
-	end if
+	if lrow = -1 then exit Sub
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	oSheets = odoc.Sheets 
 	oView = ThisComponent.CurrentController
 	nome_sheet = oView.GetActiveSheet.Name
 
-	if nome_sheet = &quot;COMPUTO&quot; then
-			iflag = CNTR_Computo (lrow)
-			sFlag = &quot;C&quot;
-		else
-			If nome_sheet = &quot;Analisi di Prezzo&quot; then
-			iflag =	CNTR_Analisi (lrow)
+&apos;	if nome_sheet = &quot;COMPUTO&quot; then
+&apos;			iflag = CNTR_Computo (lrow)
+&apos;			sFlag = &quot;C&quot;
+&apos;		else
+&apos;			If nome_sheet = &quot;Analisi di Prezzo&quot; then
+&apos;			iflag =	CNTR_Analisi (lrow)
 &apos;			print lrow &amp; &quot; &quot; &amp; iflag
-			sFlag = &quot;A&quot;
-			end if
-	end if
+&apos;			sFlag = &quot;A&quot;
+&apos;			end if
+&apos;	end if
 &apos;	print iflag
-	if iflag = 1 then
-		exit sub
-	end if
+&apos;	if iflag = 1 then
+&apos;		exit sub
+&apos;	end if
 
 	oCalcSheet = oSheets.GetByIndex(0)
 	For I = 0 to oSheets.Count -1 
@@ -1275,7 +1249,7 @@ Dim iflag
 	CellRangeAddress.StartColumn = 0
 	CellRangeAddress.StartRow = lrow	
 	CellRangeAddress.EndColumn = 15 &apos;250 
-	insRows (lrow, 1)
+&apos;	insRows (lrow, 1)
 &apos;	oSheet.getRows.insertByIndex(lrow, 1)
 &apos;exit sub
 	CellAddress.Sheet = oSheet_num 
@@ -1285,7 +1259,7 @@ Dim iflag
 	CellAddress.Row = lrow &apos; destinazione
 	oSheets.copyRange(CellAddress, CellRangeAddress)
 
-	lrow =lrow+1
+&apos;	lrow =lrow+1
 
  &apos; lettura var generale in S1
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 0 then &apos;Copia il testo sovrastante 1=sì

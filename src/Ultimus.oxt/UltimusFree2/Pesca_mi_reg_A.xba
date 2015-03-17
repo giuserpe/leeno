@@ -187,10 +187,11 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 				sTmp = Mid(oCell.formula, 2, 1) &apos;Left (oCell.formula, 2)
 				dim iTmp as integer
 				iTmp = sTmp 	
-				iTmp = iTmp +1 -1
+&apos;				iTmp = iTmp +1 -1
 				If stmp &lt;&gt; iTmp then &apos; se diversi è perché contiene lettere (quindi è link)
 					ThisComponent.CurrentController.Select(ocell)
-					dim sD as string
+					dim sD as String
+					If InStr (oSheet.GetCellByPosition(8 , i).string, &quot;Parziale [&quot;) Then exit For
 					msgbox (&quot;Ho trovato link ovvero COLLEGAMENTO ad un&apos;altra cella!&quot; &amp; CHR$(10)_
 						&amp; &quot;Come risultato finale di questa operazione otterrai la copia dei dati consolidati.&quot; &amp; CHR$(10)_
 						&amp; &quot;Dovrai, eventualmente, correggere la descrizione dei righi di misurazione interessati!&quot; &amp; CHR$(10)_
@@ -289,7 +290,7 @@ AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
 	sotto = sotto+1
 	oSheet.getCellByPosition(1, sotto-1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
 	oSheet.getCellRangeByPosition(2, sotto-1, 7, sotto-1).cellstyle = &quot;comp sotto centro_R&quot;
-	Print 
+
 	oSheet.getCellByPosition(8, sotto-1).setformula(&quot;=CONCATENATE(&quot;&quot;Somma positivi e negativi [&quot;&quot;;VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
 	oSheet.getCellByPosition(8, sotto-1).cellstyle = &quot;comp sotto BiancheS_R&quot;
 	oSheet.getCellRangeByPosition(9, lrow+2, 9, sotto-2).cellstyle = &quot;Comp-Variante&quot;			&apos;righe positivi
@@ -329,6 +330,7 @@ IMPOSTO_VALORI_E_FORMULE:
 	oSheet.GetCellByPosition(23, lrow+1).cellstyle = &quot;Sal&quot;
 Numera_Voci_Computo (&quot;niente prompt&quot;)
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow+2))
+parziale_verifica
 exit sub
  	errore:
 	sMemoPesca = empty

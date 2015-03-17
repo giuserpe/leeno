@@ -406,6 +406,7 @@ rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
 Controlla_Somme_Componenti
+Rinumera_TUTTI_Capitoli2
 	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
 		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 		ThisComponent.CurrentController.Select(oSheet)
@@ -416,11 +417,13 @@ Controlla_Somme_Componenti
 		&apos;Numera_Voci_Computo (&quot;niente prompt&quot;) &apos;meglio non eseguire in automatico
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)
-		
-		oDpage = oSheet.DrawPage
- 		oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
- 		oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
-		oCtrlModel.Enabled = true	
+&apos;--------------------------------------------
+rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
+&apos;	oDpage = oSheet.DrawPage
+&apos;	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
+&apos;	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
+&apos;	oCtrlModel.Enabled = False
+&apos;-------------------------------------------------	
 		aggiorniamoli
 		Visualizza_normale
 	end if

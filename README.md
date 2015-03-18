@@ -1,10 +1,8 @@
-Ultimus
-=======
+LeenO - Computo metrico assistito con Libreoffice/Openoffice
+=====
 
-Ultimus alias LEENO - Computo metrico assistito con Libreoffice
-
-
-Cos’è UltimusFree
+Cos’è LeenO
+===========
 
 Fare architettura è divertente, la gestione della parte finanziaria molto meno!
 
@@ -12,12 +10,13 @@ Ma avere il controllo del budget, sia a monte che durante la gestione di un prog
 
 In commercio ci sono diversi programmi orientati allo scopo, ma li trovo poco flessibili e – in genere – specifici per un solo sistema operativo.
 
-Per questo ho messo a punto UlltimusFree, un applicativo per LibreOffice (e/o OpenOffice.org) per la stesura e la gestione dei Computi Metrici Estimativi e della Contabilità Lavori.
+Per questo ho messo a punto UlltimusFree (LeenO), un applicativo per LibreOffice (e/o OpenOffice.org) per la stesura e la gestione dei Computi Metrici Estimativi e della Contabilità Lavori.
 
-UltimusFree può “girare” su piattaforme diverse (GNU/Linux, MS Windows e Mac) e i documenti contabili prodotti (normali tabelle di calcolo) possono essere aperti, manipolati e stampati anche con programmi diversi da LibreOffice (o da OpenOffice.org).
+LeenO può “girare” su piattaforme diverse (GNU/Linux, MS Windows e Mac) e i documenti contabili prodotti (normali tabelle di calcolo) possono essere aperti, manipolati e stampati anche con programmi diversi da LibreOffice (o da OpenOffice.org).
 
 Ho cercato il massimo della flessibilità e della potenza, anche a scapito della semplicità… Il risultato sono una serie di tabelle collegate fra loro, manipolabili anche a mano attraverso l’interfaccia standard e senza utilizzare le macro.
 
+LibreOffice genera e gestisce file in formato OpenDocument (ODF) ISO/IEC 26300:2006 che è l’unico formato standard aperto riconosciuto. LeenO, essendo un add-on per LibreOffice, aderisce perfettamente allo stesso standard. OpenDocument, come tale, garantisce interoperabilità senza barriere tecniche e legali anche tra sistemi operativi diversi, assicurando la scambio dei dati corretto e sicuro oltre che l’accesso agli stessi a lungo termine. Le sue specifiche tecniche sono di pubblico dominio, per cui favorisce la concorrenza impedendo che dette specifiche siano detenute da un singolo produttore di software.
 
 Installazione
 =============

@@ -97,13 +97,11 @@ sub Procedura_di_Controllo &apos; eseguita da menu con il doc già aperto
 	Su_Apertura_Doc(sSMS)
 
 end sub
-
-
-&apos;_____________________________________________________________
+rem ######################################################################
 
 Sub Su_Apertura_Doc (optional sSMS as string)&apos; in apertura eseguo queste routine
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
-Visualizza_normale 
+Visualizza_normale
 	Barra_chiudi_sempre_4 
 	Barra_apri_chiudi_4 
 	dim sVerMinorDoc as long
@@ -149,7 +147,6 @@ rem on error goto ErrorHandler
 	&apos;print sVer2
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-rem NUOVO NUMERO VERSIONE GIUSERPE
 		oSheet.unprotect(&quot;&quot;)
 rem ----------------------------------------------------------------------
 rem le tre che seguono sono settate in &quot;_variabili&quot;
@@ -405,16 +402,13 @@ rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
-Controlla_Somme_Componenti
-Rinumera_TUTTI_Capitoli2
-	If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
-		oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-		ThisComponent.CurrentController.Select(oSheet)
-		&apos; questa è lunga da eseguire...
-		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-		Tutti_Subtotali (oSheet)
-		
-		&apos;Numera_Voci_Computo (&quot;niente prompt&quot;) &apos;meglio non eseguire in automatico
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+Computo_Normale_terra_terra &apos;visualizza
+Rifa_Somme_TOT_Computo &apos;comprende anche Controlla_Somme_Componenti &apos;ricontrolla tutti i calcoli e sistema i tag
+Rinumera_TUTTI_Capitoli2	&apos;ricontrolla i calcoli 
+Numera_Voci_Computo (&quot;niente prompt&quot;)
+
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)
 &apos;--------------------------------------------
@@ -426,11 +420,8 @@ rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 &apos;-------------------------------------------------	
 		aggiorniamoli
 		Visualizza_normale
-	end if
 	
-	If thisComponent.Sheets.hasByName(&quot;S5&quot;) Then
-		Logo_Avvio
-	end if
+	If thisComponent.Sheets.hasByName(&quot;S5&quot;) Then Logo_Avvio
 
 	If Constrolla_se_M1 = true then
 			Vai_a_M1
@@ -473,9 +464,10 @@ rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 					oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
 					oPrimaCella.Rows.Height = 2200
 					ThisComponent.CurrentController.Select(oPrimaCella)
-					oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-					oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
-					oSpalte1.isVisible = false
+					Print 
+			&apos;		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+			&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
+			&apos;		oSpalte1.isVisible = false
 				&apos;	Sel_Computo
 					Computo_Normale_terra_terra
 					Sel_Altre_Opz
@@ -485,14 +477,7 @@ rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 	end if
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;6... Attendi ancora&quot;, 70)
-&apos;print &quot;uffa_3&quot;	
 	Rimetti_in_ordine_tab
-
- 	&apos;Select case MsgBox ( &quot;Controllo le finestrelle a discesa? &quot;&amp; CHR$(10)_
- 	&apos;	&amp; &quot;&quot; , 35, &quot;Fimestrelle a discesa&quot; )
-	&apos;	Case 6	
-
-&apos;print &quot;uffa_4&quot;	
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value = 1 then 
 &apos;					&apos;And ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &lt;&gt; 0 then 
@@ -512,22 +497,31 @@ rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
 		Nascondi_tabs_contabilita
 	end if
 
-	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).string = 1 then
-		Rifa_Somme_TOT_Computo
-		&apos;Tutti_Subtotali
-	end if
+&apos;	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,314).string = 1 then
+&apos;		Rifa_Somme_TOT_Computo
+&apos;		&apos;Tutti_Subtotali
+&apos;	end if
 
 	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &lt;&gt; &quot;0&quot; then
 		Nascondi_tabs_COMPUTO_soltanto
 	end if
 
 	&apos; questa è lunghetta
-	modifiche_risibili
+&apos;	modifiche_risibili
 	&apos;fare qualcosa
 	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;2 ok proseguo!&quot;, 60)	
 
+rem ----------------------------------------------------------------------
+reset_STILI
+rem adatta altezza righe di tutto il doc
+	Dim lsheet() As object
+	lsheet() = thiscomponent.sheets.elementnames
+	For Each el In lsheet()
+		Adatta_h_riga_intera_tabella(el)
+	Next
+rem ----------------------------------------------------------------------
 Protect_alcune_tabelle
 	
 &apos;	suona_1_2 
@@ -540,7 +534,6 @@ Protect_alcune_tabelle
 	sVers= ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string &amp; &quot;.&quot; &amp;_
 			 ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).string &amp; &quot;.&quot; &amp;_
 			 ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string &amp; &quot;.&quot; 
-			 
 
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).string = 1 then
 			sContab = &quot;Si sta lavorando sulla Contabilità:&quot;	
@@ -549,11 +542,6 @@ Protect_alcune_tabelle
 	end if
 	
 	sNome_lavoro = ThisComponent.Sheets.getByName(&quot;M1&quot;).GetCellByPosition(2,3).string
-		
-&apos;	Msgbox &quot;Versione di UltimusFree installata: &quot; &amp; sVers &amp; CHR$(10)_
-&apos;			&amp; &quot;Template: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).string
-&apos;NOMEFILE = ThisComponent.oDoc.CurrentSelection.title
-&apos;MSGBOX NOMEFILE
 
 	Msgbox &quot;Il livello di esperienza è impostato su: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &amp; CHR$(10) &amp; CHR$(10)_
 			&amp; sContab &amp; CHR$(10)_
@@ -562,17 +550,8 @@ Protect_alcune_tabelle
 			&amp; &quot; Buon lavoro!&quot; &amp; CHR$(10)_
 				&amp; &quot;&quot; , , &quot;LeenO: &quot; &amp; sVers &amp; &quot; - Template: &quot; &amp; ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).string
 	
-&apos;	Msgbox &quot; &quot; &amp; CHR$(10)_
-&apos;		&amp;&quot; La procedura di Controllo pare essersi conclusa con successo! &quot; &amp; CHR$(10) &amp; CHR$(10)_
-	
 	No_Procedura:
-	
-&apos;	print &quot;fine&quot;&apos;&apos;
-&apos;	xray oProgressBar
-&apos;	If not isNull (oProgressBar) or not isEmpty (oProgressBar) then
-&apos;		oProgressBar.end
-&apos;	end if
-	exit sub
+Exit Sub
 	ErrorHandler:
 	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	ThisComponent.unlockControllers 

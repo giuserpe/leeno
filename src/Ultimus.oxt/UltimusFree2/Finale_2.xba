@@ -379,13 +379,9 @@ Sub Computo_senza_prezzi &apos;Genera un Puro computo metrico senza i prezzi
 
 	osheet.getCellRangeByPosition (22,2,26,lrowfine).ClearContents(iCellAttr)
 	osheet.getCellRangeByPosition (28,2,30,lrowfine).ClearContents(iCellAttr)
-
 	osheet.getCellRangeByPosition (36,2,37,lrowfine).ClearContents(iCellAttr)
-	
 	osheet.getCellRangeByPosition (12,0,16,lrowfine).ClearContents(iCellAttr)
-	
 	osheet.getCellRangeByPosition (10,0,10,lrowfine).ClearContents(iCellAttr)
-
 	osheet.getCellRangeByPosition (19,0,26,lrowfine).ClearContents(iCellAttr)
 
 	&apos; ora svuoto cancello anche i rinvii nella riga del subtotali cap e sottocap

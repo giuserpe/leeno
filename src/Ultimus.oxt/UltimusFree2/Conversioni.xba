@@ -41,7 +41,7 @@ rem faccio il backup del file e riporto il focus sul file -tmp
 	idxtemplate = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 290).value
 	
 backup_tmp &apos;questa lascia il focus sul nuovo doc-tmp
-aggiorna_STILI
+reset_STILI
 rem ----------------------------------------------------------------------
 rem torno sul file di partenza
 Focus_su_altro_Doc (sUrl_tmp)
@@ -288,10 +288,9 @@ rem Saluti
 &apos;Print now &amp; &quot; - &quot; &amp; now1
 rem ----------------------------------------------------------------------
 End Sub
+rem ######################################################################
 
-
-
- sub aggiorna_STILI 
+sub reset_STILI
  &apos;tutti in blocco e sovrascrive 
 	&apos; aggiorno gli stili di cella sulla base di quelli del template di riferimento
 	&apos; attenzione li sovrascrive tutti (modulo suggerito da dfrench - Nuova Zelanda)

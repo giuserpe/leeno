@@ -1110,26 +1110,10 @@ Sub copia_riga_Ent &apos; capisce su quale tipologia di tabelle è
 	rem	oCtrlModel = oform.getbyname(&quot;Pulsante 11&quot;) &apos; pulsante +RIGA
 	rem	oCtrlModel.Enabled = False &apos; disabilita
 &apos;-------------------------------------------------------------------------
-&apos;	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
-&apos;		exit sub
-&apos;	end If
 	oSheet=ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos;righe per ridurre a cella iniziale una eventuale
 	if lrow = -1 then	exit Sub
-&apos;	If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Or _
-&apos;		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;An-lavoraz-Cod-sx&quot; Or _
-&apos;		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;An-lavoraz-desc-CEN&quot; And _
-&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;A&quot; Or _
-&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;B&quot; Or _
-&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;C&quot; Or _
-&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;D&quot; Or _
-&apos;		oSheet.GetCellByPosition(0, lrow).String =  &quot;E&quot; Or _
-&apos;		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro&quot; Or _
-&apos;		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro_R&quot;	Then
-&apos;		oSheet.getRows.insertByIndex(lrow,1)
-&apos;	Else
-&apos;		Exit Sub
-&apos;	EndIf
+
 	sStRange = Circoscrive_Voce_Computo_Att (lRow)
 	With sStRange.RangeAddress
 		sopra =.StartRow
@@ -1156,32 +1140,58 @@ rem imposto gli stili
 		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot;
 		oSheet.GetCellByPosition(8, lrow).CellStyle = &quot;comp 1-a peso&quot;
 		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Blu&quot;
+rem ci metto le formule
 		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
 		oSheet.GetCellByPosition( 10 , lrow).formula = &quot;&quot;
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 , lrow))
 &apos;		Print 
 	Case &quot;CONTABILITA&quot; &apos;&quot;TIPO_CONTABILITA&quot;
-	If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Or _
-		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
-		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro_R&quot;	Then
-		oSheet.getRows.insertByIndex(lrow,1)
-	Else
-		Exit Sub
-	EndIf
+		If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Then
+			oSheet.getRows.insertByIndex(lrow,1)
+			GoTo procedi:
+		EndIf
+		If 	oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
+			oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro_R&quot;	Then
+			oSheet.getRows.insertByIndex(lrow,1)
+			GoTo procedi:
+		Else
+		GoTo fine:
+		EndIf
+procedi:
 rem immissione tags cat/subcat
 		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
 		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
 		oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; sotto+2)
 		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
 		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
-rem imposto gli stili
+rem imposto gli stili		
+		oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot;
+		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot;
+		oSheet.getCellRangeByPosition(5, lrow, 7, lrow,).CellStyle = &quot;comp 1-a&quot;
+		oSheet.GetCellByPosition(8, lrow).CellStyle = &quot;comp 1-a peso&quot;
+		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Comp-Variante&quot;
+rem ci metto le formule
 		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
 		oSheet.GetCellByPosition( 11 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)*-1)&quot;
+rem preserva la data di misura
+		If oSheet.GetCellByPosition(1, lrow+1).CellStyle = &quot;Data_bianca&quot; Then
+			CellAddress = oSheet.GetCellByPosition(1, lrow).CellAddress
+			CellRangeAddress.Sheet = oSheet.RangeAddress.sheet
+			CellRangeAddress.StartColumn = 	1
+			CellRangeAddress.StartRow = lrow+1
+			CellRangeAddress.EndColumn = 1
+			CellRangeAddress.EndRow = lrow+1
+			oSheet.copyRange(CellAddress, CellRangeAddress)
+		EndIf
+		oSheet.GetCellByPosition(1, lrow+1).String = &quot;&quot;
+		oSheet.GetCellByPosition(1, lrow+1).CellStyle = &quot;Comp-Bianche in mezzo_R&quot;
+		
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
 	Case &quot;Analisi di Prezzo&quot; &apos;&quot;TIPO_ANALISI&quot;
 		copia_riga_A
 	end select
 	rem		oCtrlModel.Enabled = True &apos;riabilita il pulsante +RIGA
+fine:
 end sub
 rem ######################################################################
 
@@ -1222,21 +1232,6 @@ Dim iflag
 	oView = ThisComponent.CurrentController
 	nome_sheet = oView.GetActiveSheet.Name
 
-&apos;	if nome_sheet = &quot;COMPUTO&quot; then
-&apos;			iflag = CNTR_Computo (lrow)
-&apos;			sFlag = &quot;C&quot;
-&apos;		else
-&apos;			If nome_sheet = &quot;Analisi di Prezzo&quot; then
-&apos;			iflag =	CNTR_Analisi (lrow)
-&apos;			print lrow &amp; &quot; &quot; &amp; iflag
-&apos;			sFlag = &quot;A&quot;
-&apos;			end if
-&apos;	end if
-&apos;	print iflag
-&apos;	if iflag = 1 then
-&apos;		exit sub
-&apos;	end if
-
 	oCalcSheet = oSheets.GetByIndex(0)
 	For I = 0 to oSheets.Count -1 
 		oCalcSheet = oSheets(I) &apos;recuperiamo la tabella
@@ -1249,7 +1244,7 @@ Dim iflag
 	CellRangeAddress.StartColumn = 0
 	CellRangeAddress.StartRow = lrow	
 	CellRangeAddress.EndColumn = 15 &apos;250 
-&apos;	insRows (lrow, 1)
+	insRows (lrow, 1)
 &apos;	oSheet.getRows.insertByIndex(lrow, 1)
 &apos;exit sub
 	CellAddress.Sheet = oSheet_num 

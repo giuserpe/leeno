@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_variabili" script:language="StarBasic">rem  *****  BASIC  *****
 &apos;_______________________________________________________________________________________	
-&apos; LeenO 3.11.0
+&apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -24,7 +24,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
 Public Const versioneUF_minor= 11			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;1.dev&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_subversion= &quot;1&quot;		&apos;CORREZIONE BUGS
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;

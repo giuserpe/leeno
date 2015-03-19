@@ -3,7 +3,7 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="SAL_REG" script:language="StarBasic">rem ***** BASIC *****
 
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.11.0
+&apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					

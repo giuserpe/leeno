@@ -2,7 +2,7 @@
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="Finale" script:language="StarBasic">
 &apos;_______________________________________________________________________________________ 		
-&apos; LeenO 3.11.0
+&apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
 &apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
@@ -1787,7 +1787,7 @@ END SUB
 
 Sub Ri_Formatta_Capitoli &apos; duplica sul computo gli stili di cella delle intestazioni (capitoli e sottoCapitoli)
 &apos; la ricerca e l&apos;individuazione viene fatta sullo stile di cella della colonna A
-rem adeguata a LeenO 3.11.0
+rem adeguata a LeenO - Computo Metrico
 Clessid_lock_Start 
  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	lcol5 = 0

@@ -81,6 +81,6 @@
  <library:element library:name="Zip"/>
  <library:element library:name="Conversioni"/>
  <library:element library:name="ConversioneDaListiniEsterni"/>
- <library:element library:name="xmlsix_io"/>
+ <library:element library:name="PY_bridge"/>
  <library:element library:name="Menu"/>
 </library:library>

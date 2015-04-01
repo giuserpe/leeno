@@ -1112,8 +1112,15 @@ Sub copia_riga_Ent &apos; capisce su quale tipologia di tabelle è
 &apos;-------------------------------------------------------------------------
 	oSheet=ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos;righe per ridurre a cella iniziale una eventuale
-	if lrow = -1 then	exit Sub
-
+	If lrow = -1 Then Exit Sub
+	stile = oSheet.GetCellByPosition(0, lrow).CellStyle
+	Select Case stile
+	Case &quot;An-lavoraz-Cod-sx&quot;, &quot;An-lavoraz-desc-CEN&quot;, &quot;comp 10 s&quot;, &quot;Comp End Attributo&quot;, &quot;comp 10 s_R&quot;
+		If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;An-lavoraz-desc-CEN&quot; And _
+			oSheet.GetCellByPosition(0, lrow-1).CellStyle = &quot;An-lavoraz-desc-CEN&quot; Then Exit Sub
+	Case Else
+		Exit Sub
+	End Select
 	sStRange = Circoscrive_Voce_Computo_Att (lRow)
 	With sStRange.RangeAddress
 		sopra =.StartRow
@@ -1167,7 +1174,8 @@ rem immissione tags cat/subcat
 rem imposto gli stili		
 		oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot;
 		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot;
-		oSheet.getCellRangeByPosition(5, lrow, 7, lrow,).CellStyle = &quot;comp 1-a&quot;
+		oSheet.getCellRangeByPosition(5, lrow, 7, lrow).CellStyle = &quot;comp 1-a&quot;
+		oSheet.getCellRangeByPosition(11, lrow, 23, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot;
 		oSheet.GetCellByPosition(8, lrow).CellStyle = &quot;comp 1-a peso&quot;
 		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Comp-Variante&quot;
 rem ci metto le formule

@@ -83,7 +83,6 @@ rem ----------------------------------------------------------------------
 	oDoc = thiscomponent
 	oLayout = oDoc.CurrentController.getFrame().LayoutManager
 	oDoc.currentcontroller.activesheet.Name
-	oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 rem ----------------------------------------------------------------------
 &apos;	Dim pip As Object, extensionLocation As String
 &apos;	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot; REM vedi in &quot;_variabili&quot;
@@ -102,6 +101,7 @@ rem le variabili di versione sono settate In &quot;_vaiabili&quot;
 	End If
 &apos;	Print extensionLocation
 	zipfolder(extensionLocation,ConvertToUrl(nomeZip))
+	oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 &apos;	Print nomeZip
 &apos;	Filecopy nomeZip, nomeZip2 &apos;seconda copia senza data
 end Sub

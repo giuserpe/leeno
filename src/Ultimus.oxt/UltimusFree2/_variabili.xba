@@ -24,7 +24,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
 Public Const versioneUF_minor= 11			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;2.dev&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_subversion= &quot;2&quot;		&apos;CORREZIONE BUGS
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;

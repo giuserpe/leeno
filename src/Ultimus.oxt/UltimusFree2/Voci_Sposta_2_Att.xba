@@ -293,7 +293,7 @@ rem cerco la prima riga
 				Else
 					Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot;
 						osheet.getCellByPosition (0, lrow).CellStyle
-&apos;ThisComponent.CurrentController.Select(osheet.getCellByPosition (0, lrow)) 
+ThisComponent.CurrentController.Select(osheet.getCellByPosition (0, lrow)) 
 						lrow = lrow -1
 					Loop
 					lrows=lrow
@@ -302,7 +302,7 @@ rem cerco la prima riga
 REM ----------------------------------------------------------------------
 rem cerco l&apos;ultima riga
 			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
-&apos;ThisComponent.CurrentController.Select(osheet.getCellByPosition (0, lrow)) 
+ThisComponent.CurrentController.Select(osheet.getCellByPosition (0, lrow)) 
 				lrow=lrow+1
 			Loop
 			lrowE=lrow

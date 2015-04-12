@@ -224,8 +224,7 @@ rem rigo parziale già esistente:
 			If InStr (oSheet.GetCellByPosition(8 , lrow).string, &quot;Parziale [&quot;) Then GoTo procedi
 rem ----------------------------------------------------------------------
 rem rigo normale:
-
-			If 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s&quot; And _
+			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s&quot; And _
 				osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; And _
 				osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
 				oSheet.getRows.insertByIndex(lrow,1)
@@ -233,9 +232,6 @@ rem rigo normale:
 rem ----------------------------------------------------------------------
 rem ultimo rigo:
 			ElseIf InStr (oSheet.GetCellByPosition(8 , lrow).String, &quot;SOMMANO [&quot;) &gt; 0  Then 
-				oSheet.getRows.insertByIndex(lrow,1)
-				GoTo procedi
-			ElseIf 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then
 				oSheet.getRows.insertByIndex(lrow,1)
 				GoTo procedi
 			EndIf

@@ -339,9 +339,10 @@ ELIMINA_I_NOMI_DI_AREA_ERRATI:
  	if InStr(Contenuto, &quot;#REF!&quot;) or _
 			InStr(Contenuto, &quot;#rif!&quot;) then&apos;
 &apos;print oNomiArea(i) &amp;&quot; &quot;&amp; Contenuto
-			oAree. removeByName(oNomiArea(i))
+			oAree.removeByName(oNomiArea(i))
  	end if
- next
+ Next
+	Doc.Sheets.removeByName(&quot;duplicati&quot;)
 END SUB
 
 SUB DOLO rem SOLO MANUTENZIONE

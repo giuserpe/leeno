@@ -20,7 +20,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="-103" dlg:top="74" dlg:width="100" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="Computo Normale">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Computo_Normale_b?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="5" dlg:top="70" dlg:width="100" dlg:height="20" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione Corta on/off">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="5" dlg:top="70" dlg:width="100" dlg:height="20" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="5" dlg:left="-99" dlg:top="55" dlg:width="95" dlg:height="14" dlg:help-text="Apri TUTTI i Sommari del Registro di Contabilità" dlg:value="Apri tutti i Sommari" dlg:multiline="true">

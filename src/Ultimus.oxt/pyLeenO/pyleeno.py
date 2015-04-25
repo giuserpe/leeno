@@ -105,11 +105,12 @@ def xmlsix2ods ():
 import logging
 from xml.etree.ElementTree import ElementTree
 
-#~ filename = 'W:/_dwg/ULTIMUSFREE/elenchi/abruzzo/2014/AB2014_03-11-2014.xml'
-#filename = 'W:/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml'
+filename = 'W:/_dwg/ULTIMUSFREE/elenchi/abruzzo/2014/AB2014_03-11-2014.xml'
+#~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/abruzzo/2014/AB2014_03-11-2014.xml'
+#~ filename = "W:/_dwg/ULTIMUSFREE/elenchi/Calabria/2013/Urbanizzazioni_2013_UCU2.xml"
 
-#filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml'
-filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/abruzzo/2014/AB2014_03-11-2014.xml'
+#~ filename = 'W:/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml'
+#~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml'
 
 def import_XML ():
     """Routine di importazione di un prezziario XML formato SIX"""
@@ -117,12 +118,11 @@ def import_XML ():
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare
     diz_um = dict() # array per le unità di misura
     # stringhe per nome capitoli
-    titolo_sup = str()
-    titolo_cap = str()
-    titolo_sub = str()
+    #~ titolo_sup = str()
+    #~ titolo_cap = str()
+    #~ titolo_sub = str()
     # stringhe per descrizioni articoli
     desc_codice = str()
-    desc_voce = str()
     desc_estesa = str()
     # effettua il parsing del file XML
     #~ logging.debug(_("Parsing del file XML: {0}").format(filename))
@@ -196,53 +196,59 @@ def import_XML ():
             if sub_desc != None:
                 desc_codice = sub_desc.get("breve")
                 if desc_codice == None:
-                    desc_codice = ""                        
+                    desc_codice = ""
                 desc_estesa = sub_desc.get("estesa")
                 if desc_estesa == None:
                     desc_estesa = ""
             sub_quot = elem.find("{six.xsd}prdQuotazione")
             if sub_quot != None:
                 list_nr = sub_quot.get("listaQuotazioneId")
-                if sub_quot.get("valore") != None:
-                    costo_materiali = float(sub_quot.get("valore"))
                 sic = elem.get("onereSicurezza")
                 if sic != None:
                     sicurezza = float(sic)
+                if sub_quot.get("valore") != None:
+                    valore = float(sub_quot.get("valore"))
                 if sub_quot.get("quantita") is not None:
                     quantita = float(sub_quot.get("quantita"))
             else:
-                costo_materiali = ""
+                valore = ""
                 sicurezza = ""
                 quantita = ""
             articolo = (prod_id,            #0
                         tariffa,            #1
-                        #~ titolo,             #2
-                        desc_codice,        #3
-                        desc_estesa,        #4
-                        desc_voce,          #5
-                        costo_materiali,    #6
-                        quantita,           #7
-                        sicurezza,          #8
-                        unita_misura)       #9
+                        desc_codice,        #2
+                        desc_estesa,        #3
+                        unita_misura,       #4
+                        valore,             #5
+                        quantita,           #6
+                        sicurezza)         #7 %
             lista_articoli.append(articolo)
 # compilo la tabella ###################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByName('Foglio1')
+    oSheet = oDoc.getSheets().getByName('Listino')
     #~ oSheet.getCellRangeByName('C1').String = przDes_breve
     #~ oSheet.getCellRangeByName('E3').String = przDes_breve
-    i=1
+# nome del prezzario ###################################################
+    oSheet.getCellRangeByName('C1').String = nome
+    i=7
     for elem in lista_articoli:
         try:
-            oSheet.getCellRangeByName('A'+ str (i)).String = elem[0]    #
-            oSheet.getCellRangeByName('B'+ str (i)).String = elem[1]    # 
-            oSheet.getCellRangeByName('C'+ str (i)).String = elem[2]    # 
-            oSheet.getCellRangeByName('D'+ str (i)).String = elem[3]    # 
-            oSheet.getCellRangeByName('E'+ str (i)).String = elem[4]    #
-            oSheet.getCellRangeByName('F'+ str (i)).String = elem[5]
-            oSheet.getCellRangeByName('G'+ str (i)).String = elem[6]
-            oSheet.getCellRangeByName('H'+ str (i)).String = elem[7]
-            oSheet.getCellRangeByName('I'+ str (i)).String = elem[8]
-            oSheet.getCellRangeByName('L'+ str (i)).String = elem[9]
+            oSheet.getCellRangeByName('A'+ str (i)).String = elem[0]    #prod_id
+            oSheet.getCellRangeByName('C'+ str (i)).String = elem[1]    #tariffa
+            oSheet.getCellRangeByName('E'+ str (i)).String = elem[2]    #desc_codice
+            if elem[3] !="":
+                oSheet.getCellRangeByName('E'+ str (i)).String = elem[3]    #desc_estesa
+#            oSheet.getCellRangeByName('F'+ str (i)).String = elem[3]    #desc_estesa
+            oSheet.getCellRangeByName('G'+ str (i)).String = elem[4]    #unita_misura
+            if elem[5] == "":
+                oSheet.getCellRangeByName('H'+ str (i)).String = ""
+            else:
+                oSheet.getCellRangeByName('H'+ str (i)).Value = elem[5] #valore
+            if elem[7] == "":
+                oSheet.getCellRangeByName('L'+ str (i)).String = ""
+            else:
+                oSheet.getCellRangeByName('k'+ str (i)).Value = elem[7] #sicurezza %
+                #~ oSheet.getCellRangeByName('L'+ str (i)).Value = float (elem[5] * elem[7] / 100) #sicurezza
         except IndexError:
             pass
         i=i+1

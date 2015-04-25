@@ -571,7 +571,7 @@ sub compila_tag_con_codice_voce (msg As Boolean)
  					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
  					if lrow &gt;= nEndRow then
  						exit do
- 					end if
+ 					end If
  				lrow=lrow+1
  			loop	
  			sFormula = &quot;=B&quot; &amp; nCurRow+1

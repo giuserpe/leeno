@@ -1557,3 +1557,108 @@ ThisComponent.CurrentController.Select(sStRange)
 END SUB
 
 '==========================================================================
+
+
+SUB Tronca_Altezza_Voci_Computo_NON_USATA '1 e Contabilità NON USATA
+		oSheet = ThisComponent.currentController.activeSheet
+	'	Print 	right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2)
+ 		if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = "_R" or	_
+				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = "_R" or _
+				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = "_R" or _
+				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = "_R" then
+				s_R = "_R"	
+			else
+				s_R = ""
+		end if	' ha impostato un flag
+	oActiveCell1 = thisComponent.getCurrentSelection()
+	lStartRow = oSheet.GetCellByPosition( 1 , 0)
+	numV = 1
+	
+	'trovo la fine dei dati
+	oEnd=uFindString("TOTALI COMPUTO", oSheet) 
+	If isNull (oEnd) or isEmpty (oEnd) then 
+			lLastUrowNN = getLastUsedRow(oSheet)
+		else
+			lLastUrowNN=oEnd.RangeAddress.EndRow '-1
+	end if
+	
+	lrow= Range2Cell
+	if lrow = -1 then exit Sub
+	if lrow > lLastUrowNN Then lrow = lLastUrowNN-3
+
+	for i = lrow to lLastUrowNN
+			if oSheet.GetCellByPosition(1 ,i).CellStyle = "comp Art-EP" then 
+				lrow =i
+				exit for
+			end if
+	next
+		
+	'controllo se la riga corrente	è quella base
+	if	oSheet.GetCellByPosition(1 , lrow).CellStyle = "comp Art-EP" & s_R then
+		goto verifica 
+	end if
+
+	' Altrimenti questo ciclo cerca nella voce la riga base
+	oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
+ For i = oRangeVC.RangeAddress.StartRow to oRangeVC.RangeAddress.EndRow
+		if	oSheet.GetCellByPosition(1 , (i)).CellStyle = "comp Art-EP" & s_R then	 
+			 lrow = i
+		end if
+	Next i
+	verifica:
+	' se la riga 'base' NON è ottimizzata in altezza
+	if oSheet.GetCellByPosition(1 ,lrow).Rows.OptimalHeight = false then
+		' le allunga
+	 	sString$ = "Fine Computo"
+		oEnd=uFindString(sString$, oSheet) 
+		If isNull (oEnd) or isEmpty (oEnd) then 
+				lLastUrowNN = getLastUsedRow(oSheet)
+			else
+				lLastUrowNN=oEnd.RangeAddress.EndRow '-1
+		end if
+		oRange = oSheet.getCellRangeByPosition (1,2,5,lLastUrowNN)
+		oRange.Rows.OptimalHeight = true
+		ThisComponent.CurrentController.Select(oActiveCell1)
+		exit sub
+	end if
+
+	If thisComponent.Sheets.hasByName("S1") Then 
+			If ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,310).value = 0 then
+					lAltezzaRiga = 1200
+				else
+					lAltezzaRiga =_
+					ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,310).value * 1000
+			end if				 	
+		else
+			lAltezzaRiga = 1300
+	end if
+			
+	lStartRow = oSheet.GetCellByPosition( 0 , 0)
+	
+	sString$ = "Fine Computo"
+	oEnd=uFindString(sString$, oSheet) 
+	If isNull (oEnd) or isEmpty (oEnd) then 
+			lLastUrowNN = getLastUsedRow(oSheet)
+		else
+			lLastUrowNN=oEnd.RangeAddress.EndRow-1
+	end if
+	
+	If thisComponent.Sheets.hasByName("S1") Then '???
+			iLivelliVisibili = ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,297).value '?????????
+			if iLivelliVisibili=0 then 'per avere comunque un valore di default nel caso il riferimento sia vuoto
+					iLivelliVisibili = 2
+			end if
+		else
+			iLivelliVisibili = 2
+	end if
+		
+	For i = 2 to lLastUrowNN
+		'Dim oCRA As New com.sun.star.table.CellRangeAddress
+		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = "comp Art-EP" & s_R then	 
+			 oSheet.GetCellByPosition(1 , (I)).rows.Height = lAltezzaRiga
+		end if
+	next I
+	ThisComponent.CurrentController.Select(oActiveCell1) 
+	thisComponent.currentController.Select(thisComponent.CreateInstance("com.sun.star.sheet.SheetCellRanges")) 'unselect ranges 	
+	' toglie la selezione 	
+END SUB 'fine di: Tronca_Altezza_Voci_Computo

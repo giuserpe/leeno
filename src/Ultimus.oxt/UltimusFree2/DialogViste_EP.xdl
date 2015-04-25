@@ -36,7 +36,7 @@
   <dlg:button dlg:style-id="2" dlg:id="CommandButton4" dlg:tab-index="8" dlg:left="42" dlg:top="-50" dlg:width="42" dlg:height="14" dlg:help-text="Elimina le righe selezionate" dlg:value="ELIMINA RIGA/E" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="9" dlg:left="5" dlg:top="75" dlg:width="80" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione Corta ON/OFF">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="9" dlg:left="5" dlg:top="75" dlg:width="80" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="10" dlg:left="90" dlg:top="75" dlg:width="80" dlg:height="15" dlg:help-text="Altezza Ottimale delle righe" dlg:value="Adatta altezza righe" dlg:multiline="true">

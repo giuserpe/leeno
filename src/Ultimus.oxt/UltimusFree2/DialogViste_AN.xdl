@@ -10,7 +10,7 @@
   <dlg:style dlg:style-id="5" dlg:background-color="0x98fb98"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="0" dlg:left="5" dlg:top="5" dlg:width="78" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Descrizione Corta ON/OFF" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="0" dlg:left="5" dlg:top="5" dlg:width="78" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Descrizione be" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton10" dlg:tab-index="1" dlg:left="305" dlg:top="27" dlg:width="76" dlg:height="15" dlg:help-text="Visualizza/Nascondi  gestione MANODOPERA" dlg:value="Gestione Manodopera  on/off" dlg:multiline="true">

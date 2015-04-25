@@ -1301,17 +1301,12 @@ end sub
 
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
-
 Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
-	
 &apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
+	chiudi_dialoghi &apos; chiude tutti i dialoghi
 &apos;_____________________
-	
 	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
-	
 	ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
-	
 	sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 &apos;Print Trova_Attr_Sheet
 	Select Case Trova_Attr_Sheet
@@ -1334,113 +1329,64 @@ Exit sub
 	end If
 end sub
 
+Sub Tronca_Altezza_Voci_Computo &apos; (c) Giuseppe Vizziello 2015
+&apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO e CONTABILITA
+&apos; verifico la compatibilità ed adatto
+chiudi_dialoghi &apos; chiude tutti i dialoghi
+	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+	if	oSheet.GetCellByPosition(7,336).value = 0 Then
+		oSheet.GetCellByPosition(6,336).String = &quot;Descrizioni abbreviate: primi caratteri della voce&quot;
+		oSheet.GetCellByPosition(6,336).CellStyle = &quot;Setvar b&quot;
+		oSheet.GetCellByPosition(7,336).value = 160
+		oSheet.GetCellByPosition(7,336).CellStyle = &quot;Setvar C&quot;
+		oSheet.GetCellByPosition(8,336).String = &quot;Quanti caratteri vuoi visualizzare partendo dall&apos;INIZIO della descrizione?&quot;
+		oSheet.GetCellRangeByPosition(8,336,20,336).CellStyle = &quot;Setvar D&quot;
+		oSheet.GetCellByPosition(6,337).String = &quot;Descrizioni abbreviate: ultimi caratteri della voce&quot;
+		oSheet.GetCellByPosition(6,337).CellStyle = &quot;Setvar b&quot;
+		oSheet.GetCellByPosition(7,337).value = 100
+		oSheet.GetCellByPosition(7,337).CellStyle = &quot;Setvar C&quot;
+		oSheet.GetCellByPosition(8,337).String = &quot;Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?&quot;
+		oSheet.GetCellRangeByPosition(8,337,20,337).CellStyle = &quot;Setvar D&quot;
+	EndIf
+	primi = oSheet.GetCellByPosition(7,336).value
+	ultimi = oSheet.GetCellByPosition(7,337).value
 
-SUB Tronca_Altezza_Voci_Computo &apos;1 e Contabilità
-		oSheet = ThisComponent.currentController.activeSheet
-	&apos;	Print 	right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2)
- 		if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
-				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
-				s_R = &quot;_R&quot;	
-			else
-				s_R = &quot;&quot;
-		end if	&apos; ha impostato un flag
-	oActiveCell1 = thisComponent.getCurrentSelection()
-	lStartRow = oSheet.GetCellByPosition( 1 , 0)
-	numV = 1
-	
-	&apos;trovo la fine dei dati
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
-	If isNull (oEnd) or isEmpty (oEnd) then 
-			lLastUrowNN = getLastUsedRow(oSheet)
-		else
-			lLastUrowNN=oEnd.RangeAddress.EndRow &apos;-1
-	end if
-	
-	lrow= Range2Cell
-	if lrow = -1 then exit Sub
-	if lrow &gt; lLastUrowNN Then lrow = lLastUrowNN-3
+	oSheet = ThisComponent.currentController.activeSheet
+	i = getLastUsedRow(oSheet)
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;
+		stile = &quot;Comp-Bianche in mezzo Descr&quot;
+	Case &quot;CONTABILITA&quot;
+		If ThisComponent.NamedRanges.hasByName(&quot;#LIB#1&quot;) Then
+			MsgBox (&quot;Il cambio della modalità di visualizzazione delle descrizioni è possibile&quot; &amp; CHR$(13) &amp; _
+					&quot;solo se NON è presente ulcun atto contabile registrato!.&quot;, 16, &quot;ATTENZIONE!&quot;)
+			Exit Sub
+		EndIf
+		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;
+	End Select
+&apos;	For i = 1 To uRiga
+	While i &gt; 2
+rem preferisco che lavori a partire dal fondo per questioni di visibilità per l&apos;utente
+		If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+&apos; switch ON/OFF
+			If InStr (oSheet.GetCellByPosition(2,i).String, &quot; [...] &quot;) &lt;&gt; 0 Then
+					sformula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
+				Else
+					sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
+						&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; _
+						&quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&amp; primi &amp;&quot;);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
+						&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; ultimi &amp; &quot;))&quot;
+			EndIf
+			oSheet.GetCellByPosition(2 ,i).formula = sformula
+		EndIf
+		i = i-1
+	Wend
+&apos;	Next
+Adatta_h_riga_intera_tabella(oSheet.Name)
+	MsgBox (&quot;La visualizzazione delle descrizioni è stata cambiata!.&quot;, , &quot;AVVISO!&quot;)
+End Sub
 
-	for i = lrow to lLastUrowNN
-			if oSheet.GetCellByPosition(1 ,i).CellStyle = &quot;comp Art-EP&quot; then 
-				lrow =i
-				exit for
-			end if
-	next
-		
-	&apos;controllo se la riga corrente	è quella base
-	if	oSheet.GetCellByPosition(1 , lrow).CellStyle = &quot;comp Art-EP&quot; &amp; s_R then
-		goto verifica 
-	end if
-
-	&apos; Altrimenti questo ciclo cerca nella voce la riga base
-	oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
- For i = oRangeVC.RangeAddress.StartRow to oRangeVC.RangeAddress.EndRow
-		if	oSheet.GetCellByPosition(1 , (i)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R then	 
-			 lrow = i
-		end if
-	Next i
-	verifica:
-	&apos; se la riga &apos;base&apos; NON è ottimizzata in altezza
-	if oSheet.GetCellByPosition(1 ,lrow).Rows.OptimalHeight = false then
-		&apos; le allunga
-	 	sString$ = &quot;Fine Computo&quot;
-		oEnd=uFindString(sString$, oSheet) 
-		If isNull (oEnd) or isEmpty (oEnd) then 
-				lLastUrowNN = getLastUsedRow(oSheet)
-			else
-				lLastUrowNN=oEnd.RangeAddress.EndRow &apos;-1
-		end if
-		oRange = oSheet.getCellRangeByPosition (1,2,5,lLastUrowNN)
-		oRange.Rows.OptimalHeight = true
-		ThisComponent.CurrentController.Select(oActiveCell1)
-		exit sub
-	end if
-
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = 0 then
-					lAltezzaRiga = 1200
-				else
-					lAltezzaRiga =_
-					ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value * 1000
-			end if				 	
-		else
-			lAltezzaRiga = 1300
-	end if
-			
-	lStartRow = oSheet.GetCellByPosition( 0 , 0)
-	
-	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet) 
-	If isNull (oEnd) or isEmpty (oEnd) then 
-			lLastUrowNN = getLastUsedRow(oSheet)
-		else
-			lLastUrowNN=oEnd.RangeAddress.EndRow-1
-	end if
-	
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos;???
-			iLivelliVisibili = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value &apos;?????????
-			if iLivelliVisibili=0 then &apos;per avere comunque un valore di default nel caso il riferimento sia vuoto
-					iLivelliVisibili = 2
-			end if
-		else
-			iLivelliVisibili = 2
-	end if
-		
-	For i = 2 to lLastUrowNN
-		&apos;Dim oCRA As New com.sun.star.table.CellRangeAddress
-		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R then	 
-			 oSheet.GetCellByPosition(1 , (I)).rows.Height = lAltezzaRiga
-		end if
-	next I
-	ThisComponent.CurrentController.Select(oActiveCell1) 
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-	&apos; toglie la selezione 	
-END SUB &apos;fine di: Tronca_Altezza_Voci_Computo
-
-
-
+&apos; ########################################################################
 sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle descrizioni per visualizzare più righe/voci
  &apos;	msgbox &quot;Spiacente ma funziona solo sulla tab &apos;Elenco Prezzi&apos;&quot;&amp; CHR$(10)_
  	&apos;		&amp; &quot; e NON sui suoi duplicati!&quot;				

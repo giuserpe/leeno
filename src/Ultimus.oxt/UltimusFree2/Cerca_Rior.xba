@@ -45,7 +45,6 @@ RiDefinisci_Area_Elenco_prezzi
 	lcolEPF = oRangeEP.EndColumn
 
 	If lrowEPF = lrowF Then lrowEPF=lrowF-1
-
 &apos;On Error Resume Next 
 	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
 ordina_col (lcolEPI+1)
@@ -53,6 +52,7 @@ ordina_col (lcolEPI+1)
 &apos;	Print idxcol
 &apos;	Print idxrow
 fissa (0,idxrow+1)
+	Barra_chiudi_sempre_4
 End Sub
 
 
@@ -79,10 +79,11 @@ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 				exit function
 	end If
  oRanges = ThisComponent.NamedRanges
-RiDefinisci_Area_Elenco_prezzi
-seleziona_area (&quot;elenco_prezzi&quot;)
+&apos;RiDefinisci_Area_Elenco_prezzi
+&apos;seleziona_area (&quot;elenco_prezzi&quot;)
 print
-ordina_col (1)
+&apos;ordina_col (1)
+Riordina_ElencoPrezzi_D
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	Riordina_0 = lrowF
 End Function 
@@ -285,6 +286,7 @@ rem ultima riga
 	lRowE=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)+1
 rem ----------------------------------------------------------------------
 rem nome ultima colonna
+
 	lCol = ColumnNameOf(getLastUsedCol(oSheet)+2) &apos; aggiungo 3 colonne in più... non si sa mai
 	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
 	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici

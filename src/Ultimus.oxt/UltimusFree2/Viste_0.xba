@@ -61,6 +61,10 @@ Sub sicurezza_Analisi_on_off &apos; chiude le col della manodopera su Analisi
 End Sub
 
 Sub tag_usata_on_off
+	tag_usata_switch
+End Sub
+
+Sub tag_usata_switch (Optional flag As String)
 &apos;print Trova_Attr_Sheet
 	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
 		if Trova_Attr_Sheet = &quot;&quot; Then
@@ -82,12 +86,25 @@ Sub tag_usata_on_off
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase
 				exit sub
-	end if
-
-	If oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = false then
+	end If
+&apos;-------------------------------------------------------------------------
+	If flag = &quot;on&quot; Then
 		oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = true
-	 else	 
-		oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = false			
+		oSheet.getColumns.getByIndex(lcolbase+8+idxcol).isVisible = true
+		Exit Sub
+	EndIf
+	If flag = &quot;off&quot; Then
+		oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = false
+		oSheet.getColumns.getByIndex(lcolbase+8+idxcol).isVisible = false
+		Exit Sub
+	EndIf
+&apos;-------------------------------------------------------------------------
+	If oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = false Then
+		oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = true
+		oSheet.getColumns.getByIndex(lcolbase+8+idxcol).isVisible = true
+	 else
+		oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = false
+		oSheet.getColumns.getByIndex(lcolbase+8+idxcol).isVisible = false
 	end If
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)

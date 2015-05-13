@@ -1342,6 +1342,7 @@ end sub
 &apos;------------------------------------------------------------------------
 
 Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di stampa su un foglio
+rimuovi_area_di_stampa
 	togli_salti_pagina
 	dim oCellStart as object
 	dim lrowE as long
@@ -1358,6 +1359,9 @@ Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di s
 	sAttributo = Trova_Attr_Sheet
 &apos;	Print sAttributo
 	oSheet = ThisComponent.currentController.activeSheet
+ThisComponent.CurrentController.Select(oSheet)
+Adatta_Altezza_riga
+thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	Select Case oSheet.Name &apos;sAttributo
 	 Case &quot;TIPO_COMPUTO&quot;, &quot;COMPUTO&quot;
 	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800

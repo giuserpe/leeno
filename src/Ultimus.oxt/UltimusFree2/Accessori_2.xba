@@ -676,7 +676,7 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow,&quot;BB&quot;) &apos; quantità
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then &apos;11111
+	If isNull (oEnd) or isEmpty (oEnd) then 
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
 		msgbox &quot;Manca la riga rossa di chiusura della tabella. PROVVEDI!&quot;
 		exit sub

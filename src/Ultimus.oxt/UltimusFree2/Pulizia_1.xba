@@ -19,6 +19,7 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	oPos = ThisComponent.getCurrentSelection()	
 	lcolbase = Colonna_giusta_EP (oSheet)
+	
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase
 				exit sub
@@ -26,20 +27,22 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 
 	oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = true
 
-	If MsgBox (&quot;Sto per Taggare le voci di Elenco Prezzi e Analisi realmente utilizzate nel computo e nelle analisi.&quot;&amp; CHR$(10)_
-		&amp;	&quot;L&apos;operazione potrebbe richiedere molto tempo... Se NON hai salvato, esci e Salva....&quot;_
-		&amp; &quot;e poi ripeti questo comando&quot; &amp; CHR$(10) &amp; &quot;PROSEGUO senza salvare? &quot;, 292, &quot;Si tratta di un&apos;operazione Lunga!!!!&quot;) = 7 then
+	If MsgBox (&quot;Sto per segnare le voci di Elenco Prezzi e Analisi realmente utilizzate.&quot;&amp; CHR$(10)_
+		&amp; &quot;L&apos;operazione potrebbe richiedere tempo...&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;Se NON hai salvato ti conviene farlo!&quot; &amp; CHR$(10)_
+		&amp; &quot;PROSEGUO senza salvare? &quot;, 292, &quot;Si tratta di un&apos;operazione lunga!&quot;) = 7 then
 			exit sub
 	end if
 
-	If MsgBox (&quot; Prima di procedere sarebbe meglio &quot;&quot;ripulire&quot;&quot; le colonne dei Tag!&quot; &amp; CHR$(10)_
-				&amp; &quot; In modo da lavorare su una situazione &quot;&quot;pulita&quot;&quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot; 	&quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot;RIPULISCO? (Consigliato...) &quot;, 4+0+32, &quot; PULIZIA DEI TAG ATTUALI &quot;) = 6 then
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	If MsgBox (&quot; Prima di procedere sarebbe meglio &quot;&quot;ripulire&quot;&quot; le colonne dei Tag!&quot; &amp; CHR$(10)_
+&apos;				&amp; &quot; In modo da lavorare su una situazione &quot;&quot;pulita&quot;&quot; &quot; &amp; CHR$(10) &amp; CHR$(10)_
+&apos;				&amp; &quot; 	&quot; &amp; CHR$(10) &amp; CHR$(10)_
+&apos;		&amp; &quot;RIPULISCO? (Consigliato...) &quot;, 4+0+32, &quot; PULIZIA DEI TAG ATTUALI &quot;) = 6 then
+&apos;	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;
+&apos;	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+&apos;	end If
 			Pulisci_Colonne_tag	&apos;pulizia dei vecchi eventuali tag
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	end if
 	Uscita_forzata = &quot;&quot;
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	DOPPIONI_TROVA
@@ -48,7 +51,7 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	If Uscita_forzata = &quot;Esci&quot; then
  	 exit sub	 
  	end if
- 	
+GoTo saltarello: 	
  	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	sString$ = &quot;Fine elenco&quot;
 	oEnd=uFindString(sString$, oSheet)	
@@ -84,6 +87,8 @@ SUB	Tagga_VociPrezzo_non_usate_linkato ()
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot; #&quot;&amp; lrowE, 0)
 &apos;	Barra_apri_chiudi_4	
+saltarello:
+tagga_
 	Tag = &quot;UA&quot;
 	Tagged = &quot;UC&quot;
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -226,7 +231,7 @@ end if
 
 	&apos; PRINT &quot;eseguo A_1&quot;
 	 oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
-	 lrow=2 
+	 lrow=3
  	 oCell = oSheet.GetCellByPosition( 1, lrow )
 	 xA = &quot;&quot;
 	 lUltimaRiga = getLastUsedRow(oSheet
@@ -414,75 +419,83 @@ END Function
 
 
 Function S_EP (optional xA as string, Tag as string)as string&apos;le segna su EP (da dovunque arrivi)
-dim lrow as long
-dim lrowE as long
-dim sString as string
-				Barra_chiudi_sempre_4
-				Barra_apri_chiudi_4	
-
-				oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
-				lcolbase = Colonna_giusta_EP(osheet) 
-			 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-					print lcolbase
-					exit function
-				end if
- 			
-				oCell = oSheet.GetCellByPosition(lcolbase + 0,1 ) 
+	dim lrow as long
+	dim lrowE as long
+	dim sString as string
+	Barra_chiudi_sempre_4
+	Barra_apri_chiudi_4	
+	
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
+	lcolbase = Colonna_giusta_EP(osheet) 
+		if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
+		print lcolbase
+		exit function
+	end if
+	oCell = oSheet.GetCellByPosition(lcolbase + 0,1 ) 
 &apos;				ThisComponent.CurrentController.Select(ocell)&apos; solo per debug
 &apos;						print &quot;elenco -- Xa: &quot; &amp; Xa &amp; &quot;|| e con Tag: &quot; &amp; Tag
-						&apos;circoscrive l&apos;elenco e cerca la fine
-				sString$ = &quot;Fine elenco&quot;
-				oEnd=uFindString(sString$, oSheet)			
-				lrowE=oEnd.CellAddress.Row
-				lrowE = lrowE-1 
-					&apos;	print lrowE
-				lrowS = 2
-					&apos;	print xa
-				sString = xA
-				lcolS = lcolbase +0
-				lcolE = lcolbase +0
+&apos;circoscrive l&apos;elenco e cerca la fine
 
-				oIniz = TrovaSTR(sString, oSheet)
-				&apos;oIniz = SimpleSheetSearch (sString, oSheet, lcolS, lrowS, lcolE, lrowE-1, false )
-				
-				&apos;brancaleone
+&apos;	sString$ = &quot;Fine elenco&quot;
+&apos;	oEnd=uFindString(sString$, oSheet)			
+&apos;	lrowE=oEnd.CellAddress.Row
+&apos;	lrowE = lrowE-1 
+&apos;	lrowS = 2
 
-				If IsNull(oIniz) then
-							sDomanda = MsgBox (&quot;La voce di Computo &lt; &quot; &amp; sString &amp; &quot; &gt; non esiste in Elenco Prezzi!&quot; &amp; CHR$(10)_
-							&amp; &quot;Se si tratta di Opere Pubbliche il fatto è illegale. In tal caso esci e risolvi il problema!&quot;&amp; CHR$(10)_
-							&amp; &quot;Se invece è un computo per privati puoi ignorare la cosa e proseguire...&quot;&amp; CHR$(10)_
-							&amp; &quot;Che faccio PROSEGUO? &quot;, 292, &quot;&quot;)
-					if sDomanda = 7 then
-					&apos;	Uscita_forzata = &quot;Esci1&quot;
-						S_EP = &quot;Esci1&quot;
-					&apos;	print &quot;esco per doppio mancante!&quot;
-						exit function 
-					end if
-				 	If sDomanda = 6 then
-					 	&apos;	Uscita_forzata = &quot;continua&quot;
-					 			S_EP = &quot;continua&quot;
-					 	&apos;	print &quot; proseguo&quot;
-					 		exit function 
-					end if
-				end if				
-				lrowS=oIniz.CellAddress.Row 
-				if lrowS &gt; lrowE then
-						&apos;		Uscita_forzata = &quot;Esci&quot;
-						print &quot;setto Uscita_forzata ed esco&quot; &apos;debug
-						exit function
-				end if 
-				oCell = oSheet.GetCellByPosition(lcolbase + 0,lrowS )
-				ThisComponent.CurrentController.Select(oCell)	&apos;debug
-				xA = oCell.string 
-				oCell = oSheet.GetCellByPosition( lcolbase +9, lrowS) &apos;8
-				oCell.string = Tag
-				oCell.Cellbackcolor= RGB(255,0,0)&apos; 10&apos; 1 nero&apos;&amp;HCCCCCC grigio&apos;&amp;H00000 nero
-				oCell = oSheet.GetCellByPosition(lcolbase + 7, lrowS)
-				oCell.Cellbackcolor= RGB(255,141,56)
-			 oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
-				 oCell = oSheet.GetCellByPosition( 1, lrow+1 )
-	 		 xA = oCell.string
+
+	oNamedRange= thiscomponent.NamedRanges.elenco_prezzi.ReferredCells
+	With oNamedRange.RangeAddress
+		lrowS = .StartRow+1
+		lrowE = .EndRow-1
+	End With
+
+&apos;	print xa
+	sString = xA
+	lcolS = lcolbase +0
+	lcolE = lcolbase +0
+	
+	oIniz = TrovaSTR(sString, oSheet)
+&apos;oIniz = SimpleSheetSearch (sString, oSheet, lcolS, lrowS, lcolE, lrowE-1, false )
+	
+&apos;brancaleone
+	
+	If IsNull(oIniz) then
+		sDomanda = MsgBox (&quot;La voce di Computo &lt; &quot; &amp; sString &amp; &quot; &gt; non esiste in Elenco Prezzi!&quot; &amp; CHR$(10)_
+		&amp; &quot;Se si tratta di Opere Pubbliche il fatto è illegale. In tal caso esci e risolvi il problema!&quot;&amp; CHR$(10)_
+		&amp; &quot;Se invece è un computo per privati puoi ignorare la cosa e proseguire...&quot;&amp; CHR$(10)_
+		&amp; &quot;Che faccio PROSEGUO? &quot;, 292, &quot;&quot;)
+		if sDomanda = 7 then
+&apos;	Uscita_forzata = &quot;Esci1&quot;
+			S_EP = &quot;Esci1&quot;
+&apos;	print &quot;esco per doppio mancante!&quot;
+			exit function 
+		end if
+			If sDomanda = 6 then
+				&apos;	Uscita_forzata = &quot;continua&quot;
+						S_EP = &quot;continua&quot;
+				&apos;	print &quot; proseguo&quot;
+					exit function 
+		end if
+	end if				
+	lrowS=oIniz.CellAddress.Row 
+	if lrowS &gt; lrowE then
+&apos;		Uscita_forzata = &quot;Esci&quot;
+		print &quot;setto Uscita_forzata ed esco&quot; &apos;debug
+		exit function
+	end if 
+	oCell = oSheet.GetCellByPosition(lcolbase + 0,lrowS )
+	ThisComponent.CurrentController.Select(oCell)	&apos;debug
+	xA = oCell.string 
+	oCell = oSheet.GetCellByPosition( lcolbase +9, lrowS) &apos;8
+	oCell.string = Tag
+	oCell.Cellbackcolor= RGB(255,0,0)&apos; 10&apos; 1 nero&apos;&amp;HCCCCCC grigio&apos;&amp;H00000 nero
+	oCell = oSheet.GetCellByPosition(lcolbase + 7, lrowS)
+	oCell.Cellbackcolor= RGB(255,141,56)
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
+	oCell = oSheet.GetCellByPosition( 1, lrow+1 )
+			 xA = oCell.string
 &apos;@	passa_oltre:
-				Barra_chiudi_sempre_4
+	Barra_chiudi_sempre_4
 end function
+
 </script:module>

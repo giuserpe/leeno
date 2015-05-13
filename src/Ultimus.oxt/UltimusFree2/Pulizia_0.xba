@@ -17,13 +17,49 @@
 
 
 
-Sub Tagga_VociPrezzo_non_usate () 
-&apos;	tag_usata_on_off &apos;
+Sub Tagga_VociPrezzo_non_usate ()
+	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;))
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	tag_usata_switch (&quot;on&quot;)
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Tagga_VociPrezzo_non_usate_linkato &apos;ho spostato la macro main in Pulizia_1 per questioni di ordine
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	EliminaVociTaggate_EP_0
 end sub
+
+Sub tagga_
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+&apos;-------------------------------------------------------------------------
+	Barra_Apri_Chiudi_5(&quot;                  Rigenero il sommario Computo&quot;, 10)
+	Rifa_AA_BB_Computo
+	Barra_chiudi_sempre_4
+&apos;-------------------------------------------------------------------------
+	Barra_Apri_Chiudi_5(&quot;                  Rigenero il sommario Contabilità&quot;, 20)
+	Rifa_GG_G1G1_Contab
+	Barra_chiudi_sempre_4
+&apos;-------------------------------------------------------------------------
+&apos;segno le voci usate
+	Barra_Apri_Chiudi_5(&quot;                  Segno le voci usate&quot;, 30)
+	sString$ = &quot;Fine elenco&quot;
+	oEnd=uFindString(sString$, oSheet)
+	lrow=oEnd.RangeAddress.EndRow 
+	n = 3
+	While n &lt; lrow
+&apos;		Barra_Apri_Chiudi_5(&quot;                  Segno le voci usate&quot;, n/lrow*100)
+		If oSheet.GetCellByPosition(10,n).value&lt;&gt;0 Or _
+			oSheet.GetCellByPosition(13,n).value&lt;&gt;0 Then
+			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(9,n))&apos; solo per debug
+			oSheet.GetCellByPosition(9,n).string = &quot;UC&quot;
+			oSheet.GetCellByPosition(9,n).cellstyle = &quot;Tag_decim&quot;
+		Else
+			oSheet.GetCellByPosition(9,n).string = &quot;&quot;
+		EndIf
+		n=n+1
+	Wend
+	Barra_chiudi_sempre_4
+&apos;-------------------------------------------------------------------------
+
+End Sub
 
 
 
@@ -516,8 +552,7 @@ Sub Pulisci_Colonne_tag &apos;elimina tutti i tag da EP e dalle Analisi
 	oMioRange.CellStyle = &quot;Analisi_Sfondo&quot;
 	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	lrow=1 
-	
+	lrow=2
 	lcolbase = Colonna_giusta_EP (oSheet)
 
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
@@ -529,7 +564,7 @@ Sub Pulisci_Colonne_tag &apos;elimina tutti i tag da EP e dalle Analisi
 	ocell = oSheet.GetCellByPosition(9 ,lrow)
 
 	lUltimaRiga = getLastUsedRow(oSheet)	
-	oMioRange = oSheet.getCellRangeByPosition (9,lrow+1,9,lUltimaRiga-1)
+	oMioRange = oSheet.getCellRangeByPosition (8,lrow+1,9,lUltimaRiga-1)
 		ThisComponent.CurrentController.Select(oMioRange)
 	oMioRange.ClearContents(iCellAttr)
 	oMioRange.CellStyle = &quot;EP-sfondo&quot;
@@ -975,7 +1010,7 @@ SUB DOPPIONI_TROVA &apos; trova i codici doppi nell&apos;EP
 	end if
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Riordina_ElencoPrezzi 
+	Riordina_ElencoPrezzi
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
 	lrow = 2
@@ -990,7 +1025,7 @@ SUB DOPPIONI_TROVA &apos; trova i codici doppi nell&apos;EP
 		goto Fine
 	end if
 	do while xA = &quot;&quot;
-		lrow = lorw+1
+		lrow = lrow+1
 		oCell = oSheet.GetCellByPosition(lcolbase + 0,lrow ) 
 		Xa = oCell.string
 	loop

@@ -357,11 +357,11 @@ Sub Vai_submenu_segnaVoci_non_usate()
 	If oSheet.isVisible = false then
  		oSheet.isVisible = true
 	end if 
-	oAreaR = Osheet.getCellRangeByName (&quot;AJ1:AJ1&quot;)
+	oAreaR = Osheet.getCellRangeByName (&quot;AJ5:AJ5&quot;)
 	Thiscomponent.currentcontroller.select(oAreaR)
 	oContr = ThisComponent.CurrentController
 	oContr.setFirstVisibleColumn (35)
-	oContr.setFirstVisibleRow(0 )
+	oContr.setFirstVisibleRow(4 )
 	If sNomesheet &lt;&gt; &quot;S3&quot; then 
 &apos;		oSheetCurrent.isVisible = false 
 	endif

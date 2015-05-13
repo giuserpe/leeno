@@ -917,10 +917,6 @@ Function GetFileURL( sTitle As String )
  End Function
  GetFileURL = sFileURL
 End Function 
-Sub miomio
-sCommand = &quot;service:vnd.mio?execute&quot;
-End Sub
-
 
 Sub SetUpKeyBinding&apos;(sModifier as string, sChiave as string, sAzione as string)
 &apos; copyright Paolo Mantovani

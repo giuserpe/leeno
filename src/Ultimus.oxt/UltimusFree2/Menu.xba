@@ -67,9 +67,6 @@ Sub SeeComponentsElements()
 	oFrame = oDoc.getCurrentController().getFrame()
 	oCfgManager = oDoc.getUIConfigurationManager()
 	oToolInfo = oCfgManager.getUIElementsInfo( iToolType )
-&apos;xray	ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(5)&apos;.RealInterface.isFloating 
-&apos;ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(5).RealInterface.isFloating = False
-&apos;Print 	ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(5).RealInterface.isFloating
 	For Each x in oFrame.LayoutManager.getElements()
 		s = s &amp; x.ResourceURL &amp; CHR$(10)
 	Next
@@ -149,6 +146,7 @@ xray test(1).value
 	EndIf 
 End Sub
 rem ######################################################################
+
 
 Sub eventi_pulisci &apos;Giuseppe Vizziello 2014
 rem elimina tutte le macro legate agli eventi in ogni foglio e per l&apos;intero documento

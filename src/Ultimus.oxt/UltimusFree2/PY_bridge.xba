@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="PY_bridge" script:language="StarBasic">REM  *****  BASIC  *****
+rem ######################################################################
+Sub Macro_py
+	now1 = now
+&apos;xmL = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml&quot;
+	fileurl = GetFileURL( &quot;Cerca il file da cui prelevare gli stili.&quot;)
+&apos;	Print convertfromurl (fileurl)
+	xml = convertfromurl (fileurl)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;import_XML&quot;, xml)
+	now2 = now
+	Print now2-now1	
+End Sub
+Sub Macro_pydfgd
+&apos;xray ThisComponent
+ScriptPy(&quot;lastused.py&quot;,&quot;oTest&quot;, &quot;Foglio1&quot;,&quot;E&quot;)
+&apos;ScriptPy(&quot;lastused.py&quot;,&quot;oTest&quot;)
+End Sub
+Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant &apos;Giuseppe Vizziello 2015
+rem questa serve ad avviare le funzioni/script di python
+rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
+	args() = Array()
+	If not ismissing (arg1) Then Appenditem(args(), arg1)
+	If not ismissing (arg2) Then Appenditem(args(), arg2)
+	If not ismissing (arg3) Then Appenditem(args(), arg3)
+	rem RIF: http://bit.ly/1b4d3dF
+	Dim MasterScriptProviderFactory as Object
+	Dim MasterScriptProvider as Object
+	Dim Script as Object
+	Dim Url as String
+	sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
+&apos;Print sName
+&apos;	sModulo = &quot;FormulaSemplice.py&quot;
+&apos;	sFunzione = &quot;oMacroTest1&quot;
+	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyLeenO|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
+&apos;Print Url
+	MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
+	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
+	Script = MasterScriptProvider.getScript(Url)
+&apos;xray args
+	Script.invoke(args,Array(),Array())
+&apos;	Script.invoke(Array(),Array(),Array())
+&apos;	PythonResult = Script.invoke(Array(),Array(),Array())
+End Sub
+
+Sub Macro_py_buona_non_usata
+&apos;xray StarDesktop.getCurrentFrame.getContainerWindow.getToolkit
+	rem RIF: http://bit.ly/1b4d3dF
+	Dim MasterScriptProviderFactory as Object
+	Dim MasterScriptProvider as Object
+	Dim Script as Object
+	Dim Url as String
+&apos;	Dim PythonResult as object
+	sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
+&apos;Print sName
+	sModulo = &quot;FormulaSemplice.py&quot;
+	sFunzione = &quot;oMacroTest1&quot;
+	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyLeenO|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
+&apos;Print Url
+	MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
+	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
+	Script = MasterScriptProvider.getScript(Url)
+&apos;xray Script
+	Script.invoke(Array(),Array(),Array())
+&apos;	PythonResult = Script.invoke(Array(),Array(),Array())
+End Sub
+rem ######################################################################
+
+
+sub ddddddddddddd
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;Nr&quot;
+args1(0).Value = 2
+
+dispatcher.executeDispatch(document, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
+
+rem ----------------------------------------------------------------------
+dim args2(0) as new com.sun.star.beans.PropertyValue
+args2(0).Name = &quot;ToPoint&quot;
+args2(0).Value = &quot;$B$6&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args2())
+
+rem ----------------------------------------------------------------------
+dim args3(0) as new com.sun.star.beans.PropertyValue
+args3(0).Name = &quot;StringName&quot;
+args3(0).Value = &quot;1&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:EnterString&quot;, &quot;&quot;, 0, args3())
+
+rem ----------------------------------------------------------------------
+dim args4(0) as new com.sun.star.beans.PropertyValue
+args4(0).Name = &quot;ToPoint&quot;
+args4(0).Value = &quot;$B$7&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args4())
+
+
+end sub
+</script:module>

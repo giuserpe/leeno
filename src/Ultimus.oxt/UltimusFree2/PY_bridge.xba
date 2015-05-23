@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="PY_bridge" script:language="StarBasic">REM  *****  BASIC  *****
-rem ######################################################################
-Sub Macro_py
-	now1 = now
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="PY_bridge" script:language="StarBasic">rem ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO - Computo Metrico
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+Sub python_debug
+&apos;	now1 = now
 &apos;xmL = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml&quot;
-	fileurl = GetFileURL( &quot;Cerca il file da cui prelevare gli stili.&quot;)
+&apos;	fileurl = GetFileURL(&quot;Seleziona il file da convertire.&quot;)
 &apos;	Print convertfromurl (fileurl)
-	xml = convertfromurl (fileurl)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;import_XML&quot;, xml)
-	now2 = now
-	Print now2-now1	
+&apos;	xml = convertfromurl (fileurl)
+	ScriptPy(&quot;messagebox.py&quot;,&quot;TestMessageBox&quot;)
+&apos;	now2 = now
+&apos;	Print now2-now1	
 End Sub
-Sub Macro_pydfgd
-&apos;xray ThisComponent
-ScriptPy(&quot;lastused.py&quot;,&quot;oTest&quot;, &quot;Foglio1&quot;,&quot;E&quot;)
-&apos;ScriptPy(&quot;lastused.py&quot;,&quot;oTest&quot;)
-End Sub
+&apos;#########################################################################
+
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant &apos;Giuseppe Vizziello 2015
 rem questa serve ad avviare le funzioni/script di python
 rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno

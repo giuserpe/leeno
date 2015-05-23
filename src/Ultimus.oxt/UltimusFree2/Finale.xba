@@ -1390,10 +1390,6 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
  
-&apos;		oSheet.setTitleRows(oSheet.getCellRangeByName(&quot;A1&quot;,&quot;H2&quot;).getRangeAddress())&apos; non funzionava bene
-		&apos;Le due linee sopra impostano la riga da ripetere in ciascuna pagina che viene stampata
-		&apos;o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
-			
 		oSheet.setPrintareas(selArea())
 			
 	&apos;&apos;&apos;	oRange = oSheet.getCellRangeByName(&quot;A1:AZ&quot; &amp; lRowE + 10)
@@ -2035,7 +2031,6 @@ End Sub
 
 sub togli_salti_pagina &apos;(C) Giuseppe Vizziello 2014
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;	xray oSheet
 	oSheet.removeAllManualPageBreaks
 end sub
 

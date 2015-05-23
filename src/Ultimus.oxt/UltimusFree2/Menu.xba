@@ -18,7 +18,7 @@ rem http://www.pitonyak.org/AndrewMacro.odt
 rem ######################################################################
 Sub _nuove_icone
 &apos;	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.png&quot;)
-	sURL = LeenO_path +&quot;/icons/part_det.png&quot;
+	sURL = LeenO_path +&quot;/icons/py.png&quot;
 	sName = Replace_G(sURL, &quot;.png&quot;, &quot;&quot;)
 	sNewURL= sName + &quot;_26h.bmp&quot;
 	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;

@@ -81,7 +81,7 @@ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
  oRanges = ThisComponent.NamedRanges
 &apos;RiDefinisci_Area_Elenco_prezzi
 &apos;seleziona_area (&quot;elenco_prezzi&quot;)
-print
+&apos; Print minghia
 &apos;ordina_col (1)
 Riordina_ElencoPrezzi_D
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	

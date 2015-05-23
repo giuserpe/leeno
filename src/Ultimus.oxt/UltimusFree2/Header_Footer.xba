@@ -436,7 +436,8 @@ ErrorHandler:
  msgbox Erl &amp; &quot; &quot; &amp; Error &amp; &quot; &quot; &amp; Err 
  Resume Next
 End Sub
-rem ----------------------------------------------------------------------
+&apos;#########################################################################
+
 SUB Set_HF_turbo (optional sMessaggio as string)
 &apos;Print 
 &apos; initialize &apos;
@@ -463,8 +464,8 @@ rem ----------------------------------------------------------------------
 rem dati di questo doc
 	DXX = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;).String			&apos;committente
 &apos;	oProgetto_8 = oSheet.getCellRangeByName(&quot;Progetto_8&quot;).String	&apos;titolo
-&apos;	oData = oSheet.getCellRangeByName(&quot;oData_8&quot;).String				&apos;data
-	oData = &quot;LeenO.org&quot;
+	oData = oSheet.getCellRangeByName(&quot;oData_8&quot;).String				&apos;data
+&apos;	oData = &quot;LeenO.org&quot;
 	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;).String				&apos;intestazione destra
 rem ----------------------------------------------------------------------
 	If oBozza_8 &lt;&gt; &quot;&quot; Then
@@ -502,8 +503,10 @@ rem ----------------------------------------------------------------------
 		Case &quot;Page_Style_Libretto_Misure2&quot;
 			dx = dxx &amp; CHR$(10) &amp; &quot;Libretto delle misure n.&quot;
 			oCentro = &quot;L&apos;IMPRESA						IL DIRETTORE DEI LAVORI&quot; &amp; CHR$(10)	&amp; CHR$(10) &amp; CHR$(10) &amp; CHR$(10)
-		Case &quot;PageStyle_COMPUTO_A4&quot;
+		Case &quot;PageStyle_REGISTRO_A4&quot;
 			dx = dxx &amp; CHR$(10) &amp; &quot;Registro di contabilità n.&quot;
+		Case &quot;PageStyle_COMPUTO_A4&quot;
+			dx = dxx &amp; CHR$(10) &amp; &quot;Dato provvisorio per debug&quot;
 	End Select
 
 		oAktPage.HeaderIsOn = True 
@@ -563,7 +566,8 @@ rem ----------------------------------------------------------------------
 
 rem uscendo da S2 vengono aggiornati tutti gli stili esistenti
 SUB set_header_auto
-
+	Barra_Apri_Chiudi_5(&quot;                  Aggiorno intestazioni e pié di pagina&quot;, 80)
 	Set_HF_turbo (&quot;no messaggio&quot;)
+	Barra_chiudi_sempre_4
 end sub
 </script:module>

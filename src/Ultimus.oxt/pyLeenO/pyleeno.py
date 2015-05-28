@@ -15,15 +15,6 @@ import os, sys, uno, unohelper
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 import logging
 from xml.etree.ElementTree import ElementTree
-
-#~ filename = 'W:/_dwg/ULTIMUSFREE/elenchi/abruzzo/2014/AB2014_03-11-2014.xml'
-#~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/abruzzo/2014/AB2014_03-11-2014.xml'
-#~ filename = "W:/_dwg/ULTIMUSFREE/elenchi/Calabria/2013/Urbanizzazioni_2013_UCU2.xml"
-
-#~ filename = 'W:/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml'
-#~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Bolzano/2014/HBED14_OpereEdili_20141103_XmlSix.xml'
-#~ filename = 'W:/_dwg/ULTIMUSFREE/elenchi/Piemonte/Cuneo/2015/Prezzario_15BD.xml'
-
 def XML_import (): #(filename):
     """Routine di importazione di un prezziario XML formato SIX. Molto
     liberamente tratta da PreventARES https://launchpad.net/preventares
@@ -231,8 +222,6 @@ def XML_import (): #(filename):
         #~ oSheet.getCellRangeByName('E'+ str (i)).String = elem[2]    #Codice
         #~ i=i+1
 
-
-
 ########################################################################
 
 import os
@@ -245,6 +234,7 @@ from com.sun.star.awt import Rectangle
     #~ filedia('Scegli il file da convertire...')
 
 def filedia(titolo):
+# http://openoffice3.web.fc2.com/Python_Macro_Calc.html#OOoCCB01 #
     try:
         oCtx = uno.getComponentContext()
         oServiceManager = oCtx.ServiceManager
@@ -266,7 +256,7 @@ def filedia(titolo):
         oTabIndex = 0
         oModel.Name = 'OkBtn'
         oModel.TabIndex = oTabIndex
-        oModel.PositionX = oDlgWth/2 - 20
+        oModel.PositionX = oDlgWth/2 - 50
         oModel.PositionY = oDlgHgt - 20
         oModel.Width = 40
         oModel.Height = 15
@@ -274,6 +264,22 @@ def filedia(titolo):
         oModel.PushButtonType = 1       # 1 : OK
         # Dialog Modelの仕様に Step Button の仕様を設定
         oDlgModel.insertByName('OkBtn', oModel)
+        # ***** [ OK / Cancel  Button 設定 ] *****
+        #
+        # ***** [ OK / Cancel  Button 設定 ] *****
+        # OK Button 仕様
+        oModel = oDlgModel.createInstance('com.sun.star.awt.UnoControlButtonModel')
+        oTabIndex = 0
+        oModel.Name = 'AnnullaBtn'
+        oModel.TabIndex = oTabIndex
+        oModel.PositionX = oDlgWth/2 + 10
+        oModel.PositionY = oDlgHgt - 20
+        oModel.Width = 40
+        oModel.Height = 15
+        oModel.Label = u'Annulla'
+        oModel.PushButtonType = 2       # 1 : CANCEL
+        # Dialog Modelの仕様に Step Button の仕様を設定
+        oDlgModel.insertByName('AnnullaBtn', oModel)
         # ***** [ OK / Cancel  Button 設定 ] *****
         #
         # ***** [ FileCntrol 設定 ] *****
@@ -316,7 +322,39 @@ def filedia(titolo):
         #~ oDoc = XSCRIPTCONTEXT.getDocument()
         #~ oSheet = oDoc.getSheets().getByIndex(0)
         #~ oSheet.getCellRangeByName('A1').String = oDisp # nome file
+########################################################################
+import uno
+ 
+from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BUTTONS_YES_NO, BUTTONS_YES_NO_CANCEL, BUTTONS_RETRY_CANCEL, BUTTONS_ABORT_IGNORE_RETRY
+from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON_CANCEL, DEFAULT_BUTTON_RETRY, DEFAULT_BUTTON_YES, DEFAULT_BUTTON_NO, DEFAULT_BUTTON_IGNORE
+ 
+from com.sun.star.awt.MessageBoxType import MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
+ 
+#rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
+def MsgBox(s,t): # s = messaggio | t = titolo
+    doc = XSCRIPTCONTEXT.getDocument()
+    parentwin = doc.CurrentController.Frame.ContainerWindow
+    #~ s = "This a message"
+    #~ t = "Title of the box"
+    #~ res = MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO_CANCEL + DEFAULT_BUTTON_NO)
+ 
+    #~ s = res
+    #~ t = "Titolo"
 
+    MessageBox(parentwin, s, t, "infobox")
+ 
+# Show a message box with the UNO based toolkit
+def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTTONS_OK):
+    ctx = uno.getComponentContext()
+    sm = ctx.ServiceManager
+    sv = sm.createInstanceWithContext("com.sun.star.awt.Toolkit", ctx) 
+    myBox = sv.createMessageBox(ParentWin, MsgType, MsgButtons, MsgTitle, MsgText)
+    return myBox.execute()
+ 
+#g_exportedScripts = TestMessageBox,
+########################################################################
+
+########################################################################
 
 
 #g_exportedScripts = xmlsix2ods, import_XML,

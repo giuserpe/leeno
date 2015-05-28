@@ -569,33 +569,34 @@ End Sub
 
 Sub Sistema_diverse_cose &apos; tipo: toglie gli a capo, gli spazi ridondanti, i tab (forse)
 &apos;print &quot;sistema&quot;
-oSheet = ThisComponent.currentController.activeSheet
-oSelezione = thisComponent.getCurrentSelection()
-checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
-if checkzelle then 
-lrow = oSelezione.celladdress.row
-lcol = oSelezione.celladdress.column
-else
-lrow= oSelezione.RangeAddress.startRow 
-lCol= oSelezione.RangeAddress.startColumn
-print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
-end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
+	oSheet = ThisComponent.currentController.activeSheet
+	oSelezione = thisComponent.getCurrentSelection()
+	checkzelle=HasUnoInterfaces(oSelezione, &quot;com.sun.star.table.XCell&quot; )
+	if checkzelle then 
+		lrow = oSelezione.celladdress.row
+		lcol = oSelezione.celladdress.column
+	else
+		lrow= oSelezione.RangeAddress.startRow 
+		lCol= oSelezione.RangeAddress.startColumn
+		print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
+	end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
 &apos;selezione di un range anzichè di una cella
-oCell = oSheet.GetCellByPosition(lcol , lrow)
-strTemp = oCell.string
-strTemp = LCase(strTemp)
-oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)&apos; = LCase(strTemp)
-oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-oCell.string = Join(Split(oCell.String, Chr(10)), &quot;&quot;)
-oCell.string = Join(Split(oCell.String, Chr(9)), &quot;&quot;)
-oCell.string = Join(Split(oCell.String,&quot;- &quot;, &quot;&quot;)
+	oCell = oSheet.GetCellByPosition(lcol , lrow)
+	strTemp = oCell.string
+	strTemp = LCase(strTemp)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)&apos; = LCase(strTemp)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+	oCell.string = Join(Split(oCell.String, Chr(10)), &quot; &quot;)
+	oCell.string = Join(Split(oCell.String, Chr(9)), &quot; &quot;)
+	oCell.string = Join(Split(oCell.String,&quot;- &quot;, &quot;&quot;)
 &apos;oCell.string = Join(Split(oCell.String,&quot;-&quot;, &quot;&quot;)
-Thiscomponent.CurrentController.Select(oCell)
+	Thiscomponent.CurrentController.Select(oCell)
 End Sub
+
 
 sub suona
 if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then

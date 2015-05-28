@@ -169,7 +169,7 @@ rem colora indice capitoli
 	riga2 = primariga-1&apos; +4
 	k= riga2-riga1+1
 Adatta_Altezza_riga
-&apos;Print 
+Print 
 &apos;Raggruppa_righe
 rem ----------------------------------------------------------------------
 	test = UBound(elCap())&apos; -1

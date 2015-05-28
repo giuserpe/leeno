@@ -1358,8 +1358,9 @@ chiudi_dialoghi &apos; chiude tutti i dialoghi
 		stile = &quot;Comp-Bianche in mezzo Descr&quot;
 	Case &quot;CONTABILITA&quot;
 		If ThisComponent.NamedRanges.hasByName(&quot;#LIB#1&quot;) Then
-			MsgBox (&quot;Il cambio della modalità di visualizzazione delle descrizioni è possibile&quot; &amp; CHR$(13) &amp; _
-					&quot;solo se NON è presente ulcun atto contabile registrato!.&quot;, 16, &quot;ATTENZIONE!&quot;)
+			MsgBox (&quot;Il cambio della modalità di visualizzazione&quot; &amp; CHR$(13) &amp; _
+					&quot;delle descrizioni è possibile solo&quot; &amp; CHR$(13) &amp; _
+					&quot;se NON è presente ulcun atto contabile registrato!&quot;, 16, &quot;ATTENZIONE!&quot;)
 			Exit Sub
 		EndIf
 		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;

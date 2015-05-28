@@ -18,7 +18,7 @@ Sub python_debug
 &apos;	fileurl = GetFileURL(&quot;Seleziona il file da convertire.&quot;)
 &apos;	Print convertfromurl (fileurl)
 &apos;	xml = convertfromurl (fileurl)
-	ScriptPy(&quot;messagebox.py&quot;,&quot;TestMessageBox&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;prova&quot;)
 &apos;	now2 = now
 &apos;	Print now2-now1	
 End Sub
@@ -46,9 +46,11 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
 	Script = MasterScriptProvider.getScript(Url)
 &apos;xray args
+On Error GoTo end:
 	Script.invoke(args,Array(),Array())
 &apos;	Script.invoke(Array(),Array(),Array())
 &apos;	PythonResult = Script.invoke(Array(),Array(),Array())
+end: 
 End Sub
 
 Sub Macro_py_buona_non_usata

@@ -97,7 +97,7 @@ sub Genera_REGISTRO &apos;(C) Giuseppe Vizziello 2014
 	oRanges = ThisComponent.NamedRanges
 &apos;	Annulla_atto_contabile(&quot;Registro&quot;) &apos; annulla registro
 &apos;print
-&apos;	Exit Sub 
+&apos;	Exit Sub
 rem ----------------------------------------------------------------------
 rem idxCol e idxRow sono costanti settate nel modulo &quot;_variabili&quot;
 rem ----------------------------------------------------------------------
@@ -199,7 +199,7 @@ rem Recupero i dati dal libretto
 			importo	= oSheet.GetCellByPosition(idxcol+15, f).getvalue &apos;importo
 			sicurezza= oSheet.GetCellByPosition(idxcol+17, f).getvalue &apos;sicurezza
 			mdo		= oSheet.GetCellByPosition(idxcol+30, f).getvalue &apos;mdo
-		else 
+		else
 	exit for
 		end if
 		i=f
@@ -217,7 +217,6 @@ rem ----------------------------------------------------------------------
 		AppendItem(elVoci(), array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo, sicurezza, mdo))
 &apos;		Barra_Apri_Chiudi_5(&quot;                                Restano &quot;&amp; aRiga-i &amp;&quot; righe...&quot;, 0)
 	Next
-
 rem ----------------------------------------------------------------------
 rem completo la lista voci per la preparazione del SAL prima di passare alla compilazione del REGISTRO
 	vociSAL()=elVoci()
@@ -234,13 +233,17 @@ rem completo la lista voci per la preparazione del SAL prima di passare alla com
 			data	= oSheet.GetCellByPosition(idxcol+1, i+2).getstring &apos;data
 			desc	= oSheet.GetCellByPosition(idxcol+2, i+1).getstring &apos;descrizione
 			um		= oSheet.GetCellByPosition(idxcol+9, i+1).getstring &apos;unità
-			Nlib	= oSheet.GetCellByPosition(idxcol+19, i+1).getvalue &apos;Lib. N.
+&apos;			Nlib	= oSheet.GetCellByPosition(idxcol+19, i+1).getvalue &apos;Lib. N.
 			Plib	= oSheet.GetCellByPosition(idxcol+20, i+1).getvalue &apos;Lib. P.
 			quant	= oSheet.GetCellByPosition(idxcol+9, f).getvalue &apos;quantità
 			prezzo	= oSheet.GetCellByPosition(idxcol+13, f).getvalue &apos;prezzo
 			importo	= oSheet.GetCellByPosition(idxcol+15, f).getvalue &apos;importo
 			sicurezza= oSheet.GetCellByPosition(idxcol+17, f).getvalue &apos;sicurezza
 			mdo		= oSheet.GetCellByPosition(idxcol+30, f).getvalue &apos;mdo
+			
+&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(idxcol+19, i+1))
+&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+&apos;	Print Nlib
 rem ----------------------------------------------------------------------
 rem approssimazione dei valori a idxdec dopo la virgola
 &apos;		quant=myround(quant,idxdec)
@@ -525,12 +528,11 @@ rem ULTIMA RIGA:
 rem trovo l&apos;ultimo effettivo numero di pagina 
 	If inumPag =0 Then	inumPag = 1
 	For i = precRowReg+1 to getLastUsedRow(oSheetReg)
-&apos;			oSheetReg.GetCellByPosition(10,i).value = inumPag
-&apos;			ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(10,i+1))
 		if oSheetReg.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
 			inumPag = inumPag+1
 		end If
 	Next
+inumPag = inumPag-1 &apos;ultimo numero pagina ESCLUSA la copertina
 &apos;	Print inumPag
 rem annoto ultimo numero di pagina 
 &apos;	oSheetReg.GetCellByPosition(fcol+10 , fineFirme-1).value = inumPag-1
@@ -552,8 +554,8 @@ rem ci metto un po&apos; di informazioni
 	davoce=elVoci(0)(0) &apos;ultima voce
 	avoce=elVoci(ubound(elvoci()))(0) &apos;ultima voce
 	oSheetReg.getCellByPosition(1,ins).string = &quot;segue Registro n.&quot; &amp; nSal &amp; &quot; - &quot; &amp; davoce &amp; &quot;÷&quot; &amp; avoce
+	oSheetReg.GetCellByPosition(2,ins).value= nLib &apos;1 &apos; numero libretto
 	oSheetReg.GetCellByPosition(3,ins).value = inumPag &apos;ultimo numero pagina
-	oSheetReg.GetCellByPosition(2, ins).value= nLib &apos;1 &apos; numero libretto
 &apos;	oSheetReg.GetCellByPosition(23, ins).value= nSal &apos; numero SAL
 	oSheetReg.GetCellByPosition(8, ins).formula = &quot;=SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;)&quot;
 	oSheetReg.GetCellByPosition(8, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
@@ -617,7 +619,7 @@ rem larghezza colonne SAL
 			oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;) &apos; SETTA COME CORRENTE
 			oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal-1).referredCells
 			With oNamedRange.RangeAddress
-			&apos;	fRow = .StartRow
+				fRow = .StartRow
 				lRow = .EndRow
 				precRowSAL = .EndRow
 			End With
@@ -625,8 +627,8 @@ rem larghezza colonne SAL
 rem ----------------------------------------------------------------------
 &apos;#########################################################################
 rem chiudo il vecchio SAL
-		oCell = oSheetSAL.getCellRangeByPosition(0,fRow,6,lRow)
-		oCell.Rows.IsVisible=false &apos; chiudi gruppo
+			oCell = oSheetSAL.getCellRangeByPosition(0,fRow,6,lRow)
+			oCell.Rows.IsVisible=false &apos; chiudi gruppo
 	End Select
 	ThisComponent.CurrentController.ZoomValue = 100
 
@@ -840,6 +842,17 @@ Ripristina_statusLine &apos;Barra_chiudi_sempre_4
 &apos;RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene sminchiata succede con LIBREOFFICE 4.3.*
 &apos;Exit Sub
 rem ----------------------------------------------------------------------
+
+rem trovo l&apos;ultimo effettivo numero di pagina del sal
+	inumPag =0
+	For i = precRowSAL+1 to getLastUsedRow(oSheetSal)
+		if oSheetSal.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
+			inumPag = inumPag+1
+		end If
+	Next
+&apos;inumPag = inumPag-1 &apos;ultimo numero pagina ESCLUSA la copertina&quot;
+rem ----------------------------------------------------------------------
+
 rem inserisco la prima riga del documento
 	oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal).referredCells
 &apos;	oNamedRange=oRanges.getByName(nomearea).referredCells
@@ -1194,12 +1207,12 @@ rem MI SPOSTO SUL FOGLIO GIUSTO
 	oRanges = ThisComponent.NamedRanges
 rem ----------------------------------------------------------------------
 rem Recupero il nome del SAL da registrare
-	IF not oRanges.hasByName(&quot;#Lib#1&quot;) THEN
+	IF not oRanges.hasByName(&quot;#Lib#1&quot;) Then
 		nSal=1
 		else
 		nSal=idxSAL &apos;variabile impostata nel modulo _variabili
 		Do while nSal &gt; 0
-			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) THEN
+			IF oRanges.hasByName(&quot;#Lib#&quot; &amp; nSal) Then
 		&apos;			nSal=nSal-1
 				exit do
 			end if
@@ -1224,7 +1237,7 @@ rem recuperno l&apos;ultimo numero di pagina usato (serve in caso di libretto un
 &apos;Print old_nPage
 		daVoce = oSheetCont.getcellbyposition(0,daVoce).getstring()
 		If cint(davoce)=0 Then &apos; daVoce= &quot;Fine Computo&quot; Then 
-				msgbox 	&quot;Non ci sono voci da registrare&quot;,48, &quot;AVVISO!&quot;
+			msgbox 	&quot;Non ci sono voci da registrare&quot;,48, &quot;AVVISO!&quot;
 			Exit sub
 		End if
 		oCell = oSheetCont.getCellRangeByPosition(0,frow,25,lrow)
@@ -1234,7 +1247,6 @@ rem recuperno l&apos;ultimo numero di pagina usato (serve in caso di libretto un
 		else
 		daVoce=1
 	end if
-rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 rem PRIMA RIGA
  	daVoce = InputBox (&quot;Da voce n.:&quot;, &quot;REGISTRA&quot;, daVoce)
@@ -1339,7 +1351,6 @@ fineFirme = fineFirme-1
 	If daqui&lt;&gt;0 then
 		ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(2, daqui))
 copy_clip
-&apos;Print daqui
 		ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(2, daqui, 2, finefirme-1))
 &apos;Print finefirme-1
 paste_clip

@@ -76,8 +76,27 @@ print &quot;Focus.Sel_provared - Ma non era disattivata?&quot;
 	Thiscomponent.currentcontroller.select(oAreaR)
 	oCell = Osheet.GetCellByPosition(0,95)
 	ThisComponent.CurrentController.Select(oCell)
-END SUB
+END Sub
 
+&apos;#########################################################################
+Sub vedi_situazione_contabile &apos;(C) Giuseppe Vizziello 2015 
+	Chiudi_dialoghi
+	Osheet = thisComponent.sheets.getbyname(&quot;S2&quot;)
+	oSheet.isVisible = TRUE
+ 	Thiscomponent.currentcontroller.select(Osheet)
+	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oSheet)
+	Lrow=oEnd.RangeAddress.EndRow		&apos;riga
+	Lcol=oEnd.RangeAddress.EndColumn	&apos;colonna
+	oContr = ThisComponent.CurrentController
+	oContr.setFirstVisibleColumn (lcol-1)
+	oContr.setFirstVisibleRow(lrow-1)
+	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	ThisComponent.unlockControllers
+	oContr.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;))
+	ThisComponent.CurrentController.ZoomValue = 100
+End Sub
+
+&apos;#########################################################################
 Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (era &quot;Altre Opzioni&quot;)
 	dim osheet as object
 	dim oAreaR as object

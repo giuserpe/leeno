@@ -38,6 +38,16 @@ sub elimina_voce &apos;elimina voce (C) Giuseppe Vizziello 2014
 	End With
 	If oNomeSheet = &quot;Analisi di Prezzo&quot; Then iRowEnd=iRowEnd+1
 	ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
+&apos;	xray oSheet&apos;.Unprotect
+
+	oSheet.unprotect(&quot;&quot;)
+rem ----------------------------------------------------------------------
+rem controllo se posso procedere
+	If oSheet.cellprotection.IsLocked = True Then
+		MsgBox (&quot;Stai operando su un foglio protetto!&quot;&amp; CHR$(10)_
+				&amp;&quot;Per poter procedere devi prima disattivare la protezione!&quot;, 48+256, &quot;Attenzione!&quot;)
+	&apos;	Exit Sub
+	EndIf
 	If MsgBox (&quot;Stai per eliminare la voce selezionata&quot;&amp; CHR$(10)_
 		&amp;&quot;Vuoi procedere?&quot;, 1+32+256, &quot;Attenzione!&quot;) = 2 Then
 		Else

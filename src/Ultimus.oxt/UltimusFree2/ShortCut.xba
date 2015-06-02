@@ -263,15 +263,15 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	shortCuts.store() &apos; cancellata alla 3,5,181 (prima o poi sbiancare tutto)
 
 &apos;____________________________Shift F9 spefica per giuserpe
-	with aKeyEvent
-		. modifiers = com.sun.star.awt.KeyModifier.SHIFT
-		. KeyCode = com.sun.star.awt.Key.F9
-	End with
-	UIcfgMgr = thisComponent.UIConfigurationManager
-	shortCuts = UicfgMgr.ShortCutManager
-	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili_giuserpe?language=Basic&amp;location=application&quot; )
+&apos;	with aKeyEvent
+&apos;		. modifiers = com.sun.star.awt.KeyModifier.SHIFT
+&apos;		. KeyCode = com.sun.star.awt.Key.F9
+&apos;	End with
+&apos;	UIcfgMgr = thisComponent.UIConfigurationManager
+&apos;	shortCuts = UicfgMgr.ShortCutManager
+&apos;	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili_giuserpe?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+&apos;	shortCuts.store() 
 
 
 	

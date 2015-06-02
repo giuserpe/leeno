@@ -346,22 +346,38 @@ i=0
 &apos;xray vocisal()
 &apos;Print ubound (vociSAL())
 &apos;Exit Sub
-rem ----------------------------------------------------------------------
-rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
+&apos;#########################################################################
+rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot; 2di2
 	oS2 = ThisComponent.Sheets.getByName(&quot;S2&quot;)
 rem TROVO LA POSIZIONE DEL TITOLO
 	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oS2)
 	yS2=oEnd.RangeAddress.EndRow		&apos;riga
 	xS2=oEnd.RangeAddress.EndColumn	&apos;colonna
+	sCol = ColumnNameOf(xS2+nSal)
+	oS2.GetCellByPosition(xS2+nSal,yS2+4).formula = &quot;=&quot;&amp; sCol &amp; yS2+4 &amp; &quot;*$C$74&quot; &apos; iincidenza sicurezza su lavori a CORPO
+	oS2.GetCellByPosition(xS2+nSal,yS2+5).formula = &quot;=&quot;&amp; sCol &amp; yS2+4 &amp; &quot;*$C$76&quot; &apos; iincidenza sicurezza su lavori a CORPO
+	oS2.GetCellByPosition(xS2+nSal,yS2+8).value = SALamisura &apos; importo lavori a misura
+	oS2.GetCellByPosition(xS2+nSal,yS2+9).formula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp; &quot;*$C$74&quot; &apos; iincidenza sicurezza su lavori a MISURA
+	oS2.GetCellByPosition(xS2+nSal,yS2+10).formula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp; &quot;*$C$76&quot; &apos; iincidenza sicurezza su lavori a MISURA
+	sFormula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp;&quot;+&quot;&amp; sCol &amp; yS2+4 &amp; &quot;-&quot; &amp; sCol &amp; yS2+5 &amp; &quot;-&quot; &amp; sCol &amp; yS2+6 &amp; &quot;-&quot; &amp; sCol &amp; yS2+10 &amp; &quot;-&quot; &amp; sCol &amp; yS2+11
+	oS2.GetCellByPosition(xS2+nSal,yS2+12).formula = sFormula &apos; quota da ribassare
+	oS2.GetCellByPosition(xS2+nSal,yS2+13).formula = &quot;=&quot; &amp; sCol &amp; yS2+13 &amp;&quot;*$C$78&quot; &apos; ribasso
 	
-&apos;	SALamisura = myround(SALamisura,idxdec)
-&apos;	SALsicurezza = myround(SALsicurezza,idxdec)
-&apos;	SALmdo = myround(SALmdo,idxdec)
-	oS2.GetCellByPosition(xS2+nSal,yS2+5).value = SALamisura &apos; importo lavori a misura
-	oS2.GetCellByPosition(xS2+nSal,yS2+8).formula = &quot;=(ROUND(SUBTOTAL(9;&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+6 &amp;&quot;:&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+9 &amp;&quot;);2)&quot;
-	oS2.GetCellByPosition(xS2+nSal,yS2+10).value = SALsicurezza &apos; di cui importo per la sicurezza
-	oS2.GetCellByPosition(xS2+nSal,yS2+11).value = SALmdo &apos; di cui importo per la mdo
-rem ----------------------------------------------------------------------
+	oS2.GetCellByPosition(xS2+nSal,yS2+14).formula = &quot;=&quot; &amp; sCol &amp; yS2+9 &amp;&quot;-&quot;&amp; sCol &amp; yS2+14  &apos; Importo netto
+	
+	oS2.GetCellByPosition(xS2+nSal,yS2+15).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$84&quot; &apos; Ritenute per garanzia
+	oS2.GetCellByPosition(xS2+nSal,yS2+16).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$85&quot; &apos; Ritenute per infortuni
+	oS2.GetCellByPosition(xS2+nSal,yS2+17).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$80&quot; &apos; Recupero anticipazioni
+	oS2.GetCellByPosition(xS2+nSal,yS2+18).formula = &quot;=subtotal(9;&quot; &amp; ColumnNameOf(xS2+1)&amp; yS2+19 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp;&quot;)&quot; &apos; Certificati precedenti / Ultimo riporto
+	oS2.GetCellByPosition(xS2+nSal,yS2+19).formula = &quot;=SUM(&quot;&amp; sCol &amp; yS2+16 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp; &quot;)&quot;&apos; totale detrazioni
+	sFormula = &quot;=&quot;&amp; sCol &amp; yS2+15 &amp;&quot;-&quot;&amp; sCol &amp; yS2+20 &amp; &quot;+&quot; &amp; sCol &amp; yS2+5 &amp; &quot;+&quot; &amp; sCol &amp; yS2+6 &amp; &quot;+&quot; &amp; sCol &amp; yS2+10 &amp; &quot;+&quot; &amp; sCol &amp; yS2+11
+	oS2.GetCellByPosition(xS2+nSal,yS2+20).formula = sFormula &apos; Importo Certificato di pagamento
+	
+&apos;	oS2.GetCellByPosition(xS2+nSal,yS2+8).formula = &quot;=(ROUND(SUBTOTAL(9;&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+6 &amp;&quot;:&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+9 &amp;&quot;);2)&quot;
+&apos;	oS2.GetCellByPosition(xS2+nSal,yS2+10).value = SALsicurezza &apos; di cui importo per la sicurezza
+&apos;	oS2.GetCellByPosition(xS2+nSal,yS2+11).value = SALmdo &apos; di cui importo per la mdo
+&apos;#########################################################################
+
 initRegistro: rem INIZIO COMPILAZIONE REGISTRO
 &apos;GoTo initSal: &apos; salto direttamente al SAL evitando il registro se già presente nel documento - solo debug
 
@@ -882,12 +898,41 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oSheet)
 	Lrow=oEnd.RangeAddress.EndRow		&apos;riga
 	Lcol=oEnd.RangeAddress.EndColumn	&apos;colonna
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(lcol, lrow))
+rem Compilo i titoli
+	oSheet.GetCellByPosition(Lcol,Lrow+1).string = &quot;S.A.L. n.&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+2).string = &quot;A tutto il&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+3).string = &quot;Lavori e somministrazioni a CORPO&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+4).string = &quot;Quota sicurezza non soggetta a ribasso&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+5).string = &quot;Quota MDO non soggetta a ribasso&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+6).string = &quot;Lavori in economia&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+7).string = &quot;&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+8).string = &quot;Lavori e somministrazioni a MISURA&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+9).string = &quot;Quota sicurezza non soggetta a ribasso&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+10).string = &quot;Quota MDO non soggetta a ribasso&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+11).string = &quot;&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+12).string = &quot;Importo su cui applicare il ribasso&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+13).formula = &quot;=CONCATENATE(&quot;&quot;Ribasso del &quot;&quot;;TEXT($S2.$C$78;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+14).string = &quot;Importo ribassato&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+15).formula = &quot;=CONCATENATE(&quot;&quot;Ritenute per garanzia &quot;&quot;;TEXT($S2.$C$84;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+16).formula = &quot;=CONCATENATE(&quot;&quot;Ritenute per infortuni &quot;&quot;;TEXT($S2.$C$85;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+17).formula = &quot;=CONCATENATE(&quot;&quot;Recupero anticipazione &quot;&quot;;TEXT($S2.$C$80;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+18).string = &quot;Certificati precedenti / Ultimo riporto&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+19).string = &quot;Totale detrazioni&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+20).string = &quot;Importo Certificato di pagamento&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+21).string = &quot;&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+22).string = &quot;&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+23).string = &quot;Data di stampa&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+24).string = &quot;Ultima voce registrata n.&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+25).string = &quot;Ultima pagina libretto n.&quot;
+	oSheet.GetCellByPosition(Lcol,Lrow+26).string = &quot;Ultimo disegno contabile n.&quot;
+
 rem INPUT IMPORTO LAVORI SITUAZIONE CONTABILE
-	sFormulaSomma =&quot;=$CONTABILITA.$Z$&quot; &amp; iEndRow+1 
-	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+3).FORMULA = sFormulaSomma
+&apos;	sFormulaSomma =&quot;=$CONTABILITA.$Z$&quot; &amp; iEndRow+1 
+&apos;	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+3).FORMULA = sFormulaSomma
 rem INPUT IMPORTO MANODOPERA SITUAZIONE CONTABILE
-	sFormulaSomma =&quot;=$CONTABILITA.$AE$&quot; &amp; iEndRow+1 
-	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+4).FORMULA = sFormulaSomma
+&apos;	sFormulaSomma =&quot;=$CONTABILITA.$AE$&quot; &amp; iEndRow+1 
+&apos;	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+4).FORMULA = sFormulaSomma
 End Sub
 rem ######################################################################
 
@@ -1017,7 +1062,21 @@ chiudi_dialoghi
 	Annulla_atto_contabile(&quot;SAL&quot;, 1)
 	Annulla_atto_contabile(&quot;Registro&quot;, 1)
 	Annulla_atto_contabile(&quot;CONTABILITA&quot;, 1)
-oSheetCont.protect &quot;&quot;
+	If nsal = 1 Then
+		oSheetCont.Unprotect &quot;&quot;
+	Else 
+		oSheetCont.protect &quot;&quot;
+	EndIf
+	
+rem sistemo LA SITUAZIONE CONTABILE IN &quot;S2&quot;
+	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
+rem TROVO LA POSIZIONE DEL TITOLO
+	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oSheet)
+	Lrow=oEnd.RangeAddress.EndRow		&apos;riga
+	Lcol=oEnd.RangeAddress.EndColumn	&apos;colonna
+	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcol+nsal, lrow,lcol+nsal, lrow+30))
+	cancella_dati
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 fine:
 End Sub
 rem ######################################################################
@@ -1384,8 +1443,8 @@ rem in modo che la numerazione delle pagine non ricominci da capo
 rem ----------------------------------------------------------------------
 	nLib = nSal
 &apos;End If
-
-rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot;
+&apos;#########################################################################
+rem COMPILO LA SITUAZIONE CONTABILE IN &quot;S2&quot; 1di2
 	oS2 = ThisComponent.Sheets.getByName(&quot;S2&quot;)
 rem TROVO LA POSIZIONE DEL TITOLO
 	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oS2)
@@ -1393,10 +1452,13 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	yS2=oEnd.RangeAddress.EndColumn	&apos;colonna
 	
 	oS2.GetCellByPosition(yS2+nSal,xS2+1).value = nSal &apos;numero sal
+	Print datafirma
 	oS2.GetCellByPosition(yS2+nSal,xS2+2).value = datafirma &apos;data
-	oS2.GetCellByPosition(yS2+nSal,xS2+3).value = aVoce &apos; ultima voce libretto
-	oS2.GetCellByPosition(yS2+nSal,xS2+4).value = inumPag &apos; ultima pagina libretto
+	oS2.GetCellByPosition(yS2+nSal,xS2+24).value = aVoce &apos; ultima voce libretto
+	oS2.GetCellByPosition(yS2+nSal,xS2+25).value = inumPag &apos; ultima pagina libretto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+&apos;#########################################################################
+
 &apos;BARRA_chiudi
 Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Libetto delle Misure...&quot;, 75)
 

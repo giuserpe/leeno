@@ -230,8 +230,17 @@ import sys
 import traceback
 from com.sun.star.awt import Rectangle
 #
-#~ def oTest():
-    #~ filedia('Scegli il file da convertire...')
+def oTest0():
+    oDisp = filedia('Scegli il file da convertire...')
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByIndex(0)
+    oSheet.getCellRangeByName('c3').String = oDisp # nome file
+
+def oTest():
+    oDisp = filedia('Scegli il file da convertire...')
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByIndex(0)
+    oSheet.getCellRangeByName('c3').String = oDisp # nome file
 
 def filedia(titolo):
 # http://openoffice3.web.fc2.com/Python_Macro_Calc.html#OOoCCB01 #
@@ -280,10 +289,10 @@ def filedia(titolo):
         oModel.PushButtonType = 2       # 1 : CANCEL
         # Dialog Modelの仕様に Step Button の仕様を設定
         oDlgModel.insertByName('AnnullaBtn', oModel)
-        # ***** [ OK / Cancel  Button 設定 ] *****
+        # ***** [ OK / Cancel  Button Setting ] *****
         #
-        # ***** [ FileCntrol 設定 ] *****
-        # FileCntrol 仕様
+        # ***** [ FileCntrol Setting ] *****
+        # FileCntrol specifiche
         oModel = oDlgModel.createInstance('com.sun.star.awt.UnoControlFileControlModel')
         oTabIndex = oTabIndex + 1
         oModel.Name = 'FileCtrl'
@@ -294,7 +303,7 @@ def filedia(titolo):
         oModel.Height = 15
         oModel.Enabled = 1
         oModel.Border = 1
-        # Dialog Modelの仕様に FileCntrol の仕様を設定
+        # Dialog Model FileCntrol 
         oDlgModel.insertByName('FileCtrl', oModel)
         # ***** [ FileCntrol 設定 ] *****
         #
@@ -312,16 +321,13 @@ def filedia(titolo):
             oSelFile = oDlgModel.getByName('FileCtrl')
             oDisp = oSelFile.Text
         else:
-            oDisp = u'Cancelされました。'
+            oDisp = u'Cancel' # "Cancel" è il risultato del tasto
         # End Dialog
         oDlg.endExecute()
     except:
         oDisp = traceback.format_exc(sys.exc_info()[2])
     finally:
         return oDisp
-        #~ oDoc = XSCRIPTCONTEXT.getDocument()
-        #~ oSheet = oDoc.getSheets().getByIndex(0)
-        #~ oSheet.getCellRangeByName('A1').String = oDisp # nome file
 ########################################################################
 import uno
  

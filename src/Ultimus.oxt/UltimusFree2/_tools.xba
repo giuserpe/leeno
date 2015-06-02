@@ -249,8 +249,6 @@ sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con r
 		Sheet = Doc.Sheets.getByName(&quot;stili&quot;)
 	End If
 	ThisComponent.CurrentController.Select(Sheet.GetCellByPosition(0,0))
-&apos;	thisComponent.getSheets().removeByName(&quot;stili&quot;)
-&apos;	thisComponent.getSheets().insertNewByName(&quot;stili&quot;,5,0)
 	imax=UBound(sty())
 	i =0
 	for each el in BubbleSortlist(sty())
@@ -258,7 +256,9 @@ sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con r
 		Sheet.GetCellByPosition( 1, i).cellstyle = el
 		Sheet.GetCellByPosition( 3, i).cellstyle = el
 		Sheet.GetCellByPosition( 1, i).setvalue(2000,00)
-		Sheet.GetCellByPosition( 3, i).setstring(&quot;LeenO&quot;)
+		Sheet.GetCellByPosition( 3, i).String =&quot;LeenO&quot;
+		oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sty(i))
+		oStile.CharFontName = &quot;Liberation Serif&quot;
 	i=i+2
 	Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
 	next	

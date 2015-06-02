@@ -18,7 +18,7 @@ Sub python_debug
 &apos;	fileurl = GetFileURL(&quot;Seleziona il file da convertire.&quot;)
 &apos;	Print convertfromurl (fileurl)
 &apos;	xml = convertfromurl (fileurl)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;prova&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;oTest&quot;)
 &apos;	now2 = now
 &apos;	Print now2-now1	
 End Sub
@@ -75,46 +75,4 @@ Sub Macro_py_buona_non_usata
 &apos;	PythonResult = Script.invoke(Array(),Array(),Array())
 End Sub
 rem ######################################################################
-
-
-sub ddddddddddddd
-rem ----------------------------------------------------------------------
-rem define variables
-dim document   as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document   = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem ----------------------------------------------------------------------
-dim args1(0) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;Nr&quot;
-args1(0).Value = 2
-
-dispatcher.executeDispatch(document, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
-
-rem ----------------------------------------------------------------------
-dim args2(0) as new com.sun.star.beans.PropertyValue
-args2(0).Name = &quot;ToPoint&quot;
-args2(0).Value = &quot;$B$6&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args2())
-
-rem ----------------------------------------------------------------------
-dim args3(0) as new com.sun.star.beans.PropertyValue
-args3(0).Name = &quot;StringName&quot;
-args3(0).Value = &quot;1&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:EnterString&quot;, &quot;&quot;, 0, args3())
-
-rem ----------------------------------------------------------------------
-dim args4(0) as new com.sun.star.beans.PropertyValue
-args4(0).Name = &quot;ToPoint&quot;
-args4(0).Value = &quot;$B$7&quot;
-
-dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args4())
-
-
-end sub
 </script:module>

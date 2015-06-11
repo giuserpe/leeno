@@ -15,6 +15,9 @@ import os, sys, uno, unohelper
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 import logging
 from xml.etree.ElementTree import ElementTree
+########################################################################
+########################################################################
+# XML_import ###########################################################
 def XML_import (): #(filename):
     """Routine di importazione di un prezziario XML formato SIX. Molto
     liberamente tratta da PreventARES https://launchpad.net/preventares
@@ -222,6 +225,205 @@ def XML_import (): #(filename):
         #~ oSheet.getCellRangeByName('E'+ str (i)).String = elem[2]    #Codice
         #~ i=i+1
 
+# XML_import ###########################################################
+########################################################################
+########################################################################
+# XPWE_import ##########################################################
+def XPWE_import (): #(filename):
+    #~ filename = filedia('Scegli il file XPWE da importare...')
+    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/xpwe_prova.xpwe'
+    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/_Prezzari/2005/da_pwe/Esempio_Progetto_CorpoMisura.xpwe'
+    filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Sicilia/sicilia2013.xpwe'
+    """xml auto indent: http://www.freeformatter.com/xml-formatter.html"""
+    #~ filename = filedia('Scegli il file XML-SIX da convertire...')
+    # inizializzazioe delle variabili
+    lista_articoli = list() # lista in cui memorizzare gli articoli da importare
+    diz_ep = dict() # array per le voci di elenco prezzi
+    # effettua il parsing del file XML
+    tree = ElementTree()
+    tree.parse(filename)
+    # ottieni l'item root
+    root = tree.getroot()
+    logging.debug(list(root))
+    # effettua il parsing di tutti gli elemnti dell'albero XML
+    iter = tree.getiterator()
+    nome_file = root.find('FileNameDocumento').text
+########################################################################
+
+    dati = root.find('PweDatiGenerali')
+    DatiGenerali = dati.getchildren()[0][0]
+    percprezzi = DatiGenerali[0].text
+    comune = DatiGenerali[1].text
+    provincia = DatiGenerali[2].text
+    oggetto = DatiGenerali[3].text
+    committente = DatiGenerali[4].text
+    impresa = DatiGenerali[5].text
+    parteopera = DatiGenerali[6].text
+########################################################################
+
+    misurazioni = root.find('PweMisurazioni')
+    PweElencoPrezzi = misurazioni.getchildren()[0]
+########################################################################
+    # leggo l'elenco prezzi ################################################
+    epitems = PweElencoPrezzi.findall('EPItem')
+    lista_articoli = list()
+    for elem in epitems:
+        diz_ep = dict()
+        id_ep = elem.get('ID')
+        tipoep = elem.find('TipoEP').text
+        tariffa = elem.find('Tariffa').text
+        articolo = elem.find('Articolo').text
+        desridotta = elem.find('DesRidotta').text
+        destestesa = elem.find('DesEstesa').text
+        desridotta = elem.find('DesBreve').text
+        desbreve = elem.find('DesBreve').text
+        unmisura = elem.find('UnMisura').text
+        prezzo1 = elem.find('Prezzo1').text
+        prezzo2 = elem.find('Prezzo2').text
+        prezzo3 = elem.find('Prezzo3').text
+        prezzo4 = elem.find('Prezzo4').text
+        prezzo5 = elem.find('Prezzo5').text
+        idspcap = elem.find('IDSpCap').text
+        idcap = elem.find('IDCap').text
+        idsbcap = elem.find('IDSbCap').text
+        flags = elem.find('Flags').text
+        data = elem.find('Data').text
+        adrinternet = elem.find('AdrInternet').text
+        pweepanalisi = elem.find('PweEPAnalisi').text
+        diz_ep['id_ep'] = id_ep
+        diz_ep['tipoep'] = tipoep
+        diz_ep['tariffa'] = tariffa
+        diz_ep['articolo'] = articolo
+        diz_ep['desridotta'] = desridotta
+        diz_ep['destestesa'] = destestesa
+        diz_ep['desridotta'] = desridotta
+        diz_ep['desbreve'] = desbreve
+        diz_ep['unmisura'] = unmisura
+        diz_ep['prezzo1'] = prezzo1
+        diz_ep['prezzo2'] = prezzo2
+        diz_ep['prezzo3'] = prezzo3
+        diz_ep['prezzo4'] = prezzo4
+        diz_ep['prezzo5'] = prezzo5
+        diz_ep['idspcap'] = idspcap
+        diz_ep['idcap'] = idcap
+        diz_ep['flags'] = flags
+        diz_ep['data'] = data
+        diz_ep['adrinternet'] = adrinternet
+        diz_ep['pweepanalisi'] = pweepanalisi
+        #~ epitem = (tipoep, tariffa, articolo, desridotta, destestesa, desridotta, desbreve, prezzo1, prezzo2, prezzo3, prezzo4, prezzo5, idspcap, idcap, flags, data, adrinternet, pweepanalisi)
+        lista_articoli.append(diz_ep)
+    ########################################################################
+    # leggo voci di misurazione e righe ####################################
+    try:
+        PweVociComputo = misurazioni.getchildren()[1]
+        vcitems = PweVociComputo.findall('VCItem')
+        lista_misure = list()
+        for elem in vcitems:
+            diz_misura = dict()
+            id_vc = elem.get('ID')
+            id_ep = elem.find('IDEP').text
+            quantita = elem.find('Quantita').text
+            datamis = elem.find('DataMis').text
+            flags = elem.find('Flags').text
+            idspcat = elem.find('IDSpCat').text
+            idcat = elem.find('IDCat').text
+            idsbcat = elem.find('IDSbCat').text
+            righi_mis = elem.getchildren()[-1].findall('RGItem')
+            lista_rig = list()
+            for el in righi_mis:
+                diz_rig = dict()
+                rgitem = el.get('ID')
+                idvv = el.find('IDVV').text
+                descrizione = el.find('Descrizione').text
+                partiuguali = el.find('PartiUguali').text
+                lunghezza = el.find('Lunghezza').text
+                larghezza = el.find('Larghezza').text
+                hpeso = el.find('Larghezza').text
+                quantita = el.find('Quantita').text
+                flags = el.find('Flags').text
+                diz_rig['rgitem'] = rgitem
+                diz_rig['idvv'] = idvv
+                diz_rig['descrizione'] = descrizione
+                diz_rig['partiuguali'] = partiuguali
+                diz_rig['lunghezza'] = lunghezza
+                diz_rig['larghezza'] = larghezza
+                diz_rig['hpeso'] = hpeso
+                diz_rig['quantita'] = quantita
+                diz_rig['flags'] = flags
+                lista_rig.append(diz_rig)
+            diz_misura['id_vc'] = id_vc
+            diz_misura['id_ep'] = id_ep
+            diz_misura['quantita'] = quantita
+            diz_misura['datamis'] = datamis
+            diz_misura['flags'] = flags
+            diz_misura['idspcat'] = idspcat
+            diz_misura['idcat'] = idcat
+            diz_misura['idsbcat'] = idsbcat
+            diz_misura['lista_rig'] = lista_rig
+            #~ vcitem = (id_vc, id_ep, quantita, datamis, flags, idspcat, idcat, idsbcat)
+            #~ lista_misure[id_vc] = vcitem
+            lista_misure.append(diz_misura)
+    except IndexError:
+        MsgBox("questo risulta essere un elenco prezzi senza voci di misurazione","ATTENZIONE!")
+        pass
+########################################################################
+# compilo la tabella ###################################################
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = 0
+    oCellRangeAddr.StartColumn = 0
+    oCellRangeAddr.StartRow = 3
+    oCellRangeAddr.EndColumn = 0
+    oCellRangeAddr.EndRow = 3
+    lrow=4 #primo rigo dati
+    idxcol=0
+########################################################################
+# inserisco prima solo le righe se no mi fa casino
+    for elem in lista_articoli:
+        try:
+            oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
+            oSheet.getCellRangeByName('A4').CellStyle = "EP-aS"
+            oSheet.getCellRangeByName('B4').CellStyle = "EP-a"
+            oSheet.getCellRangeByName('C4').CellStyle = "EP-mezzo"
+            oSheet.getCellRangeByName('D4').CellStyle = "EP-mezzo"
+            oSheet.getCellRangeByName('E4').CellStyle = "EP-mezzo"
+            oSheet.getCellRangeByName('F4').CellStyle = "EP-mezzo %"
+            oSheet.getCellRangeByName('G4').CellStyle = "EP-mezzo"
+            oSheet.getCellRangeByName('H4').CellStyle = "EP-mezzo"
+            oSheet.getCellRangeByName('I4').CellStyle = "EP-sfondo"
+            oSheet.getCellRangeByName('J4').CellStyle = "EP-sfondo"
+########################################################################
+# sommario computo
+            oSheet.getCellRangeByName('K4').Formula =  "=sumif(AA;A4;BB)"
+            oSheet.getCellRangeByName('K4').CellStyle = "EP statistiche_q"
+            oSheet.getCellRangeByName('L4').Formula = "=K4*E4"
+            oSheet.getCellRangeByName('L4').CellStyle = "EP statistiche"
+########################################################################
+# sommario contabilità
+            oSheet.getCellRangeByName('N4').CellStyle = "EP statistiche_Contab_q"
+            oSheet.getCellRangeByName('N4').Formula = "=SUMIF(GG;A4;G1G1)"
+            oSheet.getCellRangeByName('O4').CellStyle = "EP statistiche_Contab"
+            oSheet.getCellRangeByName('O4').Formula = "=N4*E4"
+        except IndexError:
+            pass
+        lrow=lrow+1
+    lrow=4 #primo rigo dati
+########################################################################
+# inserisco le voci di Elenco Prezzi
+    for elem in lista_articoli:
+        try:
+            oSheet.getCellRangeByName('A'+ str (lrow)).String = elem['tariffa']
+            oSheet.getCellRangeByName('B'+ str (lrow)).String = elem['destestesa']
+            oSheet.getCellRangeByName('C'+ str (lrow)).String = elem['unmisura']
+            oSheet.getCellRangeByName('E'+ str (lrow)).Value = elem['prezzo1']
+        except IndexError:
+            pass
+        lrow=lrow+1
+
+# XPWE_import ##########################################################
+########################################################################
+########################################################################
 ########################################################################
 
 import os

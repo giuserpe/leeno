@@ -258,7 +258,7 @@ Sub Svuota_CONTABILITA &apos;main
 	&apos;_____________________
 	if msgbox (&quot;(1) Sto per eliminare TUTTI i dati da questa tabella di CONTABILITA&apos; ed i relativi Sommari in Computo&quot; &amp; CHR$(10)_
 		&amp;&quot;PROSEGUO ? &quot; &amp; CHR$(10) _
-		&amp; CHR$(10),36, &quot;Attento!!!&quot;) = 7 then
+		&amp; CHR$(10),36, &quot;***ATTENZIONE!!!***&quot;) = 7 then
 		exit sub
 	end if
 	Svuota_CONTABILITA_esegui

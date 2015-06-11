@@ -370,7 +370,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	oS2.GetCellByPosition(xS2+nSal,yS2+17).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$80&quot; &apos; Recupero anticipazioni
 	oS2.GetCellByPosition(xS2+nSal,yS2+18).formula = &quot;=subtotal(9;&quot; &amp; ColumnNameOf(xS2+1)&amp; yS2+19 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp;&quot;)&quot; &apos; Certificati precedenti / Ultimo riporto
 	oS2.GetCellByPosition(xS2+nSal,yS2+19).formula = &quot;=SUM(&quot;&amp; sCol &amp; yS2+16 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp; &quot;)&quot;&apos; totale detrazioni
-	sFormula = &quot;=&quot;&amp; sCol &amp; yS2+15 &amp;&quot;-&quot;&amp; sCol &amp; yS2+20 &amp; &quot;+&quot; &amp; sCol &amp; yS2+5 &amp; &quot;+&quot; &amp; sCol &amp; yS2+6 &amp; &quot;+&quot; &amp; sCol &amp; yS2+10 &amp; &quot;+&quot; &amp; sCol &amp; yS2+11
+	sFormula = &quot;=&quot;&amp; sCol &amp; yS2+15 &amp;&quot;-&quot;&amp; sCol &amp; yS2+20&apos; &amp; &quot;+&quot; &amp; sCol &amp; yS2+5 &amp; &quot;+&quot; &amp; sCol &amp; yS2+6 &amp; &quot;+&quot; &amp; sCol &amp; yS2+10 &amp; &quot;+&quot; &amp; sCol &amp; yS2+11
 	oS2.GetCellByPosition(xS2+nSal,yS2+20).formula = sFormula &apos; Importo Certificato di pagamento
 	
 &apos;	oS2.GetCellByPosition(xS2+nSal,yS2+8).formula = &quot;=(ROUND(SUBTOTAL(9;&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+6 &amp;&quot;:&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+9 &amp;&quot;);2)&quot;
@@ -1076,6 +1076,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	Lcol=oEnd.RangeAddress.EndColumn	&apos;colonna
 	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcol+nsal, lrow,lcol+nsal, lrow+30))
 	cancella_dati
+	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;))
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 fine:
 End Sub

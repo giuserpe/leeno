@@ -13,7 +13,7 @@
  <library:element library:name="Module4"/>
  <library:element library:name="ShortC_temp"/>
  <library:element library:name="Pulizia_0"/>
- <library:element library:name="RiorAnalisi"/>
+ <library:element library:name="Menu"/>
  <library:element library:name="Viste"/>
  <library:element library:name="Varie"/>
  <library:element library:name="Voci_crea"/>
@@ -82,5 +82,4 @@
  <library:element library:name="Conversioni"/>
  <library:element library:name="ConversioneDaListiniEsterni"/>
  <library:element library:name="PY_bridge"/>
- <library:element library:name="Menu"/>
 </library:library>

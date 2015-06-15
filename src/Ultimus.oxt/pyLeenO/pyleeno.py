@@ -233,7 +233,8 @@ def XPWE_import (): #(filename):
     #~ filename = filedia('Scegli il file XPWE da importare...')
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/xpwe_prova.xpwe'
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/_Prezzari/2005/da_pwe/Esempio_Progetto_CorpoMisura.xpwe'
-    filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Sicilia/sicilia2013.xpwe'
+    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Sicilia/sicilia2013.xpwe'
+    filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/berlingieri.xpwe'
     """xml auto indent: http://www.freeformatter.com/xml-formatter.html"""
     #~ filename = filedia('Scegli il file XML-SIX da convertire...')
     # inizializzazioe delle variabili
@@ -415,11 +416,30 @@ def XPWE_import (): #(filename):
         try:
             oSheet.getCellRangeByName('A'+ str (lrow)).String = elem['tariffa']
             oSheet.getCellRangeByName('B'+ str (lrow)).String = elem['destestesa']
-            oSheet.getCellRangeByName('C'+ str (lrow)).String = elem['unmisura']
+            if elem['unmisura'] == None:
+                oSheet.getCellRangeByName('C'+ str (lrow)).String = ""
+            else:
+                oSheet.getCellRangeByName('C'+ str (lrow)).String = elem['unmisura']
             oSheet.getCellRangeByName('E'+ str (lrow)).Value = elem['prezzo1']
         except IndexError:
             pass
         lrow=lrow+1
+########################################################################
+    #~ oSheet=ThisComponent.currentController.activeSheet
+    oSheet = oDoc.getSheets().getByName('COMPUTO')
+    iSheet_num = oSheet.RangeAddress.Sheet
+    #~ sLinkSheetName = thisComponent.Sheets.getByIndex(iSheet_num).getName()
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet_num
+    oCellRangeAddr.StartColumn = 0
+    oCellRangeAddr.StartRow = 3
+    oCellRangeAddr.EndColumn = 0
+    oCellRangeAddr.EndRow = 5
+    lrow=4 #primo rigo dati
+    oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
+    oSheet.getCellRangeByName('A10').String = "prova"
+    
+########################################################################
 
 # XPWE_import ##########################################################
 ########################################################################

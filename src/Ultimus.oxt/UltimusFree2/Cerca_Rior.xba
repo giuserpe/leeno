@@ -43,7 +43,8 @@ RiDefinisci_Area_Elenco_prezzi
 	lrowEPF = oRangeEP.EndRow-1
 	lcolEPI = oRangeEP.StartColumn
 	lcolEPF = oRangeEP.EndColumn
-
+	
+	If lrowEPI &gt; lrowEPF Then GoTo fine:
 	If lrowEPF = lrowF Then lrowEPF=lrowF-1
 &apos;On Error Resume Next 
 	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
@@ -51,6 +52,7 @@ ordina_col (lcolEPI+1)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 &apos;	Print idxcol
 &apos;	Print idxrow
+fine:
 fissa (0,idxrow+1)
 	Barra_chiudi_sempre_4
 End Sub

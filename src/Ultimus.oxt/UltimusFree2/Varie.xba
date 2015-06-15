@@ -1889,17 +1889,10 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 
 END SUB
 
-
-
-&apos;********************************************************************************
-
-
-
-
-Sub Svuota_Computo ()
+&apos;#########################################################################
+Sub Svuota_TUTTO ()
 &apos;modificata Giuseppe Vizziello 2014
 &apos;svuota tutto (o quasi) il doc di computo &apos; doradora
-&apos;xray ThisComponent.Sheets
 	if ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false then
 		msgbox &quot;Questo comando si usa soltanto in LeenO...&quot;,48, &quot;ATTENZIONE!&quot;
 		Exit sub
@@ -1907,14 +1900,9 @@ Sub Svuota_Computo ()
 	Ripristina_statusLine
 	barra_apri_chiudi_4
 
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	if msgbox (&quot; La macchina sta per Svuotare questo computo,!&quot;&amp; CHR$(10)_
-			&amp; &quot; ma prima salvo il doc corrente, e poi ne salvo una copia con nuovo nome!&quot;&amp; CHR$(10)_
-			&amp; &quot; PROSEGUO? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
-		&apos;	&amp;&quot;&quot;,4, &quot;&quot;&amp; CHR$(10)) = 7 then
-			
+Verifica_chiudi_preview
+	if msgbox (&quot;Stai per SVUOTARE questo computo!&quot;&amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;SEI DAVVERO SICURO DI VOLER PROSEGUIRE?&quot; &amp; CHR$(10) &amp; &quot; &quot;, 4,&quot;ATTENZIONE!!!&quot;) = 7 Then
 		exit sub	
 	end if
  oDoc = ThisComponent
@@ -1923,8 +1911,8 @@ Sub Svuota_Computo ()
  &apos; Get the frame from the controller.
  oDocFrame = oDocCtrl.getFrame()	
 	
-	&apos; salviamo comunque il doc corrente
-	oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+&apos; salviamo comunque il doc corrente
+&apos;	oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
 &apos;	oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
  
  	Barra_chiudi_sempre_4
@@ -1936,16 +1924,16 @@ rem ----------------------------------------------------------------------
 	lrowFine=oEnd.RangeAddress.EndRow-1
 &apos;GoTo salta:
 	If lrowFine &gt; 2 Then
-&apos;		oSheet.rows.removeByIndex (2, lrowFine)
-		oRange = osheet.getCellRangeByPosition (0,1,13,lrowFine )
-		ThisComponent.CurrentController.Select(oRange)
-cancella_dati
-		oRange = osheet.getCellRangeByPosition (0,2,0,lrowFine )
-		ThisComponent.CurrentController.Select(oRange)
-		elimina_riga
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+		oRangeEP = ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells.RangeAddress
+		lrowEPI = oRangeEP.StartRow+1
+		lrowEPF = oRangeEP.EndRow-1
+		lcolEPI = oRangeEP.StartColumn
+		lcolEPF = oRangeEP.EndColumn
+		ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
+		elimina_righe
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	end If
-salta:
+&apos;salta:
 
 rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
@@ -1955,36 +1943,26 @@ rem ----------------------------------------------------------------------
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = 0
 
-&apos;	&apos;sString$ = &quot;Fine elenco&quot;
-&apos;	oEnd=uFindString(sString$, oSheet) 
-&apos;	lrowFine=oEnd.RangeAddress.EndRow-1
-&apos;	oRange = osheet.getCellRangeByPosition (0,1,10,lrowFine )
-&apos;	Flags = com.sun.star.sheet.CellFlags.STRING _
-&apos;			 + com.sun.star.sheet.CellFlags.HARDATTR _
-&apos;				+ com.sun.star.sheet.CellFlags.VALUE
-&apos;	oRange.clearContents(Flags)
-&apos;	Barra_chiudi_sempre_4
-&apos;	Barra_Apri_Chiudi_5(&quot;3 Sto svuotando questo documento... Pazienta... &quot;, 50)
-	&apos; magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
 	lrowFine= getLastUsedRow(oSheet)
 	oCell=oSheet.getCellRangeByPosition(0, 0, 9, lrowFine)
 	ThisComponent.CurrentController.Select(oCell)
 	Adatta_Altezza_riga
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona	
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona	
 &apos;	Adatta_h_riga_intera_tabella(&quot;Elenco Prezzi&quot;)
 fissa(0,2)
 
 &apos;&apos;svuota Analisi
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-&apos;	lrowFine= getLastUsedRow(oSheet)
-	oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet) 
+	lrowFine= getLastUsedRow(oSheet)
+
+	
 	lrowFine=oEnd.RangeAddress.EndRow-1
 	If lrowFine &gt; 2 then
 &apos;		oSheet.rows.removeByIndex (2, lrowFine)
 		oRange = osheet.getCellRangeByPosition (0,1,0,lrowFine )
 		ThisComponent.CurrentController.Select(oRange)
 		elimina_righe
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	end If
 	
 	Barra_chiudi_sempre_4
@@ -1994,8 +1972,10 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 	lrowFine= getLastUsedRow(oSheet)
 	oCell=oSheet.getCellRangeByPosition(0, 0, 10, lrowFine)
 	ThisComponent.CurrentController.Select(oCell)
+	elimina_righe
 	Adatta_Altezza_riga
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 fissa(0,2)
 
 rem RIPULISCI COMPUTO
@@ -2005,7 +1985,8 @@ rem RIPULISCI COMPUTO
 inizializza_computo
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)	
-	Svuota_CONTABILITA_esegui 
+	Svuota_CONTABILITA
+&apos;	Svuota_CONTABILITA_esegui 
 	
 	Adatta_h_riga_intera_tabella(&quot;CONTABILITA&quot;)
 	if	sState = &quot;chiusa&quot; then
@@ -2013,15 +1994,11 @@ inizializza_computo
 	end if &apos;
 	
 	
-Ripristina_Validita_Lista	
-	salva_temp
-	
+Ripristina_Validita_Lista
 	&apos;rendi correntexx
-	Scrivi_Globale
-	Ripristina_statusLine
-&apos;	Vai_a_M1
+Scrivi_Globale
+Ripristina_statusLine
 Visualizza_normale_esegui
-inizializza_elenco
 	msgbox &quot;Questo documento è stato in gran parte svuotato dai sui dati!..!&quot;
 end sub
 </script:module>

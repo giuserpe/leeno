@@ -212,45 +212,23 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;1 Sto ripristinando le finestre a discesa... pazienta........&quot;, 30)
 	oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;) &apos;(ThisComponent.currentcontroller.activesheet.name)
-&apos;ThisComponent.Sheets.getByName(&quot;S5&quot;).isVisible = true 
- 	&apos; questo blocco le cambia in S1 in modo forzato 
-&apos;	 oCell=oSheet.GetCellbyPosition( 5, 45 ) &apos; Codice voce in computo
+
 	oCell=oSheet.GetCellbyPosition( 1, 9 ) &apos; Codice voce in computo
 	Cambia_d1 (oCell)	
-						 
-&apos;	oCell=oSheet.GetCellbyPosition( 47, 42 ) &apos;um
+	oCell.string = &quot;Cod. Art.?&quot;
+	
 
+	oCell=oSheet.GetCellbyPosition( 1, 23 ) &apos; Codice voce in contabilità
+	Cambia_d1 (oCell)	
+	oCell.string = &quot;Cod. Art.?&quot;
+
+	oCell=oSheet.GetCellbyPosition( 3, 108) &apos;um (in analisi avcp
+	Cambia_d2 (oCell)
 	oCell.string = &quot;U.M. ??&quot;
-	oCell=oSheet.GetCellbyPosition( 3, 45) &apos;um (in analisi)
-	Cambia_d2 (oCell)
-	oCell=oSheet.GetCellbyPosition( 3, 107) &apos;um (in analisi avcp
-	Cambia_d2 (oCell)
 
-&apos;	oCell=oSheet.GetCellbyPosition( 49, 44 )
-	oCell=oSheet.GetCellbyPosition( 5, 47 ) &apos;Codice (in analisi) 1
-	oCell.string = &quot;Pesca... o Seleziona il codice&quot;
-	Cambia_d1 (oCell)
-	
-&apos;	oCell=oSheet.GetCellbyPosition( 49, 45 ) 
-	oCell=oSheet.GetCellbyPosition( 5, 48 ) &apos;Codice (in analisi) 2
-	oCell.string = &quot;Pesca... o Seleziona il codice&quot;
-	Cambia_d1 (oCell)
-
-	oCell=oSheet.GetCellbyPosition( 5, 49 ) &apos;Codice (in analisi) 3
-	oCell.string = &quot;Pesca... o Seleziona il codice&quot;
-	Cambia_d1 (oCell)
-
-	oCell=oSheet.GetCellbyPosition( 2, 51 ) &apos;maggiorazioni in analisi 1
-	Cambia_d3 (oCell)
-
-	oCell=oSheet.GetCellbyPosition( 2, 52 ) &apos;maggiorazioni in analisi 2
-	Cambia_d3 (oCell)
-
-	oCell=oSheet.GetCellbyPosition( 2, 53 ) &apos;maggiorazioni in analisi 3
-	Cambia_d3 (oCell)
-	
 	oCell=oSheet.GetCellbyPosition( 4, 127 ) &apos;maggiorazioni in analisi AVCP
 	Cambia_d3 (oCell)
+
 	oCell=oSheet.GetCellbyPosition( 4, 128 ) &apos;maggiorazioni in analisi AVCP
 	Cambia_d3 (oCell)
 
@@ -258,7 +236,6 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 	&apos; passo a lavorare sul foglio Analisi
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) &apos;(ThisComponent.currentcontroller.activesheet.name)
 	lLastUrow = getLastUsedRow(oSheet)
-&apos;	lrow = 3
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;2 Sto ripristinando le finestre a discesa delle maggiorazioni...&quot;, 40)
 	if oSheet.GetCellbyPosition(0,0).string = &quot;inizio analisi AVCP&quot; then &apos;CONTROLLO SULLE ANALISI AVCP maggiorazioni utili
@@ -349,30 +326,6 @@ Function Cambia_d1 (oCell as object) &apos; finestra validation per cod. prezzo
  ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)
 end Function
  
-Function Cambia_d2_old (oCell as object) rem QUESTA NON VA - è riscritta sotto
-rem quanto segue sembra non funzionare
-	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
-	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
- oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, False)
-&apos;	oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, True)
-	oTabVal.setPropertyValue(&quot;IgnoreBlankCells&quot;, True) 
- oTabVal.setPropertyValue(&quot;ErrorMessage&quot;, sMessaggioErr)
- oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;,2) &apos; com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
- oTabVal.setPropertyValue(&quot;Type&quot;,6)
- oTabVal.setPropertyValue(&quot;Operator&quot;,0) &apos;com.sun.star.sheet.ConditionOperator.NONE
-	oTabVal.setPropertyValue(&quot;ShowInputMessage&quot;, true)
-	oTabVal.setPropertyValue(&quot;InputTitle&quot;,&quot;U. M.&quot;)
-	oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;Click sulla freccetta e &quot; &amp; CHR(10)_
-											&amp;&quot;seleziona l&apos;unità di misura&quot;)
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).string = &quot;&quot; then 
-	 sListUM = &quot; &quot;&quot;m²&quot;&quot;;&quot;&quot;m³&quot;&quot;;&quot;&quot;corpo&quot;&quot;;&quot;&quot;Cad&quot;&quot;;&quot;&quot;m&quot;&quot;;&quot;&quot;kg&quot;&quot;;&quot;&quot;t&quot;&quot;;&quot;&quot;lt&quot;&quot;;&quot;&quot;dm&quot;&quot;;&quot;&quot;dm²&quot;&quot;;&quot;&quot;dm³&quot;&quot; &quot;
-	 else
- 		sListUM = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).string
-	end if 
- &apos; sListUM = &quot; &quot;&quot;dmq&quot;&quot;;&quot;&quot;dmc&quot;&quot;;&quot;&quot;mq&quot;&quot;;&quot;&quot;mc&quot;&quot;; &quot;&quot;m²&quot;&quot;;&quot;&quot;m³&quot;&quot;;&quot;&quot;corpo&quot;&quot;;&quot;&quot;m&quot;&quot;;&quot;&quot;Cad&quot;&quot;;&quot;&quot;kg&quot;&quot;;&quot;&quot;t&quot;&quot;;&quot;&quot;lt&quot;&quot;;&quot;&quot;dm&quot;&quot;;&quot;&quot;dm²&quot;&quot;;&quot;&quot;dm³&quot;&quot; &quot;
- 	oTabVal.setFormula1(sListUM) 	
- 	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)
-end Function
 Function Cambia_d2 (oCell as object) &apos;
 	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
 	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)

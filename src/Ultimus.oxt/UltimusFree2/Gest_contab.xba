@@ -276,7 +276,7 @@ Sub Svuota_CONTABILITA_esegui (optional sSommari as String) &apos;(C) Giuseppe V
 		
  	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
 
-	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+&apos;	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 rem riga di intestazione
 	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
 	oSheet.GetCellByPosition(1,2).setstring(&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)

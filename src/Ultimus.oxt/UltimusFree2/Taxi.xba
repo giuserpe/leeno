@@ -1077,8 +1077,11 @@ Function Riordina_Taxi (oSheet, ColdaRior, AscDesc as boolean )as variant &apos;
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 End Function 
 
+Sub xxxxxxx
+oSheet = ThisComponent.currentController.activeSheet
+xray uFindString(&quot;Fine Computo&quot;, oSheet)
 
-
+End Sub
 
 
 

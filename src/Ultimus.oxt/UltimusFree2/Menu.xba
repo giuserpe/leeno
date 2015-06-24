@@ -138,7 +138,7 @@ rem ----------------------------------------------------------------------
 rem controllo esistenza proprietà definita dall&apos;utente
 	Dim test() As Object 
 	test() =oDoc.DocumentProperties.UserDefinedProperties.PropertyValues()
-xray test(1).value
+&apos;xray test(1).value
 	If ubound(test()) &gt;= 2 Then 
 		If oDoc.DocumentProperties.UserDefinedProperties.PropertyValues(2).name = &quot;Versione LeenO&quot; Then
 &apos;			eventi_assegna

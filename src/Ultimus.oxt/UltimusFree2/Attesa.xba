@@ -332,10 +332,6 @@ Sub B_Chiudi
 	oProgressBar.End 
 end sub
 
-sub guarda
-	xray oProgressBar
-end sub
-
 &apos;+++++++++++++++++++++++++++++++++
 
 

@@ -94,7 +94,7 @@ Sub _accoda_files_in_unico
 	Dim DocName as object, DocUlr as string, dummy()
 	Doc = ThisComponent
 	Sheet = Doc.Sheets(0) 
-	sPath =&quot;W:\_dwg\ULTIMUSFREE\elenchi\Prezzari\Veneto\venezia\ODS\&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
+	sPath =&quot;W:\_dwg\ULTIMUSFREE\elenchi\Veneto\padova\&quot;  &apos; cartella con i documenti da copiare (non ci deve essere il file destinazione con la macro
 	sFileName = Dir(sPath &amp; &quot;*.ods&quot;, 0)
 	Barra_Apri_Chiudi_5(&quot;.......................Sto lavorando su &quot;&amp; sFileName, 0)
 	Do While (sFileName &lt;&gt; &quot;&quot;)
@@ -111,9 +111,9 @@ Sub _accoda_files_in_unico
 	&apos;	oStart=uFindString(&quot;ATTENZIONE!&quot;, Sheet1)
 	&apos;	Srow=oStart.RangeAddress.EndRow+1
 	Srow = 0
-		Range = Sheet1.getCellRangeByPosition(1, Srow,  12, LastRow1).getDataArray &apos;(1^ colonna, 1^ riga, 10^ colonna, ultima riga)
+		Range = Sheet1.getCellRangeByPosition(0, Srow,  12, LastRow1).getDataArray &apos;(1^ colonna, 1^ riga, 10^ colonna, ultima riga)
 		DocName.dispose
-		dRange  = Sheet.getCellRangeByPosition(1, LastRow, 12, LastRow1 + LastRow-Srow)
+		dRange  = Sheet.getCellRangeByPosition(0, LastRow, 12, LastRow1 + LastRow-Srow)
 		dRange.setDataArray(Range)
 		sFileName = Dir()
 	Loop
@@ -368,10 +368,6 @@ SUB DOLO rem SOLO MANUTENZIONE
 
 	&apos;end if
 END Sub
-
-Sub sdcs
-xray thiscomponent.currentselection
-End Sub
 
 sub ripara_computo
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)

@@ -18,7 +18,7 @@ Sub python_debug
 &apos;	fileurl = GetFileURL(&quot;Seleziona il file da convertire.&quot;)
 &apos;	Print convertfromurl (fileurl)
 &apos;	xml = convertfromurl (fileurl)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;XPWE_import&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;debug&quot;)
 &apos;	now2 = now
 &apos;	Print now2-now1	
 End Sub

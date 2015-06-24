@@ -364,23 +364,6 @@ rem SU ANALISI AVCP
  	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)&apos;
 end Function
 
-sub qui rem SOLO PER CAPIRE 
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	for lrow = 0 to 140
- 	if oSheet.GetCellbyPosition(3,lrow).string = &quot;Spese Generali (calcolate su F)&quot; OR _
-	 	oSheet.GetCellbyPosition(3,lrow).string = &quot;Utili d&apos;Impresa (calcolata su F+G)&quot; then
-&apos; 	osheet.getCellRangeByPosition (3,lrow,3,lrow).CellStyle = &quot;An-lavoraz-Utili desc&quot;
-&apos; 	osheet.getCellRangeByPosition (1,lrow,2,lrow).CellStyle = &quot;An-lavoraz-Utili&quot;
-
-		 oCell=oSheet.GetCellbyPosition( 3, lrow )
-&apos;		 xray oCell
-	 	Cambia_d3 (oCell)
-	 	 	end if
-	next
-
-end sub
-&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
 sub Ripristina_controlli_con_nuovaFinestra
 &apos;assegnata al menu UltimusFree &gt; Ripristina Controlli
 

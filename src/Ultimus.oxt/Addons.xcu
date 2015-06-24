@@ -6,7 +6,7 @@ oor:name="Addons"
 oor:package="org.openoffice.Office">
 	<node oor:name="AddonUI">
 		<node oor:name="OfficeToolBar">
-<!-- OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar OfficeToolBar -->
+<!-- OfficeToolBar OfficeToolBar OfficeToolBar -->
 			<node oor:name="ULTIMUS_3.OfficeToolBar" oor:op="replace">
 				<node oor:name="Ma00" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">

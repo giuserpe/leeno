@@ -1662,3 +1662,116 @@ SUB Tronca_Altezza_Voci_Computo_NON_USATA '1 e Contabilità NON USATA
 	thisComponent.currentController.Select(thisComponent.CreateInstance("com.sun.star.sheet.SheetCellRanges")) 'unselect ranges 	
 	' toglie la selezione 	
 END SUB 'fine di: Tronca_Altezza_Voci_Computo
+'#########################################################################
+
+Sub Svuota_TUTTO ()
+'modificata Giuseppe Vizziello 2015
+'svuota tutto (o quasi) il doc di computo ' doradora
+	if ThisComponent.Sheets.hasByName("Elenco Prezzi") = false then
+		msgbox "Questo comando si usa soltanto in LeenO...",48, "ATTENZIONE!"
+		Exit sub
+	end if
+	Ripristina_statusLine
+	barra_apri_chiudi_4
+
+Verifica_chiudi_preview
+	if msgbox ("Stai per SVUOTARE questo computo!"& CHR$(10) & CHR$(10)_
+			& "SEI DAVVERO SICURO DI VOLER PROSEGUIRE?" & CHR$(10) & " ", 4,"ATTENZIONE!!!") = 7 Then
+		exit sub	
+	end if
+	oDoc = ThisComponent
+ ' Get the document's controller.
+	oDocCtrl = oDoc.getCurrentController()
+ ' Get the frame from the controller.
+	oDocFrame = oDocCtrl.getFrame()	
+	
+' salviamo comunque il doc corrente
+'	oDispatchHelper = createUnoService( "com.sun.star.frame.DispatchHelper" )
+'	oDispatchHelper.executeDispatch( oDocFrame, ".uno:Save", "", 0, Array() )
+ 
+ 	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5("Sto svuotando questo documento... Pazienta... ", 30)
+rem ----------------------------------------------------------------------
+'svuota Elenco Prezzi	
+	oSheet = ThisComponent.Sheets.getByName("Elenco Prezzi")
+	oEnd=uFindString("Fine elenco", oSheet) 
+	lrowFine=oEnd.RangeAddress.EndRow-1
+'GoTo salta:
+	If lrowFine > 2 Then
+		oRangeEP = ThisComponent.NamedRanges.getByName("elenco_prezzi").getReferredCells.RangeAddress
+		lrowEPI = oRangeEP.StartRow+1
+		lrowEPF = oRangeEP.EndRow-1
+		lcolEPI = oRangeEP.StartColumn
+		lcolEPF = oRangeEP.EndColumn
+		ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
+		elimina_righe
+		thisComponent.currentController.Select(thisComponent.CreateInstance("com.sun.star.sheet.SheetCellRanges")) 'deseleziona
+	end If
+'salta:
+
+rem ----------------------------------------------------------------------
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5("2 Sto svuotando questo documento... Pazienta... ", 40)
+
+
+	ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,327).value = 0 
+	ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,334).value = 0
+
+	lrowFine= getLastUsedRow(oSheet)
+	oCell=oSheet.getCellRangeByPosition(0, 0, 9, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
+	thisComponent.currentController.Select(thisComponent.CreateInstance("com.sun.star.sheet.SheetCellRanges")) 'deseleziona	
+'	Adatta_h_riga_intera_tabella("Elenco Prezzi")
+fissa(0,2)
+
+''svuota Analisi
+	oSheet = ThisComponent.Sheets.getByName("Analisi di Prezzo")
+	lrowFine= getLastUsedRow(oSheet)
+
+	
+	lrowFine=oEnd.RangeAddress.EndRow-1
+	If lrowFine > 2 then
+'		oSheet.rows.removeByIndex (2, lrowFine)
+		oRange = osheet.getCellRangeByPosition (0,1,0,lrowFine )
+		ThisComponent.CurrentController.Select(oRange)
+		elimina_righe
+		thisComponent.currentController.Select(thisComponent.CreateInstance("com.sun.star.sheet.SheetCellRanges")) 'deseleziona
+	end If
+	
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5("4 Sto svuotando questo documento... Pazienta... ", 60)
+
+	' magari adatta le righe (in certe sistuazioni rimaneva una riga rossa molto alta
+	lrowFine= getLastUsedRow(oSheet)
+	oCell=oSheet.getCellRangeByPosition(0, 0, 10, lrowFine)
+	ThisComponent.CurrentController.Select(oCell)
+	elimina_righe
+	Adatta_Altezza_riga
+	
+	thisComponent.currentController.Select(thisComponent.CreateInstance("com.sun.star.sheet.SheetCellRanges")) 'deseleziona
+fissa(0,2)
+
+rem RIPULISCI COMPUTO
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5("5 Sto svuotando questo documento... Pazienta... ", 70)
+	oSheet = ThisComponent.Sheets.getByName("COMPUTO")
+inizializza_computo
+
+	oSheet = ThisComponent.Sheets.getByName("CONTABILITA")	
+	Svuota_CONTABILITA
+'	Svuota_CONTABILITA_esegui 
+	
+	Adatta_h_riga_intera_tabella("CONTABILITA")
+	if	sState = "chiusa" then
+		osheet.isVisible = false
+	end if '
+	
+	
+Ripristina_Validita_Lista
+	'rendi correntexx
+Scrivi_Globale
+Ripristina_statusLine
+Visualizza_normale_esegui
+	msgbox "Questo documento è stato in gran parte svuotato dai sui dati!..!"
+end sub

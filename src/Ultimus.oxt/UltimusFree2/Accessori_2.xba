@@ -261,7 +261,6 @@ Sub Visualizza_sheet_TUTTE
 	oSheets = ThisComponent.Sheets
 	For I = 0 to oSheets.Count -1 
 		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
-	&apos;	xray 
 &apos;		oCalcSheet.unprotect(&quot;&quot;)
 		oCalcSheet.isVisible = TRUE
 	Next I	

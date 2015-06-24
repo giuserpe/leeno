@@ -10,11 +10,174 @@
 # Sono inoltre graditi suggerimenti in merito alle gestione della
 # Contabilità Lavori e per l'ottimizzazione del codice.
 ########################################################################
-import os, sys, uno, unohelper
+import os, sys, uno, unohelper, pyuno
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 import logging
 from xml.etree.ElementTree import ElementTree
+########################################################################
+def leeno_path():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.getCellRangeByName('a1').String = dir(uno.getComponentContext).__str__()
+    oSheet.getCellRangeByName('a2').String = dir(uno.getComponentContext.__name__).__str__()
+    #~ strin = ''
+    #~ if 'win' in sys.platform:
+        #~ lst = sys.path[0].split('\\')
+        #~ lstr = len(lst)
+        #~ for el in lst:# range(0,lstr-1):
+            #~ strin = strin + el + '\\'
+        #~ oSheet.getCellRangeByName('a2').String = strin
+def debughelp_uno():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.getCellRangeByName('B9').String = dir(os).__str__()
+    oSheet.getCellRangeByName('B10').String = dir(uno.__package__.title.__name__).__str__()
+    oSheet.getCellRangeByName('B11').String = dir(unohelper).__str__()
+    #~ oSheet.getCellRangeByName('A12').String = sys.__doc__
+    #~ oSheet.getCellRangeByName('A13').String = dir(uno).__str__()
+    #~ oSheet.getCellRangeByName('A14').String = dir(unohelper).__str__()
+    #~ oSheet.getCellRangeByName('A15').String = dir(pyuno).__str__()
+    #~ oSheet.getCellRangeByName('A11').String = dir(pyuno).__str__()
+    #~ n = 1
+    #~ for el in dir(uno):
+        #~ oSheet.getCellRangeByName('A' + str(n)).String = 'uno.' + 
+    #~ oSheet.getCellRangeByName('A12').String = sys.__doc__
+
+########################################################################
+def insRows(lrow, nrighe):
+    """Inserisce nrighe nella posizione lrow"""
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    iSheet = oSheet.RangeAddress.Sheet
+    #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    #~ lrow = Range2Cell()[1]
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    oCellRangeAddr.StartColumn = 0
+    oCellRangeAddr.EndColumn = 0
+    oCellRangeAddr.StartRow = lrow
+    oCellRangeAddr.EndRow = lrow+4-1
+    oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
+    #~ MsgBox(str(lrow),'lrow')
+########################################################################
+def uFindString (sString, oSheet):
+    """Trova la prima ricorrenza di una stringa (sString) riga per riga
+    in un foglio di calcolo (oSheet) e restituisce una tupla (IDcolonna, IDriga)"""
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ sString = 'TOTALI COMPUTO'
+    oCell = oSheet.getCellByPosition(0,0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    for nRow in range(0, aAddress.EndRow+1):
+        for nCol in range(0, aAddress.EndColumn+1):
+    # ritocco di +Daniele Zambelli:
+            if sString in oSheet.getCellByPosition(nCol,nRow).String:
+                 return (nCol,nRow)
+########################################################################
+from com.sun.star.beans import PropertyValue
+def _gotoCella (IDcol,IDrow):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    oProp = PropertyValue()
+    oProp.Name = 'ToPoint'
+    oProp.Value = ColumnNumberToName(oSheet, IDcol)+str(IDrow+1)
+    properties = (oProp,)
+    dispatchHelper.executeDispatch(oFrame, '.uno:GoToCell', '', 0, properties )
+########################################################################
+def ColumnNumberToName(oSheet,cColumnNumb):
+    """Trasforma IDcolonna in Nome"""
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    oColumns = oSheet.getColumns()
+    oColumn = oColumns.getByIndex(cColumnNumb).Name
+    return oColumn
+########################################################################
+def ColumnNameToNumber(oSheet,cColumnName):
+    """Trasforma il nome colonna in IDcolonna"""
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    oColumns = oSheet.getColumns()
+    oColumn = oColumns.getByName(cColumnName)
+    oRangeAddress = oColumn.getRangeAddress()
+    nColumn = oRangeAddress.StartColumn
+    return nColumn
+########################################################################
+# Range2Cell ###########################################################
+def Range2Cell():
+    """Partendo da una selezione qualsiasi restituisce una tupla (IDcolonna, IDriga)"""
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        if oDoc.getCurrentSelection().getRangeAddresses()[0]:
+            nRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
+            nCol = oDoc.getCurrentSelection().getRangeAddresses()[0].StartColumn
+    except AttributeError:
+        nRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
+        nCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
+    return (nCol,nRow)
+########################################################################
+# ins_voce_computo #####################################################
+def debug(): #ins_voce_computo ():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    eRow = uFindString ('TOTALI COMPUTO', oSheet)[1]
+    MsgBox(str(eRow),'eRow')
+    if lrow >= eRow:
+        lrow = eRow
+    elif lrow <= 3:
+        lrow = 3
+    insRows(lrow,4) #inserisco le righe
+
+
+
+#~ riprendi da qui
+
+
+
+
+
+
+
+
+    # imposto gli stili
+    #~ oSheet.getCellByPosition (0,lrow).CellStyle = 'Comp Start Attributo'
+    #~ oSheet.getCellRangeByPosition (0,lrow,30,lrow).CellStyle = 'Comp-Bianche sopra'
+    #~ oSheet.getCellByPosition (2,lrow).CellStyle = 'Comp-Bianche sopraS'
+    #~ 
+    #~ oSheet.getCellByPosition (0,lrow+1).CellStyle = 'comp progress'
+    #~ oSheet.getCellByPosition (1,lrow+1).CellStyle = 'comp Art-EP'
+    #~ oSheet.getCellRangeByPosition (2,lrow+1,8,lrow+1).CellStyle = 'Comp-Bianche in mezzo Descr'
+    #~ oSheet.getCellRangeByPosition (2,lrow+1,8,lrow+1).getIsMerged = True
+##### se non risolvo getIsMerged non posso procedere ###################
+##### quindi vado alla vecchia maniera #################################
+##### copio il range di righe computo da S5 ############################
+    oSheetto = oDoc.getSheets().getByName('S5')
+    oRangeAddress = oSheetto.getCellRangeByName('$A$9:$AR$12').getRangeAddress()
+    oCellAddress = oSheet.getCellByPosition(0,lrow).getCellAddress()
+    oSheet.copyRange(oCellAddress, oRangeAddress)
+########################################################################
+    _gotoCella(1,lrow+1)
+########################################################################
+    
+    oCell = oSheet.getCellByPosition(1,lrow+1)
+    oCursor = oSheet.createCursorByRange(oCell)
+
+    oCell = oSheet.getCellByPosition(0,0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoOffset(10,10)
+
+    
+    #~ oDoc.CurrentController.Select(oSheet.getCellByPosition(1,lrow+1))
+    #~ MsgBox(lrow,'')
+
 ########################################################################
 ########################################################################
 # XML_import ###########################################################
@@ -234,6 +397,7 @@ def XPWE_import (): #(filename):
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/xpwe_prova.xpwe'
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/_Prezzari/2005/da_pwe/Esempio_Progetto_CorpoMisura.xpwe'
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Sicilia/sicilia2013.xpwe'
+    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\berlingieri.xpwe'
     filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/berlingieri.xpwe'
     """xml auto indent: http://www.freeformatter.com/xml-formatter.html"""
     #~ filename = filedia('Scegli il file XML-SIX da convertire...')
@@ -250,7 +414,6 @@ def XPWE_import (): #(filename):
     iter = tree.getiterator()
     nome_file = root.find('FileNameDocumento').text
 ########################################################################
-
     dati = root.find('PweDatiGenerali')
     DatiGenerali = dati.getchildren()[0][0]
     percprezzi = DatiGenerali[0].text
@@ -261,11 +424,83 @@ def XPWE_import (): #(filename):
     impresa = DatiGenerali[5].text
     parteopera = DatiGenerali[6].text
 ########################################################################
-
+#PweDGCapitoliCategorie
+    PweDGSuperCapitoli  = dati.getchildren()[1][0].getchildren()    #PweDGSuperCapitoli
+    PweDGCapitoli       = dati.getchildren()[1][1].getchildren()    #PweDGCapitoli
+    PweDGSuperCategorie = dati.getchildren()[1][2].getchildren()    #PweDGSuperCategorie
+    PweDGCategorie      = dati.getchildren()[1][3].getchildren()    #PweDGCategorie
+    PweDGSubCategorie   = dati.getchildren()[1][4].getchildren()    #PweDGSubCategorie
+########################################################################
+#PweDGSuperCapitoli
+    lista_supcap = list()
+    for elem in PweDGSuperCapitoli:
+        id_sc = elem.get('ID')
+        dessintetica = elem.find('DesSintetica').text
+        percentuale = elem.find('Percentuale').text
+        diz = dict ()
+        diz['id_sc'] = id_sc
+        diz['dessintetica'] = dessintetica
+        diz['percentuale'] = percentuale
+        lista_supcap.append(diz)
+########################################################################
+#PweDGCapitoli
+    lista_cap = list()
+    for elem in PweDGCapitoli:
+        id_sc = elem.get('ID')
+        dessintetica = elem.find('DesSintetica').text
+        percentuale = elem.find('Percentuale').text
+        diz = dict ()
+        diz['id_sc'] = id_sc
+        diz['dessintetica'] = dessintetica
+        diz['percentuale'] = percentuale
+        lista_cap.append(diz)
+########################################################################
+#PweDGSuperCategorie
+    lista_supcat = list()
+    for elem in PweDGSuperCategorie:
+        id_sc = elem.get('ID')
+        dessintetica = elem.find('DesSintetica').text
+        percentuale = elem.find('Percentuale').text
+        diz = dict ()
+        diz['id_sc'] = id_sc
+        diz['dessintetica'] = dessintetica
+        diz['percentuale'] = percentuale
+        lista_supcat.append(diz)
+########################################################################
+#PweDGCategorie
+    lista_cat = list()
+    for elem in PweDGCategorie:
+        id_sc = elem.get('ID')
+        dessintetica = elem.find('DesSintetica').text
+        percentuale = elem.find('Percentuale').text
+        diz = dict ()
+        diz['id_sc'] = id_sc
+        diz['dessintetica'] = dessintetica
+        diz['percentuale'] = percentuale
+        lista_cat.append(diz)
+########################################################################
+#PweDGSubCategorie
+    lista_subcat = list()
+    for elem in PweDGSubCategorie:
+        id_sc = elem.get('ID')
+        dessintetica = elem.find('DesSintetica').text
+        percentuale = elem.find('Percentuale').text
+        diz = dict ()
+        diz['id_sc'] = id_sc
+        diz['dessintetica'] = dessintetica
+        diz['percentuale'] = percentuale
+        lista_subcat.append(diz)
+########################################################################
+    PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
+    speseutili = PweDGModuli[0].text
+    spesegenerali = PweDGModuli[1].text
+    utiliimpresa = PweDGModuli[2].text
+    oneriaccessorisc = PweDGModuli[3].text
+########################################################################
     misurazioni = root.find('PweMisurazioni')
     PweElencoPrezzi = misurazioni.getchildren()[0]
 ########################################################################
-    # leggo l'elenco prezzi ################################################
+# leggo l'elenco prezzi ################################################
     epitems = PweElencoPrezzi.findall('EPItem')
     lista_articoli = list()
     for elem in epitems:
@@ -313,8 +548,8 @@ def XPWE_import (): #(filename):
         diz_ep['pweepanalisi'] = pweepanalisi
         #~ epitem = (tipoep, tariffa, articolo, desridotta, destestesa, desridotta, desbreve, prezzo1, prezzo2, prezzo3, prezzo4, prezzo5, idspcap, idcap, flags, data, adrinternet, pweepanalisi)
         lista_articoli.append(diz_ep)
-    ########################################################################
-    # leggo voci di misurazione e righe ####################################
+########################################################################
+# leggo voci di misurazione e righe ####################################
     try:
         PweVociComputo = misurazioni.getchildren()[1]
         vcitems = PweVociComputo.findall('VCItem')
@@ -368,8 +603,19 @@ def XPWE_import (): #(filename):
         MsgBox("questo risulta essere un elenco prezzi senza voci di misurazione","ATTENZIONE!")
         pass
 ########################################################################
-# compilo la tabella ###################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
+# compilo Anagrafica generale ##########################################
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellRangeByName('C3').String = oggetto
+    oSheet.getCellRangeByName('C4').String = comune
+    oSheet.getCellRangeByName('C6').String = committente
+    oSheet.getCellRangeByName('C17').String = impresa
+# compilo Elenco Prezzi ################################################
+    oSheet = oDoc.getSheets().getByName('S1')
+    oSheet.getCellRangeByName('H319').Value = float(oneriaccessorisc)/100
+    oSheet.getCellRangeByName('H320').Value = float(spesegenerali)/100
+    oSheet.getCellRangeByName('H321').Value = float(utiliimpresa)/100
+# compilo Elenco Prezzi ################################################
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = 0
@@ -425,6 +671,7 @@ def XPWE_import (): #(filename):
             pass
         lrow=lrow+1
 ########################################################################
+# Inserisco i dati nel COMPUTO #########################################
     #~ oSheet=ThisComponent.currentController.activeSheet
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     iSheet_num = oSheet.RangeAddress.Sheet
@@ -432,23 +679,20 @@ def XPWE_import (): #(filename):
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet_num
     oCellRangeAddr.StartColumn = 0
-    oCellRangeAddr.StartRow = 3
     oCellRangeAddr.EndColumn = 0
-    oCellRangeAddr.EndRow = 5
+    oCellRangeAddr.StartRow = 3
+    oCellRangeAddr.EndRow = 3+len(lista_misure)*4
     lrow=4 #primo rigo dati
     oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
-    oSheet.getCellRangeByName('A10').String = "prova"
-    
 ########################################################################
+    #~ for el in lista_misure:
+
 
 # XPWE_import ##########################################################
 ########################################################################
 ########################################################################
 ########################################################################
 
-import os
-import uno
-import sys
 import traceback
 from com.sun.star.awt import Rectangle
 #
@@ -551,8 +795,6 @@ def filedia(titolo):
     finally:
         return oDisp
 ########################################################################
-import uno
- 
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BUTTONS_YES_NO, BUTTONS_YES_NO_CANCEL, BUTTONS_RETRY_CANCEL, BUTTONS_ABORT_IGNORE_RETRY
 from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON_CANCEL, DEFAULT_BUTTON_RETRY, DEFAULT_BUTTON_YES, DEFAULT_BUTTON_NO, DEFAULT_BUTTON_IGNORE
  
@@ -568,9 +810,10 @@ def MsgBox(s,t): # s = messaggio | t = titolo
  
     #~ s = res
     #~ t = "Titolo"
-
+    if t == None:
+        t='messaggio'
     MessageBox(parentwin, s, t, "infobox")
- 
+
 # Show a message box with the UNO based toolkit
 def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTTONS_OK):
     ctx = uno.getComponentContext()
@@ -581,10 +824,5 @@ def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTT
  
 #g_exportedScripts = TestMessageBox,
 ########################################################################
-
-########################################################################
-
-
-#g_exportedScripts = xmlsix2ods, import_XML,
 ########################################################################
 #import pdb; pdb.set_trace() #debugger

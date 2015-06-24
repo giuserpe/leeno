@@ -435,8 +435,10 @@ End Function
 
 
 
-Function CalcColumnNameToNumber( oSheet As com.sun.star.sheet.Spreadsheet,cColumnName As String ) As Long
+Function CalcColumnNameToNumber&apos;( oSheet As com.sun.star.sheet.Spreadsheet,cColumnName As String ) As Long
 &apos; trasforma un nome di colonna in numero di colonna
+cColumnName = 5
+ oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente
  oColumns = oSheet.getColumns()
  oColumn = oColumns.getByName( cColumnName )
  oRangeAddress = oColumn.getRangeAddress()

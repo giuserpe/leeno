@@ -1819,19 +1819,14 @@ rem ----------------------------------------------------------------------
 &apos;	 		oRange.rows.Height = 475
  	End Select  
 END SUB
+Sub asd
+xray thiscomponent.currentselection
+End Sub
 
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione...
  &apos;&apos; Clessid_lock_Start
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-&apos;	sAttributo = Trova_Attr_Sheet
-&apos; If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
-&apos; 	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; Then 
-&apos; 			 msgbox &quot;Questa macro si può usare solo in una tabella di COMPUTO! (o sua copia... o comunque di &quot;&quot;tipo computo&quot;&quot;)&quot;
-&apos; 			 Clessid_lock_End
-&apos;			exit sub
-&apos;	end if
-
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
  	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 and _
  		sAttributo = &quot;TIPO_COMPUTO&quot; then
@@ -1862,6 +1857,7 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 &apos;	sString$ = &quot;Fine Computo&quot;
 &apos;	oEnd=uFindString(sString$, oSheet) 
 &apos;	lLastUrowNN=oEnd.RangeAddress.EndRow-1
+GoTo salto:
 	if IsMissing(verbosa) Then
 		If msgbox (CHR$(10) &amp;&quot;Sto per Ri-Numerare questa tabella...&quot; &amp; CHR$(10)&amp; CHR$(10)_
 				&amp; &quot; Procedo ? &quot;&amp; CHR$(10)&amp; CHR$(10)_
@@ -1869,6 +1865,7 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione.
 			exit sub
 		end if
 	End If
+salto:
 &apos;	print &quot;comp Art-EP&quot; &amp; s_R
 &apos;	print &quot;Comp Start Attributo&quot; &amp; s_R
 	For i = 2 to lLastUrowNN

@@ -64,9 +64,6 @@ def insRows(lrow, nrighe):
 def uFindString (sString, oSheet):
     """Trova la prima ricorrenza di una stringa (sString) riga per riga
     in un foglio di calcolo (oSheet) e restituisce una tupla (IDcolonna, IDriga)"""
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
-    #~ sString = 'TOTALI COMPUTO'
     oCell = oSheet.getCellByPosition(0,0)
     oCursor = oSheet.createCursorByRange(oCell)
     oCursor.gotoEndOfUsedArea(True)
@@ -123,31 +120,48 @@ def Range2Cell():
         nCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
     return (nCol,nRow)
 ########################################################################
+# restituisce l'ID dell'ultima riga usata
+def getLastUsedCell(oSheet):
+    oCell = oSheet.getCellByPosition(0, 0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    return aAddress#.EndColumn, aAddress.EndRow)
+########################################################################
+# numera le voci di computo o contabilità
+def Numera_Voci():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    n , lastRow = 4 , getLastUsedCell(oSheet).EndRow+1
+    for lrow in range(0,lastRow):
+        if oSheet.getCellByPosition (1,lrow).CellStyle == 'comp Art-EP' or oSheet.getCellByPosition (1,lrow).CellStyle == 'comp Art-EP_R':
+            oSheet.getCellByPosition (0,lrow).Value = n
+            n = n+1
+########################################################################
 # ins_voce_computo #####################################################
 def debug(): #ins_voce_computo ():
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     eRow = uFindString ('TOTALI COMPUTO', oSheet)[1]
-    MsgBox(str(eRow),'eRow')
-    if lrow >= eRow:
-        lrow = eRow
-    elif lrow <= 3:
+    #~ MsgBox(str(eRow),'eRow')
+    cella = oSheet.getCellByPosition(1,lrow)
+    if lrow <= 3:
         lrow = 3
-    insRows(lrow,4) #inserisco le righe
-
-
-
-#~ riprendi da qui
-
-
-
-
-
-
-
-
-    # imposto gli stili
+    elif oSheet.getCellByPosition(1, lrow).CellStyle == "Livello-1-scritta" or oSheet.getCellByPosition(1, lrow).CellStyle == "livello2 valuta":
+        lrow = lrow+1
+    elif lrow >= eRow:
+        lrow = eRow
+    elif cella.CellStyle != "Comp-Bianche sopra":
+        while cella.CellStyle != "Comp-Bianche sopra": #comp sotto Bianche per inserimento SOTTO
+            lrow = lrow-1
+            cella = oSheet.getCellByPosition(1,lrow)
+########################################################################
+# questo sistema eviterebbe l'uso della sheet S5 da cui copiare i range campione
+# potrei svuotare la S5 ma allungando di molto il codice per la generazione della voce
+# per ora lascio perdere
+    # inserisco le righe ed imposto gli stili
+    #~ insRows(lrow,4) #inserisco le righe
     #~ oSheet.getCellByPosition (0,lrow).CellStyle = 'Comp Start Attributo'
     #~ oSheet.getCellRangeByPosition (0,lrow,30,lrow).CellStyle = 'Comp-Bianche sopra'
     #~ oSheet.getCellByPosition (2,lrow).CellStyle = 'Comp-Bianche sopraS'
@@ -155,28 +169,40 @@ def debug(): #ins_voce_computo ():
     #~ oSheet.getCellByPosition (0,lrow+1).CellStyle = 'comp progress'
     #~ oSheet.getCellByPosition (1,lrow+1).CellStyle = 'comp Art-EP'
     #~ oSheet.getCellRangeByPosition (2,lrow+1,8,lrow+1).CellStyle = 'Comp-Bianche in mezzo Descr'
-    #~ oSheet.getCellRangeByPosition (2,lrow+1,8,lrow+1).getIsMerged = True
-##### se non risolvo getIsMerged non posso procedere ###################
-##### quindi vado alla vecchia maniera #################################
+    #~ oSheet.getCellRangeByPosition (2,lrow+1,8,lrow+1).merge(True)
+########################################################################
+##### vado alla vecchia maniera ########################################
 ##### copio il range di righe computo da S5 ############################
     oSheetto = oDoc.getSheets().getByName('S5')
     oRangeAddress = oSheetto.getCellRangeByName('$A$9:$AR$12').getRangeAddress()
     oCellAddress = oSheet.getCellByPosition(0,lrow).getCellAddress()
+    insRows(lrow,4) #inserisco le righe
     oSheet.copyRange(oCellAddress, oRangeAddress)
 ########################################################################
-    _gotoCella(1,lrow+1)
+# correggo alcune formule
+    oSheet.getCellByPosition(13,lrow+3).Formula ="=J"+str(lrow+4)
+# sistemo i LINK dei tagG nelle righe sopra al tag vero e prorio...
+    oSheet.getCellByPosition(31, lrow+2).Formula = "=AF$"+str(lrow+4)
+    oSheet.getCellByPosition(32, lrow+2).Formula = "=AG$"+str(lrow+4)
+    oSheet.getCellByPosition(33, lrow+2).Formula = "=AH$"+str(lrow+4)
+    oSheet.getCellByPosition(34, lrow+2).Formula = "=AI$"+str(lrow+4)
+    oSheet.getCellByPosition(35, lrow+2).Formula = "=AJ$"+str(lrow+4)
+    oSheet.getCellByPosition(31, lrow+1).Formula = "=AF$"+str(lrow+4)
+    oSheet.getCellByPosition(32, lrow+1).Formula = "=AG$"+str(lrow+4)
+    oSheet.getCellByPosition(33, lrow+1).Formula = "=AH$"+str(lrow+4)
+    oSheet.getCellByPosition(34, lrow+1).Formula = "=AI$"+str(lrow+4)
+    oSheet.getCellByPosition(35, lrow+1).Formula = "=AJ$"+str(lrow+4)
+    oSheet.getCellByPosition(31, lrow).Formula = "=AF$"+str(lrow+4)
+    oSheet.getCellByPosition(32, lrow).Formula = "=AG$"+str(lrow+4)
+    oSheet.getCellByPosition(33, lrow).Formula = "=AH$"+str(lrow+4)
+    oSheet.getCellByPosition(34, lrow).Formula = "=AI$"+str(lrow+4)
+    oSheet.getCellByPosition(35, lrow).Formula = "=AJ$"+str(lrow+4)
+    celle=oSheet.getCellRangeByPosition(0, lrow, 43,lrow+3)# 'seleziona la cella
+    oDoc.CurrentController.select(celle)
+    celle.Rows.OptimalHeight = True
 ########################################################################
-    
-    oCell = oSheet.getCellByPosition(1,lrow+1)
-    oCursor = oSheet.createCursorByRange(oCell)
-
-    oCell = oSheet.getCellByPosition(0,0)
-    oCursor = oSheet.createCursorByRange(oCell)
-    oCursor.gotoOffset(10,10)
-
-    
-    #~ oDoc.CurrentController.Select(oSheet.getCellByPosition(1,lrow+1))
-    #~ MsgBox(lrow,'')
+    Numera_Voci()
+    _gotoCella(1,lrow+1)
 
 ########################################################################
 ########################################################################
@@ -198,7 +224,7 @@ def XML_import (): #(filename):
     # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))
-    # effettua il parsing di tutti gli elemnti dell'albero XML
+    # effettua il parsing di tutti gli elemnti dell'albero XMLsub nuova_voce_computo_at
     iter = tree.getiterator()
     listaSOA = []
     articolo = []
@@ -692,22 +718,8 @@ def XPWE_import (): #(filename):
 ########################################################################
 ########################################################################
 ########################################################################
-
 import traceback
 from com.sun.star.awt import Rectangle
-#
-def oTest0():
-    oDisp = filedia('Scegli il file da convertire...')
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByIndex(0)
-    oSheet.getCellRangeByName('c3').String = oDisp # nome file
-
-def oTest():
-    oDisp = filedia('Scegli il file da convertire...')
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByIndex(0)
-    oSheet.getCellRangeByName('c3').String = oDisp # nome file
-
 def filedia(titolo):
 # http://openoffice3.web.fc2.com/Python_Macro_Calc.html#OOoCCB01 #
     try:

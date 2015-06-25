@@ -491,17 +491,16 @@ SUB Adatta_Altezza_riga__________() &apos; non funziona bene su testi giustifica
 	oMioRange.Rows.OptimalHeight = true
 END SUB
 
-
 Function getLastUsedRow (oSheet as Object) as long &apos;Integer (non bastava su tabelle lunghe: Overflow)
  Dim oCell As Object
  Dim oCursor As Object
  Dim aAddress As Variant
- &apos; xray osheet
 	if ismissing (oSheet) or isnull(oSheet) then
  		oSheet = ThisComponent.currentController.activeSheet
  	end if
 	oCell = oSheet.GetCellbyPosition( 0, 0 )
 	oCursor = oSheet.createCursorByRange(oCell)
+ &apos;xray oCursor
 	oCursor.GotoEndOfUsedArea(True)
 	GetLastUsedRow = oCursor.RangeAddress.EndRow	
 End Function

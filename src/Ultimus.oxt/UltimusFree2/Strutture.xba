@@ -468,7 +468,7 @@ dim icapitolo
 			 lrow = lroww
 	end if 
 
-	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet)
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) then
 		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;
 		exit Sub&apos;
@@ -545,7 +545,7 @@ sistema_attributi_sheet
 		 	exit sub
 	end if
 
-	sString$ = &quot;Fine Computo&quot;
+	sString$ = &quot;TOTALI COMPUTO&quot;
 	oEnd=uFindString(sString$, oSheet1)
 	If isNull (oEnd) or isEmpty (oEnd) then
 		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;

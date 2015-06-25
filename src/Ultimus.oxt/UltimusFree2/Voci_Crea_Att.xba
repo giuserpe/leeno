@@ -376,25 +376,18 @@ SUB Nuova_Voce_Computo_Att &apos;
 	dim oSheet as object
 	dim oSheetSRC as object
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;--------------------------------------------
-rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
-&apos;	oDpage = oSheet.DrawPage
-&apos;	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
-&apos;	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
-&apos;	oCtrlModel.Enabled = False
-&apos;-------------------------------------------------	
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then		 
 		exit sub
 	end if
-	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet) &apos;piviere
-	If isNull (oEnd) or isEmpty (oEnd) then 
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI4! &quot;
-		oCtrlModel.Enabled = True
-		exit sub
-	end if 
-	lrowFine=oEnd.RangeAddress.EndRow
+&apos;	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet) &apos;piviere
+&apos;	If isNull (oEnd) or isEmpty (oEnd) then 
+&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+&apos;		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI4! &quot;
+&apos;		oCtrlModel.Enabled = True
+&apos;		exit sub
+&apos;	end if 
+
 	
 VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
@@ -424,17 +417,12 @@ rem se su firme
 	end if
 	
 
- 	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Ultimus_centro&quot; or lrow &gt;= lrowFine then
+ 	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Ultimus_centro&quot; or lrow &gt;= iEndRow then
  		oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
  		lrow=oEnd.RangeAddress.EndRow-1
  		goto Inserisci_voce
 	end If
 	
-	
-	if 	oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp sotto Bianche&quot; then
-			lrow = lrow+1
-			goto Inserisci_voce
-	end if
 	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Default&quot; And _
 		oSheet.GetCellByPosition( 1, lrow-1).cellstyle = &quot;Default&quot; Or _
 		oSheet.GetCellByPosition( 1, lrow+1).cellstyle = &quot;Comp TOTALI&quot; or _
@@ -461,13 +449,15 @@ rem SUL TOTALE
 			goto Inserisci_voce
 	end if
 rem SUI RIGHI DI MISURAZIONE
-	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot; then
-		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot;
-			lrow = lrow+1	
+&apos;GoTo salto1:
+	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; Then &apos;comp sotto Bianche per inserimento SOTTO
+		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; &apos;comp sotto Bianche per inserimento SOTTO
+			lrow = lrow-1	
 		loop
-		lrow = lrow+1
+&apos;		lrow = lrow-1
 		goto Inserisci_voce
-	end if
+	end If
+&apos;salto1:
 inserisci_voce:
 &apos;	print lrow
 	insRows (lrow, 4) &apos; numero di righe da inserire

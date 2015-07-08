@@ -1105,13 +1105,6 @@ Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tab
 	Dim I as long
 	Dim oSheet_num as integer
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
-&apos;-------------------------------------------------------------------------
-	rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
-	rem	oDpage = thisComponent.currentcontroller.activesheet.DrawPage
-	rem	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
-	rem	oCtrlModel = oform.getbyname(&quot;Pulsante 11&quot;) &apos; pulsante +RIGA
-	rem	oCtrlModel.Enabled = False &apos; disabilita
-&apos;-------------------------------------------------------------------------
 	oSheet=ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos;righe per ridurre a cella iniziale una eventuale
 	If lrow = -1 Then Exit Sub

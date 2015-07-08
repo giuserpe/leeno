@@ -224,8 +224,30 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 
 	oCell=oSheet.GetCellbyPosition( 3, 108) &apos;um (in analisi avcp
 	Cambia_d2 (oCell)
-	oCell.string = &quot;U.M. ??&quot;
-
+	oCell.string = &quot;U.M. ?&quot;
+	
+	oCell=oSheet.GetCellbyPosition( 1, 110) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 111) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 112) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 115) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 118) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 121) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 124) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	
 	oCell=oSheet.GetCellbyPosition( 4, 127 ) &apos;maggiorazioni in analisi AVCP
 	Cambia_d3 (oCell)
 

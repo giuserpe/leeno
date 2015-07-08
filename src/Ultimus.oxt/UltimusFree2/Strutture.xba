@@ -1301,7 +1301,7 @@ end sub
 
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
-Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto)
+Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) descrizione breve
 &apos;_____________________
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 &apos;_____________________
@@ -1333,6 +1333,10 @@ Sub Tronca_Altezza_Voci_Computo &apos; (c) Giuseppe Vizziello 2015
 &apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO e CONTABILITA
 &apos; verifico la compatibilità ed adatto
 chiudi_dialoghi &apos; chiude tutti i dialoghi
+Barra_chiudi_sempre_4
+Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
+&apos;	oDialogScenari_A = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgAttesa) &apos; Inizializza il dialogo
+&apos;	oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
 	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	if	oSheet.GetCellByPosition(7,336).value = 0 Then
 		oSheet.GetCellByPosition(6,336).String = &quot;Descrizioni abbreviate: primi caratteri della voce&quot;
@@ -1366,7 +1370,9 @@ chiudi_dialoghi &apos; chiude tutti i dialoghi
 		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;
 	End Select
 &apos;	For i = 1 To uRiga
+Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
 	While i &gt; 2
+	Barra_Apri_Chiudi_5(i, 25)
 rem preferisco che lavori a partire dal fondo per questioni di visibilità per l&apos;utente
 		If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
 &apos; switch ON/OFF
@@ -1384,6 +1390,8 @@ rem preferisco che lavori a partire dal fondo per questioni di visibilità per l
 	Wend
 &apos;	Next
 Adatta_h_riga_intera_tabella(oSheet.Name)
+&apos;chiudi_dialoghi
+		 	Barra_chiudi_sempre_4	
 	MsgBox (&quot;La visualizzazione delle descrizioni è stata cambiata!.&quot;, , &quot;AVVISO!&quot;)
 End Sub
 

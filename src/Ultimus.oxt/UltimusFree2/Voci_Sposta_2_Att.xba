@@ -271,91 +271,77 @@ ThisComponent.CurrentController.Select(oRange)
 End Function
 
 rem ----------------------------------------------------------------------
-Function Circoscrive_Voce_Computo_Att (ByVal lrow As Long)
-dim lrowS as long
-dim lrowE as Long
-Dim oSheet As Object
+Function Circoscrive_Voce_Computo_Att &apos;(ByVal lrow As Long)
+	dim lrowS as long
+	dim lrowE as Long
+	Dim oSheet As Object
 	osheet = ThisComponent.currentController.activeSheet
+	lrow = range2cell
 	select Case oSheet.Name
-REM ----------------------------------------------------------------------
-		Case = &quot;COMPUTO&quot;
-			Select Case osheet.getCellByPosition (0, lrow).CellStyle
-				Case &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp Start Attributo&quot;, &quot;Comp End Attributo&quot;
-					GoTo procedo:
-				Case Else
-					Exit Function
-			End Select
-procedo:
-REM ----------------------------------------------------------------------
-rem cerco la prima riga
-			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot; Then
-					lrows=lrow
-				Else
-					Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot;
-						osheet.getCellByPosition (0, lrow).CellStyle
-&apos;ThisComponent.CurrentController.Select(osheet.getCellByPosition (0, lrow)) 
-						lrow = lrow -1
-					Loop
-					lrows=lrow
+		REM ----------------------------------------------------------------------
+	Case = &quot;COMPUTO&quot;
+		Select Case osheet.getCellByPosition (0, lrow).CellStyle
+		Case &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp Start Attributo&quot;, &quot;Comp End Attributo&quot;
+			GoTo procedo:
+		Case Else
+			Exit Function
+		End Select
+		procedo:
+		REM ----------------------------------------------------------------------
+		rem cerco la prima riga
+		If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot; Then
+			lrows=lrow
+		Else
+			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot;
+				lrow = lrow -1
+			Loop
+			lrows=lrow
 			EndIf
 			lrow = lrows
-REM ----------------------------------------------------------------------
-rem cerco l&apos;ultima riga
+			REM ----------------------------------------------------------------------
+			rem cerco l&apos;ultima riga
 			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
-&apos;ThisComponent.CurrentController.Select(osheet.getCellByPosition (0, lrow)) 
 				lrow=lrow+1
 			Loop
 			lrowE=lrow
-REM ----------------------------------------------------------------------
-	Case = &quot;CONTABILITA&quot;
-&apos;		While osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
-&apos;					osheet.getCellByPosition (0, lrow).CellStyle = &quot;livello2 valuta&quot;
-&apos;					lrow=lrow+1
-&apos;			Wend
-		REM ----------------------------------------------------------------------
+			REM ----------------------------------------------------------------------
+		Case = &quot;CONTABILITA&quot;
 			If 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo_R&quot; Or _
 				osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s_R&quot; Or _
 				osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo_R&quot; Then
 				GoTo procedo_R:
-				else
+			Else
 				Exit Function
 			EndIf 
-		procedo_R:
-		REM ----------------------------------------------------------------------
-		REM se non trova inizio voce, lo inserisce
+			procedo_R:
+			REM ----------------------------------------------------------------------
+			REM se non trova inizio voce, lo inserisce
 			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
 				if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo_R&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;livello2 valuta&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Default&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
 					osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp Int_colonna_R_prima&quot; Then
-&apos;					insRows (lrow+1, 1)
-&apos;					lrowE = lrowE + 1
-&apos;					lrow=lrow+1
-&apos;					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo_R&quot;
-&apos;					osheet.getCellRangeByPosition (1, lrow, 30, lrow).CellStyle = &quot;Comp-Bianche sopra_R&quot;
-&apos;					osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
 					ptIns = osheet.getCellByPosition (31, lrow).getCellAddress()
 					range = osheet.getCellRangeByPosition (31, lrow+1, 35, lrow+1).getRangeAddress
 					osheet.copyRange(ptIns, range)
 					Exit Do
-					&apos;		oSheet.getRows.insertByIndex(lDove, lrows)
-		&apos;			msgbox  &quot;Dopo la riga n.&quot; &amp; lrow+1 &amp; &quot; mi aspetto di trovare una riga di Inizio Voce!&quot;
 				EndIf
 				lrow=lrow-1
 			Loop
 			lrows=lrow
-		REM ----------------------------------------------------------------------
-		REM cerca fine voce
+			REM ----------------------------------------------------------------------
+			REM cerca fine voce
 			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo_R&quot;
 				if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp TOTALI&quot; Then Exit Function
 				lrow=lrow+1
 			Loop
 			lrowE = lrow
 			lrow = lrowE-1
-	End Select
-REM ----------------------------------------------------------------------
-oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
-Circoscrive_Voce_Computo_Att= oRangeVoceC
-End Function
+		End Select
+		REM ----------------------------------------------------------------------
+		oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+		Circoscrive_Voce_Computo_Att= oRangeVoceC
+	End Function
+
 </script:module>

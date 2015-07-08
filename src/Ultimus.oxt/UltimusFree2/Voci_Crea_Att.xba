@@ -387,8 +387,6 @@ SUB Nuova_Voce_Computo_Att &apos;
 &apos;		oCtrlModel.Enabled = True
 &apos;		exit sub
 &apos;	end if 
-
-	
 VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
 	iEndRow=oEnd.RangeAddress.EndRow
@@ -450,11 +448,15 @@ rem SUL TOTALE
 	end if
 rem SUI RIGHI DI MISURAZIONE
 &apos;GoTo salto1:
-	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; Then &apos;comp sotto Bianche per inserimento SOTTO
-		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;Comp-Bianche sopra&quot; &apos;comp sotto Bianche per inserimento SOTTO
-			lrow = lrow-1	
+	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp sotto Bianche&quot; Then &apos;Comp-Bianche sopra per inserimento sopra
+		lrow = lrow+1
+		goto Inserisci_voce
+	end If
+	if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot; Then &apos;Comp-Bianche sopra per inserimento sopra
+		do while oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp sotto Bianche&quot;
+			lrow = lrow+1
 		loop
-&apos;		lrow = lrow-1
+		lrow = lrow+1
 		goto Inserisci_voce
 	end If
 &apos;salto1:

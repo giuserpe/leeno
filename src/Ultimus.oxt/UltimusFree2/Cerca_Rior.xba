@@ -156,12 +156,13 @@ Function uFindString(sString$, oSheet ) As Variant &apos; richiamata da diverse 
 	aAddress = oCursor.RangeAddress
 	nEndRow = aAddress.EndRow
 	nEndCol = aAddress.EndColumn
-	For nCurCol = 0 To nEndCol &apos;Go through the range column by column,
-		For nCurRow = 0 To nEndRow &apos;row by row.
-			oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
-			sFind = oCell.String &apos;Get cell contents.
-			If inStr(sFind, sString$) Then
-						 uFindString = oCell
+	For nCurRow = 0 To nEndRow &apos;row by row.
+		For nCurCol = 0 To nEndCol &apos;Go through the range column by column
+			&apos;oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+			&apos;sFind = oCell.String &apos;Get cell contents.
+			&apos;If inStr(sFind, sString$) Then
+			If inStr (oSheet.GetCellByPosition(nCurCol, nCurRow).String , sString$) then
+						 uFindString = oSheet.GetCellByPosition(nCurCol, nCurRow)
 					 Exit Function
 			End If
 		Next

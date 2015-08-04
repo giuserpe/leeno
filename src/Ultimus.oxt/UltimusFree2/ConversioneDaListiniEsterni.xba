@@ -37,29 +37,23 @@ Barra_chiudi_sempre_4
 		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 		ThisComponent.CurrentController.Select(oSheet)
 &apos;			xray oSheet
-		else
+	else
 		msgbox &quot;Sei certo di lavorare su di un file di Listino?&quot;, 0, &quot;AVVISO!&quot;
-	exit sub
+		exit Sub
 	END IF
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
 	Barra_Apri_Chiudi_5(&quot;Preparazione del lavoro in corso...&quot;, 0)
 rem ----------------------------------------------------------------------
 rem cancello eventuale indice capitoli già presente
-	oEnd=uFindString(&quot;Capitoli:&quot;, oSheet)
-	r1=oEnd.RangeAddress.EndRow
-
+&apos;	oEnd=uFindString(&quot;Capitoli:&quot;, oSheet)
+&apos;	r1=oEnd.RangeAddress.EndRow
+	r1 = 3
 	oEnd=uFindString(&quot;ATTENZIONE!&quot;, oSheet)
 	r2=oEnd.RangeAddress.EndRow
-	If r2-r1-1 &gt; 0 Then oSheet.getrows.removebyindex(r1+1,r2-r1-1)rem se è presente un indice capitoli
-rem ----------------------------------------------------------------------
-	oEnd=uFindString(&quot;ATTENZIONE!&quot;, oSheet)
-	primariga = oEnd.RangeAddress.EndRow +1
-&apos;	for i = 0 to lLastUrow
-&apos;		if oSheet.GetCellByPosition( 5,i).getstring = &quot;ATTENZIONE!&quot; then
-&apos;			primariga = i+1
-&apos;			exit for
-&apos;		end if 
-&apos;	Next
+	If r2-r1-1 &gt; 0 Then
+		oSheet.getrows.removebyindex(r1+1,r2-r1-1)rem se è presente un indice capitoli
+	EndIf
+	primariga = 5
 
 rem ----------------------------------------------------------------------
 	Flag = com.sun.star.sheet.CellFlags.HARDATTR
@@ -67,12 +61,9 @@ rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 	oSheet.getCellRangeByPosition (0,primariga,5,lLastUrow).CellStyle = &quot;List-stringa-sin&quot;
 	oSheet.getCellRangeByPosition (6,primariga,6,lLastUrow).CellStyle = &quot;List-stringa-centro&quot;
-	oSheet.getCellRangeByPosition (7,primariga,7,lLastUrow).CellStyle = &quot;List-num-euro&quot;
+	oSheet.getCellRangeByPosition (7,primariga,11,lLastUrow).CellStyle = &quot;List-num-euro&quot;
 	oSheet.getCellRangeByPosition (8,primariga,8,lLastUrow).CellStyle = &quot;List-%&quot;
-	oSheet.getCellRangeByPosition (9,primariga,9,lLastUrow).CellStyle = &quot;List-num-euro&quot;
 	oSheet.getCellRangeByPosition (10,primariga,10,lLastUrow).CellStyle = &quot;List-%&quot;
-	oSheet.getCellRangeByPosition (11,primariga,11,lLastUrow).CellStyle = &quot;List-num-euro&quot;
-	
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 rem ----------------------------------------------------------------------
 	colore = &quot;giallo&quot;
@@ -122,9 +113,9 @@ Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; lLas
 	For Each el In elleno()
 		AppendItem(elCap(), array (el(0),el(1),el(2)))
 	Next
-	oSheet.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne
-	oSheet.getCellRangeByposition(12,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
-	oSheet.getCellRangeByposition(0,lLastUrow+1,0,1048575).Rows.IsVisible=false &apos; nascondi righe
+&apos;	oSheet.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne
+&apos;	oSheet.getCellRangeByposition(12,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
+&apos;	oSheet.getCellRangeByposition(0,lLastUrow+1,0,1048575).Rows.IsVisible=false &apos; nascondi righe
 	oSheet = ThisComponent.Sheets.getByName(&quot;Temp&quot;)
 	oSheet.getCellRangeByPosition (0,0,8,0).Columns.IsVisible=True &apos; mostra colonne
 	oSheet.getCellRangeByposition(9,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
@@ -152,7 +143,6 @@ rem colora indice capitoli
 	For Each el In elCap()
 		insrows (primariga, 1)
 		oSheet.getCellRangeByPosition(1,primariga,4,primariga).clearContents(Flag)
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,primariga ))
 		oSheet.GetCellbyPosition(1, primariga).String = el(0)
 		oSheet.getCellRangeByposition(1,primariga,2,primariga).Merge(True)
 		oSheet.GetCellbyPosition(4, primariga).String = el(1)
@@ -163,14 +153,17 @@ rem colora indice capitoli
 			oSheet.getCellRangeByPosition (1,primariga,4,primariga).CellBackColor = colore3 &apos; RGB(255, 255, 208)
 			test=1
 		EndIf
-
 		primariga = primariga+1
 	Next
 	riga2 = primariga-1&apos; +4
 	k= riga2-riga1+1
+rem ----------------------------------------------------------------------
+	oSheet.getCellByPosition(3, riga1).CellBackColor = RGB(255, 0, 0)
+	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+Barra_chiudi_sempre_4
+Exit Sub &apos;
+rem ----------------------------------------------------------------------
 Adatta_Altezza_riga
-Print 
-&apos;Raggruppa_righe
 rem ----------------------------------------------------------------------
 	test = UBound(elCap())&apos; -1
 	For i = 1 To test
@@ -178,11 +171,9 @@ Focus_su_altro_Doc (completo) &apos; torno sul listino completo
 		oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 		ThisComponent.CurrentController.Select(oSheet.getCellRangeByposition(0 , 0, 100, riga2))
 copy_clip
-
 rem ----------------------------------------------------------------------
 rem creo il file
 		newCap = path &amp; elCap(i)(1) &amp; &quot;.ods&quot;
-&apos;		Print newCap
 New_LeenO_to (&quot;listino&quot;, newCap) &apos; creo un nuovo listino vuoto
 Focus_su_altro_Doc (newCap)
 		oSheetDest = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
@@ -220,9 +211,6 @@ paste_clip
 rem ----------------------------------------------------------------------
 rem inserisce il numero di prezzi
 oSheetDest.GetCellByPosition(5, riga1+ics).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
-&apos;oSheetDest.GetCellByPosition(6, riga1-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;)&quot;
-&apos;oSheetDest.GetCellByPosition(6, uriga-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;)&quot;
-&apos;Print 
 rem ----------------------------------------------------------------------
 rem copia/incolla Note
 Focus_su_altro_Doc (completo) &apos; torno sul listino completo
@@ -259,17 +247,9 @@ rem chiudo il capitolo
 	   end if
 	Loop
 rem ----------------------------------------------------------------------
-rem stranamente non va
-&apos;	oSrc = oSheet.getCellRangeByPosition(0, primaR, 100, ultimaR).RangeAddress
-&apos;	oDest = oSheetDest.GetCellByPosition(0,getLastUsedRow(oSheetDest)+1).CellAddress
-&apos;	oSheetDest.copyRange(oDest, oSrc)
-rem ----------------------------------------------------------------------
 	Next i
-	oSheet.getCellByPosition (3,riga1).CellBackColor = RGB(255, 0, 0)
-	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
-&apos;oSheet.GetCellByPosition(6, riga2+2).formula = &quot;=COUNT(H&quot;&amp; riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;)&quot;
-&apos;oSheet.GetCellByPosition(6, riga1-1).formula = &quot;=COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;)&quot;
-
+&apos;	oSheet.getCellByPosition (3,riga1).CellBackColor = RGB(255, 0, 0)
+&apos;	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
 Focus_su_altro_Doc (completo)
 	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Listino&quot;).GetCellByPosition(0,0))
 rem ----------------------------------------------------------------------
@@ -319,8 +299,8 @@ Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; urow-i &amp;&quo
 	next 
 End Sub
 rem ----------------------------------------------------------------------
-Sub listino_toscana_2014 &apos;Giuseppe Vizziello 2014
-&apos;http://www301.regione.toscana.it/bancadati/PrezzarioLavoriPubblici/index.html
+Sub listino_toscana_2015 &apos;Giuseppe Vizziello 2015
+&apos;http://prezzariollpp.regione.toscana.it/
 	Dim test As String
 	Dim articoli()
 	completo = ThisComponent.getURL()
@@ -328,9 +308,28 @@ Sub listino_toscana_2014 &apos;Giuseppe Vizziello 2014
  	sName = Replace_G(thiscomponent.title, &quot;.ods&quot;, &quot;-leeno.ods&quot;)
 	path = Replace_G(completo, thiscomponent.title, &quot;&quot;)
 	newListino = path &amp; sName
-	oSheet=ThisComponent.currentController.activeSheet 
+	oSheet=ThisComponent.currentController.activeSheet
+	Search_replace (oSheet, &quot;TOS15_&quot;, &quot;&quot;)
+	&apos;oSheet.getCellRangeByName(&apos;F5&apos;)
+	&apos;xray oSheet
+&apos;#########################################################################
+&apos; aggiunte per il 2015
+
+	oSheet.getcolumns.removebyindex(12,1)
+	oSheet.getcolumns.removebyindex(11,1)
+	oSheet.getcolumns.removebyindex(9,1)
+	oSheet.getcolumns.removebyindex(8,1)
+	oSheet.getcolumns.removebyindex(6,1)	
+	oSheet.getrows.removeByIndex(1, 1)
 	lRowE = getLastUsedRow(oSheet)
-rem ----------------------------------------------------------------------
+	oRange = oSheet.getCellRangeByposition(7, 1 ,7,lRowE)
+	ThisComponent.CurrentController.Select(oRange)
+Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri
+	oRange = oSheet.getCellRangeByposition(8, 1 ,8,lRowE)
+	ThisComponent.CurrentController.Select(oRange)
+Che_Digerisce_Quasi_Tutto_e_Lo_Converte_In_Numeri
+
+&apos;#########################################################################
 &apos;lRowE =100
 	For i =1 to lRowE
 		test = oSheet.GetCellByPosition(0, i).String
@@ -377,8 +376,8 @@ Focus_su_altro_Doc (newListino) &apos; ci vado
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 	ThisComponent.CurrentController.Select(oSheetDest)
 	lrow =uFindString(&quot;ATTENZIONE!&quot;, oSheetDest).RangeAddress.EndRow+1
-	oSheetDest.GetCellByPosition(6, 0).value = 3 &apos; indice di accodamento
-	oSheetDest.GetCellByPosition(2, 0).String = ente &apos; indice di accodamento
+	oSheetDest.GetCellByPosition(6, 0).value = 2 &apos; indice di accodamento
+	oSheetDest.GetCellByPosition(2, 0).String = ente 
 
 	test = UBound(articoli())
 rem ----------------------------------------------------------------------
@@ -479,7 +478,7 @@ rem ultima riga
 	If articoli(i)(10) &lt;&gt; 0 Then oSheetDest.GetCellByPosition(11, lrow+i).value = articoli(i)(10) &apos; sicurezza
 oBarra.reset() 
 _Listino_Crea_Capitoli
-print
+&apos;print
 End Sub
 rem ----------------------------------------------------------------------
 Sub listini_da_primus_TOPPA &apos;Giuseppe Vizziello 2014

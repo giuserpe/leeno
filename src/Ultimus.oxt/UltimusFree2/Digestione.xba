@@ -166,15 +166,14 @@ goto Salta
 		end if
 Salta:
 	Next
-
 	oBarra.End
-	if isMissing (oRange) then
-		msgbox &quot; La conversione in numeri è &quot;_
-		&amp; &quot;terminata... &quot;&amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot;Ma ATTENZIONE: una errata indicazione del separatore decimale&quot;&amp; CHR$(10)_
-		&amp; &quot; restituisce inevitabilmente dei numeri errati! &quot;&amp; CHR$(10)&amp; CHR$(10)_
-		&amp; &quot; Quindi CONTROLLA!!&quot;
-	end if
+&apos;	if isMissing (oRange) then
+&apos;		msgbox &quot; La conversione in numeri è &quot;_
+&apos;		&amp; &quot;terminata... &quot;&amp; CHR$(10) &amp; CHR$(10)_
+&apos;		&amp; &quot;Ma ATTENZIONE: una errata indicazione del separatore decimale&quot;&amp; CHR$(10)_
+&apos;		&amp; &quot; restituisce inevitabilmente dei numeri errati! &quot;&amp; CHR$(10)&amp; CHR$(10)_
+&apos;		&amp; &quot; Quindi CONTROLLA!!&quot;
+&apos;	end if
 
 end sub
 

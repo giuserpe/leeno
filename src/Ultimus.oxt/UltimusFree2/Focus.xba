@@ -312,16 +312,7 @@ print &quot;Focus.Sel_Altre_Opz_3 - Ma non era disattivata?&quot;
 	Thiscomponent.currentcontroller.select(oAreaR)
 END SUB
 
-
 &apos;##############################################################
-
-
-
-
-
-&apos;#############################################################
-&apos;##############################################################
-
 Sub Sel_analisi() &apos; vai all&apos;analisi
 	dim osheet as object
 	Osheet = thisComponent.sheets.getbyname(&quot;Analisi di prezzo&quot;)
@@ -353,10 +344,7 @@ Sub Sel_Elenco_Prezzi() &apos; vai al
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 END SUB
 
-
-
 &apos;##############################################################
-
 Sub Vai_submenu_segnaVoci_non_usate()
 	dim osheet as object
 	dim oAreaR as object

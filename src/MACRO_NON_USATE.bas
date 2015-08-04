@@ -1775,3 +1775,166 @@ Ripristina_statusLine
 Visualizza_normale_esegui
 	msgbox "Questo documento è stato in gran parte svuotato dai sui dati!..!"
 end sub
+Sub listino_toscana_2014 'Giuseppe Vizziello 2014
+'http://www301.regione.toscana.it/bancadati/PrezzarioLavoriPubblici/index.html
+	Dim test As String
+	Dim articoli()
+	completo = ThisComponent.getURL()
+	ente = Replace_G(thiscomponent.title, ".ods", "")
+ 	sName = Replace_G(thiscomponent.title, ".ods", "-leeno.ods")
+	path = Replace_G(completo, thiscomponent.title, "")
+	newListino = path & sName
+	oSheet=ThisComponent.currentController.activeSheet
+'	Search_replace (oSheet, "TOS15_", "")
+	lRowE = getLastUsedRow(oSheet)
+rem ----------------------------------------------------------------------
+'lRowE =100
+	For i =1 to lRowE
+		test = oSheet.GetCellByPosition(0, i).String
+		cod1 = left (test, instr (test, ".")-1)
+		test = mid (test, instr (test, ".")+1)
+		cod2 = left (test, instr (test, ".")-1)
+		test = mid (test, instr (test, ".")+1)
+		cod3 = left (test, instr (test, ".")-1)
+		test = mid (test, instr (test, ".")+1)
+		cod4 = mid (test, instr (test, ".")+1)
+		tipo = oSheet.GetCellByPosition(1, i).String
+		capitolo = oSheet.GetCellByPosition(2, i).String
+		voce = oSheet.GetCellByPosition(3, i).String
+		articolo =  oSheet.GetCellByPosition(4, i).String
+		udm = oSheet.GetCellByPosition(5, i).String
+		prezzo = oSheet.GetCellByPosition(6, i).value
+		sicurezza = oSheet.GetCellByPosition(7, i).value
+		mdo = oSheet.GetCellByPosition(8, i).value
+		riga = array (cod1, cod2, cod3, cod4, tipo, capitolo, voce, articolo, udm, prezzo, sicurezza, mdo/100)
+rem ----------------------------------------------------------------------
+		Appenditem(articoli(), riga)
+rem ----------------------------------------------------------------------
+		oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
+		oBarra.Start(" Conversione in corso... " & i &"/"& lRowE, i/lRowE*100)
+	Next
+rem ----------------------------------------------------------------------
+rem prendo i valori della prima riga per i raffronti con i successivi
+		xcod1 = articoli(0)(0)
+		xcod2 = articoli(0)(1)
+		xcod3 = articoli(0)(2)
+		xcod4 = articoli(0)(3)
+		xtipo = articoli(0)(4)
+		xcapitolo = articoli(0)(5)
+		xvoce = articoli(0)(6)
+		xarticolo =  articoli(0)(7)
+		xudm = articoli(0)(8)
+		xprezzo = articoli(0)(9)
+		xsicurezza = articoli(0)(10)
+		xmdo = articoli(0)(11)
+rem ----------------------------------------------------------------------
+rem creo il file
+New_LeenO_to ("listino", newListino) ' creo un nuovo listino vuoto
+Focus_su_altro_Doc (newListino) ' ci vado
+	oSheetDest = ThisComponent.Sheets.getByName("Listino")
+	ThisComponent.CurrentController.Select(oSheetDest)
+	lrow =uFindString("ATTENZIONE!", oSheetDest).RangeAddress.EndRow+1
+	oSheetDest.GetCellByPosition(6, 0).value = 3 ' indice di accodamento
+	oSheetDest.GetCellByPosition(2, 0).String = ente ' indice di accodamento
+
+	test = UBound(articoli())
+rem ----------------------------------------------------------------------
+rem compilo le prime 4 righe
+	oSheetDest.GetCellByPosition(2, lrow).String = xcod1
+	If instr (xtipo, ": ") <> 0 Then
+		oSheetDest.GetCellByPosition(4, lrow).String = left (xtipo, instr (xtipo, ": ")-1)
+		oSheetDest.GetCellByPosition(5, lrow).String = mid (xtipo, instr (xtipo, ": ")+2)
+		Else
+		oSheetDest.GetCellByPosition(4, lrow).String = xtipo
+	EndIf
+	lrow = lrow+1
+	oSheetDest.GetCellByPosition(2, lrow).String = xcod1 & "." & xcod2
+'	If instr (xcapitolo, ": ") <> 0 Then
+'		oSheetDest.GetCellByPosition(4, lrow).String = left (xcapitolo, instr (xcapitolo, ": ")-1)
+'		oSheetDest.GetCellByPosition(5, lrow).String = mid (xcapitolo, instr (xcapitolo, ": ")+2)
+'		Else
+		oSheetDest.GetCellByPosition(4, lrow).String = xcapitolo
+'	EndIf
+	lrow = lrow+1
+	oSheetDest.GetCellByPosition(2, lrow).String = xcod1 & "." & xcod2 & "." & xcod3
+	oSheetDest.GetCellByPosition(4, lrow).String = xvoce
+	lrow = lrow+1
+	oSheetDest.GetCellByPosition(2, lrow).String = xcod1 & "." & xcod2 & "." & xcod3 & "." & xcod4
+	oSheetDest.GetCellByPosition(4, lrow).String = xarticolo
+	oSheetDest.GetCellByPosition(7, lrow).value = xprezzo ' prezzo
+	oSheetDest.GetCellByPosition(8, lrow).value = xmdo ' mdo
+	oSheetDest.GetCellByPosition(11, lrow).value = xsicurezza ' sicurezza
+rem ----------------------------------------------------------------------
+rem inserisco le altre
+	i = 1
+	Do While i <> test'+1
+'Print xcod1 & "." & xcod2 & "." & xcod3 & "." & xcod4
+'Print "cippa " & articoli(i)(0) & "." & articoli(i)(1) & "." & articoli(i)(2) & "." & articoli(i)(3) 
+verifica:
+		If	articoli(i)(0) = xcod1 And articoli(i)(1) = xcod2 And articoli(i)(2) <> xcod3 Then GoTo liv3:
+		If	articoli(i)(0) = xcod1 And articoli(i)(1) <> xcod2 Then GoTo liv2:
+		If	articoli(i)(0) <> xcod1 Then GoTo liv1:
+		If	articoli(i)(0) = xcod1 And articoli(i)(1) = xcod2 And articoli(i)(2) = xcod3 And articoli(i)(3) <> xcod4 Then GoTo liv4:
+liv1:
+		oSheetDest.GetCellByPosition(2, lrow+i).String = articoli(i)(0)
+		If instr (articoli(i)(4), ": ") <> 0 Then
+			oSheetDest.GetCellByPosition(4, lrow+i).String = left (articoli(i)(4), instr (articoli(i)(4), ": ")-1)' tipo
+			oSheetDest.GetCellByPosition(5, lrow+i).String = mid (articoli(i)(4), instr (articoli(i)(4), ": ")+2)' note
+			Else
+			oSheetDest.GetCellByPosition(4, lrow+i).String = articoli(i)(4)
+		EndIf
+		xcod1 = articoli(i)(0)
+		lrow=lrow+1
+		GoTo liv2:
+	GoTo fine:
+liv2:
+		oSheetDest.GetCellByPosition(2, lrow+i).String = articoli(i)(0) & "." & articoli(i)(1)
+'		If instr (articoli(i)(5), ": ") <> 0 Then 
+'			oSheetDest.GetCellByPosition(4, lrow+i).String = left (articoli(i)(5), instr (articoli(i)(5), ": ")-1)' capitolo
+'			oSheetDest.GetCellByPosition(5, lrow+i).String = mid (articoli(i)(5), instr (articoli(i)(5), ": ")+2)' note
+'			Else
+			oSheetDest.GetCellByPosition(4, lrow+i).String = articoli(i)(5)
+'		EndIf
+		xcod2 = articoli(i)(1)
+		lrow=lrow+1
+		GoTo liv3:
+	GoTo fine:
+liv3:
+		oSheetDest.GetCellByPosition(2, lrow+i).String = articoli(i)(0) & "." & articoli(i)(1) & "." & articoli(i)(2)
+		oSheetDest.GetCellByPosition(4, lrow+i).String = articoli(i)(6) 'voce
+		xcod3 = articoli(i)(2)
+		lrow=lrow+1
+		GoTo liv4:
+	GoTo fine:
+liv4:
+		oSheetDest.GetCellByPosition(2, lrow+i).String = articoli(i)(0) & "." & articoli(i)(1) & "." & articoli(i)(2) & "." & articoli(i)(3)
+		oSheetDest.GetCellByPosition(4, lrow+i).String = articoli(i)(7) ' articolo
+		oSheetDest.GetCellByPosition(6, lrow+i).String = articoli(i)(8) ' udm
+		oSheetDest.GetCellByPosition(7, lrow+i).value = articoli(i)(9) ' prezzo
+		If articoli(i)(11) <> 0 Then oSheetDest.GetCellByPosition(8, lrow+i).value = articoli(i)(11) ' mdo
+		If articoli(i)(10) <> 0 Then oSheetDest.GetCellByPosition(11, lrow+i).value = articoli(i)(10) ' sicurezza
+		xcod1 = articoli(i)(0)
+		xcod2 = articoli(i)(1)
+		xcod3 = articoli(i)(2)
+		xcod4 = articoli(i)(3)
+	GoTo fine:
+
+fine:
+
+'	Next i
+	i=i+1
+	oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
+	oBarra.Start(" Conversione in corso... " & i &"/"& test,0)
+	Loop
+rem ----------------------------------------------------------------------
+rem ultima riga
+	oSheetDest.GetCellByPosition(2, lrow+i).String = articoli(i)(0) & "." & articoli(i)(1) & "." & articoli(i)(2) & "." & articoli(i)(3)
+	oSheetDest.GetCellByPosition(4, lrow+i).String = articoli(i)(7) ' articolo
+	oSheetDest.GetCellByPosition(6, lrow+i).String = articoli(i)(8) ' udm
+	oSheetDest.GetCellByPosition(7, lrow+i).value = articoli(i)(9) ' prezzo
+	If articoli(i)(11) <> 0 Then oSheetDest.GetCellByPosition(8, lrow+i).value = articoli(i)(11) ' mdo
+	If articoli(i)(10) <> 0 Then oSheetDest.GetCellByPosition(11, lrow+i).value = articoli(i)(10) ' sicurezza
+oBarra.reset() 
+_Listino_Crea_Capitoli
+print
+End Sub

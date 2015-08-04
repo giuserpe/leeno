@@ -136,54 +136,34 @@ Sub Scrivi_orfani(sCodOrfano as string)
  oSheet.GetCellByPosition( 0 , nEndRow+1).CellStyle = &quot;EP-aS&quot;
 End sub
 
-sub provaCS
-	oSheet = thisComponent.Sheets.GetByName(&quot;Analisi di Prezzo&quot;)
-	Search_replace (oSheet, &quot;S1_qualcosa&quot;, &quot;S1&quot;)
-	&apos;	Search_replace (oSheet, &quot;S1&quot;, &quot;S1_qualcosa&quot;)
-end sub
-
-
 Sub Search_replace (oSheet as object, sCerca as string, sSostituisci as string)
+	Dim Doc As Object
+	Dim Sheet As Object
+	Dim ReplaceDescriptor As Object
+	Dim I As Integer
+	Doc = StarDesktop.CurrentComponent
+	ReplaceDescriptor = oSheet.createReplaceDescriptor()
+	ReplaceDescriptor.SearchString = sCerca
+	ReplaceDescriptor.ReplaceString = sSostituisci
+	oSheet.ReplaceAll(ReplaceDescriptor) 
+End Sub
 
-Dim Doc As Object
-Dim Sheet As Object
-Dim ReplaceDescriptor As Object
-Dim I As Integer
- 
-Doc = StarDesktop.CurrentComponent
-
-ReplaceDescriptor = oSheet.createReplaceDescriptor()
-ReplaceDescriptor.SearchString = sCerca
-ReplaceDescriptor.ReplaceString = sSostituisci
-&apos;For I = 0 to Doc.Sheets.Count - 1
-&apos; Sheet = Doc.Sheets(I)
-&apos;xray oSheet
- oSheet.ReplaceAll(ReplaceDescriptor) 
-&apos;Next I
-
-End sub
-
-
-Sub Search_replace_doc &apos;cerca in tutto il doc
-
-Dim Doc As Object
-Dim Sheet As Object
-Dim ReplaceDescriptor As Object
-Dim I As Integer
- 
-Doc = StarDesktop.CurrentComponent
-Sheet = Doc.Sheets(0)
-&apos;xray sheet
- 
-
-ReplaceDescriptor = Sheet.createReplaceDescriptor()
-ReplaceDescriptor.SearchString = &quot;cerca&quot;
-ReplaceDescriptor.ReplaceString = &quot;sostituisci&quot;
-For I = 0 to Doc.Sheets.Count - 1
- Sheet = Doc.Sheets(I)
- Sheet.ReplaceAll(ReplaceDescriptor) 
-Next I
-
+Sub Search_replace_doc &apos;cerca in tutto il foglio
+	Dim Doc As Object
+	Dim Sheet As Object
+	Dim ReplaceDescriptor As Object
+	Dim I As Integer
+	Doc = StarDesktop.CurrentComponent
+	Sheet = thisComponent.CurrentController.ActiveSheet
+	&apos;Sheet = Doc.Sheets(0)
+	&apos;xray sheet
+	ReplaceDescriptor = Sheet.createReplaceDescriptor()
+	ReplaceDescriptor.SearchString = &quot;TOS15_&quot;
+	ReplaceDescriptor.ReplaceString = &quot;&quot;
+&apos;	For I = 0 to Doc.Sheets.Count - 1
+&apos;		Sheet = Doc.Sheets(I)
+		Sheet.ReplaceAll(ReplaceDescriptor) 
+&apos;	Next I
 End sub
 
 

@@ -11,7 +11,7 @@
   <dlg:style dlg:style-id="6" dlg:background-color="0x9fd7f6" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="0" dlg:left="5" dlg:top="10" dlg:width="95" dlg:height="15" dlg:help-text="Mostra TUTTE le colone" dlg:value="Apri tutto">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="0" dlg:left="5" dlg:top="10" dlg:width="95" dlg:height="15" dlg:help-text="Mostra TUTTE le colone" dlg:value="Mostra tutto">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Mostra_Tutto?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="1" dlg:left="110" dlg:top="10" dlg:width="95" dlg:height="15" dlg:help-text="Scenario base Semplificato per il Computo" dlg:value="Computo Terra_Terra">

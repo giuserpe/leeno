@@ -1016,76 +1016,71 @@ END FUNCTION
 
 
 Sub Scrivi_header_moduli
-oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
-
-if osheet.isvisible=false then
+	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
+	
+	if osheet.isvisible=false then
 &apos;	osheet.isvisible=true
-	sHide=&quot;Nascosta&quot;
-end if
-
-oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
-DX = oCell.String
-
-
-oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
-oProgetto_8 = oCell.String
-
-
-oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
-oData= oCell.String
-
-oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
-oBozza_8 = oCell.String
+		sHide=&quot;Nascosta&quot;
+	end if
+	
+	oCell = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;)
+	DX = oCell.String
+	
+	
+	oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
+	oProgetto_8 = oCell.String
+	
+	
+	oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
+	oData= oCell.String
+	
+	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
+	oBozza_8 = oCell.String
 &apos;print oBozza_8
-If oBozza_8 &lt;&gt; &quot;&quot; Then
- Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
- End If
-
-oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
-oCentro = oCell.String
-
-
+	If oBozza_8 &lt;&gt; &quot;&quot; Then
+		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
+	End If
+	
+	oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
+	oCentro = oCell.String
 &apos;.....................
-
+	
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-sPrima = Verifica_chiudi_preview
+	sPrima = Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-if sPrima =&quot;Attiva&quot; then
-	wait 1000
-end if	
-oSheetCur = ThisComponent.Sheets.getByName(_
-ThisComponent.currentcontroller.activesheet.name)
-
-sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
-
-oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
-oController = oDesktop.CurrentFrame.Controller
-oDocument = oController.Model
-
+	if sPrima =&quot;Attiva&quot; then
+		wait 1000
+	end if	
+	oSheetCur = ThisComponent.Sheets.getByName(_
+	ThisComponent.currentcontroller.activesheet.name)
+	
+	sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
+	
+	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )
+	oController = oDesktop.CurrentFrame.Controller
+	oDocument = oController.Model
+	
 	oStyleFam = oDocument.StyleFamilies
-
+	
 	oTablePageStyles = oStyleFam.getbyName(&quot;PageStyles&quot;)
 	oAktPage = oTablePageStyles.getByname(sStile_Pag)
-
+	
 	oAktPage.HeaderIsOn = True 
 	oHeader = oAktPage.RightPageHeaderContent
-
+	
 	oHLText = oHeader.LeftText.text 
 	oHLText.String = DX 
-
+	
 	
 	oHCText = oHeader.CenterText.Text
 	oHCText.String = oProgetto_8
 	oHRText = oHeader.RightText
 	oHRText.String = Bozza 
-	&apos; update header
+&apos; update header
 	oAktPage.RightPageHeaderContent = oHeader
-	
-
-if sHide=&quot;Nascosta&quot; then &apos; la rimette come l&apos;ha trovata
-	osheet.isvisible=false
-end if
-
-
+	if sHide=&quot;Nascosta&quot; then &apos; la rimette come l&apos;ha trovata
+		osheet.isvisible=false
+	end if
 end sub
+
 </script:module>

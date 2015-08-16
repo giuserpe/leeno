@@ -387,6 +387,7 @@ def XML_import (): #(filename):
     iter = tree.getiterator()
     listaSOA = []
     articolo = []
+    articolo_modificato = ()
     lingua_scelta = 'it'
 ########################################################################
     # nome del prezzario
@@ -517,16 +518,41 @@ def XML_import (): #(filename):
             else:
                 valore = ''
                 quantita = ''
-            articolo = (prod_id,            #0
-                        tariffa,            #1
-                        desc_voce,        #2
-                        desc_estesa,        #3 non usata
-                        unita_misura,       #4
-                        valore,             #5
-                        quantita,           #6
-                        mdo,                #7
-                        sicurezza)         #8 %
-            lista_articoli.append(articolo)
+            #articolo = (prod_id,            #0
+            #            tariffa,            #1
+            #            desc_voce,        #2
+            #            desc_estesa,        #3 non usata
+            #            unita_misura,       #4
+            #            valore,             #5
+            #            quantita,           #6
+            #            mdo,                #7
+            #            sicurezza)         #8 %
+            #lista_articoli.append(articolo)
+            
+            # Riarrangio i dati di ogni articolo così da formare una tupla 1D 
+            # l'idea è creare un array 2D e caricarlo direttamente nel foglio in una singola operazione
+            vuoto = ''
+            elem_7 = ''
+            elem_11 = ''
+            if mdo != '' and mdo != 0:
+                elem_7 = str(mdo/100)
+            if sicurezza != '' and valore != '':
+                elem_11 = str(valore*sicurezza/100)
+            # Nota che ora articolo_modificato non è più una lista ma una tupla,
+            # riguardo al motivo, vedi commenti in basso
+            articolo_modificato =  (prod_id,          #0  colonna
+                                    vuoto,            #1  colonna
+                                    tariffa,          #2  colonna
+                                    vuoto,            #3  colonna
+                                    desc_voce,        #4  colonna
+                                    vuoto,            #5  colonna
+                                    unita_misura,     #6  colonna
+                                    valore,           #7  colonna
+                                    elem_7,           #8  colonna %
+                                    vuoto,            #9  colonna
+                                    vuoto,            #10 colonna
+                                    elem_11)          #11 colonna %
+            lista_articoli.append(articolo_modificato)
 # compilo la tabella ###################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Listino')
@@ -537,21 +563,35 @@ def XML_import (): #(filename):
         oSheet.removeRange(oRangeAddress, 3) # Mode.ROWS
 # nome del prezzario ###################################################
     oSheet.getCellByPosition(2, 0).String = nome
-    scarto=6 #primo rigo dati
-    for riga, elem in enumerate(lista_articoli):
+    # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
+    # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
+    lista_come_array = tuple(lista_articoli) 
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
+    scarto_righe = 5 # numero righe da saltare a partire dall'alto
+    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+    oRange = oSheet.getCellRangeByPosition( scarto_colonne, 
+                                            scarto_righe, 
+                                            colonne_lista + scarto_colonne - 1, # l'indice parte da 0
+                                            righe_lista + scarto_righe - 1)
+    oRange.setDataArray(lista_come_array)
+    
+#    scarto=6 #primo rigo dati
+#    for riga, elem in enumerate(lista_articoli):
 # ciclo for ottimizzato da Dabniele Zambelli https://plus.google.com/u/0/107607056036247518268/about
-        riga += scarto
-        oSheet.getCellByPosition(0, riga).String = elem[0]    #prod_id
-        oSheet.getCellByPosition(2, riga).String = elem[1]    #tariffa
-        oSheet.getCellByPosition(4, riga).String = elem[2]    #desc_voce
-        oSheet.getCellByPosition(6, riga).String = elem[4]    #unita_misura
-        if elem[5] != '':
-            oSheet.getCellByPosition(7, riga).Value = elem[5] #valore
-        if elem[7] != '' and elem[7] != 0:
-            oSheet.getCellByPosition(8, riga).Value = elem[7] /100 #manodopera % (lo stile % di LibreOffice moltiplica per 100)
-        if elem[8] != '':
-            oSheet.getCellByPosition(11, riga).Value = float (elem[5] * elem[8] / 100) #sicurezza
-    MsgBox(str(date1 - datetime.now()),'')
+#        riga += scarto
+#        oSheet.getCellByPosition(0, riga).String = elem[0]    #prod_id
+#        oSheet.getCellByPosition(2, riga).String = elem[1]    #tariffa
+#        oSheet.getCellByPosition(4, riga).String = elem[2]    #desc_voce
+#        oSheet.getCellByPosition(6, riga).String = elem[4]    #unita_misura
+#        if elem[5] != '':
+#            oSheet.getCellByPosition(7, riga).Value = elem[5] #valore
+#        if elem[7] != '' and elem[7] != 0:
+#            oSheet.getCellByPosition(8, riga).Value = elem[7] /100 #manodopera % (lo stile % di LibreOffice moltiplica per 100)
+#        if elem[8] != '':
+#            oSheet.getCellByPosition(11, riga).Value = float (elem[5] * elem[8] / 100) #sicurezza
+    MsgBox(str(datetime.now() - date1),'')
 # XML_import ###########################################################
 ########################################################################
 def debug():#XML_import_BOLZANO ():

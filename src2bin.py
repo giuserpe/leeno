@@ -21,6 +21,8 @@ def compress():
             fileExtension = args.ext
         archname = '%s.%s' % (fileName, fileExtension)
         archpath = os.path.join('bin', archname)
+        if not os.path.isdir('bin'):
+            os.mkdir('bin')
         with zipfile.ZipFile(archpath, "w") as archive:
             n = 0
             for dirname, dirnames, filenames in os.walk(os.path.join('src', rootname)):

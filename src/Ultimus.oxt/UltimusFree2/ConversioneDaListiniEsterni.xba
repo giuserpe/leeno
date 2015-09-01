@@ -12,15 +12,15 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
+rem ######################################################################
 Sub XML_import &apos;(C) Giuseppe Vizziello 2015
 rem importa i prezzari dal formato XML-SIX
-rem ----------------------------------------------------------------------
-rem scelta del file da convertire
-&apos;	fileurl = GetFileURL(&quot;Seleziona il file da convertire.&quot;)
-&apos;	xml = convertfromurl (fileurl)
-rem ----------------------------------------------------------------------
-rem invio dei parametri allo script python
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;XML_import&quot;)
+End Sub
+
+Sub XML_import_BOLZANO &apos;(C) Giuseppe Vizziello 2015
+rem importa i prezzari dal formato XML-SIX bilingue
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;XML_import_BOLZANO&quot;)
 End Sub
 rem ######################################################################
 

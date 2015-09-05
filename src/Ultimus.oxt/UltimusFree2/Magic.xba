@@ -77,7 +77,6 @@ rem per circoscrivere l&apos;operazione alla singola voce di computo:
 		end if
 	next	
 
-
 end Sub
 
 Sub Formula_magica_off
@@ -88,10 +87,8 @@ Sub Formula_magica_off
 	lrow = 3
 	For lrow=3 to lLastUrow &apos;lrow=iVoce To fVoce&apos;lLastUrow
 		If oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; Then
-
 			stringa = oSheet.GetCellbyPosition(2, lrow ).getString()
-&apos;			Print stringa
-			If instr (stringa , &quot; &gt;( &quot;) &lt;&gt; 0 Then oSheet.GetCellbyPosition(2, lrow ).String = left (stringa, (instr (stringa , &quot; &gt;( &quot;)))
+			If instr (stringa , &quot; &gt;( &quot;) &lt;&gt; 0 Then oSheet.GetCellbyPosition(2, lrow ).String = left (stringa, (instr (stringa , &quot; &gt;( &quot;)) -1)
 		EndIf 
 	Next
 End Sub
@@ -124,17 +121,6 @@ rem MODIFICATA Giuseppe Vizziello 2014
 		if InStr(1, sComp, sSimbDividente) &lt;&gt; 0 then
 			sComp = Left(sComp,InStr(1, sComp, sSimbDividente)-1) &apos; Restituisce la stringa 
 		end If
-&apos;la colonna E non è più In uso
-	&apos;		sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
-	&apos;		sProvv = Replace_G(sString4,&quot;=&quot;,&quot;&quot;)
-	&apos;		iProvv = sProvv
-	&apos;	 	if iProvv + 1.999958689 = 1.999958689 then
-	&apos;	 			if oSheet.GetCellByPosition( 4, iRowQ ).value = 0 then
-	&apos;	 					sString4 = &quot;&quot;
-	&apos;	 				else
-	&apos;	 			sString4 = oSheet.GetCellByPosition( 4, iRowQ ).formula
-	&apos;	 			end if
-	&apos;	 	end if
 	If left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 1)=&quot;=&quot; Or _
 		left (oSheet.GetCellByPosition( 6, iRowQ ).formula, 1)=&quot;=&quot; Or _
 		left (oSheet.GetCellByPosition( 7, iRowQ ).formula, 1)=&quot;=&quot; Or _
@@ -149,11 +135,9 @@ rem MODIFICATA Giuseppe Vizziello 2014
 		If left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 2)=&quot;=$&quot; Or _
 			left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 3)=&quot;=-$&quot; Then
 			Exit Sub
-			
-		&apos;sString5 = oSheet.GetCellByPosition( 5, iRowQ ).value
-
 		Else
 		sString5 = oSheet.GetCellByPosition( 5, iRowQ ).formula
+		If instr (sString5 , &quot;$&quot;) &lt;&gt; 0 Then sString5 = oSheet.GetCellByPosition( 5, iRowQ ).value
 		End If 
 			sProvv = Replace_G(sString5,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
@@ -166,6 +150,7 @@ rem MODIFICATA Giuseppe Vizziello 2014
 		 	end if	
 	
 		sString6 = oSheet.GetCellByPosition( 6, iRowQ ).formula
+		If instr (sString6 , &quot;$&quot;) &lt;&gt; 0 Then sString5 = oSheet.GetCellByPosition( 6, iRowQ ).value
 			sProvv = Replace_G(sString6,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
 		 	if iProvv + 1.999958689 = 1.999958689 then
@@ -176,6 +161,7 @@ rem MODIFICATA Giuseppe Vizziello 2014
 					end if
 		 	end if
 		sString7 = oSheet.GetCellByPosition( 7, iRowQ ).formula
+		If instr (sString7 , &quot;$&quot;) &lt;&gt; 0 Then sString5 = oSheet.GetCellByPosition( 7, iRowQ ).value
 			sProvv = Replace_G(sString7,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
 		 	if iProvv + 1.999958689 = 1.999958689 then
@@ -186,6 +172,7 @@ rem MODIFICATA Giuseppe Vizziello 2014
 		 			end if
 		 	end if
 		sString8 = oSheet.GetCellByPosition( 8, iRowQ ).formula
+		If instr (sString8 , &quot;$&quot;) &lt;&gt; 0 Then sString5 = oSheet.GetCellByPosition( 8, iRowQ ).value
 			sProvv = Replace_G(sString8,&quot;=&quot;,&quot;&quot;)
 			iProvv = sProvv
 		 	if iProvv + 1.999958689 = 1.999958689 then

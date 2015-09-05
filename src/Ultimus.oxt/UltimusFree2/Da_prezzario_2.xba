@@ -897,28 +897,6 @@ SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4
  	sIncMan = &quot;&quot;
  perc_IncMan = &quot;&quot;
  sDiverse = &quot; &quot;
- &apos;&apos; 	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot; or _
-&apos; 		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
-	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
-&apos;	end if
- 
- &apos; sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
- &apos; sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
-
- &apos; If oSheet.GetCellByPosition( 8, lrow).getstring = &quot;&quot; then 
- &apos; 	sIncMan = &quot;&quot;
- &apos; end if
- 
-
-&apos;print &quot;Sic_perc &quot; &amp;	Sic_perc
-		
- &apos; 	if oSheet.GetCellByPosition( 9, lrow).string = &quot;&quot; then 
- &apos;			sSicur = &quot;&quot;
-&apos;	 else
-&apos;	 	sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
-&apos;	end if	
-&apos;xray sSicur
-
 	&apos;Prezzo
 	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
 			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
@@ -927,7 +905,7 @@ SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4
 	end if
 
  &apos;manodopera
- goto saltalo
+goto saltalo
 	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
 		sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
 	&apos;	print sIncman
@@ -937,7 +915,7 @@ SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4
 		sIncMan = oSheet.GetCellByPosition( 8, lrow).getstring
 	&apos;	print sIncman
 	end if
-	saltalo:
+saltalo:
 	
 	if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0 and oSheet.GetCellByPosition( 9, lrow).value &lt;&gt; 0 then
 		if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; oSheet.GetCellByPosition( 9, lrow).value then &apos; e se non sono memmeno equivalenti
@@ -956,7 +934,7 @@ SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4
  
 	if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0 then &apos;and oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0 then	 
 			perc_IncMan = oSheet.GetCellByPosition( 8, lrow).value 
-		&apos;	print &quot;se c&apos;è una % &quot;
+&apos;	print &quot;se c&apos;è una % &quot;
 		else 
 			if oSheet.GetCellByPosition( 9, lrow).value &lt;&gt; 0 or oSheet.GetCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot; then
 				if (oSheet.GetCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
@@ -968,7 +946,7 @@ SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4
 		end if	 
 	end if	
 
-	&apos;sicurezza
+&apos;sicurezza
 	if (oSheet.GetCellByPosition( 11, lrow).Type = com.sun.star.table.CellContentType.VALUE) then &apos;9
 			sSicur = oSheet.GetCellByPosition( 11, lrow).getvalue
 		else 	
@@ -989,10 +967,6 @@ SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4
 &apos;dim p1 as double
 pp1 = oSheet.GetCellByPosition( 10, lrow).formula
 
-
-
-&apos;print pp1 &apos; +100
-&apos;xray pp1
 dim pp2 as single &apos;integer &apos;long
 
 
@@ -1183,9 +1157,6 @@ percent2 = pp2
 	 
 
 	voce_completa:
-&apos;	print sDescr0
-&apos;print sDescr1
-&apos;print sDescr2
 	If sDescr1 = sDescr2 then &apos; su milano ci sono voci dove 
 	&apos;la descr è ripetuta tal quale... e possiamo eliminarla subito.
 		sDescr2 = &quot;&quot; &apos;
@@ -1209,12 +1180,9 @@ percent2 = pp2
  	oRange.clearContents(Flags) &apos;@@@ pare non cancellare tutto... aggiungere flag?
 
 	if sCategoria &lt;&gt; &quot;&quot; then
-&apos;		oSheetTemp.getCellByPosition(5,5).string = sCategoria 
 	end if
 
 	SCompleta1 = sAlfaNum0
-
-&apos;	oSheetTemp.getCellByPosition(1,2).string = SCompleta1
 
 	if Len( sDescr3) &lt;&gt; 0 then
 		 sDescr3 = sDescr3 &amp; CHR(13)
@@ -1228,27 +1196,14 @@ percent2 = pp2
 	
 	&apos; introdotto con TV
 	&apos; azioni diverse per TV e T3
-&apos;	print oSheetTemp.getCellByPosition(5,1).string
 	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot; or _
 		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
-		&apos;&apos;&apos;	if sIncMan&lt;&gt; 0 then
-&apos;			print sincman
-			&apos;	oSheetTemp.getCellByPosition(5,2).string = sIncMan
-		&apos;&apos;&apos;		oSheetTemp.getCellByPosition(5,2).value = sIncMan &apos;SCompleta0
-		&apos;&apos;&apos;	end if		
-			&apos;PRINT &quot;DDDDD&quot; &amp; sAlfaNum0 
-&apos;			SCompleta5 = &quot;=_CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
-			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;G5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
+			SCompleta5 = sAlfaNum0
 			oSheetTemp.getCellByPosition(6,2).formula = SCompleta5
 		Else
-			
-	&apos;		SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
 			SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
 			oSheetTemp.getCellByPosition(5,2).formula = SCompleta5
 	end if
-	&apos;xray sSicur
-&apos;	if oSheetTemp.getCellByPosition(7,1).value &lt;&gt; &quot;&quot; then 
-&apos;	if sSicur &lt;&gt; 0 or sSicur &lt;&gt; &quot;&quot; then &apos; se abbiamo l&apos;importo lo scriviamo direttamente
 	if sSicur &lt;&gt; &quot;&quot; then &apos; se abbiamo l&apos;importo lo scriviamo direttamente
 				oSheetTemp.getCellByPosition(7,2).value = sSicur
 				&apos;print &quot;casco qui&quot;
@@ -1266,23 +1221,13 @@ percent2 = pp2
 		oSheetTemp.GetCellByPosition( 8, 2).cellstyle = Temp_%
 	end if
 	
-	
-&apos;____
-&apos;	if sSicur &lt;&gt; &quot;&quot; then &apos; se abbiamo l&apos;importo lo scriviamo direttamente
-&apos;print &quot;perc_IncMan &quot; &amp; perc_IncMan &amp; &quot; -&quot;		
-&apos;print &quot;2 sIncMan &quot; &amp; sIncMan
 	if perc_IncMan &lt;&gt; &quot;&quot; then &apos; se abbiamo la percentuale la scriviamo direttamente
 				oSheetTemp.getCellByPosition(5,2).value = perc_IncMan
 				oSheetTemp.getCellByPosition(5,2).cellstyle = &quot;Temp_%&quot;
 				&apos;print &quot;perc_IncMan mm &quot; &amp; perc_IncMan
-			else &apos;altrimenti
-			&apos;	print &quot;dentro sIncMan &quot; &amp; sIncMan
+			else
 				if sIncMan &lt;&gt; &quot;&quot; then
-			&apos;	print &quot;alla fine &quot; &amp; Prezzo
-			&apos;	print sIncMan
 					perc_IncMan = sIncMan / Prezzo
-				&apos;	perc_IncMan = sIncMan * 100/Prezzo					
-				&apos;	sSicur = Sic_perc * Prezzo
 					oSheetTemp.getCellByPosition(5,2).value = perc_IncMan
 					oSheetTemp.getCellByPosition(5,2).cellstyle = &quot;Temp_€&quot;
 				end if
@@ -1313,7 +1258,6 @@ percent2 = pp2
 		oSheetTemp.getCellByPosition(4,2).value &lt;&gt; 0 then
 	 oSheetTemp.getCellByPosition(4,2).string = &quot;&quot; 	 
 	 SpostaCursore_su_Prezzario
-	 &apos; ThisComponent.CurrentSelection
 	 lrow=ThisComponent.CurrentSelection.RangeAddress.StartRow 
 	 ThisComponent.CurrentController.Select(oSheet.getCellByPosition(7,lrow))
 		MSGBOX &quot;Il formato del prezzo del listino è una stringa&quot; &amp; CHR$(10)_
@@ -1334,14 +1278,8 @@ end sub
 SUB Accoda_Normale_________________(livelli as long, lrow as long)
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
  oCell = oSheet.GetCellByPosition( 2, lrow-1 ) 
- &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
  dim sIncMan as double
- 
- &apos;&apos; 	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot; or _
-&apos; 		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
-	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
-&apos;	end if
 
  sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
  sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue

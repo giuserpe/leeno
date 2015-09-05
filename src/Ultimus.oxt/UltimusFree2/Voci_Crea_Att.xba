@@ -349,17 +349,9 @@ SUB tante_voci_insieme
  Else
  	 If nome_sheet = &quot;Analisi di Prezzo&quot; Then
  		 NuovaAnalisi_Att
- 		&apos;la seguente inserisce le tre maggiorazioni in blocco
-			 	&apos;Inserisci_Utili_giuserpe_2 &apos;
-				&apos; se non serve disattivare la riga 
+
  End If
- End If
- 
-&apos;		Nuova_Voce_scelta
-		
-		&apos;la seguente inserisce le tre maggiorazioni in blocco
-&apos;		Inserisci_Utili_giuserpe_2 &apos;
-		&apos; se non serve disattivare la riga 
+ End If 
  next i
 end sub
 

@@ -1329,6 +1329,7 @@ Exit sub
 	end If
 end sub
 
+Global abbrevia as Integer
 Sub Tronca_Altezza_Voci_Computo &apos; (c) Giuseppe Vizziello 2015
 &apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO e CONTABILITA
 &apos; verifico la compatibilità ed adatto
@@ -1356,7 +1357,6 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 	ultimi = oSheet.GetCellByPosition(7,337).value
 
 	oSheet = ThisComponent.currentController.activeSheet
-	i = getLastUsedRow(oSheet)
 	Select Case oSheet.Name
 	Case &quot;COMPUTO&quot;
 		stile = &quot;Comp-Bianche in mezzo Descr&quot;
@@ -1369,26 +1369,44 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 		EndIf
 		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;
 	End Select
-&apos;	For i = 1 To uRiga
+
 Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
-	While i &gt; 2
-	Barra_Apri_Chiudi_5(i, 25)
-rem preferisco che lavori a partire dal fondo per questioni di visibilità per l&apos;utente
-		If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+
 &apos; switch ON/OFF
+	For i = 2 To 100	
+		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
 			If InStr (oSheet.GetCellByPosition(2,i).String, &quot; [...] &quot;) &lt;&gt; 0 Then
-					sformula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
-				Else
-					sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
-						&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; _
-						&quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&amp; primi &amp;&quot;);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
-						&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; ultimi &amp; &quot;))&quot;
+				abbrevia = 1
+				Exit For
+			Else
+				abbrevia = 0
+				Exit For
 			EndIf
-			oSheet.GetCellByPosition(2 ,i).formula = sformula
 		EndIf
-		i = i-1
-	Wend
-&apos;	Next
+	Next i
+	i = getLastUsedRow(oSheet)
+	If abbrevia = 0 Then 
+		While i &gt; 2
+			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+				sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
+					&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; _
+					&quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&amp; primi &amp;&quot;);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
+					&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; ultimi &amp; &quot;))&quot;
+				oSheet.GetCellByPosition(2 ,i).formula = sformula
+			EndIf
+			i = i-1
+			Barra_Apri_Chiudi_5(i, 25)
+		Wend
+	Else
+		While i &gt; 2
+			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+			sformula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
+				oSheet.GetCellByPosition(2 ,i).formula = sformula
+			EndIf
+			i = i-1
+			Barra_Apri_Chiudi_5(i, 25)
+		Wend
+	EndIf
 Adatta_h_riga_intera_tabella(oSheet.Name)
 &apos;chiudi_dialoghi
 		 	Barra_chiudi_sempre_4	

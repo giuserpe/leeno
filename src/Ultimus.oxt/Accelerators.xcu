@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:install="http://openoffice.org/2004/installation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" oor:name="Accelerators" oor:package="org.openoffice.Office">
   <node oor:name="PrimaryKeys">
-	  
      <node oor:name="Global">
       <node oor:name="8_MOD1" oor:op="replace">
         <prop oor:name="Command">
@@ -9,8 +8,8 @@
         </prop>
       </node>
     </node>
-<!--CTRL-ALT-F3
--->	<node oor:name="Modules">
+<!--CTRL-ALT-F3-->
+    <node oor:name="Modules">
       <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
         <node oor:name="F3_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -19,8 +18,8 @@
         </node>
       </node>
     </node>	
-<!--CTRL-ALT-R
--->	<node oor:name="Modules">
+<!--CTRL-SHIFT-R-->
+    <node oor:name="Modules">
       <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
         <node oor:name="R_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -29,8 +28,18 @@
         </node>
       </node>
     </node>
-	<!--CTRL-ALT-Q
--->	<node oor:name="Modules">
+<!--CTRL-SHIFT-9-->
+    <node oor:name="Modules">
+      <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
+        <node oor:name="9_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Magic.Formula_magica_off?language=Basic&amp;location=application</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+	<!--CTRL-ALT-Q-->
+    <node oor:name="Modules">
       <node oor:name="com.sun.star.text.Text">
         <node oor:name="Q_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">

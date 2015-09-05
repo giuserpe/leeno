@@ -11,7 +11,7 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-
+Global msg_SpostaCursore_su_Prezzario As Integer
 Sub Voce_a_ElencoPrezzi_Alt (sQualeTipoCodice as string) &apos;versione 081220 (Da prezziario a Template)
 &apos;---------------------------------------------------------------------------
  	Dim oSourceDoc As Object, oSourceSheet As Object
@@ -22,11 +22,7 @@ Sub Voce_a_ElencoPrezzi_Alt (sQualeTipoCodice as string) &apos;versione 081220 (
 	dim sCodOrigine as string
  	dim iPrezzo 
  	dim iIncMan 
- 	dim iSic
-&apos;...print &quot;ecco&quot;
-&apos;xray oUltimo_indirizzo_conosciuto &apos;= &quot;&quot; &apos;temp per debub
-&apos;xray sPrezzario_in_uso 
-&apos;print &quot;uff&quot;	
+ 	dim iSic	
 &apos;On error Resume Next &apos;da tenere attivo escluso debug
 
  	oSourceDoc=ThisComponent
@@ -57,14 +53,23 @@ nomeListino = &quot;&gt; &quot; &amp; Replace_G(ThisComponent.title, &quot;.ods&
 	sDesc = oSourceSheet.getCellByPosition(2,2).String &apos; si prelevano i dati su &quot;Temp&quot;
 	sUM = oSourceSheet.getCellByPosition(3,2).String &apos; alle quattro variabili
 	iPrezzo = oSourceSheet.getCellByPosition(4,2).Value
+	
 	sCodOrigine = oSourceSheet.getCellByPosition(6,2).String
+	
+	nPrezzario = oSourceSheet.getCellByPosition(6,4).String
+	
 	iSic = oSourceSheet.getCellByPosition(7,2).value
 	iIncMan = oSourceSheet.getCellByPosition(5,2).value
+	
+&apos;##############################################################################
+&apos;INSERISCI IL CODICE DI ORIGINE NELLA DESCRIZIONE DELLA VOCE
+	If ucase(oSourceSheet.getCellByPosition(7,0).String) = &quot;SÌ&quot; Or _
+		ucase(oSourceSheet.getCellByPosition(7,0).String) = &quot;SI&quot; Or _
+		ucase(oSourceSheet.getCellByPosition(7,0).String) = &quot;SI&apos;&quot; Then sDesc = &quot;(&quot;+ sCodOrigine + &quot;) &quot; + sDesc
+&apos;##############################################################################
+	sCodOrigine = &quot;(&quot; + nPrezzario + &quot;)&quot; + CHR$(10) + sCodOrigine
 
-	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-	End If 
-
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; )
 
 	&apos; questa recupera il codice originale del prezziario	
 	if not isnull (UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto) then
@@ -88,15 +93,11 @@ nomeListino = &quot;&gt; &quot; &amp; Replace_G(ThisComponent.title, &quot;.ods&
 		&apos;	print &quot;indirizzo NON trovato - tento recupero &quot; &amp; sCodOrigineNUDO
 	end if
 
-	
 SpostaCursore_su_Prezzario &apos; questo accrocchio fa si che quando l&apos;utente
 	&apos;torna sul prezzario si ritrova nel listino alla voce che precedentemente
 	&apos; aveva selezionato (anzichè nella sheet di assemblaggio)
-	
-	
 	&apos;ora tutti i dati del prezzario dovrebbero essere &apos;in memoria&apos; vediamo il DCC
 	&apos;aggiorna_nome_CC &apos; prima cosa azzerare eventuali &apos;fantasmi&quot;
-&apos;	ThisComponent.getCurrentController.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;).string = UltimusFree2.Lupo_0.sUltimus
 	If UltimusFree2.Lupo_0.sUltimus = &quot;&quot; then &apos; se non è definoto...
 		Select case msgbox (&quot;Non è stato definito il documento DCC, ovvero non so dove infilare la voce di prezzo!!&quot; &amp; CHR$(10)_
 					&amp; &quot;Carica il documento di Computo dal tuo HardDisk &quot; &amp; CHR$(10)_
@@ -161,25 +162,9 @@ SpostaCursore_su_Prezzario &apos; questo accrocchio fa si che quando l&apos;uten
 	oSheet.unprotect(&quot;&quot;)
 &apos;	insRows (lrowI, 1) &apos;	oSheet.getRows.insertByIndex (2, lrowI-1)
 Voce_EP_in_bianco
-	&apos; sistemo gli stili nelle celle
-&apos;	oSheet.getCellByPosition(lcolbase+0,lrowI).CellStyle = &quot;EP-aS&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+1,lrowI).CellStyle = &quot;EP-a&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+2,lrowI).CellStyle = &quot;EP-mezzo&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+3,lrowI).CellStyle = &quot;EP-mezzo&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+4,lrowI).CellStyle = &quot;EP-mezzo&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+5,lrowI).CellStyle = &quot;EP-mezzo %&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+6,lrowI).CellStyle = &quot;EP-mezzo&quot;
 
 	oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
 	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;)&quot; 
-
-	
-&apos;	oSheet.getCellByPosition(lcolbase+idxcol+7,lrowI).CellStyle = &quot;EP-mezzo&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+idxcol+8,lrowI).CellStyle = &quot;EP-sfondo&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+idxcol+9,lrowI).CellStyle = &quot;EP-sfondo&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+idxcol+10,lrowI).CellStyle = &quot;EP statistiche&quot;
-
-
 	&apos; scrivo in EP i dati delle variabili prelevate dal listino,
 	
 	if sQualeTipoCodice = &quot;interno&quot; then
@@ -200,6 +185,7 @@ Voce_EP_in_bianco
 &apos;PRINT iIncMan
 	oSheet.getCellByPosition(lcolbase+5,lrowI).SetValue(iIncMan )
 	oSheet.getCellByPosition(lcolbase+6,lrowI)&apos;.SetValue(....)
+	
 	oSheet.getCellByPosition(lcolbase+7,lrowI).setString(sCodOrigine)
 &apos;print &quot;guarda&quot;
 	
@@ -261,12 +247,14 @@ Voce_EP_in_bianco
 		Sel_Elenco_Prezzi
 		oSheet = ThisComponent.currentController.activeSheet		
 		thiscomponent.CurrentController.Select(oSheet.getCellByPosition(lcolbase,lrowI))
-		 msgbox &quot;Prima di procedere, inserisci il CODICE ARTICOLO...&quot; &amp; CHR(10) &amp; CHR(10)_
-		 	&amp; &quot;Ctrl shift Z oppure ALT -Z per tornare sul file di Listino&quot; &amp; CHR(10) &amp; CHR(10)_
-		 	&amp; CHR(9) &amp; CHR(9) &amp; CHR(9) &amp; CHR(9) &amp; nomeListino &amp; CHR(10)_
-		 	&amp; &quot;&quot;, 48, &quot;Inserisci il CODICE ARTICOLO...&quot;
+		If  msg_SpostaCursore_su_Prezzario = 0 then
+			 msgbox &quot;Prima di procedere, inserisci il CODICE ARTICOLO...&quot; &amp; CHR(10) &amp; CHR(10)_
+			 	&amp; &quot;Ctrl shift Z oppure ALT -Z per tornare sul file di Listino&quot; &amp; CHR(10) &amp; CHR(10)_
+			 	&amp; CHR(9) &amp; CHR(9) &amp; CHR(9) &amp; CHR(9) &amp; nomeListino &amp; CHR(10)_
+			 	&amp; &quot;&quot;, 48, &quot;Inserisci il CODICE ARTICOLO...&quot;
+		 	 msg_SpostaCursore_su_Prezzario = 1
+		 EndIf
  end if
- 
  &apos;ora vorrei tanto rendere null la variabile
  &apos; xray oUltimo_indirizzo_conosciuto
  oUltimo_indirizzo_conosciuto = Nothing &apos;.release() &apos; = &quot;null object&quot; 

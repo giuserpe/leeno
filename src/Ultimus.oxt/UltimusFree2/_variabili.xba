@@ -55,6 +55,7 @@ End Function
 rem ######################################################################
 
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
+	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	Sel_Altre_Opz
 	eventi_assegna
 	Elimina_Nomi_Area_errati

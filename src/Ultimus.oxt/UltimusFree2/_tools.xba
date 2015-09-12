@@ -3,6 +3,10 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
 rem raccolta di utility di vario genere
 rem ######################################################################
+Sub bbv
+xray ThisComponent
+
+End Sub
 
 Function SpeechEngine()as string     
   select case getGUIType

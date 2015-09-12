@@ -420,6 +420,25 @@ dispatcher.executeDispatch(document, &quot;.uno:HorizontalAlignment&quot;, &quot
 end sub
 rem ######################################################################
 
+sub MOSTRA_colonne (switch As String)&apos; &quot;on&quot; per mostrare, &quot;off&quot; per nascondere
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+If switch =&quot;on&quot; Then azione =&quot;.uno:ShowColumn&quot;
+If switch =&quot;off&quot; Then azione =&quot;.uno:HideColumn&quot;
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, azione, &quot;&quot;, 0, Array())
+dispatcher.executeDispatch(document, &quot;.uno:ShowColumn&quot;, &quot;&quot;, 0, Array())
+
+
+end Sub
+
 sub MOSTRA_righe (switch As String)&apos; &quot;on&quot; per mostrare, &quot;off&quot; per nascondere
 rem ----------------------------------------------------------------------
 rem define variables
@@ -702,5 +721,7 @@ rem ----------------------------------------------------------------------
 dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
 
 end Sub 
+
+
 
 </script:module>

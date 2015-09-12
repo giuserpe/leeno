@@ -138,13 +138,13 @@ VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
 	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
 	iEndRow=oEnd.RangeAddress.EndRow
 	if lrow &gt;= iEndRow then &apos;SE OLTRE IL &quot;T O T A L E&quot;
-		lrow = iEndRow-2
-		&apos;goto FAI
+		lrow = iEndRow&apos;-2
+		goto FAI
 	end if
 	if lRow &lt;= 3 then
 		lrow = 3
 		goto FAI
-	end if
+	end If
 &apos;	if lRow = 3 and _
 &apos;		oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle = &quot;Reg_prog&quot; then
 &apos;		lrow = 4
@@ -165,11 +165,12 @@ rem se su firme
 		GoTo FAI
 	end if
 rem se in una voce esistente
+
 	Select Case oSheet.GetCellByPosition( 0 , lRow).cellstyle
 		Case = &quot;Comp End Attributo_R&quot; , &quot;Comp Start Attributo_R&quot; , &quot;comp 10 s_R&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (lRow)
 			With sStRange.RangeAddress
-				iVoce =.StartRow
+				iVoce = .StartRow
 				fVoce = .EndRow
 			End With
 rem controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate

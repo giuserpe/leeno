@@ -345,16 +345,13 @@ Barra_Apri_Chiudi_4
 DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
 
-
-
 SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue formule e i suoi link&apos; usa CopiaSheet 
 &apos; &apos; Shortcut: non assegnata
-dim nEndRow as long
-dim nEndCol as long
-&apos;print &quot;duplico la sheet come nuovo doc&quot;
-
-	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
-	 ThisComponent.unlockControllers 	
+	dim nEndRow as long
+	dim nEndCol as long
+	
+	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	ThisComponent.unlockControllers 	
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
 			on error goto Gestione_Errore
@@ -362,147 +359,155 @@ dim nEndCol as long
 	END IF
 	
 	Torna_a_schermo_normale
-
+	
 	Barra_Apri_Chiudi_4
-
-&apos;	wait 5000 &apos;disatt 080609 a favore di
-&apos;	wait 1000 &apos;diasatt 080624
-
 &apos;	on error goto Gestione_Errore
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	&apos;--------------------------------------------------
+&apos;--------------------------------------------------
 	oSheet = ThisComponent.currentcontroller.activesheet
 	
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	pezzo in prova
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- 	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
+			 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
-&apos;	sNomeSrc = FileNameoutofPath(UrlSrc)
-&apos;xray UrlSrc
-&apos;	sUrlsrc = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus) &apos; file destinazione
-&apos;	sNameDest = FileNameoutofPath(sUrl2)
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	fine pezzo in prova
-
+	
 	lnumSheet=oSheet.RangeAddress.Sheet
 	sOK = &quot;OK&quot; &apos; questo serve solo a rendere la var not isMissing...????
 
-&apos;	Barra_Apri_Chiudi_4
-&apos;print &quot;ippo&quot;
 	sNomeBuono =	DuplicaSheetinDoc (sOK, lnumSheet)
-&apos;print sNomeBuono
-&apos;	if sNomeBuono &lt;&gt; &quot;prosegui&quot; then
+	
 	if sNomeBuono = &quot;Annulla&quot; then
 		exit sub
 	end if
-	&apos;__________________________
-
 
 	sTempSheet = ThisComponent.currentcontroller.activesheet.name
-
-
+&apos;Print sTempSheet
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;xray oSheet
+	lLastUrow = getLastUsedRow(oSheet)
+&apos;#########################################################################
+	ThisComponent.CurrentController.Select(oSheet)
+	MOSTRA_colonne (&quot;on&quot;)
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+&apos; in caso di tebella del computo o cotabilità
+	sAttributo = Trova_Attr_Sheet
+	Select Case sAttributo
+	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;
+		For n = 1 To lLastUrow
+				oCell = oSheet.GetCellbyPosition(2, n)
+			stilecella = oCell.cellstyle
+			Select Case stilecella
+			Case &quot;Comp-Bianche in mezzo Descr&quot;, &quot;Comp-Bianche in mezzo Descr_R&quot;
+				descr = oSheet.GetCellbyPosition(2, n).String
+				oSheet.GetCellbyPosition(2, n).String = descr
+			Case &quot;comp 1-a&quot;
+&apos;				ThisComponent.CurrentController.Select(oCell)
+				descr = oSheet.GetCellbyPosition(2, n).String
+				oSheet.GetCellbyPosition(2, n).String = descr
+				num = oSheet.GetCellbyPosition(5, n).value
+				If num &lt;&gt; 0 Then oSheet.GetCellbyPosition(5, n).value = num
+			Case &quot;comp sotto centro&quot;, &quot;comp sotto centro_R&quot;
+				descr = oSheet.GetCellbyPosition(8, n).String
+				oSheet.GetCellbyPosition(8, n).String = descr
+				num = oSheet.GetCellbyPosition(11, n).value
+				If num &lt;&gt; 0 Then oSheet.GetCellbyPosition(11, n).value = num
+				num = oSheet.GetCellbyPosition(13, n).value
+				If num &lt;&gt; 0 Then oSheet.GetCellbyPosition(13, n).value = num
+			Case &quot;Livello-1-scritta mini&quot;, &quot;livello2_&quot;
+				descr = oSheet.GetCellbyPosition(1, n).String
+				oSheet.GetCellbyPosition(1, n).String = descr
+			End Select
+		Next
+		Select Case sAttributo
+		Case &quot;TIPO_COMPUTO&quot;
+			oSheet.Columns.removeByIndex(19, 100)
+			oSheet.Columns.removeByIndex(12, 6)
+			oSheet.Columns.removeByIndex(10, 1)
+			oSheet.Columns.removeByIndex(3, 2)
+		Case &quot;TIPO_CONTABILITA&quot;
+			oSheet.Columns.removeByIndex(26, 100)
+			oSheet.Columns.removeByIndex(24, 3)
+			oSheet.Columns.removeByIndex(21, 1)
+			oSheet.Columns.removeByIndex(16, 3)
+			oSheet.Columns.removeByIndex(14, 1)
+			oSheet.Columns.removeByIndex(12, 1)
+			oSheet.Columns.removeByIndex(10, 1)
+			oSheet.Columns.removeByIndex(3, 2)
+		End Select
+	End Select
+	Adatta_h_riga_intera_tabella(oSheet.Name)
+&apos;#########################################################################
 	If oSheet.isProtected = true then
-	 osheet.unprotect(&quot;&quot;)
-	end if
+		osheet.unprotect(&quot;&quot;)
+	end If
+	
 	bGrid=ThisComponent.CurrentController.ShowGrid
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
- Copy_PageStyle
- 	oCell = oSheet.GetCellbyPosition( 0, 0 )
- 	oCursor = oSheet.createCursorByRange(oCell)
- 	
- 	 oCursor.GotoEndOfUsedArea(True)
- 	 aAddress = oCursor.RangeAddress
- 	nEndRow = aAddress.EndRow
- 	nEndCol = aAddress.EndColumn
- 
-
-
-rem ----------------------------------loadcomponentFromUrl(sUrl, &quot;_default&quot;, 0, Array()))------------------------------------
-rem define variables
-&apos;dim oDoc as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-oDocumento = ThisComponent
-oDoc = ThisComponent.CurrentController.Frame
-sNomeSheet = ThisComponent.currentcontroller.activesheet.name
-&apos;inumSheet = oCell.RangeAddress.sheet
-&apos;print iNumSheet
-sUrl1 = oDocumento.Url
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-
-rem -------rendo attiva la sheet duplicata.---------------------------------------------------------------
-dim args1(0) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;Name&quot;
-args1(0).Value = sNomeSheet
-
-dispatcher.executeDispatch(oDoc, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
-Barra_Apri_Chiudi_4
-rem --e la duplico come nuovo doc--------------------------------------------------------------------
-dim args2(2) as new com.sun.star.beans.PropertyValue
-args2(0).Name = &quot;DocName&quot;
-args2(0).Value = &quot;&quot;
-args2(1).Name = &quot;Index&quot;
-args2(1).Value = 32767
-args2(2).Name = &quot;Copy&quot;
-args2(2).Value = false
-
-dispatcher.executeDispatch(oDoc, &quot;.uno:Move&quot;, &quot;&quot;, 0, args2())
+	Copy_PageStyle
+		oCell = oSheet.GetCellbyPosition( 0, 0 )
+		oCursor = oSheet.createCursorByRange(oCell)
+		
+		 oCursor.GotoEndOfUsedArea(True)
+		 aAddress = oCursor.RangeAddress
+		nEndRow = aAddress.EndRow
+		nEndCol = aAddress.EndColumn
+	rem ----------------------------------loadcomponentFromUrl(sUrl, &quot;_default&quot;, 0, Array()))------------------------------------
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	oDocumento = ThisComponent
+	oDoc = ThisComponent.CurrentController.Frame
+	sNomeSheet = ThisComponent.currentcontroller.activesheet.name
+	sUrl1 = oDocumento.Url
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem -------rendo attiva la sheet duplicata.---------------------------------------------------------------
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = &quot;Name&quot;
+	args1(0).Value = sNomeSheet
+	
+	dispatcher.executeDispatch(oDoc, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
+	Barra_Apri_Chiudi_4
+	rem --e la duplico come nuovo doc--------------------------------------------------------------------
+	dim args2(2) as new com.sun.star.beans.PropertyValue
+	args2(0).Name = &quot;DocName&quot;
+	args2(0).Value = &quot;&quot;
+	args2(1).Name = &quot;Index&quot;
+	args2(1).Value = 32767
+	args2(2).Name = &quot;Copy&quot;
+	args2(2).Value = false
+	
+	dispatcher.executeDispatch(oDoc, &quot;.uno:Move&quot;, &quot;&quot;, 0, args2())
 &apos; la sheet adesso è un nuovo doc e il focus è sopra ?
-
-
-
-&apos;exit sub
-
-
-&apos;exit sub
-&apos;.............. fine pezzo in prova
-
-&apos;oDocumento.Sheets.removeByName(sTempSheet) &apos;thank&apos;s
-
-
-ThisComponent.CurrentController.ZoomValue = 65
-ThisComponent.CurrentController.ShowGrid = bGrid
-
-&apos;oDoc2.CurrentController.Frame.ContainerWindow.toFront() 
-ThisComponent.CurrentController.Frame.ContainerWindow.toFront()
-
-&apos;oSheet = ThisComponent.Sheets.getByName(_
-&apos;ThisComponent.currentcontroller.activesheet.name)
-oSheet = ThisComponent.currentController.activeSheet
+	
+	ThisComponent.CurrentController.ZoomValue = 65
+	ThisComponent.CurrentController.ShowGrid = bGrid
+	ThisComponent.CurrentController.Frame.ContainerWindow.toFront()
+	
+	oSheet = ThisComponent.currentController.activeSheet
+	Adatta_h_riga_intera_tabella(oSheet.Name)
+	iCellAttr =	com.sun.star.sheet.CellFlags.OBJECTS
+	osheet.getCellRangeByPosition (0,0,100,1).ClearContents(iCellAttr)
+	oSheet.getrows.removebyindex(0,1)
+	fissa (0,2)
+	Firme_in_calce
 &apos;PRINT
-Write_PageStyle
+	Write_PageStyle
 &apos;Visualizza_PageBreak
-oSheet.setPrintAreas(print_area)
-oSheet.setTitleRows(RepeatRows)
-oSheet.setPrintTitleRows(PrintRepeatRows)
-&apos;&apos;&apos;&apos;Barra_Apri_Chiudi_4
-&apos;Clessid_lock_End
-&apos;Print &quot;cless closed&quot;
-&apos;SalvaDoc(sUrl1)&apos; non era una buona idea...&apos;
-&apos;Clessid_lock_End
-
-Msgbox &quot;Questa tabella è adesso un documento esterno e autonomo... e dovresti salvarla con un nome...&quot;
- &apos;	xray thiscomponent.isActionLocked
- &apos;	xray thiscomponent.hasControllersLocked
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;Barra_Apri_Chiudi_4
-&apos;ThisComponent.CurrentController.Select(oCell)
-&apos;sUrl1.Select()
-exit sub
-Gestione_Errore:
-Barra_Apri_Chiudi_4
-DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
+	oSheet.setPrintAreas(print_area)
+	oSheet.setTitleRows(RepeatRows)
+	oSheet.setPrintTitleRows(PrintRepeatRows)
+	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
+	msgbox &quot;Questa tabella è un documento esterno al file di origine.&quot;&amp; CHR$(10)_
+		&amp; &quot;Conviene salvarla subito.&quot;, 48, &quot;AVVISO!&quot;
+	exit sub
+	Gestione_Errore:
+	Barra_Apri_Chiudi_4
+	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
-
-
 
 
 
@@ -513,12 +518,6 @@ dim nEndCol as long
 
 	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	 ThisComponent.unlockControllers 	
-&apos;	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-&apos;&apos;		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
-&apos;			on error goto Gestione_Errore
-&apos;		end if
-&apos;	END IF
-	
 	Torna_a_schermo_normale
 
 	Barra_Apri_Chiudi_4

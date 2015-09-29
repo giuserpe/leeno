@@ -473,7 +473,10 @@ rem ----------------------------------------------------------------------
 &apos;		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
 		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
 		oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+4
-		oSheet.GetCellByPosition( 18 , lRow).formula = &quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
+		&apos;=SE(&quot;SOMMANO [%]&quot;=I15;J15*L15/100;J15*L15)
+		sformula=&quot;=IF(&quot;&quot;SOMMANO [%]&quot;&quot;=I&quot; &amp; lrow+1 &amp; &quot;;J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1 &amp; &quot;/100;J&quot;&amp; lrow+1 &amp; &quot;*L&quot;&amp; lrow+1 &amp; &quot;)&quot;
+		oSheet.GetCellByPosition( 18 , lRow).formula = sformula
+	&apos;	oSheet.GetCellByPosition( 18 , lRow).formula = &quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
 
 
 			For ii = lRowI+2 To lRow-1

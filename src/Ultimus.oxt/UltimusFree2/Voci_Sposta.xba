@@ -29,7 +29,7 @@ sub elimina_voce &apos;elimina voce (C) Giuseppe Vizziello 2014
 	Select Case oNomeSheet
 		Case &quot;Analisi di Prezzo&quot;
 			sStRange = CircoscrivileAnalisi_Att (cRow)
-		Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
+		Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;, &quot;VARIANTE&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (cRow)
 	end select
 	With sStRange.RangeAddress
@@ -43,11 +43,11 @@ sub elimina_voce &apos;elimina voce (C) Giuseppe Vizziello 2014
 	oSheet.unprotect(&quot;&quot;)
 rem ----------------------------------------------------------------------
 rem controllo se posso procedere
-	If oSheet.cellprotection.IsLocked = True Then
-		MsgBox (&quot;Stai operando su un foglio protetto!&quot;&amp; CHR$(10)_
-				&amp;&quot;Per poter procedere devi prima disattivare la protezione!&quot;, 48+256, &quot;Attenzione!&quot;)
-	&apos;	Exit Sub
-	EndIf
+&apos;	If oSheet.cellprotection.IsLocked = True Then
+&apos;		MsgBox (&quot;Stai operando su un foglio protetto!&quot;&amp; CHR$(10)_
+&apos;				&amp;&quot;Per poter procedere devi prima disattivare la protezione!&quot;, 48+256, &quot;Attenzione!&quot;)
+&apos;		Exit Sub
+&apos;	EndIf
 	If MsgBox (&quot;Stai per eliminare la voce selezionata&quot;&amp; CHR$(10)_
 		&amp;&quot;Vuoi procedere?&quot;, 1+32+256, &quot;Attenzione!&quot;) = 2 Then
 		Else

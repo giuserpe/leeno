@@ -250,7 +250,7 @@ rem MODIFICATA Giuseppe Vizziello 2014
 		end if
 
 
-		sString8 = sString4 &amp; sString5 &amp; sString6 &amp; sString7 &amp; sString8 &amp; &quot; )&quot;
+		sString8 = sString4 &amp; sString5 &amp; sString6 &amp; sString7 &amp; sString8 &amp; &quot;)&quot;
 
 		Search = &quot;=&quot;
 		NewPart = &quot;&quot;		

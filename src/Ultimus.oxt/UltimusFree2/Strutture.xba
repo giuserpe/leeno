@@ -12,6 +12,8 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 Sub Inser_Capitolo
+	oSheet = ThisComponent.currentController.activeSheet
+ If oSheet.Name &lt;&gt; &quot;COMPUTO&quot; Then Exit Sub	
 	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
  				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
  	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
@@ -21,23 +23,15 @@ Inser_Capitolo_arg (sTesto)
 End Sub
 
 Sub Inser_Capitolo_arg (sTesto As string)
-
-Verifica_chiudi_preview
-
+	Verifica_chiudi_preview
+	oSheet = ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then	exit sub
-	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet
- If oSheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;#1 Questo comando si può usare solo&quot; &amp; CHR$(10)_
- 			 &amp;&quot; in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
-			exit sub
-	end if
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	
 rem stabilisce il comportamento
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		&apos;IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &lt;= 2 then	
 		IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string = 0 then
 		&apos; se &quot;livello difficoltà&quot; è &quot;primo Approccio&quot;
 			oSheet.getColumns().getByName(&quot;AF&quot;).isVisible = false
@@ -50,8 +44,8 @@ rem stabilisce il comportamento
 			end if
 		END IF
 	else
-	Msgbox &quot;Non mi sembra opportuno usare queste macroo su una tabella esterna al template di Ultimus...&quot; &amp; CHR$(10)_
-		&amp; &quot; &quot;,, &quot;Iniziativa annullata!&quot;
+	Msgbox &quot;Non è possibile usare questo comando fuori da un documento LeenO...&quot; &amp; CHR$(10)_
+		&amp; &quot; &quot;,48, &quot;Iniziativa annullata!&quot;
 		exit sub	
 	end if
 rem ----------------------------------------------------------------------
@@ -68,28 +62,30 @@ rem STABILISCE LA POSIZIONE DI INSERIMENTO
 		lrow = 3&apos;+2
 		goto inserisci_voce
 	end If
+	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;livello-1-sopra&quot; Then &apos; se su CATEGORIA
+		lrow = lrow+2
+		goto inserisci_voce
+	EndIf
 	&apos; se su Cat o SubCaT
 	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;Livello-1-scritta&quot; Or &quot;livello2 valuta&quot; Then &apos; se su CATEGORIA
 		lrow = lrow+1
 		goto inserisci_voce
-	end If
+	EndIf
+inserisci_voce:
 	&apos; se su una voce 
 	sStRange = Circoscrive_Voce_Computo_Att (lrow)
-&apos;			print i
 	lrow = sStRange.RangeAddress.EndRow+1
 rem ----------------------------------------------------------------------
-inserisci_voce:
-&apos;	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
-&apos;				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
-&apos; 	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
-&apos; 		exit sub		
-&apos; 	end If
-
-	If sTesto &lt;&gt; &quot;&quot; Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 1 Then &apos;Categorie e subcategorie: riga bianca ON/OFF
+rem con riga bianca sopra
+		insRows (lrow, 2) &apos;inserisci riga
+		oSheet.GetCellbyPosition( 2, lRow+1).string=sTesto &apos;scrive titolo
+		oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;livello-1-sopra&quot;
+		lrow = lrow+1
+	Else
 		insRows (lrow, 1) &apos;inserisci riga
 		oSheet.GetCellbyPosition( 2, lRow).string=sTesto &apos;scrive titolo
 	EndIf
-	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
 rem ----------------------------------------------------------------------
 rem inserisco i valori e le formule
 	oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;Livello-1-scritta&quot;
@@ -101,15 +97,8 @@ rem inserisco i valori e le formule
 	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
 	oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1
 rem ----------------------------------------------------------------------
-&apos;	ThisComponent.CurrentController.Select(oCell)
+print
 Adatta_Altezza_riga
-rem ----------------------------------------------------------------------
-&apos;	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-&apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,3,41,3).RangeAddress &apos;origine solo il rigo utile
-&apos;	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
-&apos;	oSheet.copyRange(oDest, oSrc) &apos;incolla
-rem ----------------------------------------------------------------------
-
 
 	ocellBaseA = oSheet.GetCellbyPosition( 1, lRow)
 	ocellBaseR = oSheet.GetCellbyPosition( 31, lRow)
@@ -120,9 +109,8 @@ rem ----------------------------------------------------------------------
 					If lrowProvv &gt; 4 then
 							lrowProvv = lrowProvv-1
 						else
-							exit do
+							exit Do
 					end if
-			&apos;		print lrowProvv
 			loop
 			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
 			numCap1 = numCap
@@ -144,31 +132,27 @@ rem ----------------------------------------------------------------------
 			numCap1 = numCap
 			ocellBaseR.value = numCap1 +1
 	end if 
-
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 0 then 
-	&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1, lRow+1)) &apos;31
-	Print 
-rem ----------------------------------------------------------------------
-			lrowAlT = lRow &apos;-1
-			do while oSheet.GetCellByPosition(31 , lrowAlT).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot; 
-				If lrowAlT &gt; 1 then
-						lrowAlT = lrowAlT-1
-					else
-						MSGBOX &quot;#1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CATEGORIA A CUI RIFERIRMI...&quot;
-						 iCapitolo = 1
-					exit do
-				end if
-			loop
-			
-			iCapitoloProposta =	oSheet.GetCellByPosition(31 , lrowAlT).value
-			iCapitoloProposta = iCapitoloProposta + 1
-			print iCapitoloProposta
-			sTesto2 = InputBox (&quot; (Scrivi il Numero della Categoria)...&quot; &amp; CHR$(10) &amp; CHR$(10)_
-							&amp; &quot;Le altre Categorie non saranno rinumerate, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
- 						&amp; &quot; &quot;,&quot; Numerazione Manuale Categorie&quot;, iCapitoloProposta)&apos; &amp; CHR$(10) 
- 			If sTesto2 = &quot;&quot; then &apos; se si preme annulla Inputbox restituisce una stringa vuota
- 				exit sub		
- 			end if
+		lrowAlT = lRow &apos;-1
+		do while oSheet.GetCellByPosition(31 , lrowAlT).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot; 
+			If lrowAlT &gt; 1 then
+					lrowAlT = lrowAlT-1
+				else
+					MSGBOX &quot;#1 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CATEGORIA A CUI RIFERIRMI...&quot;
+					 iCapitolo = 1
+				exit do
+			end if
+		loop
+		
+		iCapitoloProposta =	oSheet.GetCellByPosition(31 , lrowAlT).value
+		iCapitoloProposta = iCapitoloProposta + 1
+		print iCapitoloProposta
+		sTesto2 = InputBox (&quot; (Scrivi il Numero della Categoria)...&quot; &amp; CHR$(10) &amp; CHR$(10)_
+						&amp; &quot;Le altre Categorie non saranno rinumerate, ma potrai sempre farlo a mano&quot;&amp; CHR$(10)_
+						&amp; &quot; &quot;,&quot; Numerazione Manuale Categorie&quot;, iCapitoloProposta)&apos; &amp; CHR$(10) 
+			If sTesto2 = &quot;&quot; then &apos; se si preme annulla Inputbox restituisce una stringa vuota
+				exit sub		
+			end If
  	end If
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 1 then 
 			Inser_SottoCapitolo
@@ -182,7 +166,6 @@ rem ----------------------------------------------------------------------
 	end if
 	ThisComponent.CurrentController.Select(ocellBaseA)
 End Sub
-
 
 SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row
 	oSheet1 = ThisComponent.currentController.activeSheet
@@ -261,6 +244,8 @@ END SUB
 
 rem ----------------------------------------------------------------------
 Sub Inser_SottoCapitolo
+	oSheet = ThisComponent.currentController.activeSheet
+	If oSheet.Name &lt;&gt; &quot;COMPUTO&quot; Then Exit Sub	
 	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
 				&amp; &quot; &quot;,&quot; Nuova SottoCategoria&quot;, &quot;SottoCategoria ??&quot;)&apos; &amp; CHR$(10) 
 	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
@@ -270,33 +255,18 @@ Inser_SottoCapitolo_arg (sTesto)
 End Sub 
 
 Sub Inser_SottoCapitolo_arg (sTesto As String)
-
-Verifica_chiudi_preview
-
-	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then	 
-		exit sub
-	end if
+	Verifica_chiudi_preview
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;	sAttributo = Trova_Attr_Sheet	
- If osheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;#3 Questo comando si può usare solo&quot; &amp; CHR$(10)_
- 			 &amp;&quot; in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
-			exit sub
-	end if
-	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
+	if lrow = -1 Then Exit Sub
 rem stabilisce il comportamento
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 0 then 
-					Sincronizza_SottoCap_Tag_Capitolo_Cor(lrow, &quot;no_rinum&quot;)
-				else
-					Sincronizza_SottoCap_Tag_Capitolo_Cor
-			end if
-		else
-			Msgbox &quot;Non mi sembra opportuno usare questa macro su una tabella esterna al template di Ultimus...&quot; &amp; CHR$(10)_
-				&amp; &quot; &quot;,, &quot;Iniziativa annullata!&quot;
-			exit sub	
-	end if
+
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 0 then 
+				Sincronizza_SottoCap_Tag_Capitolo_Cor(lrow, &quot;no_rinum&quot;)
+			else
+				Sincronizza_SottoCap_Tag_Capitolo_Cor
+		end if
+
 
 	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string = 0 then
 			&apos; se &quot;livello difficoltà&quot; è &quot;primo Approccio&quot;
@@ -430,12 +400,14 @@ rem ----------------------------------------------------------------------
 			lrowProvv = lrowProvv-1
 		&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(31 , lrowProvv)) &apos;debug
 		&apos;	print
-	loop
+	Loop
+	
 	&apos; se c&apos;è aggiorna la somma
 &apos;	Print lrowProvv
 	SubSum_SottoCap (lrowProvv)
 
-	ThisComponent.CurrentController.Select(oCell) 
+	ThisComponent.CurrentController.Select(oCell)
+
 End Sub
 
 &apos;_______________________________________________________________________________________
@@ -703,23 +675,7 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 	oSheet.GetCellByPosition(30 , lrowStart1).Formula = sFormula
 	oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;livello2 valuta mini&quot;
 	&apos;importo manodopera in col AP
-
-&apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 1 then 
-&apos;			sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;AE&quot; &amp; lRowU-1 &amp; &quot;)&quot;
-&apos;			oSheet.GetCellByPosition(41 , lrowStart1).Formula = sFormula	
-&apos;			oSheet.GetCellByPosition(41 , lrowStart1).CellStyle = &quot;livello2 valuta mini&quot;
-&apos;		else
-&apos;			oSheet.GetCellByPosition(41 , lrowStart1).CellStyle = &quot;livello2 valuta&quot;
-&apos;			oSheet.GetCellByPosition(41 , lrowStart1).string =&quot;&quot;
-&apos;	end if
 	
-	&apos; sceglie se scrivere i subtotali sulla riga o cancellarli
-rem disattivo perché inutile - TOTALE € SULLA COLONNA QUANTITA&apos;
-&apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1 then 
-&apos;		sScritta =&quot;=CONCATENATE(&quot;&quot; &quot;&quot;;&quot; &amp; &quot;DOLLAR(AN&quot; &amp; lrowStart1+1 &amp; &quot;;2);)&quot; &apos; senza parentesi
-&apos;		oSheet.GetCellByPosition(9 , lrowStart1).formula = sScritta
-&apos;		oSheet.GetCellByPosition(9 , lrowStart1).CellStyle = &quot;livello2 scritta mini&quot;
-&apos;	end if	
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 0 then 
 		oSheet.GetCellByPosition(9 , lrowStart1).string = &quot;&quot;
 	end if	

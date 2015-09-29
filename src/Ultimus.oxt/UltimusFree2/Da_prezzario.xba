@@ -579,7 +579,7 @@ dim oCellS as object
 
 &apos;	SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
 	SCompleta5 = &quot;=CONCATENATE(&quot;&quot;(&quot;&quot;;F5; &quot;&quot;)&quot;&quot;; &quot;&quot; &quot;&quot;; &quot; &amp; &quot; &quot; &amp; &quot;&quot;&quot;&quot; &amp; sAlfaNum0 &amp; &quot;&quot;&quot;&quot; &amp; &quot;)&quot;
-&apos;	print &quot;CCCCCCCCCCCCCCCC&quot;
+
 	oSheet.getCellByPosition(5,2).formula = SCompleta5
 	
 &apos;	print &quot;trallala&quot;

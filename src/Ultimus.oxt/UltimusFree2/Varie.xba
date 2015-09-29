@@ -432,7 +432,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string) &apos;ada
 	
 	saltarello:
 	lrowRisel = lrow
-	 &apos;print &quot;333 &quot; &amp; lrow
+
 	oCell = oSheet.GetCellByPosition( 0, lrow+1 ) &apos;codice AVCP
 	&apos; ..................vede se analisi vechia o nuova...
 	oCell1 = oSheet.GetCellByPosition( 3 , lrow)
@@ -780,196 +780,7 @@ Aggiorna_formula_sommase(lrow)
 	end if
  	ANALISI_IN_ELENCOPREZZI_Der = lrowRisel
 END FUNCTION
-rem ----------------------------------------------------------------------
-Function ANALISI_IN_ELENCOPREZZI_Der_vecchia (optional flag_rior as string) &apos;NON USATA
-&apos;(optional flagrior as string)
-&apos;(flag_rior as string)
- &apos; copia l&apos;analisi e la inserisce in Elenco Prezzi come nuovo prezzo
-&apos;Analisi_in_ElencoPrezzi
-&apos;End sub
-&apos;sub temp
-&apos;print 
-	if isMissing (flag_rior) then
-		flag_rior = &quot;&quot;
-	end if
-	
-	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	&apos; errata selezione di un range
-	if lrow = -1 then	exit function
-	If lrow = 0 then
-		lrow = 1
-	end if
-	
-	ANALISI_IN_ELENCOPREZZI_Der = lrow &apos; registra la posizione della riga di partenza
-	oSheet = ThisComponent.currentController.activeSheet
-Print &quot;123456789&quot;
-	oCell = oSheet.GetCellByPosition( 5 , lrow)
-	oCell1 = oSheet.GetCellByPosition( 3 , lrow)
-	oCell3 = oSheet.GetCellByPosition( 4 , lrow)
-&apos;xray flag_rior
- 	if flag_rior = &quot;&quot; then &apos; se arriva da concatena salta il ciclo
-			if oSheet.GetCellByPosition( 1 , lrow).string = &quot;&quot; AND oSheet.GetCellByPosition( 2 , lrow).string=&quot;&quot; _
-				AND oSheet.GetCellByPosition( 4 , lrow).string = &quot;&quot; _
-				AND oSheet.GetCellByPosition( 5 , lrow).string = &quot;&quot; then
-					msgbox &quot;Hai selezionato una riga di separazione...&quot; &amp; CHR(10)_
-					&amp; &quot; E non posso sapere quale voce volevi manipolare!&quot; &amp; CHR(10)_
-					&amp; &quot;Riprova!&quot; , 128 + 32 + 0 , &quot; ERRORE DI SELEZIONE &quot;
-					oCell = oSheet.GetCellByPosition( 1 , lrow)
-					ThisComponent.CurrentController.Select(oCell)
-					exit Function
-			end if
-		else
-	Do While (oSheet.GetCellByPosition( 4 , lrow).string &lt;&gt; &quot;TOTALE&quot;)_
-	 	and (oSheet.GetCellByPosition( 5 , lrow).string &lt;&gt; &quot;TOTALE&quot;)_
-		 and ((Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		 lrow = lrow + 1
-		 &apos; print lrow
- 		 &apos; oCell = oSheet.GetCellByPosition( 5 , lrow)
-		 &apos;oCell1 = oSheet.GetCellByPosition( 3 , lrow)
-		&apos; ThisComponent.CurrentController.Select(oCell)
-		 &apos; print &quot;ecco!&quot;	
-	loop
-	 		
- 	end if
- 	
- 	if oSheet.GetCellByPosition( 5 , lrow).string = &quot;TOTALE&quot; OR _
- 	 (Trova_Attr_N (oCell1, oSheet)) = &quot;End_voce_ANALISI&quot; then
- 			goto saltarello	
-	end if
-	
-	Do While (oSheet.GetCellByPosition( 4 , lrow).string &lt;&gt; &quot;TOTALE&quot;) and _
-			 (oSheet.GetCellByPosition( 5 , lrow).string &lt;&gt; &quot;TOTALE&quot;) and _
-			 ((Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
-		 lrow = lrow - 1
-		 &apos; print lrow
- 		 &apos; oCell = oSheet.GetCellByPosition( 5 , lrow)
-		 oCell1 = oSheet.GetCellByPosition( 3 , lrow)
-	&apos;	 ThisComponent.CurrentController.Select(oCell)
-		 &apos; print &quot;ecco!&quot;	
-	loop
 
-saltarello:
-	lrowRisel = lrow
-	 &apos;print &quot;333 &quot; &amp; lrow
- oCell = oSheet.GetCellByPosition( 0, lrow ) 
- 
- &apos; ..................vede se analisi vechia o nuova...
- oCell1 = oSheet.GetCellByPosition( 3 , lrow)
- if Trova_Attr_N (oSheet.GetCellByPosition( 3 , lrow), oSheet) = &quot;Start_voce_ANALISI&quot; then
-		&apos;	print &quot;Attributi&quot;
-			iflag = 6
-		else
-		&apos;	print &quot;Vai lisio&quot;
-			iflag = 7
-	end if
-	&apos;......................................
-	
- 	xA = oCell.string
- 	if flag_rior = &quot;&quot; then &apos; se arriva da concatena salta...
- 		 	If xA = &quot;AP&quot; OR xA = &quot;&quot; Then
- 				 ThisComponent.CurrentController.Select(oCell)
- 	 MsgBox &quot;Attenzione! NON hai scelto un Codice per la voce!&quot; &amp; CHR$ (10) &amp; CHR$(10)_
- 		 &amp; &quot;(NB il codice deciso quì nell&apos;Analisi corrisponde al codice interno nell&apos;Elenco prezzi)&quot; &amp; CHR$(10)_
- 		 	&amp; &quot; &quot; , 128 + 32 + 0 , &quot; DEVI SCRIVERE UN CODICE PER LA VOCE &quot; &amp; CHR$(10)
-				exit Function
-			end if			
- 	end if
- oCodAnalisi = xA
-
- oCelle = oSheet.GetCellByPosition( 1, lrow ) 
- xA = oCell.string
- oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
- oConv.Address = oCelle.getCellAddress
- oLdescAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
- 
- oCelle = oSheet.GetCellByPosition( 2, lrow ) 
- oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
- oConv.Address = oCelle.getCellAddress
- oLumAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation 
-
- oCelle = oSheet.GetCellByPosition( iflag, lrow ) &apos; iflag è la colonna del prezzo
- &apos; diversa dopo la modifica della struttura della voce di analisi
- oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
- oConv.Address = oCelle.getCellAddress
- oLprezzoAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
- 
- 
- &apos;xray oLprezzoAnalisi
- oCelle = oSheet.GetCellByPosition( 0, lrow ) 
- oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
- oConv.Address = oCelle.getCellAddress
- oLOrigPAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
-
- oAP = &quot;(AP)&quot;
- 
- &apos;........ rimando di selezione sulla tab Analisi di prezzo
- oCella = oSheet.GetCellByPosition( 1, lrowRisel ) 
- ThisComponent.CurrentController.Select(oCella)
- &apos; .... per quando si torna sulla tab 
-
- oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) &apos;punto alla tabella in base al nome
- &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; oCell=thisComponent.getCurrentSelection()&apos;
-
-	lcolbase = Colonna_giusta_EP (oSheet)
- 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit function
-	end if
- 	
-	lscarto = 0 &apos; per la 4
-
-
- oCell = oSheet.GetCellByPosition( lcolbase+0,3 ) 
- ThisComponent.CurrentController.Select(oCell)&apos;@
- 
- lrow = 3
- insRows (lrow,1)
-&apos; oSheet.getRows.insertByIndex(lrow,1)
- oCell = oSheet.GetCellByPosition( lcolbase+0 , lrow)
-				&apos;	oCell.CellBackColor = RGB(255,220,130) &apos;238;233;191
-					oCell.CellStyle=&quot;EP-Cs&quot;
-					Print oCodAnalisi
- oCell.string= oCodAnalisi
-
- oCell = oSheet.GetCellByPosition( lcolbase + lscarto +1 , lrow)
- 
- oCell.formula = oLdescAnalisi
- &apos; oCell.IsCellBackgroundTransparent = TRUE
- 					&apos;oCell.CellBackColor = RGB(255,220,130)&apos;255;235;205
- 					oCell.CellStyle=&quot;EP-C&quot;
- oCell = oSheet.GetCellByPosition( lcolbase + lscarto +2 , lrow)
-				 &apos;oCell.CellBackColor = RGB(255,220,130)
-				 oCell.CellStyle=&quot;EP-C mezzo&quot;
- oCell.formula = oLumAnalisi
- 
-	oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 4 , lrow)
- 	oCell.formula = oLprezzoAnalisi 
-				 &apos;oCell.CellBackColor = RGB(255,220,130)
-				 oCell.CellStyle=&quot;EP-C mezzo&quot;
- oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 5 , lrow)
- oCell.formula = oLOrigPAnalisi
- 					&apos; oCell.CellBackColor = RGB(255,220,130)
- 					 oCell.CellStyle=&quot;EP-C mezzo&quot;
- oCell = oSheet.GetCellByPosition( lcolbase + lscarto + 6 , lrow)
- oCell.string = oAP 
- 					 &apos;oCell.CellBackColor = RGB(255,220,130)
- 					 oCell.CellStyle=&quot;EP-C mezzo&quot;
- oCell = oSheet.GetCellByPosition( lcolbase+lcol + 7 , lrow)
- 					 oCell.CellBackColor = RGB(0,0,139)
- 					 oCell.CellStyle=&quot;EP-sfondo&quot;
- 
- Aggiorna_formula_sommase(lrow)
-
-	if ismissing (flag_rior) then &apos;= &quot;&quot; then
-	
-		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
- 		 Riordina_ElencoPrezzi
- 		 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
- 		 Adatta_Altezza_riga 
-		 &apos; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	end if
- 	ANALISI_IN_ELENCOPREZZI_Der = lrowRisel
-END FUNCTION
 rem ######################################################################
 
 
@@ -1563,22 +1374,25 @@ Sub asd
 xray thiscomponent.currentselection
 End Sub
 
-sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione...
+sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
+&apos; sistema_attributi_sheet
  &apos;&apos; Clessid_lock_Start
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
+	sAttributo = Trova_Attr_Sheet
+GoTo no
  	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 and _
- 		sAttributo = &quot;TIPO_COMPUTO&quot; then
+ 		sAttributo = &quot;TIPO_COMPUTO&quot; Then
 		msgbox &quot;La rinumerazione è disabilitata perché è stata abilitata la Contabilità&quot;
  		&apos; inibisce anche se la var apposita è diversa da 0
  		exit sub
  	endif
-
+no:
 	&apos;inibisce la rinumerazione se la var apposita è diversa da 0
  	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 and _
  		sAttributo = &quot;TIPO_COMPUTO&quot; then
-		msgbox &quot;La rinumerazione è disabilitata: controlla la Variabile Generale H335&quot;&amp; CHR$(10)_
+		msgbox &quot;La rinumerazione è disabilitata: dipende dalla Variabile Generale S1.H335&quot;&amp; CHR$(10)_
 			&amp; &quot;dal Menu Principale&gt;Variabili Generali&quot;
  		exit sub
  	endif 	

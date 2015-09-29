@@ -20,18 +20,19 @@ SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
 	sUrl = DirectoryNameoutofPath(sDocURL, &quot;/&quot;) &apos;path
 	sFileName = GetFileNameWithoutExtension(sDocURL, &quot;/&quot;) &apos;file
 &apos;	oActiveSheet = &quot;COMPUTO&quot;
-	sFile = sUrl + &quot;/&quot; + sFileName + &quot;_&quot; + oActiveSheet + &quot;.pdf&quot;
+	sFile = sUrl + &quot;/&quot; + sFileName + &quot;-&quot; + oActiveSheet + gina_furbetta_2 +&quot;.pdf&quot;
 	
-	rem metto in ordine secondo la stampa
-	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;) &apos;questa serve a conservare l&apos;area di stampa dell&apos;ulima sheet utile
+rem metto in ordine secondo la stampa
+	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;) &apos;questa serve a conservare l&apos;area di stampa dell&apos;ultima sheet utile
 	oSheet.IsVisible = True
-	thisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
+	If thisComponent.Sheets.hasbyname(&quot;cP_Cop&quot;) Then ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
+&apos;	ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
-	thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,2)
+&apos;	thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,2)
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,10,10))
-	rem rimuovo le aree di stampa che non interessano
+rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
-		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
+		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet Then &apos; and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
 &apos;oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;)
 			ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).GetCellByPosition(0,0))
 &apos;	Print  
@@ -48,13 +49,8 @@ SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
 &apos;			End With
 			If 	oSh.Name = oActiveSheet Then 
 				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
-				SBIANCA_celle
-				thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
-				
-&apos;				Print scol &amp;&quot; &quot;&amp; srow &amp;&quot; &quot;&amp; ecol &amp;&quot; &quot;&amp; erow
-&apos;				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(scol,srow,ecol,erow))
-&apos;				SBIANCA_celle
-&apos;				thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+				if msgbox (CHR$(10) &amp;&quot;Preferisci nascondere i colori?&quot;,36, &quot;&quot;) = 6 Then	SBIANCA_celle
+				thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 			Else
 				Set_Area_Stampa_N(&quot;NO_messaggio&quot;)
 			End If
@@ -132,12 +128,21 @@ SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
 &apos;For Each oSh In oSheets
 &apos;     oSh.IsVisible = True
 &apos;Next
+	ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
+	SBIANCA_ANNULLA
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 	
 	Rimetti_in_ordine_tab
 	Chiudi_o_elimina_tabelle_inutili
 	oSheet = ThisComponent.Sheets.getByName(oActiveSheet)
 	oSheet.IsVisible = True
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
+	
+	if msgbox (CHR$(10) &amp;&quot;Il documento PDF è stato esportato come &quot; &amp; sFile &amp; CHR$(10)&amp; CHR$(10)_
+				&amp; &quot; Vuoi aprire il PDF? &quot;&amp; CHR$(10)&amp; CHR$(10)_
+				&amp; &quot;&quot; ,36, &quot;&quot;) = 6 Then
+		createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;).execute(sFile,&quot;&quot;, 0)
+	EndIf
 End Sub
 
 
@@ -162,7 +167,7 @@ Sub esporta_PDF_Foglio_Attivo
 	Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	Visualizza_PageBreak
-	sSheetName = ThisComponent.currentcontroller.activesheet.name &apos; il ome della sheet da trattare
+	sSheetName = ThisComponent.currentcontroller.activesheet.name &apos; il nome della sheet da trattare
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 		Set_solo_Righe_ripet &apos; le reimposta ogni volta
 		iCaso = msgbox (&quot;Ti va bene l&apos;area di stampa così com&apos;é impostata?&quot; &amp; CHR$(10)_
@@ -178,18 +183,7 @@ Sub esporta_PDF_Foglio_Attivo
 			end select	
 	end if
 rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&apos;ANAGRAFICA
-&apos; 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-&apos;		iCaso = msgbox (&quot; Aggiorno in automatico le Intestazioni ed i Piè di Pagina?&quot; &amp; CHR$(10) &amp; CHR$(10)_
-&apos;				&amp; &quot; (...prelevandoli dalla schermata dei “Dati dl Documento”) &quot; &amp; CHR$(10)&amp; CHR$(10)_
-&apos;				&amp; &quot; &quot;&amp; CHR$(10)&amp; CHR$(10)_
-&apos;				&amp; &quot;&quot; ,35, &quot;&quot;)
-&apos;			select case iCaso
-&apos;				case 6
-&apos;					Set_Header_Footer (&quot;no messaggio&quot;)
-&apos;				case 2
-&apos;					exit sub	
-&apos;			end select
-&apos;	end if	
+
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 		iCaso = msgbox (&quot; Esporto IGNORANDO i COLORI?&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot; (otterrai un pdf in bianco/nero senza sfumature di grigio) &quot; &amp; CHR$(10)&amp; CHR$(10)_
@@ -200,9 +194,7 @@ rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 				case 6
 					DuplicaSheetinDoc(&quot;_copia&quot;)
 					sElim = ThisComponent.currentController.activeSheet.name &apos;il nome della sheet duplicata
-			
 					Sbianca_e_o_consolida(1) &apos; CON il parametro ad 1 non consolida
-				
 				case 2			
 					exit sub
 			end select 	
@@ -210,9 +202,7 @@ rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 	
 
 	&apos;sceglie la dir proponendo quella del doc sorgente
-	If (Not GlobalScope.BasicLibraries.isLibraryLoaded(&quot;Tools&quot;)) Then
- 	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-	End If	
+	If (Not GlobalScope.BasicLibraries.isLibraryLoaded(&quot;Tools&quot;)) Then GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 	&apos; codice originale di questa subroutine by Andrew Pitonyak
 	If (ThisComponent.hasLocation()) Then &apos; se è noto al file system
 	 	sDocURL = ThisComponent.getURL() 
@@ -252,7 +242,7 @@ rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
  	Barra_Apri_Chiudi_5(&quot;Attendi.... sto riflettendo... (Il tempo è solo una convenzione...))&quot;, 60) 
  	&apos;&lt;&lt;&lt;&lt;&lt;	
 	&apos; qui controlla se si tratta della dir corrente del doc
-	&apos; se non lo è aggiunge llo slash finale
+	&apos; se non lo è aggiunge lo slash finale
 	&apos; ma se si aggiunge per sbaglio uno / ?
 	&apos; mmm... pare che lo elimini automaticamente.
 	if ChosenDir &lt;&gt; sDocDir then 
@@ -316,13 +306,13 @@ SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
 	oDoc = ThisComponent
 	oSheets = oDoc.Sheets()
 	oActiveSheet = oDoc.CurrentController.ActiveSheet()
-	&apos; print oActiveSheet.name
 	For Each oSh In oSheets
 		If oSh.Name = oActiveSheet.Name Then
 			Appenditem(mSheetAreas(), Array(oSh.Name, oSh.PrintAreas()))
 			oSh.PrintAreas() = Array()
 		End If
 	Next
+xray mSheetAreas()
  &apos;parametri di esportazione
 	Dim mStoreOpts(1) As New com.sun.star.beans.PropertyValue
 	mStoreOpts(0).Name = &quot;Overwrite&quot;
@@ -330,13 +320,12 @@ SUB esporta_PDF(sUrl) &apos; copyright 2010 Paolo Mantovani
 	mStoreOpts(1).Name = &quot;FilterName&quot;
 	mStoreOpts(1).Value = &quot;calc_pdf_Export&quot;
 &apos;	sUrl = &quot;file:///W:/test.pdf&quot;
-
 	oDoc.storeToURL(sUrl, mStoreOpts())
 
-	For Each mShArea In mSheetAreas()
- 	oSh = oSheets.getByName(mShArea(0))
- 	oSh.PrintAreas() = mShArea(1)
-	Next
+&apos;	For Each mShArea In mSheetAreas()
+&apos;	 	oSh = oSheets.getByName(mShArea(0))
+&apos;	 	oSh.PrintAreas() = mShArea(1)
+&apos;	Next
 End Sub
 
 

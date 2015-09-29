@@ -271,12 +271,12 @@ ThisComponent.CurrentController.Select(oRange)
 End Function
 
 rem ----------------------------------------------------------------------
-Function Circoscrive_Voce_Computo_Att &apos;(ByVal lrow As Long)
+Function Circoscrive_Voce_Computo_Att (ByVal lrow As Long)
 	dim lrowS as long
 	dim lrowE as Long
 	Dim oSheet As Object
 	osheet = ThisComponent.currentController.activeSheet
-	lrow = range2cell
+&apos;	lrow = range2cell
 	select Case oSheet.Name
 		REM ----------------------------------------------------------------------
 	Case = &quot;COMPUTO&quot;

@@ -613,7 +613,9 @@ rem controllo riga dei totali
 			oSheet.GetCellByPosition( 10 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
 			oSheet.GetCellByPosition( 11 , lRow).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;
 			oSheet.GetCellByPosition( 11 , lRow).cellstyle = &quot;comp sotto Unitario&quot;
-			oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
+			sformula=&quot;=IF(&quot;&quot;SOMMANO [%]&quot;&quot;=I&quot; &amp; lrow+1 &amp; &quot;;J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1 &amp; &quot;/100;J&quot;&amp; lrow+1 &amp; &quot;*L&quot;&amp; lrow+1 &amp; &quot;)&quot;
+		&apos;	oSheet.GetCellByPosition( 18 , lRow).setformula(&quot;=J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1
+			oSheet.GetCellByPosition( 18 , lRow).formula = sformula
 rem ----------------------------------------------------------------------
 rem controllo TAG su riga dei totali
 			oSheet.getCellByPosition(33, lRow).setstring(&quot;R&quot;)			&apos;tag A

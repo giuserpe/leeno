@@ -667,7 +667,6 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 	&apos;	sRangeTarget_EP = &quot;$A&quot; &amp; lrowEnd_EP_src
 		
 	&apos;	sRangeTarget_EP = &quot;$A&quot; &amp;
-		&apos;print &quot;333333&quot;
 		Copia_DATI_Colleg (sSourceURL, sTargetURL, sSheetSRC_EP, sSheetTarget_EP, sRangeSRC_EP, sRangeTarget_EP,_
 					sAreaName_EP )
 
@@ -1881,7 +1880,7 @@ annullato:
  	Barra_chiudi_sempre_4
  	
 	if msgbox (&quot;Il foglio &quot; &amp; sSheetSRC &amp; &quot; è stato duplicato con successo&quot; &amp; CHR$(10)_
-		&amp; &quot;in questo documento (&quot; &amp; sNameDest &amp; &quot; )&quot; &amp; CHR$(10)&amp; CHR$(10) _
+		&amp; &quot;in questo documento (&quot; &amp; sNameDest &amp; &quot;)&quot; &amp; CHR$(10)&amp; CHR$(10) _
 		&amp; &quot;Vuoi nascondere le tabelle secondarie ?&quot;&amp; CHR$(10) _
 		&amp; &quot; (se ti sparisce qualcosa lo potrai trovare in Formato&gt;Foglio&gt;Mostra)&quot; , 4,&quot;&quot;&amp; CHR$(10)) = 6 then
 		Chiudi_o_elimina_tabelle_inutili &apos; cioè le secondarie)	 

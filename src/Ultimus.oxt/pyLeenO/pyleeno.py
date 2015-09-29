@@ -39,12 +39,31 @@ class New_file:
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Listino_LeenO.ots', "_blank", 0, (opz,))
         return (document)
-def xxdebug():
-    New_file.computo()
-    New_file.listino()
-def debughelp_uno():
+import shutil
+def debug0():
     oDoc = XSCRIPTCONTEXT.getDocument()
+    path = oDoc.getURL()
+    bak = '.'.join(path.split('.')[:-1]) + '-backup.ods'
+    tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
+    dest = ''.join([path.split('.')[0], '-', tempo, '.ods'])
     oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.getCellByPosition(1,0).String = bak
+    oSheet.getCellByPosition(1,1).String = path
+    oSheet.getCellByPosition(1,2).String = dest
+    shutil.copyfile (path, dest)
+    #~ oSheet.getCellByPosition(1,3).String = path.split('.')[0]
+    #~ oSheet.getCellByPosition(1,4).String = tempo
+    #~ oSheet.getCellByPosition(1,5).String = path.split('.')[:-1]
+    #~ oSheet.getCellByPosition(1,6).String = path.split('.')[:-1]
+
+    
+def debug2():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    oSheet.getCellByPosition(1,7).String = oDoc.getURL()
     oSheet.getCellByPosition(1,8).String = dir(os).__str__()
     oSheet.getCellByPosition(1, 9).String = dir(uno.__package__.title.__name__).__str__()
     oSheet.getCellByPosition(1, 10).String = dir(unohelper).__str__()
@@ -215,7 +234,6 @@ def copia_riga_contab(lrow):
 def copia_riga_analisi(lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ lrow = Range2Cell()[1]
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
         lrow=lrow+1
@@ -784,13 +802,13 @@ def XML_import_BOLZANO ():
 # XML_import_BOLZANO ###################################################
 ########################################################################
 # XPWE_import ##########################################################
-def debug(): #XPWE_import (): #(filename):
-    #~ filename = filedia('Scegli il file XPWE da importare...')
+def debug (): #XPWE_import (): #(filename):
+    New_file.computo()
+    filename = filedia('Scegli il file XPWE da importare...')
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/xpwe_prova.xpwe'
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/_Prezzari/2005/da_pwe/Esempio_Progetto_CorpoMisura.xpwe'
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Sicilia/sicilia2013.xpwe'
-    New_file.computo()
-    filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\berlingieri.xpwe'
+    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\berlingieri.xpwe'
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/berlingieri.xpwe'
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/prova_vedi_voce.xpwe'
     #~ filename = 'W:\\BAR\\S. Francesco di assisi Gravina\\primus\\Campanile_san_francesco.xpwe'
@@ -855,7 +873,7 @@ def debug(): #XPWE_import (): #(filename):
 #PweDGSubCapitoli
     if CapCat.find('PweDGSubCapitoli'):
         PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
-        lista_cap = list()
+        lista_subcap = list()
         for elem in PweDGSubCapitoli:
             id_sc = elem.get('ID')
             dessintetica = elem.find('DesSintetica').text
@@ -1068,9 +1086,12 @@ def debug(): #XPWE_import (): #(filename):
     oDoc = XSCRIPTCONTEXT.getDocument()
 # compilo Anagrafica generale ##########################################
     oSheet = oDoc.getSheets().getByName('S2')
-    oSheet.getCellByPosition (2,2).String = oggetto
-    oSheet.getCellByPosition(2,3).String = comune
-    oSheet.getCellByPosition(2,5).String = committente
+    if oggetto != None:
+        oSheet.getCellByPosition (2,2).String = oggetto
+    if comune != None:
+        oSheet.getCellByPosition(2,3).String = comune
+    if committente != None:
+        oSheet.getCellByPosition(2,5).String = committente
     if impresa != None:
         oSheet.getCellByPosition(3,16).String = impresa
 # compilo Elenco Prezzi ################################################
@@ -1114,12 +1135,16 @@ def debug(): #XPWE_import (): #(filename):
     lrow=4 #primo rigo dati
 ###
 # inserisco le voci di Elenco Prezzi
+# questa va migliorata creando una tupla da incollare nel foglio
     for elem in lista_articoli.items():
-        oSheet.getCellByPosition(0, lrow-1).String = elem[1].get('tariffa')
-        oSheet.getCellByPosition(1, lrow-1).String = elem[1].get('destestesa').strip()
+        if elem[1].get('tariffa') != None:
+            oSheet.getCellByPosition(0, lrow-1).String = elem[1].get('tariffa')
+        if elem[1].get('destestesa') != None:
+            oSheet.getCellByPosition(1, lrow-1).String = elem[1].get('destestesa').strip()
         if elem[1].get('unmisura') != None:
             oSheet.getCellByPosition(2, lrow-1).String = elem[1].get('unmisura')
-        oSheet.getCellByPosition(4, lrow-1).Value = elem[1].get('prezzo1')
+        if elem[1].get('prezzo1') != None:
+            oSheet.getCellByPosition(4, lrow-1).Value = elem[1].get('prezzo1')
         lrow=lrow+1
 ###
 # Inserisco i dati nel COMPUTO #########################################

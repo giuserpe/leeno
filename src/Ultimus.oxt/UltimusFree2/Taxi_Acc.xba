@@ -138,7 +138,8 @@ Sub Accoda_un_computo &apos; accodamento di dati partendo dal file DCC
 		thisComponent.Sheets.hasByName(&quot;S1&quot;) and _
 		thisComponent.Sheets.hasByName(&quot;S2&quot;) and _
 		thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;)) then
-		msgbox &quot; Questo NON è un template di Ultimus, e l&apos;azione richiesta non è ammessa!&quot;
+		msgbox (&quot;Questo documento NON è gestibile con LeenO.&quot; &amp; CHR$(10)_
+		&amp; &quot;L&apos;azione richiesta non è ammessa!&quot;, 48, &quot;AVVISO!&quot;)
 		exit sub
 	end if
 	sURLdest = ConvertfromUrl(ThisComponent.getURL()) 
@@ -146,7 +147,7 @@ Sub Accoda_un_computo &apos; accodamento di dati partendo dal file DCC
 	&apos;print &quot;sUltimus: &quot; &amp; sUltimus &apos;&amp; &quot; -- &quot; &amp; sURLdest&apos;&apos;
 	if sURLdest = sUltimus then
 			if msgbox (&quot; Vuoi accodare un computo in questo documento?&quot; &amp; CHR$(10)_
-				&amp; &quot;(&quot;&amp; sNomedest &amp; &quot; )&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;(&quot;&amp; sNomedest &amp; &quot;)&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest ) = 6 then
 				goto esegui	
 			 else
@@ -156,7 +157,7 @@ Sub Accoda_un_computo &apos; accodamento di dati partendo dal file DCC
 		else
 			if ismissing(sUltimus) or sUltimus = &quot;&quot; then
 				if msgbox (&quot; Vuoi accodare un computo in questo documento?&quot; &amp; CHR$(10)_
-					&amp; &quot;(&quot;&amp; sNomedest &amp; &quot; )&quot; &amp; CHR$(10) &amp; CHR$(10)_
+					&amp; &quot;(&quot;&amp; sNomedest &amp; &quot;)&quot; &amp; CHR$(10) &amp; CHR$(10)_
 					&amp; &quot;&quot;,36, &quot;Accodamento in &quot; &amp; sNomedest ) = 6 then
 					Scrivi_Globale
 					Aggiorniamoli 

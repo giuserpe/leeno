@@ -67,7 +67,7 @@ function BrowseForFile(sTitle as String, sFilterName as String, sStartDirectory 
 dim ars
 o=CreateUnoService(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
 o.setTitle(sTitle)
-o.appendFilter( sFilterName &amp; &quot; (&quot; &amp; sFilter &amp; &quot;)&quot;, sFilter)
+o.appendFilter( sFilterName &amp; &quot;(&quot; &amp; sFilter &amp; &quot;)&quot;, sFilter)
 o.setMultiSelectionMode(false)
 o.setDisplayDirectory(ConvertToUrl(sStartDirectory))
  

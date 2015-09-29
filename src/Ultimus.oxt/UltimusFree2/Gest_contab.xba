@@ -19,7 +19,7 @@ dim cSheetName2 as string
  		oSheet = ThisComponent.Sheets.getByIndex(i)
  		thisComponent.Sheets.moveByName(cSheetName2 ,4)
 			oSheet.isVisible = true &apos;false &apos;true
-			Thiscomponent.currentcontroller.setactivesheet(Osheet
+			Thiscomponent.currentcontroller.setactivesheet(Osheet)
  EndIf
 	Next 
 	
@@ -44,7 +44,7 @@ Sub Abilita_contabilita
 	sVerT = 146
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &lt; sVerT	then
 			msgbox &quot;Se vuoi usare o anche solo testare la Contabilità Avanzata dovresti farlo su un template uguale o superiore al &quot; &amp; _
-			sVerT &amp; &quot; (&quot; &amp; sVerT &amp; &quot;.3.5)&quot;
+			sVerT &amp; &quot;(&quot; &amp; sVerT &amp; &quot;.3.5)&quot;
 		&apos;	exit sub
 	end if
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 1 THEN 

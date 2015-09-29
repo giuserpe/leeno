@@ -720,8 +720,6 @@ dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 rem ----------------------------------------------------------------------
 dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
 
-end Sub 
-
-
+end Sub
 
 </script:module>

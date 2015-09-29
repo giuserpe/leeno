@@ -516,7 +516,7 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 	Barra_Apri_Chiudi_5(&quot;2 ok proseguo!&quot;, 60)	
 
 rem ----------------------------------------------------------------------
-reset_STILI
+&apos; reset_STILI
 rem adatta altezza righe di tutto il doc
 	Dim lsheet() As object
 	lsheet() = thiscomponent.sheets.elementnames

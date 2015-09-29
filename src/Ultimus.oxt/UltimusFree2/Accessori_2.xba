@@ -628,21 +628,27 @@ rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot
 	oSheet.getColumns.getByIndex(lcolbase+14+idxcol).isVisible = true
 			
 i=rIntest
-	oSheet.GetCellByPosition(13,i).STRING=&quot;TOTALE&quot; &apos;totale computo
-	oSheet.GetCellByPosition(13,i).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
+	oSheet.GetCellByPosition(16,i).STRING=&quot;TOTALE&quot; &apos;totale computo
+	oSheet.GetCellByPosition(16,i).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
 
 
-	oSheet.GetCellByPosition(lcolbase+13 , i).formula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot; &apos; quantità
-	oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase+13 , i).formula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot; &apos; quantità
+&apos;	oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
 
-	oSheet.GetCellByPosition(lcolbase+14 , i).formula = &quot;=E&quot; &amp; i+1 &amp; &quot;*N&quot; &amp; i+1
-	oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
-	
+&apos;	oSheet.GetCellByPosition(lcolbase+14 , i).formula = &quot;=E&quot; &amp; i+1 &amp; &quot;*N&quot; &amp; i+1
+&apos;	oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
 
+	oSheet.GetCellByPosition(lcolbase + 15 , i).formula = &quot;=R4/$R$2&quot;
+	oSheet.GetCellByPosition(lcolbase + 15 , i).cellstyle = &quot;EP-mezzo %&quot;
+	oSheet.GetCellByPosition(lcolbase + 16 , i).formula = &quot;=SUMIF(GG;A4;G1G1)&quot;
+	oSheet.GetCellByPosition(lcolbase + 16 , i).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(lcolbase + 17 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 17 , i).cellstyle = &quot;EP statistiche&quot;
+Exit Sub 
 rem seleziono le formule
-	oSrc = oSheet.getCellRangeByPosition(lcolbase+13, rIntest, lcolbase+14, rIntest).RangeAddress
+	oSrc = oSheet.getCellRangeByPosition(lcolbase+15, rIntest, lcolbase+17, rIntest).RangeAddress
 	For i=rIntest To lrowf-2
-		oDest = oSheet.getCellByPosition(lcolbase+13, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
+		oDest = oSheet.getCellByPosition(lcolbase+15, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
 		oSheet.copyRange(oDest, oSrc)
 &apos;print
 	Next	
@@ -657,22 +663,42 @@ rem seleziono le formule
 &apos;	suona_1_2
 END SUB
 
-
-SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
+SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di somma.se
+&apos; parallelo variante
 	Dim oSheet As Object
-&apos;manomessa da Giuseppe Vizziello 2014
-&apos; rifà le aree AA e BB nel computo (servono per la formula somma.se)
+GoTo no:
+	Select Case nSheet
+		Case &quot;COMPUTO&quot;
+			tagA = &quot;AA&quot;
+			quan = &quot;BB&quot;
+			perc = 11
+			qq = 12
+			ii = 13
+			fat = &quot;M&quot; &apos; colonna fattore
+			tot = &quot;N&quot; &apos;totale
+		Case &quot;VARIANTE&quot;
+			tagA = &quot;varAA&quot;
+			quan = &quot;varBB&quot;
+			perc = 19
+			qq = 20
+			ii = 21
+			fat = &quot;U&quot; &apos; colonna fattore
+			tot = &quot;V&quot; &apos;totale
+	End Select
+no:
+	chiudi_dialoghi
+
+&apos;## computo ##############################################################
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
-&apos; con qualcosa che esegua sia se nome sia se Attributo ???
-	rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot;,oSheet)&apos; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
 	lLastUrow = getLastUsedRow(oSheet)
-&apos;_____________________
-	chiudi_dialoghi 
-&apos;_____________________
-	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;AA&quot;) &apos;tag codici
-	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow,&quot;BB&quot;) &apos; quantità
+&apos;	rifa_nomearea (nSheet,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, tagA) &apos;tag codici
+&apos;	rifa_nomearea (nSheet,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, quan) &apos; quantità
+	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;AA&quot;) &apos;tag codici
+	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;BB&quot;) &apos; quantità
+&apos;#########################################################################
+	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
 	If isNull (oEnd) or isEmpty (oEnd) then 
@@ -682,43 +708,86 @@ SUB Rifa_AA_BB_Computo &apos; RIFA ANCHE le formule di somma.se
 	end if 
 	lrowF=oEnd.RangeAddress.EndRow
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
-&apos;	rIntest=oStart.CellAddress.Row+1
+
 	lcolbase = Colonna_giusta_EP (oSheet)
-	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-		print lcolbase
-		exit sub
-	end if
 	
 	sCol = ColumnNameOf(lcolbase+idxcol)
-	sCol2 = ColumnNameOf(lcolbase+idxcol+11) &apos;Col L
+	sCol2 = ColumnNameOf(lcolbase+idxcol+ ii) &apos;Col L
 	sCol4 = ColumnNameOf(lcolbase+idxcol+4) &apos;col E
 	
-	oSheet.getColumns.getByIndex(lcolbase+10+idxcol).isVisible = true
-	oSheet.getColumns.getByIndex(lcolbase+11+idxcol).isVisible = true
+	oSheet.getColumns.getByIndex(lcolbase + qq + idxcol).isVisible = true
+	oSheet.getColumns.getByIndex(lcolbase + ii + idxcol).isVisible = true
 	
 	i=rIntest
 
-	oSheet.GetCellByPosition(lcolbase+10 , i).formula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
-	oSheet.GetCellByPosition(lcolbase+10 , i).cellstyle = &quot;EP statistiche_q&quot;
+rem colonne del computo
+&apos;	oSheet.GetCellByPosition(lcolbase + perc , i).formula = &quot;=&quot;&amp; tot &amp; i+1 &amp; &quot;/$&quot; &amp; tot &amp; &quot;$2&quot;&apos; &amp; i+1
+	oSheet.GetCellByPosition(lcolbase + 11 , i).formula = &quot;=N4/$N$2&quot;
+	oSheet.GetCellByPosition(lcolbase + 11 , i).cellstyle = &quot;EP-mezzo %&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + qq , i).formula = &quot;=sumif(&quot;&amp; tagA &amp;&quot;;&quot; &amp; sCol &amp; i+1 &amp; &quot;;&quot; &amp; quan &amp; &quot;)&quot;
+	oSheet.GetCellByPosition(lcolbase + 12 , i).formula = &quot;=SUMIF(AA;A4;BB)&quot;
+	oSheet.GetCellByPosition(lcolbase + 12 , i).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;M4*E4/100;M4*E4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 13 , i).cellstyle = &quot;EP statistiche&quot;
 
-	oSheet.GetCellByPosition(lcolbase+11 , i).formula = &quot;=K&quot; &amp; i+1 &amp; &quot;*E&quot; &amp; i+1
-	oSheet.GetCellByPosition(lcolbase+11 , i).cellstyle = &quot;EP statistiche&quot;
+&apos;## contabilità ##########################################################
+	Rifa_GG_G1G1_Contab
 
-	rem ----------------------------------------------------------------------
-	rem seleziono le formule
-	oSrc = oSheet.getCellRangeByPosition(lcolbase+10, idxrow+1, lcolbase+11, rIntest).RangeAddress
-	For i=rIntest To lrowf-2
-		oDest = oSheet.getCellByPosition(lcolbase+10, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
-		oSheet.copyRange(oDest, oSrc)
-&apos;print
-	Next
-	oSheet.GetCellByPosition(10,lRowF).STRING=&quot;TOTALE&quot; &apos;totale computo
-	oSheet.GetCellByPosition(10,lRowF).cellstyle=&quot;EP statistiche_q&quot; &apos;totale computo
-	oSheet.GetCellByPosition(lcolbase+11, lrowF).setformula(&quot;=SUBTOTAL(9;L&quot; &amp; rIntest &amp;&quot;:L&quot; &amp; lrowF+1 &amp; &quot;)&quot;)
-	oSheet.GetCellByPosition(lcolbase+11, lrowF).cellstyle = &quot;EP statistiche&quot;	
+&apos;## variante #############################################################
+	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
+
+		oSheet_var = ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;) &apos; da sostituire o integrare
+		oStart = uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot;,oSheet_var)&apos; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+		rIntest=oStart.CellAddress.Row+1
+		lLastUrow = getLastUsedRow(oSheet_var)
+		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;varAA&quot;) &apos;tag codici
+		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;varBB&quot;) &apos; quantità
+		oSheet.GetCellByPosition(lcolbase + 19 , i).formula = &quot;=V4/$V$2&quot;
+		oSheet.GetCellByPosition(lcolbase + 19 , i).cellstyle = &quot;EP-mezzo %&quot;
+		oSheet.GetCellByPosition(lcolbase + 20 , i).formula = &quot;=SUMIF(varAA;A4;varBB)&quot;
+		oSheet.GetCellByPosition(lcolbase + 20 , i).cellstyle = &quot;EP statistiche_q&quot;
+		oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;U4*E4/100;U4*E4)&quot;
+		oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
+	EndIf
+&apos;#########################################################################
+	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(U4-M4=0;&quot;&quot;--&quot;&quot;;U4-M4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(V4-N4&gt;0;V4-N4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(V4-N4&lt;0;N4-V4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
+	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4))&quot;
+	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;
+	oSheet.GetCellByPosition(lcolbase + 10 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 14 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
+
+rem questa soot è da tenere d&apos;occhio!!!
+	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, idxrow+1, lcolbase + 26, rIntest)) &apos;deseleziona
+	copy_clip
+	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, i+1,lcolbase+10, lrowf-1)) &apos;deseleziona
+	paste_clip
+rem ----------------------------------------------------------------------
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
-END SUB
+
+Exit Sub
+rem QUESTE SOTTO LE CONSERVO PERCHE&apos; POTREBBE FARE STORIE CON QUELLE SOPRA
+rem seleziono le formule e le ricopio giù
+	oSrc = oSheet.getCellRangeByPosition(lcolbase + 10, idxrow+1, lcolbase + 25, rIntest).RangeAddress
+	oDest = oSheet.getCellByPosition(lcolbase + 10, i+1,lcolbase+10, lrowf-1).CellAddress &apos;
+	oSheet.copyRange(oDest, oSrc)
+	For i=rIntest To lrowf-2
+		oDest = oSheet.getCellByPosition(lcolbase + 10, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
+		oSheet.copyRange(oDest, oSrc)
+
+	Next
+	oSheet.GetCellByPosition(qq ,lRowF).STRING=&quot;TOTALE&quot; &apos;totale computo
+	oSheet.GetCellByPosition(qq ,lRowF).cellstyle=&quot;EP statistiche_q&quot; &apos;totale computo
+	oSheet.GetCellByPosition(lcolbase+ ii , lrowF).setformula(&quot;=SUBTOTAL(9;&quot; &amp; tot &amp; rIntest &amp;&quot;:&quot; &amp; tot &amp; lrowF+1 &amp; &quot;)&quot;)
+	oSheet.GetCellByPosition(lcolbase+ ii , lrowF).cellstyle = &quot;EP statistiche&quot;	
+	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
+END Sub
 
 rem ----------------------------------------------------------------------
 
@@ -729,7 +798,6 @@ Function TrovaFine_Computo (optional oSheet as object) as integer &apos; funzion
 			oSheet = ThisComponent.currentController.activeSheet
 		end if
 		ilastRow = getLastUsedRow(oSheet)
-&apos;		print ilastrow
 		do while oSheet.GetCellByPosition(1, ilastrow).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot;&apos; or _
 
 			if oSheet.GetCellByPosition(1, ilastrow).CellStyle = &quot;livello-2-sotto_&quot; or _
@@ -737,15 +805,6 @@ Function TrovaFine_Computo (optional oSheet as object) as integer &apos; funzion
 				oSheet.GetCellByPosition(1, ilastrow).CellStyle = &quot;Comp TOTALI&quot; or _
 				oSheet.GetCellByPosition(2, ilastrow).CellStyle = &quot;Reg-SAL-chiudi_Sotto&quot; or _
 				oSheet.GetCellByPosition(2, ilastrow).CellStyle = 	&quot;comp sotto BiancheS_R&quot; then
-			&apos;	oSheet.GetCellByPosition(0, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(1, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(2, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(3, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(4, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(5, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(6, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(7, ilastrow).string = &quot;&quot; And _
-			&apos;	oSheet.GetCellByPosition(18, ilastrow).string = &quot;&quot; then
 					exit do
 			end if 
 			if ilastrow &lt;= 3 then 
@@ -754,7 +813,7 @@ Function TrovaFine_Computo (optional oSheet as object) as integer &apos; funzion
 			end if
 			ilastrow = ilastrow-1	
 		loop
-					&apos;print &quot; mi darebbe &quot; &amp; ilastrow
+
 		TrovaFine_Computo = ilastrow+1
 		exit function
 		errore:	
@@ -862,58 +921,6 @@ sub Salva_spazio_A_A &apos; chiamata da aggiorna template
 	end if	
 end sub	
 
-
-
-Sub Sistema_il_listino___ 
-	oSheet=ThisComponent.currentController.activeSheet 
-	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE 
-			if oSheet.GetCellByPosition(0, i).string &lt;&gt; &quot;&quot; then
-				oSheet.GetCellByPosition(1, i).string = oSheet.GetCellByPosition(0, i).string &amp; &quot; &quot; &amp; oSheet.GetCellByPosition(1, i).string	
-				oSheet.GetCellByPosition(1, i).cellstyle = &quot;List-stringa-sin&quot;
-				oSheet.GetCellByPosition(2, i).cellstyle = &quot;List-stringa-sin&quot;
-				oSheet.GetCellByPosition(3, i).cellstyle = &quot;List-num-centro&quot;
-				oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-num-euro&quot;
-				&apos;oSheet.GetCellByPosition(7, i).cellstyle = &quot;EU&quot;		
-			end if
-			if oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot; then
-				oSheet.GetCellByPosition(2, i).string = 	oSheet.GetCellByPosition(2, i).string &amp; &quot; - &quot; &amp; &quot;Solo Fornitura&quot;
-			end if 
-			if oSheet.GetCellByPosition(5, i).string &lt;&gt; &quot;&quot; then
-				oSheet.GetCellByPosition(4, i).value = oSheet.GetCellByPosition(5, i).value 
-				oSheet.GetCellByPosition(2, i).string = oSheet.GetCellByPosition(2, i).string &amp; &quot; - &quot; &amp; &quot;Fornitura in Opera&quot;
-			end if 
-	next
-	print &quot;FINITO&quot;
-end sub
-
-
-Sub Sistema_il_listino
-	oSheet=ThisComponent.currentController.activeSheet 
-	iRowE = getLastUsedRow(oSheet)
-	dim alfa as string
-	dim beta as integer
-	for i = 2 to iRowE 
-			if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot; and oSheet.GetCellByPosition(2, i).value = isnotANUMBER and _
-				oSheet.GetCellByPosition(2, i).value &lt;&gt; 0 then
-				
-				beta = oSheet.GetCellByPosition(2, i).value
-				alfa = beta
-				oSheet.GetCellByPosition(2, i).string = beta &apos;&quot;&apos;&quot; &amp; oSheet.GetCellByPosition(2, i).value
-				&apos;	oSheet.GetCellByPosition(9, i).string = &quot;&quot;
-			end if
-		&apos;	oSheet.GetCellByPosition(0, i).string &amp; &quot;.&quot; &amp; oSheet.GetCellByPosition(1, i).string &amp; &quot;.&quot; &amp; oSheet.GetCellByPosition(2, i).string 
-		&apos;	if oSheet.GetCellByPosition(7, i).value = 0 then
-		&apos;		oSheet.GetCellByPosition(7, i).string = &quot;&quot;
-		&apos;	end if
-	next
-	print &quot;FINITO&quot;
-end Sub
-Sub sdfgh
-	oSheet=ThisComponent.currentController.activeSheet 
-	print	oSheet.GetCellByPosition(0, 21899).String
-End Sub
-
 rem ----------------------------------------------------------------------
 Sub elimina_righe_vuote
 	oSheet=ThisComponent.currentController.activeSheet 
@@ -959,97 +966,6 @@ Sub elimina_righe_vuote
 	Next
 oltre:
 	print &quot;FINITO&quot;
-end sub
-
-Sub Sistema_il_listino_______________________
-	oSheet=ThisComponent.currentController.activeSheet 
-	iRowE = getLastUsedRow(oSheet)
-	for i = 16 to iRowE 
-		goto salta
-			if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot; and _
-				oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot; and _
-				oSheet.GetCellByPosition(6, i).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(7, i).string = &quot;&quot; and _
-					oSheet.GetCellByPosition(4, i+1).string &lt;&gt; &quot;&quot; and _
-				oSheet.GetCellByPosition(2, i+1).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(7, i+1).string = &quot;&quot; and _
-				oSheet.GetCellByPosition(6, i+1).string = &quot;&quot; then
-				&apos;print i
-				oSheet.GetCellByPosition(4, i).string = oSheet.GetCellByPosition(4, i).string &amp; &quot; &quot; &amp; Chr(10) &amp; &quot; &quot; &amp; oSheet.GetCellByPosition(4, i+1).string
-				oSheet.getrows.removebyindex(i+1,1)
-			end if
-		salta:		&apos;exit for
-		goto salta1
-			if oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot; and _
-					oSheet.GetCellByPosition(7, i).string &lt;&gt; &quot;&quot; and _
-					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;%&quot; then
-				&apos;	print i
-					oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-stringa-sin&quot;
-						oSheet.GetCellByPosition(6, i).cellstyle = &quot;List-num-centro&quot;
-						oSheet.GetCellByPosition(7, i).cellstyle = &quot;List-num-euro&quot;
-				&apos;	print i
-			&apos;	end if
-			end if
-		salta1:
-		if oSheet.GetCellByPosition(2, i).string &lt;&gt; &quot;&quot; and _
-					oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot; and _
-					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot; and _
-					oSheet.GetCellByPosition(7, i).string &lt;&gt; &quot;&quot; and _
-					oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;%&quot; then
-				&apos;	print i
-					oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-stringa-sin&quot;
-						oSheet.GetCellByPosition(6, i).cellstyle = &quot;List-num-centro&quot;
-						oSheet.GetCellByPosition(7, i).cellstyle = &quot;List-num-euro&quot;
-				&apos;	print i
-			&apos;	end if
-		end if
-
-	next
-	print &quot;FINITO&quot;
-end sub
-
-Sub Sistema_il_listino____
-	oSheet=ThisComponent.currentController.activeSheet 
-	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE 
-			if oSheet.GetCellByPosition(0, i).string &lt;&gt; &quot;&quot; then
-				oSheet.GetCellByPosition(1, i).string = oSheet.GetCellByPosition(0, i).string &amp; &quot; &quot; &amp; oSheet.GetCellByPosition(1, i).string	
-				oSheet.GetCellByPosition(1, i).cellstyle = &quot;List-stringa-sin&quot;
-				oSheet.GetCellByPosition(2, i).cellstyle = &quot;List-stringa-sin&quot;
-				oSheet.GetCellByPosition(3, i).cellstyle = &quot;List-num-centro&quot;
-				oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-num-euro&quot;
-				&apos;oSheet.GetCellByPosition(7, i).cellstyle = &quot;EU&quot;		
-			end if
-			if oSheet.GetCellByPosition(7, i).string &lt;&gt; &quot;&quot; then
-				oSheet.GetCellByPosition(4, i).value = oSheet.GetCellByPosition(7, i).value 
-				oSheet.GetCellByPosition(4, i).cellstyle = oSheet.GetCellByPosition(7, i).cellstyle
-				oSheet.GetCellByPosition(4, i).cellstyle = &quot;List-%&quot;			
-			end if
-	next
-	print &quot;FINITO&quot;
-end sub
-
-
-Sub Sistema_listino_2
-	oSheet=ThisComponent.currentController.activeSheet 
-	iRowE = getLastUsedRow(oSheet)
-	for i = 2 to iRowE 
-			if oSheet.GetCellByPosition(3, i).string &lt;&gt; &quot;&quot; and _
-				oSheet.GetCellByPosition(4, i).string &lt;&gt; &quot;&quot; and _
-				oSheet.GetCellByPosition(2, i).string = &quot;&quot; then
-				oSheet.GetCellByPosition(6, i-1).string = oSheet.GetCellByPosition(6, i).string 
-				oSheet.GetCellByPosition(7, i-1).string = oSheet.GetCellByPosition(7, i).string
-				oSheet.getrows.removebyindex(i,1)
-				&apos;oSheet.GetCellByPosition(7, i-1).cellstyle = oSheet.GetCellByPosition(10, i).cellstyle			
-			end if
-	next
-	print &quot;FINITO&quot;
-end sub
-
-
-sub adr
-	oSheet=ThisComponent.currentController.activeSheet 
-	Salva_spazio (osheet)
 end sub
 
 

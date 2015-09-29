@@ -723,7 +723,7 @@ salta:
 			oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 			oConv.Address = oSheet.GetCellByPosition( iColTran+iNumSAL-1, iUFF+1).getCellAddress
 			sT = oConv.UserInterfaceRepresentation												
-			oSheet.GetCellByPosition( iColTran+iNumSAL-1, i).formula = &quot;=IF(&quot; &amp; sT &amp; &quot;&lt;&gt;&quot;&quot;.&quot;&quot;;&quot; &amp; sT &amp; &quot;*L&quot; &amp; i+1 &amp; &quot;; &quot;&quot;.&quot;&quot; )&quot;
+			oSheet.GetCellByPosition( iColTran+iNumSAL-1, i).formula = &quot;=IF(&quot; &amp; sT &amp; &quot;&lt;&gt;&quot;&quot;.&quot;&quot;;&quot; &amp; sT &amp; &quot;*L&quot; &amp; i+1 &amp; &quot;; &quot;&quot;.&quot;&quot;)&quot;
 			oSheet.GetCellByPosition( iColTran+iNumSAL-1, i).cellstyle = &quot;Comp-Sal-Valuta sotto_p&quot;
 			
 			

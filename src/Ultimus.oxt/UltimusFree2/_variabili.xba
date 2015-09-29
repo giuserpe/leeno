@@ -63,9 +63,10 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 rem ----------------------------------------------------------------------
 rem visualizza le toolbar leeno
 	Dim sName$
-	For Each sName In GetmyToolBarNames()
-		toolbar_on (sName, 1)
-	Next
+	Toolbar_vedi
+&apos;	For Each sName In GetmyToolBarNames()
+&apos;		toolbar_on (sName, 1)
+&apos;	Next
 	toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, 0)
 End Sub
 rem ######################################################################

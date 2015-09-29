@@ -81,7 +81,7 @@ GoTo salta: &apos;solo per debug
 	Exit Sub
 salta:
 	Genera_LIBRETTO
-	Genera_REGISTRO
+&apos;	Genera_REGISTRO &apos; questa è annidata in Genera_LIBRETTO per evitare che sia avviata quando non ci sono voci da registrare
 	msgbox (&quot;La generazione degli allegati contabili è stata completata.&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
 	fine:
@@ -1296,7 +1296,7 @@ rem recuperno l&apos;ultimo numero di pagina usato (serve in caso di libretto un
 		old_nPage=oSheetCont.getcellbyposition(20,lRow).value
 &apos;Print old_nPage
 		daVoce = oSheetCont.getcellbyposition(0,daVoce).getstring()
-		If cint(davoce)=0 Then &apos; daVoce= &quot;Fine Computo&quot; Then 
+		If cint(davoce)=0 Then 
 			msgbox 	&quot;Non ci sono voci da registrare&quot;,48, &quot;AVVISO!&quot;
 			Exit sub
 		End if
@@ -1453,7 +1453,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	yS2=oEnd.RangeAddress.EndColumn	&apos;colonna
 	
 	oS2.GetCellByPosition(yS2+nSal,xS2+1).value = nSal &apos;numero sal
-	Print datafirma
+&apos;	Print &quot;datafirma &quot; &amp; datafirma
 	oS2.GetCellByPosition(yS2+nSal,xS2+2).value = datafirma &apos;data
 	oS2.GetCellByPosition(yS2+nSal,xS2+24).value = aVoce &apos; ultima voce libretto
 	oS2.GetCellByPosition(yS2+nSal,xS2+25).value = inumPag &apos; ultima pagina libretto
@@ -1553,5 +1553,6 @@ Ripristina_statusLine &apos;Barra_chiudi_sempre_4
 Protezione_area (&quot;CONTABILITA&quot;,nomearea)
 Struttura_Contab (&quot;#Lib#&quot;)
 RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene cambiata
+	Genera_REGISTRO
 end Sub
 </script:module>

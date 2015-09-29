@@ -15,8 +15,8 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton17" dlg:tab-index="5" dlg:left="5" dlg:top="30" dlg:width="90" dlg:height="15" dlg:help-text="Mostra/Nascondi la colonna del sommario COMPUTO" dlg:default="true" dlg:value="Sommario Computo ON/OFF" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.Sommario_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton18" dlg:tab-index="6" dlg:left="5" dlg:top="10" dlg:width="90" dlg:height="15" dlg:printable="false" dlg:help-text="genera qui una colonna di Sommario degli importi a Computo" dlg:default="true" dlg:value="Genera Sommario Computo" dlg:multiline="true">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Accessori_2.Rifa_AA_BB_Computo?language=Basic&amp;location=application" script:language="Script"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton18" dlg:tab-index="6" dlg:left="5" dlg:top="10" dlg:width="90" dlg:height="15" dlg:printable="false" dlg:help-text="Rigenera i commari di Computo, Variante, Contabilità e Quadro di raffronto" dlg:default="true" dlg:value="Rigenera tutti i Sommari" dlg:multiline="true">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.inizializza_elenco?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton24" dlg:tab-index="3" dlg:left="93" dlg:top="-50" dlg:width="47" dlg:height="14" dlg:help-text="Crea una nuova Voce (in bianco) alla posizione corrente del cursore" dlg:value="Crea Nuova Voce" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.Nuova_Voce_scelta?language=Basic&amp;location=application" script:language="Script"/>
@@ -51,7 +51,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="13" dlg:left="100" dlg:top="30" dlg:width="90" dlg:height="14" dlg:help-text="Mostra/Nascondi la colonna del sommario CONTABILITA&apos;" dlg:default="true" dlg:value="Sommario Contabilità ON/OFF" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.Sommario_Contab_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="14" dlg:left="100" dlg:top="10" dlg:width="90" dlg:height="15" dlg:printable="false" dlg:help-text="genera qui una colonna di Sommario degli importi acquisi in Contabilità" dlg:default="true" dlg:value="Genera Sommario Contabilità" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="14" dlg:left="208" dlg:top="11" dlg:width="90" dlg:height="15" dlg:printable="false" dlg:help-text="genera qui una colonna di Sommario degli importi acquisi in Contabilità" dlg:default="true" dlg:value="Genera Sommario Contabilità" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Accessori_2.Rifa_GG_G1G1_Contab?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:fixedline dlg:style-id="0" dlg:id="FixedLine1" dlg:tab-index="15" dlg:left="5" dlg:top="50" dlg:width="185" dlg:height="1"/>

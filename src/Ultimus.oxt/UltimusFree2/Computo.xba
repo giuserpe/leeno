@@ -36,24 +36,10 @@ rem ----------------------------------------------------------------------
 		oSheet.GetCellByPosition(2,1).cellstyle = &quot;EP-a -Top&quot; Then 
 		insrows (0, 1)
 		GoTo esegui:
-	&apos;	Else
-	&apos;	Print
-	&apos;	Exit Sub
 	EndIf
-rem ----------------------------------------------------------------------
-&apos;	oEnd=uFindString(&quot;Cod.Voce&quot;, oSheet)	
-&apos;	If isNull (oEnd) or isEmpty (oEnd) Then
-&apos;		GoTo esegui:
-&apos;		Else
-&apos;			test1 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
-&apos;			oEnd=uFindString(&quot;tag usata/non usata&quot;, oSheet)
-&apos;			test2 = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA
-&apos;		If test1=0 And test2=0 Then insRows (test1, 2) &apos;insertByIndex non funziona 	
-&apos;	End If
 rem ----------------------------------------------------------------------
 esegui:
 &apos; 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
-
 rem ----------------------------------------------------------------------
 REM PLUSCI LE PRIME DUE RIGHE
 	Flags = com.sun.star.sheet.CellFlags.STRING + _
@@ -61,8 +47,8 @@ REM PLUSCI LE PRIME DUE RIGHE
 			com.sun.star.sheet.CellFlags.HARDATTR + _
 			com.sun.star.sheet.CellFlags.FORMULA
 	oSheet.getCellRangeByPosition(0, 0, 100, 1).clearContents(Flags)
-rem ----------------------------------------------------------------------
-&apos;	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
+rem cancella tutti i sommari
+	oSheet.getCellRangeByPosition(10, 0, 100,getLastUsedRow(oSheet)).clearContents(Flags)
 	oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
 rem ----------------------------------------------------------------------
 rem riga di intestazione
@@ -78,17 +64,62 @@ rIntest = 2
 	oSheet.GetCellByPosition(7,rIntest).setstring(&quot;Codice di origine prezzo&quot;)
 	oSheet.GetCellByPosition(8,rIntest).setstring(&quot;Flag&quot; + chr(13) +&quot;analisi&quot;)
 	oSheet.GetCellByPosition(9,rIntest).setstring(&quot;Usata&quot; + chr(13) + &quot;Non usata&quot;)
-	oSheet.GetCellByPosition(10,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;a computo&quot;)
-	oSheet.GetCellByPosition(11,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;a computo&quot;)
-	oSheet.GetCellByPosition(12,rIntest).setstring(&quot;&quot;)
-	oSheet.GetCellByPosition(13,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;contabilizzate&quot;)
-	oSheet.GetCellByPosition(14,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;contabilizzati&quot;)
-	oSheet.getCellRangeByPosition(0, rIntest, 14 , rIntest).cellstyle = &quot;EP-a -Top&quot;
-	oSheet.getCellRangeByName(&quot;I1:J1&quot;).Columns.IsVisible=false
-	oSheet.getCellRangeByName(&quot;M1:M1&quot;).Columns.IsVisible=false
 	
-rem ----------------------------------------------------------------------
-&apos;insRows (1,1)
+	oSheet.GetCellByPosition(10,rIntest).setstring(&quot;&quot;)
+	oSheet.GetCellByPosition(11,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;computo&quot;)
+	oSheet.GetCellByPosition(12,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;computo&quot;)
+	oSheet.GetCellByPosition(13,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;computo&quot;)
+	oSheet.GetCellByPosition(14,rIntest).setstring(&quot;&quot;)
+
+	oSheet.GetCellByPosition(15,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;contabilità&quot;)
+	oSheet.GetCellByPosition(16,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;contabilità&quot;)
+	oSheet.GetCellByPosition(17,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;contabilità&quot;)
+	oSheet.GetCellByPosition(18,rIntest).setstring(&quot;&quot;)
+	
+	oSheet.GetCellByPosition(19,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;variante&quot;)
+	oSheet.GetCellByPosition(20,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;variante&quot;)
+	oSheet.GetCellByPosition(21,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;variante&quot;)
+	
+	oSheet.GetCellByPosition(22,rIntest).setstring(&quot;&quot;)
+	oSheet.GetCellByPosition(23,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;variaz.&quot;)
+	oSheet.GetCellByPosition(24,rIntest).setstring(&quot;IMPORTI&quot; + chr(13) + &quot;in più&quot;)
+	oSheet.GetCellByPosition(25,rIntest).setstring(&quot;IMPORTI&quot; + chr(13) + &quot;in meno&quot;)
+	oSheet.GetCellByPosition(26,rIntest).setstring(&quot;VAR. %&quot;)
+
+	oSheet.getCellRangeByPosition(0, rIntest, 26 , rIntest).cellstyle = &quot;EP-a -Top&quot;
+	oSheet.getCellRangeByName(&quot;I1:J1&quot;).Columns.IsVisible=false
+	
+	oSheet.GetCellByPosition(10,rIntest).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(14,rIntest).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(18,rIntest).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(22,rIntest).cellstyle = &quot;Default&quot;
+	
+	
+	set_larghezza_colonne
+
+&apos;#########################################################################
+&apos; RAGGRUPPA
+GoTo no:
+	iSheet = oSheet.RangeAddress.sheet
+	Dim oCRA As New com.sun.star.table.CellRangeAddress
+	oCRA.Sheet =iSheet
+	oCRA.StartColumn = 10
+	oCRA.EndColumn = 13
+	oSheet.group(oCRA,0)
+
+	oCRA.StartColumn = 14
+	oCRA.EndColumn = 17
+	oSheet.group(oCRA,0)
+
+	oCRA.StartColumn = 18
+	oCRA.EndColumn = 21
+	oSheet.group(oCRA,0)
+
+	oCRA.StartColumn = 22
+	oCRA.EndColumn = 26
+	oSheet.group(oCRA,0)
+no:
+&apos;#########################################################################
 oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
 If isNull (oDoc) or isEmpty (oDoc) Then
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,getLastUsedRow(oSheet)+1))
@@ -98,42 +129,53 @@ If isNull (oDoc) or isEmpty (oDoc) Then
 lRowE = oDoc.CellAddress.Row
 rem	riga di controllo importo
 	oSheet.GetCellByPosition(1,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
-	oSheet.GetCellByPosition(11,1).FORMULA=&quot;=SUBTOTAL(9;L3:L&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale computo
-	oSheet.GetCellByPosition(14,1).FORMULA=&quot;=SUBTOTAL(9;O3:O&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale contabilità
-	oSheet.GetCellByPosition(10,lRowE).STRING=&quot;TOTALE&quot; &apos;totale computo
-	oSheet.GetCellByPosition(10,lRowE).cellstyle=&quot;EP statistiche_q&quot; &apos;totale computo
-	oSheet.GetCellByPosition(11,lRowE).FORMULA=&quot;=SUBTOTAL(9;L3:L&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale computo
-	oSheet.GetCellByPosition(11,lRowE).cellstyle=&quot;EP statistiche&quot; &apos;totale computo
-	oSheet.GetCellByPosition(13,lRowE).STRING=&quot;TOTALE&quot; &apos;totale computo
-	oSheet.GetCellByPosition(13,lRowE).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
-	oSheet.GetCellByPosition(14,lRowE).FORMULA=&quot;=SUBTOTAL(9;O3:O&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;totale contabilità
-	oSheet.GetCellByPosition(14,lRowE).cellstyle=&quot;EP statistiche_Contab&quot; &apos;totale computo
+	oSheet.GetCellByPosition(13,1).FORMULA=&quot;=SUBTOTAL(9;N3:N&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+	oSheet.GetCellByPosition(21,1).FORMULA=&quot;=SUBTOTAL(9;V3:V&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+	oSheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+	oSheet.GetCellByPosition(25,1).FORMULA=&quot;=SUBTOTAL(9;Z3:Z&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+	oSheet.GetCellByPosition(26,1).FORMULA=&quot;=SUBTOTAL(9;AA3:AA&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+		
+	oSheet.getCellRangeByPosition(0, 1, 26 , 1).cellstyle = &quot;comp In testa&quot;
+	oSheet.GetCellByPosition(10,1).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(14,1).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(18,1).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(22,1).cellstyle = &quot;Default&quot;
+	
+rem	riga di totale importo COMPUTO
+	oSheet.GetCellByPosition(12,lRowE).STRING=&quot;TOTALE&quot;
+	oSheet.GetCellByPosition(13,lRowE).FORMULA=&quot;=SUBTOTAL(9;N3:N&quot;&amp; lRowE+1 &amp;&quot;)&quot;
 
+rem	riga di totale importo CONTABILITA&apos;
+	oSheet.GetCellByPosition(16,lRowE).STRING=&quot;TOTALE&quot;
+	oSheet.GetCellByPosition(17,lRowE).FORMULA=&quot;=SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;)&quot;
 
-	oSheet.getCellRangeByPosition(0, 1, 14 , 1).cellstyle = &quot;comp In testa&quot;
+rem	riga di totale importo VARIANTE
+	oSheet.GetCellByPosition(20,lRowE).STRING=&quot;TOTALE&quot;
+	oSheet.GetCellByPosition(21,lRowE).FORMULA=&quot;=SUBTOTAL(9;V3:V&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+
+rem	riga di totale importo PARALLELO
+	oSheet.GetCellByPosition(23,lRowE).STRING=&quot;TOTALE&quot;
+	oSheet.GetCellByPosition(24,lRowE).FORMULA=&quot;=SUBTOTAL(9;Y3:Y&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+	oSheet.GetCellByPosition(25,lRowE).FORMULA=&quot;=SUBTOTAL(9;Z3:Z&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+	oSheet.getCellRangeByPosition(10, lRowE, 26 , lRowE).cellstyle = &quot;EP statistiche_Contab&quot;
+
 	oSheet.getCellByPosition(29,1).cellstyle = &quot;Comp TOTALI %&quot;
-
-&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,3))
+	oSheet.GetCellByPosition(10,lRowE).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(14,lRowE).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(18,lRowE).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(22,lRowE).cellstyle = &quot;Default&quot;
 rem ----------------------------------------------------------------------	
-rem rigenera i sommari
+&apos; rigenera tutti i sommari
 Rifa_AA_BB_Computo
-Rifa_GG_G1G1_Contab
-
-set_larghezza_colonne
 rem ----------------------------------------------------------------------
 rem cancello fomrattazioni dirette	
 	Flag = com.sun.star.sheet.CellFlags.HARDATTR
 	oSheet.getCellRangeByPosition(0, 0, 250, lRowE+10).clearContents(Flag)
-rem ----------------------------------------------------------------------
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
-	If Not isNull (oEnd) or isEmpty (oEnd) Then Rifa_GG_G1G1_Contab
-	
-sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
-&apos;Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
-
-&apos;Barra_chiudi_sempre_4 
+sistema_attributi_sheet
 barra_fatto
+	msgbox (&quot;Ho fatto!&quot; &amp; CHR$(10) _
+			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Operazione completata&quot;)
 End Sub
 rem ######################################################################
 
@@ -224,7 +266,6 @@ rem rigo parziale già esistente:
 			If InStr (oSheet.GetCellByPosition(8 , lrow).string, &quot;Parziale [&quot;) Then GoTo procedi
 rem ----------------------------------------------------------------------
 rem rigo normale:
-
 			If 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s&quot; And _
 				osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; And _
 				osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
@@ -290,7 +331,7 @@ rem ---------------------------------------------------------------------
 				EndIf
 				i=i-1
 			Loop 
-			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma
+			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot;)&quot;) &apos;Somma
 		Case &quot;CONTABILITA&quot;
 rem ---------------------------------------------------------------------
 			oSheet.getCellRangeByPosition(2, lrow, 7, lrow).cellstyle = &quot;comp sotto centro_R&quot;
@@ -314,7 +355,7 @@ rem ---------------------------------------------------------------------
 				EndIf
 				i=i-1
 			Loop 
-			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot; )-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot; )&quot;) &apos;Somma
+			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot;)&quot;) &apos;Somma
 	End Select 
 rem ----------------------------------------------------------------------
 fine:
@@ -554,11 +595,10 @@ rem SE COMPUTO
 &apos;		osheet = thisComponent.CurrentController.ActiveSheet
 		If lRowE &gt;lRowF+1 then
 				oSheet.getrows.removebyindex(lRowF,	lRowE-lRowF)
-		end if
+		end If
+&apos;		Exit Sub 
 		i = 0
 		For i = 0 to 1000
-&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, lRowE))
-&apos;Print 
 			if oSheet.GetCellByPosition(0 , lRowE).CellStyle = &quot;Comp TOTALI&quot; OR _
 				oSheet.GetCellByPosition(0 , lRowE).CellStyle = &quot;Reg_prog&quot; Then
 				iserisco_qui = lRowE

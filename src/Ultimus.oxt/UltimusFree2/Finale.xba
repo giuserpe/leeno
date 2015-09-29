@@ -46,10 +46,9 @@ rem RIDUCI ALTEZZA PRIMA RIGA
 	
 end sub
 
-sub protmp
-
-	Sbianca_e_o_consolida(1, &quot;Parla&quot;)
-			
+Sub interrompi_collegamento
+	Dim eLinks()
+	eLinks() = ThisComponent.ExternalDocLinks.ElementNames()
 end sub
 
 
@@ -348,8 +347,18 @@ END SUB
 SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue formule e i suoi link&apos; usa CopiaSheet 
 &apos; &apos; Shortcut: non assegnata
 	dim nEndRow as long
-	dim nEndCol as long
-	
+	dim nEndCol as Long
+&apos;-------------------------------------------------------------------------
+	oSheet = ThisComponent.currentcontroller.activesheet
+	sAttributo = Trova_Attr_Sheet
+	Select Case sAttributo
+	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;, &quot;TIPO_ANALISI&quot;, &quot;TIPO_EP&quot;
+		GoTo procedi:
+	Case Else
+		Exit Sub
+	End Select	
+procedi:
+&apos;-------------------------------------------------------------------------
 	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	ThisComponent.unlockControllers 	
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
@@ -363,12 +372,9 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	Barra_Apri_Chiudi_4
 &apos;	on error goto Gestione_Errore
 	Verifica_chiudi_preview
-&apos;--------------------------------------------------
-	oSheet = ThisComponent.currentcontroller.activesheet
-	
-	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
-			 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-	End If 
+&apos;-------------------------------------------------------------------------
+
+	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; )
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
 	
@@ -390,7 +396,6 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	MOSTRA_colonne (&quot;on&quot;)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 &apos; in caso di tebella del computo o cotabilità
-	sAttributo = Trova_Attr_Sheet
 	Select Case sAttributo
 	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;
 		For n = 1 To lLastUrow
@@ -493,7 +498,8 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	osheet.getCellRangeByPosition (0,0,100,1).ClearContents(iCellAttr)
 	oSheet.getrows.removebyindex(0,1)
 	fissa (0,2)
-	Firme_in_calce
+	If sAttributo = &quot;TIPO_COMPUTO&quot; Then Firme_in_calce
+
 &apos;PRINT
 	Write_PageStyle
 &apos;Visualizza_PageBreak
@@ -501,13 +507,59 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	oSheet.setTitleRows(RepeatRows)
 	oSheet.setPrintTitleRows(PrintRepeatRows)
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
-	msgbox &quot;Questa tabella è un documento esterno al file di origine.&quot;&amp; CHR$(10)_
-		&amp; &quot;Conviene salvarla subito.&quot;, 48, &quot;AVVISO!&quot;
+	lRow = getlastusedrow (oSheet)
+&apos;#########################################################################
+&apos; questo serve ad evitare l&apos;errore di riferimento circolare in excel
+&apos; OCCHIO , PERO&apos;, AL RANGE 
+	For i = 0 To lRow
+		If InStr (oSheet.getCellByPosition(7,i).FORMULA, &quot;SUBTOTAL&quot;) &gt; 0 Then
+			form() =  (split (oSheet.getCellByPosition(7,i).FORMULA,&quot;H&quot;))
+			row = split (form(2), &quot;)&quot;)
+			nForm = form(0) &amp; &quot;H&quot; &amp; form(1) &amp; &quot;H&quot; &amp; cstr(CInt(row(0))-1) &amp; &quot;)&quot;
+			oSheet.getCellByPosition(7,i).FORMULA = nForm
+		EndIf
+	Next i
+	For i = 0 To lRow
+		If InStr (oSheet.getCellByPosition(9,i).FORMULA, &quot;SUBTOTAL&quot;) &gt; 0 Then
+			form = (split (oSheet.getCellByPosition(9,i).FORMULA, &quot;J&quot;))
+			val1 = cInt(split (form(1), &quot;:&quot;)(0))
+			val2 = cInt(split (form(2), &quot;)&quot;)(0))
+			val1 = cStr(val1(0)+1)
+			val2 = cStr(val2(0)-1)
+			nform = &quot;=SUBTOTAL(9;J&quot; + val1 + &quot;:J&quot; + val2 + &quot;)&quot;
+			oSheet.getCellByPosition(9,i).FORMULA = nForm
+		EndIf
+	Next i
+&apos;#########################################################################
+	msgbox &quot;Questo è un nuovo documento indipendente dal file di origine.&quot;&amp; CHR$(10)_
+		&amp; &quot;Conviene salvarlo subito.&quot;, 48, &quot;AVVISO!&quot;
 	exit sub
 	Gestione_Errore:
 	Barra_Apri_Chiudi_4
 	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
-END SUB
+END Sub
+
+Sub mizzica
+	form = (split (&quot;=SUBTOTAL(9;J2:J171)&quot;, &quot;J&quot;))
+	val1 = cInt(split (form(1), &quot;:&quot;)(0))
+	val2 = cInt(split (form(2), &quot;)&quot;)(0))
+	val1 = cStr(val1(0)+1)
+	val2 = cStr(val2(0)-1)
+	nform = &quot;=SUBTOTAL(9;J&quot; + val1 + &quot;:J&quot; + val2 + &quot;)&quot;
+	Print nform
+Exit Sub
+
+	For i = 0 To lRow
+		If InStr (oSheet.getCellByPosition(9,i).FORMULA, &quot;SUBTOTAL&quot;) &gt; 0 Then
+			form() =  (split (oSheet.getCellByPosition(9,i).FORMULA,&quot;H&quot;))
+			row = split (form(2), &quot;)&quot;)
+			nForm = form(0) &amp; &quot;H&quot; &amp; form(1) &amp; &quot;H&quot; &amp; cstr(CInt(row(0))-1) &amp; &quot;)&quot;
+			oSheet.getCellByPosition(7,i).FORMULA = nForm
+		EndIf
+	Next i
+End Sub
+
+
 
 
 
@@ -1362,10 +1414,9 @@ ThisComponent.CurrentController.Select(oSheet)
 Adatta_Altezza_riga
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	Select Case oSheet.Name &apos;sAttributo
-	 Case &quot;TIPO_COMPUTO&quot;, &quot;COMPUTO&quot;
+	 Case &quot;TIPO_COMPUTO&quot;, &quot;COMPUTO&quot;, &quot;COMPUTO_print&quot;
 	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800
 		&apos;print &quot;Tipo computo&quot;
-		&apos;oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
 		sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString(sString$, oSheet)	
 		If isNull (oEnd) or isEmpty (oEnd) 		then
@@ -1376,7 +1427,7 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 &apos;		lLastUrow = getLastUsedRow(oSheet)
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 2
-		selArea(0).EndColumn = 41&apos; getLastUsedCol(oSheet)
+		selArea(0).EndColumn = 41 &apos; getLastUsedCol(oSheet)
 	&apos;	end if	
 		selArea(0).EndRow = lRowE
 	
@@ -1390,16 +1441,6 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 		oSheet.setTitleRows(oTitles)
  
 		oSheet.setPrintareas(selArea())
-			
-	&apos;&apos;&apos;	oRange = oSheet.getCellRangeByName(&quot;A1:AZ&quot; &amp; lRowE + 10)
-	&apos;&apos;&apos;	Pulisci_Tabella(oRange)
-		&apos;Queste ,invece, selezionano il range usato(un po più abbondante &quot; &quot;AZ&quot;&amp;lRowE+10 &quot;)
-		&apos;e viene chiamata la sub Pulisci_Tabella()
-		 
-		&apos; nasconde la riga di Fine Elenco
-&apos;		oRigaNascosta = oSheet.getRows().getByIndex (lrowE)
-&apos;		oRigaNascosta.isVisible = false 	&apos; nasconde la riga di Fine elenco
-		rem ALTEZZA riga di intestazione
 	 Case &quot;TIPO_ANALISI&quot;, &quot;Analisi di Prezzo&quot;
 		oSheet.Rows.OptimalHeight= TRUE&apos; adatta le righe
 		oEnd=uFindString(&quot;Fine ANALISI&quot;, oSheet)			
@@ -1457,28 +1498,14 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 		&apos;o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
 			
 		oSheet.setPrintareas(selArea())
-&apos;oSheet = ThisComponent.currentController.activeSheet
-&apos;xray oSheet
-&apos;oSheet.getCellRangeByposition(0,lLastUrow-3,0,lLastUrow).Rows.IsVisible=false &apos; nascondi righe
-&apos;		Dim oCRA As New com.sun.star.table.CellRangeAddress
-&apos;			oCRA.Sheet = oSheet.RangeAddress.sheet
-&apos;			oCRA.StartColumn = 	1
-&apos;			oCRA.StartRow = lLastUrow-3
-&apos;			oCRA.EndColumn = 19
-&apos;			oCRA.EndRow = lLastUrow
-&apos;			oSheet.group(oCRA,1,0)
+
 
 	Case &quot;TIPO_ELENCOP&quot;, &quot;TIPO_EP&quot;, &quot;Elenco Prezzi&quot;
 
 		oSheet.Rows.OptimalHeight= TRUE &apos; adatta le righe
 		oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 		rIntest=oStart.CellAddress.Row
-&apos;		oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
-&apos;xray oEnd
-&apos;		lRowE=oEnd.CellAddress.Row
-&apos;oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
-&apos;		lLastUrow = getLastUsedRow(oSheet) &apos;rem rigabart
-&apos;		lLastUrow = lRowE
+
 	lLastUrow=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
 		&apos;lLastUrow = lRowE+10
 		selArea(0).StartColumn = 0

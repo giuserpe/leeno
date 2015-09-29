@@ -4,8 +4,23 @@
 rem raccolta di utility di vario genere
 rem ######################################################################
 Sub bbv
-xray ThisComponent
+	oSheet = ThisComponent.Sheets.getByName(&quot;Foglio1&quot;)
+	n = 0
+	for i = 0 to 100
+		oSheet.GetCellByPosition(2,1).value = i
+		If oSheet.GetCellByPosition(5,4).value = 0.2 Then
+&apos;			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,n))
+&apos;			print
+			vaal = oSheet.GetCellByPosition(2,3).value
+			Print vaal
+			oSheet.GetCellByPosition(8,n).value = vaal
+		&apos;	Exit For
+			i = i + 0.1 -1
+			n = 1 + n
+		EndIf
 
+&apos;	Print 
+	Next
 End Sub
 
 Function SpeechEngine()as string     
@@ -174,7 +189,7 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 	rem larghezza colonne
 		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
 		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
-		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 7800
+		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 6300 &apos;7800
 		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 1300
 		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 1300
 		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 1300
@@ -185,7 +200,7 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 	rem larghezza colonne
 		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
 		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
-		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 7800
+		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 6300 &apos;7800
 		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 1300
 		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 1300
 		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 1300
@@ -195,22 +210,36 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;S&quot;).Columns.Width = 1700
 &apos;		InsRow = fRow+1 &apos;prima riga inserimento in Registro	
 		case = &quot;Elenco Prezzi&quot;
-		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 2000
-		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 13000
-		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 2200
-		oSheet.getColumns().getByName(&quot;D&quot;).Columns.Width = 2200
-		oSheet.getColumns().getByName(&quot;E&quot;).Columns.Width = 2200
-		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 2200
-		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 2200
-		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 3000
+		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 10000
+		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 1500
+		oSheet.getColumns().getByName(&quot;D&quot;).Columns.Width = 2300
+		oSheet.getColumns().getByName(&quot;E&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 2300
+		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 2300
+		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 1600
 		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1200
 		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1200
-		oSheet.getColumns().getByName(&quot;K&quot;).Columns.Width = 2200
-		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 3000
-		oSheet.getColumns().getByName(&quot;M&quot;).Columns.Width = 3000
-		oSheet.getColumns().getByName(&quot;N&quot;).Columns.Width = 3000
-		oSheet.getColumns().getByName(&quot;O&quot;).Columns.Width = 3000
+		oSheet.getColumns().getByName(&quot;K&quot;).Columns.Width = 200
+		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;M&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;N&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;O&quot;).Columns.Width = 200
+		oSheet.getColumns().getByName(&quot;P&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;Q&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;R&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;S&quot;).Columns.Width = 200
+		oSheet.getColumns().getByName(&quot;T&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;U&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;V&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;W&quot;).Columns.Width = 200
+		oSheet.getColumns().getByName(&quot;X&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;Y&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;Z&quot;).Columns.Width = 1600
+		oSheet.getColumns().getByName(&quot;AA&quot;).Columns.Width = 1600
 	end Select
+	ThisComponent.CurrentController.Select(oCell)
+	Adatta_Altezza_riga
 	fissa (0,idxrow+1)
 end Sub
 

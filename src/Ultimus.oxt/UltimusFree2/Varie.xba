@@ -933,21 +933,21 @@ Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tab
 		sotto =.EndRow
 	End With
 	Select Case nome_sheet &apos; Trova_Attr_Sheet
-	Case &quot;COMPUTO&quot; &apos;&quot;TIPO_COMPUTO&quot;
-	If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then lrow=lrow-1
-	If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp progress&quot; Then
-		lrow=lrow+1 rem PER INSERIMENTO SOTTO RIGA CORRENTE
-		oSheet.getRows.insertByIndex(lrow,1)
-		GoTo procedi_computo:
-	EndIf
-
-	If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Or _
-		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro&quot; And _
-		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot; Then
-		lrow=lrow+1 rem PER INSERIMENTO SOTTO RIGA CORRENTE
-		oSheet.getRows.insertByIndex(lrow,1)
-	Else
-		Exit Sub
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot; &apos;&quot;TIPO_COMPUTO&quot;
+		If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then lrow=lrow-1
+		If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp progress&quot; Then
+			lrow=lrow+1 rem PER INSERIMENTO SOTTO RIGA CORRENTE
+			oSheet.getRows.insertByIndex(lrow,1)
+			GoTo procedi_computo:
+		EndIf
+	
+		If oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot; Or _
+			oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp sotto centro&quot; And _
+			oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot; Then
+			lrow=lrow+1 rem PER INSERIMENTO SOTTO RIGA CORRENTE
+			oSheet.getRows.insertByIndex(lrow,1)
+		Else
+			Exit Sub
 	EndIf
 procedi_computo:
 rem immissione tags cat/subcat
@@ -965,7 +965,7 @@ rem imposto gli stili
 		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Blu&quot;
 rem ci metto le formule
 		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
-		oSheet.GetCellByPosition( 10 , lrow).formula = &quot;&quot;
+&apos;		oSheet.GetCellByPosition( 10 , lrow).formula = &quot;&quot;
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 , lrow))
 &apos;		Print 
 	Case &quot;CONTABILITA&quot; &apos;&quot;TIPO_CONTABILITA&quot;
@@ -1381,14 +1381,6 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
 	sAttributo = Trova_Attr_Sheet
-GoTo no
- 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 and _
- 		sAttributo = &quot;TIPO_COMPUTO&quot; Then
-		msgbox &quot;La rinumerazione è disabilitata perché è stata abilitata la Contabilità&quot;
- 		&apos; inibisce anche se la var apposita è diversa da 0
- 		exit sub
- 	endif
-no:
 	&apos;inibisce la rinumerazione se la var apposita è diversa da 0
  	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 and _
  		sAttributo = &quot;TIPO_COMPUTO&quot; then
@@ -1403,7 +1395,7 @@ no:
 	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; Then
 		s_R = &quot;_R&quot;
 	end if	
-	lStartRow = oSheet.GetCellByPosition( 0 , 0)
+&apos;	lStartRow = oSheet.GetCellByPosition(0 , 0)
 	numV = 1
 
 	lLastUrowNN = getLastUsedRow(oSheet)	
@@ -1423,12 +1415,12 @@ salto:
 &apos;	print &quot;comp Art-EP&quot; &amp; s_R
 &apos;	print &quot;Comp Start Attributo&quot; &amp; s_R
 	For i = 2 to lLastUrowNN
-		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; Or _
-			oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP_R&quot; Then &apos; &amp; s_R then &apos;&lt;&lt;&lt; vecchio modulo contabilità	 
-			 oSheet.GetCellByPosition(0 , (I)).value = numV 
+		if	oSheet.GetCellByPosition(1 , i).CellStyle = &quot;comp Art-EP&quot; Or _
+			oSheet.GetCellByPosition(1 , i).CellStyle = &quot;comp Art-EP_R&quot; Then &apos; &amp; s_R then &apos;&lt;&lt;&lt; vecchio modulo contabilità	 
+			 oSheet.GetCellByPosition(0 , i).value = numV
 			 numV = numV + 1
 		end if
-	next I
+	Next
 &apos;&apos;Clessid_lock_End
 
 	if IsNull(verbosa) Then

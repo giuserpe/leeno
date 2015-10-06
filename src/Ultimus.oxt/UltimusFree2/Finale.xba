@@ -47,8 +47,13 @@ rem RIDUCI ALTEZZA PRIMA RIGA
 end sub
 
 Sub interrompi_collegamento
-	Dim eLinks()
-	eLinks() = ThisComponent.ExternalDocLinks.ElementNames()
+&apos;	Dim eLinks()
+&apos;	eLinks() = ThisComponent.ExternalDocLinks&apos;.ElementNames()
+&apos;	xray eLinks()
+	n = ThisComponent.AreaLinks.getCount
+	For i = 0 To n - 1
+		ThisComponent.AreaLinks.removeByIndex(i)
+	Next i 
 end sub
 
 
@@ -342,7 +347,7 @@ exit sub
 Gestione_Errore:
 Barra_Apri_Chiudi_4
 DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
-END SUB
+END Sub
 
 SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue formule e i suoi link&apos; usa CopiaSheet 
 &apos; &apos; Shortcut: non assegnata
@@ -498,7 +503,7 @@ procedi:
 	osheet.getCellRangeByPosition (0,0,100,1).ClearContents(iCellAttr)
 	oSheet.getrows.removebyindex(0,1)
 	fissa (0,2)
-	If sAttributo = &quot;TIPO_COMPUTO&quot; Then Firme_in_calce
+&apos;	If sAttributo = &quot;TIPO_COMPUTO&quot; Then Firme_in_calce
 
 &apos;PRINT
 	Write_PageStyle
@@ -530,6 +535,15 @@ procedi:
 			oSheet.getCellByPosition(9,i).FORMULA = nForm
 		EndIf
 	Next i
+
+&apos;	For i = 0 To lRow
+&apos;		If InStr (oSheet.getCellByPosition(4,i).FORMULA, &quot;$COMPUTO.$&quot;) &gt; 0 Then
+&apos;			form = (split (oSheet.getCellByPosition(4,i).FORMULA, &quot;$J$&quot;))
+&apos;			val1 = cInt(form(1))-1
+&apos;			oSheet.getCellByPosition(4,i).FORMULA = &quot;=$H$&quot; &amp; val1
+&apos;		EndIf
+&apos;	Next i
+	
 &apos;#########################################################################
 	msgbox &quot;Questo è un nuovo documento indipendente dal file di origine.&quot;&amp; CHR$(10)_
 		&amp; &quot;Conviene salvarlo subito.&quot;, 48, &quot;AVVISO!&quot;
@@ -538,30 +552,6 @@ procedi:
 	Barra_Apri_Chiudi_4
 	DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END Sub
-
-Sub mizzica
-	form = (split (&quot;=SUBTOTAL(9;J2:J171)&quot;, &quot;J&quot;))
-	val1 = cInt(split (form(1), &quot;:&quot;)(0))
-	val2 = cInt(split (form(2), &quot;)&quot;)(0))
-	val1 = cStr(val1(0)+1)
-	val2 = cStr(val2(0)-1)
-	nform = &quot;=SUBTOTAL(9;J&quot; + val1 + &quot;:J&quot; + val2 + &quot;)&quot;
-	Print nform
-Exit Sub
-
-	For i = 0 To lRow
-		If InStr (oSheet.getCellByPosition(9,i).FORMULA, &quot;SUBTOTAL&quot;) &gt; 0 Then
-			form() =  (split (oSheet.getCellByPosition(9,i).FORMULA,&quot;H&quot;))
-			row = split (form(2), &quot;)&quot;)
-			nForm = form(0) &amp; &quot;H&quot; &amp; form(1) &amp; &quot;H&quot; &amp; cstr(CInt(row(0))-1) &amp; &quot;)&quot;
-			oSheet.getCellByPosition(7,i).FORMULA = nForm
-		EndIf
-	Next i
-End Sub
-
-
-
-
 
 SUB Duplica_e_Consolida_doc &apos; duplica e consolida ( usa CopiaSheet )
 &apos; &apos; specifica per RdO da )

@@ -466,11 +466,6 @@ lnumF = stardesktop.frames.getCount
 	sPG1=0
 end sub
 
-
-
-
-
-
 sub Importa_STILI &apos;tutti in blocco e sovrascrive 
 	&apos; aggiorno gli stili di cella sulla base di quelli del template di riferimento
 	&apos; attenzione li sovrascrive tutti (modulo suggerito da dfrench - Nuova Zelanda)
@@ -604,13 +599,13 @@ rem ----------------------------------------------------------------------
 rem controllo riga dei totali
 			oSheet.GetCellByPosition( 9 , i+1).string = &quot;&quot;
 			oSheet.GetCellByPosition( 9 , i+1).cellstyle = &quot;vuote2&quot;
-			oSheet.GetCellByPosition( 10 , i+1).string = &quot;&quot;
+&apos;			oSheet.GetCellByPosition( 10 , i+1).string = &quot;&quot;
 			oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
 			oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; i+2 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
 			oSheet.GetCellByPosition( 9 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
 			oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+1
-			oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; i+2 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
-			oSheet.GetCellByPosition( 10 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
+&apos;			oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; i+2 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
+&apos;			oSheet.GetCellByPosition( 10 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
 			oSheet.GetCellByPosition( 11 , lRow).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;
 			oSheet.GetCellByPosition( 11 , lRow).cellstyle = &quot;comp sotto Unitario&quot;
 			sformula=&quot;=IF(&quot;&quot;SOMMANO [%]&quot;&quot;=I&quot; &amp; lrow+1 &amp; &quot;;J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1 &amp; &quot;/100;J&quot;&amp; lrow+1 &amp; &quot;*L&quot;&amp; lrow+1 &amp; &quot;)&quot;
@@ -633,7 +628,8 @@ rem ----------------------------------------------------------------------
 					oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a peso&quot;
 				EndIf
 				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
-				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+&apos;				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+oSheet.GetCellByPosition( 10 , ii).formula = &quot;&quot;
 				If InStr (oSheet.GetCellByPosition(8, ii).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then parziale_core (ii)
 				i = lRow &apos;+ 1
 			Next

@@ -497,28 +497,28 @@ def XML_import (): #(filename):
             else:
                 mdo =''
 ########################################################################
-            #~ try:
-            if len (elem.findall('{six.xsd}prdDescrizione')) == 1:
-                desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
-                desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
-            else:
-        #descrizione voce
-                if elem.findall('{six.xsd}prdDescrizione')[0].get('lingua') == lingua_scelta:
-                    idx = 0 #ITALIANO
+            try:
+                if len (elem.findall('{six.xsd}prdDescrizione')) == 1:
+                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
+                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
                 else:
-                    idx = 1 #TEDESCO
-                desc_breve = elem.findall('{six.xsd}prdDescrizione')[idx].get('breve')
-                desc_estesa = elem.findall('{six.xsd}prdDescrizione')[idx].get('estesa')
-            if desc_breve == None:
-                desc_breve = ''
-            if desc_estesa == None:
-                desc_estesa = ''
-            if len(desc_breve) > len (desc_estesa):
-                desc_voce = desc_breve
-            else:
-                desc_voce = desc_estesa
-            #~ except IndexError:
-                #~ pass
+            #descrizione voce
+                    if elem.findall('{six.xsd}prdDescrizione')[0].get('lingua') == lingua_scelta:
+                        idx = 0 #ITALIANO
+                    else:
+                        idx = 1 #TEDESCO
+                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[idx].get('breve')
+                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[idx].get('estesa')
+                if desc_breve == None:
+                    desc_breve = ''
+                if desc_estesa == None:
+                    desc_estesa = ''
+                if len(desc_breve) > len (desc_estesa):
+                    desc_voce = desc_breve
+                else:
+                    desc_voce = desc_estesa
+            except IndexError:
+                pass
 ########################################################################
             sub_quot = elem.find('{six.xsd}prdQuotazione')
             if sub_quot != None:

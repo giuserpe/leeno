@@ -657,7 +657,7 @@ oor:package="org.openoffice.Office">
 								<value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import?language=Basic&amp;location=application</value>
 							</prop>
 							<prop oor:name="Title" oor:type="xs:string">
-								<value>Importa voci da prezziario XML-SIX</value>
+								<value>Importa voci da prezzario XML-SIX</value>
 							</prop>
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
@@ -672,7 +672,7 @@ oor:package="org.openoffice.Office">
 								<value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import_BOLZANO?language=Basic&amp;location=application</value>
 							</prop>
 							<prop oor:name="Title" oor:type="xs:string">
-								<value>Importa voci da prezziario XML-SIX bilingue - Provincia di Bolzano</value>
+								<value>Importa voci da prezzario XML-SIX bilingue - Provincia di Bolzano</value>
 							</prop>
 							<prop oor:name="Target" oor:type="xs:string">
 								<value>_self</value>
@@ -1676,7 +1676,7 @@ oor:package="org.openoffice.Office">
 								<value>_self</value>
 							</prop>
 						</node>
-
+<!--
 						<node oor:name="m13S8" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1694,7 +1694,7 @@ oor:package="org.openoffice.Office">
 								<value>_self</value>
 							</prop>
 						</node>
-
+-->
 						<node oor:name="m13S9" oor:op="replace">
 							<prop oor:name="Context" oor:type="xs:string">
 								<value>com.sun.star.sheet.SpreadsheetDocument</value>

@@ -327,9 +327,49 @@ Function Colonna_giusta_EP (oSheet as object)
  			print &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; 
  	end if
 
-end function
+end Function
 
+Global codice_da_cercare_in_elenco as String
+Sub cerca_in_elenco
+On Error GoTo fine:
+	osheet = thisComponent.CurrentController.ActiveSheet
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;, &quot;VARIANTE&quot;
+		lrow = range2cell
+		sStRange = Circoscrive_Voce_Computo_Att (lrow)
+		With sStRange.RangeAddress
+	 		lRow = .StartRow+1
+		End With	
+		codice_da_cercare_in_elenco = oSheet.getCellByPosition(1,lRow).String
+	End Select
+&apos; Print codice_da_cercare_in_elenco
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+&apos;	oCell=uFindString(codice_da_cercare_in_elenco, oSheet)
+&apos;	ThisComponent.CurrentController.Select(oCell)
+&apos;	ThisComponent.CurrentController.setFirstVisibleRow(oCell.RangeAddress.StartRow)
+fine:
+End Sub
 
-
-
+Function ultima_voce
+	oSheet = thisComponent.CurrentController.ActiveSheet
+	Dim test As Long
+	test = getlastusedrow(osheet)
+	
+	Select Case oSheet.Name
+		Case &quot;Elenco Prezzi&quot;
+			stile = &quot;EP-aS&quot;
+		Case &quot;Analisi di Prezzo&quot;
+			stile = &quot;An-sfondo-basso Att End&quot;
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+			stile = &quot;Comp End Attributo&quot;
+		Case &quot;CONTABILITA&quot;
+			stile = &quot;Comp End Attributo_R&quot;
+	End Select 	
+	For i = test To 0 Step -1
+		If oSheet.getCellByPosition(0, i).cellstyle = stile Then
+			ultima_voce = i
+			Exit Function
+		EndIf 
+	next
+End Function
 </script:module>

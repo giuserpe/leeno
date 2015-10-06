@@ -73,7 +73,7 @@ rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; lRowI+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
 				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
-				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
+&apos;				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
 				oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+4
 				i=lRow+1
 			If oSheet.GetCellByPosition( 2 , lRow+1).cellstyle = &quot;Comp TOTALI&quot; Then Exit For
@@ -471,7 +471,7 @@ rem ----------------------------------------------------------------------
 &apos;		oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
 		oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
 &apos;		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
-		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
+&apos;		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
 		oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+4
 		&apos;=SE(&quot;SOMMANO [%]&quot;=I15;J15*L15/100;J15*L15)
 		sformula=&quot;=IF(&quot;&quot;SOMMANO [%]&quot;&quot;=I&quot; &amp; lrow+1 &amp; &quot;;J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1 &amp; &quot;/100;J&quot;&amp; lrow+1 &amp; &quot;*L&quot;&amp; lrow+1 &amp; &quot;)&quot;
@@ -533,7 +533,7 @@ rem traslo anche evntuali collegamenti ad altre celle
 				End If 
 				If oSheet.GetCellByPosition( 8 , ii).cellstyle = &quot;comp 1-a&quot; Then oSheet.GetCellByPosition( 8 , ii).cellstyle = &quot;comp 1-a peso&quot;
 				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
-				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+&apos;				oSheet.GetCellByPosition( 10 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
 			Next
 			i = lRow + 1
 			If oSheet.GetCellByPosition( 2 , i).cellstyle = &quot;Comp TOTALI&quot; Then Exit For

@@ -279,7 +279,7 @@ Function Circoscrive_Voce_Computo_Att (ByVal lrow As Long)
 &apos;	lrow = range2cell
 	select Case oSheet.Name
 		REM ----------------------------------------------------------------------
-	Case = &quot;COMPUTO&quot;
+	Case = &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 		Select Case osheet.getCellByPosition (0, lrow).CellStyle
 		Case &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp Start Attributo&quot;, &quot;Comp End Attributo&quot;
 			GoTo procedo:

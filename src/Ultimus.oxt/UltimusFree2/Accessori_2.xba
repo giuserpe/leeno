@@ -258,6 +258,7 @@ Sub refreshAllSheetLinks() &apos;fa il refresh dei link esterni&apos;
 End Sub
 
 Sub Visualizza_sheet_TUTTE
+Rimetti_in_ordine_tab
 	oSheets = ThisComponent.Sheets
 	For I = 0 to oSheets.Count -1 
 		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
@@ -505,13 +506,13 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(7,2).setstring(&quot;Larg.&quot;)
 	oSheet.GetCellByPosition(8,2).setstring(&quot;Alt.&quot; + chr(13) +&quot;Peso&quot;)
 	oSheet.GetCellByPosition(9,2).setstring(&quot;Quantità&quot;)
-	oSheet.GetCellByPosition(10,2).setstring(&quot;Quantità perizia di variante&quot;)
+&apos;	oSheet.GetCellByPosition(10,2).setstring(&quot;Quantità perizia di variante&quot;)
 	oSheet.GetCellByPosition(11,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
 	oSheet.GetCellByPosition(13,2).setstring(&quot;Serve per avere le quantità&quot; + chr(13) + &quot;realizzate “pulite” e sommabili&quot;)
 	oSheet.GetCellByPosition(17,2).setstring(&quot;di cui&quot; + chr(13) + &quot;sicurezza&quot;)
 	oSheet.GetCellByPosition(18,2).setstring(&quot;Importo €&quot;)
-	oSheet.GetCellByPosition(19,2).setstring(&quot;Importo totale&quot; + chr(13) +&quot;perizia di variante&quot;)
-	oSheet.GetCellByPosition(24,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;sul totale&quot;)
+&apos;	oSheet.GetCellByPosition(19,2).setstring(&quot;Importo totale&quot; + chr(13) +&quot;perizia di variante&quot;)
+	oSheet.GetCellByPosition(24,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;sul totale&quot;) &apos; POTREBBE SERVIRE PER INDICARE L&apos;INCIDENZA DI OGNI SINGOLA VOCE
 	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
 	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
 	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
@@ -540,7 +541,7 @@ rem riga del totale
 	oSheet.GetCellByPosition(2,lRowE).setstring(&quot;TOTALI COMPUTO&quot;)
 	oSheet.GetCellByPosition(17,lRowE).FORMULA=&quot;=SUBTOTAL(9;R3:R&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo sicurezza
 	oSheet.GetCellByPosition(18,lRowE).FORMULA=&quot;=SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo lavori
-	oSheet.GetCellByPosition(19,lRowE).FORMULA=&quot;=SUBTOTAL(9;T3:T&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo perizia di variante
+&apos;	oSheet.GetCellByPosition(19,lRowE).FORMULA=&quot;=SUBTOTAL(9;T3:T&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo perizia di variante
 	oSheet.GetCellByPosition(29,lRowE).FORMULA=&quot;=AE&quot;&amp; lRowE+1 &amp;&quot;/S&quot;&amp; lRowE+1 &amp;&quot;&quot;  &apos;Incidenza manodopera %
 	oSheet.GetCellByPosition(30,lRowE).FORMULA=&quot;=SUBTOTAL(9;AE3:AE&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo manodopera
 	oSheet.GetCellByPosition(36,lRowE).FORMULA=&quot;=SUBTOTAL(9;AK3:AK&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos; totale computo sole voci senza errori
@@ -689,10 +690,13 @@ no:
 	chiudi_dialoghi
 
 &apos;## computo ##############################################################
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos; da sostituire o integrare
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	oStart=uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot;,oSheet)&apos; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
 	lLastUrow = getLastUsedRow(oSheet)
+	For i = rIntest To lLastUrow
+		If oSheet.GetCellByPosition (13, i).cellstyle = &quot;comp sotto Unitario&quot; Then oSheet.GetCellByPosition (13, i).formula = &quot;=J&quot; &amp; i+1
+	Next	
 &apos;	rifa_nomearea (nSheet,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, tagA) &apos;tag codici
 &apos;	rifa_nomearea (nSheet,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, quan) &apos; quantità
 	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;AA&quot;) &apos;tag codici
@@ -732,7 +736,7 @@ rem colonne del computo
 
 &apos;## contabilità ##########################################################
 	Rifa_GG_G1G1_Contab
-
+&apos;GoTo ooo:
 &apos;## variante #############################################################
 	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
 
@@ -740,8 +744,17 @@ rem colonne del computo
 		oStart = uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot;,oSheet_var)&apos; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 		rIntest=oStart.CellAddress.Row+1
 		lLastUrow = getLastUsedRow(oSheet_var)
+		
 		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;varAA&quot;) &apos;tag codici
 		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;varBB&quot;) &apos; quantità
+		
+&apos;		For i = rIntest To lLastUrow
+&apos;			If oSheet_var.GetCellByPosition (13, i).cellstyle = &quot;comp sotto Unitario&quot; Then
+&apos;				oSheet_var.GetCellByPosition (13, i).formula = &quot;=J&quot; &amp; i+1
+&apos;			EndIf
+&apos;		Next
+	EndIf
+	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
 		oSheet.GetCellByPosition(lcolbase + 19 , i).formula = &quot;=V4/$V$2&quot;
 		oSheet.GetCellByPosition(lcolbase + 19 , i).cellstyle = &quot;EP-mezzo %&quot;
 		oSheet.GetCellByPosition(lcolbase + 20 , i).formula = &quot;=SUMIF(varAA;A4;varBB)&quot;
@@ -749,7 +762,9 @@ rem colonne del computo
 		oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;U4*E4/100;U4*E4)&quot;
 		oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
 	EndIf
+ooo:
 &apos;#########################################################################
+&apos;QUADRO COMPARATIVO
 	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(U4-M4=0;&quot;&quot;--&quot;&quot;;U4-M4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(V4-N4&gt;0;V4-N4;&quot;&quot;&quot;&quot;)&quot;
 	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(V4-N4&lt;0;N4-V4;&quot;&quot;&quot;&quot;)&quot;
@@ -761,7 +776,7 @@ rem colonne del computo
 	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
 	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
 
-rem questa soot è da tenere d&apos;occhio!!!
+rem questa sotto è da tenere d&apos;occhio!!!
 	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, idxrow+1, lcolbase + 26, rIntest)) &apos;deseleziona
 	copy_clip
 	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, i+1,lcolbase+10, lrowf-1)) &apos;deseleziona
@@ -779,7 +794,6 @@ rem seleziono le formule e le ricopio giù
 	For i=rIntest To lrowf-2
 		oDest = oSheet.getCellByPosition(lcolbase + 10, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
 		oSheet.copyRange(oDest, oSrc)
-
 	Next
 	oSheet.GetCellByPosition(qq ,lRowF).STRING=&quot;TOTALE&quot; &apos;totale computo
 	oSheet.GetCellByPosition(qq ,lRowF).cellstyle=&quot;EP statistiche_q&quot; &apos;totale computo
@@ -925,7 +939,18 @@ rem ----------------------------------------------------------------------
 Sub elimina_righe_vuote
 	oSheet=ThisComponent.currentController.activeSheet 
 	i = getLastUsedRow(oSheet)
-	Do While i &gt; 2
+
+
+	Do While i &gt; 0
+				if oSheet.GetCellByPosition(0, i).string = &quot;&quot; Then
+				oSheet.getrows.removebyindex(i,1)
+	Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; i &amp;&quot; righe...&quot;, 0)
+			end If
+	i=i-1
+	Loop
+Exit Sub 
+	
+	Do While i &gt; 0
 				if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
 				oSheet.GetCellByPosition(0, i).cellstyle &lt;&gt; &quot;Comp Start Attributo&quot; Or &quot;Comp End Attributo&quot; And _
 				oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _

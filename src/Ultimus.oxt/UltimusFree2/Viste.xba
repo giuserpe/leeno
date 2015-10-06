@@ -32,6 +32,7 @@ Sub Scelta_Viste() &apos;nuova versione universale
 	End If
 sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
+&apos;	Print sAttributo
  If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
  	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; and _
  	sAttributo &lt;&gt; &quot;TIPO_ANALISI&quot; and _
@@ -49,7 +50,7 @@ esegui:
  	 DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 	End If 
 	Select case sAttributo
- 		case &quot;TIPO_COMPUTO&quot;
+ 		case &quot;TIPO_COMPUTO&quot; 
 			oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A) &apos; Inizializza il dialogo
 			oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
 	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
@@ -941,6 +942,7 @@ dim sString as string
 END FUNCTION
 
 
+
 SUB Mostra_Tutto
 fissa (0,idxrow+1)
 &apos;ColRid_on
@@ -949,8 +951,6 @@ chiudi_dialoghi &apos; chiude tutti i dialoghi
 oSheetD = ThisComponent.currentController.activeSheet
 oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),10,).Columns.IsVisible=true
 oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),getLastUsedRow(oSheetD),).Rows.IsVisible=true
-
-
 END SUB
 rem ----------------------------------------------------------------------
 SUB mostra_tutte_le_sheet
@@ -1169,9 +1169,9 @@ end sub
 
 sub Computo_Normale_terra_terra
 chiudi_dialoghi
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	oSheet = ThisComponent.currentController.activeSheet
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	Thiscomponent.currentcontroller.select(oSheet)
-&apos;	oSheet = ThisComponent.currentController.activeSheet
 	oRange = oSheet.getCellRangeByposition(33,0,1023,0) &apos;nascondi il resto delle colonne
 	oRange.Columns.IsVisible=false	
 	&apos;registro la posizione attuale del cursore
@@ -1184,28 +1184,14 @@ chiudi_dialoghi
 				else
 			Viste_nuove(&quot;TTTFTTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFTTFFFFF&quot;)
 						&apos;1234567890123456789012345678901234567890123456
-			&apos;	print &quot;2&quot;		
+	
 	end if	
 	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-
 	ThisComponent.CurrentController().freezeAtPosition(0,2)
-	&apos; riporta il cursore sulla posizione di partenza
 	ThisComponent.CurrentController.Select( oPos )
-&apos;	fissa (39,2)&apos; optional icol as long, optional irow as long)
-&apos;	fissa (12,2)
+
 	ColRid_off
 set_larghezza_colonne
-&apos;	oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
-&apos;	oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
-&apos;	oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 5800
-&apos;	oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 1300
-&apos;	oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 1300
-&apos;	oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 1300
-&apos;	oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1300
-&apos;	oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
-&apos;	oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
-&apos;	oSheet.getColumns().getByName(&quot;S&quot;).Columns.Width = 1800
-
 END SUB 
 
 

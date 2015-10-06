@@ -173,7 +173,7 @@ rem ----------------------------------------------------------------------
 Sub scrivi_larghezza_colonna
 	oSheet =ThisComponent.currentController.activeSheet
 	lrow = 0&apos;range2cell
-	For n = 0 To 9&apos;getLastUsedCol(oSheet)
+	For n = 0 To 50&apos;getLastUsedCol(oSheet)
 		oSheet.GetCellByPosition(n, lrow).setvalue(oSheet.GetCellByPosition(n, lrow).getcolumns.width)
 	Next
 End Sub
@@ -196,7 +196,7 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1300
 		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
 		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
-		case = &quot;COMPUTO&quot;
+		case = &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 	rem larghezza colonne
 		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
 		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500

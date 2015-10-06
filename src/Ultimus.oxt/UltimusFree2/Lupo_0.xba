@@ -411,13 +411,7 @@ Numera_Voci_Computo (&quot;niente prompt&quot;)
 
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)
-&apos;--------------------------------------------
-rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
-&apos;	oDpage = oSheet.DrawPage
-&apos;	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)
-&apos;	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)
-&apos;	oCtrlModel.Enabled = False
-&apos;-------------------------------------------------	
+
 		aggiorniamoli
 		Visualizza_normale
 	

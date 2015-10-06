@@ -119,8 +119,8 @@ Sub avvia_IDE
 	oDoc.currentcontroller.activesheet.Name
 &apos;	oLayout.isElementFloating(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 	oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
-	If getos()=&quot;OSX&quot; Then shell (&quot;thunar&quot;, 2, leeno_path)
-	If getos()=&quot;WINDOWS&quot; Then shell (&quot;explorer.exe&quot;, 2,  convertfromurl(leeno_path))
+	If getos()=&quot;OSX&quot; Then shell (&quot;thunar&quot;, 1, leeno_path)
+	If getos()=&quot;WINDOWS&quot; Then shell (&quot;explorer.exe&quot;, 1,  convertfromurl(leeno_path))
 Print convertfromurl(leeno_path)
 End Sub
 

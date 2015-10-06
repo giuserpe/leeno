@@ -187,10 +187,10 @@ Sub Nascondi_TUTTI_docs_e_Copertine
 	Nascondi_tabs_COMPUTO_soltanto
 	Nascondi_tabs_contabilita_soltanto
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
-		thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
+		thisComponent.Sheets.moveByName (&quot;S1&quot; ,7)
 	end if
 	If thisComponent.Sheets.hasByName(&quot;S2&quot;) then
-		thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
+		thisComponent.Sheets.moveByName (&quot;S2&quot; ,8)
 	end if
  	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 &apos;	Chiudi_o_elimina_tabelle_inutili
@@ -214,6 +214,14 @@ Sub sistema_attributi_sheet&apos; (sSheet As string) rem renderla opzionale?
 			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;A2&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;B1&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;B2&quot;)
+&apos;		Case &quot;VARIANTE&quot;
+		If ThisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
+			oSheet = ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;A1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;A2&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;B1&quot;)
+			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;B2&quot;)
+		EndIf
 &apos;		Case &quot;Analisi di Prezzo&quot;
 			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;A1&quot;)

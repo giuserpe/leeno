@@ -109,7 +109,7 @@ rem CONTESTUALIZZATE
 				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO&quot;, 1)
 			Case &quot;Analisi di Prezzo&quot;
 				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI&quot;, 1)
-			Case &quot;COMPUTO&quot;
+			Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;, 1)
 			Case &quot;CONTABILITA&quot;
 				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, 1)
@@ -169,33 +169,72 @@ Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Co
 &apos;	msgbox s
 End Sub
 rem ######################################################################
+Sub computo_OnSelect
+	cerca_in_elenco
+End Sub
+
+Sub elenco_OnFocus
+	Toolbar_vedi
+	If codice_da_cercare_in_elenco = &quot;Cod. Art.?&quot;  Then Exit Sub
+	If codice_da_cercare_in_elenco &lt;&gt; &quot;&quot; Then
+		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+		oCell=uFindString(codice_da_cercare_in_elenco, oSheet)
+		ThisComponent.CurrentController.Select(oCell)
+		ThisComponent.CurrentController.setFirstVisibleRow(oCell.RangeAddress.StartRow)
+	EndIf
+End Sub
+Sub elenco_OnUnFocus
+	Toolbar_vedi
+	codice_da_cercare_in_elenco = &quot;&quot;
+End Sub
+
 
 Sub eventi_assegna
+&apos;Array : T( 0 To 6 ) As string  
+&apos;(0)       | string : &quot;OnFocus&quot;
+&apos;(1)       | string : &quot;OnUnfocus&quot;
+&apos;(2)       | string : &quot;OnSelect&quot;
+&apos;(3)       | string : &quot;OnDoubleClick&quot;
+&apos;(4)       | string : &quot;OnRightClick&quot;
+&apos;(5)       | string : &quot;OnChange&quot;
+&apos;(6)       | string : &quot;OnCalculate&quot;
+&apos;xray thiscomponent.currentcontroller.activesheet.events
+
 &apos; (flag As integer)
 &apos;	Dim oDoc 				:	oDoc = thiscomponent
 &apos;	xray eventi_doc()
 &apos;	If flag = 0 Then	Exit Sub
-Macro_SHEET (&quot;Elenco Prezzi&quot;,		&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;Elenco Prezzi&quot;, 		&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.elenco_OnFocus?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.elenco_OnUnFocus?language=Basic&amp;location=application&quot;)
+
 Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
 Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;COMPUTO&quot;,				&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;COMPUTO&quot;,				&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;CONTABILITA&quot;,			&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;CONTABILITA&quot;,			&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;S2&quot;,					&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
+
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
+
+Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
+
+Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
+
+Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
 &apos;OnStartApp
 &apos;OnCloseApp
 &apos;OnCreate
-Macro_Doc (&quot;OnNew&quot;,				&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
+Macro_Doc (&quot;OnNew&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 &apos;OnLoadFinished
-Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
+Macro_Doc (&quot;OnLoad&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 Macro_Doc (&quot;OnPrepareUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&amp;location=application&quot;)
-Macro_Doc (&quot;OnUnload&quot;,			&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
+Macro_Doc (&quot;OnUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
 &apos;OnSave
 &apos;OnSaveDone
 &apos;OnSaveFailed
-Macro_Doc (&quot;OnSaveAs&quot;,			&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
+Macro_Doc (&quot;OnSaveAs&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
 &apos;OnSaveAsDone
 Macro_Doc (&quot;OnSaveAsFailed&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec?language=Basic&amp;location=application&quot;)
 &apos;Macro_doc (&quot;OnCopyTo&quot;, &quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)

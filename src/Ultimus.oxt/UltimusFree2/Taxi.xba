@@ -1480,31 +1480,27 @@ end sub
  oRanges.addNewByName(sAreaName, sDefArea , oCellAddress, 0)
 END SUB 
 
-
-
-
 sub Rimetti_in_ordine_tab
-&apos;	if not isnull (ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value) then
-&apos;		thisComponent.Sheets.moveByName(&quot;Elenco Prezzi&quot;
-&apos;	end if
-&apos;3277
 	sproteggi_sheet_TUTTE
-	Visualizza_sheet_TUTTE
 	thisComponent.Sheets.moveByName(&quot;Elenco Prezzi&quot;,0)
 	thisComponent.Sheets.moveByName(&quot;Analisi di Prezzo&quot;,1)
 	thisComponent.Sheets.moveByName(&quot;COMPUTO&quot;,2)
+	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
+		thisComponent.Sheets.moveByName(&quot;VARIANTE&quot;,3)
+	end if
 	If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
-		thisComponent.Sheets.moveByName(&quot;CONTABILITA&quot;,3)
-	end if
+		thisComponent.Sheets.moveByName(&quot;CONTABILITA&quot;,4)
+	end If
+
 	If thisComponent.Sheets.hasByName(&quot;M1&quot;)then
-		thisComponent.Sheets.moveByName(&quot;M1&quot;,4)
+		thisComponent.Sheets.moveByName(&quot;M1&quot;,5)
 	end if
-	thisComponent.Sheets.moveByName(&quot;S1&quot;,5)
-	thisComponent.Sheets.moveByName(&quot;S2&quot;,6)
-	thisComponent.Sheets.moveByName(&quot;S3&quot;,7)
-	thisComponent.Sheets.moveByName(&quot;S4&quot;,8)
+	thisComponent.Sheets.moveByName(&quot;S1&quot;,6)
+	thisComponent.Sheets.moveByName(&quot;S2&quot;,7)
+	thisComponent.Sheets.moveByName(&quot;S3&quot;,8)
+	thisComponent.Sheets.moveByName(&quot;S4&quot;,9)
 	if 	thisComponent.Sheets.hasByName(&quot;S5&quot;) then
-		thisComponent.Sheets.moveByName(&quot;S5&quot;,9)	
+		thisComponent.Sheets.moveByName(&quot;S5&quot;,10)	
 	end if
 	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then
 		thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,thisComponent.Sheets.count)

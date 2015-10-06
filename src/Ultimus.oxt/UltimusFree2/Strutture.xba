@@ -13,21 +13,27 @@
 &apos;_______________________________________________________________________________________
 Sub Inser_Capitolo
 	oSheet = ThisComponent.currentController.activeSheet
- If oSheet.Name &lt;&gt; &quot;COMPUTO&quot; Then Exit Sub	
+	lrow= Range2Cell
+	stile = oSheet.GetCellbyPosition(1, lrow).cellstyle
+	Select Case stile
+	Case &quot;comp Int_colonna&quot;, &quot;Livello-1-scritta&quot;, &quot;livello2 valuta&quot;, &quot;Comp-Bianche sopra&quot;, _
+	&quot;comp Art-EP&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
+		GoTo procedi:
+	Case Else
+		Exit Sub 
+	End Select
+procedi:
 	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
  				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;CATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
- 	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
- 		exit sub
- 	end If
-Inser_Capitolo_arg (sTesto)
+ 	If sTesto = &quot;&quot; Then  exit sub &apos; si preme annulla Inputbox restituisce una stringa vuota
+	Inser_Capitolo_arg (sTesto)
 End Sub
 
 Sub Inser_Capitolo_arg (sTesto As string)
 	Verifica_chiudi_preview
 	oSheet = ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then	exit sub
-&apos;	sAttributo = Trova_Attr_Sheet
+&apos;	if lrow = -1 then	exit sub
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	
 rem stabilisce il comportamento
@@ -43,38 +49,20 @@ rem stabilisce il comportamento
 				oSheet.getColumns().getByName(&quot;AG&quot;).isVisible = TRUE 
 			end if
 		END IF
-	else
-	Msgbox &quot;Non è possibile usare questo comando fuori da un documento LeenO...&quot; &amp; CHR$(10)_
-		&amp; &quot; &quot;,48, &quot;Iniziativa annullata!&quot;
-		exit sub	
-	end if
+	Else
+		Exit Sub
+	EndIf
 rem ----------------------------------------------------------------------
 rem STABILISCE LA POSIZIONE DI INSERIMENTO
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
-	lrowFine=oEnd.RangeAddress.EndRow 
- 	&apos; se dopo il totale
-	If lrow &gt;= lrowFine Then
-		lrow = lrowFine
-		goto inserisci_voce
-	end If
-	&apos; se prima dell&apos;intestazione
-	if lrow &lt;= 3 Then
-		lrow = 3&apos;+2
-		goto inserisci_voce
-	end If
-	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;livello-1-sopra&quot; Then &apos; se su CATEGORIA
-		lrow = lrow+2
-		goto inserisci_voce
-	EndIf
-	&apos; se su Cat o SubCaT
-	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;Livello-1-scritta&quot; Or &quot;livello2 valuta&quot; Then &apos; se su CATEGORIA
+	Select Case oSheet.GetCellbyPosition(1, lrow).cellstyle
+	Case &quot;comp Int_colonna&quot;, &quot;Livello-1-scritta&quot;, &quot;livello2 valuta&quot;
 		lrow = lrow+1
-		goto inserisci_voce
-	EndIf
+	Case &quot;Comp-Bianche sopra&quot;, &quot;comp Art-EP&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
+		sStRange = Circoscrive_Voce_Computo_Att (lrow)
+		lrow = sStRange.RangeAddress.EndRow+1
+	End Select
 inserisci_voce:
-	&apos; se su una voce 
-	sStRange = Circoscrive_Voce_Computo_Att (lrow)
-	lrow = sStRange.RangeAddress.EndRow+1
+
 rem ----------------------------------------------------------------------
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 1 Then &apos;Categorie e subcategorie: riga bianca ON/OFF
 rem con riga bianca sopra
@@ -97,25 +85,10 @@ rem inserisco i valori e le formule
 	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
 	oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1
 rem ----------------------------------------------------------------------
-print
 Adatta_Altezza_riga
 
 	ocellBaseA = oSheet.GetCellbyPosition( 1, lRow)
 	ocellBaseR = oSheet.GetCellbyPosition( 31, lRow)
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 or 1 then 
-	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
-			lrowProvv = lrow-1
-			do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot;
-					If lrowProvv &gt; 4 then
-							lrowProvv = lrowProvv-1
-						else
-							exit Do
-					end if
-			loop
-			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
-			numCap1 = numCap
-			ocellBaseR.value = numCap1 +1
-	end if 
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 then 
 	&apos;		Print &quot; Assegna numeri ai Cap e sottoCap&quot;
 			lrowProvv = lrow-1
@@ -125,10 +98,8 @@ Adatta_Altezza_riga
 						else
 							exit do
 					end if
-			&apos;		print lrowProvv
 			loop
 			numCap = oSheet.GetCellByPosition(1 , lrowProvv).value
-		&apos;	dim numCap1 as long
 			numCap1 = numCap
 			ocellBaseR.value = numCap1 +1
 	end if 
@@ -159,9 +130,9 @@ Adatta_Altezza_riga
 	end If
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 1 or _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 2 then 
-		&apos;	PRINT &quot;Adesso Rinumera_TUTTI_Capitoli&quot;
+
 		lrow = lrow+1 &apos;ins_080217
-		&apos;print &quot;adesso esegue rinumera _tutti u cap&quot;
+
 		Rinumera_TUTTI_Capitoli (lrow) 
 	end if
 	ThisComponent.CurrentController.Select(ocellBaseA)
@@ -185,38 +156,26 @@ SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che for
 &apos;maiusc Alt F8
 
 	oSheet1 = ThisComponent.currentController.activeSheet
-	&apos;	lrow= Range2Cell &apos; per ridurre a cella iniziale un eventuale range
 	oCell1=oSheet1.GetCellByPosition(2 , lrow)
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;	sAttributo = Trova_Attr_Sheet
- If osheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;#2 Questo comando si può usare solo&quot; &amp; CHR$(10)_
- 			 &amp;&quot; in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
-			exit sub
-	end if
-	
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		GoTo procedi:
+	Case Else
+		Exit Sub 
+	End Select
+procedi:
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;Rinumero la gerarchia dei Capitoli..... pazienta....&quot;, 60)
 
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&apos;rifà la riga delle somme in fondo e in testa al computo
-&apos;Rifa_Somme_TOT_Computo
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-
-	&apos; se la varg gen disattiva l&apos;automatismo
+&apos; se la varg gen disattiva l&apos;automatismo
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 0 then 
 			lrowCorr= Range2Cell
-			if lrowCorr = -1 then
-				 
-				exit sub
-			end if
-			
+			if lrowCorr = -1 Then Exit Sub
 			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; sincronizza il SotttoCap del cap correente ??? 
 			Sincronizza_SottoCap_Tag_Capitolo_Cor(lrowCorr)
-		&apos;	Barra_chiudi_sempre_4
 		EXIT SUB
 	end if
-
-
 	lStartRow = oSheet.GetCellByPosition( 0 , 0)
 	lLastUrowNN = getLastUsedRow(oSheet)
 	lCap = 1
@@ -226,31 +185,30 @@ SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che for
 			oSheet.GetCellByPosition(31 , (I)).Value = lCap
 		 	lCap = lCap + 1
 		 	lSotCap = 1	
-		 &apos; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-		 &apos;	Barra_chiudi_sempre_4
 		 	lriga = i+1
 		 	Sincronizza_SottoCap_Tag_Capitolo_Cor(lriga)		 	
-		 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 		end if
 	next I
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Tutti_Subtotali
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	Barra_chiudi_sempre_4
-&apos;	Clessid_lock_End
-	&apos;Clessidra_chiudi
-&apos; dis_080217	ThisComponent.CurrentController.Select(oCell1)
 END SUB
 
 rem ----------------------------------------------------------------------
 Sub Inser_SottoCapitolo
 	oSheet = ThisComponent.currentController.activeSheet
-	If oSheet.Name &lt;&gt; &quot;COMPUTO&quot; Then Exit Sub	
+	lrow= Range2Cell
+	stile = oSheet.GetCellbyPosition(1, lrow).cellstyle
+	Select Case stile
+	Case &quot;comp Int_colonna&quot;, &quot;Livello-1-scritta&quot;, &quot;livello2 valuta&quot;, &quot;Comp-Bianche sopra&quot;, _
+	&quot;comp Art-EP&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
+		GoTo procedi:
+	Case Else
+		Exit Sub 
+	End Select
+procedi:
 	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
-				&amp; &quot; &quot;,&quot; Nuova SottoCategoria&quot;, &quot;SottoCategoria ??&quot;)&apos; &amp; CHR$(10) 
-	If sTesto = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
- 		exit sub		
- 	end If
+ 				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;SUBCATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
+ 	If sTesto = &quot;&quot; Then  exit sub &apos; si preme annulla Inputbox restituisce una stringa vuota
 Inser_SottoCapitolo_arg (sTesto)
 End Sub 
 
@@ -258,15 +216,14 @@ Sub Inser_SottoCapitolo_arg (sTesto As String)
 	Verifica_chiudi_preview
 	oSheet = ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 Then Exit Sub
+&apos;	if lrow = -1 Then Exit Sub
 rem stabilisce il comportamento
 
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 0 then 
-				Sincronizza_SottoCap_Tag_Capitolo_Cor(lrow, &quot;no_rinum&quot;)
-			else
-				Sincronizza_SottoCap_Tag_Capitolo_Cor
-		end if
-
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 0 then 
+		Sincronizza_SottoCap_Tag_Capitolo_Cor(lrow, &quot;no_rinum&quot;)
+	Else
+		Sincronizza_SottoCap_Tag_Capitolo_Cor
+	EndIf 
 
 	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string = 0 then
 			&apos; se &quot;livello difficoltà&quot; è &quot;primo Approccio&quot;
@@ -280,29 +237,24 @@ rem stabilisce il comportamento
 	end If
 rem ----------------------------------------------------------------------
 rem STABILISCE LA POSIZIONE DI INSERIMENTO
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
-	lrowFine=oEnd.RangeAddress.EndRow 
- 	&apos; se dopo il totale
-	If lrow &gt;= lrowFine Then
-		lrow = lrowFine
-		goto inserisci_voce
-	end If
-	&apos; se prima dell&apos;intestazione
-	if lrow = 0 Then
-		lrow = 3&apos;+2
-		goto inserisci_voce
-	end If
-	&apos; se su Cat o SubCaT
-	If oSheet.GetCellbyPosition( 1, lrow).cellstyle = &quot;Livello-1-scritta&quot; Or &quot;livello2 valuta&quot; Then &apos; se su CATEGORIA
+	Select Case oSheet.GetCellbyPosition(1, lrow).cellstyle
+	Case &quot;comp Int_colonna&quot;, &quot;Livello-1-scritta&quot;, &quot;livello2 valuta&quot;
 		lrow = lrow+1
-		goto inserisci_voce
-	end If
-	&apos; se su una voce 
-	sStRange = Circoscrive_Voce_Computo_Att (lrow)
-&apos;			print i
-	lrow = sStRange.RangeAddress.EndRow+1
-rem ----------------------------------------------------------------------
+	Case &quot;Comp-Bianche sopra&quot;, &quot;comp Art-EP&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
+		sStRange = Circoscrive_Voce_Computo_Att (lrow)
+		lrow = sStRange.RangeAddress.EndRow+1
+	End Select
 inserisci_voce:
+rem ----------------------------------------------------------------------
+
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 1 Then &apos;Categorie e subcategorie: riga bianca ON/OFF
+rem con riga bianca sopra
+		insRows (lrow, 2) &apos;inserisci riga
+		oSheet.GetCellbyPosition( 2, lRow+1).string=sTesto &apos;scrive titolo
+		oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;livello-1-sopra&quot;
+		lrow = lrow+1
+	EndIf 
+
 	If sTesto &lt;&gt; &quot;&quot; Then
 		insRows (lrow, 1) &apos;inserisci riga
 		oSheet.GetCellbyPosition( 2, lRow).string=sTesto &apos;scrive titolo
@@ -323,11 +275,6 @@ rem ----------------------------------------------------------------------
 	ThisComponent.CurrentController.Select(oCell)
 Adatta_Altezza_riga
 rem ----------------------------------------------------------------------
-&apos;	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-&apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,6,41,6).RangeAddress &apos;origine
-&apos;	oDest = oSheet.GetCellByPosition(0,lrow ).CellAddress &apos;destinazione
-&apos;	oSheet.copyRange(oDest, oSrc) &apos; incolla
-rem ----------------------------------------------------------------------
 	ocellBaseA = oSheet.GetCellbyPosition( 31, lRow) &apos;tag Cat
 	ocellBaseB = oSheet.GetCellbyPosition( 32, lRow) &apos;tag SubCat
 
@@ -335,8 +282,6 @@ rem ----------------------------------------------------------------------
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 then 
 		lrowProvv = lrow-1
 		if oSheet.GetCellByPosition(1 , lrowProvv).value = &quot;&quot; then &apos;31
-			&apos;	ocellBaseA.value =&quot;livello2 valuta&quot; 1
-			&apos;	print &quot;A&quot;
 			else 
 				ocellBaseA.value = 	oSheet.GetCellByPosition(31 , lrowProvv).value +1
 		end if 
@@ -381,31 +326,21 @@ rem ----------------------------------------------------------------------
  	end if
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 1 then 
 			Sincronizza_SottoCap_Tag_Capitolo_Cor
-			&apos;Rinumera_TUTTI_Capitoli
 			ThisComponent.CurrentController.Select(oCell)
 	end if
 	&apos;sistema la somma del sotto Cap appena inserito			
-&apos;	Print lrow 	 
 	SubSum_SottoCap (lrow)
-
 	lrowProvv = lrow -1 
 	&apos;controlla se c&apos;è un sottoCap appena sopra
 	do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;livello2_&quot; &apos;OR _
-			&apos;oSheet.GetCellByPosition(31 , lrowProvv).CellStyle = &quot;Comp TOTALI&quot; &apos;OR _
 			If oSheet.GetCellByPosition(31 , lrowProvv).CellStyle = &quot;Livello-1-scritta&quot; or _
 				lrowProvv &lt;= 2 then
 				ThisComponent.CurrentController.Select(oCell) 
 				exit sub
 			end if
 			lrowProvv = lrowProvv-1
-		&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(31 , lrowProvv)) &apos;debug
-		&apos;	print
 	Loop
-	
-	&apos; se c&apos;è aggiorna la somma
-&apos;	Print lrowProvv
 	SubSum_SottoCap (lrowProvv)
-
 	ThisComponent.CurrentController.Select(oCell)
 
 End Sub
@@ -416,15 +351,12 @@ End Sub
 
 Sub Sincronizza_SottoCap_Tag_Capitolo_Cor (optional lroww as long) 
 		&apos;sincronizza il capitolo corrente 
-
 dim lLastUrow as long
 dim lrow as long
 dim I as long
 dim lrowS as long
 dim icapitolo 
-
 	oSheet = ThisComponent.currentController.activeSheet
-	
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 0 then
 	&apos;print &quot;esco&quot;
 		exit sub
@@ -439,16 +371,10 @@ dim icapitolo
 		else
 			 lrow = lroww
 	end if 
-
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;
-		exit Sub&apos;
-	end if 
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot; Sistemo la numerazione dei capitoli!&quot;, 60)
 
-	lRowE=oEnd.CellAddress.Row 
+	lrowE =ultima_voce+1
 	lSotCapsinizio = lrowStart
 		
 	if oSheet.GetCellByPosition(31 , lrow).CellStyle = &quot;Livello-1-scritta&quot; Then &apos; se Categoria
@@ -467,7 +393,6 @@ dim icapitolo
 		end if
 	loop
 	iCapitolo =	oSheet.GetCellByPosition(31 , lrowProvv).STRING
-		&apos; ora abbiamo il num Cap
 	lArow = lrowProvv &apos; row di testa&apos; ??? controllare se serve
 		&apos;print iCapitolo
 	lrowProvv = lrowProvv+1
@@ -479,14 +404,11 @@ dim icapitolo
 				exit Do
 		end if
 		if oSheet.GetCellByPosition(31 , lrowProvv).CellStyle = &quot;livello2_&quot; then
-	&apos;&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(31 , lrowProvv)) &apos;debug
-	&apos;&apos;		print &quot;BRRR 1&quot;
 			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 or _
 				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 then &apos;se rinum Tutto è attivo
 				oSheet.GetCellByPosition(31 , lrowProvv).value = iCapitolo
 				iSottoCap = iSottoCap +1
 				oSheet.GetCellByPosition(32 , lrowProvv).value = iSottoCap	
-				&apos;	print &quot;qui iSottoCap è &quot;	 &amp; iSottoCap	
 			else 
 				iSottoCap = oSheet.GetCellByPosition(32 , lrowProvv).value
 				oSheet.GetCellByPosition(32 , lrowProvv).value = iSottoCap	
@@ -507,33 +429,29 @@ end Sub
 
 Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto il computo sistemando i subtotali di cap e sottocap
 &apos;Print &quot;da velocizzare&quot;
-	If isNull(oSheet1) or isEmpty (oSheet1) or isMissing(oSheet1) then
- 			oSheet1 = ThisComponent.currentController.activeSheet
+	If isNull(oSheet) or isEmpty (oSheet) or isMissing(oSheet) then
+ 			oSheet = ThisComponent.currentController.activeSheet
  	end If
 &apos;Print Trova_Attr_Sheet
 sistema_attributi_sheet
-	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_COMPUTO&quot; Then
-		 msgbox &quot;#1 Questa non mi pare una tabella di Computo...!&quot;
-		 	exit sub
-	end if
-
-	sString$ = &quot;TOTALI COMPUTO&quot;
-	oEnd=uFindString(sString$, oSheet1)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;
-		exit sub
-	end if 
-	lRowE = oEnd.CellAddress.Row 
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		GoTo procedi:
+	Case Else
+		Exit Sub 
+	End Select
+procedi:
+	lRowE = ultima_voce+1
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;0.... Sistemo i subtotali.....&quot;, 80)
 	For i = 3 To lRowE 
-		if oSheet1.GetCellByPosition(18 , i).CellStyle = &quot;Livello-1-scritta mini val&quot; then
+		if oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Livello-1-scritta mini val&quot; then
 			Barra_chiudi_sempre_4
 			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali di Categoria....&quot;, 70)
 			SubSum_Cap (i)
 		end if
-		if oSheet1.GetCellByPosition(39 , i).CellStyle = &quot;livello2 valuta mini&quot; or _
-			oSheet1.GetCellByPosition(39 , i).CellStyle = &quot;livello2 valuta&quot; then
+		if oSheet.GetCellByPosition(39 , i).CellStyle = &quot;livello2 valuta mini&quot; or _
+			oSheet.GetCellByPosition(39 , i).CellStyle = &quot;livello2 valuta&quot; then
 			Barra_chiudi_sempre_4
 			Barra_Apri_Chiudi_5(i &amp; &quot; ... Sistemo i subtotali di SottoCat...&quot;, 80)
 			SubSum_SottoCap (i)
@@ -543,14 +461,14 @@ sistema_attributi_sheet
 end sub
 
 Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
-&apos; lavora su singolo sottocap
 	oSheet = ThisComponent.currentController.activeSheet
-&apos;	sAttributo = Trova_Attr_Sheet
-	If oSheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
-		msgbox &quot;#9 Questo comando si può usare solo&quot; &amp; CHR$(10)_
-		&amp;&quot;in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		GoTo procedi:
+	Case Else
 		Exit Function 
-	end if
+	End Select
+procedi:
 
 	If IsMissing (lrowStart1) Then 
 		lrowStart1= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale errata selezione di un range
@@ -560,14 +478,7 @@ Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 		sClang = &quot;yes&quot; &apos;????
 	end if
 	
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		msgbox &quot;#2 Manca la riga dei TOTALI COMPUTO.&quot; &amp; CHR$(10)_
-		&amp;&quot; Questo è molto grave! &quot;
-		exit Function&apos;
-	end If 
-	lRowE=oEnd.CellAddress.Row 
-
+	lRowE = ultima_riga+1
 	For i = lrowStart1+1 To lRowE 
 		if oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Livello-1-scritta mini val&quot; or _
 			oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Comp TOTALI&quot; or _
@@ -597,19 +508,15 @@ Function SubSum_Cap (optional lrowStart1 as long) &apos;lavora sul singolo
 	oSheet.GetCellByPosition(30 , lrowStart1).Formula = sFormula
 	oSheet.GetCellByPosition(30 , lrowStart1).CellStyle = &quot;Livello-1-scritta mini val&quot;
 &apos;importo manodopera
-&apos;	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;AE&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;AE&quot; &amp; lRowU-1 &amp; &quot;)&quot;
-&apos;	oSheet.GetCellByPosition(41 , lrowStart1).Formula = sFormula
+
 
 &apos; sceglie se scrivere i subtotali sulla riga o cancellarli
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1 then 
-		&apos;sScritta =&quot;=CONCATENATE(&quot;&quot;(subT &quot;&quot;;&quot; &amp; &quot;DOLLAR(AO&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot; &amp; &quot; &quot;&quot;)&quot;&quot; &quot; &amp; &quot;)&quot;
-&apos;		sScritta =&quot;=CONCATENATE(&quot;&quot; &quot;&quot;;&quot; &amp; &quot;DOLLAR(AO&quot; &amp; lrowStart1+1 &amp; &quot;;2);&quot; &amp; &quot;)&quot;
-		
+	
 	end if	
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 0 then 
 		oSheet.GetCellByPosition(9 , lrowStart1).string = &quot;&quot;
 	end if	
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 , lrowStart1)) &apos;debug
 end Function
 
 
@@ -618,12 +525,13 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 &apos; lavora su singolo sottocap
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet
-	If oSheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
-		msgbox &quot;#10 Questo comando si può usare solo&quot; &amp; CHR$(10)_
-		&amp;&quot;in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		GoTo procedi:
+	Case Else
 		Exit Function 
-	end if
-
+	End Select
+procedi:
 	If IsMissing (lrowStart1) Then 
 		lrowStart1= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale errata selezione di un range
 		if lrowStart1 = -1 then
@@ -631,20 +539,8 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 		end if
 		sClang = &quot;yes&quot; &apos;????
 	end if
-
-	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		msgbox &quot;#1 Manca la riga dei TOTALI COMPUTO.&quot; &amp; CHR$(10)_
-		&amp;&quot; Questo è molto grave! &quot;
-		exit Function&apos;
-	end If
-&apos;	oEnd=uFindString(&quot;Fine Computo&quot;, oSheet)
-&apos;	If isNull (oEnd) or isEmpty (oEnd) then
-&apos;		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI 25! &quot;
-&apos;		exit Function&apos;
-&apos;	end if 
-	lRowE=oEnd.CellAddress.Row 
-
+	lRowE = ultima_voce+1
+	
 	For i = lrowStart1+1 To lRowE 
 		if oSheet.GetCellByPosition(18 , i).CellStyle = &quot;livello2 scritta mini&quot; Or _ 
 			oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Comp TOTALI&quot; or _
@@ -681,10 +577,6 @@ Function SubSum_SottoCap (optional lrowStart1 as long) &apos;lavora sul singolo
 	end if	
 &apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(39 , lrowStart1)) &apos;debug
 end Function
-
-
-&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-&apos;settore filtri
 
 Sub Autofilter_On_Off &apos;per filtro Automatico su tabelle di tipo computo
 &apos; Attiva /disattiva il filtro creato con questa macro
@@ -1287,7 +1179,7 @@ end sub
 
 Global abbrevia as Integer
 Sub Tronca_Altezza_Voci_Computo &apos; (c) Giuseppe Vizziello 2015
-&apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO e CONTABILITA
+&apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO, VARIANTE e CONTABILITA
 &apos; verifico la compatibilità ed adatto
 chiudi_dialoghi &apos; chiude tutti i dialoghi
 Barra_chiudi_sempre_4
@@ -1314,7 +1206,7 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case oSheet.Name
-	Case &quot;COMPUTO&quot;
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 		stile = &quot;Comp-Bianche in mezzo Descr&quot;
 	Case &quot;CONTABILITA&quot;
 		If ThisComponent.NamedRanges.hasByName(&quot;#LIB#1&quot;) Then
@@ -1329,9 +1221,9 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
 
 &apos; switch ON/OFF
-	For i = 2 To 100	
+	For i = 2 To 10	
 		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-			If InStr (oSheet.GetCellByPosition(2,i).String, &quot; [...] &quot;) &lt;&gt; 0 Then
+			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
 				abbrevia = 1
 				Exit For
 			Else

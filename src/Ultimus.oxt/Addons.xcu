@@ -715,7 +715,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/image13</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Rpristina Controlli (REFRESH)</value>
+						<value>Ripristina Controlli (REFRESH)</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>

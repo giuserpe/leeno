@@ -190,12 +190,12 @@ Barra_chiudi_sempre_4
 end sub
 
 
-Sub Forza_Shortcut &apos; serve per la manutenzione del doc
- 	&apos; rimuove il file di conf degli accelerator a livello del doc
-	rimuovi_SC_Doc 
-	Registra_Tasti_inDoc
-	Registra_Tasti_Global
-end sub
+&apos;Sub Forza_Shortcut &apos; serve per la manutenzione del doc
+&apos; 	&apos; rimuove il file di conf degli accelerator a livello del doc&apos;
+&apos;	rimuovi_SC_Doc 
+&apos;	Registra_Tasti_inDoc
+&apos;	Registra_Tasti_Global
+&apos;end sub
 
 
 Sub Ripristina_Validita_Lista_U &apos; da dentro ultimus (usando questa c&apos;è la prompt)

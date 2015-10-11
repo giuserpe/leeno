@@ -214,9 +214,11 @@ Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.scrip
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 
-Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
+If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
+EndIf
 
 Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
 Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
@@ -296,4 +298,67 @@ rem ----------------------------------------------------------------------
 	oEve.replaceByName(nomeEvento, PropEve()) &apos; nome evento
 End Sub
 
+Sub insertItem
+   Dim oSheet as object, oMyCombo as object
+   Dim ListEntries() as string
+
+   oSheet = ThisComponent.CurrentController.ActiveSheet
+	oDialog = CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
+	&apos;		oDialogScenari_EP.getControl(&quot;Sommario Variante&quot;).State = 1
+			oDialog.Execute()
+   NewItem$ = &quot;Test&quot;
+   with oMyCombo
+      ListEntries = .StringItemList
+      NextItemIndex% = UBound(ListEntries) + 1
+      Redim Preserve ListEntries(NextItemIndex)
+      ListEntries(NextItemIndex) = NewItem
+      .StringItemList = ListEntries()
+   End with
+End Sub
+
+Sub tabella_ferri
+	oDialog1=CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
+&apos;	ComboBox=oDialog1.getControl(&quot;ComboBox1&quot;)
+	ListBox=oDialog1.getControl(&quot;ListBox1&quot;)
+	oDialog1.Execute()
+&apos;	xray oDialog1
+	item = ListBox.SelectedItem
+&apos;Item=ComboBox.Text	
+	val0 = cDbl(split (item, &quot; &quot;)(2))
+	
+	ocell = thiscomponent.currentselection
+		With ocell.CellAddress
+		lcol = .Column
+		lrow = .Row
+		lshe = .Sheet
+	End With
+	oSheet = ThisComponent.currentController.activeSheet &apos; presumo sia il foglio CONTABILITA
+	oSheet.getCellByPosition(lcol, lRow).Value = val0
+End Sub
+
+Sub ferri
+&apos;	DialogLibraries.UltimusFree2.Dialog_tabellaferri
+	oDialog1=CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
+&apos;	DialogLibraries.LoadLibrary(&quot;Standard&quot;)
+ &apos;      oDialog1=CreateUnoDialog(DialogLibraries.Standard.Dialog)
+       &apos;-------ListBox--------
+       ListBox=oDialog1.getControl(&quot;ListBox1&quot;)
+       oDialog1.Execute()
+       Item=ListBox.SelectedItem
+       Print &quot;Selected Item in ListBox= &quot;+item
+       Item=ListBox.GetSelectedItempos()
+       Print &quot;Selected Itempos in ListBox= &quot;+item
+       &apos;------ ComboBox ---------
+       ComboBox=oDialog1.getControl(&quot;ComboBox1&quot;)
+       
+       Item=ComboBox.Text
+       Print &quot;Selected Item in ComboBox= &quot;+item
+       
+       For x = 0 to ComboBox.ItemCount - 1
+          If ComboBox.Items(x) = ComboBox.Text Then
+             PickedItemPos = x
+          end if
+       next x
+       Print &quot;SelectedItempos in ListBox= &quot;+ PickedItemPos 
+End Sub 
 </script:module>

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="4" dlg:id="DialogViste_EP" dlg:left="108" dlg:top="150" dlg:width="195" dlg:height="170" dlg:help-text="Scenari, Viste e Azioni di Elenco Prezzi" dlg:closeable="true" dlg:moveable="true" dlg:title="   Scenari, Viste e Azioni di Elenco Prezzi   ">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="5" dlg:id="DialogViste_EP" dlg:left="108" dlg:top="150" dlg:width="195" dlg:height="170" dlg:help-text="Scenari, Viste e Azioni di Elenco Prezzi" dlg:closeable="true" dlg:moveable="true" dlg:title="   Scenari, Viste e Azioni di Elenco Prezzi   ">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="4" dlg:background-color="0xfcffc6"/>
+  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="5" dlg:background-color="0xfcffc6"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton10" dlg:tab-index="2" dlg:left="100" dlg:top="55" dlg:width="90" dlg:height="15" dlg:help-text="Visualizza gestione MANODOPERA" dlg:value="Manodopera ON/OFF" dlg:multiline="true">
@@ -59,5 +60,11 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:fixedline dlg:style-id="0" dlg:id="FixedLine2" dlg:tab-index="17" dlg:left="5" dlg:top="95" dlg:width="185" dlg:height="1"/>
+  <dlg:titledbox dlg:id="FrameControl1" dlg:tab-index="20" dlg:left="9" dlg:top="124" dlg:width="69" dlg:height="38">
+   <dlg:title dlg:value="Sommari"/>
+  </dlg:titledbox>
+  <dlg:checkbox dlg:style-id="4" dlg:id="Sommario Computo" dlg:tab-index="18" dlg:left="12" dlg:top="135" dlg:width="37" dlg:height="7" dlg:value="Computo" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="Sommario Variante" dlg:tab-index="19" dlg:left="12" dlg:top="144" dlg:width="34" dlg:height="7" dlg:value="Variante" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="Sommario Contabilità" dlg:tab-index="21" dlg:left="12" dlg:top="153" dlg:width="39" dlg:height="7" dlg:value="Contabilità" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

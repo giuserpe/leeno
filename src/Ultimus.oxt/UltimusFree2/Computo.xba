@@ -71,21 +71,21 @@ rIntest = 2
 	oSheet.GetCellByPosition(11,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;computo&quot;)
 	oSheet.GetCellByPosition(12,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;computo&quot;)
 	oSheet.GetCellByPosition(13,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;computo&quot;)
-	oSheet.GetCellByPosition(14,rIntest).setstring(&quot;&quot;)
-	
+
 	oSheet.getCellRangeByPosition(11,2,13,2).Cellbackcolor = (RGB(255,199,231))
 
-	oSheet.GetCellByPosition(15,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;contabilità&quot;)
-	oSheet.GetCellByPosition(16,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;contabilità&quot;)
-	oSheet.GetCellByPosition(17,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;contabilità&quot;)
-	oSheet.GetCellByPosition(18,rIntest).setstring(&quot;&quot;)
+	oSheet.GetCellByPosition(14,rIntest).setstring(&quot;&quot;)
+	oSheet.GetCellByPosition(15,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;variante&quot;)
+	oSheet.GetCellByPosition(16,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;variante&quot;)
+	oSheet.GetCellByPosition(17,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;variante&quot;)
 
-	oSheet.getCellRangeByPosition(15,2,17,2).Cellbackcolor = (RGB(255,180,175))
+	oSheet.getCellRangeByPosition(15,2,17,2).Cellbackcolor = (RGB(255,255,102))
 	
-	oSheet.GetCellByPosition(19,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;variante&quot;)
-	oSheet.GetCellByPosition(20,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;variante&quot;)
-	oSheet.GetCellByPosition(21,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;variante&quot;)
-	oSheet.getCellRangeByPosition(19,2,21,2).Cellbackcolor = (RGB(255,255,102))
+	oSheet.GetCellByPosition(18,rIntest).setstring(&quot;&quot;)	
+	oSheet.GetCellByPosition(19,rIntest).setstring(&quot;Inc. %&quot; + chr(13) + &quot;contabilità&quot;)
+	oSheet.GetCellByPosition(20,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;contabilità&quot;)
+	oSheet.GetCellByPosition(21,rIntest).setstring(&quot;Importi&quot; + chr(13) + &quot;contabilità&quot;)
+	oSheet.getCellRangeByPosition(19,2,21,2).Cellbackcolor = (RGB(255,180,175))
 	
 	oSheet.GetCellByPosition(22,rIntest).setstring(&quot;&quot;)
 	oSheet.GetCellByPosition(23,rIntest).setstring(&quot;Quantità&quot; + chr(13) + &quot;variaz.&quot;)
@@ -127,12 +127,13 @@ GoTo no:
 no:
 &apos;#########################################################################
 oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
-If isNull (oDoc) or isEmpty (oDoc) Then
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,getLastUsedRow(oSheet)+1))
-	Inserisci_Riga_rossa
-	oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
-	EndIf
-lRowE = oDoc.CellAddress.Row
+&apos;	If isNull (oDoc) or isEmpty (oDoc) Then
+&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,getLastUsedRow(oSheet)+1))
+&apos;		Inserisci_Riga_rossa
+&apos;		oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
+&apos;	EndIf
+&apos;	lRowE = oDoc.CellAddress.Row
+lRowE = ultima_voce+1
 rem	riga di controllo importo
 	oSheet.GetCellByPosition(1,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 	oSheet.GetCellByPosition(13,1).FORMULA=&quot;=SUBTOTAL(9;N3:N&quot;&amp; lRowE+1 &amp;&quot;)&quot;
@@ -267,7 +268,7 @@ If lrow = 0 Then Exit Sub
 	osheet = thisComponent.CurrentController.ActiveSheet
 
 	Select Case oSheet.Name
-		Case &quot;COMPUTO&quot;
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 rem rigo parziale già esistente:
 			If InStr (oSheet.GetCellByPosition(8 , lrow).string, &quot;Parziale [&quot;) Then GoTo procedi
 rem ----------------------------------------------------------------------
@@ -314,7 +315,7 @@ procedi:
 		lRowE = .EndRow
 	End With	
 	Select Case oSheet.Name
-		Case &quot;COMPUTO&quot;
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 rem ---------------------------------------------------------------------
 			oSheet.getCellByPosition(2, lrow).cellstyle = &quot;comp sotto centro&quot;
 			oSheet.getCellRangeByPosition(5, lrow, 7, lrow).cellstyle = &quot;comp sotto centro&quot;
@@ -406,14 +407,21 @@ Sub vedi_voce rem &apos;(C) Giuseppe Vizziello 2013
 	Dim riga_selezione As Integer
 	Dim focus as integer
 	osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
-	if oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;CONTABILITA&quot; then
-	goto procedi
-	Else
-		goto fine
-		msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi trovarti in COMPUTO o CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
-		
-	End If 
+	Select Case oSheet.name 
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
+		goto procedi:
+	End Select
+
+	goto fine:
+	
+&apos;	if oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;CONTABILITA&quot; then
+&apos;		goto procedi
+&apos;	Else
+&apos;		goto fine
+&apos;		msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
+&apos;		&amp; &quot;Devi trovarti in COMPUTO o CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
+&apos;		
+&apos;	End If 
 procedi:
 	oContr = ThisComponent.CurrentController
 	focus = oContr.getFirstVisibleRow

@@ -39,8 +39,7 @@ End Sub
 
 &apos; nKeyCode: com.sun.star.awt.KeyCode
 &apos; bShift: with Shift key, bCtrl: with Ctrl key
-Sub removeKeyEvent( nKeyCode As Long, _
- Optional bShift As Boolean, Optional bCtrl As Boolean )
+Sub removeKeyEvent( nKeyCode As Long, Optional bShift As Boolean, Optional bCtrl As Boolean )
  If IsMissing(bShift) Then bShift = False
  If IsMissing(bCtrl) Then bCtrl = False
  nModifire = 0

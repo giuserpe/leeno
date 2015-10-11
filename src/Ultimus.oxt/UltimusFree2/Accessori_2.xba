@@ -454,13 +454,16 @@ rem ----------------------------------------------------------------------
 SUB Rifa_Somme_TOT_Computo &apos;riscritta da zero (C) Giuseppe Vizziello 2014
 Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 40)
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
-	lRowE=oRow.CellAddress.Row
-	
-	If 	oSheet.getCellByPosition(2, 0).cellstyle = &quot;comp Int_colonna&quot; Then
-		insrows (0,1)
-		lRowE=lRowE+1
-	EndIf 
+	If ultima_voce = 0 Then
+		oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
+		lRowE=oRow.CellAddress.Row
+	Else
+		lRowE = ultima_voce+1
+	EndIf
+&apos;	If 	oSheet.getCellByPosition(2, 0).cellstyle = &quot;comp Int_colonna&quot; Then
+&apos;		insrows (0,1)
+&apos;		lRowE=lRowE+1
+&apos;	EndIf 
 rem ----------------------------------------------------------------------
 rem  &apos;ripulisco le prime tre righe
 	Flags = com.sun.star.sheet.CellFlags.STRING + _
@@ -576,9 +579,10 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) &apos; da sostituire o integrare
 	oRanges = ThisComponent.NamedRanges
 	&apos; con qualcosa che esegua sia se nome sia se Attributo ???
-	sString$ = &quot;T O T A L E&quot;
-	oEnd=uFindString(sString$, oSheet)
-	lLastUrow=oEnd.RangeAddress.EndRow
+&apos;	sString$ = &quot;T O T A L E&quot;
+&apos;	oEnd=uFindString(sString$, oSheet)
+&apos;	lLastUrow=oEnd.RangeAddress.EndRow
+	lLastUrow = ultima_voce
 	oStart=uFindString(&quot;LAVORAZIONI&quot; &amp; chr$(10) &amp; &quot;O PROVVISTE&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
 	lLastUrow = getLastUsedRow(oSheet)
@@ -600,9 +604,9 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 		oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
 		lLastUrow = oNamedRange.RangeAddress.EndRow
 	End If 
-rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
-rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
-
+	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
+	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
+	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
@@ -629,22 +633,17 @@ rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot
 	oSheet.getColumns.getByIndex(lcolbase+14+idxcol).isVisible = true
 			
 i=rIntest
-	oSheet.GetCellByPosition(16,i).STRING=&quot;TOTALE&quot; &apos;totale computo
-	oSheet.GetCellByPosition(16,i).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
+&apos;	oSheet.GetCellByPosition(16,i).STRING=&quot;TOTALE&quot; &apos;totale computo
+&apos;	oSheet.GetCellByPosition(16,i).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
 
-
-&apos;	oSheet.GetCellByPosition(lcolbase+13 , i).formula = &quot;=SUMIF(GG;&quot; &amp; sCol &amp; i+1 &amp; &quot;;G1G1)&quot; &apos; quantità
-&apos;	oSheet.GetCellByPosition(lcolbase+13 , i).cellstyle = &quot;EP statistiche_Contab_q&quot;
-
-&apos;	oSheet.GetCellByPosition(lcolbase+14 , i).formula = &quot;=E&quot; &amp; i+1 &amp; &quot;*N&quot; &amp; i+1
-&apos;	oSheet.GetCellByPosition(lcolbase+14 , i).cellstyle = &quot;EP statistiche_Contab&quot;
-
-	oSheet.GetCellByPosition(lcolbase + 15 , i).formula = &quot;=R4/$R$2&quot;
-	oSheet.GetCellByPosition(lcolbase + 15 , i).cellstyle = &quot;EP-mezzo %&quot;
-	oSheet.GetCellByPosition(lcolbase + 16 , i).formula = &quot;=SUMIF(GG;A4;G1G1)&quot;
-	oSheet.GetCellByPosition(lcolbase + 16 , i).cellstyle = &quot;EP statistiche_q&quot;
-	oSheet.GetCellByPosition(lcolbase + 17 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
-	oSheet.GetCellByPosition(lcolbase + 17 , i).cellstyle = &quot;EP statistiche&quot;
+&apos; FORMULE DELLA CONTABILITA&apos;
+	oSheet.GetCellByPosition(lcolbase + 19 , i).formula = &quot;=V4/$V$2&quot;
+	oSheet.GetCellByPosition(lcolbase + 19 , i).cellstyle = &quot;EP-mezzo %&quot;
+	oSheet.GetCellByPosition(lcolbase + 20 , i).formula = &quot;=SUMIF(GG;A4;G1G1)&quot;
+	oSheet.GetCellByPosition(lcolbase + 20 , i).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=SUMIF(GG;A4;conEuro)&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
 Exit Sub 
 rem seleziono le formule
 	oSrc = oSheet.getCellRangeByPosition(lcolbase+15, rIntest, lcolbase+17, rIntest).RangeAddress
@@ -667,26 +666,6 @@ END SUB
 SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di somma.se
 &apos; parallelo variante
 	Dim oSheet As Object
-GoTo no:
-	Select Case nSheet
-		Case &quot;COMPUTO&quot;
-			tagA = &quot;AA&quot;
-			quan = &quot;BB&quot;
-			perc = 11
-			qq = 12
-			ii = 13
-			fat = &quot;M&quot; &apos; colonna fattore
-			tot = &quot;N&quot; &apos;totale
-		Case &quot;VARIANTE&quot;
-			tagA = &quot;varAA&quot;
-			quan = &quot;varBB&quot;
-			perc = 19
-			qq = 20
-			ii = 21
-			fat = &quot;U&quot; &apos; colonna fattore
-			tot = &quot;V&quot; &apos;totale
-	End Select
-no:
 	chiudi_dialoghi
 
 &apos;## computo ##############################################################
@@ -694,23 +673,13 @@ no:
 	oStart=uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot;,oSheet)&apos; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
 	lLastUrow = getLastUsedRow(oSheet)
-	For i = rIntest To lLastUrow
-		If oSheet.GetCellByPosition (13, i).cellstyle = &quot;comp sotto Unitario&quot; Then oSheet.GetCellByPosition (13, i).formula = &quot;=J&quot; &amp; i+1
-	Next	
-&apos;	rifa_nomearea (nSheet,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, tagA) &apos;tag codici
-&apos;	rifa_nomearea (nSheet,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, quan) &apos; quantità
 	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;AA&quot;) &apos;tag codici
 	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;BB&quot;) &apos; quantità
+	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow, &quot;cEuro&quot;) &apos; quantità
 &apos;#########################################################################
 	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then 
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot;Manca la riga rossa di chiusura della tabella. PROVVEDI!&quot;
-		exit sub
-	end if 
-	lrowF=oEnd.RangeAddress.EndRow
+	lrowF = ultima_voce+1
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 
 	lcolbase = Colonna_giusta_EP (oSheet)
@@ -725,13 +694,13 @@ no:
 	i=rIntest
 
 rem colonne del computo
-&apos;	oSheet.GetCellByPosition(lcolbase + perc , i).formula = &quot;=&quot;&amp; tot &amp; i+1 &amp; &quot;/$&quot; &amp; tot &amp; &quot;$2&quot;&apos; &amp; i+1
+
 	oSheet.GetCellByPosition(lcolbase + 11 , i).formula = &quot;=N4/$N$2&quot;
 	oSheet.GetCellByPosition(lcolbase + 11 , i).cellstyle = &quot;EP-mezzo %&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + qq , i).formula = &quot;=sumif(&quot;&amp; tagA &amp;&quot;;&quot; &amp; sCol &amp; i+1 &amp; &quot;;&quot; &amp; quan &amp; &quot;)&quot;
 	oSheet.GetCellByPosition(lcolbase + 12 , i).formula = &quot;=SUMIF(AA;A4;BB)&quot;
 	oSheet.GetCellByPosition(lcolbase + 12 , i).cellstyle = &quot;EP statistiche_q&quot;
-	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;M4*E4/100;M4*E4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=SUMIF(AA;A4;cEuro)&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;M4*E4/100;M4*E4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 13 , i).cellstyle = &quot;EP statistiche&quot;
 
 &apos;## contabilità ##########################################################
@@ -747,34 +716,49 @@ rem colonne del computo
 		
 		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;varAA&quot;) &apos;tag codici
 		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;varBB&quot;) &apos; quantità
+		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow, &quot;varEuro&quot;) &apos;importi
 		
-&apos;		For i = rIntest To lLastUrow
-&apos;			If oSheet_var.GetCellByPosition (13, i).cellstyle = &quot;comp sotto Unitario&quot; Then
-&apos;				oSheet_var.GetCellByPosition (13, i).formula = &quot;=J&quot; &amp; i+1
-&apos;			EndIf
-&apos;		Next
 	EndIf
 	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
-		oSheet.GetCellByPosition(lcolbase + 19 , i).formula = &quot;=V4/$V$2&quot;
-		oSheet.GetCellByPosition(lcolbase + 19 , i).cellstyle = &quot;EP-mezzo %&quot;
-		oSheet.GetCellByPosition(lcolbase + 20 , i).formula = &quot;=SUMIF(varAA;A4;varBB)&quot;
-		oSheet.GetCellByPosition(lcolbase + 20 , i).cellstyle = &quot;EP statistiche_q&quot;
-		oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;U4*E4/100;U4*E4)&quot;
-		oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
+		oSheet.GetCellByPosition(lcolbase + 15 , i).formula = &quot;=R4/$R$2&quot;
+		oSheet.GetCellByPosition(lcolbase + 15 , i).cellstyle = &quot;EP-mezzo %&quot;
+		oSheet.GetCellByPosition(lcolbase + 16 , i).formula = &quot;=SUMIF(varAA;A4;varBB)&quot;
+		oSheet.GetCellByPosition(lcolbase + 16 , i).cellstyle = &quot;EP statistiche_q&quot;
+		oSheet.GetCellByPosition(lcolbase + 17 , i).formula = &quot;=SUMIF(varAA;A4;varEuro)&quot;
+&apos;		oSheet.GetCellByPosition(lcolbase + 17 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
+		oSheet.GetCellByPosition(lcolbase + 17 , i).cellstyle = &quot;EP statistiche&quot;
 	EndIf
 ooo:
+GoTo VARIANTE_COMPUTO:
 &apos;#########################################################################
-&apos;QUADRO COMPARATIVO
-	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(U4-M4=0;&quot;&quot;--&quot;&quot;;U4-M4)&quot;
-	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(V4-N4&gt;0;V4-N4;&quot;&quot;&quot;&quot;)&quot;
-	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(V4-N4&lt;0;N4-V4;&quot;&quot;&quot;&quot;)&quot;
+&apos;QUADRO COMPARATIVO CONTABILITA&apos; su COMPUTO
+CONTABILITA_COMPUTO:
+&apos;	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(U4-M4=0;&quot;&quot;--&quot;&quot;;U4-M4)&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(V4-N4&gt;0;V4-N4;&quot;&quot;&quot;&quot;)&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(V4-N4&lt;0;N4-V4;&quot;&quot;&quot;&quot;)&quot;
+&apos;	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4))&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 10 , i).cellstyle = &quot;Default&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 14 , i).cellstyle = &quot;Default&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
+&apos;	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
+&apos;#########################################################################
+&apos;QUADRO COMPARATIVO VARIANTE su COMPUTO
+GoTo prosegui:
+VARIANTE_COMPUTO:
+	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(Q4-M4=0;&quot;&quot;--&quot;&quot;;Q4-M4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(R4-N4&gt;0;R4-N4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(Q4-N4&lt;0;N4-Q4;&quot;&quot;&quot;&quot;)&quot;
 	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
-	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4))&quot;
+	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((R4-N4)/N4);-(N4-R4)/R4;(R4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((R4-N4)/N4);-(N4-R4)/R4;(R4-N4)/N4))&quot;
 	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;
 	oSheet.GetCellByPosition(lcolbase + 10 , i).cellstyle = &quot;Default&quot;
 	oSheet.GetCellByPosition(lcolbase + 14 , i).cellstyle = &quot;Default&quot;
 	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
 	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
+&apos;#########################################################################
+prosegui:
 
 rem questa sotto è da tenere d&apos;occhio!!!
 	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, idxrow+1, lcolbase + 26, rIntest)) &apos;deseleziona

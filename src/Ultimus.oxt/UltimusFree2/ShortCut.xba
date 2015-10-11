@@ -36,10 +36,10 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	End with
 	UIcfgMgr = thisComponent.UIConfigurationManager
 	shortCuts = UicfgMgr.ShortCutManager
-&apos;	shortCuts.setKeyEvent( aKeyEvent, &quot;service:vnd.pycalendar?execute&quot; ) &apos;provato e funziona
+&apos;	shortCuts.setKeyEvent( aKeyEvent, &quot;service:vnd.pycalendar?execute&quot; ) &apos;provato e funziona&apos;
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application&quot; )
-&apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;	shortCuts.store() 
 	
 &apos;____________________________Alt 1
 	with aKeyEvent 
@@ -49,8 +49,8 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	UIcfgMgr = thisComponent.UIConfigurationManager 
 	shortCuts = UicfgMgr.ShortCutManager
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Elenco_Prezzi?language=Basic&amp;location=application&quot; )
-&apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;	shortCuts.store() 
  
 	
 	
@@ -63,8 +63,8 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	shortCuts = UicfgMgr.ShortCutManager
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.setKeyEvent( aKeyEvent, &quot;macro:///UltimusFree2.Voci_Sistema.Riformatta_VCA&quot; )
-&apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;	shortCuts.store() 
  
 	
 &apos;____________________________Alt 3 
@@ -75,8 +75,8 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	UIcfgMgr = thisComponent.UIConfigurationManager 
 	shortCuts = UicfgMgr.ShortCutManager
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_Computo?language=Basic&amp;location=application&quot; )
-&apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;	shortCuts.store() 
 		
 &apos;____________________________Alt 4
 	with aKeyEvent
@@ -86,9 +86,8 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	UIcfgMgr = thisComponent.UIConfigurationManager 
 	shortCuts = UicfgMgr.ShortCutManager
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Vai_Dati_Computo?language=Basic&amp;location=application&quot; )
-&apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
-	
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;	shortCuts.store() 
 
 &apos;____________________________Alt 5
 	with aKeyEvent
@@ -98,11 +97,9 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	UIcfgMgr = thisComponent.UIConfigurationManager 
 	shortCuts = UicfgMgr.ShortCutManager
 	shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application&quot; )
-&apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;	shortCuts.store() 
 &apos;shortCuts.store(aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application&quot;) 
-	
-	
 
 &apos;____________________________Alt 6 
 	with aKeyEvent
@@ -112,8 +109,8 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	UIcfgMgr = thisComponent.UIConfigurationManager 
 	shortCuts = UicfgMgr.ShortCutManager
 	shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application&quot; )
-&apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+shortCuts.removeKeyEvent(aKeyEvent)
+&apos;	shortCuts.store() 
 	
 &apos;____________________________ Alt P
 	with aKeyEvent
@@ -165,7 +162,6 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	End with
 	UIcfgMgr = thisComponent.UIConfigurationManager 
 	shortCuts = UicfgMgr.ShortCutManager
-&apos;xray shortCuts
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.setKeyEvent( aKeyEvent, &quot;macro:///UltimusFree2.Voci_Sistema.Riformatta_VCA&quot; )
 &apos;shortCuts.removeKeyEvent(aKeyEvent)
@@ -271,7 +267,7 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_new_doc?language=Basic&amp;location=application&quot; )
 	shortCuts.removeKeyEvent(aKeyEvent)
 &apos;shortCuts.store()
-	
+
 	
 &apos;____________________________Ctrl Ins
 	with aKeyEvent
@@ -296,14 +292,14 @@ Sub Registra_Tasti_inDoc &apos; a livello del documento
 	
 	
 &apos;&apos;____________________________Shift+F1
-&apos;	with aKeyEvent &apos;Shift F1
-&apos;		. modifiers = com.sun.star.awt.KeyModifier.SHIFT
-&apos;		. KeyCode = com.sun.star.awt.Key.F1
-&apos;	End with
-&apos;	UIcfgMgr = thisComponent.UIConfigurationManager
-&apos;	shortCuts = UicfgMgr.ShortCutManager
-&apos;	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Help.Help_scorciatoie?language=Basic&amp;location=application&quot; )
-&apos;&apos;shortCuts.removeKeyEvent(aKeyEvent)
+	with aKeyEvent &apos;Shift F1
+		. modifiers = com.sun.star.awt.KeyModifier.SHIFT
+		. KeyCode = com.sun.star.awt.Key.F1
+	End with
+	UIcfgMgr = thisComponent.UIConfigurationManager
+	shortCuts = UicfgMgr.ShortCutManager
+	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Help.Help_scorciatoie?language=Basic&amp;location=application&quot; )
+shortCuts.removeKeyEvent(aKeyEvent)
 &apos;	shortCuts.store() 	
 	
 
@@ -698,20 +694,15 @@ rem ----------------------------------------------------------------------
 	
 	
 &apos; ________Ctrl T
-		aKeyEvent.Modifiers = com.sun.star.awt.KeyModifier.MOD1
-	aKeyEvent.KeyCode = com.sun.star.awt.Key.T
-	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.copia_solo_colore_Sfondo?language=Basic&amp;location=application&quot;)
-	oWriterAccelCfgMgr.store()
-&apos; oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
-	
-	
-	
-	aKeyEvent.Modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2 &apos; Ctrl Alt T da rimuovere
-	aKeyEvent.KeyCode = com.sun.star.awt.Key.T
-	oWriterAccelCfgMgr.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Accessori.copia_solo_colore_Sfondo?language=Basic&amp;location=application&quot;)
-&apos; oWriterAccelCfgMgr.store()
-	oWriterAccelCfgMgr.removeKeyEvent(aKeyEvent)
-	
+	with aKeyEvent
+		. modifiers = com.sun.star.awt.KeyModifier.MOD1 
+		. KeyCode = com.sun.star.awt.Key.T
+	End with
+	UIcfgMgr = thisComponent.UIConfigurationManager
+	shortCuts = UicfgMgr.ShortCutManager
+	shortCuts.setKeyEvent (aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.menu.tabella_ferri?language=Basic&amp;location=application&quot;)
+&apos;	shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store()
 	
 	
 &apos;________________________________________________________non assegnato

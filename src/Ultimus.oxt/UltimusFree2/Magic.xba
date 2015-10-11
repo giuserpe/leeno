@@ -131,7 +131,6 @@ rem MODIFICATA Giuseppe Vizziello 2014
 	End If
 	print
 	procedi:
-&apos;	Print left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 2)
 		If left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 2)=&quot;=$&quot; Or _
 			left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 3)=&quot;=-$&quot; Then
 			Exit Sub
@@ -248,7 +247,6 @@ rem MODIFICATA Giuseppe Vizziello 2014
 					sString8 =	&quot;*&quot; &amp; sString8
 			end if			
 		end if
-
 
 		sString8 = sString4 &amp; sString5 &amp; sString6 &amp; sString7 &amp; sString8 &amp; &quot;)&quot;
 

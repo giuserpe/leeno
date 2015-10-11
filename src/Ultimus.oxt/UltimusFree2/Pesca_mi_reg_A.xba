@@ -36,7 +36,7 @@ SUB Pesca_cod_per_reg_A &apos;&apos; non ricordo lo scopo....
 END SUB
 
 Global nSal as integer
-SUB Pesca_cod__per_reg_A_1 &apos; per CONTABILITA 
+Sub Pesca_cod__per_reg_A_1 &apos; per CONTABILITA 
 &apos;modificata pesantemente &apos;(C) Giuseppe Vizziello 2014
 	dim lrow as long
 	dim oCell as object
@@ -46,8 +46,9 @@ SUB Pesca_cod__per_reg_A_1 &apos; per CONTABILITA
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow 
 	oSheet = ThisComponent.currentController.activeSheet
-	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
-	iEndRow=oEnd.RangeAddress.EndRow	
+&apos;	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
+&apos;	iEndRow=oEnd.RangeAddress.EndRow	
+	iEndRow = ultima_voce + 1
 	&apos;verifiche sulla posizione di inserimento
 	if lrow &gt; iEndRow then
 	 	lrow = iEndRow
@@ -168,9 +169,11 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 			lRowStart_A =.StartRow
 			lRowEnd_A = .EndRow
 	 End With
-	 Hvoce = lRowEnd_A - lRowStart_A +1
-&apos;	Print lRowStart_A &amp; &quot; &quot; &amp; lRowEnd_A
-	sStRange1 = oSheet.getCellRangeByPosition(1, lRowStart_A, 8, lRowEnd_A)&apos;seleziona la voce (solo misure) del computo senza n. ordine
+	Hvoce = lRowEnd_A - lRowStart_A +1
+	oRangeMisure = oSheet.getCellRangeByPosition(2, lRowStart_A+2, 8, lRowEnd_A-1)&apos;seleziona la voce (solo misure) del computo senza n. ordine
+	ThisComponent.CurrentController.Select(oRangeMisure)
+	copy_clip
+	sStRange1 = oSheet.getCellRangeByPosition(1, lRowStart_A, 8, lRowEnd_A)&apos;seleziona la voce del computo senza n. ordine
 	RangeTAG = oSheet.getCellRangeByPosition(27, lRowStart_A, 35, lRowEnd_A)&apos;seleziona incidenze e TAGs
 	sStRange2 = oSheet.getCellRangeByPosition(0, lRowStart_A, 0, lRowEnd_A)	&apos;seleziona solo il n. ordine del computo
 	&apos; Eliminazione degli eventuali links
@@ -184,11 +187,11 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 			oCell = oSheet.GetCellByPosition( n , i) &apos;occhio Bart, tendi ad invertirli
 			if ocell.Type = com.sun.star.table.CellContentType.FORMULA then
 				&apos; se è formula verifico se contiene un link ad altre celle o se solo formula di calcolo
-				sTmp = Mid(oCell.formula, 2, 1) &apos;Left (oCell.formula, 2)
+				sTmp = Mid(oCell.formula, 2, 1)
 				dim iTmp as integer
 				iTmp = sTmp 	
-&apos;				iTmp = iTmp +1 -1
 				If stmp &lt;&gt; iTmp then &apos; se diversi è perché contiene lettere (quindi è link)
+					consolido = &quot;sì&quot;
 					ThisComponent.CurrentController.Select(ocell)
 					dim sD as String
 					If InStr (oSheet.GetCellByPosition(8 , i).string, &quot;Parziale [&quot;) Then exit For
@@ -208,6 +211,7 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 	lRowStart = sStRange.RangeAddress.StartRow	&apos;inizio range voce di computo
 	lRowEnd =sStRange.RangeAddress.EndRow		&apos;fine range voce di computo
 	oSRC1 =	sStRange1.RangeAddress
+
 	oSRC2 =	sStRange2.RangeAddress
 	srcTAG = RangeTAG.RangeAddress
 	&apos;preleva un po&apos; di dati di posizione da oPartenza_A
@@ -235,10 +239,13 @@ rem	oDest2 = oSheet.GetCellByPosition( 44 , lRow).CellAddress &apos; punto di in
 	oSheet.copyRange(oDest1, oSRC1) &apos;incolla la voce di computo
 CONSOLIDA_MISURE:
 	oRange = oSheet.getCellRangeByPosition (2,lRow+2,8,sotto-1)
-	Flags = com.sun.star.sheet.CellFlags.FORMULA
-	aSaveData = oRange.getDataArray()
-	oRange.setDataArray( aSaveData )
-
+&apos;	Flags = com.sun.star.sheet.CellFlags.FORMULA
+&apos;	aSaveData = oRange.getDataArray()
+&apos;	oRange.setDataArray(aSaveData)
+	If consolido = &quot;sì&quot; Then
+		ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(2,lRow+2))
+		consolida_clip
+	EndIf
 rem	oSheet.copyRange(oDest2, oSRC2)&apos; incolla n.ord. sulla colonna 44
 	oSheet.copyRange(destTAG, srcTAG)&apos; incolla incidenze e TAGs colonna 27
 	if oSheet.GetCellByPosition( 1 , lRow-1).cellstyle = &quot;comp sotto Bianche_R&quot; then

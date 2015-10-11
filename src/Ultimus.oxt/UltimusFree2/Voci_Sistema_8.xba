@@ -379,7 +379,7 @@ Sub Riformatta_Voci_computo &apos; &apos; mette gli attributi voce anche a un co
 End Sub
 
 sub Rifa_Formule_Orizzontali &apos;riscrive le formule sull&apos;ultima riga della voce di computo
-Print &quot;basterd!&quot;
+
 	&apos; con la formula scritta in questo codice
  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
  oCell = oSheet.GetCellbyPosition( 0, 0 )

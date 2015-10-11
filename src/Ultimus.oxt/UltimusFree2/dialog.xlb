@@ -18,4 +18,5 @@
  <library:element library:name="DlgCompletato"/>
  <library:element library:name="DlgConversioneCompleta"/>
  <library:element library:name="Dialog4"/>
+ <library:element library:name="Dialog_tabellaferri"/>
 </library:library>

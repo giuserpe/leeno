@@ -141,12 +141,8 @@ End Sub
 SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row
 	oSheet1 = ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos; per ridurre a cella iniziale un eventuale range
-	if lrow = -1 then
-		 
-		exit sub
-	end if
 	oCell1=oSheet1.GetCellByPosition(2 , lrow)
-	 Rinumera_TUTTI_Capitoli (lrow)
+	Rinumera_TUTTI_Capitoli (lrow)
  	ThisComponent.CurrentController.Select(oCell1)
 	 
 end sub
@@ -207,8 +203,8 @@ Sub Inser_SottoCapitolo
 	End Select
 procedi:
 	sTesto = InputBox (&quot;#11 Inserisci il titolo:&quot;&amp; CHR$(10)_
- 				&amp; &quot; &quot;,&quot; Nuova Categoria&quot;, &quot;SUBCATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
- 	If sTesto = &quot;&quot; Then  exit sub &apos; si preme annulla Inputbox restituisce una stringa vuota
+ 				&amp; &quot; &quot;,&quot;Nuova SottoCategoria...&quot;, &quot;SUBCATEGORIA ??&quot;)&apos; &amp; CHR$(10) 
+ 	If sTesto = &quot;&quot; Then  Exit Sub &apos; si preme annulla Inputbox restituisce una stringa vuota
 Inser_SottoCapitolo_arg (sTesto)
 End Sub 
 
@@ -255,10 +251,10 @@ rem con riga bianca sopra
 		lrow = lrow+1
 	EndIf 
 
-	If sTesto &lt;&gt; &quot;&quot; Then
-		insRows (lrow, 1) &apos;inserisci riga
-		oSheet.GetCellbyPosition( 2, lRow).string=sTesto &apos;scrive titolo
-	EndIf
+&apos;	If sTesto &lt;&gt; &quot;&quot; Then
+&apos;		insRows (lrow, 1) &apos;inserisci riga
+&apos;		oSheet.GetCellbyPosition( 2, lRow).string=sTesto &apos;scrive titolo
+&apos;	EndIf
 	oCell=oSheet.getCellRangeByPosition(0, lrow, 41, lrow)
 rem ----------------------------------------------------------------------
 rem inserisco i valori e le formule
@@ -478,7 +474,7 @@ procedi:
 		sClang = &quot;yes&quot; &apos;????
 	end if
 	
-	lRowE = ultima_riga+1
+	lRowE = ultima_voce+1
 	For i = lrowStart1+1 To lRowE 
 		if oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Livello-1-scritta mini val&quot; or _
 			oSheet.GetCellByPosition(18 , i).CellStyle = &quot;Comp TOTALI&quot; or _
@@ -489,7 +485,7 @@ procedi:
 		
 	next i
 	&apos;importo lavori
-	sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU+1 &amp; &quot;)&quot;
+	sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU+1 &amp; &quot;)&quot;
 	rem RINUNCIO ALL&apos;USO DELLA COLONNA AP
 &apos;	oSheet.GetCellByPosition(40 , lrowStart1).Formula = sFormula
 &apos;IMPORTO
@@ -553,7 +549,6 @@ procedi:
 	next i
 	&apos;sFormula = &quot;=SUBTOTAL(9;&quot; &amp; &quot;S&quot; &amp; lrowStart1 +1 &amp; &quot;:&quot; &amp; &quot;S&quot; &amp; lRowU-1 &amp; &quot;)&quot; &apos;rigabart
 	&apos;IMPORTO
-&apos;	Print lRowU
 	sFormula = &quot;=SUBTOTAL(9;S&quot; &amp; lrowStart1 +1 &amp; &quot;:S&quot; &amp; lRowU+1 &amp; &quot;)&quot; &apos;totale per categoria
 	oSheet.GetCellByPosition(18 , lrowStart1).Formula = sFormula
 	oSheet.GetCellByPosition(18 , lrowStart1).CellStyle = &quot;livello2 scritta mini&quot;

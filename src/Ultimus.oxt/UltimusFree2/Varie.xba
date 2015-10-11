@@ -1370,9 +1370,6 @@ rem ----------------------------------------------------------------------
 &apos;	 		oRange.rows.Height = 475
  	End Select  
 END SUB
-Sub asd
-xray thiscomponent.currentselection
-End Sub
 
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
 &apos; sistema_attributi_sheet

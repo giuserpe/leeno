@@ -42,8 +42,7 @@
   <dlg:fixedline dlg:id="FixedLine8" dlg:tab-index="25" dlg:left="136" dlg:top="132" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
   <dlg:fixedline dlg:id="FixedLine9" dlg:tab-index="26" dlg:left="136" dlg:top="132" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
   <dlg:fixedline dlg:style-id="4" dlg:id="FixedLine10" dlg:tab-index="27" dlg:left="50" dlg:top="134" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati" dlg:value="UUUUUUUUUUUUUU"/>
-  <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="28" dlg:left="151" dlg:top="146" dlg:width="109" dlg:height="9" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="  Attenzione, non accoda i Sommari" dlg:multiline="true" dlg:tabstop="true"/>
-  <dlg:text dlg:style-id="5" dlg:id="Label9" dlg:tab-index="29" dlg:left="151" dlg:top="155" dlg:width="109" dlg:height="9" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="  Ed occorre Rifarli (sono pochi minuti)" dlg:multiline="true" dlg:tabstop="true"/>
-  <dlg:fixedline dlg:style-id="4" dlg:id="FixedLine11" dlg:tab-index="30" dlg:left="-47" dlg:top="254" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="28" dlg:left="21" dlg:top="154" dlg:width="230" dlg:height="11" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="Attenzione: non accoda i Sommari&#x0a;ed occorre rifarli (sono pochi minuti)" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:fixedline dlg:style-id="4" dlg:id="FixedLine11" dlg:tab-index="29" dlg:left="-58" dlg:top="256" dlg:width="253" dlg:height="0" dlg:help-text="Acconda un singolo foglio non previsto tra quelli Elencati"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -398,7 +398,6 @@ rem ----------------------------------------------------------------------
 	Barra_Apri_Chiudi_5(&quot;4........&quot;, 50)
 
 
-	Colora_Tabs
 rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
@@ -408,6 +407,7 @@ Computo_Normale_terra_terra &apos;visualizza
 Rifa_Somme_TOT_Computo &apos;comprende anche Controlla_Somme_Componenti &apos;ricontrolla tutti i calcoli e sistema i tag
 Rinumera_TUTTI_Capitoli2	&apos;ricontrolla i calcoli 
 Numera_Voci_Computo (&quot;niente prompt&quot;)
+Colora_Tabs
 
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)

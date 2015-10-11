@@ -721,5 +721,4 @@ rem ----------------------------------------------------------------------
 dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
 
 end Sub
-
 </script:module>

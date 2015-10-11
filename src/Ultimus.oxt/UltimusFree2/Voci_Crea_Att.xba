@@ -92,6 +92,7 @@ sub adegua_s5 rem ADEGUAMENTO DEL FILE DI ESEMPIO 3.9.xx
 
 	oS_S5.getCellByPosition(36,sopra+3).string = &quot;&quot;	&apos;CONTROLLI
 	oS_S5.getCellByPosition(37,sopra+3).string = &quot;&quot;	&apos;CONTROLLI
+	
 	oS_S5.getCellByPosition(2,sopra+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;&apos; ci metterei &quot;Comp-Bianche in mezzo Descr_R&quot;
 	oS_S5.getCellRangeByPosition(13, sopra, 16, sopra).cellstyle = &quot;Comp-Bianche sopra_R&quot;	
 	oS_S5.getCellRangeByPosition(14, sopra+1, 16, sopra+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;
@@ -254,7 +255,11 @@ SISTEMA_I_TAG:
 		oSheet.getCellByPosition(34, lrow+i).setformula(&quot;=AI$&quot; &amp; lrow +5)
 		oSheet.getCellByPosition(35, lrow+i).setformula(&quot;=AJ$&quot; &amp; lrow +5)
 		i=i+1
-	loop
+	Loop
+		oSheet.getCellByPosition(36, lrow+i).Formula = &quot;=IF(ISERROR(P&quot;&amp; lrow +5 &amp;&quot;);&quot;&quot;&quot;&quot;;IF(P&quot;&amp; lrow +5 &amp;&quot;&lt;&gt;&quot;&quot;&quot;&quot;;P&quot;&amp; lrow +5 &amp;&quot;;&quot;&quot;&quot;&quot;))&quot;
+		oSheet.getCellByPosition(36, lrow+i).cellstyle = &quot;comp -controolo&quot;
+
+		
  	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _
  		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 0 ) and _
  		sAttributo = &quot;TIPO_CONTABILITA&quot; then
@@ -358,7 +363,6 @@ end sub
 &apos;___________________________________________________________________________________________
 
 Sub Nuova_Voce_Computo_Att
-&apos;INIZIALIZZA_COMPUTO
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then &apos;gestione errori
 		On Error GoTo Errore
 	end if

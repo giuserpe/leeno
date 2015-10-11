@@ -35,12 +35,11 @@ Sub Ricicla_Misure
 	End If
 End Sub
 
-sUB ANNULLALA
+Sub ANNULLALA
 	sMemoPesca = &quot;&quot;
-END SUB
+End Sub
 
 Sub Pesca_cod &apos; [pesca...]
-&apos;	Print
 	Select case ThisComponent.currentcontroller.activesheet.name
 		Case &quot;CONTABILITA&quot;
 			sGVV = &quot;va&quot;
@@ -55,7 +54,7 @@ Sub Pesca_cod &apos; [pesca...]
 			Pesca_cod_1
 &apos;			PRINT &quot;VAI3&quot;		
 			exit sub
-		Case &quot;COMPUTO&quot;
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 			 if sGorigine = &quot;CONTABILITA&quot; then
 			 		sGVV = &quot;viene&quot; &apos;incolla
 			 		sGDove = &quot;CONTABILITA&quot;
@@ -86,7 +85,7 @@ Sub Pesca_cod &apos; [pesca...]
 			 	else &apos; 
 			 		sGVV = &quot;va&quot;
 			 		sGDove = &quot;Elenco Prezzi&quot;
-			 		sGorigine = &quot;COMPUTO&quot;
+			 		sGorigine = ThisComponent.currentcontroller.activesheet.name
 				 	&apos;porta su EP
 				 	Pesca_cod_1
 			 end if
@@ -218,14 +217,15 @@ dim oCell as object
 	lrow=oCell.RangeAddress.StartRow 
 	oSheet = ThisComponent.currentController.activeSheet
 
-	if lRow &lt; 2 then
-		 MsgBox (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
-							&amp;	&quot; Selezionane un&apos;altra più in basso....&quot;)
-		exit sub
-	end if
+&apos;	if lRow &lt; 2 then
+&apos;		 MsgBox (&quot;La riga selezionata non è adatta per l&apos;inserimento!&quot; &amp; CHR$(10)_
+&apos;							&amp;	&quot; Selezionane un&apos;altra più in basso....&quot;)
+&apos;		exit sub
+&apos;	end if
 
 &apos;0	&apos; controlla se è dentro una voce e centra la posizione 
-	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
+	nSheet = ThisComponent.currentcontroller.activesheet.name
+	if nSheet = &quot;COMPUTO&quot; or nSheet = &quot;VARIANTE&quot; then
 		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = &quot;Comp&quot; or _
 			left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = &quot;comp&quot; then
 				oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
@@ -235,7 +235,7 @@ dim oCell as object
 				exit sub
 		end if
 	end if
-	if ThisComponent.currentcontroller.activesheet.name = &quot;Analisi di Prezzo&quot; then
+	if nSheet  = &quot;Analisi di Prezzo&quot; then
 		if left((oSheet.GetCellByPosition( 3 , lRow).cellstyle),10) &lt;&gt; &quot;An-lavoraz&quot; then
 			 msgbox &quot;Devi agire posizionato sul componente! ( Annullo! ) &quot; 
 				exit sub
@@ -244,12 +244,18 @@ dim oCell as object
 
 
 &apos;1) registra la posizione
-	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
+	Select Case nSheet
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
-	end if 
-	if ThisComponent.currentcontroller.activesheet.name = &quot;Analisi di Prezzo&quot; then
+	Case &quot;Analisi di Prezzo&quot;
 		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
-	end if 
+	End Select
+&apos;	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; or &quot;VARIANTE&quot; Then 
+&apos;		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
+&apos;	end if 
+&apos;	if ThisComponent.currentcontroller.activesheet.name = &quot;Analisi di Prezzo&quot; then
+&apos;		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
+&apos;	end if 
 
 &apos;2) focus su EP
 
@@ -314,7 +320,7 @@ SUB Pesca_cod_2
 	lrow = oPartenza.RangeAddress.StartRow 
 
 	oSheet = ThisComponent.currentController.activeSheet
-	if oSheet.name = &quot;COMPUTO&quot; then &apos;??????????????????????????????
+	if oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;VARIANTE&quot; then &apos;
 		if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP&quot; then
 			sTitolo = &quot;Seleziona la cella di destinazione (Codice) (ESC per Annullare, NO Click su X ) &quot; 
  	 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners

@@ -296,7 +296,7 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(20,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
 	oSheet.GetCellByPosition(22,2).setstring(&quot;flag&quot;)
 	oSheet.GetCellByPosition(23,2).setstring(&quot;SAL&quot; + chr(13) +&quot;N.&quot;)
-	oSheet.GetCellByPosition(25,2).setstring(&quot;Importo&quot; + chr(13) +&quot;parziale&quot;)
+	oSheet.GetCellByPosition(25,2).setstring(&quot;Importi&quot; + chr(13) +&quot;SAL parziali&quot;)
 	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
 	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
 	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
@@ -305,9 +305,10 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
 	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
 	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
+	oSheet.GetCellByPosition(36,2).setstring(&quot;Importi&quot; + chr(13) +&quot;senza errori&quot;)
 	oSheet.GetCellByPosition(0,2).Rows.Height = 800
 rem colore colonne riga di intestazione
-	oSheet.getCellRangeByPosition(0, 2, 35 , 2).cellstyle = &quot;comp Int_colonna_R&quot; &apos;do un fondo a tutte
+	oSheet.getCellRangeByPosition(0, 2, 36 , 2).cellstyle = &quot;comp Int_colonna_R&quot; &apos;do un fondo a tutte
 	oSheet.getCellByPosition(0, 2).cellstyle = &quot;comp Int_colonna_R_prima&quot;
 	oSheet.getCellByPosition(18, 2).cellstyle = &quot;COnt_noP&quot;
 	oSheet.getCellRangeByPosition(31, 2, 32 , 2).cellstyle = &quot;comp Int_colonna vert&quot;
@@ -321,16 +322,16 @@ rem	riga di controllo importo
 	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=SUBTOTAL(9;P3:P4)&quot; &apos;importo lavori
 	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=SUBTOTAL(9;R3:R4)&quot; &apos;importo sicurezza
 	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=SUBTOTAL(9;AE3:AE4)&quot; &apos;importo manodopera
-	oSheet.getCellRangeByPosition(0, 1, 35 , 1).cellstyle = &quot;Reg_prog&quot;
+	oSheet.getCellRangeByPosition(0, 1, 36 , 1).cellstyle = &quot;Reg_prog&quot;
 rem riga del totale
 	oSheet.GetCellByPosition(2,3).setstring(&quot;T O T A L E&quot;)
 	oSheet.GetCellByPosition(15,3).FORMULA=&quot;=SUBTOTAL(9;P3:P4)&quot; &apos;importo lavori
 	oSheet.GetCellByPosition(17,3).FORMULA=&quot;=SUBTOTAL(9;R3:R4)&quot; &apos;importo sicurezza
 	oSheet.GetCellByPosition(30,3).FORMULA=&quot;=SUBTOTAL(9;AE3:AE4)&quot; &apos;importo manodopera
-	oSheet.getCellRangeByPosition(0, 3, 35 , 3).cellstyle = &quot;Comp TOTALI&quot;
+	oSheet.getCellRangeByPosition(0, 3, 36 , 3).cellstyle = &quot;Comp TOTALI&quot;
 rem riga rossa
 	oSheet.GetCellByPosition(0,4).setstring(&quot;Fine Computo&quot;)
-	oSheet.getCellRangeByPosition(0, 4, 35 , 4).cellstyle = &quot;Riga_rossa_Chiudi&quot;
+	oSheet.getCellRangeByPosition(0, 4, 36 , 4).cellstyle = &quot;Riga_rossa_Chiudi&quot;
 rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
 	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
 	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A2&quot;)

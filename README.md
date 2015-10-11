@@ -22,7 +22,7 @@ Installazione
 =============
 
 Per poter permettere un versionamento del codice sono stati aggiunti due script
-in python: bin2src.py e bin2src.py. Il primo permette di estrarre i sorgenti
+in python: bin2src.py e src2bin.py. Il primo permette di estrarre i sorgenti
 in modo da poterli versionare ed il secondo di archiviare i file sorgente
 in un nuovo ed aggiornato file di estensione di LibreOffice (.oxt) su cui poter
 lavorare.

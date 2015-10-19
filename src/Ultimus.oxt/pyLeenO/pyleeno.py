@@ -94,6 +94,16 @@ def insRows(lrow, nrighe): #forse inutile
     oCellRangeAddr.EndRow = lrow+4-1
     oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
 ########################################################################
+def debug (): #ultima_voce ():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    nRow = getLastUsedCell(oSheet).EndRow
+    MsgBox(nRow , '')
+    for n in reversed(0, nRow):
+        MsgBox(n , '')
+        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo', 'Comp End Attributo_R'):
+            return (n)
+########################################################################
 def uFindString (sString, oSheet):
     '''Trova la prima ricorrenza di una stringa (sString) riga per riga
     in un foglio di calcolo (oSheet) e restituisce una tupla (IDcolonna, IDriga)'''
@@ -377,6 +387,7 @@ def ins_voce_computo():
             #~ lrow = lrow+1
     elif cella.CellStyle == 'comp sotto Bianche':
         lrow = lrow+1
+    MsgBox(lrow, "")
     ins_voce_computo_grezza(lrow)
     Numera_Voci()
 ########################################################################
@@ -802,7 +813,7 @@ def XML_import_BOLZANO ():
 # XML_import_BOLZANO ###################################################
 ########################################################################
 # XPWE_import ##########################################################
-def debug (): #XPWE_import (): #(filename):
+def debug_XPWE_import (): #(filename):
     New_file.computo()
     filename = filedia('Scegli il file XPWE da importare...')
     #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/xpwe_prova.xpwe'

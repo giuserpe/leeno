@@ -484,27 +484,6 @@ Function SheetNameToNumber( ByVal cSheetName As String ) As Long
 End Function 
 
 
-
-SUB Adatta_Altezza_riga__________() &apos; non funziona bene su testi giustificati!
-	oSheet = ThisComponent.currentController.activeSheet
-	oMioRange=thisComponent.getCurrentSelection()
-	oMioRange.Rows.OptimalHeight = true
-END SUB
-
-Function getLastUsedRow (oSheet as Object) as long &apos;Integer (non bastava su tabelle lunghe: Overflow)
- Dim oCell As Object
- Dim oCursor As Object
- Dim aAddress As Variant
-	if ismissing (oSheet) or isnull(oSheet) then
- 		oSheet = ThisComponent.currentController.activeSheet
- 	end if
-	oCell = oSheet.GetCellbyPosition( 0, 0 )
-	oCursor = oSheet.createCursorByRange(oCell)
- &apos;xray oCursor
-	oCursor.GotoEndOfUsedArea(True)
-	GetLastUsedRow = oCursor.RangeAddress.EndRow	
-End Function
-
 Function Range_Somma_locale_analisi_incidenza (lCol as long) 
 dim lrow as long
 &apos;dim lcol as long

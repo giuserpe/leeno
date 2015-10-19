@@ -32,12 +32,12 @@ sub modifiche_risibili &apos; modifica le diciture ed i relativi stili di cella
 		oCell.string = &quot; Per trovare i valori N/D esegui &quot;
 	end if
 
-	sCerca = &quot;Se la cella sopra riporta un valore N/D significa che una o più voci non sono “ a posto” &quot;
+	sCerca = &quot;Se la cella sopra riporta un valore N/D significa che una o più voci non sono a posto&quot;
 	oCell = uFindString(sCerca, oSheet )
 	If NOT IsNull(oCell) then
 		ocell.HoriJustify = com.sun.star.table.CellHoriJustify.RIGHT
 		oCell.cellstyle = &quot;Comp_No print dx&quot;
-		oCell.string = 	&quot;Se la cella sopra riporta un valore N/D &quot; &amp; CHR$(10) &amp; &quot;Significa che una o più voci non sono “ a posto” &quot;
+		oCell.string = 	&quot;Se la cella sopra riporta un valore N/D &quot; &amp; CHR$(10) &amp; &quot;Significa che una o più voci non sono a posto&quot;
 	end if
 
 end sub

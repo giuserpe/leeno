@@ -55,6 +55,7 @@ End Function
 rem ######################################################################
 
 Sub SeeComponentsElements()
+rem visualizza elenco delle toolbar
 	Dim oDoc, oFrame
 	Dim oCfgManager
 	Dim oToolInfo
@@ -71,7 +72,7 @@ Sub SeeComponentsElements()
 		s = s &amp; x.ResourceURL &amp; CHR$(10)
 	Next
 	MsgBox s, 0, &quot;Toolbars in Component&quot;
-daVoce = InputBox (&quot;Da voce n.:&quot;, &quot;REGISTRA&quot;, daVoce)
+&apos;daVoce = InputBox (&quot;Da voce n.:&quot;, &quot;REGISTRA&quot;, daVoce)
 xray	ThisComponent.getCurrentController().getFrame().LayoutManager.getElements()(daVoce)&apos;.ResourceURL()
 
 End Sub
@@ -207,8 +208,10 @@ Sub eventi_assegna
 Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.elenco_OnFocus?language=Basic&amp;location=application&quot;)
 Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.elenco_OnUnFocus?language=Basic&amp;location=application&quot;)
 
-Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+EndIf
 
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
@@ -219,11 +222,11 @@ If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
 	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
 	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
-
-Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
-
+If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
+EndIf
 Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
 &apos;OnStartApp
 &apos;OnCloseApp
@@ -298,42 +301,109 @@ rem ----------------------------------------------------------------------
 	oEve.replaceByName(nomeEvento, PropEve()) &apos; nome evento
 End Sub
 
-Sub insertItem
-   Dim oSheet as object, oMyCombo as object
-   Dim ListEntries() as string
-
-   oSheet = ThisComponent.CurrentController.ActiveSheet
-	oDialog = CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
-	&apos;		oDialogScenari_EP.getControl(&quot;Sommario Variante&quot;).State = 1
-			oDialog.Execute()
-   NewItem$ = &quot;Test&quot;
-   with oMyCombo
-      ListEntries = .StringItemList
-      NextItemIndex% = UBound(ListEntries) + 1
-      Redim Preserve ListEntries(NextItemIndex)
-      ListEntries(NextItemIndex) = NewItem
-      .StringItemList = ListEntries()
-   End with
-End Sub
-
-Sub tabella_ferri
-	oDialog1=CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
-&apos;	ComboBox=oDialog1.getControl(&quot;ComboBox1&quot;)
-	ListBox=oDialog1.getControl(&quot;ListBox1&quot;)
-	oDialog1.Execute()
-&apos;	xray oDialog1
-	item = ListBox.SelectedItem
-&apos;Item=ComboBox.Text	
-	val0 = cDbl(split (item, &quot; &quot;)(2))
-	
+Sub staffa
+On Error GoTo fine:
+	lungo = InputBox (&quot;Lato lungo:&quot;, &quot;CORDOLO - Inserisci la misura del lato lungo&quot;)
+	lungo = cDbl (lungo)
+	corto = InputBox (&quot;Lato corto:&quot;, &quot;CORDOLO - Inserisci la misura del lato corto&quot;)
+	corto = cDbl (corto)
+	ferro = 3 * corto + 2 * lungo - 0.25
+&apos;	Print cStr (corto) &amp; &quot;+&quot; &amp; cStr (lungo) &amp; &quot;+&quot; &amp; cStr (corto) &amp; &quot;+&quot; &amp; cStr (lungo) &amp; &quot;+&quot; &amp; cStr (corto) &amp; &quot;=&quot; &amp; cStr (ferro)
 	ocell = thiscomponent.currentselection
-		With ocell.CellAddress
+	With ocell.CellAddress
 		lcol = .Column
 		lrow = .Row
-		lshe = .Sheet
+&apos;		lshe = .Sheet
 	End With
 	oSheet = ThisComponent.currentController.activeSheet &apos; presumo sia il foglio CONTABILITA
-	oSheet.getCellByPosition(lcol, lRow).Value = val0
+	oSheet.getCellByPosition(lcol, lRow).Value = ferro
+	
+	Dim aKeyEvent As New com.sun.star.awt.KeyEvent
+	&apos;____________________________Ctrl Alt T
+	with aKeyEvent
+		. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2
+		. KeyCode = com.sun.star.awt.Key.T
+	End with
+	UIcfgMgr = thisComponent.UIConfigurationManager 
+	shortCuts = UicfgMgr.ShortCutManager
+	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.menu.staffa?language=Basic&amp;location=application&quot; )
+&apos;shortCuts.removeKeyEvent(aKeyEvent)
+	shortCuts.store()
+fine:
+End Sub
+
+Dim ComboBox, ListBox, d
+rem https://forum.openoffice.org/it/forum/viewtopic.php?f=26&amp;t=7144&amp;p=37706#p37706
+Sub ApriDialogo_tabelle()
+	oSheet = ThisComponent.currentController.activeSheet &apos; presumo sia il foglio CONTABILITA
+	Select Case ThisComponent.currentselection.cellstyle
+	Case &quot;comp 1-a&quot;, &quot;comp 1-a peso&quot;
+		tabelle() = Array(&quot;Tondo per c.a.&quot;, &quot;Reti elettrosaldate&quot;, &quot;Travi IPE&quot;, &quot;Travi UPN&quot;, &quot;Travi HEA&quot;, &quot;Travi HEB&quot;, &quot;Travi HEM&quot;, _
+		&quot;Tubi quadrati&quot;, &quot;L lati Uguali sp tondi&quot;, &quot;L lati Disuguali sp tondi&quot;) &apos;
+		d = CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
+	
+		ComboBox=d.getControl(&quot;ComboBox1&quot;)
+		ComboBox.addItems(tabelle(), 0)
+		
+		ListBox=d.getControl(&quot;ListBox1&quot;)
+		d.execute()
+		Itab=ComboBox.Text
+		item = ListBox.SelectedItem
+		On Error GoTo fine: 
+	&apos;	Item=ComboBox.Text	
+		val0 = cDbl(split (item, &quot;-&quot;)(1))
+		
+		ocell = thiscomponent.currentselection
+		With ocell.CellAddress
+			lcol = .Column
+			lrow = .Row
+	&apos;		lshe = .Sheet
+		End With
+		
+		oSheet.getCellByPosition(lcol, lRow).Value = val0
+	End Select
+fine:
+End Sub
+
+Sub RiempiListBox
+
+	FerroTondo() = Array(&quot;ø4  - 0,099&quot;, &quot;ø5  - 0,154&quot;, &quot;ø6  - 0,222&quot;, &quot;ø7  - 0,302&quot;, &quot;ø8  - 0,395&quot;, &quot;ø9  - 0,499&quot;, &quot;ø10 - 0,617&quot;, &quot;ø11 - 0,746&quot;, &quot;ø12 - 0,888&quot;, &quot;ø13 - 1,042&quot;, &quot;ø14 - 1,208&quot;, &quot;ø15 - 1,387&quot;, &quot;ø16 - 1,578&quot;, &quot;ø17 - 1,782&quot;, &quot;ø18 - 1,998&quot;, &quot;ø19 - 2,226&quot;, &quot;ø20 - 2,466&quot;, &quot;ø21 - 2,719&quot;, &quot;ø22 - 2,984&quot;, &quot;ø23 - 3,261&quot;, &quot;ø24 - 3,551&quot;, &quot;ø25 - 3,853&quot;, &quot;ø26 - 4,168&quot;, &quot;ø27 - 4,495&quot;, &quot;ø28 - 4,834&quot;, &quot;ø29 - 5,185&quot;, &quot;ø30 - 5,549&quot;, &quot;ø31 - 5,925&quot;, &quot;ø32 - 6,313&quot;)
+	IPE() = Array (&quot;IPE 80  -   6,0&quot;, &quot;IPE 100 -   8,1&quot;, &quot;IPE 120 -  10,4&quot;, &quot;IPE 140 -  12,9&quot;, &quot;IPE 160 -  15,8&quot;, &quot;IPE 180 -  18,8&quot;, &quot;IPE 200 -  22,4&quot;, &quot;IPE 220 -  26,2&quot;, &quot;IPE 240 -  30,7&quot;, &quot;IPE 270 -  36,1&quot;, &quot;IPE 300 -  42,2&quot;, &quot;IPE 330 -  49,1&quot;, &quot;IPE 360 -  57,1&quot;, &quot;IPE 400 -  66,3&quot;, &quot;IPE 450 -  77,6&quot;, &quot;IPE 500 -  90,7&quot;, &quot;IPE 550 - 106,0&quot;, &quot;IPE 600 - 122,0&quot;)
+	UPN() = ArraY (&quot;UPN  30 -  4,27&quot;, &quot;UPN  40 -  4,88&quot;, &quot;UPN  50 -  5,59&quot;, &quot;UPN  65 -  7,09&quot;, &quot;UPN  80 -  8,65&quot;, &quot;UPN 100 - 10,60&quot;, &quot;UPN 120 - 13,30&quot;, &quot;UPN 140 - 16,00&quot;, &quot;UPN 160 - 18,90&quot;, &quot;UPN 180 - 22,00&quot;, &quot;UPN 200 - 25,30&quot;, &quot;UPN 220 - 29,40&quot;, &quot;UPN 240 - 33,20&quot;, &quot;UPN 260 - 37,90&quot;, &quot;UPN 280 - 41,90&quot;, &quot;UPN 300 - 46,10&quot;)
+	HEA() = Array (&quot;HEA 100  - 16,7&quot;, &quot;HEA 120  - 19,9&quot;, &quot;HEA 140  - 24,7&quot;, &quot;HEA 160  - 30,4&quot;, &quot;HEA 180  - 35,5&quot;, &quot;HEA 200  - 42,3&quot;, &quot;HEA 220  - 50,5&quot;, &quot;HEA 240  - 60,3&quot;, &quot;HEA 260  - 68,2&quot;, &quot;HEA 280  - 76,4&quot;, &quot;HEA 300  - 88,3&quot;, &quot;HEA 320  - 97,6&quot;, &quot;HEA 340  - 105,0&quot;, &quot;HEA 360  - 112,0&quot;, &quot;HEA 400  - 125,0&quot;, &quot;HEA 450  - 140,0&quot;, &quot;HEA 500  - 155,0&quot;, &quot;HEA 550  - 166,0&quot;, &quot;HEA 600  - 178,0&quot;, &quot;HEA 650  - 190,0&quot;, &quot;HEA 700  - 204,0&quot;, &quot;HEA 800  - 224,0&quot;, &quot;HEA 900  - 252,0&quot;, &quot;HEA 1000 - 272,0&quot;)
+	HEB() = Array (&quot;HEB 100  -  20,4&quot;, &quot;HEB 120  -  26,7&quot;, &quot;HEB 140  -  33,7&quot;, &quot;HEB 160  -  42,6&quot;, &quot;HEB 180  -  51,2&quot;, &quot;HEB 200  -  61,3&quot;, &quot;HEB 220  -  71,5&quot;, &quot;HEB 240  -  83,2&quot;, &quot;HEB 260  -  93,0&quot;, &quot;HEB 280  - 103,0&quot;, &quot;HEB 300  - 117,0&quot;, &quot;HEB 320  - 127,0&quot;, &quot;HEB 340  - 134,0&quot;, &quot;HEB 360  - 142,0&quot;, &quot;HEB 400  - 155,0&quot;, &quot;HEB 450  - 171,0&quot;, &quot;HEB 500  - 187,0&quot;, &quot;HEB 550  - 199,0&quot;, &quot;HEB 600  - 212,0&quot;, &quot;HEB 650  - 225,0&quot;, &quot;HEB 700  - 241,0&quot;, &quot;HEB 800  - 262,0&quot;, &quot;HEB 900  - 291,0&quot;, &quot;HEB 1000 - 314,0&quot;)
+	HEM() = Array (&quot;HEM 100  -  48,8&quot;, &quot;HEM 120  -  52,1&quot;, &quot;HEM 140  -  63,2&quot;, &quot;HEM 160  -  76,2&quot;, &quot;HEM 180  -  88,9&quot;, &quot;HEM 200  - 103,0&quot;, &quot;HEM 220  - 117,0&quot;, &quot;HEM 240  - 157,0&quot;, &quot;HEM 260  - 172,0&quot;, &quot;HEM 280  - 189,0&quot;, &quot;HEM 300  - 238,0&quot;, &quot;HEM 320  - 245,0&quot;, &quot;HEM 340  - 248,0&quot;, &quot;HEM 360  - 250,0&quot;, &quot;HEM 400  - 256,0&quot;, &quot;HEM 450  - 263,0&quot;, &quot;HEM 500  - 270,0&quot;, &quot;HEM 550  - 278,0&quot;, &quot;HEM 600  - 285,0&quot;, &quot;HEM 650  - 293,0&quot;, &quot;HEM 700  - 301,0&quot;, &quot;HEM 800  - 317,0&quot;, &quot;HEM 900  - 333,0&quot;, &quot;HEM 1000 - 349,0&quot;)
+
+	tuboQuad() = Array (&quot; 20 s1,5 -  0,87&quot;, &quot; 20 s2   -  1,13&quot;, &quot; 25 s1,5 -  1,11&quot;, &quot; 25 s2   -  1,44&quot;, &quot; 30 s2   -  1,76&quot;, &quot; 30 s3   -  2,54&quot;, &quot; 35 s2   -  2,07&quot;, &quot; 35 s3   -  3,01&quot;, &quot; 40 s2   -  2,39&quot;, &quot; 40 s3   -  3,49&quot;, &quot; 40 s4   -  4,52&quot;, &quot; 50 s2   -  3,01&quot;, &quot; 50 s3   -  4,43&quot;, &quot; 50 s4   -  5,78&quot;, &quot; 60 s2   -  3,64&quot;, &quot; 60 s3   -  5,37&quot;, &quot; 60 s4   -  7,03&quot;, &quot; 70 s2   -  4,27&quot;, &quot; 70 s3   -  6,31&quot;, &quot; 70 s4   -  8,29&quot;, &quot; 80 s2   -  4,90&quot;, &quot; 80 s3   -  7,25&quot;, &quot; 80 s4   -  9,55&quot;, &quot; 80 s5   - 11,78&quot;, &quot;100 s2   -  6,15&quot;, &quot;100 s3   -  9,14&quot;, &quot;100 s4   - 12,06&quot;, &quot;100 s5   - 14,92&quot;, &quot;120 s2   -  7,41&quot;, &quot;120 s3   - 11,02&quot;, &quot;120 s4   - 14,57&quot;, &quot;120 s5   - 18,06&quot;, &quot;150 s3   - 13,85&quot;, &quot;150 s4   - 18,34&quot;, &quot;150 s5   - 22,77&quot;, &quot;180 s3   - 16,67&quot;, &quot;180 s4   - 22,11&quot;, &quot;180 s5   - 27,48&quot;, &quot;200 s3   - 18,56&quot;, &quot;200 s4   - 24,62&quot;, &quot;200 s5   - 30,62&quot;, &quot;200 s6   - 36,55&quot;, &quot;220 s4   - 27,13&quot;, &quot;220 s5   - 33,76&quot;, &quot;220 s6   - 40,32&quot;, &quot;250 s4   - 30,90&quot;, &quot;250 s5   - 38,47&quot;, &quot;250 s6   - 45,97&quot;)
+	retiEls() = Array (&quot;Foglio 2250X4000 mm:&quot;, &quot;510/2      ø5 100x100 - 3,11&quot;, &quot;515/2      ø5 150x150 - 2,07&quot;, &quot;520/2      ø5 200x200 - 1,59&quot;, &quot;610/2 AD   ø6 100x100 - 4,49&quot;, &quot;615/2 AD   ø6 150x150 - 2,98&quot;, &quot;620/2 AD   ø6 200x200 - 2,29&quot;, &quot;810/2 AD   ø8 100x100 - 7,98&quot;, &quot;815/2 AD   ø8 150x150 - 5,30&quot;, &quot;820/2 AD   ø8 200x200 - 4,08&quot;, &quot;1020/2 AD ø10 200x200 - 6,37&quot;, &quot;1220/2 AD ø12 200x200 - 9,18&quot;, &quot;Foglio 2000x3000 mm:&quot;, &quot;510/1      ø5 100x100 - 3,08&quot;, &quot;515/1      ø5 150x150 - 2,10&quot;, &quot;520/1      ø5 200x200 - 1,54&quot;, &quot;610/1 AD   ø6 100x100 - 4,43&quot;, &quot;615/1 AD   ø6 150x150 - 3,03&quot;, &quot;620/1 AD   ø6 200x200 - 2,22&quot;, &quot;810/1 AD   ø8 100x100 - 7,90&quot;, &quot;815/1 AD   ø8 150x150 - 5,37&quot;, &quot;820/1 AD   ø8 200x200 - 3,95&quot;, &quot;1020/1 AD ø10 200x200 - 6,17&quot;)
+	ang_L() = Array (&quot;L 15x3   -  0,649&quot;, &quot;L 20x3   -  0,885&quot;, &quot;L 20x4   -  1,14&quot;, &quot;L 25x3   -  1,12&quot;, &quot;L 25x4   -  1,46&quot;, &quot;L 25x5   -  1,78&quot;, &quot;L 30x3   -  1,36&quot;, &quot;L 30x4   -  1,78&quot;, &quot;L 30x5   -  2,18&quot;, &quot;L 30x6   -  2,56&quot;, &quot;L 35x3   -  1,60&quot;, &quot;L 35x3,5 -  1,85&quot;, &quot;L 35x4   -  2,09&quot;, &quot;L 35x5   -  2,57&quot;, &quot;L 35x6   -  3,04&quot;, &quot;L 40x3   -  1,84&quot;, &quot;L 40x4   -  2,42&quot;, &quot;L 40x5   -  2,97&quot;, &quot;L 40x6   -  3,52&quot;, &quot;L 45x3   -  2,09&quot;, &quot;L 45x4   -  2,74&quot;, &quot;L 45x4,5 -  3,06&quot;, &quot;L 45x5   -  3,28&quot;, &quot;L 45x6   -  4,0&quot;, &quot;L 50x4   -  3,06&quot;, &quot;L 50x5   -  3,77&quot;, &quot;L 50x6   -  4,47&quot;, &quot;L 50x7   -  5,15&quot;, &quot;L 50x8   -  5,82&quot;, &quot;L 50x9   -  6,47&quot;, &quot;L 55x4   -  3,38&quot;, &quot;L 55x5   -  4,18&quot;, &quot;L 55x6   -  4,95&quot;, &quot;L 55x8   -  6,46&quot;, &quot;L 60x4   -  3,70&quot;, &quot;L 60x5   -  4,57&quot;, &quot;L 60x6   -  5,42&quot;, &quot;L 60x8   -  7,09&quot;, &quot;L 60x10  -  8,69&quot;, &quot;L 65x5   -  4,97&quot;, &quot;L 65x6   -  5,91&quot;, &quot;L 65x7   -  6,83&quot;, &quot;L 70x5   -  5,37&quot;, &quot;L 70x6   -  6,38&quot;, &quot;L 70x7   -  7,38&quot;, &quot;L 70x8   -  8,36&quot;, &quot;L 70x10  - 10,3&quot;, &quot;L 75x5   -  5,78&quot;, &quot;L 75x6   -  6,87&quot;, &quot;L 75x7   -  7,94&quot;, &quot;L 80x6   -  7,34&quot;, &quot;L 80x7   -  8,49&quot;, &quot;L 80x8   -  9,63&quot;, &quot;L 80x10  - 11,9&quot;, &quot;L 80x12  - 14,0&quot;, &quot;L 90x6   -  8,30&quot;, &quot;L 90x7   -  9,61&quot;, &quot;L 90x8   - 10,9&quot;, &quot;L 90x9   - 12,2&quot;, &quot;L 90x10  - 13,4&quot;, &quot;L 90x12  - 15,9&quot;, &quot;L 100x6  -  9,26&quot;, &quot;L 100x7  - 10,7&quot;, &quot;L 100x8  - 12,2&quot;, &quot;L 100x9  - 13,6&quot;, &quot;L 100x10 - 15,0&quot;, &quot;L 100x12 - 17,8&quot;, &quot;L 100x14 - 20,6&quot;, &quot;L 100x15 - 21,9&quot;, &quot;L 110x6  - 10,2&quot;, &quot;L 110x7  - 11,8&quot;, &quot;L 110x8  - 13,4&quot;, &quot;L 110x9  - 15,0&quot;, &quot;L 110x10 - 16,6&quot;, &quot;L 110x12 - 19,7&quot;, &quot;L 110x14 - 22,8&quot;, &quot;L 120x8  - 14,7&quot;, &quot;L 120x9  - 16,5&quot;, &quot;L 120x10 - 18,2&quot;, &quot;L 120x11 - 19,9&quot;, &quot;L 120x12 - 21,6&quot;, &quot;L 120x13 - 23,3&quot;, &quot;L 120x15 - 26,6&quot;, &quot;L 120x18 - 31,5&quot;, &quot;L 150x12 - 27,3&quot;, &quot;L 150x15 - 33,8&quot;, &quot;L 150x18 - 40,1&quot;, &quot;L 180x15 - 40,9&quot;, &quot;L 180x18 - 48,6&quot;, &quot;L 180x20 - 53,7&quot;, &quot;L 200x16 - 48,5&quot;, &quot;L 200x18 - 54,2&quot;, &quot;L 200x20 - 59,9&quot;, &quot;L 200x24 - 71,0&quot;)
+	ang_LD() = Array (&quot;L 30x20x3    -  1,12&quot;, &quot;L 30x20x4    -  1,46&quot;, &quot;L 30x20x5    -  1,78&quot;, &quot;L 35x20x4    -  1,61&quot;, &quot;L 35x20x5    -  1,98&quot;, &quot;L 40x20x3    -  1,36&quot;, &quot;L 40x20x4    -  1,77&quot;, &quot;L 40x20x5    -  2,17&quot;, &quot;L 40x25x4    -  1,93&quot;, &quot;L 40x25x5    -  2,37&quot;, &quot;L 45x30x4    -  2,24&quot;, &quot;L 45x30x5    -  2,76&quot;, &quot;L 45x30x6    -  3,26&quot;, &quot;L 60x30x5    -  3,37&quot;, &quot;L 60x30x6    -  3,99&quot;, &quot;L 60x40x5    -  3,76&quot;, &quot;L 60x40x6    -  4,46&quot;, &quot;L 60x40x7    -  5,14&quot;, &quot;L 65x50x5    -  4,35&quot;, &quot;L 65x50x6    -  5,16&quot;, &quot;L 65x50x7    -  5,96&quot;, &quot;L 65x50x8    -  6,75&quot;, &quot;L 75x50x5    -  4,75&quot;, &quot;L 75x50x6    -  5,65&quot;, &quot;L 75x50x7    -  6,53&quot;, &quot;L 75x50x8    -  7,39&quot;, &quot;L 80x40x5    -  4,56&quot;, &quot;L 80x40x6    -  5,41&quot;, &quot;L 80x40x7    -  6,25&quot;, &quot;L 80x40x8    -  7,07&quot;, &quot;L 80x60x6    -  6,37&quot;, &quot;L 80x60x7    -  7,36&quot;, &quot;L 80x60x8    -  8,34&quot;, &quot;L 80x60x10   - 10,30&quot;, &quot;L 100x50x6   -  6,85&quot;, &quot;L 100x50x7   -  7,93&quot;, &quot;L 100x50x8   -  8,99&quot;, &quot;L 100x50x10  - 11,10&quot;, &quot;L 100x65x7   -  8,77&quot;, &quot;L 100x65x8   -  9,94&quot;, &quot;L 100x65x9   - 11,10&quot;, &quot;L 100x65x10  - 12,30&quot;, &quot;L 100x65x11  - 13,40&quot;, &quot;L 100x75x8   - 10,60&quot;, &quot;L 100x75x10  - 13,00&quot;, &quot;L 100x75x12  - 15,40&quot;, &quot;L 110x75x8   - 11,20&quot;, &quot;L 110x75x10  - 13,80&quot;, &quot;L 120x60x8   - 10,90&quot;, &quot;L 120x60x10  - 13,40&quot;, &quot;L 120x80x8   - 12,20&quot;, &quot;L 120x80x10  - 15,00&quot;, &quot;L 120x80x12  - 17,80&quot;, &quot;L 120x80x14  - 20,50&quot;, &quot;L 130x65x8   - 11,80&quot;, &quot;L 130x65x10  - 14,60&quot;, &quot;L 130x65x12  - 17,30&quot;, &quot;L 150x100x10 - 19,00&quot;, &quot;L 150x100x12 - 22,60&quot;, &quot;L 150x100x14 - 26,10&quot;)
+
+	
+	ListBox.removeItems(0, 100)
+	Select Case ComboBox.Text
+	Case &quot;Tondo per c.a.&quot;
+		ListBox.addItems(FerroTondo(), 0)
+	Case &quot;Reti elettrosaldate&quot;
+		ListBox.addItems(retiEls(), 0)
+	Case &quot;Travi IPE&quot;
+		ListBox.addItems(IPE(), 0)
+	Case &quot;Travi HEA&quot;
+		ListBox.addItems(HEA(), 0)
+	Case &quot;Travi HEB&quot;
+		ListBox.addItems(HEB(), 0)
+	Case &quot;Travi HEM&quot;
+		ListBox.addItems(HEM(), 0)
+	Case &quot;Tubi quadrati&quot;
+		ListBox.addItems(tuboQuad(), 0)
+	Case &quot;L lati Uguali sp tondi&quot;
+		ListBox.addItems(ang_L(), 0)
+	Case &quot;L lati Disuguali sp tondi&quot;
+		ListBox.addItems(ang_LD(), 0)
+	Case &quot;Travi UPN&quot;
+		ListBox.addItems(UPN(), 0)
+	End Select
+&apos;  ListBox.getModel.StringItemList = Dati1(0)
 End Sub
 
 Sub ferri
@@ -342,10 +412,15 @@ Sub ferri
 &apos;	DialogLibraries.LoadLibrary(&quot;Standard&quot;)
  &apos;      oDialog1=CreateUnoDialog(DialogLibraries.Standard.Dialog)
        &apos;-------ListBox--------
+       Dim ListBox As Object
        ListBox=oDialog1.getControl(&quot;ListBox1&quot;)
        oDialog1.Execute()
+
+xray ListBox.getSelectedItem()
        Item=ListBox.SelectedItem
-       Print &quot;Selected Item in ListBox= &quot;+item
+
+
+       Print &quot;Selected Item in ListBox= &quot;+Item
        Item=ListBox.GetSelectedItempos()
        Print &quot;Selected Itempos in ListBox= &quot;+item
        &apos;------ ComboBox ---------

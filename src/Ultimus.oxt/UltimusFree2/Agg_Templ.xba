@@ -558,7 +558,6 @@ end Sub
 sub Colora_Tabs &apos;sistena i colori delle tabs
 	&apos; le apre tutte
 	Visualizza_sheet_TUTTE
-	
 	&apos; prima tutte circa come defaults
 	SetTabColorAll
 	&apos;poi procede a colorarle una per una in base a nomi e/o criteri
@@ -600,10 +599,10 @@ sub Colora_Tabs &apos;sistena i colori delle tabs
 			SetTabColorN(RGB(255,180,175))
 		end if
 
-		if i= 4 or i =4 then 
+&apos;		if i= 4 or i =4 then 
 	&apos;		ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
 		&apos;	SetTabColorN(RGB(102,102,102))
-		end if
+&apos;		end if
 		If left(sSheetName,3) = &quot;cT_&quot; or left(sSheetName,3) = &quot;cP_&quot; Then
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
 			SetTabColorN(RGB(204,255,255))	

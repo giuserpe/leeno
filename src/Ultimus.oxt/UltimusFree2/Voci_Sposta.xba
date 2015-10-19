@@ -43,6 +43,7 @@ sub elimina_voce &apos;elimina voce (C) Giuseppe Vizziello 2014
 	oSheet.unprotect(&quot;&quot;)
 rem ----------------------------------------------------------------------
 rem controllo se posso procedere
+&apos;xray oSheet.cellprotection
 &apos;	If oSheet.cellprotection.IsLocked = True Then
 &apos;		MsgBox (&quot;Stai operando su un foglio protetto!&quot;&amp; CHR$(10)_
 &apos;				&amp;&quot;Per poter procedere devi prima disattivare la protezione!&quot;, 48+256, &quot;Attenzione!&quot;)

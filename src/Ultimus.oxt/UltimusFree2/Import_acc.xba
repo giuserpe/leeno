@@ -486,7 +486,7 @@ Sub Conversione_2&apos;(sOutputFilePath)
 	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Tabella1&quot;) 
 	oCell = oSheet.GetCellByPosition( 5, 5 )
-	ThisComponent.CurrentController.Select(sheet)	
+	ThisComponent.CurrentController.Select(sheet)
 &apos;print	thiscomponent.getURL()	
 &apos;xray ThisComponent.CurrentController
 	Copia_Sheet_2_AltroDoc (sNameDest2)

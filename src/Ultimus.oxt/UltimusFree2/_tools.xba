@@ -167,7 +167,7 @@ rem	+ com.sun.star.sheet.CellFlags.EDITATTR)
 	CellProtStruc = rngClear.CellProtection
 	CellProtStruc.isLocked = True
 	rngClear.CellProtection = CellProtStruc
-	oSheet1.Protect &quot;&quot;
+&apos;	oSheet1.Protect &quot;&quot;
 End Sub
 rem ----------------------------------------------------------------------
 Sub scrivi_larghezza_colonna
@@ -181,7 +181,21 @@ rem ----------------------------------------------------------------------
 sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda della sheet
 	oSheet =ThisComponent.currentController.activeSheet
 	Select Case oSheet.Name
-		case = &quot;CONTABILITA&quot;
+		Case &quot;Analisi di Prezzo&quot;
+		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 2100
+		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 12000
+		oSheet.getColumns().getByName(&quot;C&quot;).Columns.Width = 1600 &apos;7800
+		oSheet.getColumns().getByName(&quot;D&quot;).Columns.Width = 2000
+		oSheet.getColumns().getByName(&quot;E&quot;).Columns.Width = 3400
+		oSheet.getColumns().getByName(&quot;F&quot;).Columns.Width = 3400
+		oSheet.getColumns().getByName(&quot;G&quot;).Columns.Width = 2700
+		oSheet.getColumns().getByName(&quot;H&quot;).Columns.Width = 2700
+		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 2000
+		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 2000
+		oSheet.getColumns().getByName(&quot;K&quot;).Columns.Width = 2000
+
+		Case &quot;CONTABILITA&quot;
+		viste_nuove(&quot;TTTFFTTTTTFTFTFTFFFTTFTTFT&quot;)
 		oSheet.getCellRangeByposition(13,0,1023,0).Columns.Width = 1900 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 1000 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(51,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
@@ -196,7 +210,16 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;I&quot;).Columns.Width = 1300
 		oSheet.getColumns().getByName(&quot;J&quot;).Columns.Width = 1700
 		oSheet.getColumns().getByName(&quot;L&quot;).Columns.Width = 1700
-		case = &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		oSheet.getColumns().getByName(&quot;N&quot;).Columns.Width = 1900
+		oSheet.getColumns().getByName(&quot;P&quot;).Columns.Width = 1900
+		oSheet.getColumns().getByName(&quot;T&quot;).Columns.Width = 1000
+		oSheet.getColumns().getByName(&quot;U&quot;).Columns.Width = 1000
+		oSheet.getColumns().getByName(&quot;W&quot;).Columns.Width = 1000
+		oSheet.getColumns().getByName(&quot;X&quot;).Columns.Width = 1000
+		oSheet.getColumns().getByName(&quot;Z&quot;).Columns.Width = 1900
+		oSheet.getColumns().getByName(&quot;AX&quot;).Columns.Width = 1900
+		oSheet.getColumns().getByName(&quot;AY&quot;).Columns.Width = 1900
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 	rem larghezza colonne
 		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
 		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
@@ -238,7 +261,9 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;Z&quot;).Columns.Width = 1600
 		oSheet.getColumns().getByName(&quot;AA&quot;).Columns.Width = 1600
 	end Select
-	ThisComponent.CurrentController.Select(oCell)
+&apos;	oSheet.getCellRANGEByPosition(0, 0, getLastUsedCol(oSheet),getLastUsedRow(oSheet)).Rows.OptimalHeight = True
+&apos;	ThisComponent.CurrentController.Select(oCell)
+&apos;		oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4).Rows.OptimalHeight = True
 	Adatta_Altezza_riga
 	fissa (0,idxrow+1)
 end Sub
@@ -361,7 +386,6 @@ SUB Elimina_Nomi_Area_errati &apos;nome eloquente
  		oNomiArea() = oAree.ElementNames()
 		n = oAree.Count - 1
 		Sheet = Doc.Sheets.getByName(&quot;duplicati&quot;)&apos;
-&apos;xray oNomiArea
  For i = 0 to n
 		Cell = Sheet.getCellByPosition(0, i)				&apos;prima colonna
 		Cell.String = oNomiArea(i)							&apos;inserisce nome area
@@ -386,13 +410,22 @@ SUB DOLO rem SOLO MANUTENZIONE
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$91:$L$91&quot; , &quot;trasporti&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$92:$L$92&quot; , &quot;altre_forniture&quot;)
 		rem VECCHIO BLOCCO ANALISI_BART
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$45:$N$51&quot; , &quot;blocco_analisi&quot;)
 		rem BLOCCO ANALISI AVCP
-&apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
 &apos;		rifa_nomearea (&quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
 &apos;		rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
+Exit Sub
 		
-		rifa_nomearea (&quot;S5&quot;, &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;) &apos;blocco_contabilità
+rifa_nomearea (&quot;S5&quot; , &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
+rifa_nomearea (&quot;M1&quot; , &quot;$D$4&quot; , &quot;Bozza_8&quot;)
+rifa_nomearea (&quot;M1&quot; , &quot;$C$19&quot; , &quot;data_prog_8&quot;)
+rifa_nomearea (&quot;M1&quot; , &quot;$E$4&quot; , &quot;oData_8&quot;)
+rifa_nomearea (&quot;M1&quot; , &quot;$C$4&quot; , &quot;progetto_8&quot;)
+rifa_nomearea (&quot;S5&quot; , &quot;$B$116:$O$116&quot; , &quot;riga_analisi&quot;)
+rifa_nomearea (&quot;S5&quot; , &quot;$A$9:$AP12&quot; , &quot;Serv_gen1_8&quot;)
+rifa_nomearea (&quot;S5&quot; , &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;)
+rifa_nomearea (&quot;M1&quot; , &quot;$B$4&quot; , &quot;Super_ego_8&quot;)
+rifa_nomearea (&quot;S5&quot; , &quot;$B$128:$O$128&quot; , &quot;utili&quot;)
+		
 
 &apos;rifa_nomearea (&quot;Foglio1&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
  oDoc = ThisComponent

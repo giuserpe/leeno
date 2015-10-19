@@ -328,7 +328,7 @@ Dim lcolorSRC as long
 		if SelectedRange = &quot;&quot; or _
 	 		SelectedRange = &quot;ANNULLA&quot; then
 oRangeSelectionListener.release()
-xray oRangeSelectionListener
+&apos;xray oRangeSelectionListener
 		 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 		 	exit sub
 	 	end if 	

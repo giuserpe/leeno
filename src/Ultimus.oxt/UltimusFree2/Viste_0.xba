@@ -249,7 +249,7 @@ Sub manodoperta_on_off &apos; chiude le col della manodopera su EP
 	
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
-ffissa (0,idxrow+1)
+fissa (0,idxrow+1)
 End Sub
 
 
@@ -362,7 +362,7 @@ Exit Sub
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then	
 		msgbox &quot;In questo modo il &apos;prezzo&apos; lo devi compilare a mano!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp; &quot;Se invece vuoi acquisire dei prezzi da un Prezzario devi aprire un file prezziario e da quello inviare qui la voce...&quot; &amp; CHR$(10)_
-				&amp; &quot; (Eventualmente consulta il &apos;Tutorial per iniziare&apos; al cap. &apos;5.6 Inserire un nuovo prezzo in “Elenco Prezzi&apos;) &quot;
+				&amp; &quot; (Eventualmente consulta il &apos;Tutorial per iniziare&apos; al cap. &apos;5.6 Inserire un nuovo prezzo in Elenco Prezzi&apos;) &quot;
 	end if
 End Sub
 
@@ -386,8 +386,4 @@ SUB chiudi_dialoghi &apos; chiude tutte le dialog
 		oDialogScenari_2.endExecute() 
 	end if&apos;			
 END SUB
-
-
-
-
 </script:module>

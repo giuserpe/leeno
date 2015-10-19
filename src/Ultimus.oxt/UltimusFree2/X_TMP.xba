@@ -315,25 +315,19 @@ oMyStyleCell.setPropertyToDefault(&quot;ShadowFormat&quot;)&apos;?????????????
 
 &apos;___questa funzia__________________________________________________
 
-end sub
+End Sub
 
 SUB rifa_nomearea (sSheet as string, sRange as string, sName as string)
-	&apos; prova per avere un solo modulo richiamabile da al tre sub
+	&apos; prova per avere un solo modulo richiamabile da al tresub
 	&apos; questo vuole i dati in formaro A1 C1
 &apos;	Barra_Apri_Chiudi_5(&quot;Devo ridefinire un Nome di Area... Pazienta... &quot;, 50)
 	sPath = &quot;$&apos;&quot; &amp; sSheet &amp; &quot;&apos;.&quot; &amp; sRange
 	oRanges = ThisComponent.NamedRanges
  	oCellAddress = ThisComponent.Sheets.getByName(sSheet).getCellRangeByName(&quot;A1&quot;).getCellAddress() 
-&apos;now1=now
-	IF oRanges.hasByName(sName) THEN
- 		oRanges.removeByName(sName)
- 	end IF
-&apos;now2=now
+
+	If oRanges.hasByName(sName) Then oRanges.removeByName(sName)
+
 	oRanges.addNewByName(sName,sPath,oCellAddress,0)
-&apos;now3=now
-&apos;print now3-now1
-&apos;print now3-now2
-&apos;	Barra_Apri_Chiudi_5
 end sub
 
 
@@ -347,5 +341,5 @@ Function Verifica_chiudi_preview &apos;(optional sPrima as string)
  	 dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;) 
  	 dispatcher.executeDispatch(document, &quot;.uno:ClosePreview&quot;, &quot;&quot;, 0, Array()) 
 	 End If 
-end Function
+End Function
 </script:module>

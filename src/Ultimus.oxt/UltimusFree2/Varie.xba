@@ -855,8 +855,10 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot; And _
 				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
+				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;livello-1-sopra&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;ULTIMUS&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Ultimus_destra_totali&quot; Or _
+				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Ultimus_centro&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;livello2 valuta&quot; Then
 			Else
 				Exit Sub
@@ -897,6 +899,12 @@ parziale_verifica
 	If test = &quot;è Computo&quot; Then Rinumera_TUTTI_Capitoli2
 END SUB
 rem ######################################################################
+Sub copia_TANTE_righe_Ent
+	For n = 0 To 100
+		copia_riga_Ent
+	Next n
+End Sub
+
 
 Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tabelle è
 &apos; e reinvia ad _C or a _A 
@@ -950,6 +958,7 @@ Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tab
 			Exit Sub
 	EndIf
 procedi_computo:
+	 	oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
 rem immissione tags cat/subcat
 		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
 		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
@@ -965,8 +974,14 @@ rem imposto gli stili
 		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Blu&quot;
 rem ci metto le formule
 		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
-&apos;		oSheet.GetCellByPosition( 10 , lrow).formula = &quot;&quot;
-		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 , lrow))
+&apos;se la VarG è 1, copia il rigo di sopra:
+	 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 301).value = 1 And _
+	 		oSheet.GetCellByPosition(1, lrow-1).CellStyle = &quot;Comp-Bianche in mezzo&quot; Then
+	 		oRangeData = oSheet.getCellRangeByPosition(2, lrow-1, 8, lrow-1).RangeAddress
+			oDest = oSheet.GetCellByPosition(2, lrow).CellAddress
+			oSheet.copyRange(oDest, oRangeData)
+	 	EndIf 
+ 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 , lrow))
 &apos;		Print 
 	Case &quot;CONTABILITA&quot; &apos;&quot;TIPO_CONTABILITA&quot;
 		If oSheet.GetCellByPosition(0, lrow+1).CellStyle = &quot;Comp End Attributo_R&quot; Then lrow=lrow-1
@@ -1007,7 +1022,15 @@ rem preserva la data di misura
 		EndIf
 		oSheet.GetCellByPosition(1, lrow+1).String = &quot;&quot;
 		oSheet.GetCellByPosition(1, lrow+1).CellStyle = &quot;Comp-Bianche in mezzo_R&quot;
-		
+&apos;se la VarG è 1, copia il rigo di sopra:
+	 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 301).value = 1 And _
+	 		oSheet.GetCellByPosition(0, lrow-1).value = 0 Then
+	 		oRangeData = oSheet.getCellRangeByPosition(2, lrow-1, 8, lrow-1).RangeAddress
+			oDest = oSheet.GetCellByPosition(2, lrow).CellAddress
+			oSheet.copyRange(oDest, oRangeData)
+	 	EndIf 
+
+
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
 	Case &quot;Analisi di Prezzo&quot; &apos;&quot;TIPO_ANALISI&quot;
 		copia_riga_A
@@ -1267,24 +1290,30 @@ Dim oRangeAddress as object
 end sub
 
 sub Adatta_Altezza_riga &apos; Funzionava egregiamente ma era un po&apos; lento
-&apos; funziona sulla sheet corrente, su una o più righe... 
-&apos; creata col registratore--- usata tal quale
-rem ----------------------------------------------------------------------
-rem define variables
-dim document as object
-dim dispatcher as object
-rem ----------------------------------------------------------------------
-rem get access to the document
-document = ThisComponent.CurrentController.Frame
-dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	&apos; funziona sulla sheet corrente, su una o più righe... 
+	&apos; creata col registratore--- usata tal quale
+&apos;	rem ----------------------------------------------------------------------
+&apos;	rem define variables
+&apos;	dim document as object
+&apos;	dim dispatcher as object
+&apos;	rem ----------------------------------------------------------------------
+&apos;	rem get access to the document
+&apos;	document = ThisComponent.CurrentController.Frame
+&apos;	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+&apos;	
+&apos;	rem ----------------------------------------------------------------------
+&apos;	dim args1(0) as new com.sun.star.beans.PropertyValue
+&apos;	args1(0).Name = &quot;aExtraHeight&quot;
+&apos;	args1(0).Value = 0
+&apos;	
+&apos;	dispatcher.executeDispatch(document, &quot;.uno:SetOptimalRowHeight&quot;, &quot;&quot;, 0, args1())
 
-rem ----------------------------------------------------------------------
-dim args1(0) as new com.sun.star.beans.PropertyValue
-args1(0).Name = &quot;aExtraHeight&quot;
-args1(0).Value = 0
-
-dispatcher.executeDispatch(document, &quot;.uno:SetOptimalRowHeight&quot;, &quot;&quot;, 0, args1())
-
+	oSheet = ThisComponent.currentController.activeSheet
+	oSheet.getCellRANGEByPosition(0, 0, getLastUsedCol(oSheet),getLastUsedRow(oSheet)).Rows.OptimalHeight = True
+	Select Case oSheet.Name
+	Case &quot;Elenco Prezzi&quot;, &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
+		oSheet.GetCellByPosition(0,2).Rows.Height = 800
+	End select
 END Sub
 
 
@@ -1379,7 +1408,7 @@ sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
 	sAttributo = Trova_Attr_Sheet
 	&apos;inibisce la rinumerazione se la var apposita è diversa da 0
- 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 and _
+ 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 and _
  		sAttributo = &quot;TIPO_COMPUTO&quot; then
 		msgbox &quot;La rinumerazione è disabilitata: dipende dalla Variabile Generale S1.H335&quot;&amp; CHR$(10)_
 			&amp; &quot;dal Menu Principale&gt;Variabili Generali&quot;

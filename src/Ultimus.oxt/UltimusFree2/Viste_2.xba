@@ -210,6 +210,7 @@ Mostra_Tutto
 	&apos;_____________________
 	oPos = ThisComponent.getCurrentSelection()	
 	&apos; ambaradan che controlla la modalità di tenuta del libretto delle Misure
+Exit Sub 
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,330).value = 0 then
 		if msgbox ( &quot;Questa contabilità attualmente è impostata per un &quot;&quot;Libretto&quot;&quot; cartaceo!&quot; &amp; CHR$(10)_
 			&amp; &quot;Pertanto la visualizzazione del Libretto delle Misure è incompatibile e non è di nessuna utilità!&quot;&amp; CHR$(10) &amp; CHR$(10)_

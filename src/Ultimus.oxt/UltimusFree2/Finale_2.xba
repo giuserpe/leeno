@@ -26,7 +26,6 @@ rem metto in ordine secondo la stampa
 	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;) &apos;questa serve a conservare l&apos;area di stampa dell&apos;ultima sheet utile
 	oSheet.IsVisible = True
 	If thisComponent.Sheets.hasbyname(&quot;cP_Cop&quot;) Then ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
-&apos;	ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
 &apos;	thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,2)
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,10,10))
@@ -47,14 +46,13 @@ rem rimuovo le aree di stampa che non interessano
 &apos;				scol=.StartColumn
 &apos;				srow=.StartRow
 &apos;			End With
+			Set_Area_Stampa_N(&quot;NO_messaggio&quot;)
 			If 	oSh.Name = oActiveSheet Then 
 				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
 				if msgbox (CHR$(10) &amp;&quot;Preferisci nascondere i colori?&quot;,36, &quot;&quot;) = 6 Then	SBIANCA_celle
 				thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 			Else
-				Set_Area_Stampa_N(&quot;NO_messaggio&quot;)
 			End If
-			
 		End If
 	Next
 &apos;parametri di esportazione
@@ -128,7 +126,7 @@ rem rimuovo le aree di stampa che non interessano
 &apos;For Each oSh In oSheets
 &apos;     oSh.IsVisible = True
 &apos;Next
-	ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
+	ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh)+100,getLastUsedRow(oSh)+100))
 	SBIANCA_ANNULLA
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 	

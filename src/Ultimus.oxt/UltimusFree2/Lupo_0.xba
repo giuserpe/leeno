@@ -128,15 +128,13 @@ Visualizza_normale
 
 rem on error goto ErrorHandler 
 
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;1........&quot;, 50)
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+
 	Logo_Avvio
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
 	if SGenericoMemo = &quot;Interrompi&quot; then &apos; la variabile globale viene impostata da accrocchi vari
 			&apos; tipo quello che apre un template per acccodare delle sheet (aggiorna_template )
 		exit sub
@@ -403,11 +401,12 @@ rem ----------------------------------------------------------------------
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
+Colora_Tabs
 Computo_Normale_terra_terra &apos;visualizza
-Rifa_Somme_TOT_Computo &apos;comprende anche Controlla_Somme_Componenti &apos;ricontrolla tutti i calcoli e sistema i tag
+Rifa_Somme_TOT_Computo
 Rinumera_TUTTI_Capitoli2	&apos;ricontrolla i calcoli 
 Numera_Voci_Computo (&quot;niente prompt&quot;)
-Colora_Tabs
+
 
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)
@@ -785,72 +784,9 @@ Sub Scrivi_Globale &apos; versione semplice
 	end if
 	&apos;oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(4,11)
 	ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string = sUltimus
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Scrivi_Globale2 
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	Colora_M1(URLStr)
 END SUB 
 
-
-
-Sub Scrivi_Globale______________ &apos;(optional URLStr as string) &apos; versione semplice
-&apos;Il file attivo diventa il &quot;Computo Corrente&quot;
-&apos; ovvero il file dove dei prezzari andranno a scrivere le voci selezionate 
-&apos; Ovvero quando dal file prezzario si è individuata una voce da scrivere 
-&apos; sull&apos;elenco prezzi, la macro del file prezziario andrà a leggersi la 
-&apos; variabile globale &quot;sUltimus&quot; per sapere dove scriverlo.
-&apos;+++++++++++FUNZIONA
-&apos;ThisComponent.unlockControllers()
-&apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
-&apos; dove è scritta la variabile globale
-&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-dim xA as string
-&apos; print sUltimus
-&apos;xray URLStr
-If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
- GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-End If 
-
-
-&apos;azzera il nome del frame
-&apos;dis 2/01/09 &apos; ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; serve? mmm. pare di no
-
-&apos; se arriva da un file picher...
-&apos;if isnull(URLStr) or isMissing(URLO) then
-&apos;	URLStr = ThisComponent.getURL() 
-&apos;end if
-xray URLStr
-URLStr = ThisComponent.getURL() 
-&apos; regista la variabile globale sUltimus
-UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) 
- &apos; adesso scrive il nome della variabile globale nella ???cella???
-&apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
-
-&apos;xray omycell
-&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
- &apos;	lcolS = oNomeRange.Column
-&apos;	lrowS = oNomeRange.Row 
-
-	oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27)
-	oMycell2.string = sUltimus
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Scrivi_Globale2 
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	Colora_M1(URLStr)
-END SUB 
-
-
-Sub Scrivi_Globale2 &apos; serve veramente? sembra dis-utile...
-
-	exit sub &apos; Documentinfo buggata su Libò 4
-	
-	sUltimus2 = ThisComponent.CurrentController.Frame.title
-	sUltimus2 = RTrimStr (sUltimus2, &quot; - OpenOffice.org Calc&quot;)
-	If ThisComponent.DocumentInfo.Title &lt;&gt; &quot;&quot; then
-			sUltimus2= ThisComponent.DocumentInfo.Title
-	end If
-&apos;	sUltimus2 = sUltimus2 &amp; &quot;.ods&quot;
-End sub
 
 sub su_salva_0 &apos; tentativi per portare su doc salvato il proivilegio di DCC
 &apos; ma non funziona... perché quando comicia a salvare e viene intercettato l&apos;evento la usrl del doc non è più recuperabile
@@ -874,10 +810,6 @@ end sub
 
 
 
-
-
-
-
 Sub Svuota_Globale &apos; svuota la variabile globale con file DCC
 &apos; attivata all&apos;uscita del file... altrimenti se si tenta di inviare dei prezzi al DCC
 &apos; riapre il file gia chiuso...
@@ -890,9 +822,6 @@ On Error resume next
  If oLibCont.hasByName(sLib)= false Then
  			exit sub
  end if
-
-
-
 
 oDoc = ThisComponent&apos;.URL
 URLStr = ThisComponent.getURL() &apos; con queste 2 righe si preleva il nome del file
@@ -1019,121 +948,6 @@ Dim sBaseBookmarkName as String
 print sBookmarkName
 END SUB
 
-sub sListDocs_______________________________ &apos; va in giro su tutti i documenti aperti
-&apos; se sono calc controlla se c&apos;è la sheet S1
-&apos; e in tal caso va a raccontare aquale è il computo corrente
-&apos; IN LAVORAZIONE
- Dim oDocs As Object, oDoc As Object
- rem Load the included &quot;Tools&quot; library
-&apos; GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
- oDocs = StarDesktop.getComponents().createEnumeration()
- Do While oDocs.hasMoreElements()
- oDoc = oDocs.nextElement()
- rem Ignore any component that is not a document.
- rem The IDE, for example
- If HasUnoInterfaces(oDoc, &quot;com.sun.star.frame.XModel&quot;) Then
- rem If there is no URL, then do not try to find it
- If oDoc.hasLocation() Then
- rem Use the FileNameOutOfPath routine included with OOo
- &apos;MsgBox FileNameOutOfPath(oDoc.getURL()) &amp;_
- &apos; &quot; is of type &quot; &amp; GetDocumentType(oDoc)
- FileNameOutOfPath(oDoc.getURL())
- If GetDocumentType(oDoc) = &quot;scalc&quot; then
- print &quot; è una calc&quot; &apos; per adesso abbiamo trovato le tabelle
- 	&apos; adesso bisogna andarci dentro e controllare se c&apos;è 
- 	&apos; la sheet S1...
- oNome=FileNameOutOfPath(oDoc.getURL())
- print oNome
- oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
- 	ThisComponent.CurrentController.setActiveSheet(oSheet)
- 	oTempView = oDoc.getCurrentController() &apos; questa invece trova la cella usando il nome di area
-		mycell = otempview.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;)
- end if
- End If
- End If
- Loop
-END SUB
-
-
-
-
-
-
-
-
-
-
-
-Sub ExampleSetValue
- Dim oDocument As Object, oSheet As Object, oCell As Object
- oDocument=ThisComponent
- oSheet=oDocument.Sheets.getByName(&quot;S1&quot;)
- oCell=oSheet.getCellByPosition(0,0) 
- &apos; oCell.setValue(23658)
- &apos; oCell.NumberFormat=2 &apos;23658.00
- oCell.SetString(&quot;oops&quot;)
-&apos; oCell.setFormula(&quot;=FUNCTION()&quot;)
-&apos; oCell.IsCellBackgroundTransparent = TRUE
-&apos; oCell.CellBackColor = RGB(255,141,56)
-END SUB
-
-
-
-
-
-sub Numera_Voci_Computo__vecia &apos; assegnato a Ctrl-N 
-&apos;______________________________________________________________-
-&apos; funziona bene, ma è migliorabile... 
-&apos; magari garantirne il funzionamento anche senza la riga di chiusura...
- oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- oCelle=thisComponent.getCurrentSelection().getCellAddress() 
- lrow=oCelle.Row 
- oCell = oSheet.GetCellByPosition( 0, lrow ) 
- ThisComponent.CurrentController.Select(oCell)&apos; spostamento tutto a sin (mai fidarsi dell&apos;utente...)
- 	if thisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; then
- 		msgbox &quot;questa macro si può usare solo sulla Tabella Computo... &quot;
- 		exit sub
- 	 end if
- 
- Dim NumC, numV
- numV = oCell.value
-&apos; print numV
- if numV = 0 then
- 	 msgbox &quot;Errore!!!! .... non so da che Numero incominciare (a numerare...) !!! DEVI posizionarti su un numero buono!&quot;
- 	 exit sub
- end if
- 	 oCelle=thisComponent.getCurrentSelection().getCellAddress() 
- 	 lrow=oCelle.Row 
- 	 oCell = oSheet.GetCellByPosition( 0, lrow+1 ) 
-	 ThisComponent.CurrentController.Select(oCell)&apos;@@@@
- 	 numC = oCell.string &apos;formula&apos;.value
- 	 lLastUrow = getLastUsedRow(oSheet)
- &apos;	 numMax = 15 &apos; controllo per non finire in culo a giove in caso di errore
- 	
- Do While numC = &quot;&quot; 
- 	lrow = lrow+1
- 	 oCell = oSheet.GetCellByPosition( 0, lrow) 
- 	 numC = oCell.string
- &apos; 	 numMax = numMax-1 &apos; controllo per non finire in culo a giove in caso di errore
- 	 If lrow &gt; lLastUrow then
- 	 	msgbox &quot;mi sembra di essere finito fuori dal seminato...&quot;_
- 	 	&amp; &quot; Probabilmente ti manca la riga rossa di fine tabella o c&apos;è qualche altro errore non meglio identificato...&quot;
- 	 	exit sub
- 	 end if
- loop
- 	ThisComponent.CurrentController.Select(oCell)
- If NumC = &quot;Fine Computo&quot; Or NumC = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rmanere tranquillamente NASCOSTA!)&quot; or lrow &gt; lLastUrow Then 
- &apos; Selection.Offset(-2, 0).Select
- MsgBox &quot;Finito!!!&quot;
- Exit Sub
- Else 
- 		numV = numV + 1
- 		oCell.value = numV
- End If
-END SUB
-
-
-
 Function OOoVersion() As String
  &apos;Retreives the running OOO version
  Dim aSettings, aConfigProvider
@@ -1146,15 +960,8 @@ Function OOoVersion() As String
  aParams2(0).Value = &quot;/org.openoffice.Setup/Product&quot;
  aSettings = aConfigProvider.createInstanceWithArguments(sAccess, aParams2())
  OOOVersion=aSettings.getbyname(&quot;ooSetupVersion&quot;)
+ Print OOOVersion
 End Function
-
-
-&apos;Function TabellenName as String &apos; RECUPERA E RESTITUISCE IL NOME DELLA TABELLA
-&apos;odoc=thisComponent
-&apos;Tabellenname=odoc.currentcontroller.activesheet.name
-&apos;end Function
-
-
 
 &apos;***************************************************************+
 Sub crea_stile_cella_1

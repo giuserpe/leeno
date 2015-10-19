@@ -1483,7 +1483,9 @@ END SUB
 sub Rimetti_in_ordine_tab
 	sproteggi_sheet_TUTTE
 	thisComponent.Sheets.moveByName(&quot;Elenco Prezzi&quot;,0)
-	thisComponent.Sheets.moveByName(&quot;Analisi di Prezzo&quot;,1)
+	If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
+		thisComponent.Sheets.moveByName(&quot;Analisi di Prezzo&quot;,1)
+	EndIf
 	thisComponent.Sheets.moveByName(&quot;COMPUTO&quot;,2)
 	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
 		thisComponent.Sheets.moveByName(&quot;VARIANTE&quot;,3)

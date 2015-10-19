@@ -13,31 +13,28 @@
 &apos;_______________________________________________________________________________________
 Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 &apos; creata per lo shortcut
- Dim nome_sheet as string
-	nome_sheet = thisComponent.currentcontroller.activesheet.name
-	if SE_contabilita = 0 and nome_sheet &lt;&gt; &quot;CONTABILITA&quot; then
-		exit sub
-	end if
-	&apos;_____________________
+ Dim nome_sheet As String 
+ 	nome_sheet = thisComponent.currentcontroller.activesheet.Name
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	Select Case thisComponent.currentcontroller.activesheet.name
-		Case = &quot;COMPUTO&quot; , &quot;VARIANTE&quot;
+	Select Case thisComponent.currentcontroller.activesheet.Name
+	Case &quot;COMPUTO&quot; , &quot;VARIANTE&quot;
+&apos;		if SE_contabilita = 0 And nome_sheet &lt;&gt; &quot;CONTABILITA&quot; Then Exit Sub
+	&apos;	ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_computo&quot;)
  		Nuova_Voce_Computo_Att
- 	Case = 	&quot;Analisi di Prezzo&quot; 
+ 	Case &quot;Analisi di Prezzo&quot;
+&apos; 		if SE_contabilita = 0 And nome_sheet &lt;&gt; &quot;CONTABILITA&quot; Then Exit Sub
 		NuovaAnalisi_Att
- 	Case = 	&quot;CONTABILITA&quot;
-			nuova_voce_contab
+ 	Case &quot;CONTABILITA&quot;
+		nuova_voce_contab
 		&apos;	msgbox &quot;L&apos;inserimento di una Nuova Voce non è prevista su questa tabella!&quot; &amp; CHR$(10)_
  		&apos;		&amp; &quot;Ma se proprio vuoi puoi facilmente copiare una voce analoga e poi modificarla a mano&quot; &amp; CHR$(10)_
  		&apos;		&amp; &quot; - Seleziona le righe della Voce da copiare&quot; &amp; CHR$(10)_
  		&apos;		&amp; &quot; - Ctrl Shift C&quot; &amp; CHR$(10)_
  		&apos;		&amp; &quot; - Clicca per inserirla...&quot;
- 	Case = 	&quot;Elenco Prezzi&quot;
+ 	Case &quot;Elenco Prezzi&quot;
  	Voce_EP_in_bianco
-	end select
-END SUB
-
+	End Select
+End Sub
 
 &apos;normalmente in Contabilità non vengono create nuove voci ma si &quot;pesca&quot;
 &apos;semplicemente una voce del computo di cui si vuole contabilizzare.
@@ -135,20 +132,26 @@ MAIN:
 	lrow=oCell.RangeAddress.StartRow
 
 	oSheet = ThisComponent.currentController.activeSheet
+	stile = oSheet.GetCellByPosition( 0, lrow).cellstyle
+&apos;	Print stile 
+	Select Case stile
+	Case &quot;Default&quot;, &quot;Reg_prog&quot;
+		Exit Sub
+	Case &quot;Comp TOTALI&quot;
+		GoTo FAI:
+	Case &quot;comp Int_colonna_R_prima&quot;&apos;, &quot;Comp Start Attributo&quot;, &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp End Attributo&quot;, &quot;Comp TOTALI&quot;, &quot;Livello-1-scritta&quot; , &quot;livello2 valuta&quot;
+		lrow = lrow+1
+		GoTo FAI:
+	End Select
 VERIFICHE_SULLA_POSIZIONE_DI_INSERIMENTO:
-	oEnd=uFindString(&quot;T O T A L E&quot;, oSheet)
-	iEndRow=oEnd.RangeAddress.EndRow
-	if lrow &gt;= iEndRow then &apos;SE OLTRE IL &quot;T O T A L E&quot;
-		lrow = iEndRow&apos;-2
-		goto FAI
-	end if
-	if lRow &lt;= 3 then
-		lrow = 3
-		goto FAI
-	end If
-&apos;	if lRow = 3 and _
-&apos;		oSheet.GetCellByPosition( 0 , iEndRow-1).cellstyle = &quot;Reg_prog&quot; then
-&apos;		lrow = 4
+	iEndRow = ultima_voce + 1
+&apos;	if lrow &gt; iEndRow then &apos;SE OLTRE IL &quot;T O T A L E&quot;
+&apos;		Exit Sub
+&apos;		lrow = iEndRow&apos;-2
+&apos;		goto FAI
+&apos;	end if
+&apos;	if lRow &lt;= 3 then
+&apos;		lrow = 3
 &apos;		goto FAI
 &apos;	end If
 rem se su firme
@@ -166,7 +169,6 @@ rem se su firme
 		GoTo FAI
 	end if
 rem se in una voce esistente
-
 	Select Case oSheet.GetCellByPosition( 0 , lRow).cellstyle
 		Case = &quot;Comp End Attributo_R&quot; , &quot;Comp Start Attributo_R&quot; , &quot;comp 10 s_R&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (lRow)
@@ -199,7 +201,7 @@ rem controllo se in punto di inserimmento della nuova misura è compreso tra due
 			end if
 			GoTo FAI
 	End select
-	FAI:
+FAI:
 &apos;l&apos;istrizione insertByIndex dà problemi ai range delle righe successive
 &apos;LO Bug #77080
 	insRows (lrow, 5) &apos;insertByIndex non funziona
@@ -269,7 +271,7 @@ SISTEMA_I_TAG:
  	 	Numera_Voci_Computo (&quot;niente prompt&quot;)	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
  	endif 	
  
- thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+&apos; thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 	&apos; toglie la selezione 	
  	&apos; dati del libretto
 	&apos;copio (mi annoto) il range degli estremi del libretto della voce precedente
@@ -279,9 +281,9 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
  sGDove = &quot;Elenco Prezzi&quot;
 	sGVV = &quot;va&quot;	
 	sGorigine = &quot;CONTABILITA&quot;				
-&apos;porta su EP
-&apos;	Pesca_cod_1
-&apos;	Sel_Elenco_Prezzi
+
+	oSheet.getCellRANGEByPosition(0, lrow, 50,lrow+4).Rows.OptimalHeight = True
+
 	Barra_chiudi_sempre_4	
 goto salta_messaggio
 	msgbox &quot;Sei sull&apos;Elenco Prezzi! Cerca il Nuovo Prezzo che ti serve.... &quot; &amp; CHR$(10)_
@@ -294,72 +296,46 @@ errore:
 MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;
 Barra_chiudi_sempre_4
 oCtrlModel.Enabled = True
-print
 &apos;DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
-
-end sub
+End Sub
 
 
 FUNCTION SE_contabilita
-
-	If thisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; Then 
-		SE_contabilita = 0
-		exit function
-	end if
-	If not thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-		SE_contabilita = 1
-		exit function
-	end if
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt;= 2 then
-		SE_contabilita = 1
-		exit function
-	end if	
 rem ----------------------------------------------------------------------
 &apos;L&apos;inibizione dell&apos;inserimento di voci in computo, in presenza di misure nel libretto, è legata all&apos;esistenza di #Lib#1
-&apos;	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 Then
-	if	ThisComponent.NamedRanges.hasByName(&quot;#Lib#1&quot;) Then
-&apos;		Print (&quot;prova chiappali&quot;)
-			if msgbox ( &quot;#1 Mi risulta che il computo sia già chiuso e completato!&quot; &amp; CHR$(10)_
-					&amp; &quot;Si sta lavorando sulla contabilità, e per questo mi pare una richiesta strana...&quot;&amp; CHR$(10)_
-					&amp; &quot;Se Prosegui vai ad alterare i dati del Computo!&quot;&amp; CHR$(10)_
-					&amp; &quot; PROSEGUI comunque? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
-					SE_contabilita = 0
-					exit function
-				ELSE
-				 	SE_contabilita = 1
-				 	exit function
-			end if
-		else
-			SE_contabilita = 1
-	end if
+	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 Then
+&apos;	if	ThisComponent.NamedRanges.hasByName(&quot;#Lib#1&quot;) Then
+&apos;Print SE_contabilita
+&apos;	If SE_contabilita = 1 Then 
+		if msgbox ( &quot;#1 Risulta emesso un atto contabile. Il computo è chiuso e completato!&quot; &amp; CHR$(10)_
+			&amp; &quot;Si sta lavorando sulla contabilità, e per questo mi pare una richiesta strana...&quot;&amp; CHR$(10)_
+			&amp; &quot;Se Prosegui vai ad alterare i dati del Computo!&quot;&amp; CHR$(10)_
+			&amp; &quot; PROSEGUI comunque? &quot;, 32+4,&quot;&quot;&amp; CHR$(10)) = 7 then
+			SE_contabilita = 0
+			exit function
+		Else
+		 	SE_contabilita = 1
+		 	Exit Function 
+		EndIf
+	Else
+		&apos;	SE_contabilita = 1
+	EndIf
 end FUNCTION
-
 
 SUB tante_voci_insieme
 	dim quante as long
 	dim i as long
-	nome_sheet = thisComponent.currentcontroller.activesheet.name
- If nome_sheet &lt;&gt; &quot;COMPUTO&quot; And nome_sheet &lt;&gt; &quot;Analisi di Prezzo&quot; Then
- 	 	msgbox &quot;Questa macro va eseguita sulla tabella di Computo o di Analisi&quot;
- 	 	exit sub
- end if	
- 	quante = InputBox(&quot;quante voci vuoi inserire?&quot;, &quot;1&quot;)
- 	If quante = 0 then
-		exit sub
-	end if
-
-	msgbox &quot;adesso inserisco &quot; &amp; quante &amp; &quot; voci&quot;
- For i = 1 To quante 
- If nome_sheet = &quot;COMPUTO&quot; Then
- 			Nuova_Voce_Computo_Att
- Else
- 	 If nome_sheet = &quot;Analisi di Prezzo&quot; Then
- 		 NuovaAnalisi_Att
-
- End If
- End If 
- next i
-end sub
+	nome_sheet = thisComponent.currentcontroller.activesheet.Name
+	Select Case nome_sheet
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;Analisi di Prezzo&quot;
+		quante = InputBox(&quot;quante voci vuoi inserire?&quot;, &quot;1&quot;)
+	 	If quante = 0 Then Exit Sub
+	 	For i = 1 To quante 
+		 	If nome_sheet = &quot;COMPUTO&quot; Or &quot;VARIANTE&quot; Then Nuova_Voce_Computo_Att
+			If nome_sheet = &quot;Analisi di Prezzo&quot; Then NuovaAnalisi_Att
+		Next
+	End Select
+End Sub
 &apos;___________________________________________________________________________________________
 
 Sub Nuova_Voce_Computo_Att
@@ -376,7 +352,7 @@ Sub Nuova_Voce_Computo_Att
 
  	stile = oSheet.GetCellByPosition( 0, lrow).cellstyle
 	Select Case stile
-	Case &quot;Comp Start Attributo&quot;, &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp End Attributo&quot;, &quot;Comp TOTALI&quot;, &quot;Livello-1-scritta&quot; , &quot;livello2 valuta&quot;
+	Case &quot;comp Int_colonna&quot;, &quot;Comp Start Attributo&quot;, &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp End Attributo&quot;, &quot;Comp TOTALI&quot;, &quot;Livello-1-scritta&quot; , &quot;livello2 valuta&quot;
 	Case Else
 		Exit Sub
 	End Select
@@ -404,10 +380,14 @@ rem SOTTO CATEGORIA O SUBCATEGORIA
 	end if
 
 rem SUL TOTALE
-	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; then 
+	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; Then
 		rinumera = &quot;ok&quot;
-			goto Inserisci_voce
-	end if
+		GoTo Inserisci_voce
+	EndIf
+	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp Int_colonna&quot; Then
+		lrow = lrow +1
+		GoTo Inserisci_voce
+	End If
 rem SUI RIGHI DI MISURAZIONE
 &apos;GoTo salto1:
 	if oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp sotto Bianche&quot; Then &apos;Comp-Bianche sopra per inserimento sopra
@@ -465,9 +445,7 @@ rem ----------------------------------------------------------------------
 	oSheet.getCellByPosition(33, lrow).formula = &quot;=AH$&quot; &amp; lrow+4
 	oSheet.getCellByPosition(34, lrow).formula = &quot;=AI$&quot; &amp; lrow+4
 	oSheet.getCellByPosition(35, lrow).formula = &quot;=AJ$&quot; &amp; lrow+4
-	oCell=oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4) &apos;seleziona la cella
-	ThisComponent.CurrentController.Select(oCell)
-ADATTA_ALTEZZA_RIGA
+	oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4).Rows.OptimalHeight = True
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = 0 Then
 		If prog &lt;&gt; 0 Then
 			For i = nprog To getlastusedrow(oSheet)
@@ -508,9 +486,7 @@ SUB NuovaAnalisi_Att &apos;
 	
 	lrow= Range2Cell &apos;prende l&apos;idirizzo della prima cella del range
 	oContr = ThisComponent.CurrentController
-	if lrow = -1 then	 
-		exit sub
-	end if
+
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
 	If Constrolla_se_M1 = true then
@@ -518,38 +494,42 @@ SUB NuovaAnalisi_Att &apos;
 			goto inserisci
 		end if
 	end if
-	sString$ = &quot;Fine ANALISI&quot;
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then 
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI5! &quot;
-		exit sub
-	end if 
-	lrowFine=oEnd.RangeAddress.EndRow
-	If lrow &gt;= lrowFine Then
-	 lrow =lrowFine&apos;-1 &apos;oltre la riga rossa
-	GoTo inserisci
-	End if 
-	if lrow &lt;1 Then
-		lrow = 1
-		GoTo inserisci
-	end if
+&apos;	sString$ = &quot;Fine ANALISI&quot;
+&apos;	oEnd = uFindString(sString$, oSheet)
+&apos;	If isNull (oEnd) or isEmpty (oEnd) then 
+&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
+&apos;		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI5! &quot;
+&apos;		exit sub
+&apos;	end if 
+&apos;	lrowFine=oEnd.RangeAddress.EndRow
+	lrowFine = ultima_voce + 2
+	If lrowFine = 2 Then
+		lrow = 0
+		GoTo inserisci:
+	EndIf
+	If lrow &gt; lrowFine Then Exit Sub
+	If lrowFine &lt; 10 Then
+		lrow = lrowFine-1
+		GoTo inserisci:
+	EndIf
+&apos;	If lrow &lt;1 Then Exit sub
 	&apos; se sono sul grigio inserisco
-	If oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot; Then 
-		do While oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;Analisi_Sfondo&quot;
+	If oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;An-sfondo-basso Att End&quot; Then 
+		do While oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;An-sfondo-basso Att End&quot;
 			lrow=lrow+1
 		Loop
 		lrow=lrow+1
 	End if
 
 inserisci:
+lrow = lrow+1
 	insRows (lrow, 26) &apos;sub di bart per sostituire InsertbyIndex
 &apos;	oSheet.getRows.insertByIndex(lrow, 25) &apos;INSERISCE LE RIGHE PER IL BLOCCO_ANALISI
 	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
+&apos;	if not ThisComponent.NamedRanges.hasByName(&quot;blocco_analisi&quot;) then
 		rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
-	end if
+&apos;	end if
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S5
 	oDoc = ThisComponent
@@ -566,24 +546,10 @@ inserisci:
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos;ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	&apos; togle la selezione
-	oContr.setFirstVisibleRow(lrow)
+	oContr.setFirstVisibleRow(lrow+1)
  	exit sub
 errore:
 oCtrlModel.Enabled = True
 DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
-
-sub test &apos; provare le selezioni
-	oSheet = ThisComponent.currentController.activeSheet
-	oCell = oSheet.GetCellByPosition( 1,10)
-	ThisComponent.CurrentController.Select(oCell,false)
-	ThisComponent.CurrentController.Select(oCell(FALSE))
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
-
-end sub
-
-
-
-
-
 </script:module>

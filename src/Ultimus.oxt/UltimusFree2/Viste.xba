@@ -58,11 +58,13 @@ esegui:
 			oDialogScenari_2.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 	
 		case &quot;TIPO_ELENCOP&quot;,&quot;TIPO_EP&quot;
 			oDialogScenari_EP = CreateUnoDialog(DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
-			oDialogScenari_EP.getControl(&quot;Sommario Computo&quot;).State = 1
-			oDialogScenari_EP.getControl(&quot;Sommario Contabilità&quot;).State = 1
-			oDialogScenari_EP.getControl(&quot;Sommario Variante&quot;).State = 1
+			oDialogScenari_EP.getControl(&quot;Sommario_Computo&quot;).State = 1
+			oDialogScenari_EP.getControl(&quot;Sommario_Contabilità&quot;).State = 1
+			oDialogScenari_EP.getControl(&quot;Sommario_Variante&quot;).State = 1
+			Tronca_Altezza_Voci_EP
 			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 	 		sumcomp = oDialogScenari_EP.getControl(&quot;Sommario Computo&quot;).State
+	 		
 		case &quot;TIPO_ANALISI&quot;
 			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
 			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
@@ -898,7 +900,6 @@ dim sString as string
 	&apos;_____________________
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
-	
 	sScelta = Scenari 
 	If 	sScelta = &quot;si&quot;	then
 			oSheet = ThisComponent.currentController.activeSheet
@@ -906,8 +907,6 @@ dim sString as string
 			exit function
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
-
-	&apos;sList1 = &quot;TTFTTTTTTTFTFFFFTTFFFTFFFFTFFFFTT&quot;
 	iNumCol = -1
 	iString = 0
 	For i = 0 to 50
@@ -927,13 +926,14 @@ END FUNCTION
 
 
 SUB Mostra_Tutto
-fissa (0,idxrow+1)
-&apos;ColRid_on
-	&apos;_____________________
-chiudi_dialoghi &apos; chiude tutti i dialoghi
-oSheetD = ThisComponent.currentController.activeSheet
-oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),10,).Columns.IsVisible=true
-oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),getLastUsedRow(oSheetD),).Rows.IsVisible=true
+	fissa (0,idxrow+1)
+	&apos;ColRid_on
+		&apos;_____________________
+	&apos;chiudi_dialoghi &apos; chiude tutti i dialoghi
+	oSheetD = ThisComponent.currentController.activeSheet
+	oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),10).Columns.IsVisible=true
+	oSheetD.getCellRangeByposition(0,0,getLastUsedCol(oSheetD),getLastUsedRow(oSheetD)).Rows.IsVisible=true
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 END SUB
 rem ----------------------------------------------------------------------
 SUB mostra_tutte_le_sheet
@@ -1151,7 +1151,7 @@ end sub
 
 
 sub Computo_Normale_terra_terra
-chiudi_dialoghi
+&apos;chiudi_dialoghi
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	Thiscomponent.currentcontroller.select(oSheet)
@@ -1175,27 +1175,9 @@ chiudi_dialoghi
 
 	ColRid_off
 set_larghezza_colonne
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 END SUB 
 
-
-sub Sommario_Reg___ &apos;_on_off 
-	Computo_Normale_terra_terra
-	if 	templateTipo = &quot;5C&quot; then
-		&apos;	Viste_nuove(&quot;TTTTTTTTTTFTFFFFFFFTFFFFFFFFFFFFFFFFT&quot;)
-			Viste_nuove(&quot; FFFFFTTTT&quot;)
-		&apos;	Viste_nuove(&quot;TTFTTTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTTTT&quot;)
-						&apos;123456789012345678901234567890123456789012345678
-				&apos;		 10 20 30 40
-	&apos;			print &quot;1&quot;
-				else
-		&apos;	Viste_nuove(&quot;TTFTTTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFTTFFFFF&quot;)
-						&apos;1234567890123456789012345678901234567890123456
-	&apos;			print &quot;2&quot;		
-	end if	
-&apos;	oController=ThisComponent.getcurrentController
-&apos;	oController.freezeAtPosition(39,2)
-&apos;	ColRid_off
-END SUB 
 
 sub Computo_Normale_terra_terraDIRETTO &apos; chiamato/usato in aperura solo per &quot;primo Approccio&quot;
 &apos; specifica ed esclusiva per sheet con nome COMPUTO

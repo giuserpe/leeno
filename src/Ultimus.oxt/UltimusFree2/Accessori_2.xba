@@ -452,6 +452,7 @@ end if
 END SUB
 rem ----------------------------------------------------------------------
 SUB Rifa_Somme_TOT_Computo &apos;riscritta da zero (C) Giuseppe Vizziello 2014
+GoTo fine:
 Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 40)
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	If ultima_voce = 0 Then
@@ -509,12 +510,10 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(7,2).setstring(&quot;Larg.&quot;)
 	oSheet.GetCellByPosition(8,2).setstring(&quot;Alt.&quot; + chr(13) +&quot;Peso&quot;)
 	oSheet.GetCellByPosition(9,2).setstring(&quot;Quantità&quot;)
-&apos;	oSheet.GetCellByPosition(10,2).setstring(&quot;Quantità perizia di variante&quot;)
 	oSheet.GetCellByPosition(11,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
-	oSheet.GetCellByPosition(13,2).setstring(&quot;Serve per avere le quantità&quot; + chr(13) + &quot;realizzate “pulite” e sommabili&quot;)
+	oSheet.GetCellByPosition(13,2).setstring(&quot;Serve per avere le quantità&quot; + chr(13) + &quot;realizzate &quot;&quot;pulite&quot;&quot; e sommabili&quot;)
 	oSheet.GetCellByPosition(17,2).setstring(&quot;di cui&quot; + chr(13) + &quot;sicurezza&quot;)
 	oSheet.GetCellByPosition(18,2).setstring(&quot;Importo €&quot;)
-&apos;	oSheet.GetCellByPosition(19,2).setstring(&quot;Importo totale&quot; + chr(13) +&quot;perizia di variante&quot;)
 	oSheet.GetCellByPosition(24,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;sul totale&quot;) &apos; POTREBBE SERVIRE PER INDICARE L&apos;INCIDENZA DI OGNI SINGOLA VOCE
 	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
 	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
@@ -565,6 +564,7 @@ rem riga rossa
 set_larghezza_colonne
 Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
 fissa(0,idxrow+1)
+fine:
 controlla_somme_componenti
 Barra_fatto
 End Sub
@@ -575,7 +575,7 @@ End Sub
 SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 &apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree GG e G1G1 in CONTABILITA (servono per la formula somma.se)
-
+	If Not thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then Exit Sub
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) &apos; da sostituire o integrare
 	oRanges = ThisComponent.NamedRanges
 	&apos; con qualcosa che esegua sia se nome sia se Attributo ???
@@ -749,7 +749,7 @@ GoTo prosegui:
 VARIANTE_COMPUTO:
 	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(Q4-M4=0;&quot;&quot;--&quot;&quot;;Q4-M4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(R4-N4&gt;0;R4-N4;&quot;&quot;&quot;&quot;)&quot;
-	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(Q4-N4&lt;0;N4-Q4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(R4-N4&lt;0;N4-R4;&quot;&quot;&quot;&quot;)&quot;
 	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
 	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((R4-N4)/N4);-(N4-R4)/R4;(R4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((R4-N4)/N4);-(N4-R4)/R4;(R4-N4)/N4))&quot;
 	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;

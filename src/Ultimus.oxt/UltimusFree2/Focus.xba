@@ -37,6 +37,7 @@ Sub Sel_Computo() &apos; vai al Computo metrico
 END SUB
 
 Sub Sel_CONTABILITA() &apos; vai al Computo metrico
+	If Not thisComponent.sheets.hasbyname (&quot;CONTABILITA&quot;) Then Exit Sub
 	dim osheet as object
 &apos;Mostra_tabs_contabilita
 	Osheet = thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
@@ -238,9 +239,7 @@ END SUB
 &apos;##############################################################
 Sub Sel_Altre_Opz() &apos; porta la vista (la selezione) su Menu Principale
 &apos; questa è un casino ma va meglio....
-&apos;ThisComponent.unlockControllers()
-&apos;&apos;&apos;Aggiorniamoli
-&apos;&apos;&apos;Visualizza_normale
+
 	If ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false and _
 		ThisComponent.Sheets.hasByName(&quot;S1&quot;) = false and _
 		ThisComponent.Sheets.hasByName(&quot;S2&quot;) = false then
@@ -293,8 +292,10 @@ Dim StartCol, StartRow, EndCol, EndRow, CellRow, CellCol As Long
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 Chiudi_o_elimina_tabelle_inutili
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
-	 ThisComponent.unlockControllers 
+	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
+	ThisComponent.unlockControllers 
+&apos;	ThisComponent.CurrentController.Zoomtype = 3
+	ThisComponent.CurrentController.ZoomValue = 80
 END SUB
 
  &apos;##############################################################
@@ -314,6 +315,7 @@ END SUB
 
 &apos;##############################################################
 Sub Sel_analisi() &apos; vai all&apos;analisi
+	If Not thisComponent.sheets.hasbyname (&quot;Analisi di prezzo&quot;) Then Exit Sub
 	dim osheet as object
 	Osheet = thisComponent.sheets.getbyname(&quot;Analisi di prezzo&quot;)
 	Osheet.isVisible = true

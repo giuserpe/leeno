@@ -85,8 +85,6 @@ rem inserisco i valori e le formule
 	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
 	oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1
 rem ----------------------------------------------------------------------
-Adatta_Altezza_riga
-
 	ocellBaseA = oSheet.GetCellbyPosition( 1, lRow)
 	ocellBaseR = oSheet.GetCellbyPosition( 31, lRow)
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 then 
@@ -136,6 +134,7 @@ Adatta_Altezza_riga
 		Rinumera_TUTTI_Capitoli (lrow) 
 	end if
 	ThisComponent.CurrentController.Select(ocellBaseA)
+	oSheet.getCellRangeByPosition(0 ,lrow-2, 0 ,lrow).Rows.OptimalHeight = True
 End Sub
 
 SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row
@@ -921,88 +920,79 @@ Sub Togli_Struttura ()
 	dim oCelle as object
 	oCelle=ThisComponent.CurrentSelection
 
-	if oSheet.GetCellByPosition(5 , 1).getCOLUMNS.IsVisible=false then
-		oSheet.clearOutline()
-	 	oSpalte2 = oSheet.getColumns().getByName(&quot;E&quot;) 
-		oSpalte2.isVisible = false 	
-		oSpalte2 = oSheet.getColumns().getByName(&quot;F&quot;) 		 		
-		oSpalte2.isVisible = false 
-		oSpalte1 = oSheet.getColumns().getByName(&quot;G&quot;) 
-		oSpalte1.isVisible = false
-		oSpalte2 = oSheet.getColumns().getByName(&quot;H&quot;) 
-		oSpalte2.isVisible = false
-		oSpalte1 = oSheet.getColumns().getByName(&quot;I&quot;) 
-		oSpalte1.isVisible = false 
- else
+&apos;	if oSheet.GetCellByPosition(5 , 1).getCOLUMNS.IsVisible=false then
+&apos;		oSheet.clearOutline()
+&apos;	 	oSpalte2 = oSheet.getColumns().getByName(&quot;E&quot;) 
+&apos;		oSpalte2.isVisible = false 	
+&apos;		oSpalte2 = oSheet.getColumns().getByName(&quot;F&quot;) 		 		
+&apos;		oSpalte2.isVisible = false 
+&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;G&quot;) 
+&apos;		oSpalte1.isVisible = false
+&apos;		oSpalte2 = oSheet.getColumns().getByName(&quot;H&quot;) 
+&apos;		oSpalte2.isVisible = false
+&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;I&quot;) 
+&apos;		oSpalte1.isVisible = false 
+&apos;	Else
 		oSheet.clearOutline()		
-	end if
-
-	ThisComponent.CurrentController.Select(ocelle)
+&apos;	end if
+	Viste_nuove(&quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)
+	set_larghezza_colonne
+	ThisComponent.CurrentController.Select(oCell)
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 end sub
 
 
 sub Struttura_ComputoM rem COPIA DI Struttura_ComputoM CHE RAGGRUPPA
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; per evitare che duplichi la struttura
 	 Togli_Struttura
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
 	Ripristina_statusLine
 	Barra_Apri_Chiudi_5(&quot;1 Sto creando le strutture... Pazienta...&quot;, 10)
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
+	oCelle=ThisComponent.CurrentSelection
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 &apos;	sAttributo = Trova_Attr_Sheet
- If osheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;#6 Questo comando si può usare solo&quot; &amp; CHR$(10)_
- 			 &amp;&quot; in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
-			exit sub
-	end if
- 	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
+	Select Case osheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 		s_R = &quot;&quot;
-	end if
-	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-		s_R = &quot;_R&quot;
-	end if		
-	if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
-				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
-				s_R = &quot;_R&quot;	
-	end if	
+GoTo procedi:
+	Case Else 
+		Exit Sub
+	End Select
+procedi:
 
+	lStartRow = 0 &apos;oSheet.GetCellByPosition( 0 , 0)
+	lLastUrowNN = ultima_voce+1
+Dim oCRA As New com.sun.star.table.CellRangeAddress
 	
-	lStartRow = oSheet.GetCellByPosition( 0 , 0)
-&apos;	lLastUrowNN = getLastUsedRow(oSheet)
-	
-	sString$ = &quot;Fine Computo&quot;
-	
-	oEnd=uFindString(sString$, oSheet) 
-	If isNull (oEnd) or isEmpty (oEnd) then 
-						lLastUrowNN = getLastUsedRow(oSheet)-1
-					else
-						lLastUrowNN=oEnd.RangeAddress.EndRow -1
-	end if
-	IF lLastUrowNN	&gt;= 600 and lLastUrowNN	&lt;= 1000 then
-		if msgbox (&quot;Questa tabella è abbastanza corposa e ci vorrà un po&apos; ! &quot; &amp; CHR$(10)_
-		 	&amp; &quot; ( una bella manciata di secondi...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
- 			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
- 			exit sub
- 	end if
-	end if
+	For n = lStartRow To lLastUrowNN
+		If oSheet.GetCellByPosition(0, n).CellStyle = &quot;Comp Start Attributo&quot; Then
+			sStRange = Circoscrive_Voce_Computo_Att (n)
+			With sStRange.RangeAddress
+				sopra =.StartRow
+				sotto =.EndRow
+			End With
+			ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0, sopra+2, 0, sotto-1))
+			Raggruppa_righe
+			n = sotto
+		EndIf
+	Next
+print
 	IF lLastUrowNN	&gt; 1001 and lLastUrowNN	&lt;= 1800 then
-		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo! &quot; &amp; CHR$(10)_
-			&amp; &quot; ( probabilmente più di un minuto...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
+		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo!&quot; &amp; CHR$(10)_
+			&amp; &quot;(probabilmente più di un minuto...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp;&quot;PROSEGUO ?... &quot; &amp; CHR$(10) _
  			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
  			exit sub
  	end if
 	end if
 	IF lLastUrowNN	&gt; 1801 then
 		if msgbox (&quot;Questa tabella è decisamente corposa e ci vorrà del tempo! &quot; &amp; CHR$(10)_
-			&amp; &quot; ( probabilmente alcuni minuti...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
+			&amp; &quot;(probabilmente alcuni minuti...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;PROSEGUO ?... &quot; &amp; CHR$(10) _
  			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
  			exit sub
- 	end if
+ 		end If
 	end if
 	&apos;lLastUrowNN=oEnd.RangeAddress.EndRow-1
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,280).string = NOW &apos;debug
@@ -1013,16 +1003,13 @@ sub Struttura_ComputoM rem COPIA DI Struttura_ComputoM CHE RAGGRUPPA
 			iLivelliVisibili = 2	
 	end if
 For I = 3 to lLastUrowNN
-Dim oCRA As New com.sun.star.table.CellRangeAddress
+
 				&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2 ,I )) &apos;debug
 				&apos;print left((oSheet.GetCellByPosition(2 , (I)).CellStyle),7) &apos;debug				
 		&apos; se è dentro una intestazione di capitolo o sottoCap
 		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-1-sopra&quot; &amp; s_R or _
 		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Livello-1-scritta&quot; &amp; s_R or _
-		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-1-sotto_&quot; &amp; s_R or _
 			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 valuta&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-2-sotto_&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 sopra&quot; &amp; s_R or _
 			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Reg_prog&quot; or _
 			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Default&quot; or _
 			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;COMP_BASE&quot; or _
@@ -1031,7 +1018,7 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 	&apos;		 	print
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
 	&apos;	print &quot;cap ________________________________cap -_________________________________________-cap __________________________________________________-_______________&quot; &amp; oSheet.GetCellByPosition(1 ,I ).CellStyle
-				goto prossima &apos; passa alla riga dopo&apos;
+GoTo prossima &apos; passa alla riga dopo&apos;
 			else 
 				iRI=I
 				Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche sopra&quot; &amp; s_R OR _
@@ -1064,7 +1051,7 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 									oCRA.EndRow = I-1	
 							end if
 							oCRA.Sheet =iSheet
-							oCRA.StartColumn = 	4
+							oCRA.StartColumn = 	5
 							oCRA.StartRow = iRIs
 						&apos;	PRINT IRIS
 							oCRA.EndColumn = 9
@@ -1101,7 +1088,7 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 			&apos;	oSheet.showLevel(1,1)
 				I = I+1 
 		end if
-		prossima:
+prossima:
 	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
 	&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
 	&apos;	if i = 10 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
@@ -1110,7 +1097,7 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 			sTxt = &quot;Sto creando le strutture e sono alla riga &quot; &amp; i
 			Barra_Apri_Chiudi_5( stxt, 50)
 	&apos;	end if
-		goto salta_debug
+goto salta_debug
 
 		Ripristina_statusLine
 		Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/5*100/lLastUrowNN)
@@ -1140,14 +1127,18 @@ next I
 
 	Ripristina_statusLine
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,281).string = NOW &apos;debug
+	ThisComponent.CurrentController.Select(oCelle)
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+set_larghezza_colonne
+Viste_nuove(&quot;TTTFFFFFFTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)	
 end sub
 
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) descrizione breve
-&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-&apos;_____________________
+
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
+
 	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
 	ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
 	sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
@@ -1164,19 +1155,14 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) de
 		Tronca_Altezza_Voci_Listino
 		exit sub
 	end If
-Exit sub
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-		if	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 Then
-			MsgBox &quot;1 L&apos;opzione non è prevista su questo foglio!!!&quot;
-		end if
-	end If
+
 end sub
 
 Global abbrevia as Integer
 Sub Tronca_Altezza_Voci_Computo &apos; (c) Giuseppe Vizziello 2015
 &apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO, VARIANTE e CONTABILITA
 &apos; verifico la compatibilità ed adatto
-chiudi_dialoghi &apos; chiude tutti i dialoghi
+&apos;chiudi_dialoghi &apos; chiude tutti i dialoghi
 Barra_chiudi_sempre_4
 Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 &apos;	oDialogScenari_A = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgAttesa) &apos; Inizializza il dialogo

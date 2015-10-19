@@ -37,7 +37,7 @@ Sub Abilita_contabilita
 	oSheet.isVisible = true
 	thisComponent.Sheets.moveByName(&quot;CONTABILITA&quot; ,4)
 	&apos;print &quot;la scrive&quot;
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 	
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
 	Thiscomponent.currentcontroller.setactivesheet(Osheet)
 	
 	&apos;queste che seguono per 
@@ -223,17 +223,21 @@ Sub sistema_attributi_sheet&apos; (sSheet As string) rem renderla opzionale?
 			Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, oSheet, &quot;B2&quot;)
 		EndIf
 &apos;		Case &quot;Analisi di Prezzo&quot;
+		If ThisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
 			oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;A1&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;A2&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;B1&quot;)
 			Stora_Attr_sheet_generico(&quot;TIPO_ANALISI&quot;, oSheet, &quot;B2&quot;)
+		EndIf
 &apos;		Case &quot;CONTABILITA&quot;
-			oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
-			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
-			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
-			Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+			If ThisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
+				oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+				Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A1&quot;)
+				Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;A2&quot;)
+				Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
+				Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
+			EndIf
 			If ThisComponent.Sheets.hasByName(&quot;Registro&quot;) Then
 				oSheet = ThisComponent.Sheets.getByName(&quot;Registro&quot;)
 				Stora_Attr_sheet_generico(&quot;TIPO_REGISTRO&quot;, oSheet, &quot;A1&quot;)
@@ -270,12 +274,17 @@ end Sub
 Sub Svuota_CONTABILITA_esegui (optional sSommari as String) &apos;(C) Giuseppe Vizziello 2014 - riscritta totalmente
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	for i = 1 to 20 &apos;(questo 20 posso dedurlo dal quadro riepilogativo contabile)
-		if ThisComponent.NamedRanges.hasByName(&quot;#Lib#&quot; &amp; i) then
+		if ThisComponent.NamedRanges.hasByName(&quot;#Lib#&quot; &amp; i) Then
 		 	ThisComponent.NamedRanges.removeByName(&quot;#Lib#&quot; &amp; i)
+		 	ThisComponent.NamedRanges.removeByName(&quot;#SAL#&quot; &amp; i)
+		 	ThisComponent.NamedRanges.removeByName(&quot;#Reg#&quot; &amp; i)
+		 	ThisComponent.Sheets.removeByName(&quot;Registro&quot;)
+		 	ThisComponent.Sheets.removeByName(&quot;SAL&quot;)
 		end if
 	next
+
 		
- 	oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
+ 	oSheet.rows.removeByIndex(0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
 
 &apos;	oSheet.GetCellByPosition(0,0).setstring(&quot;.&quot;+ chr(13) +&quot;.&quot;+ chr(13) +&quot;.&quot;) &apos; tiene l&apos;altezza della riga
 rem riga di intestazione
@@ -291,7 +300,7 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(13,2).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
 	oSheet.GetCellByPosition(15,2).setstring(&quot;Importi&quot;)
 	oSheet.GetCellByPosition(17,2).setstring(&quot;Sicurezza&quot; + chr(13) + &quot;inclusa&quot;)
-	oSheet.GetCellByPosition(18,2).setstring(&quot;Serve per avere le quantità&quot; + chr(13) + &quot;realizzate “pulite” e sommabili&quot;)
+	oSheet.GetCellByPosition(18,2).setstring(&quot;Serve per avere le quantità&quot; + chr(13) + &quot;realizzate &quot;&quot;pulite&quot;&quot; e sommabili&quot;)
 	oSheet.GetCellByPosition(19,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
 	oSheet.GetCellByPosition(20,2).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
 	oSheet.GetCellByPosition(22,2).setstring(&quot;flag&quot;)
@@ -339,7 +348,7 @@ rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controll
 	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
 
 apri_libretto_misure
-Visualizza_normale_esegui
+&apos;Visualizza_normale_esegui
 se_ci_sono_problemi_guarda_la_sub_di_Bart:
 end sub
 

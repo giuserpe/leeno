@@ -11,6 +11,39 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
+Sub attiva_contabilita
+	chiudi_dialoghi
+	If ThisComponent.Sheets.hasbyname(&quot;CONTABILITA&quot;) Then
+		Sel_CONTABILITA
+		Exit Sub
+	EndIf
+
+	thisComponent.getSheets().insertNewByName(&quot;CONTABILITA&quot;,3,0)
+&apos;	dim Doc as object
+&apos;	Doc = ThisComponent
+&apos;	If Not Doc.Sheets.hasbyname(&quot;CONTABILITA&quot;) Then
+&apos;		Sheet = Doc.createInstance(&quot;com.sun.star.sheet.Spreadsheet&quot;)
+&apos;		Doc.Sheets.insertByName(&quot;CONTABILITA&quot;, Sheet)
+&apos;	Else
+&apos;	Exit Sub
+&apos;	EndIf
+	sistema_attributi_sheet
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
+	Svuota_CONTABILITA_esegui
+	
+	oSheet.getCellByPosition(2,0).String  = &quot;CONTABILITA&quot;
+	oSheet.getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
+	oSheet.getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,180,175))
+	oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,180,175))
+	ThisComponent.CurrentController.Select(oSheet)
+	SetTabColorN(RGB(255,180,175))
+	Visualizza_sheet_TUTTE	
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
+	nuova_voce_contab
+	fissa (0,3)
+End Sub
 
 Sub partita (testo as string)
 	Dim test As String
@@ -1133,7 +1166,8 @@ rem chiedo se posso procedere
 				Case &quot;Libretto&quot;
 					oNamedRange=oRanges.getByName(prefix &amp; nSal).referredCells
 ThisComponent.CurrentController.Select(oNamedRange)
-SEPARA_righe 
+SEPARA_righe
+		oNamedRange.cellprotection.IsLocked = False
 rem recupero l&apos;ultima riga del documento
 					With oNamedRange.RangeAddress
 						daVoce = .StartRow

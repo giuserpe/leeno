@@ -75,9 +75,6 @@ FUNCTION DuplicaSheetinDoc(Optional sSuffix as string, Optional lnumSheet as lon
 &apos; un foglio e aggiunge un suffisso al nome
 dim iNumInser as integer
 
-
- 	&apos;xray thiscomponent.isActionLocked 
- 	&apos;xray thiscomponent.hasControllersLocked
  &apos; &apos;__________________________
 &apos;	Clessid_lock_Start
 	oDoc = thisComponent
@@ -354,6 +351,7 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	dim nEndRow as long
 	dim nEndCol as Long
 &apos;-------------------------------------------------------------------------
+	sistema_attributi_sheet
 	oSheet = ThisComponent.currentcontroller.activesheet
 	sAttributo = Trova_Attr_Sheet
 	Select Case sAttributo
@@ -1404,7 +1402,7 @@ ThisComponent.CurrentController.Select(oSheet)
 Adatta_Altezza_riga
 thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
 	Select Case oSheet.Name &apos;sAttributo
-	 Case &quot;TIPO_COMPUTO&quot;, &quot;COMPUTO&quot;, &quot;COMPUTO_print&quot;
+	 Case &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;COMPUTO_print&quot;
 	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800
 		&apos;print &quot;Tipo computo&quot;
 		sString$ = &quot;Fine Computo&quot;

@@ -511,7 +511,8 @@ shortCuts.removeKeyEvent(aKeyEvent)
 	shortCuts = UicfgMgr.ShortCutManager
 	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Voci_Sistema.Riformatta_VCA?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store() 
+	shortCuts.store()
+	
 	
 	
 END SUB
@@ -700,7 +701,7 @@ rem ----------------------------------------------------------------------
 	End with
 	UIcfgMgr = thisComponent.UIConfigurationManager
 	shortCuts = UicfgMgr.ShortCutManager
-	shortCuts.setKeyEvent (aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.menu.tabella_ferri?language=Basic&amp;location=application&quot;)
+	shortCuts.setKeyEvent (aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.menu.ApriDialogo_tabelle?language=Basic&amp;location=application&quot;)
 &apos;	shortCuts.removeKeyEvent(aKeyEvent)
 shortCuts.store()
 	

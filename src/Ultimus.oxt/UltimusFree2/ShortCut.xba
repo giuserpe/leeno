@@ -503,15 +503,15 @@ shortCuts.removeKeyEvent(aKeyEvent)
 	
 	
 &apos;____________________________Ctrl Alt R
-	with aKeyEvent
-		. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2
-		. KeyCode = com.sun.star.awt.Key.R
-	End with
-	UIcfgMgr = thisComponent.UIConfigurationManager 
-	shortCuts = UicfgMgr.ShortCutManager
-	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Voci_Sistema.Riformatta_VCA?language=Basic&amp;location=application&quot; )
+&apos;	with aKeyEvent
+&apos;		. modifiers = com.sun.star.awt.KeyModifier.MOD1 + com.sun.star.awt.KeyModifier.MOD2
+&apos;		. KeyCode = com.sun.star.awt.Key.R
+&apos;	End with
+&apos;	UIcfgMgr = thisComponent.UIConfigurationManager 
+&apos;	shortCuts = UicfgMgr.ShortCutManager
+&apos;	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Voci_Sistema.Riformatta_VCA?language=Basic&amp;location=application&quot; )
 &apos;shortCuts.removeKeyEvent(aKeyEvent)
-	shortCuts.store()
+&apos;	shortCuts.store()
 	
 	
 	

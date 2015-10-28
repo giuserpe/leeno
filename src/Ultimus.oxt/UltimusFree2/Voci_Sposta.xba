@@ -65,7 +65,7 @@ Sub spostaVCA() &apos; assegnata a ALT-X??
 	Dim nome_sheet as string
 	nome_sheet = thisComponent.currentcontroller.activesheet.Name
 	Select Case nome_sheet
-		Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
 			Sposta_Voce_Computo_Att
 		Case &quot;Analisi di Prezzo&quot;
 			Sposta_Voce_Analisi_Att

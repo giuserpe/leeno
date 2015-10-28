@@ -8,7 +8,7 @@
         </prop>
       </node>
     </node>
-<!--CTRL-ALT-F3-->
+<!--CTRL-SHIFT-F3-->
     <node oor:name="Modules">
       <node oor:name="com.sun.star.sheet.SpreadsheetDocument">
         <node oor:name="F3_SHIFT_MOD1" oor:op="replace">
@@ -38,7 +38,7 @@
         </node>
       </node>
     </node>
-	<!--CTRL-ALT-Q-->
+	<!--CTRL-SHIFT-Q-->
     <node oor:name="Modules">
       <node oor:name="com.sun.star.text.Text">
         <node oor:name="Q_SHIFT_MOD1" oor:op="replace">

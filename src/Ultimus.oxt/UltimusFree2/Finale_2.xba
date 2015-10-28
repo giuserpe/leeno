@@ -27,25 +27,16 @@ rem metto in ordine secondo la stampa
 	oSheet.IsVisible = True
 	If thisComponent.Sheets.hasbyname(&quot;cP_Cop&quot;) Then ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
-&apos;	thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,2)
-&apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0,0,10,10))
 rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
 		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet Then &apos; and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
-&apos;oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;)
+
 			ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).GetCellByPosition(0,0))
 &apos;	Print  
 			rimuovi_area_di_stampa
 			oSh.IsVisible = False
 		Else
-&apos;		If 	ubound(print_area)=0 and oSh.Name = oActiveSheet Then &apos; se è definista un&apos;area di stampa
-&apos;			With print_area(0)
-&apos;				ecol=.EndColumn
-&apos;				erow=.EndRow
-&apos;				esh=.Sheet
-&apos;				scol=.StartColumn
-&apos;				srow=.StartRow
-&apos;			End With
+
 			Set_Area_Stampa_N(&quot;NO_messaggio&quot;)
 			If 	oSh.Name = oActiveSheet Then 
 				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
@@ -60,14 +51,7 @@ rem rimuovo le aree di stampa che non interessano
 	dim document as Object
 	document   = ThisComponent.CurrentController.Frame
 	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-&apos;   Dim mStoreOpts(1) As New com.sun.star.beans.PropertyValue
-&apos;   mStoreOpts(0).Name = &quot;Overwrite&quot;
-&apos;   mStoreOpts(0).Value = True
-&apos;   mStoreOpts(1).Name = &quot;FilterName&quot;
-&apos;   mStoreOpts(1).Value = &quot;calc_pdf_Export&quot;
-&apos;   sFile = &quot;file:///C:/test1.PDF&quot;
-	
-&apos;   oDoc.storeToURL(sFile, mStoreOpts())
+
 	
 	rem ----------------------------------------------------------------------
 	dim args1(2) as new com.sun.star.beans.PropertyValue

@@ -131,7 +131,7 @@ Dim sOutputFilePath as string
 &apos;dim sSuperC1 as string
 &apos;Dim oUcb as Object
 sInputFilePath = BrowseForFile(&quot;Browse for File.pwe to be imported as CSV&quot;, &quot;&quot;, &quot;C:\windows\desktop&quot;, &quot;*.pwe&quot;)
-sInputFilePath = converttourl(sInputFilePath) 
+sInputFilePath = converttourl(sInputFilePath)
  &apos; sInputFilePath = converttourl(&quot;c:\restauri.pwe&quot;)
  sOutputFilePath = converttourl(&quot;c:\tempo_csv.txt&quot;)
 

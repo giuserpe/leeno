@@ -256,6 +256,7 @@ Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a disce
 
 
 	&apos; passo a lavorare sul foglio Analisi
+	If Not ThisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then Exit Sub
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) &apos;(ThisComponent.currentcontroller.activesheet.name)
 	lLastUrow = getLastUsedRow(oSheet)
 	Barra_chiudi_sempre_4

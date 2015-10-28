@@ -390,7 +390,6 @@ Sel_Range.Cellbackcolor = lcolorSRC
 END SUB
 
 
-
 Sub cerca_errori &apos; trova gli errori (valori #N/D) in una tabella Calc
 &apos; dalla riga attiva al fondo del foglio...
 dim lrow as long

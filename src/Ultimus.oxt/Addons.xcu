@@ -118,6 +118,25 @@ oor:package="org.openoffice.Office">
 						<value>_self</value>
 					</prop>
 				</node>
+
+				<node oor:name="Ma55" oor:op="replace">
+					<prop oor:name="Context" oor:type="xs:string">
+						<value>com.sun.star.sheet.SpreadsheetDocument</value>
+					</prop>
+					<prop oor:name="URL" oor:type="xs:string">
+						<value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
+					</prop>
+					<prop oor:name="ImageIdentifier" oor:type="xs:string">
+					<value>%origin%/icons/findcode</value>
+					</prop>
+					<prop oor:name="Title" oor:type="xs:string">
+						<value>Fitra Codice della voce corrente</value>
+					</prop>
+					<prop oor:name="Target" oor:type="xs:string">
+						<value>_self</value>
+					</prop>
+				</node>
+
 				<node oor:name="Ma59" oor:op="replace">
 					<prop oor:name="Context" oor:type="xs:string">
 						<value></value>
@@ -154,7 +173,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/pesca</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Pesca Codice Va e Vieni</value>
+						<value>Pesca Codice</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
@@ -1436,7 +1455,7 @@ oor:package="org.openoffice.Office">
 						<value>%origin%/icons/pesca</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Pesca Va e Vieni</value>
+						<value>Pesca Codice</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>
@@ -1559,7 +1578,7 @@ oor:package="org.openoffice.Office">
 						<value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
 					</prop>
 					<prop oor:name="Title" oor:type="xs:string">
-						<value>Vista Corta (abbreviata) ON/OFF  </value>
+						<value>Descriziona abbreviata ON/OFF</value>
 					</prop>
 					<prop oor:name="Target" oor:type="xs:string">
 						<value>_self</value>

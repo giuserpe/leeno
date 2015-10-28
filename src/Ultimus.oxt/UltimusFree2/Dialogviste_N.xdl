@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialogviste_N" dlg:left="107" dlg:top="182" dlg:width="210" dlg:height="184" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni per CONTABILITA&apos;" dlg:image-src="file:///media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/logo/leeno_.bmp">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialogviste_N" dlg:left="107" dlg:top="182" dlg:width="210" dlg:height="189" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni per CONTABILITA&apos;" dlg:image-src="file:///media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/logo/leeno_.bmp">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Arial Narrow" dlg:font-height="11" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:background-color="0xff3333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Grassetto" dlg:font-family="swiss" dlg:font-weight="150" dlg:font-underline="bold"/>
@@ -12,6 +12,8 @@
   <dlg:style dlg:style-id="7" dlg:background-color="0xff6666" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Grassetto" dlg:font-family="swiss" dlg:font-weight="150" dlg:font-underline="bold"/>
   <dlg:style dlg:style-id="8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="9" dlg:background-color="0xff9999"/>
+  <dlg:style dlg:style-id="10" dlg:background-color="0x99ff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="11" dlg:background-color="0xff3333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="26" dlg:top="-107" dlg:width="125" dlg:height="15" dlg:help-text=".Viste.Mostra_Tutto" dlg:value="Apri tutto" dlg:multiline="true">
@@ -57,7 +59,7 @@
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.Apri_libretto_misure?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton17" dlg:tab-index="14" dlg:left="110" dlg:top="117" dlg:width="95" dlg:height="15" dlg:help-text="Attiva la Vista &quot;Libretto delle misure&quot; NB: solo Per tenuta Elettronica del Libretto (imposta anche la modalità di tenuta elettronica del Libretto delle Misure) - .Viste_2.Apri_libretto_misure" dlg:value="Vista Libretto delle Misure" dlg:multiline="true">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.Apri_libretto_misure?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2._tools.set_larghezza_colonne?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton18" dlg:tab-index="15" dlg:left="-108" dlg:top="-89" dlg:width="87" dlg:height="15" dlg:printable="false" dlg:help-text="Imposta la contabilità per la compilazione &quot;tradizionale&quot; del LIbretto (su carta )" dlg:value="Imposta Libretto Misure Cartaceo" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.Imposta_libretto_Cart?language=Basic&amp;location=application" script:language="Script"/>
@@ -71,23 +73,24 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton21" dlg:tab-index="18" dlg:left="255" dlg:top="96" dlg:width="80" dlg:height="15" dlg:value="SICUREZZA on/off" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.sicurezza_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton22" dlg:tab-index="19" dlg:left="110" dlg:top="162" dlg:width="95" dlg:height="15" dlg:help-text="Anche il tasto Esc chiude la finestra" dlg:default="true" dlg:value="OK, CHIUDI" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
-  </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton23" dlg:tab-index="20" dlg:left="255" dlg:top="73" dlg:width="80" dlg:height="15" dlg:help-text="Chiude/apre la colonna delle figure e annotazioni del Computo" dlg:value="Annotazioni  Computo ON/OFF" dlg:toggled="1" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton23" dlg:tab-index="19" dlg:left="255" dlg:top="73" dlg:width="80" dlg:height="15" dlg:help-text="Chiude/apre la colonna delle figure e annotazioni del Computo" dlg:value="Annotazioni  Computo ON/OFF" dlg:toggled="1" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.Figure_Annotazioni_Computo_on_off?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:style-id="6" dlg:id="Label1" dlg:tab-index="21" dlg:left="26" dlg:top="8" dlg:width="160" dlg:height="76" dlg:value="Questo menù introduce nuove funzionalità da intendersi come sperimentali.&#x0a;Per questo non ne è garantita l&apos;efficacia.&#x0a;Produce:&#x0a;- Libretto delle misure&#x0a;- Registro di Contabilità&#x0a;- Stato di Avanzamento dei Lavori" dlg:multiline="true"/>
-  <dlg:fixedline dlg:style-id="2" dlg:id="FixedLine1" dlg:tab-index="22" dlg:left="4" dlg:top="157" dlg:width="200" dlg:height="1"/>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton24" dlg:tab-index="23" dlg:left="4" dlg:top="137" dlg:width="95" dlg:height="15" dlg:help-text="Svuota da tutti i dati la tab di contabilità" dlg:value="Elimina atti (un SAL intero)" dlg:multiline="true">
+  <dlg:text dlg:style-id="6" dlg:id="Label1" dlg:tab-index="20" dlg:left="26" dlg:top="8" dlg:width="160" dlg:height="76" dlg:value="Questo menù introduce nuove funzionalità da intendersi come sperimentali.&#x0a;Per questo non ne è garantita l&apos;efficacia.&#x0a;Produce:&#x0a;- Libretto delle misure&#x0a;- Registro di Contabilità&#x0a;- Stato di Avanzamento dei Lavori" dlg:multiline="true"/>
+  <dlg:fixedline dlg:style-id="2" dlg:id="FixedLine1" dlg:tab-index="21" dlg:left="4" dlg:top="157" dlg:width="200" dlg:height="1"/>
+  <dlg:button dlg:style-id="7" dlg:id="CommandButton24" dlg:tab-index="22" dlg:left="4" dlg:top="137" dlg:width="95" dlg:height="15" dlg:help-text="Svuota da tutti i dati la tab di contabilità" dlg:value="Elimina atti (un SAL intero)" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.annulla_tutti_gli_atti?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="8" dlg:id="CommandButton2" dlg:tab-index="24" dlg:left="4" dlg:top="117" dlg:width="95" dlg:height="15" dlg:value="Descrizione breve ON/OFF">
+  <dlg:button dlg:style-id="8" dlg:id="CommandButton2" dlg:tab-index="23" dlg:left="4" dlg:top="117" dlg:width="95" dlg:height="15" dlg:value="Descrizione breve ON/OFF">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci_Computo?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="9" dlg:id="CommandButton9" dlg:tab-index="25" dlg:left="55" dlg:top="225" dlg:width="0" dlg:height="0" dlg:value="CommandButton9"/>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton25" dlg:tab-index="26" dlg:left="110" dlg:top="97" dlg:width="95" dlg:height="15" dlg:help-text="Attiva la Vista &quot;Libretto delle misure&quot; NB: solo Per tenuta Elettronica del Libretto (imposta anche la modalità di tenuta elettronica del Libretto delle Misure) - .Viste_2.Apri_libretto_misure" dlg:value="Situazione contabile" dlg:multiline="true">
+  <dlg:button dlg:style-id="9" dlg:id="CommandButton9" dlg:tab-index="24" dlg:left="55" dlg:top="225" dlg:width="0" dlg:height="0" dlg:value="CommandButton9"/>
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton25" dlg:tab-index="25" dlg:left="110" dlg:top="97" dlg:width="95" dlg:height="15" dlg:help-text="Attiva la Vista &quot;Libretto delle misure&quot; NB: solo Per tenuta Elettronica del Libretto (imposta anche la modalità di tenuta elettronica del Libretto delle Misure) - .Viste_2.Apri_libretto_misure" dlg:value="Situazione contabile" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.vedi_situazione_contabile?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
+  <dlg:button dlg:style-id="10" dlg:id="CommandButton22" dlg:tab-index="26" dlg:left="190" dlg:top="162" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="11" dlg:id="CommandButton26" dlg:tab-index="27" dlg:left="170" dlg:top="162" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -12,6 +12,7 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 Sub attiva_contabilita
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
 	chiudi_dialoghi
 	If ThisComponent.Sheets.hasbyname(&quot;CONTABILITA&quot;) Then
 		Sel_CONTABILITA
@@ -39,10 +40,11 @@ Sub attiva_contabilita
 	oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,180,175))
 	ThisComponent.CurrentController.Select(oSheet)
 	SetTabColorN(RGB(255,180,175))
-	Visualizza_sheet_TUTTE	
+	Visualizza_sheet_TUTTE
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
 	nuova_voce_contab
 	fissa (0,3)
+	set_larghezza_colonne
 End Sub
 
 Sub partita (testo as string)

@@ -256,19 +256,11 @@ End Sub
 
 
 Sub SIC_EP_on_off &apos; chiude le col della manodopera su EP
-	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
-		if Trova_Attr_Sheet = &quot;&quot; Then
-			tabella=&quot;sconosciuto&quot;
-		Else
-			tabella= Trova_Attr_Sheet
-		End If 
-		msgbox &quot;#5 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
-				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (manodoperta_on_off)&quot;
-				exit sub
-	end if
+	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then Exit Sub 
+
 	oSheet = ThisComponent.currentController.activeSheet
 	lcolbase = Colonna_giusta_EP (oSheet)
+	Print lcolbase
  	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
 				print lcolbase
 				exit sub

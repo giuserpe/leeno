@@ -258,12 +258,6 @@ End function
 
 &apos;++++++++++++++++ DIALOGHI +++++++++++++++++++++++++++++++++++
 
-&apos;sub dialogo2
-&apos;	DialogLibraries.LoadLibrary(&quot;Digest&quot;)
-&apos;	Dlg2=CreateUnoDialog(DialogLibraries.Digest.Dialog2)
-&apos;	Dlg2.execute()
-&apos;end sub
-
 sub dialogo_annulla
 
 	Dlg2.endExecute()

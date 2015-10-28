@@ -19,13 +19,11 @@ Public Const idxCol = 0		&apos;indice prima colonna
 Public Const idxRow = 2		&apos;indice posizione intestazione di tabella
 Public Const idxSAL = 30 	&apos;numero massimo possibile di SAL
 Public Const idxdec = 2		&apos;numero cifre decimali per le approssimazioni
-
-
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
 Public Const versioneUF_minor= 12			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;0.dev&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_subversion= &quot;0&quot;		&apos;CORREZIONE BUGS
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
@@ -56,7 +54,10 @@ End Function
 rem ######################################################################
 
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
+	GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
+ 	Setta_Cost_Gen
+ 	bak_timestamp
 	codice_da_cercare_in_elenco = &quot;&quot;
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	Sel_Altre_Opz
@@ -72,7 +73,6 @@ rem visualizza le toolbar leeno
 &apos;		toolbar_on (sName, 1)
 &apos;	Next
 	toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, 0)
-&apos; 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 Then
 &apos; imposto la VarG della contabilità S1.H328
 	If ThisComponent.Sheets.HasByName(&quot;CONTABILITA&quot;) Then
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1

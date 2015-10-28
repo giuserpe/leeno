@@ -14,25 +14,19 @@
 
 Sub Sposta_Voce_Computo_Att &apos; &apos; sposta una Voce di Computo in nuova posizione...
 
-&apos; da sistemare la visualizzazione finale... funzia solo se si sposta verso il basso |||
-dim oSrow as long
-dim oErow as long
-dim StartRow as long
-&apos; ScreenUpdatingOn 
- 
-&apos;.......................................................................................................
+	dim oSrow as long
+	dim oErow as long
+	dim StartRow as Long
+
 
 	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lSrow = -1 then
-		exit sub
-	end if
+	If lSrow = -1 Then Exit Sub
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0 , oSrow)&apos; errata selezione di un range
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+
 	sStRange = Circoscrive_Voce_Computo_Att (lSrow)
-ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
+	ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
 	oOldSelection = sStRange
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 
 	sTitolo = &quot;Click sulla riga dove vuoi spostare la voce (ESC per Annullare, NO Click su X ) &quot;
 	SelectedRange = getRange(sTitolo) &apos; richiama il listeners
@@ -43,37 +37,19 @@ ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
  	end if
 
 	StartRow = getRigaIniziale(SelectedRange)
-	
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	StartRowM = Mettiti_esattamente_tra_due_VociC_Att (StartRow)
-	
-	if StartRowM = &quot;uscita forzata&quot; then exit sub
+	If StartRow &lt;2 Then StartRow = 2
+	If oSheet.GetCellbyPosition(0, StartRow).CellStyle = &quot;Livello-1-scritta&quot; Then StartRowM =StartRow +1
+	If oSheet.GetCellbyPosition(0, StartRow).CellStyle = &quot;livello2 valuta&quot; Then StartRowM =StartRow +1
+	If oSheet.GetCellbyPosition(0, StartRow).CellStyle = &quot;comp Int_colonna&quot; Then StartRowM =StartRow +1
 
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
-&apos;print &quot;Ritorna &quot; &amp; StartRowM
- 	sString$ = &quot;Fine Computo&quot;
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then 
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI18! &quot;
-		exit sub
-	end if 
-	lrowF=oEnd.CellAddress.Row 
-
-	If lrowF &lt; StartRow-1 then
-		oCellK = oSheet.GetCellByPosition( 0 , StartRow)
-		ThisComponent.CurrentController.Select(oCellK)
-		msgbox &quot; Hai selezionato una destinazione ESTERNA all&apos;area &quot; &amp; CHR$(10)_
-		&amp; &quot; definita dalla riga rossa di chiusura... &quot;&amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; e questo non è consentito!...&quot;
-		ThisComponent.CurrentController.Select(sStRange)
-		exit SUB
-	end if
-
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	On Error GoTo salto:
+		StartRowM = fine_voce(StartRow) +1
+salto:
+	lrowF = ULTIMA_VOCE+1 
+	If lrowF &lt; StartRow-1 Then exit SUB
 	Sposta_range_buono_Att(StartRowM,sStRange)
-&apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-Numera_Voci_Computo (&quot;niente prompt&quot;)
+	Numera_Voci_Computo (&quot;niente prompt&quot;)
+	Adatta_h_riga_intera_tabella(oSheet.Name)
 END Sub
 
 &apos;_______________________________________________________________________________________++
@@ -207,30 +183,13 @@ Dim CellAddress As New com.sun.star.table.CellAddress
 	o2ColoumnE	= o1ColoumnE
 	L2RowE	= L2RowS + L1RowSCount -1 &apos; si toglie uno per ragioni che mi sfuggono... 
 
-	&apos;inserisce righe vuote
- &apos; 	CellRangeAddress.Sheet = o2sheet
- &apos; CellRangeAddress.StartColumn = o2ColoumnS
- &apos; CellRangeAddress.StartRow = L2RowS
-&apos;	CellRangeAddress.EndColumn = o2ColoumnE
-&apos;	CellRangeAddress.EndRow = L2RowE
-
-&apos;	Doc = StarDesktop.CurrentComponent
-&apos;	Sheet = Doc.Sheets(CellRangeAddress.Sheet) &apos; target sheet
-&apos;	Sheet.insertCells(CellRangeAddress, com.sun.star.sheet.CellInsertMode.DOWN)
 	oSheet = ThisComponent.currentController.activeSheet 
 	iSheet = ThisComponent.currentController.activeSheet.RangeAddress.sheet &apos; index della sheet
 
 	iRowCount = L2RowE - L2RowS+1
-	
-
-		ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1,L2RowS))
-&apos;	print L2RowS
+	ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1,L2RowS))
 	insRows (L2RowS, iRowCount)
-&apos;	oSheet.getRows.insertByIndex(L2RowS, iRowCount)
 
-&apos;print
-	&apos; recupera il vecchio range (che, a causa dell&apos;inserimento, ha cambiato coordinate..)	
-	&apos; il 3 sta per recupero del range di origine,,,
 	i3sheet = i1sheet &apos; per il momento è la medesima...
 	
 	L3ColoumnS = o1ColoumnS
@@ -267,7 +226,7 @@ if lrowDest &gt; lrowT then &apos; questo pasticcetto per visualizzare la voce s
 &apos;	print &quot;verso l&apos;alto?&quot;
 	oRange = oSheet.getCellRangeByposition (L3ColoumnS, L2RowS , L3ColoumnE, L2RowS+lrdif )
 end if
-ThisComponent.CurrentController.Select(oRange)
+&apos;ThisComponent.CurrentController.Select(oRange)
 End Function
 
 rem ----------------------------------------------------------------------
@@ -280,68 +239,82 @@ Function Circoscrive_Voce_Computo_Att (ByVal lrow As Long)
 	select Case oSheet.Name
 		REM ----------------------------------------------------------------------
 	Case = &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-		Select Case osheet.getCellByPosition (0, lrow).CellStyle
-		Case &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp Start Attributo&quot;, &quot;Comp End Attributo&quot;
-			GoTo procedo:
-		Case Else
-			Exit Function
-		End Select
-		procedo:
+	Select Case osheet.getCellByPosition (0, lrow).CellStyle
+	Case &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp Start Attributo&quot;, &quot;Comp End Attributo&quot;
+		GoTo procedo:
+	Case Else
+		Exit Function
+	End Select
+	procedo:
+	REM ----------------------------------------------------------------------
+	rem cerco la prima riga
+	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot; Then
+		lrows=lrow
+	Else
+		Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot;
+			lrow = lrow -1
+		Loop
+		lrows=lrow
+		EndIf
+		lrow = lrows
 		REM ----------------------------------------------------------------------
-		rem cerco la prima riga
-		If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo&quot; Then
-			lrows=lrow
+		rem cerco l&apos;ultima riga
+		Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
+			lrow=lrow+1
+		Loop
+		lrowE=lrow
+		REM ----------------------------------------------------------------------
+	Case = &quot;CONTABILITA&quot;
+		If 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo_R&quot; Or _
+			osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s_R&quot; Or _
+			osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo_R&quot; Then
+			GoTo procedo_R:
 		Else
-			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo&quot;
-				lrow = lrow -1
-			Loop
-			lrows=lrow
-			EndIf
-			lrow = lrows
-			REM ----------------------------------------------------------------------
-			rem cerco l&apos;ultima riga
-			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
-				lrow=lrow+1
-			Loop
-			lrowE=lrow
-			REM ----------------------------------------------------------------------
-		Case = &quot;CONTABILITA&quot;
-			If 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo_R&quot; Or _
-				osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s_R&quot; Or _
-				osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo_R&quot; Then
-				GoTo procedo_R:
-			Else
-				Exit Function
-			EndIf 
-			procedo_R:
-			REM ----------------------------------------------------------------------
-			REM se non trova inizio voce, lo inserisce
-			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
-				if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo_R&quot; Or _
-					osheet.getCellByPosition (0, lrow).CellStyle = &quot;livello2 valuta&quot; Or _
-					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Default&quot; Or _
-					osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
-					osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp Int_colonna_R_prima&quot; Then
-					ptIns = osheet.getCellByPosition (31, lrow).getCellAddress()
-					range = osheet.getCellRangeByPosition (31, lrow+1, 35, lrow+1).getRangeAddress
-					osheet.copyRange(ptIns, range)
-					Exit Do
-				EndIf
-				lrow=lrow-1
-			Loop
-			lrows=lrow
-			REM ----------------------------------------------------------------------
-			REM cerca fine voce
-			Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo_R&quot;
-				if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp TOTALI&quot; Then Exit Function
-				lrow=lrow+1
-			Loop
-			lrowE = lrow
-			lrow = lrowE-1
-		End Select
+			Exit Function
+		EndIf 
+		procedo_R:
 		REM ----------------------------------------------------------------------
-		oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
-		Circoscrive_Voce_Computo_Att= oRangeVoceC
-	End Function
+		REM se non trova inizio voce, lo inserisce
+		Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
+			if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp Start Attributo_R&quot; Or _
+				osheet.getCellByPosition (0, lrow).CellStyle = &quot;livello2 valuta&quot; Or _
+				osheet.getCellByPosition (0, lrow).CellStyle = &quot;Default&quot; Or _
+				osheet.getCellByPosition (0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
+				osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp Int_colonna_R_prima&quot; Then
+				ptIns = osheet.getCellByPosition (31, lrow).getCellAddress()
+				range = osheet.getCellRangeByPosition (31, lrow+1, 35, lrow+1).getRangeAddress
+				osheet.copyRange(ptIns, range)
+				Exit Do
+			EndIf
+			lrow=lrow-1
+		Loop
+		lrows=lrow
+		REM ----------------------------------------------------------------------
+		REM cerca fine voce
+		Do while osheet.getCellByPosition (0, lrow).CellStyle &lt;&gt; &quot;Comp End Attributo_R&quot;
+			if osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp TOTALI&quot; Then Exit Function
+			lrow=lrow+1
+		Loop
+		lrowE = lrow
+		lrow = lrowE-1
+	End Select
+	REM ----------------------------------------------------------------------
+	oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+	Circoscrive_Voce_Computo_Att= oRangeVoceC
+End Function
+
+Function inizio_voce (ByVal lrow As Long) &apos; RESTITUISCE LA RIGA APPENA DOPO LA VOCE CORRENTE
+		sStRange = Circoscrive_Voce_Computo_Att (lrow)
+		With sStRange.RangeAddress
+	 		inizio_voce = .StartRow
+		End With
+End Function
+
+Function fine_voce (ByVal lrow As Long) &apos; RESTITUISCE LA RIGA APPENA DOPO LA VOCE CORRENTE
+		sStRange = Circoscrive_Voce_Computo_Att (lrow)
+		With sStRange.RangeAddress
+	 		fine_voce = .EndRow
+		End With
+End Function
 
 </script:module>

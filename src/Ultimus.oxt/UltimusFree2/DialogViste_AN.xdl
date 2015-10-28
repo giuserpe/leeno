@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="5" dlg:id="DialogViste_AN" dlg:left="97" dlg:top="150" dlg:width="170" dlg:height="72" dlg:help-text="   Scenari, Viste e Azioni Delle ANALISI DI PREZZO" dlg:help-url="http://aimar.mrjive.it/files/MANUALE%20D%27USO%20di%20Ultimus-3.5-101130.pdf" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni Delle ANALISI DI PREZZO">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="6" dlg:id="DialogViste_AN" dlg:left="97" dlg:top="150" dlg:width="170" dlg:height="72" dlg:help-text="   Scenari, Viste e Azioni Delle ANALISI DI PREZZO" dlg:help-url="http://aimar.mrjive.it/files/MANUALE%20D%27USO%20di%20Ultimus-3.5-101130.pdf" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni Delle ANALISI DI PREZZO">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="3" dlg:font-name="Arial Narrow" dlg:font-height="9" dlg:font-stylename="Normale" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="5" dlg:background-color="0x98fb98"/>
+  <dlg:style dlg:style-id="4" dlg:background-color="0x99ff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="5" dlg:background-color="0xff3333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="6" dlg:background-color="0xb9f0a8"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="0" dlg:left="5" dlg:top="5" dlg:width="78" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Descrizione tronca" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="0" dlg:left="5" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Descrizione tronca" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton10" dlg:tab-index="1" dlg:left="305" dlg:top="27" dlg:width="76" dlg:height="15" dlg:help-text="Visualizza/Nascondi  gestione MANODOPERA" dlg:value="Gestione Manodopera  on/off" dlg:multiline="true">
@@ -28,14 +29,15 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="5" dlg:left="90" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Voci usate-non usate..." dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.Vai_submenu_segnaVoci_non_usate?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton32" dlg:tab-index="6" dlg:left="65" dlg:top="45" dlg:width="40" dlg:height="20" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:button-type="ok" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
-  </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="7" dlg:left="5" dlg:top="25" dlg:width="78" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Riordina le analisi" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="6" dlg:left="5" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Riordina le analisi" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Main_Riordina_Analisi_Alfabetico?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="8" dlg:left="90" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Genera lista analisi" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="7" dlg:left="90" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Genera lista analisi" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton6" dlg:tab-index="8" dlg:left="150" dlg:top="48" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="5" dlg:id="CommandButton7" dlg:tab-index="9" dlg:left="130" dlg:top="48" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

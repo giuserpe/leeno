@@ -23,12 +23,6 @@ Dim oSelect As Object
 Dim lcolorSRC As String
 
 
-sub proviamo_questo
-oCosa = getTheRange
-xray oCosa
-end sub
-
-
 function getTheRangeQ()
  
 &apos;	DialogLibraries.LoadLibrary(&quot;Standard&quot; )

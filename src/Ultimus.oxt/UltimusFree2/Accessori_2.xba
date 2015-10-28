@@ -661,7 +661,15 @@ rem seleziono le formule
 	oSheet.GetCellByPosition(lcolbase+14 , lrowF).cellstyle = &quot;EP statistiche_Contab&quot;
 	Ripristina_statusLine
 &apos;	suona_1_2
-END SUB
+END Sub
+
+
+Sub nascondi_righe_errate
+	oSheet = ThisComponent.currentController.activeSheet
+	For n = 2 To ultima_voce+1
+		If osheet.GetCellbyPosition(26, n).String = &quot;#DIV/0!&quot; Then	oSheet.getCellByposition(0, n).Rows.IsVisible=false
+	Next
+End Sub
 
 SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di somma.se
 &apos; parallelo variante
@@ -680,6 +688,8 @@ SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di
 	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	lrowF = ultima_voce+1
+	inizializza_elenco
+	
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 
 	lcolbase = Colonna_giusta_EP (oSheet)
@@ -692,6 +702,10 @@ SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di
 	oSheet.getColumns.getByIndex(lcolbase + ii + idxcol).isVisible = true
 	
 	i=rIntest
+
+&apos;	thisComponent.currentController.Select(oSheet.getCellRangeByposition(11, i,26, lrowf-1)) &apos;deseleziona
+&apos;print
+&apos;	cancella_dati
 
 rem colonne del computo
 
@@ -725,32 +739,58 @@ rem colonne del computo
 		oSheet.GetCellByPosition(lcolbase + 16 , i).formula = &quot;=SUMIF(varAA;A4;varBB)&quot;
 		oSheet.GetCellByPosition(lcolbase + 16 , i).cellstyle = &quot;EP statistiche_q&quot;
 		oSheet.GetCellByPosition(lcolbase + 17 , i).formula = &quot;=SUMIF(varAA;A4;varEuro)&quot;
-&apos;		oSheet.GetCellByPosition(lcolbase + 17 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
 		oSheet.GetCellByPosition(lcolbase + 17 , i).cellstyle = &quot;EP statistiche&quot;
 	EndIf
-ooo:
-GoTo VARIANTE_COMPUTO:
+	Dim oCRA As New com.sun.star.table.CellRangeAddress
+	iSheet = oSheet.RangeAddress.sheet
+	oCRA.Sheet =iSheet
+	oCRA.StartColumn = 0
+	oCRA.EndColumn = 26
+	oSheet.ungroup(oCRA,0)
+	oSheet.getCellRangeByposition(15, 0, 26, 0).Columns.IsVisible=True
+	
+	If  Not VarCon And Not ComCon And Not ComVar Then GoTo prosegui:
+	
+	If ComVar = True Then GoTo VARIANTE_COMPUTO:
+	If ComCon = True Then GoTo COMPUTO_CONTABILITA:
+	If VarCon = True Then GoTo VARIANTE_CONTABILITA:
 &apos;#########################################################################
-&apos;QUADRO COMPARATIVO CONTABILITA&apos; su COMPUTO
-CONTABILITA_COMPUTO:
-&apos;	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(U4-M4=0;&quot;&quot;--&quot;&quot;;U4-M4)&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(V4-N4&gt;0;V4-N4;&quot;&quot;&quot;&quot;)&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(V4-N4&lt;0;N4-V4;&quot;&quot;&quot;&quot;)&quot;
-&apos;	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4))&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 10 , i).cellstyle = &quot;Default&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 14 , i).cellstyle = &quot;Default&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
+COMPUTO_CONTABILITA:
+&apos;Print &quot;COMPUTO_CONTABILITA:&quot;
+
+	oSheet.getCellRangeByposition(15, 0, 18, 0).Columns.IsVisible=false
+	oCRA.StartColumn = 15
+	oCRA.EndColumn = 18
+	oSheet.group(oCRA,0)
+
+	oSheet.GetCellByPosition(lcolbase + 23 , 0).String = &quot;Computo - Contabilità&quot;
+	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(U4-M4=0;&quot;&quot;--&quot;&quot;;U4-M4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(V4-N4&gt;0;V4-N4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(V4-N4&lt;0;N4-V4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
+	oSheet.GetCellByPosition(lcolbase + 23 , i).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((V4-N4)/N4);-(N4-V4)/V4;(V4-N4)/N4))&quot;
+	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;
+	oSheet.GetCellByPosition(lcolbase + 10 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 14 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
 &apos;#########################################################################
-&apos;QUADRO COMPARATIVO VARIANTE su COMPUTO
 GoTo prosegui:
 VARIANTE_COMPUTO:
+&apos;Print &quot;VARIANTE_COMPUTO:&quot;
+
+&apos;	oSheet.getCellRangeByposition(19,0,22,0).Columns.IsVisible=false
+	oCRA.StartColumn = 19
+	oCRA.EndColumn = 22
+	oSheet.group(oCRA,0,0)
+
+	oSheet.GetCellByPosition(lcolbase + 23 , 0).String = &quot;Computo - Variante&quot;
 	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(Q4-M4=0;&quot;&quot;--&quot;&quot;;Q4-M4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(R4-N4&gt;0;R4-N4;&quot;&quot;&quot;&quot;)&quot;
 	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(R4-N4&lt;0;N4-R4;&quot;&quot;&quot;&quot;)&quot;
 	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
+	oSheet.GetCellByPosition(lcolbase + 23 , i).cellstyle = &quot;EP statistiche_q&quot;
 	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((R4-N4)/N4);-(N4-R4)/R4;(R4-N4)/N4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((R4-N4)/N4);-(N4-R4)/R4;(R4-N4)/N4))&quot;
 	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;
 	oSheet.GetCellByPosition(lcolbase + 10 , i).cellstyle = &quot;Default&quot;
@@ -758,14 +798,37 @@ VARIANTE_COMPUTO:
 	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
 	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
 &apos;#########################################################################
-prosegui:
+GoTo prosegui:
+VARIANTE_CONTABILITA:
+&apos;Print &quot;VARIANTE_CONTABILITA:&quot;
 
+	oSheet.getCellRangeByposition(11, 0, 14, 0).Columns.IsVisible=false
+	oCRA.StartColumn = 11
+	oCRA.EndColumn = 14
+	oSheet.group(oCRA,0)
+	
+	oSheet.GetCellByPosition(lcolbase + 23 , 0).String = &quot;Variante - Contabilità&quot;
+	oSheet.GetCellByPosition(lcolbase + 23 , i).formula = &quot;=IF(U4-Q4=0;&quot;&quot;--&quot;&quot;;U4-Q4)&quot;
+	oSheet.GetCellByPosition(lcolbase + 24 , i).formula = &quot;=IF(V4-R4&gt;0;V4-R4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellByPosition(lcolbase + 25 , i).formula = &quot;=IF(V4-R4&lt;0;R4-V4;&quot;&quot;&quot;&quot;)&quot;
+	oSheet.GetCellRangeByPosition(lcolbase + 23 , i,lcolbase + 25 , i).cellstyle = &quot;EP statistiche&quot;
+	oSheet.GetCellByPosition(lcolbase + 23 , i).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.GetCellByPosition(lcolbase + 26 , i).formula = &quot;=IF(IF(ISERROR((V4-R4)/R4);-(R4-V4)/V4;(V4-R4)/R4)=0;&quot;&quot;--&quot;&quot;;IF(ISERROR((V4-R4)/R4);-(R4-V4)/V4;(V4-R4)/R4))&quot;
+	oSheet.GetCellByPosition(lcolbase + 26 , i).cellstyle = &quot;EP-mezzo %&quot;
+	oSheet.GetCellByPosition(lcolbase + 10 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 14 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 18 , i).cellstyle = &quot;Default&quot;
+	oSheet.GetCellByPosition(lcolbase + 22 , i).cellstyle = &quot;Default&quot;
+&apos;#########################################################################
+GoTo prosegui:
+prosegui:
 rem questa sotto è da tenere d&apos;occhio!!!
 	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, idxrow+1, lcolbase + 26, rIntest)) &apos;deseleziona
 	copy_clip
 	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, i+1,lcolbase+10, lrowf-1)) &apos;deseleziona
 	paste_clip
 rem ----------------------------------------------------------------------
+	thisComponent.currentController.Select(oSheet.getCellByposition(0, 0)) &apos;deseleziona
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
 

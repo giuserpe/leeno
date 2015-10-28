@@ -180,6 +180,7 @@ sub Raggruppa_righe &apos;da registratore macro - questa blocca tutto in fase di
 	dispatcher.executeDispatch(document, &quot;.uno:Group&quot;, &quot;&quot;, 0, args1())
 	
 end Sub
+
 rem ######################################################################
 
 sub insert_clip &apos;da registratore macro

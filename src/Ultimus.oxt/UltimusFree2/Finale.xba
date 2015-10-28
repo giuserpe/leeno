@@ -1405,13 +1405,14 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 	 Case &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;COMPUTO_print&quot;
 	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800
 		&apos;print &quot;Tipo computo&quot;
-		sString$ = &quot;Fine Computo&quot;
-		oEnd=uFindString(sString$, oSheet)	
-		If isNull (oEnd) or isEmpty (oEnd) 		then
-				msgbox &quot; ERRORE! Probabilemente manca la riga rossa di chiusura&quot;
-				exit sub
-		end if
-		lRowE=oEnd.CellAddress.Row-1		
+&apos;		sString$ = &quot;Fine Computo&quot;
+&apos;		oEnd=uFindString(sString$, oSheet)	
+&apos;		If isNull (oEnd) or isEmpty (oEnd) 		then
+&apos;				msgbox &quot; ERRORE! Probabilemente manca la riga rossa di chiusura&quot;
+&apos;				exit sub
+&apos;		end if
+&apos;		lRowE=oEnd.CellAddress.Row-1
+		lRowE = ultima_voce		
 &apos;		lLastUrow = getLastUsedRow(oSheet)
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 2

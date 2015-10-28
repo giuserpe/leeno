@@ -30,7 +30,7 @@ goto ritorno &apos; torna su
 		sNomeTab = &quot;Altro&quot;
 	end if
 	Select Case sNomeTab
-		Case &quot;COMPUTO&quot;
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 		&apos;	print &quot;computo&quot;
 			Dialogo_help_tutte
 		Case &quot;Analisi di Prezzo&quot;

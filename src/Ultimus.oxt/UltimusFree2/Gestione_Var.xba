@@ -133,7 +133,24 @@ rem ----------------------------------------------------------------------
 
 End Sub 
 
-sub Setta_Var_Gen_Default &apos; (pubblicazione)
+sub Setta_Cost_Gen &apos; imposta variabili generali (pubblicazione
+&apos;xray thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues()
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).String = _
+	thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(1).value &apos;Versione (template)(0)
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).String = _
+	Split (thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(2).value, &quot;.&quot;)(0) &apos;minorrelease
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).String = _
+	Split (thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(2).value, &quot;.&quot;)(1) &apos;subversion
+	
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,294).String = _
+	Split (thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(2).value, &quot;.&quot;)(0) &apos;minorrelease
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,294).String = _
+	Split (thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(2).value, &quot;.&quot;)(1) &apos;subversion
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,294).String = _
+	Split (thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(2).value, &quot;.&quot;)(2)
+End Sub
+
+sub Setta_Var_Gen_Default
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,291).value = 1 &apos; automatico per lo zoom in apertura
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,292).value = 81 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value = 0 

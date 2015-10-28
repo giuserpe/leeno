@@ -82,4 +82,5 @@
  <library:element library:name="Conversioni"/>
  <library:element library:name="ConversioneDaListiniEsterni"/>
  <library:element library:name="PY_bridge"/>
+ <library:element library:name="Module2"/>
 </library:library>

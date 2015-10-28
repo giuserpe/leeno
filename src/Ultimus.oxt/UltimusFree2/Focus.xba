@@ -46,21 +46,6 @@ Sub Sel_CONTABILITA() &apos; vai al Computo metrico
 	Visualizza_normale
 END SUB
 
-
-Sub Sel_Altre_Opz2() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
-
-print &quot;Focus.Sel_Altre_Opz2 - Ma non era disattivata?&quot;
-	dim osheet as object
-	dim oAreaR as object
-	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;) &apos;
-	If oSheet.isVisible = false then
- 		oSheet.isVisible = true
-	 end if
-	oAreaR = Osheet.getCellRangeByName (&quot;altre_opzioni_8&quot;) &apos; nome di area
-	Thiscomponent.currentcontroller.select(oAreaR)
-	
-&apos;Thiscomponent.GETcurrentcontroller(oAreaR)
-END SUB
 &apos;##############################################################
 
 Sub Sel_provared() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
@@ -165,47 +150,6 @@ END SUB
 
 
 &apos;##############################################################
-
-
-Sub Sel_print_Opz2() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
-print &quot;Focus.Sel_print_Opz2() - Ma non era disattivata?&quot;
-	dim osheet as object
-	dim oAreaR as object
-	dim oCell as object
-&apos;	ThisComponent.unlockControllers()
-	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;) 
-	If oSheet.isVisible = false then
- 		oSheet.isVisible = true
-	 end if
-	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
-	Thiscomponent.currentcontroller.select(oAreaR)
-	oCell = Osheet.GetCellByPosition(76 , 4)
-&apos;	ThisComponent.CurrentController.Select(oCell)
-END SUB
-&apos;##############################################################
-Sub Sel_print_Opz3() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
-
-print &quot;Focus.Sel_print_Opz3() - Ma non era disattivata?&quot;
-	dim osheet as object
-	dim oAreaR as object
-	dim oCell as object
-	Osheet = thisComponent.sheets.getbyname(&quot;S2&quot;) 
-
- oDocument = StarDesktop.getCurrentComponent
- oView = oDocument.getCurrentController
- 	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
-	Thiscomponent.currentController.select(oAreaR)
- &apos;Move to a specified cell
- &apos;oCell = oView.getActiveSheet.getCellByPosition(5,10)
- &apos;Move at the beginning of the selection
- ocell=odocument.getcurrentselection
-
- oRanges = oDocument.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)
- oView.Select(oRanges)
-
-END SUB
-
-&apos;##############################################################
 Sub Sel_Filtro() &apos; 
 	dim osheet as object
 	dim oAreaR as object
@@ -298,20 +242,6 @@ Chiudi_o_elimina_tabelle_inutili
 	ThisComponent.CurrentController.ZoomValue = 80
 END SUB
 
- &apos;##############################################################
-Sub Sel_Altre_Opz_3() &apos; porta la vista (la selezione) su &quot;Altre Opzioni&quot;
-print &quot;Focus.Sel_Altre_Opz_3 - Ma non era disattivata?&quot;
-	dim osheet as object
-	dim oAreaR as object
-&apos;	ThisComponent.unlockControllers()
-	Visualizza_normale
-	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;) 
-	If oSheet.isVisible = false then
- 		oSheet.isVisible = true
-	 end if
-	oAreaR = Osheet.getCellRangeByName (&quot;A1:A1&quot;)
-	Thiscomponent.currentcontroller.select(oAreaR)
-END SUB
 
 &apos;##############################################################
 Sub Sel_analisi() &apos; vai all&apos;analisi
@@ -679,87 +609,6 @@ dim osheet as object
 &apos;		Seleziona_Cella (sQualeCella)
 END SUB
 
-FUNCTION ZOOMMATA (iRowMax as long, iColMax as long) &apos; APPROSSIMA LO ZOOM AD UNA DETERMINATA ALTEZZA DI RIGA
- &apos; da cancellare
-
-&apos;	on error goto Error_handler
-print &quot;Focus.ZOOMMATA - Ma non era disattivata?&quot;	
-	oContr = ThisComponent.CurrentController
-	
-	oContr.setFirstVisibleColumn (0)&apos; work only from this position
-	oContr.setFirstVisibleRow(0 ) &apos; enough for my needs	(actually)
-	
-	iRow = oContr.getVisibleRange.EndRow
-	iZoom =oContr.ZoomValue
- 	 do While iRow &lt;&gt; iRowMax 
- 	 	if icount = 400 then
- 	 	print icount
- 	 		exit function
- 	 	end if
- 	 	if iRowMax - iRow = 0 then &apos;or iRowMax - iRow = 1 then
- 	&apos; 	print &quot;1&gt;&quot; &amp; irow &amp; &quot; - &quot; &amp; iRowMax
- 			goto Set_X
- 		end if
- 		if irow &lt; 1 or iRow &gt; 250 then
- &apos;		print &quot;2 &gt;&quot; &amp; irow
- 			goto Set_X
- 		end if
- 		if iRowMax &gt; iRow then
- 			iZval = -1
- 				else
- 			iZval = 1
- 		end if
- 		Select Case iZoom
- 			Case &lt; 20 
- 				goto Set_X
- 			Case &gt; 399 
- 				goto Set_X
- 		end select
- 		iZoom = iZoom + iZval
-		oContr.ZoomType=BYVALUE 
- 		oContr.ZoomValue=iZoom
- 		iRow = oContr.getVisibleRange.EndRow 
- 		iZoom =oContr.ZoomValue
- 		count = count+1
- 	loop
-	
- 	Set_X:
- 	
- 	&apos; Print &quot;&apos; controlla anche la larghezza &quot; &amp; irow &amp; &quot; - &quot; &amp; iRowMax
-	iCol = oContr.getVisibleRange.EndColumn
-&apos;	print icol
-	If iCol &lt; iColMax then
-	 	 do While iCol &lt;&gt; iColMax 	
- 			if iColMax - iCol = 0 then &apos;or iColMax - iCol = 1 then
- 		&apos;	print &quot;3 &quot; &amp; iColMax - iCol &amp; &quot; . &quot; &amp; iColMax &amp; &quot; . &quot; &amp; iCol
- 				exit FUNCTION
- 			end if
- 			if iCol &lt; 1 or icol &gt; 250 then
- 		&apos;	print &quot;4 &quot; &amp; icol
- 				exit FUNCTION
- 			end if
- 			if iColMax &gt; iCol then
- 				iZval = -1
- 					else
- 				iZval = 1
- 			end if
- 			iZoom = iZoom + iZval
- 			Select Case iZoom
- 				Case &lt; 20
- 					exit Function
- 				Case &gt; 399 
- 					exit Function
- 			end select
- 		
- 			oContr.ZoomType=BYVALUE 
- 			oContr.ZoomValue=iZoom
- 			iCol = oContr.getVisibleRange.EndColumn
-		loop
-	end if	
-	exit function
-	Error_handler:
-	exit function
-END FUNCTION
 
 SUB APPROSSIMA_ZOOM &apos;alla dimensione scritta in &quot;Variabili Generali&quot;
 If ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false and _

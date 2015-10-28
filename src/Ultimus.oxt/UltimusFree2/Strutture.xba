@@ -248,6 +248,10 @@ rem con riga bianca sopra
 		oSheet.GetCellbyPosition( 2, lRow+1).string=sTesto &apos;scrive titolo
 		oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;livello-1-sopra&quot;
 		lrow = lrow+1
+	Else
+		insRows (lrow, 1) &apos;inserisci riga
+		oSheet.GetCellbyPosition( 2, lRow).string=sTesto &apos;scrive titolo
+		oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = &quot;livello-1-sopra&quot;
 	EndIf 
 
 &apos;	If sTesto &lt;&gt; &quot;&quot; Then
@@ -916,7 +920,7 @@ Sub Togli_Struttura ()
 
 	&apos;--------------------------------------------------
 	oSheet = ThisComponent.currentController.activeSheet
-
+	lrow = range2cell
 	dim oCelle as object
 	oCelle=ThisComponent.CurrentSelection
 
@@ -935,10 +939,17 @@ Sub Togli_Struttura ()
 &apos;	Else
 		oSheet.clearOutline()		
 &apos;	end if
-	Viste_nuove(&quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)
-	set_larghezza_colonne
-	ThisComponent.CurrentController.Select(oCell)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+&apos;	Viste_nuove(&quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)
+&apos;	set_larghezza_colonne
+&apos;	ThisComponent.CurrentController.Select(oCell)
+&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+	On Error GoTo fine:
+		ThisComponent.CurrentController.setFirstVisibleRow(inizio_voce(lrow))
+	GoTo uscita:
+	fine:
+		ThisComponent.CurrentController.setFirstVisibleRow(lRow-3)
+	uscita:
+Adatta_h_riga_intera_tabella(oSheet.Name)
 end sub
 
 
@@ -1139,8 +1150,8 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) de
 
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 
-	oActiveCell1 = thisComponent.getCurrentSelection() &apos;oCell.string
-	ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
+	oCell = thisComponent.getCurrentSelection() &apos;oCell.string
+&apos;	ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
 	sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
 &apos;Print Trova_Attr_Sheet
 	Select Case Trova_Attr_Sheet
@@ -1148,18 +1159,39 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) de
 		Tronca_Altezza_Voci_EP
 	Case &quot;TIPO_ANALISI&quot;
 		Tronca_Altezza_Analisi
-	Case &quot;TIPO_COMPUTO&quot;&apos;, &quot;TIPO_CONTABILITA&quot; disattivata in contabilità
-		Tronca_Altezza_Voci_Computo
+	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;&apos; disattivata in contabilità
+		If abbreviata = 1 Then
+			Tronca_Altezza_Voci_Computo_OFF
+		Else
+			Tronca_Altezza_Voci_Computo_ON
+		EndIf
 	End Select
 	If ThisComponent.currentController.activeSheet.name = &quot;Listino&quot; Then	 		
 		Tronca_Altezza_Voci_Listino
 		exit sub
 	end If
-
+	thisComponent.currentController.Select(oCell)
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 end sub
 
-Global abbrevia as Integer
-Sub Tronca_Altezza_Voci_Computo &apos; (c) Giuseppe Vizziello 2015
+Function abbreviata
+	oSheet = ThisComponent.currentController.activeSheet
+	stile = &quot;Comp-Bianche in mezzo Descr&quot;
+	For i = 2 To 10	
+		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2 ,i))
+			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
+				abbreviata = 1
+				Exit For
+			Else
+				abbreviata = 0
+				Exit For
+			EndIf
+		EndIf
+	Next i
+End Function
+
+Sub Tronca_Altezza_Voci_Computo_ON &apos; (c) Giuseppe Vizziello 2015
 &apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO, VARIANTE e CONTABILITA
 &apos; verifico la compatibilità ed adatto
 &apos;chiudi_dialoghi &apos; chiude tutti i dialoghi
@@ -1202,19 +1234,19 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
 
 &apos; switch ON/OFF
-	For i = 2 To 10	
-		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
-				abbrevia = 1
-				Exit For
-			Else
-				abbrevia = 0
-				Exit For
-			EndIf
-		EndIf
-	Next i
+&apos;	For i = 2 To 10	
+&apos;		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+&apos;			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
+&apos;				abbrevia = 1
+&apos;				Exit For
+&apos;			Else
+&apos;				abbrevia = 0
+&apos;				Exit For
+&apos;			EndIf
+&apos;		EndIf
+&apos;	Next i
 	i = getLastUsedRow(oSheet)
-	If abbrevia = 0 Then 
+&apos;	If abbrevia = 0 Then
 		While i &gt; 2
 			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
 				sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
@@ -1226,7 +1258,90 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
 			i = i-1
 			Barra_Apri_Chiudi_5(i, 25)
 		Wend
-	Else
+&apos;	Else
+&apos;		While i &gt; 2
+&apos;			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+&apos;			sformula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
+&apos;				oSheet.GetCellByPosition(2 ,i).formula = sformula
+&apos;			EndIf
+&apos;			i = i-1
+&apos;			Barra_Apri_Chiudi_5(i, 25)
+&apos;		Wend
+&apos;	EndIf
+Adatta_h_riga_intera_tabella(oSheet.Name)
+&apos;chiudi_dialoghi
+		 	Barra_chiudi_sempre_4	
+&apos;	MsgBox (&quot;La visualizzazione delle descrizioni è stata cambiata!.&quot;, , &quot;AVVISO!&quot;)
+End Sub
+&apos;#########################################################################
+Sub Tronca_Altezza_Voci_Computo_OFF &apos; (c) Giuseppe Vizziello 2015
+&apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO, VARIANTE e CONTABILITA
+&apos; verifico la compatibilità ed adatto
+&apos;chiudi_dialoghi &apos; chiude tutti i dialoghi
+Barra_chiudi_sempre_4
+Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
+&apos;	oDialogScenari_A = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgAttesa) &apos; Inizializza il dialogo
+&apos;	oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+&apos;	if	oSheet.GetCellByPosition(7,336).value = 0 Then
+&apos;		oSheet.GetCellByPosition(6,336).String = &quot;Descrizioni abbreviate: primi caratteri della voce&quot;
+&apos;		oSheet.GetCellByPosition(6,336).CellStyle = &quot;Setvar b&quot;
+&apos;		oSheet.GetCellByPosition(7,336).value = 160
+&apos;		oSheet.GetCellByPosition(7,336).CellStyle = &quot;Setvar C&quot;
+&apos;		oSheet.GetCellByPosition(8,336).String = &quot;Quanti caratteri vuoi visualizzare partendo dall&apos;INIZIO della descrizione?&quot;
+&apos;		oSheet.GetCellRangeByPosition(8,336,20,336).CellStyle = &quot;Setvar D&quot;
+&apos;		oSheet.GetCellByPosition(6,337).String = &quot;Descrizioni abbreviate: ultimi caratteri della voce&quot;
+&apos;		oSheet.GetCellByPosition(6,337).CellStyle = &quot;Setvar b&quot;
+&apos;		oSheet.GetCellByPosition(7,337).value = 100
+&apos;		oSheet.GetCellByPosition(7,337).CellStyle = &quot;Setvar C&quot;
+&apos;		oSheet.GetCellByPosition(8,337).String = &quot;Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?&quot;
+&apos;		oSheet.GetCellRangeByPosition(8,337,20,337).CellStyle = &quot;Setvar D&quot;
+&apos;	EndIf
+&apos;	primi = oSheet.GetCellByPosition(7,336).value
+&apos;	ultimi = oSheet.GetCellByPosition(7,337).value
+
+	oSheet = ThisComponent.currentController.activeSheet
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		stile = &quot;Comp-Bianche in mezzo Descr&quot;
+	Case &quot;CONTABILITA&quot;
+		If ThisComponent.NamedRanges.hasByName(&quot;#LIB#1&quot;) Then
+			MsgBox (&quot;Il cambio della modalità di visualizzazione&quot; &amp; CHR$(13) &amp; _
+					&quot;delle descrizioni è possibile solo&quot; &amp; CHR$(13) &amp; _
+					&quot;se NON è presente ulcun atto contabile registrato!&quot;, 16, &quot;ATTENZIONE!&quot;)
+			Exit Sub
+		EndIf
+		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;
+	End Select
+
+Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
+
+&apos; switch ON/OFF
+&apos;	For i = 2 To 10	
+&apos;		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+&apos;			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
+&apos;				abbrevia = 1
+&apos;				Exit For
+&apos;			Else
+&apos;				abbrevia = 0
+&apos;				Exit For
+&apos;			EndIf
+&apos;		EndIf
+&apos;	Next i
+	i = getLastUsedRow(oSheet)
+&apos;	If abbrevia = 0 Then
+&apos;		While i &gt; 2
+&apos;			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
+&apos;				sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
+&apos;					&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; _
+&apos;					&quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&amp; primi &amp;&quot;);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
+&apos;					&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; ultimi &amp; &quot;))&quot;
+&apos;				oSheet.GetCellByPosition(2 ,i).formula = sformula
+&apos;			EndIf
+&apos;			i = i-1
+&apos;			Barra_Apri_Chiudi_5(i, 25)
+&apos;		Wend
+&apos;	Else
 		While i &gt; 2
 			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
 			sformula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
@@ -1235,44 +1350,45 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
 			i = i-1
 			Barra_Apri_Chiudi_5(i, 25)
 		Wend
-	EndIf
+&apos;	EndIf
 Adatta_h_riga_intera_tabella(oSheet.Name)
 &apos;chiudi_dialoghi
 		 	Barra_chiudi_sempre_4	
-	MsgBox (&quot;La visualizzazione delle descrizioni è stata cambiata!.&quot;, , &quot;AVVISO!&quot;)
+&apos;	MsgBox (&quot;La visualizzazione delle descrizioni è stata cambiata!.&quot;, , &quot;AVVISO!&quot;)
 End Sub
-
 &apos; ########################################################################
 sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle descrizioni per visualizzare più righe/voci
  &apos;	msgbox &quot;Spiacente ma funziona solo sulla tab &apos;Elenco Prezzi&apos;&quot;&amp; CHR$(10)_
  	&apos;		&amp; &quot; e NON sui suoi duplicati!&quot;				
 	oSheet = ThisComponent.currentController.activeSheet										
 	oRange = thiscomponent.NamedRanges.elenco_prezzi.ReferredCells&apos;
+	with oRange.RangeAddress
+		lrowStart= .startRow+1
+		lrowEnd= .Endrow-1
+	end with
 	&apos;---------------
 	lrow = range2cell
-	if lrow = -1 Then Exit Sub 
 	if lrow = 0 Then lrow = 3 &apos; altrimenti rileva la riga di intestazione che è sempre uguale (e non commuta)
 
 	if oSheet.GetCellByPosition(1 ,lrow).Rows.OptimalHeight = false then
 			&apos; se la riga corrente è non &quot;adattata&quot; le allunga
 				oRange.Rows.OptimalHeight = true
-			&apos;	ThisComponent.CurrentController.Select(oActiveCell1)
-				&apos;exit sub
 		 else
 			If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).string = &quot;&quot; then
-						oRange.Rows.Height = 1200
+					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).string = &quot;&quot; Then
+						oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = 1200
+
 					end if
-					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value &lt;&gt; &quot;&quot; then
-						oRange.rows.Height =_
+					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value &lt;&gt; &quot;&quot; Then
+						oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height =_
 						ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value * 1000
 					end if	
 				else
-					oRange.Rows.Height = 1300
+					oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = 1300
 			end if
 	endif 	
-	ThisComponent.CurrentController.Select(oActiveCell1) 
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+&apos;	ThisComponent.CurrentController.Select(oActiveCell1) 
+&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 end sub
 

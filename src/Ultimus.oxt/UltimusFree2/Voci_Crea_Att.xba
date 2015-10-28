@@ -18,19 +18,13 @@ Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	Select Case thisComponent.currentcontroller.activesheet.Name
 	Case &quot;COMPUTO&quot; , &quot;VARIANTE&quot;
-&apos;		if SE_contabilita = 0 And nome_sheet &lt;&gt; &quot;CONTABILITA&quot; Then Exit Sub
+If se_contabilita = 1 Then Exit Sub
 	&apos;	ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_computo&quot;)
  		Nuova_Voce_Computo_Att
  	Case &quot;Analisi di Prezzo&quot;
-&apos; 		if SE_contabilita = 0 And nome_sheet &lt;&gt; &quot;CONTABILITA&quot; Then Exit Sub
 		NuovaAnalisi_Att
  	Case &quot;CONTABILITA&quot;
 		nuova_voce_contab
-		&apos;	msgbox &quot;L&apos;inserimento di una Nuova Voce non è prevista su questa tabella!&quot; &amp; CHR$(10)_
- 		&apos;		&amp; &quot;Ma se proprio vuoi puoi facilmente copiare una voce analoga e poi modificarla a mano&quot; &amp; CHR$(10)_
- 		&apos;		&amp; &quot; - Seleziona le righe della Voce da copiare&quot; &amp; CHR$(10)_
- 		&apos;		&amp; &quot; - Ctrl Shift C&quot; &amp; CHR$(10)_
- 		&apos;		&amp; &quot; - Clicca per inserirla...&quot;
  	Case &quot;Elenco Prezzi&quot;
  	Voce_EP_in_bianco
 	End Select
@@ -300,27 +294,26 @@ oCtrlModel.Enabled = True
 End Sub
 
 
-FUNCTION SE_contabilita
+Function SE_contabilita
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 Then
+		se_contabilita = 0
+		Exit Function
+	Else
+		se_contabilita = 1
+	EndIf
 rem ----------------------------------------------------------------------
 &apos;L&apos;inibizione dell&apos;inserimento di voci in computo, in presenza di misure nel libretto, è legata all&apos;esistenza di #Lib#1
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value =1 Then
-&apos;	if	ThisComponent.NamedRanges.hasByName(&quot;#Lib#1&quot;) Then
-&apos;Print SE_contabilita
-&apos;	If SE_contabilita = 1 Then 
-		if msgbox ( &quot;#1 Risulta emesso un atto contabile. Il computo è chiuso e completato!&quot; &amp; CHR$(10)_
-			&amp; &quot;Si sta lavorando sulla contabilità, e per questo mi pare una richiesta strana...&quot;&amp; CHR$(10)_
-			&amp; &quot;Se Prosegui vai ad alterare i dati del Computo!&quot;&amp; CHR$(10)_
-			&amp; &quot; PROSEGUI comunque? &quot;, 32+4,&quot;&quot;&amp; CHR$(10)) = 7 then
-			SE_contabilita = 0
-			exit function
-		Else
-		 	SE_contabilita = 1
-		 	Exit Function 
-		EndIf
-	Else
-		&apos;	SE_contabilita = 1
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 Then
+		test = msgbox  (&quot;#1 Risulta presente il foglio CONTABILITA.&quot; &amp; CHR$(10)_
+			&amp; &quot;Se si sta lavorando sulla contabilità, il computo dovrebbe essere chiuso e completato!&quot;&amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Se prosegui vai ad alterare il computo.&quot;&amp; CHR$(10)_
+			&amp; &quot;Vuoi procedere?&quot;, 32+4,&quot;&quot;&amp; CHR$(10))
+		If test = 6 Then
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0
+			se_contabilita = 0
+		EndIf  
 	EndIf
-end FUNCTION
+End Function
 
 SUB tante_voci_insieme
 	dim quante as long
@@ -341,7 +334,7 @@ End Sub
 Sub Nuova_Voce_Computo_Att
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then &apos;gestione errori
 		On Error GoTo Errore
-	end if
+	EndIf
 	dim lrow as long
 	dim lrowV as long
 	dim xA as string
@@ -462,6 +455,15 @@ rem ----------------------------------------------------------------------
 	EndIf
  	thisComponent.currentController.Select(oSheet.getCellByPosition(1, lrow+1)) &apos;unselect ranges 	
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+&apos;#########################################################################
+&apos;raggruppa righi di misura
+	Dim oCRA As New com.sun.star.table.CellRangeAddress
+	oCRA.Sheet = oSheet.RangeAddress.sheet &apos; index della sheet
+	oCRA.StartRow = lrow+2 &apos;inizio_gruppo
+	oCRA.EndRow = lrow+2
+	oSheet.group(oCRA,1)
+&apos;#########################################################################
+
 	&apos; toglie la selezione
  	exit sub
 errore:

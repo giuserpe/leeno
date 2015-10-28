@@ -136,31 +136,6 @@ Sub Uniforma_Formati_Computo_sing_voce
 	ThisComponent.CurrentController.Select(oCell)
 	Clessid_lock_End
 end sub
-&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Sub Uniforma_Formati_ANALISI_sing_voce
- 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then
-		 
-		exit sub
-	end if
-	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
-
- 	VarScelta = InputBox(&quot;Sovrascrivo colori e altre formattazioni forzate applicate localmente?&quot;&amp; CHR$(10)_
- 	 &amp; &quot; 1 per mantenere --- 0 per sovrascrivere&quot; , &quot;SCEGLI 1 PER MANTENERE I FORMATI FORZATI - 0 PER SOVRASCRIVE CON GLI STILI&quot;, &quot;1&quot;)
-	If VarScelta = &quot;&quot; then
-			exit sub
-	end if	
-&apos;	VarScelta= CDbl(VarScelta)
-
-&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	lrow = Riformatta_Voce_Analisi(lrow, VarScelta)
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	ThisComponent.CurrentController.Select(oCell)
-&apos;	Clessid_lock_End
-end sub
-
 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 &apos;_______________________________________________________________________________________+++++++++++++++++++++++++++

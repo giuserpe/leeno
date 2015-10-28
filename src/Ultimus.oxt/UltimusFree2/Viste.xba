@@ -22,6 +22,10 @@ Dim oDialogScenari_A As Object &apos; Questa variabile va dichiarata perchè vie
 Dim oDialogScenari_EP As Object
 Dim oDialogScenari_AN As Object
 
+Dim ComVar As Boolean
+Dim ComCon As Boolean
+Dim VarCon As Boolean
+
 Sub Scelta_Viste() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
 	osheet = thisComponent.CurrentController.ActiveSheet
@@ -52,533 +56,173 @@ esegui:
 	Select case sAttributo
  		case &quot;TIPO_COMPUTO&quot; 
 			oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A) &apos; Inizializza il dialogo
-			oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
+&apos;#########################################################################
+&apos;INIT CONTROLLI
+			If oSheet.getColumns.getByIndex(5).isVisible = True Then oDialogScenari_A.getControl(&quot;CBMis&quot;).State = 1
+			If oSheet.getColumns.getByIndex(17).isVisible = True Then oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 1
+			If oSheet.getColumns.getByIndex(29).isVisible = True Then oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 1
+			If oSheet.getColumns.getByIndex(31).isVisible = True Then oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 1
+			If oSheet.getColumns.getByIndex(32).isVisible = True Then oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 1
+			If oSheet.getColumns.getByIndex(38).isVisible = True Then oDialogScenari_A.getControl(&quot;CBFig&quot;).State = 1
+&apos;			If abbreviata = 1 Then oDialogScenari_A.getControl(&quot;CBDesc&quot;).State = 1
+
+&apos;			oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
+		Select Case oDialogScenari_A.Execute()
+		Case 1
+		Case 0
+			Exit Sub
+		End Select
+&apos;#########################################################################
+			OBTerra = oDialogScenari_A.getControl(&quot;OBTerra&quot;).State
+			If OBTerra = True Then
+				Computo_Normale_terra_terra
+				oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 0
+				oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0
+				oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 0
+				oDialogScenari_A.getControl(&quot;CBFig&quot;).State = 0
+				oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0
+			EndIf
+
+			If	oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(29).isVisible = false
+				oSheet.getColumns.getByIndex(30).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(29).isVisible = True
+				oSheet.getColumns.getByIndex(30).isVisible = True
+			EndIf
+			If	oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(31).isVisible = false
+				oSheet.getColumns.getByIndex(32).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(31).isVisible = True
+				oSheet.getColumns.getByIndex(32).isVisible = True
+			EndIf
+			
+			If	oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(33).isVisible = false
+				oSheet.getColumns.getByIndex(34).isVisible = false
+				oSheet.getColumns.getByIndex(35).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(33).isVisible = True
+				oSheet.getColumns.getByIndex(34).isVisible = True
+				oSheet.getColumns.getByIndex(35).isVisible = True
+			EndIf
+			
+			If	oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(17).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(17).isVisible = True
+			EndIf
+			If	oDialogScenari_A.getControl(&quot;CBFig&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(38).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(38).isVisible = True
+			EndIf
+			If	oDialogScenari_A.getControl(&quot;CBMis&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(5).isVisible = false
+				oSheet.getColumns.getByIndex(6).isVisible = false
+				oSheet.getColumns.getByIndex(7).isVisible = false
+				oSheet.getColumns.getByIndex(8).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(5).isVisible = True
+				oSheet.getColumns.getByIndex(6).isVisible = True
+				oSheet.getColumns.getByIndex(7).isVisible = True
+				oSheet.getColumns.getByIndex(8).isVisible = True
+			EndIf
+			&apos;If	oDialogScenari_A.getControl(&quot;CBDesc&quot;).State = 1 Then &apos;Descrizione breve
+			&apos;	Tronca_Altezza_Voci_Computo_ON
+			&apos;Else
+			&apos;	Tronca_Altezza_Voci_Computo_OFF
+			&apos;EndIf
+			
+			If	oDialogScenari_A.getControl(&quot;CBDet&quot;).State = 0 Then
+				Formula_magica_off
+			Else
+				Formula_magica_aggiorna
+			endif
+&apos;#########################################################################
  		case &quot;TIPO_CONTABILITA&quot;
 			oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.Dialogviste_N) &apos; Inizializza il dialogo
-			oDialogScenari_2.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 	
+			 &apos; Esegue il dialogo, cioè appare sullo schermo
+		Select Case oDialogScenari_2.Execute()
+		Case 1
+		Case 0
+			Exit Sub
+		End Select
+	
 		case &quot;TIPO_ELENCOP&quot;,&quot;TIPO_EP&quot;
 			oDialogScenari_EP = CreateUnoDialog(DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
-			oDialogScenari_EP.getControl(&quot;Sommario_Computo&quot;).State = 1
-			oDialogScenari_EP.getControl(&quot;Sommario_Contabilità&quot;).State = 1
-			oDialogScenari_EP.getControl(&quot;Sommario_Variante&quot;).State = 1
-			Tronca_Altezza_Voci_EP
-			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
-	 		sumcomp = oDialogScenari_EP.getControl(&quot;Sommario Computo&quot;).State
+&apos;#########################################################################
+&apos;INIT CONTROLLI
+			If oSheet.getColumns.getByIndex(3).isVisible = True Then oDialogScenari_EP.getControl(&quot;CBSic&quot;).State = 1
+			If oSheet.getColumns.getByIndex(5).isVisible = True Then oDialogScenari_EP.getControl(&quot;CBMdo&quot;).State = 1
+			If oSheet.GetCellByPosition(1 ,3).Rows.OptimalHeight = false Then oDialogScenari_EP.getControl(&quot;CBDesc&quot;).State = 1
+			If oSheet.getColumns.getByIndex(7).isVisible = True Then oDialogScenari_EP.getControl(&quot;CBOrig&quot;).State = 1
+			If oSheet.getColumns.getByIndex(8).isVisible = True Then oDialogScenari_EP.getControl(&quot;CBUsa&quot;).State = 1
+
+			 &apos; Esegue il dialogo, cioè appare sullo schermo
+		Select Case oDialogScenari_EP.Execute()
+		Case 1
+		Case 0
+			Exit Sub
+		End Select
+&apos;#########################################################################
+&apos; esegui azioni
+	 		If	oDialogScenari_EP.getControl(&quot;CBSic&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(3).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(3).isVisible = True
+			EndIf
+			
+			If	oDialogScenari_EP.getControl(&quot;CBMdo&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(5).isVisible = false
+				oSheet.getColumns.getByIndex(6).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(5).isVisible = True
+				oSheet.getColumns.getByIndex(6).isVisible = True
+			EndIf
+			
+			If	oDialogScenari_EP.getControl(&quot;CBDesc&quot;).State = 1 And _
+				oSheet.GetCellByPosition(1 ,3).Rows.OptimalHeight = True Then
+				Tronca_altezza_voci_ep
+			Else
+				If oDialogScenari_EP.getControl(&quot;CBDesc&quot;).State = 0 Then Adatta_h_riga_intera_tabella(oSheet.Name)
+			EndIf
+	 		
+	 		If	oDialogScenari_EP.getControl(&quot;CBOrig&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(7).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(7).isVisible = True
+			EndIf
+	 		
+	 		If	oDialogScenari_EP.getControl(&quot;CBUsa&quot;).State = 0 Then &apos;sicurezza
+				oSheet.getColumns.getByIndex(8).isVisible = false
+				oSheet.getColumns.getByIndex(9).isVisible = false
+			Else
+				oSheet.getColumns.getByIndex(8).isVisible = True
+				oSheet.getColumns.getByIndex(9).isVisible = True
+			EndIf
+	 		
+	 		ComVar = oDialogScenari_EP.getControl(&quot;ComVar&quot;).State
+	 		ComCon = oDialogScenari_EP.getControl(&quot;ComCon&quot;).State
+	 		VarCon = oDialogScenari_EP.getControl(&quot;VarCon&quot;).State
+	 			 		
+	 		If  VarCon Or ComCon Or ComVar Then Rifa_AA_BB_Computo
 	 		
 		case &quot;TIPO_ANALISI&quot;
 			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
 			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
+		Select Case oDialogScenari_AN.Execute()
+		Case 1
+		Case 0
+			Exit Sub
+		End Select
  	end select
 
 END SUB
 
 
-Sub Scelta_Viste____() &apos;nuova versione universale
-					&apos; e sopratutto contestuale
-	sAttributo = Trova_Attr_Sheet
-	&apos;print sAttributo
- If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
- 	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; and _
- 	sAttributo &lt;&gt; &quot;TIPO_ANALISI&quot; and _
- 	sAttributo &lt;&gt; &quot;TFILTROTMP&quot; and _
- 	sAttributo &lt;&gt; &quot;TIPO_ELENCOP&quot; Then
- 	msgbox &quot;1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
-		 			&amp; &quot;&quot;
-		 	exit sub
- 	end if &apos;
-
- 	&apos; verica e caricamento prob. ridondanti (lo esegue in apertura del doc)
- 	If NOT DialogLibraries.isLibraryLoaded(&quot;UltimusFree2&quot;) Then &apos; dovrebbe essere ridondante
- 	 DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-	End If 
-
-	Select case sAttributo
- 		case &quot;TIPO_COMPUTO&quot;
-	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
- 			if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 or _
- 				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1	then &apos; carica la dialog appropriata
-					oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A ) &apos; Inizializza il dialogo
-					oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
- 				else
- 					oDialogScenari = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste ) &apos; Inizializza il dialogo
-					oDialogScenari.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
-			end if
-
- 		case &quot;TIPO_CONTABILITA&quot;
-	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
-			oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.Dialogviste_N) &apos; Inizializza il dialogo
-			oDialogScenari_2.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 	
-			
-		case &quot;TIPO_ELENCOP&quot;
-	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
-			oDialogScenari_EP = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
-			oDialogScenari_EP.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
-
-		case &quot;TIPO_ANALISI&quot;
-	 	&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
-			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
-			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
-
- 	end select
-
-END SUB
-
-
-
-Sub Scelta_____Viste()
-	sAttributo = Trova_Attr_Sheet
- If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; Then
- 	msgbox &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
-		 			&amp; &quot;Sei certo di essere su una tabella di computo?&quot;
-		 	exit sub
- 	end if &apos;
- 	if thisComponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot;then 
- 	msgbox &quot;questa opzione è disponibile solo sulla tab COMPUTO!!&quot;&amp; CHR$(10)_
-		 			&amp; &quot; Annullo!!&quot;
-		 	exit sub
- 	end if &apos;
-	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)&apos; &quot;Standard&quot; )
-
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 	then
-		oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A ) &apos; Inizializza il dialogo
-		oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
-	 else	
-		oDialogScenari = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste ) &apos; Inizializza il dialogo
-		oDialogScenari.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
-	end if
-END SUB
-
-sub Importi_Computo_su_Computo
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
-	If oSheet.getColumns().getByName(&quot;S&quot;).isVisible = false then
-			oSheet.getColumns().getByName(&quot;S&quot;).isVisible = TRUE 
-	 else	 
-			oSheet.getColumns().getByName(&quot;S&quot;).isVisible = false 
-	end if
-end sub
-Function Scenari () &apos; in realtà sono solo visualizzazioni
-&apos; cioè colonne nascote o mostrate a seconda delle diverse configurazionmi richieste
-	Dim nome_sheet as string
-	
-	nome_sheet = thisComponent.currentcontroller.activesheet.name
-	sAttributo = Trova_Attr_Sheet &apos;brigante
-	If sAttributo = &quot;TIPO_COMPUTO&quot; or _
-		sAttributo = &quot;TIPO_CONTABILITA&quot; Then
-		Scenari = &quot;si&quot;
-	Else
-		Scenari = &quot;no&quot;
-		Exit Function
-&apos;		Print &quot;questa opzione non è disponibile su questa tabella!&quot;&amp; CHR$(10)_
-&apos;		&amp; &quot;Sei certo di essere su una tabella di computo?&quot;
-	end if &apos;
-End Function
- 
-
-
-
-
-
-
-Sub Sommari_TUTTI 
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	oSheetD = ThisComponent.currentController.activeSheet
-	ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(1 , 1 ))
-
-	oRange = oSheetD.getCellRangeByposition(iColA,0,iColZ,0)
-
-	oRange.Columns.IsVisible=true
-	oRange = oSheetD.getCellRangeByposition(19,0,43,0)
-&apos;	ThisComponent.CurrentController.Select(oRange)
-&apos;	print
-	oRange.Columns.IsVisible=False
-	oRange = oSheetD.getCellRangeByposition(44,0,250,0,)
-&apos;	ThisComponent.CurrentController.Select(oRange)
-&apos;	print
-	oRange.Columns.IsVisible=true
-&apos;	ThisComponent.CurrentController.setFirstVisibleColumn (iColA)
-end sub
-
-Sub Sommario_da_dialog
-	Sommario (&quot;&quot; , &quot;&quot;)
-end sub
-
-Sub Sommario_specifico &apos; sul computo
-
-	&apos;Sub Sommario_specifico(optional numsal as integer) &apos; chissà perché questa non funziona...
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	&apos;se si esegue dalla Contabilità va a lavorare sulla tab CONTABILITA
-	if thisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-			oSheetD	 = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-		else
-			oSheetD = ThisComponent.currentController.activeSheet
-	end if
-	ThisComponent.CurrentController.Select(oSheetD)
-	&apos;oSheetD = ThisComponent.currentController.activeSheet
-	sSALnum = InputBox (&quot;Inserisci il numero di SAL da visualizzare! &quot;,_
-			 &quot;SAL Numero ??&quot;, &quot;&quot;)
-	if sSALnum = &quot;&quot; then
-			&apos; toglie la selezione 
-			thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) 
-			exit Sub
-	end if
-
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	iColA = 44
-	iColZ = getLastUsedCol(oSheetD)
-	&apos;print iColz
-	if IColZ-1 &lt;= 45 then 
-		msgbox &quot;Non mi risulta nessun Sommario da visualizzare&quot; 
-		exit sub
-	end if
-	
-	for i = 45 to iColZ
-	&apos;		ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(i , 1 ))
-	&apos;		print oSheetD.GetCellByPosition( i-2, 1 ).string
-		if oSheetD.GetCellByPosition( i, 0 ).CellStyle = &quot;comp Int_colonna_Imp&quot; And _
-			oSheetD.GetCellByPosition( i-2, 1 ).string = sSALnum then
-			iColA = i-1 &apos;accidenti a questi spostamenti... mi taglierei le dita
-			exit for
-		end if
-	&apos;	print i &amp; &quot; &quot; &amp; iColZ
-		if i = iColZ-1 then
-		 	 Sommari_TUTTI 
-		 msgbox &quot;Non mi risulta sia stato Creato un Sommario per il SAL &quot; &amp; sSALnum &amp; CHR$(10)_
-		 			&amp; &quot; Verifica di aver realmente Chiuso il SAL &quot; &amp; sSALnum &amp; CHR$(10)_
-		 			&amp; &quot; e di averlo registrato/aggiornato... !&quot; 
-		 	 exit sub
-		end if
-	next
-		
-&apos;print iColA
-	&apos;Sommario (iColA-1,iColA+4) &apos;per vedere anche la Sicurezza
-	Sommario (iColA-1,iColA+3)
-end sub
-
-
-Sub Sommario (optional iColA as long, optional iColZ as long) &apos;TUTTI i sommari
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-&apos;	print icolA
-&apos;	print icolZ
-	
-	oSheetD = ThisComponent.currentController.activeSheet
-	&apos;	xray iColA
-	&apos;print &quot;vartype = &quot; &amp; Vartype(iColA)
-	&apos;exit sub
-	&apos;	if Vartype(iColA)=10 then
-	&apos;	if IsMissing(iColA) or iColA = 0 then
-	if isNull (iColA) or iColA = 0 then
-		iColA = 44
-		iColZ = getLastUsedCol(oSheetD)
-	end if
-
-	Mostra_tutto
-	Computo_Normale_terra_terra
-	Det_quantita_toggle_off
-
-	ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(1 , 1 ))
-
-	
-	oRange = oSheetD.getCellRangeByposition(19,0,43,0)
-	oRange.Columns.IsVisible=False
-
-	if iColz-1 &gt;= 44 then
-		oRange = oSheetD.getCellRangeByposition(44,0,iColZ,0,)
-		oRange.Columns.IsVisible=False
-		&apos;	end if
-	
-		oRange = oSheetD.getCellRangeByposition(iColA,0,iColZ,0)
-		oRange.Columns.IsVisible=true
-	end if
-&apos;	print &quot;aaa&quot;
-&apos;	if iColA-1 &gt;= 44 then
-&apos;		oRange = oSheetD.getCellRangeByposition(44,0,iColA-1,0,)
-&apos;		oRange.Columns.IsVisible=False
-&apos;	end if
-	for i = 45 to iColZ
-&apos;			ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(i , 1 ))
-&apos;			print oSheetD.GetCellByPosition( i, 0 ).CellStyle
-
-		if oSheetD.GetCellByPosition( i, 0 ).CellStyle = &quot;comp Int_colonna_Imp&quot; then
-			&apos;oSheetD.getCellRangeByposition(i,1,i,1).Columns.IsVisible=true
-			oSheetD.getCellRangeByposition(i-2,1,i-2,1).Columns.IsVisible=true
-&apos;		ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(i , 1 ))
-&apos;		print &quot;fatto&quot;
-		end if
-	next
-	&apos;exit sub
-	iUlt=getLastUsedCol(oSheetD)
-&apos;	print iColZ+1
-&apos;	print iUlt
-	&apos;print oSheetD.getCellRangeByposition(iColZ+1, 0, iUlt, 0)
-
-	if iColZ+1 &lt; iUlt then 
-		oSheetD.getCellRangeByposition(iColZ+1,0,iUlt,0).Columns.IsVisible=False
-	end if
-	ThisComponent.CurrentController.setFirstVisibleColumn (iColA)
-&apos;	iColA = &quot;&quot;
-END SUB
-
-Sub Sommario___ (Optional iColA as long, iColZ as long) &apos;nuova in prova
-	oSheetD = ThisComponent.currentController.activeSheet
-	ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(1 , 1 ))
-
-	oRange = oSheetD.getCellRangeByposition(iColA,0,iColZ,0)
-	oRange.Columns.IsVisible=true
-	
-	oRange = oSheetD.getCellRangeByposition(19,0,43,0)
-&apos;	ThisComponent.CurrentController.Select(oRange)
-&apos;	print
-	oRange.Columns.IsVisible=False
-&apos;	print &quot;44, 0, &quot; &amp; iColA-1 &amp; &quot;, 0)&quot;
-	
-	if iColA-1 &gt;= 44 then
-		oRange = oSheetD.getCellRangeByposition(44,0,iColA-1,0,)
-		oRange.Columns.IsVisible=False
-	end if
-	ThisComponent.CurrentController.setFirstVisibleColumn (iColA)
-END SUB
-
 &apos;----------------------------------------------------------------
-sub SAL_1_toggle &apos; accendi spegni 
-	dim sScelta as string
-
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;M&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;m&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;w&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSheet.getColumns().getByName(&quot;AL&quot;).isVisible = TRUE 
-		&apos;	oSpalte1 = oSheet.getColumns().getByName(&quot;AD&quot;) 
-		&apos;	oSpalte1.isVisible =TRUE 
-			oSpalte2 = oSheet.getColumns().getByName(&quot;AC&quot;) 
-			oSpalte2.isVisible = TRUE 
-		 else	 		
-			oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;m&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;w&quot;) 
-			oSpalte2.isVisible = false
-			oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = false
-			oSheet.getColumns().getByName(&quot;AL&quot;).isVisible = false
-		&apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;AC&quot;) 
-		&apos;	oSpalte2.isVisible = false			
-	 	end if
-	 ColRid_on	
-END SUB
-
-&apos;----------------------------------------------------------------
-sub SAL_2_toggle &apos; accendi spegni 
-	dim sScelta as string
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;n&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;n&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;x&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = TRUE 
-			oSheet.getColumns().getByName(&quot;AL&quot;).isVisible = TRUE 			
-		 else	 		
-		&apos;	oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;n&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;x&quot;) 
-			oSpalte2.isVisible = false
-			oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = false
-			oSheet.getColumns().getByName(&quot;AL&quot;).isVisible = false
-	 	end if
-	 ColRid_on
-END SUB
-
-sub SAL_3_toggle &apos; accendi spegni 
-	dim sScelta as string
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;o&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;o&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;Y&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = TRUE 
-			oSheet.getColumns().getByName(&quot;AL&quot;).isVisible = TRUE 
-		 else	 		
-		&apos;	oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;O&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;Y&quot;) 
-			oSpalte2.isVisible = false
-	 	end if
-	 ColRid_on
-END SUB
-
-sub SAL_4_toggle &apos; accendi spegni 
-	dim sScelta as string
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;P&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;P&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;Z&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;AC&quot;) 
-			oSpalte1.isVisible =TRUE 
-	
-		 else	 		
-			oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;P&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;Z&quot;) 
-			oSpalte2.isVisible = false
-	 	end if
-	 ColRid_on
-END SUB
-
-sub SAL_5_toggle &apos; accendi spegni 
-	dim sScelta as string
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;Q&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;Q&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;AA&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;Ac&quot;) 
-			oSpalte1.isVisible =TRUE 
-
-		 else	 		
-			oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;Q&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;AA&quot;) 
-			oSpalte2.isVisible = false
-		&apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;AD&quot;) 
-		&apos;	oSpalte2.isVisible = false	
-	 	end if
-	 ColRid_on
-END SUB
-
-sub SAL_6_toggle &apos; accendi spegni 
-	dim sScelta as string
-
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;R&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;R&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;AB&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;Ac&quot;) 
-			oSpalte1.isVisible =TRUE 
-		 else	 		
-			oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;R&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;AB&quot;) 
-			oSpalte2.isVisible = false
-	 	end if
-	 	ColRid_on
-END SUB
-
-sub SAL_fINALE_toggle &apos; accendi spegni 
-	dim sScelta as string
-
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;R&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;R&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;AB&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;AD&quot;) 
-			oSpalte1.isVisible =TRUE 
-		 else	 		
-			oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;R&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;AB&quot;) 
-			oSpalte2.isVisible = false
-	 	end if
-	 	ColRid_on
-END SUB
-
 sub TAG_toggle &apos; accendi spegni 
 	dim sScelta as string
 	&apos;_____________________
@@ -619,49 +263,6 @@ sub TAG_toggle &apos; accendi spegni
 			oSpalte1 = oSheet.getColumns().getByName(&quot;AJ&quot;) 
 		&apos;	oSpalte1.isVisible = false	
 	 	end if
-	 &apos;	ColRid_on_off
-END SUB
-
-sub Perizia_toggle &apos; accendi spegni 
-	dim sScelta as string
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-	oSpalte2 = oSheet.getColumns().getByName(&quot;K&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;K&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte2 = oSheet.getColumns().getByName(&quot;T&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;U&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;V&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;U&quot;) 
-			oSpalte1.isVisible =TRUE 
-		&apos;	oSpalte1 = oSheet.getColumns().getByName(&quot;w&quot;) 
-		&apos;	oSpalte1.isVisible =TRUE 
-		 else
-			oSpalte2 = oSheet.getColumns().getByName(&quot;K&quot;) 
-			oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;T&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;U&quot;) 
-			oSpalte2.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;V&quot;) 
-			oSpalte2.isVisible = false	
-			oSpalte2 = oSheet.getColumns().getByName(&quot;U&quot;) 
-			oSpalte2.isVisible = false	
-		&apos;	oSpalte2 = oSheet.getColumns().getByName(&quot;W&quot;) 
-		&apos;	oSpalte2.isVisible = false	
-	 	end if
 END SUB
 
 &apos;----------------------------------------------------------------
@@ -685,7 +286,7 @@ sub Col_Cap_on_off &apos; spegni dettagli quantità
 	
 	oSheet = ThisComponent.currentController.activeSheet
 	oRange = oSheet.getCellRangeByposition(39,0,41,0)
-	oRange_man = oSheet.getCellRangeByposition(29,0,30,0)
+	oRange_man = oSheet.getCellRangeByposition(31, 0, 32, 0)
 	if oRange.Columns.IsVisible=False Then
 			oRange.Columns.IsVisible=true
 			if oRange_man.Columns.IsVisible=False Then
@@ -735,7 +336,6 @@ sub Det_quantita_toggle &apos; accendi spegni dettagli quantità
 			oSpalte1 = oSheet.getColumns().getByName(&quot;I&quot;) 
 			oSpalte1.isVisible = false 
 	 	end if
-	 	ColRid_on_off
 END SUB
 
 
@@ -779,54 +379,8 @@ sub Incidenza_manod_toggle &apos; accendi spegni incidenza manodopera su COMPUTO
 			oSheet.getColumns().getByName(&quot;AP&quot;).isVisible = false 
 	
 	 	end if
-	 	ColRid_on_off
 END SUB
 
-
-sub Libretto_Misure &apos; accendi spegni la col del REgistro di contabilità sul computo (non sul registro)
-					&apos; forse obsoleta
-	dim sScelta as string
-	print &quot;questa???&quot;
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	oPos = ThisComponent.getCurrentSelection()	
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit sub
-	end if
-			oSelections = ThisComponent.getCurrentSelection()
-			oSpalte2 = oSheet.getColumns().getByName(&quot;AM&quot;) 
-&apos;xray oSpalte2.isVisible
-		If oSpalte2.isVisible = false then
-	&apos;		oSpalte2 = oSheet.getColumns().getByName(&quot;AL&quot;) 
-	&apos;		oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;AM&quot;) 
-			oSpalte1.isVisible =TRUE 
-			lcol = 38
-		 else	 		
-			oSpalte2.isVisible = false 
-		&apos;	oSpalte1 = oSheet.getColumns().getByName(&quot;AL&quot;) 
-		&apos;	oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;AM&quot;) 
-			oSpalte2.isVisible = false
-			lcol = 35
-	 	end if
-	 &apos;	fissa(0,16, lcol,2)
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-
-	ThisComponent.CurrentController().freezeAtPosition(0,16)
-
-	&apos; riporta il cursore sulla posizione di partenza
-	ThisComponent.CurrentController.Select( oPos )	
-		&apos;	ThisComponent.CurrentController.setFirstVisibleColumn (0)
-		&apos;	ThisComponent.CurrentController.setFirstVisibleRow(16)
-			
-		&apos;	ThisComponent.CurrentController().freezeAtPosition(lcol,2)
-		&apos;	ThisComponent.CurrentController.Select(oSelections)
-END SUB
 
 
 Sub fissa (lColFix as long, lrowFix as long, optional lcol as long, optional lrow as long)
@@ -843,51 +397,6 @@ end sub
 
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-&apos; nuovo modo....
-Function Viste_nuove___ (sList1 as string)
-&apos;print sList1
-dim iNumCol as integer
-dim iString as integer
-dim bValue as boolean
-dim sValue as string
-dim sString as string
-&apos;dim sList1 as string
-	dim sScelta as string
-	if Not isNull (oDialogScenari) then 
-		oDialogScenari.endExecute() 
-	end if
-	if Not isNull (oDialogScenari_2) then &apos;birra
-		oDialogScenari_2.endExecute() 
-	end if
-	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit function
-	end if
-oSheet = ThisComponent.currentController.activeSheet
-
-&apos;sList1 = &quot;TTFTTTTTTTFTFFFFTTFFFTFFFFTFFFFTT&quot;
-iNumCol = -1
-iString = 0
-For i = 0 to 50
-	iNumCol = iNumCol +1
-	oCell = oSheet.GetCellByPosition(iNumCol, 2 )
-	iString = iString +1
-	sString = mid(sList1, iString,1)
-	
-	if sString = &quot;T&quot; then
-		bValue = True
-		else
-		bValue = False
-	end if
-	oCell.Columns.IsVisible = bValue
-	next
-END FUNCTION
-
-
-
-&apos; nuovo modo.... ancora più nuovo... 12/10/2010
 Function Viste_nuove (sList1 as string)
 &apos;print sList1
 dim iNumCol as integer
@@ -901,11 +410,11 @@ dim sString as string
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
 	sScelta = Scenari 
-	If 	sScelta = &quot;si&quot;	then
-			oSheet = ThisComponent.currentController.activeSheet
-		else
-			exit function
-	end if
+&apos;	If 	sScelta = &quot;si&quot;	then
+&apos;			oSheet = ThisComponent.currentController.activeSheet
+&apos;		else
+&apos;			exit function
+&apos;	end if
 	oSheet = ThisComponent.currentController.activeSheet
 	iNumCol = -1
 	iString = 0
@@ -1055,7 +564,6 @@ Sub Computo_Sicur &apos;on / off solo somputo e no sommari del Registro di Cpnta
 		 	oSpalte2 = oSheet.getColumns().getByName(&quot;R&quot;) 
 			oSpalte2.isVisible = false 	
 	 	end if
-	 	ColRid_on_off
 END SUB
 
 
@@ -1130,26 +638,6 @@ dim iNumInser as integer
 END FUNCTION
 
 
-
-Sub figure_annotazioni_on_off
-
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
-	sAttributo = Trova_Attr_Sheet
-	oSheet = ThisComponent.currentController.activeSheet
-	if sAttributo = &quot;TIPO_COMPUTO&quot; then
-
-		If oSheet.getColumns.getByIndex(38+idxcol).isVisible = false then
-				oSheet.getColumns.getByIndex(38+idxcol).isVisible = true
-	 		else	 
-				oSheet.getColumns.getByIndex(38+idxcol).isVisible = false			
-		end if
-	end if
-end sub
-
-
 sub Computo_Normale_terra_terra
 &apos;chiudi_dialoghi
 	oSheet = ThisComponent.currentController.activeSheet
@@ -1173,7 +661,6 @@ sub Computo_Normale_terra_terra
 	ThisComponent.CurrentController().freezeAtPosition(0,2)
 	ThisComponent.CurrentController.Select( oPos )
 
-	ColRid_off
 set_larghezza_colonne
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 END SUB 
@@ -1325,76 +812,6 @@ Sub Chiudi_al_tocco
 end sub
 
 
-Sub ColRid_on_off
-
-	exit sub &apos;diastt 101227
-dim lrowE as long
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	sString$ = &quot;Fine Computo&quot; 
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI1! &quot;
-		exit sub
-	end if 
-	lRowE=oEnd.RangeAddress.EndRow 
-	oRiga = oSheet.getRows().getByIndex(lrowE+2)
-	If origa.IsVisible = true then
-		oSheet.getRows().getByIndex(lrowE+2).isVisible = false
-	&apos;	oSheet.getRows().getByIndex(lrowE+3).isVisible = false
-	&apos;	oSheet.getRows().getByIndex(lrowE+4).isVisible = false
-	&apos;	oSheet.getRows().getByIndex(lrowE+5).isVisible = false
-	 Else
-	 	oSheet.getRows().getByIndex(lrowE+2).isVisible = true
-	&apos;	oSheet.getRows().getByIndex(lrowE+3).isVisible = true
-	&apos;	oSheet.getRows().getByIndex(lrowE+4).isVisible = true
-	&apos;	oSheet.getRows().getByIndex(lrowE+5).isVisible = true
-	end if
-end sub
-
-Sub ColRid_off
-	exit sub &apos;diastt 101227
-
-dim lrowE as long
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	sString$ = &quot;Fine Computo&quot; 
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI2! &quot;
-		exit sub
-	end if 
-	lRowE=oEnd.RangeAddress.EndRow 
-		oSheet.getRows().getByIndex(lrowE+2).isVisible = false
-	&apos;	oSheet.getRows().getByIndex(lrowE+3).isVisible = false
-	&apos;	oSheet.getRows().getByIndex(lrowE+4).isVisible = false
-	&apos;	oSheet.getRows().getByIndex(lrowE+5).isVisible = false
-
-end sub
-
-Sub ColRid_on
-dim lrowE as long
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	sString$ = &quot;Fine Computo&quot; 
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI3! &quot;
-		exit sub
-	end if 
-	lRowE=oEnd.RangeAddress.EndRow 
- 	oSheet.getRows().getByIndex(lrowE+2).isVisible = true
-&apos;	oSheet.getRows().getByIndex(lrowE+3).isVisible = true
-&apos;	oSheet.getRows().getByIndex(lrowE+4).isVisible = true
-&apos;	oSheet.getRows().getByIndex(lrowE+5).isVisible = true	
-end sub
-
-
-
-
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-&apos; settore per le rows
-
-
-
 SUB massimizza &apos; Schermo intero in apertura del doc
 	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	 ThisComponent.unlockControllers 	
@@ -1427,35 +844,6 @@ END SUB
 
 
 
-sub Prova_viste_caselle &apos; accendi spegni 
-&apos;	dim sScelta as string
-&apos;	oDialogScenari.endExecute() &apos; Chiude il dialogo, questa linea viene ripetuta in tutte quelle sub
-								&apos; chamate dai relativi pulsanti
-&apos;	sScelta = Scenari 
-&apos;	If 	sScelta = &quot;si&quot;	then
-&apos;			oSheet = ThisComponent.currentController.activeSheet
-&apos;		else
-&apos;			exit sub
-&apos;	end if
-	oSheet = ThisComponent.currentController.activeSheet
-	oSpalte2 = oSheet.getColumns().getByName(&quot;P&quot;) 
-		If oSpalte2.isVisible = false then
-			oSpalte2 = oSheet.getColumns().getByName(&quot;P&quot;) 
-			oSpalte2.isVisible = TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;Z&quot;) 
-			oSpalte1.isVisible =TRUE 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;AC&quot;) 
-			oSpalte1.isVisible =TRUE 
-	
-		 else	 		
-			oSpalte2.isVisible = false 
-			oSpalte1 = oSheet.getColumns().getByName(&quot;P&quot;) 
-			oSpalte1.isVisible = false
-			oSpalte2 = oSheet.getColumns().getByName(&quot;Z&quot;) 
-			oSpalte2.isVisible = false
-	 	end if
-	 ColRid_on
-END SUB
 
 
 

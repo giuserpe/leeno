@@ -524,7 +524,7 @@ Function Salva_copia_aPerdere &apos; salva il doc corrente come temporaneo (con 
  oSheet = ThisComponent.CurrentController.ActiveSheet
  
  dim sUrl2, sNameDest as string
-	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
+	If Not GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
  	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 

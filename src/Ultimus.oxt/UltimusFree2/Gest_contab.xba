@@ -347,7 +347,7 @@ rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controll
 	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B1&quot;)
 	Stora_Attr_sheet_generico(&quot;TIPO_CONTABILITA&quot;, oSheet, &quot;B2&quot;)
 
-apri_libretto_misure
+set_larghezza_colonne
 &apos;Visualizza_normale_esegui
 se_ci_sono_problemi_guarda_la_sub_di_Bart:
 end sub

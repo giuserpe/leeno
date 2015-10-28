@@ -53,26 +53,42 @@ End Sub
 
 rem ----------------------------------------------------------------------
 Sub new_leeno
-New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
+	New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
+ 	Setta_Cost_Gen
 	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 		&amp; &quot;Provvedi subito a dare un nome al file di computo...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
 	salva_doc_come
+	autoexec
 End Sub
 
 rem ----------------------------------------------------------------------
 Sub new_listino
-New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
+	New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
 	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 		&amp; &quot;Provvedi subito a dare un nome al file di listino...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
 	salva_doc_come
+	autoexec
 End Sub
 
 rem ----------------------------------------------------------------------
 Sub new_usobollo
-New_FILE (&quot;/template/offmisc/UsoBollo.ott&quot;)
+	New_FILE (&quot;/template/offmisc/UsoBollo.ott&quot;)
 	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 		&amp; &quot;Provvedi subito a dare un nome al documento...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
 	salva_doc_come
+	autoexec
+End Sub
+
+Sub bak_timestamp &apos; salva una copia di backup del file ad ogni apertura
+	oDoc = ThisComponent
+	If (oDoc.hasLocation()) Then
+		sDocURL = oDoc.getURL() &apos;url
+		sUrl = DirectoryNameoutofPath(sDocURL, &quot;/&quot;) &apos;path
+		sFileName = GetFileNameWithoutExtension(sDocURL, &quot;/&quot;) &apos;file
+		Mkdir (convertfromurl(sUrl+&quot;/leeno-bk/&quot;))
+		sNewURL = sUrl+&quot;/leeno-bk/&quot;+sFileName+&quot;-&quot;+gina_furbetta_2+&quot;.ods&quot;
+		Filecopy sDocURL, sNewURL &apos;agisce direttamente su disco in modo &quot;trasparente&quot;
+	End If
 End Sub
 
 rem ----------------------------------------------------------------------
@@ -109,7 +125,6 @@ rem le variabili di versione sono settate In &quot;_vaiabili&quot;
 end Sub
 
 rem ----------------------------------------------------------------------
-
 Sub avvia_IDE
 	Dim oLayout
 	oDoc = thiscomponent

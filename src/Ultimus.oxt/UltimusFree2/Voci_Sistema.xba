@@ -12,35 +12,6 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-&apos;********************************************************
-Sub Riformatta_VCA () &apos;assegnato a 
-&apos; decide se attivare Riformatta analisi o Riformatta voce-computo
- Dim nome_sheet as string
-&apos;ScreenUpdatingOff 
-nome_sheet = thisComponent.currentcontroller.activesheet.name
-
-	if msgbox (&quot; Questa macro non è stata verificata con le versioni più recenti... &quot;&amp; CHR$(10)_
-				&amp; &quot; Intendi proseguire ugualmente?&quot; &amp; CHR$(10)_
-					&amp; &quot; Proseguo ? &quot;, 4,&quot;&quot;&amp; CHR$(10)) = 7 then
-				
-				print &quot;esco&quot;
-				exit sub
-	end if
- If nome_sheet = &quot;COMPUTO&quot; Then
- &apos; Riformatta_Voce_Computo
- Uniforma_Formati_Computo_sing_voce
- Else
- If nome_sheet = &quot;Analisi di Prezzo&quot; Then
- &apos;Riformatta_Voce_Analisi &apos; questa continua ad essere buona
- &apos; Riformatta_Voce_Analisi_special &apos;da usare con computi vecchi...
- Uniforma_Formati_ANALISI_sing_voce
- Else: MsgBox &quot;Questa è: &quot; +nome_sheet + &quot; ___ e questa Macro si usa soltanto nel COMPUTO e nelle ANALISI !!!! 1___&quot;
- End If
- End If
-&apos;ScreenUpdatingOn 
-END SUB
-
-
 FUNCTION templateTipo &apos; introdotta con nuovo template 5C
 &apos;If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 &apos;If ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)._

@@ -9,6 +9,6 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="70" dlg:top="29" dlg:width="35" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:progressmeter dlg:id="ProgressBar1" dlg:tab-index="2" dlg:left="7" dlg:top="64" dlg:width="50" dlg:height="7" dlg:value="2"/>
+  <dlg:progressmeter dlg:id="ProgressBar1" dlg:tab-index="2" dlg:left="7" dlg:top="64" dlg:width="50" dlg:height="23" dlg:value="2"/>
  </dlg:bulletinboard>
 </dlg:window>

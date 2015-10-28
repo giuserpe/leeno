@@ -141,16 +141,11 @@ rem on error goto ErrorHandler
 	end if 
 	Barra_chiudi_sempre_4
 	Barra_apri_chiudi_4 
-	&apos;	sVer2 = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion &apos; versione di questo codice
-	&apos;print sVer2
+
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
 		oSheet.unprotect(&quot;&quot;)
-rem ----------------------------------------------------------------------
-rem le tre che seguono sono settate in &quot;_variabili&quot;
-&apos;versioneUF_major=
-&apos;versioneUF_minor=
-&apos;versioneUF_subversion=
+
 rem ----------------------------------------------------------------------
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
@@ -399,9 +394,11 @@ rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;5 Attendi... sto caricando... &quot;, 60)
+Colora_Tabs
+
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
-Colora_Tabs
+
 Computo_Normale_terra_terra &apos;visualizza
 Rifa_Somme_TOT_Computo
 Rinumera_TUTTI_Capitoli2	&apos;ricontrolla i calcoli 
@@ -620,37 +617,17 @@ dim Esiste as boolean
 	&apos;xray oSheet
 	
 rem ----------------------------------------------------------------------
-rem le tre che seguono sono settate in &quot;_variabili&quot;
-&apos;versioneUF_major=
-&apos;versioneUF_minor=
-&apos;versioneUF_subversion=
-rem ----------------------------------------------------------------------
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion
-&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).string = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion 
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
 	oSheet.protect(&quot;&quot;)
-&apos; print versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion
 
-&apos;print &quot;non posso non sapere...&quot; &amp; sUltimus 
-&apos;wait 300	
-
-
-
-&apos;&apos;&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
-&apos;&apos;&apos;	lcolS = oNomeRange.Column
-&apos;&apos;&apos;	lrowS = oNomeRange.Row
-&apos;&apos;&apos;	xray oNomeRange
-&apos;print &quot;1 ooobbb&quot;
  	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
 
 	oMycell2 = oSheet.getCellByPosition (2,27)&apos;(lcolS ,lrowS)
 	oMycell2.string = &quot;&quot;
-&apos;	print oMycell2.string
 	oMycell2.string = sUltimus
-&apos;	print oMycell2.string
-&apos;	oMycell2.string = UltimusFree2.Lupo_0.sUltimus	
  Dim sURLStr as String
  Dim sFileName as String
 &apos;print &quot;2 ooobbb&quot; 
@@ -758,9 +735,8 @@ Sub Scrivi_Globale &apos; versione semplice
 		
 		oDoc = ThisComponent 
 		if not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
-		thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) and _
-		thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) then
-		exit sub
+			thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) Then
+		exit Sub
 	end if
 	
 	setDocEventOnClose
@@ -812,9 +788,6 @@ end sub
 
 Sub Svuota_Globale &apos; svuota la variabile globale con file DCC
 &apos; attivata all&apos;uscita del file... altrimenti se si tenta di inviare dei prezzi al DCC
-&apos; riapre il file gia chiuso...
-
-&apos;print &quot;svuota 260211 ooaaee&quot; 
 
 On Error resume next
 
@@ -831,7 +804,6 @@ oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryCo
 If not oLibCont.hasByName(sLib)= true Then
 	exit sub
 end if 
- 		
 
 &apos;
 sNome = ConvertFromUrl (URLStr)
@@ -843,17 +815,10 @@ oSheet = oDoc.currentcontroller.activesheet
 
  		UltimusFree2.Lupo_0.sUltimus = &quot;&quot; &apos; variabile svuotata
  		Colora_M1(sURLStr)
- &apos;	print &quot;fatto ooaaee&quot;
- 		&apos;oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-	&apos;	oMycell2 = oSheet.getCellByPosition(4,11) &apos;(lcolS ,lrowS)
-	&apos;	oMycell2.string = &quot;&quot;	
-		&apos;oMycell2.string = UltimusFree2.Lupo_0.sUltimus
-		&apos; ma non basterà svuotarla
 	end if
 	
 	sUltimus2 = &quot;&quot;
 	Colora_M1(URLStr)
-	&apos;print
 	exit sub
 	
 &apos;ErrorHandler:	

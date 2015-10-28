@@ -26,8 +26,11 @@ Sub genera_variante
 		oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,255,102))
 		ThisComponent.CurrentController.Select(oSheet)
 		SetTabColorN(RGB(255,255,102))
-
 		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,0))
+	Else
+		ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;))
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+		Exit Sub
 	EndIf
 	If ultima_voce = 0 Then
 		Exit Sub
@@ -176,7 +179,7 @@ rem	riga di controllo importo
 	oSheet.GetCellByPosition(21,1).FORMULA=&quot;=SUBTOTAL(9;V3:V&quot;&amp; lRowE+1 &amp;&quot;)&quot;
 	oSheet.GetCellByPosition(24,1).FORMULA=&quot;=SUBTOTAL(9;Y3:Y&quot;&amp; lRowE+1 &amp;&quot;)&quot;
 	oSheet.GetCellByPosition(25,1).FORMULA=&quot;=SUBTOTAL(9;Z3:Z&quot;&amp; lRowE+1 &amp;&quot;)&quot;
-	oSheet.GetCellByPosition(26,1).FORMULA=&quot;=SUBTOTAL(9;AA3:AA&quot;&amp; lRowE+1 &amp;&quot;)&quot;
+&apos;	oSheet.GetCellByPosition(26,1).FORMULA=&quot;=SUBTOTAL(9;AA3:AA&quot;&amp; lRowE+1 &amp;&quot;)&quot;
 		
 	oSheet.getCellRangeByPosition(0, 1, 26 , 1).cellstyle = &quot;comp In testa&quot;
 	oSheet.GetCellByPosition(10,1).cellstyle = &quot;Default&quot;
@@ -208,16 +211,13 @@ rem	riga di totale importo PARALLELO
 	oSheet.GetCellByPosition(18,lRowE).cellstyle = &quot;Default&quot;
 	oSheet.GetCellByPosition(22,lRowE).cellstyle = &quot;Default&quot;
 rem ----------------------------------------------------------------------	
-&apos; rigenera tutti i sommari
-Rifa_AA_BB_Computo
-rem ----------------------------------------------------------------------
 rem cancello fomrattazioni dirette	
 	Flag = com.sun.star.sheet.CellFlags.HARDATTR
 	oSheet.getCellRangeByPosition(0, 3, 250, lRowE+10).clearContents(Flag)
 sistema_attributi_sheet
 barra_fatto
-	msgbox (&quot;Ho fatto!&quot; &amp; CHR$(10) _
-			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Operazione completata&quot;)
+&apos;	msgbox (&quot;Ho fatto!&quot; &amp; CHR$(10) _
+&apos;			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Operazione completata&quot;)
 End Sub
 rem ######################################################################
 
@@ -359,6 +359,7 @@ If lrow = 0 Then Exit Sub
 
 	Select Case oSheet.Name
 		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		If se_contabilita = 1 Then Exit Sub
 rem rigo parziale già esistente:
 			If InStr (oSheet.GetCellByPosition(8 , lrow).string, &quot;Parziale [&quot;) Then GoTo procedi
 rem ----------------------------------------------------------------------
@@ -462,10 +463,11 @@ rem ######################################################################
 Sub parziale_verifica rem &apos;(C) Giuseppe Vizziello 2015
 rem questa è inserita anche alla fine della sub elimina_riga
 	osheet = thisComponent.CurrentController.ActiveSheet
-	If osheet.Name = &quot;COMPUTO&quot; Or osheet.Name = &quot;CONTABILITA&quot; Then
-	Else
-		Exit Sub
-	endif
+	Select Case osheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
+	Case Else
+		Exit Sub 
+	End Select
 rem ----------------------------------------------------------------------
 	lrow = range2cell
 rem ----------------------------------------------------------------------

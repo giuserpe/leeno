@@ -577,18 +577,18 @@ sub Colora_Tabs &apos;sistena i colori delle tabs
 		If sSheetName = &quot;COMPUTO&quot; Then
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;COMPUTO&quot;
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,199,231))
-			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,199,231))
+		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(153,204,255))
+		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(153,204,255))
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
-			SetTabColorN(RGB(255,199,231))
+			SetTabColorN(RGB(255,199,231))&apos;(255,199,231))
 		end If
 		If sSheetName = &quot;VARIANTE&quot; Then
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;VARIANTE&quot;
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,255,102))
-			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,255,102))
+		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,205,102))
+		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,205,102))
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
-			SetTabColorN(RGB(255,255,102))
+			SetTabColorN(RGB(255,205,102))
 		end if
 		If sSheetName = &quot;CONTABILITA&quot; then 
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;CONTABILITA&quot;

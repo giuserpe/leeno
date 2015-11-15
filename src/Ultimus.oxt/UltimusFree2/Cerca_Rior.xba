@@ -368,7 +368,9 @@ If NOT GlobalScope.BasicLibraries.isLibraryLoaded(&quot;Tools&quot;) Then Global
 		EndIf 
 	next
 End Function
+
 Sub filtra_codice
+&apos;ScreenUpdatingOFF
 	chiudi_dialoghi
 	Togli_Struttura
 	Dim oCRA As New com.sun.star.table.CellRangeAddress
@@ -465,7 +467,7 @@ Sub filtra_codice
 &apos;		EndIf
 	Next
 salta:
-
+&apos;ScreenUpdatingOn
 	msgbox (&quot;Ho fatto!&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Operazione completata&quot;)
 End Sub
@@ -475,6 +477,7 @@ End Sub
 Sub nuova_struttura
 	chiudi_dialoghi
 	Togli_Struttura
+&apos;ScreenUpdatingOFF
 	Dim oCRA As New com.sun.star.table.CellRangeAddress
 	osheet = ThisComponent.currentController.activeSheet
 	lRow = range2cell
@@ -550,7 +553,7 @@ Sub nuova_struttura
 &apos;		EndIf
 	Next
 salta:
-
+&apos;ScreenUpdatingOn
 	msgbox (&quot;Ho fatto!&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Operazione completata&quot;)
 End Sub

@@ -19,7 +19,7 @@ Sub python_debug
 &apos;	Print convertfromurl (fileurl)
 &apos;	xml = convertfromurl (fileurl)
 &apos;	ScriptPy(&quot;pyleeno.py&quot;, &quot;debug&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;ins_voce_computo&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;debug&quot;)
 	
 &apos;	now2 = now
 &apos;	Print now2-now1	

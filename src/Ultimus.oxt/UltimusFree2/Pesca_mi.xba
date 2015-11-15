@@ -321,20 +321,22 @@ SUB Pesca_cod_2
 
 	oSheet = ThisComponent.currentController.activeSheet
 	if oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;VARIANTE&quot; then &apos;
-		if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP&quot; then
-			sTitolo = &quot;Seleziona la cella di destinazione (Codice) (ESC per Annullare, NO Click su X ) &quot; 
- 	 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners
- 			if SelectedRange = &quot;&quot; or _
- 			 	SelectedRange = &quot;ANNULLA&quot; then
- 			 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
- 			 	exit sub
-		 	end if
-			lrow = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
-			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
-		end if
+&apos;		if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP_R&quot; Or _
+&apos;			oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP&quot; Then
+&apos;			sTitolo = &quot;Seleziona la cella di destinazione (Codice) (ESC per Annullare, NO Click su X ) &quot; 
+ &apos;			SelectedRange = getRange(sTitolo) &apos; richiama il listeners
+ &apos;			if SelectedRange = &quot;&quot; or _
+ &apos;			 	SelectedRange = &quot;ANNULLA&quot; then
+ &apos;			 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+ &apos;			 	exit sub
+&apos;		 	end if
+&apos;			lrow = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
+&apos;			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
+&apos;		end if
 		oPartenza.SetString(sCodice)
 		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+1)
-	end if
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	EndIf
 	if oSheet.name = &quot;Analisi di Prezzo&quot; then
 &apos;	print &quot;eccoci&quot;
 		if oSheet.GetCellByPosition( 0, lrow).cellstyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; then

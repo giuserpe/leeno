@@ -269,10 +269,9 @@ ErroreDet = 0 &apos;metto in off il detentore (per il momento)
 		thisComponent.Sheets.moveByName(sSheetSRC_S1 ,5)
 	end if
 	thisComponent.Sheets.moveByName(&quot;S2&quot; ,6)
-	thisComponent.Sheets.moveByName(&quot;S4&quot;,8)
-	if 	thisComponent.Sheets.hasByName(&quot;S5&quot;) then
-		thisComponent.Sheets.moveByName(&quot;S5&quot;,9)	
-	end if
+
+	If thisComponent.Sheets.hasByName(&quot;S4&quot;) Then thisComponent.Sheets.moveByName(&quot;S4&quot;,10)
+	If thisComponent.Sheets.hasByName(&quot;S5&quot;) Then thisComponent.Sheets.moveByName(&quot;S5&quot;,9)
 
 	if iOP1 = 2 or iOP2=1 or iOP3=1 or iOP6=1 then 
 		&apos; ripulusco l&apos;EP dalle voci AP li registrate 

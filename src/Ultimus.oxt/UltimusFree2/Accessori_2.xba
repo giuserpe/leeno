@@ -664,12 +664,17 @@ rem seleziono le formule
 END Sub
 
 
-Sub nascondi_righe_errate
+Sub nascondi_errore (sTipo As String)
 	oSheet = ThisComponent.currentController.activeSheet
 	For n = 2 To ultima_voce+1
-		If osheet.GetCellbyPosition(26, n).String = &quot;#DIV/0!&quot; Then	oSheet.getCellByposition(0, n).Rows.IsVisible=false
+		If osheet.GetCellbyPosition(26, n).String = sTipo Then	oSheet.getCellByposition(0, n).Rows.IsVisible=false
 	Next
 End Sub
+Sub sdcsd
+	nascondi_errore (&quot;#DIV/0!&quot;)
+&apos;	nascondi_errore (&quot;--&quot;)
+End Sub
+
 
 SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di somma.se
 &apos; parallelo variante
@@ -708,7 +713,7 @@ SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di
 &apos;	cancella_dati
 
 rem colonne del computo
-
+SOMMARIO_SEMPLICE:
 	oSheet.GetCellByPosition(lcolbase + 11 , i).formula = &quot;=N4/$N$2&quot;
 	oSheet.GetCellByPosition(lcolbase + 11 , i).cellstyle = &quot;EP-mezzo %&quot;
 	oSheet.GetCellByPosition(lcolbase + 12 , i).formula = &quot;=SUMIF(AA;A4;BB)&quot;
@@ -716,6 +721,8 @@ rem colonne del computo
 	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=SUMIF(AA;A4;cEuro)&quot;
 &apos;	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;M4*E4/100;M4*E4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 13 , i).cellstyle = &quot;EP statistiche&quot;
+	
+If Not thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) And Not thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then GoTo prosegui:
 
 &apos;## contabilità ##########################################################
 	Rifa_GG_G1G1_Contab

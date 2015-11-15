@@ -207,8 +207,11 @@ esegui:
 	 		ComCon = oDialogScenari_EP.getControl(&quot;ComCon&quot;).State
 	 		VarCon = oDialogScenari_EP.getControl(&quot;VarCon&quot;).State
 	 			 		
-	 		If  VarCon Or ComCon Or ComVar Then Rifa_AA_BB_Computo
-	 		
+	 		If  VarCon Or ComCon Or ComVar Then
+	 			Rifa_AA_BB_Computo
+	 		Else
+	 			If	oDialogScenari_EP.getControl(&quot;CBSom&quot;).State = 1 Then Rifa_AA_BB_Computo
+	 		EndIf 	 		
 		case &quot;TIPO_ANALISI&quot;
 			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
 			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 

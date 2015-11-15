@@ -265,7 +265,8 @@ rem	riga di controllo importo
 	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=SUBTOTAL(9;AK3:AK&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos; totale computo sole voci senza errori
 
 	oSheet.getCellRangeByPosition(0, 1, 43 , 1).cellstyle = &quot;comp In testa&quot;
-	oSheet.getCellByPosition(29,1).cellstyle = &quot;Comp TOTALI %&quot;
+	oSheet.getCellRangeByposition(0, 0, 43 , 2).merge(FALSE)
+	oSheet.getCellByPosition(29, 1).cellstyle = &quot;Comp TOTALI %&quot;
 rem ----------------------------------------------------------------------
 rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
  	Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A1&quot;)
@@ -484,6 +485,7 @@ rem ---------------------------------------------------------------------
 		If InStr (oSheet.GetCellByPosition(8, i).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then parziale_core (i)
 	Next
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 End Sub
 rem ######################################################################
 Function abs2name (nCol As Long, nRow As Long)
@@ -848,4 +850,20 @@ rem NASCONDE RIGHE
 	END IF
 	fine:
 end Sub
+
+Sub azzera_voce
+	oSheet = ThisComponent.currentController.activeSheet
+	lrow = range2cell
+	inizio = inizio_voce(lrow)+3
+	fine = fine_voce(lrow)
+	sFormula = &quot;=-SUBTOTAL(9;J&quot; &amp; inizio &amp; &quot;:J&quot; &amp; fine &amp; &quot;)&quot;
+	If osheet.getCellByPosition (2, fine-1).String = &quot;*** VOCE AZZERATA ***&quot; Then
+		oSheet.rows.removeByIndex (fine-1, 1)
+		Exit Sub
+	EndIf 
+	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, fine-1))
+	copia_riga_Ent
+	osheet.getCellByPosition (2, fine).String = &quot;*** VOCE AZZERATA ***&quot;
+	osheet.getCellByPosition (5, fine).formula = sFormula
+End Sub
 </script:module>

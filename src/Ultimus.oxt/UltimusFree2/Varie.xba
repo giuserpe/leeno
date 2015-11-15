@@ -896,7 +896,8 @@ parziale_verifica
 END SUB
 rem ######################################################################
 Sub copia_TANTE_righe_Ent
-	For n = 0 To 50
+&apos;	ScriptPy(&quot;pyleeno.py&quot;, &quot;copia_riga_computo&quot;)
+	For n = 0 To 30
 		copia_riga_Ent
 	Next n
 End Sub
@@ -926,8 +927,6 @@ Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tab
 	stile = oSheet.GetCellByPosition(0, lrow).CellStyle
 	Select Case stile
 	Case &quot;An-lavoraz-Cod-sx&quot;, &quot;An-lavoraz-desc&quot;, &quot;comp 10 s&quot;, &quot;comp 10 s_R&quot;, &quot;comp progress&quot;, &quot;Comp End Attributo&quot;
-&apos;		If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;An-lavoraz-desc-CEN&quot; And _
-&apos;			oSheet.GetCellByPosition(0, lrow-1).CellStyle = &quot;An-lavoraz-desc-CEN&quot; Then Exit Sub
 	Case Else
 		Exit Sub
 	End Select
@@ -955,7 +954,11 @@ Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tab
 			Exit Sub
 	EndIf
 procedi_computo:
-	 	oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
+		oS5= thisComponent.sheets.getbyname(&quot;S5&quot;)
+		oRangeData = oS5.getCellRangeByPosition(0, 10, 43, 10).RangeAddress
+		oDest = oSheet.GetCellByPosition(0, lrow).CellAddress
+		oSheet.copyRange(oDest, oRangeData)
+&apos;	Print 
 rem immissione tags cat/subcat
 		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
 		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
@@ -963,14 +966,14 @@ rem immissione tags cat/subcat
 		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
 		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
 rem imposto gli stili
-		oSheet.getCellRangeByPosition(5, lrow, 7, lrow,).CellStyle = &quot;comp 1-a&quot;
-		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot;
-		oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot;
-		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot;
-		oSheet.GetCellByPosition(8, lrow).CellStyle = &quot;comp 1-a peso&quot;
-		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Blu&quot;
+&apos;		oSheet.getCellRangeByPosition(5, lrow, 7, lrow,).CellStyle = &quot;comp 1-a&quot;
+&apos;		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot;
+&apos;		oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot;
+&apos;		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot;
+&apos;		oSheet.GetCellByPosition(8, lrow).CellStyle = &quot;comp 1-a peso&quot;
+&apos;		oSheet.GetCellByPosition(9, lrow).CellStyle = &quot;Blu&quot;
 rem ci metto le formule
-		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
+&apos;		oSheet.GetCellByPosition( 9 , lrow).formula = &quot;=IF(PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+1 &amp; &quot;:I&quot; &amp; lrow+1 &amp; &quot;))&quot;
 &apos;se la VarG è 1, copia il rigo di sopra:
 	 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 301).value = 1 And _
 	 		oSheet.GetCellByPosition(1, lrow-1).CellStyle = &quot;Comp-Bianche in mezzo&quot; Then
@@ -979,6 +982,7 @@ rem ci metto le formule
 			oSheet.copyRange(oDest, oRangeData)
 	 	EndIf 
  		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 , lrow))
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 &apos;		Print 
 	Case &quot;CONTABILITA&quot; &apos;&quot;TIPO_CONTABILITA&quot;
 		If oSheet.GetCellByPosition(0, lrow+1).CellStyle = &quot;Comp End Attributo_R&quot; Then lrow=lrow-1
@@ -1029,6 +1033,7 @@ rem preserva la data di misura
 
 
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 	Case &quot;Analisi di Prezzo&quot; &apos;&quot;TIPO_ANALISI&quot;
 		copia_riga_A
 	end select
@@ -1398,6 +1403,7 @@ rem ----------------------------------------------------------------------
 END SUB
 
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
+&apos;	aa = (now)
 &apos; sistema_attributi_sheet
  &apos;&apos; Clessid_lock_Start
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
@@ -1452,6 +1458,6 @@ salto:
 	 		MsgBox &quot;Fatto! le voci di questa tabella sono state numerate!!&quot;
 		end if
 	end if
-
-END SUB
+&apos;Print aa &amp; &quot; - &quot; &amp; (now)
+END Sub
 </script:module>

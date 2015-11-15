@@ -83,4 +83,5 @@
  <library:element library:name="ConversioneDaListiniEsterni"/>
  <library:element library:name="PY_bridge"/>
  <library:element library:name="Module2"/>
+ <library:element library:name="export"/>
 </library:library>

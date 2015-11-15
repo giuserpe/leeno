@@ -3,25 +3,6 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
 rem raccolta di utility di vario genere
 rem ######################################################################
-Sub bbv
-	oSheet = ThisComponent.Sheets.getByName(&quot;Foglio1&quot;)
-	n = 0
-	for i = 0 to 100
-		oSheet.GetCellByPosition(2,1).value = i
-		If oSheet.GetCellByPosition(5,4).value = 0.2 Then
-&apos;			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,n))
-&apos;			print
-			vaal = oSheet.GetCellByPosition(2,3).value
-			Print vaal
-			oSheet.GetCellByPosition(8,n).value = vaal
-		&apos;	Exit For
-			i = i + 0.1 -1
-			n = 1 + n
-		EndIf
-
-&apos;	Print 
-	Next
-End Sub
 
 Function SpeechEngine()as string     
   select case getGUIType
@@ -340,8 +321,9 @@ sub studio_stile &apos; serve a capire come influisce lo stile di testo sul nume
       oCell.Rows.Height = hh
       wait 1000
    next
-end sub
-sub studio_stile__
+End Sub
+
+Sub studio_stile__
 oCell=thiscomponent.currentselection
 &apos;	With oCell.CellAddress
 &apos;		icol =.Column
@@ -353,7 +335,7 @@ oCell=thiscomponent.currentselection
 xray oCell
 nSty=oCell.cellstyle
 &apos;print nsty
-Dim dSty as object
+Dim dSty As Object
 dsty = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getbyname(nSty)
 &apos;xray dsty
 alt = dsty.CharHeight*0.352777777778
@@ -367,7 +349,7 @@ oCell.Rows.Height = nr*100*alt+(nr-1)*30*alt+topm
 &apos;	oPrimaCella.Rows.Height = 2200
 &apos;print alt
 &apos;print topm
-end sub
+End Sub
 
 SUB Elimina_Nomi_Area_errati &apos;nome eloquente
 	Dim Doc As Object

@@ -82,7 +82,7 @@ rem inserisco i valori e le formule
 	oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
 	oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;Livello-1-scritta mini %&quot;
 	oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;Livello-1-scritta mini val&quot;
-	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
+	osheet.getCellRangeByPosition (2, lrow, 11, lrow).merge(True)
 	oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1
 rem ----------------------------------------------------------------------
 	ocellBaseA = oSheet.GetCellbyPosition( 1, lRow)
@@ -126,6 +126,7 @@ rem ----------------------------------------------------------------------
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 1 then 
 			Inser_SottoCapitolo
 	end If
+
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 1 or _
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 2 then 
 
@@ -138,12 +139,13 @@ rem ----------------------------------------------------------------------
 End Sub
 
 SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row
+&apos;screenupdatingOFF
 	oSheet1 = ThisComponent.currentController.activeSheet
 	lrow= Range2Cell &apos; per ridurre a cella iniziale un eventuale range
 	oCell1=oSheet1.GetCellByPosition(2 , lrow)
 	Rinumera_TUTTI_Capitoli (lrow)
  	ThisComponent.CurrentController.Select(oCell1)
-	 
+&apos;screenupdatingON
 end sub
 rem ----------------------------------------------------------------------
 SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che fornisce lrow (numero di riga necessario!)
@@ -268,7 +270,7 @@ rem inserisco i valori e le formule
 	oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = &quot;livello2 valuta mini %&quot;
 	oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = &quot;livello2 valuta mini&quot;
 	oSheet.getCellRangeByPosition(31, lrow, 32, lrow).CellStyle = &quot;livello2_&quot;
-	osheet.getCellRangeByPosition (2, lrow, 8, lrow).merge(True)
+	osheet.getCellRangeByPosition (2, lrow, 11, lrow).merge(True)
 	oSheet.getCellbyPosition(1, lrow).formula = &quot;=AF&quot; &amp; lrow+1 &amp; &quot;&amp;&quot;&quot;.&quot;&quot;&amp;AG&quot; &amp; lrow+1
 rem ----------------------------------------------------------------------
 	ThisComponent.CurrentController.Select(oCell)
@@ -341,7 +343,7 @@ rem ----------------------------------------------------------------------
 	Loop
 	SubSum_SottoCap (lrowProvv)
 	ThisComponent.CurrentController.Select(oCell)
-
+	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 End Sub
 
 &apos;_______________________________________________________________________________________
@@ -804,6 +806,7 @@ Sub Struttura
 	&apos;_____________________
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
+&apos;screenupdatingOFF
 sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
 &apos;	Print sAttributo
@@ -823,7 +826,8 @@ sistema_attributi_sheet
 		Case &quot;TIPO_ANALISI&quot;
 			Struttura_Analisi
 			exit sub
-	End select
+	End Select
+&apos;screenupdatingON
 	msgbox (&quot;#str Questa macro non lavora su questa tipologia di tabella!&quot;, 25, &quot;AVVISO!&quot;)
 end Sub
 rem ----------------------------------------------------------------------
@@ -975,7 +979,8 @@ procedi:
 	lStartRow = 0 &apos;oSheet.GetCellByPosition( 0 , 0)
 	lLastUrowNN = ultima_voce+1
 Dim oCRA As New com.sun.star.table.CellRangeAddress
-	
+	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
+	oCRA.Sheet =iSheet	
 	For n = lStartRow To lLastUrowNN
 		If oSheet.GetCellByPosition(0, n).CellStyle = &quot;Comp Start Attributo&quot; Then
 			sStRange = Circoscrive_Voce_Computo_Att (n)
@@ -983,8 +988,11 @@ Dim oCRA As New com.sun.star.table.CellRangeAddress
 				sopra =.StartRow
 				sotto =.EndRow
 			End With
-			ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0, sopra+2, 0, sotto-1))
-			Raggruppa_righe
+			oCRA.StartRow = sopra&apos;inizio_gruppo
+			oCRA.EndRow = sotto
+			oSheet.group(oCRA,1)
+&apos;			ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0, sopra+2, 0, sotto-1))
+&apos;			Raggruppa_righe
 			n = sotto
 		EndIf
 	Next
@@ -1147,7 +1155,7 @@ end sub
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) descrizione breve
-
+&apos;ScreenUpdatingOFF
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 
 	oCell = thisComponent.getCurrentSelection() &apos;oCell.string
@@ -1170,6 +1178,7 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) de
 		Tronca_Altezza_Voci_Listino
 		exit sub
 	end If
+&apos;ScreenUpdatingON
 	thisComponent.currentController.Select(oCell)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
 end sub

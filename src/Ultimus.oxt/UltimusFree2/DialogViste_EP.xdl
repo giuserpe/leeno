@@ -65,7 +65,7 @@
    <dlg:radio dlg:id="VarCon" dlg:tab-index="21" dlg:left="15" dlg:top="122" dlg:width="65" dlg:height="10" dlg:value="Variante - Contabilità"/>
    <dlg:radio dlg:id="ComVar" dlg:tab-index="19" dlg:left="15" dlg:top="102" dlg:width="65" dlg:height="10" dlg:value="Computo - Variante"/>
   </dlg:radiogroup>
-  <dlg:titledbox dlg:style-id="3" dlg:id="FrameControl1" dlg:tab-index="22" dlg:left="10" dlg:top="10" dlg:width="75" dlg:height="70">
+  <dlg:titledbox dlg:style-id="3" dlg:id="FrameControl1" dlg:tab-index="22" dlg:left="10" dlg:top="10" dlg:width="75" dlg:height="75">
    <dlg:title dlg:value="Visualizza"/>
   </dlg:titledbox>
   <dlg:checkbox dlg:style-id="4" dlg:id="CBSic" dlg:tab-index="15" dlg:left="15" dlg:top="25" dlg:width="65" dlg:height="7" dlg:value="Sicurezza" dlg:checked="false"/>
@@ -81,5 +81,6 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="7" dlg:id="CommandButton11" dlg:tab-index="28" dlg:left="157" dlg:top="122" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CBSom" dlg:tab-index="29" dlg:left="15" dlg:top="75" dlg:width="65" dlg:height="7" dlg:value="Sommario Computo" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -214,13 +214,15 @@ Function Range2Cell (optional flag) &apos;NUOVA funzione da richiamare da altri 
 			&apos; restitusce una Row anche se l&apos;utente ha selezionato un range
 			&apos; (&quot;Mai fidarsi dell&apos;utente... - Paolom &quot;)
 &apos; flag per non evidenziare il messaggio
-	if HasUnoInterfaces( thisComponent.getCurrentSelection, &quot;com.sun.star.drawing.XShapes&quot; ) = true then
-		if isMissing(flag) then 
-			print &quot;ATTENTO, hai selezionato dei pulsanti! Annullo!&quot;
+	if HasUnoInterfaces( thisComponent.getCurrentSelection, &quot;com.sun.star.drawing.XShapes&quot; ) = true Then
+		if isMissing(flag) Then
+			Exit Function
+			Print &quot;ATTENTO, hai selezionato dei pulsanti! Annullo!&quot;
 		end if
 		Range2Cell= -1
 		exit Function
 	end If
+	On Error GoTo fine:
 Range2Cell= thisComponent.getCurrentSelection.RangeAddress.startRow
 &apos;	if HasUnoInterfaces( thisComponent.getCurrentSelection, &quot;com.sun.star.table.XCell&quot; ) = true then
 &apos;			Range2Cell= thisComponent.getCurrentSelection.celladdress.row
@@ -231,10 +233,8 @@ Range2Cell= thisComponent.getCurrentSelection.RangeAddress.startRow
 &apos;				print &quot;è una RANGE&quot;	
 &apos;			exit Function
 &apos;	end if
-end Function
-
-
-
+fine:
+End Function
 
 Function Range2Cell____________________________ () &apos; funzione da richiamare da altri moduli
 			&apos; restitusce una Row anche se l&apos;utente ha selezionato un range
@@ -263,7 +263,6 @@ Function Range2Cell____________________________ () &apos; funzione da richiamare
 &apos;	Range2Cell = oDoc.getCurrentSelection()
 	Range2Cell = -1 &apos;(-1 come valore di errore)
 end Function
-
 &apos;********************************************************************************
 
 Function Range2Cell_COL () &apos; funzione da richiamare da altri moduli

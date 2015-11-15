@@ -375,9 +375,9 @@ shortCuts.removeKeyEvent(aKeyEvent)
 	End with
 	UIcfgMgr = thisComponent.UIConfigurationManager
 	shortCuts = UicfgMgr.ShortCutManager
-	shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Pulizia_0.DOPPIONI_TROVA_manuale?language=Basic&amp;location=application&quot; )
-	shortCuts.removeKeyEvent(aKeyEvent)
-&apos;shortCuts.store()
+	shortCuts.setKeyEvent( aKeyEvent,&quot;vnd.sun.star.script:UltimusFree2.Computo.azzera_voce?language=Basic&amp;location=application&quot; )
+&apos;	shortCuts.removeKeyEvent(aKeyEvent)
+shortCuts.store()
 	
 &apos;____________________________Ctrl Shift L
 	with aKeyEvent

@@ -300,6 +300,7 @@ Function Circoscrive_Voce_Computo_Att (ByVal lrow As Long)
 	End Select
 	REM ----------------------------------------------------------------------
 	oRangeVoceC = osheet.getCellRangeByPosition (0,lrowS,250,lrowE )
+	oRangeVoceC.Rows.OptimalHeight = True
 	Circoscrive_Voce_Computo_Att= oRangeVoceC
 End Function
 

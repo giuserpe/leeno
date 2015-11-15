@@ -222,6 +222,7 @@ Firme_in_calce
 	ThisComponent.CalcAsShown = true 
 Numera_Voci_Computo (&quot;niente prompt&quot;) &apos; NON CHIEDE CONFERMA
 Chiudi_o_elimina_tabelle_inutili
+inizializza_analisi
 rem ----------------------------------------------------------------------
 Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
 Barra_Apri_Chiudi_5(&quot;3/4&quot;, 60)
@@ -251,12 +252,14 @@ Visualizza_normale_esegui
 	oDispatchHelper = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	oDispatchHelper.executeDispatch(oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array())
 Computo_Normale_terra_terra
-Adatta_Altezza_riga
+inizializza_computo
+Adatta_h_riga_intera_tabella(oSheet.Name)
 chiudi_dialoghi &apos; chiude tutti i dialoghi
 	msgbox &quot;Ho conservato una copia di sicurezza del vecchio file come:&quot; &amp; chr(10) &amp; chr(10)_
 			&amp; sUrlbak &amp; chr(10) &amp; chr(10)_
 			&amp; &quot;Eventuali discrepanze tra gli importi sono da ricercarsi nella&quot;&amp; chr(10)_
-			&amp; &quot;differenza del numero di cifre visualizzate dopo la virgola.&quot; &amp; chr(10) &amp; chr(10)_
+			&amp; &quot;differenza del numero di cifre visualizzate dopo la virgola.&quot; &amp; chr(10)_
+			&amp; &quot;Fai un attento controllo del risultato.&quot; &amp; chr(10)&amp; chr(10)_
 			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
 &apos;	msgbox &quot;Ho conservato una copia di sicurezza del file non convertito,&quot; &amp; chr(10) &amp; chr(10)_
 &apos;			&amp; &quot;Grazie per l&apos;attesa e buon lavoro!&quot; ,64, &quot;OPERAZIONE COMPLETATA!&quot;
@@ -269,7 +272,7 @@ rem prova dialogo
 &apos;	oDlg = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgConversioneCompleta) &apos; Inizializza il dialogo
 &apos;	oDlg.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
 rem ----------------------------------------------------------------------
-
+	colora_tabs
 rem torno su -tmp
 Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
 rem ----------------------------------------------------------------------
@@ -311,7 +314,7 @@ end Sub
 sub crea_molte_copie_file &apos;Giuseppe Vizziello 2014
 	Dim sURL, sNewURL, sName As String
 &apos;	sURL = ConvertToUrl(ThisComponent.getURL())
-	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.ods&quot;)
+	sURL = ConvertToUrl(&quot;W:\_dwg\ULTIMUSFREE\_lorenzo\00.ods&quot;)
  	sName = Replace_G(sURL, &quot;.ods&quot;, &quot;&quot;)
 	For i=0 To 9
 		sNewURL= sName + i + &quot;.ods&quot;
@@ -394,8 +397,13 @@ rem elimino i pulsanti prima di copiare
 	oSheetSRC.getCellRangeByPosition (0,0,140,3).ClearContents(iCellAttr)
 rem ----------------------------------------------------------------------
 rem seleziono il range da trasferire
-	oSRC=oSheetSRC.getCellRangeByPosition (0, 0, getLastUsedCol(oSheetSRC), getLastUsedRow(oSheetSRC)).getRangeAddress
-	oDocSrc.getCurrentController.select(oSheetSRC.GetCellRangeByPosition(0, 0, getLastUsedCol(oSheetSRC), getLastUsedRow(oSheetSRC)))
+
+	lCol = getLastUsedCol(oSheetSRC)
+	If oSheetSRC.Name = &quot;S2&quot; Then lCol = 2
+	lrow = getLastUsedRow(oSheetSRC)
+	
+	oSRC=oSheetSRC.getCellRangeByPosition (0, 0, lCol, lRow).getRangeAddress
+	oDocSrc.getCurrentController.select(oSheetSRC.GetCellRangeByPosition(0, 0, lCol, lRow))
 copy_clip	
 rem ----------------------------------------------------------------------
 rem copia lo stile di pagina del foglio

@@ -1,4 +1,4 @@
-﻿#!
+﻿#!/usr/bin/env python
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 ########################################################################
 # LeenO - Computo Metrico
@@ -10,12 +10,16 @@
 # Sono inoltre graditi suggerimenti in merito alle gestione della
 # Contabilità Lavori e per l'ottimizzazione del codice.
 ########################################################################
+import locale
+import codecs
+#~ locale.setlocale(locale.LC_ALL, '')
+#~ locale.setlocale(locale.LC_ALL, 'it_IT.UTF-8')
 import os, sys, uno, unohelper, pyuno, logging, shutil
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
-from datetime import datetime
+from datetime import datetime, date
 from com.sun.star.beans import PropertyValue
-from xml.etree.ElementTree import ElementTree
+from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 ########################################################################
 def LeenO_path():
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -94,15 +98,16 @@ def insRows(lrow, nrighe): #forse inutile
     oCellRangeAddr.EndRow = lrow+4-1
     oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
 ########################################################################
-def debug (): #ultima_voce ():
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+def ultima_voce (oSheet):
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
     nRow = getLastUsedCell(oSheet).EndRow
-    MsgBox(nRow , '')
-    for n in reversed(0, nRow):
-        MsgBox(n , '')
+    #~ MsgBox(nRow,'')
+    for n in reversed(range(0, nRow)):
         if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo', 'Comp End Attributo_R'):
-            return (n)
+            break
+    #~ MsgBox(n , '')
+    return n
 ########################################################################
 def uFindString (sString, oSheet):
     '''Trova la prima ricorrenza di una stringa (sString) riga per riga
@@ -131,13 +136,241 @@ def _gotoCella (IDcol,IDrow):
     properties = (oProp,)
     dispatchHelper.executeDispatch(oFrame, '.uno:GoToCell', '', 0, properties )
 ########################################################################
+# Scrive un file.
+def debug_XPWE_export():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ filename = filedia('Esporta in formato XPWE con nome...')
+    #~ MsgBox (filename, '')
+    #~ out_file = open("/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/test.xpwe","w")
+    lista_righe = list()
+    top = Element('PweDocumento')
+    #~ dati generali
+    PweDatiGenerali = SubElement(top,'PweDatiGenerali')
+    PweMisurazioni = SubElement(top,'PweMisurazioni')
+    PweDGProgetto = SubElement(PweDatiGenerali,'PweDGProgetto')
+    PweDGDatiGenerali = SubElement(PweDGProgetto,'PweDGDatiGenerali')
+    PercPrezzi = SubElement(PweDGDatiGenerali,'PercPrezzi')
+    PercPrezzi.text = '0'
+
+    Comune = SubElement(PweDGDatiGenerali,'Comune')
+    Provincia = SubElement(PweDGDatiGenerali,'Provincia')
+    Oggetto = SubElement(PweDGDatiGenerali,'Oggetto')
+    Committente = SubElement(PweDGDatiGenerali,'Committente')
+    Impresa = SubElement(PweDGDatiGenerali,'Impresa')
+    ParteOpera = SubElement(PweDGDatiGenerali,'ParteOpera')
+    #~  leggo i dati generali
+    oSheet = oDoc.getSheets().getByName('S2')
+    Comune.text = oSheet.getCellByPosition(2, 3).String
+    Provincia.text = ''
+    Oggetto.text = oSheet.getCellByPosition(2, 2).String
+    Committente.text = oSheet.getCellByPosition(2, 5).String
+    Impresa.text = oSheet.getCellByPosition(2, 16).String
+    ParteOpera.text = ''
+    #~ Capitoli e Categorie
+    PweDGCapitoliCategorie = SubElement(PweDatiGenerali,'PweDGCapitoliCategorie')
+    #~ SuperCategorie
+    oSheet = oDoc.getSheets().getByName('VARIANTE')
+    #~ for n in range (0, ultima_voce(oSheet)):
+        #~ if oSheet.getCellByPosition(1, n).CellStyle == 'Livello-1-scritta':
+            #~ idID = oSheet.getCellByPosition(1, n).String
+            #~ desc = oSheet.getCellByPosition(2, n).String
+            #~ 
+            #~ PweDGSuperCategorie = SubElement(PweDGCapitoliCategorie,'PweDGSuperCategorie')
+            #~ DGSuperCategorieItem = SubElement(PweDGSuperCategorie,'DGSuperCategorieItem')
+            #~ DesSintetica = SubElement(DGSuperCategorieItem,'DesSintetica')
+            #~ 
+            #~ DGSuperCategorieItem.set('ID', idID)
+            #~ DesSintetica.text = desc
+
+    #~ Categorie
+    for n in range (0, ultima_voce(oSheet)):
+        if oSheet.getCellByPosition(1, n).CellStyle == 'Livello-1-scritta':
+            idID = oSheet.getCellByPosition(31, n).String
+            #~ idID = oSheet.getCellByPosition(1, n).String.split('.')[-1]
+            desc = oSheet.getCellByPosition(2, n).String
+            
+            PweDGCategorie = SubElement(PweDGCapitoliCategorie,'PweDGCategorie')
+            DGCategorieItem = SubElement(PweDGCategorie,'DGCategorieItem')
+            DesSintetica = SubElement(DGCategorieItem,'DesSintetica')
+            
+            DGCategorieItem.set('ID', idID)
+            DesSintetica.text = desc
+    #~ SubCategorie
+    oSheet = oDoc.getSheets().getByName('VARIANTE')
+    for n in range (0, ultima_voce(oSheet)):
+        if oSheet.getCellByPosition(1, n).CellStyle == 'livello2 valuta':
+            idID = oSheet.getCellByPosition(32, n).String
+            desc = oSheet.getCellByPosition(2, n).String
+            
+            PweDGSubCategorie = SubElement(PweDGCapitoliCategorie,'PweDGSubCategorie')
+            DGSubCategorieItem = SubElement(PweDGSubCategorie,'DGSubCategorieItem')
+            DesSintetica = SubElement(DGSubCategorieItem,'DesSintetica')
+            
+            DGSubCategorieItem.set('ID', idID)
+            DesSintetica.text = desc
+            
+    #~ Elenco Prezzi
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    PweElencoPrezzi = SubElement(PweMisurazioni,'PweElencoPrezzi')
+    diz_ep = dict ()
+    for n in range (0, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(0, n).CellStyle == 'EP-aS':
+            EPItem = SubElement(PweElencoPrezzi,'EPItem')
+            EPItem.set('ID', str(n))
+            TipoEP = SubElement(EPItem,'TipoEP')
+            TipoEP.text = '0'
+            Tariffa = SubElement(EPItem,'Tariffa')
+            id_tar = str(n)
+            Tariffa.text = oSheet.getCellByPosition(0, n).String
+            diz_ep[oSheet.getCellByPosition(0, n).String] = id_tar
+            Articolo = SubElement(EPItem,'Articolo')
+            Articolo.text = ''
+            DesRidotta = SubElement(EPItem,'DesRidotta')
+            DesRidotta.text = ''
+            DesEstesa = SubElement(EPItem,'DesEstesa')
+            DesEstesa.text = oSheet.getCellByPosition(1, n).String
+            DesBreve = SubElement(EPItem,'DesBreve')
+            DesBreve.text = ''
+            UnMisura = SubElement(EPItem,'UnMisura')
+            UnMisura.text = oSheet.getCellByPosition(2, n).String
+            Prezzo1 = SubElement(EPItem,'Prezzo1')
+            Prezzo1.text = str(oSheet.getCellByPosition(4, n).Value)
+            Prezzo2 = SubElement(EPItem,'Prezzo2')
+            Prezzo2.text = '0'
+            Prezzo3 = SubElement(EPItem,'Prezzo3')
+            Prezzo3.text = '0'
+            Prezzo4 = SubElement(EPItem,'Prezzo4')
+            Prezzo4.text = '0'
+            Prezzo5 = SubElement(EPItem,'Prezzo5')
+            Prezzo5.text = '0'
+            IDSpCap = SubElement(EPItem,'IDSpCap')
+            IDSpCap.text = '0'
+            IDCap = SubElement(EPItem,'IDCap')
+            IDCap.text = '0'
+            IDSbCap = SubElement(EPItem,'IDSbCap')
+            IDSbCap.text = '0'
+            Flags = SubElement(EPItem,'Flags')
+            Flags.text = '0'
+            Data = SubElement(EPItem,'Data')
+            Data.text = '30/12/1899'
+            AdrInternet = SubElement(EPItem,'AdrInternet')
+            AdrInternet.text = ''
+            PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
+            PweEPAnalisi.text = ''
+    #~ COMPUTO
+    oSheet = oDoc.getSheets().getByName('VARIANTE')
+    PweVociComputo = SubElement(PweMisurazioni,'PweVociComputo')
+    oDoc.CurrentController.select(oSheet)
+    #~ oDoc.CurrentController.select(oDoc.CreateInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    for n in range (0, ultima_voce(oSheet)):
+        if oSheet.getCellByPosition(0, n).CellStyle == 'Comp Start Attributo':
+            sStRange = Circoscrive_Voce_Computo_Att (n)
+            sStRange.RangeAddress
+            sopra = sStRange.RangeAddress.StartRow
+            sotto = sStRange.RangeAddress.EndRow
+            
+            VCItem = SubElement(PweVociComputo,'VCItem')
+            VCItem.set('ID', str(n))
+            
+            IDEP = SubElement(VCItem,'IDEP')
+            IDEP.text = diz_ep.get(oSheet.getCellByPosition(1, sopra+1).String)
+##########################
+            Quantita = SubElement(VCItem,'Quantita')
+            Quantita.text = oSheet.getCellByPosition(9, sotto).String
+##########################
+            DataMis = SubElement(VCItem,'DataMis')
+            DataMis.text = '29/09/2013'###
+            Flags = SubElement(VCItem,'Flags')
+            Flags.text = '0'
+##########################
+            IDSpCat = SubElement(VCItem,'IDSpCat')
+            IDSpCat.text = ''
+##########################
+            IDCat = SubElement(VCItem,'IDCat')
+            IDCat.text = oSheet.getCellByPosition(31, sotto).String
+##########################
+            IDSbCat = SubElement(VCItem,'IDSbCat')
+            IDSbCat.text = oSheet.getCellByPosition(32, sotto).String
+##########################
+            PweVCMisure = SubElement(VCItem,'PweVCMisure')
+            for m in range (sopra+2, sotto):
+                RGItem = SubElement(PweVCMisure,'RGItem')
+                x = 2
+                RGItem.set('ID', str(x))
+                x = x+1
+##########################
+                IDVV = SubElement(RGItem,'IDVV')
+                IDVV.text = '-2'
+##########################
+                Descrizione = SubElement(RGItem,'Descrizione')
+                Descrizione.text = oSheet.getCellByPosition(2, m).String
+##########################
+                PartiUguali = SubElement(RGItem,'PartiUguali')
+                if oSheet.getCellByPosition(5, m).Formula.split('=')[-1] == None:
+                    PartiUguali.text = oSheet.getCellByPosition(5, m).String
+                else:
+                    PartiUguali.text = str(oSheet.getCellByPosition(5, m).Formula.split('=')[-1])
+                try:
+                    int(oSheet.getCellByPosition(5, m).Formula[1])
+                except:
+                    PartiUguali.text = oSheet.getCellByPosition(5, m).String
+##########################
+                Lunghezza = SubElement(RGItem,'Lunghezza')
+                if oSheet.getCellByPosition(6, m).Formula.split('=')[-1] == None:
+                    Lunghezza.text = oSheet.getCellByPosition(6, m).String
+                else:
+                    Lunghezza.text = str(oSheet.getCellByPosition(6, m).Formula.split('=')[-1])
+                try:
+                    int(oSheet.getCellByPosition(6, m).Formula[1])
+                except:
+                    Lunghezza.text = oSheet.getCellByPosition(6, m).String
+##########################
+                Larghezza = SubElement(RGItem,'Larghezza')
+                if oSheet.getCellByPosition(7, m).Formula.split('=')[-1] == None:
+                    Larghezza.text = oSheet.getCellByPosition(7, m).String
+                else:
+                    Larghezza.text = str(oSheet.getCellByPosition(7, m).Formula.split('=')[-1])
+                try:
+                    int(oSheet.getCellByPosition(7, m).Formula[1])
+                except:
+                    Larghezza.text = oSheet.getCellByPosition(7, m).String
+##########################
+                HPeso = SubElement(RGItem,'HPeso')
+                if oSheet.getCellByPosition(8, m).Formula.split('=')[-1] == None:
+                    HPeso.text = oSheet.getCellByPosition(8, m).Formula
+                else:
+                    HPeso.text = str(oSheet.getCellByPosition(8, m).Formula.split('=')[-1])
+                try:
+                    int(oSheet.getCellByPosition(8, m).Formula[1])
+                except:
+                    HPeso.text = oSheet.getCellByPosition(8, m).Formula
+##########################
+                Quantita = SubElement(RGItem,'Quantita')
+                Quantita.text = ''
+                #~ Quantita.text = oSheet.getCellByPosition(9, m).String
+##########################
+                Flags = SubElement(RGItem,'Flags')
+                if "Parziale [" in oSheet.getCellByPosition(8, m).String:
+                    Flags.text = '2'
+                else:
+                    Flags.text = ''
+            n = sotto+1
+
+    ####################################################################
+    out_file ="W:\\_dwg\\ULTIMUSFREE\\xpwe\\test.xpwe"
+    riga = str(tostring(top, encoding="unicode"))
+    of = codecs.open(out_file,'w','utf-8')
+    of.write(riga)
+    MsgBox('Esportazione in formato XPWE\neseguita con successo!','Avviso.')
+########################################################################
 def Circoscrive_Voce_Computo_Att (lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ lrow = Range2Cell()[1]
-    if oSheet.Name in ( 'COMPUTO','CONTABILITA'):
+    if oSheet.Name in ('VARIANTE', 'COMPUTO','CONTABILITA'):
         #~ stile=oSheet.getCellByPosition(0, lrow).CellStyle
-        if oSheet.getCellByPosition(0, lrow).CellStyle in ('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R'):
+        if oSheet.getCellByPosition(0, lrow).CellStyle in ('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-1-scritta', 'livello2 valuta'):
             if oSheet.getCellByPosition (0, lrow).CellStyle in ('Comp Start Attributo', 'Comp Start Attributo_R'):
                 lrowS=lrow
             else:
@@ -302,6 +535,19 @@ def getLastUsedCell(oSheet):
     aAddress = oCursor.RangeAddress
     return aAddress#.EndColumn, aAddress.EndRow)
 ########################################################################
+# restituisce l'ID dell'ultima riga usata
+def ultima_voce_bis(oSheet):
+    oCell = oSheet.getCellByPosition(0, 0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    for n in range(0, aAddress.EndRow, -1):
+        if oSheet.getCellByPosition (0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo', 'Comp End Attributo_R'):
+            return(n)
+            n = 1
+    MsgBox(n, '')
+    #~ return aAddress#.EndColumn, aAddress.EndRow)
+########################################################################
 # numera le voci di computo o contabilità
 def Numera_Voci():
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -408,6 +654,8 @@ def XML_import (): #(filename):
     desc_estesa = str()
     # effettua il parsing del file XML
     tree = ElementTree()
+    if filename == 'Cancel' or filename == '':
+        return
     tree.parse(filename)
     # ottieni l'item root
     root = tree.getroot()
@@ -613,6 +861,8 @@ def XML_import_BOLZANO ():
     desc_estesa = str()
     # effettua il parsing del file XML
     tree = ElementTree()
+    if filename == 'Cancel' or filename == '':
+        return
     tree.parse(filename)
     # ottieni l'item root
     root = tree.getroot()
@@ -813,16 +1063,9 @@ def XML_import_BOLZANO ():
 # XML_import_BOLZANO ###################################################
 ########################################################################
 # XPWE_import ##########################################################
-def debug_XPWE_import (): #(filename):
-    New_file.computo()
-    filename = filedia('Scegli il file XPWE da importare...')
-    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/xpwe_prova.xpwe'
-    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/_Prezzari/2005/da_pwe/Esempio_Progetto_CorpoMisura.xpwe'
-    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/elenchi/Sicilia/sicilia2013.xpwe'
-    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\berlingieri.xpwe'
-    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/berlingieri.xpwe'
-    #~ filename = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/prova_vedi_voce.xpwe'
-    #~ filename = 'W:\\BAR\\S. Francesco di assisi Gravina\\primus\\Campanile_san_francesco.xpwe'
+def debug():#_XPWE_import (): #(filename):
+    #~ filename = filedia('Scegli il file XPWE da importare...')
+    filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\000.xpwe'
     #~ filename = filedia('Scegli il file XPWE da importare...')
     '''xml auto indent: http://www.freeformatter.com/xml-formatter.html'''
     #~ filename = filedia('Scegli il file XML-SIX da convertire...')
@@ -832,6 +1075,8 @@ def debug_XPWE_import (): #(filename):
     diz_ep = dict() # array per le voci di elenco prezzi
     # effettua il parsing del file XML
     tree = ElementTree()
+    if filename == 'Cancel' or filename == '':
+        return
     tree.parse(filename)
     # ottieni l'item root
     root = tree.getroot()
@@ -942,13 +1187,32 @@ def debug_XPWE_import (): #(filename):
     spesegenerali = PweDGModuli[1].text
     utiliimpresa = PweDGModuli[2].text
     oneriaccessorisc = PweDGModuli[3].text
+    ConfQuantita = PweDGModuli[4].text
+###
+    PweDGConfigurazione = dati.getchildren()[3][0].getchildren()    #PweDGConfigurazione
+    Divisa = PweDGConfigurazione[0].text
+    ConversioniIN = PweDGConfigurazione[1].text
+    FattoreConversione = PweDGConfigurazione[2].text
+    Cambio = PweDGConfigurazione[3].text
+    PartiUguali = PweDGConfigurazione[4].text
+    PartiUguali = PweDGConfigurazione[5].text
+    Larghezza = PweDGConfigurazione[6].text
+    HPeso = PweDGConfigurazione[7].text
+    Quantita = PweDGConfigurazione[8].text
+    Prezzi = PweDGConfigurazione[9].text
+    PrezziTotale = PweDGConfigurazione[10].text
+    ConvPrezzi= PweDGConfigurazione[11].text
+    ConvPrezziTotale = PweDGConfigurazione[12].text
+    IncidenzaPercentuale = PweDGConfigurazione[13].text
+    Aliquote = PweDGConfigurazione[14].text
 ###
     misurazioni = root.find('PweMisurazioni')
     PweElencoPrezzi = misurazioni.getchildren()[0]
 ###
 # leggo l'elenco prezzi ################################################
     epitems = PweElencoPrezzi.findall('EPItem')
-    lista_articoli = dict()
+    dict_articoli = dict()
+    lista_articoli = list()
     for elem in epitems:
         id_ep = elem.get('ID')
         diz_ep = dict()
@@ -959,7 +1223,10 @@ def debug_XPWE_import (): #(filename):
         destestesa = elem.find('DesEstesa').text
         desridotta = elem.find('DesBreve').text
         desbreve = elem.find('DesBreve').text
-        unmisura = elem.find('UnMisura').text
+        if elem.find('UnMisura').text != None:
+            unmisura = elem.find('UnMisura').text
+        else:
+            unmisura = '%'
         prezzo1 = elem.find('Prezzo1').text
         prezzo2 = elem.find('Prezzo2').text
         prezzo3 = elem.find('Prezzo3').text
@@ -991,101 +1258,108 @@ def debug_XPWE_import (): #(filename):
         diz_ep['data'] = data
         diz_ep['adrinternet'] = adrinternet
         diz_ep['pweepanalisi'] = pweepanalisi
-        lista_articoli[id_ep] = diz_ep
+        dict_articoli[id_ep] = diz_ep
+        lista_articoli.append
+        articolo_modificato =  (tariffa,
+                                    destestesa,
+                                    unmisura,
+                                    '',
+                                    prezzo1)
+        lista_articoli.append(articolo_modificato)
 ###
 # leggo voci di misurazione e righe ####################################
-    #~ try:
-    PweVociComputo = misurazioni.getchildren()[1]
-    vcitems = PweVociComputo.findall('VCItem')
     lista_misure = list()
-    for elem in vcitems:
-        diz_misura = dict()
-        id_vc = elem.get('ID')
-        id_ep = elem.find('IDEP').text
-        quantita = elem.find('Quantita').text
-        datamis = elem.find('DataMis').text
-        flags = elem.find('Flags').text
-        idspcat = elem.find('IDSpCat').text
-        idcat = elem.find('IDCat').text
-        idsbcat = elem.find('IDSbCat').text
-        righi_mis = elem.getchildren()[-1].findall('RGItem')
-        lista_rig = list()
-        riga_misura = ()
-        lista_righe = []
-        for el in righi_mis:
-            diz_rig = dict()
-            rgitem = el.get('ID')
-            idvv = el.find('IDVV').text
-            descrizione = el.find('Descrizione').text
-            partiuguali = el.find('PartiUguali').text
-            lunghezza = el.find('Lunghezza').text
-            larghezza = el.find('Larghezza').text
-            hpeso = el.find('HPeso').text
-            quantita = el.find('Quantita').text
-            flags = el.find('Flags').text
-            diz_rig['rgitem'] = rgitem
-            diz_rig['idvv'] = idvv
-            diz_rig['descrizione'] = descrizione
-            diz_rig['partiuguali'] = partiuguali
-            diz_rig['lunghezza'] = lunghezza
-            diz_rig['larghezza'] = larghezza
-            diz_rig['hpeso'] = hpeso
-            diz_rig['quantita'] = quantita
-            diz_rig['flags'] = flags
-            if partiuguali == None:
-                partiuguali = ''
-            else:
-                if '*' in partiuguali:
-                    partiuguali = '='+ partiuguali
-            if hpeso == None:
-                hpeso = ''
-            #~ else:
-                #~ if '*', '+', '/' in hpeso:
-                    #~ hpeso = '='+ hpeso
-            riga_misura =  (descrizione,
-                            '',
-                            '',
-                            partiuguali,
-                            lunghezza,
-                            larghezza,
-                            hpeso)
-            mia = []
-            mia.append(riga_misura[0])
-            for el in riga_misura[1:]:
-                if el == None:
-                    el = ''
+    try:
+        PweVociComputo = misurazioni.getchildren()[1]
+        vcitems = PweVociComputo.findall('VCItem')
+        for elem in vcitems:
+            diz_misura = dict()
+            id_vc = elem.get('ID')
+            id_ep = elem.find('IDEP').text
+            quantita = elem.find('Quantita').text
+            datamis = elem.find('DataMis').text
+            flags = elem.find('Flags').text
+            idspcat = elem.find('IDSpCat').text
+            idcat = elem.find('IDCat').text
+            idsbcat = elem.find('IDSbCat').text
+            righi_mis = elem.getchildren()[-1].findall('RGItem')
+            lista_rig = list()
+            riga_misura = ()
+            lista_righe = []
+            for el in righi_mis:
+                diz_rig = dict()
+                rgitem = el.get('ID')
+                idvv = el.find('IDVV').text
+                descrizione = el.find('Descrizione').text
+                partiuguali = el.find('PartiUguali').text
+                lunghezza = el.find('Lunghezza').text
+                larghezza = el.find('Larghezza').text
+                hpeso = el.find('HPeso').text
+                quantita = el.find('Quantita').text
+                flags = el.find('Flags').text
+                diz_rig['rgitem'] = rgitem
+                diz_rig['idvv'] = idvv
+                diz_rig['descrizione'] = descrizione
+                diz_rig['partiuguali'] = partiuguali
+                diz_rig['lunghezza'] = lunghezza
+                diz_rig['larghezza'] = larghezza
+                diz_rig['hpeso'] = hpeso
+                diz_rig['quantita'] = quantita
+                diz_rig['flags'] = flags
+                if partiuguali == None:
+                    partiuguali = ''
                 else:
-                    try:
-                        el = float(el)
-                    except ValueError:
-                        if el != '':
-                            el = '=' + el.replace('.',',')
-                        #~ pass
-                    #~ el = eval(el.replace('.',','))
-                    #~ MsgBox(el.replace('.',','),'')
-                    #~ print(el)
-                    #~ pri()
-                    #~ el = eval(el)#replace('.',',')
-                mia.append(el) 
-            lista_righe.append(tuple(mia))
-            #~ lista_righe.append(riga_misura)
-            #~ lista_rig.append(diz_rig)
-        diz_misura['id_vc'] = id_vc
-        diz_misura['id_ep'] = id_ep
-        diz_misura['quantita'] = quantita
-        diz_misura['datamis'] = datamis
-        diz_misura['flags'] = flags
-        diz_misura['idspcat'] = idspcat
-        diz_misura['idcat'] = idcat
-        diz_misura['idsbcat'] = idsbcat
-        #~ diz_misura['lista_rig'] = lista_rig
-        diz_misura['lista_rig'] = tuple(lista_righe)
-        #~ vcitem = (id_vc, id_ep, quantita, datamis, flags, idspcat, idcat, idsbcat)
-        #~ lista_misure[id_vc] = vcitem
-        lista_misure.append(diz_misura)
-    #~ except IndexError:
-        #~ MsgBox('questo risulta essere un elenco prezzi senza voci di misurazione','ATTENZIONE!')
-        #~ pass
+                    if '*' in partiuguali:
+                        partiuguali = '='+ partiuguali
+                if hpeso == None:
+                    hpeso = ''
+                #~ else:
+                    #~ if '*', '+', '/' in hpeso:
+                        #~ hpeso = '='+ hpeso
+                riga_misura =  (descrizione,
+                                '',
+                                '',
+                                partiuguali,
+                                lunghezza,
+                                larghezza,
+                                hpeso)
+                mia = []
+                mia.append(riga_misura[0])
+                for el in riga_misura[1:]:
+                    if el == None:
+                        el = ''
+                    else:
+                        try:
+                            el = float(el)
+                        except ValueError:
+                            if el != '':
+                                el = '=' + el.replace('.',',')
+                            #~ pass
+                        #~ el = eval(el.replace('.',','))
+                        #~ MsgBox(el.replace('.',','),'')
+                        #~ print(el)
+                        #~ pri()
+                        #~ el = eval(el)#replace('.',',')
+                    mia.append(el) 
+                lista_righe.append(tuple(mia))
+                #~ lista_righe.append(riga_misura)
+                #~ lista_rig.append(diz_rig)
+            diz_misura['id_vc'] = id_vc
+            diz_misura['id_ep'] = id_ep
+            diz_misura['quantita'] = quantita
+            diz_misura['datamis'] = datamis
+            diz_misura['flags'] = flags
+            diz_misura['idspcat'] = idspcat
+            diz_misura['idcat'] = idcat
+            diz_misura['idsbcat'] = idsbcat
+            #~ diz_misura['lista_rig'] = lista_rig
+            diz_misura['lista_rig'] = tuple(lista_righe)
+            #~ vcitem = (id_vc, id_ep, quantita, datamis, flags, idspcat, idcat, idsbcat)
+            #~ lista_misure[id_vc] = vcitem
+            lista_misure.append(diz_misura)
+    except IndexError:
+        MsgBox('In questo file non risultano esserci voci di misurazione.\nImporterò le sole voci di Elenco Prezzi.','ATTENZIONE!')
+        pass
     #~ articoli = open ('/home/giuserpe/.config/libreoffice/4/user/uno_packages/cache/uno_packages/luds59ep.tmp_/LeenO-3.11.3.dev-150714180321.oxt/pyLeenO/articoli.txt', 'w')
     #~ print (str(lista_articoli), file=articoli)
     #~ articoli.close()
@@ -1094,6 +1368,8 @@ def debug_XPWE_import (): #(filename):
     #~ misure.close()
     #~ MsgBox('ho stampato', '')
 ###
+    New_file.computo()
+    #~ return
     oDoc = XSCRIPTCONTEXT.getDocument()
 # compilo Anagrafica generale ##########################################
     oSheet = oDoc.getSheets().getByName('S2')
@@ -1112,19 +1388,34 @@ def debug_XPWE_import (): #(filename):
     oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
 # compilo Elenco Prezzi ################################################
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    n_art = len(lista_articoli)
+
+    # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
+    # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
+    lista_come_array = tuple(lista_articoli) 
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
+    scarto_righe = 3 # numero righe da saltare a partire dall'alto
+    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+
+    oSheet.getRows().insertByIndex(3, righe_lista)
+
+    oRange = oSheet.getCellRangeByPosition( scarto_colonne, 
+                                            scarto_righe, 
+                                            colonne_lista + scarto_colonne - 1, # l'indice parte da 0
+                                            righe_lista + scarto_righe - 1)
+
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
+
     SC = oCellRangeAddr.StartColumn = 0
     SR = oCellRangeAddr.StartRow = 3
     EC = oCellRangeAddr.EndColumn = 0
-    ER = oCellRangeAddr.EndRow = 3 + n_art - 1
-    lrow=4 #primo rigo dati
-    idxcol=0
-###
-# INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
-    oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
-#~ SISTEMO GLI STILI
+    ER = oCellRangeAddr.EndRow = 3 + righe_lista - 1
+
+    #~ oSheet.insertCells(oCellRangeAddr, 1100)   # com.sun.star.sheet.CellInsertMode.ROW
+
+    oRange.setDataArray(lista_come_array)
     oSheet.getCellRangeByPosition (0, SR, 7, ER).CellStyle = 'EP-aS'
     oSheet.getCellRangeByPosition (1, SR, 1, ER).CellStyle = 'EP-a'
     oSheet.getCellRangeByPosition (2, SR, 6, ER).CellStyle = 'EP-mezzo'
@@ -1134,6 +1425,33 @@ def debug_XPWE_import (): #(filename):
     oSheet.getCellRangeByPosition (11, SR, 11, ER).CellStyle = 'EP statistiche'
     oSheet.getCellRangeByPosition (13, SR, 13, ER).CellStyle = 'EP statistiche_Contab_q'
     oSheet.getCellRangeByPosition (14, SR, 14, ER).CellStyle = 'EP statistiche_Contab'
+    return
+
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    n_art = len(lista_articoli)
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
+    
+    SC = oCellRangeAddr.StartColumn = 0
+    SR = oCellRangeAddr.StartRow = 3
+    EC = oCellRangeAddr.EndColumn = 0
+    ER = oCellRangeAddr.EndRow = 3 + n_art - 1
+    
+    lrow=4 #primo rigo dati
+    idxcol=0
+###
+# INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
+    oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
+#~ SISTEMO GLI STILI
+    #~ oSheet.getCellRangeByPosition (0, SR, 7, ER).CellStyle = 'EP-aS'
+    #~ oSheet.getCellRangeByPosition (1, SR, 1, ER).CellStyle = 'EP-a'
+    #~ oSheet.getCellRangeByPosition (2, SR, 6, ER).CellStyle = 'EP-mezzo'
+    #~ oSheet.getCellRangeByPosition (5, SR, 5, ER).CellStyle = 'EP-mezzo %'
+    #~ oSheet.getCellRangeByPosition (8, SR, 9, ER).CellStyle = 'EP-sfondo'
+    #~ oSheet.getCellRangeByPosition (10, SR, 10, ER).CellStyle = 'EP statistiche_q'
+    #~ oSheet.getCellRangeByPosition (11, SR, 11, ER).CellStyle = 'EP statistiche'
+    #~ oSheet.getCellRangeByPosition (13, SR, 13, ER).CellStyle = 'EP statistiche_Contab_q'
+    #~ oSheet.getCellRangeByPosition (14, SR, 14, ER).CellStyle = 'EP statistiche_Contab'
 ###
     for elem in lista_articoli:
 # sommario computo
@@ -1164,6 +1482,9 @@ def debug_XPWE_import (): #(filename):
     oDoc.CurrentController.select(oSheet)
     iSheet_num = oSheet.RangeAddress.Sheet
 ###
+    if len(lista_misure) == 0:
+        MsgBox('Elenco prezzi importato\ndal file: ' + filename, 'Avviso')
+        return
     lista_misure.reverse()
     lrow=3 #primo rigo dati
     for el in lista_misure:
@@ -1297,6 +1618,8 @@ def filedia(titolo):
         oDisp = traceback.format_exc(sys.exc_info()[2])
     finally:
         return oDisp
+########################################################################
+
 ########################################################################
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BUTTONS_YES_NO, BUTTONS_YES_NO_CANCEL, BUTTONS_RETRY_CANCEL, BUTTONS_ABORT_IGNORE_RETRY
 from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON_CANCEL, DEFAULT_BUTTON_RETRY, DEFAULT_BUTTON_YES, DEFAULT_BUTTON_NO, DEFAULT_BUTTON_IGNORE

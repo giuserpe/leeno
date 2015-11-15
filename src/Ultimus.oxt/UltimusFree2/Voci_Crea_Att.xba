@@ -13,13 +13,14 @@
 &apos;_______________________________________________________________________________________
 Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 &apos; creata per lo shortcut
+&apos;screenupdatingoff
  Dim nome_sheet As String 
  	nome_sheet = thisComponent.currentcontroller.activesheet.Name
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	Select Case thisComponent.currentcontroller.activesheet.Name
 	Case &quot;COMPUTO&quot; , &quot;VARIANTE&quot;
 If se_contabilita = 1 Then Exit Sub
-	&apos;	ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_computo&quot;)
+	&apos;	ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_computo&quot;) &apos;ANCORA TROPPO LENTO
  		Nuova_Voce_Computo_Att
  	Case &quot;Analisi di Prezzo&quot;
 		NuovaAnalisi_Att
@@ -28,6 +29,7 @@ If se_contabilita = 1 Then Exit Sub
  	Case &quot;Elenco Prezzi&quot;
  	Voce_EP_in_bianco
 	End Select
+&apos;screenupdatingon
 End Sub
 
 &apos;normalmente in Contabilità non vengono create nuove voci ma si &quot;pesca&quot;
@@ -324,7 +326,7 @@ SUB tante_voci_insieme
 		quante = InputBox(&quot;quante voci vuoi inserire?&quot;, &quot;1&quot;)
 	 	If quante = 0 Then Exit Sub
 	 	For i = 1 To quante 
-		 	If nome_sheet = &quot;COMPUTO&quot; Or &quot;VARIANTE&quot; Then Nuova_Voce_Computo_Att
+		 	If nome_sheet = &quot;COMPUTO&quot; Or nome_sheet = &quot;VARIANTE&quot; Then Nuova_Voce_Computo_Att
 			If nome_sheet = &quot;Analisi di Prezzo&quot; Then NuovaAnalisi_Att
 		Next
 	End Select
@@ -463,6 +465,19 @@ rem ----------------------------------------------------------------------
 	oCRA.EndRow = lrow+2
 	oSheet.group(oCRA,1)
 &apos;#########################################################################
+&apos;descrizione breve della voce
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1 Then
+		primi = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,336).value
+		ultimi = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,337).value
+		sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; lrow+2 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
+			&quot;;VLOOKUP(B&quot; &amp; lrow+2 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; _
+			&quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; lrow+2 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&amp; primi &amp;&quot;);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
+			&quot;RIGHT(VLOOKUP(B&quot; &amp; lrow+2 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; ultimi &amp; &quot;))&quot;
+		oSheet.GetCellByPosition(2 ,lrow+1).formula = sformula
+	EndIf
+&apos;#########################################################################
+
+
 
 	&apos; toglie la selezione
  	exit sub

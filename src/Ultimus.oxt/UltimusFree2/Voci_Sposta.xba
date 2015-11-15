@@ -14,6 +14,7 @@
 
 rem ______________________________________________________
 sub elimina_voce &apos;elimina voce (C) Giuseppe Vizziello 2014
+&apos;c
 &apos;On Error GoTo fine:
 	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
 	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
@@ -57,6 +58,7 @@ rem controllo se posso procedere
 		Numera_Voci_Computo (&quot;&quot;)
 	End If
 fine:
+&apos;screenupdatingon
 end sub
 rem ######################################################################
 

@@ -532,7 +532,7 @@ procedi:
 	oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
 	if oSheet.GetCellByPosition(2,riga_corrente).string = &quot;SI DETRAE PARTITA PROVVISORIA&quot; then
 		segno=&quot;-&quot;
-	else
+	Else
 		segno=&quot;&quot;
 	end if
 	riga_corrente=riga_corrente+1

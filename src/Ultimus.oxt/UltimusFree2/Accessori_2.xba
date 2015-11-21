@@ -644,23 +644,6 @@ i=rIntest
 	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=SUMIF(GG;A4;conEuro)&quot;
 &apos;	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
-Exit Sub 
-rem seleziono le formule
-	oSrc = oSheet.getCellRangeByPosition(lcolbase+15, rIntest, lcolbase+17, rIntest).RangeAddress
-	For i=rIntest To lrowf-2
-		oDest = oSheet.getCellByPosition(lcolbase+15, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
-		oSheet.copyRange(oDest, oSrc)
-&apos;print
-	Next	
-
-rem seleziono le formule
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
-&apos;	ThisComponent.CurrentController.Select(oSheet.getcellrangeByPosition(lcolbase+13 , rIntest,lcolbase+14 , rIntest))
-	sFormula1 = &quot;=SUBTOTAL(9;&quot; &amp; sCol2 &amp; idxrow+1 &amp; &quot;:&quot; &amp; sCol2 &amp; lrowF+2 &amp; &quot;)&quot;		
-	oSheet.GetCellByPosition(lcolbase+14 , lrowF).setformula(sFormula1)	
-	oSheet.GetCellByPosition(lcolbase+14 , lrowF).cellstyle = &quot;EP statistiche_Contab&quot;
-	Ripristina_statusLine
-&apos;	suona_1_2
 END Sub
 
 
@@ -836,23 +819,6 @@ rem questa sotto è da tenere d&apos;occhio!!!
 	paste_clip
 rem ----------------------------------------------------------------------
 	thisComponent.currentController.Select(oSheet.getCellByposition(0, 0)) &apos;deseleziona
-	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
-
-Exit Sub
-rem QUESTE SOTTO LE CONSERVO PERCHE&apos; POTREBBE FARE STORIE CON QUELLE SOPRA
-rem seleziono le formule e le ricopio giù
-	oSrc = oSheet.getCellRangeByPosition(lcolbase + 10, idxrow+1, lcolbase + 25, rIntest).RangeAddress
-	oDest = oSheet.getCellByPosition(lcolbase + 10, i+1,lcolbase+10, lrowf-1).CellAddress &apos;
-	oSheet.copyRange(oDest, oSrc)
-	For i=rIntest To lrowf-2
-		oDest = oSheet.getCellByPosition(lcolbase + 10, i+1).CellAddress &apos;,lcolbase+10, lrowf-1
-		oSheet.copyRange(oDest, oSrc)
-	Next
-	oSheet.GetCellByPosition(qq ,lRowF).STRING=&quot;TOTALE&quot; &apos;totale computo
-	oSheet.GetCellByPosition(qq ,lRowF).cellstyle=&quot;EP statistiche_q&quot; &apos;totale computo
-	oSheet.GetCellByPosition(lcolbase+ ii , lrowF).setformula(&quot;=SUBTOTAL(9;&quot; &amp; tot &amp; rIntest &amp;&quot;:&quot; &amp; tot &amp; lrowF+1 &amp; &quot;)&quot;)
-	oSheet.GetCellByPosition(lcolbase+ ii , lrowF).cellstyle = &quot;EP statistiche&quot;	
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
 END Sub

@@ -299,57 +299,13 @@ sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con r
 		Sheet.GetCellByPosition( 1, i).setvalue(2000,00)
 		Sheet.GetCellByPosition( 3, i).String =&quot;LeenO&quot;
 		oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sty(i))
-		oStile.CharFontName = &quot;Liberation Serif&quot;
+&apos;		oStile.CharFontName = &quot;Liberation Serif&quot;
 	i=i+2
 	Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
 	next	
 &apos;	def=odoc.StyleFamilies.getByName(&quot;Cellstyles&quot;).getElementsNames
 print &quot;ok&quot;
 end sub
-
-sub studio_stile &apos; serve a capire come influisce lo stile di testo sul numero di righe vvisualizzate nella cella
- &apos;  oCell=ThisComponent.Sheets.GetByName(&quot;Foglio1&quot;).getCellByPosition(1, 1)&apos;B2
- oCell=thiscomponent.currentselection
-   
-   nSty=oCell.cellstyle
-   Dim oSty as object
-   oSty = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getbyname(nSty)
-   alt = oSty.CharHeight*47&apos;35.2777777778
-   topm = oSty.ParaTopMargin
-   for nr=2 to 10
-      hh=alt+(nr-1)*0.85*alt+topm
-      oCell.Rows.Height = hh
-      wait 1000
-   next
-End Sub
-
-Sub studio_stile__
-oCell=thiscomponent.currentselection
-&apos;	With oCell.CellAddress
-&apos;		icol =.Column
-&apos;		iRow =.Row
-&apos;	End With
-
-
-
-xray oCell
-nSty=oCell.cellstyle
-&apos;print nsty
-Dim dSty As Object
-dsty = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getbyname(nSty)
-&apos;xray dsty
-alt = dsty.CharHeight*0.352777777778
-topm = dsty.ParaTopMargin*0.352777777778
-nr =5
-&apos;nr = n+(n-1)*0.18
-&apos;print (nr+nr-1)*100*alt+topm
-oCell.Rows.Height = nr*100*alt+(nr-1)*30*alt+topm
-&apos;	oSheet = ThisComponent.currentController.activeSheet
-&apos;	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
-&apos;	oPrimaCella.Rows.Height = 2200
-&apos;print alt
-&apos;print topm
-End Sub
 
 SUB Elimina_Nomi_Area_errati &apos;nome eloquente
 	Dim Doc As Object

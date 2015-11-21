@@ -84,7 +84,7 @@ def debug2():
 ########################################################################
 def insRows(lrow, nrighe): #forse inutile
     '''Inserisce nrighe nella posizione lrow - alternativo a
-    oSheet.getRows().insertByIndex(lrow,1)'''
+    oSheet.getRows().insertByIndex(lrow, 1)'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     iSheet = oSheet.RangeAddress.Sheet
@@ -104,7 +104,7 @@ def ultima_voce (oSheet):
     nRow = getLastUsedCell(oSheet).EndRow
     #~ MsgBox(nRow,'')
     for n in reversed(range(0, nRow)):
-        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo', 'Comp End Attributo_R'):
+        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo', 'Comp End Attributo_R', 'comp Int_colonna', 'comp Int_colonna_R_prima'):
             break
     #~ MsgBox(n , '')
     return n
@@ -514,7 +514,7 @@ def Copia_riga_Ent(): #Aggiungi Componente - capisce su quale tipologia di tabel
         copia_riga_analisi(lrow)
 ########################################################################
 # Range2Cell ###########################################################
-def Range2Cell():
+def Range2Cell ():
     '''Partendo da una selezione qualsiasi restituisce una tupla (IDcolonna, IDriga)'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1062,14 +1062,87 @@ def XML_import_BOLZANO ():
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - date).total_seconds()) + ' secondi!','')
 # XML_import_BOLZANO ###################################################
 ########################################################################
+# parziale_core ########################################################
+def parziale_core(lrow):
+    #~ lrow = 12
+    if lrow == 0:
+        return
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    #~ sStRange.RangeAddress
+    sopra = sStRange.RangeAddress.StartRow
+    sotto = sStRange.RangeAddress.EndRow
+
+    if oSheet.Name in ('COMPUTO','VARIANTE'):
+        if oSheet.getCellByPosition (0, lrow).CellStyle == 'comp 10 s' and \
+        oSheet.getCellByPosition (1, lrow).CellStyle == 'Comp-Bianche in mezzo' and \
+        oSheet.getCellByPosition (2, lrow).CellStyle == 'comp 1-a' or \
+        oSheet.getCellByPosition (0, lrow).CellStyle == 'Comp End Attributo':
+            oSheet.getRows().insertByIndex(lrow, 1)
+            oSheet.getCellRangeByPosition (2, lrow, 7, lrow).CellStyle = 'comp sotto centro'
+            oSheet.getCellByPosition (8, lrow).CellStyle = 'comp sotto BiancheS'
+            oSheet.getCellByPosition (9, lrow).CellStyle = 'Comp-Variante num sotto'
+
+            oSheet.getCellByPosition(31, lrow).Formula ='=AF$' + str(sotto+2)
+            oSheet.getCellByPosition(32, lrow).Formula ='=AG$' + str(sotto+2)
+            oSheet.getCellByPosition(33, lrow).Formula ='=AH$' + str(sotto+2)
+            oSheet.getCellByPosition(34, lrow).Formula ='=AI$' + str(sotto+2)
+            oSheet.getCellByPosition(35, lrow).Formula ='=AJ$' + str(sotto+2)
+            
+            oSheet.getCellByPosition (8, lrow).Formula = '''=CONCATENATE("Parziale [";VLOOKUP(B'''+ str(sopra+2) + ''';elenco_prezzi;3;FALSE());"]")'''
+
+            for i in reversed(range(0, lrow)):
+                if oSheet.getCellByPosition (9, i-1).CellStyle in ('vuote2', 'Comp-Variante num sotto'):
+                    i
+                    break
+
+            oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
+########################################################################
+# abs2name ############################################################
+def abs2name(nCol, nRow):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    idvoce = oSheet.getCellByPosition(nCol, nRow).AbsoluteName.split('$')
+    return idvoce[2]+idvoce[3]
+########################################################################
+# vedi_voce ############################################################
+def vedi_voce(riga_corrente,vRif, descrizione):
+    """(riga d'inserimento, riga di riferimento, descrizione)"""
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ riga_corrente = Range2Cell()[1]
+
+    #~ if oSheet.getCellByPosition(2, riga_corrente).CellStyle != 'comp 1-a':
+        #~ MsgBox(oSheet.getCellByPosition(2, riga_corrente).CellStyle,str(type(riga_corrente)))
+        #~ return
+
+    #~ copia_riga_computo(riga_corrente+1)
+    #~ vRif = 6
+    sStRange = Circoscrive_Voce_Computo_Att (vRif)
+    sStRange.RangeAddress
+    idv = sStRange.RangeAddress.StartRow +1
+    sotto = sStRange.RangeAddress.EndRow
+    art = abs2name (1, idv)
+    idvoce = abs2name (0, idv)
+    quantity = abs2name (9, sotto)
+    um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
+    #~ MsgBox(str(um),'um')
+    #~ descrizione = '- fghjk'
+    oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("'+ descrizione +'";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';"[";' + um + ';"]"'
+    oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
+########################################################################
 # XPWE_import ##########################################################
-def debug():#_XPWE_import (): #(filename):
-    #~ filename = filedia('Scegli il file XPWE da importare...')
-    filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\000.xpwe'
+def debug():#_XPWE_import(): #(filename):
+    filename = filedia('Scegli il file XPWE da importare...')
+    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\parziale_negativo.xpwe'
+    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\sSofia.xpwe'
+    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\000.xpwe'
     #~ filename = filedia('Scegli il file XPWE da importare...')
     '''xml auto indent: http://www.freeformatter.com/xml-formatter.html'''
     #~ filename = filedia('Scegli il file XML-SIX da convertire...')
-    # inizializzazioe delle variabili
+    # inizializzazione delle variabili
     date = datetime.now()
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare
     diz_ep = dict() # array per le voci di elenco prezzi
@@ -1217,16 +1290,19 @@ def debug():#_XPWE_import (): #(filename):
         id_ep = elem.get('ID')
         diz_ep = dict()
         tipoep = elem.find('TipoEP').text
-        tariffa = elem.find('Tariffa').text
+        if elem.find('Tariffa').text != None:
+            tariffa = elem.find('Tariffa').text
+        else:
+            tariffa = ''
         articolo = elem.find('Articolo').text
         desridotta = elem.find('DesRidotta').text
-        destestesa = elem.find('DesEstesa').text
+        destestesa = elem.find('DesEstesa').text#.strip()
         desridotta = elem.find('DesBreve').text
         desbreve = elem.find('DesBreve').text
         if elem.find('UnMisura').text != None:
             unmisura = elem.find('UnMisura').text
         else:
-            unmisura = '%'
+            unmisura = ''
         prezzo1 = elem.find('Prezzo1').text
         prezzo2 = elem.find('Prezzo2').text
         prezzo3 = elem.find('Prezzo3').text
@@ -1264,7 +1340,7 @@ def debug():#_XPWE_import (): #(filename):
                                     destestesa,
                                     unmisura,
                                     '',
-                                    prezzo1)
+                                    float(prezzo1))
         lista_articoli.append(articolo_modificato)
 ###
 # leggo voci di misurazione e righe ####################################
@@ -1285,12 +1361,15 @@ def debug():#_XPWE_import (): #(filename):
             righi_mis = elem.getchildren()[-1].findall('RGItem')
             lista_rig = list()
             riga_misura = ()
-            lista_righe = []
+            lista_righe = list()#[]
             for el in righi_mis:
                 diz_rig = dict()
                 rgitem = el.get('ID')
                 idvv = el.find('IDVV').text
-                descrizione = el.find('Descrizione').text
+                if el.find('Descrizione').text != None:
+                    descrizione = el.find('Descrizione').text
+                else:
+                    descrizione = ''
                 partiuguali = el.find('PartiUguali').text
                 lunghezza = el.find('Lunghezza').text
                 larghezza = el.find('Larghezza').text
@@ -1300,19 +1379,34 @@ def debug():#_XPWE_import (): #(filename):
                 diz_rig['rgitem'] = rgitem
                 diz_rig['idvv'] = idvv
                 diz_rig['descrizione'] = descrizione
-                diz_rig['partiuguali'] = partiuguali
-                diz_rig['lunghezza'] = lunghezza
-                diz_rig['larghezza'] = larghezza
-                diz_rig['hpeso'] = hpeso
-                diz_rig['quantita'] = quantita
-                diz_rig['flags'] = flags
-                if partiuguali == None:
-                    partiuguali = ''
+                if partiuguali !=None:
+                    diz_rig['partiuguali'] = partiuguali.replace('.',',')
                 else:
-                    if '*' in partiuguali:
-                        partiuguali = '='+ partiuguali
-                if hpeso == None:
-                    hpeso = ''
+                    diz_rig['partiuguali'] = partiuguali
+                if lunghezza !=None:
+                    diz_rig['lunghezza'] = lunghezza.replace('.',',')
+                else:
+                    diz_rig['lunghezza'] = lunghezza
+                if larghezza !=None:
+                    diz_rig['larghezza'] = larghezza.replace('.',',')
+                else:
+                    diz_rig['larghezza'] = larghezza
+                if hpeso !=None:
+                    diz_rig['hpeso'] = hpeso.replace('.',',')
+                else:
+                    diz_rig['hpeso'] = hpeso
+                if quantita !=None:
+                    diz_rig['quantita'] = quantita.replace('.',',')
+                else:
+                    diz_rig['quantita'] = quantita
+                diz_rig['flags'] = flags
+                #~ if partiuguali == None:
+                    #~ partiuguali = ''
+                #~ else:
+                    #~ if '*' in partiuguali:
+                        #~ partiuguali = '='+ partiuguali
+                #~ if hpeso == None:
+                    #~ hpeso = ''
                 #~ else:
                     #~ if '*', '+', '/' in hpeso:
                         #~ hpeso = '='+ hpeso
@@ -1322,7 +1416,10 @@ def debug():#_XPWE_import (): #(filename):
                                 partiuguali,
                                 lunghezza,
                                 larghezza,
-                                hpeso)
+                                hpeso,
+                                quantita,
+                                flags,
+                                idvv)
                 mia = []
                 mia.append(riga_misura[0])
                 for el in riga_misura[1:]:
@@ -1341,8 +1438,8 @@ def debug():#_XPWE_import (): #(filename):
                         #~ pri()
                         #~ el = eval(el)#replace('.',',')
                     mia.append(el) 
-                lista_righe.append(tuple(mia))
-                #~ lista_righe.append(riga_misura)
+                #~ lista_righe.append(tuple(mia))
+                lista_righe.append(riga_misura)
                 #~ lista_rig.append(diz_rig)
             diz_misura['id_vc'] = id_vc
             diz_misura['id_ep'] = id_ep
@@ -1353,12 +1450,17 @@ def debug():#_XPWE_import (): #(filename):
             diz_misura['idcat'] = idcat
             diz_misura['idsbcat'] = idsbcat
             #~ diz_misura['lista_rig'] = lista_rig
-            diz_misura['lista_rig'] = tuple(lista_righe)
+            #~ diz_misura['lista_rig'] = tuple(lista_righe)
+            diz_misura['lista_rig'] = lista_righe
+
             #~ vcitem = (id_vc, id_ep, quantita, datamis, flags, idspcat, idcat, idsbcat)
             #~ lista_misure[id_vc] = vcitem
             lista_misure.append(diz_misura)
     except IndexError:
-        MsgBox('In questo file non risultano esserci voci di misurazione.\nImporterò le sole voci di Elenco Prezzi.','ATTENZIONE!')
+        MsgBox("""In questo file non risultano esserci voci di misurazione
+Perciò saranno importate le sole voci di Elenco Prezzi.
+\nSi tenga conto che il formato XPWE non conserva alcuni dati
+come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
     #~ articoli = open ('/home/giuserpe/.config/libreoffice/4/user/uno_packages/cache/uno_packages/luds59ep.tmp_/LeenO-3.11.3.dev-150714180321.oxt/pyLeenO/articoli.txt', 'w')
     #~ print (str(lista_articoli), file=articoli)
@@ -1412,9 +1514,8 @@ def debug():#_XPWE_import (): #(filename):
     SR = oCellRangeAddr.StartRow = 3
     EC = oCellRangeAddr.EndColumn = 0
     ER = oCellRangeAddr.EndRow = 3 + righe_lista - 1
-
     #~ oSheet.insertCells(oCellRangeAddr, 1100)   # com.sun.star.sheet.CellInsertMode.ROW
-
+#~ SISTEMO GLI STILI
     oRange.setDataArray(lista_come_array)
     oSheet.getCellRangeByPosition (0, SR, 7, ER).CellStyle = 'EP-aS'
     oSheet.getCellRangeByPosition (1, SR, 1, ER).CellStyle = 'EP-a'
@@ -1425,105 +1526,141 @@ def debug():#_XPWE_import (): #(filename):
     oSheet.getCellRangeByPosition (11, SR, 11, ER).CellStyle = 'EP statistiche'
     oSheet.getCellRangeByPosition (13, SR, 13, ER).CellStyle = 'EP statistiche_Contab_q'
     oSheet.getCellRangeByPosition (14, SR, 14, ER).CellStyle = 'EP statistiche_Contab'
-    return
-
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    n_art = len(lista_articoli)
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
-    
-    SC = oCellRangeAddr.StartColumn = 0
-    SR = oCellRangeAddr.StartRow = 3
-    EC = oCellRangeAddr.EndColumn = 0
-    ER = oCellRangeAddr.EndRow = 3 + n_art - 1
-    
-    lrow=4 #primo rigo dati
-    idxcol=0
-###
-# INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
-    oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
-#~ SISTEMO GLI STILI
-    #~ oSheet.getCellRangeByPosition (0, SR, 7, ER).CellStyle = 'EP-aS'
-    #~ oSheet.getCellRangeByPosition (1, SR, 1, ER).CellStyle = 'EP-a'
-    #~ oSheet.getCellRangeByPosition (2, SR, 6, ER).CellStyle = 'EP-mezzo'
-    #~ oSheet.getCellRangeByPosition (5, SR, 5, ER).CellStyle = 'EP-mezzo %'
-    #~ oSheet.getCellRangeByPosition (8, SR, 9, ER).CellStyle = 'EP-sfondo'
-    #~ oSheet.getCellRangeByPosition (10, SR, 10, ER).CellStyle = 'EP statistiche_q'
-    #~ oSheet.getCellRangeByPosition (11, SR, 11, ER).CellStyle = 'EP statistiche'
-    #~ oSheet.getCellRangeByPosition (13, SR, 13, ER).CellStyle = 'EP statistiche_Contab_q'
-    #~ oSheet.getCellRangeByPosition (14, SR, 14, ER).CellStyle = 'EP statistiche_Contab'
-###
-    for elem in lista_articoli:
-# sommario computo
-        oSheet.getCellByPosition(10, lrow - 1).Formula =  '=SUMIF(AA;A' + str(lrow) + ';BB)'
-        oSheet.getCellByPosition(11, lrow - 1).Formula = '=K' + str(lrow) + '*E' + str(lrow)
-# sommario contabilità
-        oSheet.getCellByPosition(13, lrow - 1).Formula = '=SUMIF(GG;A' + str(lrow) + ';G1G1)'
-        oSheet.getCellByPosition(14, lrow - 1).Formula = '=N' + str(lrow) + '*E' + str(lrow)
-        lrow=lrow+1
-    lrow=4 #primo rigo dati
-###
-# inserisco le voci di Elenco Prezzi
-# questa va migliorata creando una tupla da incollare nel foglio
-    for elem in lista_articoli.items():
-        if elem[1].get('tariffa') != None:
-            oSheet.getCellByPosition(0, lrow-1).String = elem[1].get('tariffa')
-        if elem[1].get('destestesa') != None:
-            oSheet.getCellByPosition(1, lrow-1).String = elem[1].get('destestesa').strip()
-        if elem[1].get('unmisura') != None:
-            oSheet.getCellByPosition(2, lrow-1).String = elem[1].get('unmisura')
-        if elem[1].get('prezzo1') != None:
-            oSheet.getCellByPosition(4, lrow-1).Value = elem[1].get('prezzo1')
-        lrow=lrow+1
+    #~ return
 ###
 # Inserisco i dati nel COMPUTO #########################################
-    #~ oSheet=ThisComponent.currentController.activeSheet
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     oDoc.CurrentController.select(oSheet)
     iSheet_num = oSheet.RangeAddress.Sheet
 ###
     if len(lista_misure) == 0:
-        MsgBox('Elenco prezzi importato\ndal file: ' + filename, 'Avviso')
+        MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
         return
-    lista_misure.reverse()
-    lrow=3 #primo rigo dati
+    #~ lista_misure#.reverse()
+    #~ lrow = 3 #primo rigo dati
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
+    diz_vv = dict()
+    x = 1
     for el in lista_misure:
+
+        lrow = ultima_voce(oSheet) + 1 
+
         ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')
-        oSheet.getCellByPosition(1, lrow+1).String = lista_articoli.get(ID).get('tariffa')
+        id_vc = el.get('id_vc')
+        #~ MsgBox(str(el),id_vc)
+        oSheet.getCellByPosition(1, lrow+1).String = dict_articoli.get(ID).get('tariffa')
+        diz_vv[id_vc] = lrow+1
+        oSheet.getCellByPosition(0, lrow+1).String = str(x)
+        x = x+1
         SC = 2
         SR = lrow + 2 + 1
+        nrighe = len(el.get('lista_rig')) - 1
         EC = SC + len(el.get('lista_rig')[0])
-        ER = SR + len(el.get('lista_rig')) - 1
-        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-        oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
+        ER = SR + nrighe
+
+        if nrighe > 0:
+            oSheet.getRows().insertByIndex(SR, nrighe)
+
+        oRangeAddress = oSheet.getCellRangeByPosition(0, SR-1, 250, SR-1).getRangeAddress()
+        
+        for n in range (SR, SR+nrighe):
+            oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
+            #~ oDoc.CurrentController.select(oCellAddress)
+            oSheet.copyRange(oCellAddress, oRangeAddress)
+
         oCellRangeAddr.StartColumn = SC
         oCellRangeAddr.StartRow = SR
         oCellRangeAddr.EndColumn = EC
         oCellRangeAddr.EndRow = ER
     ###
     # INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
-        if ER > SR:
-            oCellRangeAddr.EndRow = ER -1
-            oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
-        oRange = oSheet.getCellRangeByPosition(SC, SR -1 , EC - 1, ER - 1)
-        oRange.setDataArray(el.get('lista_rig'))
-        #~ for mis in el.get('lista_rig'):
-            #~ if mis.get('descrizione') != None:
-                #~ oSheet.getCellByPosition(2, lmis).String = mis.get('descrizione').strip()
-            #~ if mis.get('partiuguali') != None:
-                #~ oSheet.getCellByPosition(5, lmis).Value = eval(mis.get('partiuguali'))
-            #~ if mis.get('lunghezza') != None:
-                #~ oSheet.getCellByPosition(6, lmis).Value = eval(mis.get('lunghezza'))
-            #~ if mis.get('larghezza') != None:
-                #~ oSheet.getCellByPosition(7, lmis).Value = eval(mis.get('larghezza'))
-            #~ if mis.get('hpeso') != None:
-                #~ oSheet.getCellByPosition(8, lmis).Value = eval(mis.get('hpeso'))
-            #~ SR = SR+1
+
+# metodo veloce, ma ignora le formule
+# va bene se lista_righe viene convertito come tupla alla riga 1363
+        #~ if ER > SR:
+            #~ oCellRangeAddr.EndRow = ER -1
+            #~ oRange = oSheet.getCellRangeByPosition(SC, SR -1 , EC - 1, ER - 1)
+            #~ oRange.setDataArray(el.get('lista_rig'))
+
+
+            #~ oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
+        #~ MsgBox(str(el.get('lista_rig')),str(type(el.get('lista_rig'))))
+        SR = SR - 1
+        for mis in el.get('lista_rig'):
+            #~ MsgBox(str(mis[9]),'idvv')
+            if mis[8] == '2':
+                oRangeAddress = oSheet.getCellRangeByPosition(0, SR+1, 1, SR+1).getRangeAddress()
+                oSheet.removeRange(oRangeAddress, 3) # Mode.ROWS
+                parziale_core(SR)
+
+            if mis[0] != None: #descrizione
+                descrizione = mis[0].strip()
+                oSheet.getCellByPosition(2, SR).String = descrizione
+            else:
+                descrizione =''
+
+            #~ if mis[0] != None: #descrizione
+                #~ oSheet.getCellByPosition(2, SR).String = mis[0].strip()
+
+            #~ if mis[3] == None and '-' in mis[7]: #quantità
+                #~ oSheet.getCellByPosition(5, SR).Value = -1
+
+            if mis[4] != None: #lunghezza
+                if any(o in mis[4] for o in ('+', '*', '/', '-',)):
+                    oSheet.getCellByPosition(6, SR).Formula = '=' + str(mis[4])
+                else:
+                    oSheet.getCellByPosition(6, SR).Value = eval(mis[4])
+
+            if mis[5] != None: #larghezza
+                if any(o in mis[5] for o in ('+', '*', '/', '-', )):
+                    oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5])
+                else:
+                    oSheet.getCellByPosition(7, SR).Value = eval(mis[5])
+
+            if mis[6] != None: #HPESO
+                if any(o in mis[6] for o in ('+', '*', '/', '-', )):
+                    oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6])
+                else:
+                    oSheet.getCellByPosition(8, SR).Value = eval(mis[6])
+
+            va = oSheet.getCellByPosition(5, SR).Value
+            vb = oSheet.getCellByPosition(6, SR).Value
+            vc = oSheet.getCellByPosition(7, SR).Value
+            vd = oSheet.getCellByPosition(8, SR).Value
+            if va ==0:
+                va =1
+            if vb ==0:
+                vb =1
+            if vc ==0:
+                vc =1
+            if vd ==0:
+                vd =1
+
+            if mis[3] != None: #parti uguali
+                if '-' in mis[7] and va*vb*vc*vd >0: #quantità
+                    pu = '-1*(' + str(mis[3]) +')'
+                else:
+                    pu = str(mis[3])
+                if any(o in pu for o in ('+', '*', '/', '-', )):
+                    oSheet.getCellByPosition(5, SR).Formula = '=' + pu
+                else:
+                    oSheet.getCellByPosition(5, SR).Value = eval(pu)
+
+            if mis[9] != '-2':
+                vedi = diz_vv.get(mis[9])
+                if va*vb*vc*vd !=1:
+                    oSheet.getCellByPosition(8, SR).Value = va*vb*vc*vd
+                vedi_voce(SR, vedi, descrizione)
+
+            SR = SR+1
             #~ copia_riga_computo(SR)
         #~ lrow=SR+2
-    Numera_Voci()
+    #~ Numera_Voci()
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - date).total_seconds()) + ' secondi!','')
+    #~ MsgBox(str(diz_vv),str(type(diz_vv)))
+
     #~ prin('')
     #~ MsgBox(str((datetime.now() - date).total_seconds()),'')
 # XPWE_import ##########################################################

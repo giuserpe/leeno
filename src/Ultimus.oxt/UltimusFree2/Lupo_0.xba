@@ -364,7 +364,7 @@ rem ----------------------------------------------------------------------
  	
 	crea_stile_cella_1 &apos; inserisce uno stile di cella per distingere le voci che sono in contab direttamente dall&apos;EP
 	crea_stile_cella_2 &apos; modifica lo stile &quot;data_bianca&quot; da 01/01/2011 a 01/01/11
-	crea_stile_cella_3 &apos; nuovo stile creato per evidenziare importi in eccesso rispetto al Computo 01/06/2013
+	crea_stile_cella_3 &apos; nuovo stile creato per evidenziare importi in eccesso rispetto al Computo 01/06/2013 - sesto quinto
 
 	&apos;assegna una macro ad un evento (chiusura file)
 	setDocEventOnClose &apos;
@@ -984,7 +984,7 @@ Sub crea_stile_cella_3
 	dim sStileCella as string
 	&apos;dim ostileCella as object
 	sStileCella = &quot;comp_sotto_E_cond&quot; &apos;
-	if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(sStileCella)= false then
+&apos;	if Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).hasByName(sStileCella)= false then
 			&apos;se non esiste creo lo stile di cella
 			Set ostileCella = ThisComponent.createInstance(&quot;com.sun.star.style.CellStyle&quot;)
 					Call Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).insertByName(sStileCella, ostileCella )
@@ -996,12 +996,12 @@ Sub crea_stile_cella_3
 					&apos;	ostileCella.HoriJustify = com.sun.star.table.CellHoriJustify.CENTER 
 					&apos;	ostileCella.VertJustify = com.sun.star.table.CellVertJustify.CENTER 
 					
-		ELSE
+&apos;		ELSE
 			&apos; se c&apos;è lo modifico
 		&apos;		oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sStileCella)
 		&apos;		oStile.IsCellBackgroundTransparent = False
 		&apos;		oStile.CellBackColor = RGB(255,204,153)
-	end if
+&apos;	end if
 
 End Sub
 

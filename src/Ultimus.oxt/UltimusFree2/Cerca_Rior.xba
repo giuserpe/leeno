@@ -345,7 +345,7 @@ On Error GoTo fine:
 fine:
 End Sub
 
-Function ultima_voce
+Function ultima_voce__
 	oSheet = thisComponent.CurrentController.ActiveSheet
 	Dim test As Long
 If NOT GlobalScope.BasicLibraries.isLibraryLoaded(&quot;Tools&quot;) Then GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;) 
@@ -360,13 +360,27 @@ If NOT GlobalScope.BasicLibraries.isLibraryLoaded(&quot;Tools&quot;) Then Global
 			stile = &quot;Comp End Attributo&quot;
 		Case &quot;CONTABILITA&quot;
 			stile = &quot;Comp End Attributo_R&quot;
-	End Select 	
+	End Select
 	For i = test To 0 Step -1
 		If oSheet.getCellByPosition(0, i).cellstyle = stile Then
 			ultima_voce = i
 			Exit Function
 		EndIf 
 	next
+End Function
+
+Function ultima_voce
+	oSheet = thisComponent.CurrentController.ActiveSheet
+    nRow = getlastusedrow(oSheet)
+    For n = nRow To 0 Step -1
+    	test = oSheet.getCellByPosition(0, n).CellStyle
+    	Select Case test
+    	Case &quot;EP-aS&quot;, &quot;An-sfondo-basso Att End&quot;, &quot;Comp End Attributo&quot;, &quot;Comp End Attributo_R&quot;, &quot;comp Int_colonna&quot;, &quot;comp Int_colonna_R_prima&quot;
+    		ultima_voce = n
+			Exit Function
+		End Select
+	Next
+
 End Function
 
 Sub filtra_codice

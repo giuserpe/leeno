@@ -296,9 +296,6 @@ Sub Protect_alcune_tabelle
 &apos;	print &quot;M1 protetta&quot;
 end sub
 
-
-
-
 Sub Chiudi_o_elimina_tabelle_inutili
 
 	nome = ThisComponent.currentController.activeSheet.name

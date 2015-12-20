@@ -604,10 +604,13 @@ END SUB
 
 
 
+SUB DOPPIONI_TROVA_giuserpe()
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;doppioni&quot;)
+End sub
 
-SUB DOPPIONI_TROVA_giuserpe() &apos; &apos; trova i codici doppi nell&apos;EP e controlla se anche
+SUB DOPPIONI_TROVA_giuserpe_EX() &apos; &apos; trova i codici doppi nell&apos;EP e controlla se anche
 &apos; le voci sono uguali... solo se uguali le cancella...
-
+ScriptPy(&quot;pyleeno.py&quot;, &quot;doppioni&quot;)
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;

@@ -136,13 +136,79 @@ def _gotoCella (IDcol,IDrow):
     properties = (oProp,)
     dispatchHelper.executeDispatch(oFrame, '.uno:GoToCell', '', 0, properties )
 ########################################################################
-# Scrive un file.
-def debug_XPWE_export():
+# doppioni #############################################################
+def doppioni():
+    '''Elimina i doppioni nell'elenco prezzi'''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    ###
+    #~ oDoc.addActionLock
+    #~ oDoc.lockControllers
+    ###
+    lista_voci = list()
+    diz_ep = dict()
+    for n in range (0, ultima_voce(oSheet)+1):
+        if oSheet.getCellByPosition(0, n).CellStyle == 'EP-aS':
+            cod = oSheet.getCellByPosition(0, n).String
+            des = oSheet.getCellByPosition(1, n).String
+            um = oSheet.getCellByPosition(2, n).String
+            sic = oSheet.getCellByPosition(3, n).Value
+            pr = oSheet.getCellByPosition(4, n).Value
+            iMDO = oSheet.getCellByPosition(5, n).Value
+            mdo = oSheet.getCellByPosition(6, n).Value
+            cor = oSheet.getCellByPosition(7, n).String
+            voce = (cod, des, um, sic, pr, iMDO, mdo, cor)
+            diz_ep[cod] = voce
+    for voce in diz_ep.items():
+        lista_voci.append(voce[-1])
+    oSheet.getRows().removeByIndex(3, ultima_voce(oSheet)-2)
+    lista_come_array = tuple(lista_voci) 
+
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+
+    oSheet.getRows().insertByIndex(3, righe_lista)
+
+    oRange = oSheet.getCellRangeByPosition( 0, 
+                                            3, 
+                                            colonne_lista - 1, # l'indice parte da 0
+                                            righe_lista + 3 - 1)
+    oRange.setDataArray(lista_come_array)
+
+#~ SISTEMO GLI STILI
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
+    SC = oCellRangeAddr.StartColumn = 0
+    SR = oCellRangeAddr.StartRow = 3
+    EC = oCellRangeAddr.EndColumn = 0
+    ER = oCellRangeAddr.EndRow = 3 + righe_lista - 1
+    
+    oSheet.getCellRangeByPosition (0, SR, 7, ER).CellStyle = 'EP-aS'
+    oSheet.getCellRangeByPosition (1, SR, 1, ER).CellStyle = 'EP-a'
+    oSheet.getCellRangeByPosition (2, SR, 6, ER).CellStyle = 'EP-mezzo'
+    oSheet.getCellRangeByPosition (5, SR, 5, ER).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition (8, SR, 9, ER).CellStyle = 'EP-sfondo'
+    oSheet.getCellRangeByPosition (10, SR, 10, ER).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition (11, SR, 11, ER).CellStyle = 'EP statistiche'
+    oSheet.getCellRangeByPosition (13, SR, 13, ER).CellStyle = 'EP statistiche_Contab_q'
+    oSheet.getCellRangeByPosition (14, SR, 14, ER).CellStyle = 'EP statistiche_Contab'
+    ###
+    #~ oDoc.removeActionLock
+    #~ oDoc.unlockControllers
+    ###
+    
+# doppioni #############################################################
+########################################################################
+# Scrive un file.
+def XPWE_export():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    if oDoc.getSheets().hasByName('S2') == False:
+        MsgBox('Puoi usare questo comando da un file di computo esistente.','Avviso!')
+        return
     #~ oSheet = oDoc.CurrentController.ActiveSheet
     #~ filename = filedia('Esporta in formato XPWE con nome...')
     #~ MsgBox (filename, '')
-    #~ out_file = open("/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/xpwe/test.xpwe","w")
     lista_righe = list()
     top = Element('PweDocumento')
     #~ dati generali
@@ -170,7 +236,7 @@ def debug_XPWE_export():
     #~ Capitoli e Categorie
     PweDGCapitoliCategorie = SubElement(PweDatiGenerali,'PweDGCapitoliCategorie')
     #~ SuperCategorie
-    oSheet = oDoc.getSheets().getByName('VARIANTE')
+    #~ oSheet = oDoc.getSheets().getByName('COMPUTO')
     #~ for n in range (0, ultima_voce(oSheet)):
         #~ if oSheet.getCellByPosition(1, n).CellStyle == 'Livello-1-scritta':
             #~ idID = oSheet.getCellByPosition(1, n).String
@@ -197,7 +263,7 @@ def debug_XPWE_export():
             DGCategorieItem.set('ID', idID)
             DesSintetica.text = desc
     #~ SubCategorie
-    oSheet = oDoc.getSheets().getByName('VARIANTE')
+    oSheet = oDoc.getSheets().getByName('COMPUTO')
     for n in range (0, ultima_voce(oSheet)):
         if oSheet.getCellByPosition(1, n).CellStyle == 'livello2 valuta':
             idID = oSheet.getCellByPosition(32, n).String
@@ -259,10 +325,11 @@ def debug_XPWE_export():
             PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
             PweEPAnalisi.text = ''
     #~ COMPUTO
-    oSheet = oDoc.getSheets().getByName('VARIANTE')
+    oSheet = oDoc.getSheets().getByName('COMPUTO')
     PweVociComputo = SubElement(PweMisurazioni,'PweVociComputo')
     oDoc.CurrentController.select(oSheet)
-    #~ oDoc.CurrentController.select(oDoc.CreateInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    nVCItem = 2
     for n in range (0, ultima_voce(oSheet)):
         if oSheet.getCellByPosition(0, n).CellStyle == 'Comp Start Attributo':
             sStRange = Circoscrive_Voce_Computo_Att (n)
@@ -271,18 +338,21 @@ def debug_XPWE_export():
             sotto = sStRange.RangeAddress.EndRow
             
             VCItem = SubElement(PweVociComputo,'VCItem')
-            VCItem.set('ID', str(n))
-            
+            VCItem.set('ID', str(nVCItem))
+            nVCItem += 1
+
             IDEP = SubElement(VCItem,'IDEP')
             IDEP.text = diz_ep.get(oSheet.getCellByPosition(1, sopra+1).String)
+
+            #~ MsgBox(IDEP.text,'')
 ##########################
             Quantita = SubElement(VCItem,'Quantita')
             Quantita.text = oSheet.getCellByPosition(9, sotto).String
 ##########################
             DataMis = SubElement(VCItem,'DataMis')
-            DataMis.text = '29/09/2013'###
-            Flags = SubElement(VCItem,'Flags')
-            Flags.text = '0'
+            DataMis.text = '28/09/2013'###
+            vFlags = SubElement(VCItem,'Flags')
+            vFlags.text = '0'
 ##########################
             IDSpCat = SubElement(VCItem,'IDSpCat')
             IDSpCat.text = ''
@@ -298,7 +368,7 @@ def debug_XPWE_export():
                 RGItem = SubElement(PweVCMisure,'RGItem')
                 x = 2
                 RGItem.set('ID', str(x))
-                x = x+1
+                x += 1
 ##########################
                 IDVV = SubElement(RGItem,'IDVV')
                 IDVV.text = '-2'
@@ -347,23 +417,37 @@ def debug_XPWE_export():
                     HPeso.text = oSheet.getCellByPosition(8, m).Formula
 ##########################
                 Quantita = SubElement(RGItem,'Quantita')
-                Quantita.text = ''
-                #~ Quantita.text = oSheet.getCellByPosition(9, m).String
+                #~ Quantita.text = ''
+                Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
 ##########################
                 Flags = SubElement(RGItem,'Flags')
                 if "Parziale [" in oSheet.getCellByPosition(8, m).String:
                     Flags.text = '2'
+                    HPeso.text = ''
+                elif 'PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
+                    Flags.text = '16'
                 else:
-                    Flags.text = ''
+                    Flags.text = '0'
+##########################
+                if 'DETRAE LA PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
+                    Flags.text = '32'
+                if ' - vedi voce n. ' in Descrizione.text:
+                    IDVV.text = str(int(Descrizione.text.split(' - vedi voce n. ')[1].split(' ')[0])+1)
+                    Flags.text = '32768'
+                    PartiUguali.text =''
+                    #~ Descrizione.text = ''
+                    if '-' in Quantita:
+                        Flags.text = '32769'
+                #~ vFlags.text = str(int(vFlags.text)+int(Flags.text))
             n = sotto+1
-
     ####################################################################
-    out_file ="W:\\_dwg\\ULTIMUSFREE\\xpwe\\test.xpwe"
+    #~ out_file ="C:\\Users\\giuserpe\\Desktop\\prove\\prova.xpwe"
+    out_file ="W:\\_dwg\\ULTIMUSFREE\\xpwe\\exp.xpwe"
     riga = str(tostring(top, encoding="unicode"))
     of = codecs.open(out_file,'w','utf-8')
     of.write(riga)
-    MsgBox('Esportazione in formato XPWE\neseguita con successo!','Avviso.')
-########################################################################
+    MsgBox('Esportazione in formato XPWE eseguita con successo\nsul file ' + out_file + '!','Avviso.')
+
 def Circoscrive_Voce_Computo_Att (lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -545,7 +629,6 @@ def ultima_voce_bis(oSheet):
         if oSheet.getCellByPosition (0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo', 'Comp End Attributo_R'):
             return(n)
             n = 1
-    MsgBox(n, '')
     #~ return aAddress#.EndColumn, aAddress.EndRow)
 ########################################################################
 # numera le voci di computo o contabilità
@@ -1064,7 +1147,7 @@ def XML_import_BOLZANO ():
 ########################################################################
 # parziale_core ########################################################
 def parziale_core(lrow):
-    #~ lrow = 12
+    #~ lrow = 7
     if lrow == 0:
         return
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -1108,8 +1191,8 @@ def abs2name(nCol, nRow):
     return idvoce[2]+idvoce[3]
 ########################################################################
 # vedi_voce ############################################################
-def vedi_voce(riga_corrente,vRif, descrizione):
-    """(riga d'inserimento, riga di riferimento, descrizione)"""
+def vedi_voce(riga_corrente,vRif):
+    """(riga d'inserimento, riga di riferimento)"""
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ riga_corrente = Range2Cell()[1]
@@ -1129,19 +1212,23 @@ def vedi_voce(riga_corrente,vRif, descrizione):
     quantity = abs2name (9, sotto)
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
     #~ MsgBox(str(um),'um')
-    #~ descrizione = '- fghjk'
-    oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("'+ descrizione +'";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';"[";' + um + ';"]"'
+    oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';"[";' + um + ';"]"'
     oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
 ########################################################################
 # XPWE_import ##########################################################
-def debug():#_XPWE_import(): #(filename):
+def XPWE_import(): #(filename):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    ###
+    oDoc.addActionLock
+    oDoc.lockControllers
+    ###
+    ###
+    if oDoc.getSheets().hasByName('S2') == False:
+        MsgBox('Puoi usare questo comando da un file di computo nuovo o già esistente.','Avviso!')
+        return
+    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\b.xpwe'''
     filename = filedia('Scegli il file XPWE da importare...')
-    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\parziale_negativo.xpwe'
-    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\sSofia.xpwe'
-    #~ filename = 'W:\\_dwg\\ULTIMUSFREE\\xpwe\\000.xpwe'
-    #~ filename = filedia('Scegli il file XPWE da importare...')
     '''xml auto indent: http://www.freeformatter.com/xml-formatter.html'''
-    #~ filename = filedia('Scegli il file XML-SIX da convertire...')
     # inizializzazione delle variabili
     date = datetime.now()
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare
@@ -1156,7 +1243,11 @@ def debug():#_XPWE_import(): #(filename):
     logging.debug(list(root))
     # effettua il parsing di tutti gli elemnti dell'albero XML
     iter = tree.getiterator()
-    nome_file = root.find('FileNameDocumento').text
+    if root.find('FileNameDocumento'):
+        nome_file = root.find('FileNameDocumento').text
+    else:
+        nome_file = "nome_file"
+    
 ###
     dati = root.find('PweDatiGenerali')
     DatiGenerali = dati.getchildren()[0][0]
@@ -1255,29 +1346,36 @@ def debug():#_XPWE_import(): #(filename):
             diz['percentuale'] = percentuale
             lista_subcat.append(diz)
 ###
-    PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
-    speseutili = PweDGModuli[0].text
-    spesegenerali = PweDGModuli[1].text
-    utiliimpresa = PweDGModuli[2].text
-    oneriaccessorisc = PweDGModuli[3].text
-    ConfQuantita = PweDGModuli[4].text
+    try:
+        PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
+        speseutili = PweDGModuli[0].text
+        spesegenerali = PweDGModuli[1].text
+        utiliimpresa = PweDGModuli[2].text
+        oneriaccessorisc = PweDGModuli[3].text
+        ConfQuantita = PweDGModuli[4].text
+    except IndexError:
+        pass
 ###
-    PweDGConfigurazione = dati.getchildren()[3][0].getchildren()    #PweDGConfigurazione
-    Divisa = PweDGConfigurazione[0].text
-    ConversioniIN = PweDGConfigurazione[1].text
-    FattoreConversione = PweDGConfigurazione[2].text
-    Cambio = PweDGConfigurazione[3].text
-    PartiUguali = PweDGConfigurazione[4].text
-    PartiUguali = PweDGConfigurazione[5].text
-    Larghezza = PweDGConfigurazione[6].text
-    HPeso = PweDGConfigurazione[7].text
-    Quantita = PweDGConfigurazione[8].text
-    Prezzi = PweDGConfigurazione[9].text
-    PrezziTotale = PweDGConfigurazione[10].text
-    ConvPrezzi= PweDGConfigurazione[11].text
-    ConvPrezziTotale = PweDGConfigurazione[12].text
-    IncidenzaPercentuale = PweDGConfigurazione[13].text
-    Aliquote = PweDGConfigurazione[14].text
+    try:
+        PweDGConfigurazione = dati.getchildren()[3][0].getchildren()    #PweDGConfigurazione
+        Divisa = PweDGConfigurazione[0].text
+        ConversioniIN = PweDGConfigurazione[1].text
+        FattoreConversione = PweDGConfigurazione[2].text
+        Cambio = PweDGConfigurazione[3].text
+        PartiUguali = PweDGConfigurazione[4].text
+        PartiUguali = PweDGConfigurazione[5].text
+        Larghezza = PweDGConfigurazione[6].text
+        HPeso = PweDGConfigurazione[7].text
+        Quantita = PweDGConfigurazione[8].text
+        Prezzi = PweDGConfigurazione[9].text
+        PrezziTotale = PweDGConfigurazione[10].text
+        ConvPrezzi= PweDGConfigurazione[11].text
+        ConvPrezziTotale = PweDGConfigurazione[12].text
+        IncidenzaPercentuale = PweDGConfigurazione[13].text
+        Aliquote = PweDGConfigurazione[14].text
+    except IndexError:
+        pass
+
 ###
     misurazioni = root.find('PweMisurazioni')
     PweElencoPrezzi = misurazioni.getchildren()[0]
@@ -1379,37 +1477,33 @@ def debug():#_XPWE_import(): #(filename):
                 diz_rig['rgitem'] = rgitem
                 diz_rig['idvv'] = idvv
                 diz_rig['descrizione'] = descrizione
+
                 if partiuguali !=None:
                     diz_rig['partiuguali'] = partiuguali.replace('.',',')
                 else:
                     diz_rig['partiuguali'] = partiuguali
+
                 if lunghezza !=None:
                     diz_rig['lunghezza'] = lunghezza.replace('.',',')
                 else:
                     diz_rig['lunghezza'] = lunghezza
+
                 if larghezza !=None:
                     diz_rig['larghezza'] = larghezza.replace('.',',')
                 else:
                     diz_rig['larghezza'] = larghezza
+
                 if hpeso !=None:
                     diz_rig['hpeso'] = hpeso.replace('.',',')
                 else:
                     diz_rig['hpeso'] = hpeso
+
                 if quantita !=None:
                     diz_rig['quantita'] = quantita.replace('.',',')
                 else:
                     diz_rig['quantita'] = quantita
+
                 diz_rig['flags'] = flags
-                #~ if partiuguali == None:
-                    #~ partiuguali = ''
-                #~ else:
-                    #~ if '*' in partiuguali:
-                        #~ partiuguali = '='+ partiuguali
-                #~ if hpeso == None:
-                    #~ hpeso = ''
-                #~ else:
-                    #~ if '*', '+', '/' in hpeso:
-                        #~ hpeso = '='+ hpeso
                 riga_misura =  (descrizione,
                                 '',
                                 '',
@@ -1457,10 +1551,13 @@ def debug():#_XPWE_import(): #(filename):
             #~ lista_misure[id_vc] = vcitem
             lista_misure.append(diz_misura)
     except IndexError:
-        MsgBox("""In questo file non risultano esserci voci di misurazione
-Perciò saranno importate le sole voci di Elenco Prezzi.
-\nSi tenga conto che il formato XPWE non conserva alcuni dati
-come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
+        MsgBox("""Nel file scelto non risultano esserci voci di misurazione,
+perciò saranno importate le sole voci di Elenco Prezzi.
+
+Si tenga conto che:
+    - sarà importato solo il "Prezzo 1" dell'elenco;
+    - il formato XPWE non conserva alcuni dati come
+      le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
     #~ articoli = open ('/home/giuserpe/.config/libreoffice/4/user/uno_packages/cache/uno_packages/luds59ep.tmp_/LeenO-3.11.3.dev-150714180321.oxt/pyLeenO/articoli.txt', 'w')
     #~ print (str(lista_articoli), file=articoli)
@@ -1470,9 +1567,8 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
     #~ misure.close()
     #~ MsgBox('ho stampato', '')
 ###
-    New_file.computo()
-    #~ return
-    oDoc = XSCRIPTCONTEXT.getDocument()
+# compilo Anagrafica generale ##########################################
+    #~ New_file.computo()
 # compilo Anagrafica generale ##########################################
     oSheet = oDoc.getSheets().getByName('S2')
     if oggetto != None:
@@ -1483,14 +1579,16 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
         oSheet.getCellByPosition(2,5).String = committente
     if impresa != None:
         oSheet.getCellByPosition(3,16).String = impresa
-# compilo Elenco Prezzi ################################################
-    oSheet = oDoc.getSheets().getByName('S1')
-    oSheet.getCellByPosition(7,318).Value = float(oneriaccessorisc)/100
-    oSheet.getCellByPosition(7,319).Value = float(spesegenerali)/100
-    oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
+###
+    try:
+        oSheet = oDoc.getSheets().getByName('S1')
+        oSheet.getCellByPosition(7,318).Value = float(oneriaccessorisc)/100
+        oSheet.getCellByPosition(7,319).Value = float(spesegenerali)/100
+        oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
+    except UnboundLocalError:
+        pass
 # compilo Elenco Prezzi ################################################
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-
     # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
     # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
     lista_come_array = tuple(lista_articoli) 
@@ -1514,9 +1612,9 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
     SR = oCellRangeAddr.StartRow = 3
     EC = oCellRangeAddr.EndColumn = 0
     ER = oCellRangeAddr.EndRow = 3 + righe_lista - 1
-    #~ oSheet.insertCells(oCellRangeAddr, 1100)   # com.sun.star.sheet.CellInsertMode.ROW
-#~ SISTEMO GLI STILI
+
     oRange.setDataArray(lista_come_array)
+#~ SISTEMO GLI STILI
     oSheet.getCellRangeByPosition (0, SR, 7, ER).CellStyle = 'EP-aS'
     oSheet.getCellRangeByPosition (1, SR, 1, ER).CellStyle = 'EP-a'
     oSheet.getCellRangeByPosition (2, SR, 6, ER).CellStyle = 'EP-mezzo'
@@ -1528,16 +1626,20 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
     oSheet.getCellRangeByPosition (14, SR, 14, ER).CellStyle = 'EP statistiche_Contab'
     #~ return
 ###
+    if len(lista_misure) == 0:
+        MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oDoc.CurrentController.select(oSheet)
+        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+        oDoc.CurrentController.ZoomValue = 100
+        return
+###
 # Inserisco i dati nel COMPUTO #########################################
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     oDoc.CurrentController.select(oSheet)
+    oDoc.CurrentController.ZoomValue = 400
     iSheet_num = oSheet.RangeAddress.Sheet
 ###
-    if len(lista_misure) == 0:
-        MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
-        return
-    #~ lista_misure#.reverse()
-    #~ lrow = 3 #primo rigo dati
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
     diz_vv = dict()
@@ -1549,7 +1651,6 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
         ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')
         id_vc = el.get('id_vc')
-        #~ MsgBox(str(el),id_vc)
         oSheet.getCellByPosition(1, lrow+1).String = dict_articoli.get(ID).get('tariffa')
         diz_vv[id_vc] = lrow+1
         oSheet.getCellByPosition(0, lrow+1).String = str(x)
@@ -1567,7 +1668,6 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
         
         for n in range (SR, SR+nrighe):
             oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
-            #~ oDoc.CurrentController.select(oCellAddress)
             oSheet.copyRange(oCellAddress, oRangeAddress)
 
         oCellRangeAddr.StartColumn = SC
@@ -1579,21 +1679,11 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
 
 # metodo veloce, ma ignora le formule
 # va bene se lista_righe viene convertito come tupla alla riga 1363
-        #~ if ER > SR:
-            #~ oCellRangeAddr.EndRow = ER -1
-            #~ oRange = oSheet.getCellRangeByPosition(SC, SR -1 , EC - 1, ER - 1)
-            #~ oRange.setDataArray(el.get('lista_rig'))
-
-
-            #~ oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
-        #~ MsgBox(str(el.get('lista_rig')),str(type(el.get('lista_rig'))))
         SR = SR - 1
+        #~ MsgBox(str(eval('1,1')),str(eval('1,1')))
+
         for mis in el.get('lista_rig'):
             #~ MsgBox(str(mis[9]),'idvv')
-            if mis[8] == '2':
-                oRangeAddress = oSheet.getCellRangeByPosition(0, SR+1, 1, SR+1).getRangeAddress()
-                oSheet.removeRange(oRangeAddress, 3) # Mode.ROWS
-                parziale_core(SR)
 
             if mis[0] != None: #descrizione
                 descrizione = mis[0].strip()
@@ -1601,18 +1691,16 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
             else:
                 descrizione =''
 
-            #~ if mis[0] != None: #descrizione
-                #~ oSheet.getCellByPosition(2, SR).String = mis[0].strip()
-
-            #~ if mis[3] == None and '-' in mis[7]: #quantità
-                #~ oSheet.getCellByPosition(5, SR).Value = -1
-
             if mis[4] != None: #lunghezza
                 if any(o in mis[4] for o in ('+', '*', '/', '-',)):
                     oSheet.getCellByPosition(6, SR).Formula = '=' + str(mis[4])
                 else:
+                    #~ MsgBox(id_vc,'idvoce')
+                    #~ MsgBox(mis[4],str(eval(mis[4])))
                     oSheet.getCellByPosition(6, SR).Value = eval(mis[4])
-
+            else:
+                pass
+                    
             if mis[5] != None: #larghezza
                 if any(o in mis[5] for o in ('+', '*', '/', '-', )):
                     oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5])
@@ -1625,39 +1713,68 @@ come le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
                 else:
                     oSheet.getCellByPosition(8, SR).Value = eval(mis[6])
 
+            if mis[8] == '2':
+                #~ oRangeAddress = oSheet.getCellRangeByPosition(0, SR+1, 1, SR+1).getRangeAddress()
+                #~ oSheet.removeRange(oRangeAddress, 3) # Mode.ROWS
+                #~ MsgBox('parziale','') #; return
+                parziale_core(SR)
+                oSheet.getRows().removeByIndex(SR+1, 1)
+                descrizione =''
+                
+            #~ MsgBox(str(SR),'SR')
+            
             va = oSheet.getCellByPosition(5, SR).Value
             vb = oSheet.getCellByPosition(6, SR).Value
             vc = oSheet.getCellByPosition(7, SR).Value
             vd = oSheet.getCellByPosition(8, SR).Value
-            if va ==0:
+
+            if mis[3] == None:
                 va =1
+            else:
+                if '^' in mis[3]:
+                    va = eval(mis[3].replace('^','**'))
+                else:
+                    va = eval(mis[3])
             if vb ==0:
                 vb =1
             if vc ==0:
                 vc =1
             if vd ==0:
                 vd =1
+            try:
+                if mis[3] != None: #partiuguali
+                    if '-' in mis[7] and va*vb*vc*vd >0: #quantità
+                        pu = '-1*(' + str(mis[3]) +')'
+                    else:
+                        pu = str(mis[3])
+                    if any(o in pu for o in ('+', '*', '/', '-', '^',)):
+                        oSheet.getCellByPosition(5, SR).Formula = '=' + pu
+                    else:
+                        oSheet.getCellByPosition(5, SR).Value = eval(pu)
 
-            if mis[3] != None: #parti uguali
                 if '-' in mis[7] and va*vb*vc*vd >0: #quantità
-                    pu = '-1*(' + str(mis[3]) +')'
-                else:
-                    pu = str(mis[3])
-                if any(o in pu for o in ('+', '*', '/', '-', )):
-                    oSheet.getCellByPosition(5, SR).Formula = '=' + pu
-                else:
-                    oSheet.getCellByPosition(5, SR).Value = eval(pu)
+                    if mis[3] != None: #partiuguali
+                        oSheet.getCellByPosition(5, SR).Formula =  '=-1*(' + str(mis[3]) +')'
+                    else:
+                        oSheet.getCellByPosition(5, SR).Value = eval('-1')
 
-            if mis[9] != '-2':
-                vedi = diz_vv.get(mis[9])
-                if va*vb*vc*vd !=1:
-                    oSheet.getCellByPosition(8, SR).Value = va*vb*vc*vd
-                vedi_voce(SR, vedi, descrizione)
+                if mis[9] != '-2':
+                    vedi = diz_vv.get(mis[9])
+                    #~ MsgBox(vedi,str(SR))
+                    vedi_voce(SR, vedi)
+                    if va*vb*vc*vd != 1:
+                        oSheet.getCellByPosition(8, SR).Value = va*vb*vc*vd
+                    if '-' in mis[7] and oSheet.getCellByPosition(5, SR).Value > 0:
+                        oSheet.getCellByPosition(8, SR).Value = va*vb*vc*vd*-1
+                    oSheet.getCellByPosition(7, SR).String = ''
+                    oSheet.getCellByPosition(6, SR).String = ''
 
+            except TypeError:
+                pass
             SR = SR+1
-            #~ copia_riga_computo(SR)
-        #~ lrow=SR+2
     #~ Numera_Voci()
+    oDoc.CurrentController.ZoomValue = 100
+    ###
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - date).total_seconds()) + ' secondi!','')
     #~ MsgBox(str(diz_vv),str(type(diz_vv)))
 
@@ -1760,7 +1877,6 @@ def filedia(titolo):
 ########################################################################
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BUTTONS_YES_NO, BUTTONS_YES_NO_CANCEL, BUTTONS_RETRY_CANCEL, BUTTONS_ABORT_IGNORE_RETRY
 from com.sun.star.awt.MessageBoxButtons import DEFAULT_BUTTON_OK, DEFAULT_BUTTON_CANCEL, DEFAULT_BUTTON_RETRY, DEFAULT_BUTTON_YES, DEFAULT_BUTTON_NO, DEFAULT_BUTTON_IGNORE
-
 from com.sun.star.awt.MessageBoxType import MESSAGEBOX, INFOBOX, WARNINGBOX, ERRORBOX, QUERYBOX
 
 #rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
@@ -1784,6 +1900,18 @@ def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTT
     sv = sm.createInstanceWithContext('com.sun.star.awt.Toolkit', ctx)
     myBox = sv.createMessageBox(ParentWin, MsgType, MsgButtons, MsgTitle, MsgText)
     return myBox.execute()
+# [　入手元　]
+def debug_MRI():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oDoc.CurrentController
+    #~ ScreenUpdatingOn
+    mri(oDoc)
+
+def mri(target):
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    mri = ctx.ServiceManager.createInstanceWithContext('mytools.Mri',ctx)
+    mri.inspect(target)
+    MsgBox('MRI in corso...','avviso')
 
 #g_exportedScripts = TestMessageBox,
 ########################################################################

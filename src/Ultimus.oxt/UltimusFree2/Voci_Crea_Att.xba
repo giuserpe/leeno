@@ -375,10 +375,10 @@ rem SOTTO CATEGORIA O SUBCATEGORIA
 	end if
 
 rem SUL TOTALE
-	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; Then
-		rinumera = &quot;ok&quot;
-		GoTo Inserisci_voce
-	EndIf
+&apos;	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;Comp TOTALI&quot; Then
+&apos;		rinumera = &quot;ok&quot;
+&apos;		GoTo Inserisci_voce
+&apos;	EndIf
 	If oSheet.GetCellByPosition( 1, lrow).cellstyle = &quot;comp Int_colonna&quot; Then
 		lrow = lrow +1
 		GoTo Inserisci_voce
@@ -442,6 +442,7 @@ rem ----------------------------------------------------------------------
 	oSheet.getCellByPosition(35, lrow).formula = &quot;=AJ$&quot; &amp; lrow+4
 	oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4).Rows.OptimalHeight = True
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value = 0 Then
+		Numera_Voci_Computo (&quot;niente prompt&quot;)
 		If prog &lt;&gt; 0 Then
 			For i = nprog To getlastusedrow(oSheet)
 				If oSheet.GetCellByPosition(0, i).cellstyle = &quot;comp progress&quot; Then
@@ -450,10 +451,11 @@ rem ----------------------------------------------------------------------
 				EndIf
 			next
 		EndIf
-		If rinumera = &quot;ok&quot; Then
-			rinumera = &quot;&quot;
-			Numera_Voci_Computo (&quot;niente prompt&quot;)
-		EndIf
+&apos;		Print rinumera
+&apos;		If rinumera = &quot;ok&quot; Then
+&apos;			rinumera = &quot;&quot;
+&apos;			Numera_Voci_Computo (&quot;niente prompt&quot;)
+&apos;		EndIf
 	EndIf
  	thisComponent.currentController.Select(oSheet.getCellByPosition(1, lrow+1)) &apos;unselect ranges 	
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	

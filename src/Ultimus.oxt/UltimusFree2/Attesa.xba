@@ -209,7 +209,7 @@ END SUB
 
 
 Sub ScreenUpdatingOn
-	ThisComponent.UnlockControllers
+	ThisComponent.unlockControllers
 	do while thiscomponent.isActionLocked = true
  	ThisComponent.removeActionLock
  	&apos;	print &quot;1&quot;
@@ -218,7 +218,7 @@ End Sub
 
 Sub ScreenUpdatingOff
  ThisComponent.addActionLock
- ThisComponent.LockControllers
+ ThisComponent.lockControllers
 End Sub
 
 &apos;_______________________________________________________________________________________++

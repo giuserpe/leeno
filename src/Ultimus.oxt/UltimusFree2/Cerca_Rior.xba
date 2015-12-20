@@ -14,8 +14,19 @@
 
 Sub Riordina_ElencoPrezzi &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
 &apos;seleziona_area (&quot;elenco_prezzi&quot;)
-Riordina_ElencoPrezzi_D	
-end Sub
+	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
+	oRanges = ThisComponent.NamedRanges
+&apos;xray 	oRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells().RangeAddress
+	With oRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells().RangeAddress
+		SR = .StartRow+1
+		ER = .EndRow-1
+		SC = .StartColumn
+		EC = .EndColumn
+	End With
+	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(SC, SR, EC, ER))
+	ordina_col(SC+1)
+		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+End Sub
 
 Sub Riordina_ElencoPrezzi_D (optional sRitorno) &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
 	&apos;_____________________
@@ -48,6 +59,7 @@ RiDefinisci_Area_Elenco_prezzi
 	If lrowEPF = lrowF Then lrowEPF=lrowF-1
 &apos;On Error Resume Next 
 	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
+	
 ordina_col (lcolEPI+1)
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 &apos;	Print idxcol

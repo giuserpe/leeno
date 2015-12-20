@@ -12,6 +12,15 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
+Sub XPWE_export &apos;(C) Giuseppe Vizziello 2015
+rem esporta al formato XPWE
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;XPWE_export&quot;)
+End Sub
+
+Sub XPWE_import &apos;(C) Giuseppe Vizziello 2015
+rem importa dal formato XPWE
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;XPWE_import&quot;)
+End Sub
 rem ######################################################################
 Sub XML_import &apos;(C) Giuseppe Vizziello 2015
 rem importa i prezzari dal formato XML-SIX

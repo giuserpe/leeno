@@ -17,7 +17,7 @@ Sub Inser_Capitolo
 	stile = oSheet.GetCellbyPosition(1, lrow).cellstyle
 	Select Case stile
 	Case &quot;comp Int_colonna&quot;, &quot;Livello-1-scritta&quot;, &quot;livello2 valuta&quot;, &quot;Comp-Bianche sopra&quot;, _
-	&quot;comp Art-EP&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
+	&quot;comp Art-EP&quot;, &quot;comp Art-EP_R&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
 		GoTo procedi:
 	Case Else
 		Exit Sub 
@@ -57,7 +57,7 @@ rem STABILISCE LA POSIZIONE DI INSERIMENTO
 	Select Case oSheet.GetCellbyPosition(1, lrow).cellstyle
 	Case &quot;comp Int_colonna&quot;, &quot;Livello-1-scritta&quot;, &quot;livello2 valuta&quot;
 		lrow = lrow+1
-	Case &quot;Comp-Bianche sopra&quot;, &quot;comp Art-EP&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
+	Case &quot;Comp-Bianche sopra&quot;, &quot;comp Art-EP&quot;, &quot;comp Art-EP_R&quot;, &quot;Comp-Bianche in mezzo&quot;, &quot;comp sotto Bianche&quot;
 		sStRange = Circoscrive_Voce_Computo_Att (lrow)
 		lrow = sStRange.RangeAddress.EndRow+1
 	End Select
@@ -366,12 +366,11 @@ dim icapitolo
 			lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 			&apos; errata selezione di un range
 			if lrow = -1 then
-				 
-				exit sub
-			end if
-		else
-			 lrow = lroww
-	end if 
+				Exit Sub
+			EndIf
+	Else
+		lrow = lroww
+	EndIf
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot; Sistemo la numerazione dei capitoli!&quot;, 60)
 
@@ -381,7 +380,7 @@ dim icapitolo
 	if oSheet.GetCellByPosition(31 , lrow).CellStyle = &quot;Livello-1-scritta&quot; Then &apos; se Categoria
 			lrow = lrow+2
 	end if
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
+&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
 &apos; va sù a cercare ilCap sopra e registra il valore e posizione
 	lrowProvv = lrow-1
 	do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot; 

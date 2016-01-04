@@ -1093,40 +1093,18 @@ Dim iflag
 	oSheet.getRows.insertByIndex(lrow,1)
 &apos;exit sub
 	CellAddress.Sheet = oSheet_num 
-	CellRangeAddress.StartRow = lrow+1
-	CellRangeAddress.EndRow = lrow+1
+	CellRangeAddress.StartRow = lrow-1
+	CellRangeAddress.EndRow = lrow-1
 	CellAddress.Column = 0
 	CellAddress.Row = lrow &apos; destinazione
-	oSheets.copyRange(CellAddress, CellRangeAddress)
-
-&apos;	lrow =lrow+1
-
- &apos; lettura var generale in S1
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 0 then &apos;Copia il testo sovrastante 1=sì
-		oCellN = oSheet.GetCellbyPosition( 0, lrow)&apos;morgana
-		oCelleN= oCellN.getCellAddress()
-		oSheetO = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-&apos;		oRangeO = ThisComponent.NamedRanges.hasByName(&quot;riga_analisi&quot;)
-&apos;		oRangeO = osheetO.getCellRangeByPosition (1, 114, 15, 114) &apos; SINGOLA RIGA ANALISI bloccarlo in un namedranges?
-														
-		oRangeO=ThisComponent.NamedRanges.riga_analisi.ReferredCells &apos;&quot;riga_analisi&quot; NOME RANGE
-
-		oRangeO = oRangeO.RangeAddress
-		oSheet.copyRange(oCelleN,oRangeO)
-		oCellFinale = oSheets.GetCellByPosition( 0 , lrow) &apos;focus su nuova riga analisi_AVCP			
-		ThisComponent.CurrentController.Select(oCellFinale)
-	 else 
-	 	oCellFinale = oSheets.GetCellByPosition( 3 , lrow)
-		ThisComponent.CurrentController.Select(oCellFinale)
-	end if
-	sFormula_1 = &quot;=SUM(G&quot; &amp; lrow+1 &amp; &quot;)*D&quot; &amp; lrow+2 &apos; /SUM(&quot; &amp; sCol &amp; lrowS &amp; &quot;:&quot; &amp; sCol &amp; lrowF &amp; &quot;)&quot;&apos; &amp; lrowE+1
-	sFormula_2 = &quot;=SUM(G&quot; &amp; lrow+1 &amp; &quot;:G&quot; &amp; lrow+1 &amp; &quot;)*D&quot; &amp; lrow+2
-	if oSheet.GetCellbyPosition( 6, lrow+1).formula = sFormula_1 or _
-		oSheet.GetCellbyPosition( 6, lrow+1).formula = sFormula_2 then
-		oSheet.GetCellbyPosition( 6, lrow+1).setformula (&quot;=SUM(G&quot; &amp; lrow &amp; &quot;:G&quot; &amp; lrow+1 &amp; &quot;)*D&quot; &amp; lrow+2)
-		ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 6, lrow+1))
-		Msgbox &quot;Attento! Sei certo che questa maggiorazione stia ancora prelevando i dati secondo le tue volontà?&quot;
-	end if
+	oSheets.copyRange(CellAddress, CellRangeAddress) &apos;copio la riga superiore
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,302).value = 1 then &apos;Copia il testo sovrastante 1=sì
+		Exit Sub
+	Else
+		oSheet.GetCellbyPosition( 0, lrow).String = &quot;Cod. Art.?&quot;
+	EndIf
+	oCellFinale = oSheets.GetCellByPosition( 0 , lrow) &apos;focus su nuova riga analisi_AVCP			
+	ThisComponent.CurrentController.Select(oCellFinale)
 END SUB
 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++

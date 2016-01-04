@@ -3,6 +3,61 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
 rem raccolta di utility di vario genere
 rem ######################################################################
+Sub ReadDataFromProgeCAD()
+    Dim pCad As Object
+    Dim pCadDoc As Object
+    Dim ent As Object
+    Dim i As Integer
+    Dim model As Object
+    Dim entType As String
+    Dim entLayer As String
+    Dim entHandle As String
+
+    Dim iLine as Integer
+    Dim iColumn as Integer
+    Dim Doc As Object
+    Dim Sheet As Object
+    Dim CellRange As Object
+    Dim Cell As Object
+
+    Dim DwgFileName as String
+
+    DwgFileName = &quot;W:\_dwg\amenta1.dwg&quot;
+
+    Doc = ThisComponent
+    Sheet = Doc.Sheets(0)
+    iLine = 1
+    iColumn = 1
+
+    pCad = CreateObject(&quot;autocad.Application&quot;)
+    pCadDoc = pCad.Documents.Open(DwgFileName, True)
+    model = pCadDoc.ModelSpace
+
+    While (i &lt; model.Count)
+        ent = model.Item(i)
+
+        entType = ent.EntityName
+        entLayer = ent.Layer
+        entHandle = ent.Handle
+
+        Cell = Sheet.GetCellByPosition(iColumn, iLine)
+        Cell.String = entType
+        Cell = Sheet.GetCellByPosition(iColumn + 1, iLine)
+        Cell.String = entLayer
+        Cell = Sheet.GetCellByPosition(iColumn + 2, iLine)
+        Cell.String = entHandle
+        On Error GoTo procedi:
+         Sheet.GetCellByPosition(iColumn + 3, iLine).String = ent.Area
+        procedi:
+        iLine = iLine + 1
+
+        i = i + 1
+    Wend
+  &apos;  pCad.Documents.CloseAll(false)
+    pCad.Quit()
+
+    MsgBox(&quot;Procedura Conclusa&quot;)
+End Sub
 
 Function SpeechEngine()as string     
   select case getGUIType

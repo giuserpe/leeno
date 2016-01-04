@@ -27,6 +27,7 @@ def LeenO_path():
     expath=pir.getPackageLocation('org.giuseppe-vizziello.leeno')
     return (expath)
 class New_file:
+    '''Crea un nuovo computo o un nuovo listino.'''
     def __init__(self):#, computo, listino):
         pass
     def computo():
@@ -82,6 +83,109 @@ def debug2():
     #~ oSheet.getCellRangeByName('A12').String = sys.__doc__
 
 ########################################################################
+def inser_capitolo_arg (lrow, sTesto): #
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+        return
+    #~ lrow = Range2Cell()[1]
+    #~ sTesto = 'prova'
+    style = oSheet.getCellByPosition(1, lrow).CellStyle
+    if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta', 'Comp TOTALI',
+                'Comp-Bianche sopra', 'comp Art-EP', 'comp Art-EP_R','Comp-Bianche in mezzo', 'comp sotto Bianche'):
+        if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta'):
+            lrow += 1
+        #~ elif style in ('Comp TOTALI'):
+            #~ lrow -= 1
+        elif style in ('Comp-Bianche sopra', 'comp Art-EP','comp Art-EP_R', 'Comp-Bianche in mezzo', 'comp sotto Bianche'):
+            sStRange = Circoscrive_Voce_Computo_Att (lrow)
+            lrow = sStRange.RangeAddress.EndRow+1
+        if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1:
+            insRows(lrow, 2)
+            oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
+            lrow += 1
+            oSheet.getCellByPosition(2, lrow).String = sTesto
+
+        else:
+            insRows(lrow, 1)
+            oSheet.getCellByPosition(2, lrow).String = sTesto
+    # inserisco i valori e le formule
+        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-1-scritta'
+        oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
+        oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-1-scritta mini val'
+        oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-1-scritta mini %'
+        oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-1-scritta mini %'
+        oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-1-scritta mini val'
+        oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
+        oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1)
+    # rinumero e ricalcolo
+    ocellBaseA = oSheet.getCellByPosition(1, lrow)
+    ocellBaseR = oSheet.getCellByPosition(31, lrow)
+    if oDoc.getSheets().getByName('S1').getCellByPosition(7,305).Value == 1:
+        lrowProvv = lrow-1
+        while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
+            if lrowProvv > 4:
+                lrowProvv -=1
+            else:
+                break
+        oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
+    oSheet.getCellRangeByPosition(2, lrow-1, 11, lrow).Rows.OptimalHeight = True
+    #~ SubSum_Cap (lrow)
+########################################################################
+def Tutti_Subtotali ():
+    '''ricalcola i subtotali di categorie e subcategorie'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+        return
+    for n in range (0, ultima_voce(oSheet)+1):
+        if oSheet.getCellByPosition(0, n).CellStyle == 'Livello-1-scritta':
+            SubSum_Cap (n)
+
+########################################################################
+def SubSum_Cap (lrow):
+    '''inserisce i dati nella riga di categoria'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+        return
+    #~ lrow = Range2Cell()[1]
+    lrowE = ultima_voce(oSheet)+1
+    nextCap = lrowE
+    for n in range (lrow+1, lrowE):
+        if oSheet.getCellByPosition(18, n).CellStyle in ('Livello-1-scritta mini val', 'Comp TOTALI'):
+            #~ MsgBox(oSheet.getCellByPosition(18, n).CellStyle,'')
+            nextCap = n + 1
+            break
+    oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
+    oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-1-scritta mini val'
+    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-1-scritta mini %'
+    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-1-scritta mini %'
+    oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
+    oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
+            
+########################################################################
+def debug():#Sincronizza_SottoCap_Tag_Capitolo_Cor():
+    '''sincronicca il capitolo corrente'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oDoc.getSheets().getByName('S1').getCellByPosition(7,304).Value == 0:
+        return
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+        return
+    lrow = Range2Cell()[1]
+    lastRow = ultima_voce(oSheet)+1
+    idcat = 0
+    for lrow in range(0,lastRow):
+        if oSheet.getCellByPosition(31, lrow).CellStyle == 'Livello-1-scritta':
+            idcat += 1
+            oSheet.getCellByPosition(31, lrow).Value = idcat
+        if oSheet.getCellByPosition(31, lrow).CellStyle == 'compTagRiservato':
+            oSheet.getCellByPosition(31, lrow).Value = idcat
+    #~ MsgBox(oSheet.getCellByPosition(31, lrow).CellStyle,'')
+########################################################################
 def insRows(lrow, nrighe): #forse inutile
     '''Inserisce nrighe nella posizione lrow - alternativo a
     oSheet.getRows().insertByIndex(lrow, 1)'''
@@ -95,7 +199,7 @@ def insRows(lrow, nrighe): #forse inutile
     oCellRangeAddr.StartColumn = 0
     oCellRangeAddr.EndColumn = 0
     oCellRangeAddr.StartRow = lrow
-    oCellRangeAddr.EndRow = lrow+4-1
+    oCellRangeAddr.EndRow = lrow + nrighe - 1
     oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
 ########################################################################
 def ultima_voce (oSheet):
@@ -104,7 +208,9 @@ def ultima_voce (oSheet):
     nRow = getLastUsedCell(oSheet).EndRow
     #~ MsgBox(nRow,'')
     for n in reversed(range(0, nRow)):
-        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo', 'Comp End Attributo_R', 'comp Int_colonna', 'comp Int_colonna_R_prima'):
+        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo',
+                                                        'Comp End Attributo_R', 'comp Int_colonna', 'comp Int_colonna_R_prima',
+                                                        'Livello-1-scritta', 'livello2 valuta'):
             break
     #~ MsgBox(n , '')
     return n
@@ -136,6 +242,24 @@ def _gotoCella (IDcol,IDrow):
     properties = (oProp,)
     dispatchHelper.executeDispatch(oFrame, '.uno:GoToCell', '', 0, properties )
 ########################################################################
+def Adatta_Altezza_riga ():
+    '''questa sembra inefficace
+    meglio usare qualcosa tipo:
+    oSheet.getCellRangeByPosition(2, lrow-1, 11, lrow).Rows.OptimalHeight = True'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    oProp = PropertyValue()
+    oProp.Name = 'aExtraHeight'
+    oProp.Value = 0
+    properties = (oProp,)
+    dispatchHelper.executeDispatch(oFrame, '.uno:SetOptimalRowHeight', '', 0, properties)
+    if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+########################################################################
 # doppioni #############################################################
 def doppioni():
     '''Elimina i doppioni nell'elenco prezzi'''
@@ -162,6 +286,7 @@ def doppioni():
     for voce in diz_ep.items():
         lista_voci.append(voce[-1])
     oSheet.getRows().removeByIndex(3, ultima_voce(oSheet)-2)
+    lista_voci.sort()
     lista_come_array = tuple(lista_voci) 
 
     # Parametrizzo il range di celle a seconda della dimensione della lista
@@ -235,17 +360,19 @@ def XPWE_export():
     ParteOpera.text = ''
     #~ Capitoli e Categorie
     PweDGCapitoliCategorie = SubElement(PweDatiGenerali,'PweDGCapitoliCategorie')
+    
     #~ SuperCategorie
-    #~ oSheet = oDoc.getSheets().getByName('COMPUTO')
+    oSheet = oDoc.getSheets().getByName('COMPUTO')
+    # evito di esportare in SuperCategorie perché inutile, almeno per ora
     #~ for n in range (0, ultima_voce(oSheet)):
         #~ if oSheet.getCellByPosition(1, n).CellStyle == 'Livello-1-scritta':
             #~ idID = oSheet.getCellByPosition(1, n).String
             #~ desc = oSheet.getCellByPosition(2, n).String
-            #~ 
+            
             #~ PweDGSuperCategorie = SubElement(PweDGCapitoliCategorie,'PweDGSuperCategorie')
             #~ DGSuperCategorieItem = SubElement(PweDGSuperCategorie,'DGSuperCategorieItem')
             #~ DesSintetica = SubElement(DGSuperCategorieItem,'DesSintetica')
-            #~ 
+            
             #~ DGSuperCategorieItem.set('ID', idID)
             #~ DesSintetica.text = desc
 
@@ -350,7 +477,7 @@ def XPWE_export():
             Quantita.text = oSheet.getCellByPosition(9, sotto).String
 ##########################
             DataMis = SubElement(VCItem,'DataMis')
-            DataMis.text = '28/09/2013'###
+            DataMis.text = '26/12/1952'#'28/09/2013'###
             vFlags = SubElement(VCItem,'Flags')
             vFlags.text = '0'
 ##########################
@@ -377,14 +504,29 @@ def XPWE_export():
                 Descrizione.text = oSheet.getCellByPosition(2, m).String
 ##########################
                 PartiUguali = SubElement(RGItem,'PartiUguali')
-                if oSheet.getCellByPosition(5, m).Formula.split('=')[-1] == None:
-                    PartiUguali.text = oSheet.getCellByPosition(5, m).String
-                else:
-                    PartiUguali.text = str(oSheet.getCellByPosition(5, m).Formula.split('=')[-1])
+                #~ eval(mis[3].replace('^','**'))
+                #~ mri(oSheet.getCellByPosition(5, m).Formula.split('=')[-1].replace('^','**'))
+                
+                #~ MsgBox (str(eval(oSheet.getCellByPosition(5, m).Formula.split('=')[-1].replace('^','**').replace(',','.').replace('1/2','1.0/2'))),'')
+                
                 try:
-                    int(oSheet.getCellByPosition(5, m).Formula[1])
+                    eval(oSheet.getCellByPosition(5, m).Formula.split('=')[-1].replace('^','**').replace(',','.').replace('1/2','1.0/2'))
+                    PartiUguali.text = oSheet.getCellByPosition(5, m).Formula.split('=')[-1]
+                    #~ MsgBox (PartiUguali.text , '')
                 except:
-                    PartiUguali.text = oSheet.getCellByPosition(5, m).String
+                    if oSheet.getCellByPosition(5, m).Value !=0:
+                        PartiUguali.text = str(oSheet.getCellByPosition(5, m).Value)
+                    else:
+                        PartiUguali.text = ''
+
+                #~ if oSheet.getCellByPosition(5, m).Formula.split('=')[-1] == None:
+                    #~ PartiUguali.text = oSheet.getCellByPosition(5, m).String
+                #~ else:
+                    #~ PartiUguali.text = str(oSheet.getCellByPosition(5, m).Formula.split('=')[-1])
+                #~ try:
+                    #~ int(oSheet.getCellByPosition(5, m).Formula[1])
+                #~ except:
+                    #~ PartiUguali.text = oSheet.getCellByPosition(5, m).String
 ##########################
                 Lunghezza = SubElement(RGItem,'Lunghezza')
                 if oSheet.getCellByPosition(6, m).Formula.split('=')[-1] == None:
@@ -668,6 +810,16 @@ def ins_voce_computo_grezza(lrow):
     oCellAddress = oSheet.getCellByPosition(0,lrow).getCellAddress()
     oSheet.getRows().insertByIndex(lrow,4)#~ insRows(lrow,4) #inserisco le righe
     oSheet.copyRange(oCellAddress, oRangeAddress)
+########################################################################
+# raggruppo i righi di mirura
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    oCellRangeAddr.StartColumn = 0
+    oCellRangeAddr.EndColumn = 0
+    oCellRangeAddr.StartRow = lrow+2
+    oCellRangeAddr.EndRow = lrow+2
+    oSheet.group(oCellRangeAddr, 1)
 ########################################################################
 # correggo alcune formule
     oSheet.getCellByPosition(13,lrow+3).Formula ='=J'+str(lrow+4)
@@ -1222,7 +1374,6 @@ def XPWE_import(): #(filename):
     oDoc.addActionLock
     oDoc.lockControllers
     ###
-    ###
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo nuovo o già esistente.','Avviso!')
         return
@@ -1312,11 +1463,14 @@ def XPWE_import(): #(filename):
             id_sc = elem.get('ID')
             dessintetica = elem.find('DesSintetica').text
             percentuale = elem.find('Percentuale').text
-            diz = dict ()
-            diz['id_sc'] = id_sc
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            lista_supcat.append(diz)
+            #~ diz = dict ()
+            #~ diz['id_sc'] = id_sc
+            #~ diz['dessintetica'] = dessintetica
+            #~ diz['percentuale'] = percentuale
+            #~ lista_supcat.append(diz)
+            supcat = (id_sc, dessintetica, percentuale)
+            lista_supcat.append(supcat)
+        #~ MsgBox(str(lista_supcat),'') ; return
 ###
 #PweDGCategorie
     if CapCat.find('PweDGCategorie'):
@@ -1326,11 +1480,14 @@ def XPWE_import(): #(filename):
             id_sc = elem.get('ID')
             dessintetica = elem.find('DesSintetica').text
             percentuale = elem.find('Percentuale').text
-            diz = dict ()
-            diz['id_sc'] = id_sc
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            lista_cat.append(diz)
+            #~ diz = dict ()
+            #~ diz['id_sc'] = id_sc
+            #~ diz['dessintetica'] = dessintetica
+            #~ diz['percentuale'] = percentuale
+            #~ lista_cat.append(diz)
+            cat = id_sc, dessintetica, percentuale
+            lista_cat.append(cat)
+        #~ MsgBox(str(lista_cat),'') ; return
 ###
 #PweDGSubCategorie
     if CapCat.find('PweDGSubCategorie'):
@@ -1340,11 +1497,14 @@ def XPWE_import(): #(filename):
             id_sc = elem.get('ID')
             dessintetica = elem.find('DesSintetica').text
             percentuale = elem.find('Percentuale').text
-            diz = dict ()
-            diz['id_sc'] = id_sc
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            lista_subcat.append(diz)
+            #~ diz = dict ()
+            #~ diz['id_sc'] = id_sc
+            #~ diz['dessintetica'] = dessintetica
+            #~ diz['percentuale'] = percentuale
+            #~ lista_subcat.append(diz)
+            subcat = id_sc, dessintetica, percentuale
+            lista_subcat.append(subcat)
+        #~ MsgBox(str(lista_subcat),'') ; return
 ###
     try:
         PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
@@ -1460,6 +1620,7 @@ def XPWE_import(): #(filename):
             lista_rig = list()
             riga_misura = ()
             lista_righe = list()#[]
+            #~ MsgBox(idspcat,'')
             for el in righi_mis:
                 diz_rig = dict()
                 rgitem = el.get('ID')
@@ -1513,7 +1674,8 @@ def XPWE_import(): #(filename):
                                 hpeso,
                                 quantita,
                                 flags,
-                                idvv)
+                                idvv,
+                                )
                 mia = []
                 mia.append(riga_misura[0])
                 for el in riga_misura[1:]:
@@ -1525,16 +1687,8 @@ def XPWE_import(): #(filename):
                         except ValueError:
                             if el != '':
                                 el = '=' + el.replace('.',',')
-                            #~ pass
-                        #~ el = eval(el.replace('.',','))
-                        #~ MsgBox(el.replace('.',','),'')
-                        #~ print(el)
-                        #~ pri()
-                        #~ el = eval(el)#replace('.',',')
                     mia.append(el) 
-                #~ lista_righe.append(tuple(mia))
                 lista_righe.append(riga_misura)
-                #~ lista_rig.append(diz_rig)
             diz_misura['id_vc'] = id_vc
             diz_misura['id_ep'] = id_ep
             diz_misura['quantita'] = quantita
@@ -1543,12 +1697,7 @@ def XPWE_import(): #(filename):
             diz_misura['idspcat'] = idspcat
             diz_misura['idcat'] = idcat
             diz_misura['idsbcat'] = idsbcat
-            #~ diz_misura['lista_rig'] = lista_rig
-            #~ diz_misura['lista_rig'] = tuple(lista_righe)
             diz_misura['lista_rig'] = lista_righe
-
-            #~ vcitem = (id_vc, id_ep, quantita, datamis, flags, idspcat, idcat, idsbcat)
-            #~ lista_misure[id_vc] = vcitem
             lista_misure.append(diz_misura)
     except IndexError:
         MsgBox("""Nel file scelto non risultano esserci voci di misurazione,
@@ -1643,11 +1792,31 @@ Si tenga conto che:
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
     diz_vv = dict()
+    
+    testspcat = '0'
+    testcat = '0'
+    testsbcat = '0'
+    #~ if idcat == '3':
+        #~ MsgBox(lista_supcat[eval(idcat)-1][1],'') ; return
+        #~ idspcat
+        #~ idcat
     x = 1
     for el in lista_misure:
+        #~ MsgBox (str(el),str(type(el))) ; return
+        
+        idspcat = el.get('idspcat')
+        idcat = el.get('idcat')
+        idsbcat = el.get('idsbcat')
 
-        lrow = ultima_voce(oSheet) + 1 
-
+        lrow = ultima_voce(oSheet) + 1
+        #~ MsgBox(str(lrow),'')
+        if idspcat != testspcat:
+            testspcat = idspcat
+            #~ MsgBox(str(lrow),str(type(lrow)))
+            #~ MsgBox(str(lista_supcat[eval(idspcat)-1][1]), str(type(lista_supcat[eval(idspcat)-1][1])))
+            inser_capitolo_arg(lrow, lista_supcat[eval(idspcat)-1][1])
+            #~ MsgBox(str(lista_supcat[eval(idspcat)-1][1]),'') ; return
+        lrow = ultima_voce(oSheet) + 1
         ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')
         id_vc = el.get('id_vc')
@@ -1705,7 +1874,11 @@ Si tenga conto che:
                 if any(o in mis[5] for o in ('+', '*', '/', '-', )):
                     oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5])
                 else:
-                    oSheet.getCellByPosition(7, SR).Value = eval(mis[5])
+                    try:
+                        eval(mis[5])
+                        oSheet.getCellByPosition(7, SR).Value = eval(mis[5].replace(',','.'))
+                    except:
+                        MsgBox(str(type(mis[5])),'') ; return
 
             if mis[6] != None: #HPESO
                 if any(o in mis[6] for o in ('+', '*', '/', '-', )):
@@ -1772,9 +1945,10 @@ Si tenga conto che:
             except TypeError:
                 pass
             SR = SR+1
-    #~ Numera_Voci()
+    Numera_Voci()
     oDoc.CurrentController.ZoomValue = 100
     ###
+    Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - date).total_seconds()) + ' secondi!','')
     #~ MsgBox(str(diz_vv),str(type(diz_vv)))
 

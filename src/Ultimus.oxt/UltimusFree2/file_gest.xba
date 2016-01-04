@@ -122,6 +122,7 @@ rem le variabili di versione sono settate In &quot;_vaiabili&quot;
 &apos;	Print nomeZip
 &apos;	Filecopy nomeZip, nomeZip2 &apos;seconda copia senza data
 	If getos()=&quot;WINDOWS&quot; Then shell (&quot;explorer.exe&quot;, 1,  &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT&quot;)
+	If getos()=&quot;OSX&quot; Then shell (&quot;nautilus&quot;, 1, &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/&quot;)
 end Sub
 
 rem ----------------------------------------------------------------------

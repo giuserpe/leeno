@@ -220,6 +220,10 @@ barra_fatto
 &apos;			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Operazione completata&quot;)
 End Sub
 rem ######################################################################
+Sub SVUOTA_COMPUTO
+	inizializza_computo (&quot;cancella&quot;)
+End Sub
+
 Sub inizializza_computo (Optional delete As String)&apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object 
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)

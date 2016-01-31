@@ -42,6 +42,7 @@ Sub CopySpreadsheet (sSheetSRC as string, firstDoc as object, secondDoc as objec
 	Barra_chiudi_sempre_4
 	exit sub
  errore:
+ 		msgbox &quot;Errore in &apos;Sub CopySpreadsheet&apos;:  &quot; &amp; Error
 	Barra_chiudi_sempre_4
  print &quot;Errore nel modulo &apos;Sub CopySpreadsheet&apos; copiando &quot; &amp; sSheetSRC &amp; &quot;(&quot; &amp; error &amp; &quot;)&quot;
 End Sub

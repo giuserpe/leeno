@@ -848,7 +848,6 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 				Exit Sub
 			EndIf
 		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-			If se_contabilita = 1 Then Exit Sub
 			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot; And _
 				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
@@ -870,10 +869,10 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 vai:
 	Dim test As String
 	If oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;VARIANTE&quot; Then
-		If  oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;livello2 valuta&quot; Or _
-			oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;Livello-1-scritta&quot; Then 
+		Select Case oSheet.GetCellByPosition(0 , lrow).CellStyle
+		Case &quot;livello2 valuta&quot;, &quot;Livello-1-scritta&quot;, &quot;livello-1-sopra&quot;
 			test = &quot;è Computo&quot;
-		EndIf
+		End Select
 	EndIf
 	iSheet_num = oSheet.RangeAddress.sheet 
 	nome_sheet = oView.GetActiveSheet.Name
@@ -892,7 +891,9 @@ vai:
 rem ----------------------------------------------------------------------
 parziale_verifica
 	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
-	If test = &quot;è Computo&quot; Then Rinumera_TUTTI_Capitoli2
+	If test = &quot;è Computo&quot; Then
+		 Rinumera_TUTTI_Capitoli2
+	End If
 END SUB
 rem ######################################################################
 Sub copia_TANTE_righe_Ent
@@ -1381,6 +1382,7 @@ rem ----------------------------------------------------------------------
 END SUB
 
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
+&apos;# da sostituire con def Numera_Voci(bit=1):# in python
 &apos;	aa = (now)
 &apos; sistema_attributi_sheet
  &apos;&apos; Clessid_lock_Start

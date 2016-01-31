@@ -1,1805 +1,1787 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<oor:component-data
-xmlns:oor="http://openoffice.org/2001/registry"
-xmlns:xs="http://www.w3.org/2001/XMLSchema"
-oor:name="Addons"
-oor:package="org.openoffice.Office">
-    <node oor:name="AddonUI">
-        <node oor:name="OfficeToolBar">
-<!-- OfficeToolBar OfficeToolBar OfficeToolBar -->
-            <node oor:name="ULTIMUS_3.OfficeToolBar" oor:op="replace">
-                <node oor:name="Ma00" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image92</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Menù Principale</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma10" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Focus.APPROSSIMA_ZOOM?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image2</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Zoom a Default</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma19" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma20" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Viste.Scelta_Viste?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image18</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>VISTE</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma30" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Varie.Adatta_Altezza_riga?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/adattaH</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Adatta altezza righe selezionate - Alt-A</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma40" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/Corta</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Vista Corta (abbreviata) ON/OFF  </value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma50" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                    <value>%origin%/icons/image333</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Filtro Standard Semplificato ON/OFF</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-
-                <node oor:name="Ma55" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                    <value>%origin%/icons/findcode</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Fitra Codice della voce corrente</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-
-                <node oor:name="Ma59" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma60" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.Nuova_Voce_scelta?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image93</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Nuova Voce</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma70" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/pesca</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Pesca Codice</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma80" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Varie.copia_riga_Ent?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/compo</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Aggiungi Componente</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma89" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma90" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/cross</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>ELIMINA le righe attive/selezionate </value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma100" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image37</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Sposta una Voce di Analisi, Computo o Contabilità</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ma110" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.elimina_voce?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/cestino</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Elimina voce</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-            </node>
+<oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
+  <node oor:name="AddonUI">
+    <node oor:name="OfficeToolBar">
+      <!-- OfficeToolBar OfficeToolBar OfficeToolBar -->
+      <node oor:name="ULTIMUS_3.OfficeToolBar" oor:op="replace">
+        <node oor:name="Ma00" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image92</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Menù Principale</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
         </node>
-<!-- ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO -->
-        <node oor:name="OfficeToolBar">
-            <node oor:name="ULTIMUS_3.OfficeToolBar_ELENCO" oor:op="replace">
-                <node oor:name="EL00" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Pulizia_0.DOPPIONI_TROVA_manuale?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image21</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Trova Codici Doppi in El.Prezzi </value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="EL10" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.Riordina_ElencoPrezzi?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/riordina</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Riordina Elenco Prezzi (ordine alfabetico)</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-            </node>
+        <node oor:name="Ma10" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Focus.APPROSSIMA_ZOOM?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image2</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Zoom a Default</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
         </node>
-<!-- ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI -->
-        <node oor:name="OfficeToolBar">
-            <node oor:name="ULTIMUS_3.OfficeToolBar_ANALISI" oor:op="replace">
-                <node oor:name="ANa00" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/perc</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci % Utili/Maggiorazioni</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="ANa10" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Varie.ANALISI_IN_ELENCOPREZZI?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/2ep</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Crea Nuovo Prezzo dall'Analisi</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-            </node>
+        <node oor:name="Ma19" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value />
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>private:separator</value>
+          </prop>
         </node>
-<!--COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO -->
-        <node oor:name="OfficeToolBar">
-            <node oor:name="ULTIMUS_3.OfficeToolBar_COMPUTO" oor:op="replace">
-                <node oor:name="Ca00" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image19</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci Categoria</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ca10" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image20</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci SottoCategoria</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ca20" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Computo.parziale?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/parz</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci parziale</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ca30" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Computo.vedi_voce?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/vedivoce</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Vedi voce precedente</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ca40" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Computo.Firme_in_calce?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/riepilogo</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Riepilogo e firme in calce al COMPUTO</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ca49" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="Ca50" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                    <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image8</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Struttura ON</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="Ca60" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image9</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Struttura OFF</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-
-            </node>
+        <node oor:name="Ma20" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Viste.Scelta_Viste?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image18</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>VISTE</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
         </node>
-<!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
-        <node oor:name="OfficeToolBar">
-            <node oor:name="ULTIMUS_3.OfficeToolBar_CONTABILITA" oor:op="replace">
-                <node oor:name="COa00" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Ricicla_Misure?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/ricicla</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Ricicla una voce dal Computo</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="COa10" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Computo.vedi_voce?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/vedivoce</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Vedi voce precedente</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="COa20" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Contab.partita_provvisoria?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/part_agg</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci Partita Provvisoria</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="COa30" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Contab.detrai_partita_provvisoria?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/part_det</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Detrai Partita Provisoria</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="COa40" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Computo.parziale?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/parz</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci parziale</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-            </node>
+        <node oor:name="Ma30" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Varie.Adatta_Altezza_riga?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/adattaH</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Adatta altezza righe selezionate - Alt-A</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
         </node>
-<!--DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV -->
-        <node oor:name="OfficeToolBar">
-            <node oor:name="ULTIMUS_3.OfficeToolBar_DEV" oor:op="replace">
-<!-- crea il pacchetto -->
-                <node oor:name="m001" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/zip</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>pack.OXT</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <!-- IMPORTA-->
-                <node oor:name="m100" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.PY_bridge.python_debug?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/py</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>python debug</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-<!-- PROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVA-->
-            </node>
+        <node oor:name="Ma40" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/Corta</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Vista Corta (abbreviata) ON/OFF</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
         </node>
-<!--                                                                                        -->
-        <node oor:name="OfficeMenuBar">
-            <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
+        <node oor:name="Ma50" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image333</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Filtro Standard Semplificato ON/OFF</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma55" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/findcode</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Fitra Codice della voce corrente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma59" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value />
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>private:separator</value>
+          </prop>
+        </node>
+        <node oor:name="Ma60" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.Nuova_Voce_scelta?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image93</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Nuova Voce</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma70" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/pesca</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Pesca Codice</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma80" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Varie.copia_riga_Ent?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/compo</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Aggiungi Componente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma89" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value />
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>private:separator</value>
+          </prop>
+        </node>
+        <node oor:name="Ma90" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/cross</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>ELIMINA le righe attive/selezionate</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma100" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image37</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Sposta una Voce di Analisi, Computo o Contabilità</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma110" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.elimina_voce?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/cestino</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Elimina voce</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+    <!-- ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO -->
+    <node oor:name="OfficeToolBar">
+      <node oor:name="ULTIMUS_3.OfficeToolBar_ELENCO" oor:op="replace">
+        <node oor:name="EL00" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Pulizia_0.DOPPIONI_TROVA_manuale?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image21</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Trova Codici Doppi in El.Prezzi</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="EL10" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.Riordina_ElencoPrezzi?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/riordina</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Riordina Elenco Prezzi (ordine alfabetico)</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+    <!-- ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI -->
+    <node oor:name="OfficeToolBar">
+      <node oor:name="ULTIMUS_3.OfficeToolBar_ANALISI" oor:op="replace">
+        <node oor:name="ANa00" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Varie.Inserisci_Utili?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/perc</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Inserisci % Utili/Maggiorazioni</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="ANa10" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Varie.ANALISI_IN_ELENCOPREZZI?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/2ep</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Crea Nuovo Prezzo dall'Analisi</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+    <!--COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO -->
+    <node oor:name="OfficeToolBar">
+      <node oor:name="ULTIMUS_3.OfficeToolBar_COMPUTO" oor:op="replace">
+        <node oor:name="Ca00" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image19</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Inserisci Categoria</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca10" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image20</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Inserisci SottoCategoria</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca20" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Computo.parziale?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/parz</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Inserisci parziale</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca30" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Computo.vedi_voce?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/vedivoce</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Vedi voce precedente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca40" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Computo.Firme_in_calce?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/riepilogo</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Riepilogo e firme in calce al COMPUTO</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca49" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value />
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>private:separator</value>
+          </prop>
+        </node>
+        <node oor:name="Ca50" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image8</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Struttura ON</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca60" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image9</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Struttura OFF</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+    <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
+    <node oor:name="OfficeToolBar">
+      <node oor:name="ULTIMUS_3.OfficeToolBar_CONTABILITA" oor:op="replace">
+        <node oor:name="COa00" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Ricicla_Misure?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/ricicla</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Ricicla una voce dal Computo</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="COa10" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Computo.vedi_voce?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/vedivoce</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Vedi voce precedente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="COa20" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Contab.partita_provvisoria?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/part_agg</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Inserisci Partita Provvisoria</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="COa30" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Contab.detrai_partita_provvisoria?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/part_det</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Detrai Partita Provisoria</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="COa40" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Computo.parziale?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/parz</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Inserisci parziale</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+    <!--DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV DEV -->
+    <node oor:name="OfficeToolBar">
+      <node oor:name="ULTIMUS_3.OfficeToolBar_DEV" oor:op="replace">
+        <!-- crea il pacchetto -->
+        <node oor:name="m001" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/zip</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>pack.OXT</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <!-- IMPORTA-->
+        <node oor:name="m100" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.python_debug?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/py</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>python debug</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <!-- PROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVA-->
+      </node>
+    </node>
+    <!--                                                                              -->
+    <node oor:name="OfficeMenuBar">
+      <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
+        <prop oor:name="Context" oor:type="xs:string">
+          <value>com.sun.star.sheet.SpreadsheetDocument</value>
+        </prop>
+        <prop oor:name="Title" oor:type="xs:string">
+          <value>LeenO</value>
+        </prop>
+        <node oor:name="Submenu">
+          <node oor:name="m00" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <!--                     <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                 <value>%origin%/icons/image14</value>
+                 </prop> -->
+            <!-- sottomenu Nuovo -->
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Nuovo...</value>
+            </prop>
+            <node oor:name="Submenu">
+              <node oor:name="m0U01" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
-                    <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_LeenO?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image15</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                    <value>LeenO</value>
+                  <value>Computo</value>
                 </prop>
-                <node oor:name="Submenu">
-
-                <node oor:name="m00" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-<!--                     <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image14</value>
-                    </prop> -->
-<!-- sottomenu Nuovo -->
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Nuovo...</value>
-                    </prop>
-                    <node oor:name="Submenu">
-
-                        <node oor:name="m0U01" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.file_gest.New_LeenO?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/image15</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Computo</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U02" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_import?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Importa XPWE in questo computo</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U03" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_export?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Esporta XPWE da questo computo</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U04" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                            <value></value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                            <value>private:separator</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U05" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.file_gest.New_listino?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/nuovoPrezzario</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Listino prezzi</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U06" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Importa voci da prezzario XML-SIX</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U07" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import_BOLZANO?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Importa voci da prezzario XML-SIX bilingue - Provincia di Bolzano</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U08" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                            <value></value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                            <value>private:separator</value>
-                            </prop>
-                        </node>
-
-                        <node oor:name="m0U09" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.file_gest.New_usobollo?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Documento UsoBollo</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                    </node>
-                </node>
-                <node oor:name="m01" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Manutenzione.Ripristina_controlli_con_nuovaFinestra?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image13</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Ripristina Controlli (REFRESH)</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m02" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Lupo_0.Procedura_di_Controllo?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/s_ok-g</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Esegui Procedura di controllo (doc attivo)</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m03" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image14</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>   &gt; &gt; &gt;     UTILITY &gt;&gt; &gt;</value>
-                    </prop>
-                    <node oor:name="Submenu">
-                    <node oor:name="m2U01" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U03" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Taxi_Acc.Accoda_un_computo?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image35m</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Importa/Accoda QUI i Dati di un Altro Doc (Nuova) </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-<!--                    <node oor:name="m2U04" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Agg_Templ.AGGIORNA_TEMPLATE?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/s_smily_oh</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Aggiorna il tuo Doc/Template (Nuova) </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
--->
-                    <node oor:name="m2U05" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U06" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Taxi.Main_Importa_Altro_Computo?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image35</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Esporta/Accoda i Dati di questo Doc > in DCC (Doc Contab. Corrente) </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U07" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Taxi.gina?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image35</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Duplica il foglio attivo > in DCC (Doc Contab. Corrente) </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U07.1" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U07.2" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Manutenzione.Importa_STILI?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/sfera_gialla</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Importa Stili da altro Doc </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U08" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Digestione.Converti_stringhe?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image16</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Converti Stringhe in Numeri    </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U09" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Accessori_2.sproteggi_sheet_TUTTE?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image17</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Sproteggi Tutto il Doc     Ctl Shift K</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U10" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Accessori_2.Visualizza_sheet_TUTTE?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/vintage</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Visualizza (mostra) TUTTI i fogli </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U11" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Varie.Numera_Voci_Computo?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image161</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Numera (ri-numera) le Voci di Computo (o di Contabilità)</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U12" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Strutture.Rinumera_TUTTI_Capitoli2?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/rinum_cap</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Rinumera Cat, Sottocat - rifà i subTotali e Totali Generali</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U13" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Varie.Inserisci_riga_rossa?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image100</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Inserisci riga rossa di chiusura</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U14" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Accessori.ToggleGrid?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/griglia3</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Mostra/Nascondi Griglia</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-
-                    <node oor:name="m2U15" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.tante_voci_insieme?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image300</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Inserisci gruppi di nuove voci (Analisi / Computo)</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U16" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Varie.vai_ed_esegui?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image300</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Nuovi prezzi da gruppi di Analisi (ESPERTI)</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U17" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.X_TMP.popi_serva?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/image300</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>popi_serva (ESPERTI)</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U18" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Finale_2.Computo_senza_prezzi?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/sf_Ver</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>APP- Crea Copia del Computo Metrico (con o) Senza Prezzi</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U19" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Finale_2.Modulo_Lista_categorie_appalto?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/sf_Ver</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>APP- Crea Lista Lavorazioni e Forniture</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U20" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.InLettereFunc.In_Let?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/sf_Ver</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value> APP-Converte In Lettere i numeri selezionati (selezione verticale)</value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U21" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Finale.DuplicaSheetinDoc?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/sf_blu</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Duplica il foglio attivo in questo Doc </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U22" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_new_doc_No_Cons?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/sf_bluF</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Duplica il foglio attivo FUORI da questo Doc Calc </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    <node oor:name="m2U23" oor:op="replace">
-                        <prop oor:name="Context" oor:type="xs:string">
-                            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                        </prop>
-                        <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_new_doc?language=Basic&amp;location=application</value>
-                        </prop>
-                        <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/sf_bluF</value>
-                        </prop>
-                        <prop oor:name="Title" oor:type="xs:string">
-                            <value>Duplica e CONSOLIDA il foglio attivo FUORI da questo Documento </value>
-                        </prop>
-                        <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                    </node>
-                    </node>
-                </node>
-                <node oor:name="m04" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m05" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/vintage</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>    &gt; &gt; &gt;   Gestione Copertine e Docs &gt;&gt;</value>
-                    </prop>
-                    <node oor:name="Submenu">
-                        <node oor:name="m3U01" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_COMPUTO?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/vintage</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Mostra le Copertine e i Docs del COMPUTO</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m3U02" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_contabilita_soltanto?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/vintage</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Mostra le Copertine e i Docs di Contabilita'</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m3U03" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Nascondi_TUTTI_docs_e_Copertine?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/vintage</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>Nascondi TUTTE le Copertine e i Docs</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m3U04" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                             <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Accessori_2.Visualizza_sheet_TUTTE?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/vintage</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                            <value>Visualizza (mostra) TUTTI i fogli </value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m3U05" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                             <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Taxi.Rimetti_in_ordine_tab?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                            <value>%origin%/icons/vintage</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                            <value>Riordina i fogli/Tab (ordine predefinito)  </value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                            <value>_self</value>
-                        </prop>
-                        </node>
-                    </node>
-                </node>
-                <node oor:name="m06" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image19</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci Categoria</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m07" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image20</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Inserisci SottoCategoria</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m08" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m09" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image8</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Metti in struttura</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m10" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image9</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Elimina Strutture</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m11" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m12" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Tutti_Subtotali?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image77</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Rifa Tutti i subtotali (di Cap e SottoCap)</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m13" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m14" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image37</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Sposta una Voce di Analisi, Computo o Contabilità</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m15" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.elimina_voce?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/cestino</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Elimina voce</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m16" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Accessori.Copia_Righe_Inserisci_Anche_in_tabelle_diverse?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image39</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>COPIA un range di righe in nuova posizione</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m17" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Accessori.Sposta_Righe_Anche_in_tabelle_diverse?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image38</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>SPOSTA un range di righe in nuova posizione</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m18" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m19" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/pesca</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Pesca Codice</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m20" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m21" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image333</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Filtro Standard Semplificato ON/OFF</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m22" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Autofilter_On_Off?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image444</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Filtro Automatico sul Computo ON/OFF</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m23" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Focus.Sel_Filtro?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image555</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Filtra Computo e Fai una copia su altra tabella</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m24" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m26" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Pulizia_0.DOPPIONI_TROVA_giuserpe?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image21B</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                            <value>Elimina codici doppi in Elenco Prezzi</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m27" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                            <value>vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/imageNA</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                            <value>Cerca errori nel foglio attivo </value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m28" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value></value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>private:separator</value>
-                    </prop>
-                </node>
-                <node oor:name="m29" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Descriziona abbreviata ON/OFF</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m30" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/fileprint</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>    &gt; &gt; &gt;  STAMPA (procedure di...)  &gt; &gt; &gt;</value>
-                    </prop>
-                    <node oor:name="Submenu">
-                        <node oor:name="m13S1" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_in_Doc?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/image36</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>    Duplica il foglio attivo...</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m13S3" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale.Set_Area_Stampa_N?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/image36</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>    Approssima area stampa...</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m13S4" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale.Pulisci_Tabella_Tutta?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/image36</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>    Sbianca il foglio (nasconde i colori)</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m13S5" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/image36b</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>1) PREPARA IL FOGLIO PER LA STAMPA (concatena le 4 precedenti)</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <!-- Utile solo per le analisi -->
-                        <node oor:name="m13S6" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale.Impagina_N?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/image36b</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>2) Imposta i salti pagina... (solo Analisi)  </value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                        <node oor:name="m13S7" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale.togli_salti_pagina?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>--- ELIMINA tutti i salti pagina!</value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-<!--
-                        <node oor:name="m13S8" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale_2.esporta_PDF_Foglio_Attivo?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/pdf-icon</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>3) ESPORTA in PDF il foglio attivo  </value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
--->
-                        <node oor:name="m13S9" oor:op="replace">
-                            <prop oor:name="Context" oor:type="xs:string">
-                                <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                            </prop>
-                            <prop oor:name="URL" oor:type="xs:string">
-                                <value>vnd.sun.star.script:UltimusFree2.Finale_2.esporta_tanti_Fogli_PDF?language=Basic&amp;location=application</value>
-                            </prop>
-                            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                                <value>%origin%/icons/pdf-icon</value>
-                            </prop>
-                            <prop oor:name="Title" oor:type="xs:string">
-                                <value>> ESPORTA in PDF foglio attivo e copertina (cP_Cop) </value>
-                            </prop>
-                            <prop oor:name="Target" oor:type="xs:string">
-                                <value>_self</value>
-                            </prop>
-                        </node>
-                    </node>
-                </node>
-                <node oor:name="m31" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.Accessori_2.SwitchDesign?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/image22</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Modo Bozza On / Off</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
-                <node oor:name="m32" oor:op="replace">
-                    <prop oor:name="Context" oor:type="xs:string">
-                        <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                    </prop>
-                    <prop oor:name="URL" oor:type="xs:string">
-                        <value>vnd.sun.star.script:UltimusFree2.file_gest.apri_manuale?language=Basic&amp;location=application</value>
-                    </prop>
-                    <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                        <value>%origin%/icons/manuale</value>
-                    </prop>
-                    <prop oor:name="Title" oor:type="xs:string">
-                        <value>Manuale...</value>
-                    </prop>
-                    <prop oor:name="Target" oor:type="xs:string">
-                        <value>_self</value>
-                    </prop>
-                </node>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m0U02" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_import?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa XPWE in questo computo</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m0U03" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_export?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Esporta XPWE da questo computo</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m0U04" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+              <node oor:name="m0U05" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_listino?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/nuovoPrezzario</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Listino prezzi</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m0U06" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa voci da prezzario XML-SIX</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m0U07" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import_BOLZANO?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa voci da prezzario XML-SIX bilingue - Provincia di Bolzano</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m0U08" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+              <node oor:name="m0U09" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_usobollo?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Documento UsoBollo</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
             </node>
+          </node>
+          <node oor:name="m01" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Manutenzione.Ripristina_controlli_con_nuovaFinestra?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image13</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Ripristina Controlli (REFRESH)</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m02" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Lupo_0.Procedura_di_Controllo?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/s_ok-g</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Esegui Procedura di controllo (doc attivo)</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m03" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image14</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>&gt; &gt; &gt;     UTILITY &gt;&gt; &gt;</value>
+            </prop>
+            <node oor:name="Submenu">
+              <node oor:name="m2U01" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+              <node oor:name="m2U03" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Taxi_Acc.Accoda_un_computo?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image35m</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa/Accoda QUI i Dati di un Altro Doc (Nuova)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <!--                    <node oor:name="m2U04" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.Agg_Templ.AGGIORNA_TEMPLATE?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/s_smily_oh</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>Aggiorna il tuo Doc/Template (Nuova) </value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
+              <node oor:name="m2U05" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+              <node oor:name="m2U06" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Taxi.Main_Importa_Altro_Computo?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image35</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Esporta/Accoda i Dati di questo Doc > in DCC (Doc Contab. Corrente)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U07" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Taxi.gina?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image35</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Duplica il foglio attivo > in DCC (Doc Contab. Corrente)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U07.1" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+              <node oor:name="m2U07.2" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Manutenzione.Importa_STILI?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/sfera_gialla</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa Stili da altro Doc</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U08" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Digestione.Converti_stringhe?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image16</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Converti Stringhe in Numeri</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U09" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Accessori_2.sproteggi_sheet_TUTTE?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image17</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Sproteggi Tutto il Doc     Ctl Shift K</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U10" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Accessori_2.Visualizza_sheet_TUTTE?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/vintage</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Visualizza (mostra) TUTTI i fogli</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U11" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Varie.Numera_Voci_Computo?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image161</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Numera le voci di Computo/Contabilità</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U12" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Strutture.Rinumera_TUTTI_Capitoli2?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/rinum_cap</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Rinumera Cat, Sottocat - fa i subTotali e Totali Generali</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U13" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Varie.Inserisci_riga_rossa?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image100</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Inserisci riga rossa di chiusura</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U14" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Accessori.ToggleGrid?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/griglia3</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Mostra/Nascondi Griglia</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U15" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Voci_Crea_Att.tante_voci_insieme?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image300</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Inserisci gruppi di nuove voci (Analisi / Computo)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U16" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Varie.vai_ed_esegui?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image300</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Nuovi prezzi da gruppi di Analisi (ESPERTI)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U17" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.X_TMP.popi_serva?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image300</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>popi_serva (ESPERTI)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U18" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale_2.Computo_senza_prezzi?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/sf_Ver</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>APP- Crea Copia del Computo Metrico (con o) Senza Prezzi</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U19" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale_2.Modulo_Lista_categorie_appalto?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/sf_Ver</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>APP- Crea Lista Lavorazioni e Forniture</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U20" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.InLettereFunc.In_Let?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/sf_Ver</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>APP-Converte In Lettere i numeri selezionati (selezione verticale)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U21" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.DuplicaSheetinDoc?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/sf_blu</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Duplica il foglio attivo in questo Doc</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U22" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_new_doc_No_Cons?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/sf_bluF</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Duplica il foglio attivo FUORI da questo Doc Calc</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U23" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_new_doc?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/sf_bluF</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Duplica e CONSOLIDA il foglio attivo FUORI da questo Documento</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+            </node>
+          </node>
+          <node oor:name="m04" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m05" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/vintage</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>&gt; &gt; &gt;   Gestione Copertine e Docs &gt;&gt;</value>
+            </prop>
+            <node oor:name="Submenu">
+              <node oor:name="m3U01" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_COMPUTO?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/vintage</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Mostra le Copertine e i Docs del COMPUTO</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U02" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_contabilita_soltanto?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/vintage</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Mostra le Copertine e i Docs di Contabilita'</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U03" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Nascondi_TUTTI_docs_e_Copertine?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/vintage</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Nascondi TUTTE le Copertine e i Docs</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U04" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Accessori_2.Visualizza_sheet_TUTTE?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/vintage</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Visualizza (mostra) TUTTI i fogli</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U05" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Taxi.Rimetti_in_ordine_tab?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/vintage</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Riordina i fogli/Tab (ordine predefinito)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+            </node>
+          </node>
+          <node oor:name="m06" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image19</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Inserisci Categoria</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m07" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image20</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Inserisci SottoCategoria</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m08" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m09" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image8</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Metti in struttura</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m10" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image9</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Elimina Strutture</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m11" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m12" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Strutture.Tutti_Subtotali?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image77</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Rifa Tutti i subtotali (di Cap e SottoCap)</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m13" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m14" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image37</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Sposta una Voce di Analisi, Computo o Contabilità</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m15" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Voci_Sposta.elimina_voce?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/cestino</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Elimina voce</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m16" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Accessori.Copia_Righe_Inserisci_Anche_in_tabelle_diverse?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image39</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>COPIA un range di righe in nuova posizione</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m17" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Accessori.Sposta_Righe_Anche_in_tabelle_diverse?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image38</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>SPOSTA un range di righe in nuova posizione</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m18" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m19" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Pesca_mi.Pesca_cod?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/pesca</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Pesca Codice</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m20" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m21" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image333</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Filtro Standard Semplificato ON/OFF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m22" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Strutture.Autofilter_On_Off?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image444</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Filtro Automatico sul Computo ON/OFF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m23" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Focus.Sel_Filtro?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image555</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Filtra Computo e Fai una copia su altra tabella</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m24" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m26" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Pulizia_0.DOPPIONI_TROVA_giuserpe?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image21B</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Elimina codici doppi in Elenco Prezzi</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m27" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Accessori.cerca_errori?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/imageNA</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Cerca errori nel foglio attivo</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m28" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m29" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Descriziona abbreviata ON/OFF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m30" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/fileprint</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>&gt; &gt; &gt;  STAMPA (procedure di...)  &gt; &gt; &gt;</value>
+            </prop>
+            <node oor:name="Submenu">
+              <node oor:name="m13S1" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_in_Doc?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image36</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Duplica il foglio attivo...</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m13S3" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.Set_Area_Stampa_N?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image36</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Approssima area stampa...</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m13S4" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.Pulisci_Tabella_Tutta?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image36</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Sbianca il foglio (nasconde i colori)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m13S5" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.Prepara_un_Doc_per_la_stampa?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image36b</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>1) PREPARA IL FOGLIO PER LA STAMPA (concatena le 4 precedenti)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <!-- Utile solo per le analisi -->
+              <node oor:name="m13S6" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.Impagina_N?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/image36b</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>2) Imposta i salti pagina... (solo Analisi)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m13S7" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale.togli_salti_pagina?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>--- ELIMINA tutti i salti pagina!</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <!--
+                   <node oor:name="m13S8" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.Finale_2.esporta_PDF_Foglio_Attivo?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/pdf-icon</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>3) ESPORTA in PDF il foglio attivo  </value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
+              <node oor:name="m13S9" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:UltimusFree2.Finale_2.esporta_tanti_Fogli_PDF?language=Basic&amp;location=application</value>
+                </prop>
+                <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                  <value>%origin%/icons/pdf-icon</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>> ESPORTA in PDF foglio attivo e copertina (cP_Cop)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+            </node>
+          </node>
+          <node oor:name="m31" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Accessori_2.SwitchDesign?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image22</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Modo Bozza On / Off</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m32" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.file_gest.apri_manuale?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/manuale</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Manuale...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
         </node>
+      </node>
     </node>
-    </node>
+  </node>
 </oor:component-data>

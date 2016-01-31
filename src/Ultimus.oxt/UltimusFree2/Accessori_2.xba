@@ -848,8 +848,10 @@ Function TrovaFine_Computo (optional oSheet as object) as integer &apos; funzion
 		TrovaFine_Computo = ilastrow+1
 		exit function
 		errore:	
+		msgbox &quot;Error: &quot; &amp; Error
 		exit function
 End Function
+
 
 
 Sub Annulla_Salva_spazio

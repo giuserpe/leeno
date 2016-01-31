@@ -16,7 +16,7 @@
  <library:element library:name="Menu"/>
  <library:element library:name="Viste"/>
  <library:element library:name="Varie"/>
- <library:element library:name="Voci_crea"/>
+ <library:element library:name="Module2"/>
  <library:element library:name="Voci_Sistema"/>
  <library:element library:name="Voci_Sistema_2"/>
  <library:element library:name="Voci_Sistema_3"/>
@@ -55,7 +55,7 @@
  <library:element library:name="Pesca_mi_reg_A"/>
  <library:element library:name="Viste_2"/>
  <library:element library:name="Gestione_Var"/>
- <library:element library:name="SAL_REG"/>
+ <library:element library:name="export"/>
  <library:element library:name="Magic"/>
  <library:element library:name="Taxi_Acc"/>
  <library:element library:name="Taxi_temp_obs"/>
@@ -82,6 +82,4 @@
  <library:element library:name="Conversioni"/>
  <library:element library:name="ConversioneDaListiniEsterni"/>
  <library:element library:name="PY_bridge"/>
- <library:element library:name="Module2"/>
- <library:element library:name="export"/>
 </library:library>

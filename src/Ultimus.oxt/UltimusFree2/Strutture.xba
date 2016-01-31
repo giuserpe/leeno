@@ -139,15 +139,10 @@ rem ----------------------------------------------------------------------
 End Sub
 
 SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row
-&apos;screenupdatingOFF
-	oSheet1 = ThisComponent.currentController.activeSheet
-	lrow= Range2Cell &apos; per ridurre a cella iniziale un eventuale range
-	oCell1=oSheet1.GetCellByPosition(2 , lrow)
-	Rinumera_TUTTI_Capitoli (lrow)
- 	ThisComponent.CurrentController.Select(oCell1)
-&apos;screenupdatingON
-end sub
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;Rinumera_TUTTI_Capitoli2&quot;)
+End sub
 rem ----------------------------------------------------------------------
+
 SUB Rinumera_TUTTI_Capitoli (lrow as long) &apos; se arriva da altra sub che fornisce lrow (numero di riga necessario!)
 &apos; al momento rinumera
 &apos;maiusc Alt F8
@@ -346,86 +341,10 @@ rem ----------------------------------------------------------------------
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
 End Sub
 
-&apos;_______________________________________________________________________________________
-
-
-
-Sub Sincronizza_SottoCap_Tag_Capitolo_Cor (optional lroww as long) 
-		&apos;sincronizza il capitolo corrente 
-dim lLastUrow as long
-dim lrow as long
-dim I as long
-dim lrowS as long
-dim icapitolo 
-	oSheet = ThisComponent.currentController.activeSheet
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 0 then
-	&apos;print &quot;esco&quot;
-		exit sub
-	end if
-	if ismissing (lroww) then
-			lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-			&apos; errata selezione di un range
-			if lrow = -1 then
-				Exit Sub
-			EndIf
-	Else
-		lrow = lroww
-	EndIf
-	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot; Sistemo la numerazione dei capitoli!&quot;, 60)
-
-	lrowE =ultima_voce+1
-	lSotCapsinizio = lrowStart
-		
-	if oSheet.GetCellByPosition(31 , lrow).CellStyle = &quot;Livello-1-scritta&quot; Then &apos; se Categoria
-			lrow = lrow+2
-	end if
-&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)
-&apos; va sù a cercare ilCap sopra e registra il valore e posizione
-	lrowProvv = lrow-1
-	do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot; 
-		If lrowProvv &gt; 1 Then
-			lrowProvv = lrowProvv-1
-		else
-			MSGBOX &quot;#3 IN QUESTA SEZIONE NON CI SONO INTESTAZIONI DI CATEGORIA A CUI RIFERIRMI...&quot;
-			iCapitolo = 1
-			exit do
-		end if
-	loop
-	iCapitolo =	oSheet.GetCellByPosition(31 , lrowProvv).STRING
-	lArow = lrowProvv &apos; row di testa&apos; ??? controllare se serve
-		&apos;print iCapitolo
-	lrowProvv = lrowProvv+1
-	iSottoCap = 0
-&apos;&apos;&apos;	print &quot;sono dentro sincronizza alla riga &quot; &amp; lrowProvv &amp; &quot;e il Cap è :&quot; &amp; iCapitolo
-	do while oSheet.GetCellByPosition(31 , lrowProvv).CellStyle &lt;&gt; &quot;Livello-1-scritta&quot; OR _
-		oSheet.GetCellByPosition(31 , lrowProvv).CellStyle = &quot;Comp TOTALI&quot; &apos;OR _
-		if lrowProvv &gt;= lRowE then
-				exit Do
-		end if
-		if oSheet.GetCellByPosition(31 , lrowProvv).CellStyle = &quot;livello2_&quot; then
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 1 or _
-				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,305).value = 2 then &apos;se rinum Tutto è attivo
-				oSheet.GetCellByPosition(31 , lrowProvv).value = iCapitolo
-				iSottoCap = iSottoCap +1
-				oSheet.GetCellByPosition(32 , lrowProvv).value = iSottoCap	
-			else 
-				iSottoCap = oSheet.GetCellByPosition(32 , lrowProvv).value
-				oSheet.GetCellByPosition(32 , lrowProvv).value = iSottoCap	
-			end If					
-		end if
-		if oSheet.GetCellByPosition(31 , lrowProvv).CellStyle = &quot;compTagRiservato&quot; Then
-				If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,304).value = 1 then
-					oSheet.GetCellByPosition(31 , lrowProvv).value = iCapitolo
-					oSheet.GetCellByPosition(32 , lrowProvv).value = iSottoCap
-				end if				
-		end if	
-		lrowProvv = lrowProvv+1
-	loop
-	Barra_chiudi_sempre_4
-end Sub
-
-
+&apos;#########################################################################
+Sub Sincronizza_SottoCap_Tag_Capitolo_Cor
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;Sincronizza_SottoCap_Tag_Capitolo_Cor&quot;)
+End Sub 
 
 Sub Tutti_Subtotali (optional oSheet1) &apos;as object) &apos; lavora su tutto il computo sistemando i subtotali di cap e sottocap
 &apos;Print &quot;da velocizzare&quot;
@@ -905,252 +824,14 @@ Sub Struttura_Analisi ()
 
 end sub
 
-
-Sub Togli_tutte_Strutture
-&apos; questa non fa nulla, ma qualche vecchio template cerca di eseguirla in automatico
-&apos; quindi lasciarla così VUOTA
-End sub
-
-
-
 Sub Togli_Struttura ()
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-&apos;	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-
-
-	&apos;--------------------------------------------------
 	oSheet = ThisComponent.currentController.activeSheet
-	lrow = range2cell
-	dim oCelle as object
-	oCelle=ThisComponent.CurrentSelection
-
-&apos;	if oSheet.GetCellByPosition(5 , 1).getCOLUMNS.IsVisible=false then
-&apos;		oSheet.clearOutline()
-&apos;	 	oSpalte2 = oSheet.getColumns().getByName(&quot;E&quot;) 
-&apos;		oSpalte2.isVisible = false 	
-&apos;		oSpalte2 = oSheet.getColumns().getByName(&quot;F&quot;) 		 		
-&apos;		oSpalte2.isVisible = false 
-&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;G&quot;) 
-&apos;		oSpalte1.isVisible = false
-&apos;		oSpalte2 = oSheet.getColumns().getByName(&quot;H&quot;) 
-&apos;		oSpalte2.isVisible = false
-&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;I&quot;) 
-&apos;		oSpalte1.isVisible = false 
-&apos;	Else
-		oSheet.clearOutline()		
-&apos;	end if
-&apos;	Viste_nuove(&quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)
-&apos;	set_larghezza_colonne
-&apos;	ThisComponent.CurrentController.Select(oCell)
-&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
-	On Error GoTo fine:
-		ThisComponent.CurrentController.setFirstVisibleRow(inizio_voce(lrow))
-	GoTo uscita:
-	fine:
-		ThisComponent.CurrentController.setFirstVisibleRow(lRow-3)
-	uscita:
-Adatta_h_riga_intera_tabella(oSheet.Name)
+	oSheet.clearOutline()
 end sub
 
-
-sub Struttura_ComputoM rem COPIA DI Struttura_ComputoM CHE RAGGRUPPA
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; per evitare che duplichi la struttura
-	 Togli_Struttura
-
-	Ripristina_statusLine
-	Barra_Apri_Chiudi_5(&quot;1 Sto creando le strutture... Pazienta...&quot;, 10)
-	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
-	oCelle=ThisComponent.CurrentSelection
-	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-&apos;	sAttributo = Trova_Attr_Sheet
-	Select Case osheet.Name
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-		s_R = &quot;&quot;
-GoTo procedi:
-	Case Else 
-		Exit Sub
-	End Select
-procedi:
-
-	lStartRow = 0 &apos;oSheet.GetCellByPosition( 0 , 0)
-	lLastUrowNN = ultima_voce+1
-Dim oCRA As New com.sun.star.table.CellRangeAddress
-	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
-	oCRA.Sheet =iSheet	
-	For n = lStartRow To lLastUrowNN
-		If oSheet.GetCellByPosition(0, n).CellStyle = &quot;Comp Start Attributo&quot; Then
-			sStRange = Circoscrive_Voce_Computo_Att (n)
-			With sStRange.RangeAddress
-				sopra =.StartRow
-				sotto =.EndRow
-			End With
-			oCRA.StartRow = sopra&apos;inizio_gruppo
-			oCRA.EndRow = sotto
-			oSheet.group(oCRA,1)
-&apos;			ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition(0, sopra+2, 0, sotto-1))
-&apos;			Raggruppa_righe
-			n = sotto
-		EndIf
-	Next
-print
-	IF lLastUrowNN	&gt; 1001 and lLastUrowNN	&lt;= 1800 then
-		if msgbox (&quot;Questa tabella è piuttosto corposa e ci vorrà un po&apos; di tempo!&quot; &amp; CHR$(10)_
-			&amp; &quot;(probabilmente più di un minuto...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp;&quot;PROSEGUO ?... &quot; &amp; CHR$(10) _
- 			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
- 			exit sub
- 	end if
-	end if
-	IF lLastUrowNN	&gt; 1801 then
-		if msgbox (&quot;Questa tabella è decisamente corposa e ci vorrà del tempo! &quot; &amp; CHR$(10)_
-			&amp; &quot;(probabilmente alcuni minuti...) &quot; &amp; CHR$(10) &amp; CHR$(10)_
-			&amp; &quot;PROSEGUO ?... &quot; &amp; CHR$(10) _
- 			&amp; CHR$(10) &amp; &quot;&quot;,36, &quot;Creazione STRUTTURE&quot;) = 7 then
- 			exit sub
- 		end If
-	end if
-	&apos;lLastUrowNN=oEnd.RangeAddress.EndRow-1
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,280).string = NOW &apos;debug
-	Ripristina_statusLine
-	Barra_Apri_Chiudi_5(&quot;2 Sto creando le strutture... Pazienta...&quot;, 15)
-	iLivelliVisibili = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,297).value 
-	if iLivelliVisibili=0 then &apos;per avere comunque un valore di default nel caso il riferimento sia vuoto
-			iLivelliVisibili = 2	
-	end if
-For I = 3 to lLastUrowNN
-
-				&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2 ,I )) &apos;debug
-				&apos;print left((oSheet.GetCellByPosition(2 , (I)).CellStyle),7) &apos;debug				
-		&apos; se è dentro una intestazione di capitolo o sottoCap
-		if	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello-1-sopra&quot; &amp; s_R or _
-		 		oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Livello-1-scritta&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;livello2 valuta&quot; &amp; s_R or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Reg_prog&quot; or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Default&quot; or _
-			 	oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;COMP_BASE&quot; or _
-			 	left((oSheet.GetCellByPosition(1 , (I)).CellStyle),7) = &quot;Reg-SAL&quot; or _
-			 	left((oSheet.GetCellByPosition(2 , (I)).CellStyle),7) = &quot;Reg-SAL&quot; then	 &apos;questa per usare stile gerarchico
-	&apos;		 	print
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-	&apos;	print &quot;cap ________________________________cap -_________________________________________-cap __________________________________________________-_______________&quot; &amp; oSheet.GetCellByPosition(1 ,I ).CellStyle
-GoTo prossima &apos; passa alla riga dopo&apos;
-			else 
-				iRI=I
-				Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche sopra&quot; &amp; s_R OR _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R OR _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R OR _
-						oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp sotto Bianche&quot; &amp; s_R &apos; &apos; prima avevo OR
-						if oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R then
-							iRIs = I
-							Do while oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;Comp-Bianche in mezzo&quot; &amp; s_R 
-								&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug
-								&apos;print &apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )).CellStyle&apos;debug
-								I = I + 1 
-							loop
-							if iRIs &gt; I-1 then
-									ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
-									beep
-									oCRA.EndRow = iRIs 
-									
-									Select case msgbox (&quot;Da queste parti lo stile delle righe non sembra ordinato! &quot;&amp; CHR$(10)_
-											&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;_
-											&amp;&quot; &quot; &amp; CHR$(10) _
- 											&amp; CHR$(10) &amp; &quot;&quot;,49, &quot;&quot;) 				
-										case 6 &apos;SI
-										case 7
-							 				exit sub
-						 	 			case 2
-						 					exit sub
- 								 	end select	
-								else
-									oCRA.EndRow = I-1	
-							end if
-							oCRA.Sheet =iSheet
-							oCRA.StartColumn = 	5
-							oCRA.StartRow = iRIs
-						&apos;	PRINT IRIS
-							oCRA.EndColumn = 9
-							oSheet.group(oCRA,1,1)
-						&apos;	XRAY oSheet
-							oSheet.getRows().getByindex(i).isvisible = False
-							&apos; magari provare autoOutline qui in locale (sarà + veloce?)
-							oSheet.showLevel(iLivelliVisibili-1,1)
-						&apos;	ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition (4, iRIs, 9, I-1 )) &apos;debug &apos;elisabetta
-						&apos;	 print iRIs &amp; &quot; - &quot; &amp; I-1
-							&apos;oSheet.hideDetail(oCRA)
-						end if
-						I=I+1
-					&apos;print &quot;e qui mi fermo&quot;
-				Loop
-	I=I-1
-				if iRI &gt; I-1 then
-					&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,iRI))
-					&apos;	beep &apos; queste 4 disattivate per prova il 110110
-					&apos;	oCRA.EndRow = iRi
-					&apos;	msgbox &quot;In questo punto lo stile delle righe non sembra ordinato! &quot;&amp; CHR$(10)_
-					&apos;			&amp; &quot;Io ho raggruppato ugualmente... ma se la struttura non ti sembrerà ordinata non dare la colpa a me... -;)&quot;	
-					else
-						oCRA.EndRow = I-1	
-				end if
-				oCRA.Sheet =iSheet
-				oCRA.StartColumn = 	5
-				oCRA.StartRow = iRI
-				oCRA.EndColumn = 5
-				&apos;oCRA.EndRow = I-1
-				oSheet.group(oCRA,1)
-			&apos;	oSheet.hideDetail(oCRA)
-				oSheet.showLevel(iLivelliVisibili-1,1)
-			&apos;	oSheet.showLevel(1,1)
-				I = I+1 
-		end if
-prossima:
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,I )) &apos;debug	
-	&apos;	print oSheet.GetCellByPosition(1 ,I ).CellStyle
-	&apos;	if i = 10 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
-		&apos;	Ripristina_statusLine
-		Barra_Apri_Chiudi_5( stxt, 50)
-			sTxt = &quot;Sto creando le strutture e sono alla riga &quot; &amp; i
-			Barra_Apri_Chiudi_5( stxt, 50)
-	&apos;	end if
-goto salta_debug
-
-		Ripristina_statusLine
-		Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/5*100/lLastUrowNN)
-		if i &gt;= lLastUrowNN / 4 then &apos; and i &lt;= lLastUrowNN / 4 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*100/lLastUrowNN)
-		end if
-		if i &gt;= lLastUrowNN/4*2 then &apos;and i &lt;= lLastUrowNN/4*2 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt , lLastUrowNN/4*2*100/lLastUrowNN)
-		end if
-		if i &gt;= lLastUrowNN/4*3 then &apos;and i &lt;= lLastUrowNN/4*3 + 1 then
-			Ripristina_statusLine
-			Barra_Apri_Chiudi_5(sTxt, lLastUrowNN/4*3*100/lLastUrowNN)
-		end if
-
-		salta_debug:
-next I
-
-	oCRA.Sheet =iSheet
-	oCRA.StartColumn = 	4
-	oCRA.StartRow = 1
-	oCRA.EndColumn = 8
-	oCRA.EndRow = 100
-	oSheet.group(oCRA,0)
-	oSheet.showLevel(0,0)
-
-	Ripristina_statusLine
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,281).string = NOW &apos;debug
-	ThisComponent.CurrentController.Select(oCelle)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
-set_larghezza_colonne
-Viste_nuove(&quot;TTTFFFFFFTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)	
+Sub struttura_ComputoM
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_ComputoM&quot;)
 end sub
-
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) descrizione breve
@@ -1479,13 +1160,6 @@ sub Tronca_Altezza_Voci_Listino &apos; sull&apos;E.P. limita l&apos;altezza dell
 	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 end sub
-
-sub vedilo &apos;il livello
-oSheet = ThisComponent.currentController.activeSheet
-oSheet.showLevel(1,1)
-end sub
-
-
 
 function fnColLtr2Number_(sCol as string) as integer
 	dim i as integer, nCol as integer

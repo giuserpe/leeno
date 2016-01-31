@@ -971,16 +971,6 @@ rem INPUT IMPORTO MANODOPERA SITUAZIONE CONTABILE
 End Sub
 rem ######################################################################
 
-sub testzzzzzzzz
-XRAY thisComponent.getCurrentSelection()
-	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
-	
-	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
-	Print thisComponent.getCurrentSelection().rows.IsStartOfNewPage
-&apos;	oSheetCont.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage = False
-	xray StarDesktop&apos;thisComponent&apos;.getCurrentSelection().rows&apos;ThisComponent.currentselection
-Barra_chiudi_sempre_4
-end sub
 rem ######################################################################
 
 sub firme (lrow as long)&apos;, nr as long) &apos;(C) Giuseppe Vizziello 2014

@@ -130,30 +130,12 @@ End Function
 
 Sub ciapa
 	on error goto errore
-exit sub
+	l = 0.0 /10 
 errore:
 DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 end sub
 
-Sub proviamola
- oSheet = ThisComponent.currentController.activeSheet
- 
- iSrow = Range2Cell &apos; quweste 4 righe per ridurre a cella iniziale una eventuale 
-	if iSrow = -1 then
-		 
-		exit sub
-	end if
-
-&apos;	oCell = oSheet.GetCellByPosition( 0 , iSrow)&apos; errata selezione di un range
- &apos;	ThisComponent.CurrentController.Select(oCell) 
- &apos;ocell.CellStyle=&quot;Default&quot;
- oRange = osheet.getCellRangeByPosition (0,iSrow,0,iSrow)
- &apos;xray orange
-Property2default(oRange)
-end sub
-
-
-SUB Property2default(oRange as object) &apos;NON FUNZIONA (nessun errore... ma nulla di fatto)
+SUB Property2default(oRange as object) &apos;FUNZIONA
 	&apos; queste sono solo alcune delle proprietà... :-(
 	&apos;aggiungere man mano che si trovano 
 	&apos; ci dovrebbe essere il modo, recuperare le proprietà (un array)
@@ -245,6 +227,8 @@ End Sub
 
 
 Sub BackGround_2_default
+	on error goto errore
+
 	oSheet = ThisComponent.Sheets.getByName(_
 	ThisComponent.currentcontroller.activesheet.name)
  	ocell = thiscomponent.currentselection()
@@ -266,7 +250,10 @@ oMyStyleCell.setPropertyToDefault(&quot;CellBackColor&quot;)
 &apos;oMyStyleCell.setPropertyToDefault(&quot;OuterLineWidth&quot;)
 &apos;
 &apos;___questa funzia__________________________________________________
-end sub
+errore:
+DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
+
+end Sub
 
 
 Sub Validation_2_default

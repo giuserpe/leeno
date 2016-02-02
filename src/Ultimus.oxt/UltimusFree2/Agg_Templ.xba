@@ -462,7 +462,7 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;.. Sto svuotando la contabilità....&quot;, 50)
 		Svuota_CONTABILITA_esegui (&quot;true&quot;) &apos;sSommari = true
-		Computo_Normale_b
+
 	end if
 	if sContab = 2 then 
 		msgbox &quot;Ho inserito un foglio CONTABILITA!&quot;&amp; CHR$(10)_
@@ -472,7 +472,6 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;.. Sto svuotando la contabilità....&quot;, 50)
 		Svuota_CONTABILITA_esegui (&quot;true&quot;) &apos;sSommari = true	
-		Computo_Normale_b		
 	end if
 	Aggiorna_Template_2 = UrlSecond
 	Barra_chiudi_sempre_4

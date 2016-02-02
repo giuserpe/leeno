@@ -2222,7 +2222,7 @@ def filedia(titolo='Scegli il file...', est='*.*',  mode=0):
             oDisp = oFilePicker.getFiles()[0]
     except:
         MsgBox('Il file non è stato selezionato', 'ATTENZIONE!') ; return
-    return oDisp.split('///')[-1]
+    return oDisp.split('///')[-1].replace('%20',' ')
 ########################################################################
 import traceback
 from com.sun.star.awt import Rectangle

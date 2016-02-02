@@ -779,7 +779,7 @@
               <value>%origin%/icons/image14</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>&gt; &gt; &gt;     UTILITY &gt;&gt; &gt;</value>
+              <value>UTILITY...</value>
             </prop>
             <node oor:name="Submenu">
               <node oor:name="m2U01" oor:op="replace">
@@ -790,23 +790,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              <node oor:name="m2U03" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Taxi_Acc.Accoda_un_computo?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image35m</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa/Accoda QUI i Dati di un Altro Doc (Nuova)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
+
               <!--                    <node oor:name="m2U04" oor:op="replace">
                    <prop oor:name="Context" oor:type="xs:string">
                    <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -827,14 +811,6 @@
               -->
               <node oor:name="m2U05" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
-                  <value />
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>private:separator</value>
-                </prop>
-              </node>
-              <node oor:name="m2U06" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
@@ -848,6 +824,14 @@
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U06" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
                 </prop>
               </node>
               <node oor:name="m2U07" oor:op="replace">
@@ -1182,7 +1166,7 @@
               <value>%origin%/icons/vintage</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>&gt; &gt; &gt;   Gestione Copertine e Docs &gt;&gt;</value>
+              <value>Gestione Copertine e Docs...</value>
             </prop>
             <node oor:name="Submenu">
               <node oor:name="m3U01" oor:op="replace">
@@ -1605,7 +1589,7 @@
               <value>%origin%/icons/fileprint</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>&gt; &gt; &gt;  STAMPA (procedure di...)  &gt; &gt; &gt;</value>
+              <value>STAMPA...</value>
             </prop>
             <node oor:name="Submenu">
               <node oor:name="m13S1" oor:op="replace">

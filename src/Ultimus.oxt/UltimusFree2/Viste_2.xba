@@ -61,14 +61,6 @@ sub Apri_CONTABILITA_C
 	Carica_vista_da_schema(Tabella1, Config1)
 end sub
 
-sub Apri_Sommario
-	dim Tabella1 as string
-	dim Config1 as string
-	Tabella1 = &quot;CONTABILITA&quot;
-	Config1 = &quot;Sommario&quot;
-	Carica_vista_da_schema(Tabella1, Config1)
-end sub
-
 Sub fixme &apos; questa è appiccicata ad eventi di Analisi di Prezzo
 &apos;Print &quot;lkl&quot;
 &apos;	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
@@ -117,76 +109,6 @@ sub sicurezza_on_off
 	end if
 end sub
 
-
-sub Residui_on_off
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-&apos;	dim Tabella1 as string
-&apos;	dim Config1 as string
-&apos;	Tabella1 = &quot;CONTABILITA&quot;
-&apos;	Config1 = &quot;Reg_sal&quot;
-&apos;	Carica_vista_da_schema(Tabella1, Config1)
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) 
-	If oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = false then 
-		oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = TRUE
-		if oSheet.getColumns().getByName(&quot;AV&quot;).isVisible = TRUE then 	 
-			oSheet.getColumns().getByName(&quot;AW&quot;).isVisible = TRUE 
-		end if
-		goto fine
-	end if
-	If oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = true then 
-		oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = false 
-		oSheet.getColumns().getByName(&quot;AW&quot;).isVisible = false
-	end if
-	fine:
-end sub
-
-
-
-sub progetto_imp_on_off
-	dim Tabella1 as string
-	dim Config1 as string
-	Tabella1 = &quot;CONTABILITA&quot;
-	Config1 = &quot;progetto_imp&quot;
-&apos;	Carica_vista_da_schema(Tabella1, Config1)
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) 
-
-	If oSheet.getColumns().getByName(&quot;s&quot;).isVisible = false then
-			oSheet.getColumns().getByName(&quot;S&quot;).isVisible = TRUE 
-	 else	 		
-			oSheet.getColumns().getByName(&quot;S&quot;).isVisible = false 
-	end if
-
-end sub
-
-sub Quantita_prevista_aComputo_on_off
-	dim Tabella1 as string
-	dim Config1 as string
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;j&quot;).isVisible = false then
-			oSheet.getColumns().getByName(&quot;j&quot;).isVisible = TRUE 
-	 else	 		
-			oSheet.getColumns().getByName(&quot;j&quot;).isVisible = false 
-	end if
-end sub
-
-sub Figure_Annotazioni_Computo_on_off
-	dim Tabella1 as string
-	dim Config1 as string
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	If oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = false then
-			oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = TRUE 
-	 else	 		
-			oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = false 
-	end if
-end sub
 
 
 Function Carica_vista_da_schema (Tabella as string, Config as string)

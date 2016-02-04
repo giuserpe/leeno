@@ -147,9 +147,7 @@ rem on error goto ErrorHandler
 		oSheet.unprotect(&quot;&quot;)
 
 rem ----------------------------------------------------------------------
-		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
-		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
-		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion
+		setta_versione
 		If thisComponent.Sheets.hasByName(&quot;Scorciatoie&quot;) Then
 			ThisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).GetCellByPosition(1,0).string = versioneUF_major &amp;&quot;.&quot;&amp; versioneUF_minor &amp;&quot;.&quot;&amp; versioneUF_subversion 
 		end if

@@ -528,8 +528,13 @@ Sub Pulisci_Colonne_tag &apos;elimina tutti i tag da EP e dalle Analisi
 	lrowP = range2cell
 	if lrowP = -1 then
 		exit sub
-	end if
-	oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	end If
+	
+	If ThisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
+		oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	Else
+		exit Sub
+	EndIf 
 	lrow=idxrow
 
 	ocell = oSheetAnalisi.GetCellByPosition( 11 ,lrow) &apos;9 &apos;orecchione

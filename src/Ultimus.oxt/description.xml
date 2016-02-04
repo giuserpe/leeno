@@ -1,29 +1,23 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<description
- xmlns="http://openoffice.org/extensions/description/2006"
- xmlns:dep="http://openoffice.org/extensions/description/2006"
- xmlns:xlink="http://www.w3.org/1999/xlink">
-	<identifier value="org.giuseppe-vizziello.leeno"/>
-	<version value="3.13.0"/>
-	<!-- <dependencies>
-		<OpenOffice.org-minimal-version value="2.2" dep:name="OpenOffice.org 2.2"/>
-	</dependencies> -->
-	<publisher>
-		<name xlink:href="http://leeno.org">LeenO</name>
-	</publisher>
-	<display-name>
-		<name lang="it">LeenO</name>
-	</display-name>
-	<extension-description>
-		<src xlink:href="pkg-desc/description.txt" lang="it" />
-	</extension-description>
-	<icon>
-		<default xlink:href="icon.png" />
-	</icon>
-	<registration>
-		<simple-license  accept-by="admin" default-license-id="en" suppress-on-update="true" >
-			<license-text xlink:href="registration/lgpl-en.txt" lang="en" license-id="en" />
-			<license-text xlink:href="registration/lgpl-it.txt" lang="it" />
-		</simple-license>
-	</registration>
+<description xmlns="http://openoffice.org/extensions/description/2006" xmlns:dep="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <identifier value="org.giuseppe-vizziello.leeno" />
+  <version value="3.13.1" />
+  <publisher>
+    <name xlink:href="http://leeno.org">LeenO</name>
+  </publisher>
+  <display-name>
+    <name lang="it">LeenO</name>
+  </display-name>
+  <extension-description>
+    <src xlink:href="pkg-desc/description.txt" lang="it" />
+  </extension-description>
+  <icon>
+    <default xlink:href="icon.png" />
+  </icon>
+  <registration>
+    <simple-license accept-by="admin" default-license-id="en" suppress-on-update="true">
+      <license-text xlink:href="registration/lgpl-en.txt" lang="en" license-id="en" />
+      <license-text xlink:href="registration/lgpl-it.txt" lang="it" />
+    </simple-license>
+  </registration>
 </description>

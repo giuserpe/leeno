@@ -91,6 +91,9 @@ def fdebug():
     #~ oSheet.getCellRangeByName('A12').String = sys.__doc__
 
 ########################################################################
+def Inser_SottoCapitolo():
+    Ins_Categorie(2)
+########################################################################
 def Inser_SottoCapitolo_arg (lrow, sTesto): #
     '''
     lrow    { double } : id della riga di inerimento
@@ -103,31 +106,31 @@ def Inser_SottoCapitolo_arg (lrow, sTesto): #
     #~ lrow = Range2Cell()[1]
     #~ sTesto = 'prova'
     style = oSheet.getCellByPosition(1, lrow).CellStyle
-    if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta', 'Comp TOTALI',
-                'Comp-Bianche sopra', 'comp Art-EP', 'comp Art-EP_R','Comp-Bianche in mezzo', 'comp sotto Bianche'):
-        if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta'):
-            lrow += 1
-        elif style in ('Comp-Bianche sopra', 'comp Art-EP','comp Art-EP_R', 'Comp-Bianche in mezzo', 'comp sotto Bianche'):
-            sStRange = Circoscrive_Voce_Computo_Att (lrow)
-            lrow = sStRange.RangeAddress.EndRow+1
-        if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
-            insRows(lrow, 2)
-            oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
-            lrow += 1
-            oSheet.getCellByPosition(2, lrow).String = sTesto
-        else:
-            insRows(lrow, 1)
-            oSheet.getCellByPosition(2, lrow).String = sTesto
-    # inserisco i valori e le formule
-        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello2 valuta'
-        oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'livello2_'
-        oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'livello2 scritta mini'
-        oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'livello2 valuta mini %'
-        oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'livello2 valuta mini %'
-        oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'livello2 valuta mini'
-        oSheet.getCellRangeByPosition(31, lrow, 32, lrow).CellStyle = 'livello2_'
-        oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
-        oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1) + '''&"."&''' + 'AG' + str(lrow+1)
+    #~ if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta', 'Comp TOTALI',
+                #~ 'Comp-Bianche sopra', 'comp Art-EP', 'comp Art-EP_R','Comp-Bianche in mezzo', 'comp sotto Bianche'):
+        #~ if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta'):
+            #~ lrow += 1
+        #~ elif style in ('Comp-Bianche sopra', 'comp Art-EP','comp Art-EP_R', 'Comp-Bianche in mezzo', 'comp sotto Bianche'):
+            #~ sStRange = Circoscrive_Voce_Computo_Att (lrow)
+            #~ lrow = sStRange.RangeAddress.EndRow+1
+    if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
+        insRows(lrow, 2)
+        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
+        lrow += 1
+        oSheet.getCellByPosition(2, lrow).String = sTesto
+    else:
+        insRows(lrow, 1)
+        oSheet.getCellByPosition(2, lrow).String = sTesto
+# inserisco i valori e le formule
+    oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello2 valuta'
+    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'livello2_'
+    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'livello2 scritta mini'
+    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'livello2 valuta mini %'
+    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'livello2 valuta mini %'
+    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'livello2 valuta mini'
+    oSheet.getCellRangeByPosition(31, lrow, 32, lrow).CellStyle = 'livello2_'
+    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
+    #~ oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1) + '''&"."&''' + 'AG' + str(lrow+1)
     # rinumero e ricalcolo
     ocellBaseA = oSheet.getCellByPosition(1, lrow)
     ocellBaseR = oSheet.getCellByPosition(31, lrow)
@@ -148,6 +151,50 @@ def Inser_SottoCapitolo_arg (lrow, sTesto): #
                 break
         oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value
     #~ SubSum_Cap (lrow)
+
+########################################################################
+def Ins_Categorie(n):
+    '''
+    n    { int } : livello della categoria
+    0 = SuperCategoria < futura implementazione
+    1 = Categoria
+    2 = SubCategoria
+    '''
+    sTesto = ''
+    if n==1:
+        sTesto = 'Inserisci il titolo per la Categoria'
+    elif n==2:
+        sTesto = 'Inserisci il titolo per la Sottocategoria'
+    sString = InputBox(sTesto, sTesto)
+    if sString ==None:
+        return
+    
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    row = Range2Cell()[1]
+    if oSheet.getCellByPosition(0, row).CellStyle in siVoce:
+        lrow = next_voice(row, 1)
+    elif oSheet.getCellByPosition(0, row).CellStyle in noVoce:
+        lrow = row+1
+    else:
+        return
+
+    if n==1:
+        Inser_Capitolo_arg (lrow, sString)
+    elif n==2:
+        Inser_SottoCapitolo_arg (lrow, sString)
+    
+    if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
+        _gotoCella(2, lrow+1)
+    else:
+        _gotoCella(2, lrow)
+    Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
+    Sincronizza_SottoCap_Tag_Capitolo_Cor()# sistemo gli idcat voce per voce
+
+########################################################################
+def Inser_Capitolo():
+    Ins_Categorie(1)
+
 ########################################################################
 def Inser_Capitolo_arg (lrow, sTesto='Categoria'): #
     '''
@@ -161,32 +208,32 @@ def Inser_Capitolo_arg (lrow, sTesto='Categoria'): #
     #~ lrow = Range2Cell()[1]
     #~ sTesto = 'prova'
     style = oSheet.getCellByPosition(1, lrow).CellStyle
-    if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta', 'Comp TOTALI',
-                'Comp-Bianche sopra', 'comp Art-EP', 'comp Art-EP_R','Comp-Bianche in mezzo', 'comp sotto Bianche'):
-        if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta'):
-            lrow += 1
+    #~ if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta', 'Comp TOTALI',
+                #~ 'Comp-Bianche sopra', 'comp Art-EP', 'comp Art-EP_R','Comp-Bianche in mezzo', 'comp sotto Bianche'):
+        #~ if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta'):
+            #~ lrow += 1
         #~ elif style in ('Comp TOTALI'):
             #~ lrow -= 1
         #~ elif style in ('Comp-Bianche sopra', 'comp Art-EP','comp Art-EP_R', 'Comp-Bianche in mezzo', 'comp sotto Bianche'):
             #~ sStRange = Circoscrive_Voce_Computo_Att (lrow)
             #~ lrow = sStRange.RangeAddress.EndRow+1
-        if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
-            insRows(lrow, 2)
-            oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
-            lrow += 1
-            oSheet.getCellByPosition(2, lrow).String = sTesto
-        else:
-            insRows(lrow, 1)
-            oSheet.getCellByPosition(2, lrow).String = sTesto
+    if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
+        insRows(lrow, 2)
+        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
+        lrow += 1
+        oSheet.getCellByPosition(2, lrow).String = sTesto
+    else:
+        insRows(lrow, 1)
+        oSheet.getCellByPosition(2, lrow).String = sTesto
     # inserisco i valori e le formule
-        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-1-scritta'
-        oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
-        oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-1-scritta mini val'
-        oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-1-scritta mini %'
-        oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-1-scritta mini %'
-        oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-1-scritta mini val'
-        oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
-        oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1)
+    oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-1-scritta'
+    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
+    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-1-scritta mini val'
+    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-1-scritta mini %'
+    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-1-scritta mini %'
+    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-1-scritta mini val'
+    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
+    #~ oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1)
     # rinumero e ricalcolo
     ocellBaseA = oSheet.getCellByPosition(1, lrow)
     ocellBaseR = oSheet.getCellByPosition(31, lrow)
@@ -198,6 +245,7 @@ def Inser_Capitolo_arg (lrow, sTesto='Categoria'): #
             else:
                 break
         oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
+
     #~ oSheet.getCellRangeByPosition(2, lrow-1, 11, lrow).Rows.OptimalHeight = True
     #~ SubSum_Cap (lrow)
 ########################################################################
@@ -271,6 +319,32 @@ def SubSum_Cap (lrow):
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
 ########################################################################
+def debug():
+    #~ delay(1)
+    #~ MsgBox('fdgsgs')
+    Sincronizza_SottoCap_Tag_Capitolo_Cor()
+    delay(0)
+    
+def delay(n):
+    
+    '''
+    sCella  { string } : stringa di default nella casella di testo
+    t       { string } : titolo del dialogo
+    Viasualizza un dialogo di richiesta testo
+    '''
+
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgAttesa?language=Basic&location=application") 
+    oDialog1Model = oDialog1.Model
+
+    oDialog1Model.Title = 'tiolo'
+    chi(oDialog1)
+    if n==1:
+        oDialog1.execute()
+    elif n==0:
+        oDialog1.endDialog()
+
 def Sincronizza_SottoCap_Tag_Capitolo_Cor():
     '''
     lrow    { double } : id della riga di inerimento
@@ -294,12 +368,13 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor():
             oSheet.getCellByPosition(31, lrow).Value = idcat
         if oSheet.getCellByPosition(31, lrow).CellStyle in ('compTagRiservato',
                                                             'livello2_'):
+            if oSheet.getCellByPosition(31, lrow).CellStyle == 'livello2_':
+                oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1) + '''&"."&''' + 'AG' + str(lrow+1)
             try:
                 oSheet.getCellByPosition(31, lrow).Value = idcat
             except:
                 oSheet.getCellByPosition(31, lrow).Value = 0
 
-    #~ MsgBox(str(lista),'')
 
     lista = list()
     for lrow in range(0,lastRow):
@@ -311,11 +386,14 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor():
         if oSheet.getCellByPosition(31, lrow).CellStyle in ('compTagRiservato', 'livello2_'):
             try:
                 oSheet.getCellByPosition(32, lrow).Value = idsbcat
+                
             except:
                 oSheet.getCellByPosition(32, lrow).Value = 0
         elif oSheet.getCellByPosition(31, lrow).CellStyle in ('Livello-1-scritta'):
+            oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1)
             #~ oSheet.getCellByPosition(32, lrow).Value = 0
             idsbcat = 0
+    #~ MsgBox(lista,'')
 
 ########################################################################
 def insRows(lrow, nrighe): #forse inutile
@@ -371,7 +449,6 @@ def uFindString (sString, oSheet):
             if sString in oSheet.getCellByPosition(nCol,nRow).String:
                  return (nCol,nRow)
 ########################################################################
-from com.sun.star.beans import PropertyValue
 def _gotoCella (IDcol, IDrow):
     '''
     IDcol   { integer } : id colonna
@@ -743,10 +820,11 @@ def XPWE_export():
             n = sotto+1
 ##########################
     out_file = filedia('Salva con nome...', '*.xpwe', 1)
-
-    if out_file.split('.')[-1].upper() != 'XPWE':
-        out_file = out_file + '.xpwe'
-
+    try:
+        if out_file.split('.')[-1].upper() != 'XPWE':
+            out_file = out_file + '.xpwe'
+    except AttributeError:
+        return
     riga = str(tostring(top, encoding="unicode"))
     of = codecs.open(out_file,'w','utf-8')
     of.write(riga)
@@ -1605,9 +1683,13 @@ def XPWE_import(): #(filename):
         return
     try:
         tree.parse(filename)
+    except TypeError:
+        return
     except PermissionError:
         MsgBox('Accertati che il nome del file sia corretto.', 'ATTENZIONE! Impossibile procedere.')
         return
+    except FileNotFoundError: # 
+        tree.parse('/' + filename)
     # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))
@@ -2021,7 +2103,7 @@ Si tenga conto che:
             #~ MsgBox(lista_cat)
             Inser_Capitolo_arg(lrow, lista_cat[eval(idcat)-1][1])
             lrow = lrow + 2
-            Inser_SottoCapitolo_arg(lrow, lista_subcat[eval(idsbcat)-1][1])
+            #~ Inser_SottoCapitolo_arg(lrow, lista_subcat[eval(idsbcat)-1][1])
             #~ if idsbcat != testsbcat:
                 #~ testsbcat = idsbcat
                 #~ Inser_SottoCapitolo_arg(lrow, lista_subcat[eval(idsbcat)-1][1])
@@ -2220,9 +2302,12 @@ def filedia(titolo='Scegli il file...', est='*.*',  mode=0):
         oFilePicker.appendFilter (app, est)
         if oFilePicker.execute():
             oDisp = oFilePicker.getFiles()[0]
+        oDisp.split('///')[-1].replace('%20',' ')
+        return oDisp.split('///')[-1].replace('%20',' ')
     except:
-        MsgBox('Il file non è stato selezionato', 'ATTENZIONE!') ; return
-    return oDisp.split('///')[-1].replace('%20',' ')
+        MsgBox('Il file non è stato selezionato', 'ATTENZIONE!')
+        return
+    
 ########################################################################
 import traceback
 from com.sun.star.awt import Rectangle
@@ -2312,7 +2397,6 @@ def filedia_(titolo=''):
     except:
         oDisp = traceback.format_exc(sys.exc_info()[2])
     finally:
-        MsgBox(oDisp,'')
         return oDisp
 
 ########################################################################
@@ -2530,3 +2614,24 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
+def InputBox (sCella='', t=''):
+    '''
+    sCella  { string } : stringa di default nella casella di testo
+    t       { string } : titolo del dialogo
+    Viasualizza un dialogo di richiesta testo
+    '''
+
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgTesto?language=Basic&location=application") 
+    oDialog1Model = oDialog1.Model
+
+    oDialog1Model.Title = t
+    
+    sString = oDialog1.getControl("TextField1")
+    sString.Text = sCella
+
+    if oDialog1.execute()==0:
+        return
+    else:
+        return sString.Text

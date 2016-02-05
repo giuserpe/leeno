@@ -319,13 +319,7 @@ def SubSum_Cap (lrow):
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
 ########################################################################
-def debug():
-    #~ delay(1)
-    #~ MsgBox('fdgsgs')
-    Sincronizza_SottoCap_Tag_Capitolo_Cor()
-    delay(0)
-    
-def delay(n):
+def debugdelay(n):
     
     '''
     sCella  { string } : stringa di default nella casella di testo
@@ -1688,8 +1682,6 @@ def XPWE_import(): #(filename):
     except PermissionError:
         MsgBox('Accertati che il nome del file sia corretto.', 'ATTENZIONE! Impossibile procedere.')
         return
-    except FileNotFoundError: # 
-        tree.parse('/' + filename)
     # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))
@@ -2269,7 +2261,33 @@ createUnoService = (
         .createInstance 
                     )
 ########################################################################
-def filedia(titolo='Scegli il file...', est='*.*',  mode=0):
+def debugDlgFile (sCella='', t=''):
+    '''
+    sCella  { string } : stringa di default nella casella di testo
+    t       { string } : titolo del dialogo
+    Viasualizza un dialogo di richiesta testo
+    '''
+    chi(sys.platform)
+    return
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgFile?language=Basic&location=application") 
+    oDialog1Model = oDialog1.Model
+
+    oDialog1Model.Title = t
+    
+    oString = oDialog1.getControl("FileControl1")
+    chi(oString)
+    oString.Text = sCella
+    #~ oDialog1.execute()
+    if oDialog1.execute()==0:
+        return
+    else:
+        MsgBox(oString.Text)
+        return oString.Text
+
+########################################################################
+def filedia (titolo='Scegli il file...', est='*.*',  mode=0):
     """
     titolo  { string }  : titolo del FilePicker
     est     { string }  : filtro di visualizzazione file
@@ -2303,7 +2321,12 @@ def filedia(titolo='Scegli il file...', est='*.*',  mode=0):
         if oFilePicker.execute():
             oDisp = oFilePicker.getFiles()[0]
         oDisp.split('///')[-1].replace('%20',' ')
-        return oDisp.split('///')[-1].replace('%20',' ')
+        if sys.platform == 'linux':
+            return '/' + oDisp.split('///')[-1].replace('%20',' ')
+        elif sys.platform == 'darwin':
+            return '/' + oDisp.split('///')[-1].replace('%20',' ')
+        elif sys.platform == 'win32':
+            return oDisp.split('///')[-1].replace('%20',' ')
     except:
         MsgBox('Il file non è stato selezionato', 'ATTENZIONE!')
         return

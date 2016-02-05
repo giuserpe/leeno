@@ -23,7 +23,12 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
 Public Const versioneUF_minor= 13			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;1&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_subversion= &quot;2.dev&quot;		&apos;CORREZIONE BUGS
+Sub setta_versione
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion
+End Sub
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
@@ -52,12 +57,6 @@ Function GetmyToolBarNames()
 &apos;		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, _
 End Function
 rem ######################################################################
-Sub setta_versione
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = versioneUF_subversion
-End Sub
-
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
 	GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)

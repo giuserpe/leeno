@@ -799,16 +799,12 @@ Sub Aggiorna_formula_sommase (lrow as long) &apos; Giuseppe Vizziello 2014
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 rem ----------------------------------------------------------------------
 rem sommario computo
-	oSheet.GetCellByPosition(idxcol+10, lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot;
-	oSheet.GetCellByPosition(idxcol+10, lrow).cellstyle = &quot;EP statistiche_q&quot;
-	oSheet.GetCellByPosition(idxcol+11, lrow).formula = &quot;=K&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp; lrow+1
-	oSheet.GetCellByPosition(idxcol+11, lrow).cellstyle = &quot;EP statistiche&quot;
-rem ----------------------------------------------------------------------
-rem sommario contabilità
+	oSheet.GetCellByPosition(idxcol+11,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;/$N$2&quot;
+	oSheet.GetCellByPosition(idxcol+11, lrow).cellstyle = &quot;EP-mezzo %&quot;
+	oSheet.GetCellByPosition(idxcol+12, lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;BB)&quot;
+	oSheet.GetCellByPosition(idxcol+12, lrow).cellstyle = &quot;EP statistiche_q&quot;
 	oSheet.getCellByPosition(idxcol+13,lrow).CellStyle = &quot;EP statistiche_Contab_q&quot;
-	oSheet.GetCellByPosition(idxcol+13,lrow).formula = &quot;=SUMIF(GG;A&quot; &amp; lrow+1 &amp; &quot;;G1G1)&quot;
-	oSheet.getCellByPosition(idxcol+14,lrow).CellStyle = &quot;EP statistiche_Contab&quot;
-	oSheet.GetCellByPosition(idxcol+14,lrow).formula = &quot;=N&quot; &amp; Lrow+1 &amp; &quot;*E&quot;&amp; Lrow+1
+	oSheet.GetCellByPosition(idxcol+13,lrow).formula = &quot;=sumif(AA;A&quot; &amp; lrow+1 &amp; &quot;;cEuro)&quot;
 rem ----------------------------------------------------------------------
 End Sub
 

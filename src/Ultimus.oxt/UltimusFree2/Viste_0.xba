@@ -345,6 +345,7 @@ rem ----------------------------------------------------------------------
 rem aggiorna sommari
 Aggiorna_formula_sommase (lrow)
 
+
 	oMioRange=thisComponent.getCurrentSelection()
 	oMioRange.Rows.OptimalHeight = true
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)

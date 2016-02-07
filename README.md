@@ -1,4 +1,4 @@
-LeenO - Computo metrico assistito con LibreOffice/OpenOffice
+LeenO - Computo metrico assistito con LibreOffice
 =====
 
 Cos’è LeenO
@@ -10,9 +10,9 @@ Ma avere il controllo del budget, sia a monte che durante la gestione di un prog
 
 In commercio ci sono diversi programmi orientati allo scopo, ma li trovo poco flessibili e – in genere – specifici per un solo sistema operativo.
 
-Per questo ho messo a punto UltimusFree (LeenO), un applicativo per LibreOffice (e/o OpenOffice.org) per la stesura e la gestione dei Computi Metrici Estimativi e della Contabilità Lavori.
+Per questo ho messo a punto UltimusFree (LeenO), un applicativo per LibreOffice per la stesura e la gestione dei Computi Metrici Estimativi e della Contabilità Lavori.
 
-LeenO può “girare” su piattaforme diverse (GNU/Linux, MS Windows e Mac) e i documenti contabili prodotti (normali tabelle di calcolo) possono essere aperti, manipolati e stampati anche con programmi diversi da LibreOffice (o da OpenOffice.org).
+LeenO può “girare” su piattaforme diverse (GNU/Linux, MS Windows e Mac) e i documenti contabili prodotti (normali tabelle di calcolo) possono essere aperti, manipolati e stampati anche con programmi diversi da LibreOffice.
 
 Ho cercato il massimo della flessibilità e della potenza, anche a scapito della semplicità… Il risultato sono una serie di tabelle collegate fra loro, manipolabili anche a mano attraverso l’interfaccia standard e senza utilizzare le macro.
 

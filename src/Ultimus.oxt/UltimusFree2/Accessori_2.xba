@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti all&apos;indirizzo qui sopra.
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
@@ -604,6 +604,15 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
+	
+&apos;sistemo la colonna &quot;Importi senza errori&quot;
+	nEndRow = ultima_voce
+	For i = 0 To nEndRow &apos;row by row.
+		If oSheet.GetCellByPosition( 0, i ).CellStyle = &quot;Comp End Attributo_R&quot; then &apos;
+			oSheet.getCellByPosition(36 , i).formula = &quot;=IF(ISERROR(P&quot; &amp; i+1 &amp; &quot;);&quot;&quot;&quot;&quot;;IF(P&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;;P&quot; &amp; i+1 &amp; &quot;;&quot;&quot;))&quot;
+			oSheet.GetCellByPosition(36, i ).CellStyle = &quot;comp -controolo&quot;
+		EndIf
+	Next i
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	oEnd=uFindString(&quot;Fine elenco&quot;, oSheet)

@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -1074,14 +1074,6 @@ Function Riordina_Taxi (oSheet, ColdaRior, AscDesc as boolean )as variant &apos;
 &apos;	Clessid_lock_End
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 End Function 
-
-Sub xxxxxxx
-oSheet = ThisComponent.currentController.activeSheet
-xray uFindString(&quot;Fine Computo&quot;, oSheet)
-
-End Sub
-
-
 
 Function uFindString_taxi(sString, oSheet) As Variant &apos; richiamata solo da taxi
  Dim nCurCol As Integer

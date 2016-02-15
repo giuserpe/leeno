@@ -1153,7 +1153,7 @@ def ins_voce_computo(): #TROPPO LENTA
     else:
         return
     ins_voce_computo_grezza(lrow)
-    Numera_Voci(0)
+    Numera_Voci(1)
 ########################################################################
 ########################################################################
 # XML_import ###########################################################
@@ -1858,8 +1858,14 @@ def XPWE_import(): #(filename):
         idsbcap = elem.find('IDSbCap').text
         flags = elem.find('Flags').text
         data = elem.find('Data').text
-        adrinternet = elem.find('AdrInternet').text
-        pweepanalisi = elem.find('PweEPAnalisi').text
+        try:
+            adrinternet = elem.find('AdrInternet').text
+        except AttributeError:
+            adrinternet = ''
+        try:
+            pweepanalisi = elem.find('PweEPAnalisi').text
+        except AttributeError:
+            pweepanalisi = ''
         diz_ep['tipoep'] = tipoep
         diz_ep['tariffa'] = tariffa
         diz_ep['articolo'] = articolo
@@ -2167,7 +2173,7 @@ Si tenga conto che:
                         eval(mis[5])
                         oSheet.getCellByPosition(7, SR).Value = eval(mis[5].replace(',','.'))
                     except:
-                        MsgBox(str(type(mis[5])),'') ; return
+                        oSheet.getCellByPosition(7, SR).Value = mis[5].replace(',','.')
 
             if mis[6] != None: #HPESO
                 if any(o in mis[6] for o in ('+', '*', '/', '-', )):
@@ -2261,13 +2267,13 @@ createUnoService = (
         .createInstance 
                     )
 ########################################################################
-def debugDlgFile (sCella='', t=''):
+def debugg (sCella='', t=''):
     '''
     sCella  { string } : stringa di default nella casella di testo
     t       { string } : titolo del dialogo
     Viasualizza un dialogo di richiesta testo
     '''
-    chi(sys.platform)
+    chi(sys)
     return
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
@@ -2636,6 +2642,30 @@ def struct(l):
         oCellRangeAddr.EndRow = el[1]
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
+########################################################################
+def debug (): #MenuMain
+    '''
+    sCella  { string } : stringa di default nella casella di testo
+    t       { string } : titolo del dialogo
+    Viasualizza un dialogo di richiesta testo
+    '''
+
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application") 
+    oDialog1Model = oDialog1.Model
+
+    oDialog1.execute()
+    return
+    oDialog1Model.Title = t
+    
+    sString = oDialog1.getControl("TextField1")
+    sString.Text = sCella
+
+    if oDialog1.execute()==0:
+        return
+    else:
+        return sString.Text
 ########################################################################
 def InputBox (sCella='', t=''):
     '''

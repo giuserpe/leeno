@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -554,7 +554,7 @@ Sub aggiorna_variabili &apos; e anche altri aggiornamenti in giro&apos;
  	oSheetDest.copyRange(oDest, oSrc)
 end Sub
 
-sub Colora_Tabs &apos;sistena i colori delle tabs
+sub Colora_Tabs &apos;sistena i colori delle tabs e riordina
 	&apos; le apre tutte
 	Visualizza_sheet_TUTTE
 	&apos; prima tutte circa come defaults
@@ -587,7 +587,7 @@ sub Colora_Tabs &apos;sistena i colori delle tabs
 		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,205,102))
 		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,205,102))
 			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
-			SetTabColorN(RGB(255,205,102))
+			SetTabColorN(RGB(255,255,102))
 		end if
 		If sSheetName = &quot;CONTABILITA&quot; then 
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;CONTABILITA&quot;

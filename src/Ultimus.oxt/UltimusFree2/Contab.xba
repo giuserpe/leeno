@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -17,34 +17,27 @@ Sub attiva_contabilita
 	If ThisComponent.Sheets.hasbyname(&quot;CONTABILITA&quot;) Then
 		Sel_CONTABILITA
 		Exit Sub
+	Else
+		thisComponent.getSheets().insertNewByName(&quot;CONTABILITA&quot;,3,0)	
 	EndIf
-
-	thisComponent.getSheets().insertNewByName(&quot;CONTABILITA&quot;,3,0)
-&apos;	dim Doc as object
-&apos;	Doc = ThisComponent
-&apos;	If Not Doc.Sheets.hasbyname(&quot;CONTABILITA&quot;) Then
-&apos;		Sheet = Doc.createInstance(&quot;com.sun.star.sheet.Spreadsheet&quot;)
-&apos;		Doc.Sheets.insertByName(&quot;CONTABILITA&quot;, Sheet)
-&apos;	Else
-&apos;	Exit Sub
-&apos;	EndIf
-	sistema_attributi_sheet
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
 	Svuota_CONTABILITA_esegui
-	
 	oSheet.getCellByPosition(2,0).String  = &quot;CONTABILITA&quot;
 	oSheet.getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
 	oSheet.getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,180,175))
 	oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,180,175))
-	ThisComponent.CurrentController.Select(oSheet)
+
 	SetTabColorN(RGB(255,180,175))
 	Visualizza_sheet_TUTTE
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
 	nuova_voce_contab
 	fissa (0,3)
 	set_larghezza_colonne
+	sistema_attributi_sheet
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
+&apos;	ThisComponent.CurrentController.Select(oSheet)
+&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
 End Sub
 
 Sub partita (testo as string)
@@ -853,9 +846,9 @@ rem ----------------------------------------------------------------------
 	oSheetSal.GetCellByPosition(fcol+5, InsRow+9).formula= &quot;=SUM(&quot; &amp; ncol &amp; InsRow+7 &amp; &quot;:&quot; &amp; ncol &amp; InsRow+9 &amp;&quot;)&quot;
 
 	oSheetSal.GetCellByPosition(fcol+1, InsRow+10).formula= _
-	&quot;=CONCATENATE(&quot;&quot;RIBASSO del &quot;&quot;;TEXT($S2.$C$11*100;&quot;&quot;#.##0,00&quot;&quot;);&quot;&quot;%&quot;&quot;)&quot;
+	&quot;=CONCATENATE(&quot;&quot;RIBASSO del &quot;&quot;;TEXT($S2.$C$78*100;&quot;&quot;#.##0,00&quot;&quot;);&quot;&quot;%&quot;&quot;)&quot;
 
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+10).formula= &quot;=-&quot;&amp; ncol &amp; InsRow+10 &amp;&quot;*$S2.$C$11&quot; &apos; RIBASSO
+	oSheetSal.GetCellByPosition(fcol+5, InsRow+10).formula= &quot;=-&quot;&amp; ncol &amp; InsRow+10 &amp;&quot;*$S2.$C$78&quot; &apos; RIBASSO
 rem ----------------------------------------------------------------------
 	oSheetSal.getCellRangeByPosition(fcol+1, InsRow+11, fcol+1, InsRow+12).CellStyle = &quot;Ultimus_sx&quot;
 	oSheetSal.GetCellByPosition(fcol+1, InsRow+11).setstring(&quot;Importo per la Sicurezza&quot;)
@@ -1066,7 +1059,18 @@ sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 		oSheet.rows.removeByIndex (urow, drow-urow+1)
 end Sub
 rem ######################################################################
-
+Sub azzera_atti
+	testa = msgbox (&quot;Hai chiesto di procedere con la cancellazione&quot; &amp; CHR$(10) _
+		&amp; &quot;di TUTTI gli atti contabili presenti nel documnto.&quot; &amp; CHR$(10) &amp; CHR$(10) _
+		&amp; &quot;Ti sarà chiesta conferma ad ogni passo.&quot; &amp; CHR$(10) &amp; CHR$(10) _
+		&amp; &quot;Sei sicuro di volerlo fare?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 +32 , &quot;AVVISO!&quot;)
+	If testa = 7 Then GoTo fine:
+	For i = 0 To 100
+		annulla_tutti_gli_atti
+	Next
+	fine:
+End Sub
+rem ######################################################################
 Sub annulla_tutti_gli_atti
 	oSheetCont= thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
 oSheetCont.Unprotect &quot;&quot;
@@ -1080,6 +1084,7 @@ chiudi_dialoghi
 		end If
 	nSal=nSal-1
 	Loop
+	if nSal = 0 Then Exit Sub
 	testa = msgbox (&quot;Hai chiesto di procedere con la cancellazione&quot; &amp; CHR$(10) _
 	&amp; &quot;di TUTTI gli atti contabili relativi al SAL n.&quot; &amp; nSal &amp; CHR$(10) &amp; CHR$(10) _
 	&amp; &quot;Sei veramente sicuro di voler procedere?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 +32 , &quot;AVVISO!&quot;)

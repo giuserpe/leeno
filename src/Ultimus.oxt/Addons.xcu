@@ -582,6 +582,9 @@
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
             <value>vnd.sun.star.script:UltimusFree2.PY_bridge.python_debug?language=Basic&amp;location=application</value>
+<!-- QUESTA FUNZIONA PER AVVIARE COMANDI PYTHON
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$chi?language=Python&amp;location=user:uno_packages</value>
+-->
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/py</value>

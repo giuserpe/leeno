@@ -27,6 +27,7 @@ rem metto in ordine secondo la stampa
 	oSheet.IsVisible = True
 	If thisComponent.Sheets.hasbyname(&quot;cP_Cop&quot;) Then ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
+	print
 rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
 		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet Then &apos; and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then

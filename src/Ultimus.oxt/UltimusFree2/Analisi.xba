@@ -201,5 +201,43 @@ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 		next
 	Next
 	exit sub
-end sub
+end Sub
+&apos;#########################################################################
+
+Sub tante_analisi_in_ep &apos;vai_ed_esegui &apos;temporanea creata per registrare in automatico le analisi in EP
+	&apos; senza effettuare il riordino dell&apos;EP ne altro controllo
+	&apos;l&apos;avesse avuta giuserpe per buttare in EP 350 analisi avrebbe rispatmiato tempo e fatica
+
+	oSheetEP = thiscomponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+	oSheetANAP = thiscomponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+	lUltimaRiga = getLastUsedRow(oSheetANAP)
+	if msgbox (&quot;Questa macro è per Esperti&quot; &amp; CHR(10)_
+		&amp; &quot; serve a creare nuovi prezzi lavorando su più voci di Analisi!&quot; &amp; CHR(10)_
+		&amp; &quot; Procedo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;&quot; ,36, &quot;&quot;) &lt;&gt; 6 then
+		exit Sub
+	end If
+	Var = InputBox(&quot;Creo nuovi prezzi da tutte le Analisi: Da quale numero di riga vuoi iniziare?&quot;, &quot;Inserisci il numero di riga da cui vuoi iniziare a Trasferire&quot;, &quot;1&quot;)
+	If var = &quot;&quot; Then
+		exit Sub 
+		lrow = 2
+	end If 
+	lrow = CDbl(Var)
+&apos;	print lrow
+
+	Do While oSheetANAP.GetCellByPosition( 0,lrow ).string &lt;&gt; &quot;Fine ANALISI&quot;_
+		Or lrow &lt; lUltimaRiga
+		Do While oSheetANAP.GetCellByPosition( 0,lrow ).CellStyle &lt;&gt; &quot;An-sfondo-basso Att End&quot;
+			lrow = lrow+1
+			if lrow &gt; lUltimaRiga Then	Exit Do
+		Loop
+		if lrow &gt; lUltimaRiga Then Exit Do
+		ANALISI_IN_ELENCOPREZZI_AVCP (lrow)
+&apos;		ANALISI_IN_ELENCOPREZZI_Taxi (lrow)
+&apos;		ThisComponent.CurrentController.Select(oSheetANAP.GetCellbyPosition( 0, lrow ))
+&apos;	print &quot;c &quot; &amp; lrow
+		lrow = lrow+1
+	Loop
+	suona_1_2
+End Sub
 </script:module>

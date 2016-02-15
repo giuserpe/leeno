@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -196,6 +196,7 @@ Sub elenco_OnFocus
 	Toolbar_vedi
 	If codice_da_cercare_in_elenco = &quot;Cod. Art.?&quot;  Then Exit Sub
 	If codice_da_cercare_in_elenco &lt;&gt; &quot;&quot; Then
+	&apos;	Print codice_da_cercare_in_elenco
 		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 		oCell=uFindString(codice_da_cercare_in_elenco, oSheet)
 		ThisComponent.CurrentController.Select(oCell)

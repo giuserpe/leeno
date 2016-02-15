@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -54,20 +54,20 @@ End Sub
 rem ----------------------------------------------------------------------
 Sub new_leeno
 	New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
+ 	autoexec
  	Setta_Cost_Gen
 	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 		&amp; &quot;Provvedi subito a dare un nome al file di computo...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
 	salva_doc_come
-	autoexec
 End Sub
 
 rem ----------------------------------------------------------------------
 Sub new_listino
 	New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
+	autoexec
 	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 		&amp; &quot;Provvedi subito a dare un nome al file di listino...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
 	salva_doc_come
-	autoexec
 End Sub
 
 rem ----------------------------------------------------------------------
@@ -122,7 +122,7 @@ rem le variabili di versione sono settate In &quot;_vaiabili&quot;
 &apos;	Print nomeZip
 &apos;	Filecopy nomeZip, nomeZip2 &apos;seconda copia senza data
 	If getos()=&quot;WINDOWS&quot; Then shell (&quot;explorer.exe&quot;, 1,  &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT&quot;)
-	If getos()=&quot;OSX&quot; Then shell (&quot;nautilus&quot;, 1, &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/&quot;)
+	If getos()=&quot;OSX&quot; Then shell (&quot;nemo&quot;, 1, &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/&quot;)
 end Sub
 
 rem ----------------------------------------------------------------------
@@ -136,7 +136,7 @@ Sub avvia_IDE
 &apos;	oLayout.isElementFloating(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 	oLayout.showElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 &apos;	If getos()=&quot;OSX&quot; Then shell (&quot;thunar&quot;, 1, leeno_path)
-	If getos()=&quot;OSX&quot; Then shell (&quot;nautilus&quot;, 1, leeno_path)
+	If getos()=&quot;OSX&quot; Then shell (&quot;nemo&quot;, 1, leeno_path)
 	If getos()=&quot;WINDOWS&quot; Then shell (&quot;explorer.exe&quot;, 1,  convertfromurl(leeno_path))
 Print convertfromurl(leeno_path)
 End Sub
@@ -162,7 +162,7 @@ REM vedi in &quot;_variabili&quot;
 	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
 rem ----------------------------------------------------------------------
-	sUrl = extensionLocation &amp; &quot;/template/MANUALE_LeenO.pdf&quot;
+	sUrl = extensionLocation &amp; &quot;/MANUALE_LeenO.pdf&quot;
 	oSvc = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;) 
 	oSvc.execute(sUrl,&quot;&quot;, 0)
 End Sub

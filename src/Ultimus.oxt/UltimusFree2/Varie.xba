@@ -5,58 +5,13 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice. 
 &apos;_______________________________________________________________________________________
 Global codice as string
-
-sub vai_ed_esegui &apos;temporanea creata per registrare in automatico le analisi in EP
-&apos; senza effettuare il riordino dell&apos;EP ne altro controllo
-&apos;l&apos;avesse avuta giuserpe per buttare in EP 350 analisi avrebbe rispatmiato tempo e fatica
-
-oSheetEP = thiscomponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-oSheetANAP = thiscomponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-lUltimaRiga = getLastUsedRow(oSheetANAP)
-	if msgbox (&quot;Questa macro è per Esperti&quot; &amp; CHR(10)_
-		&amp; &quot; serve a creare nuovi prezzi lavorando su più voci di Analisi!&quot; &amp; CHR(10)_
-		&amp; &quot; Procedo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot;&quot; ,36, &quot;&quot;) &lt;&gt; 6 then
-		exit sub
-	end if			
-	Var = InputBox(&quot;Creo nuovi prezzi da tutte le Analisi: Da quale numero di riga vuoi iniziare?&quot;, &quot;Inserisci il numero di riga da cui vuoi iniziare a Trasferire&quot;, &quot;1&quot;)
-	If var = &quot;&quot; then
-		exit sub
-		lrow = 2
-	end if
-	lrow = CDbl(Var)
-&apos;	print lrow
-
-do while oSheetANAP.GetCellByPosition( 0,lrow ).string &lt;&gt; &quot;Fine ANALISI&quot;_
-		or lrow &lt; lUltimaRiga
-	do while oSheetANAP.GetCellByPosition( 0,lrow ).CellStyle &lt;&gt; &quot;An-sfondo-basso Att End&quot;
-		lrow = lrow+1
-		if lrow &gt; lUltimaRiga then
-&apos;		print &quot;adesso esco1&quot;
-			exit do
-		end if	
-	loop
-		if lrow &gt; lUltimaRiga then
-&apos;		print &quot;adesso esco2&quot;
-			exit do
-		end If
-		ANALISI_IN_ELENCOPREZZI_AVCP (lrow)
-&apos;		ANALISI_IN_ELENCOPREZZI_Taxi (lrow)
-&apos;		ThisComponent.CurrentController.Select(oSheetANAP.GetCellbyPosition( 0, lrow ))
-&apos;	print &quot;c &quot; &amp; lrow
-	lrow = lrow+1
-loop
-suona_1_2
-end sub
-
-
 
 Sub ANALISI_IN_ELENCOPREZZI
 sistema_attributi_sheet
@@ -863,8 +818,12 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 			If oSheet.GetCellByPosition(0, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; And _
 				oSheet.GetCellByPosition(1, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-generica&quot; Then Exit Sub
 		Case &quot;Elenco Prezzi&quot;
-			If 	oSheet.GetCellByPosition(0, lrow).CellStyle &lt;&gt; &quot;EP-aS&quot; And _
-				oSheet.GetCellByPosition(1, lrow).CellStyle &lt;&gt; &quot;EP-a&quot; Then Exit Sub
+			Select Case oSheet.GetCellByPosition(0, lrow).CellStyle
+				Case &quot;EP-aS&quot; ,&quot;EP-a&quot;, &quot;EP-Cs&quot;
+					GoTo vai:
+				Case Else
+					Exit Sub
+			End Select
 	End Select
 vai:
 	Dim test As String

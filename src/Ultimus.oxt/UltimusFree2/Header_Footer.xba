@@ -6,7 +6,7 @@ rem ***** BASIC *****
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -443,6 +443,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 &apos; initialize &apos;
 &apos;On Error Goto ErrorHandler
 &apos;Call SetModuleVars 
+sDocURL = thisComponent.getURL()
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
 			on error goto Errore 
@@ -506,7 +507,8 @@ rem ----------------------------------------------------------------------
 		Case &quot;PageStyle_REGISTRO_A4&quot;
 			dx = dxx &amp; CHR$(10) &amp; &quot;Registro di contabilità n.&quot;
 		Case &quot;PageStyle_COMPUTO_A4&quot;
-			dx = dxx &amp; CHR$(10) &amp; &quot;Dato provvisorio per debug&quot;
+&apos;		Print FileNameOutOfPath(sDocURL)
+			dx = dxx &amp; CHR$(10) &amp; FileNameOutOfPath(sDocURL)
 	End Select
 
 		oAktPage.HeaderIsOn = True 

@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -168,8 +168,8 @@ Function uFindString(sString$, oSheet ) As Variant &apos; richiamata da diverse 
 	aAddress = oCursor.RangeAddress
 	nEndRow = aAddress.EndRow
 	nEndCol = aAddress.EndColumn
-	For nCurRow = 0 To nEndRow &apos;row by row.
-		For nCurCol = 0 To nEndCol &apos;Go through the range column by column
+	For nCurCol = 0 To nEndCol &apos;Go through the range column by column
+		For nCurRow = 0 To nEndRow &apos;row by row.
 			&apos;oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
 			&apos;sFind = oCell.String &apos;Get cell contents.
 			&apos;If inStr(sFind, sString$) Then
@@ -351,7 +351,8 @@ On Error GoTo fine:
 		sStRange = Circoscrive_Voce_Computo_Att (lrow)
 		With sStRange.RangeAddress
 	 		lRow = .StartRow+1
-		End With	
+		End With
+	&apos;	Print oSheet.getCellByPosition(1,lRow).String
 		codice_da_cercare_in_elenco = oSheet.getCellByPosition(1,lRow).String
 	End Select
 fine:

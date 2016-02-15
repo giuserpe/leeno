@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarà grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -1032,7 +1032,7 @@ rimuovi_area_di_stampa
 	Dim selArea(0) as new com.sun.star.table.CellRangeAddress
 	&apos;Visualizza_normale &apos;per chi è ossessivo e con mania di controllo si consiglia la disattivazione
 	&apos;Set_Header_Footer &apos; meglio farlo ogni volta !!! ??
-	sAttributo = Trova_Attr_Sheet
+&apos;	sAttributo = Trova_Attr_Sheet
 &apos;	Print sAttributo
 	oSheet = ThisComponent.currentController.activeSheet
 ThisComponent.CurrentController.Select(oSheet)
@@ -1049,7 +1049,8 @@ thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.su
 &apos;				exit sub
 &apos;		end if
 &apos;		lRowE=oEnd.CellAddress.Row-1
-		lRowE = ultima_voce		
+		lRowE = ultima_voce
+		Print lRowE
 &apos;		lLastUrow = getLastUsedRow(oSheet)
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 2

@@ -5,7 +5,7 @@
 &apos; LeenO - Computo Metrico
 &apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
 &apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
-&apos; Licenza LGPL http://www.gnu.org/licenses/lgpl.html					
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
 &apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
 &apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
@@ -183,7 +183,7 @@ END SUB
 &apos;##############################################################
 Sub Sel_Altre_Opz() &apos; porta la vista (la selezione) su Menu Principale
 &apos; questa è un casino ma va meglio....
-
+	Toolbar_vedi
 	If ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false and _
 		ThisComponent.Sheets.hasByName(&quot;S1&quot;) = false and _
 		ThisComponent.Sheets.hasByName(&quot;S2&quot;) = false then
@@ -207,39 +207,18 @@ Dim StartCol, StartRow, EndCol, EndRow, CellRow, CellCol As Long
 	Set oCalcApp = ThisComponent &apos;ThisComponent.sheets.getByname(&quot;S1&quot;).CurrentController.getCellRangeByName(strAddress) (&quot;A2&quot;)
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
 	oSheet.isVisible = TRUE
- &apos;dis_080219	If Constrolla_se_M1 = true then					
-
-					Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-					oSheet.isVisible = TRUE
-					oAreaR = Osheet.getCellRangeByName (&quot;A190:A190&quot;)
-					Thiscomponent.currentcontroller.select(oAreaR)
-					oContr = ThisComponent.CurrentController
-					oContr.setFirstVisibleColumn (0)
-					oContr.setFirstVisibleRow(190)
- &apos;dis_080219	 			else
-	 			&apos;	if oCalcApp.sheets.getByname(&quot;S1&quot;)= then
- &apos;dis_080219						Set oSheet = oCalcApp.sheets.getByname(&quot;S1&quot;)
- &apos;dis_080219						If oSheet.isVisible = false then
- &apos;dis_080219							msgbox &quot;Per accedere ai menu devi prima chiudere questo file e riaprirlo...!&quot;
- &apos;dis_080219						 end if
- &apos;dis_080219						Set oCalcView = oCalcApp.CurrentController
- &apos;dis_080219						strAddress = &quot;A1&quot;
- &apos;dis_080219						Set oRange = oSheet.getCellRangeByName(strAddress)
- &apos;dis_080219						oCalcView.select(oRange)
-				&apos;	end if
- &apos;dis_080219	end if
-&apos; print sNomesheet
-&apos;	If sNomesheet &lt;&gt; &quot;S1&quot; then 
-&apos;	print &quot;nascondo&quot;
-&apos;		oSheetCurrent.isVisible = false 
-&apos;	endif
+	oAreaR = Osheet.getCellRangeByName (&quot;A190:A190&quot;)
+	Thiscomponent.currentcontroller.select(oAreaR)
+	oContr = ThisComponent.CurrentController
+	oContr.setFirstVisibleColumn (0)
+	oContr.setFirstVisibleRow(190)
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 Chiudi_o_elimina_tabelle_inutili
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	ThisComponent.unlockControllers 
 &apos;	ThisComponent.CurrentController.Zoomtype = 3
-	ThisComponent.CurrentController.ZoomValue = 80
+	ThisComponent.CurrentController.ZoomValue = 100
 END SUB
 
 

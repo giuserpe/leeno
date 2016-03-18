@@ -65,9 +65,9 @@ nomeListino = &quot;&gt; &quot; &amp; Replace_G(ThisComponent.title, &quot;.ods&
 &apos;INSERISCI IL CODICE DI ORIGINE NELLA DESCRIZIONE DELLA VOCE
 	If ucase(oSourceSheet.getCellByPosition(7,0).String) = &quot;SÌ&quot; Or _
 		ucase(oSourceSheet.getCellByPosition(7,0).String) = &quot;SI&quot; Or _
-		ucase(oSourceSheet.getCellByPosition(7,0).String) = &quot;SI&apos;&quot; Then sDesc = &quot;(&quot;+ sCodOrigine + &quot;)&quot; + sDesc
+		ucase(oSourceSheet.getCellByPosition(7,0).String) = &quot;SI&apos;&quot; Then sDesc = &quot;(&quot;+ sCodOrigine + &quot;) &quot; + sDesc
 &apos;##############################################################################
-	sCodOrigine = &quot;(&quot; + nPrezzario + &quot;)&quot; + CHR$(10) + sCodOrigine
+	sCodOrigine = &quot;(&quot; + nPrezzario + &quot;) &quot; + CHR$(10) + sCodOrigine
 
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; )
 
@@ -112,7 +112,8 @@ SpostaCursore_su_Prezzario &apos; questo accrocchio fa si che quando l&apos;uten
  								Stardesktop.LoadComponentFromUrl(sSourceURL, &quot;_default&quot;, 1, Array())
  								wait 100 &apos; 
  							else
-								Print &quot;Non hai selezionato un file:. ANNULLO!&quot;
+								msgbox (&quot;Non hai selezionato il file.&quot; &amp; CHR$(10) &amp; CHR$(10)_
+								 &amp; &quot;Operazione annullata!&quot; &amp; CHR$(13)&amp; CHR$(13), 0, &quot;AVVISO!&quot;)
 								exit sub
  						end if
 				case 7

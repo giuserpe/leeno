@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="12" dlg:id="DialogViste_A" dlg:left="179" dlg:top="215" dlg:width="188" dlg:height="134" dlg:help-text="Viste del Computo" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni su COMPUTO ">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="11" dlg:id="DialogViste_A" dlg:left="179" dlg:top="215" dlg:width="188" dlg:height="116" dlg:help-text="Viste del Computo" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni su COMPUTO ">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:background-color="0xffb4af" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
@@ -12,9 +12,8 @@
   <dlg:style dlg:style-id="7" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="8" dlg:background-color="0x99ff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="9" dlg:background-color="0xff3333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="10" dlg:background-color="0xccff99" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="11" dlg:background-color="0xff99cc" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="12" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="10" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="11" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="0" dlg:left="107" dlg:top="-219" dlg:width="95" dlg:height="15" dlg:help-text="Mostra TUTTE le colone" dlg:value="Mostra tutto">
@@ -72,25 +71,24 @@
   <dlg:button dlg:style-id="7" dlg:id="CommandButton9" dlg:tab-index="23" dlg:left="-173" dlg:top="57" dlg:width="85" dlg:height="42" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="Filtra codice voce corrente">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Voci_Sposta_2_Att.filtra_codice?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:id="CommandButton14" dlg:tab-index="24" dlg:left="-175" dlg:top="103" dlg:width="37" dlg:height="21" dlg:value="Annulla" dlg:button-type="cancel"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBCat" dlg:tab-index="22" dlg:left="10" dlg:top="79" dlg:width="68" dlg:height="10" dlg:value="Cat e SubCat" dlg:checked="false"/>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton19" dlg:tab-index="25" dlg:left="105" dlg:top="50" dlg:width="75" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton19" dlg:tab-index="24" dlg:left="105" dlg:top="50" dlg:width="75" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBFig" dlg:tab-index="21" dlg:left="10" dlg:top="49" dlg:width="68" dlg:height="10" dlg:value="Figure e annotazioni" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBSic" dlg:tab-index="15" dlg:left="10" dlg:top="59" dlg:width="68" dlg:height="10" dlg:value="Sicurezza" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBMdo" dlg:tab-index="16" dlg:left="10" dlg:top="69" dlg:width="68" dlg:height="10" dlg:value="Manodopera" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBMis" dlg:tab-index="19" dlg:left="10" dlg:top="39" dlg:width="68" dlg:height="10" dlg:value="Colonne misure" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBTag" dlg:tab-index="26" dlg:left="10" dlg:top="91" dlg:width="56" dlg:height="10" dlg:value="Tag" dlg:checked="false"/>
-  <dlg:button dlg:style-id="8" dlg:id="CommandButton20" dlg:tab-index="27" dlg:left="165" dlg:top="101" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBTag" dlg:tab-index="25" dlg:left="10" dlg:top="91" dlg:width="56" dlg:height="10" dlg:value="Tag" dlg:checked="false"/>
+  <dlg:button dlg:style-id="8" dlg:id="CommandButton20" dlg:tab-index="26" dlg:left="119" dlg:top="135" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="9" dlg:id="CommandButton21" dlg:tab-index="28" dlg:left="145" dlg:top="101" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
-  <dlg:button dlg:style-id="10" dlg:id="CommandButton12" dlg:tab-index="29" dlg:left="-87" dlg:top="31" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
+  <dlg:button dlg:style-id="9" dlg:id="CommandButton21" dlg:tab-index="27" dlg:left="101" dlg:top="135" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBDet" dlg:tab-index="28" dlg:left="10" dlg:top="28" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton22" dlg:tab-index="29" dlg:left="105" dlg:top="70" dlg:width="75" dlg:height="15" dlg:value="Rigenera formule"/>
+  <dlg:button dlg:style-id="10" dlg:id="CommandButton23" dlg:tab-index="30" dlg:left="164" dlg:top="94" dlg:width="14" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="11" dlg:id="CommandButton13" dlg:tab-index="30" dlg:left="-108" dlg:top="31" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBDet" dlg:tab-index="31" dlg:left="10" dlg:top="28" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton22" dlg:tab-index="32" dlg:left="105" dlg:top="70" dlg:width="75" dlg:height="15" dlg:value="Rigenera formule"/>
+  <dlg:button dlg:style-id="10" dlg:id="CommandButton24" dlg:tab-index="31" dlg:left="138" dlg:top="94" dlg:width="19" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

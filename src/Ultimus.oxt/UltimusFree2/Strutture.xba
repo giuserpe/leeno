@@ -13,6 +13,7 @@
 &apos;_______________________________________________________________________________________
 Sub Inser_Capitolo
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;Inser_Capitolo&quot;)
+&apos;	service:vnd.pycalendar?execute
 End Sub
 &apos;#########################################################################
 SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row

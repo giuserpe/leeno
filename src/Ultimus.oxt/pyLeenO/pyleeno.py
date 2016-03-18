@@ -12,7 +12,7 @@
 ########################################################################
 import locale
 import codecs
-import os, sys, uno, unohelper, pyuno, logging, shutil
+import os, sys, uno, unohelper, pyuno, logging, shutil, base64
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 from datetime import datetime, date
@@ -275,7 +275,7 @@ def SubSum_SottoCap (lrow):
     if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
         return
     #lrow = 0#Range2Cell()[1]
-    lrowE = ultima_voce(oSheet)+1
+    lrowE = ultima_voce(oSheet)+2
     nextCap = lrowE
     for n in range (lrow+1, lrowE):
         #~ if oSheet.getCellByPosition(18, n).CellStyle in ('livello2 scritta mini', 'Livello-1-scritta mini val', 'Comp TOTALI'):
@@ -303,7 +303,7 @@ def SubSum_Cap (lrow):
     if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
-    lrowE = ultima_voce(oSheet)+1
+    lrowE = ultima_voce(oSheet)+2
     nextCap = lrowE
     for n in range (lrow+1, lrowE):
         if oSheet.getCellByPosition(18, n).CellStyle in ('Livello-1-scritta mini val', 'Comp TOTALI'):
@@ -2256,6 +2256,9 @@ Si tenga conto che:
 # XPWE_import ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:
+Lmajor= 3 #'INCOMPATIBILITA'
+Lminor= 13 #'NUOVE FUNZIONALITA'
+Lsubv= "2.dev"#'CORREZIONE BUGS
 noVoce = ('Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 siVoce = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
 siVoce_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
@@ -2643,17 +2646,46 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-def debug (): #MenuMain
+def debug(): #MenuMain():
     '''
     sCella  { string } : stringa di default nella casella di testo
     t       { string } : titolo del dialogo
     Viasualizza un dialogo di richiesta testo
     '''
-
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    
+    
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application") 
     oDialog1Model = oDialog1.Model
+
+    sString = oDialog1.getControl("Label1")
+    sString.Text = str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv
+    
+    
+    sString = oDialog1.getControl("Label2")
+    oSheet = oDoc.Sheets.getByName('S1')
+    sString.Text = oSheet.getCellByPosition(7, 290).String
+    
+    try:
+        oSheet = oDoc.Sheets.getByName('COMPUTO')
+        sString = oDialog1.getControl("Label5")
+        sString.Text = "{:.2f}".format(oSheet.getCellByPosition(0, 1).Value)
+    except:
+        pass
+    try:
+        oSheet = oDoc.Sheets.getByName('VARIANTE')
+        sString = oDialog1.getControl("Label6")
+        sString.Text = "{:.2f}".format(oSheet.getCellByPosition(0, 1).Value)
+    except:
+        pass
+    try:
+        oSheet = oDoc.Sheets.getByName('CONTABILITA')
+        sString = oDialog1.getControl("Label9")
+        sString.Text = "{:.2f}".format(oSheet.getCellByPosition(0, 1).Value)
+    except:
+        pass
 
     oDialog1.execute()
     return
@@ -2688,3 +2720,12 @@ def InputBox (sCella='', t=''):
         return
     else:
         return sString.Text
+
+#~ def debug():
+    #~ iconfile = open("/media/giuserpe/PRIVATO/LeenO/logo/loghi/leeno_banner_piccolo.png", 'rb')
+    #~ icondata = iconfile.read()
+    #~ icondata = base64.b64encode(icondata)
+    #~ chi (icondata)
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oSheet.getCellByPosition(0, 0).String = icondata

@@ -8,8 +8,7 @@
   <dlg:style dlg:style-id="3" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="5" dlg:background-color="0xb9f0a8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="6" dlg:background-color="0x99ff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:background-color="0xff3333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton10" dlg:tab-index="2" dlg:left="74" dlg:top="-157" dlg:width="90" dlg:height="15" dlg:help-text="Visualizza gestione MANODOPERA" dlg:value="Manodopera ON/OFF" dlg:multiline="true">
@@ -57,30 +56,30 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="14" dlg:left="169" dlg:top="-170" dlg:width="90" dlg:height="15" dlg:printable="false" dlg:help-text="genera qui una colonna di Sommario degli importi acquisi in Contabilità" dlg:default="true" dlg:value="Genera Sommario Contabilità" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Accessori_2.Rifa_GG_G1G1_Contab?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:titledbox dlg:style-id="3" dlg:id="FC_parallelo" dlg:tab-index="18" dlg:left="13" dlg:top="88" dlg:width="75" dlg:height="50">
+  <dlg:titledbox dlg:style-id="3" dlg:id="FC_parallelo" dlg:tab-index="18" dlg:left="10" dlg:top="89" dlg:width="80" dlg:height="50">
    <dlg:title dlg:value="Quadro di raffronto"/>
   </dlg:titledbox>
   <dlg:radiogroup>
-   <dlg:radio dlg:id="ComCon" dlg:tab-index="20" dlg:left="18" dlg:top="112" dlg:width="65" dlg:height="10" dlg:value="Computo - Contabilità"/>
-   <dlg:radio dlg:id="VarCon" dlg:tab-index="21" dlg:left="18" dlg:top="122" dlg:width="65" dlg:height="10" dlg:value="Variante - Contabilità"/>
-   <dlg:radio dlg:id="ComVar" dlg:tab-index="19" dlg:left="18" dlg:top="102" dlg:width="65" dlg:height="10" dlg:value="Computo - Variante"/>
+   <dlg:radio dlg:id="ComCon" dlg:tab-index="20" dlg:left="13" dlg:top="113" dlg:width="70" dlg:height="10" dlg:value="Computo - Contabilità"/>
+   <dlg:radio dlg:id="VarCon" dlg:tab-index="21" dlg:left="13" dlg:top="123" dlg:width="70" dlg:height="10" dlg:value="Variante - Contabilità"/>
+   <dlg:radio dlg:id="ComVar" dlg:tab-index="19" dlg:left="13" dlg:top="103" dlg:width="70" dlg:height="10" dlg:value="Computo - Variante"/>
   </dlg:radiogroup>
-  <dlg:titledbox dlg:style-id="3" dlg:id="FrameControl1" dlg:tab-index="22" dlg:left="13" dlg:top="10" dlg:width="75" dlg:height="75">
+  <dlg:titledbox dlg:style-id="3" dlg:id="FrameControl1" dlg:tab-index="22" dlg:left="10" dlg:top="11" dlg:width="80" dlg:height="75">
    <dlg:title dlg:value="Visualizza"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="4" dlg:id="CBSic" dlg:tab-index="15" dlg:left="18" dlg:top="25" dlg:width="65" dlg:height="7" dlg:value="Sicurezza" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="4" dlg:id="CBMdo" dlg:tab-index="16" dlg:left="18" dlg:top="35" dlg:width="65" dlg:height="7" dlg:value="Manodopera" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="4" dlg:id="CBDesc" dlg:tab-index="17" dlg:left="18" dlg:top="65" dlg:width="65" dlg:height="7" dlg:value="Descrizione breve" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="4" dlg:id="CBUsa" dlg:tab-index="23" dlg:left="18" dlg:top="55" dlg:width="65" dlg:height="7" dlg:value="Voci usate" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CBSic" dlg:tab-index="15" dlg:left="13" dlg:top="26" dlg:width="70" dlg:height="7" dlg:value="Sicurezza" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CBMdo" dlg:tab-index="16" dlg:left="13" dlg:top="36" dlg:width="70" dlg:height="7" dlg:value="Manodopera" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CBDesc" dlg:tab-index="17" dlg:left="13" dlg:top="66" dlg:width="70" dlg:height="7" dlg:value="Descrizione breve" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CBUsa" dlg:tab-index="23" dlg:left="13" dlg:top="56" dlg:width="70" dlg:height="7" dlg:value="Voci usate" dlg:checked="false"/>
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="25" dlg:left="93" dlg:top="10" dlg:width="4" dlg:height="130" dlg:align="vertical"/>
-  <dlg:checkbox dlg:style-id="4" dlg:id="CBOrig" dlg:tab-index="24" dlg:left="18" dlg:top="45" dlg:width="65" dlg:height="7" dlg:value="Codice di origine" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CBOrig" dlg:tab-index="24" dlg:left="13" dlg:top="46" dlg:width="70" dlg:height="7" dlg:value="Codice di origine" dlg:checked="false"/>
   <dlg:button dlg:style-id="5" dlg:id="CommandButton9" dlg:tab-index="26" dlg:left="104" dlg:top="93" dlg:width="90" dlg:height="15" dlg:value="Analisi di Prezzo" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.inizializza_analisi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton1" dlg:tab-index="27" dlg:left="180" dlg:top="122" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
+  <dlg:checkbox dlg:style-id="4" dlg:id="CBSom" dlg:tab-index="27" dlg:left="13" dlg:top="76" dlg:width="70" dlg:height="7" dlg:value="Sommario Computo" dlg:checked="false"/>
+  <dlg:button dlg:style-id="6" dlg:id="CommandButton12" dlg:tab-index="28" dlg:left="180" dlg:top="122" dlg:width="14" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton11" dlg:tab-index="28" dlg:left="160" dlg:top="122" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
-  <dlg:checkbox dlg:style-id="4" dlg:id="CBSom" dlg:tab-index="29" dlg:left="18" dlg:top="75" dlg:width="65" dlg:height="7" dlg:value="Sommario Computo" dlg:checked="false"/>
+  <dlg:button dlg:style-id="6" dlg:id="CommandButton13" dlg:tab-index="29" dlg:left="154" dlg:top="122" dlg:width="19" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

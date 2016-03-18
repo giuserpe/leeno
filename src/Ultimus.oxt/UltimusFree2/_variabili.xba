@@ -60,7 +60,7 @@ rem ######################################################################
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
 	GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-	setta_versione
+	If Not ThisComponent.Sheets.HasByName(&quot;S1&quot;) Then Exit Sub
  	Setta_Cost_Gen
 	codice_da_cercare_in_elenco = &quot;&quot;
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on

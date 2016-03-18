@@ -599,14 +599,18 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 		nSal=nSal-1
 		Loop
 		oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
-		lLastUrow = oNamedRange.RangeAddress.EndRow
+&apos;		lLastUrow = oNamedRange.RangeAddress.EndRow
 	End If 
+	lLastUrow = getLastUsedRow(oSheet)
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
+
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
 	
 &apos;sistemo la colonna &quot;Importi senza errori&quot;
 	nEndRow = ultima_voce
+	Print lLastUrow
+	oSheet.getCellByPosition(36 ,1).formula = &quot;=SUBTOTAL(9;AK3:AK&quot; &amp; nEndRow+1 &amp; &quot;)&quot;
 	For i = 0 To nEndRow &apos;row by row.
 		If oSheet.GetCellByPosition( 0, i ).CellStyle = &quot;Comp End Attributo_R&quot; then &apos;
 			oSheet.getCellByPosition(36 , i).formula = &quot;=IF(ISERROR(P&quot; &amp; i+1 &amp; &quot;);&quot;&quot;&quot;&quot;;IF(P&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;;P&quot; &amp; i+1 &amp; &quot;;&quot;&quot;))&quot;

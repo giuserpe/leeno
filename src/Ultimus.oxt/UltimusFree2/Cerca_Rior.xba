@@ -14,6 +14,7 @@
 
 Sub Riordina_ElencoPrezzi &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
 &apos;seleziona_area (&quot;elenco_prezzi&quot;)
+RiDefinisci_Area_Elenco_prezzi
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
 	oRanges = ThisComponent.NamedRanges
 &apos;xray 	oRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells().RangeAddress

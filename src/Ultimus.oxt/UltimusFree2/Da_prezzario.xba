@@ -99,7 +99,8 @@ Sub Vai_a_Contabilita
  								Stardesktop.LoadComponentFromUrl(sSourceURL, &quot;_default&quot;, 1, Array())
  								wait 100 &apos; 
  							else
-								Print &quot;Non hai selezionato un file:. ANNULLO!&quot;
+								msgbox (&quot;Non hai selezionato il file.&quot; &amp; CHR$(10) &amp; CHR$(10)_
+								 &amp; &quot;Operazione annullata!&quot; &amp; CHR$(13)&amp; CHR$(13), 0, &quot;AVVISO!&quot;)
 								exit sub
  						end if
 					case 7

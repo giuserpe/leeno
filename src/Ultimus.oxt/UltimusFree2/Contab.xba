@@ -535,8 +535,6 @@ i=1
 		End If
 		fineFirme = fineFirme+1
 		i=i+1
-&apos;				Barra_Apri_Chiudi_5(&quot;                                           &quot;&amp; _
-&apos;				 oSheetReg.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage, 0)
 	Loop
 	fineFirme = fineFirme-1
 	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, daqui))

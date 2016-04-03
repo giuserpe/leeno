@@ -355,11 +355,11 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	oSheet = ThisComponent.currentcontroller.activesheet
 	sAttributo = Trova_Attr_Sheet
 	Select Case sAttributo
-	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;, &quot;TIPO_ANALISI&quot;, &quot;TIPO_EP&quot;
+	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;, &quot;TIPO_ANALISI&quot;, &quot;TIPO_EP&quot;,&quot;&quot;
 		GoTo procedi:
 	Case Else
 		Exit Sub
-	End Select	
+	End Select
 procedi:
 &apos;-------------------------------------------------------------------------
 	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
@@ -490,7 +490,12 @@ procedi:
 	
 	dispatcher.executeDispatch(oDoc, &quot;.uno:Move&quot;, &quot;&quot;, 0, args2())
 &apos; la sheet adesso è un nuovo doc e il focus è sopra ?
-	
+	If sAttributo=&quot;&quot; Then
+		fissa (0,1)
+		Write_PageStyle
+		Exit Sub
+	EndIf 
+		
 	ThisComponent.CurrentController.ZoomValue = 65
 	ThisComponent.CurrentController.ShowGrid = bGrid
 	ThisComponent.CurrentController.Frame.ContainerWindow.toFront()

@@ -609,7 +609,7 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 	
 &apos;sistemo la colonna &quot;Importi senza errori&quot;
 	nEndRow = ultima_voce
-	Print lLastUrow
+&apos;	Print lLastUrow
 	oSheet.getCellByPosition(36 ,1).formula = &quot;=SUBTOTAL(9;AK3:AK&quot; &amp; nEndRow+1 &amp; &quot;)&quot;
 	For i = 0 To nEndRow &apos;row by row.
 		If oSheet.GetCellByPosition( 0, i ).CellStyle = &quot;Comp End Attributo_R&quot; then &apos;

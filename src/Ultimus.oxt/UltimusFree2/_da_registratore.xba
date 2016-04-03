@@ -722,4 +722,33 @@ sub paste_clip
 	dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
 	
 end Sub
+
+
+sub fill_serie (dir As String)
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(5) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;FillDir&quot;
+args1(0).Value = dir
+args1(1).Name = &quot;FillCmd&quot;
+args1(1).Value = &quot;L&quot;
+args1(2).Name = &quot;FillStep&quot;
+args1(2).Value = &quot;1&quot;
+args1(3).Name = &quot;FillDateCmd&quot;
+args1(3).Value = &quot;D&quot;
+args1(4).Name = &quot;FillStart&quot;
+args1(4).Value = &quot;1&quot;
+args1(5).Name = &quot;FillMax&quot;
+args1(5).Value = &quot;2E+307&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:FillSeries&quot;, &quot;&quot;, 0, args1())
+end sub
 </script:module>

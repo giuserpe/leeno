@@ -189,7 +189,7 @@ Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Co
 End Sub
 rem ######################################################################
 Sub computo_OnSelect
-	cerca_in_elenco
+&apos;	cerca_in_elenco
 End Sub
 
 Sub elenco_OnFocus

@@ -11,7 +11,7 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-rem qui ci metto tutte le variabili/COSTANTI globali
+rem qui ci metto tutte le VARIABILI GLOBALI
 
 option explicit
 Public Const sLib = &quot;UltimusFree2&quot; &apos;nome libreria

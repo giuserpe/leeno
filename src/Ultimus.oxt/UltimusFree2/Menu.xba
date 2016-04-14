@@ -364,8 +364,11 @@ Dim ComboBox, ListBox, d
 rem https://forum.openoffice.org/it/forum/viewtopic.php?f=26&amp;t=7144&amp;p=37706#p37706
 Sub ApriDialogo_tabelle()
 	oSheet = ThisComponent.currentController.activeSheet &apos; presumo sia il foglio CONTABILITA
-&apos;	Select Case ThisComponent.currentselection.cellstyle
-&apos;	Case &quot;comp 1-a&quot;, &quot;comp 1-a peso&quot;,&quot;*&quot;
+&apos;	lrow = range2cell
+	
+	
+	Select Case ThisComponent.currentselection.cellstyle
+	Case &quot;comp 1-a&quot;, &quot;comp 1-a peso&quot;,&quot;Default&quot;
 		tabelle() = Array(&quot;Tondo per c.a.&quot;, &quot;Reti elettrosaldate&quot;, &quot;Orsogril&quot;, &quot;Travi IPE&quot;, &quot;Travi UPN&quot;, &quot;Travi HEA&quot;, &quot;Travi HEB&quot;, &quot;Travi HEM&quot;, _
 		&quot;Tubi quadrati&quot;, &quot;Tubi rettangolari&quot;, &quot;L lati Uguali sp tondi&quot;, &quot;L lati Disuguali sp tondi&quot;) &apos;
 		d = CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
@@ -398,7 +401,7 @@ Sub ApriDialogo_tabelle()
 		End With
 		
 		oSheet.getCellByPosition(lcol, lRow).Value = val0
-&apos;	End Select
+	End Select
 fine:
 End Sub
 

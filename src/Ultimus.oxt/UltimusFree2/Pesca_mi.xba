@@ -335,7 +335,7 @@ SUB Pesca_cod_2
 &apos;		end if
 		oPartenza.SetString(sCodice)
 		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+1)
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+		unSelect &apos;unselect ranges 	
 	EndIf
 	if oSheet.name = &quot;Analisi di Prezzo&quot; then
 &apos;	print &quot;eccoci&quot;

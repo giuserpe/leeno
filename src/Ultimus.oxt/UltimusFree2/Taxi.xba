@@ -1887,7 +1887,7 @@ annullato:
 	&apos; questo solo per portare in primo piano la sheet appena importata (ci sono modi migliori...)
 	orange_t =oSheet.getCellRangeByPosition(0,0,0,0)
 	ThisComponent.CurrentController.Select(orange_t) 
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 end sub
 

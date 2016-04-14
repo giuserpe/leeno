@@ -127,10 +127,6 @@ FAI:
 	pesca_cod
 End SUB
 
-
-
-
-&apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++
 SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità COMPUTO&lt;&gt;CONTABILITA
 	dim lrow as long
 	dim cPrezzo as Currency
@@ -163,7 +159,20 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 &apos;	print RigaVoceGlobal
 	if RigaVoceGlobal &lt;&gt; &quot;&quot; then
 		lSrow = RigaVoceGlobal
-	end if
+	end If
+	Select Case oSheet.GetCellByPosition( 0, lSrow).cellstyle
+	Case &quot;An.1v-Att Start&quot;, &quot;An-1_sigla&quot;, &quot;An-lavoraz-desc&quot;, &quot;An-lavoraz-Cod-sx&quot;, &quot;An-lavoraz-desc-CEN&quot;, &quot;An-sfondo-basso Att End&quot;, _
+		&quot;Comp Start Attributo&quot;, &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp End Attributo&quot;, _
+		&quot;Comp Start Attributo_R&quot;, &quot;comp 10 s_R&quot;, &quot;Comp End Attributo_R&quot;
+	Case Else
+		msgbox &quot;Selezione non consentita! Riprova.&quot;, 16, &quot;AVVISO!&quot;
+		ThisComponent.CurrentController.Select(oPartenza_A)
+		oSheet = ThisComponent.currentController.activeSheet
+		lrow = Range2Cell-1
+		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
+		unSelect &apos;unselect ranges 	
+		Exit Sub
+	End Select
 	sStRange = Circoscrive_Voce_Computo_Att (lSrow)
 	 With sStRange.RangeAddress
 			lRowStart_A =.StartRow

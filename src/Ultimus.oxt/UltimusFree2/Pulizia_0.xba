@@ -19,7 +19,7 @@
 
 Sub Tagga_VociPrezzo_non_usate ()
 	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;))
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	tag_usata_switch (&quot;on&quot;)
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Tagga_VociPrezzo_non_usate_linkato &apos;ho spostato la macro main in Pulizia_1 per questioni di ordine
@@ -306,7 +306,7 @@ Sub SegnaManinaVociUsate_Analisi
 	oCell.cellStyle= &quot;Analisi tag manuale&quot;
 
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1, lrow+1)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 END SUB
 
@@ -338,7 +338,7 @@ Sub SegnaManinaVociUsate_EP &apos; segna manualmente le voci di EP da mantenere
  End If
  	oSheet.getColumns.getByIndex(lcolbase+9+idxcol).isVisible = true
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(lcolbase+ 1, lrow+1)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 END SUB 
 
@@ -582,7 +582,7 @@ Sub Pulisci_Colonne_tag &apos;elimina tutti i tag da EP e dalle Analisi
 			ocell = oSheetAnalisi.GetCellByPosition( lcolbase+1,lrow)
 	end if
 	ThisComponent.CurrentController.Select(oCell)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	
 End SUB
 
@@ -736,7 +736,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
  									if SelectedRange = &quot;&quot; or _
 								 	 		SelectedRange = &quot;ANNULLA&quot; then
 								 	 		ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-								 			thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+								 			unSelect &apos;unselect ranges 	
 											&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 											Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 				 	exit sub
@@ -745,7 +745,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 											iDel = getRigaIniziale(SelectedRange)
 	 		 								myrows = oSheet.getrows &apos; rimuove solo le voci proprio identiche &apos;&apos;&apos;&apos;
 		 									myrows.removebyindex(iDel,1)
-					 						thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+					 						unSelect &apos;unselect ranges 	
 											&apos;print &quot;	&apos; toglie la selezione 	&quot;
 										&apos;	Barra_Apri_Chiudi_5(&quot;--&quot;, 1)			&apos;eleonora	
 									end if
@@ -767,7 +767,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
  							if SelectedRange = &quot;&quot; or _
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+						 		unSelect &apos;unselect ranges 	
 								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								&apos;Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
@@ -776,7 +776,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 							iDel = getRigaIniziale(SelectedRange)
 	 		 				myrows = oSheet.getrows &apos; rimuove solo le voci proprio identiche &apos;&apos;&apos;&apos;
 		 					myrows.removebyindex(iDel,1)
-					 	&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+					 	&apos;	unSelect &apos;unselect ranges 	
 						&apos;	print &quot;E 4 &quot;&apos;&quot;	&apos; toglie la selezione 	&quot;
 						&apos;	Barra_Apri_Chiudi_5(&quot;--&quot;, 1)						 	
 			end if
@@ -791,7 +791,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
  				if SelectedRange = &quot;&quot; or _
 						SelectedRange = &quot;ANNULLA&quot; then
 			 			ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-						thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+						unSelect &apos;unselect ranges 	
 						&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 						Barra_chiudi_sempre_4
 						Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
@@ -802,7 +802,7 @@ SUB DOPPIONI_TROVA_giu_discrimina &apos; trova i codici doppi nell&apos;EP e con
 						iDel = getRigaIniziale(SelectedRange)
 	 			 		myrows = oSheet.getrows &apos; rimuove solo le voci proprio identiche &apos;&apos;&apos;&apos;
 		 				myrows.removebyindex(iDel,1)
-						thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+						unSelect &apos;unselect ranges 	
 											&apos;print &quot;	&apos; toglie la selezione 	&quot;
 										&apos;	Barra_Apri_Chiudi_5(&quot;--&quot;, 1)			&apos;eleonora		
 				end if		
@@ -827,7 +827,7 @@ exit sub
  							if SelectedRange = &quot;&quot; or _
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+						 		unSelect &apos;unselect ranges 	
 								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
@@ -835,7 +835,7 @@ exit sub
  							lrowDel = getRigaIniziale(SelectedRange)
 	 		 				myrows = oSheet.getrows &apos; rimuove solo le voci proprio identiche &apos;&apos;&apos;&apos;
 		 					myrows.removebyindex(lrowDel,1)
-					 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+					 		unSelect &apos;unselect ranges 	
 							&apos;print &quot;	&apos; toglie la selezione 	&quot;
 							Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 					end if
@@ -847,7 +847,7 @@ exit sub
  							if SelectedRange = &quot;&quot; or _
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+						 		unSelect &apos;unselect ranges 	
 								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
@@ -855,7 +855,7 @@ exit sub
  							lrowDel = getRigaIniziale(SelectedRange)
 	 		 				myrows = oSheet.getrows &apos; rimuove solo le voci proprio identiche &apos;&apos;&apos;&apos;
 		 					myrows.removebyindex(lrowDel,1)
-					 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+					 		unSelect &apos;unselect ranges 	
 							&apos;print &quot;	&apos; toglie la selezione 	&quot;
 							Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 					end if
@@ -955,7 +955,7 @@ SUB DOPPIONI_TROVA_giu_discrimina______ &apos; trova i codici doppi nell&apos;EP
  							if SelectedRange = &quot;&quot; or _
 						 	 	SelectedRange = &quot;ANNULLA&quot; then
 						 	 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-						 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+						 		unSelect &apos;unselect ranges 	
 								&apos;print &quot;&apos; toglie la selezione ed esce	&quot;
 								Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						 	 	exit sub
@@ -963,7 +963,7 @@ SUB DOPPIONI_TROVA_giu_discrimina______ &apos; trova i codici doppi nell&apos;EP
  							lrowDel = getRigaIniziale(SelectedRange)
 	 		 				myrows = oSheet.getrows &apos; rimuove solo le voci proprio identiche &apos;&apos;&apos;&apos;
 		 					myrows.removebyindex(lrowDel,1)
-					 		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+					 		unSelect &apos;unselect ranges 	
 							&apos;print &quot;	&apos; toglie la selezione 	&quot;
 							Barra_Apri_Chiudi_5(&quot;--&quot;, 1)
 						else

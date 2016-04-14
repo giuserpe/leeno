@@ -73,7 +73,7 @@ rem ----------------------------------------------------------------------
 	oSheet.getCellRangeByPosition (7,primariga,11,lLastUrow).CellStyle = &quot;List-num-euro&quot;
 	oSheet.getCellRangeByPosition (8,primariga,8,lLastUrow).CellStyle = &quot;List-%&quot;
 	oSheet.getCellRangeByPosition (10,primariga,10,lLastUrow).CellStyle = &quot;List-%&quot;
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+	unSelect &apos;unselect ranges
 rem ----------------------------------------------------------------------
 	colore = &quot;giallo&quot;
 	Select Case colore
@@ -211,12 +211,12 @@ rem ----------------------------------------------------------------------
 rem copia/incolla le voci
 	ThisComponent.CurrentController.Select(oSheet.getCellRangeByposition(0, primaR, 100, ultimaR))
 copy_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+	unSelect &apos;unselect ranges
 Focus_su_altro_Doc (newCap)
 uriga=getLastUsedRow(oSheetDest)+1
 	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0,uriga))
 paste_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+	unSelect &apos;unselect ranges
 rem ----------------------------------------------------------------------
 rem inserisce il numero di prezzi
 oSheetDest.GetCellByPosition(5, riga1+ics).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
@@ -226,12 +226,12 @@ Focus_su_altro_Doc (completo) &apos; torno sul listino completo
 	oSheetNote = ThisComponent.Sheets.getByName(&quot;Note&quot;)
 	ThisComponent.CurrentController.Select(oSheetNote.getCellRangeByposition(0, 0, 100, 100))
 copy_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 Focus_su_altro_Doc (newCap)
 	oSheetNote = ThisComponent.Sheets.getByName(&quot;Note&quot;)
 	ThisComponent.CurrentController.Select(oSheetNote.GetCellByPosition(0,0))
 paste_clip
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+	unSelect &apos;unselect ranges
 	nomeCap =thisComponent.currentController.title
 rem ----------------------------------------------------------------------		
 	oSheetDest.getCellRangeByPosition (0,0,11,0).Columns.IsVisible=True &apos; mostra colonne

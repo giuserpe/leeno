@@ -454,7 +454,7 @@ Numera_Voci_Computo (&quot;niente prompt&quot;)
 &apos;					ThisComponent.CurrentController.Select(oPrimaCella)
 ThisComponent.CurrentController.Select(oSheet)
 Adatta_Altezza_riga
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deselezion
+unSelect &apos;deselezion
 			&apos;		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
 			&apos;		oSpalte1.isVisible = false

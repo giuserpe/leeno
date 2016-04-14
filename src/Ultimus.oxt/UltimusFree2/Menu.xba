@@ -88,14 +88,22 @@ End Sub
 rem ######################################################################
 
 Sub Toolbar_vedi&apos;(oDoc, sURL)
-	Dim oLayout
+	Dim oLayout, s$, sName$
 	oDoc = thiscomponent
 	oLayout = oDoc.CurrentController.getFrame().LayoutManager	
 rem stabilisce il comportamento
 rem se il livelli di difficoltà è impostato su 0 (primo approccio), tutte le toolbars restano visibili
+&apos;	On Error GoTo fine:
+	If Not thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
+		new_leeno
+&apos;		For Each sName In GetmyToolBarNames()
+&apos;			toolbar_on (sName, 0)
+&apos;		Next
+		Exit Sub
+	EndIf
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 Then
 rem SEMPRE VISIBILI
-		Dim s$, sName$
+
 		For Each sName In GetmyToolBarNames()
 			toolbar_on (sName, 1)
 		Next

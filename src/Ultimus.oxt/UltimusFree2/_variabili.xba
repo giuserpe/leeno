@@ -88,12 +88,12 @@ End Sub
 rem ######################################################################
 Sub autoexec_off
 rem chiudo le toolbars
+	Sel_Altre_Opz
+	eventi_pulisci
 	Dim sName As String
 	For Each sName In GetmyToolBarNames()
 		toolbar_on (sName, 0)
 	Next
-	eventi_pulisci
-	Sel_Altre_Opz
 End Sub
 
 </script:module>

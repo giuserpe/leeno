@@ -270,7 +270,7 @@ rem completo la lista voci per la preparazione del SAL prima di passare alla com
 			mdo		= oSheet.GetCellByPosition(idxcol+30, f).getvalue &apos;mdo
 			
 &apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(idxcol+19, i+1))
-&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+&apos;	unSelect &apos;unselect ranges
 &apos;	Print Nlib
 rem ----------------------------------------------------------------------
 rem approssimazione dei valori a idxdec dopo la virgola
@@ -457,7 +457,7 @@ rem gli importi vanno tutti nella colonna DEBITO, anche se negativi
 copy_clip
 consolida_clip &apos; consolida la data
 	ncol=ColumnNameOf(fcol+8)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	unSelect &apos;deseleziona
 	oSheetReg.GetCellByPosition(fcol+8, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
 	
 &apos;	fineMisure = InsRow
@@ -716,7 +716,7 @@ rem ----------------------------------------------------------------------
 copy_clip
 consolida_clip &apos; consolida la data
 	ncol=ColumnNameOf(fcol+5)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	unSelect &apos;deseleziona
 	oSheetSal.GetCellByPosition(fcol+5, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
 
 &apos;	inizioFirme = InsRow+7
@@ -798,7 +798,7 @@ rem ----------------------------------------------------------------------
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, fineFirme-1))
 	ThisComponent.CurrentController.setFirstVisibleRow (fineFirme)
 cancella_dati
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	unSelect &apos;deseleziona
 rem LA RIPETIZIONE DEL SETTAGGIO DEGLI STILI E&apos; VOLUTA - VEDI rem DI SOPRA
 	insRows (fineFirme,1) &apos;insertByIndex non funziona
 	oSheetSal.getCellRangeByPosition (fcol+0,fineFirme,fcol+5,fineFirme).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
@@ -1002,7 +1002,7 @@ rem INSERISCI
 			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(idxcol+1 , riga_corrente))
 copy_clip
 consolida_clip &apos; consolida la data
-			thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+			unSelect &apos;deseleziona
 		
 			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+2).setformula(&quot;L&apos;Impresa esecutrice&quot;&amp; CHR$(10)&amp; _
 				&quot;(&quot; + oSheet_S2.GetCellByPosition(2 , 16).getstring + &quot;)&quot;)
@@ -1019,7 +1019,7 @@ rem CONSOLIDO
 			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(idxcol+1 , riga_corrente+10))
 copy_clip
 consolida_clip &apos; consolida la data
-			thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+			unSelect &apos;deseleziona
 			ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+12).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
 				&quot;(&quot; + oSheet_S2.GetCellByPosition(idxcol+2 , 15).getstring + &quot;)&quot;)
@@ -1105,7 +1105,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcol+nsal, lrow,lcol+nsal, lrow+30))
 	cancella_dati
 	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;))
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+	unSelect &apos;unselect ranges
 fine:
 End Sub
 rem ######################################################################

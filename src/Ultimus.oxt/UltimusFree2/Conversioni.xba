@@ -244,7 +244,7 @@ rem torno sul -tmp e lo chiudo
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
  		GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If   &apos; Load standard library for funny function DisposeDocument()
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+unSelect &apos;unselect ranges 	
 rem ----------------------------------------------------------------------
 &apos; salvo il doc corrente
 Visualizza_normale_esegui

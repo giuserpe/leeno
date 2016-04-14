@@ -650,7 +650,7 @@ rem HO INIZIATO A LAVORARCI, MA TOCCA TENER CONTO DEGLI ACCODAMENTI (GV)
 
  oCell = oSheet.GetCellByPosition(lcolbase+0,3 ) 
 ThisComponent.CurrentController.Select(oCell)&apos;@
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+unSelect &apos;unselect ranges 
 rem ----------------------------------------------------------------------
 	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	lrow=oStart.CellAddress.Row+1
@@ -942,7 +942,7 @@ rem ci metto le formule
 			oSheet.copyRange(oDest, oRangeData)
 	 	EndIf 
  		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(2 , lrow))
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+		unSelect &apos;unselect ranges 
 &apos;		Print 
 	Case &quot;CONTABILITA&quot; &apos;&quot;TIPO_CONTABILITA&quot;
 		If oSheet.GetCellByPosition(0, lrow+1).CellStyle = &quot;Comp End Attributo_R&quot; Then lrow=lrow-1
@@ -993,7 +993,7 @@ rem preserva la data di misura
 
 
 		ThisComponent.CurrentController.Select( oSheet.GetCellByPosition( 2 , lrow))
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+		unSelect &apos;unselect ranges 
 	Case &quot;Analisi di Prezzo&quot; &apos;&quot;TIPO_ANALISI&quot;
 		copia_riga_A
 	end select

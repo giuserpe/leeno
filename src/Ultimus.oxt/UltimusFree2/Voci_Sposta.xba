@@ -54,7 +54,7 @@ rem controllo se posso procedere
 		&amp;&quot;Vuoi procedere?&quot;, 1+32+256, &quot;Attenzione!&quot;) = 2 Then
 		Else
 		oSheet.rows.removeByIndex (iRowStart, iRowEnd-iRowStart+1)
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+		unSelect &apos;unselect ranges 	
 		Numera_Voci_Computo (&quot;&quot;)
 	End If
 fine:

@@ -42,7 +42,7 @@ rem rimuovo le aree di stampa che non interessano
 			If 	oSh.Name = oActiveSheet Then 
 				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
 				if msgbox (CHR$(10) &amp;&quot;Preferisci nascondere i colori?&quot;,36, &quot;&quot;) = 6 Then	SBIANCA_celle
-				thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+				unSelect &apos;unselect ranges 
 			Else
 			End If
 		End If
@@ -113,7 +113,7 @@ rem rimuovo le aree di stampa che non interessano
 &apos;Next
 	ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh)+100,getLastUsedRow(oSh)+100))
 	SBIANCA_ANNULLA
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+	unSelect &apos;unselect ranges
 	
 	Rimetti_in_ordine_tab
 	Chiudi_o_elimina_tabelle_inutili
@@ -213,7 +213,7 @@ rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 			&apos;if not ismissing(sElim) or not isnull(sElim) then &apos; &apos;questo metodo isnull ismissing da sempre problemi
  			ThisComponent.Sheets.removeByName(sElim) &apos;elimino il duplicato
 			ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(sSheetName) 
-			thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+			unSelect &apos;unselect ranges 	
 			&apos; toglie la selezione 		
 			Visualizza_normale
 		end if
@@ -267,7 +267,7 @@ rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 	
 	
 	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(sSheetName) 
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 		GetGUIType
 	Visualizza_normale
  if msgbox (CHR$(10) &amp;&quot;Il documento pdf è stato esportato come &quot; &amp; sUrl &amp; CHR$(10)&amp; CHR$(10)_
@@ -606,7 +606,7 @@ Sub Modulo_Lista_categorie_appalto &apos;Crea Il modulo per una lista generata d
 &apos;duplico la tabella nel doc stesso
 	oSheet=ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	Thiscomponent.currentcontroller.select(oSheet)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	unSelect &apos;deseleziona
 	
 	if msgbox (&quot;Sto per generare un nuovo foglio con la:&quot; &amp; CHR$(10) &amp; CHR$(10)_
 	&amp; &quot;Lista delle Lavorazioni e Forniture previste per l&apos;esecuzione dell&apos;appalto.&quot; &amp; CHR$(10) &amp; CHR$(10)_
@@ -722,7 +722,7 @@ Sub Modulo_Lista_categorie_appalto &apos;Crea Il modulo per una lista generata d
 	
 	Thiscomponent.currentcontroller.select(oSheet.getCellRangeByPosition(0,1,0,lrowe-1))
 	fill_serie (&quot;D&quot;)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+	unSelect &apos;deseleziona
 	oSheet.Rows.removeByindex(lrowe+1,1)
 	Sbianca_e_o_consolida(1) &apos; USANDO 1 SBIANCA SOLAMENTE
 	oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 650

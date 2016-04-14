@@ -3,6 +3,10 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="_tools" script:language="StarBasic">rem ***** BASIC *****
 rem raccolta di utility di vario genere
 rem ######################################################################
+Sub unSelect
+	ThisComponent.currentController.Select(ThisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;))
+End Sub
+
 Sub ReadDataFromProgeCAD()
     Dim pCad As Object
     Dim pCadDoc As Object
@@ -208,6 +212,10 @@ End Sub
 rem ----------------------------------------------------------------------
 Sub scrivi_larghezza_colonna
 	oSheet =ThisComponent.currentController.activeSheet
+&apos;	orange_t = oSheet.getCellRangeByPosition(1,0,100,0)
+&apos;	ThisComponent.CurrentController.Select(orange_t)
+&apos;	fill_serie (&quot;R&quot;)
+&apos;	Exit Sub
 	lrow = 0&apos;range2cell
 	For n = 0 To 200&apos;getLastUsedCol(oSheet)
 		oSheet.GetCellByPosition(n, lrow).value = oSheet.GetCellByPosition(n, lrow).getcolumns.width

@@ -350,7 +350,7 @@ Aggiorna_formula_sommase (lrow)
 	oMioRange.Rows.OptimalHeight = true
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)
 	ThisComponent.CurrentController.Select (oSheet.getCellByPosition(lcolbase+idxcol,lrow)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+	unSelect &apos;unselect ranges 
 Exit Sub 
 	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then	
 		msgbox &quot;In questo modo il &apos;prezzo&apos; lo devi compilare a mano!&quot; &amp; CHR$(10) &amp; CHR$(10)_

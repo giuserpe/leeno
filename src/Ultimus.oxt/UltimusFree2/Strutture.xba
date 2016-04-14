@@ -259,7 +259,7 @@ oNamedRange=oRanges.getByName(tag &amp; nSaln).referredCells
 		ThisComponent.CurrentController.Select(oRanges.getByName(tag &amp; nSaln).referredCells)
 Raggruppa_righe &apos; raggruppo 
 		oRanges.getByName(tag &amp; nSaln).referredCells.Rows.IsVisible=false
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona
+		unSelect &apos;deseleziona
 		nSaln=nSaln-1
 	Loop
 	oRanges.getByName(tag &amp; LSal).referredCells.Rows.IsVisible=True
@@ -338,7 +338,7 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) de
 	end If
 &apos;ScreenUpdatingON
 	thisComponent.currentController.Select(oCell)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+	unSelect &apos;unselect ranges 
 end sub
 
 Function abbreviata
@@ -561,7 +561,7 @@ sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle des
 			end if
 	endif 	
 &apos;	ThisComponent.CurrentController.Select(oActiveCell1) 
-&apos;	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+&apos;	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 end sub
 
@@ -622,7 +622,7 @@ sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descriz
 	endif
  	Barra_chiudi_sempre_4 	
 	ThisComponent.CurrentController.Select(oActiveCell1) 
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 
 fissa (0, idxrow)
 end sub
@@ -641,7 +641,7 @@ sub Tronca_Altezza_Voci_Listino &apos; sull&apos;E.P. limita l&apos;altezza dell
  		 oRange.Rows.OptimalHeight = true 
  end if		 
 	ThisComponent.CurrentController.Select(oActiveCell1)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 end sub
 

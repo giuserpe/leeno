@@ -251,13 +251,13 @@ SISTEMA_I_TAG:
  	 	Numera_Voci_Computo (&quot;niente prompt&quot;)	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
  	endif 	
  
-&apos; thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 
+&apos; unSelect &apos;unselect ranges 
 	&apos; toglie la selezione 	
  	&apos; dati del libretto
 	&apos;copio (mi annoto) il range degli estremi del libretto della voce precedente
 	lrowmod1 = lrow
 ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1, lrow+1))
-thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
+unSelect &apos;unselect ranges
  sGDove = &quot;Elenco Prezzi&quot;
 	sGVV = &quot;va&quot;	
 	sGorigine = &quot;CONTABILITA&quot;				
@@ -382,7 +382,7 @@ lrow = lrow+1
  oSheet2.copyRange(oCelle,oQuellRangeAddresse)
 
  thisComponent.currentController.Select(oSheet.GetCellByPosition( 0 , lrow+1))
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 	&apos;ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	&apos; togle la selezione
 	oContr.setFirstVisibleRow(lrow+1)

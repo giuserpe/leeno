@@ -212,7 +212,7 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 		end if
 		ThisComponent.CurrentController.Select(orange_t) 
 	end if
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 &apos; toglie la selezione 	
 END SUB
 &apos;&apos;***************************************************************+
@@ -297,7 +297,7 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 		ThisComponent.CurrentController.Select(orange_t) 
 	end if
 	print
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges 	
+	unSelect &apos;unselect ranges 	
 &apos; toglie la selezione 	
 END SUB
 &apos;&apos;***************************************************************+

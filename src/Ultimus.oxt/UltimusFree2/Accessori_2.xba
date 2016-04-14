@@ -830,7 +830,7 @@ rem questa sotto è da tenere d&apos;occhio!!!
 rem ----------------------------------------------------------------------
 	thisComponent.currentController.Select(oSheet.getCellByposition(0, 0)) &apos;deseleziona
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;deseleziona			
+	unSelect &apos;deseleziona			
 END Sub
 
 rem ----------------------------------------------------------------------
@@ -920,7 +920,7 @@ End sub
 sub Salva_spazio_A_A &apos; chiamata da aggiorna template
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
-	thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) 
+	unSelect 
 	
 	for i = 0 to 500
 			if oSheet.GetCellByPosition(2, i).string = &quot;SOMMANO &quot; or _
@@ -936,7 +936,7 @@ sub Salva_spazio_A_A &apos; chiamata da aggiorna template
 		oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 		oSheet.isvisible=true
 		ThisComponent.CurrentController.Select(oSheet)
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) 
+		unSelect 
 		for i = 0 to 100
 			if oSheet.GetCellByPosition(2, i).string = &quot;SOMMANO &quot; or _
 				oSheet.GetCellByPosition(2, i).string = &quot;SOMMANO&quot; then 
@@ -949,7 +949,7 @@ sub Salva_spazio_A_A &apos; chiamata da aggiorna template
 		oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 		oSheet.isvisible=true
 		ThisComponent.CurrentController.Select(oSheet)
-		thisComponent.currentController.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) 
+		unSelect 
 	&apos;	print &quot;contab&quot;
 		&apos;if osheet.name &lt;&gt; &quot;S5&quot; then
 		

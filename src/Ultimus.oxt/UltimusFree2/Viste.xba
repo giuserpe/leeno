@@ -36,7 +36,7 @@ Sub Scelta_Viste() &apos;nuova versione universale
 	End If
 sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
-	Print sAttributo
+&apos;	Print sAttributo
  If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
  	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; and _
  	sAttributo &lt;&gt; &quot;TIPO_ANALISI&quot; and _

@@ -122,7 +122,7 @@
             <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/findcode</value>
+            <value>%origin%/icons/image444</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Fitra Codice della voce corrente</value>
@@ -130,6 +130,23 @@
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
           </prop>
+        </node>
+        <node oor:name="Ma56" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.cerca_in_elenco?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/findcode</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Trova voce in Elenco Prezzi</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
         </node>
         <node oor:name="Ma59" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
@@ -576,7 +593,7 @@
           </prop>
         </node>
         <!-- IMPORTA-->
-        <node oor:name="m100" oor:op="replace">
+        <node oor:name="m002" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
@@ -1494,7 +1511,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Strutture.Autofilter_On_Off?language=Basic&amp;location=application</value>
+              <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image444</value>
@@ -1506,7 +1523,24 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m23" oor:op="replace">
+        <node oor:name="m23" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.cerca_in_elenco?language=Basic&amp;location=application</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/findcode</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Trova voce in Elenco Prezzi</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+        </node>
+          <node oor:name="m24" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1523,7 +1557,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m24" oor:op="replace">
+          <node oor:name="m25" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
             </prop>

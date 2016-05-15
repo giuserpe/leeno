@@ -266,6 +266,49 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="Ma115" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value />
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>private:separator</value>
+          </prop>
+        </node>
+        <node oor:name="Ma120" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image8</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Struttura ON</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma130" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image9</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Struttura OFF</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+
       </node>
     </node>
     <!-- ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO -->
@@ -432,48 +475,6 @@
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Riepilogo e firme in calce al COMPUTO</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
-        <node oor:name="Ca49" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value />
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>private:separator</value>
-          </prop>
-        </node>
-        <node oor:name="Ca50" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image8</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Struttura ON</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
-        <node oor:name="Ca60" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image9</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Struttura OFF</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

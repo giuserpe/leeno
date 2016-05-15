@@ -378,7 +378,7 @@ rem ----------------------------------------------------------------------
 	
 
 	Registra_Tasti_Global
-	Registra_Tasti_inDoc &apos; non so se è una buona idea...
+	&apos;Registra_Tasti_inDoc &apos; non so se è una buona idea...
 	&apos;Registra_Variabili AL MOMENTO SEMBRA PREFERIBILE UN RIFERIMENTO DIRETTO!
 
 	Attiva_Sheets_di_Servizio

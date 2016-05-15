@@ -266,40 +266,7 @@ Raggruppa_righe &apos; raggruppo
 End Sub
 
 Sub Struttura_Analisi ()
-	dim oCelle as object
-	oSheet = ThisComponent.currentController.activeSheet
-	lrow= Range2Cell &apos; per ridurre a cella iniziale un eventuale range
-	if lrow = -1 then
-			 
-			exit sub
-	end if
-	oCelle=ThisComponent.CurrentSelection
-
-&apos;	oCelle=
-&apos;	lcS = 0 &apos;oCelle.RangeAddress.StartColumn
-&apos;	lrS = lrow
-&apos;	lcE = oCelle.RangeAddress.EndColumn
-&apos;	lrE = oCelle.RangeAddress.EndRow
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	lastUrow = getLastUsedRow(oSheet)
-	oRange = osheet.getCellRangeByPosition (6,2,6,lastUrow )
-
-	dim document as object
-	dim dispatcher as object
-	document = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	dispatcher.executeDispatch(document, &quot;.uno:AutoOutline&quot;, &quot;&quot;, 0, Array())
-	
-	ThisComponent.CurrentController.Select(oSheet)
-
-	&apos;definische cosa vedi... magari mettere i parametri tra le variabili generali?
-	osheet.showLevel(0,1) &apos; il primo parametro defisce il livello 
-	&apos; il secondo parametro e l&apos;orientamento (0&gt;colonne ; 1 &gt; righe)
-
-&apos;	oCelle=osheet.getCellRangeByPosition (lcS,lrS,lcE,lrE )
-&apos;	oCelle=osheet.getCellRangeByPosition (0,lrS,lcE,lrE )
-	ThisComponent.CurrentController.Select(ocelle)
-
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Analisi&quot;)
 end sub
 
 Sub Togli_Struttura ()

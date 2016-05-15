@@ -2593,18 +2593,29 @@ def struttura_ComputoM():
     struct(1)
     struct(2)
     struct(3)
+
+def struttura_Analisi():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.clearOutline()
     struct(4)
 
 def struct(l):
     ''' mette in vista struttura secondo categorie
     l { integer } : specifica il livello di categoria
+    ### COMPUTO/VARIANTE ###
     1 = categoria
     2 = sotto-categoria
     3 = intera voce di misurazione
-    4 = righi di misurazione di ogni voce
+    ### ANALISI ###
+    4 = simile all'elenco prezzi
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+
     if l == 1:
         stile = 'Livello-1-scritta'
         myrange = ('Livello-1-scritta', 'Comp TOTALI',)
@@ -2615,21 +2626,23 @@ def struct(l):
         myrange = ('livello2 valuta','Livello-1-scritta', 'Comp TOTALI',)
         Dsopra = 1
         Dsotto = 1
-    
     elif l == 3:
-        stile = 'Comp Start Attributo'
-        myrange = ('Comp End Attributo', 'Comp TOTALI',)
-        Dsopra = 0
-        Dsotto = 0
-    elif l == 4:
         stile = 'Comp Start Attributo'
         myrange = ('Comp End Attributo', 'Comp TOTALI',)
         Dsopra = 2
         Dsotto = 1
-    
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
+
+    elif l == 4: #Analisi di Prezzo
+        stile = 'An-1_sigla'
+        myrange = ('An.1v-Att Start', 'Analisi_Sfondo',)
+        Dsopra = 1
+        Dsotto = -1
+        for n in (3, 5, 7):
+            oCellRangeAddr.StartColumn = n
+            oCellRangeAddr.EndColumn = n
+            oSheet.group(oCellRangeAddr,0)
+            oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible=False
+
     test = ultima_voce(oSheet)+2
     lista_cat = list()
     for n in range (0, test):
@@ -2646,7 +2659,7 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-def debug(): #MenuMain():
+def debug_MenuMain():
     '''
     sCella  { string } : stringa di default nella casella di testo
     t       { string } : titolo del dialogo

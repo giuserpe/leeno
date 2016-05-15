@@ -113,7 +113,7 @@ rem UPPERCASE			oSheet.getCellByPosition (4,i).setstring(Ucase(oSheet.getCellByP
 			GoTo vai:
 		end If
 vai:
-Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; lLastUrow-i &amp;&quot; righe...&quot;, 0)
+&apos;Barra_Apri_Chiudi_5(&quot;                              Restano &quot;&amp; lLastUrow-i &amp;&quot; righe...&quot;, 0)
 	Next
 &apos;	AppendItem(elRow(), array (lLastUrow))
 	elleno() = elCap()
@@ -167,10 +167,10 @@ rem colora indice capitoli
 	riga2 = primariga-1&apos; +4
 	k= riga2-riga1+1
 rem ----------------------------------------------------------------------
-	oSheet.getCellByPosition(3, riga1).CellBackColor = RGB(255, 0, 0)
-	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+&apos;	oSheet.getCellByPosition(3, riga1).CellBackColor = RGB(255, 0, 0)
+&apos;	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
 Barra_chiudi_sempre_4
-Exit Sub &apos;
+&apos;Exit Sub &apos;
 rem ----------------------------------------------------------------------
 Adatta_Altezza_riga
 rem ----------------------------------------------------------------------
@@ -257,8 +257,8 @@ rem chiudo il capitolo
 	Loop
 rem ----------------------------------------------------------------------
 	Next i
-&apos;	oSheet.getCellByPosition (3,riga1).CellBackColor = RGB(255, 0, 0)
-&apos;	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+	oSheet.getCellByPosition (3,riga1).CellBackColor = RGB(255, 0, 0)
+	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
 Focus_su_altro_Doc (completo)
 	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Listino&quot;).GetCellByPosition(0,0))
 rem ----------------------------------------------------------------------
@@ -308,17 +308,17 @@ Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; urow-i &amp;&quo
 	next 
 End Sub
 rem ----------------------------------------------------------------------
-Sub listino_toscana_2015 &apos;Giuseppe Vizziello 2015
+Sub listino_toscana_2016 &apos;Giuseppe Vizziello 2015
 &apos;http://prezzariollpp.regione.toscana.it/
 	Dim test As String
 	Dim articoli()
 	completo = ThisComponent.getURL()
-	ente = Replace_G(thiscomponent.title, &quot;.ods&quot;, &quot;&quot;)
- 	sName = Replace_G(thiscomponent.title, &quot;.ods&quot;, &quot;-leeno.ods&quot;)
+	ente = Replace_G(thiscomponent.title, &quot;.xls&quot;, &quot;&quot;)
+ 	sName = Replace_G(thiscomponent.title, &quot;.xls&quot;, &quot;-leeno.ods&quot;)
 	path = Replace_G(completo, thiscomponent.title, &quot;&quot;)
 	newListino = path &amp; sName
 	oSheet=ThisComponent.currentController.activeSheet
-	Search_replace (oSheet, &quot;TOS15_&quot;, &quot;&quot;)
+	Search_replace (oSheet, &quot;TOS16_&quot;, &quot;&quot;)
 	&apos;oSheet.getCellRangeByName(&apos;F5&apos;)
 	&apos;xray oSheet
 &apos;#########################################################################
@@ -362,7 +362,7 @@ rem ----------------------------------------------------------------------
 		Appenditem(articoli(), riga)
 rem ----------------------------------------------------------------------
 		oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
-		oBarra.Start(&quot; Conversione in corso... &quot; &amp; i &amp;&quot;/&quot;&amp; lRowE, i/lRowE*100)
+&apos;		oBarra.Start(&quot; Conversione in corso... &quot; &amp; i &amp;&quot;/&quot;&amp; lRowE, i/lRowE*100)
 	Next
 rem ----------------------------------------------------------------------
 rem prendo i valori della prima riga per i raffronti con i successivi
@@ -475,7 +475,7 @@ fine:
 &apos;	Next i
 	i=i+1
 	oBarra = thisComponent.GetCurrentController.GetFrame.CreateStatusIndicator
-	oBarra.Start(&quot; Conversione in corso... &quot; &amp; i &amp;&quot;/&quot;&amp; test,0)
+&apos;	oBarra.Start(&quot; Conversione in corso... &quot; &amp; i &amp;&quot;/&quot;&amp; test,0)
 	Loop
 rem ----------------------------------------------------------------------
 rem ultima riga

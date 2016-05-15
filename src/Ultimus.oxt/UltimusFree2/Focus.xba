@@ -183,11 +183,15 @@ END SUB
 &apos;##############################################################
 Sub Sel_Altre_Opz() &apos; porta la vista (la selezione) su Menu Principale
 &apos; questa è un casino ma va meglio....
+	For Each sName In GetmyToolBarNames()
+		toolbar_on (sName, 0)
+	Next
 	Toolbar_vedi
 	If ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false and _
 		ThisComponent.Sheets.hasByName(&quot;S1&quot;) = false and _
 		ThisComponent.Sheets.hasByName(&quot;S2&quot;) = false then
-	Exit sub : End If
+		Exit sub
+	End If
 	 ThisComponent.lockControllers 
 	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = False 
 

@@ -127,7 +127,7 @@ sub AGGIORNA_TEMPLATE &apos;main
 		rimuovi_SC_Doc 
 	end if
 	&apos;Registra_Tasti_Global
-	Registra_Tasti_inDoc
+	&apos;Registra_Tasti_inDoc
 	
 	
  	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;

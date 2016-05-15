@@ -23,7 +23,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
 Public Const versioneUF_minor= 13			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;2&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_subversion= &quot;3.dev&quot;		&apos;CORREZIONE BUGS
 Sub setta_versione
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
@@ -53,8 +53,8 @@ Function GetmyToolBarNames()
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, _
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI&quot;, _
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO&quot;, _
-		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, _
 	)
+&apos;		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, _
 End Function
 rem ######################################################################
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
@@ -62,6 +62,7 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 	If Not ThisComponent.Sheets.HasByName(&quot;S1&quot;) Then Exit Sub
  	Setta_Cost_Gen
+ 	setta_versione
 	codice_da_cercare_in_elenco = &quot;&quot;
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	bak_timestamp
@@ -77,7 +78,6 @@ rem visualizza le toolbar leeno
 &apos;	For Each sName In GetmyToolBarNames()
 &apos;		toolbar_on (sName, 1)
 &apos;	Next
-	toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, 0)
 &apos; imposto la VarG della contabilità S1.H328
 	If ThisComponent.Sheets.HasByName(&quot;CONTABILITA&quot;) Then
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1

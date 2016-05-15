@@ -213,15 +213,25 @@ esegui:
 	 			If	oDialogScenari_EP.getControl(&quot;CBSom&quot;).State = 1 Then Rifa_AA_BB_Computo
 	 		EndIf 	 		
 		case &quot;TIPO_ANALISI&quot;
-			oDialogScenari_AN = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
-			oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
+			oDialogScenari_AN = CreateUnoDialog(DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
+			If oSheet.GetCellByPosition(1 ,2).Rows.OptimalHeight = false Then oDialogScenari_AN.getControl(&quot;CBDesc&quot;).State = 1
+	&apos;		oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
 		Select Case oDialogScenari_AN.Execute()
 		Case 1
 		Case 0
 			Exit Sub
 		End Select
+&apos;#########################################################################
+&apos; esegui azioni
+		If	oDialogScenari_AN.getControl(&quot;CBDesc&quot;).State = 1 And _
+			oSheet.GetCellByPosition(1 ,2).Rows.OptimalHeight = True Then
+			Tronca_Altezza_Analisi
+		Else
+			If oDialogScenari_AN.getControl(&quot;CBDesc&quot;).State = 0 Then
+			Adatta_h_riga_intera_tabella(oSheet.Name)
+			EndIf
+		EndIf
  	end select
-
 END SUB
 
 

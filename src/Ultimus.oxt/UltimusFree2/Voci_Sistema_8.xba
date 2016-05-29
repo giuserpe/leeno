@@ -214,7 +214,7 @@ end SUB
 								&apos; fatta nel luglio 2008;: ottima e pulita... Aggiornata gen 2011&apos;
 Sub Riformatta_Voci_computo &apos; &apos; mette gli attributi voce anche a un computo vecchio (ma non troppo vecchio)
 							&apos; e lo riformatta secondo la maschera in S5
-
+&apos;non funziona
 			Adomanda = msgbox ( &quot;Sto per riformattare le voci di computo!&quot;&amp; CHR$(10)_
 		 	&amp;&quot; (Si consiglia di salvare prima il doc)&quot;&amp; CHR$(10)_
 		 	&amp;&quot;Eseguo la riformattazione? (Se rispondi NO, ti proporrò altre azioni)&quot; ,35, &quot;&quot;)	
@@ -353,7 +353,7 @@ Sub Riformatta_Voci_computo &apos; &apos; mette gli attributi voce anche a un co
 		 		Case 6
 							&apos;questa dovrebbe costruire i tag
 							compila_tag_con_codice_voce (0)
-							Ripara_tag_corrotti (0)
+			&apos;				Ripara_tag_corrotti (0)
 						Case 2
 							exit sub
 					end select		
@@ -381,7 +381,7 @@ End Sub
 
 &apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-sub Ripara_tag_corrotti (msg As Boolean)
+sub Ripara_tag_corrotti (msg As Boolean) &apos;NON USATA
 &apos; cioè i tag dei componenti che hanno perso il link alla riga sotto (quella di sommano)&apos;
  oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
  &apos; oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)&apos;pirlicchio
@@ -439,60 +439,6 @@ sub Ripara_tag_corrotti (msg As Boolean)
 	end if
 end sub
 
-
-&apos;ATTENZIONE NON FUNZIONA:::
-sub ricostruisci_tag &apos;mette insieme compila_tag_con_codice_voce e Ripara_tag_corrotti
-&apos;NON FUNZIONA E INCASUNA TUTTO
- oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
- oCell = oSheet.GetCellbyPosition( 0, 0 )
- oCursor = oSheet.createCursorByRange(oCell)
- oCursor.GotoEndOfUsedArea(True)
- aAddress = oCursor.RangeAddress
- nEndRow = aAddress.EndRow
-	 lRow = 10	
-
-lrow = 200
-
- For nCurRow = lrow To nEndRow &apos;row by row.
- ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, nCurRow))
-
- 	If oSheet.GetCellByPosition( 0, nCurRow ).CellStyle = &quot;Comp Start Attributo&quot; then &apos; or oCellB.CellStyle = &quot;livello2 valuta&quot;
- 		lrow = nCurRow
- 		
- 			do while oSheet.GetCellByPosition( 1, lrow ).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot; or _
- 					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
- 				&apos;	 print &quot;ciccia &quot; &amp; lrow
- 				lrow=lrow+1	
- 			loop
- 			sFormula1 = &quot;=AF$&quot; &amp; lRow+1
- 			sFormula2 = &quot;=AG$&quot; &amp; lRow+1
- 			sFormulaC = &quot;=AJ$&quot; &amp; lRow+1
- 			sFormulaB = &quot;=AI$&quot; &amp; lRow+1
- 			sFormulaA = &quot;=AH$&quot; &amp; lRow+1
- 			sFormula = &quot;=B&quot; &amp; nCurRow+1 			
- 			lRow = nCurRow
- 			oSheet.GetCellByPosition(35 , lrow).Formula = sFormula
- 			oSheet.GetCellByPosition(31 , lrow).Cellstyle = &quot;compTagRiservato&quot;					
-			oSheet.GetCellByPosition(32 , lrow).Cellstyle=&quot;compTagRiservato&quot;
-			oSheet.GetCellByPosition(35 , lrow).Cellstyle=&quot;compTagRiservato&quot;
- 			do while oSheet.GetCellByPosition( 1, lrow ).CellStyle &lt;&gt; &quot;comp sotto Bianche&quot; or _
- 					oSheet.GetCellByPosition( 0, lrow ).CellStyle &lt;&gt; &quot;Comp End Attributo&quot;
- 				oSheet.GetCellByPosition(31 , lrow).Formula = sFormula1
- 				oSheet.GetCellByPosition(32 , lrow).Formula = sFormula2
- 				oSheet.GetCellByPosition(33 , lrow).Formula = sFormulaA
- 				oSheet.GetCellByPosition(34 , lrow).Formula = sFormulaB
-				oSheet.GetCellByPosition(35 , lrow).Formula = sFormulaC
-				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, lrow))
-				lrow = lrow + 1
- 			loop&apos;		
-		end if
- Next nCurRow
- suona_2
- &apos;suona_lungo
-	print &quot;fine riparazione degli eventuali tag corrotti...&quot;
-end sub
-
-
 sub compila_tag_con_codice_voce (msg As Boolean)
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
@@ -532,24 +478,4 @@ sub compila_tag_con_codice_voce (msg As Boolean)
  end if
 
 end sub
-
-
-
-function riproduci_colori (nCurCol, nCurRow, nEndcol, nEndRow as long) &apos; in lavorazione e non usata
-oSheet = ThisComponent.currentController.activeSheet
-&apos; For nCurCol To nEndCol &apos;Go through the range column by column,
-&apos;&apos; For nCurRow = 0 To nEndRow &apos;row by row.
-&apos; oCellSRC = oSheet.GetCellByPosition( nCurCol, nCurRow )
-&apos; lcolorSRC=oCellSRC.Cellbackcolor
- &apos; lCharColorSRC=oCellSRC.CharColor
- &apos; xray oCellSRC
-&apos; oCellDest = oSheetDest.GetCellByPosition( nCurCol, nCurRow )
-&apos; oCellDest.Cellbackcolor = lcolorSRC 
- &apos; oCellDest.CharColor = lCharColorSRC 
- 
- &apos; xray oCellDest
-&apos; Next
-&apos; Next
-End function
-
 </script:module>

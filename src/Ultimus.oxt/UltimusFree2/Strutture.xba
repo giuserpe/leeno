@@ -33,6 +33,7 @@ Sub Tutti_Subtotali
 end sub
 &apos;#########################################################################
 Sub Autofilter_On_Off &apos;per filtro Automatico su tabelle di tipo computo
+
 &apos; Attiva /disattiva il filtro creato con questa macro
 &apos; disattiva un filtro creato dalla GUI
 	oDbRanges = StarDesktop.CurrentComponent.DatabaseRanges	
@@ -62,15 +63,18 @@ Sub Autofilter_On_Off &apos;per filtro Automatico su tabelle di tipo computo
 end sub
 &apos;#########################################################################
 
-sub Crea_AutoFilter &apos; sul computo
+sub Crea_AutoFilter &apos; sul computo NON USATA
+Exit Sub 
 
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	sAttributo = Trova_Attr_Sheet
- If osheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;#4 Questo comando si può usare solo&quot; &amp; CHR$(10)_
- 			 &amp;&quot; in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
-			exit sub
-	end if
+	If osheet.Name = &quot;COMPUTO&quot; Or _
+  		osheet.Name = &quot;VARIANTE&quot; Then
+		GoTo vai:
+  	else
+		exit Sub
+	end If
+vai:
 	lStartRow = oSheet.GetCellByPosition( 0 , 0)
 	lLastUrowNN = getLastUsedRow(oSheet)
 	lLastUcol = getLastUsedCol(oSheet)

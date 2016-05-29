@@ -12,7 +12,7 @@
 &apos;_______________________________________________________________________________________
 
 rem ______________________________________________________
-
+&apos;QUESTA PUO&apos; ESSERE UTILE - 
 Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette 
 							&apos; e lo riformatta decondo la maschera in S5
 
@@ -151,7 +151,7 @@ Sub Riformatta_Voci_Analisi &apos; &apos; appioppa il giusto stile mette
 		 		Case 6
 							&apos;questa dovrebbe costruire i tag
 							compila_tag_con_codice_voce (0)
-							Ripara_tag_corrotti (0)
+						&apos;	Ripara_tag_corrotti (0)
 						Case 2
 							exit sub
 					end select		

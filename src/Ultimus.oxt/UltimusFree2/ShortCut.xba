@@ -13,7 +13,7 @@ rem Il codice contenuto in questo modulo è parte integrante del pacchettFo Ulti
 &apos;_______________________________________________________________________________________
 
 Sub Registra_Tasti_inDoc &apos; a livello del documento
-&apos;Exit Sub 
+Exit Sub 
 	on error resume next	
 	Dim aKeyEvent As New com.sun.star.awt.KeyEvent
 	
@@ -471,6 +471,7 @@ shortCuts.removeKeyEvent(aKeyEvent)
 	End with
 	UIcfgMgr = thisComponent.UIConfigurationManager 
 	shortCuts = UicfgMgr.ShortCutManager
+	print
 &apos;	shortCuts.setKeyEvent( aKeyEvent, &quot;vnd.sun.star.script:UltimusFree2.Strutture.Autofilter_On_Off?language=Basic&amp;location=application&quot; )
 shortCuts.removeKeyEvent(aKeyEvent)
 	shortCuts.store()
@@ -803,7 +804,7 @@ end sub
 &apos; svuota il file Current .xml di un documento (file picker)
 Sub removeKeyConfigurationFromDoc(optional sFileURL as string)
 	&apos;rimuove 
-&apos;exit sub
+exit sub
  if isnull(sFileURL) or isEmpty(sFileURL) Then
  		sFileURL = GetFileURL( _
  	&quot;Select a file you want to remove the key configuration.&quot;)

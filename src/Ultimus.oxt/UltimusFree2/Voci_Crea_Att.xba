@@ -230,14 +230,14 @@ rem in tal caso annoto il sal successivo
 
 SISTEMA_I_TAG:
 		i = 0
-	do while i &lt;4
-		oSheet.getCellByPosition(31, lrow+i).setformula(&quot;=AF$&quot; &amp; lrow +5) &apos;CAT serve???
-		oSheet.getCellByPosition(32, lrow+i).setformula(&quot;=AG$&quot; &amp; lrow +5) &apos;subCAT serve???
-		oSheet.getCellByPosition(33, lrow+i).setformula(&quot;=AH$&quot; &amp; lrow +5)
-		oSheet.getCellByPosition(34, lrow+i).setformula(&quot;=AI$&quot; &amp; lrow +5)
-		oSheet.getCellByPosition(35, lrow+i).setformula(&quot;=AJ$&quot; &amp; lrow +5)
-		i=i+1
-	Loop
+&apos;	do while i &lt;4
+&apos;		oSheet.getCellByPosition(31, lrow+i).setformula(&quot;=AF$&quot; &amp; lrow +5) &apos;CAT serve???
+&apos;		oSheet.getCellByPosition(32, lrow+i).setformula(&quot;=AG$&quot; &amp; lrow +5) &apos;subCAT serve???
+&apos;		oSheet.getCellByPosition(33, lrow+i).setformula(&quot;=AH$&quot; &amp; lrow +5)
+&apos;		oSheet.getCellByPosition(34, lrow+i).setformula(&quot;=AI$&quot; &amp; lrow +5)
+&apos;		oSheet.getCellByPosition(35, lrow+i).setformula(&quot;=AJ$&quot; &amp; lrow +5)
+&apos;		i=i+1
+&apos;	Loop
 		oSheet.getCellByPosition(36, lrow+i).Formula = &quot;=IF(ISERROR(P&quot;&amp; lrow +5 &amp;&quot;);&quot;&quot;&quot;&quot;;IF(P&quot;&amp; lrow +5 &amp;&quot;&lt;&gt;&quot;&quot;&quot;&quot;;P&quot;&amp; lrow +5 &amp;&quot;;&quot;&quot;&quot;&quot;))&quot;
 		oSheet.getCellByPosition(36, lrow+i).cellstyle = &quot;comp -controolo&quot;
 

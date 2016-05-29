@@ -920,11 +920,11 @@ procedi_computo:
 		oSheet.copyRange(oDest, oRangeData)
 &apos;	Print 
 rem immissione tags cat/subcat
-		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
 rem imposto gli stili
 &apos;		oSheet.getCellRangeByPosition(5, lrow, 7, lrow,).CellStyle = &quot;comp 1-a&quot;
 &apos;		oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot;
@@ -956,11 +956,11 @@ rem ci metto le formule
 		EndIf
 procedi:
 rem immissione tags cat/subcat
-		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
-		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; sotto+2)
+&apos;		oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; sotto+2)
 rem imposto gli stili		
 		oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot;
 		oSheet.GetCellByPosition(2, lrow).CellStyle = &quot;comp 1-a&quot;

@@ -1518,7 +1518,7 @@
               <value>%origin%/icons/image444</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>Filtro Automatico sul Computo ON/OFF</value>
+              <value>Filtra Codice della voce corrente</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>

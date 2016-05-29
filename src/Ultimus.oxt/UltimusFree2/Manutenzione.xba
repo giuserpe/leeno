@@ -616,7 +616,7 @@ rem ----------------------------------------------------------------------
 rem controllo TAG su riga dei totali
 			oSheet.getCellByPosition(33, lRow).setstring(&quot;R&quot;)			&apos;tag A
 			oSheet.getCellByPosition(34, lRow).setstring(&quot;Cx&quot;)			&apos;tag B
-			oSheet.getCellByPosition(35, lRow).setformula(&quot;=B&quot; &amp; i+2)	&apos;tag C
+&apos;			oSheet.getCellByPosition(35, lRow).setformula(&quot;=B&quot; &amp; i+2)	&apos;tag C
 rem di queste se ne occupa Rinumera_TUTTI_Capitoli2
 	&apos;		oSheet.getCellByPosition(31, lRow).setformula(&quot;=AF$&quot; &amp; sotto+1)
 	&apos;		oSheet.getCellByPosition(32, lRow).setformula(&quot;=AG$&quot; &amp; sotto+1)
@@ -635,11 +635,11 @@ oSheet.GetCellByPosition( 10 , ii).formula = &quot;&quot;
 				i = lRow &apos;+ 1
 			Next
 			For ii = itag To etag-1
-				oSheet.getCellByPosition(31, ii).setformula(&quot;=AF$&quot; &amp; etag+1)
-				oSheet.getCellByPosition(32, ii).setformula(&quot;=AG$&quot; &amp; etag+1)
-				oSheet.getCellByPosition(33, ii).setformula(&quot;=AH$&quot; &amp; etag+1)
-				oSheet.getCellByPosition(34, ii).setformula(&quot;=AI$&quot; &amp; etag+1)
-				oSheet.getCellByPosition(35, ii).setformula(&quot;=AJ$&quot; &amp; etag+1)
+&apos;				oSheet.getCellByPosition(31, ii).setformula(&quot;=AF$&quot; &amp; etag+1)
+&apos;				oSheet.getCellByPosition(32, ii).setformula(&quot;=AG$&quot; &amp; etag+1)
+&apos;				oSheet.getCellByPosition(33, ii).setformula(&quot;=AH$&quot; &amp; etag+1)
+&apos;				oSheet.getCellByPosition(34, ii).setformula(&quot;=AI$&quot; &amp; etag+1)
+&apos;				oSheet.getCellByPosition(35, ii).setformula(&quot;=AJ$&quot; &amp; etag+1)
 			Next
 		EndIf
 	Next

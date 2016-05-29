@@ -18,6 +18,8 @@ import os, sys, uno, unohelper, pyuno, logging, shutil, base64
 from datetime import datetime, date
 from com.sun.star.beans import PropertyValue
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
+from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING, 
+    ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED)
 ########################################################################
 def LeenO_path():
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -421,7 +423,6 @@ def ultima_voce (oSheet):
                                                         'Comp End Attributo_R', 'comp Int_colonna', 'comp Int_colonna_R_prima',
                                                         'Livello-1-scritta', 'livello2 valuta'):
             break
-
     return n
 ########################################################################
 def uFindString (sString, oSheet):
@@ -442,6 +443,141 @@ def uFindString (sString, oSheet):
     # ritocco di +Daniele Zambelli:
             if sString in oSheet.getCellByPosition(nCol,nRow).String:
                  return (nCol,nRow)
+########################################################################
+def copia_sheet (nSheet, tag):
+    '''
+    nSheet   { string } : nome sheet
+    tag      { string } : stringa di tag
+    duplica copia sheet corrente di fianco a destra
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ nSheet = 'COMPUTO'
+    oSheet = oDoc.getSheets().getByName(nSheet)
+    idSheet = oSheet.RangeAddress.Sheet + 1
+    if oDoc.getSheets().hasByName(nSheet +'_'+ tag) == True:
+        MsgBox('La tabella di nome '+ nSheet +'_'+ tag + 'è già presente.', 'ATTENZIONE! Impossibile procedere.')
+        return
+    else:
+        oDoc.Sheets.copyByName(nSheet, nSheet +'_'+ tag, idSheet)
+        oSheet = oDoc.getSheets().getByName(nSheet +'_'+ tag)
+        oDoc.CurrentController.select(oSheet)
+        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+########################################################################
+def debugpuliscixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for lrow in reversed(range(0, ultima_voce (oSheet))):
+        if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
+            oSheet.getCellByPosition(31,lrow).String = ''
+            oSheet.getCellByPosition(32,lrow).String = ''
+            oSheet.getCellByPosition(33,lrow).String = ''
+            oSheet.getCellByPosition(34,lrow).String = ''
+            oSheet.getCellByPosition(35,lrow).String = ''
+    _gotoSheet('S5')
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for lrow in reversed(range(0, ultima_voce (oSheet))):
+        if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
+            oSheet.getCellByPosition(31,lrow).String = ''
+            oSheet.getCellByPosition(32,lrow).String = ''
+            oSheet.getCellByPosition(33,lrow).String = ''
+            oSheet.getCellByPosition(34,lrow).String = ''
+            oSheet.getCellByPosition(35,lrow).String = ''
+    _gotoSheet('VARIANTE')
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for lrow in reversed(range(0, ultima_voce (oSheet))):
+        if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
+            oSheet.getCellByPosition(31,lrow).String = ''
+            oSheet.getCellByPosition(32,lrow).String = ''
+            oSheet.getCellByPosition(33,lrow).String = ''
+            oSheet.getCellByPosition(34,lrow).String = ''
+            oSheet.getCellByPosition(35,lrow).String = ''
+def Filtra_computo(nSheet, nCol, sString):
+    '''
+    nSheet   { string } : nome Sheet
+    ncol     { integer } : colonna di tag
+    sString  { string } : stringa di tag
+    crea una nuova sheet contenente le sole voci filtrate
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    copia_sheet (nSheet, sString)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for lrow in reversed(range(0, ultima_voce (oSheet))):
+        try:
+            sStRange = Circoscrive_Voce_Computo_Att (lrow)
+            sopra = sStRange.RangeAddress.StartRow
+            sotto = sStRange.RangeAddress.EndRow
+            if nCol ==1:
+                test=sopra+1
+            else:
+                test=sotto
+            if sString != oSheet.getCellByPosition(nCol,test).String:
+                oSheet.getRows().removeByIndex(sopra, sotto-sopra+1)
+                lrow =next_voice(lrow,0)
+        except:
+            lrow =next_voice(lrow,0)
+    for lrow in range(3, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(18,lrow).CellStyle == 'Livello-1-scritta mini val' and \
+        oSheet.getCellByPosition(18,lrow).Value == 0 or \
+        oSheet.getCellByPosition(18,lrow).CellStyle == 'livello2 scritta mini' and \
+        oSheet.getCellByPosition(18,lrow).Value == 0:
+
+            oSheet.getRows().removeByIndex(lrow, 1)
+
+    #~ iCellAttr = (oDoc.createInstance("com.sun.star.sheet.CellFlags.OBJECTS"))
+    flags = OBJECTS
+    oSheet.getCellRangeByPosition (0,0,42,0).clearContents(flags) #cancello gli oggetti
+    oDoc.CurrentController.select(oSheet.getCellByPosition(0,3))
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+########################################################################
+def Sel_Filtro ():
+    _gotoSheet('S3')
+    _gotoCella(7,8)
+########################################################################
+def Filtra_Computo_Cap ():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    nSheet = oSheet.getCellByPosition(7,8).String
+    sString = oSheet.getCellByPosition(7,10).String
+    Filtra_computo(nSheet, 31, sString)
+########################################################################
+def Filtra_Computo_SottCap ():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    nSheet = oSheet.getCellByPosition(7,8).String
+    sString = oSheet.getCellByPosition(7,12).String
+    Filtra_computo(nSheet, 32, sString)
+########################################################################
+def Filtra_Computo_A ():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    nSheet = oSheet.getCellByPosition(7,8).String
+    sString = oSheet.getCellByPosition(7,14).String
+    Filtra_computo(nSheet, 33, sString)
+########################################################################
+def Filtra_Computo_B ():
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    nSheet = oSheet.getCellByPosition(7,8).String
+    sString = oSheet.getCellByPosition(7,16).String
+    Filtra_computo(nSheet, 34, sString)
+########################################################################
+def Filtra_Computo_C (): #filtra in base al codice di prezzo
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    nSheet = oSheet.getCellByPosition(7,8).String
+    sString = oSheet.getCellByPosition(7,20).String
+    Filtra_computo(nSheet, 1, sString)
+########################################################################
+def _gotoSheet (nSheet):
+    '''
+    nSheet   { string } : nome Sheet
+    attiva e seleziona una sheet
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.Sheets.getByName(nSheet)
+    oSheet.IsVisible = True
+    oDoc.CurrentController.select(oSheet)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def _gotoCella (IDcol, IDrow):
     '''
@@ -824,7 +960,7 @@ def XPWE_export():
     of.write(riga)
     MsgBox('Esportazione in formato XPWE eseguita con successo\nsul file ' + out_file + '!','Avviso.')
 ########################################################################
-def debug___():
+def debugx___():
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
@@ -871,19 +1007,19 @@ def Circoscrive_Voce_Computo_Att (lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ lrow = Range2Cell()[1]
-    if oSheet.Name in ('VARIANTE', 'COMPUTO','CONTABILITA'):
-         if oSheet.getCellByPosition(0, lrow).CellStyle in ('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-1-scritta', 'livello2 valuta'):
-            if oSheet.getCellByPosition (0, lrow).CellStyle in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-                lrowS=lrow
-            else:
-                while oSheet.getCellByPosition(0, lrow).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-                    lrow = lrow-1
-                lrowS=lrow
-            lrow = lrowS
-            ### cerco l'ultima riga
-            while oSheet.getCellByPosition (0, lrow).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
-                lrow=lrow+1
-            lrowE=lrow
+    #~ if oSheet.Name in ('VARIANTE', 'COMPUTO','CONTABILITA'):
+    if oSheet.getCellByPosition(0, lrow).CellStyle in ('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-1-scritta', 'livello2 valuta'):
+        if oSheet.getCellByPosition (0, lrow).CellStyle in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+            lrowS=lrow
+        else:
+            while oSheet.getCellByPosition(0, lrow).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                lrow = lrow-1
+            lrowS=lrow
+        lrow = lrowS
+        ### cerco l'ultima riga
+        while oSheet.getCellByPosition (0, lrow).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
+            lrow=lrow+1
+        lrowE=lrow
     celle=oSheet.getCellRangeByPosition(0,lrowS,250,lrowE)
     return celle
 ########################################################################
@@ -924,11 +1060,11 @@ def copia_riga_computo(lrow):
             pass
         oSheet.getRows().insertByIndex(lrow,1)
 # immissione tags cat/subcat
-        oSheet.getCellByPosition(31, lrow).Formula = '=AF$' +str(sotto+2)
-        oSheet.getCellByPosition(32, lrow).Formula = '=AG$' +str(sotto+2)
-        oSheet.getCellByPosition(33, lrow).Formula = '=AH$' +str(sotto+2)
-        oSheet.getCellByPosition(34, lrow).Formula = '=AI$' +str(sotto+2)
-        oSheet.getCellByPosition(35, lrow).Formula = '=AJ$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(31, lrow).Formula = '=AF$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(32, lrow).Formula = '=AG$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(33, lrow).Formula = '=AH$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(34, lrow).Formula = '=AI$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(35, lrow).Formula = '=AJ$' +str(sotto+2)
 # imposto gli stili
         oSheet.getCellRangeByPosition(5, lrow, 7, lrow,).CellStyle = 'comp 1-a'
         oSheet.getCellByPosition(0, lrow).CellStyle = 'comp 10 s'
@@ -959,11 +1095,11 @@ def copia_riga_contab(lrow):
             lrow = lrow-1
         oSheet.getRows().insertByIndex(lrow,1)
     # immissione tags cat/subcat
-        oSheet.getCellByPosition(31, lrow).Formula = '=AF$' +str(sotto+2)
-        oSheet.getCellByPosition(32, lrow).Formula = '=AG$' +str(sotto+2)
-        oSheet.getCellByPosition(33, lrow).Formula = '=AH$' +str(sotto+2)
-        oSheet.getCellByPosition(34, lrow).Formula = '=AI$' +str(sotto+2)
-        oSheet.getCellByPosition(35, lrow).Formula = '=AJ$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(31, lrow).Formula = '=AF$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(32, lrow).Formula = '=AG$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(33, lrow).Formula = '=AH$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(34, lrow).Formula = '=AI$' +str(sotto+2)
+        #~ oSheet.getCellByPosition(35, lrow).Formula = '=AJ$' +str(sotto+2)
     # imposto gli stili
         oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo_R'
         oSheet.getCellByPosition(2, lrow).CellStyle = 'comp 1-a'
@@ -1118,21 +1254,21 @@ def ins_voce_computo_grezza(lrow):
 # correggo alcune formule
     oSheet.getCellByPosition(13,lrow+3).Formula ='=J'+str(lrow+4)
 # sistemo i LINK dei tagG nelle righe sopra al tag vero e prorio...
-    oSheet.getCellByPosition(31, lrow+2).Formula = '=AF$'+str(lrow+4)
-    oSheet.getCellByPosition(32, lrow+2).Formula = '=AG$'+str(lrow+4)
-    oSheet.getCellByPosition(33, lrow+2).Formula = '=AH$'+str(lrow+4)
-    oSheet.getCellByPosition(34, lrow+2).Formula = '=AI$'+str(lrow+4)
-    oSheet.getCellByPosition(35, lrow+2).Formula = '=AJ$'+str(lrow+4)
-    oSheet.getCellByPosition(31, lrow+1).Formula = '=AF$'+str(lrow+4)
-    oSheet.getCellByPosition(32, lrow+1).Formula = '=AG$'+str(lrow+4)
-    oSheet.getCellByPosition(33, lrow+1).Formula = '=AH$'+str(lrow+4)
-    oSheet.getCellByPosition(34, lrow+1).Formula = '=AI$'+str(lrow+4)
-    oSheet.getCellByPosition(35, lrow+1).Formula = '=AJ$'+str(lrow+4)
-    oSheet.getCellByPosition(31, lrow).Formula = '=AF$'+str(lrow+4)
-    oSheet.getCellByPosition(32, lrow).Formula = '=AG$'+str(lrow+4)
-    oSheet.getCellByPosition(33, lrow).Formula = '=AH$'+str(lrow+4)
-    oSheet.getCellByPosition(34, lrow).Formula = '=AI$'+str(lrow+4)
-    oSheet.getCellByPosition(35, lrow).Formula = '=AJ$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(31, lrow+2).Formula = '=AF$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(32, lrow+2).Formula = '=AG$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(33, lrow+2).Formula = '=AH$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(34, lrow+2).Formula = '=AI$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(35, lrow+2).Formula = '=AJ$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(31, lrow+1).Formula = '=AF$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(32, lrow+1).Formula = '=AG$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(33, lrow+1).Formula = '=AH$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(34, lrow+1).Formula = '=AI$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(35, lrow+1).Formula = '=AJ$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(31, lrow).Formula = '=AF$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(32, lrow).Formula = '=AG$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(33, lrow).Formula = '=AH$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(34, lrow).Formula = '=AI$'+str(lrow+4)
+    #~ oSheet.getCellByPosition(35, lrow).Formula = '=AJ$'+str(lrow+4)
     if oSheet.getCellByPosition(31, lrow-1).CellStyle in ('livello2 valuta', 'Livello-1-scritta', 'compTagRiservato'):
         oSheet.getCellByPosition(31, lrow+3).Value = oSheet.getCellByPosition(31, lrow-1).Value
         oSheet.getCellByPosition(32, lrow+3).Value = oSheet.getCellByPosition(32, lrow-1).Value
@@ -1607,11 +1743,11 @@ def parziale_core(lrow):
             oSheet.getCellByPosition (8, lrow).CellStyle = 'comp sotto BiancheS'
             oSheet.getCellByPosition (9, lrow).CellStyle = 'Comp-Variante num sotto'
 
-            oSheet.getCellByPosition(31, lrow).Formula ='=AF$' + str(sotto+2)
-            oSheet.getCellByPosition(32, lrow).Formula ='=AG$' + str(sotto+2)
-            oSheet.getCellByPosition(33, lrow).Formula ='=AH$' + str(sotto+2)
-            oSheet.getCellByPosition(34, lrow).Formula ='=AI$' + str(sotto+2)
-            oSheet.getCellByPosition(35, lrow).Formula ='=AJ$' + str(sotto+2)
+            #~ oSheet.getCellByPosition(31, lrow).Formula ='=AF$' + str(sotto+2)
+            #~ oSheet.getCellByPosition(32, lrow).Formula ='=AG$' + str(sotto+2)
+            #~ oSheet.getCellByPosition(33, lrow).Formula ='=AH$' + str(sotto+2)
+            #~ oSheet.getCellByPosition(34, lrow).Formula ='=AI$' + str(sotto+2)
+            #~ oSheet.getCellByPosition(35, lrow).Formula ='=AJ$' + str(sotto+2)
             
             oSheet.getCellByPosition (8, lrow).Formula = '''=CONCATENATE("Parziale [";VLOOKUP(B'''+ str(sopra+2) + ''';elenco_prezzi;3;FALSE());"]")'''
 

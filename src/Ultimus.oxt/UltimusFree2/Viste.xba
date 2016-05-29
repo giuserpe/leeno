@@ -62,7 +62,7 @@ esegui:
 			If oSheet.getColumns.getByIndex(17).isVisible = True Then oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 1
 			If oSheet.getColumns.getByIndex(29).isVisible = True Then oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 1
 			If oSheet.getColumns.getByIndex(31).isVisible = True Then oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 1
-			If oSheet.getColumns.getByIndex(32).isVisible = True Then oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 1
+			If oSheet.getColumns.getByIndex(33).isVisible = True Then oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 1
 			If oSheet.getColumns.getByIndex(38).isVisible = True Then oDialogScenari_A.getControl(&quot;CBFig&quot;).State = 1
 &apos;			If abbreviata = 1 Then oDialogScenari_A.getControl(&quot;CBDesc&quot;).State = 1
 

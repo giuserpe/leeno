@@ -312,14 +312,14 @@ AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
 	oSheet.getCellRangeByPosition(9, lrow+2, 9, sotto-2).cellstyle = &quot;Comp-Variante&quot;			&apos;righe positivi
 	oSheet.getCellRangeByPosition(11, lrow+2, 11, sotto-2).cellstyle = &quot;Comp-Variante&quot;			&apos;righe negativi
 	i = 1
-	do while i &lt; Hvoce+1
-		oSheet.getCellByPosition(31, sotto-i).setformula(&quot;=AF$&quot; &amp; sotto+1)
-		oSheet.getCellByPosition(32, sotto-i).setformula(&quot;=AG$&quot; &amp; sotto+1)
-		oSheet.getCellByPosition(33, sotto-i).setformula(&quot;=AH$&quot; &amp; sotto+1)
-		oSheet.getCellByPosition(34, sotto-i).setformula(&quot;=AI$&quot; &amp; sotto+1)
-		oSheet.getCellByPosition(35, sotto-i).setformula(&quot;=AJ$&quot; &amp; sotto+1)
-		i=i+1
-	loop
+&apos;	do while i &lt; Hvoce+1
+&apos;		oSheet.getCellByPosition(31, sotto-i).setformula(&quot;=AF$&quot; &amp; sotto+1)
+&apos;		oSheet.getCellByPosition(32, sotto-i).setformula(&quot;=AG$&quot; &amp; sotto+1)
+&apos;		oSheet.getCellByPosition(33, sotto-i).setformula(&quot;=AH$&quot; &amp; sotto+1)
+&apos;		oSheet.getCellByPosition(34, sotto-i).setformula(&quot;=AI$&quot; &amp; sotto+1)
+&apos;		oSheet.getCellByPosition(35, sotto-i).setformula(&quot;=AJ$&quot; &amp; sotto+1)
+&apos;		i=i+1
+&apos;	loop
 IMPOSTO_VALORI_E_FORMULE:
 	i=2
 	do while lrow+i &lt; sotto-1

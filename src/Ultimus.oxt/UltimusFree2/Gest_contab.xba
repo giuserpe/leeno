@@ -313,7 +313,7 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(32,2).setstring(&quot;tag&quot; + chr(13) +&quot;subCat&quot;)
 	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
 	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
-	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
+&apos;	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
 	oSheet.GetCellByPosition(36,2).setstring(&quot;Importi&quot; + chr(13) +&quot;senza errori&quot;)
 	oSheet.GetCellByPosition(0,2).Rows.Height = 800
 rem colore colonne riga di intestazione

@@ -150,32 +150,8 @@ END SUB
 
 
 &apos;##############################################################
-Sub Sel_Filtro() &apos; 
-	dim osheet as object
-	dim oAreaR as object
-	dim oCell as object	
-	Osheet = thisComponent.sheets.getbyname(&quot;S3&quot;) 
-	oSheet.isVisible = TRUE
-	Thiscomponent.currentController.select(	Osheet)
-	 oDocument = StarDesktop.getCurrentComponent
-	 oView = oDocument.getCurrentController
-	 &apos;	oAreaR = Osheet.getCellRangeByName (&quot;op_print_8&quot;) &apos; nome di area
-	&apos;	Thiscomponent.currentController.select(oAreaR)
-	 &apos;Move to a specified cell
-	 oCell = oView.getActiveSheet.getCellByPosition(0,0)
-	 &apos;Move at the beginning of the selection
-	 &apos; ocell=odocument.getcurrentselection
-	
-	 &apos; oRanges = oDocument.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)
-	oView.Select(oCell)
-	oAreaR = Osheet.getCellRangeByName (&quot;b3:f3&quot;)
- 	Thiscomponent.currentcontroller.select(oAreaR)
-	oContr = ThisComponent.CurrentController
-	oContr.setFirstVisibleColumn (0)&apos;( lprimaCol )
-	oContr.setFirstVisibleRow(0 )
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Chiudi_o_elimina_tabelle_inutili
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+Sub Sel_Filtro()
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Sel_Filtro&quot;)
 END SUB
 
 

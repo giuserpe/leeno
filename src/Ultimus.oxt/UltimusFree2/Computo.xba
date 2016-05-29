@@ -423,11 +423,11 @@ rem ---------------------------------------------------------------------
 			oSheet.getCellByPosition(9, lrow).cellstyle = &quot;Comp-Variante num sotto&quot;
 			oSheet.getCellByPosition(8, lrow).setformula(&quot;=CONCATENATE(&quot;&quot;Parziale [&quot;&quot;;VLOOKUP(B&quot; &amp; lrowi+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
 rem immissione tags cat/subcat
-			oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lRowE+1)
 rem ---------------------------------------------------------------------
 			i = lrow
 			Do While i &gt; 0
@@ -447,11 +447,11 @@ rem ---------------------------------------------------------------------
 			oSheet.getCellByPosition(8, lrow).setformula(&quot;=CONCATENATE(&quot;&quot;Parziale [&quot;&quot;;VLOOKUP(B&quot; &amp; lrowi+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
 			
 rem immissione tags cat/subcat
-			oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lRowE+1)
-			oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lRowE+1)
+&apos;			oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lRowE+1)
 rem ---------------------------------------------------------------------
 			i = lrow
 			Do While i &gt; 0
@@ -620,7 +620,7 @@ osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 &apos;xray osheet
 GoTo lllllllllllll:
 	Select Case oSheet.Name
-		Case &quot;COMPUTO_copia&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
+		Case &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
 			sString$ = &quot;Fine Computo&quot;
 		Case &quot;Elenco Prezzi&quot;
 	 		sString$ = &quot;Fine elenco&quot;

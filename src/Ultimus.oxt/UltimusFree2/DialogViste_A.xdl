@@ -22,7 +22,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="1" dlg:left="212" dlg:top="-219" dlg:width="95" dlg:height="15" dlg:help-text="Scenario base Semplificato per il Computo" dlg:value="Vista terra-terra">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Computo_Normale_terra_terra?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton8" dlg:tab-index="2" dlg:left="99" dlg:top="33" dlg:width="81" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton8" dlg:tab-index="2" dlg:left="99" dlg:top="33" dlg:width="80" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.attiva_contabilita?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="2" dlg:id="CommandButton15" dlg:tab-index="3" dlg:left="101" dlg:top="-114" dlg:width="95" dlg:height="15" dlg:help-text="Mette in struttura" dlg:value="Metti in struttura (Ctrl+)">
@@ -55,7 +55,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton4" dlg:tab-index="12" dlg:left="212" dlg:top="-159" dlg:width="95" dlg:height="15" dlg:help-text="Mostra/Nasconde i dettagli di misura delle quantità" dlg:value="Dettagli Quantità ON/OFF" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Det_quantita_toggle?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton7" dlg:tab-index="13" dlg:left="99" dlg:top="13" dlg:width="81" dlg:height="15" dlg:help-text="Mette in struttura" dlg:value="VARIANTE">
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton7" dlg:tab-index="13" dlg:left="99" dlg:top="13" dlg:width="80" dlg:height="15" dlg:help-text="Mette in struttura" dlg:value="VARIANTE">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.genera_variante?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="5" dlg:id="CommandButton32" dlg:tab-index="14" dlg:left="216" dlg:top="-94" dlg:width="82" dlg:height="17" dlg:help-text="Mostra/Nasconde le colonne dei Tag" dlg:value="TAG on/off">
@@ -72,7 +72,7 @@
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Voci_Sposta_2_Att.filtra_codice?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBCat" dlg:tab-index="22" dlg:left="10" dlg:top="79" dlg:width="68" dlg:height="10" dlg:value="Cat e SubCat" dlg:checked="false"/>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton19" dlg:tab-index="24" dlg:left="99" dlg:top="53" dlg:width="81" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton19" dlg:tab-index="24" dlg:left="99" dlg:top="53" dlg:width="80" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBFig" dlg:tab-index="21" dlg:left="10" dlg:top="49" dlg:width="68" dlg:height="10" dlg:value="Figure e annotazioni" dlg:checked="false"/>
@@ -85,7 +85,7 @@
   </dlg:button>
   <dlg:button dlg:style-id="9" dlg:id="CommandButton21" dlg:tab-index="27" dlg:left="101" dlg:top="135" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBDet" dlg:tab-index="28" dlg:left="10" dlg:top="28" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton22" dlg:tab-index="29" dlg:left="99" dlg:top="73" dlg:width="81" dlg:height="15" dlg:value="Rigenera formule">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton22" dlg:tab-index="29" dlg:left="99" dlg:top="73" dlg:width="80" dlg:height="15" dlg:value="Rigenera formule">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.Rifa_Formule_Orizzontali?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="10" dlg:id="CommandButton23" dlg:tab-index="30" dlg:left="164" dlg:top="94" dlg:width="14" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">

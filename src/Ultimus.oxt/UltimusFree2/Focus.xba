@@ -33,7 +33,7 @@ Sub Sel_Computo() &apos; vai al Computo metrico
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Chiudi_o_elimina_tabelle_inutili
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-
+  Chiudi_dialoghi
 END SUB
 
 Sub Sel_CONTABILITA() &apos; vai al Computo metrico
@@ -420,6 +420,7 @@ END SUB
 
 
 Sub Vai_a_M1()
+	chiudi_dialoghi
 	dim osheet as object
 	dim oAreaR as object
 		&apos;	ThisComponent.unlockControllers()

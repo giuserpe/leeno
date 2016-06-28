@@ -363,20 +363,12 @@ End Sub
 
 SUB chiudi_dialoghi &apos; chiude tutte le dialog
 			&apos; modificare qui se si aggiungono delle dialog
-	if Not isNull (oDialogScenari) then 
-		oDialogScenari.endExecute() 
-	end if
-	if Not isNull (oDialogScenari_A) then 
-		oDialogScenari_A.endExecute() 
-	end if
-	if Not isNull (oDialogScenari_EP) then 
-		oDialogScenari_EP.endExecute() 
-	end if
-	if Not isNull (oDialogScenari_AN) then 
-		oDialogScenari_AN.endExecute() 
-	end if
-	if Not isNull (oDialogScenari_2) then &apos;birra
-		oDialogScenari_2.endExecute() 
-	end if&apos;			
+	if Not isNull (oDialogScenari) then oDialogScenari.endExecute() 
+	if Not isNull (oDialogScenari_A) then oDialogScenari_A.endExecute()
+	if Not isNull (oDialogScenari_EP) then oDialogScenari_EP.endExecute() 
+	if Not isNull (oDialogScenari_AN) then oDialogScenari_AN.endExecute() 
+	if Not isNull (oDialogScenari_2) then oDialogScenari_2.endExecute()
+&apos;	oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.DlgMain) &apos; Inizializza il dialogo
+	if Not isNull (oDlgMain) then CreateUnoDialog( DialogLibraries.UltimusFree2.DlgMain).endExecute()
 END SUB
 </script:module>

@@ -166,7 +166,7 @@ sub Setta_Var_Gen_Default
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 0 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = 1 
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = 2 
+&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = 2 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = 1.25 &apos; per inserire i decimali usare il punto
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = 0 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 
@@ -213,7 +213,7 @@ sub Setta_Var_Gen_Bart
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = 0 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 0
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = 1 
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = 2
+&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = 2
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = 1.25 &apos; per inserire i decimali usare il punto
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = 0 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 
@@ -253,7 +253,7 @@ dim lriga as long
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306+lriga).value 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307+lriga).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308+lriga).value
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309+lriga).value
+&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309+lriga).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310+lriga).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311+lriga).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312+lriga).value 
@@ -301,7 +301,7 @@ dim lriga as long
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,306).value 
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,308).value
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value
+&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,309).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,311).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value 

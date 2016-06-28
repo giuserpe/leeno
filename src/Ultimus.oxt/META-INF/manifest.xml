@@ -1,16 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest:manifest>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Addons.xcu" />
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Paths.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Accelerators.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/DrawWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/CalcWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/ImpressWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/BasicIDEWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/WriterWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/BaseWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/StartModuleWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data"	manifest:full-path="Office/UI/MathWindowState.xcu"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.basic-library"		manifest:full-path="UltimusFree2/"/>
-<manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script"	manifest:full-path="pyLeenO"/> 
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Addons.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Paths.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Accelerators.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/DrawWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/CalcWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/ImpressWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/BasicIDEWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/WriterWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/BaseWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/StartModuleWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/MathWindowState.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.basic-library" manifest:full-path="UltimusFree2/" />
+  <manifest:file-entry manifest:media-type="" manifest:full-path="icons/" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script" manifest:full-path="pyLeenO" />
+  <manifest:file-entry manifest:media-type="application/binary" manifest:full-path="Scripts/python/" />
+
+<!--
+  <manifest:file-entry manifest:media-type="" manifest:full-path="pyLeenO/pyleeno.py" />
+  <manifest:file-entry manifest:media-type="application/binary" manifest:full-path="pyLeenO/" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Python" manifest:full-path="pyLeenO/pyleeno.py" />
+  -->
+<!--
+  <manifest:file-entry manifest:media-type="application/vnd.oasis.opendocument.text" manifest:full-path="/" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.xml.ui.configuration" manifest:full-path="Configurations2/" />
+  <manifest:file-entry manifest:media-type="" manifest:full-path="Pictures/" />
+  <manifest:file-entry manifest:media-type="text/xml" manifest:full-path="content.xml" />
+  <manifest:file-entry :media-type="text/xml" manifest:full-path="styles.xml" />
+  <manifest:file-entry manifest:media-type="text/xml" manifest:full-path="meta.xml" />
+  <manifest:file-entry manifest:media-type="" manifest:full-path="Thumbnails/thumbnail.png" />
+  <manifest:file-entry manifest:media-type="" manifest:full-path="Thumbnails/" />
+  <manifest:file-entry manifest:media-type="text/xml" manifest:full-path="settings.xml" />
+  <manifest:file-entry manifest:media-type="" manifest:full-path="Scripts/python/push_me.py" />
+  <manifest:file-entry manifest:media-type="application/binary" manifest:full-path="Scripts/" />
+-->
 </manifest:manifest>

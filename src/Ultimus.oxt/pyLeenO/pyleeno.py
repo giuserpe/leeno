@@ -568,6 +568,9 @@ def Filtra_Computo_C (): #filtra in base al codice di prezzo
     sString = oSheet.getCellByPosition(7,20).String
     Filtra_computo(nSheet, 1, sString)
 ########################################################################
+def Vai_a_M1 ():
+    _gotoSheet ('M1')
+    _gotoCella(0,0)
 def _gotoSheet (nSheet):
     '''
     nSheet   { string } : nome Sheet
@@ -2398,7 +2401,6 @@ Lsubv= "2.dev"#'CORREZIONE BUGS
 noVoce = ('Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 siVoce = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
 siVoce_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
-
 createUnoService = (
         XSCRIPTCONTEXT
         .getComponentContext()
@@ -2795,7 +2797,14 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-def debug_MenuMain():
+def debug_DLG():
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    smgr = ctx.getServiceManager()
+    dp = smgr.createInstanceWithContext("com.sun.star.awt.DialogProvider", ctx)
+    dialog = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application")
+    dialog.execute()
+    dialog.dispose()
+def debug():
     '''
     sCella  { string } : stringa di default nella casella di testo
     t       { string } : titolo del dialogo
@@ -2806,47 +2815,50 @@ def debug_MenuMain():
     
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application") 
-    oDialog1Model = oDialog1.Model
+    oDlgMain = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application") 
+    #~ oDlgMain = dp.createDialog("vnd.sun.star.script:Standard.DlgMain?location=document") 
+    oDialog1Model = oDlgMain.Model
 
-    sString = oDialog1.getControl("Label1")
+    sString = oDlgMain.getControl("Label1")
     sString.Text = str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv
     
-    
-    sString = oDialog1.getControl("Label2")
-    oSheet = oDoc.Sheets.getByName('S1')
+    sString = oDlgMain.getControl("Label2")
+    try:
+        oSheet = oDoc.Sheets.getByName('S1')
+    except:
+        return
     sString.Text = oSheet.getCellByPosition(7, 290).String
-    
     try:
         oSheet = oDoc.Sheets.getByName('COMPUTO')
-        sString = oDialog1.getControl("Label5")
-        sString.Text = "{:.2f}".format(oSheet.getCellByPosition(0, 1).Value)
+        sString = oDlgMain.getControl("Label8")
+        sString.Text = "€ {:,.2f}".format(oSheet.getCellByPosition(18, 1).Value)
     except:
         pass
     try:
         oSheet = oDoc.Sheets.getByName('VARIANTE')
-        sString = oDialog1.getControl("Label6")
-        sString.Text = "{:.2f}".format(oSheet.getCellByPosition(0, 1).Value)
+        sString = oDlgMain.getControl("Label5")
+        sString.Text = "€ {:,.2f}".format(oSheet.getCellByPosition(18, 1).Value)
     except:
         pass
     try:
         oSheet = oDoc.Sheets.getByName('CONTABILITA')
-        sString = oDialog1.getControl("Label9")
-        sString.Text = "{:.2f}".format(oSheet.getCellByPosition(0, 1).Value)
+        sString = oDlgMain.getControl("Label9")
+        sString.Text = "€ {:,.2f}".format(oSheet.getCellByPosition(15, 1).Value)
     except:
         pass
 
-    oDialog1.execute()
+    oDlgMain.execute()
     return
-    oDialog1Model.Title = t
+    #~ oDialog1Model.Title = t
     
-    sString = oDialog1.getControl("TextField1")
-    sString.Text = sCella
+    #~ sString = oDlgMain.getControl("TextField1")
+    #~ sString.Text = sCella
 
-    if oDialog1.execute()==0:
-        return
-    else:
-        return sString.Text
+    #~ if oDlgMain.execute()==0:
+        #~ return
+    #~ else:
+        #~ return sString.Text
+        
 ########################################################################
 def InputBox (sCella='', t=''):
     '''

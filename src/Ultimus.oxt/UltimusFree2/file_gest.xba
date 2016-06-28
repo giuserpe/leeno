@@ -110,17 +110,17 @@ rem ----------------------------------------------------------------------
 rem le variabili di versione sono settate In &quot;_vaiabili&quot;
 	If getos()=&quot;WINDOWS&quot; Then
 		nomeZip = &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
-&apos;		nomeZip2 = &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
+		nomeZip2 = &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT\LeenO.oxt&quot;&apos;-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
 
 	Else 
 		nomeZip = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
-&apos;		nomeZip2 = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
+		nomeZip2 = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt&quot;&apos;-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
 	End If
 &apos;	Print extensionLocation
 	zipfolder(extensionLocation,ConvertToUrl(nomeZip))
 	oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
 &apos;	Print nomeZip
-&apos;	Filecopy nomeZip, nomeZip2 &apos;seconda copia senza data
+	Filecopy nomeZip, nomeZip2 &apos;seconda copia senza data
 	If getos()=&quot;WINDOWS&quot; Then shell (&quot;explorer.exe&quot;, 1,  &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT&quot;)
 	If getos()=&quot;OSX&quot; Then shell (&quot;nemo&quot;, 1, &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/&quot;)
 end Sub

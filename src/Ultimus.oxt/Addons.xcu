@@ -10,9 +10,6 @@
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
             <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
-<!--
-            <value>vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
--->
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -640,7 +637,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_LeenO?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_computo?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image15</value>
@@ -657,7 +654,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_import?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_import?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa XPWE in questo computo</value>
@@ -671,7 +668,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_export?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_export?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Esporta XPWE da questo computo</value>
@@ -693,7 +690,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_listino?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_listino?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/nuovoPrezzario</value>
@@ -710,7 +707,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario XML-SIX</value>
@@ -724,7 +721,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import_BOLZANO?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_BOLZANO?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario XML-SIX bilingue - Provincia di Bolzano</value>
@@ -746,7 +743,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_usobollo?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_usobollo?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Documento UsoBollo</value>

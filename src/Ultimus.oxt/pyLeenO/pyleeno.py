@@ -26,6 +26,7 @@ def LeenO_path():
     pir = ctx.getValueByName('/singletons/com.sun.star.deployment.PackageInformationProvider')
     expath=pir.getPackageLocation('org.giuseppe-vizziello.leeno')
     return (expath)
+########################################################################
 #~ class New_File:
     #~ ''' Crea un nuovo computo o un nuovo listino '''
     #~ def __init__(self):
@@ -40,10 +41,9 @@ def LeenO_path():
         #~ return self.loadComponent('Computo_LeenO.ots')
     #~ def listino(self):
         #~ return self.loadComponent('Listino_LeenO.ots')
-
+########################################################################
 class New_file:
     '''Crea un nuovo computo o un nuovo listino.'''
-
     def __init__(self):#, computo, listino):
         pass
     def computo():
@@ -54,7 +54,7 @@ class New_file:
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
         toolbar_vedi()
         MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
-Provvedi subito a dare un nome al file di computo...''')
+Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
         salva_come()
         return (document)
     def listino():
@@ -64,7 +64,23 @@ Provvedi subito a dare un nome al file di computo...''')
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Listino_LeenO.ots', "_blank", 0, (opz,))
         return (document)
-import shutil
+    def usobollo():
+        desktop = XSCRIPTCONTEXT.getDesktop()
+        opz = PropertyValue()
+        opz.Name = 'AsTemplate'
+        opz.Value = True
+        document = desktop.loadComponentFromURL(LeenO_path()+'/template/offmisc/UsoBollo.ott', "_blank", 0, (opz,))
+        return (document)
+########################################################################
+def nuovo_computo (arg=None):
+    New_file.computo()
+########################################################################
+def nuovo_listino (arg=None):
+    New_file.listino()
+########################################################################
+def nuovo_usobollo (arg=None):
+    New_file.usobollo()
+########################################################################
 def oggi():
     '''
     restituisce la data di oggi
@@ -2458,8 +2474,8 @@ Si tenga conto che:
 ########################################################################
 #VARIABILI GLOBALI:
 Lmajor= 3 #'INCOMPATIBILITA'
-Lminor= 13 #'NUOVE FUNZIONALITA'
-Lsubv= "3.dev"#'CORREZIONE BUGS
+Lminor= 14 #'NUOVE FUNZIONALITA'
+Lsubv= "0"#'CORREZIONE BUGS
 noVoce = ('Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 siVoce = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
 siVoce_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
@@ -2962,30 +2978,6 @@ def leeno_version_code(arg=None):
     of.close()
     return str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv +'-'+ tempo[:-2]
 ########################################################################
-def zipdir(path, zipf):
-    #~ http://bit.ly/29P2COv
-    #~ Iterate all the directories and files
-    for root, dirs, files in os.walk(path):
-        # Create a prefix variable with the folder structure inside the path folder.
-        # So if a file is at the path directory will be at the root directory of the zip file
-        # so the prefix will be empty. If the file belongs to a containing folder of path folder
-        # then the prefix will be that folder.
-        if root.replace(path,'') == '':
-                prefix = ''
-        else:
-                # Keep the folder structure after the path folder, append a '/' at the end
-                # and remome the first character, if it is a '/' in order to have a path like
-                # folder1/folder2/file.txt
-                prefix = root.replace(path, '') + '/'
-                if (prefix[0] == '/'):
-                        prefix = prefix[1:]
-        for filename in files:
-                actual_file_path = root + '/' + filename
-                zipped_file_path = prefix + filename
-                zipf.write(actual_file_path, zipped_file_path)
-        #~ zipf = zipfile.ZipFile(nomeZip, 'w', zipfile.ZIP_DEFLATED)
-        #~ zipf.close()
-#######################################################################
 def toolbar_vedi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -3010,11 +3002,14 @@ def toolbar_on (toolbarURL, flag=1):
     else:
         oLayout.showElement(toolbarURL)
 #######################################################################
+#~ from zipfile import ZipFile
+#~ from shutil import make_archive
 def make_pack (arg=None):
     oxt_path = LeenO_path().split('///')[-1].replace('%20',' ')
     tempo = leeno_version_code()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    
     if sys.platform == 'linux' or sys.platform == 'darwin':
         nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
         nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
@@ -3022,16 +3017,11 @@ def make_pack (arg=None):
     elif sys.platform == 'win32':
         nomeZip2= 'W:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
         nomeZip = 'W:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-
-    oxt = zipfile.ZipFile(nomeZip2, 'w', zipfile.ZIP_DEFLATED)
-    zipdir(oxt_path, oxt)
-    #~ shutil.copyfile (nomeZip, nomeZip2)
-    oxt.close()
-
-    oxt = zipfile.ZipFile(nomeZip, 'w', zipfile.ZIP_DEFLATED)
-    zipdir(oxt_path, oxt)
-    #~ shutil.copyfile (nomeZip, nomeZip2)
-    oxt.close()
+    
+    shutil.make_archive(nomeZip2, 'zip', oxt_path)
+    shutil.move(nomeZip2 + '.zip', nomeZip2)
+    shutil.copyfile (nomeZip2, nomeZip)
+    
     oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
 #######################################################################
 #~ def debug():
@@ -3045,7 +3035,7 @@ def make_pack (arg=None):
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 ########################################################################
-g_exportedScripts = Adatta_Altezza_riga, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci,
+g_exportedScripts = Adatta_Altezza_riga, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo
 ########################################################################
 ########################################################################
 # ... here is the python script code

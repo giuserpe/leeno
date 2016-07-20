@@ -20,7 +20,7 @@
 
 
 &apos;##############################################################
-Sub Sel_Computo() &apos; vai al Computo metrico
+Sub Sel_Computo() &apos; vai al Computo metrico py:Vai_a_Computo
 	dim osheet as object
 
 &apos;	oSheetCurrent = ThisComponent.currentController.activeSheet
@@ -84,6 +84,9 @@ End Sub
 
 &apos;#########################################################################
 Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (era &quot;Altre Opzioni&quot;)
+&apos;SOSTITUITA DA Vai_a_S2 py
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Vai_a_S2&quot;)
+Exit sub
 	dim osheet as object
 	dim oAreaR as object
 	dim oCell as object
@@ -107,12 +110,8 @@ Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (er
 			thisComponent.Sheets.moveByName (nome ,6)
 		end if
 	next	
-&apos;	oAreaR = Osheet.getCellRangeByname(&quot;A1:cf40&quot;)
 	oAreaR = Osheet.getCellRangeByname(&quot;A1:c1&quot;)
-&apos;	ThisComponent.CurrentController.Select(oCell)
 	Thiscomponent.currentcontroller.select(oAreaR)
-&apos;	sQualeCella = &quot;$c$1&quot;
-&apos;	 Seleziona_Cella (sQualeCella)
 	If sNomesheet = &quot;M1&quot; then 
 		oSheetCurrent.isVisible = false 
 	endif
@@ -147,15 +146,6 @@ Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (er
 				&amp; &quot; &quot; &amp; CHR$(10)
 
 END SUB
-
-
-&apos;##############################################################
-Sub Sel_Filtro()
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;Sel_Filtro&quot;)
-END SUB
-
-
-
 &apos;##############################################################
 Sub Sel_Altre_Opz() &apos; porta la vista (la selezione) su Menu Principale
 &apos; questa è un casino ma va meglio....
@@ -218,7 +208,7 @@ Sub Sel_analisi() &apos; vai all&apos;analisi
 END SUB
 
 &apos;##############################################################
-Sub Sel_Elenco_Prezzi() &apos; vai al 
+Sub Sel_Elenco_Prezzi() &apos; vai al py:Vai_a_ElencoPrezzi
 	dim Osheet as object
 	Osheet = thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;)
 	Osheet.isVisible = true
@@ -236,35 +226,6 @@ Sub Sel_Elenco_Prezzi() &apos; vai al
 END SUB
 
 &apos;##############################################################
-Sub Vai_submenu_segnaVoci_non_usate()
-	dim osheet as object
-	dim oAreaR as object
-
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	oSheetCurrent = ThisComponent.currentController.activeSheet
-	sNomesheet = ThisComponent.currentController.activeSheet.name	
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Chiudi_o_elimina_tabelle_inutili
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-&apos;print 2
-&apos;	ThisComponent.unlockControllers()
-	Osheet = thisComponent.sheets.getbyname(&quot;S3&quot;)
-	If oSheet.isVisible = false then
- 		oSheet.isVisible = true
-	end if 
-	oAreaR = Osheet.getCellRangeByName (&quot;AJ5:AJ5&quot;)
-	Thiscomponent.currentcontroller.select(oAreaR)
-	oContr = ThisComponent.CurrentController
-	oContr.setFirstVisibleColumn (35)
-	oContr.setFirstVisibleRow(4 )
-	If sNomesheet &lt;&gt; &quot;S3&quot; then 
-&apos;		oSheetCurrent.isVisible = false 
-	endif
-END SUB
-
 Sub Logo_Avvio
 	dim osheet as object
 	dim oAreaR as object

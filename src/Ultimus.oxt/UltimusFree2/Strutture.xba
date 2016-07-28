@@ -11,6 +11,27 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
+Sub Inser_Capitolo
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;Inser_Capitolo&quot;)
+&apos;	service:vnd.pycalendar?execute
+End Sub
+&apos;#########################################################################
+SUB Rinumera_TUTTI_Capitoli2 &apos; se arriva da shortcut F8 senza la row
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;Rinumera_TUTTI_Capitoli2&quot;)
+End sub
+&apos;#########################################################################
+Sub Inser_SottoCapitolo
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;Inser_SottoCapitolo&quot;)
+End Sub 
+&apos;#########################################################################
+Sub Sincronizza_SottoCap_Tag_Capitolo_Cor
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;Sincronizza_SottoCap_Tag_Capitolo_Cor&quot;)
+End Sub 
+&apos;#########################################################################
+Sub Tutti_Subtotali
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;Tutti_Subtotali&quot;)
+end sub
+&apos;#########################################################################
 Sub Autofilter_On_Off &apos;per filtro Automatico su tabelle di tipo computo
 
 &apos; Attiva /disattiva il filtro creato con questa macro
@@ -41,6 +62,45 @@ Sub Autofilter_On_Off &apos;per filtro Automatico su tabelle di tipo computo
 	fine: 
 end sub
 &apos;#########################################################################
+
+sub Crea_AutoFilter &apos; sul computo NON USATA
+Exit Sub 
+
+	oSheet = ThisComponent.currentController.activeSheet
+&apos;	sAttributo = Trova_Attr_Sheet
+	If osheet.Name = &quot;COMPUTO&quot; Or _
+  		osheet.Name = &quot;VARIANTE&quot; Then
+		GoTo vai:
+  	else
+		exit Sub
+	end If
+vai:
+	lStartRow = oSheet.GetCellByPosition( 0 , 0)
+	lLastUrowNN = getLastUsedRow(oSheet)
+	lLastUcol = getLastUsedCol(oSheet)
+&apos;	oRange = oSheet.getCellRangeByposition(0,0,lLastUcol,lLastUrowNN)
+&apos;	ThisComponent.CurrentController.Select(oRange)
+	oDoc = ThisComponent
+	 If oDoc.DatabaseRanges.hasByName(&quot;MyName1&quot;) Then
+ 		 oDoc.DatabaseRanges.removeByName(&quot;MyName1&quot;)
+ 	End If
+ &apos;	exit sub
+ &apos;&apos;&apos;	If NOT oDoc.DatabaseRanges.hasByName(&quot;MyName&quot;) Then
+ 	&apos; oSheet = ThisComponent.getSheets().getByIndex(2)
+ 	 oAddr = oSheet.getCellRangeByposition(0,0,lLastUcol,lLastUrowNN).getRangeAddress()
+ &apos;	 oAddr = oSheet.getCellRangeByName(&quot;A1:F10&quot;).getRangeAddress()
+ &apos;	xray oAddr
+ &apos;	xray oDoc.DatabaseRanges
+ &apos;	sname = &quot;MyName1&quot;
+ &apos;	 oDoc.DatabaseRanges.addNewByName(&quot;MyName&quot;, oRange) &apos;Addr)
+ 	 oDoc.DatabaseRanges.addNewByName(&quot;MyName1&quot;, oAddr)
+ &apos;&apos;&apos;	 End If
+ 	oRange = oDoc.DatabaseRanges.getByName(&quot;MyName1&quot;) 
+ 	oRange.AutoFilter = True 
+ 	oContr = ThisComponent.CurrentController
+	oContr.setFirstVisibleRow (1) 	
+&apos;	xray oRange &apos;.AutoFilter = True 
+end sub
 
 sub subTurnOffAutoFilter &apos; in test...
 &apos;non mi è chiaro se cancella &quot;qualsiasi&quot; filtro Automatico

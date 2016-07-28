@@ -67,7 +67,7 @@
  <library:element library:name="Lupo_tmp"/>
  <library:element library:name="Viste_0"/>
  <library:element library:name="Finale"/>
- <library:element library:name="PY_bridge"/>
+ <library:element library:name="Help"/>
  <library:element library:name="Da_prezzario_2"/>
  <library:element library:name="Computo"/>
  <library:element library:name="Analisi"/>
@@ -81,4 +81,5 @@
  <library:element library:name="Zip"/>
  <library:element library:name="Conversioni"/>
  <library:element library:name="ConversioneDaListiniEsterni"/>
+ <library:element library:name="PY_bridge"/>
 </library:library>

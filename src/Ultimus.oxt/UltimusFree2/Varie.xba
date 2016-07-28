@@ -864,9 +864,6 @@ End Sub
 
 
 Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tabelle è
-&apos;	now1 = now
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;Copia_riga_Ent&quot;)
-Exit sub
 &apos; e reinvia ad _C or a _A 
 &apos; aggiunta per la scorciatoia... i bottoni vanno direttamente alle specifiche macro
 	dim nome as string

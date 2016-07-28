@@ -73,6 +73,11 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 rem ----------------------------------------------------------------------
 rem visualizza le toolbar leeno
 	Dim sName$
+	Toolbar_vedi
+	Registra_Tasti_Global
+&apos;	For Each sName In GetmyToolBarNames()
+&apos;		toolbar_on (sName, 1)
+&apos;	Next
 &apos; imposto la VarG della contabilità S1.H328
 	If ThisComponent.Sheets.HasByName(&quot;CONTABILITA&quot;) Then
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1

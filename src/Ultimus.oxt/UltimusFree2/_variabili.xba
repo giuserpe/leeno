@@ -22,8 +22,8 @@ Public Const idxdec = 2		&apos;numero cifre decimali per le approssimazioni
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
-Public Const versioneUF_minor= 14			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;0&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_minor= 13			&apos;NUOVE FUNZIONALITA&apos;
+Public Const versioneUF_subversion= &quot;3.dev&quot;		&apos;CORREZIONE BUGS
 Sub setta_versione
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor

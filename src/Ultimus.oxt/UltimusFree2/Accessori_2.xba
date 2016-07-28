@@ -96,7 +96,6 @@ Sub SwitchDesign___ &apos; By Andrew Pitonyak
  	print &quot;è off e lo metto on&quot;
 		SwitchDesignMode()
  		ThisComponent.ApplyFormDesignMode = False
- 		Sel_Altre_Opz
  End If
 end sub
 
@@ -573,6 +572,7 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 &apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree GG e G1G1 in CONTABILITA (servono per la formula somma.se)
 	If Not thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then Exit Sub
+	ThisComponent.enableAutomaticCalculation(False)
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) &apos; da sostituire o integrare
 	oRanges = ThisComponent.NamedRanges
 	&apos; con qualcosa che esegua sia se nome sia se Attributo ???
@@ -654,6 +654,7 @@ i=rIntest
 	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=SUMIF(GG;A4;conEuro)&quot;
 &apos;	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
+	ThisComponent.enableAutomaticCalculation(True)
 END Sub
 
 
@@ -670,6 +671,7 @@ End Sub
 
 
 SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di somma.se
+	ThisComponent.enableAutomaticCalculation(False)
 &apos; parallelo variante
 	Dim oSheet As Object
 	chiudi_dialoghi
@@ -700,11 +702,6 @@ SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di
 	oSheet.getColumns.getByIndex(lcolbase + ii + idxcol).isVisible = true
 	
 	i=rIntest
-
-&apos;	thisComponent.currentController.Select(oSheet.getCellRangeByposition(11, i,26, lrowf-1)) &apos;deseleziona
-&apos;print
-&apos;	cancella_dati
-
 rem colonne del computo
 SOMMARIO_SEMPLICE:
 	oSheet.GetCellByPosition(lcolbase + 11 , i).formula = &quot;=N4/$N$2&quot;
@@ -830,7 +827,8 @@ rem questa sotto è da tenere d&apos;occhio!!!
 rem ----------------------------------------------------------------------
 	thisComponent.currentController.Select(oSheet.getCellByposition(0, 0)) &apos;deseleziona
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
-	unSelect &apos;deseleziona			
+	unSelect &apos;deseleziona
+	ThisComponent.enableAutomaticCalculation(True)
 END Sub
 
 rem ----------------------------------------------------------------------

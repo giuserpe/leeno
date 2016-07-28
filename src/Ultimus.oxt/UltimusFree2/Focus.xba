@@ -20,7 +20,7 @@
 
 
 &apos;##############################################################
-Sub Sel_Computo() &apos; vai al Computo metrico
+Sub Sel_Computo() &apos; vai al Computo metrico py:Vai_a_Computo
 	dim osheet as object
 
 &apos;	oSheetCurrent = ThisComponent.currentController.activeSheet
@@ -84,121 +84,12 @@ End Sub
 
 &apos;#########################################################################
 Sub Sel_print_Opz () &apos; porta la vista (la selezione) su Menu Principale (era &quot;Altre Opzioni&quot;)
-	dim osheet as object
-	dim oAreaR as object
-	dim oCell as object
-	dim sQualeCella as string
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Chiudi_o_elimina_tabelle_inutili
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	&apos;	ThisComponent.unlockControllers()
-	Visualizza_normale
-	thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
-	oSheetCurrent = ThisComponent.currentController.activeSheet
-	sNomesheet = ThisComponent.currentController.activeSheet.name	
-	
-	Osheet = thisComponent.sheets.getbyname(&quot;S2&quot;) &apos;
-	oSheet.isVisible = TRUE
-	For I = 0 to thisComponent.Sheets.Count -1 &apos;gennaro
-		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
-		if left (oCalcSheet.getName(),3) = &quot;S2_&quot; then
-			nome = oCalcSheet.getName
-			thisComponent.Sheets.getByName(nome).isVisible = TRUE
-			thisComponent.Sheets.moveByName (nome ,6)
-		end if
-	next	
-&apos;	oAreaR = Osheet.getCellRangeByname(&quot;A1:cf40&quot;)
-	oAreaR = Osheet.getCellRangeByname(&quot;A1:c1&quot;)
-&apos;	ThisComponent.CurrentController.Select(oCell)
-	Thiscomponent.currentcontroller.select(oAreaR)
-&apos;	sQualeCella = &quot;$c$1&quot;
-&apos;	 Seleziona_Cella (sQualeCella)
-	If sNomesheet = &quot;M1&quot; then 
-		oSheetCurrent.isVisible = false 
-	endif
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,2).formula,7) = &quot;=&apos;file:&quot; then
-		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,2).formula	
-		goto saltaQui:
-	end if
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,3).formula,7) = &quot;=&apos;file:&quot; then
-		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,3).formula	
-		goto saltaQui:
-	end if
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,4).formula,7) = &quot;=&apos;file:&quot; then
-		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,4).formula	
-		goto saltaQui:
-	end if
-	if left (thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,5).formula,7) = &quot;=&apos;file:&quot; then
-		sLink = thisComponent.sheets.getbyname(&quot;S2&quot;).GetCellByPosition(2,5).formula	
-		goto saltaQui:
-	end if
-
-	exit sub
-	
-	saltaQui:
-			msgbox &quot;		 	ATTENZIONE!&quot; &amp; CHR$(10)_
-				&amp; &quot;Mi risulta che l&apos;Anagrafica Progetto sia linkata (in tutto o in parte) al file:&quot; &amp; CHR$(10)_
-				&amp;	sLink &amp; CHR$(10)&amp; CHR$(10)_
-				&amp;	&quot;ovvero esternamente a questo documento!&quot;&amp; CHR$(10)_
-				&amp; &quot; &quot; &amp; CHR$(10) &amp; CHR$(13) &amp; CHR$(10)_
-				&amp;	&quot;( Per &quot;&quot;forzare&quot;&quot; l&apos;aggiornamento del collegamento:&quot; &amp; CHR$(10)_
-				&amp; &quot; usa lo shortcut Alt K &quot;&amp; CHR$(10)_
-				&amp; &quot; Oppure dal menu di OOo Modifica &gt; Aggiornamenti &gt; Aggiorna... )&quot;&amp; CHR$(10)_
-				&amp; &quot; &quot; &amp; CHR$(10)
-
+&apos;SOSTITUITA DA Vai_a_S2 py
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Vai_a_S2&quot;)
 END SUB
-
-
-&apos;##############################################################
-Sub Sel_Filtro()
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;Sel_Filtro&quot;)
-END SUB
-
-
-
 &apos;##############################################################
 Sub Sel_Altre_Opz() &apos; porta la vista (la selezione) su Menu Principale
-&apos; questa è un casino ma va meglio....
-	For Each sName In GetmyToolBarNames()
-		toolbar_on (sName, 0)
-	Next
-	Toolbar_vedi
-	If ThisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) = false and _
-		ThisComponent.Sheets.hasByName(&quot;S1&quot;) = false and _
-		ThisComponent.Sheets.hasByName(&quot;S2&quot;) = false then
-		Exit sub
-	End If
-	 ThisComponent.lockControllers 
-	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = False 
-
-Dim oCalcApp As Object &apos;applicazione calc
-Dim oSheet As Object &apos;foglio di lavoro
-Dim oCalcView As Object &apos;quello che l&apos;utente vede
-Dim oRange As Object &apos;voglia di aranciata??
-Dim oNewSelection As Object &apos;devo spiegare?
-dim oAreaR as object
-Dim strAddress As String
-Dim StartCol, StartRow, EndCol, EndRow, CellRow, CellCol As Long
-	Visualizza_normale
-	
-	oSheetCurrent = ThisComponent.currentController.activeSheet
-	sNomesheet = ThisComponent.currentController.activeSheet.name
-
-	Set oCalcApp = ThisComponent &apos;ThisComponent.sheets.getByname(&quot;S1&quot;).CurrentController.getCellRangeByName(strAddress) (&quot;A2&quot;)
-	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-	oSheet.isVisible = TRUE
-	oAreaR = Osheet.getCellRangeByName (&quot;A190:A190&quot;)
-	Thiscomponent.currentcontroller.select(oAreaR)
-	oContr = ThisComponent.CurrentController
-	oContr.setFirstVisibleColumn (0)
-	oContr.setFirstVisibleRow(190)
-&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-Chiudi_o_elimina_tabelle_inutili
-&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
-	ThisComponent.unlockControllers 
-&apos;	ThisComponent.CurrentController.Zoomtype = 3
-	ThisComponent.CurrentController.ZoomValue = 100
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Vai_a_S1&quot;)
 END SUB
 
 
@@ -218,7 +109,7 @@ Sub Sel_analisi() &apos; vai all&apos;analisi
 END SUB
 
 &apos;##############################################################
-Sub Sel_Elenco_Prezzi() &apos; vai al 
+Sub Sel_Elenco_Prezzi() &apos; vai al py:Vai_a_ElencoPrezzi
 	dim Osheet as object
 	Osheet = thisComponent.sheets.getbyname(&quot;Elenco Prezzi&quot;)
 	Osheet.isVisible = true
@@ -236,35 +127,6 @@ Sub Sel_Elenco_Prezzi() &apos; vai al
 END SUB
 
 &apos;##############################################################
-Sub Vai_submenu_segnaVoci_non_usate()
-	dim osheet as object
-	dim oAreaR as object
-
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	
-	oSheetCurrent = ThisComponent.currentController.activeSheet
-	sNomesheet = ThisComponent.currentController.activeSheet.name	
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Chiudi_o_elimina_tabelle_inutili
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-&apos;print 2
-&apos;	ThisComponent.unlockControllers()
-	Osheet = thisComponent.sheets.getbyname(&quot;S3&quot;)
-	If oSheet.isVisible = false then
- 		oSheet.isVisible = true
-	end if 
-	oAreaR = Osheet.getCellRangeByName (&quot;AJ5:AJ5&quot;)
-	Thiscomponent.currentcontroller.select(oAreaR)
-	oContr = ThisComponent.CurrentController
-	oContr.setFirstVisibleColumn (35)
-	oContr.setFirstVisibleRow(4 )
-	If sNomesheet &lt;&gt; &quot;S3&quot; then 
-&apos;		oSheetCurrent.isVisible = false 
-	endif
-END SUB
-
 Sub Logo_Avvio
 	dim osheet as object
 	dim oAreaR as object
@@ -470,7 +332,7 @@ print &quot; questa (Vai_a_M1_noSelect) non credo sia usata &quot;
 		oContr.setFirstVisibleColumn (0)&apos;( lprimaCol )
 		oContr.setFirstVisibleRow(0 )
 &apos;	 else 
-&apos;	 	 Sel_Altre_Opz
+
 &apos;	end if	
 END SUB
 
@@ -534,7 +396,7 @@ SUB Nascondi_S4
 	 				Thiscomponent.currentcontroller.setactivesheet(oSheet)
 	 			else
 	 				oSheet.isVisible = false
-	 				Sel_Altre_Opz
+	 &apos;				Sel_Altre_Opz
 			 end if
 &apos;	 	else
 &apos;			exit sub
@@ -556,7 +418,6 @@ dim osheet as object
 	 				Thiscomponent.currentcontroller.setactivesheet(oSheet)
 	 		&apos;	else
 	 		&apos;		oSheet.isVisible = false
-	 		&apos;		Sel_Altre_Opz
 		&apos;	 end if
 	 	else
 			exit sub
@@ -639,6 +500,7 @@ END SUB
 
 
 sub Trova_ZOOM &apos; trova il coefficiente di zoom
+Exit sub
 &apos; dis_090424	oSheet = ThisComponent.currentController.activeSheet
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
 		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)

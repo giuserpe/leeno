@@ -17,17 +17,16 @@ rem buona parte delle macro in questo modulo sono tratte da
 rem http://www.pitonyak.org/AndrewMacro.odt
 rem ######################################################################
 Sub _nuove_icone
-&apos;	sURL = ConvertToUrl(&quot;/home/giuserpe/Scaricati/00.png&quot;)
 	sURL = LeenO_path +&quot;/icons/py.png&quot;
 	sName = Replace_G(sURL, &quot;.png&quot;, &quot;&quot;)
 	sNewURL= sName + &quot;_26h.bmp&quot;
 	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
 	sNewURL= sName + &quot;_26.bmp&quot;
-	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	Filecopy sURL, sNewURL 
 	sNewURL= sName + &quot;_16h.bmp&quot;
-	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	Filecopy sURL, sNewURL
 	sNewURL= sName + &quot;_16.bmp&quot;
-	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
+	Filecopy sURL, sNewURL
 	kill (sURL)
 End Sub
 rem ######################################################################
@@ -88,17 +87,12 @@ End Sub
 rem ######################################################################
 
 Sub Toolbar_vedi&apos;(oDoc, sURL)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+Exit sub
 	Dim oLayout, s$, sName$
 	oDoc = thiscomponent
 	oLayout = oDoc.CurrentController.getFrame().LayoutManager	
-rem stabilisce il comportamento
-rem se il livelli di difficoltà è impostato su 0 (primo approccio), tutte le toolbars restano visibili
-&apos;	On Error GoTo fine:
 	If Not thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		new_leeno
-&apos;		For Each sName In GetmyToolBarNames()
-&apos;			toolbar_on (sName, 0)
-&apos;		Next
 		Exit Sub
 	EndIf
 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 Then
@@ -125,6 +119,17 @@ rem CONTESTUALIZZATE
 			Case Else
 		End Select
 	EndIf
+End Sub
+rem ######################################################################
+Sub SETPOS
+	Dim oDoc 	:	oDoc = thiscomponent
+	Dim oLayout :	oLayout = oDoc.CurrentController.getFrame().LayoutManager
+&apos;	xray	oLayout.getElementpos(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;)
+	Dim oPosition as new com.sun.star.awt.Point
+	oPosition.X = 100
+	oPosition.Y = 4
+	oLayout.setElementpos(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, oPosition)
+	oLayout.Visible = True
 End Sub
 rem ######################################################################
 	
@@ -201,7 +206,7 @@ Sub computo_OnSelect
 End Sub
 
 Sub elenco_OnFocus
-	Toolbar_vedi
+&apos;	Toolbar_vedi
 	If codice_da_cercare_in_elenco = &quot;Cod. Art.?&quot;  Then Exit Sub
 	If codice_da_cercare_in_elenco &lt;&gt; &quot;&quot; Then
 	&apos;	Print codice_da_cercare_in_elenco
@@ -212,7 +217,7 @@ Sub elenco_OnFocus
 	EndIf
 End Sub
 Sub elenco_OnUnFocus
-	Toolbar_vedi
+&apos;	Toolbar_vedi
 	codice_da_cercare_in_elenco = &quot;&quot;
 End Sub
 
@@ -236,22 +241,24 @@ Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnFocus&quot;,	&quot;vnd.sun.star.
 Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.elenco_OnUnFocus?language=Basic&amp;location=application&quot;)
 
 If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
-	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 EndIf
 
-Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 
 If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
-	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
-	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)

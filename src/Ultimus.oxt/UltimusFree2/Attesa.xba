@@ -209,16 +209,19 @@ END SUB
 
 
 Sub ScreenUpdatingOn
-	ThisComponent.unlockControllers
-	do while thiscomponent.isActionLocked = true
- 	ThisComponent.removeActionLock
- 	&apos;	print &quot;1&quot;
-	loop
+	ThisComponent.enableAutomaticCalculation(True)
+&apos;	ThisComponent.unlockControllers
+&apos;	do while thiscomponent.isActionLocked = true
+&apos; &apos;	ThisComponent.removeActionLock
+&apos;	loop
 End Sub
 
-Sub ScreenUpdatingOff
- ThisComponent.addActionLock
- ThisComponent.lockControllers
+Sub ScreenUpdatingOff &apos; calcolo automatico
+ThisComponent.enableAutomaticCalculation(False)
+&apos;xray ThisComponent
+&apos; ThisComponent.lockControllers ()
+&apos; ThisComponent.addActionLock ()
+
 End Sub
 
 &apos;_______________________________________________________________________________________++

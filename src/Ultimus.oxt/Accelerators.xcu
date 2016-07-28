@@ -20,13 +20,13 @@
         <!--CTRL-0-->
         <node oor:name="0_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-1-->
         <node oor:name="1_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Elenco_Prezzi?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_ElencoPrezzi?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-2-->
@@ -38,13 +38,13 @@
         <!--CTRL-3-->
         <node oor:name="3_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Computo?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Computo?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-4-->
         <node oor:name="4_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Vai_Dati_Computo?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-5-->
@@ -56,7 +56,10 @@
         <!--CTRL-6-->
         <node oor:name="6_MOD1" oor:op="replace">
           <prop oor:name="Command">
+<!--
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
+-->
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S2?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-8-->
@@ -94,7 +97,7 @@
         <!--SHIFT-F1-->
         <node oor:name="F1_SHIFT" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Help.Help_scorciatoie?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Scorciatoie?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--SHIFT-F10-->
@@ -112,7 +115,7 @@
         <!--CTRL-SHIFT-F8-->
         <node oor:name="F8_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Rinumera_TUTTI_Capitoli2?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Rinumera_TUTTI_Capitoli2?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-F10-->
@@ -130,7 +133,7 @@
         <!--CTRL-SHIFT-A-->
         <node oor:name="A_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Varie.copia_riga_Ent?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Copia_riga_Ent?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-B-->
@@ -154,7 +157,7 @@
         <!--CTRL-SHIFT-F-->
         <node oor:name="F_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$filtra_codice?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-K-->
@@ -208,7 +211,7 @@
         <!--CTRL-SHIFT-Z-->
         <node oor:name="Z_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziari?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-9-->

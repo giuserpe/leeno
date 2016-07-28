@@ -564,29 +564,27 @@ sub Colora_Tabs &apos;sistena i colori delle tabs e riordina
 	bSheetNames = oSheets.getElementNames()
 	For i = LBound( bSheetNames ) To UBound( bSheetNames )
 		sSheetName = bSheetNames( i ) &apos;255,233,
+	    oSheet = ThisComponent.Sheets.getByName(sSheetName)
 		If sSheetName = &quot;Elenco Prezzi&quot; then 
-			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
 			SetTabColorN(RGB(255,240,178))	
 		end if
 		If sSheetName = &quot;Analisi di Prezzo&quot; or _
 			sSheetName = &quot;Lista Analisi&quot; Then
-			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
 			SetTabColorN(RGB(185,255,168))
 		end if
 		If sSheetName = &quot;COMPUTO&quot; Then
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;COMPUTO&quot;
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(153,204,255))
-		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(153,204,255))
-			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
 			SetTabColorN(RGB(255,199,231))&apos;(255,199,231))
 		end If
 		If sSheetName = &quot;VARIANTE&quot; Then
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;VARIANTE&quot;
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,205,102))
-		&apos;	thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,205,102))
-			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
+
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
 			SetTabColorN(RGB(255,255,102))
 		end if
 		If sSheetName = &quot;CONTABILITA&quot; then 
@@ -594,20 +592,16 @@ sub Colora_Tabs &apos;sistena i colori delle tabs e riordina
 			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
 			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,180,175))
 			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,180,175))
-			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
 			SetTabColorN(RGB(255,180,175))
 		end if
 
-&apos;		if i= 4 or i =4 then 
-	&apos;		ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
-		&apos;	SetTabColorN(RGB(102,102,102))
-&apos;		end if
 		If left(sSheetName,3) = &quot;cT_&quot; or left(sSheetName,3) = &quot;cP_&quot; Then
-			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
 			SetTabColorN(RGB(204,255,255))	
 		end if 
 		If left(sSheetName,6) = &quot;QUADRO&quot; or left(sSheetName,6) = &quot;Quadro&quot; or left(sSheetName,6) = &quot;quadro&quot; Then
-			ThisComponent.CurrentController.Select(thisComponent.Sheets.GetByName(sSheetName))
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
 			SetTabColorN(RGB(76,76,76))			
 		end if 
 	Next 

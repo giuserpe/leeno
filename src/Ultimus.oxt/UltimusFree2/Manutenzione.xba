@@ -646,4 +646,9 @@ oSheet.GetCellByPosition( 10 , ii).formula = &quot;&quot;
 fissa (0,idxrow+1)
 	ThisComponent.calculateAll()
 End Sub
+
+Sub sfsdfsd
+	ThisComponent.calculateAll()
+End Sub
+
 </script:module>

@@ -493,6 +493,7 @@ sub AutoCalc (flag As Integer) &apos; Calcolo automatico &gt; 0 spento, 1 acceso
 	dispatcher.executeDispatch(document, &quot;.uno:AutomaticCalculation&quot;, &quot;&quot;, 0, args1())
 end sub
 rem ######################################################################
+&apos;salva_doc_come (LeenO_Path &amp; &quot;/template/leeno/Listino_LeenO.ots&quot;
 
 sub salva_doc_come (Optional nomeurl As string)
 	rem ----------------------------------------------------------------------
@@ -509,7 +510,7 @@ sub salva_doc_come (Optional nomeurl As string)
 	args1(0).Name = &quot;URL&quot;
 	
 	If Not IsMissing(nomeurl) Then
-		Print convertToUrl (nomeurl)
+&apos;		Print convertToUrl (nomeurl)
 		args1(0).Value = convertToUrl (nomeurl)
 	EndIf 
 &apos;args1(0).Value = &quot;file:///W:/_dwg/ULTIMUSFREE/_tmp/Senza.ods&quot;
@@ -770,5 +771,27 @@ dim args1(0) as new com.sun.star.beans.PropertyValue
 args1(0).Name = &quot;Nr&quot;
 args1(0).Value = iSheet+1
 dispatcher.executeDispatch(document, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
+end sub
+
+
+sub evidenzia
+xray (thiscomponent)
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;ViewValueHighlighting&quot;
+args1(0).Value = true
+
+dispatcher.executeDispatch(document, &quot;.uno:ViewValueHighlighting&quot;, &quot;&quot;, 0, args1())
+
+
 end sub
 </script:module>

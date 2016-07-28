@@ -52,32 +52,6 @@ rem ----------------------------------------------------------------------
 End Sub
 
 rem ----------------------------------------------------------------------
-Sub new_leeno
-	New_FILE (&quot;/template/leeno/Computo_LeenO.ots&quot;)
- 	autoexec
- 	Setta_Cost_Gen
-	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
-		&amp; &quot;Provvedi subito a dare un nome al file di computo...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
-	salva_doc_come
-End Sub
-
-rem ----------------------------------------------------------------------
-Sub new_listino
-	New_FILE (&quot;/template/leeno/Listino_LeenO.ots&quot;)
-	autoexec
-	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
-		&amp; &quot;Provvedi subito a dare un nome al file di listino...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
-	salva_doc_come
-End Sub
-
-rem ----------------------------------------------------------------------
-Sub new_usobollo
-	New_FILE (&quot;/template/offmisc/UsoBollo.ott&quot;)
-	testa=msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
-		&amp; &quot;Provvedi subito a dare un nome al documento...&quot; &amp; CHR$(10) &amp; CHR$(10), 48 , &quot;AVVISO!&quot;)
-	salva_doc_come
-	autoexec
-End Sub
 
 Sub bak_timestamp &apos; salva una copia di backup del file ad ogni apertura
 	oDoc = ThisComponent
@@ -90,42 +64,15 @@ Sub bak_timestamp &apos; salva una copia di backup del file ad ogni apertura
 		Filecopy sDocURL, sNewURL &apos;agisce direttamente su disco in modo &quot;trasparente&quot;
 	End If
 End Sub
-
-rem ----------------------------------------------------------------------
-rem pacchettizza l&apos;estensione direttamente nel mio archivio
-sub make_pack
-rem ----------------------------------------------------------------------
-	Dim oLayout
-	oDoc = thiscomponent
-	oLayout = oDoc.CurrentController.getFrame().LayoutManager
-	oDoc.currentcontroller.activesheet.Name
-rem ----------------------------------------------------------------------
-&apos;	Dim pip As Object, extensionLocation As String
-&apos;	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot; REM vedi in &quot;_variabili&quot;
-&apos;	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
-&apos;	extensionLocation = pip.getPackageLocation(extensionIdentifier)
-&apos;	Print 
-	extensionLocation = LeenO_path &apos; extensionLocation
-rem ----------------------------------------------------------------------
-rem le variabili di versione sono settate In &quot;_vaiabili&quot;
-	If getos()=&quot;WINDOWS&quot; Then
-		nomeZip = &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT\LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
-		nomeZip2 = &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT\LeenO.oxt&quot;&apos;-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
-
-	Else 
-		nomeZip = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.oxt&quot;
-		nomeZip2 = &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt&quot;&apos;-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp;&quot;.oxt&quot;
-	End If
-&apos;	Print extensionLocation
-	zipfolder(extensionLocation,ConvertToUrl(nomeZip))
-	oLayout.hideElement(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
-&apos;	Print nomeZip
-	Filecopy nomeZip, nomeZip2 &apos;seconda copia senza data
-	If getos()=&quot;WINDOWS&quot; Then shell (&quot;explorer.exe&quot;, 1,  &quot;W:\_dwg\ULTIMUSFREE\_SRC\OXT&quot;)
-	If getos()=&quot;OSX&quot; Then shell (&quot;nemo&quot;, 1, &quot;/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/&quot;)
-end Sub
-
-rem ----------------------------------------------------------------------
+&apos;#########################################################################
+Sub file2template
+	For Each sName In GetmyToolBarNames()
+		toolbar_on (sName, 0)
+	Next
+	toolbar_on (&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, 0)
+	salva_doc_come (LeenO_Path &amp; &quot;/template/leeno/Computo_template.ods&quot;)
+End Sub 
+&apos;#########################################################################
 Sub avvia_IDE
 	Dim oLayout
 	oDoc = thiscomponent

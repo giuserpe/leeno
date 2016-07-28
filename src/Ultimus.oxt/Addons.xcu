@@ -1,4 +1,4 @@
-<?xml version='1.0' encoding='UTF-8'?>
+﻿<?xml version='1.0' encoding='UTF-8'?>
 <oor:component-data xmlns:oor="http://openoffice.org/2001/registry" xmlns:xs="http://www.w3.org/2001/XMLSchema" oor:name="Addons" oor:package="org.openoffice.Office">
   <node oor:name="AddonUI">
     <node oor:name="OfficeToolBar">
@@ -9,7 +9,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -397,10 +397,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
-<!--
-            <value>vnd.sun.star.script:Inser_Capitolo?language=Python&amp;location=user:uno_packages</value>
--->
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_Capitolo?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image19</value>
@@ -417,7 +414,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SottoCapitolo?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image20</value>
@@ -581,7 +578,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.file_gest.make_pack?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$make_pack?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/zip</value>
@@ -599,10 +596,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.python_debug?language=Basic&amp;location=application</value>
-<!-- QUESTA FUNZIONA PER AVVIARE COMANDI PYTHON
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$chi?language=Python&amp;location=user:uno_packages</value>
--->
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$debug?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/py</value>
@@ -614,7 +608,6 @@
             <value>_self</value>
           </prop>
         </node>
-        <!-- PROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVAPROVA-->
       </node>
     </node>
     <!--                                                                              -->
@@ -644,7 +637,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_LeenO?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_computo?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image15</value>
@@ -661,7 +654,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_import?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_import?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa XPWE in questo computo</value>
@@ -675,7 +668,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XPWE_export?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_export?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Esporta XPWE da questo computo</value>
@@ -697,7 +690,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_listino?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_listino?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/nuovoPrezzario</value>
@@ -714,7 +707,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario XML-SIX</value>
@@ -728,7 +721,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.ConversioneDaListiniEsterni.XML_import_BOLZANO?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_BOLZANO?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario XML-SIX bilingue - Provincia di Bolzano</value>
@@ -750,7 +743,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.file_gest.New_usobollo?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_usobollo?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Documento UsoBollo</value>
@@ -778,6 +771,7 @@
               <value>_self</value>
             </prop>
           </node>
+<!--
           <node oor:name="m02" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -795,6 +789,7 @@
               <value>_self</value>
             </prop>
           </node>
+-->
           <node oor:name="m03" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -973,7 +968,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Strutture.Rinumera_TUTTI_Capitoli2?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Rinumera_TUTTI_Capitoli2?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/rinum_cap</value>
@@ -1285,7 +1280,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_Capitolo?language=Basic&amp;location=application</value>
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_Capitolo?language=Python&amp;location=user:uno_packages</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image19</value>
@@ -1302,7 +1297,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Strutture.Inser_SottoCapitolo?language=Basic&amp;location=application</value>
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SottoCapitolo?language=Python&amp;location=user:uno_packages</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image20</value>

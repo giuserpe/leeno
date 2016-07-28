@@ -786,7 +786,7 @@ end sub
 
 Sub Svuota_Globale &apos; svuota la variabile globale con file DCC
 &apos; attivata all&apos;uscita del file... altrimenti se si tenta di inviare dei prezzi al DCC
-
+autoexec_off
 On Error resume next
 
 	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)

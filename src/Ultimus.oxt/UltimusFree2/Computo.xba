@@ -229,6 +229,7 @@ End Sub
 Sub inizializza_computo (Optional delete As String)&apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object 
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	ThisComponent.CurrentController.setActiveSheet(oSheet)
 	If delete = &quot;cancella&quot; Then oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
 	
 	lRow = ultima_voce +1
@@ -315,8 +316,8 @@ rem riga di intestazione
 	oSheet.getCellByPosition(43,2).cellstyle = &quot;COnt_noP&quot;
 	oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
 	
-	ThisComponent.CurrentController.Select(oCell)
-	Adatta_Altezza_riga
+&apos;	ThisComponent.CurrentController.Select(oCell)
+&apos;	Adatta_Altezza_riga
 &apos;	oSheet.GetCellByPosition(0,2).Rows.Height = 800
 rem ----------------------------------------------------------------------
 rem riga del totale
@@ -337,12 +338,19 @@ rem riga rossa
 		End If
 		oSheet.GetCellByPosition(0,lRowE+1).setstring(&quot;Fine Computo&quot;)
 		oSheet.getCellRangeByPosition(0,lRowE+1, 36 , lRowE+1).cellstyle = &quot;Riga_rossa_Chiudi&quot;
-		exit sub
-	end if
+&apos;		exit sub
+	end If
+	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+	oSheet.GetCellByPosition(9, 190).FORMULA=&quot;=$COMPUTO.$S$2&quot;
+	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
+	oSheet.GetCellByPosition(3, 0).FORMULA=&quot;=$COMPUTO.$S$2&quot;
+	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
+	oSheet.GetCellByPosition(4, 0).FORMULA=&quot;=$COMPUTO.$S$2&quot;
+	Seleziona_Cella (&quot;$C$3&quot;)
+	set_larghezza_colonne
+&apos;	Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
+	fissa(0,idxrow+1)
 
-set_larghezza_colonne
-Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
-fissa(0,idxrow+1)
 &apos;Rifa_Somme_TOT_Computo &apos; crea anche la struttura del foglio
 End Sub
 rem ######################################################################

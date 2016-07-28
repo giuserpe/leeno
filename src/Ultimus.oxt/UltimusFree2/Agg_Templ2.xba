@@ -493,19 +493,6 @@ Sub setDocEventOnClose () &apos;assegna una macro ad un evento (chiusura file)
 	oDoc.getEvents().replaceByName(&quot;OnUnload&quot;, mEvt())
 End Sub
 
-Sub destroy &apos; non usata...
-sSourceFile = ConvertToURL( sPathDoc )
-Filecopy sSourceFile, sURLmem
-&apos;verifica presenza documento .pdf e avvisa processo riuscito
-	sControlloFile = Dir(sURLmem)
-&apos;	if sControlloFile&lt;&gt;&quot;&quot; then
-&apos;	print &quot;Il documento é stato memorizzato all&apos;indirizzo: &quot; + sFileSalva + &quot;\&quot; + sNomeDoc
-	kill(sSourceFile)
-
-&apos;il codice qui sopra serve in una procedura ceh prende un file da un posto (sSourceFile) 
-&apos;lo copia in un altro (sURLmem), verifica che il file copiato esista e cancella il primo: non so se é quello che cerchi ma io ci provo...
-end sub
-
 Sub Elimina_copia_aPerdere (sUrl)
 	if not isnull(sURL) or not ismissing(sURL) then
 		kill(sURL)

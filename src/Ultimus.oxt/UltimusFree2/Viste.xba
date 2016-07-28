@@ -25,7 +25,6 @@ Dim oDialogScenari_AN As Object
 Dim ComVar As Boolean
 Dim ComCon As Boolean
 Dim VarCon As Boolean
-
 Sub Scelta_Viste() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
 	osheet = thisComponent.CurrentController.ActiveSheet

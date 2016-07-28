@@ -18,22 +18,22 @@
   <dlg:button dlg:style-id="2" dlg:id="CommandButton21" dlg:tab-index="2" dlg:left="140" dlg:top="114" dlg:width="95" dlg:height="15" dlg:help-text="Altezza Ottimale delle righe" dlg:value="Adatta altezza righe" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.Adatta_Altezza_riga?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="3" dlg:left="5" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="Registra l&apos;analisi corrente come Nuovo prezzo In El. Prezzi" dlg:value="Una Analisi ad E.P." dlg:multiline="true">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Varie.ANALISI_IN_ELENCOPREZZI?language=Basic&amp;location=application" script:language="Script"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="3" dlg:left="5" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="Registra l&apos;analisi corrente come Nuovo prezzo In El. Prezzi" dlg:value="Una Analisi ad E.P." dlg:button-type="ok" dlg:multiline="true">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ANALISI_IN_ELENCOPREZZI?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton12" dlg:tab-index="4" dlg:left="245" dlg:top="-90" dlg:width="57" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Apri tutto" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste.Mostra_Tutto?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="5" dlg:left="90" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Voci usate-non usate..." dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="5" dlg:left="90" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Voci usate-non usate..." dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.Vai_submenu_segnaVoci_non_usate?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="6" dlg:left="5" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Riordina le analisi" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="6" dlg:left="5" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Riordina le analisi" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Main_Riordina_Analisi_Alfabetico?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="7" dlg:left="90" dlg:top="45" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Genera lista analisi" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="7" dlg:left="90" dlg:top="45" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Genera lista analisi" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton4" dlg:tab-index="8" dlg:left="90" dlg:top="5" dlg:width="75" dlg:height="15" dlg:value="Tutte le Analisi ad E.P.">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton4" dlg:tab-index="8" dlg:left="90" dlg:top="5" dlg:width="75" dlg:height="15" dlg:value="Tutte le Analisi ad E.P." dlg:button-type="ok">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.tante_analisi_in_ep?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton8" dlg:tab-index="9" dlg:left="149" dlg:top="67" dlg:width="14" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">

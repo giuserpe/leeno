@@ -11,29 +11,16 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-Sub python_debug
-&apos;	now1 = now
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;debug&quot;)
-&apos;	now2 = now
-&apos;	Print now2-now1	
-End Sub
-&apos;#########################################################################
-
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant &apos;Giuseppe Vizziello 2015
 rem questa serve ad avviare le funzioni/script di python
 rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
+&apos;Print &quot;pyleeno&quot;
 	args() = Array()
 	If not ismissing (arg1) Then Appenditem(args(), arg1)
 	If not ismissing (arg2) Then Appenditem(args(), arg2)
 	If not ismissing (arg3) Then Appenditem(args(), arg3)
 	rem RIF: http://bit.ly/1b4d3dF
-	
-	&apos;Url = &quot;vnd.sun.star.script:pyleeno.py$YokoCalcPython?language=Python&amp;location=share&quot;
-	&apos; vnd.sun.star.script:pyleeno.py$myFunction?language=Python&amp;location=user
-	&apos; vnd.sun.star.script:pyleeno.py$myFunction?language=Python&amp;location=share
-	&apos; vnd.sun.star.script:pyleeno.py$myFunction?language=Python&amp;location=document
-	&apos; vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$myFunction?language=Python&amp;location=share:uno_packages
-	
+
 	Dim MasterScriptProviderFactory as Object
 	Dim MasterScriptProvider as Object
 	Dim Script as Object
@@ -53,33 +40,6 @@ On Error GoTo end:
 &apos;	Script.invoke(Array(),Array(),Array())
 &apos;	PythonResult = Script.invoke(Array(),Array(),Array())
 end: 
-End Sub
-
-Sub Macro_py_buona_non_usata
-
-rem *********** tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
-
-&apos;xray StarDesktop.getCurrentFrame.getContainerWindow.getToolkit
-	rem RIF: http://bit.ly/1b4d3dF
-	Dim MasterScriptProviderFactory as Object
-	Dim MasterScriptProvider as Object
-	Dim Script as Object
-	Dim Url as String
-&apos;	Dim PythonResult as object
-	sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
-&apos;Print sName
-	sModulo = &quot;pyleeno.py&quot;
-	sFunzione = &quot;Sel_Filtro&quot;
-	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyLeenO|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
-	Url = &quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
-	Url = &quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$debug?language=Python&amp;location=user:uno_packages&quot;
-&apos;Print Url
-	MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
-	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
-	Script = MasterScriptProvider.getScript(Url)
-&apos;xray Script
-	Script.invoke(Array(),Array(),Array())
-&apos;	PythonResult = Script.invoke(Array(),Array(),Array())
 End Sub
 rem ######################################################################
 </script:module>

@@ -61,25 +61,6 @@ Sub Abilita_contabilita
 End Sub
 
 
-Sub Nascondi_tabs_contabilita 
-dim oSheets as object
-dim oSheet as object
-dim aSheetNames as object
-dim cSheetName2 as string
-	oSheets = ThisComponent.getSheets()
-	Nascondi_tabs_contabilita_soltanto
-	
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string = 0 then
-		Mostra_tabs_COMPUTO 
-	end if
-	
-	ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;).isVisible = false 
-	thisComponent.Sheets.moveByName (&quot;S1&quot; ,5)
-	thisComponent.Sheets.moveByName (&quot;S2&quot; ,6)
- Sel_Altre_Opz
-End Sub
-
-
 
 sub Nascondi_tutte_secondarie 
 	oSheets = ThisComponent.getSheets()

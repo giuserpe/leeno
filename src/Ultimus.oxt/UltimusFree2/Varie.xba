@@ -14,6 +14,8 @@
 Global codice as string
 
 Sub ANALISI_IN_ELENCOPREZZI
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;ANALISI_IN_ELENCOPREZZI&quot;)
+Exit sub
 sistema_attributi_sheet
 &apos;Print Trova_Attr_Sheet
 	if Trova_Attr_Sheet &lt;&gt; &quot;TIPO_ANALISI&quot; then
@@ -864,6 +866,9 @@ End Sub
 
 
 Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tabelle è
+&apos;	now1 = now
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Copia_riga_Ent&quot;)
+Exit sub
 &apos; e reinvia ad _C or a _A 
 &apos; aggiunta per la scorciatoia... i bottoni vanno direttamente alle specifiche macro
 	dim nome as string
@@ -1247,10 +1252,10 @@ sub Adatta_Altezza_riga &apos; Funzionava egregiamente ma era un po&apos; lento
 
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	oSheet.getCellRANGEByPosition(0, 0, getLastUsedCol(oSheet),getLastUsedRow(oSheet)).Rows.OptimalHeight = True
-	Select Case oSheet.Name
-	Case &quot;Elenco Prezzi&quot;, &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
-		oSheet.GetCellByPosition(0,2).Rows.Height = 800
-	End Select
+&apos;	Select Case oSheet.Name
+&apos;	Case &quot;Elenco Prezzi&quot;, &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
+&apos;		oSheet.GetCellByPosition(0,2).Rows.Height = 800
+&apos;	End Select
 &apos;	fissa (0, 3)
 END Sub
 

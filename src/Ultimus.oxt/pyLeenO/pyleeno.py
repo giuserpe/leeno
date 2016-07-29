@@ -2,7 +2,7 @@
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 ########################################################################
 # LeenO - Computo Metrico
-# Template assistito per la compilazione di Computi Metrici Estimativi646
+# Template assistito per la compilazione di Computi Metrici Estimativi
 # Copyright (C) Giuseppe Vizziello - supporto@leeno.org
 # Licenza LGPL http://www.gnu.org/licenses/lgpl.html
 # Il codice contenuto in questo modulo è parte integrante dell'estensione LeenO
@@ -2955,6 +2955,26 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
+def autoexec (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('S1')
+    oSheet.getCellByPosition(7,193).Value = r_version_code()
+    oSheet.getCellByPosition(8,193).Value = Lmajor
+    oSheet.getCellByPosition(9,193).Value = Lminor
+    oSheet.getCellByPosition(10,193).String = Lsubv
+    oSheet.getCellByPosition(7,295).Value = Lmajor
+    oSheet.getCellByPosition(8,295).Value = Lminor
+    oSheet.getCellByPosition(9,295).String = Lsubv
+########################################################################
+def r_version_code(arg=None):
+    if sys.platform == 'linux' or sys.platform == 'darwin':
+        code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
+    elif sys.platform == 'win32':
+        code_file = (LeenO_path() + os.altsep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
+
+    f = open(code_file, 'r')
+    return f.readline().split('-')[-1]
+########################################################################
 def DlgMain(arg=None):
     '''
     Viasualizza il menù principale
@@ -3038,7 +3058,7 @@ def InputBox (sCella='', t=''):
 import zipfile
 ########################################################################
 # Scrive un file.
-def leeno_version_code(arg=None):
+def w_version_code(arg=None):
     '''
     scrive versione e timestamp nel file leeno_version_code
     '''
@@ -3052,9 +3072,6 @@ def leeno_version_code(arg=None):
     of.close()
     return str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv +'-'+ tempo[:-2]
 ########################################################################
-def debug (arg=None):
-    toolbar_ordina()
-
 def toolbar_vedi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -3104,7 +3121,6 @@ def toolbar_ordina (arg=None):
 #~ from zipfile import ZipFile
 #~ from shutil import make_archive
 def make_pack (arg=None):
-    tempo = leeno_version_code()
     oDoc = XSCRIPTCONTEXT.getDocument()
     for bar in GetmyToolBarNames: #toolbar sempre visibili
         toolbar_on (bar, 0)

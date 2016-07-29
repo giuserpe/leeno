@@ -168,7 +168,6 @@ sistema_attributi_sheet
 			exit sub
 	End Select
 ThisComponent.enableAutomaticCalculation(True)
-	msgbox (&quot;#str Questa macro non lavora su questa tipologia di tabella!&quot;, 25, &quot;AVVISO!&quot;)
 end Sub
 rem ----------------------------------------------------------------------
 Sub Struttura_Contab (tag As string) &apos; (c) Giuseppe Vizziello 2014

@@ -2,7 +2,7 @@
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 ########################################################################
 # LeenO - Computo Metrico
-# Template assistito per la compilazione di Computi Metrici Estimativi
+# Template assistito per la compilazione di Computi Metrici Estimativi646
 # Copyright (C) Giuseppe Vizziello - supporto@leeno.org
 # Licenza LGPL http://www.gnu.org/licenses/lgpl.html
 # Il codice contenuto in questo modulo è parte integrante dell'estensione LeenO
@@ -646,8 +646,6 @@ def _gotoSheet (nSheet, fattore=100):
     oSheet = oDoc.Sheets.getByName(nSheet)
     oSheet.IsVisible = True
     oDoc.CurrentController.setActiveSheet(oSheet)
-    #~ if oDoc.getSheets().getByName('S1').getCellByPosition(7,291).Value == 2:
-        #~ fattore = oDoc.getSheets().getByName('S1').getCellByPosition(7,292).Value
     oDoc.CurrentController.ZoomValue = fattore
 
      #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
@@ -2570,7 +2568,7 @@ createUnoService = (
                     )
 GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO','private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', )
 ########################################################################
-def debug (sCella='', t=''):
+def debugnn (sCella='', t=''):
     mri(XSCRIPTCONTEXT.getDocument())
     '''
     sCella  { string } : stringa di default nella casella di testo
@@ -3054,11 +3052,13 @@ def leeno_version_code(arg=None):
     of.close()
     return str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv +'-'+ tempo[:-2]
 ########################################################################
+def debug (arg=None):
+    toolbar_ordina()
+
 def toolbar_vedi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    #~ if oDoc.getSheets().hasByName('S1') == False:
-        #~ return
+
     if oDoc.getSheets().getByName('S1').getCellByPosition(7,316).Value == 0:
         for bar in GetmyToolBarNames: #toolbar sempre visibili
             toolbar_on (bar)
@@ -3069,6 +3069,7 @@ def toolbar_vedi (arg=None):
     toolbar_ordina()
     oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
     nSheet = oDoc.CurrentController.ActiveSheet.Name
+
     if nSheet == 'Elenco Prezzi':
         toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO')
     elif nSheet == 'Analisi di Prezzo':
@@ -3097,7 +3098,7 @@ def toolbar_ordina (arg=None):
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     i = 0
     for bar in GetmyToolBarNames:
-        oLayout.dockWindow(bar, 'DOCKINGAREA_TOP', Point(i, 3))
+        oLayout.dockWindow(bar, 'DOCKINGAREA_TOP', Point(i, 4))
         i += 1
 #######################################################################
 #~ from zipfile import ZipFile
@@ -3135,7 +3136,7 @@ def make_pack (arg=None):
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 ########################################################################
-g_exportedScripts = Adatta_Altezza_riga, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI
+g_exportedScripts = Adatta_Altezza_riga, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1
 ########################################################################
 ########################################################################
 # ... here is the python script code

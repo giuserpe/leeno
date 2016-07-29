@@ -61,6 +61,16 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 	GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 	If Not ThisComponent.Sheets.HasByName(&quot;S1&quot;) Then Exit Sub
+
+	Dim oSheet, oContr as Object
+	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+	oSheet.isVisible = TRUE
+	oContr = ThisComponent.CurrentController
+	oContr.ZoomValue = 100
+	oContr.setactivesheet(oSheet)
+	oContr.setFirstVisibleColumn (0)
+	oContr.setFirstVisibleRow(190)
+
  	Setta_Cost_Gen
  	setta_versione
 	codice_da_cercare_in_elenco = &quot;&quot;
@@ -79,18 +89,19 @@ rem visualizza le toolbar leeno
 	Else
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0
 	EndIf
+&apos;	Sel_Altre_Opz
 End Sub
 rem ######################################################################
 Sub autoexec_off
 rem chiudo le toolbars
-	Dim oSheet, oContr, oAreaR as Object
+	Dim oSheet, oContr as Object
 	Visualizza_normale
 	
-	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
 	oSheet.isVisible = TRUE
-	oAreaR = Osheet.getCellRangeByName (&quot;A190:A190&quot;)
-	Thiscomponent.currentcontroller.select(oAreaR)
 	oContr = ThisComponent.CurrentController
+	oContr.ZoomValue = 100
+	oContr.setactivesheet(oSheet)
 	oContr.setFirstVisibleColumn (0)
 	oContr.setFirstVisibleRow(190)
 	

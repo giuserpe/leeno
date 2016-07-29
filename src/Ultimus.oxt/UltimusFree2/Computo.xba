@@ -14,7 +14,8 @@
 
 Sub genera_variante
 	chiudi_dialoghi
-	Visualizza_sheet_TUTTE
+	If ultima_voce = 2 Then Exit sub
+&apos;	Visualizza_sheet_TUTTE
 	If Not ThisComponent.Sheets.hasbyname(&quot;VARIANTE&quot;) Then
 		ThisComponent.Sheets.CopybyName(&quot;COMPUTO&quot;, &quot;VARIANTE&quot;, 4)
 		sistema_attributi_sheet
@@ -33,9 +34,8 @@ Sub genera_variante
 		unSelect &apos;unselect ranges 	
 		Exit Sub
 	EndIf
-	If ultima_voce = 0 Then
-		Exit Sub
-	Else
+
+
 		test = msgbox (&quot;Vuoi svuotare la VARIANTE appena generata?.&quot; &amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Se decidi di continuare, cancellerai tutte le voci di&quot; &amp; CHR$(10) _
 		&amp; &quot;misurazione già presenti in questo elaborato.&quot; &amp; CHR$(10) &amp; CHR$(10) _
@@ -43,11 +43,11 @@ Sub genera_variante
 		If test = 7 Then
 			Exit Sub
 		Else
+			
 			oSheet.rows.removeByIndex (3,ultima_voce-2)&apos;cancella tutto il foglio
 			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,2))
 			nuova_voce_computo_att
 		EndIf
-	EndIf
 
 End Sub
 

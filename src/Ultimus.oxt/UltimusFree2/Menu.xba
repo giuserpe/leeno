@@ -121,17 +121,6 @@ rem CONTESTUALIZZATE
 	EndIf
 End Sub
 rem ######################################################################
-Sub SETPOS
-	Dim oDoc 	:	oDoc = thiscomponent
-	Dim oLayout :	oLayout = oDoc.CurrentController.getFrame().LayoutManager
-&apos;	xray	oLayout.getElementpos(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;)
-	Dim oPosition as new com.sun.star.awt.Point
-	oPosition.X = 100
-	oPosition.Y = 4
-	oLayout.setElementpos(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, oPosition)
-	oLayout.Visible = True
-End Sub
-rem ######################################################################
 	
 Sub toolbar_on (toolbarURL As string, optional flag As Integer) &apos;(C) Giuseppe Vizziello 2015
 rem se il flag è 0 (zero) la toolbarURL viene nascosta

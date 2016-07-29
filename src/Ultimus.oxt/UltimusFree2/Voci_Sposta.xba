@@ -58,7 +58,6 @@ rem controllo se posso procedere
 		Numera_Voci_Computo (&quot;&quot;)
 	End If
 fine:
-&apos;screenupdatingon
 end sub
 rem ######################################################################
 

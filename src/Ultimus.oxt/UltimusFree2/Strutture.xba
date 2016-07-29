@@ -146,7 +146,7 @@ Sub Struttura
 	&apos;_____________________
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 	&apos;_____________________
-&apos;screenupdatingOFF
+	ThisComponent.enableAutomaticCalculation(False)
 sistema_attributi_sheet
 	sAttributo = Trova_Attr_Sheet
 &apos;	Print sAttributo
@@ -167,7 +167,7 @@ sistema_attributi_sheet
 			Struttura_Analisi
 			exit sub
 	End Select
-&apos;screenupdatingON
+ThisComponent.enableAutomaticCalculation(True)
 	msgbox (&quot;#str Questa macro non lavora su questa tipologia di tabella!&quot;, 25, &quot;AVVISO!&quot;)
 end Sub
 rem ----------------------------------------------------------------------
@@ -224,7 +224,7 @@ end sub
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) descrizione breve
-&apos;ScreenUpdatingOFF
+ThisComponent.enableAutomaticCalculation(False)
 &apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
 
 	oCell = thisComponent.getCurrentSelection() &apos;oCell.string
@@ -247,7 +247,7 @@ Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) de
 		Tronca_Altezza_Voci_Listino
 		exit sub
 	end If
-&apos;ScreenUpdatingON
+ThisComponent.enableAutomaticCalculation(True)
 	thisComponent.currentController.Select(oCell)
 	unSelect &apos;unselect ranges 
 end sub

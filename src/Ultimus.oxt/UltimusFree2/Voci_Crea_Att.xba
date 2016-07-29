@@ -13,7 +13,7 @@
 &apos;_______________________________________________________________________________________
 Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 &apos; creata per lo shortcut
-&apos;screenupdatingoff
+ThisComponent.enableAutomaticCalculation(False)
  Dim nome_sheet As String 
  	nome_sheet = thisComponent.currentcontroller.activesheet.Name
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
@@ -29,7 +29,7 @@ If se_contabilita = 1 Then Exit Sub
  	Case &quot;Elenco Prezzi&quot;
  	Voce_EP_in_bianco
 	End Select
-&apos;screenupdatingon
+ThisComponent.enableAutomaticCalculation(true)
 End Sub
 
 &apos;normalmente in Contabilità non vengono create nuove voci ma si &quot;pesca&quot;

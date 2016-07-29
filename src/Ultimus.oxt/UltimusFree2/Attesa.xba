@@ -55,8 +55,6 @@ END IF
 	oDoc = ThisComponent
 	oDocView = ThisComponent.getCurrentController()
 	if thiscomponent.isActionLocked = true then 
-			ScreenUpdatingOn
-			ScreenUpdatingOff
 		&apos;	msgbox &quot; mm ...Scusa... era distratto... &quot;&amp; CHR(10)_
 		&apos;	&amp; &quot; potresti ripetere il comando... ? &quot;
 		&apos;	Clessid_lock_Start = &quot;fallito&quot;
@@ -67,7 +65,6 @@ END IF
 saltarello:	
 	RegisterKeyHandler
 	RegisterMouseClickHandler
-	ScreenUpdatingOff
 
 exit function
 cleanExit:
@@ -129,7 +126,6 @@ END IF
 &apos;dialogoProva
 	Barra_Apri_leggera
 
-&apos;	ScreenUpdatingOff
 exit function
 cleanExit:
 Clessid_lock_End
@@ -161,7 +157,6 @@ END IF
 saltarello:
 	oDoc = ThisComponent
 	oDocView = ThisComponent.getCurrentController()
-	ScreenUpdatingOff
 	RegisterKeyHandler
 	RegisterMouseClickHandler
 exit function
@@ -199,31 +194,10 @@ Sub	Clessid_lock_End_
 	unRegisterKeyHandler(oKeyHandler)
 	UnregisterMouseClickHandler(oMouseClickHandler)
 	while thiscomponent.isActionLocked = true 
-	 	ScreenUpdatingOn
 	wend 
-	ScreenUpdatingOn
 	barra_chiudi
 
 END SUB
-
-
-
-Sub ScreenUpdatingOn
-	ThisComponent.enableAutomaticCalculation(True)
-&apos;	ThisComponent.unlockControllers
-&apos;	do while thiscomponent.isActionLocked = true
-&apos; &apos;	ThisComponent.removeActionLock
-&apos;	loop
-End Sub
-
-Sub ScreenUpdatingOff &apos; calcolo automatico
-ThisComponent.enableAutomaticCalculation(False)
-&apos;xray ThisComponent
-&apos; ThisComponent.lockControllers ()
-&apos; ThisComponent.addActionLock ()
-
-End Sub
-
 &apos;_______________________________________________________________________________________++
 
 Sub Clessidra()

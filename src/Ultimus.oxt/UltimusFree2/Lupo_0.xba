@@ -824,18 +824,6 @@ oSheet = oDoc.currentcontroller.activesheet
 &apos;exit sub
 END SUB
 
-
-&apos;sub ScreenUpdatingOn 
-&apos; ThisComponent.UnlockControllers
-&apos; ThisComponent.removeActionLock
-&apos;END SUB
-
-&apos;sub ScreenUpdatingOff 
- &apos; ThisComponent.addActionLock
-&apos; ThisComponent.LockControllers
-&apos;END SUB 
-
-
 Function OpenDocument(DocPath as String, Args(), Optional bDisposable as Boolean)
 Dim oComponents as Object
 Dim oComponent as Object

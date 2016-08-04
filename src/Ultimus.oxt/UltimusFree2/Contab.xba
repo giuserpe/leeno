@@ -34,7 +34,7 @@ Sub attiva_contabilita
 	nuova_voce_contab
 	fissa (0,3)
 	set_larghezza_colonne
-	sistema_attributi_sheet
+
 &apos;	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 &apos;	ThisComponent.CurrentController.Select(oSheet)
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
@@ -84,7 +84,7 @@ end Sub
 rem ######################################################################
 
 sub GENERA_Atti_Contabili &apos;(C) Giuseppe Vizziello 2014
-	ThisComponent.enableAutomaticCalculation(False)
+&apos;	ThisComponent.enableAutomaticCalculation(False)
 chiudi_dialoghi
 	testa = msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 	&amp; &quot;Puoi continuare, ma a tuo rischio!&quot; &amp; CHR$(10) &amp; CHR$(10) _
@@ -110,8 +110,8 @@ GoTo salta: &apos;solo per debug
 	Exit Sub
 salta:
 	Genera_LIBRETTO
-&apos;	Genera_REGISTRO &apos; questa è annidata in Genera_LIBRETTO per evitare che sia avviata quando non ci sono voci da registrare
-	ThisComponent.enableAutomaticCalculation(True)
+&apos;&apos;	Genera_REGISTRO &apos; questa è annidata in Genera_LIBRETTO per evitare che sia avviata quando non ci sono voci da registrare
+&apos;	ThisComponent.enableAutomaticCalculation(True)
 	msgbox (&quot;La generazione degli allegati contabili è stata completata.&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
 	fine:
@@ -1061,6 +1061,7 @@ sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 end Sub
 rem ######################################################################
 Sub azzera_atti
+chiudi_dialoghi
 	testa = msgbox (&quot;Hai chiesto di procedere con la cancellazione&quot; &amp; CHR$(10) _
 		&amp; &quot;di TUTTI gli atti contabili presenti nel documnto.&quot; &amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Ti sarà chiesta conferma ad ogni passo.&quot; &amp; CHR$(10) &amp; CHR$(10) _

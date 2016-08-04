@@ -294,29 +294,12 @@ End Sub
 
 
 Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
-sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
-	If Trova_Attr_Sheet &lt;&gt; &quot;TIPO_EP&quot; Then 
-		if Trova_Attr_Sheet = &quot;&quot; Then
-			tabella=&quot;sconosciuto&quot;
-		Else
-			tabella= Trova_Attr_Sheet
-		End If 
-		msgbox &quot;#6 Questo comando va eseguito su una tabella di Elenco Prezzi.&quot;&amp; CHR$(10)_
-				&amp; &quot;ANNULLO!&quot;&amp; CHR$(10)_
-				&amp; &quot;Questa tabella ha attributo: &quot;&amp; tabella ,48, &quot;ATTENZIONE! (Voce_EP_in_bianco)&quot;
-				exit sub
-	end if
-	oSheet = ThisComponent.currentController.activeSheet
-	lcolbase = Colonna_giusta_EP (oSheet)
-rem ----------------------------------------------------------------------
-	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
-	rIntest=oStart.CellAddress.Row+1
+oSheet = ThisComponent.currentController.activeSheet
+
+	If oSheet.Name &lt;&gt; &quot;Elenco Prezzi&quot; Then Exit Sub
+
 fissa (0,idxrow+1)
-rem ----------------------------------------------------------------------
- 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit sub
-	end if
+
  	
 	&apos;_____________________
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
@@ -347,21 +330,16 @@ Aggiorna_formula_sommase (lrow)
 
 
 	oMioRange=thisComponent.getCurrentSelection()
-	oMioRange.Rows.OptimalHeight = true
+&apos;	oMioRange.Rows.OptimalHeight = true
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)
 	ThisComponent.CurrentController.Select (oSheet.getCellByPosition(lcolbase+idxcol,lrow)
 	unSelect &apos;unselect ranges 
-Exit Sub 
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then	
-		msgbox &quot;In questo modo il &apos;prezzo&apos; lo devi compilare a mano!&quot; &amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot;Se invece vuoi acquisire dei prezzi da un Prezzario devi aprire un file prezziario e da quello inviare qui la voce...&quot; &amp; CHR$(10)_
-				&amp; &quot; (Eventualmente consulta il &apos;Tutorial per iniziare&apos; al cap. &apos;5.6 Inserire un nuovo prezzo in Elenco Prezzi&apos;) &quot;
-	end if
 End Sub
 
 
 
 SUB chiudi_dialoghi &apos; chiude tutte le dialog
+
 			&apos; modificare qui se si aggiungono delle dialog
 	if Not isNull (oDialogScenari) then oDialogScenari.endExecute() 
 	if Not isNull (oDialogScenari_A) then oDialogScenari_A.endExecute()

@@ -13,7 +13,8 @@
 &apos;_______________________________________________________________________________________
 Sub Nuova_Voce_scelta () &apos;assegnato a Ctrl-Shift-N
 &apos; creata per lo shortcut
-ThisComponent.enableAutomaticCalculation(False)
+ThisComponent.enableAutomaticCalculation(true)
+On Error GoTo fine:
  Dim nome_sheet As String 
  	nome_sheet = thisComponent.currentcontroller.activesheet.Name
 	chiudi_dialoghi &apos; chiude tutti i dialoghi
@@ -29,7 +30,7 @@ If se_contabilita = 1 Then Exit Sub
  	Case &quot;Elenco Prezzi&quot;
  	Voce_EP_in_bianco
 	End Select
-ThisComponent.enableAutomaticCalculation(true)
+fine:
 End Sub
 
 &apos;normalmente in Contabilità non vengono create nuove voci ma si &quot;pesca&quot;
@@ -117,7 +118,7 @@ sub adegua_s5 rem ADEGUAMENTO DEL FILE DI ESEMPIO 3.9.xx
 	
 end sub
 
-sub nuova_voce_contab &apos;correzioni (C) Giuseppe Vizziello 2014
+sub nuova_voce_contab
 MAIN:	
 &apos;individua la riga corrente
 	oCell=thisComponent.getCurrentSelection()
@@ -238,8 +239,9 @@ SISTEMA_I_TAG:
 &apos;		oSheet.getCellByPosition(35, lrow+i).setformula(&quot;=AJ$&quot; &amp; lrow +5)
 &apos;		i=i+1
 &apos;	Loop
-		oSheet.getCellByPosition(36, lrow+i).Formula = &quot;=IF(ISERROR(P&quot;&amp; lrow +5 &amp;&quot;);&quot;&quot;&quot;&quot;;IF(P&quot;&amp; lrow +5 &amp;&quot;&lt;&gt;&quot;&quot;&quot;&quot;;P&quot;&amp; lrow +5 &amp;&quot;;&quot;&quot;&quot;&quot;))&quot;
-		oSheet.getCellByPosition(36, lrow+i).cellstyle = &quot;comp -controolo&quot;
+		oSheet.getCellByPosition(35, lrow+4).Formula = &quot;=B&quot;&amp; lrow +2
+		oSheet.getCellByPosition(36, lrow+4).Formula = &quot;=IF(ISERROR(P&quot;&amp; lrow +5 &amp;&quot;);&quot;&quot;&quot;&quot;;IF(P&quot;&amp; lrow +5 &amp;&quot;&lt;&gt;&quot;&quot;&quot;&quot;;P&quot;&amp; lrow +5 &amp;&quot;;&quot;&quot;&quot;&quot;))&quot;
+		oSheet.getCellByPosition(36, lrow+4).cellstyle = &quot;comp -controolo&quot;
 
 		
  	if 	(ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 or _

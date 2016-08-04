@@ -143,31 +143,24 @@ rem fine filtri
 rem ----------------------------------------------------------------------
 
 Sub Struttura
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	ThisComponent.enableAutomaticCalculation(False)
-sistema_attributi_sheet
-	sAttributo = Trova_Attr_Sheet
-&apos;	Print sAttributo
-	Select case sAttributo 
-		Case &quot;TIPO_COMPUTO&quot;
+	Select case ThisComponent.currentController.activeSheet.Name
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 			Struttura_ComputoM
 			exit sub
-		Case &quot;TIPO_CONTABILITA&quot;
+		Case &quot;CONTABILITA&quot;
 			Struttura_Contab (&quot;#Lib#&quot;)
 			exit Sub
-		Case &quot;TIPO_REGISTRO&quot;
+		Case &quot;Registro&quot;
 			Struttura_Contab (&quot;#Reg#&quot;)
 			exit Sub
-		Case &quot;TIPO_SAL&quot;
+		Case &quot;SAL&quot;
 			Struttura_Contab (&quot;#Sal#&quot;)
 			exit Sub
-		Case &quot;TIPO_ANALISI&quot;
+		Case &quot;Analisi di Prezzo&quot;
 			Struttura_Analisi
 			exit sub
 	End Select
-ThisComponent.enableAutomaticCalculation(True)
+&apos;ThisComponent.enableAutomaticCalculation(True)
 end Sub
 rem ----------------------------------------------------------------------
 Sub Struttura_Contab (tag As string) &apos; (c) Giuseppe Vizziello 2014
@@ -222,20 +215,15 @@ Sub struttura_ComputoM
 end sub
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
-Sub Tronca_Altezza_Voci &apos;0 switch (sceglie in base alla tab di contesto) descrizione breve
-ThisComponent.enableAutomaticCalculation(False)
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-
+Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione breve
 	oCell = thisComponent.getCurrentSelection() &apos;oCell.string
-&apos;	ThisComponent.Sheets.getByName(ThisComponent.currentController.activeSheet.Name)
-	sistema_attributi_sheet&apos; (&quot;Elenco Prezzi&quot;)
-&apos;Print Trova_Attr_Sheet
-	Select Case Trova_Attr_Sheet
-	Case &quot;TIPO_EP&quot;
+	
+	Select case ThisComponent.currentController.activeSheet.Name
+	Case &quot;Elenco Prezzi&quot;
 		Tronca_Altezza_Voci_EP
-	Case &quot;TIPO_ANALISI&quot;
+	Case &quot;Analisi di Prezzo&quot;
 		Tronca_Altezza_Analisi
-	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;&apos; disattivata in contabilità
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;TIPO_CONTABILITA&quot;&apos; disattivata in contabilità
 		If abbreviata = 1 Then
 			Tronca_Altezza_Voci_Computo_OFF
 		Else
@@ -246,7 +234,7 @@ ThisComponent.enableAutomaticCalculation(False)
 		Tronca_Altezza_Voci_Listino
 		exit sub
 	end If
-ThisComponent.enableAutomaticCalculation(True)
+&apos;ThisComponent.enableAutomaticCalculation(True)
 	thisComponent.currentController.Select(oCell)
 	unSelect &apos;unselect ranges 
 end sub

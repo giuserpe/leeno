@@ -28,32 +28,10 @@ Dim VarCon As Boolean
 Sub Scelta_Viste() &apos;nuova versione universale
 					&apos; e sopratutto contestuale
 	osheet = thisComponent.CurrentController.ActiveSheet
-	If osheet.Name = &quot;Registro&quot; Or _
-		osheet.Name = &quot;SAL&quot; Then
-		sAttributo = &quot;TIPO_CONTABILITA&quot;
-		GoTo esegui:
-	End If
-sistema_attributi_sheet
-	sAttributo = Trova_Attr_Sheet
-&apos;	Print sAttributo
- If sAttributo &lt;&gt; &quot;TIPO_COMPUTO&quot; and _
- 	sAttributo &lt;&gt; &quot;TIPO_CONTABILITA&quot; and _
- 	sAttributo &lt;&gt; &quot;TIPO_ANALISI&quot; and _
- 	sAttributo &lt;&gt; &quot;TFILTROTMP&quot; and _
- 	sAttributo &lt;&gt; &quot;TIPO_ELENCOP&quot; and _
- 	sAttributo &lt;&gt; &quot;TIPO_EP&quot; Then
-		 	exit sub
- 	msgbox &quot;#1 questa opzione non è disponibile su questo tipo di tabella!&quot;&amp; CHR$(10)_
-		 			&amp; &quot;&quot;
+&apos;	If NOT DialogLibraries.isLibraryLoaded(&quot;UltimusFree2&quot;) Then  DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
 
- 	end if &apos;
-esegui:
- 	&apos; verica e caricamento prob. ridondanti (lo esegue in apertura del doc)
- 	If NOT DialogLibraries.isLibraryLoaded(&quot;UltimusFree2&quot;) Then &apos; dovrebbe essere ridondante
- 	 DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-	End If 
-	Select case sAttributo
- 		case &quot;TIPO_COMPUTO&quot; 
+	Select case osheet.Name
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
 			oDialogScenari_A = CreateUnoDialog( DialogLibraries.UltimusFree2.DialogViste_A) &apos; Inizializza il dialogo
 &apos;#########################################################################
 &apos;INIT CONTROLLI
@@ -66,11 +44,11 @@ esegui:
 &apos;			If abbreviata = 1 Then oDialogScenari_A.getControl(&quot;CBDesc&quot;).State = 1
 
 &apos;			oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
-		Select Case oDialogScenari_A.Execute()
-		Case 1
-		Case 0
-			Exit Sub
-		End Select
+			Select Case oDialogScenari_A.Execute()
+			Case 1
+			Case 0
+				Exit Sub
+			End Select
 &apos;#########################################################################
 			OBTerra = oDialogScenari_A.getControl(&quot;OBTerra&quot;).State
 			If OBTerra = True Then
@@ -140,16 +118,16 @@ esegui:
 				Formula_magica_aggiorna
 			endif
 &apos;#########################################################################
- 		case &quot;TIPO_CONTABILITA&quot;
+ 		Case &quot;CONTABILITA&quot;, &quot;Registro&quot;, &quot;SAL&quot;
 			oDialogScenari_2 = CreateUnoDialog( DialogLibraries.UltimusFree2.Dialogviste_N) &apos; Inizializza il dialogo
 			 &apos; Esegue il dialogo, cioè appare sullo schermo
-		Select Case oDialogScenari_2.Execute()
-		Case 1
-		Case 0
-			Exit Sub
-		End Select
+			Select Case oDialogScenari_2.Execute()
+			Case 1
+			Case 0
+				Exit Sub
+			End Select
 	
-		case &quot;TIPO_ELENCOP&quot;,&quot;TIPO_EP&quot;
+		Case &quot;Elenco Prezzi&quot;
 			oDialogScenari_EP = CreateUnoDialog(DialogLibraries.UltimusFree2.DialogViste_EP) &apos; Inizializza il dialogo
 &apos;#########################################################################
 &apos;INIT CONTROLLI
@@ -160,11 +138,11 @@ esegui:
 			If oSheet.getColumns.getByIndex(8).isVisible = True Then oDialogScenari_EP.getControl(&quot;CBUsa&quot;).State = 1
 
 			 &apos; Esegue il dialogo, cioè appare sullo schermo
-		Select Case oDialogScenari_EP.Execute()
-		Case 1
-		Case 0
-			Exit Sub
-		End Select
+			Select Case oDialogScenari_EP.Execute()
+			Case 1
+			Case 0
+				Exit Sub
+			End Select
 &apos;#########################################################################
 &apos; esegui azioni
 	 		If	oDialogScenari_EP.getControl(&quot;CBSic&quot;).State = 0 Then &apos;sicurezza
@@ -208,17 +186,18 @@ esegui:
 	 			 		
 	 		If  VarCon Or ComCon Or ComVar Then
 	 			Rifa_AA_BB_Computo
+				ScriptPy(&quot;pyleeno.py&quot;,&quot;nascondi_err&quot;)
 	 		Else
 	 			If	oDialogScenari_EP.getControl(&quot;CBSom&quot;).State = 1 Then Rifa_AA_BB_Computo
 	 		EndIf 	 		
-		case &quot;TIPO_ANALISI&quot;
+		case &quot;Analisi di Prezzo&quot;
 			oDialogScenari_AN = CreateUnoDialog(DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo
 			If oSheet.GetCellByPosition(1 ,2).Rows.OptimalHeight = false Then oDialogScenari_AN.getControl(&quot;CBDesc&quot;).State = 1
 	&apos;		oDialogScenari_AN.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo 
-		Select Case oDialogScenari_AN.Execute()
-		Case 1
-		Case 0
-			Exit Sub
+			Select Case oDialogScenari_AN.Execute()
+			Case 1
+			Case 0
+				Exit Sub
 		End Select
 &apos;#########################################################################
 &apos; esegui azioni
@@ -230,6 +209,8 @@ esegui:
 			Adatta_h_riga_intera_tabella(oSheet.Name)
 			EndIf
 		EndIf
+	&apos;	Case Else
+			Exit sub
  	end select
 END SUB
 
@@ -570,10 +551,4 @@ SUB Torna_a_schermo_normale &apos; Schermo intero in apertura del doc
 	 dispatcher.executeDispatch(document, &quot;.uno:FullScreen&quot;, &quot;&quot;, 0, args1())
 	 
 END SUB
-
-
-
-
-
-
 </script:module>

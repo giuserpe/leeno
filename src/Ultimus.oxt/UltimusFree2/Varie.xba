@@ -15,24 +15,6 @@ Global codice as string
 
 Sub ANALISI_IN_ELENCOPREZZI
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;ANALISI_IN_ELENCOPREZZI&quot;)
-Exit sub
-sistema_attributi_sheet
-&apos;Print Trova_Attr_Sheet
-	if Trova_Attr_Sheet &lt;&gt; &quot;TIPO_ANALISI&quot; then
-		exit sub
-	end if
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	range2Cell &apos; per uscire dal modo editazione
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 1 then
-&apos;		Print &quot;caso1&quot;
-		Elimina_doppione &apos; primus like ma solo se quella già in EP non e (AP)
-	end if
-	If 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).value = 0 or _
-		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).string = &quot;&quot; Then
-&apos;		Print &quot;caso2&quot;
-	 	ANALISI_IN_ELENCOPREZZI_classica
-	end If
-
 END SUB
 
 
@@ -1271,7 +1253,6 @@ SUB Adatta_h_riga_intera_tabella(nSheet as string)
 END SUB
 
 sub Inserisci_Riga_rossa&apos; di chiusura
-sistema_attributi_sheet
  Dim nome_sheet as string
 	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	if lrow = -1 then
@@ -1279,95 +1260,51 @@ sistema_attributi_sheet
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
 	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
-
 	nome_sheet = thisComponent.currentcontroller.activesheet.name
 
- sAttributo = Trova_Attr_Sheet
-&apos;print sAttributo
-	insRows (lrow, 1)
-&apos;	oSheet.getRows.insertByIndex(lrow, 1)
-	&apos;lrow = lrow+1
-&apos; oSheet = ThisComponent.currentController.activeSheet
- &apos; oCell = ThisComponent.CurrentSelection
- &apos; lrow = oCell.CellAddress.row
-&apos;	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-	Select Case sAttributo
-		case &quot;TIPO_COMPUTO&quot;
- 			oCell = oSheet.GetCellByPosition( 0, lrow)
- 			oCell.string = &quot;Fine Computo&quot;
- 	 		oCell = oSheet.GetCellByPosition( 3, lrow)
- 			oCell.string = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)&quot;
- 			oCell = oSheet.GetCellByPosition( 34, lrow)
- 			oCell.string = &quot;Fine Computo&quot;
+	Select Case nome_sheet
+		case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
+			lrow = ultima_voce + 2
+ 			oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine Computo&quot;
+ 	 		oSheet.GetCellByPosition( 3, lrow).string = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)&quot;
+ 			oSheet.GetCellByPosition( 34, lrow).string = &quot;Fine Computo&quot;
 	 		oRange = oSheet.getCellRangeByPosition(0,lrow,34,lrow)
- 		 	&apos;oRange.CellBackColor = RGB(255,0,0)
  	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 	 	 
-		case &quot;TIPO_ANALISI&quot;
- 			oCell = oSheet.GetCellByPosition( 0, lrow)
- 			oCell.string = &quot;Fine ANALISI&quot;
- 	 		oCell = oSheet.GetCellByPosition( 2, lrow)
- 			oCell.string = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)&quot;
- 			&apos;oCell = oSheet.GetCellByPosition( 5, lrow)
- 			&apos;oCell.string = &quot;Fine ANALISI&quot;
- 			&apos;oCell = oSheet.GetCellByPosition( 6, lrow)
- 			&apos;oCell.string = &quot;Fine ANALISI&quot;
+		case &quot;Analisi di Prezzo&quot;
+			lrow = ultima_voce + 1
+ 			oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine ANALISI&quot;
+ 	 		oSheet.GetCellByPosition( 2, lrow).string = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)&quot;
  			oRange = oSheet.getCellRangeByPosition(0,lrow,8,lrow)
- 	 		&apos;oRange.CellBackColor = RGB(255,0,0) 
  	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 		
-		case &quot;TIPO_EP&quot;, &quot;TIPO_ELENCOP&quot;
-			oCell = oSheet.GetCellByPosition( 1, lrow)
- 			oCell.string = &quot;Questa riga NON deve essere cancellata, MAI!!!  (ma può rimanere tranquillamente NASCOSTA!)&quot;
- 			dim lH as long
+		case &quot;Elenco Prezzi&quot;
+&apos;			lrow = ultima_voce + 2
+			oSheet.GetCellByPosition( 1, lrow).string = &quot;Questa riga NON deve essere cancellata, MAI!!!  (ma può rimanere tranquillamente NASCOSTA!)&quot;
  			oCell.rows.Height = 475
  	 		oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine elenco&quot;
  	 		oSheet.GetCellByPosition( 3, lrow).string = &quot;&quot; 	 			 
   			oSheet.GetCellByPosition( 8, lrow).string = &quot;Fine elenco&quot; 
- 			oRange = oSheet.getCellRangeByPosition(0,lrow,9,lrow)
+ 			oRange = oSheet.getCellRangeByPosition(0,lrow,26,lrow)
  		 	&apos;oRange.CellBackColor = RGB(255,0,0) 
  	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 	
  	 		oRange = oSheet.getCellRangeByPosition(0, lrow,255,lrow)
- 	 		rem ----------------------------------------------------------------------
- 	 		
-rem totale computo
-	oSheet.GetCellByPosition(10,lrow).STRING=&quot;TOTALE&quot; &apos;totale computo
-	oSheet.GetCellByPosition(10,lrow).cellstyle=&quot;EP statlrowstlrowche_q&quot; &apos;totale computo
-rem ----------------------------------------------------------------------
-	oSheet.GetCellByPosition(lcolbase+11, lrow).setformula(&quot;=SUBTOTAL(9;L&quot; &amp; idxrow &amp;&quot;:L&quot; &amp; lrow &amp; &quot;)&quot;)
-	oSheet.GetCellByPosition(lcolbase+11, lrow).cellstyle = &quot;EP statlrowstlrowche&quot;	
-rem ----------------------------------------------------------------------
-rem totale contabilità
-	oSheet.GetCellByPosition(13,lrow).STRING=&quot;TOTALE&quot; &apos;totale contabilità
-	oSheet.GetCellByPosition(13,lrow).cellstyle=&quot;EP statlrowstlrowche_Contab_q&quot; &apos;totale contabilità
-rem ----------------------------------------------------------------------
-	oSheet.GetCellByPosition(14 , lrow).formula = &quot;=SUBTOTAL(9;O&quot; &amp; idxrow &amp;&quot;:O&quot; &amp; lrow
-	oSheet.GetCellByPosition(14 , lrow).cellstyle = &quot;EP statlrowstlrowche_Contab_q&quot;
-&apos;	 		oRange.rows.Height = 475
  	End Select  
 END SUB
 
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
-&apos;# da sostituire con def Numera_Voci(bit=1):# in python
-&apos;	aa = (now)
-&apos; sistema_attributi_sheet
- &apos;&apos; Clessid_lock_Start
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 	&apos;inibisce la rinumerazione se la Contabilità è abilita
-	sAttributo = Trova_Attr_Sheet
 	&apos;inibisce la rinumerazione se la var apposita è diversa da 0
- 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 and _
- 		sAttributo = &quot;TIPO_COMPUTO&quot; then
-		msgbox &quot;La rinumerazione è disabilitata: dipende dalla Variabile Generale S1.H335&quot;&amp; CHR$(10)_
-			&amp; &quot;dal Menu Principale&gt;Variabili Generali&quot;
- 		exit sub
+ 	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,334).value &lt;&gt; 0 Then
+ 		If oSheet.Name = &quot;COMPUTO&quot; Or oSheet.Name = &quot;VARIANTE&quot; Then
+			msgbox &quot;La rinumerazione è disabilitata: dipende dalla Variabile Generale S1.H335&quot;&amp; CHR$(10)_
+				&amp; &quot;dal Menu Principale&gt;Variabili Generali&quot;
+	 		exit Sub
+ 		End If 
  	endif 	
 
-	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
-		s_R = &quot;&quot;
-	end if
-	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; Then
-		s_R = &quot;_R&quot;
-	end if	
+	If oSheet.name = &quot;COMPUTO&quot; Or oSheet.Name = &quot;VARIANTE&quot; Then s_R = &quot;&quot;
+	If oSheet.name = &quot;CONTABILITA&quot; Then s_R = &quot;_R&quot;
 &apos;	lStartRow = oSheet.GetCellByPosition(0 , 0)
 	numV = 1
 

@@ -185,8 +185,8 @@ rem da mettere in uscita
 		Macro_doc (evento, &quot;&quot;)
 &apos;		s = s &amp; &quot;&apos;&quot; &amp; evento &amp; CHR$(10)
 	Next
-Macro_Doc (&quot;OnNew&quot;,				&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
-Macro_Doc (&quot;OnLoad&quot;,			&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
+Macro_Doc (&quot;OnNew&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
+Macro_Doc (&quot;OnLoad&quot;,&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 &apos;	msgbox s
 End Sub
 rem ######################################################################
@@ -254,7 +254,7 @@ Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:Ult
 Macro_SHEET (&quot;S1&quot;,	&quot;OnFocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.file_gest.bak_timestamp?language=Basic&amp;location=application&quot;)
 &apos;OnStartApp
 &apos;OnCloseApp
-&apos;OnCreate
+&apos;Macro_Doc (&quot;OnCreate&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 Macro_Doc (&quot;OnNew&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 &apos;OnLoadFinished
 Macro_Doc (&quot;OnLoad&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)

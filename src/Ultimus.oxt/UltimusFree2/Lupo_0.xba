@@ -593,7 +593,7 @@ sub Aggiorniamoli &apos;*** aggiorna la cella con il nome del file di Contabilit
 &apos;On Error goto gest_errore &apos;resume next
 dim sUltimus as string
 dim oSheet as object
-dim Esiste as boolean
+dim Esiste as Boolean
 	&apos;On Error resume next 
 	on error goto gest_errore &apos;preso dalla 4 ed è in prova
 	&apos;in questo caso fa il riesume nella gestione errore
@@ -604,6 +604,7 @@ dim Esiste as boolean
  &apos; GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 &apos;	sLib = &quot;UltimusFree2&quot; 
 	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
+
 &apos;	print &quot;libcontain &quot; &amp; oLibCont.hasByName(sLib)
  If oLibCont.hasByName(sLib)= false Then
  print &quot;perso slib ?(&quot; &amp; sLib &amp; &quot;)&quot;

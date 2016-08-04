@@ -450,11 +450,8 @@ sDocURL = thisComponent.getURL()
 		end if 
 	END IF
 	
-	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then &apos; se la sheet esiste
-	&apos; msgbox &quot;Questa macro funziona soltanto con un template di Ultimus&quot; rem DISATTIVATA GIUSERPE
-		exit sub
-	END IF
-Aggiorniamoli
+	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then exit sub
+&apos;Aggiorniamoli
 	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;) &apos;tab con i dati
 	
 	if osheet.isvisible=false then
@@ -478,9 +475,9 @@ rem ----------------------------------------------------------------------
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	sPrima = Verifica_chiudi_preview
 &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	if sPrima =&quot;Attiva&quot; then
-		wait 5000
-	end if	
+&apos;	if sPrima =&quot;Attiva&quot; then
+&apos;		wait 5000
+&apos;	end if	
 	oSheetCur = ThisComponent.Sheets.getByName(ThisComponent.currentcontroller.activesheet.name)
 	sStile_Pag = oSheetCur.PageStyle &apos;registra il nome dello stile corrente della Sheet
 	oDesktop = createUnoService( &quot;com.sun.star.frame.Desktop&quot; )

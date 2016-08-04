@@ -474,25 +474,6 @@ sub _menu_pop
 	
 end Sub
 rem ######################################################################
-
-sub AutoCalc (flag As Integer) &apos; Calcolo automatico &gt; 0 spento, 1 acceso
-	rem ----------------------------------------------------------------------
-	rem define variables
-	dim document   as object
-	dim dispatcher as object
-	rem ----------------------------------------------------------------------
-	rem get access to the document
-	document   = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	rem ----------------------------------------------------------------------
-	dim args1(0) as new com.sun.star.beans.PropertyValue
-	args1(0).Name = &quot;AutomaticCalculation&quot;
-	args1(0).Value = flag
-	
-	dispatcher.executeDispatch(document, &quot;.uno:AutomaticCalculation&quot;, &quot;&quot;, 0, args1())
-end sub
-rem ######################################################################
 &apos;salva_doc_come (LeenO_Path &amp; &quot;/template/leeno/Listino_LeenO.ots&quot;
 
 sub salva_doc_come (Optional nomeurl As string)

@@ -612,7 +612,7 @@ rem ----------------------------------------------------------------------
 rem controllo TAG su riga dei totali
 			oSheet.getCellByPosition(33, lRow).setstring(&quot;R&quot;)			&apos;tag A
 			oSheet.getCellByPosition(34, lRow).setstring(&quot;Cx&quot;)			&apos;tag B
-&apos;			oSheet.getCellByPosition(35, lRow).setformula(&quot;=B&quot; &amp; i+2)	&apos;tag C
+			oSheet.getCellByPosition(35, lRow).setformula(&quot;=B&quot; &amp; i+2)	&apos;tag C
 rem di queste se ne occupa Rinumera_TUTTI_Capitoli2
 	&apos;		oSheet.getCellByPosition(31, lRow).setformula(&quot;=AF$&quot; &amp; sotto+1)
 	&apos;		oSheet.getCellByPosition(32, lRow).setformula(&quot;=AG$&quot; &amp; sotto+1)

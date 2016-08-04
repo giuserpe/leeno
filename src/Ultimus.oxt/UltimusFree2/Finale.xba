@@ -347,15 +347,14 @@ DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END Sub
 
 SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue formule e i suoi link&apos; usa CopiaSheet 
-&apos; &apos; Shortcut: non assegnata
 	dim nEndRow as long
 	dim nEndCol as Long
 &apos;-------------------------------------------------------------------------
-	sistema_attributi_sheet
+
 	oSheet = ThisComponent.currentcontroller.activesheet
-	sAttributo = Trova_Attr_Sheet
-	Select Case sAttributo
-	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;, &quot;TIPO_ANALISI&quot;, &quot;TIPO_EP&quot;,&quot;&quot;
+
+	Select Case oSheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;, &quot;Analisi di Prezzo&quot;, &quot;Elenco Prezzi&quot;
 		GoTo procedi:
 	Case Else
 		Exit Sub
@@ -399,8 +398,8 @@ procedi:
 	MOSTRA_colonne (&quot;on&quot;)
 	unSelect &apos;unselect ranges 	
 &apos; in caso di tebella del computo o cotabilità
-	Select Case sAttributo
-	Case &quot;TIPO_COMPUTO&quot;, &quot;TIPO_CONTABILITA&quot;
+	Select Case oSheet.Name
+	Case &quot;COMPUTO_copia&quot;, &quot;VARIANTE_copia&quot;, &quot;CONTABILITA_copia&quot;
 		For n = 1 To lLastUrow
 				oCell = oSheet.GetCellbyPosition(2, n)
 			stilecella = oCell.cellstyle
@@ -426,13 +425,13 @@ procedi:
 				oSheet.GetCellbyPosition(1, n).String = descr
 			End Select
 		Next
-		Select Case sAttributo
-		Case &quot;TIPO_COMPUTO&quot;
+		Select Case oSheet.Name
+		Case &quot;COMPUTO_copia&quot;, &quot;VARIANTE_copia&quot;
 			oSheet.Columns.removeByIndex(19, 100)
 			oSheet.Columns.removeByIndex(12, 6)
 			oSheet.Columns.removeByIndex(10, 1)
 			oSheet.Columns.removeByIndex(3, 2)
-		Case &quot;TIPO_CONTABILITA&quot;
+		Case &quot;CONTABILITA_copia&quot;
 			oSheet.Columns.removeByIndex(26, 100)
 			oSheet.Columns.removeByIndex(24, 3)
 			oSheet.Columns.removeByIndex(21, 1)

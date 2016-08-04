@@ -119,7 +119,8 @@ Function Stora_Attr_sheet_generico(sValoreAtt as string, optional oSheet as obje
  &apos; Get the collection of attributes.
  oCustomXmlAttributes = oCell.UserDefinedAttributes
 &apos; xray oCustomXmlAttributes
- 
+If oCustomXmlAttributes.hasByName( &quot;Tipo_sheet&quot; ) Then oCustomXmlAttributes.removeByName( &quot;Tipo_sheet&quot; )
+Exit Function
  If oCustomXmlAttributes.hasByName( &quot;Tipo_sheet&quot; ) Then
  &apos; Change the value of the attribute.
  &apos; oCustomXmlAttributes.replaceByName( &quot;Tipo&quot;, CreateAttributeData(&quot;TIPO_COMPUTO&quot;) )

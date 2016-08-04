@@ -183,7 +183,7 @@ Visualizza_sheet_TUTTE
 			ThisComponent.CurrentController.Select(oSheet)
 			oSheet.unprotect(&quot;&quot;)
 insRows (50, 2)
-AutoCalc (1)
+&apos;ThisComponent.enableAutomaticCalculation(True)
 	end Select
 rem ----------------------------------------------------------------------
  	sURL = UltimusFree2.Lupo_0.sUltimus 

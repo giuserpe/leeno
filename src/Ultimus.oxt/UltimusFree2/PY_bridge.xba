@@ -11,6 +11,7 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
+
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant &apos;Giuseppe Vizziello 2015
 rem questa serve ad avviare le funzioni/script di python
 rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
@@ -36,8 +37,8 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 	Script = MasterScriptProvider.getScript(Url)
 &apos;xray args
 On Error GoTo end:
-	Script.invoke(args,Array(),Array())
-&apos;	Script.invoke(Array(),Array(),Array())
+&apos;	Script.invoke(args,Array(),Array())
+	Script.invoke(Array(),Array(),Array())
 &apos;	PythonResult = Script.invoke(Array(),Array(),Array())
 end: 
 End Sub

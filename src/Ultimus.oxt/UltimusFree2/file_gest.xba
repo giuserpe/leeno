@@ -66,6 +66,15 @@ Sub bak_timestamp &apos; salva una copia di backup del file ad ogni apertura
 End Sub
 &apos;#########################################################################
 Sub file2template
+	Dim oSheet, oContr as Object
+	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+	oSheet.isVisible = TRUE
+	oContr = ThisComponent.CurrentController
+	oContr.ZoomValue = 100
+	oContr.setactivesheet(oSheet)
+	oContr.setFirstVisibleColumn (0)
+	oContr.setFirstVisibleRow(190)
+
 	For Each sName In GetmyToolBarNames()
 		toolbar_on (sName, 0)
 	Next

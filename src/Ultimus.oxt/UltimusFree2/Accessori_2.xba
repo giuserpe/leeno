@@ -572,7 +572,9 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 &apos;manomessa da Giuseppe Vizziello 2014
 &apos; rifà le aree GG e G1G1 in CONTABILITA (servono per la formula somma.se)
 	If Not thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then Exit Sub
-	ThisComponent.enableAutomaticCalculation(False)
+	
+&apos;	ThisComponent.enableAutomaticCalculation(False)
+	
 	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) &apos; da sostituire o integrare
 	oRanges = ThisComponent.NamedRanges
 	&apos; con qualcosa che esegua sia se nome sia se Attributo ???
@@ -603,7 +605,6 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 	End If 
 	lLastUrow = getLastUsedRow(oSheet)
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
-
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
 	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
 	
@@ -654,24 +655,11 @@ i=rIntest
 	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=SUMIF(GG;A4;conEuro)&quot;
 &apos;	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
-	ThisComponent.enableAutomaticCalculation(True)
+&apos;	ThisComponent.enableAutomaticCalculation(True)
 END Sub
 
-
-Sub nascondi_errore (sTipo As String)
-	oSheet = ThisComponent.currentController.activeSheet
-	For n = 2 To ultima_voce+1
-		If osheet.GetCellbyPosition(26, n).String = sTipo Then	oSheet.getCellByposition(0, n).Rows.IsVisible=false
-	Next
-End Sub
-Sub sdcsd
-	nascondi_errore (&quot;#DIV/0!&quot;)
-&apos;	nascondi_errore (&quot;--&quot;)
-End Sub
-
-
 SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di somma.se
-	ThisComponent.enableAutomaticCalculation(False)
+&apos;	ThisComponent.enableAutomaticCalculation(False)
 &apos; parallelo variante
 	Dim oSheet As Object
 	chiudi_dialoghi
@@ -828,7 +816,7 @@ rem ----------------------------------------------------------------------
 	thisComponent.currentController.Select(oSheet.getCellByposition(0, 0)) &apos;deseleziona
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 	unSelect &apos;deseleziona
-	ThisComponent.enableAutomaticCalculation(True)
+&apos;	ThisComponent.enableAutomaticCalculation(True)
 END Sub
 
 rem ----------------------------------------------------------------------

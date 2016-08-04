@@ -18,9 +18,7 @@ Sub genera_variante
 &apos;	Visualizza_sheet_TUTTE
 	If Not ThisComponent.Sheets.hasbyname(&quot;VARIANTE&quot;) Then
 		ThisComponent.Sheets.CopybyName(&quot;COMPUTO&quot;, &quot;VARIANTE&quot;, 4)
-		sistema_attributi_sheet
 		oSheet = ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;)
-		
 		oSheet.getCellByPosition(2,0).String  = &quot;VARIANTE&quot;
 		oSheet.getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
 		oSheet.getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,255,102))
@@ -216,7 +214,6 @@ rem ----------------------------------------------------------------------
 rem cancello fomrattazioni dirette	
 	Flag = com.sun.star.sheet.CellFlags.HARDATTR
 	oSheet.getCellRangeByPosition(0, 3, 250, lRowE+10).clearContents(Flag)
-sistema_attributi_sheet
 barra_fatto
 &apos;	msgbox (&quot;Ho fatto!&quot; &amp; CHR$(10) _
 &apos;			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Operazione completata&quot;)
@@ -621,8 +618,7 @@ end sub
 
 rem ######################################################################
 Sub Firme_in_calce &apos;RIEPILOGO CATEGORIE (c) Giuseppe Vizziello 2014
-&apos;Rinumera_TUTTI_Capitoli2
-sistema_attributi_sheet
+&apos;ThisComponent.enableAutomaticCalculation(False)
 Dim test As Long 
 osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
 &apos;xray osheet
@@ -644,8 +640,9 @@ GoTo lllllllllllll:
 	lRowE = oEnd.CellAddress.Row	rem TROVA LA POSIZIONE DELLA RIGA ROSSA
 Print lRowE
 lllllllllllll:
-rem SE ANALISI PREZZI
-	If Trova_Attr_Sheet = &quot;TIPO_ANALISI&quot; Then
+	Select Case oSheet.Name
+		Case &quot;Analisi di Prezzo&quot;
+
 &apos;#########################################################################
 rem lrowF inizio firme
 rem lrowE fine firme
@@ -680,9 +677,8 @@ rem lrowE fine firme
 		Flags = com.sun.star.sheet.CellFlags.FORMULA
 		aSaveData = oRange.getDataArray()
  		oRange.setDataArray(aSaveData)
-	end if
-rem SE ELENCO PREZZI
-	If Trova_Attr_Sheet = &quot;TIPO_EP&quot; OR Trova_Attr_Sheet = &quot;TIPO_ELENCOP&quot; Then
+
+		Case &quot;Elenco Prezzi&quot;
 &apos;#########################################################################
 rem lrowF inizio firme
 rem lrowE fine firme
@@ -718,14 +714,12 @@ rem lrowE fine firme
 		aSaveData = oRange.getDataArray()
  		oRange.setDataArray( aSaveData )
 
-		end if
-&apos;	goto fine
-rem SE COMPUTO
-	If Trova_Attr_Sheet = &quot;TIPO_COMPUTO&quot; Then
+		Case &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
 &apos;#########################################################################
 rem lrowF inizio firme
 rem lrowE fine firme
 		lrowF = ultima_voce+2
+		Print ultima_voce
 		For i = getlastusedrow (oSheet) to 0 Step -1 
 			If oSheet.GetCellByPosition(0, i).cellstyle = &quot;Riga_rossa_Chiudi&quot; then
 				lRowE = i
@@ -733,7 +727,7 @@ rem lrowE fine firme
 			EndIf
 		Next 
 &apos;#########################################################################
-	ThisComponent.CurrentController.setFirstVisibleRow(lRowE)
+	ThisComponent.CurrentController.setFirstVisibleRow(lRowF)
 &apos;		osheet = thisComponent.CurrentController.ActiveSheet
 		If lRowE &gt;lRowF+1 then
 				oSheet.getrows.removebyindex(lRowF,	lRowE-lRowF)
@@ -867,8 +861,9 @@ rem NASCONDE RIGHE
 	adatta_altezza_riga
 	unselect
 &apos;Set_Area_Stampa_N
-	END IF
+	End Select
 	fine:
+&apos;ThisComponent.enableAutomaticCalculation(True)
 end Sub
 &apos;#########################################################################
 Sub azzera_voce

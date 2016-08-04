@@ -58,20 +58,19 @@ Function GetmyToolBarNames()
 End Function
 rem ######################################################################
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;autoexec&quot;)
-	GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-	If Not ThisComponent.Sheets.HasByName(&quot;S1&quot;) Then Exit Sub
-
-	Dim oSheet, oContr as Object
-	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-	oSheet.isVisible = TRUE
-	oContr = ThisComponent.CurrentController
-	oContr.ZoomValue = 100
-	oContr.setactivesheet(oSheet)
-	oContr.setFirstVisibleColumn (0)
-	oContr.setFirstVisibleRow(190)
-
+	ThisComponent.enableAutomaticCalculation(true)
+	eventi_assegna
+	
+	Dim oLibCont As object
+	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
+	If oLibCont.hasByName(&quot;XrayTool&quot;) Then GlobalScope.Basiclibraries.LoadLibrary(&quot;XrayTool&quot;)
+	GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; )
+	If Not ThisComponent.Sheets.HasByName(&quot;S1&quot;) Then
+		Exit Sub
+	Else
+		Dim oSheet As Object
+		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
+	EndIf
  	Setta_Cost_Gen
 	codice_da_cercare_in_elenco = &quot;&quot;
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
@@ -82,14 +81,14 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 &apos;assegna le macro agli eventi di ogni foglio e del documento:
 rem ----------------------------------------------------------------------
 rem visualizza le toolbar leeno
-	Dim sName$
+
 &apos; imposto la VarG della contabilità S1.H328
 	If ThisComponent.Sheets.HasByName(&quot;CONTABILITA&quot;) Then
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
 	Else
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0
 	EndIf
-&apos;	Sel_Altre_Opz
+	if oSheet.getCellByPosition(7,194).Value &lt; 200 Then	ScriptPy(&quot;pyleeno.py&quot;,&quot;autoexec&quot;)
 End Sub
 rem ######################################################################
 Sub autoexec_off
@@ -97,13 +96,13 @@ rem chiudo le toolbars
 	Dim oSheet, oContr as Object
 	Visualizza_normale
 	
-	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-	oSheet.isVisible = TRUE
-	oContr = ThisComponent.CurrentController
-	oContr.ZoomValue = 100
-	oContr.setactivesheet(oSheet)
-	oContr.setFirstVisibleColumn (0)
-	oContr.setFirstVisibleRow(190)
+&apos;	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
+&apos;	oSheet.isVisible = TRUE
+&apos;	oContr = ThisComponent.CurrentController
+&apos;	oContr.ZoomValue = 100
+&apos;	oContr.setactivesheet(oSheet)
+&apos;	oContr.setFirstVisibleColumn (0)
+&apos;	oContr.setFirstVisibleRow(190)
 	
 	eventi_pulisci
 	

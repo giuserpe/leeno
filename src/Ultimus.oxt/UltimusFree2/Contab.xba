@@ -1061,7 +1061,6 @@ sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 end Sub
 rem ######################################################################
 Sub azzera_atti
-chiudi_dialoghi
 	testa = msgbox (&quot;Hai chiesto di procedere con la cancellazione&quot; &amp; CHR$(10) _
 		&amp; &quot;di TUTTI gli atti contabili presenti nel documnto.&quot; &amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Ti sarà chiesta conferma ad ogni passo.&quot; &amp; CHR$(10) &amp; CHR$(10) _

@@ -76,13 +76,15 @@ Sub Scelta_Viste() &apos;nuova versione universale
 			EndIf
 			
 			If	oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0 Then &apos;sicurezza
+&apos;				oSheet.getColumns.getByIndex(31).isVisible = false
+&apos;				oSheet.getColumns.getByIndex(32).isVisible = false
 				oSheet.getColumns.getByIndex(33).isVisible = false
 				oSheet.getColumns.getByIndex(34).isVisible = false
-				oSheet.getColumns.getByIndex(35).isVisible = false
 			Else
+&apos;				oSheet.getColumns.getByIndex(31).isVisible = True
+&apos;				oSheet.getColumns.getByIndex(32).isVisible = True
 				oSheet.getColumns.getByIndex(33).isVisible = True
 				oSheet.getColumns.getByIndex(34).isVisible = True
-				oSheet.getColumns.getByIndex(35).isVisible = True
 			EndIf
 			
 			If	oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 0 Then &apos;sicurezza

@@ -960,6 +960,24 @@ def XPWE_out(arg=None):
             AdrInternet.text = ''
             PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
             PweEPAnalisi.text = ''
+
+            xlo_sic = SubElement(EPItem,'xlo_sic')
+            if oSheet.getCellByPosition(3, n).Value == 0.0:
+                xlo_sic.text = ''
+            else:
+                xlo_sic.text = str(oSheet.getCellByPosition(3, n).Value)
+                
+            xlo_mdop = SubElement(EPItem,'xlo_mdop')
+            if oSheet.getCellByPosition(5, n).Value == 0.0:
+                xlo_mdop.text = ''
+            else:
+                xlo_mdop.text = str(oSheet.getCellByPosition(5, n).Value)
+            
+            xlo_mdo = SubElement(EPItem,'xlo_mdo')
+            if oSheet.getCellByPosition(6, n).Value == 0.0:
+                xlo_mdo.text = ''
+            else:
+                xlo_mdo.text = str(oSheet.getCellByPosition(6, n).Value)
     #~ COMPUTO
     oSheet = oDoc.getSheets().getByName(arg)
     PweVociComputo = SubElement(PweMisurazioni,'PweVociComputo')
@@ -1075,7 +1093,7 @@ def XPWE_out(arg=None):
     out_file = filedia('Salva con nome...', '*.xpwe', 1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
-            out_file = out_file + '-'+ arg + '.xpwe'
+            out_file = out_file + '-'+ arg + '.xlo.xpwe'
     except AttributeError:
         return
     riga = str(tostring(top, encoding="unicode"))
@@ -1486,7 +1504,10 @@ def XML_import (arg=None):
     liberamente tratta da PreventARES https://launchpad.net/preventares
     di <Davide Vescovini> <davide.vescovini@gmail.com>
     '''
-    filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
+    try:
+        filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
+    except:
+        return
     datarif = datetime.now()
     # inizializzazioe delle variabili
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare
@@ -1496,7 +1517,7 @@ def XML_import (arg=None):
     desc_estesa = str()
     # effettua il parsing del file XML
     tree = ElementTree()
-    if filename == 'Cancel' or filename == '':
+    if filename == None:
         return
     tree.parse(filename)
     # ottieni l'item root
@@ -1688,13 +1709,13 @@ def XML_import (arg=None):
 # XML_import ###########################################################
 ########################################################################
 def XML_import_BOLZANO (arg=None):
-    New_file.listino()
     '''
     Routine di importazione di un prezziario XML formato SIX. Molto
     liberamente tratta da PreventARES https://launchpad.net/preventares
     di <Davide Vescovini> <davide.vescovini@gmail.com>
     *Versione bilingue*
     '''
+    New_file.listino()
     filename = filedia('Scegli il file XML-SIX da convertire...','*.xml')
     datarif = datetime.now()
     # inizializzazioe delle variabili
@@ -1705,7 +1726,7 @@ def XML_import_BOLZANO (arg=None):
     desc_estesa = str()
     # effettua il parsing del file XML
     tree = ElementTree()
-    if filename == 'Cancel' or filename == '':
+    if filename == None:
         return
     tree.parse(filename)
     # ottieni l'item root
@@ -1976,7 +1997,7 @@ def vedi_voce(riga_corrente,vRif):
     oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';"[";' + um + ';"]"'
     oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
 ########################################################################
-# XPWE_import ##########################################################
+# XPWE_in ##########################################################
 def XPWE_in(arg=None): #(filename):
     oDoc = XSCRIPTCONTEXT.getDocument()
     ###
@@ -2180,6 +2201,19 @@ def XPWE_in(arg=None): #(filename):
         idsbcap = elem.find('IDSbCap').text
         flags = elem.find('Flags').text
         data = elem.find('Data').text
+
+        xlo_sic = ''
+        if elem.find('xlo_sic').text != None:
+            xlo_sic = float(elem.find('xlo_sic').text)
+
+        xlo_mdop = ''
+        if elem.find('xlo_mdop').text != None:
+            xlo_mdop = float(elem.find('xlo_mdop').text)
+
+        xlo_mdo = ''
+        if elem.find('xlo_mdo').text != None:
+            xlo_mdo = float(elem.find('xlo_mdo').text)
+
         try:
             adrinternet = elem.find('AdrInternet').text
         except AttributeError:
@@ -2207,13 +2241,19 @@ def XPWE_in(arg=None): #(filename):
         diz_ep['data'] = data
         diz_ep['adrinternet'] = adrinternet
         diz_ep['pweepanalisi'] = pweepanalisi
+        diz_ep['xlo_sic'] = xlo_sic
+        diz_ep['xlo_mdop'] = xlo_mdop
+        diz_ep['xlo_mdo'] = xlo_mdo
         dict_articoli[id_ep] = diz_ep
         lista_articoli.append
+
         articolo_modificato =  (tariffa,
                                     destestesa,
                                     unmisura,
-                                    '',
-                                    float(prezzo1))
+                                    xlo_sic,
+                                    float(prezzo1),
+                                    xlo_mdop,
+                                    xlo_mdo)
         lista_articoli.append(articolo_modificato)
 ###
 # leggo voci di misurazione e righe ####################################
@@ -2438,7 +2478,10 @@ Si tenga conto che:
         ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')
         id_vc = el.get('id_vc')
-        oSheet.getCellByPosition(1, lrow+1).String = dict_articoli.get(ID).get('tariffa')
+        try:
+            oSheet.getCellByPosition(1, lrow+1).String = dict_articoli.get(ID).get('tariffa')
+        except:
+            pass
         diz_vv[id_vc] = lrow+1
         oSheet.getCellByPosition(0, lrow+1).String = str(x)
         x = x+1
@@ -2577,12 +2620,12 @@ Si tenga conto che:
 
     #~ prin('')
     #~ MsgBox(str((datetime.now() - date).total_seconds()),'')
-# XPWE_import ##########################################################
+# XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 14 #'NUOVE FUNZIONALITA'
-Lsubv= "0"#'CORREZIONE BUGS
+Lsubv= "1.dev"#'CORREZIONE BUGS
 noVoce = ('Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 siVoce = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
 siVoce_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
@@ -2986,23 +3029,24 @@ def autoexec (arg=None):
     '''
     questa è richiamata da NewFile()
     '''
+    #~ chi("autoexec py")
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ try:
-    oSheet = oDoc.getSheets().getByName('S1')
-    oSheet.getCellByPosition(7,193).Value = r_version_code()
-    oSheet.getCellByPosition(8,193).Value = Lmajor
-    oSheet.getCellByPosition(9,193).Value = Lminor
-    oSheet.getCellByPosition(10,193).String = Lsubv
-    oSheet.getCellByPosition(7,295).Value = Lmajor
-    oSheet.getCellByPosition(8,295).Value = Lminor
-    oSheet.getCellByPosition(9,295).String = Lsubv
-    if oSheet.getCellByPosition(7,194).Value > 200: #mantengo la compatibilità con el vecchie versioni del template
-        Lib_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    DlgMain()
-        #~ MsgBox('autoexec py concluso')
-    #~ except:
+    try:
+        oSheet = oDoc.getSheets().getByName('S1')
+        oSheet.getCellByPosition(7,193).Value = r_version_code()
+        oSheet.getCellByPosition(8,193).Value = Lmajor
+        oSheet.getCellByPosition(9,193).Value = Lminor
+        oSheet.getCellByPosition(10,193).String = Lsubv
+        oSheet.getCellByPosition(7,295).Value = Lmajor
+        oSheet.getCellByPosition(8,295).Value = Lminor
+        oSheet.getCellByPosition(9,295).String = Lsubv
+        if int(oSheet.getCellByPosition(7,194).String) > 200: #mantengo la compatibilità con el vecchie versioni del template
+            #~ chi(int(oSheet.getCellByPosition(7,194).String))
+            Lib_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
+        DlgMain()
+    except:
         #~ chi("autoexec py")
-        #~ return
+        return
 #~ ########################################################################
 def r_version_code(arg=None):
     if sys.platform == 'linux' or sys.platform == 'darwin':
@@ -3023,13 +3067,13 @@ def XPWE_export (arg=None ):
     oDlgXLO = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application")
     oDialog1Model = oDlgXLO.Model
     oDlgXLO.Title = 'Menù export XPWE'
-    oDlgXLO.execute()
-    if oDlgXLO.getControl("CME_XLO").State == True:
-        XPWE_out('COMPUTO')
-    elif  oDlgXLO.getControl("VAR_XLO").State == True:
-        XPWE_out('VARIANTE')
-    elif  oDlgXLO.getControl("CON_XLO").State == True:
-        XPWE_out('CONTABILITA')
+    if oDlgXLO.execute() ==1:
+        if oDlgXLO.getControl("CME_XLO").State == True:
+            XPWE_out('COMPUTO')
+        elif  oDlgXLO.getControl("VAR_XLO").State == True:
+            XPWE_out('VARIANTE')
+        elif  oDlgXLO.getControl("CON_XLO").State == True:
+            XPWE_out('CONTABILITA')
 ########################################################################
 def XPWE_import (arg=None ):
     '''
@@ -3041,13 +3085,17 @@ def XPWE_import (arg=None ):
     oDlgXLO = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application")
     oDialog1Model = oDlgXLO.Model
     oDlgXLO.Title = 'Menù import XPWE'
-    oDlgXLO.execute()
-    if oDlgXLO.getControl("CME_XLO").State == True:
-        XPWE_in('COMPUTO')
-    elif  oDlgXLO.getControl("VAR_XLO").State == True:
-        XPWE_in('VARIANTE')
-    elif  oDlgXLO.getControl("CON_XLO").State == True:
-        XPWE_in('CONTABILITA')
+    if oDlgXLO.execute() ==1:
+        if oDlgXLO.getControl("CME_XLO").State == True:
+            XPWE_in('COMPUTO')
+        elif  oDlgXLO.getControl("VAR_XLO").State == True:
+            XPWE_in('VARIANTE')
+        elif  oDlgXLO.getControl("CON_XLO").State == True:
+            XPWE_in('CONTABILITA')
+        try:
+            doppioni()
+        except:
+            return
 ########################################################################
 def DlgMain(arg=None):
     '''
@@ -3155,8 +3203,8 @@ def hide_error (sErrore, irow):
     return
 
 def nascondi_err(arg=None):
-    if DlgSiNo("Nascondo eventuali righe a '#DIV/0!' nell'ultima colonna?") == 1:
-        hide_error('#DIV/0!', 26)
+    #~ if DlgSiNo("Nascondo eventuali righe a '#DIV/0!' nell'ultima colonna?") == 1:
+    hide_error('#DIV/0!', 26)
 
 def DlgSiNo (titolo = ''):
     '''
@@ -3188,27 +3236,30 @@ def w_version_code(arg=None):
 ########################################################################
 def toolbar_vedi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    try:
+        oLayout = oDoc.CurrentController.getFrame().LayoutManager
 
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,316).Value == 0:
-        for bar in GetmyToolBarNames: #toolbar sempre visibili
-            toolbar_on (bar)
-    else:
-        for bar in GetmyToolBarNames: #toolbar contestualizzate
-            toolbar_on (bar, 0)
-    #~ oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
-    toolbar_ordina()
-    oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
-    nSheet = oDoc.CurrentController.ActiveSheet.Name
+        if oDoc.getSheets().getByName('S1').getCellByPosition(7,316).Value == 0:
+            for bar in GetmyToolBarNames: #toolbar sempre visibili
+                toolbar_on (bar)
+        else:
+            for bar in GetmyToolBarNames: #toolbar contestualizzate
+                toolbar_on (bar, 0)
+        #~ oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+        toolbar_ordina()
+        oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
+        nSheet = oDoc.CurrentController.ActiveSheet.Name
 
-    if nSheet == 'Elenco Prezzi':
-        toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO')
-    elif nSheet == 'Analisi di Prezzo':
-        toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI')
-    elif nSheet == 'CONTABILITA':
-        toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
-    elif nSheet in ('COMPUTO','VARIANTE'):
-        toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
+        if nSheet == 'Elenco Prezzi':
+            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO')
+        elif nSheet == 'Analisi di Prezzo':
+            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI')
+        elif nSheet == 'CONTABILITA':
+            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
+        elif nSheet in ('COMPUTO','VARIANTE'):
+            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
+    except:
+        pass
     
 def toolbar_on (toolbarURL, flag=1):
     '''

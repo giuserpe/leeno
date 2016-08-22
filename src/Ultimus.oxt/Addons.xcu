@@ -1185,7 +1185,7 @@
               <value>%origin%/icons/vintage</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>Gestione Copertine e Docs...</value>
+              <value>Gestione Copertine ...</value>
             </prop>
             <node oor:name="Submenu">
               <node oor:name="m3U01" oor:op="replace">
@@ -1541,7 +1541,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Focus.Sel_Filtro?language=Basic&amp;location=application</value>
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_filtro?language=Python&amp;location=user:uno_packages</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image555</value>

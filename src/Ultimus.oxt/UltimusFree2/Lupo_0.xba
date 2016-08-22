@@ -683,7 +683,7 @@ Sub Colora_M1(sURLStr as string)
 		&apos;	oRangeM2.CharColor = 10079487
 			oRangeM3.CellBackColor= RGB(255,0,0)
 		&apos;	oRangeM4.CellBackColor= RGB(255,0,0)
-			oMycellM1.string = (&quot;Questo documento coincide con il documento di Contabilità Corrente !&quot;)
+			oMycellM1.string = (&quot;Questo documento coincide con il documento di Contabilità Corrente!&quot;)
 			oMycellM1.CellStyle = (&quot;M1 colorata&quot;)
 		&apos;	oSheet.getCellByPosition(2, 27).string = &quot;&quot;
 		Else

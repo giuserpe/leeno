@@ -23,7 +23,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
 Public Const versioneUF_minor= 14			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;0&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_subversion= &quot;1.dev&quot;		&apos;CORREZIONE BUGS
 Sub setta_versione
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor
@@ -58,12 +58,13 @@ Function GetmyToolBarNames()
 End Function
 rem ######################################################################
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
+&apos;	Print &quot;basic&quot;
 	ThisComponent.enableAutomaticCalculation(true)
 	eventi_assegna
 	
 	Dim oLibCont As object
 	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
-	If oLibCont.hasByName(&quot;XrayTool&quot;) Then GlobalScope.Basiclibraries.LoadLibrary(&quot;XrayTool&quot;)
+	If oLibCont.hasByName(&quot;XrayTool&quot;) Then	GlobalScope.Basiclibraries.LoadLibrary(&quot;XrayTool&quot;)
 	GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; )
 	If Not ThisComponent.Sheets.HasByName(&quot;S1&quot;) Then
 		Exit Sub
@@ -76,7 +77,6 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	bak_timestamp
 	eventi_assegna
-
 	Elimina_Nomi_Area_errati
 &apos;assegna le macro agli eventi di ogni foglio e del documento:
 rem ----------------------------------------------------------------------
@@ -88,7 +88,7 @@ rem visualizza le toolbar leeno
 	Else
 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0
 	EndIf
-	if oSheet.getCellByPosition(7,194).Value &lt; 200 Then	ScriptPy(&quot;pyleeno.py&quot;,&quot;autoexec&quot;)
+	if cInt(oSheet.getCellByPosition(7,194).String) &lt; 200 Then	ScriptPy(&quot;pyleeno.py&quot;,&quot;autoexec&quot;)
 End Sub
 rem ######################################################################
 Sub autoexec_off

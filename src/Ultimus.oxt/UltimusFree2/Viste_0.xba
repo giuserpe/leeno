@@ -339,7 +339,7 @@ End Sub
 
 
 SUB chiudi_dialoghi &apos; chiude tutte le dialog
-
+Exit Sub 
 			&apos; modificare qui se si aggiungono delle dialog
 	if Not isNull (oDialogScenari) then oDialogScenari.endExecute() 
 	if Not isNull (oDialogScenari_A) then oDialogScenari_A.endExecute()

@@ -1065,6 +1065,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+<!--
               <node oor:name="m2U18" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1082,6 +1083,8 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
+<!--
               <node oor:name="m2U19" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1099,6 +1102,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
               <node oor:name="m2U20" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1690,7 +1694,7 @@
                   <value>%origin%/icons/image36b</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>1) PREPARA IL FOGLIO PER LA STAMPA (concatena le 4 precedenti)</value>
+                  <value>Prepara il foglio per la stampa</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1708,7 +1712,7 @@
                   <value>%origin%/icons/image36b</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>2) Imposta i salti pagina... (solo Analisi)</value>
+                  <value>Imposta i salti pagina... (solo Analisi)</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

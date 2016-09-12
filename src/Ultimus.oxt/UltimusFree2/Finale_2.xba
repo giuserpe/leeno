@@ -27,7 +27,6 @@ rem metto in ordine secondo la stampa
 	oSheet.IsVisible = True
 	If thisComponent.Sheets.hasbyname(&quot;cP_Cop&quot;) Then ThisComponent.Sheets.moveByName(&quot;cP_Cop&quot;,0)
 	thisComponent.Sheets.moveByName(oActiveSheet,1)
-	print
 rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
 		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet Then &apos; and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
@@ -323,18 +322,18 @@ End Sub
 Sub Computo_senza_prezzi &apos;Genera un Puro computo metrico senza i prezzi 
 	&apos;per richiesta di offerta
 	&apos;duplico la tabella nel doc stesso
-	
-	if 	thiscomponent.currentcontroller.activesheet.name &lt;&gt; &quot;COMPUTO&quot; then
+	Select Case thiscomponent.currentcontroller.activesheet.Name
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
+		GoTo procedi:
+	Case Else
 		msgbox &quot;Procedura Annullata! ... &quot;&amp; CHR$(10)_
 		&amp; &quot; è previsto che si parta dal foglio COMPUTO&quot;&amp; CHR$(10)_
 			&amp; &quot;&quot; ,&quot;&quot;, &quot;Procedura per un Computo Metrico SENZA Prezzi&quot;	
-		exit sub
-	end if
-	
+		Exit Sub
+	End Select
+procedi:
 	DuplicaSheetinDoc_Comp_NoP(&quot;Rdo_&quot; &amp; sData,6)
 
-&apos;	ThisComponent.currentcontroller.activesheet.name= &quot;EP_NoP&quot;
-	
 	If thisComponent.Sheets.hasByName(&quot;CompuM_NoP_bk&quot;) Then
 		thisComponent.Sheets.removebyname(&quot;CompuM_NoP_bk&quot;)
 		If thisComponent.Sheets.hasByName(&quot;CompuM_NoP&quot;) Then
@@ -377,15 +376,15 @@ Sub Computo_senza_prezzi &apos;Genera un Puro computo metrico senza i prezzi
 &apos;			com.sun.star.sheet.CellFlags.STYLES 
 
 	if msgbox (&quot;&quot; &amp; CHR$(10)_
-				&amp;&quot; Sto duplicando il Computo Metrico &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp;&quot; Sto duplicando il foglio di COMPUTO/VARIANTE &quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&amp;&quot; Confermi la Cancellazione dei Prezzi ? &quot; &amp; CHR$(10)_
  				&amp; CHR$(10) &amp; &quot;&quot;,4, &quot;Fare copia del Computo Metrico&quot;) = 6 then			
  			&apos;	exit sub
  				sSegno=1
- 				osheet.getCellRangeByPosition (11,2,11,lrowfine).ClearContents(iCellAttr)
-	 			osheet.getCellRangeByPosition (27,2,27,lrowfine).ClearContents(iCellAttr)
+ 				osheet.getCellRangeByPosition (11,3,11,lrowfine).ClearContents(iCellAttr)
+	 			osheet.getCellRangeByPosition (27,3,27,lrowfine).ClearContents(iCellAttr)
 	 			osheet.getCellRangeByPosition (17,0,17,lrowfine).ClearContents(iCellAttr)
-	 			osheet.getCellRangeByPosition (0,1,20,1).ClearContents(iCellAttr) &apos; la riassuntiva in testa
+	 			osheet.getCellRangeByPosition (0,0,100,1).ClearContents(iCellAttr) &apos; la riassuntiva in testa
  	end if
 
 	&apos;osheet.getCellRangeByPosition (11,2,11,lrowfine).ClearContents(iCellAttr)
@@ -408,7 +407,7 @@ Sub Computo_senza_prezzi &apos;Genera un Puro computo metrico senza i prezzi
  	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 0
  	
  	&apos; rifaccio u subtotali con var a 0
- 	Tutti_Subtotali ()
+ 	ScriptPy(&quot;pyleeno.py&quot;,&quot;Tutti_Subtotali&quot;)
 
  	&apos;ripristino la Var generale che c&apos;era prima
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = iVar_332

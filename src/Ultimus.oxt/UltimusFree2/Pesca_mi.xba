@@ -269,8 +269,8 @@ dim oCell as object
  		 else
 			msgbox &quot;Cerca la voce che ti serve.... &quot; &amp; CHR$(10)_
 				&amp; &quot;(puoi usare Shit F3, oppure Ctrl-F, ...),&quot; &amp; CHR$(10)_
-				&amp; &quot;Un click sulla riga della voce e poi ri-aziona &apos;pesca va e vieni&apos;&quot;&amp; CHR$(10)_
-				&amp; &quot; (Ctrl Alt K oppure Ctrl Ins) &quot; 
+				&amp; &quot;Seleziona la riga della voce e poi ri-aziona &apos;Pesca...&apos;&quot;&amp; CHR$(10)_
+				&amp; &quot;con Ctrl+8 o Ctrl-Ins&quot; 
 	end if
 	exit sub
 	errore:

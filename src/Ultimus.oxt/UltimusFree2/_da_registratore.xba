@@ -753,4 +753,5 @@ args1(0).Name = &quot;Nr&quot;
 args1(0).Value = iSheet+1
 dispatcher.executeDispatch(document, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
 end sub
+
 </script:module>

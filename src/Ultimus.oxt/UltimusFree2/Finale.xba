@@ -354,7 +354,7 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	oSheet = ThisComponent.currentcontroller.activesheet
 
 	Select Case oSheet.Name
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;, &quot;Analisi di Prezzo&quot;, &quot;Elenco Prezzi&quot;
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;, &quot;Analisi di Prezzo&quot;, &quot;Elenco Prezzi&quot;, &quot;CompuM_NoP&quot;
 		GoTo procedi:
 	Case Else
 		Exit Sub
@@ -401,7 +401,7 @@ procedi:
 	Select Case oSheet.Name
 	Case &quot;COMPUTO_copia&quot;, &quot;VARIANTE_copia&quot;, &quot;CONTABILITA_copia&quot;
 		For n = 1 To lLastUrow
-				oCell = oSheet.GetCellbyPosition(2, n)
+			oCell = oSheet.GetCellbyPosition(2, n)
 			stilecella = oCell.cellstyle
 			Select Case stilecella
 			Case &quot;Comp-Bianche in mezzo Descr&quot;, &quot;Comp-Bianche in mezzo Descr_R&quot;
@@ -431,6 +431,28 @@ procedi:
 			oSheet.Columns.removeByIndex(12, 6)
 			oSheet.Columns.removeByIndex(10, 1)
 			oSheet.Columns.removeByIndex(3, 2)
+			
+	lrowFine = ultima_voce
+		&apos;ora pulisco/cancello tutti i prezzi delle colonne
+	iCellAttr = _
+			com.sun.star.sheet.CellFlags.VALUE + _
+			com.sun.star.sheet.CellFlags.DATETIME + _
+			com.sun.star.sheet.CellFlags.STRING + _
+			com.sun.star.sheet.CellFlags.ANNOTATION + _
+			com.sun.star.sheet.CellFlags.FORMULA + _
+			com.sun.star.sheet.CellFlags.OBJECTS + _
+			com.sun.star.sheet.CellFlags.HARDATTR + _
+			com.sun.star.sheet.CellFlags.EDITATTR
+
+			if msgbox (&quot;&quot; &amp; CHR$(10)_
+				&amp;&quot; Sto duplicando il foglio di COMPUTO/VARIANTE &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp;&quot; Confermi la Cancellazione dei Prezzi ? &quot; &amp; CHR$(10)_
+ 				&amp; CHR$(10) &amp; &quot;&quot;,4, &quot;Fare copia del Computo Metrico&quot;) = 6 then			
+ 				sSegno=1
+ 				osheet.getCellRangeByPosition (8,3,8,lrowfine).ClearContents(iCellAttr)
+ 			end If
+			
+			
 		Case &quot;CONTABILITA_copia&quot;
 			oSheet.Columns.removeByIndex(26, 100)
 			oSheet.Columns.removeByIndex(24, 3)
@@ -1054,7 +1076,10 @@ unSelect &apos;deseleziona
 &apos;		end if
 &apos;		lRowE=oEnd.CellAddress.Row-1
 		lRowE = ultima_voce
-		Print lRowE
+		While oSheet.GetCellByPosition(0, lRowE).CellStyle &lt;&gt; &quot;Riga_rossa_Chiudi&quot;
+			lRowE = lRowE + 1
+		Wend
+&apos;		Print lRowE
 &apos;		lLastUrow = getLastUsedRow(oSheet)
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = 2

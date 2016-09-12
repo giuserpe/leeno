@@ -588,5 +588,32 @@ args1(5).Value = 4
 
 dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args1())
 
-end sub
+end Sub
+Sub numeri_computo
+	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+	lLastUrow = getLastUsedRow(oSheet)
+&apos;	print lLastUrow
+
+	test = &quot;&quot;
+	for i = lLastUrow To 0 -1 step -1
+		IF oSheet.GetCellByPosition(36 , I).CellStyle = &quot;compTagRiservato&quot; Then test = oSheet.GetCellByPosition(36 , I).String
+	&apos;	Print test
+		oSheet.GetCellByPosition(36 , I).String = test
+	next
+&apos;	fine:
+
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+&apos;	lLastUrow = getLastUsedRow(oSheet)
+&apos;	print lLastUrow
+
+&apos;	test = 0
+&apos;	for i = 0 to lLastUrow
+&apos;		IF oSheet.GetCellByPosition(33 , I).CellStyle = &quot;livello2_&quot; Then test = oSheet.GetCellByPosition(33 , I).Value
+&apos;	&apos;	Print test
+&apos;		oSheet.GetCellByPosition(33 , I).Value = test
+&apos;	next
+&apos;	fine:
+End Sub
+
+
 </script:module>

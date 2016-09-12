@@ -866,22 +866,6 @@ rem NASCONDE RIGHE
 &apos;ThisComponent.enableAutomaticCalculation(True)
 end Sub
 &apos;#########################################################################
-Sub azzera_voce
-	oSheet = ThisComponent.currentController.activeSheet
-	lrow = range2cell
-	inizio = inizio_voce(lrow)+3
-	fine = fine_voce(lrow)
-	sFormula = &quot;=-SUBTOTAL(9;J&quot; &amp; inizio &amp; &quot;:J&quot; &amp; fine &amp; &quot;)&quot;
-	If osheet.getCellByPosition (2, fine-1).String = &quot;*** VOCE AZZERATA ***&quot; Then
-		oSheet.rows.removeByIndex (fine-1, 1)
-		Exit Sub
-	EndIf 
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, fine-1))
-	copia_riga_Ent
-	osheet.getCellByPosition (2, fine).String = &quot;*** VOCE AZZERATA ***&quot;
-	osheet.getCellByPosition (5, fine).formula = sFormula
-End Sub
-&apos;#########################################################################
 sub Rifa_Formule_Orizzontali &apos;riscrive le formule sull&apos;ultima riga della voce di computo
 	&apos; con la formula scritta in questo codice
 	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name

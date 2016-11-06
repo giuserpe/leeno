@@ -57,7 +57,7 @@
   <dlg:button dlg:style-id="5" dlg:id="CommandButton9" dlg:tab-index="19" dlg:left="-173" dlg:top="57" dlg:width="85" dlg:height="42" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="Filtra codice voce corrente">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Voci_Sposta_2_Att.filtra_codice?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBCat" dlg:tab-index="18" dlg:left="10" dlg:top="79" dlg:width="68" dlg:height="10" dlg:value="Cat e SubCat" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBCat" dlg:tab-index="18" dlg:left="10" dlg:top="79" dlg:width="68" dlg:height="10" dlg:value="Categorie" dlg:checked="false"/>
   <dlg:button dlg:style-id="2" dlg:id="CommandButton19" dlg:tab-index="20" dlg:left="99" dlg:top="53" dlg:width="80" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF" dlg:button-type="ok">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>

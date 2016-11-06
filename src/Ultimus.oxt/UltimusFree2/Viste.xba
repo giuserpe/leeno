@@ -39,7 +39,7 @@ Sub Scelta_Viste() &apos;nuova versione universale
 			If oSheet.getColumns.getByIndex(17).isVisible = True Then oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 1
 			If oSheet.getColumns.getByIndex(29).isVisible = True Then oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 1
 			If oSheet.getColumns.getByIndex(31).isVisible = True Then oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 1
-			If oSheet.getColumns.getByIndex(33).isVisible = True Then oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 1
+			If oSheet.getColumns.getByIndex(34).isVisible = True Then oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 1
 			If oSheet.getColumns.getByIndex(38).isVisible = True Then oDialogScenari_A.getControl(&quot;CBFig&quot;).State = 1
 &apos;			If abbreviata = 1 Then oDialogScenari_A.getControl(&quot;CBDesc&quot;).State = 1
 
@@ -60,30 +60,27 @@ Sub Scelta_Viste() &apos;nuova versione universale
 				oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0
 			EndIf
 
-			If	oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0 Then &apos;sicurezza
+			If	oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0 Then &apos;manodopera
 				oSheet.getColumns.getByIndex(29).isVisible = false
 				oSheet.getColumns.getByIndex(30).isVisible = false
 			Else
 				oSheet.getColumns.getByIndex(29).isVisible = True
 				oSheet.getColumns.getByIndex(30).isVisible = True
 			EndIf
-			If	oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 0 Then &apos;sicurezza
+			If	oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 0 Then &apos;categorie
 				oSheet.getColumns.getByIndex(31).isVisible = false
 				oSheet.getColumns.getByIndex(32).isVisible = false
+				oSheet.getColumns.getByIndex(33).isVisible = false
 			Else
 				oSheet.getColumns.getByIndex(31).isVisible = True
 				oSheet.getColumns.getByIndex(32).isVisible = True
+				oSheet.getColumns.getByIndex(33).isVisible = True
+				
 			EndIf
 			
-			If	oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0 Then &apos;sicurezza
-&apos;				oSheet.getColumns.getByIndex(31).isVisible = false
-&apos;				oSheet.getColumns.getByIndex(32).isVisible = false
-				oSheet.getColumns.getByIndex(33).isVisible = false
+			If	oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0 Then &apos;tag
 				oSheet.getColumns.getByIndex(34).isVisible = false
 			Else
-&apos;				oSheet.getColumns.getByIndex(31).isVisible = True
-&apos;				oSheet.getColumns.getByIndex(32).isVisible = True
-				oSheet.getColumns.getByIndex(33).isVisible = True
 				oSheet.getColumns.getByIndex(34).isVisible = True
 			EndIf
 			

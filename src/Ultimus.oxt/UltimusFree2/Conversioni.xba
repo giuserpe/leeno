@@ -38,7 +38,7 @@ rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 rem faccio il backup del file e riporto il focus sul file -tmp
 	&apos; ID del template di partenza:
-	idxtemplate = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 290).value
+	idxtemplate = ThisComponent.getDocumentProperties().getUserDefinedProperties().Versione
 	
 backup_tmp &apos;questa lascia il focus sul nuovo doc-tmp
 reset_STILI

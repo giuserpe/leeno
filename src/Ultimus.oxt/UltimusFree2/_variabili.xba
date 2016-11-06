@@ -77,7 +77,7 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	bak_timestamp
 	eventi_assegna
-	Elimina_Nomi_Area_errati
+&apos;	Elimina_Nomi_Area_errati
 &apos;assegna le macro agli eventi di ogni foglio e del documento:
 rem ----------------------------------------------------------------------
 rem visualizza le toolbar leeno

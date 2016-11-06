@@ -466,8 +466,7 @@ sub compila_tag_con_codice_voce (msg As Boolean)
 			oSheet.GetCellByPosition(35 , lrow).Formula = sFormula
 			oSheet.GetCellByPosition(43 , lrow).Formula = sFormulanew
 			oSheet.GetCellByPosition( 43 , lRowMod).cellstyle = &quot;noprint_2&quot;	
-			oSheet.GetCellByPosition(31 , lrow).Cellstyle = &quot;compTagRiservato&quot;					
-			oSheet.GetCellByPosition(32 , lrow).Cellstyle=&quot;compTagRiservato&quot;
+			oSheet.getCellRangeByPosition(31, lrow, 33, lrow).Cellstyle = &quot;compTagRiservato&quot;
 			oSheet.GetCellByPosition(35 , lrow).Cellstyle=&quot;compTagRiservato&quot;				
 			nCurRow = lrow+1
 		end if

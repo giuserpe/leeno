@@ -226,6 +226,7 @@ End Sub
 Sub inizializza_computo (Optional delete As String)&apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object 
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+variante:
 	ThisComponent.CurrentController.setActiveSheet(oSheet)
 	If delete = &quot;cancella&quot; Then oSheet.rows.removeByIndex (0,getLastUsedRow(oSheet)+1)&apos;cancella tutto il foglio
 	
@@ -234,7 +235,7 @@ Sub inizializza_computo (Optional delete As String)&apos;(C) Giuseppe Vizziello 
 	oSheet.GetCellByPosition(2, lRow).setstring(&quot;TOTALI COMPUTO&quot;)
 rem ----------------------------------------------------------------------
 Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 40)
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	If ultima_voce = 0 Then
 		oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
 		lRowE=oRow.CellAddress.Row
@@ -274,12 +275,6 @@ rem	riga di controllo importo
 	oSheet.getCellRangeByposition(0, 1, 1, 1).merge(TRUE)
 	oSheet.getCellByPosition(29, 1).cellstyle = &quot;Comp TOTALI %&quot;
 rem ----------------------------------------------------------------------
-rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
- 	Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A1&quot;)
-	Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;A2&quot;)
-	Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B1&quot;)
-	Stora_Attr_sheet_generico(&quot;TIPO_COMPUTO&quot;, ThisComponent.currentController.activeSheet, &quot;B2&quot;)
-rem ----------------------------------------------------------------------
 &apos;GoTo questa_sta_in_init_computo:
 rem riga di intestazione
 	oSheet.GetCellByPosition(0,2).setstring(&quot;N.&quot;)
@@ -298,9 +293,9 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
 	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
 	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
-	oSheet.GetCellByPosition(31,2).setstring(&quot;tag Cat&quot;)
-	oSheet.GetCellByPosition(32,2).setstring(&quot;tag&quot; + chr(13) +&quot;subCat&quot;)
-	oSheet.GetCellByPosition(33,2).setstring(&quot;tag A&quot;)
+	oSheet.GetCellByPosition(31,2).setstring(&quot;Super Cat&quot;)
+	oSheet.GetCellByPosition(32,2).setstring(&quot;Cat&quot;)
+	oSheet.GetCellByPosition(33,2).setstring(&quot;Sub Cat&quot;) &apos;(&quot;tag A&quot;)
 	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
 	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
 	oSheet.GetCellByPosition(36,2).setstring(&quot;importo totale computo&quot;+ chr(13) + &quot;sole voci senza errori&quot;)
@@ -313,9 +308,6 @@ rem riga di intestazione
 	oSheet.getCellByPosition(43,2).cellstyle = &quot;COnt_noP&quot;
 	oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
 	
-&apos;	ThisComponent.CurrentController.Select(oCell)
-&apos;	Adatta_Altezza_riga
-&apos;	oSheet.GetCellByPosition(0,2).Rows.Height = 800
 rem ----------------------------------------------------------------------
 rem riga del totale
 	oSheet.GetCellByPosition(2,lRowE).setstring(&quot;TOTALI COMPUTO&quot;)
@@ -337,6 +329,27 @@ rem riga rossa
 		oSheet.getCellRangeByPosition(0,lRowE+1, 36 , lRowE+1).cellstyle = &quot;Riga_rossa_Chiudi&quot;
 &apos;		exit sub
 	end If
+	For i = 0 to getlastusedrow (oSheet)
+		&apos;	Print oSheet.Name &apos;.getCellByPosition(0, i).CellStyle
+	sStRange = Circoscrive_Voce_Computo_Att (i) &apos;(range2cell)
+	
+	on error resume next
+	
+	With sStRange.RangeAddress
+	&apos;	lRowI = .StartRow
+		i = .EndRow
+	End With
+	
+&apos;	Print oSheet.getCellByPosition(0, lRowE).CellStyle 
+			ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i))
+			
+		If 	oSheet.getCellByPosition(0, i).CellStyle = &quot;Comp End Attributo&quot; Then
+
+			oSheet.getCellByPosition(33, i).CellStyle = &quot;compTagRiservato&quot;
+		EndIf
+		
+	next	
+	
 	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	oSheet.GetCellByPosition(9, 190).FORMULA=&quot;=$COMPUTO.$S$2&quot;
 	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
@@ -347,6 +360,19 @@ rem riga rossa
 	set_larghezza_colonne
 &apos;	Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
 	fissa(0,idxrow+1)
+	
+
+	If thisComponent.CurrentController.ActiveSheet.Name = &quot;VARIANTE&quot; Then
+		oSheet = ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;)
+		oSheet.getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,255,102))
+		oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,255,102))
+		unSelect
+		Exit Sub 
+	EndIf 
+	If ThisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
+		oSheet = ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;)
+		GoTo variante:
+	EndIf 
 
 &apos;Rifa_Somme_TOT_Computo &apos; crea anche la struttura del foglio
 End Sub

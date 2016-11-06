@@ -23,9 +23,6 @@ sub salva_il_template &apos; per la pubblicazione del Template
 	Dim oDoc 	:	oDoc = thiscomponent
 rem ----------------------------------------------------------------------
 rem controllo esistenza proprietà definita dall&apos;utente
-	Dim test() As Object 
-	test() =oDoc.DocumentProperties.UserDefinedProperties.PropertyValues()
-
 	sPassw = InputBox (&quot;Evita guai! Questo è un comando che dovrebbe eseguire&quot;&amp; CHR$(10) &amp; CHR$(10)_
 						&amp; &quot;solo Giuseppe Vizziello! (info@leeno.org)&quot;&amp; CHR$(10)_
 						&amp; &quot;Giuseppe, inserisci la password...&quot;&amp; CHR$(10)_
@@ -44,7 +41,7 @@ rem ----------------------------------------------------------------------
 	&apos;sVer_templ è il numero seriale progressivo del template
 &apos;	SGenericoMemo = sVer_templ &apos;forse eliminare questo rif ad una variabile globale ?
 &apos; ovviamente si tratta di eliminare anche la proposta in ImputBox lasciando il vuoto...
-sVer_templ = test(1).value
+sVer_templ = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
  If sVer_templ = &quot;&quot; then
  	exit sub
  end if
@@ -136,7 +133,7 @@ End Sub
 sub Setta_Cost_Gen &apos; imposta variabili generali (pubblicazione
 &apos;xray thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues()
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).String = _
-	thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(1).value &apos;Versione (template)(0)
+	thiscomponent.getDocumentProperties().getUserDefinedProperties().Versione
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,290).String = _
 	Split (thiscomponent.DocumentProperties.UserDefinedProperties.PropertyValues(2).value, &quot;.&quot;)(0) &apos;minorrelease
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,290).String = _

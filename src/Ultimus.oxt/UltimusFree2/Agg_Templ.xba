@@ -39,12 +39,6 @@ sub AGGIORNA_TEMPLATE &apos;main
 	&apos; versione oxt installata
 &apos;	versioneUF_major = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value
 &apos;	versioneUF_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
-
-&apos;	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &gt; 163 and _
-&apos;		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &lt; 169 then	
-&apos;		aggiorna_leggero
-&apos;&apos;		exit sub
-&apos;	end if
  
 	Select case msgbox (&quot;Sto per aggiornare questo documento rendendolo &apos;simile&apos; ad un template più aggiornato (e che dovrai scegliere e caricare) &quot; &amp; CHR$(10)_
 		&amp; &quot; Prima di proseguire consiglio di CONSULTARE IL MANUALE AL Cap. AGGIORNAMENTO DI UN COMPUTO &apos;VECCHIO&apos; per maggiori dettagli&quot; &amp; CHR$(10) &amp; CHR$(10)_
@@ -296,7 +290,7 @@ Function Aggiorna_Template_2 &apos; modulo secondario che importa alcune sheet
  &apos;versione minor prevista per questo template (cioè versione oxt installata)
  GsTemp_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
  &apos; numero del template... lo leggo nelle var
- GsVer_templ = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value
+ GsVer_templ = ThisComponent.getDocumentProperties().getUserDefinedProperties().Versione 
 	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;.. Sto lavorando...(metto le tab tutte in fila...&quot;, 30)

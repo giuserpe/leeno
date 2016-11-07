@@ -816,40 +816,37 @@ def debugl(arg=None): #
 ########################################################################
 # doppioni #############################################################
 def doppioni(arg=None):
-    '''
-    Elimina i doppioni nell'elenco prezzi
-    basandosi solo sul confronto dei codici di prezzo
-    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     ###
-    #~ oDoc.addActionLock
-    #~ oDoc.lockControllers
-    ###
     lista_voci = list()
-    cancellare = list()
-    for n in range (0, ultima_voce(oSheet)+1):
-        cod = oSheet.getCellByPosition(0, n).String
-        #~ des = oSheet.getCellByPosition(1, n).String
-        um = oSheet.getCellByPosition(2, n).String
-        #~ sic = oSheet.getCellByPosition(3, n).Value
-        pr = oSheet.getCellByPosition(4, n).Value
-        #~ iMDO = oSheet.getCellByPosition(5, n).Value
-        #~ mdo = oSheet.getCellByPosition(6, n).Value
-        #~ cor = oSheet.getCellByPosition(7, n).String
-        #~ voce = (cod, des, um, sic, pr)#, iMDO, mdo, cor)
-        voce = (cod, um, pr)#, iMDO, mdo, cor)
-        if voce in lista_voci:
-            cancellare.append(n)
-        else:
-            lista_voci.append(voce)
-    for n in reversed(cancellare):
-        oSheet.getRows().removeByIndex(n, 1)
-    MsgBox ("Cancellazione dei doppioni dall'Elenco Prezzi completata.", 'Avviso!')
-    ###
-    #~ oDoc.removeActionLock
-    #~ oDoc.unlockControllers
-    ###
+    voce = list()
+    for n in range (3, ultima_voce(oSheet)+1):
+        voce = ( oSheet.getCellByPosition(0, n).String,
+            oSheet.getCellByPosition(1, n).String,
+            oSheet.getCellByPosition(2, n).String,
+            oSheet.getCellByPosition(3, n).Value,
+            oSheet.getCellByPosition(4, n).Value,
+            oSheet.getCellByPosition(5, n).Value,
+            oSheet.getCellByPosition(6, n).Value,
+            oSheet.getCellByPosition(7, n).Value,
+        )
+        lista_voci.append(voce)
+    oSheet.getRows().removeByIndex(4, ultima_voce(oSheet)-3) # lascio una riga per conservare gli stili
+    oSheet.getRows().insertByIndex(4, len(set(lista_voci))-1)
+    
+    lista_voci = set (lista_voci)
+    lista_come_array = tuple (lista_voci)
+
+    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
+    scarto_righe = 3 # numero righe da saltare a partire dall'alto
+    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+    oRange = oSheet.getCellRangeByPosition( 0,
+                                            3,
+                                            colonne_lista + 0 - 1, # l'indice parte da 0
+                                            righe_lista + 3 - 1)
+    oRange.setDataArray(lista_come_array)
 # doppioni #############################################################
 ########################################################################
 # Scrive un file.
@@ -2091,7 +2088,7 @@ def XPWE_in(arg=None): #(filename):
     filename = filedia('Scegli il file XPWE da importare...','*.xpwe')#'*.xpwe')
     '''xml auto indent: http://www.freeformatter.com/xml-formatter.html'''
     # inizializzazione delle variabili
-    #~ datarif = datetime.now()
+    datarif = datetime.now()
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare
     diz_ep = dict() # array per le voci di elenco prezzi
     # effettua il parsing del file XML
@@ -2497,34 +2494,16 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
     colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
 
-    oSheet.getRows().insertByIndex(3, righe_lista)
+    oSheet.getRows().insertByIndex(4, righe_lista -1)
 
     oRange = oSheet.getCellRangeByPosition( scarto_colonne,
                                             scarto_righe,
                                             colonne_lista + scarto_colonne - 1, # l'indice parte da 0
                                             righe_lista + scarto_righe - 1)
 
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet # recupero l'index del foglio
-
-    SC = oCellRangeAddr.StartColumn = 0
-    SR = oCellRangeAddr.StartRow = 3
-    EC = oCellRangeAddr.EndColumn = 0
-    ER = oCellRangeAddr.EndRow = 3 + righe_lista - 1
-
     oRange.setDataArray(lista_come_array)
-#~ SISTEMO GLI STILI
-    oSheet.getCellRangeByPosition (0, SR, 7, ER).CellStyle = 'EP-aS'
-    oSheet.getCellRangeByPosition (1, SR, 1, ER).CellStyle = 'EP-a'
-    oSheet.getCellRangeByPosition (2, SR, 6, ER).CellStyle = 'EP-mezzo'
-    oSheet.getCellRangeByPosition (5, SR, 5, ER).CellStyle = 'EP-mezzo %'
-    oSheet.getCellRangeByPosition (8, SR, 9, ER).CellStyle = 'EP-sfondo'
-    oSheet.getCellRangeByPosition (10, SR, 10, ER).CellStyle = 'EP statistiche_q'
-    oSheet.getCellRangeByPosition (11, SR, 11, ER).CellStyle = 'EP statistiche'
-    oSheet.getCellRangeByPosition (13, SR, 13, ER).CellStyle = 'EP statistiche_Contab_q'
-    oSheet.getCellRangeByPosition (14, SR, 14, ER).CellStyle = 'EP statistiche_Contab'
-    #~ return
-###
+    doppioni()
+
     if len(lista_misure) == 0:
         MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -2620,10 +2599,8 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
 
     # metodo veloce, ma ignora le formule
     # va bene se lista_righe viene convertito come tupla
-            #~ chi(el.get('lista_rig'))
             SR = SR - 1
             for mis in el.get('lista_rig'):
-                #~ MsgBox(str(mis[9]),'idvv')
                 if mis[0] != None: #descrizione
                     descrizione = mis[0].strip()
                     oSheet.getCellByPosition(2, SR).String = descrizione
@@ -2710,10 +2687,6 @@ Riordinando il computo trovo riferimenti a voci non ancora inserite.
 Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
 """\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
                         lista_n = [va, vb, vc, vd]
-                        #~ lista_n.remove(1)
-                        #~ chi(lista_n)
-                        #~ lista_n.sort()
-                        #~ lista_n.pop(0)
                         lista_p = list()
                         if va*vb*vc*vd != 1:
                             for n in lista_n:
@@ -2736,10 +2709,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                 except TypeError:
                     pass
                 SR = SR+1
-    #~ chi(8)
-    #~ return
     Numera_Voci()
-    ###
     try:
         Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
         Sincronizza_SottoCap_Tag_Capitolo_Cor()# sistemo gli idcat voce per voce
@@ -2747,8 +2717,9 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
         pass
 
     oDoc.CurrentController.ZoomValue = 100
-    chi('Importazione eseguita con successo')
-    #~ MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
+    oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
+    MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
+    #~ MsgBox('Importazione eseguita con successo!','')
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:
@@ -3313,11 +3284,6 @@ def XPWE_import (arg=None ):
             XPWE_in('VARIANTE')
         elif  oDlgXLO.getControl("CON_XLO").State == True:
             XPWE_in('CONTABILITA')
-        doppioni()
-        #~ try:
-            #~ doppioni()
-        #~ except:
-            #~ return
 ########################################################################
 def DlgMain(arg=None):
     '''

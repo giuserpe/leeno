@@ -462,7 +462,7 @@ def debugdelay(n):
         oDialog1.endDialog()
 
 ########################################################################
-def Sincronizza_SottoCap_Tag_Capitolo_Cor(arg=None):
+def Sincronizza_SottoCap_Tag_Capitolo_Cor (arg=None):
     '''
     lrow    { double } : id della riga di inerimento
     sincronizza il categoria e sottocategorie
@@ -1528,7 +1528,7 @@ def ins_voce_computo_grezza(lrow):
 ########################################################################
 # correggo alcune formule
     oSheet.getCellByPosition(13,lrow+3).Formula ='=J'+str(lrow+4)
-    oSheet.getCellByPosition(35,lrow+3).Formula ='=b'+str(lrow+2)
+    oSheet.getCellByPosition(35,lrow+3).Formula ='=B'+str(lrow+2)
 # sistemo i LINK dei tagG nelle righe sopra al tag vero e prorio...
     #~ oSheet.getCellByPosition(31, lrow+2).Formula = '=AF$'+str(lrow+4)
     #~ oSheet.getCellByPosition(32, lrow+2).Formula = '=AG$'+str(lrow+4)
@@ -2059,7 +2059,7 @@ def vedi_voce(riga_corrente,vRif,flags=''):
     idvoce = abs2name (0, idv)
     quantity = abs2name (9, sotto)
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
-    oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';"[";' + um + ';"]"'
+    oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
     if flags in ('32769', '32801'):
         oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
     else:
@@ -2075,12 +2075,9 @@ def strall (el, n=3):
 def XPWE_in(arg=None): #(filename):
     oDoc = XSCRIPTCONTEXT.getDocument()
     ###
-    oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
+    #~ oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
     #~ oDoc.addActionLock
     #~ oDoc.lockControllers #disattiva l'eco a schermo
-    
-    #~ oDoc.removeActionLock
-    #~ oDoc.unlockControllers
     ###
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo nuovo o già esistente.','Avviso!')
@@ -2448,20 +2445,18 @@ Si tenga conto che:
     - il formato XPWE non conserva alcuni dati come
       le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
-
     if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
 
 Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente
-disordinato, potrai ricevere un messaggio che ti indica come intervenire.
+disordinato, riceverai un messaggio che ti indica come intervenire.
 
 Se il risultato finale non dovesse andar bene, puoi ripetere l'importazione
-senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") ==1:
+senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") ==2:
 
         riordine = sorted(prova_l, key=lambda el: el[0])
         lista_misure = list()
         for el in riordine:
             lista_misure.append(el[1])
-
 ###
 # compilo Anagrafica generale ##########################################
     #~ New_file.computo()
@@ -2537,7 +2532,6 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
 #~ inserisco le categorie        
         try:
             if idspcat != testspcat:
-                #~ chi(lista_supcat[eval(idspcat)-1][1])
                 testspcat = idspcat
                 testcat = '0'
                 Inser_SuperCapitolo_arg(lrow, lista_supcat[eval(idspcat)-1][1])
@@ -2547,7 +2541,6 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
 
         try:
             if idcat != testcat:
-                #~ chi(lista_cat[eval(idcat)-1][1])
                 testcat = idcat
                 testsbcat = '0'
                 Inser_Capitolo_arg(lrow, lista_cat[eval(idcat)-1][1])
@@ -2557,7 +2550,6 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
 
         try:
             if idsbcat != testsbcat:
-                #~ chi(lista_subcat[eval(idsbcat)-1][1])
                 testsbcat = idsbcat
                 Inser_SottoCapitolo_arg(lrow, lista_subcat[eval(idsbcat)-1][1])
         except UnboundLocalError:
@@ -2631,14 +2623,9 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
                     else:
                         oSheet.getCellByPosition(8, SR).Value = eval(mis[6])
                 if mis[8] == '2':
-                    #~ oRangeAddress = oSheet.getCellRangeByPosition(0, SR+1, 1, SR+1).getRangeAddress()
-                    #~ oSheet.removeRange(oRangeAddress, 3) # Mode.ROWS
-                    #~ MsgBox('parziale','') #; return
                     parziale_core(SR)
                     oSheet.getRows().removeByIndex(SR+1, 1)
                     descrizione =''
-
-                #~ MsgBox(str(SR),'SR')
 
                 va = oSheet.getCellByPosition(5, SR).Value
                 vb = oSheet.getCellByPosition(6, SR).Value
@@ -2717,7 +2704,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
         pass
 
     oDoc.CurrentController.ZoomValue = 100
-    oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
+    #~ oDoc.enableAutomaticCalculation(True) # abilito il calcolo automatico
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
     #~ MsgBox('Importazione eseguita con successo!','')
 # XPWE_in ##########################################################
@@ -2919,7 +2906,8 @@ def chi(s): # s = oggetto
     
 def DlgSiNo(s,t='Titolo'): # s = messaggio | t = titolo
     '''
-    Viasualizza il menù di scelta no/sì
+    Viasualizza il menù di scelta sì/no
+    restutuisce 2 per sì e 3 per no
     '''
     doc = XSCRIPTCONTEXT.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow
@@ -3169,6 +3157,7 @@ def autoexec (arg=None):
     except:
         #~ chi("autoexec py")
         return
+########################################################################
 def adegua_tmpl (arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
@@ -3184,54 +3173,11 @@ def adegua_tmpl (arg=None):
         Lib_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
 
     if ver_tmpl < 203:
-        chi(1)        
         if DlgSiNo("Vuoi procedere con l'adeguamento di questo file alla versione corrente di LeenO?", "Richiesta") ==2:
- #~ aggiungo lo stile per la Super Categoria
-            super_cat = 0x729fcf
-            
-            CellStyles = oDoc.StyleFamilies.getByName("CellStyles")
-
-            if CellStyles.hasByName("Livello-0-scritta") == True:
-                CellStyles.getByName('Livello-0-scritta').setPropertyValue('CellBackColor',super_cat)
-                CellStyles.getByName('Livello-0-scritta mini').setPropertyValue('CellBackColor',super_cat)
-                CellStyles.getByName('Livello-0-scritta mini val').setPropertyValue('CellBackColor',super_cat)
-                CellStyles.getByName('Livello-0-scritta mini %').setPropertyValue('CellBackColor',super_cat)
-            else:
-                NewStyle = oDoc.createInstance('com.sun.star.style.CellStyle')
-                CellStyles.insertByName("Livello-0-scritta", NewStyle)
-                NewStyle.ParentStyle = 'Livello-1-scritta'
-                NewStyle.CellBackColor = super_cat
-                
-                NewStyle = oDoc.createInstance('com.sun.star.style.CellStyle')
-                CellStyles.insertByName("Livello-0-scritta mini", NewStyle)
-                NewStyle.ParentStyle = 'Livello-1-scritta mini'
-                NewStyle.CellBackColor = super_cat
-                
-                NewStyle = oDoc.createInstance('com.sun.star.style.CellStyle')
-                CellStyles.insertByName("Livello-0-scritta mini val", NewStyle)
-                NewStyle.ParentStyle = 'Livello-1-scritta mini val'
-                NewStyle.CellBackColor = super_cat
-                
-                NewStyle = oDoc.createInstance('com.sun.star.style.CellStyle')
-                CellStyles.insertByName("Livello-0-scritta mini %", NewStyle)
-                NewStyle.ParentStyle = 'Livello-1-scritta mini %'
-                NewStyle.CellBackColor = super_cat
-                chi("lkjljjnnnnnnnnnnnnnnnnnnnnnnn")
-########################
-#~ adeguo lo stile di Categoria e sub Categoria
-            
-            cat = 0x90c8f2
-            CellStyles.getByName('Livello-1-scritta').setPropertyValue('CellBackColor',cat)
-            CellStyles.getByName('Livello-1-scritta mini').setPropertyValue('CellBackColor',cat)
-            CellStyles.getByName('Livello-1-scritta mini val').setPropertyValue('CellBackColor',cat)
-            CellStyles.getByName('Livello-1-scritta mini %').setPropertyValue('CellBackColor',cat)
-            
-            sub_cat = 0xcfe7f5
-            CellStyles.getByName('livello2 valuta').setPropertyValue('CellBackColor',sub_cat)
-            CellStyles.getByName('livello2_').setPropertyValue('CellBackColor',sub_cat)
-            CellStyles.getByName('livello2 valuta mini').setPropertyValue('CellBackColor',sub_cat)
-            CellStyles.getByName('livello2 valuta mini %').setPropertyValue('CellBackColor',sub_cat)
-            CellStyles.getByName('livello2 scritta mini').setPropertyValue('CellBackColor',sub_cat)
+#~ adeguo gli stili secondo il template corrente
+            sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
+            styles = oDoc.getStyleFamilies()
+            styles.loadStylesFromURL(sUrl, list())
 
             Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')

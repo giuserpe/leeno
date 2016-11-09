@@ -131,6 +131,7 @@ rem MODIFICATA Giuseppe Vizziello 2014
 	End If
 	print
 	procedi:
+
 		If left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 2)=&quot;=$&quot; Or _
 			left (oSheet.GetCellByPosition( 5, iRowQ ).formula, 3)=&quot;=-$&quot; Then
 			Exit Sub
@@ -246,10 +247,12 @@ rem MODIFICATA Giuseppe Vizziello 2014
 			if itag = 1 then &apos; and sString7 &lt;&gt; &quot;&quot; then 
 					sString8 =	&quot;*&quot; &amp; sString8
 			end if			
-		end if
-
-		sString8 = sString4 &amp; sString5 &amp; sString6 &amp; sString7 &amp; sString8 &amp; &quot;)&quot;
-
+		end If
+		If cLng(mid (oSheet.GetCellByPosition( 5, iRowQ ).formula, 2)) = 0 Then
+			sString8 = sString4 &amp; &quot;par.ug.&quot; &amp;sString6 &amp; sString7 &amp; sString8 &amp; &quot;)&quot;
+		Else
+			sString8 = sString4 &amp; sString5 &amp; sString6 &amp; sString7 &amp; sString8 &amp; &quot;)&quot;
+		EndIf
 		Search = &quot;=&quot;
 		NewPart = &quot;&quot;		
 		sString8 = Replace_G (sString8 , Search , NewPart )			

@@ -403,7 +403,7 @@
             <value>%origin%/icons/supcat</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Inserisci Categoria</value>
+            <value>Inserisci SuperCategoria</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -482,7 +482,10 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
+<!--
             <value>vnd.sun.star.script:UltimusFree2.Computo.Firme_in_calce?language=Basic&amp;location=application</value>
+-->
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$firme_in_calce?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/riepilogo</value>

@@ -81,11 +81,20 @@
           </prop>
         </node>
         <!--CTRL-D-->
+<!--
         <node oor:name="D_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_new_doc?language=Basic&amp;location=application</value>
           </prop>
         </node>
+-->
+        <!--CTRL-X-->
+        <node oor:name="X_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$taglia_x?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+        </node>
+        
         <!--CTRL-INS-->
         <node oor:name="INSERT_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -144,11 +153,13 @@
           </prop>
         </node>
         <!--CTRL-SHIFT-D-->
+<!--
         <node oor:name="D_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_in_Doc?language=Basic&amp;location=application</value>
           </prop>
         </node>
+-->
         <!--CTRL-SHIFT-E *** VOCE AZZERATA *** -->
         <node oor:name="E_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -159,6 +170,12 @@
         <node oor:name="F_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$filtra_codice?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+        </node>
+        <!--CTRL-SHIFT-G-->
+        <node oor:name="G_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$copia_sorgente_per_git?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-K-->

@@ -959,7 +959,7 @@ Set_Area_Stampa_N (&quot;&quot;)
 	If oCell.string = &quot;----&quot; Then
 	 	i =i+2
 	 	oCell = oSheet.GetCellByPosition( 0 , i)
-		oCell.rows.IsStartOfNewPage = &quot;true&quot;
+		oCell.rows.IsStartOfNewPage = True
 	end If
 		Visualizza_PageBreak
  next

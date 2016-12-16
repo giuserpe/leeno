@@ -285,8 +285,8 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 		oSheet.GetCellByPosition(8,337).String = &quot;Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?&quot;
 		oSheet.GetCellRangeByPosition(8,337,20,337).CellStyle = &quot;Setvar D&quot;
 	EndIf
-	primi = oSheet.GetCellByPosition(7,336).value
-	ultimi = oSheet.GetCellByPosition(7,337).value
+&apos;	primi = oSheet.GetCellByPosition(7,336).value &apos;$S1.$H$337
+&apos;	ultimi = oSheet.GetCellByPosition(7,337).value &apos;$S1.$H$338
 
 	oSheet = ThisComponent.currentController.activeSheet
 	Select Case oSheet.Name
@@ -304,26 +304,13 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 
 Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
 
-&apos; switch ON/OFF
-&apos;	For i = 2 To 10	
-&apos;		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-&apos;			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
-&apos;				abbrevia = 1
-&apos;				Exit For
-&apos;			Else
-&apos;				abbrevia = 0
-&apos;				Exit For
-&apos;			EndIf
-&apos;		EndIf
-&apos;	Next i
 	i = getLastUsedRow(oSheet)
 &apos;	If abbrevia = 0 Then
 		While i &gt; 2
 			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-				sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
-					&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; _
-					&quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&amp; primi &amp;&quot;);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
-					&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; ultimi &amp; &quot;))&quot;
+				sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;($S1.$H$337+$S1.$H$338);VLOOKUP(B&quot; &amp; _
+				i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; &quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());$S1.$H$337);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
+				&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());$S1.$H$338))&quot;
 				oSheet.GetCellByPosition(2 ,i).formula = sformula
 			EndIf
 			i = i-1

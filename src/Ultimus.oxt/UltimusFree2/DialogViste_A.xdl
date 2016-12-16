@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="9" dlg:id="DialogViste_A" dlg:left="179" dlg:top="215" dlg:width="188" dlg:height="117" dlg:help-text="Viste del Computo" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni su COMPUTO ">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_A" dlg:left="179" dlg:top="215" dlg:width="188" dlg:height="117" dlg:help-text="Viste del Computo" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni su COMPUTO ">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:background-color="0xffb4af" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
@@ -8,10 +8,8 @@
   <dlg:style dlg:style-id="3" dlg:background-color="0xffff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="4" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="5" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="6" dlg:background-color="0x99ff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:background-color="0xff3333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="9" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="7" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="0" dlg:left="107" dlg:top="-219" dlg:width="95" dlg:height="15" dlg:help-text="Mostra TUTTE le colone" dlg:value="Mostra tutto">
@@ -66,17 +64,13 @@
   <dlg:checkbox dlg:style-id="0" dlg:id="CBMdo" dlg:tab-index="12" dlg:left="10" dlg:top="69" dlg:width="68" dlg:height="10" dlg:value="Manodopera" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBMis" dlg:tab-index="15" dlg:left="10" dlg:top="39" dlg:width="68" dlg:height="10" dlg:value="Colonne misure" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CBTag" dlg:tab-index="21" dlg:left="10" dlg:top="91" dlg:width="56" dlg:height="10" dlg:value="Tag" dlg:checked="false"/>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton20" dlg:tab-index="22" dlg:left="119" dlg:top="135" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
-  </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton21" dlg:tab-index="23" dlg:left="101" dlg:top="135" dlg:width="14" dlg:height="16" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:align="left" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CBDet" dlg:tab-index="24" dlg:left="10" dlg:top="28" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton22" dlg:tab-index="25" dlg:left="99" dlg:top="73" dlg:width="80" dlg:height="15" dlg:value="Rigenera formule" dlg:button-type="ok">
+  <dlg:checkbox dlg:style-id="0" dlg:id="CBDet" dlg:tab-index="22" dlg:left="10" dlg:top="28" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton22" dlg:tab-index="23" dlg:left="99" dlg:top="73" dlg:width="80" dlg:height="15" dlg:value="Rigenera formule" dlg:button-type="ok">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.Rifa_Formule_Orizzontali?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="8" dlg:id="CommandButton23" dlg:tab-index="26" dlg:left="164" dlg:top="94" dlg:width="14" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
+  <dlg:button dlg:style-id="6" dlg:id="CommandButton10" dlg:tab-index="24" dlg:left="154" dlg:top="95" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="8" dlg:id="CommandButton24" dlg:tab-index="27" dlg:left="138" dlg:top="94" dlg:width="19" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="6" dlg:id="CommandButton12" dlg:tab-index="25" dlg:left="122" dlg:top="95" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

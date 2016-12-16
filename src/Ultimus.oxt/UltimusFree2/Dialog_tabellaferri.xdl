@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog_tabellaferri" dlg:left="122" dlg:top="95" dlg:width="140" dlg:height="135" dlg:closeable="true" dlg:moveable="true" dlg:title="Misure e pesi">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xffccff" dlg:font-name="Liberation Mono" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="modern"/>
+  <dlg:style dlg:style-id="1" dlg:font-name="Liberation Mono" dlg:font-stylename="Standard" dlg:font-family="modern"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:combobox dlg:style-id="0" dlg:id="ComboBox1" dlg:tab-index="0" dlg:left="10" dlg:top="10" dlg:width="120" dlg:height="10" dlg:value="Seleziona la tabella" dlg:hide-inactive-selection="false" dlg:spin="true" dlg:linecount="20">
+   <script:event script:event-name="on-textchange" script:macro-name="vnd.sun.star.script:UltimusFree2.Menu.RiempiListBox?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:combobox>
+  <dlg:menulist dlg:style-id="1" dlg:id="ListBox1" dlg:tab-index="1" dlg:left="10" dlg:top="22" dlg:width="120" dlg:height="80"/>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton1" dlg:tab-index="2" dlg:left="107" dlg:top="111" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton3" dlg:tab-index="3" dlg:left="76" dlg:top="111" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:multiline="true"/>
+ </dlg:bulletinboard>
+</dlg:window>

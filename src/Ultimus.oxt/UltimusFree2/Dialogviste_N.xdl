@@ -91,9 +91,9 @@
   <dlg:button dlg:style-id="10" dlg:id="CommandButton27" dlg:tab-index="26" dlg:left="5" dlg:top="135" dlg:width="95" dlg:height="15" dlg:value="Elimina TUTTI i SAL">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.azzera_atti?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="11" dlg:id="CommandButton28" dlg:tab-index="27" dlg:left="191" dlg:top="166" dlg:width="14" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/_SRC/EX-ultimus/src/Ultimus.oxt/icons/s_ok-g_16.bmp" dlg:multiline="true">
+  <dlg:button dlg:style-id="11" dlg:id="CommandButton22" dlg:tab-index="27" dlg:left="180" dlg:top="165" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="11" dlg:id="CommandButton29" dlg:tab-index="28" dlg:left="165" dlg:top="166" dlg:width="19" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/icone/annulla.png" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="11" dlg:id="CommandButton26" dlg:tab-index="28" dlg:left="148" dlg:top="165" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

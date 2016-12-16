@@ -592,8 +592,18 @@ Sub Sistema_diverse_cose &apos; tipo: toglie gli a capo, gli spazi ridondanti, i
 	oCell.string = Join(Split(oCell.String, Chr(10)), &quot; &quot;)
 	oCell.string = Join(Split(oCell.String, Chr(9)), &quot; &quot;)
 	oCell.string = Join(Split(oCell.String,&quot;- &quot;, &quot;&quot;)
-&apos;oCell.string = Join(Split(oCell.String,&quot;-&quot;, &quot;&quot;)
+&apos;oCell.string =
+ Join(Split(oCell.String,&quot;-&quot;, &quot;&quot;)
 	Thiscomponent.CurrentController.Select(oCell)
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+	rem ----------------------------------------------------------------------
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = &quot;WrapText&quot;
+	args1(0).Value = true
+	dispatcher.executeDispatch(document, &quot;.uno:WrapText&quot;, &quot;&quot;, 0, args1())
+	
 End Sub
 
 

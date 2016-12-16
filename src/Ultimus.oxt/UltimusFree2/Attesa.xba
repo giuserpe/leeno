@@ -337,30 +337,30 @@ Sub Barra_Apri_Chiudi_4
 &apos; oProgressBar.Start(&quot;&quot;,100)&apos;
 &apos; oProgressBar.Value = 100
 		oProgressBar.Start(&quot;&quot;,100)&apos;
-		oProgressBar.Value = 20
+		oProgressBar.Value = 40
 		
 		oProgressBar.Text = &quot;#4 Attendi...&quot;
 		sPG1 = 1
 	else
 &apos; print &quot;barra aperta! (la elimino)&quot;
 		if not isNull (oProgressBar) then
-					 oProgressBar.end
-					 oProgressBar = nothing
+			oProgressBar.End
+			oProgressBar = nothing
 			spg1=0
 		end if
-	end if
+	end If
 End sub 
 
 
 sub prova 
  Barra_chiudi_sempre_4 
  Barra_Apri_Chiudi_5(&quot;.. Sto lavorando....&quot;, 30)
- wait 3000
+ wait 300
 &apos; print sPG1
  Barra_chiudi_sempre_4 
- wait 3000
+ wait 300
  Barra_chiudi_sempre_4 
- wait 3000
+ wait 300
  Barra_chiudi_sempre_4 
 end sub
 
@@ -542,7 +542,7 @@ Sub Main23456
 &apos;	 fenDoc = ThisComponent.CurrentController.Frame.ContainerWindow 
 	 ThisComponent.lockControllers 
 	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = False 
-	 wait 10000 &apos;
+	 wait 100 &apos;
 &apos;	 on error Resume Next 
 &apos;	 progress.End 
 	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 

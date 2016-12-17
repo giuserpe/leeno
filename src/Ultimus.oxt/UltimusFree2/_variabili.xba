@@ -75,7 +75,6 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
  	Setta_Cost_Gen
 	codice_da_cercare_in_elenco = &quot;&quot;
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
-	bak_timestamp
 	eventi_assegna
 &apos;	Elimina_Nomi_Area_errati
 &apos;assegna le macro agli eventi di ogni foglio e del documento:

@@ -146,33 +146,12 @@ def copia_sorgente_per_git(arg=None):#debug(arg=None):#
         distutils.dir_util.copy_tree(oxt_path, dest)
         
         os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
-        os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"')
+        os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/cmd/gitk.exe" && "C:/Program Files/Git/git-bash.exe"')
 
         
     
     return
-#~ C:\Program Files\Git\git-bash.exe w:\_dwg\ULTIMUSFREE\_SRC\leeno\src\Ultimus.oxt
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ path = oDoc.getURL()
-    #~ bak = '.'.join(path.split('.')[:-1]) + '-backup.ods'
-    #~ tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
-    #~ dafg = (str(datetime.now()).split(' ')[0].split('-'))
-    
-    return ('/'.join(reversed(str(datetime.now()).split(' ')[0].split('-'))))
-    chi(dafg)
-    return
-    dest = ''.join([path.split('.')[0], '-', tempo, '.ods'])
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.getCellByPosition(1,0).String = bak
-    oSheet.getCellByPosition(1,1).String = path
-    oSheet.getCellByPosition(1,2).String = dest
-    shutil.copyfile (path, dest)
-    #~ oSheet.getCellByPosition(1,3).String = path.split('.')[0]
-    #~ oSheet.getCellByPosition(1,4).String = tempo
-    #~ oSheet.getCellByPosition(1,5).String = path.split('.')[:-1]
-    #~ oSheet.getCellByPosition(1,6).String = path.split('.')[:-1]
-
-
+########################################################################
 def debugs(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     desktop = XSCRIPTCONTEXT.getDesktop()
@@ -2659,7 +2638,6 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
 # compilo Anagrafica generale ##########################################
     #~ New_file.computo()
 # compilo Anagrafica generale ##########################################
-    #~ attesa().start() # avvia il diaolgo di attesa che viene chiuso alla fine con oDialogo_attesa.endExecute()
     oSheet = oDoc.getSheets().getByName('S2')
     if oggetto != None:
         oSheet.getCellByPosition (2,2).String = oggetto
@@ -3229,10 +3207,8 @@ def filtra_codice(arg=None):
         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
         oCellRangeAddr.Sheet = iSheet
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
-        #~ sStRange.RangeAddress
         sopra = sStRange.RangeAddress.StartRow
         voce = oSheet.getCellByPosition(1, sopra+1).String
-        #~ MsgBox(voce)
     else:
         MsgBox('Devi prima selezionare una voce di misurazione.','Avviso!')
         return
@@ -3439,7 +3415,7 @@ def DlgMain(arg=None):
     '''
     Viasualizza il menù principale
     '''
-    Lib_LeenO('file_gest.bak_timestamp')
+    Lib_LeenO('file_gest.bak_timestamp') # fa il backup del file tramite basic
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     if oDoc.getSheets().hasByName('S2') == False:
@@ -3546,7 +3522,30 @@ def hide_error (lErrori, irow):
                 oSheet.getCellByPosition (0, i).Rows.IsVisible = True
     oDialogo_attesa.endExecute()
     oDoc.CurrentController.ZoomValue = 100
+########################################################################
+def bak_timestamp(arg=None):#debug(arg=None):#
+    '''
+    fa il backup del file di lavoro, partendo dall'ultimo salvataggio certo,
+    in una directory con nome "/percorso_file/leeno-bk/"
+    '''
+    tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
+    oDoc = XSCRIPTCONTEXT.getDocument()
 
+    orig = oDoc.getURL()
+    dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-' + tempo + '.ods'
+    dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
+     
+    if sys.platform == 'linux' or sys.platform == 'darwin':
+        orig = orig.split('//')[-1].replace('%20',' ')
+        dir_bak = dir_bak.split('//')[-1].replace('%20',' ')
+    elif sys.platform == 'win32':
+        orig = orig.split('///')[-1].replace('%20',' ')
+        dir_bak = dir_bak.split('///')[-1].replace('%20',' ')
+    
+    if not os.path.exists(dir_bak):
+        os.makedirs(dir_bak)
+    shutil.copyfile (orig, dir_bak + dest)
+    return
 ########################################################################
 # Scrive un file.
 def w_version_code(arg=None):
@@ -3614,8 +3613,6 @@ def toolbar_ordina (arg=None):
         i += 1
     oLayout.dockWindow('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 'DOCKINGAREA_RIGHT', Point(0, 0))
 #######################################################################
-#~ from zipfile import ZipFile
-#~ from shutil import make_archive
 def make_pack (arg=None):
     tempo = w_version_code()
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3693,8 +3690,6 @@ class debug_th (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        #~ oDialogo_attesa = dlg_attesa()
-        #~ attesa().start() #mostra il dialogo
 
         oDoc = XSCRIPTCONTEXT.getDocument()
         oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico

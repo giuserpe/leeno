@@ -13,7 +13,7 @@ def compress():
     Compress all directory under src in a zip archive under bin
     """
     for rootname in os.walk('src').next()[1]:
-        archname = rootname
+        archname = 'LeenO.oxt'
         fileName, fileExtension = os.path.splitext(archname)
         if args.version:
             fileName += '-%s' % args.version

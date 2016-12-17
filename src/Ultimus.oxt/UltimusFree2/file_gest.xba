@@ -50,20 +50,6 @@ rem ----------------------------------------------------------------------
 	End Select
 	Filecopy sURL$, sNewURL$ &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
 End Sub
-
-rem ----------------------------------------------------------------------
-
-Sub bak_timestamp &apos; salva una copia di backup del file ad ogni apertura
-	oDoc = ThisComponent
-	If (oDoc.hasLocation()) Then
-		sDocURL = oDoc.getURL() &apos;url
-		sUrl = DirectoryNameoutofPath(sDocURL, &quot;/&quot;) &apos;path
-		sFileName = GetFileNameWithoutExtension(sDocURL, &quot;/&quot;) &apos;file
-		Mkdir (convertfromurl(sUrl+&quot;/leeno-bk/&quot;))
-		sNewURL = sUrl+&quot;/leeno-bk/&quot;+sFileName+&quot;-&quot;+gina_furbetta_2+&quot;.ods&quot;
-		Filecopy sDocURL, sNewURL &apos;agisce direttamente su disco in modo &quot;trasparente&quot;
-	End If
-End Sub
 &apos;#########################################################################
 Sub file2template
 	Dim oSheet, oContr as Object

@@ -146,7 +146,7 @@ def copia_sorgente_per_git(arg=None):#debug(arg=None):#
         distutils.dir_util.copy_tree(oxt_path, dest)
         
         os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
-        os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/cmd/gitk.exe" && "C:/Program Files/Git/git-bash.exe"')
+        os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
 
         
     
@@ -3415,7 +3415,7 @@ def DlgMain(arg=None):
     '''
     Viasualizza il menù principale
     '''
-    Lib_LeenO('file_gest.bak_timestamp') # fa il backup del file tramite basic
+    bak_timestamp() # fa il backup del file
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     if oDoc.getSheets().hasByName('S2') == False:
@@ -3527,6 +3527,7 @@ def bak_timestamp(arg=None):#debug(arg=None):#
     '''
     fa il backup del file di lavoro, partendo dall'ultimo salvataggio certo,
     in una directory con nome "/percorso_file/leeno-bk/"
+    viene avviato con DlgMain()
     '''
     tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
     oDoc = XSCRIPTCONTEXT.getDocument()

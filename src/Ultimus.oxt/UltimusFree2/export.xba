@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="export" script:language="StarBasic">REM  *****  BASIC  *****
+
+Sub export_xpwe
+&apos; Clessid_lock_Start
+&apos;print &quot;1&quot;
+&apos;If ErroreDet = 1 then 
+&apos;	on error goto Errore
+&apos;end if 
+&apos;
+Dim oInputFile as Object
+Dim oOutputStream as Object
+Dim oStreamString as Object
+Dim oUcb as Object
+Dim sCRLF as String
+Dim oInputStream as Object
+Dim oOutputFile as Object
+dim sLineaLetta as string
+Dim sLineaDaScrivere as string
+Dim sInputFilePath as string
+Dim sOutputFilePath as string
+&apos;dim sSuperC1 as string
+&apos;Dim oUcb as Object
+nFile = BrowseForFile(&quot;Nome file XPWE&quot;, &quot;&quot;, &quot;W:\_dwg\ULTIMUSFREE\xpwe&quot;, &quot;*.xpwe&quot;)
+nFile = converttourl(nFile)
+	sCRLF = CHR(13) &amp; CHR(10) &apos;Serve per andare a capo
+
+&apos;Apre il file in cui devi scrivere
+
+	oUcb = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+Print 
+	oOutputStream = createUnoService(&quot;com.sun.star.io.TextOutputStream&quot;)
+	oOutputStream.Encoding = &quot;Latin-9&quot;
+	If oUcb.Exists(nFile) Then oUcb.Kill(nFile)
+	
+	oOutputFile = oUcb.OpenFileReadWrite(nFile)
+	oOutputStream.SetOutputStream(oOutputFile.GetOutputStream)
+&apos;xray oInputStream
+sLineaDaScrivere = &quot;PIPPI&quot;
+oUcb.openFileWrite(sLineaDaScrivere &amp; sCRLF)
+&apos;oOutputStream.WriteString(sLineaDaScrivere &amp; sCRLF)
+
+Exit Sub 
+	Do Until oInputStream.IsEOF
+	&apos;	sLineaDaScrivere = &quot;&quot;
+
+		do 
+			sLineaLetta = oInputStream.ReadLine
+
+				if sLineaLetta= &quot;PWE (PriMus EXCHANGE) - by ACCA&quot; then
+					 sLinea = &quot;@@@@&quot; &amp; sInputFilePath &amp; CHR(13) &amp; CHR(10)
+				end if
+				if sLineaLetta= &quot;2.00&quot; then sLinea = &quot;&quot; &apos;&amp; CHR(13) &amp; CHR(10)
+				if sLineaLetta= &quot;ANSI&quot; then sLinea = sLinea = &quot; &quot;&apos;&amp; CHR(13) &amp; CHR(10)
+			&apos;	if sLineaLetta = &quot;@;Inizio Dati Generali&quot; then
+			&apos;		exit do
+			&apos;	end if
+				
+				if Left(sLineaLetta, 2) = &quot;@a&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@b&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@c&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@d&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@e&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@f&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@g&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@h&quot; then sLinea = &quot;&quot;
+
+				if Left(sLineaLetta, 2) = &quot;@m&quot; then sLinea = &quot;&quot;	
+				if Left(sLineaLetta, 2) = &quot;@n&quot; then sLinea = &quot;&quot;		
+				if Left(sLineaLetta, 2) = &quot;@9&quot; then sLinea = &quot;&quot; &apos; ci sono molti 9 (9a, 9b etc)
+				if Left(sLineaLetta, 2) = &quot;@;&quot; then sLinea = &quot;&quot;			
+			
+				if Left(sLineaLetta, 2) = &quot;@i&quot; then 
+					sSuperC1 = (right(sLineaLetta, len(sLineaLetta) - 2))
+					sLinea = &quot;&quot;
+				end if
+			
+				if Left(sLineaLetta, 2) = &quot;@j&quot; then sLinea = &quot;&quot;
+			
+				If Left(sLineaLetta, 2) = &quot;@k&quot; then
+					 sC1 = (right(sLineaLetta, len(sLineaLetta) - 2))
+					sLinea = &quot;&quot;
+				end if
+				if Left(sLineaLetta, 2) = &quot;@l&quot; then
+					 sSubC1 = (right(sLineaLetta, len(sLineaLetta) - 2))
+					sLinea = &quot;&quot;
+				end if
+			
+				if Left(sLineaLetta, 2) = &quot;@H&quot; then
+			
+					 lInd1 = (right(sLineaLetta, len(sLineaLetta) - 2))
+					&apos; print lInd1
+					 lInd1 = (CInt(lInd1)) -1
+				 lpos = 1
+					 for i=1 to lInd1	 	
+						 lpos = InStr (lpos+1, sSuperC1, &quot;|&quot;) 
+					 next
+					 if lpos = 1 then lpos = lpos-1				 
+					 sSuperC = Mid(sSuperC1, lpos+1,(Len (sSuperC1))- lpos)
+				&apos;	 print sSuperC
+					 If InStr (sSuperC, &quot;|&quot;) &gt; 0 then
+						 sSuperC = Left(sSuperC, (InStr (sSuperC, &quot;|&quot;))-1 
+					 end if
+					 sLinea = &quot;&quot; 	
+				end if
+				if Left(sLineaLetta, 2) = &quot;@J&quot; then
+					 lInd1 = (right(sLineaLetta, len(sLineaLetta) - 2))
+					 lInd1 =(CInt(lInd1)) -1
+				 lpos = 1
+					 for i=1 to lInd1				 	
+					 lpos = InStr (lpos+1, sC1, &quot;|&quot;) 
+					 next
+					 if lpos = 1 then lpos = lpos-1
+					 sC = Mid(sC1, lpos+1,(Len (sC1))- lpos)
+					 If InStr (sC, &quot;|&quot;) &gt; 0 then
+						 sC = Left(sC, (InStr (sC, &quot;|&quot;))-1 &apos;&amp; CHR(13)&amp; CHR(10)
+					 end if
+					 sLinea = &quot;&quot; 
+						 
+				end if	
+				if Left(sLineaLetta, 2) = &quot;@K&quot; then
+					 lInd1 = (right(sLineaLetta, len(sLineaLetta) - 2))
+					 lInd1 =(CInt(lInd1)) -1
+				 lpos = 1
+					 for i=1 to lInd1				 	
+					 lpos = InStr (lpos+1, sSubC1, &quot;|&quot;) 
+					 next
+					 if lpos = 1 then lpos = lpos-1
+						 sSubC = Mid(sSubC1, lpos+1,(Len (sSubC1))- lpos)
+					 If InStr (sSubC, &quot;|&quot;) &gt; 0 then
+					 	sSubC = Left(sSubC, (InStr (sSubC, &quot;|&quot;))-1 &apos;&amp; CHR(13) 
+					 end if
+					 sLinea = &quot;&quot; 
+				end if	&apos;
+				
+				if Left(sLineaLetta, 2) = &quot;@V&quot; then
+					 sLinea = &quot;@&quot; &amp; &quot;&apos;&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;&amp; sCRLF &apos; codice mod Acca
+				end if
+			&apos;
+
+				If Left(sLineaLetta, 2) = &quot;@A&quot; then sLinea= &quot;&quot;	&apos; codice originale Basilicata		
+				if Left(sLineaLetta, 2) = &quot;@;&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@I&quot; then sLinea = &quot;@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos; n. progressivo... creato dal pwe..
+				if Left(sLineaLetta, 2) = &quot;@R&quot; then sLinea= &quot;@Z&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2))
+	&apos;			if Left(sLineaLetta, 2) = &quot;@R&quot; then sLinea = &quot;@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;descr sintetica (eliminare?)
+	
+				if Left(sLineaLetta, 2) = &quot;@D&quot; then &apos;&amp; &quot; &quot; &apos; descrizione estesa
+						sLinea = &quot;@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2))&amp; &quot; &quot;
+				&apos;		sLineaLetta2 = oInputStream.ReadLine
+				&apos;		if Left(sLineaLetta2,2 ) &lt;&gt; &quot;@U&quot; then
+				&apos;			Do while Left(sLineaLetta2,2 ) &lt;&gt; &quot;@U&quot;
+				&apos;				sLineaLetta2 = oInputStream.ReadLine
+				&apos;&apos;				slinea = slinea &amp; sLineaLetta2
+				&apos;			loop 
+				&apos;			sLineaDaScrivere = sLinea
+							&apos;exit do
+				&apos;			goto temp
+				&apos;		 end if
+				end if
+&apos;				if Left(sLineaLetta, 1) &lt;&gt; &quot;@&quot; then
+&apos;				 sLinea = sLineaLetta
+&apos;				end if 
+
+				if Left(sLineaLetta, 1) &lt;&gt; &quot;@&quot; And sLineaLetta &lt;&gt; &quot;PWE (PriMus EXCHANGE) - by ACCA&quot; And sLineaLetta&lt;&gt; &quot;2.00&quot;_
+								And sLineaLetta&lt;&gt; &quot;ANSI&quot; then
+				 sLinea = sLineaLetta
+				end if 
+				 
+				if Left(sLineaLetta, 2) = &quot;@U&quot; then sLinea = &quot;@@&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;um
+				if Left(sLineaLetta, 2) = &quot;@N&quot; then sLinea = &quot;&quot;
+				If Left(sLineaLetta, 2) = &quot;@Y&quot; then sLinea = &quot;&quot;	&apos; si elimina				
+				if Left(sLineaLetta, 2) = &quot;@F&quot; then sLinea = &quot;&quot;
+	&apos;ò			if Left(sLineaLetta, 2) = &quot;@O&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@O&quot; then sLinea = &quot;@XX&quot; &amp; (right(sLineaLetta, len(sLineaLetta) - 2)) &apos;ò
+				if Left(sLineaLetta, 2) = &quot;@0&quot; then sLinea = &quot;&quot;
+				if Left(sLineaLetta, 2) = &quot;@P&quot; then 
+						if sLineaLetta= &quot;@P0|0|0|0|0&quot; then 
+							sLinea= &quot;&quot;&apos; &amp; CHR(13) &amp; CHR(10)
+						else
+							sLinea=left(sLineaLetta, len(sLineaLetta) - 4)
+							sLinea = right(sLinea, len(sLinea) - 2)
+							sLinea = Str(&quot;@&quot; &amp; sLinea)
+						&apos;	print &quot;dentro sLinea prezzo &quot; &amp; sLinea
+					end if
+				end if
+				
+		&apos;	temp:
+			sLineaDaScrivere = sLineaDaScrivere &amp; sLinea
+		
+	&apos;	print sLineaDaScrivere
+			if oInputStream.IsEOF then exit do
+
+		Loop While Not (Left(sLineaLetta, 2) = &quot;@P&quot;)
+	
+		&apos;loop Until Left(sLineaLetta, 2) &lt;&gt; &quot;@P&quot;
+		&apos;		if Left(sLineaLetta, 2) &lt;&gt; &quot;@0&quot;
+			&apos;	print &quot;chiudo riga &quot; &amp; sLineaDaScrivere
+			temp:
+ 			sLineaDaScrivere = sSuperC &amp; &quot; - &quot; &amp; sC &amp; &quot; - &quot; &amp; sSubC &amp; sLineaDaScrivere
+			sSuperC=&quot;&quot;
+			sC=&quot;&quot;
+			sSubC =&quot;&quot;
+			sLinea =&quot;&quot;
+				&apos;	If 	sLineaDaScrivere &lt;&gt; &quot;&quot; then	
+		&apos;&apos;	temp:
+			oOutputStream.WriteString(sLineaDaScrivere &amp; sCRLF)
+			&apos;	end if
+			sLineaDaScrivere = &quot;&quot;
+				&apos;	print &quot;ciclo grande&quot;
+	Loop
+
+	oOutputStream.CloseOutput()
+	oInputStream.CloseInput()
+&apos;	msgbox &quot;FINITO!!&quot;
+	
+	Clessid_lock_End
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	Ri_passaggio
+	 ForceCSVOpen
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	 
+	
+&apos;	nome
+&apos;	nomi
+&apos;	oDoc = ThisComponent
+&apos;	sDocURL = oDoc.getURL()
+&apos;print	sDocURL
+&apos;	sSorgente = ThisComponent.getURL()
+&apos;	sSorgente = sDocURL
+&apos;print &quot;tornato ancora sorgente &quot; &amp; sSorgente
+	Conversione_2&apos;
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;	 
+&apos;	exit sub
+
+	exit sub &apos;function
+	Errore:
+		oOutputStream.CloseOutput()
+	oInputStream.CloseInput()
+		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+		Clessid_lock_End
+		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
+		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
+End Sub
+</script:module>

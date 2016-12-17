@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Zip" script:language="StarBasic">rem  *****  BASIC  *****
+&apos;______________________________________________________________________________
+&apos;	
+&apos;	BasicAddonBuilder - $ Version: 0.5.0 $ 
+&apos;	Copyright (C) 2006-2008 Paolo Mantovani
+&apos;	
+&apos;	A wizard to export basic libraries as Add on&apos;s
+&apos;	
+&apos;	This library is free software; you can redistribute it and/or
+&apos;	modify it under the terms of the GNU Lesser General Public
+&apos;	License as published by the Free Software Foundation.
+&apos;	
+&apos;	This library is distributed in the hope that it will be useful,
+&apos;	but WITHOUT ANY WARRANTY; without even the implied warranty of
+&apos;	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+&apos;	Lesser General Public License for more details.
+&apos;	
+&apos;	Please email me with any bug reports, questions or comments:
+&apos;	paolomantovani@openoffice.org
+&apos;______________________________________________________________________________
+&apos;	
+&apos;	Module ItemProperties:
+&apos;	
+&apos;______________________________________________________________________________
+&apos;
+&apos;
+&apos; Declarations:
+Option Explicit
+
+&apos;______________________________________________________________________________
+Sub ZipFolder(sSourceDirUrl As String, sZipUrl As String) 
+Dim oFileAccess As Object
+Dim oPackage As Object
+Dim oZipRootFolder As Object
+Dim bIncludeFolders As Boolean
+Dim mFolderContents()
+Dim sContentUrl As String
+
+	oFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)	
+	oPackage = CreateUnoService(&quot;com.sun.star.packages.Package&quot;)
+
+	Dim aArg As New com.sun.star.beans.NamedValue
+	aArg.Name = &quot;PackageFormat&quot;
+	aArg.Value = False
+	
+	oPackage.initialize(Array(sZipUrl, aArg))
+	oZipRootFolder = oPackage.getByHierarchicalName(&quot;/&quot;)
+
+	bIncludeFolders = True
+	mFolderContents() = oFileAccess.getFolderContents(sSourceDirUrl, bIncludeFolders)
+	For Each sContentUrl In mFolderContents()
+		AddResourceToZip(sContentUrl, oZipRootFolder, oPackage )
+	Next
+&apos;xray oPackage
+	&apos;commit
+	&apos;the second call avoids an unespected file locking in Windows (bug??)
+ 	oPackage.commitChanges()
+ 	oPackage.commitChanges()
+End Sub
+
+
+&apos;______________________________________________________________________________
+Sub AddResourceToZip(sResourceUrl As String, oZipFolder As Object, oZipPackage As Object)
+Dim oFileAccess As Object
+Dim oUrlTransformer As Object
+Dim oZipSubFolder As Object
+Dim oZipFileStream As Object
+Dim oSrcFileStream As Object
+Dim mFolderContents()
+Dim sContentUrl
+Dim sResourceName As String
+Dim bIncludeFolders As Boolean
+ 
+	&apos; create objects for later use
+	oFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+	oUrlTransformer = CreateUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
+	Dim aUrl As New com.sun.star.util.URL
+	
+	&apos;check params
+	aUrl.complete = FixFolderUrl(sResourceUrl)
+	oUrlTransformer.parseStrict(aUrl)
+	sResourceName = aUrl.Name
+	
+	If oFileAccess.isFolder(sResourceUrl) Then
+		&apos;create the subfolder inside the zip package
+		oZipSubFolder = oZipPackage.createInstanceWithArguments(Array(True)) &apos;true means &apos;create a folder&apos;
+		If Not oZipFolder.hasByName(sResourceName) Then
+			oZipFolder.insertByName(sResourceName, oZipSubFolder)
+		End If
+		
+		&apos;now add the subfolder contents to the zip package
+		bIncludeFolders = True
+		mFolderContents() = oFileAccess.getFolderContents(sResourceUrl, bIncludeFolders)
+		
+		&apos;call recursively this routine to add each contents
+		For Each sContentUrl In mFolderContents()
+			AddResourceToZip(sContentUrl, oZipSubFolder, oZipPackage)
+		Next
+		
+	Else
+		&apos; the given url is a file
+		oZipFileStream = oZipPackage.createInstanceWithArguments(Array(False)) &apos;false means &apos;create a file&apos;
+		oSrcFileStream = oFileAccess.OpenFileRead(sResourceUrl)
+		oZipFileStream.SetInputStream(oSrcFileStream)
+		
+		&apos;add the file content to the given folder
+		If Not oZipFolder.hasByName(sResourceName) Then
+			oZipFolder.insertByName(sResourceName, oZipFileStream)
+		End If
+		
+	End If
+
+End Sub
+
+&apos;______________________________________________________________________________
+Function FixFolderUrl(sFolderUrl As String) As String
+Dim sTemp As String
+
+	&apos;remove ending &quot;/&quot;
+	sTemp = ConvertToUrl(sFolderUrl)
+	If Len(sTemp) &gt; 0 Then
+		If Right(sTemp, 1) = &quot;/&quot; Then
+			sTemp = Left(sTemp, Len(sTemp)-1)
+		End If
+	End If
+	
+	FixFolderUrl = sTemp
+	
+End Function
+</script:module>

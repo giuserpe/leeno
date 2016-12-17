@@ -251,7 +251,7 @@ If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
 	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;S1&quot;,	&quot;OnFocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.file_gest.bak_timestamp?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;S1&quot;,	&quot;OnFocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$bak_timestamp?language=Python&amp;location=user:uno_packages&quot;)
 Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 &apos;OnStartApp
 &apos;OnCloseApp

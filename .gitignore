@@ -1,4 +1,10 @@
-/src/Ultimus.oxt/UltimusFree2/*.xba~
-/documentazione/*.pdf
-/documentazione/*.odt#
-*.oxt
+*~
+*.*#
+/modelli/leeno-bk/
+documentazione/*.pdf
+Esempio_LeenO.ods
+
+#/.~*
+
+#*.oxt
+

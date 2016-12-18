@@ -138,7 +138,7 @@ def copia_sorgente_per_git(arg=None):#debug(arg=None):#
         distutils.dir_util.copy_tree(oxt_path, dest)
         
         os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt')
-        os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal')
+        os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
         
     elif sys.platform == 'win32':
         oxt_path = LeenO_path().split('///')[-1].replace('%20',' ')
@@ -3542,7 +3542,8 @@ def bak_timestamp(arg=None):#debug(arg=None):#
     elif sys.platform == 'win32':
         orig = orig.split('///')[-1].replace('%20',' ')
         dir_bak = dir_bak.split('///')[-1].replace('%20',' ')
-    
+    if len(orig) ==0:
+        return
     if not os.path.exists(dir_bak):
         os.makedirs(dir_bak)
     shutil.copyfile (orig, dir_bak + dest)

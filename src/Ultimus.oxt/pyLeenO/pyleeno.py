@@ -3418,21 +3418,23 @@ def DlgMain(arg=None):
     bak_timestamp() # fa il backup del file
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
             toolbar_on (bar, 0)
+        if len(oDoc.getURL())==0 and \
+        getLastUsedCell(oSheet).EndColumn ==0 and \
+        getLastUsedCell(oSheet).EndRow ==0:
+            oDoc.close(True)
         New_file.computo()
-    #~ else:
     toolbar_vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgMain = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application")
     oDialog1Model = oDlgMain.Model
     oDlgMain.Title = 'Menù Principale (Ctrl+0)'
     
-    
     sUrl = LeenO_path()+'/icons/Immagine.png'
     oDlgMain.getModel().ImageControl1.ImageURL=sUrl
-
     if sys.platform == 'linux' or sys.platform == 'darwin':
         code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
     elif sys.platform == 'win32':

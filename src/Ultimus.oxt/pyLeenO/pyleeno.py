@@ -1188,9 +1188,8 @@ def XPWE_out(arg=None):
 ########################################################################
 def firme_in_calce_run (arg=None):
 #~ def debug (arg=None):
-    #~ chi (attesa())
     oDialogo_attesa = dlg_attesa()# avvia il diaolgo di attesa che viene chiuso alla fine con 
-    attesa().start()
+
 
     '''
     Inserisce (in COMPUTO o VARIANTE) un riepilogo delle categorie
@@ -1199,108 +1198,153 @@ def firme_in_calce_run (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
 
     oSheet = oDoc.CurrentController.ActiveSheet
-    oDoc.CurrentController.ZoomValue = 400
+    if oSheet.Name == 'Analisi di Prezzo':
+        lRowF = ultima_voce(oSheet)+1
+        oDoc.CurrentController.setFirstVisibleRow(lRowF-1)
+        lRowE = getLastUsedCell(oSheet).EndRow
+        for i in range(lRowF, getLastUsedCell(oSheet).EndRow+1):
+            if oSheet.getCellByPosition(0, i).CellStyle == "Riga_rossa_Chiudi":
+                lRowE = i
+                break
+        if lRowE > lRowF+1:
+            oSheet.getRows().removeByIndex(lRowF, lRowE-lRowF)
+        riga_corrente = lRowF+1
+        oSheet.getRows().insertByIndex(lRowF, 15)
+        oSheet.getCellRangeByPosition (0,lRowF,100,lRowF+15-1).CellStyle = "Ultimus_centro"
+    #~ raggruppo i righi di mirura
+        iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+        oCellRangeAddr.StartColumn = 0
+        oCellRangeAddr.EndColumn = 0
+        oCellRangeAddr.StartRow = lRowF
+        oCellRangeAddr.EndRow = lRowF+15-1
+        oSheet.group(oCellRangeAddr, 1)
+        
+#~ INSERISCI LA DATA E IL PROGETTISTA
+        oSheet.getCellByPosition(1 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
+    #~ consolido il risultato
+        oRange = oSheet.getCellByPosition(1 , riga_corrente+3)
+        flags = (oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
+        aSaveData = oRange.getDataArray()
+        oRange.setDataArray(aSaveData)
+        oSheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = 'ULTIMUS'
+        oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il progettista'
+        oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE("(";$S2.$C$13;")")'
+
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        oDoc.CurrentController.ZoomValue = 400
+
+        attesa().start()
         lRowF = ultima_voce(oSheet)+2
 
-    oDoc.CurrentController.setFirstVisibleRow(lRowF-2)
-    lRowE = getLastUsedCell(oSheet).EndRow
-    for i in range(lRowF, getLastUsedCell(oSheet).EndRow+1):
-        if oSheet.getCellByPosition(0, i).CellStyle == "Riga_rossa_Chiudi":
-            lRowE = i
-            break
-    if lRowE > lRowF+1:
-        oSheet.getRows().removeByIndex(lRowF, lRowE-lRowF)
-    #~ else:
-    riga_corrente = lRowF+2
-    if oDoc.getSheets().hasByName('S2') == True:
-        ii = 11
-        vv = 18
-        ss = 41
-        col ='S'
-    else:
-        ii = 8
-        vv = 9
-        ss = 9
-        col ='J'
-    #~ mri(oSheet.getCellByPosition(lRowF,0).Rows)
-    oSheet.getRows().insertByIndex(lRowF, 17)
-    oSheet.getCellRangeByPosition(0, lRowF, ss, lRowF+17-1).CellStyle = 'ULTIMUS'
-#~ INSERIMENTO TITOLO
-    oSheet.getCellByPosition(2 , riga_corrente).String = 'Riepilogo Categorie'
-    oSheet.getCellByPosition(ii , riga_corrente).String = 'Incidenze %'
-    oSheet.getCellByPosition(vv , riga_corrente).String = 'Importi €'
-    inizio_gruppo = riga_corrente
-    riga_corrente += 1
-    for i in range (0, lRowF):
-        if oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-0-scritta':
-            #~ chi(riga_corrente)
-            oSheet.getRows().insertByIndex(riga_corrente,1)
-            oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
-            oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-            oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
-            #~ chi(formulaSCat)
-            oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
-            oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
-            oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
-            oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_totali'
-            riga_corrente += 1
-        elif oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-1-scritta':
-            #~ chi(riga_corrente)
-            oSheet.getRows().insertByIndex(riga_corrente,1)
-            oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
-            oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-            oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE ("   ";C' + str(i+1) + ')'
-            #~ chi(formulaSCat)
-            oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
-            oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
-            oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
-            oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_bordo'
-            riga_corrente += 1
-        elif oSheet.getCellByPosition(1 , i).CellStyle == 'livello2 valuta':
-            #~ chi(riga_corrente)
-            oSheet.getRows().insertByIndex(riga_corrente,1)
-            oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
-            oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-            oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE ("      ";C' + str(i+1) + ')'
-            #~ chi(formulaSCat)
-            oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
-            oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
-            oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
-            oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'ULTIMUS'
-            riga_corrente += 1
-    #~ riga_corrente +=1
- 
-    oSheet.getCellRangeByPosition (2,inizio_gruppo,vv,inizio_gruppo).CellStyle = "Ultimus_centro"
+        oDoc.CurrentController.setFirstVisibleRow(lRowF-2)
+        lRowE = getLastUsedCell(oSheet).EndRow
+        for i in range(lRowF, getLastUsedCell(oSheet).EndRow+1):
+            if oSheet.getCellByPosition(0, i).CellStyle == "Riga_rossa_Chiudi":
+                lRowE = i
+                break
+        if lRowE > lRowF+1:
+            oSheet.getRows().removeByIndex(lRowF, lRowE-lRowF)
+        riga_corrente = lRowF+2
+        if oDoc.getSheets().hasByName('S2') == True:
+            ii = 11
+            vv = 18
+            ss = 41
+            col ='S'
+        else:
+            ii = 8
+            vv = 9
+            ss = 9
+            col ='J'
+        #~ mri(oSheet.getCellByPosition(lRowF,0).Rows)
+        oSheet.getRows().insertByIndex(lRowF, 17)
+        oSheet.getCellRangeByPosition(0, lRowF, ss, lRowF+17-1).CellStyle = 'ULTIMUS'
+        # raggruppo i righi di mirura
+        iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+        oCellRangeAddr.StartColumn = 0
+        oCellRangeAddr.EndColumn = 0
+        oCellRangeAddr.StartRow = lRowF
+        oCellRangeAddr.EndRow = lRowF+17-1
+        oSheet.group(oCellRangeAddr, 1)
 
-    oSheet.getCellByPosition(2 , riga_corrente).String= 'T O T A L E   €'
-    oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'Ultimus_destra'
-    oSheet.getCellByPosition(vv , riga_corrente).Formula = '=' + col + str(lRowF) 
-    oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
-    fine_gruppo = riga_corrente
-#~ DATA
-    oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
-#~ consolido il risultato
-    oRange = oSheet.getCellByPosition(2 , riga_corrente+3)
-    flags = (oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
-    aSaveData = oRange.getDataArray()
-    oRange.setDataArray(aSaveData)
-    
-    oSheet.getCellByPosition(2 , riga_corrente+5).Formula = 'Il Progettista'
-    oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE ("(";$S2.$C$13;")")'
-    oSheet.getCellRangeByPosition(2 , riga_corrente+5, 2 , riga_corrente+6).CellStyle = 'Ultimus_centro'
+    #~ INSERIMENTO TITOLO
+        oSheet.getCellByPosition(2 , riga_corrente).String = 'Riepilogo Categorie'
+        oSheet.getCellByPosition(ii , riga_corrente).String = 'Incidenze %'
+        oSheet.getCellByPosition(vv , riga_corrente).String = 'Importi €'
+        inizio_gruppo = riga_corrente
+        riga_corrente += 1
+        for i in range (0, lRowF):
+            if oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-0-scritta':
+                #~ chi(riga_corrente)
+                oSheet.getRows().insertByIndex(riga_corrente,1)
+                oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
+                oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
+                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
+                #~ chi(formulaSCat)
+                oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
+                oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
+                oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_totali'
+                riga_corrente += 1
+            elif oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-1-scritta':
+                #~ chi(riga_corrente)
+                oSheet.getRows().insertByIndex(riga_corrente,1)
+                oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
+                oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
+                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE ("   ";C' + str(i+1) + ')'
+                #~ chi(formulaSCat)
+                oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
+                oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
+                oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_bordo'
+                riga_corrente += 1
+            elif oSheet.getCellByPosition(1 , i).CellStyle == 'livello2 valuta':
+                #~ chi(riga_corrente)
+                oSheet.getRows().insertByIndex(riga_corrente,1)
+                oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
+                oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
+                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE ("      ";C' + str(i+1) + ')'
+                #~ chi(formulaSCat)
+                oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
+                oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
+                oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'ULTIMUS'
+                riga_corrente += 1
+        #~ riga_corrente +=1
+     
+        oSheet.getCellRangeByPosition (2,inizio_gruppo,vv,inizio_gruppo).CellStyle = "Ultimus_centro"
 
-    ###  inserisco il salto pagina in cima al riepilogo
-    oDoc.CurrentController.select(oSheet.getCellByPosition(0, lRowF))
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    desktop = XSCRIPTCONTEXT.getDesktop()
-    oFrame = desktop.getCurrentFrame()
+        oSheet.getCellByPosition(2 , riga_corrente).String= 'T O T A L E   €'
+        oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'Ultimus_destra'
+        oSheet.getCellByPosition(vv , riga_corrente).Formula = '=' + col + str(lRowF) 
+        oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
+        fine_gruppo = riga_corrente
+    #~ DATA
+        oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
+    #~ consolido il risultato
+        oRange = oSheet.getCellByPosition(2 , riga_corrente+3)
+        flags = (oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
+        aSaveData = oRange.getDataArray()
+        oRange.setDataArray(aSaveData)
+        
+        oSheet.getCellByPosition(2 , riga_corrente+5).Formula = 'Il Progettista'
+        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE ("(";$S2.$C$13;")")'
+        oSheet.getCellRangeByPosition(2 , riga_corrente+5, 2 , riga_corrente+6).CellStyle = 'Ultimus_centro'
 
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    dispatchHelper.executeDispatch(oFrame, ".uno:InsertRowBreak", "", 0, list())
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-    ###
-    #~ oSheet.getCellByPosition(lRowF,0).Rows.IsManualPageBreak = True
+        ###  inserisco il salto pagina in cima al riepilogo
+        oDoc.CurrentController.select(oSheet.getCellByPosition(0, lRowF))
+        ctx = XSCRIPTCONTEXT.getComponentContext()
+        desktop = XSCRIPTCONTEXT.getDesktop()
+        oFrame = desktop.getCurrentFrame()
+
+        dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+        dispatchHelper.executeDispatch(oFrame, ".uno:InsertRowBreak", "", 0, list())
+        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+        ###
+        #~ oSheet.getCellByPosition(lRowF,0).Rows.IsManualPageBreak = True
 
     oDialogo_attesa.endExecute()
     oDoc.CurrentController.ZoomValue = 100

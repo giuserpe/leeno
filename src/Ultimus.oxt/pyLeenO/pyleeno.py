@@ -106,7 +106,8 @@ def nuovo_listino (arg=None):
 def nuovo_usobollo (arg=None):
     New_file.usobollo()
 ########################################################################
-def focus_su_altro_Doc():#debug(arg=None):#
+#~ def focus_su_altro_Doc():
+def debug(arg=None):#
     '''
     porta il focus su di un altro documento
     '''
@@ -1195,7 +1196,7 @@ def firme_in_calce_run (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
 
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name == 'Analisi di Prezzo':
+    if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
         lRowF = ultima_voce(oSheet)+1
         oDoc.CurrentController.setFirstVisibleRow(lRowF-1)
         lRowE = getLastUsedCell(oSheet).EndRow

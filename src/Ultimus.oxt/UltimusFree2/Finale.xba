@@ -527,7 +527,6 @@ procedi:
 	osheet.getCellRangeByPosition (0,0,100,1).ClearContents(iCellAttr)
 	oSheet.getrows.removebyindex(0,1)
 	fissa (0,2)
-&apos;	If sAttributo = &quot;TIPO_COMPUTO&quot; Then Firme_in_calce
 
 &apos;PRINT
 	Write_PageStyle

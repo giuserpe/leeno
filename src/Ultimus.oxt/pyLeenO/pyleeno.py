@@ -1187,10 +1187,7 @@ def XPWE_out(arg=None):
     MsgBox('Esportazione in formato XPWE eseguita con successo\nsul file ' + out_file + '!','Avviso.')
 ########################################################################
 def firme_in_calce_run (arg=None):
-#~ def debug (arg=None):
     oDialogo_attesa = dlg_attesa()# avvia il diaolgo di attesa che viene chiuso alla fine con 
-
-
     '''
     Inserisce (in COMPUTO o VARIANTE) un riepilogo delle categorie
     ed i dati necessari alle firme
@@ -1232,7 +1229,7 @@ def firme_in_calce_run (arg=None):
         oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il progettista'
         oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE("(";$S2.$C$13;")")'
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         oDoc.CurrentController.ZoomValue = 400
 
         attesa().start()
@@ -3569,7 +3566,7 @@ def hide_error (lErrori, irow):
     oDialogo_attesa.endExecute()
     oDoc.CurrentController.ZoomValue = 100
 ########################################################################
-def bak_timestamp(arg=None):#debug(arg=None):#
+def bak_timestamp(arg=None):
     '''
     fa il backup del file di lavoro, partendo dall'ultimo salvataggio certo,
     in una directory con nome "/percorso_file/leeno-bk/"
@@ -3788,7 +3785,7 @@ class inserisci_nuova_riga_con_descrizione_th (threading.Thread):
             i += 1
         oDialogo_attesa.endExecute() #chiude il dialogo
         oDoc.CurrentController.ZoomValue = 100
-def inserisci_nuova_riga_con_descrizione (arg=None):#debug(arg=None):#
+def inserisci_nuova_riga_con_descrizione (arg=None):
     '''
     inserisce, all'inizio di ogni voce di computo o variante,
     una nuova riga con una descrizione a scelta

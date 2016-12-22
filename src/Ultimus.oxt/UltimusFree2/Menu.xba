@@ -88,37 +88,6 @@ rem ######################################################################
 
 Sub Toolbar_vedi&apos;(oDoc, sURL)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
-Exit sub
-	Dim oLayout, s$, sName$
-	oDoc = thiscomponent
-	oLayout = oDoc.CurrentController.getFrame().LayoutManager	
-	If Not thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		Exit Sub
-	EndIf
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 Then
-rem SEMPRE VISIBILI
-
-		For Each sName In GetmyToolBarNames()
-			toolbar_on (sName, 1)
-		Next
-	Else
-rem CONTESTUALIZZATE
-		For Each sName In GetmyToolBarNames()
-			toolbar_on (sName, 0)
-		Next
-		toolbar_on (&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, 1)
-		Select Case oDoc.currentcontroller.activesheet.Name
-			Case &quot;Elenco Prezzi&quot;
-				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO&quot;, 1)
-			Case &quot;Analisi di Prezzo&quot;
-				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI&quot;, 1)
-			Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;, 1)
-			Case &quot;CONTABILITA&quot;
-				toolbar_on(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, 1)
-			Case Else
-		End Select
-	EndIf
 End Sub
 rem ######################################################################
 	

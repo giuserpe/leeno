@@ -245,7 +245,6 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getCellRangeByposition(13,0,1023,0).Columns.Width = 1900 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(19,0,23,0).Columns.Width = 1000 &apos; larghezza colonne importi
 		oSheet.getCellRangeByposition(51,0,1023,0).Columns.IsVisible=false &apos; nascondi colonne
-&apos;	oSheet.getRows().getByIndex(&quot;1&quot;).Rows.Height = 850 &apos;altezza riga di intestazione
 	rem larghezza colonne
 		oSheet.getColumns().getByName(&quot;A&quot;).Columns.Width = 600
 		oSheet.getColumns().getByName(&quot;B&quot;).Columns.Width = 1500
@@ -307,9 +306,6 @@ sub set_larghezza_colonne &apos;regola la larghezza delle colonne a seconda dell
 		oSheet.getColumns().getByName(&quot;Z&quot;).Columns.Width = 1600
 		oSheet.getColumns().getByName(&quot;AA&quot;).Columns.Width = 1600
 	end Select
-&apos;	oSheet.getCellRANGEByPosition(0, 0, getLastUsedCol(oSheet),getLastUsedRow(oSheet)).Rows.OptimalHeight = True
-&apos;	ThisComponent.CurrentController.Select(oCell)
-&apos;		oSheet.getCellRANGEByPosition(0, lrow, 43,LROW+4).Rows.OptimalHeight = True
 	Adatta_Altezza_riga
 	fissa (0,idxrow+1)
 end Sub
@@ -331,8 +327,6 @@ for i = 1 to 5
 		oCellAddress.Column = i &apos;Column i.
  oCellAddress.Row = i + 1 &apos;Row i + 1..
  s$ = &quot;$Foglio3.$B$3:$e$10&quot;
-&apos; xray oCellAddress
- rem oRanges.addNewByName(nome_range, stringa_di_definiziones$, oCellAddress, 0)
  oRanges.addNewByName(sName$, s$, oCellAddress, 0)
  End If
 next
@@ -362,11 +356,9 @@ sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con r
 		Sheet.GetCellByPosition( 1, i).setvalue(2000,00)
 		Sheet.GetCellByPosition( 3, i).String =&quot;LeenO&quot;
 		oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sty(i))
-&apos;		oStile.CharFontName = &quot;Liberation Serif&quot;
 	i=i+2
 	Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
 	next	
-&apos;	def=odoc.StyleFamilies.getByName(&quot;Cellstyles&quot;).getElementsNames
 print &quot;ok&quot;
 end sub
 
@@ -428,14 +420,8 @@ rifa_nomearea (&quot;S5&quot; , &quot;$A$9:$AP12&quot; , &quot;Serv_gen1_8&quot;
 rifa_nomearea (&quot;S5&quot; , &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;)
 rifa_nomearea (&quot;M1&quot; , &quot;$B$4&quot; , &quot;Super_ego_8&quot;)
 rifa_nomearea (&quot;S5&quot; , &quot;$B$128:$O$128&quot; , &quot;utili&quot;)
-		
-
-&apos;rifa_nomearea (&quot;Foglio1&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
  oDoc = ThisComponent
  oAree=oDoc.NamedRanges&apos;
-&apos;xray oDoc
-
-	&apos;end if
 END Sub
 
 sub ripara_computo
@@ -492,8 +478,6 @@ end Sub
 sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazioni
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lLastUrow = getLastUsedRow(oSheet)
-	&apos;print lLastUrow
-&apos;	goto fine
 	i = 0
 	for i = 1 to lLastUrow
 	if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An-lavoraz-Cod-sx&quot; and 	oSheet.GetCellbyPosition( 0, i ).string = &quot;&quot; then 
@@ -544,11 +528,7 @@ SUB SERVIZIO__ &apos; una macro per mio uso e consumo che modifico e adatto doi 
 	ilastRow = getLastUsedRow(oSheet)
 &apos;	ilastrow = 9
 	lrow = 2
-&apos;	do while oSheet.GetCellByPosition(9, ilastrow).value &lt;&gt; &quot;&quot;
-
 	Do while lrow &lt; ilastrow
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 10, lrow))
-	&apos;	print oSheet.GetCellByPosition(10, lrow).value
 		if oSheet.GetCellByPosition(10, lrow).value &lt;&gt; 0 then 
 			percento = oSheet.GetCellByPosition(10, lrow).value
 			prezzo = oSheet.GetCellByPosition(7, lrow).value
@@ -556,7 +536,6 @@ SUB SERVIZIO__ &apos; una macro per mio uso e consumo che modifico e adatto doi 
 			oSheet.GetCellByPosition(9, lrow).value= importo
 		end if
 		lrow = lrow + 1
-		&apos;oCell = Osheet.GetCellByPosition(lcol, lrow)
 	loop
 END SUB
 
@@ -600,19 +579,6 @@ Sub numeri_computo
 	&apos;	Print test
 		oSheet.GetCellByPosition(36 , I).String = test
 	next
-&apos;	fine:
-
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-&apos;	lLastUrow = getLastUsedRow(oSheet)
-&apos;	print lLastUrow
-
-&apos;	test = 0
-&apos;	for i = 0 to lLastUrow
-&apos;		IF oSheet.GetCellByPosition(33 , I).CellStyle = &quot;livello2_&quot; Then test = oSheet.GetCellByPosition(33 , I).Value
-&apos;	&apos;	Print test
-&apos;		oSheet.GetCellByPosition(33 , I).Value = test
-&apos;	next
-&apos;	fine:
 End Sub
 
 

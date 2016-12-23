@@ -19,13 +19,13 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.APPROSSIMA_ZOOM?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="3" dlg:left="5" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="NON ancora implementata. Se la ritenete utile inviatemi una mail" dlg:tabstop="true" dlg:value="Riordina le analisi" dlg:button-type="ok" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Main_Riordina_Analisi_Alfabetico?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Main_Riordina_Analisi_Alfabetico?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="4" dlg:left="90" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="Va al submenu delle Voci usate nel Computo e nelle Analisi" dlg:value="Genera lista analisi" dlg:button-type="ok" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="5" dlg:left="90" dlg:top="5" dlg:width="75" dlg:height="15" dlg:value="Tutte le Analisi ad E.P." dlg:button-type="ok">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.tante_analisi_in_ep?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.tante_analisi_in_ep?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="7" dlg:left="5" dlg:top="44" dlg:width="75" dlg:height="25">
    <dlg:title dlg:value="Visualizza"/>

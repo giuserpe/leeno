@@ -615,6 +615,23 @@ def uFindString (sString, oSheet):
             if sString in oSheet.getCellByPosition(nCol,nRow).String:
                 return (nCol,nRow)
 ########################################################################
+def join_sheets(arg=None):
+#~ def debug(arg=None):
+    '''
+    unisci fogli
+    serve per unire tanti fogli in un unico foglio
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    lista_fogli = oDoc.Sheets.ElementNames
+    sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
+    unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
+    unione = oDoc.getSheets().getByName('unione_fogli')
+    for el in lista_fogli:
+        oSheet = oDoc.getSheets().getByName(el)
+        oRangeAddress = oSheet.getCellRangeByPosition(0,0,(getLastUsedCell(oSheet).EndColumn),(getLastUsedCell(oSheet).EndRow)).getRangeAddress()
+        oCellAddress = unione.getCellByPosition(0, getLastUsedCell(unione).EndRow+1).getCellAddress()
+        oSheet.copyRange(oCellAddress, oRangeAddress)
+########################################################################
 def copia_sheet (nSheet, tag):
     '''
     nSheet   { string } : nome sheet

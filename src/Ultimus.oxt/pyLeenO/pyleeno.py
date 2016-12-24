@@ -2984,7 +2984,7 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
                     descrizione =''
 
                 if mis[4] != None: #lunghezza
-                    if any(o in mis[4] for o in ('+', '*', '/', '-',)):
+                    if any(o in mis[4] for o in ('+', '*', '/', '-','^',)):
                         oSheet.getCellByPosition(6, SR).Formula = '=' + str(mis[4]).split('=')[-1] # tolgo evenutali '=' in eccesso
                     else:
                         oSheet.getCellByPosition(6, SR).Value = eval(mis[4].replace(',','.'))
@@ -2992,7 +2992,7 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
                     pass
 
                 if mis[5] != None: #larghezza
-                    if any(o in mis[5] for o in ('+', '*', '/', '-', )):
+                    if any(o in mis[5] for o in ('+', '*', '/', '-', '^',)):
                         oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5]).split('=')[-1] # tolgo evenutali '=' in eccesso
                     else:
                         try:
@@ -3002,7 +3002,7 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
                             oSheet.getCellByPosition(7, SR).Value = mis[5].replace(',','.')
 
                 if mis[6] != None: #HPESO
-                    if any(o in mis[6] for o in ('+', '*', '/', '-', )):
+                    if any(o in mis[6] for o in ('+', '*', '/', '-', '^',)):
                         oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6]).split('=')[-1] # tolgo evenutali '=' in eccesso
                     else:
                         oSheet.getCellByPosition(8, SR).Value = eval(mis[6])

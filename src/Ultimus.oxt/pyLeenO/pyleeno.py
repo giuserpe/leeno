@@ -106,8 +106,8 @@ def nuovo_listino (arg=None):
 def nuovo_usobollo (arg=None):
     New_file.usobollo()
 ########################################################################
-#~ def focus_su_altro_Doc():
-def debug(arg=None):#
+def focus_su_altro_Doc():
+#~ def debug(arg=None):#
     '''
     porta il focus su di un altro documento
     '''
@@ -616,21 +616,27 @@ def uFindString (sString, oSheet):
                 return (nCol,nRow)
 ########################################################################
 def join_sheets(arg=None):
-#~ def debug(arg=None):
     '''
     unisci fogli
     serve per unire tanti fogli in un unico foglio
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
-    sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
-    unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
-    unione = oDoc.getSheets().getByName('unione_fogli')
-    for el in lista_fogli:
-        oSheet = oDoc.getSheets().getByName(el)
-        oRangeAddress = oSheet.getCellRangeByPosition(0,0,(getLastUsedCell(oSheet).EndColumn),(getLastUsedCell(oSheet).EndRow)).getRangeAddress()
-        oCellAddress = unione.getCellByPosition(0, getLastUsedCell(unione).EndRow+1).getCellAddress()
-        oSheet.copyRange(oCellAddress, oRangeAddress)
+    if oDoc.getSheets().hasByName('unione_fogli') == False:
+        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
+        unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
+        lista_fogli = lista_fogli[:-1]
+        unione = oDoc.getSheets().getByName('unione_fogli')
+        for el in lista_fogli:
+            oSheet = oDoc.getSheets().getByName(el)
+            oRangeAddress = oSheet.getCellRangeByPosition(0,0,(getLastUsedCell(oSheet).EndColumn),(getLastUsedCell(oSheet).EndRow)).getRangeAddress()
+            oCellAddress = unione.getCellByPosition(0, getLastUsedCell(unione).EndRow+1).getCellAddress()
+            oSheet.copyRange(oCellAddress, oRangeAddress)
+        MsgBox('Unione dei fogli eseguita.','Avviso')
+    else:
+        unione = oDoc.getSheets().getByName('unione_fogli')
+        MsgBox('Il foglio "unione_fogli" è già esistente, quindi non procedo.','Avviso!')
+    oDoc.CurrentController.setActiveSheet(unione)
 ########################################################################
 def copia_sheet (nSheet, tag):
     '''
@@ -905,7 +911,6 @@ def XPWE_out(arg=None):
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo esistente.','Avviso!')
         return
-    lista_righe = list()
     top = Element('PweDocumento')
 #~ dati generali
     PweDatiGenerali = SubElement(top,'PweDatiGenerali')
@@ -1336,6 +1341,8 @@ def XPWE_out(arg=None):
     except AttributeError:
         return
     riga = str(tostring(top, encoding="unicode"))
+    #~ if len(lista_AP) != 0:
+        #~ riga = riga.replace('<PweDatiGenerali>','<Fgs>131072</Fgs><PweDatiGenerali>')
     try:
         of = codecs.open(out_file,'w','utf-8')
         of.write(riga)

@@ -899,6 +899,9 @@ def XPWE_out(arg=None):
     esporta il documento in formato XPWE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
+
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo esistente.','Avviso!')
         return
@@ -1110,7 +1113,6 @@ def XPWE_out(arg=None):
             lista_AP.append(oSheet.getCellByPosition(0, n).String)
 #Analisi di prezzo
     if len(lista_AP) != 0:
-        chi (lista_AP)
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_AP:
             try:
@@ -1326,6 +1328,7 @@ def XPWE_out(arg=None):
                         Flags.text = '32769'
             n = sotto+1
 ##########################
+    oDialogo_attesa.endExecute()
     out_file = filedia('Salva con nome...', '*.xpwe', 1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
@@ -3570,7 +3573,7 @@ def r_version_code(arg=None):
     f = open(code_file, 'r')
     return f.readline().split('-')[-1]
 ########################################################################
-def XPWE_export (arg=None ):
+def XPWE_export_run (arg=None ):
     '''
     Viasualizza il menù export/import XPWE
     '''
@@ -3884,6 +3887,14 @@ class XPWE_import_th (threading.Thread):
         XPWE_import_run ()
 def XPWE_import (arg=None):
     XPWE_import_th().start()
+########################################################################
+class XPWE_export_th (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        XPWE_export_run()
+def XPWE_export (arg=None):
+    XPWE_export_th().start()
 ########################################################################
 class debug_th (threading.Thread):
     def __init__(self):

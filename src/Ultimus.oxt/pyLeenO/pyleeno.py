@@ -14,6 +14,9 @@ import locale
 import codecs
 import subprocess
 import os, sys, uno, unohelper, pyuno, logging, shutil, base64
+import time
+from multiprocessing import Process, freeze_support
+import threading
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 from datetime import datetime, date
@@ -3541,7 +3544,15 @@ def autoexec (arg=None):
         #~ chi("autoexec py")
         return
 ########################################################################
+class adegua_tmpl_th (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        adegua_tmpl_run()
 def adegua_tmpl (arg=None):
+    adegua_tmpl_th().start()
+##########
+def adegua_tmpl_run (arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
@@ -3557,6 +3568,8 @@ def adegua_tmpl (arg=None):
 
     if ver_tmpl < 203:
         if DlgSiNo("Vuoi procedere con l'adeguamento di questo file alla versione corrente di LeenO?", "Richiesta") ==2:
+            oDialogo_attesa = dlg_attesa()
+            attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
             sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
             styles = oDoc.getStyleFamilies()
@@ -3565,6 +3578,8 @@ def adegua_tmpl (arg=None):
             Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')
             oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 203
+            oDialogo_attesa.endExecute() #chiude il dialogo
+            #~ oDlgMain.endExecute()
             MsgBox("Adeguamento del file completato con successo.", "Avviso")
         else:
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
@@ -3860,10 +3875,6 @@ def dlg_attesa(arg=None):
     oDialogo_attesa = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgAttesa?language=Basic&location=application")
     return oDialogo_attesa
 #~ #
-import time
-from multiprocessing import Process, freeze_support
-
-import threading
 class attesa (threading.Thread):
     #~ http://bit.ly/2fzfsT7
     '''avvia il dialogo di attesa'''

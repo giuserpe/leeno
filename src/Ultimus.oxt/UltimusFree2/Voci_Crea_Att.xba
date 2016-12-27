@@ -21,8 +21,7 @@ On Error GoTo fine:
 	Select Case thisComponent.currentcontroller.activesheet.Name
 	Case &quot;COMPUTO&quot; , &quot;VARIANTE&quot;
 If se_contabilita = 1 Then Exit Sub
-	&apos;	ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_computo&quot;) &apos;ANCORA TROPPO LENTO
- 		Nuova_Voce_Computo_Att
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_computo&quot;)
  	Case &quot;Analisi di Prezzo&quot;
 		NuovaAnalisi_Att
  	Case &quot;CONTABILITA&quot;
@@ -312,18 +311,12 @@ SUB tante_voci_insieme
 		quante = InputBox(&quot;quante voci vuoi inserire?&quot;, &quot;1&quot;)
 	 	If quante = 0 Then Exit Sub
 	 	For i = 1 To quante 
-		 	If nome_sheet = &quot;COMPUTO&quot; Or nome_sheet = &quot;VARIANTE&quot; Then Nuova_Voce_Computo_Att
+		 	If nome_sheet = &quot;COMPUTO&quot; Or nome_sheet = &quot;VARIANTE&quot; Then ScriptPy(&quot;pyleeno.py&quot;, &quot;ins_voce_computo&quot;)
 			If nome_sheet = &quot;Analisi di Prezzo&quot; Then NuovaAnalisi_Att
 		Next
 	End Select
 End Sub
 &apos;___________________________________________________________________________________________
-
-Sub Nuova_Voce_Computo_Att
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;ins_voce_computo&quot;)
-End Sub
-
-
 SUB NuovaAnalisi_Att &apos;
 	rem CANCELLA DAL blocco_analisi la riga con &quot;Oneri di Sicurezza diretti&quot; 
 	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)

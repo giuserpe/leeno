@@ -44,7 +44,7 @@ Sub genera_variante
 			
 			oSheet.rows.removeByIndex (3,ultima_voce-2)&apos;cancella tutto il foglio
 			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,2))
-			nuova_voce_computo_att
+			ScriptPy(&quot;pyleeno.py&quot;, &quot;ins_voce_computo&quot;)
 		EndIf
 
 End Sub

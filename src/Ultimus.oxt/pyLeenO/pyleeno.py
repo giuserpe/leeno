@@ -1949,6 +1949,21 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     ins_voce_computo_grezza(lrow)
     Numera_Voci(0)
 ########################################################################
+# rifa_nomearea ########################################################
+def rifa_nomearea(sSheet, sRange, sName):
+    '''
+    Definisce o ridefinisce un'area di dati a cui far riferimento
+    sSheet = nome del foglio, es.: 'S5'
+    sRange = individuazione del range di celle, es.:'$B$89:$L$89'
+    sName = nome da attribuire all'area scelta, es.: "manodopera"
+    '''
+    sPath = "$'" + sSheet + "'." + sRange
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oRanges = oDoc.NamedRanges
+    oCellAddress = oDoc.Sheets.getByName(sSheet).getCellRangeByName("A1").getCellAddress()
+    if oRanges.hasByName(sName):
+        oRanges.removeByName(sName)
+    oRanges.addNewByName(sName,sPath,oCellAddress,0)
 ########################################################################
 # XML_import ###########################################################
 def XML_import (arg=None):

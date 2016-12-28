@@ -3737,10 +3737,8 @@ def adegua_tmpl (arg=None):
     # cambiare stile http://bit.ly/2cDcCJI
     oDoc = XSCRIPTCONTEXT.getDocument()
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
-    
     if ver_tmpl > 200:
         Lib_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-
     if ver_tmpl < 203:
         if DlgSiNo("Vuoi procedere con l'adeguamento di questo file alla versione corrente di LeenO?", "Richiesta") ==2:
             #~ oDialogo_attesa = dlg_attesa()
@@ -3753,6 +3751,11 @@ def adegua_tmpl (arg=None):
             Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')
             oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 203
+            for el in oDoc.Sheets.ElementNames:
+                oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
+                adatta_altezza_riga(el)
+            oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('COMPUTO'))
+
             #~ oDialogo_attesa.endExecute() #chiude il dialogo
             #~ oDlgMain.endExecute()
             MsgBox("Adeguamento del file completato con successo.", "Avviso")

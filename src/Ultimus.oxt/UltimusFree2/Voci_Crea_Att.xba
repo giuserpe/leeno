@@ -23,7 +23,7 @@ On Error GoTo fine:
 If se_contabilita = 1 Then Exit Sub
 		ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_computo&quot;)
  	Case &quot;Analisi di Prezzo&quot;
-		NuovaAnalisi_Att
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_analisi&quot;)
  	Case &quot;CONTABILITA&quot;
 		nuova_voce_contab
  	Case &quot;Elenco Prezzi&quot;
@@ -312,80 +312,10 @@ SUB tante_voci_insieme
 	 	If quante = 0 Then Exit Sub
 	 	For i = 1 To quante 
 		 	If nome_sheet = &quot;COMPUTO&quot; Or nome_sheet = &quot;VARIANTE&quot; Then ScriptPy(&quot;pyleeno.py&quot;, &quot;ins_voce_computo&quot;)
-			If nome_sheet = &quot;Analisi di Prezzo&quot; Then NuovaAnalisi_Att
+			If nome_sheet = &quot;Analisi di Prezzo&quot; Then  ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_analisi&quot;)
 		Next
 	End Select
 End Sub
-&apos;___________________________________________________________________________________________
-SUB NuovaAnalisi_Att &apos;
-	rem CANCELLA DAL blocco_analisi la riga con &quot;Oneri di Sicurezza diretti&quot; 
-	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-	if oSheet.GetCellByPosition(7,290).getvalue = 190 and _
-		oSheet.GetCellByPosition(8,290).getvalue = 3 and _
-		oSheet.GetCellByPosition(9,290).getvalue = 9 then
-		oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;)
-		if oSheet.GetCellByPosition(4,124).string = &quot;Oneri di Sicurezza diretti&quot; then
-			oSheet.rows.removeByIndex (124, 1)
-		end if
-	end if
-	
-	lrow= Range2Cell &apos;prende l&apos;idirizzo della prima cella del range
-	oContr = ThisComponent.CurrentController
-
-	oSheet = ThisComponent.currentController.activeSheet
-	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
-	If Constrolla_se_M1 = true then
-		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,298).value = 0 then
-			goto inserisci
-		end if
-	end if
-	lrowFine = ultima_voce + 2
-	If lrowFine = 2 Then
-		lrow = 0
-		GoTo inserisci:
-	EndIf
-	If lrow &gt; lrowFine Then Exit Sub
-	If lrowFine &lt; 10 Then
-		lrow = lrowFine-1
-		GoTo inserisci:
-	EndIf
-&apos;	If lrow &lt;1 Then Exit sub
-	&apos; se sono sul grigio inserisco
-	If oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;An-sfondo-basso Att End&quot; Then 
-		do While oSheet.GetCellbyPosition( 0, lrow).CellStyle &lt;&gt; &quot;An-sfondo-basso Att End&quot;
-			lrow=lrow+1
-		Loop
-		lrow=lrow+1
-	End if
-
-inserisci:
-lrow = lrow+1
-	insRows (lrow, 26) &apos;sub di bart per sostituire InsertbyIndex
-	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
-	
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S5
-	oDoc = ThisComponent
-	DocView=oDoc.getCurrentController()
-	oRangeOrigine=oDoc.NamedRanges.blocco_analisi.ReferredCells &apos; blocco_analisi è il nome del range
-
-	oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name) &apos; sheet corrente dove incollare
-	oCelle= oCell.getCellAddress() &apos; indirizzo cella attiva (qui)
-
-	oQuellRangeAddresse = oRangeOrigine.RangeAddress &apos;CellRangeAddress
- oSheet2.copyRange(oCelle,oQuellRangeAddresse)
-
- thisComponent.currentController.Select(oSheet.GetCellByPosition( 0 , lrow+1))
-	unSelect &apos;unselect ranges 	
-	&apos;ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-	&apos; togle la selezione
-	oContr.setFirstVisibleRow(lrow+1)
- 	exit sub
-errore:
-oCtrlModel.Enabled = True
-DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
-END Sub
 &apos;########################################################################
 sub insRows (lrow as long, lrowNum as long ) &apos;grazie Bart
 &apos; funzione per sostituire il metodo insertByIndex (che non aggiorna i riferimenti)

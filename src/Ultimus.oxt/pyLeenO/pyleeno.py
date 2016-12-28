@@ -817,7 +817,24 @@ def _primaCella (IDcol=0, IDrow=0):
     oDoc.CurrentController.setFirstVisibleRow(IDrow)
     return
 ########################################################################
-
+def setTabColor (colore):
+    '''
+    colore   { integer } : id colonna
+    attribuisce al foglio corrente un colore a scelta
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    oProp = PropertyValue()
+    oProp.Name = 'TabBgColor'
+    oProp.Value = colore
+    chi(colore)
+    properties = (oProp,)
+    dispatchHelper.executeDispatch(oFrame, '.uno:SetTabBgColor', '', 0, properties)
+########################################################################
 def salva_come (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1948,6 +1965,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
         return
     ins_voce_computo_grezza(lrow)
     Numera_Voci(0)
+
 ########################################################################
 # rifa_nomearea ########################################################
 def rifa_nomearea(sSheet, sRange, sName):

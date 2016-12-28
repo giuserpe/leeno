@@ -222,7 +222,7 @@ ScriptPy(&quot;pyleeno.py&quot;, &quot;firme_in_calce&quot;)
 	ThisComponent.CalcAsShown = true 
 Numera_Voci_Computo (&quot;niente prompt&quot;) &apos; NON CHIEDE CONFERMA
 Chiudi_o_elimina_tabelle_inutili
-inizializza_analisi
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_analisi&quot;)
 rem ----------------------------------------------------------------------
 Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)
 Barra_Apri_Chiudi_5(&quot;3/4&quot;, 60)

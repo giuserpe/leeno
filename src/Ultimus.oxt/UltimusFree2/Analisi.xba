@@ -1,29 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Analisi" script:language="StarBasic">Sub inizializza_analisi &apos;(C) Giuseppe Vizziello 2014
-	chiudi_dialoghi
-	If ThisComponent.Sheets.hasbyname(&quot;Analisi di Prezzo&quot;) Then
-		Sel_analisi
-		Exit Sub 
-	EndIf
-	thisComponent.getSheets().insertNewByName(&quot;Analisi di Prezzo&quot;,1,0)
-	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-
-	oSheet.getCellRangeByPosition(0, 0, 14 ,0 ).cellstyle = &quot;Analisi_Sfondo&quot;
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,0))
-	NuovaAnalisi_Att
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,0))
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,27))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;inserisci_riga_rossa&quot;)
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
-	fissa (0, 2)
-	oSheet.PageStyle = &quot;PageStyle_Analisi di Prezzo&quot;
-	SetTabColorN(RGB(185,255,168))
-&apos;Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
-End sub
-
-sub Genera_LISTA_ANALISI &apos;(C) Giuseppe Vizziello 2014
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Analisi" script:language="StarBasic">sub Genera_LISTA_ANALISI &apos;(C) Giuseppe Vizziello 2014
 	chiudi_dialoghi
 on error goto fine
 rem attivo le analisi

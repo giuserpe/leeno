@@ -136,7 +136,7 @@ def copia_sorgente_per_git(arg=None):#debug(arg=None):#
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
-    #~ make_pack()
+    make_pack()
     if sys.platform == 'linux' or sys.platform == 'darwin':
         oxt_path = LeenO_path().split('//')[-1].replace('%20',' ')
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
@@ -1668,34 +1668,35 @@ def azzera_voce(arg=None):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = Range2Cell()[1]
-    sStRange = Circoscrive_Voce_Computo_Att (lrow)
-    sStRange.RangeAddress
-    inizio = sStRange.RangeAddress.StartRow
-    fine = sStRange.RangeAddress.EndRow
-    _gotoCella(2, fine-1)
-    if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
-        ### elimino il colore di sfondo
-        oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
-        
-        oSheet.getRows().removeByIndex(fine-1, 1)
-        _gotoCella(2, fine-2)
-    else:
-        Copia_riga_Ent()
-        oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
-        oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
-        ### cambio il colore di sfondo
-        oDoc.CurrentController.select(sStRange)
-        ctx = XSCRIPTCONTEXT.getComponentContext()
-        desktop = XSCRIPTCONTEXT.getDesktop()
-        oFrame = desktop.getCurrentFrame()
-        dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-        oProp = PropertyValue()
-        oProp.Name = 'BackgroundColor'
-        oProp.Value = 8421504
-        properties = (oProp,)
-        dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
-        ###
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        lrow = Range2Cell()[1]
+        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        sStRange.RangeAddress
+        inizio = sStRange.RangeAddress.StartRow
+        fine = sStRange.RangeAddress.EndRow
+        _gotoCella(2, fine-1)
+        if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
+            ### elimino il colore di sfondo
+            oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
+            
+            oSheet.getRows().removeByIndex(fine-1, 1)
+            _gotoCella(2, fine-2)
+        else:
+            Copia_riga_Ent()
+            oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
+            oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
+            ### cambio il colore di sfondo
+            oDoc.CurrentController.select(sStRange)
+            ctx = XSCRIPTCONTEXT.getComponentContext()
+            desktop = XSCRIPTCONTEXT.getDesktop()
+            oFrame = desktop.getCurrentFrame()
+            dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+            oProp = PropertyValue()
+            oProp.Name = 'BackgroundColor'
+            oProp.Value = 8421504
+            properties = (oProp,)
+            dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
+            ###
 ########################################################################
 def copia_riga_computo(lrow):
     '''
@@ -1962,17 +1963,37 @@ def inizializza_analisi(arg=None):
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    lrow = Range2Cell()[1]
+    rifa_nomearea('S5', '$B$108:$P$133', 'blocco_analisi')
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == False:
         oDoc.getSheets().insertNewByName('Analisi di Prezzo',1)
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
         oSheet.getCellRangeByPosition(0,0,15,0).CellStyle = 'Analisi_Sfondo'
-    oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
-    oDoc.CurrentController.setActiveSheet(oSheet)
-    setTabColor (12189608)
-    rifa_nomearea('S5', '$B$108:$P$133', 'blocco_analisi')
-    oRangeAddress=oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
-    oCellAddress = oSheet.getCellByPosition(0, getLastUsedCell(oSheet).EndRow+1).getCellAddress()
+        oSheet.getCellByPosition(0, 1).Value = 0
+        oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+        oDoc.CurrentController.setActiveSheet(oSheet)
+        setTabColor (12189608)
+        oRangeAddress=oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
+        oCellAddress = oSheet.getCellByPosition(0, getLastUsedCell(oSheet).EndRow).getCellAddress()
+        oDoc.CurrentController.select(oSheet.getCellByPosition(0,2))
+        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+        set_larghezza_colonne()
+    else:
+        oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+        oDoc.CurrentController.setActiveSheet(oSheet)
+        urow = getLastUsedCell(oSheet).EndRow
+        if lrow >= urow:
+            lrow = ultima_voce(oSheet)-5
+        for n in range(lrow ,getLastUsedCell(oSheet).EndRow):
+            if oSheet.getCellByPosition(0, n).CellStyle == 'An-sfondo-basso Att End':
+                break 
+        oRangeAddress=oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
+        oSheet.getRows().insertByIndex(n+2,26)
+        oCellAddress = oSheet.getCellByPosition(0,n+2).getCellAddress()
+        oDoc.CurrentController.select(oSheet.getCellByPosition(0,n+2+1))
+        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     oSheet.copyRange(oCellAddress, oRangeAddress)
+    inserisci_Riga_rossa()
     return
 ########################################################################
 def inserisci_Riga_rossa (arg=None):
@@ -2013,7 +2034,7 @@ def rifa_nomearea(sSheet, sRange, sName):
     sPath = "$'" + sSheet + "'." + sRange
     oDoc = XSCRIPTCONTEXT.getDocument()
     oRanges = oDoc.NamedRanges
-    oCellAddress = oDoc.Sheets.getByName(sSheet).getCellRangeByName("A1").getCellAddress()
+    oCellAddress = oDoc.Sheets.getByName(sSheet).getCellRangeByName('A1').getCellAddress()
     if oRanges.hasByName(sName):
         oRanges.removeByName(sName)
     oRanges.addNewByName(sName,sPath,oCellAddress,0)
@@ -4169,7 +4190,7 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1, autoexec, nascondi_err, azzera_voce
+g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi,
 ########################################################################
 ########################################################################
 # ... here is the python script code

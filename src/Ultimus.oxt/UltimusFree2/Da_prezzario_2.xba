@@ -205,7 +205,7 @@ SUB D_Accoda_CN(livelli as long, lRow as long)
 	
  oCell=oSheet.getCellByPosition(2,2) 
  ThisComponent.CurrentController.Select(oCell)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
  
@@ -432,7 +432,7 @@ print sDescr3
 	
  oCell=oSheet.getCellByPosition(2,2) 
  ThisComponent.CurrentController.Select(oCell)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
  
@@ -559,7 +559,7 @@ SUB Accoda_SCNVA(livelli as long, lrow as long)
  oCell=oSheetTemp.getCellByPosition(2,2) 
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 end sub
 
 &apos;__________________________________________________________________________________________
@@ -880,7 +880,7 @@ SUB Accoda_Normale(livelli as long, lrow as long) &apos;
 
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
- Adatta_Altezza_riga 	
+ 	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;) 	
 end sub
 
 
@@ -1271,7 +1271,7 @@ percent2 = pp2
 
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 end sub
 
 
@@ -1518,7 +1518,7 @@ SUB Accoda_Normale_________________(livelli as long, lrow as long)
 
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 end sub
 
 SUB Accoda_CN08(livelli as long, lrow as long)
@@ -1688,7 +1688,7 @@ SUB Accoda_CN08(livelli as long, lrow as long)
 
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 end sub
 
 
@@ -1932,11 +1932,9 @@ SUB Accoda_MS(livelli as long, lrow as long)
 	&apos; il prezzo DEVE essere un numero VERO (non stringa)
 
  oCell=oSheet.getCellByPosition(2,2) 
- &apos; ThisComponent.CurrentController.Select(oCell)
- &apos; Adatta_Altezza_riga 	
  sQualeCella = &quot;$C$3&quot;
  Seleziona_Cella (sQualeCella)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
  &apos; pRINT &quot;ACCODA NORMAL&quot;
 end sub
 </script:module>

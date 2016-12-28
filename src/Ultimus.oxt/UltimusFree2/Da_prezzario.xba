@@ -565,7 +565,7 @@ dim oCellS as object
 &apos;	print &quot;trallala&quot;
  oCell=oSheet.getCellByPosition(2,2) 
  ThisComponent.CurrentController.Select(oCell)
- Adatta_Altezza_riga 	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 &apos; sQualeCella = &quot;$C$3&quot;
  &apos; Seleziona_Cella (sQualeCella)
 

@@ -453,7 +453,7 @@ Numera_Voci_Computo (&quot;niente prompt&quot;)
 &apos;					oPrimaCella.Rows.Height = 2200
 &apos;					ThisComponent.CurrentController.Select(oPrimaCella)
 ThisComponent.CurrentController.Select(oSheet)
-Adatta_Altezza_riga
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 unSelect &apos;deselezion
 			&apos;		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 			&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 

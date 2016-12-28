@@ -172,7 +172,7 @@ rem ----------------------------------------------------------------------
 Barra_chiudi_sempre_4
 &apos;Exit Sub &apos;
 rem ----------------------------------------------------------------------
-Adatta_Altezza_riga
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 rem ----------------------------------------------------------------------
 	test = UBound(elCap())&apos; -1
 	For i = 1 To test

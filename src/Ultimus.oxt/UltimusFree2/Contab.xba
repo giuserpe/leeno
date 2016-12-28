@@ -526,7 +526,7 @@ rem il settaggio degli stili, messo qui e ripetuto qualche riga sotto, serve a r
 adatta_altezza: 
 	oCell=oSheetReg.getCellRangeByPosition(fcol+0, daRiga, fcol+9, fineFirme)
 	ThisComponent.CurrentController.Select(oCell)
-Adatta_Altezza_riga
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 	
 i=1
 	Do While oSheetReg.GetCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
@@ -1418,7 +1418,7 @@ rem set intestazione area di stampa
 rem ----------------------------------------------------------------------
 rem sbianco i dati e l&apos;intestazione
 	ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, daRiga, 11, fineFirme))
-Adatta_Altezza_riga
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 Sbianca_celle
 	ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, 2, 11, 2))
 Sbianca_celle

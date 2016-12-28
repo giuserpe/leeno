@@ -241,7 +241,7 @@ DOPPIONI_TROVA_Durante(lrowPartenza, codice)
  		 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt; 
 	 		DOPPIONI_TROVA_Durante(lrowPartenza, codice)
 	end if 		 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
- 	Adatta_Altezza_riga 
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 		 &apos; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 		 
 	 ThisComponent.CurrentController.Select (oPartenza_D)
@@ -521,7 +521,7 @@ Function ANALISI_IN_ELENCOPREZZI_Der_TV (optional flag_rior as string) &apos;ada
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
  		 Riordina_ElencoPrezzi
  		 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
- 		 Adatta_Altezza_riga 
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 		 &apos; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	end if
  	ANALISI_IN_ELENCOPREZZI_Der_TV = lrowRisel
@@ -714,7 +714,7 @@ Aggiorna_formula_sommase(lrow)
 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
  	&apos;	 Riordina_ElencoPrezzi
  		 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
- 		 Adatta_Altezza_riga 
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 		 &apos; &gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	end if
  	ANALISI_IN_ELENCOPREZZI_Der = lrowRisel
@@ -1076,34 +1076,6 @@ Dim oRangeAddress as object
 	oSheet.copyRange(oCellAddress, oRangeAddress) &apos; inserimento
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,i)) &apos;focus cella
 end sub
-
-sub Adatta_Altezza_riga &apos; Funzionava egregiamente ma era un po&apos; lento
-	&apos; funziona sulla sheet corrente, su una o più righe... 
-	&apos; creata col registratore--- usata tal quale
-	rem ----------------------------------------------------------------------
-	rem define variables
-	dim document as object
-	dim dispatcher as object
-	rem ----------------------------------------------------------------------
-	rem get access to the document
-	document = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	rem ----------------------------------------------------------------------
-	dim args1(0) as new com.sun.star.beans.PropertyValue
-	args1(0).Name = &quot;aExtraHeight&quot;
-	args1(0).Value = 0
-	
-	dispatcher.executeDispatch(document, &quot;.uno:SetOptimalRowHeight&quot;, &quot;&quot;, 0, args1())
-
-	oSheet = ThisComponent.currentController.activeSheet
-&apos;	oSheet.getCellRANGEByPosition(0, 0, getLastUsedCol(oSheet),getLastUsedRow(oSheet)).Rows.OptimalHeight = True
-&apos;	Select Case oSheet.Name
-&apos;	Case &quot;Elenco Prezzi&quot;, &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
-&apos;		oSheet.GetCellByPosition(0,2).Rows.Height = 800
-&apos;	End Select
-&apos;	fissa (0, 3)
-END Sub
 
 SUB Adatta_h_riga_intera_tabella(nSheet as string)
 	

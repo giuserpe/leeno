@@ -831,7 +831,6 @@ def setTabColor (colore):
     oProp = PropertyValue()
     oProp.Name = 'TabBgColor'
     oProp.Value = colore
-    chi(colore)
     properties = (oProp,)
     dispatchHelper.executeDispatch(oFrame, '.uno:SetTabBgColor', '', 0, properties)
 ########################################################################
@@ -862,23 +861,15 @@ def _gotoCella (IDcol=0, IDrow=0):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     return
 ########################################################################
-#~ def Adatta_Altezza_riga (arg=None):
-    #~ pass
-def debugl(arg=None): # 
-    '''questa sembra inefficace
-    meglio usare qualcosa tipo:
-    oSheet.getCellRangeByPosition(2, lrow-1, 11, lrow).Rows.OptimalHeight = True'''
+def adatta_altezza_riga (nome):
+    '''
+    nome   { string } : nome della sheet
+    imposta l'altezza ottimale delle celle
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    desktop = XSCRIPTCONTEXT.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    oProp = PropertyValue()
-    oProp.Name = 'aExtraHeight'
-    oProp.Value = 0
-    properties = (oProp,)
-    dispatchHelper.executeDispatch(oFrame, '.uno:SetOptimalRowHeight', '', 0, properties)
+    oDoc.getSheets().hasByName(nome)
+    oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
@@ -1958,14 +1949,58 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-
     if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + siVoce):
         lrow = next_voice(lrow, 1)
     else:
         return
     ins_voce_computo_grezza(lrow)
     Numera_Voci(0)
-
+########################################################################
+# inizializza_analisi ##################################################
+def inizializza_analisi(arg=None):
+    '''
+    Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    if oDoc.getSheets().hasByName('Analisi di Prezzo') == False:
+        oDoc.getSheets().insertNewByName('Analisi di Prezzo',1)
+        oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+        oSheet.getCellRangeByPosition(0,0,15,0).CellStyle = 'Analisi_Sfondo'
+    oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    setTabColor (12189608)
+    rifa_nomearea('S5', '$B$108:$P$133', 'blocco_analisi')
+    oRangeAddress=oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
+    oCellAddress = oSheet.getCellByPosition(0, getLastUsedCell(oSheet).EndRow+1).getCellAddress()
+    oSheet.copyRange(oCellAddress, oRangeAddress)
+    return
+########################################################################
+def inserisci_Riga_rossa (arg=None):
+    '''
+    Inserisce la riga rossa di chiusura degli elaborati
+    Questa riga è un rigerimento per varie operazioni
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    nome = oSheet.Name
+    if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        lrow = ultima_voce(oSheet) + 2
+        for n in range(lrow, getLastUsedCell(oSheet).EndRow+2):
+            if oSheet.getCellByPosition(0,n).CellStyle == 'Riga_rossa_Chiudi':
+                return
+        oSheet.getRows().insertByIndex(lrow,1)
+        oSheet.getCellByPosition(0, lrow).String = 'Fine Computo'
+        oSheet.getCellRangeByPosition(0,lrow,34,lrow).CellStyle='Riga_rossa_Chiudi'
+    elif nome == 'Analisi di Prezzo':
+        lrow = ultima_voce(oSheet) + 2
+        oSheet.getCellByPosition( 0, lrow).String = 'Fine ANALISI'
+        oSheet.getCellRangeByPosition(0,lrow,10,lrow).CellStyle='Riga_rossa_Chiudi' 
+    elif nome == 'Elenco Prezzi':
+        lrow = ultima_voce(oSheet) + 1
+        oSheet.getCellByPosition( 0, lrow).String = 'Fine elenco'
+        oSheet.getCellRangeByPosition(0,lrow,26,lrow).CellStyle='Riga_rossa_Chiudi' 
+    oSheet.getCellByPosition(2, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)'
 ########################################################################
 # rifa_nomearea ########################################################
 def rifa_nomearea(sSheet, sRange, sName):
@@ -3577,6 +3612,91 @@ def autoexec (arg=None):
         #~ chi("autoexec py")
         return
 ########################################################################
+def set_larghezza_colonne (arg=None):
+    '''
+    regola la larghezza delle colonne a seconda della sheet
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name == 'Analisi di Prezzo':
+        oSheet.getColumns().getByName('A').Columns.Width = 2100
+        oSheet.getColumns().getByName('B').Columns.Width = 12000
+        oSheet.getColumns().getByName('C').Columns.Width = 1600 
+        oSheet.getColumns().getByName('D').Columns.Width = 2000
+        oSheet.getColumns().getByName('E').Columns.Width = 3400
+        oSheet.getColumns().getByName('F').Columns.Width = 3400
+        oSheet.getColumns().getByName('G').Columns.Width = 2700
+        oSheet.getColumns().getByName('H').Columns.Width = 2700
+        oSheet.getColumns().getByName('I').Columns.Width = 2000
+        oSheet.getColumns().getByName('J').Columns.Width = 2000
+        oSheet.getColumns().getByName('K').Columns.Width = 2000
+        oDoc.CurrentController.freezeAtPosition(0, 2)
+    if oSheet.Name == 'CONTABILITA':
+        oSheet.getCellRangeByPosition(13,0,1023,0).Columns.Width = 1900 # larghezza colonne importi
+        oSheet.getCellRangeByPosition(19,0,23,0).Columns.Width = 1000 # larghezza colonne importi
+        oSheet.getCellRangeByPosition(51,0,1023,0).Columns.IsVisible = False # nascondi colonne
+        oSheet.getColumns().getByName('A').Columns.Width = 600
+        oSheet.getColumns().getByName('B').Columns.Width = 1500
+        oSheet.getColumns().getByName('C').Columns.Width = 6300 #7800
+        oSheet.getColumns().getByName('F').Columns.Width = 1300
+        oSheet.getColumns().getByName('G').Columns.Width = 1300
+        oSheet.getColumns().getByName('H').Columns.Width = 1300
+        oSheet.getColumns().getByName('I').Columns.Width = 1300
+        oSheet.getColumns().getByName('J').Columns.Width = 1700
+        oSheet.getColumns().getByName('L').Columns.Width = 1700
+        oSheet.getColumns().getByName('N').Columns.Width = 1900
+        oSheet.getColumns().getByName('P').Columns.Width = 1900
+        oSheet.getColumns().getByName('T').Columns.Width = 1000
+        oSheet.getColumns().getByName('U').Columns.Width = 1000
+        oSheet.getColumns().getByName('W').Columns.Width = 1000
+        oSheet.getColumns().getByName('X').Columns.Width = 1000
+        oSheet.getColumns().getByName('Z').Columns.Width = 1900
+        oSheet.getColumns().getByName('AX').Columns.Width = 1900
+        oSheet.getColumns().getByName('AY').Columns.Width = 1900
+        oDoc.CurrentController.freezeAtPosition(0, 3)
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        oSheet.getColumns().getByName('A').Columns.Width = 600
+        oSheet.getColumns().getByName('B').Columns.Width = 1500
+        oSheet.getColumns().getByName('C').Columns.Width = 6300 #7800
+        oSheet.getColumns().getByName('F').Columns.Width = 1500
+        oSheet.getColumns().getByName('G').Columns.Width = 1300
+        oSheet.getColumns().getByName('H').Columns.Width = 1300
+        oSheet.getColumns().getByName('I').Columns.Width = 1300
+        oSheet.getColumns().getByName('J').Columns.Width = 1700
+        oSheet.getColumns().getByName('L').Columns.Width = 1700
+        oSheet.getColumns().getByName('S').Columns.Width = 1700
+        oDoc.CurrentController.freezeAtPosition(0, 3)
+    if oSheet.Name == 'Elenco Prezzi':
+        oSheet.getColumns().getByName('A').Columns.Width = 1600
+        oSheet.getColumns().getByName('B').Columns.Width = 10000
+        oSheet.getColumns().getByName('C').Columns.Width = 1500
+        oSheet.getColumns().getByName('D').Columns.Width = 2300
+        oSheet.getColumns().getByName('E').Columns.Width = 1600
+        oSheet.getColumns().getByName('F').Columns.Width = 2300
+        oSheet.getColumns().getByName('G').Columns.Width = 2300
+        oSheet.getColumns().getByName('H').Columns.Width = 1600
+        oSheet.getColumns().getByName('I').Columns.Width = 1200
+        oSheet.getColumns().getByName('J').Columns.Width = 1200
+        oSheet.getColumns().getByName('K').Columns.Width = 100
+        oSheet.getColumns().getByName('L').Columns.Width = 1600
+        oSheet.getColumns().getByName('M').Columns.Width = 1600
+        oSheet.getColumns().getByName('N').Columns.Width = 1600
+        oSheet.getColumns().getByName('O').Columns.Width = 100
+        oSheet.getColumns().getByName('P').Columns.Width = 1600
+        oSheet.getColumns().getByName('Q').Columns.Width = 1600
+        oSheet.getColumns().getByName('R').Columns.Width = 1600
+        oSheet.getColumns().getByName('S').Columns.Width = 100
+        oSheet.getColumns().getByName('T').Columns.Width = 1600
+        oSheet.getColumns().getByName('U').Columns.Width = 1600
+        oSheet.getColumns().getByName('V').Columns.Width = 1600
+        oSheet.getColumns().getByName('W').Columns.Width = 100
+        oSheet.getColumns().getByName('X').Columns.Width = 1600
+        oSheet.getColumns().getByName('Y').Columns.Width = 1600
+        oSheet.getColumns().getByName('Z').Columns.Width = 1600
+        oSheet.getColumns().getByName('AA').Columns.Width = 1600
+        oDoc.CurrentController.freezeAtPosition(0, 3)
+    adatta_altezza_riga(oSheet.Name)
+########################################################################
 #~ class adegua_tmpl_th (threading.Thread):
     #~ def __init__(self):
         #~ threading.Thread.__init__(self)
@@ -3602,7 +3722,7 @@ def adegua_tmpl (arg=None):
 
     if ver_tmpl < 203:
         if DlgSiNo("Vuoi procedere con l'adeguamento di questo file alla versione corrente di LeenO?", "Richiesta") ==2:
-            oDialogo_attesa = dlg_attesa()
+            #~ oDialogo_attesa = dlg_attesa()
             #~ attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
             sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'

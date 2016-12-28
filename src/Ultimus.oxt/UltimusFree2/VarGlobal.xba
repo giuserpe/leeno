@@ -38,7 +38,7 @@ Function cerca_riga_rossa(oNomeSheet) &apos; (c) Giuseppe Vizziello 2014
 &apos;		msgbox (&quot;Quasi certamente manca la riga rossa di chiusura della tabella!&quot;&amp; CHR(10)_
 &apos;		&amp; &quot;Controlla e PROVVEDI!&quot;, 16, &quot;ERRORE!&quot;)
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)+1))
-inserisci_riga_rossa
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;inserisci_riga_rossa&quot;)
 &apos;		Exit Function 
 	End If
 cerca_riga_rossa = i

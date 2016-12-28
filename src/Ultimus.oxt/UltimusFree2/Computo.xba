@@ -164,12 +164,7 @@ GoTo no:
 no:
 &apos;#########################################################################
 oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
-&apos;	If isNull (oDoc) or isEmpty (oDoc) Then
-&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,getLastUsedRow(oSheet)+1))
-&apos;		Inserisci_Riga_rossa
-&apos;		oDoc = uFindString(&quot;Fine elenco&quot;, oSheet)
-&apos;	EndIf
-&apos;	lRowE = oDoc.CellAddress.Row
+
 lRowE = ultima_voce+1
 rem	riga di controllo importo
 	oSheet.GetCellByPosition(1,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)

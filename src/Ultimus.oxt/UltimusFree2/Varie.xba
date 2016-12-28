@@ -1088,44 +1088,6 @@ SUB Adatta_h_riga_intera_tabella(nSheet as string)
 	
 END SUB
 
-sub Inserisci_Riga_rossa&apos; di chiusura
- Dim nome_sheet as string
-	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then
-			exit sub
-	end if
-	oSheet = ThisComponent.currentController.activeSheet
-	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
-	nome_sheet = thisComponent.currentcontroller.activesheet.name
-
-	Select Case nome_sheet
-		case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
-			lrow = ultima_voce + 2
- 			oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine Computo&quot;
- 	 		oSheet.GetCellByPosition( 3, lrow).string = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)&quot;
- 			oSheet.GetCellByPosition( 34, lrow).string = &quot;Fine Computo&quot;
-	 		oRange = oSheet.getCellRangeByPosition(0,lrow,34,lrow)
- 	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 	 	 
-		case &quot;Analisi di Prezzo&quot;
-			lrow = ultima_voce + 1
- 			oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine ANALISI&quot;
- 	 		oSheet.GetCellByPosition( 2, lrow).string = &quot;Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)&quot;
- 			oRange = oSheet.getCellRangeByPosition(0,lrow,8,lrow)
- 	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 		
-		case &quot;Elenco Prezzi&quot;
-&apos;			lrow = ultima_voce + 2
-			oSheet.GetCellByPosition( 1, lrow).string = &quot;Questa riga NON deve essere cancellata, MAI!!!  (ma può rimanere tranquillamente NASCOSTA!)&quot;
- 			oCell.rows.Height = 475
- 	 		oSheet.GetCellByPosition( 0, lrow).string = &quot;Fine elenco&quot;
- 	 		oSheet.GetCellByPosition( 3, lrow).string = &quot;&quot; 	 			 
-  			oSheet.GetCellByPosition( 8, lrow).string = &quot;Fine elenco&quot; 
- 			oRange = oSheet.getCellRangeByPosition(0,lrow,26,lrow)
- 		 	&apos;oRange.CellBackColor = RGB(255,0,0) 
- 	 		oRange.CellStyle=&quot;Riga_rossa_Chiudi&quot; 	
- 	 		oRange = oSheet.getCellRangeByPosition(0, lrow,255,lrow)
- 	End Select  
-END SUB
-
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet

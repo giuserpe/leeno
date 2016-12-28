@@ -14,7 +14,7 @@
 	NuovaAnalisi_Att
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,0))
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,27))
-	Inserisci_Riga_rossa
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;inserisci_riga_rossa&quot;)
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
 	fissa (0, 2)

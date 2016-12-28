@@ -217,54 +217,11 @@ END SUB
 &apos;#########################################################################
 
 Sub fissa (lColFix as long, lrowFix as long, optional lcol as long, optional lrow as long)
-
 	If isMissing (lcol) then lcol=0
 	If isMissing (lrow) then lrow=8
-
 	oSheet = ThisComponent.currentController.activeSheet
-	&apos; spostarsi un poll position prima del &quot;fissa&quot;
-&apos;	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))
 	ThisComponent.CurrentController().freezeAtPosition(lcolFix,lrowFix)
-&apos;	ThisComponent.CurrentController.Select(oPos)
 end sub
-
-
-&apos;++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-Function Viste_nuove (sList1 as string)
-&apos;print sList1
-dim iNumCol as integer
-dim iString as integer
-dim bValue as boolean
-dim sValue as string
-dim sString as string
-&apos;dim sList1 as string
-	dim sScelta as string
-	&apos;_____________________
-&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________
-	sScelta = Scenari 
-&apos;	If 	sScelta = &quot;si&quot;	then
-&apos;			oSheet = ThisComponent.currentController.activeSheet
-&apos;		else
-&apos;			exit function
-&apos;	end if
-	oSheet = ThisComponent.currentController.activeSheet
-	iNumCol = -1
-	iString = 0
-	For i = 0 to 50
-		iNumCol = iNumCol +1
-		oCell = oSheet.GetCellByPosition(iNumCol, 2 )
-		iString = iString +1
-		sString = mid(sList1, iString,1)
-		select case sString					
-			Case &quot;T&quot;
-				oCell.Columns.IsVisible = True
-			Case &quot;F&quot;
-				oCell.Columns.IsVisible = False	
-		End Select
-	next	
-END FUNCTION
-
 
 SUB mostra_tutte_le_sheet
 	oDoc = ThisComponent
@@ -355,16 +312,7 @@ sub Computo_Normale_terra_terra
 	oRange.Columns.IsVisible=false	
 	&apos;registro la posizione attuale del cursore
 	oPos = ThisComponent.getCurrentSelection()
-	if 	templateTipo = &quot;5C&quot; then
-		&apos;	Viste_nuove(&quot;TTTTTTTTTTFTFFFFFFFTFFFFFFFFFFFFFFFFT&quot;)
-			Viste_nuove(&quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)
-						&apos;123456789012345678901234567890123456789012345678
-				&apos;		 		  10		20		  30		40		
-				else
-			Viste_nuove(&quot;TTTFTTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFTTFFFFF&quot;)
-						&apos;1234567890123456789012345678901234567890123456
-	
-	end if	
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;viste_nuove&quot;, &quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)
 	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
 	ThisComponent.CurrentController().freezeAtPosition(0,2)
 	ThisComponent.CurrentController.Select( oPos )

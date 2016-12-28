@@ -3559,15 +3559,16 @@ def autoexec (arg=None):
         #~ chi("autoexec py")
         return
 ########################################################################
-class adegua_tmpl_th (threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        adegua_tmpl_run()
-def adegua_tmpl (arg=None):
-    adegua_tmpl_th().start()
+#~ class adegua_tmpl_th (threading.Thread):
+    #~ def __init__(self):
+        #~ threading.Thread.__init__(self)
+    #~ def run(self):
+        #~ adegua_tmpl_run()
+#~ def adegua_tmpl (arg=None):
+    #~ adegua_tmpl_th().start()
 ##########
-def adegua_tmpl_run (arg=None):
+#~ def adegua_tmpl_run (arg=None):
+def adegua_tmpl (arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
@@ -3584,7 +3585,7 @@ def adegua_tmpl_run (arg=None):
     if ver_tmpl < 203:
         if DlgSiNo("Vuoi procedere con l'adeguamento di questo file alla versione corrente di LeenO?", "Richiesta") ==2:
             oDialogo_attesa = dlg_attesa()
-            attesa().start() #mostra il dialogo
+            #~ attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
             sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
             styles = oDoc.getStyleFamilies()
@@ -3593,7 +3594,7 @@ def adegua_tmpl_run (arg=None):
             Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')
             oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 203
-            oDialogo_attesa.endExecute() #chiude il dialogo
+            #~ oDialogo_attesa.endExecute() #chiude il dialogo
             #~ oDlgMain.endExecute()
             MsgBox("Adeguamento del file completato con successo.", "Avviso")
         else:

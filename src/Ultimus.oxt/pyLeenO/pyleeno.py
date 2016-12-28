@@ -136,7 +136,7 @@ def copia_sorgente_per_git(arg=None):#debug(arg=None):#
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
-    make_pack()
+    #~ make_pack()
     if sys.platform == 'linux' or sys.platform == 'darwin':
         oxt_path = LeenO_path().split('//')[-1].replace('%20',' ')
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'

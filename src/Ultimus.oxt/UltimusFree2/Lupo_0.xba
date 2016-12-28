@@ -747,13 +747,7 @@ Sub Scrivi_Globale &apos; versione semplice
 	&apos;xA=oNome
 	
 	UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) &apos;xA &apos; variabile globale registrata
-	&apos; adesso scrive il nome della variabile globale nella ???cella???
-	&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;omycell = UltimusFree2.Lupo_0.sUltimus
-	
-	&apos;xray omycell
-	&apos;	oNomeRange = ThisComponent.NamedRanges.getbyName(&quot;nome_CC2&quot;).getReferencePosition
-	&apos;	lcolS = oNomeRange.Column
-	&apos;	lrowS = oNomeRange.Row 
+
 	if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
 		exit sub
 	end if

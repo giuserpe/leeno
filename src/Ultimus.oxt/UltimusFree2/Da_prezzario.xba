@@ -17,24 +17,6 @@ Global sUltimo_indirizzo_conosciuto as string
 Global sPrezzario_in_uso as string
 &apos;Global sFlag as string&apos;
 
-sub aggiorna_nome_CC &apos; aggiorna la cella con il nome del file di Contabilità Corrente
-&apos; viene eseguita con &quot;mouse dentro&quot; su una serie di pulsanti, compreso quello
-&apos;	del rendi questo file il file di CC... (come ci vai sopra la cella si aggiorna)
-	&apos;If NOT DialogLibraries.hasByName(&quot;UltimusFree2&quot;) Then 
-	&apos;	exit sub
-	&apos;end if
-&apos;	on error resume next
-	rifa_nomearea (&quot;Temp&quot;, &quot;$C$18:$C$18&quot; , &quot;nome_CC2&quot;)
-	oDoc = ThisComponent 
-	omycell = UltimusFree2.Lupo_0.sUltimus
-	if omycell = &quot;&quot; then
-		omycell = &quot;Non è definito alcun DCC!&quot;
-	end if
-	oTempView = oDoc.getCurrentController() &apos; questa invece trova la cella usando il nome di area
-	mycell = otempview.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;) &apos; ATTENZIONE: l&apos;area deve essere sul foglio attivo
-	mycell.string = omycell
-End Sub
-
 sub ApriAltroCapitoloPrezzario &apos;giuseppe vizziello 2013
 on error goto avviso
 &apos;	on error goto errore_apri
@@ -84,7 +66,6 @@ on error goto avviso
 End Sub
 Sub Vai_a_Contabilita
 
-&apos;	ThisComponent.getCurrentController.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;).string = UltimusFree2.Lupo_0.sUltimus
 	If UltimusFree2.Lupo_0.sUltimus = &quot;&quot; then &apos; se non è definoto...
 				Select case msgbox (&quot;Al momento non c&apos;è un Documento di Contabilità Corrente (DCC) definito!&quot; &amp; CHR$(10) &amp; CHR$(10)_
 					&amp; &quot;Puoi definirlo adesso caricando il documento di Computo dal tuo HardDisk &quot; &amp; CHR$(10)_
@@ -109,8 +90,6 @@ Sub Vai_a_Contabilita
  						exit sub
  			end select	
 			Scrivi_Globale &apos;registra il doc come DCC 
-	&apos;	else
-	&apos;		ThisComponent.getCurrentController.ActiveSheet.getCellRangeByname(&quot;nome_CC2&quot;).string = UltimusFree2.Lupo_0.sUltimus
 	end if
  	 SUrl = UltimusFree2.Lupo_0.sUltimus
 	sUrl2 = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus)

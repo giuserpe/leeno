@@ -190,7 +190,7 @@ FAI:
 	insRows (lrow, 5) &apos;insertByIndex non funziona
 &apos;	oSheet.getRows.insertByIndex(lrow, 5) &apos;inserisce 5 righe
 	if Not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen_cont&quot;) then &apos; eventualmente rifa il nome di area
-		rifa_nomearea (&quot;S5&quot;, &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;) &apos;blocco_contabilità
+ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;) &apos;blocco_contabilità
 	end if
 	&apos; copia il blocco delle voce (formati + formule + numeri)
 	oDoc = ThisComponent
@@ -363,7 +363,7 @@ lrow = lrow+1
 	insRows (lrow, 26) &apos;sub di bart per sostituire InsertbyIndex
 	oCell1 = oSheet.GetCellByPosition( 1 , lrow)
 	oCell = oSheet.GetCellByPosition( 0 , lrow)
-	rifa_nomearea (&quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
 	
 &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia le celle formattate da S5
 	oDoc = ThisComponent

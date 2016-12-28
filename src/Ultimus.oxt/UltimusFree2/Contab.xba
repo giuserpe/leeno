@@ -475,7 +475,7 @@ rem set area del REGISTRO
 ncol=ColumnNameOf(fcol+9)
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$&quot;&amp; ncol &amp;&quot;$&quot;&amp;fineFirme+1
 	nomearea = &quot;#Reg#&quot; &amp; nSal
-	rifa_nomearea (&quot;Registro&quot;, area , nomearea)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Registro&quot;, area , nomearea)
 rem set area di stampa
 		oNamedRange=oRanges.getByName(nomearea).referredCells
 		With oNamedRange.RangeAddress
@@ -545,7 +545,7 @@ copy_clip
 	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(fcol+1, daqui, fcol+1, fineFirme-2))
 paste_clip
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$J$&quot;&amp;getLastUsedRow(oSheetReg)&apos;-1
-rifa_nomearea (&quot;Registro&quot;, area , nomearea)
+ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Registro&quot;, area , nomearea)
 
 &apos;	oCell=oSheetReg.getCellRangeByPosition(0,precRowReg+1,11,getLastUsedRow(oSheetReg))
 &apos;	ThisComponent.CurrentController.Select(oCell)
@@ -731,7 +731,7 @@ rem ----------------------------------------------------------------------
 rem set area del SAL
 ncol=ColumnNameOf(fcol+5)
 	area=&quot;$A$&quot; &amp; precRowSAL+2 &amp; &quot;:$&quot;&amp; ncol &amp;&quot;$&quot;&amp;fineFirme+1
-	rifa_nomearea (&quot;SAL&quot;, area , &quot;#SAL#&quot; &amp; nSal)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;SAL&quot;, area , &quot;#SAL#&quot; &amp; nSal)
 rem set area di stampa SAL
 		oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal).referredCells
 		With oNamedRange.RangeAddress
@@ -1388,7 +1388,7 @@ firme (ultimariga+1)&apos; riga di inserimento
 rem definisci il range del #Lib#
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
 &apos;Print area 
-	rifa_nomearea (&quot;CONTABILITA&quot;, area , nomearea)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;, area , nomearea)
 	
 	oSheetCont.getCellRangeByPosition (0,inizioFirme,32,finefirme).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
 	oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells
@@ -1452,7 +1452,7 @@ paste_clip
 rem ----------------------------------------------------------------------
 rem definisci il range del #Lib#
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
-	rifa_nomearea (&quot;CONTABILITA&quot;, area , nomearea)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;, area , nomearea)
 	
 rem raggruppo
 	oCell = oSheetCont.getCellRangeByPosition(0,primariga,25,finefirme)

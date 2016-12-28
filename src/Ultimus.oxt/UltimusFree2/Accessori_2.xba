@@ -488,9 +488,9 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 &apos;		lLastUrow = oNamedRange.RangeAddress.EndRow
 	End If 
 	lLastUrow = getLastUsedRow(oSheet)
-	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
-	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
-	rifa_nomearea (&quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
+ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
+ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
+ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
 	
 &apos;sistemo la colonna &quot;Importi senza errori&quot;
 	nEndRow = ultima_voce
@@ -553,9 +553,12 @@ SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di
 	oStart=uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot;,oSheet)&apos; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
 	lLastUrow = getLastUsedRow(oSheet)
-	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;AA&quot;) &apos;tag codici
-	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;BB&quot;) &apos; quantità
-	rifa_nomearea (&quot;COMPUTO&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow, &quot;cEuro&quot;) &apos; quantità
+
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;COMPUTO&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;AA&quot;) &apos;tag codici
+
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;COMPUTO&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;BB&quot;) &apos; quantità
+
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;COMPUTO&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow, &quot;cEuro&quot;) &apos; quantità
 &apos;#########################################################################
 	
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
@@ -583,7 +586,6 @@ SOMMARIO_SEMPLICE:
 	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=SUMIF(AA;A4;cEuro)&quot;
 &apos;	oSheet.GetCellByPosition(lcolbase + 13 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;M4*E4/100;M4*E4)&quot;
 	oSheet.GetCellByPosition(lcolbase + 13 , i).cellstyle = &quot;EP statistiche&quot;
-	
 If Not thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) And Not thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then GoTo prosegui:
 
 &apos;## contabilità ##########################################################
@@ -597,9 +599,9 @@ If Not thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) And Not thisComponen
 		rIntest=oStart.CellAddress.Row+1
 		lLastUrow = getLastUsedRow(oSheet_var)
 		
-		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;varAA&quot;) &apos;tag codici
-		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;varBB&quot;) &apos; quantità
-		rifa_nomearea (&quot;VARIANTE&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow, &quot;varEuro&quot;) &apos;importi
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;VARIANTE&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow, &quot;varAA&quot;) &apos;tag codici
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;VARIANTE&quot;,&quot;$N$&quot; &amp; rIntest &amp; &quot;:$N$&quot; &amp; lLastUrow, &quot;varBB&quot;) &apos; quantità
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;VARIANTE&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow, &quot;varEuro&quot;) &apos;importi
 		
 	EndIf
 	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
@@ -617,9 +619,9 @@ If Not thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) And Not thisComponen
 	oCRA.EndColumn = 26
 	oSheet.ungroup(oCRA,0)
 	oSheet.getCellRangeByposition(15, 0, 26, 0).Columns.IsVisible=True
-	
+
 	If  Not VarCon And Not ComCon And Not ComVar Then GoTo prosegui:
-	
+
 	If ComVar = True Then GoTo VARIANTE_COMPUTO:
 	If ComCon = True Then GoTo COMPUTO_CONTABILITA:
 	If VarCon = True Then GoTo VARIANTE_CONTABILITA:
@@ -696,11 +698,7 @@ rem questa sotto è da tenere d&apos;occhio!!!
 	copy_clip
 	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, i+1,lcolbase+10, lrowf-1)) &apos;deseleziona
 	paste_clip
-rem ----------------------------------------------------------------------
-	thisComponent.currentController.Select(oSheet.getCellByposition(0, 0)) &apos;deseleziona
-	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
-	unSelect &apos;deseleziona
-&apos;	ThisComponent.enableAutomaticCalculation(True)
+	unselect
 END Sub
 
 rem ----------------------------------------------------------------------

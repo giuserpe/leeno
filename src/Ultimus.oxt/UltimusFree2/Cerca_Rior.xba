@@ -295,8 +295,8 @@ rem ----------------------------------------------------------------------
 rem nome ultima colonna
 
 	lCol = ColumnNameOf(getLastUsedCol(oSheet)+2) &apos; aggiungo 3 colonne in più... non si sa mai
-	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
-	rifa_nomearea (&quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici
 END SUB 
 
 

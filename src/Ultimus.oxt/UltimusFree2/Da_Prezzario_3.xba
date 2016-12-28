@@ -97,7 +97,7 @@ SpostaCursore_su_Prezzario &apos; questo accrocchio fa si che quando l&apos;uten
 	&apos;torna sul prezzario si ritrova nel listino alla voce che precedentemente
 	&apos; aveva selezionato (anzichè nella sheet di assemblaggio)
 	&apos;ora tutti i dati del prezzario dovrebbero essere &apos;in memoria&apos; vediamo il DCC
-	&apos;aggiorna_nome_CC &apos; prima cosa azzerare eventuali &apos;fantasmi&quot;
+
 	If UltimusFree2.Lupo_0.sUltimus = &quot;&quot; then &apos; se non è definoto...
 		Select case msgbox (&quot;Non è stato definito il documento DCC, ovvero non so dove infilare la voce di prezzo!!&quot; &amp; CHR$(10)_
 					&amp; &quot;Carica il documento di Computo dal tuo HardDisk &quot; &amp; CHR$(10)_

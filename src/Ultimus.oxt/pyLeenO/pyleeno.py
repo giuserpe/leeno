@@ -2801,7 +2801,8 @@ def XPWE_in(arg=None): #(filename):
                                     xlo_mdop,
                                     xlo_mdo)
         lista_articoli.append(articolo_modificato)
-###
+### analisi di presso
+    inizializza_analisi()
 # leggo voci di misurazione e righe ####################################
     lista_misure = list()
     try:
@@ -3633,7 +3634,25 @@ def autoexec (arg=None):
         #~ chi("autoexec py")
         return
 ########################################################################
+def viste_nuove (sValori):
+    '''
+    sValori { string } : una tringa di configurazione della visibilità colonne
+    permette di visualizzare/nascondere un set di colonne
+    T = visualizza
+    F = nasconde
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    n = 0
+    for el in sValori:
+        if el == 'T':
+            oSheet.getCellByPosition(n, 2).Columns.IsVisible = True
+        elif el == 'F':
+            oSheet.getCellByPosition(n, 2).Columns.IsVisible = False
+        n += 1
+########################################################################
 def set_larghezza_colonne (arg=None):
+#~ def debug (arg=None):
     '''
     regola la larghezza delle colonne a seconda della sheet
     '''
@@ -3653,6 +3672,7 @@ def set_larghezza_colonne (arg=None):
         oSheet.getColumns().getByName('K').Columns.Width = 2000
         oDoc.CurrentController.freezeAtPosition(0, 2)
     if oSheet.Name == 'CONTABILITA':
+        viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTFTTFFFFFF')
         oSheet.getCellRangeByPosition(13,0,1023,0).Columns.Width = 1900 # larghezza colonne importi
         oSheet.getCellRangeByPosition(19,0,23,0).Columns.Width = 1000 # larghezza colonne importi
         oSheet.getCellRangeByPosition(51,0,1023,0).Columns.IsVisible = False # nascondi colonne

@@ -36,11 +36,12 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
 	Script = MasterScriptProvider.getScript(Url)
 &apos;xray args
-On Error GoTo end:
-&apos;	Script.invoke(args,Array(),Array())
-	Script.invoke(Array(),Array(),Array())
+
+&apos;On Error GoTo end:
+	Script.invoke(args,Array(),Array())
+&apos;	Script.invoke(Array(),Array(),Array())
 &apos;	PythonResult = Script.invoke(Array(),Array(),Array())
-end: 
+&apos;end: 
 End Sub
 rem ######################################################################
 </script:module>

@@ -138,8 +138,7 @@ rIntest = 2
 	oSheet.GetCellByPosition(18,rIntest).cellstyle = &quot;Default&quot;
 	oSheet.GetCellByPosition(22,rIntest).cellstyle = &quot;Default&quot;
 	
-	
-	set_larghezza_colonne
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
 
 &apos;#########################################################################
 &apos; RAGGRUPPA
@@ -356,7 +355,7 @@ rem riga rossa
 	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
 	oSheet.GetCellByPosition(4, 0).FORMULA=&quot;=$COMPUTO.$S$2&quot;
 	Seleziona_Cella (&quot;$C$3&quot;)
-	set_larghezza_colonne
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
 &apos;	Set_Area_Stampa_N (&quot;NO_MESSAGGIO&quot;)
 	fissa(0,idxrow+1)
 	

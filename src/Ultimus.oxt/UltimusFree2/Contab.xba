@@ -33,7 +33,7 @@ Sub attiva_contabilita
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
 	nuova_voce_contab
 	fissa (0,3)
-	set_larghezza_colonne
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
 
 &apos;	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
 &apos;	ThisComponent.CurrentController.Select(oSheet)

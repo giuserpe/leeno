@@ -16,7 +16,7 @@
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,27))
 	Inserisci_Riga_rossa
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
-	set_larghezza_colonne
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
 	fissa (0, 2)
 	oSheet.PageStyle = &quot;PageStyle_Analisi di Prezzo&quot;
 	SetTabColorN(RGB(185,255,168))

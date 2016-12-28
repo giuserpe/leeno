@@ -369,7 +369,7 @@ sub Computo_Normale_terra_terra
 	ThisComponent.CurrentController().freezeAtPosition(0,2)
 	ThisComponent.CurrentController.Select( oPos )
 
-set_larghezza_colonne
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
 	unSelect &apos;unselect ranges 
 END SUB 
 

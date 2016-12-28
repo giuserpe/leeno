@@ -234,7 +234,7 @@ variante:
 	If lRow &lt; 3 Then lRow = 3
 	oSheet.GetCellByPosition(2, lRow).setstring(&quot;TOTALI COMPUTO&quot;)
 rem ----------------------------------------------------------------------
-Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 40)
+&apos;Barra_Apri_Chiudi_5(&quot;Attendi...&quot;, 40)
 &apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	If ultima_voce = 0 Then
 		oRow=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet)
@@ -329,12 +329,11 @@ rem riga rossa
 		oSheet.getCellRangeByPosition(0,lRowE+1, 36 , lRowE+1).cellstyle = &quot;Riga_rossa_Chiudi&quot;
 &apos;		exit sub
 	end If
-	For i = 0 to getlastusedrow (oSheet)
+	For i = 0 To ultima_voce &apos; getlastusedrow (oSheet)
 		&apos;	Print oSheet.Name &apos;.getCellByPosition(0, i).CellStyle
 	sStRange = Circoscrive_Voce_Computo_Att (i) &apos;(range2cell)
 	
 	on error resume next
-	
 	With sStRange.RangeAddress
 	&apos;	lRowI = .StartRow
 		i = .EndRow

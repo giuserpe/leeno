@@ -3767,15 +3767,16 @@ def adegua_tmpl (arg=None):
             sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
             styles = oDoc.getStyleFamilies()
             styles.loadStylesFromURL(sUrl, list())
-
             Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')
             oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 203
             for el in oDoc.Sheets.ElementNames:
+                oDoc.getSheets().getByName(el).IsVisible = True
                 oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
                 adatta_altezza_riga(el)
-            oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('COMPUTO'))
-
+                oDoc.getSheets().getByName(el).IsVisible = False
+            _gotoSheet ('COMPUTO')
+            oDoc.getSheets().getByName('S1').IsVisible = False
             #~ oDialogo_attesa.endExecute() #chiude il dialogo
             #~ oDlgMain.endExecute()
             MsgBox("Adeguamento del file completato con successo.", "Avviso")

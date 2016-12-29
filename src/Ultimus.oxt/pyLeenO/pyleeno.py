@@ -1963,7 +1963,6 @@ def inizializza_analisi(arg=None):
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    lrow = Range2Cell()[1]
     rifa_nomearea('S5', '$B$108:$P$133', 'blocco_analisi')
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == False:
         oDoc.getSheets().insertNewByName('Analisi di Prezzo',1)
@@ -1981,6 +1980,11 @@ def inizializza_analisi(arg=None):
     else:
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
         oDoc.CurrentController.setActiveSheet(oSheet)
+        if oDoc.getSheets().getByName('Analisi di Prezzo').IsVisible == False:
+            #~ oDoc.getSheets().getByName('Analisi di Prezzo').IsVisible = True
+            _gotoSheet ('Analisi di Prezzo')
+            return
+        lrow = Range2Cell()[1]
         urow = getLastUsedCell(oSheet).EndRow
         if lrow >= urow:
             lrow = ultima_voce(oSheet)-5
@@ -2802,7 +2806,7 @@ def XPWE_in(arg=None): #(filename):
                                     xlo_mdo)
         lista_articoli.append(articolo_modificato)
 ### analisi di presso
-    inizializza_analisi()
+    #~ inizializza_analisi()
 # leggo voci di misurazione e righe ####################################
     lista_misure = list()
     try:
@@ -4224,7 +4228,7 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra,
+#~ g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra,
 ########################################################################
 ########################################################################
 # ... here is the python script code

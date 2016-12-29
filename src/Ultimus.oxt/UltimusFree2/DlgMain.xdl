@@ -9,10 +9,8 @@
   <dlg:style dlg:style-id="4" dlg:background-color="0xffffcc" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="5" dlg:border="simple" dlg:font-name="Liberation Sans" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="6" dlg:background-color="0xffff99" dlg:font-name="Liberation Sans" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:background-color="0x2255" dlg:text-color="0xdddddd" dlg:border="0xffffff" dlg:font-name="Liberation Sans" dlg:font-height="48" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="8" dlg:background-color="0x2255" dlg:text-color="0xdddddd" dlg:font-name="Liberation Sans" dlg:font-height="12" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="9" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="10" dlg:font-name="Liberation Sans Narrow" dlg:font-height="6" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="6" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="228" dlg:top="176" dlg:width="50" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;" dlg:button-type="ok">
@@ -52,20 +50,18 @@
   <dlg:text dlg:id="Label8" dlg:tab-index="16" dlg:left="75" dlg:top="5" dlg:width="50" dlg:height="8" dlg:align="right"/>
   <dlg:text dlg:id="Label9" dlg:tab-index="17" dlg:left="75" dlg:top="25" dlg:width="50" dlg:height="8" dlg:align="right"/>
   <dlg:text dlg:id="Label10" dlg:tab-index="18" dlg:left="11" dlg:top="25" dlg:width="60" dlg:height="8" dlg:value="Importo Contabilità:" dlg:align="right"/>
-  <dlg:text dlg:style-id="7" dlg:id="Label13" dlg:tab-index="19" dlg:left="87" dlg:top="-111" dlg:width="142" dlg:height="45" dlg:value="LeenO" dlg:align="center"/>
-  <dlg:text dlg:style-id="8" dlg:id="Label11" dlg:tab-index="20" dlg:left="25" dlg:top="-120" dlg:width="266" dlg:height="85" dlg:value="&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;&#x0a;applicativo per computi metrici estimativi con LibreOffice" dlg:align="center"/>
-  <dlg:button dlg:id="CommandButton11" dlg:tab-index="21" dlg:left="35" dlg:top="145" dlg:width="0" dlg:height="2" dlg:value="CommandButton11">
+  <dlg:button dlg:id="CommandButton11" dlg:tab-index="19" dlg:left="35" dlg:top="145" dlg:width="0" dlg:height="2" dlg:value="CommandButton11">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="9" dlg:id="CommandButton10" dlg:tab-index="22" dlg:left="10" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Filtra Computo e fai una copia..." dlg:button-type="ok">
+  <dlg:button dlg:style-id="7" dlg:id="CommandButton10" dlg:tab-index="20" dlg:left="10" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Filtra Computo e fai una copia..." dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Filtro?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="9" dlg:id="CommandButton12" dlg:tab-index="23" dlg:left="148" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Cancella voci non usate nel Computo..." dlg:button-type="ok">
+  <dlg:button dlg:style-id="7" dlg:id="CommandButton12" dlg:tab-index="21" dlg:left="148" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Cancella voci non usate nel Computo..." dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_SegnaVoci?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:style-id="10" dlg:id="Label12" dlg:tab-index="24" dlg:left="231" dlg:top="218" dlg:width="47" dlg:height="8" dlg:value="Label12" dlg:align="right">
+  <dlg:text dlg:style-id="8" dlg:id="Label12" dlg:tab-index="22" dlg:left="231" dlg:top="218" dlg:width="47" dlg:height="8" dlg:value="Label12" dlg:align="right">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:text>
-  <dlg:img dlg:style-id="5" dlg:id="ImageControl1" dlg:tab-index="25" dlg:left="12" dlg:top="65" dlg:width="262" dlg:height="78"/>
+  <dlg:img dlg:style-id="5" dlg:id="ImageControl1" dlg:tab-index="23" dlg:left="12" dlg:top="65" dlg:width="262" dlg:height="78"/>
  </dlg:bulletinboard>
 </dlg:window>

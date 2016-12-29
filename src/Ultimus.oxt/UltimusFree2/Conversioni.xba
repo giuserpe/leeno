@@ -49,7 +49,7 @@ rem ----------------------------------------------------------------------
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
 	ThisComponent.CurrentController.ZoomValue = 100
-Computo_Normale_terra_terra
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;)
 Togli_Struttura
 	Select Case idxtemplate
 		Case 191, 192
@@ -251,7 +251,7 @@ Visualizza_normale_esegui
 	oDocFrame = ThisComponent.getCurrentController().getFrame()
 	oDispatchHelper = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	oDispatchHelper.executeDispatch(oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array())
-Computo_Normale_terra_terra
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;)
 inizializza_computo
 Adatta_h_riga_intera_tabella(oSheet.Name)
 chiudi_dialoghi &apos; chiude tutti i dialoghi

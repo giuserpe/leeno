@@ -397,7 +397,7 @@ Colora_Tabs
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	ThisComponent.CurrentController.Select(oSheet)
 
-Computo_Normale_terra_terra &apos;visualizza
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;) &apos;visualizza
 Rifa_Somme_TOT_Computo
 Rinumera_TUTTI_Capitoli2	&apos;ricontrolla i calcoli 
 Numera_Voci_Computo (&quot;niente prompt&quot;)
@@ -444,7 +444,7 @@ Numera_Voci_Computo (&quot;niente prompt&quot;)
 				else
 					&apos; PRIMO APPROCCIO&quot;
 					
-					Computo_Normale_terra_terraDIRETTO
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;)
 					If thisComponent.Sheets.hasByName(&quot;computo&quot;) Then
 						oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 					end if
@@ -459,7 +459,7 @@ unSelect &apos;deselezion
 			&apos;		oSpalte1 = oSheet.getColumns().getByName(&quot;K&quot;) 
 			&apos;		oSpalte1.isVisible = false
 				&apos;	Sel_Computo
-					Computo_Normale_terra_terra
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;)
 					Sel_Altre_Opz
 			end if		
 	 	else

@@ -52,7 +52,7 @@ Sub Scelta_Viste() &apos;nuova versione universale
 &apos;#########################################################################
 			OBTerra = oDialogScenari_A.getControl(&quot;OBTerra&quot;).State
 			If OBTerra = True Then
-				Computo_Normale_terra_terra
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;)
 				oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 0
 				oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0
 				oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 0
@@ -302,76 +302,6 @@ dim iNumInser as integer
 	Clessid_lock_End
 END FUNCTION
 
-
-sub Computo_Normale_terra_terra
-&apos;chiudi_dialoghi
-	oSheet = ThisComponent.currentController.activeSheet
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	Thiscomponent.currentcontroller.select(oSheet)
-	oRange = oSheet.getCellRangeByposition(33,0,1023,0) &apos;nascondi il resto delle colonne
-	oRange.Columns.IsVisible=false	
-	&apos;registro la posizione attuale del cursore
-	oPos = ThisComponent.getCurrentSelection()
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;viste_nuove&quot;, &quot;TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT&quot;)
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
-	ThisComponent.CurrentController().freezeAtPosition(0,2)
-	ThisComponent.CurrentController.Select( oPos )
-
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
-	unSelect &apos;unselect ranges 
-END SUB 
-
-
-sub Computo_Normale_terra_terraDIRETTO &apos; chiamato/usato in aperura solo per &quot;primo Approccio&quot;
-&apos; specifica ed esclusiva per sheet con nome COMPUTO
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	oSheet.getColumns().getByName(&quot;A&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;B&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;C&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;D&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;F&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;G&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;H&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;I&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;J&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;K&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;L&quot;).isVisible = true	
-	oSheet.getColumns().getByName(&quot;M&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;N&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;O&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;P&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;Q&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;R&quot;).isVisible = FALSE	
-	oSheet.getColumns().getByName(&quot;S&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;T&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;U&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;V&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;X&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;Y&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;W&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;Z&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AA&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AB&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AC&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AD&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AF&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AG&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AH&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AI&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AJ&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AK&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AL&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AM&quot;).isVisible = FALSE
-	oSheet.getColumns().getByName(&quot;AN&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;AO&quot;).isVisible = true
-	oSheet.getColumns().getByName(&quot;AP&quot;).isVisible = FALSE
-	oSheet = ThisComponent.currentController.activeSheet
-	oSheet = ThisComponent.currentController.activeSheet
-&apos;	oRange = oSheet.getCellRangeByposition(41,0,500,0)
-&apos;	fissa&apos;(, as long, optional icol as long, optional irow as long)
-
-END SUB
 Sub Registra_conf_colonne &apos;scrive la configurazione con una stringa su una sheet 
 &apos; la configurazione nascondi/mostra di 30 colonne
 	dim iNumCol as integer

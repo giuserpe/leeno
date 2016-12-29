@@ -3634,6 +3634,15 @@ def autoexec (arg=None):
         #~ chi("autoexec py")
         return
 ########################################################################
+def computo_terra_terra (arg=None):
+    '''
+    Settaggio base di configuazione colonne in COMPUTO e VARIANTE
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.getCellRangeByPosition(33,0,1023,0).Columns.IsVisible = False
+    set_larghezza_colonne()
+########################################################################
 def viste_nuove (sValori):
     '''
     sValori { string } : una tringa di configurazione della visibilità colonne
@@ -3707,6 +3716,7 @@ def set_larghezza_colonne (arg=None):
         oSheet.getColumns().getByName('L').Columns.Width = 1700
         oSheet.getColumns().getByName('S').Columns.Width = 1700
         oDoc.CurrentController.freezeAtPosition(0, 3)
+        viste_nuove('TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
     if oSheet.Name == 'Elenco Prezzi':
         oSheet.getColumns().getByName('A').Columns.Width = 1600
         oSheet.getColumns().getByName('B').Columns.Width = 10000
@@ -4214,7 +4224,7 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi,
+g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra,
 ########################################################################
 ########################################################################
 # ... here is the python script code

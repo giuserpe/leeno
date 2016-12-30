@@ -143,22 +143,21 @@ def copia_sorgente_per_git(arg=None):
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
-    make_pack()
+    make_pack(bar=1)
+    oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        oxt_path = LeenO_path().split('//')[-1].replace('%20',' ')
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-        distutils.dir_util.copy_tree(oxt_path, dest)
         
         os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt')
         os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
         
     elif sys.platform == 'win32':
-        oxt_path = LeenO_path().split('///')[-1].replace('%20',' ')
         dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-        distutils.dir_util.copy_tree(oxt_path, dest)
         
         os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
         os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
+    distutils.dir_util.copy_tree(oxt_path, dest)
+
     return
 ########################################################################
 def debugs(arg=None):
@@ -4102,22 +4101,26 @@ def toolbar_ordina (arg=None):
         i += 1
     oLayout.dockWindow('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 'DOCKINGAREA_RIGHT', Point(0, 0))
 #######################################################################
-def make_pack (arg=None):
+def make_pack (arg=None, bar=0):
+    '''
+    bar { integer } : toolbar 0=spenta 1=accesa
+    Pacchettizza l'estensione in duplice copia: LeenO.oxt e LeenO-yyyymmddhhmm.oxt
+    in una directory precisa (per ora - da parametrizzare)
+    '''
     tempo = w_version_code()
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    for bar in GetmyToolBarNames: #toolbar sempre visibili
-        toolbar_on (bar, 0)
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
-    
+    if bar == 0:
+        oDoc = XSCRIPTCONTEXT.getDocument()
+        for bar in GetmyToolBarNames: #toolbar sempre visibili
+            toolbar_on (bar, 0)
+        oLayout = oDoc.CurrentController.getFrame().LayoutManager
+        oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+    oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        oxt_path = LeenO_path().split('//')[-1].replace('%20',' ')
         nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
         nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
         os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
 
     elif sys.platform == 'win32':
-        oxt_path = LeenO_path().split('///')[-1].replace('%20',' ')
         nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
         nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
         os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')

@@ -139,7 +139,7 @@ def oggi():
     return ('/'.join(reversed(str(datetime.now()).split(' ')[0].split('-'))))
 import distutils.dir_util
 ########################################################################
-def copia_sorgente_per_git(arg=None):#debug(arg=None):#
+def copia_sorgente_per_git(arg=None):
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
@@ -2975,18 +2975,19 @@ Si tenga conto che:
     - il formato XPWE non conserva alcuni dati come
       le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
-    if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
+    if len(lista_misure) != 0:
+        if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
 
-Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente
-disordinato, riceverai un messaggio che ti indica come intervenire.
+    Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente
+    disordinato, riceverai un messaggio che ti indica come intervenire.
 
-Se il risultato finale non dovesse andar bene, puoi ripetere l'importazione
-senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") ==2:
-
-        riordine = sorted(prova_l, key=lambda el: el[0])
-        lista_misure = list()
-        for el in riordine:
-            lista_misure.append(el[1])
+    Se il risultato finale non dovesse andar bene, puoi ripetere l'importazione
+    senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") ==2:
+            riordine = sorted(prova_l, key=lambda el: el[0])
+            lista_misure = list()
+            for el in riordine:
+                lista_misure.append(el[1])
+    attesa().start()
 ###
 # compilo Anagrafica generale ##########################################
     #~ New_file.computo()
@@ -3043,10 +3044,7 @@ senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") =
         Lib_LeenO('Computo.genera_variante')
     oSheet = oDoc.getSheets().getByName(arg)
     oDoc.CurrentController.select(oSheet)
-    
     oDoc.CurrentController.ZoomValue = 400
-    attesa().start()
-    
     iSheet_num = oSheet.RangeAddress.Sheet
 ###
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -3239,7 +3237,6 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     oDoc.CurrentController.ZoomValue = 100
     oDialogo_attesa.endExecute()
     #~ oDoc.enableAutomaticCalculation(True) # abilito il calcolo automatico
-    oDialogo_attesa.endExecute()
     MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     #~ MsgBox('Importazione eseguita con successo!','')
 # XPWE_in ##########################################################
@@ -3596,7 +3593,6 @@ def struttura_ComputoM(arg=None):
     struct(3)
 
 def struttura_Analisi(arg=None):
-#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
@@ -3668,8 +3664,6 @@ def struct(l):
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
 def autoexec (arg=None):
-#~ def debug (arg=None):
-
     '''
     questa è richiamata da NewFile()
     '''
@@ -3721,7 +3715,6 @@ def viste_nuove (sValori):
         n += 1
 ########################################################################
 def set_larghezza_colonne (arg=None):
-#~ def debug (arg=None):
     '''
     regola la larghezza delle colonne a seconda della sheet
     '''
@@ -3854,8 +3847,6 @@ def adegua_tmpl (arg=None):
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
 #~ ########################################################################
 def r_version_code(arg=None):
-#~ def debug (arg=None):
-
     #~ if sys.platform == 'linux' or sys.platform == 'darwin':
         #~ code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
     #~ elif sys.platform == 'win32':

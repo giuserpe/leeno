@@ -145,7 +145,7 @@ rem ----------------------------------------------------------------------
 Sub Struttura
 	Select case ThisComponent.currentController.activeSheet.Name
 		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-			Struttura_ComputoM
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_ComputoM&quot;)
 			exit sub
 		Case &quot;CONTABILITA&quot;
 			Struttura_Contab (&quot;#Lib#&quot;)
@@ -157,8 +157,11 @@ Sub Struttura
 			Struttura_Contab (&quot;#Sal#&quot;)
 			exit Sub
 		Case &quot;Analisi di Prezzo&quot;
-			Struttura_Analisi
-			exit sub
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Analisi&quot;)
+			exit Sub
+		Case &quot;Elenco Prezzi&quot;
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Elenco&quot;)
+			exit Sub
 	End Select
 &apos;ThisComponent.enableAutomaticCalculation(True)
 end Sub
@@ -201,17 +204,9 @@ Raggruppa_righe &apos; raggruppo
 	oRanges.getByName(tag &amp; LSal).referredCells.Rows.IsVisible=True
 End Sub
 
-Sub Struttura_Analisi ()
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Analisi&quot;)
-end sub
-
 Sub Togli_Struttura ()
 	oSheet = ThisComponent.currentController.activeSheet
 	oSheet.clearOutline()
-end sub
-
-Sub struttura_ComputoM
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_ComputoM&quot;)
 end sub
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________

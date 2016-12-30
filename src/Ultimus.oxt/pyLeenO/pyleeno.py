@@ -109,6 +109,13 @@ def nuovo_listino (arg=None):
 def nuovo_usobollo (arg=None):
     New_file.usobollo()
 ########################################################################
+#~ def debug (arg=None):
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ path = uno.fileUrlToSystemPath(oDoc.getURL())
+    #~ url = uno.systemPathToFileUrl(path)
+    #~ chi(uno.sys)
+    #~ chi(url)
+########################################################################
 def focus_su_altro_Doc():
 #~ def debug(arg=None):#
     '''
@@ -3661,6 +3668,8 @@ def struct(l):
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
 def autoexec (arg=None):
+#~ def debug (arg=None):
+
     '''
     questa è richiamata da NewFile()
     '''
@@ -3845,10 +3854,14 @@ def adegua_tmpl (arg=None):
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
 #~ ########################################################################
 def r_version_code(arg=None):
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
-    elif sys.platform == 'win32':
-        code_file = (LeenO_path() + os.altsep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
+#~ def debug (arg=None):
+
+    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
+        #~ code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
+    #~ elif sys.platform == 'win32':
+        #~ code_file = (LeenO_path() + os.altsep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
+    #~ chi(code_file)
+    code_file = uno.systemPathToFileUrl(LeenO_path() + os.altsep + 'leeno_version_code')
 
     f = open(code_file, 'r')
     return f.readline().split('-')[-1]
@@ -3913,10 +3926,11 @@ def DlgMain(arg=None):
     
     sUrl = LeenO_path()+'/icons/Immagine.png'
     oDlgMain.getModel().ImageControl1.ImageURL=sUrl
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
-    elif sys.platform == 'win32':
-        code_file = (LeenO_path() + os.altsep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
+    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
+        #~ code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
+    #~ elif sys.platform == 'win32':
+        #~ code_file = (LeenO_path() + os.altsep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
+    code_file = uno.fileUrlToSystemPath((LeenO_path() + os.sep + 'leeno_version_code'))
 
     f = open(code_file, 'r')
     sString = oDlgMain.getControl("Label12")
@@ -4015,18 +4029,20 @@ def bak_timestamp(arg=None):
     orig = oDoc.getURL()
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-' + tempo + '.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
-     
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        orig = orig.split('//')[-1].replace('%20',' ')
-        dir_bak = dir_bak.split('//')[-1].replace('%20',' ')
-    elif sys.platform == 'win32':
-        orig = orig.split('///')[-1].replace('%20',' ')
-        dir_bak = dir_bak.split('///')[-1].replace('%20',' ')
+    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
+        #~ orig = orig.split('//')[-1].replace('%20',' ')
+        #~ dir_bak = dir_bak.split('//')[-1].replace('%20',' ')
+    #~ elif sys.platform == 'win32':
+        #~ orig = orig.split('///')[-1].replace('%20',' ')
+        #~ dir_bak = dir_bak.split('///')[-1].replace('%20',' ')
     if len(orig) ==0:
         return
+    orig = uno.fileUrlToSystemPath(orig)
+    dir_bak = uno.fileUrlToSystemPath(dir_bak)
+    dest = uno.fileUrlToSystemPath(dest)
     if not os.path.exists(dir_bak):
         os.makedirs(dir_bak)
-    shutil.copyfile (orig, dir_bak + dest)
+    shutil.copyfile(orig, dir_bak + dest)
     return
 ########################################################################
 # Scrive un file.
@@ -4186,7 +4202,7 @@ class debug_th (threading.Thread):
                 oSheet.getRows().removeByIndex(i, 1)
         oDoc.enableAutomaticCalculation(True) # riavvio il calcolo automatico
         #~ oDialogo_attesa.endExecute()
-def cancella_righe (arg=None):#debug (arg=None):#
+def cancella_righe (arg=None):
     '''
     Questa serve a cancellare righe con valori particolari;
     è molto lenta perché Calc ricalcola i valori ad ogni cancellazione.

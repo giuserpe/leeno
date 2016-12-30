@@ -626,7 +626,6 @@ def join_sheets(arg=None):
     if oDoc.getSheets().hasByName('unione_fogli') == False:
         sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
         unione = oDoc.Sheets.insertByName('unione_fogli', sheet)
-        lista_fogli = lista_fogli[:-1]
         unione = oDoc.getSheets().getByName('unione_fogli')
         for el in lista_fogli:
             oSheet = oDoc.getSheets().getByName(el)
@@ -861,13 +860,15 @@ def _gotoCella (IDcol=0, IDrow=0):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     return
 ########################################################################
-def adatta_altezza_riga (nome):
+def adatta_altezza_riga (nome=None):
     '''
     nome   { string } : nome della sheet
     imposta l'altezza ottimale delle celle
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    if nome == None:
+        nome = oSheet.Name
     oDoc.getSheets().hasByName(nome)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
@@ -2042,6 +2043,38 @@ def rifa_nomearea(sSheet, sRange, sName):
     if oRanges.hasByName(sName):
         oRanges.removeByName(sName)
     oRanges.addNewByName(sName,sPath,oCellAddress,0)
+########################################################################
+def colora_elenco_prezzi (arg=None):
+#~ def debug (arg=None):
+    '''
+    Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
+    che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    for n in range (3, getLastUsedCell(oSheet).EndRow):
+        if len(oSheet.getCellByPosition(0, n).String.split('.')) == 2:
+            oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = 16777072
+            oCellRangeAddr.StartRow = n
+            oCellRangeAddr.EndRow = n
+            oSheet.group(oCellRangeAddr,1)
+        if len(oSheet.getCellByPosition(0, n).String.split('.')) == 4 and \
+        oSheet.getCellByPosition(4, n).String == '':
+            oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = 16777120
+            oCellRangeAddr.StartRow = n
+            oCellRangeAddr.EndRow = n
+            oSheet.group(oCellRangeAddr,1)
+    return
+    #~ la parte che segue è servita a riordinare le descrizioni del prezzario Umbria 2016
+        #~ if len(oSheet.getCellByPosition(2, n).String.split('.')) == 4 and \
+        #~ oSheet.getCellByPosition(7, n).String == '':
+            #~ des0 = oSheet.getCellByPosition(4, n).String
+            #~ des = ''
+        #~ if len(oSheet.getCellByPosition(2, n).String.split('.')) == 4 and \
+        #~ oSheet.getCellByPosition(7, n).String != '':
+            #~ des = des0 +'\n- ' + oSheet.getCellByPosition(4, n).String
+            #~ oSheet.getCellByPosition(13, n).String = des
 ########################################################################
 # XML_import ###########################################################
 def XML_import (arg=None):

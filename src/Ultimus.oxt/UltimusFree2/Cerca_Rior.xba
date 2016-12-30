@@ -356,7 +356,7 @@ On Error GoTo fine:
 	&apos;	Print oSheet.getCellByPosition(1,lRow).String
 		codice_da_cercare_in_elenco = oSheet.getCellByPosition(1,lRow).String
 	End Select
-	gotoSheet(&quot;Elenco Prezzi&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;_gotoSheet&quot;,&quot;Elenco Prezzi&quot;)
 fine:
 End Sub
 

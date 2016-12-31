@@ -3255,6 +3255,32 @@ createUnoService = (
         .createInstance
                     )
 GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO','private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', )
+#
+def ssUltimus (arg=None):
+#~ def debug (arg=None):
+    '''
+    Scrive la variabile globale che individua il Documento di Contabilità Corrente (DCC)
+    che è il file a cui giungono le voci di prezzo inviate da altri file
+    '''
+    global sUltimus
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    if oDoc.getSheets().hasByName('M1') == False:
+        return
+    if len(oDoc.getURL()) == 0:
+        MsgBox('''Prima di procedere, devi salvare il lavoro!
+Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
+        salva_come()
+        autoexec()
+    try:
+        sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
+    except:
+        return
+    oSheet = oDoc.getSheets().getByName('M1')
+    #~ oSheet.getCellByPosition(2,24).String = uno.fileUrlToSystemPath(oDoc.getURL())
+    oSheet.getCellByPosition(2,27).String = sUltimus
+    return sUltimus
+    #~ chi(len(sUltimus))
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
 ########################################################################
 def debugnn (sCella='', t=''):
     mri(XSCRIPTCONTEXT.getDocument())
@@ -3664,7 +3690,7 @@ def struct(l):
 ########################################################################
 def autoexec (arg=None):
     '''
-    questa è richiamata da NewFile()
+    questa è richiamata da New_File()
     '''
     #~ chi("autoexec py")
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3678,9 +3704,7 @@ def autoexec (arg=None):
         oSheet.getCellByPosition(7,295).Value = Lmajor
         oSheet.getCellByPosition(8,295).Value = Lminor
         oSheet.getCellByPosition(9,295).String = Lsubv
-
         adegua_tmpl() #esegue degli aggiustamenti del template
-
         toolbar_vedi()
         DlgMain()
     except:
@@ -3846,13 +3870,7 @@ def adegua_tmpl (arg=None):
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
 #~ ########################################################################
 def r_version_code(arg=None):
-    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
-        #~ code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
-    #~ elif sys.platform == 'win32':
-        #~ code_file = (LeenO_path() + os.altsep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
-    #~ chi(code_file)
-    code_file = uno.systemPathToFileUrl(LeenO_path() + os.altsep + 'leeno_version_code')
-
+    code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep + 'leeno_version_code')
     f = open(code_file, 'r')
     return f.readline().split('-')[-1]
 ########################################################################

@@ -12,7 +12,7 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant &apos;Giuseppe Vizziello 2015
+Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant 
 rem questa serve ad avviare le funzioni/script di python
 rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
 &apos;Print &quot;pyleeno&quot;
@@ -27,21 +27,16 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 	Dim Script as Object
 	Dim Url as String
 	sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
-&apos;Print sName
-&apos;	sModulo = &quot;FormulaSemplice.py&quot;
-&apos;	sFunzione = &quot;oMacroTest1&quot;
+
 	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyLeenO|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
 &apos;Print Url
 	MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
 	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
 	Script = MasterScriptProvider.getScript(Url)
-&apos;xray args
 
-&apos;On Error GoTo end:
-	Script.invoke(args,Array(),Array())
-&apos;	Script.invoke(Array(),Array(),Array())
-&apos;	PythonResult = Script.invoke(Array(),Array(),Array())
-&apos;end: 
+	PythonResult = Script.invoke(args,Array(),Array())
+
+ScriptPy = PythonResult
 End Sub
 rem ######################################################################
 </script:module>

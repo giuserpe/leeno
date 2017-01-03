@@ -705,10 +705,6 @@ Sub Colora_M1(sURLStr as string)
 &apos;print
 end sub
 
-
-
-
-
 &apos; originale funzionante...
 Sub Scrivi_Globale &apos; versione semplice
 	&apos;Il file attivo diventa il &quot;Computo Corrente&quot;
@@ -721,6 +717,9 @@ Sub Scrivi_Globale &apos; versione semplice
 	&apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
 	&apos; dove è scritta la variabile globale
 	&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;ssUltimus&quot;)
+sUltimus = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string
+exit sub
 		dim xA as string
 	&apos; print sUltimus
 		
@@ -740,13 +739,9 @@ Sub Scrivi_Globale &apos; versione semplice
 	
 	setDocEventOnClose
 	
-	URLStr = ThisComponent.getURL() &apos; con queste 2 righe si preleva il nome del file
-	
-	oSheet = ThisComponent.currentcontroller.activesheet 
-	
 	&apos;xA=oNome
 	
-	UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (URLStr) &apos;xA &apos; variabile globale registrata
+	UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (ThisComponent.getURL()) &apos;xA &apos; variabile globale registrata
 
 	if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
 		exit sub

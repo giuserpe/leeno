@@ -188,6 +188,8 @@ Sub tante_analisi_in_ep &apos;vai_ed_esegui &apos;temporanea creata per registra
 	oSheetEP = thiscomponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
 	oSheetANAP = thiscomponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lUltimaRiga = getLastUsedRow(oSheetANAP)
+	
+GoTo parti:
 	if msgbox (&quot;Questa macro è per Esperti&quot; &amp; CHR(10)_
 		&amp; &quot; serve a creare nuovi prezzi lavorando su più voci di Analisi!&quot; &amp; CHR(10)_
 		&amp; &quot; Procedo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
@@ -199,6 +201,8 @@ Sub tante_analisi_in_ep &apos;vai_ed_esegui &apos;temporanea creata per registra
 		exit Sub 
 		lrow = 2
 	end If 
+parti:	
+	Var = 1	
 	lrow = CDbl(Var)
 &apos;	print lrow
 

@@ -262,7 +262,7 @@ def Ins_Categorie(n):
         return
 
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDoc.CurrentController.ZoomValue = 400
+    #~ oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
     row = Range2Cell()[1]
     if oSheet.getCellByPosition(0, row).CellStyle in siVoce:
@@ -2776,6 +2776,7 @@ def XPWE_in(arg=None): #(filename):
     epitems = PweElencoPrezzi.findall('EPItem')
     dict_articoli = dict()
     lista_articoli = list()
+    lista_analisi = list()
     for elem in epitems:
         id_ep = elem.get('ID')
         diz_ep = dict()
@@ -2814,7 +2815,6 @@ def XPWE_in(arg=None): #(filename):
             xlo_mdo = float(elem.find('xlo_mdo').text)
         except: # AttributeError TypeError:
             pass
-        
         try:
             adrinternet = elem.find('AdrInternet').text
         except AttributeError:
@@ -2842,13 +2842,11 @@ def XPWE_in(arg=None): #(filename):
         diz_ep['flags'] = flags
         diz_ep['data'] = data
         diz_ep['adrinternet'] = adrinternet
-        diz_ep['pweepanalisi'] = pweepanalisi
+        #~ diz_ep['pweepanalisi'] = pweepanalisi
         diz_ep['xlo_sic'] = xlo_sic
         diz_ep['xlo_mdop'] = xlo_mdop
         diz_ep['xlo_mdo'] = xlo_mdo
         dict_articoli[id_ep] = diz_ep
-        lista_articoli.append
-
         articolo_modificato =  (tariffa,
                                     destestesa,
                                     unmisura,
@@ -2857,8 +2855,24 @@ def XPWE_in(arg=None): #(filename):
                                     xlo_mdop,
                                     xlo_mdo)
         lista_articoli.append(articolo_modificato)
-### analisi di presso
-    #~ inizializza_analisi()
+### leggo analisi di prezzo
+        pweepanalisi = elem.find('PweEPAnalisi')
+        PweEPAR = pweepanalisi.find('PweEPAR')
+        if PweEPAR != None:
+            EPARItem = PweEPAR.findall('EPARItem')
+            analisi = list ()
+            for el in EPARItem:
+                id_an = el.get('ID')
+                an_tipo = el.find('Tipo').text
+                id_ep = el.find('IDEP').text
+                an_des = el.find('Descrizione').text
+                an_um = el.find('Misura').text
+                an_qt = el.find('Qt').text
+                an_pr = el.find('Prezzo').text
+                an_fld = el.find('FieldCTL').text
+                an_rigo = (id_ep, an_des, an_um, an_qt, an_pr)
+                analisi.append(an_rigo)
+            lista_analisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
 # leggo voci di misurazione e righe ####################################
     lista_misure = list()
     try:
@@ -2873,7 +2887,6 @@ def XPWE_in(arg=None): #(filename):
             datamis = elem.find('DataMis').text
             flags = elem.find('Flags').text
             idspcat = elem.find('IDSpCat').text
-            
             idcat = elem.find('IDCat').text
             idsbcat = elem.find('IDSbCat').text
             righi_mis = elem.getchildren()[-1].findall('RGItem')
@@ -2883,7 +2896,7 @@ def XPWE_in(arg=None): #(filename):
             new_id_l = list()
 
             for el in righi_mis:
-                diz_rig = dict()
+                #~ diz_rig = dict()
                 rgitem = el.get('ID')
                 idvv = el.find('IDVV').text
                 if el.find('Descrizione').text != None:
@@ -2896,36 +2909,36 @@ def XPWE_in(arg=None): #(filename):
                 hpeso = el.find('HPeso').text
                 quantita = el.find('Quantita').text
                 flags = el.find('Flags').text
-                diz_rig['rgitem'] = rgitem
-                diz_rig['idvv'] = idvv
-                diz_rig['descrizione'] = descrizione
+                #~ diz_rig['rgitem'] = rgitem
+                #~ diz_rig['idvv'] = idvv
+                #~ diz_rig['descrizione'] = descrizione
 
-                if partiuguali !=None:
-                    diz_rig['partiuguali'] = partiuguali.replace('.',',')
-                else:
-                    diz_rig['partiuguali'] = partiuguali
+                #~ if partiuguali !=None:
+                    #~ diz_rig['partiuguali'] = partiuguali.replace('.',',')
+                #~ else:
+                    #~ diz_rig['partiuguali'] = partiuguali
 
-                if lunghezza !=None:
-                    diz_rig['lunghezza'] = lunghezza.replace('.',',')
-                else:
-                    diz_rig['lunghezza'] = lunghezza
+                #~ if lunghezza !=None:
+                    #~ diz_rig['lunghezza'] = lunghezza.replace('.',',')
+                #~ else:
+                    #~ diz_rig['lunghezza'] = lunghezza
 
-                if larghezza !=None:
-                    diz_rig['larghezza'] = larghezza.replace('.',',')
-                else:
-                    diz_rig['larghezza'] = larghezza
+                #~ if larghezza !=None:
+                    #~ diz_rig['larghezza'] = larghezza.replace('.',',')
+                #~ else:
+                    #~ diz_rig['larghezza'] = larghezza
 
-                if hpeso !=None:
-                    diz_rig['hpeso'] = hpeso.replace('.',',')
-                else:
-                    diz_rig['hpeso'] = hpeso
+                #~ if hpeso !=None:
+                    #~ diz_rig['hpeso'] = hpeso.replace('.',',')
+                #~ else:
+                    #~ diz_rig['hpeso'] = hpeso
 
-                if quantita !=None:
-                    diz_rig['quantita'] = quantita.replace('.',',')
-                else:
-                    diz_rig['quantita'] = quantita
+                #~ if quantita !=None:
+                    #~ diz_rig['quantita'] = quantita.replace('.',',')
+                #~ else:
+                    #~ diz_rig['quantita'] = quantita
 
-                diz_rig['flags'] = flags
+                #~ diz_rig['flags'] = flags
                 riga_misura =  (descrizione,
                                 '',
                                 '',
@@ -3033,11 +3046,43 @@ Si tenga conto che:
         MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         oDoc.CurrentController.setActiveSheet(oSheet)
-        #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
         oDoc.CurrentController.ZoomValue = 100
         oDialogo_attesa.endExecute()
         return
 ###
+# Compilo Analisi di prezzo
+    oDoc.CurrentController.ZoomValue = 400
+    if len (lista_analisi) !=0:
+        inizializza_analisi()
+        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        for el in lista_analisi:
+            sStRange = Circoscrive_Analisi (Range2Cell()[1])
+            lrow = sStRange.RangeAddress.StartRow + 1
+            oSheet.getCellByPosition(0, lrow).String = el[0]
+            oSheet.getCellByPosition(1, lrow).String = el[1]
+            oSheet.getCellByPosition(2, lrow).String = el[2]
+            oSheet.getCellByPosition(6, lrow).Value = el[4]
+            n = lrow + 2
+            y = 0
+            for x in el[3]:
+                copia_riga_analisi(n)
+                try:
+                    oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
+                except:
+                    oSheet.getCellByPosition(0, n).String = '--'
+                    oSheet.getCellByPosition(1, n).String = el[3][y][1]
+                    oSheet.getCellByPosition(2, n).String = el[3][y][2]
+                    oSheet.getCellByPosition(4, n).Value = el[3][y][4]
+                    oSheet.getCellByPosition(8, n).Value = 0
+                oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                y += 1
+                n += 1
+            oSheet.getRows().removeByIndex(n, 3)
+            oSheet.getCellByPosition(0, n+2).String = ''
+            oSheet.getCellByPosition(0, n+5).String = ''
+            oSheet.getCellByPosition(0, n+8).String = ''
+            oSheet.getCellByPosition(0, n+11).String = ''
+            inizializza_analisi()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         Lib_LeenO('Computo.genera_variante')

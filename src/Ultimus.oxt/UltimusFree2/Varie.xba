@@ -846,11 +846,6 @@ Sub copia_TANTE_righe_Ent
 	Next n
 End Sub
 
-
-Sub copia_riga_Ent &apos;Aggiungi Componente - capisce su quale tipologia di tabelle è
-&apos;	now1 = now
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;Copia_riga_Ent&quot;)
-end sub
 rem ######################################################################
 
 Sub copia_riga_A &apos; Specifica per Analisi

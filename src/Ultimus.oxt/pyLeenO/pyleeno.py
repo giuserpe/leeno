@@ -1134,16 +1134,17 @@ def XPWE_out(arg=None):
             lista_AP.append(oSheet.getCellByPosition(0, n).String)
 #Analisi di prezzo
     if len(lista_AP) != 0:
+        k = n+1
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_AP:
             try:
                 n = (uFindString(el, oSheet)[-1])
                 EPItem = SubElement(PweElencoPrezzi,'EPItem')
-                EPItem.set('ID', str(n))
+                EPItem.set('ID', str(k))
                 TipoEP = SubElement(EPItem,'TipoEP')
                 TipoEP.text = '0'
                 Tariffa = SubElement(EPItem,'Tariffa')
-                id_tar = str(n)
+                id_tar = str(k)
                 Tariffa.text = oSheet.getCellByPosition(0, n).String
                 diz_ep[oSheet.getCellByPosition(0, n).String] = id_tar
                 Articolo = SubElement(EPItem,'Articolo')
@@ -1233,6 +1234,7 @@ def XPWE_out(arg=None):
                     xlo_mdo.text = ''
                 else:
                     xlo_mdo.text = str(oSheet.getCellByPosition(9, n).Value)
+                k += 1
             except:
                 pass
 #COMPUTO/VARIANTE
@@ -3051,7 +3053,6 @@ Si tenga conto che:
         return
 ###
 # Compilo Analisi di prezzo
-    oDoc.CurrentController.ZoomValue = 400
     if len (lista_analisi) !=0:
         inizializza_analisi()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')

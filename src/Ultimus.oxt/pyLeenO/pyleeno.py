@@ -2869,8 +2869,8 @@ def XPWE_in(arg=None): #(filename):
                 id_ep = el.find('IDEP').text
                 an_des = el.find('Descrizione').text
                 an_um = el.find('Misura').text
-                an_qt = el.find('Qt').text
-                an_pr = el.find('Prezzo').text
+                an_qt = el.find('Qt').text.replace(' ','')
+                an_pr = el.find('Prezzo').text.replace(' ','')
                 an_fld = el.find('FieldCTL').text
                 an_rigo = (id_ep, an_des, an_um, an_qt, an_pr)
                 analisi.append(an_rigo)
@@ -2898,7 +2898,6 @@ def XPWE_in(arg=None): #(filename):
             new_id_l = list()
 
             for el in righi_mis:
-                #~ diz_rig = dict()
                 rgitem = el.get('ID')
                 idvv = el.find('IDVV').text
                 if el.find('Descrizione').text != None:
@@ -2911,36 +2910,6 @@ def XPWE_in(arg=None): #(filename):
                 hpeso = el.find('HPeso').text
                 quantita = el.find('Quantita').text
                 flags = el.find('Flags').text
-                #~ diz_rig['rgitem'] = rgitem
-                #~ diz_rig['idvv'] = idvv
-                #~ diz_rig['descrizione'] = descrizione
-
-                #~ if partiuguali !=None:
-                    #~ diz_rig['partiuguali'] = partiuguali.replace('.',',')
-                #~ else:
-                    #~ diz_rig['partiuguali'] = partiuguali
-
-                #~ if lunghezza !=None:
-                    #~ diz_rig['lunghezza'] = lunghezza.replace('.',',')
-                #~ else:
-                    #~ diz_rig['lunghezza'] = lunghezza
-
-                #~ if larghezza !=None:
-                    #~ diz_rig['larghezza'] = larghezza.replace('.',',')
-                #~ else:
-                    #~ diz_rig['larghezza'] = larghezza
-
-                #~ if hpeso !=None:
-                    #~ diz_rig['hpeso'] = hpeso.replace('.',',')
-                #~ else:
-                    #~ diz_rig['hpeso'] = hpeso
-
-                #~ if quantita !=None:
-                    #~ diz_rig['quantita'] = quantita.replace('.',',')
-                #~ else:
-                    #~ diz_rig['quantita'] = quantita
-
-                #~ diz_rig['flags'] = flags
                 riga_misura =  (descrizione,
                                 '',
                                 '',
@@ -3053,6 +3022,7 @@ Si tenga conto che:
         return
 ###
 # Compilo Analisi di prezzo
+    oDoc.CurrentController.ZoomValue = 400
     if len (lista_analisi) !=0:
         inizializza_analisi()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
@@ -3089,7 +3059,6 @@ Si tenga conto che:
         Lib_LeenO('Computo.genera_variante')
     oSheet = oDoc.getSheets().getByName(arg)
     oDoc.CurrentController.select(oSheet)
-    oDoc.CurrentController.ZoomValue = 400
     iSheet_num = oSheet.RangeAddress.Sheet
 ###
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')

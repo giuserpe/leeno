@@ -1556,6 +1556,24 @@ def next_voice (lrow, n=1):
         return
     return lrow
 ########################################################################
+def cancella_analisi_da_ep(arg=None):
+    '''
+    cancella le voci in Elenco Prezzi che derivano da analisi
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
+    lista_an = list()
+    for i in range(0, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(0, i).CellStyle == 'An-1_sigla':
+            codice = oSheet.getCellByPosition(0, i).String
+            lista_an.append(oSheet.getCellByPosition(0, i).String)
+    chi(lista_an)
+    oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
+    for i in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, i).String in lista_an:
+            oSheet.getRows().removeByIndex(i, 1)
+###
 def ANALISI_IN_ELENCOPREZZI (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:

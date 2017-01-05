@@ -597,7 +597,7 @@ def ultima_voce (oSheet):
     #~ oSheet = oDoc.CurrentController.ActiveSheet
     nRow = getLastUsedCell(oSheet).EndRow
     for n in reversed(range(0, nRow)):
-        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'An-sfondo-basso Att End', 'Comp End Attributo',
+        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'EP-Cs', 'An-sfondo-basso Att End', 'Comp End Attributo',
                                                         'Comp End Attributo_R', 'comp Int_colonna', 'comp Int_colonna_R_prima',
                                                         'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'):
             break

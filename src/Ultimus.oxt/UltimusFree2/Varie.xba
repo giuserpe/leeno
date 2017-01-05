@@ -835,7 +835,7 @@ rem ----------------------------------------------------------------------
 parziale_verifica
 	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
 	If test = &quot;è Computo&quot; Then
-		 Rinumera_TUTTI_Capitoli2
+ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
 	End If
 END SUB
 rem ######################################################################

@@ -175,7 +175,7 @@ rem ----------------------------------------------------------------------
 rem ----------------------------------------------------------------------
 Controlla_Componenti_conversioni
 rem ----------------------------------------------------------------------
-Rinumera_TUTTI_Capitoli2
+ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
 &apos;Svuota_CONTABILITA
 sproteggi_sheet_TUTTE
 Visualizza_sheet_TUTTE

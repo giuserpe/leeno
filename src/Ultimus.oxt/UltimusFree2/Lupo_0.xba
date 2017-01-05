@@ -399,7 +399,7 @@ Colora_Tabs
 
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;) &apos;visualizza
 Rifa_Somme_TOT_Computo
-Rinumera_TUTTI_Capitoli2	&apos;ricontrolla i calcoli 
+ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
 Numera_Voci_Computo (&quot;niente prompt&quot;)
 
 

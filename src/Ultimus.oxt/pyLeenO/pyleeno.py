@@ -2779,6 +2779,7 @@ def XPWE_in(arg=None): #(filename):
     dict_articoli = dict()
     lista_articoli = list()
     lista_analisi = list()
+    lista_tariffe_analisi = list()
     for elem in epitems:
         id_ep = elem.get('ID')
         diz_ep = dict()
@@ -2875,6 +2876,7 @@ def XPWE_in(arg=None): #(filename):
                 an_rigo = (id_ep, an_des, an_um, an_qt, an_pr)
                 analisi.append(an_rigo)
             lista_analisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
+            lista_tariffe_analisi.append(tariffa)
 # leggo voci di misurazione e righe ####################################
     lista_misure = list()
     try:
@@ -2898,6 +2900,7 @@ def XPWE_in(arg=None): #(filename):
             new_id_l = list()
 
             for el in righi_mis:
+                #~ diz_rig = dict()
                 rgitem = el.get('ID')
                 idvv = el.find('IDVV').text
                 if el.find('Descrizione').text != None:
@@ -3009,10 +3012,13 @@ Si tenga conto che:
                                             scarto_righe,
                                             colonne_lista + scarto_colonne - 1, # l'indice parte da 0
                                             righe_lista + scarto_righe - 1)
-
     oRange.setDataArray(lista_come_array)
     doppioni()
-
+### elimino le voci che hanno analisi
+    for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
+            oSheet.getRows().removeByIndex(i, 1)
+            
     if len(lista_misure) == 0:
         MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -3021,7 +3027,7 @@ Si tenga conto che:
         oDialogo_attesa.endExecute()
         return
 ###
-# Compilo Analisi di prezzo
+# Compilo Analisi di prezzo ############################################
     oDoc.CurrentController.ZoomValue = 400
     if len (lista_analisi) !=0:
         inizializza_analisi()
@@ -3054,6 +3060,8 @@ Si tenga conto che:
             oSheet.getCellByPosition(0, n+8).String = ''
             oSheet.getCellByPosition(0, n+11).String = ''
             inizializza_analisi()
+    #~ Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
+    Lib_LeenO('Analisi.tante_analisi_in_ep') #rinvia a basic
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         Lib_LeenO('Computo.genera_variante')

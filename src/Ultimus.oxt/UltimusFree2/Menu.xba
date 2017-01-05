@@ -85,11 +85,6 @@ Sub myTestToolBarVisible
 	MsgBox s, 0, &quot;Toolbar Is Visible&quot;
 End Sub
 rem ######################################################################
-
-Sub Toolbar_vedi&apos;(oDoc, sURL)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
-End Sub
-rem ######################################################################
 	
 Sub toolbar_on (toolbarURL As string, optional flag As Integer) &apos;(C) Giuseppe Vizziello 2015
 rem se il flag è 0 (zero) la toolbarURL viene nascosta
@@ -164,21 +159,17 @@ Sub computo_OnSelect
 End Sub
 
 Sub elenco_OnFocus
-&apos;	Toolbar_vedi
-	If codice_da_cercare_in_elenco = &quot;Cod. Art.?&quot;  Then Exit Sub
-	If codice_da_cercare_in_elenco &lt;&gt; &quot;&quot; Then
-	&apos;	Print codice_da_cercare_in_elenco
-		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-		oCell=uFindString(codice_da_cercare_in_elenco, oSheet)
-		ThisComponent.CurrentController.Select(oCell)
-		ThisComponent.CurrentController.setFirstVisibleRow(oCell.RangeAddress.StartRow)
-	EndIf
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
 Sub elenco_OnUnFocus
-&apos;	Toolbar_vedi
-	codice_da_cercare_in_elenco = &quot;&quot;
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
-
+Sub analisi_OnFocus
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+End Sub
+Sub analisi_OnUnFocus
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+End Sub
 
 Sub eventi_assegna
 &apos;Array : T( 0 To 6 ) As string  
@@ -199,10 +190,10 @@ Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnFocus&quot;,	&quot;vnd.sun.star.
 Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.elenco_OnUnFocus?language=Basic&amp;location=application&quot;)
 
 If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
-&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.Toolbar_vedi?language=Basic&amp;location=application&quot;)
-	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-
-	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnFocus?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnUnfocus?language=Basic&amp;location=application&quot;)
+&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 EndIf
 
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)

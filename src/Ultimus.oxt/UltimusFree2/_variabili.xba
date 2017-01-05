@@ -73,7 +73,7 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	EndIf
  	Setta_Cost_Gen
-	codice_da_cercare_in_elenco = &quot;&quot;
+	codice_da_cercare = &quot;&quot;
 	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	eventi_assegna
 &apos;	Elimina_Nomi_Area_errati

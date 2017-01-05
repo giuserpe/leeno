@@ -283,8 +283,7 @@ def Ins_Categorie(n):
         _gotoCella(2, lrow+1)
     else:
         _gotoCella(2, lrow)
-    Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
-    Sincronizza_SottoCap_Tag_Capitolo_Cor()# sistemo gli idcat voce per voce
+    Rinumera_TUTTI_Capitoli2
     oDoc.CurrentController.ZoomValue = 100
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow-5)
@@ -3252,8 +3251,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                 SR = SR+1
     Numera_Voci()
     try:
-        Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
-        Sincronizza_SottoCap_Tag_Capitolo_Cor()# sistemo gli idcat voce per voce
+        Rinumera_TUTTI_Capitoli2()
     except:
         pass
     oDoc.CurrentController.ZoomValue = 100
@@ -3635,6 +3633,7 @@ def struttura_ComputoM(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
+    Rinumera_TUTTI_Capitoli2()
     struct(0)
     struct(1)
     struct(2)

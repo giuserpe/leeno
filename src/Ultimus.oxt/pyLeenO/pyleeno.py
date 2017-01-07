@@ -12,7 +12,7 @@
 ########################################################################
 import locale
 import codecs
-import subprocess
+#~ import subprocess
 import os, sys, uno, unohelper, pyuno, logging, shutil, base64
 import time
 from multiprocessing import Process, freeze_support
@@ -165,6 +165,7 @@ def debugs(arg=None):
     desktop = XSCRIPTCONTEXT.getDesktop()
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oSheet = oDoc.CurrentController.ActiveSheet
+    
 
     oSheet.getCellByPosition(1,7).String = oDoc.getURL()
     oSheet.getCellByPosition(1,8).String = dir(os).__str__()
@@ -1835,6 +1836,70 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
 ########################################################################
+'''
+def debug(arg=None):
+    mri(XSCRIPTCONTEXT.getComponentContext())
+    sText = 'sticazzi'
+    #create SystemClipboard instance
+    oClip = createUnoService("com.sun.star.datatransfer.clipboard.SystemClipboard")
+#~ createUnoService = (XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
+    oTR = createUnoListener("Tr_", "com.sun.star.datatransfer.XTransferable")
+    oClip.setContents( oTR,Null )
+    sTxtCString = sText
+    oClip.flushClipboard()
+'''
+########################################################################
+def copia_celle_visibili(arg=None):
+    '''
+    A partire dalla selezione di un range di celle in cui alcune righe e/o colonne sono nascoste,
+    mette in clipboard solo il contenuto delle celle visibili.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    IS = oRangeAddress.Sheet
+    SC = oRangeAddress.StartColumn
+    EC = oRangeAddress.EndColumn
+    SR = oRangeAddress.StartRow
+    ER = oRangeAddress.EndRow
+    righe = list()
+    colonne = list()
+    i = 0
+    for nRow in range(SR, ER+1):
+        if oSheet.getCellByPosition(SR, nRow).Rows.IsVisible == False:
+            righe.append(i)
+        i += 1
+    i = 0
+    for nCol in range(SC, EC+1):
+        if oSheet.getCellByPosition(nCol, nRow).Columns.IsVisible == False:
+            colonne.append(i)
+        i += 1
+
+    if oDoc.getSheets().hasByName('tmp_clip') == False:
+        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
+        tmp = oDoc.Sheets.insertByName('tmp_clip', sheet)
+    tmp = oDoc.getSheets().getByName('tmp_clip')    
+
+    oCellAddress = tmp.getCellByPosition(0,0).getCellAddress()
+    tmp.copyRange(oCellAddress, oRangeAddress)
+    
+    for i in reversed(righe):
+        tmp.getRows().removeByIndex(i, 1)
+    for i in reversed(colonne):
+        tmp.getColumns().removeByIndex(i, 1)
+
+    oRange = tmp.getCellRangeByPosition(0,0, EC-SC-len(colonne), ER-SR-len(righe))
+    oDoc.CurrentController.select(oRange)
+
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
+    oDoc.Sheets.removeByName('tmp_clip')
 # Range2Cell ###########################################################
 def Range2Cell ():
     '''

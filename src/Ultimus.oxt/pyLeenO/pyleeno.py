@@ -22,6 +22,7 @@ import threading
 from datetime import datetime, date
 from com.sun.star.beans import PropertyValue
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
+#~ from com.sun.star.table.CellContentType import TEXT, EMPTY, VALUE, FORMULA
 from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
     ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED)
 ########################################################################
@@ -1569,7 +1570,6 @@ def cancella_analisi_da_ep(arg=None):
         if oSheet.getCellByPosition(0, i).CellStyle == 'An-1_sigla':
             codice = oSheet.getCellByPosition(0, i).String
             lista_an.append(oSheet.getCellByPosition(0, i).String)
-    chi(lista_an)
     oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
     for i in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_an:
@@ -1836,18 +1836,31 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
 ########################################################################
-'''
-def debug(arg=None):
-    mri(XSCRIPTCONTEXT.getComponentContext())
+def debug_tipo_di_valore(arg=None):
+#~ def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
+        MsgBox(oSheet.getCellByPosition(9, 5).Formula)
+########################################################################
+def debug_clipboard(arg=None):
+    #~ mri(XSCRIPTCONTEXT.getComponentContext())
     sText = 'sticazzi'
     #create SystemClipboard instance
     oClip = createUnoService("com.sun.star.datatransfer.clipboard.SystemClipboard")
-#~ createUnoService = (XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
-    oTR = createUnoListener("Tr_", "com.sun.star.datatransfer.XTransferable")
+    oClipContents = oClip.getContents()
+    flavors = oClipContents.getTransferDataFlavors()
+    mri(oClip)
+    #~ for i in flavors:
+        #~ aDataFlavor = flavors(i)
+        #~ chi(aDataFlavor)
+        
+    return
+    #~ createUnoService = (XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
+    #~ oTR = createUnoListener("Tr_", "com.sun.star.datatransfer.XTransferable")
     oClip.setContents( oTR, None )
     sTxtCString = sText
     oClip.flushClipboard()
-'''
 ########################################################################
 def copia_celle_visibili(arg=None):
 #~ def debug(arg=None):

@@ -1844,15 +1844,18 @@ def debug(arg=None):
     oClip = createUnoService("com.sun.star.datatransfer.clipboard.SystemClipboard")
 #~ createUnoService = (XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
     oTR = createUnoListener("Tr_", "com.sun.star.datatransfer.XTransferable")
-    oClip.setContents( oTR,Null )
+    oClip.setContents( oTR, None )
     sTxtCString = sText
     oClip.flushClipboard()
 '''
 ########################################################################
 def copia_celle_visibili(arg=None):
+#~ def debug(arg=None):
     '''
-    A partire dalla selezione di un range di celle in cui alcune righe e/o colonne sono nascoste,
-    mette in clipboard solo il contenuto delle celle visibili.
+    A partire dalla selezione di un range di celle in cui alcune righe e/o
+    colonne sono nascoste, mette in clipboard solo il contenuto delle celle
+    visibili.
+    Liberamente ispirato a "Copy only visible cells" http://bit.ly/2j3bfq2
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1865,6 +1868,10 @@ def copia_celle_visibili(arg=None):
     EC = oRangeAddress.EndColumn
     SR = oRangeAddress.StartRow
     ER = oRangeAddress.EndRow
+    if EC == 1023:
+        EC = getLastUsedCell(oSheet).EndColumn
+    if ER == 1048575:
+        ER = getLastUsedCell(oSheet).EndRow
     righe = list()
     colonne = list()
     i = 0

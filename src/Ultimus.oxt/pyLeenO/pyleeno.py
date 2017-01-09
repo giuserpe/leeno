@@ -117,20 +117,60 @@ def nuovo_usobollo (arg=None):
     #~ chi(uno.sys)
     #~ chi(url)
 ########################################################################
-def focus_su_altro_Doc():
-#~ def debug(arg=None):#
+def voce_voce(arg=None):
+#~ def debug (arg=None):
     '''
+    Invia una voce di prezzario da un elenco prezzi all'Elenco Prezzi del
+    Documento di Contabilità Corrente DCC
+    '''
+    #~ chi(sUltimus)
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+
+    oRangeAddress = oSheet.getCellRangeByPosition(0, lrow, getLastUsedCell(oSheet).EndColumn, lrow).getRangeAddress()
+    
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, getLastUsedCell(oSheet).EndColumn, lrow))
+    partenza = uno.fileUrlToSystemPath(oDoc.getURL())
+        
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+
+    focus_su_altro_Doc(sUltimus)
+    
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    oSheet.getRows().insertByIndex(3, 1)
+    oDoc.CurrentController.select(oSheet.getCellByPosition(0, 3))
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+
+    focus_su_altro_Doc(partenza)
+
+########################################################################
+def focus_su_altro_Doc(sUrl):
+    '''
+    sUrl  { string } : nome del file
     porta il focus su di un altro documento
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     path = oDoc.getURL()
     desktop = XSCRIPTCONTEXT.getDesktop()
     opz = PropertyValue()
-    sUrl = 'file:///D:/CNT/2015/C15_08_Palazzo%20Zicari/01._CONSEGNE/GO_AND_GROW/OPERE_EDILI/supporto_al_computo.ods'
+    sUrl = uno.systemPathToFileUrl(sUrl)
     target = desktop.loadComponentFromURL(sUrl, "_default", 0, (opz,))
     oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
     target.getCurrentController().getFrame().focusGained(oFocus)
-    #~ mri(target)
     
 ########################################################################
 def oggi():
@@ -3380,8 +3420,8 @@ createUnoService = (
                     )
 GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO','private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', )
 #
+sUltimus = ''
 def ssUltimus (arg=None):
-#~ def debug (arg=None):
     '''
     Scrive la variabile globale che individua il Documento di Contabilità Corrente (DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
@@ -3400,11 +3440,8 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
     except:
         return
     oSheet = oDoc.getSheets().getByName('M1')
-    #~ oSheet.getCellByPosition(2,24).String = uno.fileUrlToSystemPath(oDoc.getURL())
     oSheet.getCellByPosition(2,27).String = sUltimus
-    return sUltimus
-    #~ chi(len(sUltimus))
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    return
 ########################################################################
 def debugnn (sCella='', t=''):
     mri(XSCRIPTCONTEXT.getDocument())

@@ -3501,13 +3501,8 @@ def filedia (titolo='Scegli il file...', est='*.*',  mode=0):
         app = estensioni.get(est)
         oFilePicker.appendFilter (app, est)
         if oFilePicker.execute():
-            oDisp = oFilePicker.getFiles()[0]
-        #~ oDisp.split('///')[-1].replace('%20',' ')
-        #~ MsgBox(oDisp)
-        if sys.platform == 'linux' or sys.platform == 'darwin':
-            return oDisp.split('//')[-1].replace('%20',' ')
-        elif sys.platform == 'win32':
-            return oDisp.split('///')[-1].replace('%20',' ')
+            oDisp = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
+        return oDisp
     except:
         MsgBox('Il file non è stato selezionato', 'ATTENZIONE!')
         return
@@ -4201,12 +4196,6 @@ def bak_timestamp(arg=None):
     orig = oDoc.getURL()
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-' + tempo + '.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
-    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
-        #~ orig = orig.split('//')[-1].replace('%20',' ')
-        #~ dir_bak = dir_bak.split('//')[-1].replace('%20',' ')
-    #~ elif sys.platform == 'win32':
-        #~ orig = orig.split('///')[-1].replace('%20',' ')
-        #~ dir_bak = dir_bak.split('///')[-1].replace('%20',' ')
     if len(orig) ==0:
         return
     orig = uno.fileUrlToSystemPath(orig)

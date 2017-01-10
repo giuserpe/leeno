@@ -110,7 +110,6 @@ def nuovo_listino (arg=None):
 def nuovo_usobollo (arg=None):
     New_file.usobollo()
 ########################################################################
-#~ def debug (arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ path = uno.fileUrlToSystemPath(oDoc.getURL())
     #~ url = uno.systemPathToFileUrl(path)
@@ -4032,7 +4031,10 @@ def adegua_tmpl (arg=None):
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
 #~ ########################################################################
 def r_version_code(arg=None):
-    code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep + 'leeno_version_code')
+    if os.altsep:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep + 'leeno_version_code')
+    else:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep + 'leeno_version_code')
     f = open(code_file, 'r')
     return f.readline().split('-')[-1]
 ########################################################################
@@ -4096,13 +4098,13 @@ def DlgMain(arg=None):
     
     sUrl = LeenO_path()+'/icons/Immagine.png'
     oDlgMain.getModel().ImageControl1.ImageURL=sUrl
-    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
-        #~ code_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
-    #~ elif sys.platform == 'win32':
-        #~ code_file = (LeenO_path() + os.altsep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
-    code_file = uno.fileUrlToSystemPath((LeenO_path() + os.sep + 'leeno_version_code'))
 
+    if os.altsep:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep + 'leeno_version_code')
+    else:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep + 'leeno_version_code')
     f = open(code_file, 'r')
+    
     sString = oDlgMain.getControl("Label12")
     sString.Text = f.readline()
 

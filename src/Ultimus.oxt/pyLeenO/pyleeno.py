@@ -3105,11 +3105,9 @@ Si tenga conto che:
     if len(lista_misure) != 0:
         if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
 
-    Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente
-    disordinato, riceverai un messaggio che ti indica come intervenire.
+    Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente disordinato, riceverai un messaggio che ti indica come intervenire.
 
-    Se il risultato finale non dovesse andar bene, puoi ripetere l'importazione
-    senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") ==2:
+    Se il risultato finale non dovesse andar bene, puoi ripetere l'importazione senza il riordino delle voci rispondendo No a questa domanda.""", "Richiesta") ==2:
             riordine = sorted(prova_l, key=lambda el: el[0])
             lista_misure = list()
             for el in riordine:
@@ -3618,8 +3616,8 @@ def chi(s): # s = oggetto
     
 def DlgSiNo(s,t='Titolo'): # s = messaggio | t = titolo
     '''
-    Viasualizza il menù di scelta sì/no
-    restutuisce 2 per sì e 3 per no
+    Visualizza il menù di scelta sì/no
+    restituisce 2 per sì e 3 per no
     '''
     doc = XSCRIPTCONTEXT.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow

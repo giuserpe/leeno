@@ -782,47 +782,24 @@ dim nEndCol as long
 
 	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	 ThisComponent.unlockControllers 	
-&apos;	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-&apos;&apos;		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
-&apos;			on error goto Gestione_Errore
-&apos;		end if
-&apos;	END IF
-	
+
 	Torna_a_schermo_normale
 
 	Barra_Apri_Chiudi_4
-
-&apos;	wait 5000 &apos;disatt 080609 a favore di
-&apos;	wait 1000 &apos;diasatt 080624
-
-&apos;	on error goto Gestione_Errore
-	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	Verifica_chiudi_preview
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	&apos;--------------------------------------------------
 	oSheet = ThisComponent.currentcontroller.activesheet
 	
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	pezzo in prova
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
  	 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
-&apos;	sNomeSrc = FileNameoutofPath(UrlSrc)
-&apos;xray UrlSrc
-&apos;	sUrlsrc = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus) &apos; file destinazione
-&apos;	sNameDest = FileNameoutofPath(sUrl2)
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	fine pezzo in prova
-
-&apos;	lnumSheet=oSheet.RangeAddress.Sheet
 	lnumSheet=6
 	sOK = &quot;OK&quot; &apos; questo serve solo a rendere la var not isMissing...????
 
-&apos;	Barra_Apri_Chiudi_4
-&apos;print &quot;ippo&quot;
+
 	sNomeBuono =	DuplicaSheetinDoc (sOK, lnumSheet)
-&apos;print sNomeBuono
-&apos;	if sNomeBuono &lt;&gt; &quot;prosegui&quot; then
+
 	if sNomeBuono = &quot;Annulla&quot; then
 		exit sub
 	end if
@@ -852,9 +829,6 @@ dim nEndCol as long
  	nEndCol = aAddress.EndColumn
  	
 	oRange = oSheet.getCellRangeByPosition (0,0,245,nEndRow+30)
-	&apos;***********************************
-	&apos;(0,0,nEndColumn,nEndRow+30) &apos;perché nEndCol non funziona ed è a 0?
-	&apos;***********************************
 	Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
  	aSaveData = oRange.getDataArray()
@@ -878,8 +852,6 @@ dim nEndCol as long
 		&apos;ThisComponent.currentcontroller.activesheet.name= &quot;Lista_lavorazioni&quot;
 	end if	
 	ThisComponent.currentcontroller.activesheet.name= &quot;Lista_lavorazioni&quot;
- &apos; 	print ThisComponent.currentcontroller.activesheet.name
-
 end sub
 
 
@@ -943,8 +915,7 @@ wait 200
 	 Else	&apos; agg 080624
 	 	sNuovoNome = sNome &apos; agg 080624
 	end if &apos; agg 080624 &apos;&apos;
-&apos;	oDoc.Sheets.CopybyName(sNomeSheet,sNome, iNumInser)&apos;
-&apos;	For i 
+
 	if sNuovoNome = sNomeSheet then &apos; questo perché se si scegli d i salvare con lo 
 		sNuovoNome = sNuovoNome &amp; &quot;_&quot; &apos; nome della sheet di origine questa verrebbe poi cancellata
 	end if
@@ -956,9 +927,6 @@ wait 200
 		loop
 		sNuovoNome = sMod
 	end if
-&apos;	print sNomeSheet
-&apos;	print sNuovoNome
-&apos;	print iNumInser
 
 	If thisComponent.Sheets.hasByName(sNuovoNome) Then
 		print (sNuovoNome)

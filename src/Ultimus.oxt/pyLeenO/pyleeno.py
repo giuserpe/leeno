@@ -4223,10 +4223,12 @@ def w_version_code(arg=None):
     scrive versione e timestamp nel file leeno_version_code
     '''
     tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
-    if sys.platform == 'linux' or sys.platform == 'darwin':
-        out_file = (LeenO_path() + os.sep + 'leeno_version_code').split('//')[-1].replace('%20',' ')
-    elif sys.platform == 'win32':
-        out_file = (LeenO_path() + os.sep + 'leeno_version_code').split('///')[-1].replace('%20',' ')
+
+    if os.altsep:
+        out_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep + 'leeno_version_code')
+    else:
+        out_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep + 'leeno_version_code')
+        
     of = open(out_file,'w')
     of.write(str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv +'-'+ tempo[:-2])
     of.close()

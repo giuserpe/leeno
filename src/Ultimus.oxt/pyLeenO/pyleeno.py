@@ -122,7 +122,6 @@ def voce_voce(arg=None):
     Invia una voce di prezzario da un elenco prezzi all'Elenco Prezzi del
     Documento di Contabilità Corrente DCC
     '''
-    #~ chi(sUltimus)
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -140,21 +139,27 @@ def voce_voce(arg=None):
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 
+    if sUltimus == '':
+        MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
+        return
     focus_su_altro_Doc(sUltimus)
     
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oDoc.CurrentController.setActiveSheet(oSheet)
-    oSheet.getRows().insertByIndex(3, 1)
-    oDoc.CurrentController.select(oSheet.getCellByPosition(0, 3))
+    ddcDoc = XSCRIPTCONTEXT.getDocument()
+    #~ chi(ddcDoc.getURL())
+    dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
+    dccSheet.IsVisible = True
+    ddcDoc.CurrentController.setActiveSheet(dccSheet)
+    dccSheet.getRows().insertByIndex(3, 1)
+    ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, 3))
+    #~ chi('ppp')
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 
-    focus_su_altro_Doc(partenza)
+    #~ focus_su_altro_Doc(partenza)
 
 ########################################################################
 def focus_su_altro_Doc(sUrl):
@@ -1902,7 +1907,6 @@ def debug_clipboard(arg=None):
     oClip.flushClipboard()
 ########################################################################
 def copia_celle_visibili(arg=None):
-#~ def debug(arg=None):
     '''
     A partire dalla selezione di un range di celle in cui alcune righe e/o
     colonne sono nascoste, mette in clipboard solo il contenuto delle celle
@@ -1959,6 +1963,8 @@ def copia_celle_visibili(arg=None):
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
     oDoc.Sheets.removeByName('tmp_clip')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(SC, SR, EC, ER))
 # Range2Cell ###########################################################
 def Range2Cell ():
     '''

@@ -142,7 +142,7 @@ def voce_voce(arg=None):
     if sUltimus == '':
         MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
         return
-    focus_su_altro_Doc(sUltimus)
+    _gotoDoc(sUltimus)
     
     ddcDoc = XSCRIPTCONTEXT.getDocument()
     #~ chi(ddcDoc.getURL())
@@ -159,13 +159,13 @@ def voce_voce(arg=None):
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 
-    #~ focus_su_altro_Doc(partenza)
+    #~ _gotoDoc(partenza)
 
 ########################################################################
-def focus_su_altro_Doc(sUrl):
+def _gotoDoc(sUrl):
     '''
     sUrl  { string } : nome del file
-    porta il focus su di un altro documento
+    porta il focus su di un determinato documento
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     path = oDoc.getURL()

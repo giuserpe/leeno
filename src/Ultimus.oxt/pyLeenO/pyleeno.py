@@ -143,6 +143,7 @@ def voce_voce(arg=None):
         MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
         return
     _gotoDoc(sUltimus)
+    chi(sUltimus)
     
     ddcDoc = XSCRIPTCONTEXT.getDocument()
     #~ chi(ddcDoc.getURL())
@@ -174,8 +175,8 @@ def _gotoDoc(sUrl):
     sUrl = uno.systemPathToFileUrl(sUrl)
     target = desktop.loadComponentFromURL(sUrl, "_default", 0, (opz,))
     oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
+    #~ mri(target.getCurrentController().getFrame())
     target.getCurrentController().getFrame().focusGained(oFocus)
-    
 ########################################################################
 def oggi():
     '''
@@ -4162,10 +4163,10 @@ def InputBox (sCella='', t=''):
 
 import zipfile
 ########################################################################
-def hide_error (lErrori, irow):
+def hide_error (lErrori, icol):
     '''
     lErrori  { list } : nome dell'errore es.: '#DIV/0!'
-    irow { integer } : indice della riga da nascondere
+    icol { integer } : indice di colonna della riga da nascondere
     Viasualizza o nascondi una toolbar
     '''
     #~ attesa().start()
@@ -4180,7 +4181,7 @@ def hide_error (lErrori, irow):
     oCellRangeAddr.Sheet = iSheet
     for i in range(n, test):
         for el in lErrori:
-            if oSheet.getCellByPosition (irow, i).String == el:
+            if oSheet.getCellByPosition (icol, i).String == el:
                 oCellRangeAddr.StartRow = i
                 oCellRangeAddr.EndRow = i
                 oSheet.group(oCellRangeAddr,1)

@@ -28,8 +28,8 @@ Sub genera_variante
 		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,0))
 		eventi_assegna
 	Else
-		ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;))
-		unSelect &apos;unselect ranges 	
+		ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;).IsVisible = True
+		ThisComponent.CurrentController.setActiveSheet(ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;))
 		Exit Sub
 	EndIf
 

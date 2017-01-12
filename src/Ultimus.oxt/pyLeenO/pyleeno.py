@@ -4385,16 +4385,14 @@ class inserisci_nuova_riga_con_descrizione_th (threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         oDialogo_attesa = dlg_attesa()
-        
         oDoc = XSCRIPTCONTEXT.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
             return
-        
         descrizione = InputBox(t='inserisci una descrizione per la nuova riga')
         attesa().start() #mostra il dialogo
         
         oDoc.CurrentController.ZoomValue = 400
-        oSheet = oDoc.CurrentController.ActiveSheet
         i =0
         while (i < getLastUsedCell(oSheet).EndRow):
 

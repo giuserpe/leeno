@@ -4165,11 +4165,10 @@ import zipfile
 ########################################################################
 def hide_error (lErrori, icol):
     '''
-    lErrori  { list } : nome dell'errore es.: '#DIV/0!'
+    lErrori  { tuple } : nome dell'errore es.: '#DIV/0!'
     icol { integer } : indice di colonna della riga da nascondere
     Viasualizza o nascondi una toolbar
     '''
-    #~ attesa().start()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -4185,9 +4184,8 @@ def hide_error (lErrori, icol):
                 oCellRangeAddr.StartRow = i
                 oCellRangeAddr.EndRow = i
                 oSheet.group(oCellRangeAddr,1)
-                oSheet.getCellByPosition (0, i).Rows.IsVisible = True
-    oDialogo_attesa.endExecute()
-    oDoc.CurrentController.ZoomValue = 100
+                #~ oSheet.getCellByPosition (0, i).Rows.IsVisible = True
+    oDoc.CurrentController.ZoomValue = 80
 ########################################################################
 def bak_timestamp(arg=None):
     '''
@@ -4425,7 +4423,7 @@ class nascondi_err_th (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        errori = ('#DIV/0!')
+        errori = ('#DIV/0!',)
         hide_error(errori, 26)
 def nascondi_err (arg=None):
     nascondi_err_th().start()

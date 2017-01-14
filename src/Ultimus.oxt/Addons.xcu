@@ -4,6 +4,7 @@
     <node oor:name="OfficeToolBar">
       <!-- OfficeToolBar OfficeToolBar OfficeToolBar -->
       <node oor:name="ULTIMUS_3.OfficeToolBar" oor:op="replace">
+    <!--MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN-->
         <node oor:name="Ma00" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -74,7 +75,7 @@
             <value>%origin%/icons/adattaH</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Adatta altezza righe selezionate - Alt-A</value>
+            <value>Adatta altezza righe selezionate</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -147,6 +148,23 @@
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>
             </prop>
+        </node>
+        <node oor:name="Ma57" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$firme_in_calce?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/riepilogo</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Riepilogo e/o firme in calce</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
         </node>
         <node oor:name="Ma59" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
@@ -387,23 +405,6 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="ANa20" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$firme_in_calce?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/riepilogo</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Riepilogo e/o firme in calce</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
       </node>
     </node>
     <!--COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO -->
@@ -489,26 +490,6 @@
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Vedi voce precedente</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
-        <node oor:name="Ca60" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-<!--
-            <value>vnd.sun.star.script:UltimusFree2.Computo.Firme_in_calce?language=Basic&amp;location=application</value>
--->
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$firme_in_calce?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/riepilogo</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Riepilogo e firme in calce al COMPUTO</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

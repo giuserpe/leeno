@@ -143,7 +143,7 @@
               <value>%origin%/icons/findcode</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>Trova voce in Elenco Prezzi</value>
+              <value>Trova voce in Elenco Prezzi o Analisi di Prezzo</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>
@@ -1595,7 +1595,7 @@
               <value>%origin%/icons/findcode</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>Trova voce in Elenco Prezzi</value>
+              <value>Trova voce in Elenco Prezzi o Analisi di Prezzo</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>

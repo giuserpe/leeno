@@ -441,7 +441,7 @@ End Sub
 SUB Set_HF_turbo (optional sMessaggio as string)
 &apos;Print 
 &apos; initialize &apos;
-&apos;On Error Goto ErrorHandler
+On Error Goto Errore
 &apos;Call SetModuleVars 
 sDocURL = thisComponent.getURL()
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
@@ -560,7 +560,9 @@ rem ----------------------------------------------------------------------
 		Exit Sub
 
 		Errore:
-		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
+		Msgbox &quot;Questo file non ha ancora un nome.&quot;
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;salva_come&quot;) &apos;visualizza
+&apos;		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 	END SUB
 
 rem uscendo da S2 vengono aggiornati tutti gli stili esistenti

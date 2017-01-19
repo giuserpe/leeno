@@ -3422,7 +3422,11 @@ createUnoService = (
         .getServiceManager()
         .createInstance
                     )
-GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO','private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', )
+GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
+    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO',
+    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI',
+    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO',
+    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',)
 #
 sUltimus = ''
 def ssUltimus (arg=None):

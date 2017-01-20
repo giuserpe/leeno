@@ -291,7 +291,7 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
 	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
 	oSheet.GetCellByPosition(31,2).setstring(&quot;Super Cat&quot;)
-	oSheet.GetCellByPosition(32,2).setstring(&quot;tag Cat&quot;)
+	oSheet.GetCellByPosition(32,2).setstring(&quot;Cat&quot;)
 	oSheet.GetCellByPosition(33,2).setstring(&quot;Sub Cat&quot;) &apos;(&quot;tag A&quot;)
 	oSheet.GetCellByPosition(34,2).setstring(&quot;tag B&quot;)
 	oSheet.GetCellByPosition(35,2).setstring(&quot;tag C&quot;)
@@ -301,7 +301,6 @@ rem colore colonne riga di intestazione
 	oSheet.getCellRangeByPosition(0, 2, 36 , 2).cellstyle = &quot;comp Int_colonna_R&quot; &apos;do un fondo a tutte
 	oSheet.getCellByPosition(0, 2).cellstyle = &quot;comp Int_colonna_R_prima&quot;
 	oSheet.getCellByPosition(18, 2).cellstyle = &quot;COnt_noP&quot;
-	oSheet.getCellRangeByPosition(31, 2, 32 , 2).cellstyle = &quot;comp Int_colonna vert&quot;
 	oSheet.getCellRangeByPosition(0,0,0,3).rows.OptimalHeight = true &apos; ottimizza altezze
 rem	riga di controllo importo
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)

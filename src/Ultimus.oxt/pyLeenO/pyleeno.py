@@ -887,6 +887,21 @@ def setTabColor (colore):
     properties = (oProp,)
     dispatchHelper.executeDispatch(oFrame, '.uno:SetTabBgColor', '', 0, properties)
 ########################################################################
+def show_sheets (x=True):
+#~ def debug (x=True):
+    '''
+    x   { boolean } : True = ON, False = OFF
+    
+    Mastra/nasconde tutte le tabelle ad escluzione di COMPUTO ed Elenco Prezzi
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheets = list(oDoc.getSheets().getElementNames())
+    oSheets.remove('COMPUTO')
+    oSheets.remove('Elenco Prezzi')
+    for nome in oSheets:
+        oSheet = oDoc.getSheets().getByName(nome)
+        oSheet.IsVisible = x
+########################################################################
 def salva_come (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

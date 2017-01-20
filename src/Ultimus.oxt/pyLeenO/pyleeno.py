@@ -297,6 +297,7 @@ def Ins_Categorie(n):
     1 = Categoria
     2 = SubCategoria
     '''
+    #~ datarif = datetime.now()
     sTesto = ''
     if n==0:
         sTesto = 'Inserisci il titolo per la Supercategoria'
@@ -309,7 +310,7 @@ def Ins_Categorie(n):
         return
 
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oDoc.CurrentController.ZoomValue = 400
+    oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
     row = Range2Cell()[1]
     if oSheet.getCellByPosition(0, row).CellStyle in siVoce:
@@ -330,10 +331,11 @@ def Ins_Categorie(n):
         _gotoCella(2, lrow+1)
     else:
         _gotoCella(2, lrow)
-    Rinumera_TUTTI_Capitoli2
+    Rinumera_TUTTI_Capitoli2()
     oDoc.CurrentController.ZoomValue = 100
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow-5)
+    #~ MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
     
 ########################################################################
 def Inser_SuperCapitolo(arg=None):

@@ -888,7 +888,6 @@ def setTabColor (colore):
     dispatchHelper.executeDispatch(oFrame, '.uno:SetTabBgColor', '', 0, properties)
 ########################################################################
 def show_sheets (x=True):
-#~ def debug (x=True):
     '''
     x   { boolean } : True = ON, False = OFF
     
@@ -901,6 +900,8 @@ def show_sheets (x=True):
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = x
+def nascondi_sheets (arg=None):
+    show_sheets (False)
 ########################################################################
 def salva_come (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()

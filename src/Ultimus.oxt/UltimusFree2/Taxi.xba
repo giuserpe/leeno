@@ -863,7 +863,7 @@ Rifa_Somme_TOT_Computo
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
 	
 	Rimetti_in_ordine_tab
-	Nascondi_TUTTI_docs_e_Copertine
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;nascondi_sheets&quot;)
 	Chiudi_o_elimina_tabelle_inutili
 
 	Protect_alcune_tabelle
@@ -1880,7 +1880,7 @@ annullato:
 		end if
 		ThisComponent.Sheets.getByName(sSheetSRC).isVisible = true 
 		
-	&apos;	Nascondi_TUTTI_docs_e_Copertine
+
 	&apos;	Nascondi_tabs_contabilita 
 	end if
 	

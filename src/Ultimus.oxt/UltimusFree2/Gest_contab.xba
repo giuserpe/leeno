@@ -163,23 +163,6 @@ dim cSheetName2 as string
 	Next 
 End Sub
 
-Sub Nascondi_TUTTI_docs_e_Copertine
-	ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;).isVisible = false 
-	Nascondi_tabs_COMPUTO_soltanto
-	Nascondi_tabs_contabilita_soltanto
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
-		thisComponent.Sheets.moveByName (&quot;S1&quot; ,7)
-	end if
-	If thisComponent.Sheets.hasByName(&quot;S2&quot;) then
-		thisComponent.Sheets.moveByName (&quot;S2&quot; ,8)
-	end if
- 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-&apos;	Chiudi_o_elimina_tabelle_inutili
-	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;	
-
-	Visualizza_normale
-end sub
-
 Sub sistema_attributi_sheet&apos; (sSheet As string) rem renderla opzionale?
 &apos;print Trova_Attr_Sheet
 &apos;	Select Case sSheet

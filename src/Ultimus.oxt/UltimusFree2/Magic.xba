@@ -65,7 +65,8 @@ rem per circoscrivere l&apos;operazione alla singola voce di computo:
 &apos;	End With
 
 	For lrow=3 to lLastUrow &apos;lrow=iVoce To fVoce&apos;lLastUrow
-		if oSheet.GetCellbyPosition( 5, lrow ).cellStyle= &quot;comp 1-a&quot; then
+		if oSheet.GetCellbyPosition(5, lrow ).cellStyle= &quot;comp 1-a&quot; And _
+			oSheet.GetCellbyPosition(2, lrow ).Type &lt;&gt; com.sun.star.table.CellContentType.FORMULA Then
  			Formula_magica (lrow)
 		end if&apos; questo le aggiorna tutte
 	

@@ -2,15 +2,11 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="pippi" dlg:left="66" dlg:top="125" dlg:width="288" dlg:height="227" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0xffb4af" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="1" dlg:background-color="0xffff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="2" dlg:background-color="0xb9f0a8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="3" dlg:background-color="0xffccff" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="4" dlg:background-color="0xffffcc" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="5" dlg:border="simple" dlg:font-name="Liberation Sans" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="6" dlg:background-color="0xffff99" dlg:font-name="Liberation Sans" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="6" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="0" dlg:border="simple" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="6" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="228" dlg:top="176" dlg:width="50" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;" dlg:button-type="ok">
@@ -19,25 +15,25 @@
   <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="173" dlg:top="176" dlg:width="50" dlg:height="15" dlg:value="VARIANTE" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.genera_variante?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton3" dlg:tab-index="2" dlg:left="64" dlg:top="176" dlg:width="50" dlg:height="15" dlg:value="Analisi di Prezzo" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton3" dlg:tab-index="2" dlg:left="64" dlg:top="176" dlg:width="50" dlg:height="15" dlg:value="Analisi di Prezzo" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inizializza_analisi?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="118" dlg:top="176" dlg:width="50" dlg:height="15" dlg:value="COMPUTO" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="118" dlg:top="176" dlg:width="50" dlg:height="15" dlg:value="COMPUTO" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Computo?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="10" dlg:top="176" dlg:width="50" dlg:height="15" dlg:value="Elenco Prezzi" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="10" dlg:top="176" dlg:width="50" dlg:height="15" dlg:value="Elenco Prezzi" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_ElencoPrezzi?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton6" dlg:tab-index="5" dlg:left="10" dlg:top="199" dlg:width="130" dlg:height="15" dlg:value="Variabili generali" dlg:button-type="ok">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton6" dlg:tab-index="5" dlg:left="10" dlg:top="199" dlg:width="130" dlg:height="15" dlg:value="Variabili generali" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Variabili?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton7" dlg:tab-index="6" dlg:left="148" dlg:top="199" dlg:width="130" dlg:height="15" dlg:value="Elenco scorciatoie" dlg:button-type="ok">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton7" dlg:tab-index="6" dlg:left="148" dlg:top="199" dlg:width="130" dlg:height="15" dlg:value="Elenco scorciatoie" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Scorciatoie?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton8" dlg:tab-index="7" dlg:left="10" dlg:top="154" dlg:width="130" dlg:height="15" dlg:value="Dati di questo documento" dlg:button-type="ok">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton8" dlg:tab-index="7" dlg:left="10" dlg:top="154" dlg:width="130" dlg:height="15" dlg:value="Dati di questo documento" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton9" dlg:tab-index="8" dlg:left="148" dlg:top="154" dlg:width="130" dlg:height="15" dlg:value="Anagrafica generale" dlg:button-type="ok">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton9" dlg:tab-index="8" dlg:left="148" dlg:top="154" dlg:width="130" dlg:height="15" dlg:value="Anagrafica generale" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S2?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:text dlg:id="Label1" dlg:tab-index="9" dlg:left="240" dlg:top="5" dlg:width="33" dlg:height="8" dlg:value="Label1"/>
@@ -53,15 +49,15 @@
   <dlg:button dlg:id="CommandButton11" dlg:tab-index="19" dlg:left="35" dlg:top="145" dlg:width="0" dlg:height="2" dlg:value="CommandButton11">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton10" dlg:tab-index="20" dlg:left="10" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Filtra Computo e fai una copia..." dlg:button-type="ok">
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton10" dlg:tab-index="20" dlg:left="10" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Filtra Computo e fai una copia..." dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Filtro?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton12" dlg:tab-index="21" dlg:left="148" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Cancella voci non usate nel Computo..." dlg:button-type="ok">
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton12" dlg:tab-index="21" dlg:left="148" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Cancella voci non usate nel Computo..." dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_SegnaVoci?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:style-id="8" dlg:id="Label12" dlg:tab-index="22" dlg:left="231" dlg:top="218" dlg:width="47" dlg:height="8" dlg:value="Label12" dlg:align="right">
+  <dlg:text dlg:style-id="4" dlg:id="Label12" dlg:tab-index="22" dlg:left="231" dlg:top="218" dlg:width="47" dlg:height="8" dlg:value="Label12" dlg:align="right">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:text>
-  <dlg:img dlg:style-id="5" dlg:id="ImageControl1" dlg:tab-index="23" dlg:left="12" dlg:top="65" dlg:width="262" dlg:height="78"/>
+  <dlg:img dlg:style-id="0" dlg:id="ImageControl1" dlg:tab-index="23" dlg:left="12" dlg:top="65" dlg:width="262" dlg:height="78"/>
  </dlg:bulletinboard>
 </dlg:window>

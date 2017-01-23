@@ -42,9 +42,8 @@ Function Replace_G(Source As String, Search As String, NewPart As String)
  Replace_G = Result
 End Function
 
-
-
-Sub Formula_magica_aggiorna &apos;su tutto il foglio
+Sub Formula_magica_aggiorna
+ &apos;su tutto il foglio
 dim lrow as long
 	
 	&apos;ma prima vede se nella riga corrente c&apos;è una formula

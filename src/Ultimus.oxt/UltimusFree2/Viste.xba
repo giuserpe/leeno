@@ -184,7 +184,7 @@ Sub Scelta_Viste() &apos;nuova versione universale
 	 		VarCon = oDialogScenari_EP.getControl(&quot;VarCon&quot;).State
 	 		If  VarCon Or ComCon Or ComVar Then
 	 			Rifa_AA_BB_Computo
-&apos;				ScriptPy(&quot;pyleeno.py&quot;,&quot;nascondi_err&quot;)
+				ScriptPy(&quot;pyleeno.py&quot;,&quot;nascondi_err&quot;)
 	 		Else
 	 			If	oDialogScenari_EP.getControl(&quot;CBSom&quot;).State = 1 Then Rifa_AA_BB_Computo
 	 		EndIf 	 		

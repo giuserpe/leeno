@@ -4038,7 +4038,7 @@ def adegua_tmpl (arg=None):
             styles.loadStylesFromURL(sUrl, list())
             Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')
-            oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 203
+            oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 204
             for el in oDoc.Sheets.ElementNames:
                 oDoc.getSheets().getByName(el).IsVisible = True
                 oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
@@ -4051,6 +4051,9 @@ def adegua_tmpl (arg=None):
             MsgBox("Adeguamento del file completato con successo.", "Avviso")
         else:
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
+    if ver_tmpl == 203:
+        oSheet = oDoc.getSheets().getByName('S1')
+        oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 204
 #~ ########################################################################
 def r_version_code(arg=None):
     if os.altsep:

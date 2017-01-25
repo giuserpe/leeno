@@ -3182,7 +3182,6 @@ Si tenga conto che:
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
             oSheet.getRows().removeByIndex(i, 1)
-            
     if len(lista_misure) == 0:
         MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -3193,8 +3192,8 @@ Si tenga conto che:
 ###
 # Compilo Analisi di prezzo ############################################
     oDoc.CurrentController.ZoomValue = 400
+    inizializza_analisi()
     if len (lista_analisi) !=0:
-        inizializza_analisi()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_analisi:
             sStRange = Circoscrive_Analisi (Range2Cell()[1])

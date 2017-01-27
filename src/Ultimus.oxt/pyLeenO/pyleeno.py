@@ -950,9 +950,10 @@ def doppioni(arg=None):
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     ###
     lista_voci = list()
+    lista_tar = list()
     voce = list()
     for n in range (3, ultima_voce(oSheet)+1):
-        voce = ( oSheet.getCellByPosition(0, n).String,
+        voce = (oSheet.getCellByPosition(0, n).String,
             oSheet.getCellByPosition(1, n).String,
             oSheet.getCellByPosition(2, n).String,
             oSheet.getCellByPosition(3, n).Value,
@@ -962,10 +963,10 @@ def doppioni(arg=None):
             oSheet.getCellByPosition(7, n).Value,
         )
         lista_voci.append(voce)
+        lista_tar.append(oSheet.getCellByPosition(0, n).String)
     oSheet.getRows().removeByIndex(4, ultima_voce(oSheet)-3) # lascio una riga per conservare gli stili
     oSheet.getRows().insertByIndex(4, len(set(lista_voci))-1)
-    
-    #~ lista_voci = set (lista_voci)
+   
     lista_come_array = tuple (set (lista_voci))
 
     scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
@@ -977,6 +978,8 @@ def doppioni(arg=None):
                                             colonne_lista + 0 - 1, # l'indice parte da 0
                                             righe_lista + 3 - 1)
     oRange.setDataArray(lista_come_array)
+    if len(lista_tar) > len(set(lista_tar)):
+        MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 # doppioni #############################################################
 ########################################################################
 # Scrive un file.

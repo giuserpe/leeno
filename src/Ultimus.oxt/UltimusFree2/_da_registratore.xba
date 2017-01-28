@@ -288,38 +288,6 @@ sub definisci_area_di_stampa
 end sub
 rem ######################################################################
 
-sub ordina_col (ncol As long) &apos; riordina secondo colonna
-	rem ----------------------------------------------------------------------
-	rem define variables
-	dim document   as object
-	dim dispatcher as object
-	rem ----------------------------------------------------------------------
-	rem get access to the document
-	document   = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	rem ----------------------------------------------------------------------
-	dim args1(7) as new com.sun.star.beans.PropertyValue
-	args1(0).Name = &quot;ByRows&quot;
-	args1(0).Value = true
-	args1(1).Name = &quot;HasHeader&quot;
-	args1(1).Value = false
-	args1(2).Name = &quot;CaseSensitive&quot;
-	args1(2).Value = false
-	args1(3).Name = &quot;NaturalSort&quot;
-	args1(3).Value = false
-	args1(4).Name = &quot;IncludeAttribs&quot;
-	args1(4).Value = true
-	args1(5).Name = &quot;UserDefIndex&quot;
-	args1(5).Value = 0
-	args1(6).Name = &quot;Col1&quot;
-	args1(6).Value = ncol &apos;&lt; ID COLONNA DI ORDINAMENTO 1=A
-	args1(7).Name = &quot;Ascending1&quot;
-	args1(7).Value = true
-	
-	dispatcher.executeDispatch(document, &quot;.uno:DataSort&quot;, &quot;&quot;, 0, args1())
-	
-	
 end sub
 rem ######################################################################
 

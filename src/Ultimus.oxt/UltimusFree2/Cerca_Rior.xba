@@ -12,64 +12,6 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-Sub Riordina_ElencoPrezzi &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
-&apos;seleziona_area (&quot;elenco_prezzi&quot;)
-RiDefinisci_Area_Elenco_prezzi
-	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
-	oRanges = ThisComponent.NamedRanges
-&apos;xray 	oRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells().RangeAddress
-	With oRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells().RangeAddress
-		SR = .StartRow+1
-		ER = .EndRow-1
-		SC = .StartColumn
-		EC = .EndColumn
-	End With
-	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(SC, SR, EC, ER))
-	ordina_col(SC+1)
-		unSelect &apos;unselect ranges
-End Sub
-
-Sub Riordina_ElencoPrezzi_D (optional sRitorno) &apos;Riordina l&apos;elenco prezzi secondo codice prezzo
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-	&apos;_____________________ &apos;perbacco
-	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
-	if lrow = -1 then exit Sub
-	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
-	
-	Barra_chiudi_sempre_4
-	Barra_Apri_Chiudi_5(&quot;Riordino l&apos;Elenco Prezzi... ma se mi leggi vuol dire che è cosa lunga...&quot;, 25)
- 	
- 	lcolbase = Colonna_giusta_EP (oSheet)
- 	if lcolbase = &quot;ERRORE! Nell&apos;E.P. puoi aggiungere Max 3 colonne!&quot; then
-				print lcolbase
-				exit sub
-	end if
- 			
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-RiDefinisci_Area_Elenco_prezzi
-
-	oRangeEP = ThisComponent.NamedRanges.getByName(&quot;elenco_prezzi&quot;).getReferredCells.RangeAddress
-
-	lrowEPI = oRangeEP.StartRow+1
-	lrowEPF = oRangeEP.EndRow-1
-	lcolEPI = oRangeEP.StartColumn
-	lcolEPF = oRangeEP.EndColumn
-	
-	If lrowEPI &gt; lrowEPF Then GoTo fine:
-	If lrowEPF = lrowF Then lrowEPF=lrowF-1
-&apos;On Error Resume Next 
-	ThisComponent.CurrentController.Select(oSheet.GetCellRangeByPosition(lcolEPI,lrowEPI,lcolEPF,lrowEPF))
-	
-ordina_col (lcolEPI+1)
-	unSelect &apos;unselect ranges
-&apos;	Print idxcol
-&apos;	Print idxrow
-fine:
-fissa (0,idxrow+1)
-	Barra_chiudi_sempre_4
-End Sub
-
 
 Function Riordina_0 (ColdaRior, AscDesc as boolean )as variant &apos; Riordina l&apos;elenco prezzi con criteri
 &apos;Ritorna la riga finale 										 a scelta... (si usa richiamata da altra sub)
@@ -96,8 +38,6 @@ oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
  oRanges = ThisComponent.NamedRanges
 &apos;RiDefinisci_Area_Elenco_prezzi
 &apos;seleziona_area (&quot;elenco_prezzi&quot;)
-&apos; Print minghia
-&apos;ordina_col (1)
 Riordina_ElencoPrezzi_D
 unSelect &apos;unselect ranges 	
 	Riordina_0 = lrowF

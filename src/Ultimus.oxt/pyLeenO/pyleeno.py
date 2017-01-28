@@ -993,7 +993,21 @@ def adatta_altezza_riga (nome=None):
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
-# doppioni #############################################################
+#~ def riordina_ElencoPrezzi (arg=None):
+def debug (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    IS = oRangeAddress.Sheet
+    SC = oRangeAddress.StartColumn
+    EC = oRangeAddress.EndColumn
+    SR = oRangeAddress.StartRow+1
+    ER = oRangeAddress.EndRow-1
+    oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
+    oDoc.CurrentController.select(oRange)
+    ordina_col(1)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+########################################################################
 def doppioni(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -1036,7 +1050,6 @@ def doppioni(arg=None):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     if len(set(lista_tar)) != len(set(lista_voci)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
-# doppioni #############################################################
 ########################################################################
 # Scrive un file.
 def XPWE_out(arg=None):

@@ -1018,7 +1018,7 @@ SUB DOPPIONI_TROVA &apos; trova i codici doppi nell&apos;EP
 	end if
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Riordina_ElencoPrezzi
+&apos;	Riordina_ElencoPrezzi
 
 	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;) 
 	lrow = 2

@@ -870,9 +870,58 @@ def _primaCella (IDcol=0, IDrow=0):
     oDoc.CurrentController.setFirstVisibleRow(IDrow)
     return
 ########################################################################
+def ordina_col (ncol):
+    '''
+    ncol   { integer } : id colonna
+    ordina i dati secondo la colonna con id ncol
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    oProp = []
+    oProp0 = PropertyValue()
+    oProp0.Name = 'ByRows'
+    oProp0.Value = True
+    oProp1 = PropertyValue()
+    oProp1.Name = 'HasHeader'
+    oProp1.Value = False
+    oProp2 = PropertyValue()
+    oProp2.Name = 'CaseSensitive'
+    oProp2.Value = False
+    oProp3 = PropertyValue()
+    oProp3.Name = 'NaturalSort'
+    oProp3.Value = False
+    oProp4 = PropertyValue()
+    oProp4.Name = 'IncludeAttribs'
+    oProp4.Value = True
+    oProp5 = PropertyValue()
+    oProp5.Name = 'UserDefIndex'
+    oProp5.Value = 0
+    oProp6 = PropertyValue()
+    oProp6.Name = 'Col1'
+    oProp6.Value = ncol
+    oProp7 = PropertyValue()
+    oProp7.Name = 'Ascending1'
+    oProp7.Value = True
+    oProp.append(oProp0)
+    oProp.append(oProp1)
+    oProp.append(oProp2)
+    oProp.append(oProp3)
+    oProp.append(oProp4)
+    oProp.append(oProp5)
+    oProp.append(oProp6)
+    oProp.append(oProp7)
+    properties = tuple(oProp)
+    #~ properties = (oProp,)
+    #~ chi(properties[0][0])
+    dispatchHelper.executeDispatch(oFrame, '.uno:DataSort', '', 0, properties)
+########################################################################
 def setTabColor (colore):
     '''
-    colore   { integer } : id colonna
+    colore   { integer } : id colore
     attribuisce al foglio corrente un colore a scelta
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -962,13 +1011,17 @@ def doppioni(arg=None):
             oSheet.getCellByPosition(6, n).Value,
             oSheet.getCellByPosition(7, n).Value,
         )
-        lista_voci.append(voce)
-        lista_tar.append(oSheet.getCellByPosition(0, n).String)
+        if voce[0] != '' and voce[1] != '':
+            lista_voci.append(voce)
+    if len (lista_voci) == 1:
+        return
     oSheet.getRows().removeByIndex(4, ultima_voce(oSheet)-3) # lascio una riga per conservare gli stili
     oSheet.getRows().insertByIndex(4, len(set(lista_voci))-1)
    
     lista_come_array = tuple (set (lista_voci))
-
+    
+    for el in set (lista_voci):
+        lista_tar.append(el[0])
     scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
     scarto_righe = 3 # numero righe da saltare a partire dall'alto
     colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
@@ -978,7 +1031,10 @@ def doppioni(arg=None):
                                             colonne_lista + 0 - 1, # l'indice parte da 0
                                             righe_lista + 3 - 1)
     oRange.setDataArray(lista_come_array)
-    if len(lista_tar) > len(set(lista_tar)):
+    oDoc.CurrentController.select(oRange)
+    ordina_col(1)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    if len(set(lista_tar)) != len(set(lista_voci)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 # doppioni #############################################################
 ########################################################################

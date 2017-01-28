@@ -1421,31 +1421,6 @@
               <value>private:separator</value>
             </prop>
           </node>
-          <node oor:name="m13" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Strutture.Tutti_Subtotali?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image77</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Rifa Tutti i subtotali (di Cap e SottoCap)</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
-          <node oor:name="m14" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value />
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>private:separator</value>
-            </prop>
-          </node>
           <node oor:name="m15" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>

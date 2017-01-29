@@ -993,8 +993,7 @@ def adatta_altezza_riga (nome=None):
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
-#~ def riordina_ElencoPrezzi (arg=None):
-def debug (arg=None):
+def riordina_ElencoPrezzi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -1030,7 +1029,10 @@ def doppioni(arg=None):
     if len (lista_voci) == 1:
         return
     oSheet.getRows().removeByIndex(4, ultima_voce(oSheet)-3) # lascio una riga per conservare gli stili
-    oSheet.getRows().insertByIndex(4, len(set(lista_voci))-1)
+    try:
+        oSheet.getRows().insertByIndex(4, len(set(lista_voci))-1)
+    except:
+        return
    
     lista_come_array = tuple (set (lista_voci))
     
@@ -4116,6 +4118,7 @@ def adegua_tmpl (arg=None):
                 adatta_altezza_riga(el)
                 oDoc.getSheets().getByName(el).IsVisible = False
             _gotoSheet ('COMPUTO')
+
             oDoc.getSheets().getByName('S1').IsVisible = False
             #~ oDialogo_attesa.endExecute() #chiude il dialogo
             #~ oDlgMain.endExecute()

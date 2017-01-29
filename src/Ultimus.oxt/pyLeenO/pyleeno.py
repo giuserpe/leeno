@@ -1008,9 +1008,18 @@ def riordina_ElencoPrezzi (arg=None):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def doppioni(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
+    lista_tariffe_analisi = list()
+    oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
+    for n in range (0, ultima_voce(oSheet)+1):
+        if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla':
+            lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    ###
+
+    for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
+            oSheet.getRows().removeByIndex(i, 1)
     lista_voci = list()
     lista_tar = list()
     voce = list()
@@ -1050,6 +1059,7 @@ def doppioni(arg=None):
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    Lib_LeenO('Analisi.tante_analisi_in_ep') #rinvia a basic
     if len(set(lista_tar)) != len(set(lista_voci)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################

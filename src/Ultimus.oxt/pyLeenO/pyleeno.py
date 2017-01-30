@@ -1722,7 +1722,7 @@ def cancella_analisi_da_ep(arg=None):
         if oSheet.getCellByPosition(0, i).String in lista_an:
             oSheet.getRows().removeByIndex(i, 1)
 ###
-def ANALISI_IN_ELENCOPREZZI (arg=None):
+def analisi_in_ElencoPrezzi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
@@ -1766,7 +1766,37 @@ def ANALISI_IN_ELENCOPREZZI (arg=None):
         _gotoCella (1, 3)
     except:
         oDoc.enableAutomaticCalculation(True)
+########################################################################
+#~ def tante_analisi_in_ep (arg=None):
+def debug (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    lista_analisi = list()
+    oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
+    voce = list()
+    idx = 4
+    for n in range (0, ultima_voce(oSheet)+1):
+        if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla' and oSheet.getCellByPosition(1, n).String != '<<<Scrivi la descrizione della nuova voce da analizzare   ':
+            voce = (oSheet.getCellByPosition(0, n).String,
+                "=$'Analisi di Prezzo'.B" + str(n+1),
+                "=$'Analisi di Prezzo'.C" + str(n+1),
+                "=$'Analisi di Prezzo'.K" + str(n+1),
+                "=$'Analisi di Prezzo'.G" + str(n+1),
+                "=$'Analisi di Prezzo'.I" + str(n+1),
+                "=F"+ str(idx)+"*E"+ str(idx),
+                "=$'Analisi di Prezzo'.A" + str(n+1),
+            )
+            lista_analisi.append(voce)
+            idx += 1
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getRows().insertByIndex(3,len(lista_analisi))
+
+    oRange = oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1)
+    lista_come_array = tuple(lista_analisi)
+    oRange.setDataArray(lista_come_array)
+    #~ oRange.setFormulaArray("staciolla")
+
     
+########################################################################
 def Circoscrive_Analisi (lrow):
     '''
     lrow    { double }  : riga di riferimento per

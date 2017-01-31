@@ -1008,7 +1008,6 @@ def riordina_ElencoPrezzi (arg=None):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def doppioni(arg=None):
-#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     lista_tariffe_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
@@ -1020,6 +1019,7 @@ def doppioni(arg=None):
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
             oSheet.getRows().removeByIndex(i, 1)
+
     lista_voci = list()
     lista_tar = list()
     voce = list()
@@ -1059,7 +1059,7 @@ def doppioni(arg=None):
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    Lib_LeenO('Analisi.tante_analisi_in_ep') #rinvia a basic
+    tante_analisi_in_ep()
     if len(set(lista_tar)) != len(set(lista_voci)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################
@@ -1767,8 +1767,7 @@ def analisi_in_ElencoPrezzi (arg=None):
     except:
         oDoc.enableAutomaticCalculation(True)
 ########################################################################
-#~ def tante_analisi_in_ep (arg=None):
-def debug (arg=None):
+def tante_analisi_in_ep (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
@@ -1793,9 +1792,15 @@ def debug (arg=None):
     oRange = oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1)
     lista_come_array = tuple(lista_analisi)
     oRange.setDataArray(lista_come_array)
-    #~ oRange.setFormulaArray("staciolla")
-
+    for y in range(3, 3+len(lista_analisi)):
+        for x in range(0, 8):
+            oSheet.getCellByPosition(x, y).Formula = oSheet.getCellByPosition(x, y).String
+    oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo'
+    oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-Cs'
+    oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-C'
+    oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo %'
     
+            #~ chi(oSheet.getCellByPosition(n, 3).Formula)
 ########################################################################
 def Circoscrive_Analisi (lrow):
     '''
@@ -4598,7 +4603,7 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-#~ g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, ANALISI_IN_ELENCOPREZZI, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra,
+g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

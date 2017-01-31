@@ -462,7 +462,7 @@ procedi:
 &apos;	oSheet.Columns.removeByindex(19, 26)	&apos; sballava la posizione del rif alla sicurezza unitaria
 
 	&apos; elimino proprio tutte le colonne dopo la 27
-	oSheet.Columns.removeByindex(28, 100)
+	oSheet.Columns.removeByindex(35, 100)
 &apos;	oSheet.Columns.removeByindex(19, 100)		
 	&apos;Imposto lo stile di pagina
 

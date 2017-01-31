@@ -1791,16 +1791,14 @@ def tante_analisi_in_ep (arg=None):
 
     oRange = oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1)
     lista_come_array = tuple(lista_analisi)
-    oRange.setDataArray(lista_come_array)
+    oRange.setDataArray(lista_come_array) #setFrmulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
     for y in range(3, 3+len(lista_analisi)):
-        for x in range(0, 8):
+        for x in range(1, 8): #evito il codice articolo, altrimenti me lo converte in numero
             oSheet.getCellByPosition(x, y).Formula = oSheet.getCellByPosition(x, y).String
     oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo'
     oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-Cs'
     oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-C'
     oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo %'
-    
-            #~ chi(oSheet.getCellByPosition(n, 3).Formula)
 ########################################################################
 def Circoscrive_Analisi (lrow):
     '''

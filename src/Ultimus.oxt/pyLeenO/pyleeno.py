@@ -1787,7 +1787,10 @@ def tante_analisi_in_ep (arg=None):
             lista_analisi.append(voce)
             idx += 1
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oSheet.getRows().insertByIndex(3,len(lista_analisi))
+    if len(lista_analisi) !=0:
+        oSheet.getRows().insertByIndex(3,len(lista_analisi))
+    else:
+        return
 
     oRange = oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1)
     lista_come_array = tuple(lista_analisi)
@@ -1799,6 +1802,7 @@ def tante_analisi_in_ep (arg=None):
     oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-Cs'
     oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-C'
     oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo %'
+    MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 ########################################################################
 def Circoscrive_Analisi (lrow):
     '''
@@ -3142,6 +3146,7 @@ def XPWE_in(arg=None): #(filename):
                                     xlo_mdo)
         lista_articoli.append(articolo_modificato)
 ### leggo analisi di prezzo
+        inizializza_analisi()
         pweepanalisi = elem.find('PweEPAnalisi')
         PweEPAR = pweepanalisi.find('PweEPAR')
         if PweEPAR != None:
@@ -3309,7 +3314,6 @@ Si tenga conto che:
 ###
 # Compilo Analisi di prezzo ############################################
     oDoc.CurrentController.ZoomValue = 400
-    inizializza_analisi()
     if len (lista_analisi) !=0:
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_analisi:

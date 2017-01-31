@@ -1559,7 +1559,7 @@ def firme_in_calce_run (arg=None):
         oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il progettista'
         oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE("(";$S2.$C$13;")")'
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
         oDoc.CurrentController.ZoomValue = 400
 
         attesa().start()

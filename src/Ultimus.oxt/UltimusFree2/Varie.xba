@@ -82,6 +82,7 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot; And _
 				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
+				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Livello-0-scritta&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;livello-1-sopra&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;ULTIMUS&quot; Or _
 				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Ultimus_destra_totali&quot; Or _

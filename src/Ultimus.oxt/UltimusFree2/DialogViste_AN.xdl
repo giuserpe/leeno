@@ -25,7 +25,7 @@
    <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="5" dlg:left="90" dlg:top="5" dlg:width="75" dlg:height="15" dlg:value="Tutte le Analisi ad E.P." dlg:button-type="ok">
-   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.tante_analisi_in_ep?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$tante_analisi_in_ep?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="7" dlg:left="5" dlg:top="44" dlg:width="75" dlg:height="25">
    <dlg:title dlg:value="Visualizza"/>

@@ -380,7 +380,7 @@ Function S_AN (Tag as string, xC as string)
 	Barra_apri_chiudi_4	
 	oSheetAnalisi = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 &apos;	print &quot;dentro &quot; + xC
-&apos;	Trattini_in_Analisi
+
 	CellaCercata = TrovaSTR(sString$, oSheetAnalisi)
 	If IsNull(CellaCercata) then
 		msgbox &quot;non trovo il codice: &quot; &amp; xC &amp; CHR$(10)&amp; &quot;&quot; &amp; CHR$(10)_

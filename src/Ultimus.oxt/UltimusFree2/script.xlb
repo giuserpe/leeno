@@ -49,7 +49,7 @@
  <library:element library:name="Varie_1"/>
  <library:element library:name="Voci_Sistema_8"/>
  <library:element library:name="Da_Prezzario_3"/>
- <library:element library:name="Voci_sistema_Analisi"/>
+ <library:element library:name="ConversioneDaListiniEsterni"/>
  <library:element library:name="Pesca_mi"/>
  <library:element library:name="Agg_Templ2"/>
  <library:element library:name="Pesca_mi_reg_A"/>
@@ -58,7 +58,7 @@
  <library:element library:name="export"/>
  <library:element library:name="Magic"/>
  <library:element library:name="Taxi_Acc"/>
- <library:element library:name="Taxi_temp_obs"/>
+ <library:element library:name="Conversioni"/>
  <library:element library:name="Da_prezzario"/>
  <library:element library:name="Gest_contab"/>
  <library:element library:name="Pulizia_1"/>
@@ -79,6 +79,4 @@
  <library:element library:name="_da_registratore"/>
  <library:element library:name="_variabili"/>
  <library:element library:name="Zip"/>
- <library:element library:name="Conversioni"/>
- <library:element library:name="ConversioneDaListiniEsterni"/>
 </library:library>

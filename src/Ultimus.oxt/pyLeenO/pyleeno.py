@@ -2165,13 +2165,15 @@ def refresh (arg=1):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     if arg == 0:
+        oDoc.CurrentController.ZoomValue = 400
         oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
         oDoc.addActionLock()
-        oDoc.lockControllers #disattiva l'eco a schermo
+        #~ oDoc.lockControllers #disattiva l'eco a schermo
     elif arg == 1:
+        oDoc.CurrentController.ZoomValue = 100
         oDoc.enableAutomaticCalculation(True) # sblocco il calcolo automatico
         oDoc.removeActionLock()
-        oDoc.unlockControllers #attiva l'eco a schermo
+        #~ oDoc.unlockControllers #attiva l'eco a schermo
 ########################################################################
 def ins_voce_elenco (arg=None):
 #~ def debug (arg=None):

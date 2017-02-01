@@ -2159,7 +2159,36 @@ def Numera_Voci(bit=1):#
                 oSheet.getCellByPosition (0,row).Value = n
                 n = n+1
 ########################################################################
-# ins_voce_computo #####################################################
+def ins_voce_elenco (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    ###
+    oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
+    oDoc.addActionLock()
+    oDoc.lockControllers #disattiva l'eco a schermo
+    ###
+    oSheet = oDoc.CurrentController.ActiveSheet
+    _gotoCella(0,3)
+    oSheet.getRows().insertByIndex(3,1)
+    
+    oSheet.getCellByPosition(0, 3).CellStyle = "EP-aS"
+    oSheet.getCellByPosition(1, 3).CellStyle = "EP-a"
+    oSheet.getCellRangeByPosition(2, 3, 7, 3).CellStyle = "EP-mezzo"
+    oSheet.getCellByPosition(5, 3).CellStyle = "EP-mezzo %"
+    oSheet.getCellRangeByPosition(8, 3, 9, 3).CellStyle = "EP-sfondo"
+
+    oSheet.getCellByPosition(11, 3).Formula = '=N4/$N$2'
+    oSheet.getCellByPosition(11, 3).CellStyle = 'EP-mezzo %'
+    oSheet.getCellByPosition(12, 3).Formula = '=SUMIF(AA;A4;BB)'
+    oSheet.getCellByPosition(12, 3).CellStyle = 'EP statistiche_q'
+    oSheet.getCellByPosition(13, 3).CellStyle = 'EP statistiche_Contab_q'
+    oSheet.getCellByPosition(13, 3).Formula = '=SUMIF(AA;A4;cEuro)'
+    ###
+    oDoc.enableAutomaticCalculation(True) # blocco il calcolo automatico
+    oDoc.removeActionLock()
+    oDoc.unlockControllers #disattiva l'eco a schermo
+    ###
+########################################################################
+# nuova_voce ###########################################################
 def ins_voce_computo_grezza(lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

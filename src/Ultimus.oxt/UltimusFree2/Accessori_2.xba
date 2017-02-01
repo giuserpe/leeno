@@ -548,6 +548,7 @@ SUB Rifa_AA_BB_Computo &apos; (nSheet As String) &apos; RIFA ANCHE le formule di
 	Dim oSheet As Object
 	chiudi_dialoghi
 	
+	ThisComponent.enableAutomaticCalculation(False)
 &apos;## computo ##############################################################
 	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	oStart=uFindString(&quot;DESIGNAZIONE DEI LAVORI&quot;,oSheet)&apos; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
@@ -699,6 +700,7 @@ rem questa sotto è da tenere d&apos;occhio!!!
 	thisComponent.currentController.Select(oSheet.getCellRangeByposition(lcolbase + 10, i+1,lcolbase+10, lrowf-1)) &apos;deseleziona
 	paste_clip
 	unselect
+	ThisComponent.enableAutomaticCalculation(True)
 END Sub
 
 rem ----------------------------------------------------------------------

@@ -293,51 +293,6 @@ fissa (0,idxrow+1)
 End Sub
 
 
-Sub Voce_EP_in_bianco &apos;nuova voce di EP in bianco
-oSheet = ThisComponent.currentController.activeSheet
-
-	If oSheet.Name &lt;&gt; &quot;Elenco Prezzi&quot; Then Exit Sub
-
-fissa (0,idxrow+1)
-
- 	
-	&apos;_____________________
-	chiudi_dialoghi &apos; chiude tutti i dialoghi
-&apos;	lrow= Range2Cell 
-	if lrow = -1 then exit Sub
-	oSheet.unprotect(&quot;&quot;) &apos;non si sa mai..
-	lrow = idxRow+1
-&apos;	if lrow = 0 then lrow = 1
-	insRows (lrow,1)
-&apos;	oSheet.getRows.insertByIndex(lrow,1)
-	oSheet.getCellByPosition(lcolbase+0,lrow).CellStyle = &quot;EP-aS&quot;
-	oSheet.getCellByPosition(lcolbase+1,lrow).CellStyle = &quot;EP-a&quot;
-	oSheet.getCellByPosition(lcolbase+2,lrow).CellStyle = &quot;EP-mezzo&quot;
-	oSheet.getCellByPosition(lcolbase+3,lrow).CellStyle = &quot;EP-mezzo&quot;	
-	oSheet.getCellByPosition(lcolbase+4,lrow).CellStyle = &quot;EP-mezzo&quot;
-	oSheet.getCellByPosition(lcolbase+5,lrow).CellStyle = &quot;EP-mezzo %&quot;
-	oSheet.getCellByPosition(lcolbase+6,lrow).CellStyle = &quot;EP-mezzo&quot;
-&apos;	oSheet.getCellByPosition(lcolbase+6,lrow).formula = &quot;=IF(E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;E&quot; &amp; lrow+1 &amp; &quot;*F&quot; &amp; lrow+1 &amp;&quot;)&quot; &apos;giovanna ColumnNameOf(lcolbase+
-&apos;	oSheet.getCellByPosition(lcolbase+6,lrow).formula = _
-&apos;	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrow+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrow+1 &amp; &quot;)&quot; 
-rem ----------------------------------------------------------------------
-	oSheet.getCellByPosition(lcolbase+idxcol+7,lrow).CellStyle = &quot;EP-mezzo&quot;
-	oSheet.getCellByPosition(lcolbase+idxcol+8,lrow).CellStyle = &quot;EP-sfondo&quot;
-	oSheet.getCellByPosition(lcolbase+idxcol+9,lrow).CellStyle = &quot;EP-sfondo&quot;
-rem ----------------------------------------------------------------------
-rem aggiorna sommari
-Aggiorna_formula_sommase (lrow)
-
-
-	oMioRange=thisComponent.getCurrentSelection()
-&apos;	oMioRange.Rows.OptimalHeight = true
-&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,lrow)
-	ThisComponent.CurrentController.Select (oSheet.getCellByPosition(lcolbase+idxcol,lrow)
-	unSelect &apos;unselect ranges 
-End Sub
-
-
-
 SUB chiudi_dialoghi &apos; chiude tutte le dialog
 Exit Sub 
 			&apos; modificare qui se si aggiungono delle dialog

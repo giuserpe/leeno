@@ -27,7 +27,7 @@ If se_contabilita = 1 Then Exit Sub
  	Case &quot;CONTABILITA&quot;
 		nuova_voce_contab
  	Case &quot;Elenco Prezzi&quot;
- 	Voce_EP_in_bianco
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_elenco&quot;)
 	End Select
 fine:
 End Sub

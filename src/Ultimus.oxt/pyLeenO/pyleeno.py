@@ -2159,13 +2159,27 @@ def Numera_Voci(bit=1):#
                 oSheet.getCellByPosition (0,row).Value = n
                 n = n+1
 ########################################################################
-def ins_voce_elenco (arg=None):
+def refresh (arg=1):
+    '''
+    Abilita / disabilita il refresh per accelerare le procedure
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    ###
-    oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
-    oDoc.addActionLock()
-    oDoc.lockControllers #disattiva l'eco a schermo
-    ###
+    if arg == 0:
+        oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
+        oDoc.addActionLock()
+        oDoc.lockControllers #disattiva l'eco a schermo
+    elif arg == 1:
+        oDoc.enableAutomaticCalculation(True) # sblocco il calcolo automatico
+        oDoc.removeActionLock()
+        oDoc.unlockControllers #attiva l'eco a schermo
+########################################################################
+def ins_voce_elenco (arg=None):
+#~ def debug (arg=None):
+    '''
+    Inserisce una nuova riga voce in Elenco Prezzi
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    refresh (0) 
     oSheet = oDoc.CurrentController.ActiveSheet
     _gotoCella(0,3)
     oSheet.getRows().insertByIndex(3,1)
@@ -2182,11 +2196,7 @@ def ins_voce_elenco (arg=None):
     oSheet.getCellByPosition(12, 3).CellStyle = 'EP statistiche_q'
     oSheet.getCellByPosition(13, 3).CellStyle = 'EP statistiche_Contab_q'
     oSheet.getCellByPosition(13, 3).Formula = '=SUMIF(AA;A4;cEuro)'
-    ###
-    oDoc.enableAutomaticCalculation(True) # blocco il calcolo automatico
-    oDoc.removeActionLock()
-    oDoc.unlockControllers #disattiva l'eco a schermo
-    ###
+    refresh (1)
 ########################################################################
 # nuova_voce ###########################################################
 def ins_voce_computo_grezza(lrow):

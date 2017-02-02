@@ -777,7 +777,7 @@ def Filtra_computo(nSheet, nCol, sString):
     oDoc.CurrentController.select(oSheet.getCellByPosition(0,3))
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-def Vai_a_Filtro (arg=None):
+def Vai_a_filtro (arg=None):
     _gotoSheet('S3')
     _primaCella(0,1)
 ########################################################################
@@ -1014,11 +1014,11 @@ class doppioni_th (threading.Thread):
         doppioni_run()
 def doppioni (arg=None):
     doppioni_th().start()
-########################################################################
+###
 def doppioni_run(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
 
-    oDoc.CurrentController.ZoomValue = 400
+    #~ oDoc.CurrentController.ZoomValue = 400
     oDialogo_attesa = dlg_attesa()
     attesa().start() #mostra il dialogo
     
@@ -1039,7 +1039,6 @@ def doppioni_run(arg=None):
     oRange = oSheet.getCellRangeByPosition(0, 4, 4, ER)
     
     lista_come_array = oRange.getDataArray()
-
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
             oSheet.getRows().removeByIndex(i, 1)
@@ -1048,10 +1047,10 @@ def doppioni_run(arg=None):
 
     lista_tar = list()
     oSheet.getRows().removeByIndex(4, ultima_voce(oSheet)-3) # lascio una riga per conservare gli stili
-    try:
-        oSheet.getRows().insertByIndex(4, len(set(lista_come_array))-1)
-    except:
-        return
+    #~ try:
+    oSheet.getRows().insertByIndex(4, len(set(lista_come_array))-1)
+    #~ except:
+        #~ return
    
     for el in set (lista_come_array):
         lista_tar.append(el[0])
@@ -1081,7 +1080,7 @@ def doppioni_run(arg=None):
     tante_analisi_in_ep()
     refresh(1)
     oDoc.CurrentController.ZoomValue = 100
-
+    #~ oSheet.getRows().removeByIndex(ER, 1)
     oDialogo_attesa.endExecute() #chiude il dialogo
     if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
@@ -1814,7 +1813,6 @@ def tante_analisi_in_ep (arg=None):
         oSheet.getRows().insertByIndex(3,len(lista_analisi))
     else:
         return
-
     oRange = oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1)
     lista_come_array = tuple(lista_analisi)
     oRange.setDataArray(lista_come_array) #setFrmulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
@@ -3409,7 +3407,6 @@ Si tenga conto che:
             oSheet.getCellByPosition(0, n+11).String = ''
             inizializza_analisi()
     #~ Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
-    #~ Lib_LeenO('Analisi.tante_analisi_in_ep') #rinvia a basic
     tante_analisi_in_ep()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
@@ -4670,7 +4667,7 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-#~ g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
+#~ g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

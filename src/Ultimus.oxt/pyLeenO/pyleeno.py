@@ -1007,8 +1007,22 @@ def riordina_ElencoPrezzi (arg=None):
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-def doppioni(arg=None):
+class doppioni_th (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        doppioni_run()
+def doppioni (arg=None):
+    doppioni_th().start()
+########################################################################
+def doppioni_run(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
+
+    oDoc.CurrentController.ZoomValue = 400
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
+    
+    refresh(0)
     lista_tariffe_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
     for n in range (0, ultima_voce(oSheet)+1):
@@ -1016,36 +1030,30 @@ def doppioni(arg=None):
             lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
+    oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    IS = oRangeAddress.Sheet
+    SC = oRangeAddress.StartColumn
+    EC = oRangeAddress.EndColumn
+    SR = oRangeAddress.StartRow+1
+    ER = oRangeAddress.EndRow-1
+    oRange = oSheet.getCellRangeByPosition(0, 4, 4, ER)
+    
+    lista_come_array = oRange.getDataArray()
+
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
             oSheet.getRows().removeByIndex(i, 1)
 
-    lista_voci = list()
+    lista_come_array = tuple (set (oRange.getDataArray()))
+
     lista_tar = list()
-    voce = list()
-    for n in range (3, ultima_voce(oSheet)+1):
-        voce = (oSheet.getCellByPosition(0, n).String,
-            oSheet.getCellByPosition(1, n).String,
-            oSheet.getCellByPosition(2, n).String,
-            oSheet.getCellByPosition(3, n).Value,
-            oSheet.getCellByPosition(4, n).Value,
-            oSheet.getCellByPosition(5, n).Value,
-            oSheet.getCellByPosition(6, n).Value,
-            oSheet.getCellByPosition(7, n).Value,
-        )
-        if voce[0] != '' and voce[1] != '':
-            lista_voci.append(voce)
-    if len (lista_voci) == 1:
-        return
     oSheet.getRows().removeByIndex(4, ultima_voce(oSheet)-3) # lascio una riga per conservare gli stili
     try:
-        oSheet.getRows().insertByIndex(4, len(set(lista_voci))-1)
+        oSheet.getRows().insertByIndex(4, len(set(lista_come_array))-1)
     except:
         return
    
-    lista_come_array = tuple (set (lista_voci))
-    
-    for el in set (lista_voci):
+    for el in set (lista_come_array):
         lista_tar.append(el[0])
     scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
     scarto_righe = 3 # numero righe da saltare a partire dall'alto
@@ -1056,11 +1064,26 @@ def doppioni(arg=None):
                                             colonne_lista + 0 - 1, # l'indice parte da 0
                                             righe_lista + 3 - 1)
     oRange.setDataArray(lista_come_array)
+
+    oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
+    oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
+    oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
+    oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
+    oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
+
+    oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
+
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     tante_analisi_in_ep()
-    if len(set(lista_tar)) != len(set(lista_voci)):
+    refresh(1)
+    oDoc.CurrentController.ZoomValue = 100
+
+    oDialogo_attesa.endExecute() #chiude il dialogo
+    if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################
 # Scrive un file.
@@ -1802,7 +1825,7 @@ def tante_analisi_in_ep (arg=None):
     oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-Cs'
     oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-C'
     oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo %'
-    MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
+    #~ MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 ########################################################################
 def Circoscrive_Analisi (lrow):
     '''
@@ -2165,18 +2188,18 @@ def refresh (arg=1):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     if arg == 0:
-        oDoc.CurrentController.ZoomValue = 400
+        #~ oDoc.CurrentController.ZoomValue = 400
         oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
-        oDoc.addActionLock()
+        #~ oDoc.addActionLock()
+        #~ oDoc.removeActionLock()
         #~ oDoc.lockControllers #disattiva l'eco a schermo
     elif arg == 1:
-        oDoc.CurrentController.ZoomValue = 100
+        #~ oDoc.CurrentController.ZoomValue = 100
         oDoc.enableAutomaticCalculation(True) # sblocco il calcolo automatico
-        oDoc.removeActionLock()
+        #~ oDoc.removeActionLock()
         #~ oDoc.unlockControllers #attiva l'eco a schermo
 ########################################################################
 def ins_voce_elenco (arg=None):
-#~ def debug (arg=None):
     '''
     Inserisce una nuova riga voce in Elenco Prezzi
     '''
@@ -3386,7 +3409,8 @@ Si tenga conto che:
             oSheet.getCellByPosition(0, n+11).String = ''
             inizializza_analisi()
     #~ Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
-    Lib_LeenO('Analisi.tante_analisi_in_ep') #rinvia a basic
+    #~ Lib_LeenO('Analisi.tante_analisi_in_ep') #rinvia a basic
+    tante_analisi_in_ep()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         Lib_LeenO('Computo.genera_variante')
@@ -4646,7 +4670,7 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
+#~ g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_Filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

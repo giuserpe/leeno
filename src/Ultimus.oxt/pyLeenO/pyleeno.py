@@ -2949,7 +2949,7 @@ def strall (el, n=3):
     return el
 
 # XPWE_in ##########################################################
-def XPWE_in(arg=None): #(filename):
+def XPWE_in (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     ###
     #~ oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
@@ -2998,96 +2998,100 @@ def XPWE_in(arg=None): #(filename):
     committente = DatiGenerali[4].text
     impresa = DatiGenerali[5].text
     parteopera = DatiGenerali[6].text
+    
 ###
 #PweDGCapitoliCategorie
-    CapCat = dati.find('PweDGCapitoliCategorie')
+    try:
+        CapCat = dati.find('PweDGCapitoliCategorie')
 ###
 #PweDGSuperCapitoli
-    if CapCat.find('PweDGSuperCapitoli'):
-        PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
-        lista_supcap = list()
-        for elem in PweDGSuperCapitoli:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            percentuale = elem.find('Percentuale').text
-            diz = dict ()
-            diz['id_sc'] = id_sc
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            lista_supcap.append(diz)
+        if CapCat.find('PweDGSuperCapitoli'):
+            PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
+            lista_supcap = list()
+            for elem in PweDGSuperCapitoli:
+                id_sc = elem.get('ID')
+                dessintetica = elem.find('DesSintetica').text
+                percentuale = elem.find('Percentuale').text
+                diz = dict ()
+                diz['id_sc'] = id_sc
+                diz['dessintetica'] = dessintetica
+                diz['percentuale'] = percentuale
+                lista_supcap.append(diz)
 ###
 #PweDGCapitoli
-    if CapCat.find('PweDGCapitoli'):
-        PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
-        lista_cap = list()
-        for elem in PweDGCapitoli:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            percentuale = elem.find('Percentuale').text
-            diz = dict ()
-            diz['id_sc'] = id_sc
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            lista_cap.append(diz)
+        if CapCat.find('PweDGCapitoli'):
+            PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
+            lista_cap = list()
+            for elem in PweDGCapitoli:
+                id_sc = elem.get('ID')
+                dessintetica = elem.find('DesSintetica').text
+                percentuale = elem.find('Percentuale').text
+                diz = dict ()
+                diz['id_sc'] = id_sc
+                diz['dessintetica'] = dessintetica
+                diz['percentuale'] = percentuale
+                lista_cap.append(diz)
 ###
 #PweDGSubCapitoli
-    if CapCat.find('PweDGSubCapitoli'):
-        PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
-        lista_subcap = list()
-        for elem in PweDGSubCapitoli:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            percentuale = elem.find('Percentuale').text
-            diz = dict ()
-            diz['id_sc'] = id_sc
-            diz['dessintetica'] = dessintetica
-            diz['percentuale'] = percentuale
-            lista_subcap.append(diz)
+        if CapCat.find('PweDGSubCapitoli'):
+            PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
+            lista_subcap = list()
+            for elem in PweDGSubCapitoli:
+                id_sc = elem.get('ID')
+                dessintetica = elem.find('DesSintetica').text
+                percentuale = elem.find('Percentuale').text
+                diz = dict ()
+                diz['id_sc'] = id_sc
+                diz['dessintetica'] = dessintetica
+                diz['percentuale'] = percentuale
+                lista_subcap.append(diz)
 ###
 #PweDGSuperCategorie
-    if CapCat.find('PweDGSuperCategorie'):
-        PweDGSuperCategorie = CapCat.find('PweDGSuperCategorie').getchildren()
-        lista_supcat = list()
-        for elem in PweDGSuperCategorie:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except AttributeError:
-                percentuale = '0'
-            supcat = (id_sc, dessintetica, percentuale)
-            lista_supcat.append(supcat)
-        #~ MsgBox(str(lista_supcat),'') ; return
+        if CapCat.find('PweDGSuperCategorie'):
+            PweDGSuperCategorie = CapCat.find('PweDGSuperCategorie').getchildren()
+            lista_supcat = list()
+            for elem in PweDGSuperCategorie:
+                id_sc = elem.get('ID')
+                dessintetica = elem.find('DesSintetica').text
+                try:
+                    percentuale = elem.find('Percentuale').text
+                except AttributeError:
+                    percentuale = '0'
+                supcat = (id_sc, dessintetica, percentuale)
+                lista_supcat.append(supcat)
+            #~ MsgBox(str(lista_supcat),'') ; return
 ###
 #PweDGCategorie
-    if CapCat.find('PweDGCategorie'):
-        PweDGCategorie = CapCat.find('PweDGCategorie').getchildren()
-        lista_cat = list()
-        for elem in PweDGCategorie:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except AttributeError:
-                percentuale = '0'
-            cat = (id_sc, dessintetica, percentuale)
-            lista_cat.append(cat)
-        #~ MsgBox(str(lista_cat),'')
+        if CapCat.find('PweDGCategorie'):
+            PweDGCategorie = CapCat.find('PweDGCategorie').getchildren()
+            lista_cat = list()
+            for elem in PweDGCategorie:
+                id_sc = elem.get('ID')
+                dessintetica = elem.find('DesSintetica').text
+                try:
+                    percentuale = elem.find('Percentuale').text
+                except AttributeError:
+                    percentuale = '0'
+                cat = (id_sc, dessintetica, percentuale)
+                lista_cat.append(cat)
+            #~ MsgBox(str(lista_cat),'')
 ###
 #PweDGSubCategorie
-    if CapCat.find('PweDGSubCategorie'):
-        PweDGSubCategorie = CapCat.find('PweDGSubCategorie').getchildren()
-        lista_subcat = list()
-        for elem in PweDGSubCategorie:
-            id_sc = elem.get('ID')
-            dessintetica = elem.find('DesSintetica').text
-            try:
-                percentuale = elem.find('Percentuale').text
-            except AttributeError:
-                percentuale = '0'
-            subcat = (id_sc, dessintetica, percentuale)
-            lista_subcat.append(subcat)
-        #~ MsgBox(str(lista_subcat),'') ; return
+        if CapCat.find('PweDGSubCategorie'):
+            PweDGSubCategorie = CapCat.find('PweDGSubCategorie').getchildren()
+            lista_subcat = list()
+            for elem in PweDGSubCategorie:
+                id_sc = elem.get('ID')
+                dessintetica = elem.find('DesSintetica').text
+                try:
+                    percentuale = elem.find('Percentuale').text
+                except AttributeError:
+                    percentuale = '0'
+                subcat = (id_sc, dessintetica, percentuale)
+                lista_subcat.append(subcat)
+            #~ MsgBox(str(lista_subcat),'') ; return
+    except AttributeError:
+        pass
 ###
     try:
         PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
@@ -3118,7 +3122,7 @@ def XPWE_in(arg=None): #(filename):
         Aliquote = PweDGConfigurazione[14].text
     except IndexError:
         pass
-
+    
 ###
     misurazioni = root.find('PweMisurazioni')
     PweElencoPrezzi = misurazioni.getchildren()[0]
@@ -3140,8 +3144,15 @@ def XPWE_in(arg=None): #(filename):
         articolo = elem.find('Articolo').text
         desridotta = elem.find('DesRidotta').text
         destestesa = elem.find('DesEstesa').text#.strip()
-        desridotta = elem.find('DesBreve').text
-        desbreve = elem.find('DesBreve').text
+        try:
+            desridotta = elem.find('DesBreve').text
+        except AttributeError:
+            pass
+        try:
+            desbreve = elem.find('DesBreve').text
+        except AttributeError:
+            desbreve = ''
+
         if elem.find('UnMisura').text != None:
             unmisura = elem.find('UnMisura').text
         else:
@@ -3151,12 +3162,27 @@ def XPWE_in(arg=None): #(filename):
         prezzo3 = elem.find('Prezzo3').text
         prezzo4 = elem.find('Prezzo4').text
         prezzo5 = elem.find('Prezzo5').text
-        idspcap = elem.find('IDSpCap').text
-        idcap = elem.find('IDCap').text
-        idsbcap = elem.find('IDSbCap').text
-        flags = elem.find('Flags').text
-        data = elem.find('Data').text
-
+        try:
+            idspcap = elem.find('IDSpCap').text
+        except AttributeError:
+            idspcap = ''
+        try:
+            idcap = elem.find('IDCap').text
+        except AttributeError:
+            idcap = ''
+        try:
+            idsbcap = elem.find('IDSbCap').text
+        except AttributeError:
+            idsbcap = ''
+        try:
+            flags = elem.find('Flags').text
+        except AttributeError:
+            flags = ''
+        try:
+            data = elem.find('Data').text
+        except AttributeError:
+            data = ''
+            
         xlo_sic = ''
         xlo_mdop = ''
         xlo_mdo = ''
@@ -3208,7 +3234,6 @@ def XPWE_in(arg=None): #(filename):
                                     xlo_mdo)
         lista_articoli.append(articolo_modificato)
 ### leggo analisi di prezzo
-        inizializza_analisi()
         pweepanalisi = elem.find('PweEPAnalisi')
         PweEPAR = pweepanalisi.find('PweEPAR')
         if PweEPAR != None:
@@ -3238,11 +3263,26 @@ def XPWE_in(arg=None): #(filename):
             id_vc = elem.get('ID')
             id_ep = elem.find('IDEP').text
             quantita = elem.find('Quantita').text
-            datamis = elem.find('DataMis').text
-            flags = elem.find('Flags').text
-            idspcat = elem.find('IDSpCat').text
-            idcat = elem.find('IDCat').text
-            idsbcat = elem.find('IDSbCat').text
+            try:
+                datamis = elem.find('DataMis').text
+            except AttributeError:
+                datamis = ''
+            try:
+                flags = elem.find('Flags').text
+            except AttributeError:
+                flags = ''
+            try:
+                idspcat = elem.find('IDSpCat').text
+            except AttributeError:
+                idspcat = ''
+            try:
+                idcat = elem.find('IDCat').text
+            except AttributeError:
+                idcat = ''
+            try:
+                idsbcat = elem.find('IDSbCat').text
+            except AttributeError:
+                idsbcat = ''
             righi_mis = elem.getchildren()[-1].findall('RGItem')
             lista_rig = list()
             riga_misura = ()
@@ -3322,6 +3362,7 @@ Si tenga conto che:
             for el in riordine:
                 lista_misure.append(el[1])
     attesa().start()
+    inizializza_analisi()
 ###
 # compilo Anagrafica generale ##########################################
     #~ New_file.computo()
@@ -3361,7 +3402,7 @@ Si tenga conto che:
                                             colonne_lista + scarto_colonne - 1, # l'indice parte da 0
                                             righe_lista + scarto_righe - 1)
     oRange.setDataArray(lista_come_array)
-    doppioni()
+    #~ doppioni()
 ### elimino le voci che hanno analisi
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
@@ -3375,39 +3416,39 @@ Si tenga conto che:
         return
 ###
 # Compilo Analisi di prezzo ############################################
-    oDoc.CurrentController.ZoomValue = 400
-    if len (lista_analisi) !=0:
-        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
-        for el in lista_analisi:
-            sStRange = Circoscrive_Analisi (Range2Cell()[1])
-            lrow = sStRange.RangeAddress.StartRow + 1
-            oSheet.getCellByPosition(0, lrow).String = el[0]
-            oSheet.getCellByPosition(1, lrow).String = el[1]
-            oSheet.getCellByPosition(2, lrow).String = el[2]
-            oSheet.getCellByPosition(6, lrow).Value = el[4]
-            n = lrow + 2
-            y = 0
-            for x in el[3]:
-                copia_riga_analisi(n)
-                try:
-                    oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
-                except:
-                    oSheet.getCellByPosition(0, n).String = '--'
-                    oSheet.getCellByPosition(1, n).String = el[3][y][1]
-                    oSheet.getCellByPosition(2, n).String = el[3][y][2]
-                    oSheet.getCellByPosition(4, n).Value = el[3][y][4]
-                    oSheet.getCellByPosition(8, n).Value = 0
-                oSheet.getCellByPosition(3, n).Value = el[3][y][3]
-                y += 1
-                n += 1
-            oSheet.getRows().removeByIndex(n, 3)
-            oSheet.getCellByPosition(0, n+2).String = ''
-            oSheet.getCellByPosition(0, n+5).String = ''
-            oSheet.getCellByPosition(0, n+8).String = ''
-            oSheet.getCellByPosition(0, n+11).String = ''
-            inizializza_analisi()
-    #~ Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
-    tante_analisi_in_ep()
+    #~ oDoc.CurrentController.ZoomValue = 400
+    #~ if len (lista_analisi) !=0:
+        #~ oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        #~ for el in lista_analisi:
+            #~ sStRange = Circoscrive_Analisi (Range2Cell()[1])
+            #~ lrow = sStRange.RangeAddress.StartRow + 1
+            #~ oSheet.getCellByPosition(0, lrow).String = el[0]
+            #~ oSheet.getCellByPosition(1, lrow).String = el[1]
+            #~ oSheet.getCellByPosition(2, lrow).String = el[2]
+            #~ oSheet.getCellByPosition(6, lrow).Value = el[4]
+            #~ n = lrow + 2
+            #~ y = 0
+            #~ for x in el[3]:
+                #~ copia_riga_analisi(n)
+                #~ try:
+                    #~ oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
+                #~ except:
+                    #~ oSheet.getCellByPosition(0, n).String = '--'
+                    #~ oSheet.getCellByPosition(1, n).String = el[3][y][1]
+                    #~ oSheet.getCellByPosition(2, n).String = el[3][y][2]
+                    #~ oSheet.getCellByPosition(4, n).Value = el[3][y][4]
+                    #~ oSheet.getCellByPosition(8, n).Value = 0
+                #~ oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                #~ y += 1
+                #~ n += 1
+            #~ oSheet.getRows().removeByIndex(n, 3)
+            #~ oSheet.getCellByPosition(0, n+2).String = ''
+            #~ oSheet.getCellByPosition(0, n+5).String = ''
+            #~ oSheet.getCellByPosition(0, n+8).String = ''
+            #~ oSheet.getCellByPosition(0, n+11).String = ''
+            #~ inizializza_analisi()
+    #Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
+    #~ tante_analisi_in_ep()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         Lib_LeenO('Computo.genera_variante')
@@ -3438,7 +3479,6 @@ Si tenga conto che:
                 lrow = lrow + 2
         except UnboundLocalError:
             pass
-
         try:
             if idcat != testcat:
                 testcat = idcat

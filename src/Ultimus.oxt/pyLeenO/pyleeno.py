@@ -1045,11 +1045,7 @@ def doppioni_run(arg=None):
     lista_come_array = tuple (set (oRange.getDataArray()))
     lista_tar = list()
     oSheet.getRows().removeByIndex(3, ultima_voce(oSheet)-2)
-    #~ try:
     oSheet.getRows().insertByIndex(3, len(set(lista_come_array)))
-    #~ except:
-        #~ return
-   
     for el in set (lista_come_array):
         lista_tar.append(el[0])
     colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
@@ -1072,10 +1068,11 @@ def doppioni_run(arg=None):
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     tante_analisi_in_ep()
-    adatta_altezza_riga(oSheet.Name)
+    
     refresh(1)
-    #~ oDoc.CurrentController.ZoomValue = 100
+    adatta_altezza_riga(oSheet.Name)
     oDialogo_attesa.endExecute() #chiude il dialogo
+    
     if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################
@@ -1809,6 +1806,11 @@ def tante_analisi_in_ep (arg=None):
         return
     oRange = oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1)
     lista_come_array = tuple(lista_analisi)
+    
+    oSheet.getCellRangeByPosition(11, 3, 11, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(12, 3, 12, 3+len(lista_analisi)-1).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(13, 3, 13, 3+len(lista_analisi)-1).CellStyle = 'EP statistiche_Contab_q'
+    
     oRange.setDataArray(lista_come_array) #setFrmulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
     for y in range(3, 3+len(lista_analisi)):
         for x in range(1, 8): #evito il codice articolo, altrimenti me lo converte in numero

@@ -979,16 +979,16 @@ def _gotoCella (IDcol=0, IDrow=0):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     return
 ########################################################################
-def adatta_altezza_riga (nome=None):
+def adatta_altezza_riga (nSheet=None):
     '''
-    nome   { string } : nome della sheet
+    nSheet   { string } : nSheet della sheet
     imposta l'altezza ottimale delle celle
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if nome == None:
-        nome = oSheet.Name
-    oDoc.getSheets().hasByName(nome)
+    if nSheet == None:
+        nSheet = oSheet.Name
+    oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
@@ -1018,18 +1018,17 @@ def doppioni (arg=None):
 def doppioni_run(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
 
-    #~ oDoc.CurrentController.ZoomValue = 400
     oDialogo_attesa = dlg_attesa()
     attesa().start() #mostra il dialogo
-    
     refresh(0)
+
     lista_tariffe_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
     for n in range (0, ultima_voce(oSheet)+1):
         if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla':
             lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     IS = oRangeAddress.Sheet
     SC = oRangeAddress.StartColumn
@@ -1044,18 +1043,15 @@ def doppioni_run(arg=None):
             oSheet.getRows().removeByIndex(i, 1)
 
     lista_come_array = tuple (set (oRange.getDataArray()))
-
     lista_tar = list()
-    oSheet.getRows().removeByIndex(4, ultima_voce(oSheet)-3) # lascio una riga per conservare gli stili
+    oSheet.getRows().removeByIndex(3, ultima_voce(oSheet)-2)
     #~ try:
-    oSheet.getRows().insertByIndex(4, len(set(lista_come_array))-1)
+    oSheet.getRows().insertByIndex(3, len(set(lista_come_array)))
     #~ except:
         #~ return
    
     for el in set (lista_come_array):
         lista_tar.append(el[0])
-    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
-    scarto_righe = 3 # numero righe da saltare a partire dall'alto
     colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
     oRange = oSheet.getCellRangeByPosition( 0,
@@ -1063,7 +1059,6 @@ def doppioni_run(arg=None):
                                             colonne_lista + 0 - 1, # l'indice parte da 0
                                             righe_lista + 3 - 1)
     oRange.setDataArray(lista_come_array)
-
     oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
     oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
     oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
@@ -1073,14 +1068,13 @@ def doppioni_run(arg=None):
     oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
     oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
     oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
-
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     tante_analisi_in_ep()
+    adatta_altezza_riga(oSheet.Name)
     refresh(1)
-    oDoc.CurrentController.ZoomValue = 100
-    #~ oSheet.getRows().removeByIndex(ER, 1)
+    #~ oDoc.CurrentController.ZoomValue = 100
     oDialogo_attesa.endExecute() #chiude il dialogo
     if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')

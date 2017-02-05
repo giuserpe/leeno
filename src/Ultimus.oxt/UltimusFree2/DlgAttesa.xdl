@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgAttesa" dlg:disabled="true" dlg:left="140" dlg:top="130" dlg:width="320" dlg:height="99" dlg:closeable="true" dlg:moveable="true" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/gif/gallery_loader.gif">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgAttesa" dlg:disabled="true" dlg:left="140" dlg:top="197" dlg:width="119" dlg:height="127" dlg:closeable="true" dlg:moveable="true" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/gif/gallery_loader.gif">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:img dlg:id="ImageControl1" dlg:tab-index="0" dlg:left="10" dlg:top="13" dlg:width="300" dlg:height="75" dlg:help-url="www.leeno.org"/>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="310" dlg:top="88" dlg:width="2" dlg:height="2" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:multiline="true">
+  <dlg:img dlg:id="ImageControl1" dlg:tab-index="0" dlg:left="10" dlg:top="13" dlg:width="100" dlg:height="100" dlg:help-url="www.leeno.org"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="310" dlg:top="88" dlg:width="3" dlg:height="0" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="110" dlg:top="113" dlg:width="2" dlg:height="2" dlg:button-type="cancel"/>
  </dlg:bulletinboard>
 </dlg:window>

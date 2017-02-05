@@ -473,6 +473,7 @@ SUB Rifa_GG_G1G1_Contab &apos; RIFA ANCHE le formule di somma.se
 &apos;_____________________
 chiudi_dialoghi 
 &apos;_____________________
+	lLastUrow = getLastUsedRow(oSheet)
 rem ----------------------------------------------------------------------
 rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 	IF oRanges.hasByName(&quot;#Lib#1&quot;) THEN
@@ -485,9 +486,9 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 		nSal=nSal-1
 		Loop
 		oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells&apos;.RangeAddress
-&apos;		lLastUrow = oNamedRange.RangeAddress.EndRow
+		lLastUrow = oNamedRange.RangeAddress.EndRow
 	End If 
-	lLastUrow = getLastUsedRow(oSheet)
+
 ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
 ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
 ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi

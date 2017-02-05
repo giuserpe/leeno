@@ -994,6 +994,76 @@ def adatta_altezza_riga (nSheet=None):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
 # elenco prezzi ########################################################
+class debug_th (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        debug_run()
+def debug (arg=None):
+    debug_th().start()
+#~ ###
+def debug_run(arg=None):
+#~ def genera_sommario (arg=None):
+    '''
+    sostituirà la sub Rifa_AA_BB_Computo
+    serve a generare i sommari in Elenco Prezzi
+    '''
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
+    refresh(0)
+
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('COMPUTO')
+    lRow = getLastUsedCell(oSheet).EndRow
+
+    rifa_nomearea('COMPUTO', '$AJ$3:$AJ$' + str(lRow), 'AA')
+    rifa_nomearea('COMPUTO', '$N$3:$N$'  + str(lRow), "BB")
+    rifa_nomearea('COMPUTO', '$AK$3:$AK$' + str(lRow), "cEuro")
+
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    
+    formule = list()
+    for n in range(4, ultima_voce(oSheet)+2):
+        formule.append(['=N' + str(n) + '/$N$2',
+                        '=SUMIF(AA;A' + str(n) + ';BB)',
+                        '=SUMIF(AA;A' + str(n) + ';cEuro)'])
+    oRange = oSheet.getCellRangeByPosition(11, 3, 13, ultima_voce(oSheet))
+    formule = tuple (formule)
+    oRange.setFormulaArray(formule)
+
+    formule = list()
+    if oDoc.getSheets().hasByName('VARIANTE') == True:
+        rifa_nomearea('VARIANTE', '$AJ$3:$AJ$' + str(lRow), 'varAA')
+        rifa_nomearea('VARIANTE', '$N$3:$N$'  + str(lRow), "varBB")
+        rifa_nomearea('VARIANTE', '$AK$3:$AK$' + str(lRow), "varEuro")
+        for n in range(4, ultima_voce(oSheet)+2):
+            formule.append(['=R' + str(n) + '/$R$2',
+                            '=SUMIF(varAA;A' + str(n) + ';varBB)',
+                            '=SUMIF(varAA;A' + str(n) + ';varEuro)'])
+        oRange = oSheet.getCellRangeByPosition(15, 3, 17, ultima_voce(oSheet))
+        formule = tuple (formule)
+        oRange.setFormulaArray(formule)
+
+    formule = list()
+    if oDoc.getSheets().hasByName('CONTABILITA') == True:
+        lRow = getLastUsedCell(oDoc.getSheets().getByName('CONTABILITA')).EndRow
+        rifa_nomearea('CONTABILITA', '$AJ$3:$AJ$' + str(lRow), 'GG')
+        rifa_nomearea('CONTABILITA', '$S$3:$S$'  + str(lRow), "G1G1")
+        rifa_nomearea('CONTABILITA', '$AK$3:$AK$' + str(lRow), "conEuro")
+        for n in range(4, ultima_voce(oSheet)+2):
+            formule.append(['=V' + str(n) + '/$V$2',
+                            '=SUMIF(GG;A' + str(n) + ';G1G1)',
+                            '=SUMIF(GG;A' + str(n) + ';conEuro)'])
+        oRange = oSheet.getCellRangeByPosition(19, 3, 21, ultima_voce(oSheet))
+        formule = tuple (formule)
+        oRange.setFormulaArray(formule)
+
+    refresh(1)
+    adatta_altezza_riga(oSheet.Name)
+    oDialogo_attesa.endExecute() #chiude il dialogo
+    
+
+########################################################################
 def riordina_ElencoPrezzi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -3402,18 +3472,18 @@ Si tenga conto che:
                                             colonne_lista + scarto_colonne - 1, # l'indice parte da 0
                                             righe_lista + scarto_righe - 1)
     oRange.setDataArray(lista_come_array)
-    #~ doppioni()
+    doppioni()
 ### elimino le voci che hanno analisi
-    for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
-            oSheet.getRows().removeByIndex(i, 1)
-    if len(lista_misure) == 0:
-        MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
-        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        oDoc.CurrentController.setActiveSheet(oSheet)
-        oDoc.CurrentController.ZoomValue = 100
-        oDialogo_attesa.endExecute()
-        return
+    #~ for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
+            #~ oSheet.getRows().removeByIndex(i, 1)
+    #~ if len(lista_misure) == 0:
+        #~ MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
+        #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        #~ oDoc.CurrentController.setActiveSheet(oSheet)
+        #~ oDoc.CurrentController.ZoomValue = 100
+        #~ oDialogo_attesa.endExecute()
+        #~ return
 ###
 # Compilo Analisi di prezzo ############################################
     #~ oDoc.CurrentController.ZoomValue = 400

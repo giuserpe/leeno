@@ -993,6 +993,7 @@ def adatta_altezza_riga (nSheet=None):
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
+# elenco prezzi ########################################################
 def riordina_ElencoPrezzi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -1017,7 +1018,9 @@ def doppioni (arg=None):
 ###
 def doppioni_run(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-
+    '''
+    Cancella eventuali voci che si ripetono in Elenco Prezzi
+    '''
     oDialogo_attesa = dlg_attesa()
     attesa().start() #mostra il dialogo
     refresh(0)
@@ -1027,7 +1030,6 @@ def doppioni_run(arg=None):
     for n in range (0, ultima_voce(oSheet)+1):
         if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla':
             lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
-
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     IS = oRangeAddress.Sheet
@@ -1035,26 +1037,29 @@ def doppioni_run(arg=None):
     EC = oRangeAddress.EndColumn
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
-    oRange = oSheet.getCellRangeByPosition(0, 4, 4, ER)
-    
+    oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
     lista_come_array = oRange.getDataArray()
-    for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+
+    for i in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
             oSheet.getRows().removeByIndex(i, 1)
-
     lista_come_array = tuple (set (oRange.getDataArray()))
     lista_tar = list()
-    oSheet.getRows().removeByIndex(3, ultima_voce(oSheet)-2)
-    oSheet.getRows().insertByIndex(3, len(set(lista_come_array)))
+    oSheet.getRows().removeByIndex(SR, ER-2)
+
+    oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
     for el in set (lista_come_array):
         lista_tar.append(el[0])
-    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+
+    colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+
     oRange = oSheet.getCellRangeByPosition( 0,
                                             3,
                                             colonne_lista + 0 - 1, # l'indice parte da 0
                                             righe_lista + 3 - 1)
     oRange.setDataArray(lista_come_array)
+    
     oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
     oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
     oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
@@ -2038,7 +2043,6 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
         copia_riga_analisi(lrow)
 ########################################################################
 def debug_tipo_di_valore(arg=None):
-#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
@@ -4572,8 +4576,8 @@ class attesa (threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         oDialog1Model = oDialogo_attesa.Model # oDialogo_attesa è una variabile generale
-        oDialog1Model.Title = 'O   p   e   r   a   z   i   o   n   e       i   n       c   o   r   s   o    .   .   .'
-        sUrl = LeenO_path()+'/icons/Immagine.png'
+        oDialog1Model.Title = 'Operazione in corso...'
+        sUrl = LeenO_path()+'/icons/LeenO_square.png'
         oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
         oDialogo_attesa.execute()
         return
@@ -4602,7 +4606,7 @@ class XPWE_export_th (threading.Thread):
 def XPWE_export (arg=None):
     XPWE_export_th().start()
 ########################################################################
-class debug_th (threading.Thread):
+class cancella_righe_th (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
@@ -4622,7 +4626,7 @@ def cancella_righe (arg=None):
     è molto lenta perché Calc ricalcola i valori ad ogni cancellazione.
     Conviene inibire il ricalcolo
     '''
-    debug_th().start()
+    cancella_righe_th().start()
 ########################################################################
 class inserisci_nuova_riga_con_descrizione_th (threading.Thread):
     def __init__(self):

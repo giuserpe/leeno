@@ -243,13 +243,6 @@ def Inser_SottoCapitolo_arg (lrow, sTesto): #
     #~ lrow = Range2Cell()[1]
     #~ sTesto = 'prova'
     style = oSheet.getCellByPosition(1, lrow).CellStyle
-    #~ if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta', 'Comp TOTALI',
-                #~ 'Comp-Bianche sopra', 'comp Art-EP', 'comp Art-EP_R','Comp-Bianche in mezzo', 'comp sotto Bianche'):
-        #~ if style in ('comp Int_colonna', 'Livello-1-scritta', 'livello2 valuta'):
-            #~ lrow += 1
-        #~ elif style in ('Comp-Bianche sopra', 'comp Art-EP','comp Art-EP_R', 'Comp-Bianche in mezzo', 'comp sotto Bianche'):
-            #~ sStRange = Circoscrive_Voce_Computo_Att (lrow)
-            #~ lrow = sStRange.RangeAddress.EndRow+1
     if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
         insRows(lrow, 2)
         oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
@@ -1073,6 +1066,16 @@ def riordina_ElencoPrezzi (arg=None):
     EC = oRangeAddress.EndColumn
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
+    if ER < SR:
+        try:
+            uFindString('Fine elenco',oSheet)[1]+1
+        except TypeError:
+            inserisci_Riga_rossa()
+        test = str(uFindString('Fine elenco',oSheet)[1]+1)
+        rifa_nomearea('Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+        rifa_nomearea('Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+        oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        ER = oRangeAddress.EndRow-1
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
@@ -1093,43 +1096,45 @@ def doppioni_run(arg=None):
     '''
     oDialogo_attesa = dlg_attesa()
     attesa().start() #mostra il dialogo
+    oDoc.CurrentController.ZoomValue = 400
     refresh(0)
-
-    lista_tariffe_analisi = list()
-    oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
-    for n in range (0, ultima_voce(oSheet)+1):
-        if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla':
-            lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
+    if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
+        lista_tariffe_analisi = list()
+        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        for n in range (0, ultima_voce(oSheet)+1):
+            if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla':
+                lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    IS = oRangeAddress.Sheet
-    SC = oRangeAddress.StartColumn
-    EC = oRangeAddress.EndColumn
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
-    lista_come_array = oRange.getDataArray()
+    
+    if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
+        for i in reversed(range(SR, ER)):
+            if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
+                oSheet.getRows().removeByIndex(i, 1)
 
-    for i in reversed(range(SR, ER)):
-        if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
-            oSheet.getRows().removeByIndex(i, 1)
+    oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    SR = oRangeAddress.StartRow+1
+    ER = oRangeAddress.EndRow-1
+    oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
+    
     lista_come_array = tuple (set (oRange.getDataArray()))
     lista_tar = list()
-    oSheet.getRows().removeByIndex(SR, ER-2)
+    oSheet.getRows().removeByIndex(SR, ER-2-len(lista_tariffe_analisi))
 
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
     for el in set (lista_come_array):
         lista_tar.append(el[0])
-
     colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
-
     oRange = oSheet.getCellRangeByPosition( 0,
                                             3,
                                             colonne_lista + 0 - 1, # l'indice parte da 0
                                             righe_lista + 3 - 1)
     oRange.setDataArray(lista_come_array)
-    
     oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
     oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
     oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
@@ -1142,12 +1147,12 @@ def doppioni_run(arg=None):
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    tante_analisi_in_ep()
-    
+    if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
+        tante_analisi_in_ep()
     refresh(1)
+    oDoc.CurrentController.ZoomValue = 100
     adatta_altezza_riga(oSheet.Name)
     oDialogo_attesa.endExecute() #chiude il dialogo
-    
     if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################
@@ -2450,7 +2455,7 @@ def inserisci_Riga_rossa (arg=None):
         oSheet.getCellByPosition( 0, lrow).String = 'Fine ANALISI'
         oSheet.getCellRangeByPosition(0,lrow,10,lrow).CellStyle='Riga_rossa_Chiudi' 
     elif nome == 'Elenco Prezzi':
-        lrow = ultima_voce(oSheet) + 1
+        lrow = ultima_voce(oSheet) + 2
         oSheet.getCellByPosition( 0, lrow).String = 'Fine elenco'
         oSheet.getCellRangeByPosition(0,lrow,26,lrow).CellStyle='Riga_rossa_Chiudi' 
     oSheet.getCellByPosition(2, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)'
@@ -3021,6 +3026,7 @@ def strall (el, n=3):
 # XPWE_in ##########################################################
 def XPWE_in (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
+    refresh(0)
     ###
     #~ oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
     #~ oDoc.addActionLock
@@ -3432,7 +3438,6 @@ Si tenga conto che:
             for el in riordine:
                 lista_misure.append(el[1])
     attesa().start()
-    inizializza_analisi()
 ###
 # compilo Anagrafica generale ##########################################
     #~ New_file.computo()
@@ -3454,6 +3459,8 @@ Si tenga conto che:
         oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
     except UnboundLocalError:
         pass
+    oDoc.CurrentController.ZoomValue = 400
+
 # compilo Elenco Prezzi ################################################
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
@@ -3472,7 +3479,6 @@ Si tenga conto che:
                                             colonne_lista + scarto_colonne - 1, # l'indice parte da 0
                                             righe_lista + scarto_righe - 1)
     oRange.setDataArray(lista_come_array)
-    doppioni()
 ### elimino le voci che hanno analisi
     #~ for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         #~ if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
@@ -3486,7 +3492,8 @@ Si tenga conto che:
         #~ return
 ###
 # Compilo Analisi di prezzo ############################################
-    #~ oDoc.CurrentController.ZoomValue = 400
+    if len(lista_analisi) !=0:
+        inizializza_analisi()
     #~ if len (lista_analisi) !=0:
         #~ oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         #~ for el in lista_analisi:
@@ -3557,22 +3564,22 @@ Si tenga conto che:
                 lrow = lrow + 2
         except UnboundLocalError:
             pass
-
         try:
             if idsbcat != testsbcat:
                 testsbcat = idsbcat
                 Inser_SottoCapitolo_arg(lrow, lista_subcat[eval(idsbcat)-1][1])
         except UnboundLocalError:
             pass
-
         lrow = ultima_voce(oSheet) + 1
         ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')
         id_vc = el.get('id_vc')
+
         try:
             oSheet.getCellByPosition(1, lrow+1).String = dict_articoli.get(ID).get('tariffa')
         except:
             pass
+
         diz_vv[id_vc] = lrow+1
         oSheet.getCellByPosition(0, lrow+1).String = str(x)
         x = x+1
@@ -3707,11 +3714,13 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                     pass
                 SR = SR+1
     Numera_Voci()
+
     try:
         Rinumera_TUTTI_Capitoli2()
     except:
         pass
     oDoc.CurrentController.ZoomValue = 100
+    refresh(1)
     oDialogo_attesa.endExecute()
     #~ oDoc.enableAutomaticCalculation(True) # abilito il calcolo automatico
     MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')

@@ -1123,8 +1123,10 @@ def doppioni_run(arg=None):
     
     lista_come_array = tuple (set (oRange.getDataArray()))
     lista_tar = list()
-    oSheet.getRows().removeByIndex(SR, ER-2-len(lista_tariffe_analisi))
-
+    if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
+        oSheet.getRows().removeByIndex(SR, ER-2-len(lista_tariffe_analisi))
+    else:
+        oSheet.getRows().removeByIndex(SR, ER-2)
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
     for el in set (lista_come_array):
         lista_tar.append(el[0])
@@ -3479,6 +3481,7 @@ Si tenga conto che:
                                             colonne_lista + scarto_colonne - 1, # l'indice parte da 0
                                             righe_lista + scarto_righe - 1)
     oRange.setDataArray(lista_come_array)
+
 ### elimino le voci che hanno analisi
     #~ for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         #~ if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
@@ -3725,6 +3728,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     #~ oDoc.enableAutomaticCalculation(True) # abilito il calcolo automatico
     MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     #~ MsgBox('Importazione eseguita con successo!','')
+    doppioni()
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:

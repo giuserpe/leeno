@@ -3469,19 +3469,15 @@ Si tenga conto che:
     # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
     lista_come_array = tuple(lista_articoli)
     # Parametrizzo il range di celle a seconda della dimensione della lista
-    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
-    scarto_righe = 3 # numero righe da saltare a partire dall'alto
-    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
 
-    oSheet.getRows().insertByIndex(4, righe_lista -1)
-
-    oRange = oSheet.getCellRangeByPosition( scarto_colonne,
-                                            scarto_righe,
-                                            colonne_lista + scarto_colonne - 1, # l'indice parte da 0
-                                            righe_lista + scarto_righe - 1)
+    oSheet.getRows().insertByIndex(4, righe_lista)
+    oRange = oSheet.getCellRangeByPosition( 0,
+                                            4,
+                                            colonne_lista -1, # l'indice parte da 0
+                                            righe_lista +4-1)
     oRange.setDataArray(lista_come_array)
-
 ### elimino le voci che hanno analisi
     #~ for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         #~ if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
@@ -3722,13 +3718,14 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
         Rinumera_TUTTI_Capitoli2()
     except:
         pass
+    
     oDoc.CurrentController.ZoomValue = 100
     refresh(1)
     oDialogo_attesa.endExecute()
-    #~ oDoc.enableAutomaticCalculation(True) # abilito il calcolo automatico
     MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
+    doppioni
+    ()
     #~ MsgBox('Importazione eseguita con successo!','')
-    doppioni()
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:

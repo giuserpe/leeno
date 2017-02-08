@@ -13,6 +13,9 @@
 import locale
 import codecs
 #~ import subprocess
+#~ import pythonpath.cygnus2dbj
+#~ def debug (arg=None):
+    #~ chi (cygnus2dbj)
 import os, sys, uno, unohelper, pyuno, logging, shutil, base64
 import time
 from multiprocessing import Process, freeze_support
@@ -987,16 +990,16 @@ def adatta_altezza_riga (nSheet=None):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
 # elenco prezzi ########################################################
-class debug_th (threading.Thread):
+class genera_sommario_th (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        debug_run()
-def debug (arg=None):
-    debug_th().start()
+        genera_sommario_run()
+def genera_sommario (arg=None):
+#~ def debug (arg=None):
+    genera_sommario_th().start()
 #~ ###
-def debug_run(arg=None):
-#~ def genera_sommario (arg=None):
+def genera_sommario_run (arg=None):
     '''
     sostituirà la sub Rifa_AA_BB_Computo
     serve a generare i sommari in Elenco Prezzi
@@ -3472,11 +3475,11 @@ Si tenga conto che:
     colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
 
-    oSheet.getRows().insertByIndex(4, righe_lista)
+    oSheet.getRows().insertByIndex(3, righe_lista)
     oRange = oSheet.getCellRangeByPosition( 0,
-                                            4,
+                                            3,
                                             colonne_lista -1, # l'indice parte da 0
-                                            righe_lista +4-1)
+                                            righe_lista +3-1)
     oRange.setDataArray(lista_come_array)
 ### elimino le voci che hanno analisi
     #~ for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
@@ -3723,8 +3726,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     refresh(1)
     oDialogo_attesa.endExecute()
     MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
-    doppioni
-    ()
+    doppioni()
     #~ MsgBox('Importazione eseguita con successo!','')
 # XPWE_in ##########################################################
 ########################################################################

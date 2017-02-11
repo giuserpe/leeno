@@ -213,6 +213,23 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inverti_segno?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/invert</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Quantità positiva/negativa</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma80" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
             <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Copia_riga_Ent?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">

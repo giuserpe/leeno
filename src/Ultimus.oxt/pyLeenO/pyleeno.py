@@ -13,9 +13,8 @@
 import locale
 import codecs
 #~ import subprocess
-#~ import pythonpath.cygnus2dbj
-#~ def debug (arg=None):
-    #~ chi (cygnus2dbj)
+#~ import psutil
+
 import os, sys, uno, unohelper, pyuno, logging, shutil, base64
 import time
 from multiprocessing import Process, freeze_support
@@ -2110,6 +2109,7 @@ def copia_riga_analisi(lrow):
             oSheet.copyRange(oCellAddress, oRangeAddress)
         oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
     oDoc.CurrentController.select(oSheet.getCellByPosition(1, lrow))
+########################################################################
 def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia di tabelle è
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -2121,6 +2121,27 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
         copia_riga_contab(lrow)
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
+########################################################################
+def inverti_segno (arg=None):
+    '''
+    Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
+    Funziona solo in COMPUTO e VARIANTE.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+        try:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+        except AttributeError:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+        SR = oRangeAddress.StartRow
+        ER = oRangeAddress.EndRow
+        for lrow in range (SR, ER+1):
+            if oSheet.getCellByPosition(0, lrow).CellStyle == 'comp 10 s':
+                if '-' in oSheet.getCellByPosition(9, lrow).Formula:
+                    oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                else:
+                    oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
 def debug_tipo_di_valore(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3588,6 +3609,9 @@ Si tenga conto che:
         SC = 2
         SR = lrow + 2 + 1
         nrighe = len(el.get('lista_rig')) - 1
+
+        #~ chi(el.get('lista_rig'))
+        #~ return
         if nrighe > -1:
             EC = SC + len(el.get('lista_rig')[0])
             ER = SR + nrighe
@@ -3605,6 +3629,7 @@ Si tenga conto che:
             oCellRangeAddr.StartRow = SR
             oCellRangeAddr.EndColumn = EC
             oCellRangeAddr.EndRow = ER
+
         ###
         # INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
 

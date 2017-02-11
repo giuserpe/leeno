@@ -2129,7 +2129,7 @@ def inverti_segno (arg=None):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
         except AttributeError:
@@ -3750,7 +3750,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     oDoc.CurrentController.ZoomValue = 100
     refresh(1)
     oDialogo_attesa.endExecute()
-    MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
+    #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     doppioni()
     #~ MsgBox('Importazione eseguita con successo!','')
 # XPWE_in ##########################################################

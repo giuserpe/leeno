@@ -994,8 +994,8 @@ class genera_sommario_th (threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         genera_sommario_run()
-def genera_sommario (arg=None):
-#~ def debug (arg=None):
+#~ def genera_sommario (arg=None):
+def debug (arg=None):
     genera_sommario_th().start()
 #~ ###
 def genera_sommario_run (arg=None):
@@ -3024,8 +3024,8 @@ def abs2name(nCol, nRow):
     idvoce = oSheet.getCellByPosition(nCol, nRow).AbsoluteName.split('$')
     return idvoce[2]+idvoce[3]
 ########################################################################
-# vedi_voce ############################################################
-def vedi_voce(riga_corrente,vRif,flags=''):
+# vedi_voce_xpwe ############################################################
+def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
     """(riga d'inserimento, riga di riferimento)"""
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -3038,9 +3038,9 @@ def vedi_voce(riga_corrente,vRif,flags=''):
     quantity = abs2name (9, sotto)
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
     oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
-    if flags in ('32769', '32801'):
-        oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
-    else:
+    if flags in ('32768', '32769', '32801'):
+        #~ oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
+    #~ else:
         oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
 ########################################################################
 def strall (el, n=3):
@@ -3051,6 +3051,7 @@ def strall (el, n=3):
 
 # XPWE_in ##########################################################
 def XPWE_in (arg=None):
+#~ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     refresh(0)
     ###
@@ -3643,33 +3644,52 @@ Si tenga conto che:
                 else:
                     descrizione =''
 
+                if mis[3] != None: #parti uguali
+                    try:
+                        #~ eval(mis[3])
+                        oSheet.getCellByPosition(5, SR).Value = abs(eval(mis[3].replace(',','.')))
+                    except:
+                        oSheet.getCellByPosition(5, SR).Formula = '=' + str(mis[3]).split('=')[-1] # tolgo evenutali '=' in eccesso
                 if mis[4] != None: #lunghezza
-                    if any(o in mis[4] for o in ('+', '*', '/', '-','^',)):
+                    try:
+                        eval(mis[4])
+                        oSheet.getCellByPosition(6, SR).Value = abs(eval(mis[4].replace(',','.')))
+                    except:
                         oSheet.getCellByPosition(6, SR).Formula = '=' + str(mis[4]).split('=')[-1] # tolgo evenutali '=' in eccesso
-                    else:
-                        oSheet.getCellByPosition(6, SR).Value = eval(mis[4].replace(',','.'))
-                else:
-                    pass
-
                 if mis[5] != None: #larghezza
-                    if any(o in mis[5] for o in ('+', '*', '/', '-', '^',)):
+                    try:
+                        eval(mis[5])
+                        oSheet.getCellByPosition(7, SR).Value = abs(eval(mis[5].replace(',','.')))
+                    except:
                         oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5]).split('=')[-1] # tolgo evenutali '=' in eccesso
-                    else:
-                        try:
-                            eval(mis[5])
-                            oSheet.getCellByPosition(7, SR).Value = eval(mis[5].replace(',','.'))
-                        except:
-                            oSheet.getCellByPosition(7, SR).Value = mis[5].replace(',','.')
-
                 if mis[6] != None: #HPESO
-                    if any(o in mis[6] for o in ('+', '*', '/', '-', '^',)):
+                    try:
+                        eval(mis[6])
+                        oSheet.getCellByPosition(8, SR).Value = abs(eval(mis[6].replace(',','.')))
+                    except:
                         oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6]).split('=')[-1] # tolgo evenutali '=' in eccesso
-                    else:
-                        oSheet.getCellByPosition(8, SR).Value = eval(mis[6])
+
                 if mis[8] == '2':
                     parziale_core(SR)
                     oSheet.getRows().removeByIndex(SR+1, 1)
                     descrizione =''
+                    
+                if '-' in mis[7]:
+                    oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
+
+                #~ try:
+                    #~ if mis[9] != '-2':
+                        #~ vedi = diz_vv.get(mis[9])
+                        #~ try:
+                            #~ vedi_voce_xpwe(SR, vedi, mis[8])
+                        #~ except:
+                            #~ MsgBox("""Il file di origine è particolarmente disordinato.
+#~ Riordinando il computo trovo riferimenti a voci non ancora inserite.
+
+#~ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
+#~ """\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
+                #~ except:
+                    #~ pass
 
                 va = oSheet.getCellByPosition(5, SR).Value
                 vb = oSheet.getCellByPosition(6, SR).Value
@@ -3690,27 +3710,10 @@ Si tenga conto che:
                 if vd ==0:
                     vd =1
                 try:
-                    if mis[3] != None: #partiuguali
-                        if '-' in mis[7] and va*vb*vc*vd >0: #quantità
-                            pu = '-1*(' + str(mis[3]) +')'
-                        else:
-                            pu = str(mis[3])
-                        if any(o in pu for o in ('+', '*', '/', '-', '^',)):
-                            oSheet.getCellByPosition(5, SR).Formula = '=' + pu.split('=')[-1] # tolgo evenutali '=' in eccesso
-
-                        else:
-                            oSheet.getCellByPosition(5, SR).Value = eval(pu)
-
-                    if '-' in mis[7] and va*vb*vc*vd >0: #quantità
-                        if mis[3] != None: #partiuguali
-                            oSheet.getCellByPosition(5, SR).Formula =  '=-1*(' + str(mis[3]) +')'
-                        else:
-                            oSheet.getCellByPosition(5, SR).Value = eval('-1')
-
                     if mis[9] != '-2':
                         vedi = diz_vv.get(mis[9])
                         try:
-                            vedi_voce(SR, vedi, mis[8])
+                            vedi_voce_xpwe(SR, vedi, mis[8])
                         except:
                             MsgBox("""Il file di origine è particolarmente disordinato.
 Riordinando il computo trovo riferimenti a voci non ancora inserite.

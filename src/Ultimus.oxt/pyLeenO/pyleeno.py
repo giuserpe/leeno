@@ -3504,52 +3504,52 @@ Si tenga conto che:
                                             righe_lista +3-1)
     oRange.setDataArray(lista_come_array)
 ### elimino le voci che hanno analisi
-    #~ for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        #~ if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
-            #~ oSheet.getRows().removeByIndex(i, 1)
-    #~ if len(lista_misure) == 0:
-        #~ MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
-        #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        #~ oDoc.CurrentController.setActiveSheet(oSheet)
-        #~ oDoc.CurrentController.ZoomValue = 100
-        #~ oDialogo_attesa.endExecute()
-        #~ return
+    for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
+            oSheet.getRows().removeByIndex(i, 1)
+    if len(lista_misure) == 0:
+        MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oDoc.CurrentController.setActiveSheet(oSheet)
+        oDoc.CurrentController.ZoomValue = 100
+        oDialogo_attesa.endExecute()
+        return
 ###
 # Compilo Analisi di prezzo ############################################
     if len(lista_analisi) !=0:
         inizializza_analisi()
-    #~ if len (lista_analisi) !=0:
-        #~ oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
-        #~ for el in lista_analisi:
-            #~ sStRange = Circoscrive_Analisi (Range2Cell()[1])
-            #~ lrow = sStRange.RangeAddress.StartRow + 1
-            #~ oSheet.getCellByPosition(0, lrow).String = el[0]
-            #~ oSheet.getCellByPosition(1, lrow).String = el[1]
-            #~ oSheet.getCellByPosition(2, lrow).String = el[2]
-            #~ oSheet.getCellByPosition(6, lrow).Value = el[4]
-            #~ n = lrow + 2
-            #~ y = 0
-            #~ for x in el[3]:
-                #~ copia_riga_analisi(n)
-                #~ try:
-                    #~ oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
-                #~ except:
-                    #~ oSheet.getCellByPosition(0, n).String = '--'
-                    #~ oSheet.getCellByPosition(1, n).String = el[3][y][1]
-                    #~ oSheet.getCellByPosition(2, n).String = el[3][y][2]
-                    #~ oSheet.getCellByPosition(4, n).Value = el[3][y][4]
-                    #~ oSheet.getCellByPosition(8, n).Value = 0
-                #~ oSheet.getCellByPosition(3, n).Value = el[3][y][3]
-                #~ y += 1
-                #~ n += 1
-            #~ oSheet.getRows().removeByIndex(n, 3)
-            #~ oSheet.getCellByPosition(0, n+2).String = ''
-            #~ oSheet.getCellByPosition(0, n+5).String = ''
-            #~ oSheet.getCellByPosition(0, n+8).String = ''
-            #~ oSheet.getCellByPosition(0, n+11).String = ''
-            #~ inizializza_analisi()
-    #Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
-    #~ tante_analisi_in_ep()
+    if len (lista_analisi) !=0:
+        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        for el in lista_analisi:
+            sStRange = Circoscrive_Analisi (Range2Cell()[1])
+            lrow = sStRange.RangeAddress.StartRow + 1
+            oSheet.getCellByPosition(0, lrow).String = el[0]
+            oSheet.getCellByPosition(1, lrow).String = el[1]
+            oSheet.getCellByPosition(2, lrow).String = el[2]
+            oSheet.getCellByPosition(6, lrow).Value = el[4]
+            n = lrow + 2
+            y = 0
+            for x in el[3]:
+                copia_riga_analisi(n)
+                try:
+                    oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
+                except:
+                    oSheet.getCellByPosition(0, n).String = '--'
+                    oSheet.getCellByPosition(1, n).String = el[3][y][1]
+                    oSheet.getCellByPosition(2, n).String = el[3][y][2]
+                    oSheet.getCellByPosition(4, n).Value = el[3][y][4]
+                    oSheet.getCellByPosition(8, n).Value = 0
+                oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                y += 1
+                n += 1
+            oSheet.getRows().removeByIndex(n, 3)
+            oSheet.getCellByPosition(0, n+2).String = ''
+            oSheet.getCellByPosition(0, n+5).String = ''
+            oSheet.getCellByPosition(0, n+8).String = ''
+            oSheet.getCellByPosition(0, n+11).String = ''
+            inizializza_analisi()
+    #~ #Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
+    tante_analisi_in_ep()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         Lib_LeenO('Computo.genera_variante')

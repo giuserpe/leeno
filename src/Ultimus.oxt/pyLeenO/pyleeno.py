@@ -1123,13 +1123,10 @@ def doppioni_run(arg=None):
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
+    lista_come_array = tuple (set(oRange.getDataArray()))
+    oSheet.getRows().removeByIndex(SR, ER-SR+1)
     
-    lista_come_array = tuple (set (oRange.getDataArray()))
     lista_tar = list()
-    if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
-        oSheet.getRows().removeByIndex(SR, ER-2-len(lista_tariffe_analisi))
-    else:
-        oSheet.getRows().removeByIndex(SR, ER-2)
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
     for el in set (lista_come_array):
         lista_tar.append(el[0])
@@ -3504,6 +3501,15 @@ Si tenga conto che:
                                             colonne_lista -1, # l'indice parte da 0
                                             righe_lista +3-1)
     oRange.setDataArray(lista_come_array)
+    oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
+    oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
+    oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
+    oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
+    oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
+
+    oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
 ### elimino le voci che hanno analisi
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:

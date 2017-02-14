@@ -3561,6 +3561,8 @@ Si tenga conto che:
     if arg == 'VARIANTE':
         Lib_LeenO('Computo.genera_variante')
     oSheet = oDoc.getSheets().getByName(arg)
+    if oSheet.getCellByPosition (1, 4).String == 'Cod. Art.?':
+        oSheet.getRows().removeByIndex(3, 4)
     oDoc.CurrentController.select(oSheet)
     iSheet_num = oSheet.RangeAddress.Sheet
 ###

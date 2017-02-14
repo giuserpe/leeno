@@ -2133,7 +2133,7 @@ def inverti_segno (arg=None):
         SR = oRangeAddress.StartRow
         ER = oRangeAddress.EndRow
         for lrow in range (SR, ER+1):
-            if oSheet.getCellByPosition(0, lrow).CellStyle == 'comp 10 s':
+            if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
                 if '-' in oSheet.getCellByPosition(9, lrow).Formula:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
                 else:

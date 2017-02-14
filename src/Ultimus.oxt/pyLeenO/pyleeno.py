@@ -203,8 +203,8 @@ def copia_sorgente_per_git(arg=None):
     elif sys.platform == 'win32':
         dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         
-        os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
-        os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
+        #~ os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
+        #~ os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
     distutils.dir_util.copy_tree(oxt_path, dest)
 
     return
@@ -1001,7 +1001,7 @@ def debug (arg=None):
 #~ ###
 def genera_sommario_run (arg=None):
     '''
-    sostituirà la sub Rifa_AA_BB_Computo
+    sostituisce la sub Rifa_AA_BB_Computo
     serve a generare i sommari in Elenco Prezzi
     '''
     oDialogo_attesa = dlg_attesa()
@@ -1057,8 +1057,6 @@ def genera_sommario_run (arg=None):
     refresh(1)
     adatta_altezza_riga(oSheet.Name)
     oDialogo_attesa.endExecute() #chiude il dialogo
-    
-
 ########################################################################
 def riordina_ElencoPrezzi (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -4379,7 +4377,7 @@ def adegua_tmpl (arg=None):
             styles.loadStylesFromURL(sUrl, list())
             Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')
-            oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 204
+            oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 205
             for el in oDoc.Sheets.ElementNames:
                 oDoc.getSheets().getByName(el).IsVisible = True
                 oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
@@ -4395,7 +4393,7 @@ def adegua_tmpl (arg=None):
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
     if ver_tmpl == 203:
         oSheet = oDoc.getSheets().getByName('S1')
-        oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 204
+        oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 205
 #~ ########################################################################
 def r_version_code(arg=None):
     if os.altsep:

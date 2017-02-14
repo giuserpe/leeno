@@ -1144,11 +1144,12 @@ def doppioni_run(arg=None):
     oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
     oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
     oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
-    oDoc.CurrentController.select(oRange)
-    ordina_col(1)
+    #~ oDoc.CurrentController.select(oRange)
+    #~ ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         tante_analisi_in_ep()
+    riordina_ElencoPrezzi()
     refresh(1)
     oDoc.CurrentController.ZoomValue = 100
     adatta_altezza_riga(oSheet.Name)

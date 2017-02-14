@@ -3523,8 +3523,8 @@ Si tenga conto che:
         return
 ###
 # Compilo Analisi di prezzo ############################################
-    if len(lista_analisi) !=0:
-        inizializza_analisi()
+    #~ if len(lista_analisi) !=0:
+    inizializza_analisi()
     if len (lista_analisi) !=0:
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_analisi:

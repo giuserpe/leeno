@@ -32,7 +32,12 @@ from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
 import random
 from com.sun.star.script.provider import XScriptProviderFactory
 from com.sun.star.script.provider import XScriptProvider
-
+def barra_di_stato (testo='', valore=0):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oProgressBar = oDoc.CurrentController.Frame.createStatusIndicator()
+    oProgressBar.start ('',100)
+    oProgressBar.Value = valore
+    oProgressBar.Text = testo
 def Xray(myObject):
     # Taken from http://www.oooforum.org/forum/viewtopic.phtml?t=23577
     xCompCont = XSCRIPTCONTEXT.getComponentContext()
@@ -995,8 +1000,8 @@ class genera_sommario_th (threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         genera_sommario_run()
-#~ def genera_sommario (arg=None):
-def debug (arg=None):
+def genera_sommario (arg=None):
+#~ def debug (arg=None):
     genera_sommario_th().start()
 #~ ###
 def genera_sommario_run (arg=None):
@@ -1163,8 +1168,8 @@ def XPWE_out(arg=None):
     esporta il documento in formato XPWE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDialogo_attesa = dlg_attesa()
-    attesa().start() #mostra il dialogo
+    #~ oDialogo_attesa = dlg_attesa()
+    #~ attesa().start() #mostra il dialogo
 
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo esistente.','Avviso!')
@@ -1303,10 +1308,10 @@ def XPWE_out(arg=None):
     PweElencoPrezzi = SubElement(PweMisurazioni,'PweElencoPrezzi')
     diz_ep = dict ()
     lista_AP = list ()
-    for n in range (0, getLastUsedCell(oSheet).EndRow):
-        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'EP-Cs') and \
-        oSheet.getCellByPosition(8, n).String  != '(AP)':
-        #~ if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'EP-Cs'):
+    for n in range (3, getLastUsedCell(oSheet).EndRow):
+        barra_di_stato(str(n) + ' ' + str(getLastUsedCell(oSheet).EndRow))
+        if oSheet.getCellByPosition(1, n).Type.value == 'TEXT' and \
+        oSheet.getCellByPosition(2, n).Type.value == 'TEXT':
             EPItem = SubElement(PweElencoPrezzi,'EPItem')
             EPItem.set('ID', str(n))
             TipoEP = SubElement(EPItem,'TipoEP')
@@ -1372,7 +1377,8 @@ def XPWE_out(arg=None):
                 xlo_mdo.text = ''
             else:
                 xlo_mdo.text = str(oSheet.getCellByPosition(6, n).Value)
-        elif oSheet.getCellByPosition(8, n).String  == '(AP)':
+        elif oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and \
+        oSheet.getCellByPosition(2, n).Type.value == 'FORMULA':
             lista_AP.append(oSheet.getCellByPosition(0, n).String)
 #Analisi di prezzo
     if len(lista_AP) != 0:
@@ -1593,7 +1599,7 @@ def XPWE_out(arg=None):
                         Flags.text = '32769'
             n = sotto+1
 ##########################
-    oDialogo_attesa.endExecute()
+    #~ oDialogo_attesa.endExecute()
     out_file = filedia('Salva con nome...', '*.xpwe', 1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
@@ -2140,9 +2146,11 @@ def inverti_segno (arg=None):
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
-def debug_tipo_di_valore(arg=None):
+#~ def debug_tipo_di_valore(arg=None):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    chi(oSheet.getCellByPosition(2, 5).Type.value)
     if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
         MsgBox(oSheet.getCellByPosition(9, 5).Formula)
 ########################################################################

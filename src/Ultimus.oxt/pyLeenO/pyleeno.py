@@ -652,6 +652,24 @@ def ultima_voce (oSheet):
             break
     return n
 ########################################################################
+def uFindStringCol (sString, nCol, oSheet):
+    '''
+    sString { string }  : stringa da cercare
+    nCol    { integer } : indice di colonna
+    oSheet  { object }  :
+
+    Trova la prima ricorrenza di una stringa (sString) nella
+    colonna nCol di un foglio di calcolo (oSheet) e restituisce
+    in numero di riga
+    '''
+    oCell = oSheet.getCellByPosition(0,0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    for nRow in range(0, aAddress.EndRow+1):
+        if sString in oSheet.getCellByPosition(nCol,nRow).String:
+            return (nRow)
+########################################################################
 def uFindString (sString, oSheet):
     '''
     sString { string }  : stringa da cercare
@@ -1063,7 +1081,8 @@ def genera_sommario_run (arg=None):
     adatta_altezza_riga(oSheet.Name)
     oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
-def riordina_ElencoPrezzi (arg=None):
+#~ def riordina_ElencoPrezzi (arg=None):
+def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -1074,10 +1093,11 @@ def riordina_ElencoPrezzi (arg=None):
     ER = oRangeAddress.EndRow-1
     if ER < SR:
         try:
-            uFindString('Fine elenco',oSheet)[1]+1
+            uFindStringCol ('Fine elenco', 0, oSheet)
         except TypeError:
             inserisci_Riga_rossa()
-        test = str(uFindString('Fine elenco',oSheet)[1]+1)
+        test = str(uFindStringCol('Fine elenco', 0, oSheet))
+        return
         rifa_nomearea('Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
         rifa_nomearea('Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
         oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -1386,7 +1406,7 @@ def XPWE_out(arg=None):
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_AP:
             try:
-                n = (uFindString(el, oSheet)[-1])
+                n = (uFindStringCol(el, oSheet))
                 EPItem = SubElement(PweElencoPrezzi,'EPItem')
                 EPItem.set('ID', str(k))
                 TipoEP = SubElement(EPItem,'TipoEP')
@@ -2146,8 +2166,8 @@ def inverti_segno (arg=None):
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
-#~ def debug_tipo_di_valore(arg=None):
-def debug(arg=None):
+def debug_tipo_di_valore(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     chi(oSheet.getCellByPosition(2, 5).Type.value)

@@ -1718,7 +1718,7 @@ def firme_in_calce_run (arg=None):
         oSheet.group(oCellRangeAddr, 1)
 
     #~ INSERIMENTO TITOLO
-        oSheet.getCellByPosition(2 , riga_corrente).String = 'Riepilogo Categorie'
+        oSheet.getCellByPosition(2 , riga_corrente).String = 'Riepilogo strutturale delle Categorie'
         oSheet.getCellByPosition(ii , riga_corrente).String = 'Incidenze %'
         oSheet.getCellByPosition(vv , riga_corrente).String = 'Importi €'
         inizio_gruppo = riga_corrente

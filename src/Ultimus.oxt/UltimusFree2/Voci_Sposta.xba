@@ -12,54 +12,6 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-rem ______________________________________________________
-sub elimina_voce &apos;elimina voce (C) Giuseppe Vizziello 2014
-&apos;On Error GoTo fine:
-	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
-	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
-	oCell=thisComponent.getCurrentSelection()
-	cRow=oCell.RangeAddress.StartRow
-	Select Case oSheet.GetCellByPosition( 0, cRow).cellstyle
-	Case &quot;An.1v-Att Start&quot;, &quot;An-1_sigla&quot;, &quot;An-lavoraz-desc&quot;, &quot;An-lavoraz-Cod-sx&quot;, &quot;An-lavoraz-desc-CEN&quot;, &quot;An-sfondo-basso Att End&quot;, _
-		&quot;Comp Start Attributo&quot;, &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp End Attributo&quot;, _
-		&quot;Comp Start Attributo_R&quot;, &quot;comp 10 s_R&quot;, &quot;Comp End Attributo_R&quot;
-	Case Else
-		Exit Sub
-	End Select
-	Select Case oNomeSheet
-		Case &quot;Analisi di Prezzo&quot;
-			sStRange = CircoscrivileAnalisi_Att (cRow)
-		Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;, &quot;VARIANTE&quot;
-			sStRange = Circoscrive_Voce_Computo_Att (cRow)
-	end select
-	With sStRange.RangeAddress
-		iRowStart =.StartRow
-		iRowEnd = .EndRow
-	End With
-	If oNomeSheet = &quot;Analisi di Prezzo&quot; Then iRowEnd=iRowEnd+1
-	ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
-&apos;	xray oSheet&apos;.Unprotect
-
-	oSheet.unprotect(&quot;&quot;)
-rem ----------------------------------------------------------------------
-rem controllo se posso procedere
-&apos;xray oSheet.cellprotection
-&apos;	If oSheet.cellprotection.IsLocked = True Then
-&apos;		MsgBox (&quot;Stai operando su un foglio protetto!&quot;&amp; CHR$(10)_
-&apos;				&amp;&quot;Per poter procedere devi prima disattivare la protezione!&quot;, 48+256, &quot;Attenzione!&quot;)
-&apos;		Exit Sub
-&apos;	EndIf
-	If MsgBox (&quot;Stai per eliminare la voce selezionata&quot;&amp; CHR$(10)_
-		&amp;&quot;Vuoi procedere?&quot;, 1+32+256, &quot;Attenzione!&quot;) = 2 Then
-		Else
-		oSheet.rows.removeByIndex (iRowStart, iRowEnd-iRowStart+1)
-		unSelect &apos;unselect ranges 	
-		Numera_Voci_Computo (&quot;&quot;)
-	End If
-fine:
-end sub
-rem ######################################################################
-
 Sub spostaVCA() &apos; assegnata a ALT-X??
 &apos; decide se attivare sposta analisi o sposta voce-computo
 	Dim nome_sheet as string

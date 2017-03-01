@@ -37,7 +37,7 @@
   <dlg:checkbox dlg:style-id="3" dlg:id="CBMdo" dlg:tab-index="5" dlg:left="13" dlg:top="36" dlg:width="70" dlg:height="7" dlg:value="Manodopera" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBDesc" dlg:tab-index="6" dlg:left="13" dlg:top="66" dlg:width="70" dlg:height="7" dlg:value="Descrizione breve" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBUsa" dlg:tab-index="12" dlg:left="13" dlg:top="56" dlg:width="70" dlg:height="7" dlg:value="Voci usate" dlg:checked="false"/>
-  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="14" dlg:left="93" dlg:top="10" dlg:width="4" dlg:height="130" dlg:align="vertical"/>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="14" dlg:left="93" dlg:top="10" dlg:width="4" dlg:height="130"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBOrig" dlg:tab-index="13" dlg:left="13" dlg:top="46" dlg:width="70" dlg:height="7" dlg:value="Codice di origine" dlg:checked="false"/>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton9" dlg:tab-index="15" dlg:left="104" dlg:top="90" dlg:width="90" dlg:height="15" dlg:value="Analisi di Prezzo" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.inizializza_analisi?language=Basic&amp;location=application" script:language="Script"/>

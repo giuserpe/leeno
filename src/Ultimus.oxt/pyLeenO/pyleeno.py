@@ -123,8 +123,8 @@ def nuovo_usobollo (arg=None):
     #~ chi(uno.sys)
     #~ chi(url)
 ########################################################################
-def voce_voce(arg=None):
-#~ def debug (arg=None):
+#~ def voce_voce(arg=None):
+def debug (arg=None):
     '''
     Invia una voce di prezzario da un elenco prezzi all'Elenco Prezzi del
     Documento di Contabilità Corrente DCC
@@ -134,9 +134,16 @@ def voce_voce(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
 
-    oRangeAddress = oSheet.getCellRangeByPosition(0, lrow, getLastUsedCell(oSheet).EndColumn, lrow).getRangeAddress()
-    
+    #~ oRangeAddress = oSheet.getCellRangeByPosition(0, lrow, getLastUsedCell(oSheet).EndColumn, lrow).getRangeAddress()
+    #~ try:
+        #~ oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    #~ except AttributeError:
+        #~ oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    #~ SR = oRangeAddress.StartRow
+    #~ ER = oRangeAddress.EndRow
+
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, getLastUsedCell(oSheet).EndColumn, lrow))
+    chi('iii')
     partenza = uno.fileUrlToSystemPath(oDoc.getURL())
         
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -150,7 +157,6 @@ def voce_voce(arg=None):
         MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
         return
     _gotoDoc(sUltimus)
-    chi(sUltimus)
     
     ddcDoc = XSCRIPTCONTEXT.getDocument()
     #~ chi(ddcDoc.getURL())
@@ -3868,6 +3874,7 @@ GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
 #
 sUltimus = ''
 def ssUltimus (arg=None):
+    oDlgMain.endExecute()
     '''
     Scrive la variabile globale che individua il Documento di Contabilità Corrente (DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
@@ -3886,7 +3893,9 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
     except:
         return
     oSheet = oDoc.getSheets().getByName('M1')
+    
     oSheet.getCellByPosition(2,27).String = sUltimus
+    DlgMain()
     return
 ########################################################################
 def debugnn (sCella='', t=''):
@@ -4538,6 +4547,7 @@ def DlgMain(arg=None):
         New_file.computo()
     toolbar_vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    global oDlgMain
     oDlgMain = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application")
     oDialog1Model = oDlgMain.Model
     oDlgMain.Title = 'Menù Principale (Ctrl+0)'
@@ -4553,6 +4563,9 @@ def DlgMain(arg=None):
     
     sString = oDlgMain.getControl("Label12")
     sString.Text = f.readline()
+    
+    sString = oDlgMain.getControl("Label_DDC")
+    sString.Text = sUltimus
 
     sString = oDlgMain.getControl("Label1")
     sString.Text = str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv
@@ -4905,8 +4918,8 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = riordina_ElencoPrezzi, 
-#~ g_exportedScripts = riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
+g_exportedScripts = Vai_a_S1,
+#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

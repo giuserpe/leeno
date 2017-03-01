@@ -2222,9 +2222,9 @@ def debug_tipo_di_valore(arg=None):
 #~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi(oSheet.getCellByPosition(2, 5).Type.value)
-    if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
-        MsgBox(oSheet.getCellByPosition(9, 5).Formula)
+    chi(oSheet.getCellByPosition(Range2Cell()[0],Range2Cell()[10]).Type.value)
+    #~ if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
+        #~ MsgBox(oSheet.getCellByPosition(9, 5).Formula)
 ########################################################################
 def debug_clipboard(arg=None):
     #~ mri(XSCRIPTCONTEXT.getComponentContext())
@@ -2345,16 +2345,16 @@ def Numera_Voci(bit=1):#
     n = 1
     if bit==0:
         for x in reversed(range(0, lrow)):
-            if oSheet.getCellByPosition(0, x).CellStyle == 'comp progress':
+            if oSheet.getCellByPosition (1,x).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
                 n = oSheet.getCellByPosition (0,x).Value +1
                 break
         for row in range(lrow,lastRow):
-            if oSheet.getCellByPosition (1,row).CellStyle == 'comp Art-EP' or oSheet.getCellByPosition (1,row).CellStyle == 'comp Art-EP_R':
+            if oSheet.getCellByPosition (1,row).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
                 oSheet.getCellByPosition (0,row).Value = n
                 n +=1
     if bit==1:
         for row in range(0,lastRow):
-            if oSheet.getCellByPosition (1,row).CellStyle == 'comp Art-EP' or oSheet.getCellByPosition (1,row).CellStyle == 'comp Art-EP_R':
+            if oSheet.getCellByPosition (1,row).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
                 oSheet.getCellByPosition (0,row).Value = n
                 n = n+1
 ########################################################################

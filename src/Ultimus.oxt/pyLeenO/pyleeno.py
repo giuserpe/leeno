@@ -1081,8 +1081,8 @@ def genera_sommario_run (arg=None):
     adatta_altezza_riga(oSheet.Name)
     oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
-#~ def riordina_ElencoPrezzi (arg=None):
-def debug (arg=None):
+def riordina_ElencoPrezzi (arg=None):
+#~ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -2033,6 +2033,58 @@ def azzera_voce(arg=None):
             dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
             ###
 ########################################################################
+def elimina_voce_azzerata (arg=None):
+    '''
+    Elimina le voci in cui compare la dicitura '*** VOCE AZZERATA ***'
+    in COMPUTO o in VARIANTE, senza chiedere conferma
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            ER = getLastUsedCell(oSheet).EndRow
+            for lrow in reversed(range(0, ER)):
+                if oSheet.getCellByPosition(2, lrow).String == '*** VOCE AZZERATA ***':
+                    elimina_voce(lRow=lrow, msg=0)
+    except:
+        return
+########################################################################
+def elimina_voce (arg=None, lRow=None, msg=1):
+    '''
+    lRow { long }  : numero riga
+    msg  { bit }   : 1 chiedi conferma con messaggio
+                     0 egegui senza conferma
+    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if lRow == None:
+        lRow = Range2Cell()[1]
+    try:
+        if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+            sStRange = Circoscrive_Voce_Computo_Att (lRow)
+        elif oSheet.Name == 'Analisi di Prezzo':
+            sStRange = Circoscrive_Analisi (lRow)
+    except:
+        return
+    sStRange.RangeAddress
+    SR = sStRange.RangeAddress.StartRow
+    ER = sStRange.RangeAddress.EndRow
+    if oSheet.Name == 'Analisi di Prezzo':
+        ER += 1
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    if msg==1:
+        if DlgSiNo("""Stai per eliminare la voce selezionata.
+        Vuoi Procedere?""",'Avviso!') ==2:
+            oSheet.getRows().removeByIndex(SR, ER-SR+1)
+            Numera_Voci(0)
+        else:
+            return
+    elif msg==0:
+        oSheet.getRows().removeByIndex(SR, ER-SR+1)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+########################################################################
+
 def copia_riga_computo(lrow):
     '''
     Inserisce una nuova riga di misurazione nel computo
@@ -4853,7 +4905,8 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-#~ g_exportedScripts = Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
+g_exportedScripts = riordina_ElencoPrezzi, 
+#~ g_exportedScripts = riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

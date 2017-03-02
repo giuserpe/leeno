@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="pippi" dlg:left="66" dlg:top="125" dlg:width="288" dlg:height="236" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="pippi" dlg:left="66" dlg:top="125" dlg:width="288" dlg:height="241" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:border="simple" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -39,8 +39,8 @@
   </dlg:button>
   <dlg:text dlg:id="Label1" dlg:tab-index="9" dlg:left="240" dlg:top="5" dlg:width="33" dlg:height="8" dlg:value="Label1"/>
   <dlg:text dlg:id="Label2" dlg:tab-index="10" dlg:left="240" dlg:top="15" dlg:width="33" dlg:height="8" dlg:value="Label2"/>
-  <dlg:text dlg:id="Label3" dlg:tab-index="11" dlg:left="163" dlg:top="5" dlg:width="75" dlg:height="8" dlg:value="Versione di LeenO installata:" dlg:align="right"/>
-  <dlg:text dlg:id="Label4" dlg:tab-index="12" dlg:left="163" dlg:top="15" dlg:width="75" dlg:height="8" dlg:value="Versione seriale template:" dlg:align="right"/>
+  <dlg:text dlg:id="Label3" dlg:tab-index="11" dlg:left="150" dlg:top="5" dlg:width="88" dlg:height="8" dlg:value="Versione di LeenO installata:" dlg:align="right"/>
+  <dlg:text dlg:id="Label4" dlg:tab-index="12" dlg:left="152" dlg:top="15" dlg:width="86" dlg:height="8" dlg:value="Versione seriale template:" dlg:align="right"/>
   <dlg:text dlg:id="Label5" dlg:tab-index="13" dlg:left="75" dlg:top="15" dlg:width="50" dlg:height="8" dlg:align="right"/>
   <dlg:text dlg:id="Label6" dlg:tab-index="14" dlg:left="11" dlg:top="5" dlg:width="60" dlg:height="8" dlg:value="Importo Computo:" dlg:align="right"/>
   <dlg:text dlg:id="Label7" dlg:tab-index="15" dlg:left="11" dlg:top="15" dlg:width="60" dlg:height="8" dlg:value="Importo Variante:" dlg:align="right"/>
@@ -56,11 +56,11 @@
   <dlg:button dlg:style-id="3" dlg:id="CommandButton12" dlg:tab-index="21" dlg:left="148" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Cancella voci non usate nel Computo..." dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_SegnaVoci?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:style-id="4" dlg:id="Label12" dlg:tab-index="22" dlg:left="231" dlg:top="225" dlg:width="47" dlg:height="8" dlg:value="Label12" dlg:align="right">
+  <dlg:text dlg:style-id="4" dlg:id="Label12" dlg:tab-index="22" dlg:left="216" dlg:top="230" dlg:width="62" dlg:height="8" dlg:value="Label12" dlg:align="right">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:text>
   <dlg:img dlg:style-id="0" dlg:id="ImageControl1" dlg:tab-index="23" dlg:left="12" dlg:top="65" dlg:width="262" dlg:height="78"/>
-  <dlg:text dlg:style-id="5" dlg:id="Label_DDC" dlg:tab-index="24" dlg:left="33" dlg:top="217" dlg:width="197" dlg:height="10" dlg:value="Documento di Contabilità Corrente"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label_DDC" dlg:tab-index="24" dlg:left="33" dlg:top="217" dlg:width="244" dlg:height="10" dlg:value="Documento di Contabilità Corrente"/>
   <dlg:button dlg:style-id="2" dlg:id="CommandButton13" dlg:tab-index="25" dlg:left="10" dlg:top="215" dlg:width="20" dlg:height="15" dlg:value="DCC:">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ssUltimus?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>

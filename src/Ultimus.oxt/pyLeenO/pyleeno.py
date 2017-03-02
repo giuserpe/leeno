@@ -123,8 +123,8 @@ def nuovo_usobollo (arg=None):
     #~ chi(uno.sys)
     #~ chi(url)
 ########################################################################
-#~ def voce_voce(arg=None):
-def debug (arg=None):
+def invia_voce_ep(arg=None):
+#~ def debug (arg=None):
     '''
     Invia una voce di prezzario da un elenco prezzi all'Elenco Prezzi del
     Documento di Contabilità Corrente DCC
@@ -133,17 +133,14 @@ def debug (arg=None):
     #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    SR = oRangeAddress.StartRow
+    ER = oRangeAddress.EndRow
 
-    #~ oRangeAddress = oSheet.getCellRangeByPosition(0, lrow, getLastUsedCell(oSheet).EndColumn, lrow).getRangeAddress()
-    #~ try:
-        #~ oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
-    #~ except AttributeError:
-        #~ oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-    #~ SR = oRangeAddress.StartRow
-    #~ ER = oRangeAddress.EndRow
-
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, lrow, getLastUsedCell(oSheet).EndColumn, lrow))
-    chi('iii')
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, getLastUsedCell(oSheet).EndColumn, ER))
     partenza = uno.fileUrlToSystemPath(oDoc.getURL())
         
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -152,44 +149,38 @@ def debug (arg=None):
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-
+    
     if sUltimus == '':
         MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
         return
     _gotoDoc(sUltimus)
     
     ddcDoc = XSCRIPTCONTEXT.getDocument()
-    #~ chi(ddcDoc.getURL())
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
     dccSheet.IsVisible = True
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
-    dccSheet.getRows().insertByIndex(3, 1)
+    dccSheet.getRows().insertByIndex(3, ER-SR+1)
     ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, 3))
-    #~ chi('ppp')
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-
-    #~ _gotoDoc(partenza)
-
+    _gotoDoc(partenza)
 ########################################################################
 def _gotoDoc(sUrl):
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
     '''
     sUrl  { string } : nome del file
     porta il focus su di un determinato documento
     '''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    path = oDoc.getURL()
-    desktop = XSCRIPTCONTEXT.getDesktop()
-    opz = PropertyValue()
     sUrl = uno.systemPathToFileUrl(sUrl)
-    target = desktop.loadComponentFromURL(sUrl, "_default", 0, (opz,))
-    oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
-    #~ mri(target.getCurrentController().getFrame())
-    target.getCurrentController().getFrame().focusGained(oFocus)
+    target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
+    target.getCurrentController().Frame.ContainerWindow.toFront()
+    target.getCurrentController().Frame.activate()
+    oDialogo_attesa.endExecute()
 ########################################################################
 def oggi():
     '''
@@ -209,7 +200,7 @@ def copia_sorgente_per_git(arg=None):
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         
         #~ os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt')
-        #~ os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
+        os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
         
     elif sys.platform == 'win32':
         dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'

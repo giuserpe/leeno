@@ -2030,7 +2030,7 @@ def azzera_voce(arg=None):
             dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
             ###
 ########################################################################
-def elimina_voce_azzerata (arg=None):
+def elimina_voci_azzerate (arg=None):
     '''
     Elimina le voci in cui compare la dicitura '*** VOCE AZZERATA ***'
     in COMPUTO o in VARIANTE, senza chiedere conferma
@@ -2043,6 +2043,7 @@ def elimina_voce_azzerata (arg=None):
             for lrow in reversed(range(0, ER)):
                 if oSheet.getCellByPosition(2, lrow).String == '*** VOCE AZZERATA ***':
                     elimina_voce(lRow=lrow, msg=0)
+            Numera_Voci(1)
     except:
         return
 ########################################################################

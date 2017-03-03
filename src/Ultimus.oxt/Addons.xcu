@@ -512,6 +512,40 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="Ca60" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$azzera_voce?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/azzera</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Vedi voce precedente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca70" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$elimina_voci_azzerate?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/elimina_azzerate</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Vedi voce precedente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
       </node>
     </node>
     <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->

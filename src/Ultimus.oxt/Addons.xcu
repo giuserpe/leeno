@@ -366,6 +366,23 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="EL20" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$invia_voce_ep?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/invia_voce_ep</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Invia le voci di Elenco Prezzi selezionate al DCC</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
       </node>
     </node>
     <!-- ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI ANALISI -->
@@ -523,7 +540,7 @@
             <value>%origin%/icons/azzera</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Vedi voce precedente</value>
+            <value>Azzera una voce di computo</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -540,7 +557,7 @@
             <value>%origin%/icons/elimina_azzerate</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Vedi voce precedente</value>
+            <value>Elimina le voci di computo azzerate</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

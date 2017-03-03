@@ -124,7 +124,6 @@ def nuovo_usobollo (arg=None):
     #~ chi(url)
 ########################################################################
 def invia_voce_ep(arg=None):
-#~ def debug (arg=None):
     '''
     Invia una voce di prezzario da un elenco prezzi all'Elenco Prezzi del
     Documento di Contabilità Corrente DCC
@@ -139,10 +138,8 @@ def invia_voce_ep(arg=None):
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
     SR = oRangeAddress.StartRow
     ER = oRangeAddress.EndRow
-
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, getLastUsedCell(oSheet).EndColumn, ER))
     partenza = uno.fileUrlToSystemPath(oDoc.getURL())
-        
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -154,7 +151,6 @@ def invia_voce_ep(arg=None):
         MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
         return
     _gotoDoc(sUltimus)
-    
     ddcDoc = XSCRIPTCONTEXT.getDocument()
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
     dccSheet.IsVisible = True
@@ -176,10 +172,20 @@ def _gotoDoc(sUrl):
     sUrl  { string } : nome del file
     porta il focus su di un determinato documento
     '''
+    #~ sUrl = sUltimus
     sUrl = uno.systemPathToFileUrl(sUrl)
     target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
     target.getCurrentController().Frame.ContainerWindow.toFront()
     target.getCurrentController().Frame.activate()
+    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
+        #~ target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
+        #~ target.getCurrentController().Frame.ContainerWindow.toFront()
+        #~ target.getCurrentController().Frame.activate()
+    #~ elif sys.platform == 'win32':
+        #~ desktop = XSCRIPTCONTEXT.getDesktop()
+        #~ oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
+        #~ target = desktop.loadComponentFromURL(sUrl, "_default", 0, list())
+        #~ target.getCurrentController().getFrame().focusGained(oFocus)
     oDialogo_attesa.endExecute()
 ########################################################################
 def oggi():
@@ -201,7 +207,7 @@ def copia_sorgente_per_git(arg=None):
         
         #~ os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt')
         os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
-        
+
     elif sys.platform == 'win32':
         dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         

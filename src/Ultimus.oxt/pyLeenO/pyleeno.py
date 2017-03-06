@@ -139,7 +139,10 @@ def invia_voce_ep(arg=None):
     SR = oRangeAddress.StartRow
     ER = oRangeAddress.EndRow
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, getLastUsedCell(oSheet).EndColumn, ER))
-    partenza = uno.fileUrlToSystemPath(oDoc.getURL())
+    try:
+        partenza = uno.fileUrlToSystemPath(oDoc.getURL())
+    except:
+        MsgBox("E' necessario salvare il file di partenza.", "Attenzione!")
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -166,27 +169,30 @@ def invia_voce_ep(arg=None):
     _gotoDoc(partenza)
 ########################################################################
 def _gotoDoc(sUrl):
-    oDialogo_attesa = dlg_attesa()
-    attesa().start() #mostra il dialogo
     '''
     sUrl  { string } : nome del file
     porta il focus su di un determinato documento
     '''
-    #~ sUrl = sUltimus
     sUrl = uno.systemPathToFileUrl(sUrl)
-    target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
-    target.getCurrentController().Frame.ContainerWindow.toFront()
-    target.getCurrentController().Frame.activate()
-    #~ if sys.platform == 'linux' or sys.platform == 'darwin':
+    #~ target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
+    #~ target.getCurrentController().Frame.ContainerWindow.toFront()
+    #~ target.getCurrentController().Frame.activate()
+    if sys.platform == 'linux' or sys.platform == 'darwin':
+        oDialogo_attesa = dlg_attesa()
+        attesa().start() #mostra il dialogo
+        target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
+        target.getCurrentController().Frame.ContainerWindow.toFront()
+        target.getCurrentController().Frame.activate()
+        oDialogo_attesa.endExecute()
+    elif sys.platform == 'win32':
         #~ target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
         #~ target.getCurrentController().Frame.ContainerWindow.toFront()
         #~ target.getCurrentController().Frame.activate()
-    #~ elif sys.platform == 'win32':
-        #~ desktop = XSCRIPTCONTEXT.getDesktop()
-        #~ oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
-        #~ target = desktop.loadComponentFromURL(sUrl, "_default", 0, list())
-        #~ target.getCurrentController().getFrame().focusGained(oFocus)
-    oDialogo_attesa.endExecute()
+        
+        desktop = XSCRIPTCONTEXT.getDesktop()
+        oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
+        target = desktop.loadComponentFromURL(sUrl, "_default", 0, list())
+        target.getCurrentController().getFrame().focusGained(oFocus)
 ########################################################################
 def oggi():
     '''
@@ -212,7 +218,7 @@ def copia_sorgente_per_git(arg=None):
         dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         
         #~ os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
-        #~ os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
+        os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
     distutils.dir_util.copy_tree(oxt_path, dest)
 
     return
@@ -2838,6 +2844,216 @@ def XML_import (arg=None):
     oSheet.getCellRangeByPosition (8,scarto_righe,8,righe_lista + scarto_righe - 1).CellStyle = 'List-%'
     oSheet.getCellRangeByPosition (10,scarto_righe,10,righe_lista + scarto_righe - 1).CellStyle = 'List-%'
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
+# XML_import ###########################################################
+# XML_import ###########################################################
+#~ def debug (arg=None):
+def XML_import_ep (arg=None):
+    New_file.computo()
+    '''
+    Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
+    del template COMPUTO.
+    '''
+    try:
+        filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
+    except:
+        return
+    datarif = datetime.now()
+    # inizializzazioe delle variabili
+    lista_articoli = list() # lista in cui memorizzare gli articoli da importare
+    diz_um = dict() # array per le unità di misura
+    # stringhe per descrizioni articoli
+    desc_breve = str()
+    desc_estesa = str()
+    # effettua il parsing del file XML
+    tree = ElementTree()
+    if filename == None:
+        return
+    tree.parse(filename)
+    # ottieni l'item root
+    root = tree.getroot()
+    logging.debug(list(root))
+    # effettua il parsing di tutti gli elemnti dell'albero XMLsub nuova_voce_computo_at
+    iter = tree.getiterator()
+    listaSOA = []
+    articolo = []
+    articolo_modificato = ()
+    lingua_scelta = 'it'
+########################################################################
+    # nome del prezzario
+    prezzario = root.find('{six.xsd}prezzario')
+    if len(prezzario.findall('{six.xsd}przDescrizione')) == 2:
+        if prezzario.findall('{six.xsd}przDescrizione')[0].get('lingua') == lingua_scelta:
+            nome = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
+        else:
+            nome = prezzario.findall('{six.xsd}przDescrizione')[1].get('breve')
+    else:
+        nome = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
+########################################################################
+    for elem in iter:
+        # esegui le verifiche sulla root dell'XML
+        if elem.tag == '{six.xsd}intestazione':
+            intestazioneId= elem.get('intestazioneId')
+            lingua= elem.get('lingua')
+            separatore= elem.get('separatore')
+            separatoreParametri= elem.get('separatoreParametri')
+            valuta= elem.get('valuta')
+            autore= elem.get('autore')
+            versione= elem.get('versione')
+            # inserisci i dati generali
+            #~ self.update_dati_generali (nome=None, cliente=None,
+                                       #~ redattore=autore,
+                                       #~ ricarico=1,
+                                       #~ manodopera=None,
+                                       #~ sicurezza=None,
+                                       #~ indirizzo=None,
+                                       #~ comune=None, provincia=None,
+                                       #~ valuta=valuta)
+        elif elem.tag == '{six.xsd}categoriaSOA':
+            soaId = elem.get('soaId')
+            soaCategoria = elem.get ('soaCategoria')
+            soaDescrizione = elem.find('{six.xsd}soaDescrizione')
+            if soaDescrizione != None:
+                breveSOA = soaDescrizione.get('breve')
+            voceSOA = (soaCategoria, soaId, breveSOA)
+            listaSOA.append(voceSOA)
+        elif elem.tag == '{six.xsd}prezzario':
+            prezzarioId = elem.get('prezzarioId')
+            przId= elem.get('przId')
+            livelli_struttura= len(elem.get('prdStruttura').split('.'))
+            categoriaPrezzario= elem.get('categoriaPrezzario')
+########################################################################
+        elif elem.tag == '{six.xsd}unitaDiMisura':
+            um_id= elem.get('unitaDiMisuraId')
+            um_sim= elem.get('simbolo')
+            um_dec= elem.get('decimali')
+            # crea il dizionario dell'unita di misura
+########################################################################
+            #~ unità di misura
+            unita_misura = ''
+            try:
+                if len (elem.findall('{six.xsd}udmDescrizione')) == 1:
+                    #~ unita_misura = elem.getchildren()[0].get('breve')
+                    unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
+                else:
+                    if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
+                        idx = 1 #ITALIANO
+                    else:
+                        idx = 0 #TEDESCO
+                    unita_misura = elem.findall('{six.xsd}udmDescrizione')[idx].get('breve')
+            except IndexError:
+                pass
+            diz_um[um_id] = unita_misura
+########################################################################
+        # se il tag è un prodotto fa parte degli articoli da analizzare
+        elif elem.tag == '{six.xsd}prodotto':
+            prod_id = elem.get('prodottoId')
+            if prod_id is not None:
+                prod_id = int(prod_id)
+            tariffa= elem.get('prdId')
+            sic = elem.get('onereSicurezza')
+            if sic != None:
+                sicurezza = float(sic)
+            else:
+                sicurezza = ''
+########################################################################
+            if diz_um.get(elem.get('unitaDiMisuraId')) != None:
+                unita_misura = diz_um.get(elem.get('unitaDiMisuraId'))
+            else:
+                unita_misura = ''
+########################################################################
+            # verifica e ricava le sottosezioni
+            sub_mdo = elem.find('{six.xsd}incidenzaManodopera')
+            if sub_mdo != None:
+                mdo = float(sub_mdo.text)
+            else:
+                mdo =''
+########################################################################
+            try:
+                if len (elem.findall('{six.xsd}prdDescrizione')) == 1:
+                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
+                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
+                else:
+            #descrizione voce
+                    if elem.findall('{six.xsd}prdDescrizione')[0].get('lingua') == lingua_scelta:
+                        idx = 0 #ITALIANO
+                    else:
+                        idx = 1 #TEDESCO
+                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[idx].get('breve')
+                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[idx].get('estesa')
+                if desc_breve == None:
+                    desc_breve = ''
+                if desc_estesa == None:
+                    desc_estesa = ''
+                if len(desc_breve) > len (desc_estesa):
+                    desc_voce = desc_breve
+                else:
+                    desc_voce = desc_estesa
+            except IndexError:
+                pass
+########################################################################
+            sub_quot = elem.find('{six.xsd}prdQuotazione')
+            if sub_quot != None:
+                list_nr = sub_quot.get('listaQuotazioneId')
+                if sub_quot.get('valore') != None:
+                    valore = float(sub_quot.get('valore'))
+                if valore == 0:
+                    valore = ''
+                if sub_quot.get('quantita') is not None: #SERVE DAVVERO???
+                    quantita = float(sub_quot.get('quantita'))
+            else:
+                valore = ''
+                quantita = ''
+#~ Modifiche introdotte da Valerio De Angelis che ringrazio
+            # Riarrangio i dati di ogni articolo così da formare una tupla 1D
+            # l'idea è creare un array 2D e caricarlo direttamente nel foglio in una singola operazione
+            vuoto = ''
+            elem_7 = ''
+            elem_11 = ''
+            if mdo != '' and mdo != 0:
+                elem_7 = mdo/100
+            if sicurezza != '' and valore != '':
+                elem_11 = valore*sicurezza/100
+            # Nota che ora articolo_modificato non è più una lista ma una tupla,
+            # riguardo al motivo, vedi commenti in basso
+            articolo_modificato =  (tariffa,          #2  colonna
+                                    desc_voce,        #4  colonna
+                                    unita_misura,     #6  colonna
+                                    vuoto,
+                                    valore,           #7  prezzo
+                                    elem_7,           #8  mdo %
+                                    elem_11)          #11 sicurezza %
+            lista_articoli.append(articolo_modificato)
+# compilo la tabella ###################################################
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getRows().insertByIndex(4, len(lista_articoli))
+
+# nome del prezzario ###################################################
+    oSheet.getCellByPosition(1, 1).String = '.\n' + nome
+    #~ lista_come_array = tuple(lista_articoli)
+
+    #~ colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    #~ righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+    #~ chi(colonne_lista)
+    #~ chi(righe_lista)
+    #~ oRange = oSheet.getCellRangeByPosition(0, 3, colonne_lista+1, righe_lista+1)
+    #~ mri(oRange)
+    #~ oRange.setDataArray(lista_come_array)
+    #~ MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
+
+    lista_come_array = tuple(lista_articoli)
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
+    scarto_righe = 4 # numero righe da saltare a partire dall'alto
+    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+    oRange = oSheet.getCellRangeByPosition( scarto_colonne,
+                                            scarto_righe,
+                                            colonne_lista + scarto_colonne - 1, # l'indice parte da 0
+                                            righe_lista + scarto_righe - 1)
+    oRange.setDataArray(lista_come_array)
+    oSheet.getRows().removeByIndex(3, 1)
+
 # XML_import ###########################################################
 ########################################################################
 def XML_import_BOLZANO (arg=None):

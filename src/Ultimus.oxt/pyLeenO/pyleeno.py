@@ -2932,7 +2932,6 @@ def XML_import_ep (arg=None):
             unita_misura = ''
             try:
                 if len (elem.findall('{six.xsd}udmDescrizione')) == 1:
-                    #~ unita_misura = elem.getchildren()[0].get('breve')
                     unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
                 else:
                     if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
@@ -2968,6 +2967,7 @@ def XML_import_ep (arg=None):
             else:
                 mdo =''
 ########################################################################
+            cod_madre = '#giuSerpe#'
             try:
                 if len (elem.findall('{six.xsd}prdDescrizione')) == 1:
                     desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
@@ -2988,6 +2988,11 @@ def XML_import_ep (arg=None):
                     desc_voce = desc_breve
                 else:
                     desc_voce = desc_estesa
+                if len(tariffa.split('.')) == 4:
+                    cod_madre = tariffa
+                    madre = desc_voce
+                if len(tariffa.split('.')) == 5:
+                    desc_voce = madre + '\n - ' + desc_voce
             except IndexError:
                 pass
 ########################################################################
@@ -3053,7 +3058,8 @@ def XML_import_ep (arg=None):
                                             righe_lista + scarto_righe - 1)
     oRange.setDataArray(lista_come_array)
     oSheet.getRows().removeByIndex(3, 1)
-
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    struttura_Elenco()
 # XML_import ###########################################################
 ########################################################################
 def XML_import_BOLZANO (arg=None):

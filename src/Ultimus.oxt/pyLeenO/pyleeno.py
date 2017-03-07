@@ -81,6 +81,13 @@ class New_file:
     '''Crea un nuovo computo o un nuovo listino.'''
     def __init__(self):#, computo, listino):
         pass
+    def computo_0():
+        desktop = XSCRIPTCONTEXT.getDesktop()
+        opz = PropertyValue()
+        opz.Name = 'AsTemplate'
+        opz.Value = True
+        document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
+        return (document)
     def computo():
         desktop = XSCRIPTCONTEXT.getDesktop()
         opz = PropertyValue()
@@ -2846,9 +2853,9 @@ def XML_import (arg=None):
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 # XML_import ###########################################################
 # XML_import ###########################################################
-#~ def debug (arg=None):
-def XML_import_ep (arg=None):
-    New_file.computo()
+def debug (arg=None):
+#~ def XML_import_ep (arg=None):
+    New_file.computo_0()
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
@@ -3028,23 +3035,13 @@ def XML_import_ep (arg=None):
                                     elem_7,           #8  mdo %
                                     elem_11)          #11 sicurezza %
             lista_articoli.append(articolo_modificato)
-# compilo la tabella ###################################################
+# compilo ##############################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellByPosition(2, 2).String = nome
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    #~ oSheet.getCellByPosition(1, 1).String = nome
     oSheet.getRows().insertByIndex(4, len(lista_articoli))
-
-# nome del prezzario ###################################################
-    oSheet.getCellByPosition(1, 1).String = '.\n' + nome
-    #~ lista_come_array = tuple(lista_articoli)
-
-    #~ colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
-    #~ righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
-    #~ chi(colonne_lista)
-    #~ chi(righe_lista)
-    #~ oRange = oSheet.getCellRangeByPosition(0, 3, colonne_lista+1, righe_lista+1)
-    #~ mri(oRange)
-    #~ oRange.setDataArray(lista_come_array)
-    #~ MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 
     lista_come_array = tuple(lista_articoli)
     # Parametrizzo il range di celle a seconda della dimensione della lista

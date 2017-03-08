@@ -81,23 +81,18 @@ class New_file:
     '''Crea un nuovo computo o un nuovo listino.'''
     def __init__(self):#, computo, listino):
         pass
-    def computo_0():
+    def computo(arg=1):
+        '''arg  { integer } : 1 mostra il dialogo di salvataggio file'''
         desktop = XSCRIPTCONTEXT.getDesktop()
         opz = PropertyValue()
         opz.Name = 'AsTemplate'
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
-        return (document)
-    def computo():
-        desktop = XSCRIPTCONTEXT.getDesktop()
-        opz = PropertyValue()
-        opz.Name = 'AsTemplate'
-        opz.Value = True
-        document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
-        MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
+        if arg==1:
+            MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
-        salva_come()
-        autoexec()
+            salva_come()
+            autoexec()
         return (document)
     def listino():
         desktop = XSCRIPTCONTEXT.getDesktop()
@@ -2852,10 +2847,10 @@ def XML_import (arg=None):
     oSheet.getCellRangeByPosition (10,scarto_righe,10,righe_lista + scarto_righe - 1).CellStyle = 'List-%'
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 # XML_import ###########################################################
-# XML_import ###########################################################
-def debug (arg=None):
-#~ def XML_import_ep (arg=None):
-    New_file.computo_0()
+# XML_import_ep ###########################################################
+#~ def debug (arg=None):
+def XML_import_ep (arg=None):
+    New_file.computo(0)
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.

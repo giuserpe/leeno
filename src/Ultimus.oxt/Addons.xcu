@@ -718,7 +718,7 @@
               <value>Nuovo...</value>
             </prop>
             <node oor:name="Submenu">
-              <node oor:name="m0U01" oor:op="replace">
+              <node oor:name="m0U10" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -735,7 +735,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m0U02" oor:op="replace">
+              <node oor:name="m0U20" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -749,7 +749,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m0U03" oor:op="replace">
+              <node oor:name="m0U30" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -763,7 +763,21 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m0U04" oor:op="replace">
+              <node oor:name="m0U40" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_ep?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa voci da prezzario XML-SIX in Elenco Prezzi</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m0U50" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
                 </prop>
@@ -771,7 +785,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              <node oor:name="m0U05" oor:op="replace">
+              <node oor:name="m0U60" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -788,7 +802,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m0U06" oor:op="replace">
+              <node oor:name="m0U70" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -802,7 +816,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m0U07" oor:op="replace">
+              <node oor:name="m0U80" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -816,7 +830,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m0U08" oor:op="replace">
+              <node oor:name="m0U90" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
                 </prop>
@@ -824,7 +838,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              <node oor:name="m0U09" oor:op="replace">
+              <node oor:name="m0U91" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>

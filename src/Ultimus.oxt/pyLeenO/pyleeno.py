@@ -62,24 +62,9 @@ def LeenO_path(arg=None):
     expath=pir.getPackageLocation('org.giuseppe-vizziello.leeno')
     return (expath)
 ########################################################################
-#~ class New_File:
-    #~ ''' Crea un nuovo computo o un nuovo listino '''
-    #~ def __init__(self):
-        #~ self.desktop = XSCRIPTCONTEXT.getDesktop()
-        #~ self.opz = PropertyValue()
-        #~ self.opz.Name = 'AsTemplate'
-        #~ self.opz.Value = True
-    #~ def loadComponent(self, filename):
-        #~ path = os.path.join(LeenO_path(), 'template', 'leeno', filename)
-        #~ return self.desktop.loadComponentFromURL(path, '_blank', 0, (self.opz,))
-    #~ def computo(self):
-        #~ return self.loadComponent('Computo_LeenO.ots')
-    #~ def listino(self):
-        #~ return self.loadComponent('Listino_LeenO.ots')
-########################################################################
 class New_file:
-    '''Crea un nuovo computo o un nuovo listino.'''
-    def __init__(self):#, computo, listino):
+    '''Crea un nuovo computo.'''
+    def __init__(self):#, computo):
         pass
     def computo(arg=1):
         '''arg  { integer } : 1 mostra il dialogo di salvataggio file'''
@@ -94,14 +79,6 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
             salva_come()
             autoexec()
         return (document)
-    def listino():
-        desktop = XSCRIPTCONTEXT.getDesktop()
-        opz = PropertyValue()
-        opz.Name = 'AsTemplate'
-        opz.Value = True
-        document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Listino_LeenO.ots', "_blank", 0, (opz,))
-        autoexec()
-        return (document)
     def usobollo():
         desktop = XSCRIPTCONTEXT.getDesktop()
         opz = PropertyValue()
@@ -112,9 +89,6 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
 ########################################################################
 def nuovo_computo (arg=None):
     New_file.computo()
-########################################################################
-def nuovo_listino (arg=None):
-    New_file.listino()
 ########################################################################
 def nuovo_usobollo (arg=None):
     New_file.usobollo()
@@ -4932,7 +4906,7 @@ def taglia_x(arg=None):
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = Vai_a_S1,
-#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
+#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

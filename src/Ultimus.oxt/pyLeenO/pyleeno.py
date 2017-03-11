@@ -2848,7 +2848,6 @@ def XML_import (arg=None):
     MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 # XML_import ###########################################################
 # XML_import_ep ###########################################################
-#~ def debug (arg=None):
 def XML_import_ep (arg=None):
     New_file.computo(0)
     '''
@@ -2856,9 +2855,12 @@ def XML_import_ep (arg=None):
     del template COMPUTO.
     '''
     try:
+        attesa().start() #mostra il dialogo
+        oDialogo_attesa = dlg_attesa()
         filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
     except:
         return
+
     datarif = datetime.now()
     # inizializzazioe delle variabili
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare
@@ -3052,17 +3054,28 @@ def XML_import_ep (arg=None):
     oSheet.getRows().removeByIndex(3, 1)
     oDoc.CurrentController.setActiveSheet(oSheet)
     struttura_Elenco()
+    oDialogo_attesa.endExecute()
 # XML_import ###########################################################
 ########################################################################
-def XML_import_BOLZANO (arg=None):
+def XML_import_multi (arg=None):
+#~ def debug (arg=None):
+    MsgBox ("L'importazione dati dal formato XML-SIX potrebbe richiedere del tempo.", 'Avviso')
     '''
     Routine di importazione di un prezziario XML formato SIX. Molto
     liberamente tratta da PreventARES https://launchpad.net/preventares
     di <Davide Vescovini> <davide.vescovini@gmail.com>
     *Versione bilingue*
     '''
-    New_file.listino()
-    filename = filedia('Scegli il file XML-SIX da convertire...','*.xml')
+    New_file.computo(0)
+    try:
+        filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
+        if filename == None:
+            return
+        oDialogo_attesa = dlg_attesa()
+        attesa().start() #mostra il dialogo
+    except:
+        return
+        
     datarif = datetime.now()
     # inizializzazioe delle variabili
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare
@@ -3131,20 +3144,20 @@ def XML_import_BOLZANO (arg=None):
 ########################################################################
             #~ unità di misura
             unita_misura = ''
-            #~ try:
-            if len (elem.findall('{six.xsd}udmDescrizione')) == 1:
-                unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
-            else:
-                if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
-                    unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
-                    unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
+            try:
+                if len (elem.findall('{six.xsd}udmDescrizione')) == 1:
+                    unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
                 else:
-                    unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
-                    unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
-            if unita_misura != None:
-                unita_misura = unita_misura1 +' § '+ unita_misura2
-            #~ except IndexError:
-                #~ pass
+                    if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
+                        unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
+                        unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
+                    else:
+                        unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
+                        unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
+                if unita_misura != None:
+                    unita_misura = unita_misura1 +' § '+ unita_misura2
+            except IndexError:
+                pass
             diz_um[um_id] = unita_misura
 ########################################################################
         # se il tag è un prodotto fa parte degli articoli da analizzare
@@ -3230,34 +3243,26 @@ def XML_import_BOLZANO (arg=None):
             vuoto = ''
             elem_7 = ''
             elem_11 = ''
-            articolo_modificato =  (prod_id,          #0  colonna
-                                    vuoto,            #1  colonna
-                                    tariffa,          #2  colonna
-                                    vuoto,            #3  colonna
+            articolo_modificato =  (tariffa,          #2  colonna
                                     desc_voce,        #4  colonna
-                                    vuoto,            #5  colonna
                                     unita_misura,     #6  colonna
-                                    valore,           #7  colonna
-                                    elem_7,           #8  colonna %
-                                    vuoto,            #9  colonna
-                                    vuoto,            #10 colonna
-                                    elem_11)          #11 colonna %
+                                    vuoto,
+                                    valore,           #7  prezzo
+                                    elem_7,           #8  mdo %
+                                    elem_11)          #11 sicurezza %
             lista_articoli.append(articolo_modificato)
 # compilo la tabella ###################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByName('Listino')
-    oSheet.getCellByPosition(6, 0).Value = 1 #Livello di accodamento
-    if oSheet.getCellByPosition(5, 4).String == '': #se la cella F5 è vuota, elimina riga
-        oRangeAddress = oSheet.getCellRangeByPosition (0,4,1,4).getRangeAddress()
-        oSheet.removeRange(oRangeAddress, 3) # Mode.ROWS
-# nome del prezzario ###################################################
-    oSheet.getCellByPosition(2, 0).String = '.\n' + nome
-    # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
-    # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellByPosition(2, 2).String = nome
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    #~ oSheet.getCellByPosition(1, 1).String = nome
+    oSheet.getRows().insertByIndex(4, len(lista_articoli))
+
     lista_come_array = tuple(lista_articoli)
     # Parametrizzo il range di celle a seconda della dimensione della lista
     scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
-    scarto_righe = 5 # numero righe da saltare a partire dall'alto
+    scarto_righe = 4 # numero righe da saltare a partire dall'alto
     colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
     oRange = oSheet.getCellRangeByPosition( scarto_colonne,
@@ -3265,13 +3270,11 @@ def XML_import_BOLZANO (arg=None):
                                             colonne_lista + scarto_colonne - 1, # l'indice parte da 0
                                             righe_lista + scarto_righe - 1)
     oRange.setDataArray(lista_come_array)
-    oSheet.getCellRangeByPosition (0,scarto_righe,5,righe_lista + scarto_righe - 1).CellStyle = 'List-stringa-sin'
-    oSheet.getCellRangeByPosition (6,scarto_righe,6,righe_lista + scarto_righe - 1).CellStyle = 'List-stringa-centro'
-    oSheet.getCellRangeByPosition (7,scarto_righe,11,righe_lista + scarto_righe - 1).CellStyle = 'List-num-euro'
-    oSheet.getCellRangeByPosition (8,scarto_righe,8,righe_lista + scarto_righe - 1).CellStyle = 'List-%'
-    oSheet.getCellRangeByPosition (10,scarto_righe,10,righe_lista + scarto_righe - 1).CellStyle = 'List-%'
-    MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-# XML_import_BOLZANO ###################################################
+    oSheet.getRows().removeByIndex(3, 1)
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    struttura_Elenco()
+    oDialogo_attesa.endExecute()
+# XML_import_multi ###################################################
 ########################################################################
 # parziale_core ########################################################
 def parziale_core(lrow):
@@ -4997,13 +5000,20 @@ class attesa (threading.Thread):
     '''avvia il dialogo di attesa'''
     def __init__(self):
         threading.Thread.__init__(self)
-    def run(self):
+    def run(self, msg=''):
         oDialog1Model = oDialogo_attesa.Model # oDialogo_attesa è una variabile generale
-        oDialog1Model.Title = 'Operazione in corso...'
-        sUrl = LeenO_path()+'/icons/LeenO_square.png'
-        oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
+        
+        sString = oDialogo_attesa.getControl("Label1")
+        sString.Text = 'ATTENDI...'
+        oDialogo_attesa.Title = 'Operazione in corso...'
+
+        #~ sUrl = LeenO_path()+'/icons/LeenO_square.png'
+        #~ oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
         oDialogo_attesa.execute()
         return
+#~ def debug(arg=None):
+    #~ oDialogo_attesa = dlg_attesa()
+    #~ attesa().start() #mostra il dialogo
 ########################################################################
 class firme_in_calce_th (threading.Thread):
     def __init__(self):
@@ -5131,7 +5141,7 @@ def taglia_x(arg=None):
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = Vai_a_S1,
-#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import_BOLZANO, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
+#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_listino, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

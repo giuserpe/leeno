@@ -179,31 +179,4 @@ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 	Next
 	exit sub
 end Sub
-&apos;#########################################################################
-Sub tante_analisi_in_ep &apos;vai_ed_esegui &apos;temporanea creata per registrare in automatico le analisi in EP
-	&apos; senza effettuare il riordino dell&apos;EP ne altro controllo
-	&apos;l&apos;avesse avuta giuserpe per buttare in EP 350 analisi avrebbe rispatmiato tempo e fatica
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;cancella_analisi_da_ep&quot;)
-	oSheetEP = thiscomponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-	oSheetANAP = thiscomponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-	lUltimaRiga = getLastUsedRow(oSheetANAP)
-	
-	Var = 1	
-	lrow = CDbl (Var)
-&apos;	print lrow
-
-	Do While oSheetANAP.GetCellByPosition( 0,lrow ).string &lt;&gt; &quot;Fine ANALISI&quot;_
-		Or lrow &lt; lUltimaRiga
-		Do While oSheetANAP.GetCellByPosition( 0,lrow ).CellStyle &lt;&gt; &quot;An-sfondo-basso Att End&quot;
-			lrow = lrow+1
-			if lrow &gt; lUltimaRiga Then	Exit Do
-		Loop
-		if lrow &gt; lUltimaRiga Then Exit Do
-		ANALISI_IN_ELENCOPREZZI_AVCP (lrow)
-&apos;		ANALISI_IN_ELENCOPREZZI_Taxi (lrow)
-&apos;		ThisComponent.CurrentController.Select(oSheetANAP.GetCellbyPosition( 0, lrow ))
-&apos;	print &quot;c &quot; &amp; lrow
-		lrow = lrow+1
-	Loop
-End Sub
 </script:module>

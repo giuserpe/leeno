@@ -710,9 +710,6 @@
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
-            <!--                     <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                 <value>%origin%/icons/image14</value>
-                 </prop> -->
             <!-- sottomenu Nuovo -->
             <prop oor:name="Title" oor:type="xs:string">
               <value>Nuovo...</value>
@@ -777,61 +774,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-<!--
-              <node oor:name="m0U50" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value />
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>private:separator</value>
-                </prop>
-              </node>
-              <node oor:name="m0U60" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_listino?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/nuovoPrezzario</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Listino prezzi</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m0U70" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzario XML-SIX</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m0U80" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_BOLZANO?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzario XML-SIX bilingue - Provincia di Bolzano</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
               <node oor:name="m0U90" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />

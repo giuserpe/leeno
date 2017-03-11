@@ -2855,9 +2855,11 @@ def XML_import_ep (arg=None):
     del template COMPUTO.
     '''
     try:
-        attesa().start() #mostra il dialogo
-        oDialogo_attesa = dlg_attesa()
         filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
+        if filename == None:
+            return
+        oDialogo_attesa = dlg_attesa()
+        attesa().start() #mostra il dialogo
     except:
         return
 

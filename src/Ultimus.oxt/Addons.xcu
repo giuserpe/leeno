@@ -4,7 +4,7 @@
     <node oor:name="OfficeToolBar">
       <!-- OfficeToolBar OfficeToolBar OfficeToolBar -->
       <node oor:name="ULTIMUS_3.OfficeToolBar" oor:op="replace">
-    <!--MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN-->
+        <!--MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN MAIN-->
         <node oor:name="Ma00" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -133,21 +133,21 @@
           </prop>
         </node>
         <node oor:name="Ma56" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.cerca_in_elenco?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/findcode</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Trova voce in Elenco Prezzi o Analisi di Prezzo</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.cerca_in_elenco?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/findcode</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Trova voce in Elenco Prezzi o Analisi di Prezzo</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
         </node>
         <node oor:name="Ma57" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
@@ -326,7 +326,6 @@
             <value>_self</value>
           </prop>
         </node>
-
       </node>
     </node>
     <!-- ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO -->
@@ -696,7 +695,7 @@
         </node>
       </node>
     </node>
-    <!--                                                                              -->
+    <!--                                                                    -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -715,7 +714,7 @@
               <value>Nuovo...</value>
             </prop>
             <node oor:name="Submenu">
-              <node oor:name="m0U10" oor:op="replace">
+              <node oor:name="N010" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -732,57 +731,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m0U20" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_import?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa XPWE in questo computo</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m0U30" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_export?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Esporta XPWE da questo computo</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m0U40" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_ep?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzario XML-SIX in Elenco Prezzi</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m0U90" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value />
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>private:separator</value>
-                </prop>
-              </node>
-              <node oor:name="m0U91" oor:op="replace">
+              <node oor:name="N020" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -792,13 +741,92 @@
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Documento UsoBollo</value>
                 </prop>
+              </node>
+            </node>
+          </node>
+#########################################################################
+          <node oor:name="m01" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Importa/Esporta...</value>
+            </prop>
+            <node oor:name="Submenu">
+                
+              <node oor:name="IE000" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_import?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa da archivio XPWE</value>
+                </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
                 </prop>
               </node>
+
+              <node oor:name="IE010" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_ep?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa voci da prezzario XML-SIX</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+
+              <node oor:name="IE020" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_multi?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Importa voci da prezzario bilingue XML-SIX</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              
+              <node oor:name="IE030" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+
+              <node oor:name="IE040" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_export?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Esporta in archivio XPWE</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              
             </node>
           </node>
-          <node oor:name="m01" oor:op="replace">
+
+          <node oor:name="m02" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -815,25 +843,6 @@
               <value>_self</value>
             </prop>
           </node>
-<!--
-          <node oor:name="m02" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Lupo_0.Procedura_di_Controllo?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/s_ok-g</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Esegui Procedura di controllo (doc attivo)</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
--->
           <node oor:name="m03" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -853,25 +862,6 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-
-              <!--                    <node oor:name="m2U04" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Agg_Templ.AGGIORNA_TEMPLATE?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/s_smily_oh</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>Aggiorna il tuo Doc/Template (Nuova) </value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m2U05" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1151,25 +1141,25 @@
                   <value>_self</value>
                 </prop>
               </node>
-<!--
-              <node oor:name="m2U19" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Finale_2.Modulo_Lista_categorie_appalto?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/sf_Ver</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>APP- Crea Lista Lavorazioni e Forniture</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
+              <!--
+                   <node oor:name="m2U19" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.Finale_2.Modulo_Lista_categorie_appalto?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/sf_Ver</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>APP- Crea Lista Lavorazioni e Forniture</value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
               <node oor:name="m2U20" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1346,23 +1336,23 @@
               </node>
             </node>
           </node>
-        <node oor:name="m06" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SuperCapitolo?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/supcat</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Inserisci Categoria</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
+          <node oor:name="m06" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SuperCapitolo?language=Python&amp;location=user:uno_packages</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/supcat</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Inserisci Categoria</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
           <node oor:name="m07" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1469,7 +1459,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$elimina_voce?language=Python&amp;location=user:uno_packages</value>
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$elimina_voce?language=Python&amp;location=user:uno_packages</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/cestino</value>
@@ -1582,7 +1572,7 @@
               <value>_self</value>
             </prop>
           </node>
-        <node oor:name="m24" oor:op="replace">
+          <node oor:name="m24" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1598,7 +1588,7 @@
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>
             </prop>
-        </node>
+          </node>
           <node oor:name="m25" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>

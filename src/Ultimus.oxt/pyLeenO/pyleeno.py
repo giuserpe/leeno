@@ -118,7 +118,10 @@ def invia_voce_ep(arg=None):
     try:
         partenza = uno.fileUrlToSystemPath(oDoc.getURL())
     except:
-        MsgBox("E' necessario salvare il file di partenza.", "Attenzione!")
+        MsgBox("E' necessario prima salvare il file di partenza.", "Attenzione!")
+        salva_come()
+        partenza = uno.fileUrlToSystemPath(oDoc.getURL())
+        #~ return
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()

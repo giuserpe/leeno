@@ -891,9 +891,9 @@ END SUB
 
 sub prova345
 
-&apos;StarDesktop.setName(&quot;pippo&quot;) &apos;ok&apos;&apos;
+StarDesktop.setName(&quot;pippo&quot;) &apos;ok&apos;&apos;
 &apos;StarDesktop.setName(&quot;jenny&quot;) &apos;ok
-&apos;print &quot;questo è: &quot; &amp; StarDesktop.Name
+print &quot;questo è: &quot; &amp; StarDesktop.Name
 &apos;StarDesktop.activate (&quot;jenny&quot;)
 &apos;print &quot;Adesso è: &quot; &amp; StarDesktop.Name
 &apos;StarDesktop.ActiveFrame.setname (&quot;aldo&quot;) &apos;ok
@@ -917,92 +917,6 @@ Wend
 exit sub
 
 exit sub
-end sub
-
-Sub prova345_
-
-print left(&quot;Reg-SAL_vattelapesca&quot;, 7)
-
-exit sub
-
- aSheetNames = oSheets.getElementNames()
- xray aSheetNames
- exit sub
- For i = LBound( aSheetNames ) To UBound( aSheetNames )
- cSheetName2 = aSheetNames( i ) &apos; get string from array
- If cSheetName = cSheetName2 Then
- SheetNameToNumber() = i
- &apos;Exit Function
- EndIf
- Next
-
-	&apos;for k=0 to ThisComponent.AreaLinks.Count+1 
- 	&apos;	 ThisComponent.AreaLinks.removeByIndex(k) 
-	&apos;next 
-&apos;:com::sun::star::container::XIndexAccess
- &apos; oSheet = ThisComponent.currentController.activeSheet
-&apos; ThisComponent.AreaLinks.getcount
-&apos; removeByIndex
- &apos; xray thisComponent.frame &apos;CurrentController.Frame.getContainerWindow.setFocus()
- &apos; xframe &apos;ThisComponent&apos; .AreaLinks &apos;.getByIndex(1)
- exit sub
-&apos;print ThisComponent.AreaLinks.Count +1
-	for k=0 to ThisComponent.AreaLinks.Count+20 
-		IF not ThisComponent.AreaLinks.hasElements then
-			exit for
-		end if
-		ThisComponent.AreaLinks.removeByIndex(k) 
-	next 
-	IF ThisComponent.AreaLinks.hasElements then
-		for k=0 to ThisComponent.AreaLinks.Count+20 
-			ThisComponent.AreaLinks.removeByIndex(k) 
-		next
-	end if
-xray ThisComponent.AreaLinks
-exit sub
-	sLinked_0 = &quot;Alfa&quot;
-	sLinked_1 = &quot;beta&quot;
-	sLinked_2 = &quot;gamma&quot;
-	tabLinked() = Array(sLinked_1 , sLinked_2 , sLinked_3)	
-	
-	print tablinked(1)
-	
-	kappa =&quot;scemo&quot;
-	tabLinked(1) = Array(kappa)
-	
-	print tablinked(1)	
-exit sub
-
-	 			For I = 0 To 2
-	 				if tabLinked (I) =&quot;&quot; then
-	 					sLinked_1 = sRif_1
-	 					tabLinked() = Array(sLinked_1 , sLinked_2 , sLinked_3)
-	 					exit for
-	 				end if
-	 				xray 	tabLinked()
-	 				if tabLinked (I) = &quot;&quot; then
-	 				&apos;	sLinked_1 = sRif_1
-	 					
-	 				&apos;	exit for&apos;
-	 				end if	
-				&apos;	print tabLinked(I)
-				Next 
-	 			if sLinked_1 = &quot;&quot; then
- 						sLinked_1 = sRif_1
- 					else
- 						if sLinked_2 = &quot;&quot; then
-								sLinked_2 = sRif_1 						
- 							else
- 								if sLinked_3 = &quot;&quot; then	
-									sLinked_3 = sRif_1
-								end if
-						end if
-	 			end if
-	 		
-
-		
-
-	tabLinked() = Array(sLinked_1 , sLinked_2 , sLinked_3)	
 end sub
 
 Sub zibellino

@@ -762,7 +762,7 @@
                   <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_import?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa da archivio XPWE</value>
+                  <value>Importa/Accoda dati da archivio XPWE</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -816,7 +816,7 @@
                   <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_export?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Esporta in archivio XPWE</value>
+                  <value>Esporta dati in archivio XPWE</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

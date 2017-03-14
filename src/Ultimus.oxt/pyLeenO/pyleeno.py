@@ -101,7 +101,7 @@ def nuovo_usobollo (arg=None):
 ########################################################################
 def invia_voce_ep(arg=None):
     '''
-    Invia una voce di prezzario da un elenco prezzi all'Elenco Prezzi del
+    Invia le voci di prezzario selezionate da un elenco prezzi all'Elenco Prezzi del
     Documento di Contabilità Corrente DCC
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3828,7 +3828,6 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
         Rinumera_TUTTI_Capitoli2()
     except:
         pass
-    
     oDoc.CurrentController.ZoomValue = 100
     refresh(1)
     oDialogo_attesa.endExecute()

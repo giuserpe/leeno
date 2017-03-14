@@ -3124,8 +3124,10 @@ def XPWE_in (arg=None):
     ###
     oDialogo_attesa = dlg_attesa()
     if oDoc.getSheets().hasByName('S2') == False:
-        MsgBox('Puoi usare questo comando da un file di computo nuovo o già esistente.','Avviso!')
+        MsgBox('Puoi usare questo comando da un file di computo nuovo o già esistente.','ATTENZIONE!')
         return
+    else:
+        MsgBox("Il contenuto dell'archivio XPWE sarà aggiunto a questo file.",'Avviso!')
     oDoc.CurrentController.select(oDoc.getSheets().hasByName('COMPUTO')) # per evitare che lo script parta da un altro documento
     filename = filedia('Scegli il file XPWE da importare...','*.xpwe')#'*.xpwe')
     '''xml auto indent: http://www.freeformatter.com/xml-formatter.html'''

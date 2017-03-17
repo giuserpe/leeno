@@ -4832,11 +4832,11 @@ class attesa (threading.Thread):
         oDialog1Model = oDialogo_attesa.Model # oDialogo_attesa è una variabile generale
         
         sString = oDialogo_attesa.getControl("Label1")
-        sString.Text = 'ATTENDI...'
+        #~ sString.Text = 'ATTENDI...'
         oDialogo_attesa.Title = 'Operazione in corso...'
 
-        #~ sUrl = LeenO_path()+'/icons/LeenO_square.png'
-        #~ oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
+        sUrl = LeenO_path()+'/icons/attendi.png'
+        oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
         oDialogo_attesa.execute()
         return
 #~ def debug(arg=None):

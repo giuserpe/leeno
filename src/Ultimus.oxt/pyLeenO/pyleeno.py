@@ -202,9 +202,9 @@ def invia_voce_ep(arg=None):
         dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
         dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
         ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-        
+        doppioni()        
         ddcDoc.CurrentController.setActiveSheet(ddcDoc.getSheets().getByName('Elenco Prezzi'))
-    
+
         _gotoDoc(partenza)
         oDoc.Sheets.removeByName('tmp_DCC')
     oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('Elenco Prezzi'))
@@ -1157,21 +1157,22 @@ def riordina_ElencoPrezzi (arg=None):
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-class doppioni_th (threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        doppioni_run()
-def doppioni (arg=None):
-    doppioni_th().start()
+#~ class doppioni_th (threading.Thread):
+    #~ def __init__(self):
+        #~ threading.Thread.__init__(self)
+    #~ def run(self):
+        #~ doppioni_run()
+#~ def doppioni (arg=None):
+    #~ doppioni_th().start()
 ###
-def doppioni_run(arg=None):
+#~ def doppioni_run(arg=None):
+def doppioni(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
-    oDialogo_attesa = dlg_attesa()
-    attesa().start() #mostra il dialogo
+    #~ oDialogo_attesa = dlg_attesa()
+    #~ attesa().start() #mostra il dialogo
     oDoc.CurrentController.ZoomValue = 400
     refresh(0)
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
@@ -1191,14 +1192,12 @@ def doppioni_run(arg=None):
         for i in reversed(range(SR, ER)):
             if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
                 oSheet.getRows().removeByIndex(i, 1)
-
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
     lista_come_array = tuple (set(oRange.getDataArray()))
     oSheet.getRows().removeByIndex(SR, ER-SR+1)
-    
     lista_tar = list()
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
     for el in set (lista_come_array):
@@ -1228,7 +1227,7 @@ def doppioni_run(arg=None):
     refresh(1)
     oDoc.CurrentController.ZoomValue = 100
     adatta_altezza_riga(oSheet.Name)
-    oDialogo_attesa.endExecute() #chiude il dialogo
+    #~ oDialogo_attesa.endExecute() #chiude il dialogo
     if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################

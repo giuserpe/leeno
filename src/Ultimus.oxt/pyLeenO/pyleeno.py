@@ -105,8 +105,8 @@ def invia_voce_ep(arg=None):
     Documento di Contabilità Corrente DCC. Trasferisce anche le Analisi di Prezzo.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -1456,7 +1456,7 @@ def XPWE_out(arg=None):
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_AP:
             try:
-                n = (uFindStringCol(el, oSheet))
+                n = (uFindStringCol(el, 0, oSheet))
                 EPItem = SubElement(PweElencoPrezzi,'EPItem')
                 EPItem.set('ID', str(k))
                 TipoEP = SubElement(EPItem,'TipoEP')
@@ -1479,6 +1479,7 @@ def XPWE_out(arg=None):
                     DesBreve.text = DesEstesa.text[:30] + ' ... ' + DesEstesa.text[-30:]
                 else:
                     DesBreve.text = DesEstesa.text
+
                 UnMisura = SubElement(EPItem,'UnMisura')
                 UnMisura.text = oSheet.getCellByPosition(2, n).String
                 Prezzo1 = SubElement(EPItem,'Prezzo1')
@@ -1505,7 +1506,6 @@ def XPWE_out(arg=None):
                 AdrInternet.text = ''
                 PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
                 PweEPAR = SubElement(PweEPAnalisi,'PweEPAR')
-
                 nEPARItem = 2
                 for x in range (n, n+100):
                     if oSheet.getCellByPosition(0, x).CellStyle == 'An-lavoraz-Cod-sx' and \

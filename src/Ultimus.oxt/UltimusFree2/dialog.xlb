@@ -16,4 +16,5 @@
  <library:element library:name="DlgFile"/>
  <library:element library:name="DlgMain"/>
  <library:element library:name="Dialog_XLO"/>
+ <library:element library:name="DlgAttesa2"/>
 </library:library>

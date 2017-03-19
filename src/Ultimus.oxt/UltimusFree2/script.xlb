@@ -68,7 +68,7 @@
  <library:element library:name="Viste_0"/>
  <library:element library:name="Finale"/>
  <library:element library:name="PY_bridge"/>
- <library:element library:name="Da_prezzario_2"/>
+ <library:element library:name="Zip"/>
  <library:element library:name="Computo"/>
  <library:element library:name="Analisi"/>
  <library:element library:name="Contab"/>
@@ -78,5 +78,4 @@
  <library:element library:name="file_gest"/>
  <library:element library:name="_da_registratore"/>
  <library:element library:name="_variabili"/>
- <library:element library:name="Zip"/>
 </library:library>

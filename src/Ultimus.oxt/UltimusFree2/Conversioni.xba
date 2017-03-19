@@ -267,11 +267,6 @@ rem ----------------------------------------------------------------------
 &apos; cancello -tmp
 &apos;	Kill(sUrl)&apos; questa rompe le palle...
 rem ----------------------------------------------------------------------
-rem prova dialogo
-&apos;	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-&apos;	oDlg = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgConversioneCompleta) &apos; Inizializza il dialogo
-&apos;	oDlg.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo
-rem ----------------------------------------------------------------------
 	colora_tabs
 rem torno su -tmp
 Focus_su_altro_Doc (sUrl_tmp)&apos; , sSheetTarget , sRangeTarget, &quot;&quot;, sFrameSRC)

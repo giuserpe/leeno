@@ -153,7 +153,8 @@ def invia_voce_ep(arg=None):
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-
+    doppioni()
+    
     _gotoDoc(partenza)
     oDoc = XSCRIPTCONTEXT.getDocument()
 
@@ -202,11 +203,12 @@ def invia_voce_ep(arg=None):
         dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
         dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
         ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-        doppioni()        
+        doppioni()
         ddcDoc.CurrentController.setActiveSheet(ddcDoc.getSheets().getByName('Elenco Prezzi'))
 
         _gotoDoc(partenza)
         oDoc.Sheets.removeByName('tmp_DCC')
+    oDialogo_attesa.endExecute()
     oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('Elenco Prezzi'))
 ########################################################################
 def _gotoDoc(sUrl):
@@ -1157,6 +1159,7 @@ def riordina_ElencoPrezzi (arg=None):
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
+# L'ATTIVAZIONE DELLA CLASS doppioni_th INTERFERISCE CON invia_voce_ep()
 #~ class doppioni_th (threading.Thread):
     #~ def __init__(self):
         #~ threading.Thread.__init__(self)
@@ -1171,8 +1174,8 @@ def doppioni(arg=None):
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
-    #~ oDialogo_attesa = dlg_attesa()
-    #~ attesa().start() #mostra il dialogo
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
     oDoc.CurrentController.ZoomValue = 400
     refresh(0)
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
@@ -1227,7 +1230,7 @@ def doppioni(arg=None):
     refresh(1)
     oDoc.CurrentController.ZoomValue = 100
     adatta_altezza_riga(oSheet.Name)
-    #~ oDialogo_attesa.endExecute() #chiude il dialogo
+    oDialogo_attesa.endExecute() #chiude il dialogo
     if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################
@@ -4839,9 +4842,6 @@ class attesa (threading.Thread):
         oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
         oDialogo_attesa.execute()
         return
-#~ def debug(arg=None):
-    #~ oDialogo_attesa = dlg_attesa()
-    #~ attesa().start() #mostra il dialogo
 ########################################################################
 class firme_in_calce_th (threading.Thread):
     def __init__(self):

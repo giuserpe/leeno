@@ -510,43 +510,9 @@ SUB Ripristina_statusLine &apos;(mod &gt;)
 End sub
 
 
-
-SUB Ripristina_statusLine_______________ &apos;eseguendo questa &quot;magicamente&quot; si ripristina 
-				&apos; la riga di status
-	&apos; l&apos;ho copiata da qualche parte... ma non ricordo dove...
-	&apos;non capisco come funzioni ed ho il sospetto che si tratti di un funzionamento
-	&apos; non voluto ne documentato...
-	&apos; potrebbe rivelasi inefficace in qualsiasi upgrade dei OOo
-
-	oSheet = ThisComponent.currentController.activeSheet			
-&apos;	oMioRange = osheet.getCellRangeByPosition (0,390,2,400)
-	oMioRange = osheet.getCellRangeByPosition (0,0,1,1)
-	Dim oSheetDSC,oDSCRange As Object
-	Dim aSortFields(0) As New com.sun.star.util.SortField
-	Dim aSortDesc(0) As New com.sun.star.beans.PropertyValue
-	aSortFields(0).Field = 0
-	aSortFields(0).SortAscending = TRUE &apos;FALSE
-	aSortDesc(0).Name = &quot;SortFields&quot;
-	aSortDesc(0).Value = aSortFields()
-	oMioRange.Sort(aSortDesc())
-End SUB	
-
 Sub barra_fatto
 Barra_Apri_Chiudi_5(&quot;Fatto!&quot;, 1000)
 	wait 1000
 Barra_chiudi_sempre_4 
 End Sub
-
-
-Sub Main23456 
-&apos;	 fenDoc = ThisComponent.CurrentController.Frame.ContainerWindow 
-	 ThisComponent.lockControllers 
-	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = False 
-	 wait 100 &apos;
-&apos;	 on error Resume Next 
-&apos;	 progress.End 
-	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
-	 ThisComponent.unlockControllers 
-
- End Sub
 </script:module>

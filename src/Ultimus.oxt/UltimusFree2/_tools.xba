@@ -406,55 +406,6 @@ sub ripara_analisi_bis rem cerrate - ho escluso la manodopera dalle maggiorazion
 	fine:
 end Sub
 
-SUB SERVIZIO &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta (Bart)
-	&apos;print &quot;partenza&quot;
-	oSheet = ThisComponent.currentController.activeSheet
-	ilastRow = getLastUsedRow(oSheet)
-&apos;	ilastrow = 14
-	lrow = 3
-&apos;	do while oSheet.GetCellByPosition(9, ilastrow).value &lt;&gt; &quot;&quot;
-
-	Do while lrow &lt; ilastrow
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 10, lrow))
-	&apos;	print oSheet.GetCellByPosition(10, lrow).value
-		if oSheet.GetCellByPosition(2, lrow).string = &quot;&quot; then
-		
-	&apos;	xray oSheet.getrows()
-			&apos;	If oSheet.getrows().getByIndex(lrow).isVisible = false then
-			&apos;			oSheet.getrows().getByIndex(lrow).isVisible = TRUE 
-	 		&apos;		else	 
-						oSheet.getrows.getByIndex(lrow).isVisible = false 
-			&apos;	end if
-&apos;	end if
-			
-	&apos;		percento = oSheet.GetCellByPosition(8, lrow).value
-	&apos;		per_g = percento / 100
-	&apos;		oSheet.GetCellByPosition(9, lrow).value= per_g
-		end if
-		lrow = lrow + 1
-		&apos;oCell = Osheet.GetCellByPosition(lcol, lrow)
-	loop
-	print &quot;FINITO:::::!&quot;
-END SUB
-rem ######################################################################
-SUB SERVIZIO__ &apos; una macro per mio uso e consumo che modifico e adatto doi volta in volta
-	&apos;print &quot;partenza&quot;
-	oSheet = ThisComponent.currentController.activeSheet
-	ilastRow = getLastUsedRow(oSheet)
-&apos;	ilastrow = 9
-	lrow = 2
-	Do while lrow &lt; ilastrow
-		if oSheet.GetCellByPosition(10, lrow).value &lt;&gt; 0 then 
-			percento = oSheet.GetCellByPosition(10, lrow).value
-			prezzo = oSheet.GetCellByPosition(7, lrow).value
-			importo = percento * prezzo
-			oSheet.GetCellByPosition(9, lrow).value= importo
-		end if
-		lrow = lrow + 1
-	loop
-END SUB
-
-
 sub paste_format
 rem ----------------------------------------------------------------------
 rem define variables

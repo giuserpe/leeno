@@ -203,61 +203,6 @@ End If
 oDispatcher.executeDispatch(StarDesktop, makro, &quot;&quot;, 0, args1())
 End Sub
 
-Sub clickCommandButton1_________________
-	oSheet = ThisComponent.currentController.activeSheet
- &apos; oPage = Thiscomponent.Sheets.getByName(&quot;Sheet1&quot;).getDrawPage
- oPage = oSheet.getDrawPage
-
- iCount = oPage.getCount
- 
-&apos; oPage = oDoc.getDrawPages().getByIndex( nPageToDelete )
- &apos; Tell the document to remove it.
- &apos; ThisComponent.getDrawPages().remove( oPage )
- 
-&apos;-------------------------------------------------------------------------
-&apos;	rem CONTROLLA L&apos;ATTIVITA&apos; DEI PULSANTONI
-&apos;		oDpage = oSheet.DrawPage
-&apos;		oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
-&apos;		oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
-&apos;		oCtrlModel.Enabled = true
-&apos;-------------------------------------------------------------------------
- 
- &apos;exit sub 
- 
- For i = 0 to iCount - 1
- 	
- oEle = oPage.getByIndex(i)
- &apos;oPage.getByIndex(i)
- MRI oEle
- exit sub
- oEle.release()
- 	 
- exit sub
- xray oEle
- &apos;oEle.leaveGroup()
- if oEle.ShapeType = &quot;com.sun.star.drawing.GroupShape&quot; then 		
- 	print &quot;dentro&quot;
- 	oEle.ungroup()		
-	 &apos;oELE.enterGroup() 
-	 &apos;xray oEle
-	 &apos;oEle.remove()
-	 
-	 &apos;xray oele
-	 end if
- &apos; oEle.remove() &apos;release()
- &apos; 
- exit sub
- oControl = oEle.getControl()
- If oControl.DefaultControl = &quot;com.sun.star.form.control.CommandButton&quot; Then
- &apos; Found command button - change label of other buttons &apos;
- If oEle.Name &lt;&gt; &quot;CommandButton1&quot; Then
- oControl.Label = &quot;Inactive&quot;
- oControl.Enabled = False
- End If
- End If
- Next
-End Sub
-
  
 sub copia_teste &apos;( oSheetDest as object, oRangeDest as object, oSrc as object )ì
 	&apos; rifa le intestazioni di colonna (copiandole da S5
@@ -336,7 +281,7 @@ sub copia_teste &apos;( oSheetDest as object, oRangeDest as object, oSrc as obje
 	
 	msgbox (&quot;Ho sovrascritto le intestazioni di colonna ma alcuni pulsanti (o gruppi di pulsanti) potrebbero essere spostati o spariti&quot;&amp; CHR$(10)_
 				&amp; &quot;Sistemali a mano, confronta la situazione con i modelli che trovi nel foglio &apos;S5&apos; e nel caso copia/incolla i pulsanti mancanti&quot; &amp; CHR$(10) _
-				&amp; &quot;NB La modalità bozza è già attivata&quot;
+				&amp; &quot;NB La modalità bozza è già attivata&quot;)
 
  
  exit sub

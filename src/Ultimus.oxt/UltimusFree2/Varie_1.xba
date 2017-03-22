@@ -164,35 +164,6 @@ Range2Cell= thisComponent.getCurrentSelection.RangeAddress.startRow
 fine:
 End Function
 
-Function Range2Cell____________________________ () &apos; funzione da richiamare da altri moduli
-			&apos; restitusce una Row anche se l&apos;utente ha selezionato un range
-			&apos; (&quot;Mai fidarsi dell&apos;utente... - Paolom &quot;)
-			&apos;dora
-	on error goto errore
-
-&apos;	Verifica_chiudi_preview
-	odoc=thisComponent
-	oZelle=oDoc.getCurrentSelection()
-&apos; if oZelle =	com.sun.star.drawing.SvxShapeCollection then
-
-	checkzelle=HasUnoInterfaces( oZelle, &quot;com.sun.star.table.XCell&quot; )
-	if checkzelle then
-				oSheet2 = oDoc.Sheets.getByName(oDoc.currentcontroller.activesheet.name)
-&apos;dis_080219				ThisComponent.CurrentController.Select(oSheet2.GetCellByPosition(oZelle.celladdress.column+1,oZelle.celladdress.row))
-&apos;dis_080219				ThisComponent.CurrentController.Select(oZelle)
-				oZelle.celladdress.row		
-
-				Range2Cell= ozelle.celladdress.row
-			else
-				Range2Cell= ozelle.RangeAddress.startRow
-	end if
-	exit function
-	errore:
-&apos;	Range2Cell = oDoc.getCurrentSelection()
-	Range2Cell = -1 &apos;(-1 come valore di errore)
-end Function
-&apos;********************************************************************************
-
 Function Range2Cell_COL () &apos; funzione da richiamare da altri moduli
 			&apos; restitusce sempre una COL anche se l&apos;utente ha selezionato un range
 			&apos; (&quot;Mai fidarsi dell&apos;utente... - Paolom &quot;)
@@ -530,7 +501,7 @@ Dim iflag
 &apos;	print lrow
 &apos;lrow = lrow+1
 	oSheets.insertCells(CellRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)&apos; inserisce delle righe vuote
-	ThisComponent.CurrentController.Select(oSheets.GetCellByPosition( lcol , lrow+1)
+	ThisComponent.CurrentController.Select(oSheets.GetCellByPosition( lcol , lrow+1))
 
 	lrow2 = lrow &apos; +1
 	CellAddress.Sheet = oSheet_num 

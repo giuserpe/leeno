@@ -214,32 +214,6 @@ sub TestAtt_N &apos; test universale per verificare l&apos;Attributo della cella
 			print &quot;Nessun Attributo in questa cella!&quot;
 	end if 		
 end sub
-&apos;++++++++++++++++++++++++++++++++++++++++++++++++
-sub TestAtt_N________ &apos; test per verificare l&apos;Attributo della sheet
-	oSheet = ThisComponent.currentController.activeSheet
-	oCell=thisComponent.getCurrentSelection()
-	sAttributo_N = Trova_Attr_N(ocell, osheet)
-	
-&apos;	xray oCell.UserDefinedAttributes
-	
-	iF sAttributo_N &lt;&gt; false then
-		MsgBox (&quot; &quot; &amp; sAttributo_N _
-		 , 0 + 0 + 0 , &quot; --------------------------- &quot;)
-&apos;	end if
-		else
-		
-		 oCustomXmlAttributes = oCell.UserDefinedAttributes
-		 If oCustomXmlAttributes.hasElements = true then
-		 	&apos;	exit sub
-		 
-			print oCustomXmlAttributes.getByName( &quot;Tipo_sheet&quot; ).Value
-		end if
-	end if 
-&apos;print sAttributo_N &apos;Trova_Attr_N
-end sub
-&apos;++++++++++++++++++++++++++++++++++++++++++++++++
-
-
 
 Sub Metti_Attributo_N &apos;mette un attributo nella cella corrente
 dim sAttTipo as string

@@ -276,7 +276,7 @@ rem ----------------------------------------------------------------------
 				&amp; &quot;Vuoi procedere con la CONVERSIONE?&quot; &amp; CHR$(10)_
 				&amp; &quot;(Sarà conservata una copia del file)&quot; &amp; CHR$(10)_
 			 	&amp; CHR$(10)_
-				&amp; &quot; &quot;, 32+4, &quot;ATTENZIONE: CONVERSIONE?&quot;
+				&amp; &quot; &quot;, 32+4, &quot;ATTENZIONE: CONVERSIONE?&quot;)
 				Case 6
 				&apos;&quot;Sussistono problemi di incompatibilità.&quot; &amp; CHR$(10) &amp; CHR$(10)_
 				&apos;&amp; &quot;- se rispondi NO procedo CON Il normale caricamento del file&quot; &amp; CHR$(10)_
@@ -860,33 +860,6 @@ print	iViewPathLen
 	print CutPathView
 END SUB
 
-
-
-Sub CommitLastDocumentChanges____________________________________________&apos;(sTargetPath as String)
-Dim i as Integer
-Dim sBookmarkName as String
-Dim oDBBookmarks as Object
-Dim bLinkExists as Boolean
-Dim sBaseBookmarkName as String
-	sBookmarkName = GetFileNamewithoutExtension&apos;(FileNameoutofPath(sTargetPath))
-&apos;	sBaseBookmarkName = sBookmarkName
-&apos;	oDBBookmarks = oDataSource.GetBookmarks()
-&apos;	i = 1
-&apos;	Do
-&apos;		bLinkExists = oDBBookmarks.HasbyName(sBookmarkName)
-&apos;		If bLinkExists Then
-&apos;			i = i + 1
-&apos;			sBookmarkName = sBaseBookmarkName &amp; &quot;_&quot; &amp; i
-&apos;		Else
-&apos;			oDBBookmarks.insertByName(sBookmarkName, sTargetPath)
-&apos;		End If
-&apos;	Loop Until Not bLinkExists
-&apos;	bDisposeDoc = False
-&apos;&apos;	GroupShapesTogether()
-&apos;	ToggleDesignMode(oDocument)
-&apos;	oDBForm.Reload()
-print sBookmarkName
-END SUB
 
 Function OOoVersion() As String
  &apos;Retreives the running OOO version

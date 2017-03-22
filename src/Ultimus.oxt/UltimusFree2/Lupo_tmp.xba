@@ -111,16 +111,6 @@ function cerca_in_array(anArray as object, aString as string) as string
 end function
 
 
-Sub ExampleArray______________________
-Dim a(), i%
-a = Array(0, 1, 2)
-a = Array(&quot;Zero&quot;, 1, 2.0, Now)
-rem String, Integer, Double, Date
-For i = LBound(a()) To UBound(a())
-Print TypeName(a(i))
-Next
-End Sub
-
 
 SUB paolom
 mAreas() = oSheet.getPrintAreas()

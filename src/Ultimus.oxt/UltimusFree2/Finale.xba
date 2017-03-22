@@ -789,24 +789,6 @@ Dim oArg()
 
 END SUB
 
-
-SUB dispatchURL___(document, aURL) &apos; usata da Duplica_Sheet_new_doc 1
- Dim noProps()
- Dim URL As New com.sun.star.util.URL
-
- frame = document.getCurrentController().getFrame()
- URL.Complete = aURL
- transf = createUnoService(&quot;com.sun.star.util.URLTransformer&quot;)
- transf.parseStrict(URL)
-
- disp = frame.queryDispatch(URL, &quot;&quot;, com.sun.star.frame.FrameSearchFlag.SELF _
- OR com.sun.star.frame.FrameSearchFlag.CHILDREN)
- disp.dispatch(URL, noProps())
-END SUB
-
-
-
-
 &apos;------------------------------------------------------------------------
 SUB Impagina_N &apos; richiamata con shortcut da una tabella
 &apos; versione nuova elaborata su xp in vbox

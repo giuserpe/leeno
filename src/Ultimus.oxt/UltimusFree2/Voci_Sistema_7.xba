@@ -12,30 +12,6 @@
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
 
-sub FromATT_2_5C
-
-&apos;da fare accrochio che riconosce la tipologia della sheet 
- 
-	if templateTipo = &quot;5C&quot; then 
-	 msgbox &quot;Questo è già un template-5C.... !&quot;
-		exit sub 
-	end if
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
-	&apos;		
-	oSheet.getColumns.insertByIndex(2, 1)
-	oSheet.getColumns.insertByIndex(9, 1)	
-	oSheet.getColumns.removeByIndex(2, 2)
-&apos;	exit sub
-	oSrc = oSheet.getCellRangeByPosition(8,0,8,15000).RangeAddress
- oDest = oSheet.GetCellByPosition(7,0 ).CellAddress
- oSheet.copyRange(oDest, oSrc)
- iCellAttr = com.sun.star.sheet.CellFlags.VALUE + com.sun.star.sheet.CellFlags.STRING
-	oSheet.getCellRangeByPosition(8,0,8,15000).ClearContents(iCellAttr)
-	
-	oSheet.getcellbyposition(8,0).string = &quot;Coefficiente&quot;
-end sub
-
-
 sub cella_cella_cella(oSheetSRC as object, oSheetDest as object, oRangeSRC as object, oRangeDest as object, mantieni_colori as long) 
 &apos;sembra buona (e recente)
 

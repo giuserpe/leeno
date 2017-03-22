@@ -2887,6 +2887,7 @@ def XML_import_ep (arg=None):
     struttura_Elenco()
     oDialogo_attesa.endExecute()
     MsgBox('Importazione eseguita con successo!','')
+    autoexec()
 # XML_import ###########################################################
 ########################################################################
 def XML_import_multi (arg=None):
@@ -3107,6 +3108,7 @@ def XML_import_multi (arg=None):
     struttura_Elenco()
     oDialogo_attesa.endExecute()
     MsgBox('Importazione eseguita con successo!','')
+    autoexec()
 # XML_import_multi ###################################################
 ########################################################################
 # parziale_core ########################################################

@@ -92,7 +92,7 @@ rem ----------------------------------------------------------------------
 rem riga di intestazione
 Cscarto = 0
 rIntest = 2
-	oSheet.GetCellByPosition(0,rIntest).setstring(&quot;Codice&quot;+ chr(13) +&quot;Articolo&quot;
+	oSheet.GetCellByPosition(0,rIntest).setstring(&quot;Codice&quot;+ chr(13) +&quot;Articolo&quot;)
 	oSheet.GetCellByPosition(1,rIntest).setstring(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;)
 	oSheet.GetCellByPosition(2,rIntest).setstring(&quot;Unità di misura&quot;)
 	oSheet.GetCellByPosition(3,rIntest).setstring(&quot;Sicurezza&quot;+ chr(13) + &quot;inclusa&quot;)
@@ -582,7 +582,7 @@ procedi:
 	riga_selezione = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di vedi voce da riportare
 	if riga_corrente &lt; riga_selezione or _
 		riga_corrente = riga_selezione Then
-		msgbox (&quot;Devi selezioanre una voce precendente alla attuale.&quot;, 0,&quot;ERRORE!&quot;
+		msgbox (&quot;Devi selezioanre una voce precendente alla attuale.&quot;, 0,&quot;ERRORE!&quot;)
 		goto fine:
 	end if
 	test = &quot;style_cella&quot;
@@ -679,7 +679,7 @@ vai:
 
 			lRiga = i
 &apos;			Print lRowI
-			oSheet.GetCellByPosition(9, lRiga).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI &amp; &quot;:J&quot; &amp; lRiga+1 &amp; &quot;)&quot;
+			oSheet.GetCellByPosition(9, lRiga).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI &amp; &quot;:J&quot; &amp; lRiga+1 &amp; &quot;)&quot;)
 			lTriga = i
 			do while oSheet.GetCellByPosition(0, lTriga ).CellStyle &lt;&gt; &quot;comp progress&quot;
 			&apos; 	print lTriga &amp; &quot; dentro&quot;

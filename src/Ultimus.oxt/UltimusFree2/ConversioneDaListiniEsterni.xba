@@ -118,7 +118,7 @@ vai:
 &apos;	AppendItem(elRow(), array (lLastUrow))
 	elleno() = elCap()
 	elCap() = array()
-	AppendItem(elCap(), array ( &quot;ELENCO COMPLETO&quot;, sname &amp; &quot;-leeno&quot;,lLastUrow)
+	AppendItem(elCap(), array ( &quot;ELENCO COMPLETO&quot;, sname &amp; &quot;-leeno&quot;,lLastUrow))
 	For Each el In elleno()
 		AppendItem(elCap(), array (el(0),el(1),el(2)))
 	Next

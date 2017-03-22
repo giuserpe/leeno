@@ -234,7 +234,7 @@ end if
 	 lrow=3
  	 oCell = oSheet.GetCellByPosition( 1, lrow )
 	 xA = &quot;&quot;
-	 lUltimaRiga = getLastUsedRow(oSheet
+	 lUltimaRiga = getLastUsedRow(oSheet)
  passa_oltre:
 &apos;	print lUltimaRiga &amp;&quot; &quot; &amp; lrow
 	If lrow &gt;= lUltimaRiga then

@@ -25,7 +25,7 @@ Sub manodopera_Analisi_on_off &apos; chiude le col della manodopera su Analisi
 			oRange.Columns.IsVisible=False
 	end if
 	
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2)))		
 	ThisComponent.CurrentController().freezeAtPosition(11,1)
 	ThisComponent.CurrentController.Select( oPos )
 End Sub
@@ -55,7 +55,7 @@ Sub sicurezza_Analisi_on_off &apos; chiude le col della manodopera su Analisi
 	end if
 	
 	fissala:
-	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2))		
+	ThisComponent.CurrentController.Select((oSheet.getCellByPosition(2,2)))
 	ThisComponent.CurrentController().freezeAtPosition(10,1)
 	ThisComponent.CurrentController.Select( oPos )
 End Sub

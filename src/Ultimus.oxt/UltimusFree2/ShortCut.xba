@@ -14,7 +14,7 @@ rem Il codice contenuto in questo modulo è parte integrante del pacchettFo Ulti
 &apos; gruppo di macro per ripulire (rimuovere?) il file di conf delle SC a livello di documento
 
 sub rimuovi_SC_Doc &apos; svuota il file Current .xml del documento Corrente
-	removeKeyConfigurationFromDoc(ConvertToUrl(ThisComponent.getURL()) 
+	removeKeyConfigurationFromDoc(ConvertToUrl(ThisComponent.getURL())) 
 end sub
 
 

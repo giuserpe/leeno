@@ -55,7 +55,7 @@ sub cella_cella() &apos; passa cella per cella e copiando dati (o altro) da una 
  Dim sFind As String
 
 oSheetDest = ThisComponent.currentController.activeSheet
-oSheetsrc = ThisComponent.Sheets.getByName((ThisComponent.currentcontroller.activesheet.name &amp; &quot;_2&quot;)
+oSheetsrc = ThisComponent.Sheets.getByName((ThisComponent.currentcontroller.activesheet.name &amp; &quot;_2&quot;))
 &apos;xray oSheetsrc
 &apos;exit sub
  oCell = oSheetsrc.GetCellbyPosition( 0, 0 )

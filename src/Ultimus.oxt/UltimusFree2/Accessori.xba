@@ -407,12 +407,12 @@ else
 	lCol= oSelezione.RangeAddress.startColumn
 end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
 &apos;selezione di un range anzichè di una cella
-ThisComponent.CurrentController.Select((oSheet.getCellByPosition(lcol,lrow)) 
+ThisComponent.CurrentController.Select((oSheet.getCellByPosition(lcol,lrow))) 
 
 if not ismissing(sSMS) or not isNull(sSMS) then 
 	if sMS_error = 0 then
 		msgbox (&quot;&quot; &amp; CHR$(10)_
-								&amp; &quot;Questa macro cerca i valori #N/D, #N/A, #DIV/0 (etc.) SOLO NELLE COLONNE VISIBILI in questa tabella.&quot; 
+								&amp; &quot;Questa macro cerca i valori #N/D, #N/A, #DIV/0 (etc.) SOLO NELLE COLONNE VISIBILI in questa tabella.&quot;)
 							sMS_error = 1
 			end if	
 end if
@@ -583,17 +583,17 @@ Sub Sistema_diverse_cose &apos; tipo: toglie gli a capo, gli spazi ridondanti, i
 	oCell = oSheet.GetCellByPosition(lcol , lrow)
 	strTemp = oCell.string
 	strTemp = LCase(strTemp)
-	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)&apos; = LCase(strTemp)
-	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
-	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;))&apos; = LCase(strTemp)
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;))
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;))
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;))
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;))
+	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;))
 	oCell.string = Join(Split(oCell.String, Chr(10)), &quot; &quot;)
 	oCell.string = Join(Split(oCell.String, Chr(9)), &quot; &quot;)
-	oCell.string = Join(Split(oCell.String,&quot;- &quot;, &quot;&quot;)
+	oCell.string = Join(Split(oCell.String,&quot;- &quot;, &quot;&quot;))
 &apos;oCell.string =
- Join(Split(oCell.String,&quot;-&quot;, &quot;&quot;)
+ Join(Split(oCell.String,&quot;-&quot;, &quot;&quot;))
 	Thiscomponent.CurrentController.Select(oCell)
 	document   = ThisComponent.CurrentController.Frame
 	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)

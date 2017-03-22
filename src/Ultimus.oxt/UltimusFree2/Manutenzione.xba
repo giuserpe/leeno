@@ -530,7 +530,7 @@ for i =lColstart to lLastUcol &apos;col &amp; rows - rows/col righe/colonne
 			Barra_chiudi_sempre_4
 			Barra_Apri_Chiudi_5(&quot; cerca... cerca ..&quot;, i)
 		if oSheet.GetCellbyPosition( iC, i ).cellStyle= sNome_stile then
-			ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( iC, i ) &apos;debug
+			ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( iC, i )) &apos;debug
 			sDove = Indirizzo_in_forma_leggibile
 			beep		
 			Select case msgbox (&quot;lo stile &apos;&quot; &amp; sNome_stile &amp; &quot;&apos; è applicato in &quot; &amp; sDove &amp; CHR$(10) &amp; CHR$(10)_
@@ -601,7 +601,7 @@ rem controllo riga dei totali
 			oSheet.GetCellByPosition( 9 , i+1).string = &quot;&quot;
 			oSheet.GetCellByPosition( 9 , i+1).cellstyle = &quot;vuote2&quot;
 			oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
-			oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; i+2 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
+			oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; i+2 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;)
 			oSheet.GetCellByPosition( 9 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
 			oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+1
 			oSheet.GetCellByPosition( 11 , lRow).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;

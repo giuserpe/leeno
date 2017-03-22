@@ -123,7 +123,7 @@ function cerca_partenza
 	&apos;verifiche varie sulla posizione di inserimento
 	iEndRow = getLastUsedRow(oSheet)
 	if lrow &gt; iEndRow then
-		 MsgBox (&quot;La riga selezionata e&apos; fuori dall&apos;area di lavoro!&quot; 
+		 MsgBox (&quot;La riga selezionata e&apos; fuori dall&apos;area di lavoro!&quot;)
 		exit function
 	end if
 	if lRow &lt; 2 then
@@ -334,7 +334,7 @@ SUB Pesca_cod_2
 &apos;			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
 &apos;		end if
 		oPartenza.SetString(sCodice)
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+1)
+		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+1))
 		unSelect &apos;unselect ranges 	
 	EndIf
 	if oSheet.name = &quot;Analisi di Prezzo&quot; then
@@ -351,7 +351,7 @@ SUB Pesca_cod_2
 			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow)
 		end if
 		oPartenza.SetString(sCodice)
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 3, lrow)	
+		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 3, lrow))	
 	end if
 	
 	sMemoPesca = empty
@@ -415,9 +415,9 @@ dim oSheet as object
 	lrow = oPartenza_A.RangeAddress.StartRow 
 	
 	oSheet = ThisComponent.currentController.activeSheet
-	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice) &apos; inserisce il codice
+	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice)) &apos; inserisce il codice
 &apos;	print
-	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2) &apos; va sul primo rigo di misurazione
+	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2)) &apos; va sul primo rigo di misurazione
 &apos;	print
 &apos;	end if
 

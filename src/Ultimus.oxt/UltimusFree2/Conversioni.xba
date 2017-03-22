@@ -72,7 +72,7 @@ rem ----------------------------------------------------------------------
 				ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, lRow))
 rem ----------------------------------------------------------------------
 				oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; lRowI+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
-				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
+				oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;)
 &apos;				oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
 				oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+4
 				i=lRow+1
@@ -472,7 +472,7 @@ rem solo per movimentare
 rem ----------------------------------------------------------------------
 		oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; lRowI+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
 &apos;		oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
-		oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;
+		oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; lRowI+3 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;)
 &apos;		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=ROUND(SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;);2)&quot;
 &apos;		oSheet.GetCellByPosition( 10 , lRow).setformula(&quot;=SUBTOTAL(9;K&quot; &amp; lRowI+3 &amp; &quot;:K&quot; &amp; lrow+1 &amp; &quot;)&quot;
 		oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+4

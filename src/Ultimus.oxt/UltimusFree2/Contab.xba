@@ -299,7 +299,7 @@ rem PREPARO I DATI PER IL SAL
 	next
 
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-	lista()=BubbleSortlist(BubbleSortlist(lista()) &apos; riordino
+	lista()=BubbleSortlist(BubbleSortlist(lista())) &apos; riordino
 rem ----------------------------------------------------------------------
 rem serve ad allungare la lista
 rem non viene preso in considerazione  per il FOR successivo, ma è necessario che ci sia per non mandarlo in errore
@@ -342,7 +342,7 @@ rem sommo i valori degli articoli ricorrenti
 			End If
 &apos;Print i(1) &amp;&quot; - &quot;&amp; quant &amp;&quot; - &quot;&amp; importo &amp;&quot; - &quot;&amp; sicurezza &amp;&quot; - &quot;&amp; mdo
 		Next
-		AppendItem (vociSAL(), array (art, desc, um,  quant, prezzo, importo, sicurezza, mdo)
+		AppendItem (vociSAL(), array (art, desc, um,  quant, prezzo, importo, sicurezza, mdo))
 &apos;		AppendItem (vociSAL(), array (art, i(3), i(4),  quant, i(8), importo, sicurezza, mdo)
 	Next
 &apos;Print ubound (vociSAL())

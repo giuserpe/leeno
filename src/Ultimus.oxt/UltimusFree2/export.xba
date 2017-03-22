@@ -100,7 +100,7 @@ Exit Sub
 					 sSuperC = Mid(sSuperC1, lpos+1,(Len (sSuperC1))- lpos)
 				&apos;	 print sSuperC
 					 If InStr (sSuperC, &quot;|&quot;) &gt; 0 then
-						 sSuperC = Left(sSuperC, (InStr (sSuperC, &quot;|&quot;))-1 
+						 sSuperC = Left(sSuperC, (InStr (sSuperC, &quot;|&quot;))-1)
 					 end if
 					 sLinea = &quot;&quot; 	
 				end if
@@ -114,7 +114,7 @@ Exit Sub
 					 if lpos = 1 then lpos = lpos-1
 					 sC = Mid(sC1, lpos+1,(Len (sC1))- lpos)
 					 If InStr (sC, &quot;|&quot;) &gt; 0 then
-						 sC = Left(sC, (InStr (sC, &quot;|&quot;))-1 &apos;&amp; CHR(13)&amp; CHR(10)
+						 sC = Left(sC, (InStr (sC, &quot;|&quot;))-1) &apos;&amp; CHR(13)&amp; CHR(10)
 					 end if
 					 sLinea = &quot;&quot; 
 						 
@@ -129,7 +129,7 @@ Exit Sub
 					 if lpos = 1 then lpos = lpos-1
 						 sSubC = Mid(sSubC1, lpos+1,(Len (sSubC1))- lpos)
 					 If InStr (sSubC, &quot;|&quot;) &gt; 0 then
-					 	sSubC = Left(sSubC, (InStr (sSubC, &quot;|&quot;))-1 &apos;&amp; CHR(13) 
+					 	sSubC = Left(sSubC, (InStr (sSubC, &quot;|&quot;))-1) &apos;&amp; CHR(13) 
 					 end if
 					 sLinea = &quot;&quot; 
 				end if	&apos;

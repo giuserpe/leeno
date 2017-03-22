@@ -211,7 +211,7 @@ rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 		If thisComponent.Sheets.hasByName(sElim) Then &apos; se avevo creato la _copia da sbiancare, la elimino
 			&apos;if not ismissing(sElim) or not isnull(sElim) then &apos; &apos;questo metodo isnull ismissing da sempre problemi
  			ThisComponent.Sheets.removeByName(sElim) &apos;elimino il duplicato
-			ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(sSheetName) 
+			ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(sSheetName)) 
 			unSelect &apos;unselect ranges 	
 			&apos; toglie la selezione 		
 			Visualizza_normale
@@ -265,7 +265,7 @@ rem L&apos;AGGIORNAMENTO DELLE INTESTAZIONI AVVIENE IN AUTOMATICO USCENDO DALL&a
 &apos;	end if
 	
 	
-	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(sSheetName) 
+	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(sSheetName))
 	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 		GetGUIType
 	Visualizza_normale

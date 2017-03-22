@@ -10,13 +10,13 @@
  <library:element library:name="ListenersSelectRange"/>
  <library:element library:name="Manutenzione"/>
  <library:element library:name="Lupo_0"/>
- <library:element library:name="Module4"/>
+ <library:element library:name="_variabili"/>
  <library:element library:name="ShortC_temp"/>
  <library:element library:name="Pulizia_0"/>
  <library:element library:name="Menu"/>
  <library:element library:name="Viste"/>
  <library:element library:name="Varie"/>
- <library:element library:name="Module2"/>
+ <library:element library:name="_da_registratore"/>
  <library:element library:name="Voci_Sistema"/>
  <library:element library:name="Voci_Sistema_2"/>
  <library:element library:name="Voci_Sistema_3"/>
@@ -35,7 +35,7 @@
  <library:element library:name="Digestione"/>
  <library:element library:name="Taxi_2"/>
  <library:element library:name="Strutture"/>
- <library:element library:name="Module1"/>
+ <library:element library:name="file_gest"/>
  <library:element library:name="Voci_Sistema_7"/>
  <library:element library:name="Accessori_2"/>
  <library:element library:name="VarGlobal"/>
@@ -75,7 +75,4 @@
  <library:element library:name="celle"/>
  <library:element library:name="_tools"/>
  <library:element library:name="_Disattivate"/>
- <library:element library:name="file_gest"/>
- <library:element library:name="_da_registratore"/>
- <library:element library:name="_variabili"/>
 </library:library>

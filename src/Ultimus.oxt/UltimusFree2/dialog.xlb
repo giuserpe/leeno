@@ -5,7 +5,7 @@
  <library:element library:name="DlgAttesa"/>
  <library:element library:name="DialogDigest"/>
  <library:element library:name="DialogViste_A"/>
- <library:element library:name="DlgConversioneCompleta"/>
+ <library:element library:name="Dialog_XLO"/>
  <library:element library:name="Dialog_Filtro"/>
  <library:element library:name="DlgSiNo"/>
  <library:element library:name="DlgCompletato"/>
@@ -15,6 +15,4 @@
  <library:element library:name="DlgTesto"/>
  <library:element library:name="DlgFile"/>
  <library:element library:name="DlgMain"/>
- <library:element library:name="Dialog_XLO"/>
- <library:element library:name="DlgAttesa2"/>
 </library:library>

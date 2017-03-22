@@ -2677,6 +2677,7 @@ def struttura_Elenco (arg=None):
 ########################################################################
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):
+    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
     New_file.computo(0)
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
@@ -2867,7 +2868,7 @@ def XML_import_ep (arg=None):
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = nome
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    #~ oSheet.getCellByPosition(1, 1).String = nome
+    oSheet.getCellByPosition(1, 1).String = nome
     oSheet.getRows().insertByIndex(4, len(lista_articoli))
 
     lista_come_array = tuple(lista_articoli)
@@ -2885,6 +2886,7 @@ def XML_import_ep (arg=None):
     oDoc.CurrentController.setActiveSheet(oSheet)
     struttura_Elenco()
     oDialogo_attesa.endExecute()
+    MsgBox('Importazione eseguita con successo!','')
 # XML_import ###########################################################
 ########################################################################
 def XML_import_multi (arg=None):
@@ -3086,7 +3088,7 @@ def XML_import_multi (arg=None):
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = nome
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    #~ oSheet.getCellByPosition(1, 1).String = nome
+    oSheet.getCellByPosition(1, 1).String = nome
     oSheet.getRows().insertByIndex(4, len(lista_articoli))
 
     lista_come_array = tuple(lista_articoli)
@@ -3104,6 +3106,7 @@ def XML_import_multi (arg=None):
     oDoc.CurrentController.setActiveSheet(oSheet)
     struttura_Elenco()
     oDialogo_attesa.endExecute()
+    MsgBox('Importazione eseguita con successo!','')
 # XML_import_multi ###################################################
 ########################################################################
 # parziale_core ########################################################

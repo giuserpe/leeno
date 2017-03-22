@@ -98,22 +98,6 @@ rem se il flag è 0 (zero) la toolbarURL viene nascosta
 	EndIf
 End Sub
 rem ######################################################################
-
-Sub set_eventi_doc &apos;Giuseppe Vizziello 2014 ormai inutile da cancellare
-rem controlla che il file sia un template LeenO
-	Dim oDoc 	:	oDoc = thiscomponent
-rem ----------------------------------------------------------------------
-rem controllo esistenza proprietà definita dall&apos;utente
-	Dim test() As Object 
-	test() =oDoc.DocumentProperties.UserDefinedProperties.PropertyValues()
-&apos;xray test(1).value
-	If ubound(test()) &gt;= 2 Then 
-		If oDoc.DocumentProperties.UserDefinedProperties.PropertyValues(2).name = &quot;Versione LeenO&quot; Then
-&apos;			eventi_assegna
-		EndIf	
-	EndIf 
-End Sub
-rem ######################################################################
 Function getPropOds (id As String) &apos;Giuseppe Vizziello 2015 - accesso alle proprietà personalizzate del file ods
 REM QUESTA NON VA
 rem controlla che il file sia un template LeenO

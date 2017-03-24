@@ -14,7 +14,6 @@ import locale
 import codecs
 #~ import subprocess
 #~ import psutil
-
 import os, sys, uno, unohelper, pyuno, logging, shutil, base64
 import time
 from multiprocessing import Process, freeze_support
@@ -175,7 +174,6 @@ def invia_voce_ep(arg=None):
             tmp.copyRange(oCellAddress, oRangeAddress)
         
         nuove_righe = getLastUsedCell(tmp).EndRow+1
-        
         analisi = tmp.getCellRangeByPosition(0,0,getLastUsedCell(tmp).EndColumn,getLastUsedCell(tmp).EndRow)
         
         oDoc.CurrentController.select(analisi)
@@ -194,7 +192,6 @@ def invia_voce_ep(arg=None):
         lrow = getLastUsedCell(dccSheet).EndRow
         
         dccSheet.getRows().insertByIndex(lrow, nuove_righe)
-
         ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, lrow))
     
         ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -3905,8 +3902,8 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 ########################################################################
 #VARIABILI GLOBALI:
 Lmajor= 3 #'INCOMPATIBILITA'
-Lminor= 15 #'NUOVE FUNZIONALITA'
-Lsubv= "2.dev"#'CORREZIONE BUGS
+Lminor= 16 #'NUOVE FUNZIONALITA'
+Lsubv= "0"#'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 siVoce = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
 siVoce_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )

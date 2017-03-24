@@ -92,7 +92,6 @@ Sub avvia_IDE
 	
 &apos;Print convertfromurl(leeno_path)
 End Sub
-
 rem ----------------------------------------------------------------------
 rem l&apos;estensione va installata solo per l&apos;utente corrente
 sub make_LOportable

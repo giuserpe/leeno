@@ -53,11 +53,11 @@ Sub Scelta_Viste() &apos;nuova versione universale
 			OBTerra = oDialogScenari_A.getControl(&quot;OBTerra&quot;).State
 			If OBTerra = True Then
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;)
-				oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 0
-				oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0
-				oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 0
-				oDialogScenari_A.getControl(&quot;CBFig&quot;).State = 0
-				oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0
+	&apos;			oDialogScenari_A.getControl(&quot;CBSic&quot;).State = 0
+	&apos;			oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0
+	&apos;			oDialogScenari_A.getControl(&quot;CBCat&quot;).State = 0
+	&apos;			oDialogScenari_A.getControl(&quot;CBFig&quot;).State = 0
+	&apos;			oDialogScenari_A.getControl(&quot;CBTag&quot;).State = 0
 			EndIf
 
 			If	oDialogScenari_A.getControl(&quot;CBMdo&quot;).State = 0 Then &apos;manodopera
@@ -186,7 +186,7 @@ Sub Scelta_Viste() &apos;nuova versione universale
 	 			Rifa_AA_BB_Computo
 				ScriptPy(&quot;pyleeno.py&quot;,&quot;nascondi_err&quot;)
 	 		Else
-	 			If	oDialogScenari_EP.getControl(&quot;CBSom&quot;).State = 1 Then Rifa_AA_BB_Computo
+	 			If	oDialogScenari_EP.getControl(&quot;CBSom&quot;).State = 1 Then 	ScriptPy(&quot;pyleeno.py&quot;,&quot;genera_sommario_run&quot;)&apos; Rifa_AA_BB_Computo
 	 		EndIf 	 		
 		case &quot;Analisi di Prezzo&quot;
 			oDialogScenari_AN = CreateUnoDialog(DialogLibraries.UltimusFree2.DialogViste_AN) &apos; Inizializza il dialogo

@@ -46,7 +46,7 @@ def Xray(myObject):
     Xscript = scriptPro.getScript("vnd.sun.star.script:XrayTool._Main.Xray?language=Basic&location=application")
     Xscript.invoke((myObject,), None, None)
 
-def Lib_LeenO(funcname,*args):
+def basic_LeenO(funcname,*args):
     xCompCont = XSCRIPTCONTEXT.getComponentContext()
     sm = xCompCont.ServiceManager
     mspf = sm.createInstance("com.sun.star.script.provider.MasterScriptProviderFactory")
@@ -1062,6 +1062,214 @@ def adatta_altezza_riga (nSheet=None):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
 # elenco prezzi ########################################################
+def debug (arg=None):
+#~ def scelta_viste (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance('com.sun.star.awt.DialogProvider')
+    if oSheet.Name in ('VARIANTE', 'COMPUTO'):
+        oDialog1 = dp.createDialog('vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application')
+        oDialog1Model = oDialog1.Model
+        if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMis').State = 1
+        if oSheet.getColumns().getByIndex(17).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
+        if oSheet.getColumns().getByIndex(29).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
+        if oSheet.getColumns().getByIndex(31).Columns.IsVisible  == True: oDialog1.getControl('CBCat').State = 1
+        if oSheet.getColumns().getByIndex(34).Columns.IsVisible  == True: oDialog1.getControl('CBTag').State = 1
+        if oSheet.getColumns().getByIndex(38).Columns.IsVisible  == True: oDialog1.getControl('CBFig').State = 1
+        oDialog1.execute()
+        
+        if oDialog1.getControl('OBTerra').State == True:
+            computo_terra_terra()
+            oDialog1.getControl('CBSic').State = 0
+            oDialog1.getControl('CBMdo').State = 0
+            oDialog1.getControl('CBCat').State = 0
+            oDialog1.getControl('CBTag').State = 0
+            oDialog1.getControl('CBFig').State = 0
+            
+
+        if oDialog1.getControl('CBMdo').State == 0: #manodopera
+            oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(30).Columns.IsVisible = True
+        
+        if oDialog1.getControl('CBCat').State == 0: #categorie
+            oSheet.getColumns().getByIndex(31).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(32).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(33).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(31).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(32).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(33).Columns.IsVisible = True
+
+        #~ if oDialog1.getControl("CBTag").State == 0: #TAG
+            #~ oSheet.getColumns().getByIndex(34).Columns.IsVisible = False
+        #~ else:
+            #~ oSheet.getColumns().getByIndex(34).Columns.IsVisible = True
+
+        if oDialog1.getControl("CBTag").State == 0: #manodopera
+            oSheet.getColumns().getByIndex(34).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(34).Columns.IsVisible = True
+
+        if oDialog1.getControl("CBSic").State == 0: #sicurezza
+            oSheet.getColumns().getByIndex(17).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(17).Columns.IsVisible = True
+
+        if oDialog1.getControl("CBFig").State == 0: #figure
+            oSheet.getColumns().getByIndex(38).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(38).Columns.IsVisible = True
+            
+        if oDialog1.getControl("CBMis").State == 0: #misure
+            oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(8).Columns.IsVisible = True            
+
+        if oDialog1.getControl("CBDet").State == 0: #
+            basic_LeenO('Magic.Formula_magica_off')
+        else:
+            basic_LeenO('Magic.Formula_magica_aggiorna')
+            
+    elif oSheet.Name in ('Elenco Prezzi'):
+        oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application")
+        oDialog1Model = oDialog1.Model
+        if oSheet.getColumns().getByIndex(3).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
+        if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
+        if oSheet.getCellByPosition(1, 3).Rows.OptimalHeight == False: oDialog1.getControl('CBDesc').State = 1
+        if oSheet.getColumns().getByIndex(7).Columns.IsVisible  == True: oDialog1.getControl('CBOrig').State = 1
+        if oSheet.getColumns().getByIndex(8).Columns.IsVisible  == True: oDialog1.getControl('CBUsa').State = 1
+        oDialog1.execute()
+
+        if oDialog1.getControl("CBSic").State == 0: #sicurezza
+            oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(3).Columns.IsVisible = True
+
+        if oDialog1.getControl("CBMdo").State == 0: #sicurezza
+            oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
+
+        if oDialog1.getControl("CBDesc").State == 1: #descrizione
+            oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
+            oSheet.getCellByPosition(1, 3).Rows.OptimalHeight
+            basic_LeenO('Strutture.Tronca_altezza_voci_ep')
+        elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
+
+        if oDialog1.getControl("CBOrig").State == 0: #origine
+            oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
+        else:
+            oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
+            
+        #~ if oDialog1.getControl("CBUsa").State == 0: #usato
+            #~ oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
+            #~ oSheet.getColumns().getByIndex(9).Columns.IsVisible = False
+        #~ else:
+            #~ oSheet.getColumns().getByIndex(8).Columns.IsVisible = True
+            #~ oSheet.getColumns().getByIndex(9).Columns.IsVisible = True
+            
+        oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+        #~ IS = oRangeAddress.Sheet
+        #~ SC = oRangeAddress.StartColumn
+        #~ EC = oRangeAddress.EndColumn
+        SR = oRangeAddress.StartRow+1
+        ER = oRangeAddress.EndRow-1
+        oSheet.ungroup(oRangeAddress,0) #colonne
+        oSheet.ungroup(oRangeAddress,1) #righe
+        oSheet.getCellRangeByPosition(15, 0, 26, 0).Columns.IsVisible = True
+        oSheet.getCellRangeByPosition(23 , SR, 25, ER).CellStyle = 'EP statistiche'
+        oSheet.getCellRangeByPosition(26, SR, 26, ER+1).CellStyle = 'EP-mezzo %'
+        
+        genera_sommario()
+        if oDialog1.getControl("ComVar").State == True: #Computo - Variante
+            oRangeAddress.StartColumn = 19
+            oRangeAddress.EndColumn = 22
+            oSheet.group(oRangeAddress,0)
+            oSheet.getCellByPosition(23, 0).String = 'Computo - Variante'
+
+            formule = list()
+            for n in range(4, ultima_voce(oSheet)+2):
+                formule.append(['=IF(Q' + str(n) + '-M' + str(n) + '=0;"--";Q' + str(n) + '-M' + str(n) + ')',
+                                '=IF(R' + str(n) + '-N' + str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
+                                '=IF(R' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-R' + str(n) + ';"")',
+'=IF(IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'])
+            n += 1
+            oSheet.getCellByPosition(26, ER+1).Formula = '=IF(IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'
+            oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
+            formule = tuple (formule)
+            oRange.setFormulaArray(formule)
+
+        if oDialog1.getControl("ComCon").State == True: #Computo - Contabilità
+            oRangeAddress.StartColumn = 15
+            oRangeAddress.EndColumn = 18
+            oSheet.group(oRangeAddress,0)
+            oSheet.getCellByPosition(23, 0).String = 'Computo - Contabilità'
+            
+            formule = list()
+            for n in range(4, ultima_voce(oSheet)+2):
+                formule.append(['=IF(U' + str(n) + '-M' + str(n) + '=0;"--";U' + str(n) + '-M' + str(n) + ')',
+                                '=IF(V' + str(n) + '-N' + str(n) + '>0;V' + str(n) + '-N' + str(n) + ';"")',
+                                '=IF(V' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-V' + str(n) + ';"")',
+'=IF(IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'])
+            n += 1
+            oSheet.getCellByPosition(26, ER+1).Formula = '=IF(IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'
+            oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
+            formule = tuple (formule)
+            oRange.setFormulaArray(formule)
+
+        if oDialog1.getControl("VarCon").State == True: #Variante - Contabilità
+            oRangeAddress.StartColumn = 19
+            oRangeAddress.EndColumn = 22
+            oSheet.group(oRangeAddress,0)
+            oSheet.getCellByPosition(23, 0).String = 'Variante - Contabilità'
+            
+            formule = list()
+            for n in range(4, ultima_voce(oSheet)+2):
+                formule.append(['=IF(U' + str(n) + '-Q' + str(n) + '=0;"--";U' + str(n) + '-Q' + str(n) + ')',
+                                '=IF(V' + str(n) + '-R' + str(n) + '>0;V' + str(n) + '-R' + str(n) + ';"")',
+                                '=IF(V' + str(n) + '-R' + str(n) + '<0;R' + str(n) + '-V' + str(n) + ';"")',
+'=IF(IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + '))'])
+            n += 1
+            oSheet.getCellByPosition(26, ER+1).Formula = '=IF(IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + '))'
+            oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
+            formule = tuple (formule)
+            oRange.setFormulaArray(formule)
+
+        nascondi_err()
+
+        #~ except:
+            #~ pass
+        #~ chi(ComVar)
+        #~ chi(ComCon)
+        #~ chi(VarCon)
+        
+        #~ if oDialog1.getControl("CBSom").State == 1: #origine
+            #~ genera_sommario()
+            #~ nascondi_err()
+
+
+    elif oSheet.Name in ('Analisi di Prezzo'):
+        oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
+        oDialog1Model = oDialog1.Model
+        
+    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
+        oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application")
+        oDialog1Model = oDialog1.Model
+        oDialog1.execute()
+
+########################################################################
 class genera_sommario_th (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -3181,7 +3389,6 @@ def strall (el, n=3):
 
 # XPWE_in ##########################################################
 def XPWE_in (arg=None):
-#~ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     refresh(0)
     ###
@@ -3689,11 +3896,11 @@ Si tenga conto che:
             oSheet.getCellByPosition(0, n+8).String = ''
             oSheet.getCellByPosition(0, n+11).String = ''
             inizializza_analisi()
-    #~ #Lib_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
+    #~ #basic_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
     tante_analisi_in_ep()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
-        Lib_LeenO('Computo.genera_variante')
+        basic_LeenO('Computo.genera_variante')
     oSheet = oDoc.getSheets().getByName(arg)
     if oSheet.getCellByPosition (1, 4).String == 'Cod. Art.?':
         oSheet.getRows().removeByIndex(3, 4)
@@ -4504,7 +4711,7 @@ def adegua_tmpl (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
-        Lib_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
+        basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
     if ver_tmpl < 203:
         if DlgSiNo("Vuoi procedere con l'adeguamento di questo file alla versione corrente di LeenO?", "Richiesta") ==2:
             #~ oDialogo_attesa = dlg_attesa()
@@ -4513,7 +4720,7 @@ def adegua_tmpl (arg=None):
             sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
             styles = oDoc.getStyleFamilies()
             styles.loadStylesFromURL(sUrl, list())
-            Lib_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
+            basic_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
             oSheet = oDoc.getSheets().getByName('S1')
             oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 205
             for el in oDoc.Sheets.ElementNames:

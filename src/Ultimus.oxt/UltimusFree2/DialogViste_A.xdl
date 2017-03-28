@@ -17,7 +17,7 @@
   <dlg:button dlg:style-id="1" dlg:id="CommandButton7" dlg:tab-index="1" dlg:left="99" dlg:top="13" dlg:width="80" dlg:height="15" dlg:help-text="Mette in struttura" dlg:value="VARIANTE" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.genera_variante?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="5" dlg:left="8" dlg:top="7" dlg:width="75" dlg:height="96">
+  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="5" dlg:left="8" dlg:top="7" dlg:width="75" dlg:height="87">
    <dlg:title dlg:value="Visualizza "/>
   </dlg:titledbox>
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="7" dlg:left="88" dlg:top="12" dlg:width="4" dlg:height="91"/>
@@ -32,7 +32,7 @@
   <dlg:checkbox dlg:style-id="3" dlg:id="CBSic" dlg:tab-index="2" dlg:left="10" dlg:top="59" dlg:width="68" dlg:height="10" dlg:value="Sicurezza" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBMdo" dlg:tab-index="3" dlg:left="10" dlg:top="69" dlg:width="68" dlg:height="10" dlg:value="Manodopera" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBMis" dlg:tab-index="6" dlg:left="10" dlg:top="39" dlg:width="68" dlg:height="10" dlg:value="Colonne misure" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBTag" dlg:tab-index="11" dlg:left="10" dlg:top="91" dlg:width="56" dlg:height="10" dlg:value="Tag" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBTag" dlg:tab-index="11" dlg:left="-58" dlg:top="92" dlg:width="56" dlg:height="10" dlg:value="Tag" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBDet" dlg:tab-index="12" dlg:left="10" dlg:top="28" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton22" dlg:tab-index="13" dlg:left="99" dlg:top="73" dlg:width="80" dlg:height="15" dlg:value="Rigenera formule" dlg:button-type="ok">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.Rifa_Formule_Orizzontali?language=Basic&amp;location=application" script:language="Script"/>

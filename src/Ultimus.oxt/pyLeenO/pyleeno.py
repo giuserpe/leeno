@@ -1062,8 +1062,8 @@ def adatta_altezza_riga (nSheet=None):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
 # elenco prezzi ########################################################
-def debug (arg=None):
-#~ def scelta_viste (arg=None):
+#~ def debug (arg=None):
+def scelta_viste (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     psm = uno.getComponentContext().ServiceManager
@@ -1194,6 +1194,7 @@ def debug (arg=None):
         
         formule = list()
         if oDialog1.getControl("ComVar").State == True: #Computo - Variante
+            genera_sommario()
             oRangeAddress.StartColumn = 19
             oRangeAddress.EndColumn = 22
             oSheet.group(oRangeAddress,0)
@@ -1202,15 +1203,16 @@ def debug (arg=None):
                 formule.append(['=IF(Q' + str(n) + '-M' + str(n) + '=0;"--";Q' + str(n) + '-M' + str(n) + ')',
                                 '=IF(R' + str(n) + '-N' + str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
                                 '=IF(R' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-R' + str(n) + ';"")',
-'=IF(IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'])
+'=IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + '*100;N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + '*100)'])
+
             n += 1
-            oSheet.getCellByPosition(26, ER+1).Formula = '=IF(IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((R' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-R' + str(n) + ')/R' + str(n) + ';(R' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'
+            oSheet.getCellByPosition(26, ER+1).Formula = '=IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + '*100;N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + '*100)'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple (formule)
             oRange.setFormulaArray(formule)
-            nascondi_err()
 
         if oDialog1.getControl("ComCon").State == True: #Computo - Contabilità
+            genera_sommario()
             oRangeAddress.StartColumn = 15
             oRangeAddress.EndColumn = 18
             oSheet.group(oRangeAddress,0)
@@ -1219,30 +1221,29 @@ def debug (arg=None):
                 formule.append(['=IF(U' + str(n) + '-M' + str(n) + '=0;"--";U' + str(n) + '-M' + str(n) + ')',
                                 '=IF(V' + str(n) + '-N' + str(n) + '>0;V' + str(n) + '-N' + str(n) + ';"")',
                                 '=IF(V' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-V' + str(n) + ';"")',
-'=IF(IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'])
+'=IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + '*100;N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + '*100)'])
             n += 1
-            oSheet.getCellByPosition(26, ER+1).Formula = '=IF(IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-N' + str(n) + ')/N' + str(n) + ');-(N' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-N' + str(n) + ')/N' + str(n) + '))'
+            oSheet.getCellByPosition(26, ER+1).Formula = '=IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + '*100;N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + '*100)'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple (formule)
             oRange.setFormulaArray(formule)
-            nascondi_err()
 
         if oDialog1.getControl("VarCon").State == True: #Variante - Contabilità
-            oRangeAddress.StartColumn = 19
-            oRangeAddress.EndColumn = 22
+            genera_sommario()
+            oRangeAddress.StartColumn = 11
+            oRangeAddress.EndColumn = 14
             oSheet.group(oRangeAddress,0)
             oSheet.getCellByPosition(23, 0).String = 'Variante - Contabilità'
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(U' + str(n) + '-Q' + str(n) + '=0;"--";U' + str(n) + '-Q' + str(n) + ')',
                                 '=IF(V' + str(n) + '-R' + str(n) + '>0;V' + str(n) + '-R' + str(n) + ';"")',
                                 '=IF(V' + str(n) + '-R' + str(n) + '<0;R' + str(n) + '-V' + str(n) + ';"")',
-'=IF(IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + '))'])
+'=IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + '*100;R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + '*100)'])
             n += 1
-            oSheet.getCellByPosition(26, ER+1).Formula = '=IF(IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ')=0;"--";IF(ISERROR((V' + str(n) + '-R' + str(n) + ')/R' + str(n) + ');-(R' + str(n) + '-V' + str(n) + ')/V' + str(n) + ';(V' + str(n) + '-R' + str(n) + ')/R' + str(n) + '))'
+            oSheet.getCellByPosition(26, ER+1).Formula = '=IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + '*100;R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + '*100)'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple (formule)
             oRange.setFormulaArray(formule)
-            nascondi_err()
 
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
@@ -1258,6 +1259,7 @@ def debug (arg=None):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         oDialog1.execute()
+    #~ MsgBox('Operazione eseguita con successo!','')
 
 ########################################################################
 class genera_sommario_th (threading.Thread):
@@ -1270,6 +1272,8 @@ def genera_sommario (arg=None):
     genera_sommario_th().start()
 #~ ###
 def genera_sommario_run (arg=None):
+#~ def genera_sommario (arg=None):
+
     '''
     sostituisce la sub Rifa_AA_BB_Computo
     serve a generare i sommari in Elenco Prezzi
@@ -1323,6 +1327,17 @@ def genera_sommario_run (arg=None):
         oRange = oSheet.getCellRangeByPosition(19, 3, 21, ultima_voce(oSheet))
         formule = tuple (formule)
         oRange.setFormulaArray(formule)
+        
+    oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    SR = oRangeAddress.StartRow+1
+    ER = oRangeAddress.EndRow-1
+    
+    #~ for el in (11, 15, 19):
+        #~ oSheet.getCellRangeByPosition(el, SR, el, ER+1).CellStyle = 'EP-mezzo %'
+    #~ for el in (12, 16, 20):
+        #~ oSheet.getCellRangeByPosition(el , SR, el, ER).CellStyle = 'EP statistiche_q'
+    #~ for el in (13, 17, 21):
+        #~ oSheet.getCellRangeByPosition(el , SR, el, ER).CellStyle = 'EP statistiche'
 
     refresh(1)
     adatta_altezza_riga(oSheet.Name)

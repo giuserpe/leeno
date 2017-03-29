@@ -17,23 +17,6 @@ Global GsTemp_major
 Global GsTemp_minor
 Global GsVer_templ 
 
-Sub aggiorna_leggero
-	Select case msgbox (&quot;Per questa versione di Template è sufficiente una procedura semplificata!&quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot;Nel caso si intenda procedere questo doc può essere salvato con un nuovo nome per evitare qualsiasi rischio per i tuoi dati!&quot; &amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Salvo il doc prima di proseguire?&quot; &amp; CHR$(10)_
-				&amp; &quot;&quot; ,35, &quot;Aggiornamento del template&quot;) 
-		case 6
-			salva_temp
-		
-		case 7 
-			&apos;exit sub
-		case 2
-			exit sub
-	end select
-	Salva_spazio_A_A 
-end sub
-
-
 sub AGGIORNA_TEMPLATE &apos;main
 &apos;	on error goto errore
 	&apos; versione oxt installata

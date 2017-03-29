@@ -28,40 +28,6 @@ dim cSheetName2 as string
 	Visualizza_PageBreak
 End Sub
 
-
-Sub Abilita_contabilita 
-	dim oSheet as object
-	&apos;	Mostra_tabs_contabilita_soltanto
-	Nascondi_tabs_COMPUTO_soltanto
-	Osheet = thisComponent.sheets.getbyname(&quot;CONTABILITA&quot;)
-	oSheet.isVisible = true
-	thisComponent.Sheets.moveByName(&quot;CONTABILITA&quot; ,4)
-	&apos;print &quot;la scrive&quot;
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
-	Thiscomponent.currentcontroller.setactivesheet(Osheet)
-	
-	&apos;queste che seguono per 
-	sVerT = 146
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,290).value &lt; sVerT	then
-			msgbox &quot;Se vuoi usare o anche solo testare la Contabilità Avanzata dovresti farlo su un template uguale o superiore al &quot; &amp; _
-			sVerT &amp; &quot;(&quot; &amp; sVerT &amp; &quot;.3.5)&quot;
-		&apos;	exit sub
-	end if
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value &lt;&gt; 1 THEN 
-		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt; 0 THEN 
-			msgbox &quot;La Contabilità lavori è stata abilitata! Questo presuppone che il Computo sia finito ed i lavori già appaltati!&quot; &amp; CHR$(10)_
-				&amp; &quot;(NB: Alcune modalità avranno comportamenti diversi ed altre saranno inibite)&quot; 
-		end if
-	END IF
-	msgbox &quot;Impostare SUBITO la modalità desiderata di gestione del Libretto!&quot; &amp; CHR$(10)_
-	&amp;&quot;&quot; &amp; CHR$(10)_
-	&amp; &quot;man: Libretto delle misure cartaceo o elettronico&quot;, 0 , &quot;ATTENZIONE!&quot;
-	Scelta_Viste
-&apos;Aggiorna_stile_1 
-End Sub
-
-
-
 sub Nascondi_tutte_secondarie 
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()

@@ -1064,6 +1064,11 @@ def adatta_altezza_riga (nSheet=None):
 # elenco prezzi ########################################################
 #~ def debug (arg=None):
 def scelta_viste (arg=None):
+    '''
+    Gestisce i dialoghi del menù viste nelle tabelle di Analisi di Prezzo,
+    Elenco Prezzi, COMPUTO, VARIANTE, CONTABILITA'
+    Genera i raffronti tra COMPUTO e VARIANTE e CONTABILITA'
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     psm = uno.getComponentContext().ServiceManager
@@ -1328,9 +1333,9 @@ def genera_sommario_run (arg=None):
         formule = tuple (formule)
         oRange.setFormulaArray(formule)
         
-    oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    SR = oRangeAddress.StartRow+1
-    ER = oRangeAddress.EndRow-1
+    #~ oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    #~ SR = oRangeAddress.StartRow+1
+    #~ ER = oRangeAddress.EndRow-1
     
     #~ for el in (11, 15, 19):
         #~ oSheet.getCellRangeByPosition(el, SR, el, ER+1).CellStyle = 'EP-mezzo %'

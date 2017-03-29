@@ -52,7 +52,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Viste.Scelta_Viste?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$scelta_viste?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image18</value>

@@ -27,43 +27,6 @@ Sub Tagga_VociPrezzo_non_usate ()
 	EliminaVociTaggate_EP_0
 end sub
 
-Sub tagga_
-	oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-&apos;-------------------------------------------------------------------------
-	Barra_Apri_Chiudi_5(&quot;                  Rigenero il sommario Computo&quot;, 10)
-	Rifa_AA_BB_Computo
-	Barra_chiudi_sempre_4
-&apos;-------------------------------------------------------------------------
-	Barra_Apri_Chiudi_5(&quot;                  Rigenero il sommario Contabilità&quot;, 20)
-	Rifa_GG_G1G1_Contab
-	Barra_chiudi_sempre_4
-&apos;-------------------------------------------------------------------------
-&apos;segno le voci usate
-	Barra_Apri_Chiudi_5(&quot;                  Segno le voci usate&quot;, 30)
-	sString$ = &quot;Fine elenco&quot;
-	oEnd=uFindString(sString$, oSheet)
-	lrow=oEnd.RangeAddress.EndRow 
-	n = 3
-	While n &lt; lrow
-&apos;		Barra_Apri_Chiudi_5(&quot;                  Segno le voci usate&quot;, n/lrow*100)
-		If oSheet.GetCellByPosition(10,n).value&lt;&gt;0 Or _
-			oSheet.GetCellByPosition(13,n).value&lt;&gt;0 Then
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(9,n))&apos; solo per debug
-			oSheet.GetCellByPosition(9,n).string = &quot;UC&quot;
-			oSheet.GetCellByPosition(9,n).cellstyle = &quot;Tag_decim&quot;
-		Else
-			oSheet.GetCellByPosition(9,n).string = &quot;&quot;
-		EndIf
-		n=n+1
-	Wend
-	Barra_chiudi_sempre_4
-&apos;-------------------------------------------------------------------------
-
-End Sub
-
-
-
-
 Sub Cerca_in_Analisi_segna_in_Computo
 dim xA as string
 &apos;dim osheetnome as string

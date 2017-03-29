@@ -615,7 +615,7 @@ Sub Modulo_Lista_categorie_appalto &apos;Crea Il modulo per una lista generata d
 	 end if
 
 	&apos;aggiorno il sommario
-	Rifa_AA_BB_Computo
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;genera_sommario&quot;)&apos;	Rifa_AA_BB_Computo
 	Duplica_e_Consolida_doc
 	oSheet=thiscomponent.currentcontroller.activesheet
 	

@@ -1280,8 +1280,6 @@ def genera_sommario (arg=None):
     genera_sommario_th().start()
 #~ ###
 def genera_sommario_run (arg=None):
-#~ def genera_sommario (arg=None):
-
     '''
     sostituisce la sub Rifa_AA_BB_Computo
     serve a generare i sommari in Elenco Prezzi
@@ -1293,60 +1291,64 @@ def genera_sommario_run (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     lRow = getLastUsedCell(oSheet).EndRow
-
     rifa_nomearea('COMPUTO', '$AJ$3:$AJ$' + str(lRow), 'AA')
     rifa_nomearea('COMPUTO', '$N$3:$N$'  + str(lRow), "BB")
     rifa_nomearea('COMPUTO', '$AK$3:$AK$' + str(lRow), "cEuro")
 
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    
-    formule = list()
-    for n in range(4, ultima_voce(oSheet)+2):
-        formule.append(['=N' + str(n) + '/$N$2',
-                        '=SUMIF(AA;A' + str(n) + ';BB)',
-                        '=SUMIF(AA;A' + str(n) + ';cEuro)'])
-    oRange = oSheet.getCellRangeByPosition(11, 3, 13, ultima_voce(oSheet))
-    formule = tuple (formule)
-    oRange.setFormulaArray(formule)
-
-    formule = list()
     if oDoc.getSheets().hasByName('VARIANTE') == True:
         rifa_nomearea('VARIANTE', '$AJ$3:$AJ$' + str(lRow), 'varAA')
         rifa_nomearea('VARIANTE', '$N$3:$N$'  + str(lRow), "varBB")
         rifa_nomearea('VARIANTE', '$AK$3:$AK$' + str(lRow), "varEuro")
-        for n in range(4, ultima_voce(oSheet)+2):
-            formule.append(['=R' + str(n) + '/$R$2',
-                            '=SUMIF(varAA;A' + str(n) + ';varBB)',
-                            '=SUMIF(varAA;A' + str(n) + ';varEuro)'])
-        oRange = oSheet.getCellRangeByPosition(15, 3, 17, ultima_voce(oSheet))
-        formule = tuple (formule)
-        oRange.setFormulaArray(formule)
 
-    formule = list()
     if oDoc.getSheets().hasByName('CONTABILITA') == True:
         lRow = getLastUsedCell(oDoc.getSheets().getByName('CONTABILITA')).EndRow
         rifa_nomearea('CONTABILITA', '$AJ$3:$AJ$' + str(lRow), 'GG')
         rifa_nomearea('CONTABILITA', '$S$3:$S$'  + str(lRow), "G1G1")
         rifa_nomearea('CONTABILITA', '$AK$3:$AK$' + str(lRow), "conEuro")
-        for n in range(4, ultima_voce(oSheet)+2):
-            formule.append(['=V' + str(n) + '/$V$2',
+        
+    formule = list()
+    for n in range(4, ultima_voce(oSheet)+2):
+        stringa =(['=N' + str(n) + '/$N$2',
+                        '=SUMIF(AA;A' + str(n) + ';BB)',
+                        '=SUMIF(AA;A' + str(n) + ';cEuro)',
+                        '', '', '', '', '', '', '', ''])
+        if oDoc.getSheets().hasByName('VARIANTE') == True:
+            stringa =(['=N' + str(n) + '/$N$2',
+                        '=SUMIF(AA;A' + str(n) + ';BB)',
+                        '=SUMIF(AA;A' + str(n) + ';cEuro)',
+                        '',
+                        '=R' + str(n) + '/$R$2',
+                        '=SUMIF(varAA;A' + str(n) + ';varBB)',
+                        '=SUMIF(varAA;A' + str(n) + ';varEuro)',
+                        '', '', '',
+                        ''])
+            if oDoc.getSheets().hasByName('CONTABILITA') == True:
+                stringa =(['=N' + str(n) + '/$N$2',
+                            '=SUMIF(AA;A' + str(n) + ';BB)',
+                            '=SUMIF(AA;A' + str(n) + ';cEuro)',
+                            '',
+                            '=R' + str(n) + '/$R$2',
+                            '=SUMIF(varAA;A' + str(n) + ';varBB)',
+                            '=SUMIF(varAA;A' + str(n) + ';varEuro)',
+                            '',
+                            '=V' + str(n) + '/$V$2',
                             '=SUMIF(GG;A' + str(n) + ';G1G1)',
                             '=SUMIF(GG;A' + str(n) + ';conEuro)'])
-        oRange = oSheet.getCellRangeByPosition(19, 3, 21, ultima_voce(oSheet))
-        formule = tuple (formule)
-        oRange.setFormulaArray(formule)
-        
-    #~ oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    #~ SR = oRangeAddress.StartRow+1
-    #~ ER = oRangeAddress.EndRow-1
-    
-    #~ for el in (11, 15, 19):
-        #~ oSheet.getCellRangeByPosition(el, SR, el, ER+1).CellStyle = 'EP-mezzo %'
-    #~ for el in (12, 16, 20):
-        #~ oSheet.getCellRangeByPosition(el , SR, el, ER).CellStyle = 'EP statistiche_q'
-    #~ for el in (13, 17, 21):
-        #~ oSheet.getCellRangeByPosition(el , SR, el, ER).CellStyle = 'EP statistiche'
-
+        elif oDoc.getSheets().hasByName('CONTABILITA') == True:
+            stringa =(['=N' + str(n) + '/$N$2',
+                        '=SUMIF(AA;A' + str(n) + ';BB)',
+                        '=SUMIF(AA;A' + str(n) + ';cEuro)',
+                        '',
+                        '', '', '',
+                        '',
+                        '=V' + str(n) + '/$V$2',
+                        '=SUMIF(GG;A' + str(n) + ';G1G1)',
+                        '=SUMIF(GG;A' + str(n) + ';conEuro)'])
+        formule.append(stringa)
+    oRange = oSheet.getCellRangeByPosition(11, 3, 21, ultima_voce(oSheet))
+    formule = tuple (formule)
+    oRange.setFormulaArray(formule)
     refresh(1)
     adatta_altezza_riga(oSheet.Name)
     oDialogo_attesa.endExecute() #chiude il dialogo
@@ -5190,7 +5192,7 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = Vai_a_S1,
+g_exportedScripts = set_larghezza_colonne,
 #~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################

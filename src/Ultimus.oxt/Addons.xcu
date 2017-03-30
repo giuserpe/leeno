@@ -98,40 +98,6 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma50" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image333</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Filtro Standard Semplificato ON/OFF</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
-        <node oor:name="Ma55" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image444</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Fitra Codice della voce corrente</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
         <node oor:name="Ma56" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -426,6 +392,48 @@
     <!--COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO COMPUTO -->
     <node oor:name="OfficeToolBar">
       <node oor:name="ULTIMUS_3.OfficeToolBar_COMPUTO" oor:op="replace">
+        <node oor:name="Ca05" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image333</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Filtro Standard Semplificato ON/OFF</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca06" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image444</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Filtra Codice della voce corrente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ca07" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value />
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>private:separator</value>
+          </prop>
+        </node>
         <node oor:name="Ca10" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -695,7 +703,7 @@
         </node>
       </node>
     </node>
-    <!--                                                                    -->
+    <!--                                                               -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -744,7 +752,7 @@
               </node>
             </node>
           </node>
-#########################################################################
+          #########################################################################
           <node oor:name="m01" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -753,7 +761,6 @@
               <value>Importa/Esporta...</value>
             </prop>
             <node oor:name="Submenu">
-                
               <node oor:name="IE000" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -768,7 +775,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-
               <node oor:name="IE010" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -783,7 +789,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-
               <node oor:name="IE020" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -798,7 +803,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-              
               <node oor:name="IE030" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -807,7 +811,6 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-
               <node oor:name="IE040" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -822,10 +825,8 @@
                   <value>_self</value>
                 </prop>
               </node>
-              
             </node>
           </node>
-
           <node oor:name="m02" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1543,40 +1544,6 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Filtra_2.Filtro?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image333</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Filtro Standard Semplificato ON/OFF</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
-          <node oor:name="m23" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.filtra_codice?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image444</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Filtra Codice della voce corrente</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
-          <node oor:name="m24" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
               <value>vnd.sun.star.script:UltimusFree2.Cerca_Rior.cerca_in_elenco?language=Basic&amp;location=application</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
@@ -1589,7 +1556,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m25" oor:op="replace">
+          <node oor:name="m23" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1606,7 +1573,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m26" oor:op="replace">
+          <node oor:name="m24" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
             </prop>
@@ -1614,7 +1581,7 @@
               <value>private:separator</value>
             </prop>
           </node>
-          <node oor:name="m27" oor:op="replace">
+          <node oor:name="m25" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1631,7 +1598,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m28" oor:op="replace">
+          <node oor:name="m26" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1648,7 +1615,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m29" oor:op="replace">
+          <node oor:name="m27" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
             </prop>
@@ -1656,7 +1623,7 @@
               <value>private:separator</value>
             </prop>
           </node>
-          <node oor:name="m30" oor:op="replace">
+          <node oor:name="m28" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1670,7 +1637,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m31" oor:op="replace">
+          <node oor:name="m29" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>

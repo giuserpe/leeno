@@ -2897,8 +2897,9 @@ def struttura_Elenco (arg=None):
 ########################################################################
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):
-    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
-    New_file.computo(0)
+#~ def debug (arg=None):
+    #~ MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
+    #~ New_file.computo(0)
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
@@ -2944,6 +2945,7 @@ def XML_import_ep (arg=None):
     else:
         nome = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
 ########################################################################
+    madre = ''
     for elem in iter:
         # esegui le verifiche sulla root dell'XML
         if elem.tag == '{six.xsd}intestazione':
@@ -3004,6 +3006,8 @@ def XML_import_ep (arg=None):
             if prod_id is not None:
                 prod_id = int(prod_id)
             tariffa= elem.get('prdId')
+            voce = elem.get('voce')
+
             sic = elem.get('onereSicurezza')
             if sic != None:
                 sicurezza = float(sic)
@@ -3022,63 +3026,66 @@ def XML_import_ep (arg=None):
             else:
                 mdo =''
 ########################################################################
-            cod_madre = '#giuSerpe#'
+            #~ chi(elem.findall('{six.xsd}prdDescrizione')[0].get('breve'))
+            #~ return
             try:
                 if len (elem.findall('{six.xsd}prdDescrizione')) == 1:
                     desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
                     desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
                 else:
-            #descrizione voce
+                #descrizione voce
                     if elem.findall('{six.xsd}prdDescrizione')[0].get('lingua') == lingua_scelta:
                         idx = 0 #ITALIANO
                     else:
                         idx = 1 #TEDESCO
+                        idx = 0 #ITALIANO
                     desc_breve = elem.findall('{six.xsd}prdDescrizione')[idx].get('breve')
                     desc_estesa = elem.findall('{six.xsd}prdDescrizione')[idx].get('estesa')
-                if desc_breve == None:
-                    desc_breve = ''
-                if desc_estesa == None:
-                    desc_estesa = ''
-                if len(desc_breve) > len (desc_estesa):
-                    desc_voce = desc_breve
-                else:
-                    desc_voce = desc_estesa
-                if len(tariffa.split('.')) == 4:
-                    cod_madre = tariffa
-                    madre = desc_voce
-                if len(tariffa.split('.')) == 5:
-                    desc_voce = madre + '\n - ' + desc_voce
-            except IndexError:
+            except:
                 pass
+            if desc_breve == None: desc_breve = ''
+            if desc_estesa == None: desc_estesa = ''
+            
+            if len(desc_breve) > len (desc_estesa): desc_voce = desc_breve
+            else: desc_voce = desc_estesa
+            if voce == None and elem.get('unitaDiMisuraId') == None:
+                articolo_modificato = (tariffa, #2  colonna
+                                        desc_voce, 
+                                        '', '', '', '', '')
+            if voce != None and elem.get('unitaDiMisuraId') == None:
+                madre = desc_voce
+                articolo_modificato = (tariffa, #2  colonna
+                                        desc_voce, 
+                                        '', '', '', '', '')
+            if voce == None and elem.get('unitaDiMisuraId') != None:
+                desc_voce = madre + '\n - ' + desc_voce
+                articolo_modificato = (tariffa, #2  colonna
+                                        desc_voce, 
+                                        '', '', '', '', '')
 ########################################################################
             sub_quot = elem.find('{six.xsd}prdQuotazione')
             if sub_quot != None:
                 list_nr = sub_quot.get('listaQuotazioneId')
                 if sub_quot.get('valore') != None:
                     valore = float(sub_quot.get('valore'))
-                if valore == 0:
-                    valore = ''
-                if sub_quot.get('quantita') is not None: #SERVE DAVVERO???
-                    quantita = float(sub_quot.get('quantita'))
+                if valore == 0: valore = ''
+                if sub_quot.get('quantita') is not None: quantita = float(sub_quot.get('quantita')) #SERVE DAVVERO???
             else:
                 valore = ''
                 quantita = ''
 #~ Modifiche introdotte da Valerio De Angelis che ringrazio
             # Riarrangio i dati di ogni articolo così da formare una tupla 1D
             # l'idea è creare un array 2D e caricarlo direttamente nel foglio in una singola operazione
-            vuoto = ''
             elem_7 = ''
             elem_11 = ''
-            if mdo != '' and mdo != 0:
-                elem_7 = mdo/100
-            if sicurezza != '' and valore != '':
-                elem_11 = valore*sicurezza/100
+            if mdo != '' and mdo != 0: elem_7 = mdo/100
+            if sicurezza != '' and valore != '': elem_11 = valore*sicurezza/100
             # Nota che ora articolo_modificato non è più una lista ma una tupla,
             # riguardo al motivo, vedi commenti in basso
             articolo_modificato =  (tariffa,          #2  colonna
                                     desc_voce,        #4  colonna
                                     unita_misura,     #6  colonna
-                                    vuoto,
+                                    '',
                                     valore,           #7  prezzo
                                     elem_7,           #8  mdo %
                                     elem_11)          #11 sicurezza %
@@ -3104,7 +3111,7 @@ def XML_import_ep (arg=None):
     oRange.setDataArray(lista_come_array)
     oSheet.getRows().removeByIndex(3, 1)
     oDoc.CurrentController.setActiveSheet(oSheet)
-    struttura_Elenco()
+    #~ struttura_Elenco()
     oDialogo_attesa.endExecute()
     MsgBox('Importazione eseguita con successo!','')
     autoexec()
@@ -3165,6 +3172,7 @@ def XML_import_multi (arg=None):
 ########################################################################
     suffB_IT, suffE_IT, suffB_DE, suffE_DE = '', '', '', ''
     test = True
+    madre = ''
     for elem in iter:
         # esegui le verifiche sulla root dell'XML
         if elem.tag == '{six.xsd}intestazione':

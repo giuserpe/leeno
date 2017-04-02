@@ -2898,8 +2898,8 @@ def struttura_Elenco (arg=None):
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):
 #~ def debug (arg=None):
-    #~ MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
-    #~ New_file.computo(0)
+    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
+    New_file.computo(0)
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
@@ -3045,23 +3045,8 @@ def XML_import_ep (arg=None):
                 pass
             if desc_breve == None: desc_breve = ''
             if desc_estesa == None: desc_estesa = ''
-            
             if len(desc_breve) > len (desc_estesa): desc_voce = desc_breve
             else: desc_voce = desc_estesa
-            if voce == None and elem.get('unitaDiMisuraId') == None:
-                articolo_modificato = (tariffa, #2  colonna
-                                        desc_voce, 
-                                        '', '', '', '', '')
-            if voce != None and elem.get('unitaDiMisuraId') == None:
-                madre = desc_voce
-                articolo_modificato = (tariffa, #2  colonna
-                                        desc_voce, 
-                                        '', '', '', '', '')
-            if voce == None and elem.get('unitaDiMisuraId') != None:
-                desc_voce = madre + '\n - ' + desc_voce
-                articolo_modificato = (tariffa, #2  colonna
-                                        desc_voce, 
-                                        '', '', '', '', '')
 ########################################################################
             sub_quot = elem.find('{six.xsd}prdQuotazione')
             if sub_quot != None:
@@ -3070,12 +3055,12 @@ def XML_import_ep (arg=None):
                     valore = float(sub_quot.get('valore'))
                 if valore == 0: valore = ''
                 if sub_quot.get('quantita') is not None: quantita = float(sub_quot.get('quantita')) #SERVE DAVVERO???
+                if desc_voce[:2] == '- ': desc_voce=desc_voce[2:]
+                desc_voce = madre + '\n- ' + desc_voce
             else:
+                madre = desc_voce
                 valore = ''
                 quantita = ''
-#~ Modifiche introdotte da Valerio De Angelis che ringrazio
-            # Riarrangio i dati di ogni articolo così da formare una tupla 1D
-            # l'idea è creare un array 2D e caricarlo direttamente nel foglio in una singola operazione
             elem_7 = ''
             elem_11 = ''
             if mdo != '' and mdo != 0: elem_7 = mdo/100

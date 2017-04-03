@@ -2851,6 +2851,7 @@ def rifa_nomearea(sSheet, sRange, sName):
     oRanges.addNewByName(sName,sPath,oCellAddress,0)
 ########################################################################
 def struttura_Elenco (arg=None):
+#~ def debug (arg=None):
     '''
     Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
@@ -2863,41 +2864,22 @@ def struttura_Elenco (arg=None):
     oSheet.clearOutline()
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     lista = list()
-    test = getLastUsedCell(oSheet).EndRow
+    test = getLastUsedCell(oSheet).EndRow-1
+    #~ chi(oSheet.getCellByPosition(2, 2).Type.value)
     for n in range (3, test):#
-        if len(oSheet.getCellByPosition(0, n).String.split('.')) == 2:
-            oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col1
-            sopra = n+1
-            for n in range (sopra+1, test):
-                if len(oSheet.getCellByPosition(0, n).String.split('.')) == 2:
-                    sotto = n-1
-                    lista.append((sopra, sotto))
-                    break
-        if len(oSheet.getCellByPosition(0, n).String.split('.')) == 4 and \
-        oSheet.getCellByPosition(4, n).String == '':
+        if oSheet.getCellByPosition(4, n).Type.value == 'EMPTY':
+            #~ chi(oSheet.getCellByPosition(3, n).Type.value)
+            oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col2
+            if oSheet.getCellByPosition(2, n).Type.value == 'EMPTY':
+                oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col1
+        if oSheet.getCellByPosition(4, n).String == '':
             oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col2
             oCellRangeAddr.StartRow = n
             oCellRangeAddr.EndRow = n
             oSheet.group(oCellRangeAddr,1)
-    for el in lista:
-        oCellRangeAddr.StartRow = el[0]
-        oCellRangeAddr.EndRow = el[1]
-        oSheet.group(oCellRangeAddr,1)
-        #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
-    return
-    #~ la parte che segue è servita a riordinare le descrizioni del prezzario Umbria 2016
-        #~ if len(oSheet.getCellByPosition(2, n).String.split('.')) == 4 and \
-        #~ oSheet.getCellByPosition(7, n).String == '':
-            #~ des0 = oSheet.getCellByPosition(4, n).String
-            #~ des = ''
-        #~ if len(oSheet.getCellByPosition(2, n).String.split('.')) == 4 and \
-        #~ oSheet.getCellByPosition(7, n).String != '':
-            #~ des = des0 +'\n- ' + oSheet.getCellByPosition(4, n).String
-            #~ oSheet.getCellByPosition(13, n).String = des
 ########################################################################
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):
-#~ def debug (arg=None):
     MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
     New_file.computo(0)
     '''

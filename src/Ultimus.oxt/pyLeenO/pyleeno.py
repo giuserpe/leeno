@@ -3306,6 +3306,61 @@ def XML_import_multi (arg=None):
     autoexec()
 # XML_import_multi ###################################################
 ########################################################################
+#~ def importa_listino_leeno (arg=None):
+def debug  (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ chi (oSheet.getCellByPosition (2, 11).CellBackColor)
+    #~ chi (oSheet.getCellByPosition (2, 15).String.split('.'))
+    lista_articoli = list()
+    nome = oSheet.getCellByPosition (2, 0).String
+    test = uFindStringCol('ATTENZIONE!', 5, oSheet)+1
+    assembla = DlgSiNo('Vuoi assemblare voci e sottovoci?', 'Richiesta')
+    for el in range(test, getLastUsedCell(oSheet).EndRow+1):
+        if len(oSheet.getCellByPosition (2, el).String.split('.')) == 1 or len(oSheet.getCellByPosition (2, el).String.split('.')) == 2:
+            articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
+                        oSheet.getCellByPosition (4, el).String,    #descrizione
+                        '','','','','','','',)
+        elif len(oSheet.getCellByPosition (2, el).String.split('.')) == 3 and oSheet.getCellByPosition (8, el).Type.value == 'EMPTY':
+            articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
+                        oSheet.getCellByPosition (4, el).String,    #descrizione
+                        '','','','','','','',)
+        elif len(oSheet.getCellByPosition (2, el).String.split('.')) >= 3:
+            articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
+                        oSheet.getCellByPosition (4, el).String,    #descrizione
+                        oSheet.getCellByPosition (6, el).String,    #um
+                        '',
+                        oSheet.getCellByPosition (7, el).String,    #prezzo
+                        oSheet.getCellByPosition (8, el).String,    #mdo%
+                        oSheet.getCellByPosition (9, el).String,    #mdo
+                        oSheet.getCellByPosition (10, el).String,    #sic%
+                        oSheet.getCellByPosition (11, el).String)    #sic
+        lista_articoli.append(articolo)
+    New_file.computo(0)
+# compilo la tabella ###################################################
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellByPosition(2, 2).String = nome
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getCellByPosition(1, 1).String = nome
+    oSheet.getRows().insertByIndex(4, len(lista_articoli))
+    lista_come_array = tuple(lista_articoli)
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+    oRange = oSheet.getCellRangeByPosition( 0,
+                                            4,
+                                            colonne_lista - 1, # l'indice parte da 0
+                                            righe_lista + 4 - 1)
+    oRange.setDataArray(lista_come_array)
+    oSheet.getRows().removeByIndex(3, 1)
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    #~ struttura_Elenco()
+    #~ oDialogo_attesa.endExecute()
+    MsgBox('Importazione eseguita con successo!','')
+    #~ autoexec()
+   
+########################################################################
 # parziale_core ########################################################
 def parziale_core(lrow):
     #~ lrow = 7

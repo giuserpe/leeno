@@ -738,7 +738,7 @@ dim livelli as long
 &apos;	print livelli
 	if livelli &gt; 3 then
 		&apos;print &quot;sup&quot;
-		ocell = oSheetTemp.GetCellByPosition( 1, 1 
+		ocell = oSheetTemp.GetCellByPosition( 1, 1)
  		ThisComponent.CurrentController.Select(oCell)
 		msgbox &quot; Il numero dei Livelli impostato è &quot; &amp; livelli &amp; CHR$(10)_
 			&amp; &quot; Al momento Ultimus gestisce solo 3 livelli...&quot; &amp; CHR$(10)_

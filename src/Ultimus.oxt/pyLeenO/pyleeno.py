@@ -245,6 +245,8 @@ def copia_sorgente_per_git(arg=None):
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    scr_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String
     make_pack(bar=1)
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
@@ -255,12 +257,18 @@ def copia_sorgente_per_git(arg=None):
         os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
 
     elif sys.platform == 'win32':
-        dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
+        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
+            try:
+                os.makedirs(os.getenv("HOMEPATH") +'\\'+ scr_oxt +'\\leeno\\src\\Ultimus.oxt\\')
+            except FileExistsError:
+                pass
+            dest = os.getenv("HOMEDRIVE")  + os.getenv("HOMEPATH") +'\\'+ scr_oxt +'\\leeno\\src\\Ultimus.oxt\\'
+        else:
+            dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         
-        #~ os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
-        os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
+            #~ os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
+            os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
     distutils.dir_util.copy_tree(oxt_path, dest)
-
     return
 ########################################################################
 def debugs(arg=None):
@@ -5042,6 +5050,8 @@ def make_pack (arg=None, bar=0):
     Pacchettizza l'estensione in duplice copia: LeenO.oxt e LeenO-yyyymmddhhmm.oxt
     in una directory precisa (per ora - da parametrizzare)
     '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    scr_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String
     tempo = w_version_code()
     if bar == 0:
         oDoc = XSCRIPTCONTEXT.getDocument()
@@ -5054,11 +5064,19 @@ def make_pack (arg=None, bar=0):
         nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
         nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
         os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
-
     elif sys.platform == 'win32':
-        nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-        nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-        os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')
+        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
+            try:
+                os.makedirs(os.getenv("HOMEPATH") +'/'+ scr_oxt +'/')
+            except FileExistsError:
+                pass
+            nomeZip2= os.getenv("HOMEPATH") +'/'+ scr_oxt +'/OXT/LeenO-' + tempo + '.oxt'
+            nomeZip = os.getenv("HOMEPATH") +'/'+ scr_oxt +'/OXT/LeenO.oxt'
+            os.system('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ scr_oxt +'\\OXT\\')
+        else:
+            nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+            nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+            os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')
     
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)

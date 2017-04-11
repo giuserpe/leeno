@@ -3315,26 +3315,26 @@ def debug  (arg=None):
     lista_articoli = list()
     nome = oSheet.getCellByPosition (2, 0).String
     test = uFindStringCol('ATTENZIONE!', 5, oSheet)+1
-    assembla = DlgSiNo('Vuoi assemblare voci e sottovoci?', 'Richiesta')
+    #~ assembla = DlgSiNo('Vuoi assemblare voci e sottovoci?', 'Richiesta')
+    madre = ''
     for el in range(test, getLastUsedCell(oSheet).EndRow+1):
-        if len(oSheet.getCellByPosition (2, el).String.split('.')) == 1 or len(oSheet.getCellByPosition (2, el).String.split('.')) == 2:
+        if len(oSheet.getCellByPosition (2, el).String.split('.')) == 2 and oSheet.getCellByPosition (7, el).Type.value == 'EMPTY':
             articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
                         oSheet.getCellByPosition (4, el).String,    #descrizione
-                        '','','','','','','',)
-        elif len(oSheet.getCellByPosition (2, el).String.split('.')) == 3 and oSheet.getCellByPosition (8, el).Type.value == 'EMPTY':
+                        '','','','','',)
+        elif len(oSheet.getCellByPosition (2, el).String.split('.')) > 2 and oSheet.getCellByPosition (7, el).Type.value == 'EMPTY':
+            madre = oSheet.getCellByPosition (4, el).String    #descrizione
             articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
                         oSheet.getCellByPosition (4, el).String,    #descrizione
-                        '','','','','','','',)
-        elif len(oSheet.getCellByPosition (2, el).String.split('.')) >= 3:
-            articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
-                        oSheet.getCellByPosition (4, el).String,    #descrizione
-                        oSheet.getCellByPosition (6, el).String,    #um
-                        '',
-                        oSheet.getCellByPosition (7, el).String,    #prezzo
-                        oSheet.getCellByPosition (8, el).String,    #mdo%
-                        oSheet.getCellByPosition (9, el).String,    #mdo
-                        oSheet.getCellByPosition (10, el).String,    #sic%
-                        oSheet.getCellByPosition (11, el).String)    #sic
+                        '','','','','',)
+        else:
+            articolo = (oSheet.getCellByPosition (2, el).String, #A#tariffa
+                        madre + '\n- ' + oSheet.getCellByPosition (4, el).String,
+                        oSheet.getCellByPosition (6, el).String,
+                        oSheet.getCellByPosition (11, el).String,
+                        oSheet.getCellByPosition (7, el).String,
+                        oSheet.getCellByPosition (8, el).String,
+                        oSheet.getCellByPosition (9, el).String,)
         lista_articoli.append(articolo)
     New_file.computo(0)
 # compilo la tabella ###################################################

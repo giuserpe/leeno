@@ -246,7 +246,13 @@ def copia_sorgente_per_git(arg=None):
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    scr_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String
+    try:
+        if oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String == '':
+            src_oxt ='_LeenO'
+        else:
+            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String
+    except:
+        pass
     make_pack(bar=1)
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
@@ -259,10 +265,10 @@ def copia_sorgente_per_git(arg=None):
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
             try:
-                os.makedirs(os.getenv("HOMEPATH") +'\\'+ scr_oxt +'\\leeno\\src\\Ultimus.oxt\\')
+                os.makedirs(os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\')
             except FileExistsError:
                 pass
-            dest = os.getenv("HOMEDRIVE")  + os.getenv("HOMEPATH") +'\\'+ scr_oxt +'\\leeno\\src\\Ultimus.oxt\\'
+            dest = os.getenv("HOMEDRIVE")  + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         
@@ -5051,7 +5057,13 @@ def make_pack (arg=None, bar=0):
     in una directory precisa (per ora - da parametrizzare)
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    scr_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String
+    try:
+        if oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String == '':
+            src_oxt ='_LeenO'
+        else:
+            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(7,338).String
+    except:
+        pass
     tempo = w_version_code()
     if bar == 0:
         oDoc = XSCRIPTCONTEXT.getDocument()
@@ -5067,12 +5079,12 @@ def make_pack (arg=None, bar=0):
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
             try:
-                os.makedirs(os.getenv("HOMEPATH") +'/'+ scr_oxt +'/')
+                os.makedirs(os.getenv("HOMEPATH") +'/'+ src_oxt +'/')
             except FileExistsError:
                 pass
-            nomeZip2= os.getenv("HOMEPATH") +'/'+ scr_oxt +'/OXT/LeenO-' + tempo + '.oxt'
-            nomeZip = os.getenv("HOMEPATH") +'/'+ scr_oxt +'/OXT/LeenO.oxt'
-            os.system('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ scr_oxt +'\\OXT\\')
+            nomeZip2= os.getenv("HOMEPATH") +'/'+ src_oxt +'/OXT/LeenO-' + tempo + '.oxt'
+            nomeZip = os.getenv("HOMEPATH") +'/'+ src_oxt +'/OXT/LeenO.oxt'
+            os.system('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\')
         else:
             nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'

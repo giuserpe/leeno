@@ -478,7 +478,7 @@ sub apri_file
 	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 	dim args1(1) as new com.sun.star.beans.PropertyValue
 	args1(0).Name = &quot;URL&quot;
-	args1(0).Value = &quot;file:///W:/_dwg/ULTIMUSFREE/_tmp/aaa.ods&quot;
+	args1(0).Value = &quot;file:///media/giuserpe/PRIVATO/LeenO/elenchi/Marche/2014/Prezzario_Regione_Marche_2014-leeno__.ods&quot;
 	args1(1).Name = &quot;FilterName&quot;
 	args1(1).Value = &quot;calc8&quot;
 	rem ----------------------------------------------------------------------

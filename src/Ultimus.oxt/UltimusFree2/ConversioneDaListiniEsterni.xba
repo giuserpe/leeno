@@ -75,7 +75,7 @@ rem ----------------------------------------------------------------------
 	oSheet.getCellRangeByPosition (10,primariga,10,lLastUrow).CellStyle = &quot;List-%&quot;
 	unSelect &apos;unselect ranges
 rem ----------------------------------------------------------------------
-	colore = &quot;giallo&quot;
+	colore = &quot;viola&quot;
 	Select Case colore
 	Case &quot;giallo&quot;
 		colore1 = RGB(255, 255, 112)

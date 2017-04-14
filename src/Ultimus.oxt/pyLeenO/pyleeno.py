@@ -77,6 +77,7 @@ class New_file:
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
             salva_come()
             autoexec()
+        #~ salva_come()
         return (document)
     def usobollo():
         desktop = XSCRIPTCONTEXT.getDesktop()
@@ -2874,6 +2875,8 @@ def struttura_Elenco (arg=None):
     col2 = 16771501
     col3 = 16771521 #chiaro - sfondo celle elenco prezzi
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oDoc.CurrentController.ZoomValue = 400
+
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -2881,16 +2884,16 @@ def struttura_Elenco (arg=None):
     test = getLastUsedCell(oSheet).EndRow-1
     #~ chi(oSheet.getCellByPosition(2, 2).Type.value)
     for n in range (3, test):#
-        if oSheet.getCellByPosition(4, n).Type.value == 'EMPTY':
-            #~ chi(oSheet.getCellByPosition(3, n).Type.value)
-            oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col2
-            if oSheet.getCellByPosition(2, n).Type.value == 'EMPTY':
-                oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col1
+        #~ if oSheet.getCellByPosition(4, n).Type.value == 'EMPTY':
+            #~ oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col2
+            #~ if oSheet.getCellByPosition(2, n).Type.value == 'EMPTY':
+                #~ oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col1
         if oSheet.getCellByPosition(4, n).String == '':
-            oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col2
+            oSheet.getCellRangeByPosition(0, n, 7, n).CellBackColor = col2
             oCellRangeAddr.StartRow = n
             oCellRangeAddr.EndRow = n
             oSheet.group(oCellRangeAddr,1)
+    oDoc.CurrentController.ZoomValue = 100
 ########################################################################
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):
@@ -3320,43 +3323,98 @@ def XML_import_multi (arg=None):
     autoexec()
 # XML_import_multi ###################################################
 ########################################################################
-#~ def importa_listino_leeno (arg=None):
-def debug  (arg=None):
+class importa_listino_leeno_th (threading.Thread):
+    def __init__(self):
+        threading.Thread.__init__(self)
+    def run(self):
+        importa_listino_leeno_run ()
+def importa_listino_leeno (arg=None):
+#~ def debug  (arg=None):
+    importa_listino_leeno_th().start()
+###
+def importa_listino_leeno_run (arg=None):
+    '''
+    Esegue la conversione di un listino (formato LeenO) in template Computo
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ chi (oSheet.getCellByPosition (2, 11).CellBackColor)
-    #~ chi (oSheet.getCellByPosition (2, 15).String.split('.'))
+    #~ giallo (16777072,16777120,16777168)
+    #~ verde (9502608,13696976,15794160)
+    #~ viola (12632319,13684991,15790335)
     lista_articoli = list()
     nome = oSheet.getCellByPosition (2, 0).String
     test = uFindStringCol('ATTENZIONE!', 5, oSheet)+1
-    #~ assembla = DlgSiNo('Vuoi assemblare voci e sottovoci?', 'Richiesta')
+    assembla = DlgSiNo('''Il riconoscimento di descrizioni e sottodescrizioni
+dipende dalla colorazione di sfondo delle righe.
+
+Nel caso in cui questa fosse alterata, il risultato finale
+della conversione potrebbe essere inatteso.
+
+Considera anche la possibilità di recuperare il formato XML(SIX)
+di questo prezzario dal sito ufficiale dell'ente che lo rilascia.        
+
+Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
+
+    orig = oDoc.getURL()
+    dest0 = orig[0:-4]+ '_new.ods'
+
+    orig = uno.fileUrlToSystemPath(LeenO_path()+'/template/leeno/Computo_LeenO.ots')
+    dest = uno.fileUrlToSystemPath(dest0)
+
+    shutil.copyfile(orig, dest)
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
     madre = ''
     for el in range(test, getLastUsedCell(oSheet).EndRow+1):
-        if len(oSheet.getCellByPosition (2, el).String.split('.')) == 2 and oSheet.getCellByPosition (7, el).Type.value == 'EMPTY':
-            articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
-                        oSheet.getCellByPosition (4, el).String,    #descrizione
-                        '','','','','',)
-        elif len(oSheet.getCellByPosition (2, el).String.split('.')) > 2 and oSheet.getCellByPosition (7, el).Type.value == 'EMPTY':
-            madre = oSheet.getCellByPosition (4, el).String    #descrizione
-            articolo = (oSheet.getCellByPosition (2, el).String,    #tariffa
-                        oSheet.getCellByPosition (4, el).String,    #descrizione
-                        '','','','','',)
+        tariffa = oSheet.getCellByPosition (2, el).String
+        descrizione = oSheet.getCellByPosition (4, el).String
+        um = oSheet.getCellByPosition (6, el).String
+        sic = oSheet.getCellByPosition (11, el).String
+        prezzo = oSheet.getCellByPosition (7, el).String
+        mdo_p = oSheet.getCellByPosition (8, el).String
+        mdo = oSheet.getCellByPosition (9, el).String
+        if oSheet.getCellByPosition (2, el).CellBackColor in (16777072,16777120,9502608,13696976,12632319,13684991):
+            articolo = (tariffa,
+                        descrizione,
+                        um,
+                        sic,
+                        prezzo,
+                        mdo_p,
+                        mdo,)
+        elif oSheet.getCellByPosition (2, el).CellBackColor in (16777168,15794160,15790335):
+            if assembla ==2: madre = descrizione
+            articolo = (tariffa,
+                        descrizione,
+                        um,
+                        sic,
+                        prezzo,
+                        mdo_p,
+                        mdo,)
         else:
-            articolo = (oSheet.getCellByPosition (2, el).String, #A#tariffa
-                        madre + '\n- ' + oSheet.getCellByPosition (4, el).String,
-                        oSheet.getCellByPosition (6, el).String,
-                        oSheet.getCellByPosition (11, el).String,
-                        oSheet.getCellByPosition (7, el).String,
-                        oSheet.getCellByPosition (8, el).String,
-                        oSheet.getCellByPosition (9, el).String,)
+            if madre == '':
+                descrizione = oSheet.getCellByPosition (4, el).String
+            else:
+                descrizione = madre + ' \n- ' + oSheet.getCellByPosition (4, el).String
+            articolo = (tariffa,
+                        descrizione,
+                        um,
+                        sic,
+                        prezzo,
+                        mdo_p,
+                        mdo,)
         lista_articoli.append(articolo)
-    New_file.computo(0)
+    oDialogo_attesa.endExecute()
+    _gotoDoc (dest) #vado sul nuovo file
 # compilo la tabella ###################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
+    
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = nome
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oSheet.getCellByPosition(1, 1).String = nome
+
     oSheet.getRows().insertByIndex(4, len(lista_articoli))
     lista_come_array = tuple(lista_articoli)
     # Parametrizzo il range di celle a seconda della dimensione della lista
@@ -3369,10 +3427,19 @@ def debug  (arg=None):
     oRange.setDataArray(lista_come_array)
     oSheet.getRows().removeByIndex(3, 1)
     oDoc.CurrentController.setActiveSheet(oSheet)
-    #~ struttura_Elenco()
-    #~ oDialogo_attesa.endExecute()
-    MsgBox('Importazione eseguita con successo!','')
-    #~ autoexec()
+    oDialogo_attesa.endExecute()
+    procedo = DlgSiNo ('''Vuoi mettere in ordine la visualizzazione del prezzario?     
+
+Le righe senza prezzo avranno una tonalità di sfondo
+diversa dalle altre e potranno essere facilmente nascoste.
+
+Questa operazione potrebbe richiedere diversi minuti.''', 'Richiesta...')
+    if procedo ==2:
+        attesa().start() #mostra il dialogo
+        struttura_Elenco()
+        oDialogo_attesa.endExecute()
+    MsgBox('Conversione eseguita con successo!','')
+    autoexec()
    
 ########################################################################
 # parziale_core ########################################################
@@ -5110,6 +5177,7 @@ def dlg_attesa(arg=None):
     oDialogo_attesa = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgAttesa?language=Basic&location=application")
     return oDialogo_attesa
 #~ #
+
 class attesa (threading.Thread):
     #~ http://bit.ly/2fzfsT7
     '''avvia il dialogo di attesa'''

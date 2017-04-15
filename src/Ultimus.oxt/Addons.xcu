@@ -761,7 +761,30 @@
               <value>Importa/Esporta...</value>
             </prop>
             <node oor:name="Submenu">
+                
               <node oor:name="IE000" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$importa_listino_leeno?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Converti Listino in Elenco Prezzi (-leeno)</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node> 
+              <node oor:name="IE005" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>              
+              <node oor:name="IE006" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>

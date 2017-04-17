@@ -719,36 +719,6 @@ Sub Scrivi_Globale &apos; versione semplice
 	&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;ssUltimus&quot;)
 sUltimus = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string
-exit sub
-		dim xA as string
-	&apos; print sUltimus
-		
-		If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
-			GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
-		End If 
-		
-		
-	&apos;azzera il nome del frame
-	&apos;dis 2/01/09 &apos; ThisComponent.CurrentController.Frame.Name = &quot;&quot; &apos; serve? mmm. pare di no
-		
-		oDoc = ThisComponent 
-		if not (thisComponent.Sheets.hasByName(&quot;Elenco Prezzi&quot;) and _
-			thisComponent.Sheets.hasByName(&quot;COMPUTO&quot;)) Then
-		exit Sub
-	end if
-	
-	setDocEventOnClose
-	
-	&apos;xA=oNome
-	
-	UltimusFree2.Lupo_0.sUltimus = ConvertFromUrl (ThisComponent.getURL()) &apos;xA &apos; variabile globale registrata
-
-	if not ThisComponent.Sheets.hasByName(&quot;M1&quot;) then &apos; per computi molto vecchi
-		exit sub
-	end if
-	&apos;oMycell2 = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(4,11)
-	ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string = sUltimus
-	Colora_M1(URLStr)
 END SUB 
 
 

@@ -4236,7 +4236,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 #VARIABILI GLOBALI:
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 16 #'NUOVE FUNZIONALITA'
-Lsubv= "1.dev"#'CORREZIONE BUGS
+Lsubv= "1"#'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 siVoce = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
 siVoce_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
@@ -4681,6 +4681,11 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
+def autoexec_off (arg=None):
+    sUltimus = ''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('M1')
+    oSheet.getCellByPosition(2,27).String = ''#sUltimus
 def autoexec (arg=None):
     '''
     questa è richiamata da New_File()
@@ -4946,7 +4951,7 @@ def DlgMain(arg=None):
     sString.Text = f.readline()
     
     sString = oDlgMain.getControl("Label_DDC")
-    sString.Text = sUltimus
+    sString.Text = sUltimus #oSheet.getCellByPosition(2,27).String
 
     sString = oDlgMain.getControl("Label1")
     sString.Text = str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv

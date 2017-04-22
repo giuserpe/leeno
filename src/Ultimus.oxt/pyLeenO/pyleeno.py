@@ -2331,6 +2331,7 @@ def elimina_voci_azzerate (arg=None):
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
             ER = getLastUsedCell(oSheet).EndRow
             for lrow in reversed(range(0, ER)):
+                #~ if oSheet.getCellByPosition(9, lrow).String == '0,00':
                 if oSheet.getCellByPosition(2, lrow).String == '*** VOCE AZZERATA ***':
                     elimina_voce(lRow=lrow, msg=0)
             Numera_Voci(1)
@@ -2676,13 +2677,16 @@ def ins_voce_elenco (arg=None):
     oSheet.getCellRangeByPosition(2, 3, 7, 3).CellStyle = "EP-mezzo"
     oSheet.getCellByPosition(5, 3).CellStyle = "EP-mezzo %"
     oSheet.getCellRangeByPosition(8, 3, 9, 3).CellStyle = "EP-sfondo"
+    oSheet.getCellRangeByPosition(0, 3, 26, 3).clearContents(HARDATTR)
 
     oSheet.getCellByPosition(11, 3).Formula = '=N4/$N$2'
+    #~ oSheet.getCellByPosition(11, 3).Formula = '=IF(ISERROR(N4/$N$2);"--";N4/$N$2)'
     oSheet.getCellByPosition(11, 3).CellStyle = 'EP-mezzo %'
     oSheet.getCellByPosition(12, 3).Formula = '=SUMIF(AA;A4;BB)'
     oSheet.getCellByPosition(12, 3).CellStyle = 'EP statistiche_q'
     oSheet.getCellByPosition(13, 3).CellStyle = 'EP statistiche_Contab_q'
     oSheet.getCellByPosition(13, 3).Formula = '=SUMIF(AA;A4;cEuro)'
+
     refresh (1)
 ########################################################################
 # nuova_voce ###########################################################
@@ -4590,8 +4594,7 @@ def filtra_codice(arg=None):
             sotto = sStRange.RangeAddress.EndRow
             if oSheet.getCellByPosition(1, sopra+1).String != voce:
                 lista_pt.append((sopra, sotto))
-                lista_pt.append((sopra+2, sotto-1))
-    #~ MsgBox(lista_pt)
+                #~ lista_pt.append((sopra+2, sotto-1))
     for el in lista_pt:
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]

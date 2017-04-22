@@ -2675,17 +2675,26 @@ def ins_voce_elenco (arg=None):
     oSheet.getCellByPosition(0, 3).CellStyle = "EP-aS"
     oSheet.getCellByPosition(1, 3).CellStyle = "EP-a"
     oSheet.getCellRangeByPosition(2, 3, 7, 3).CellStyle = "EP-mezzo"
-    oSheet.getCellByPosition(5, 3).CellStyle = "EP-mezzo %"
     oSheet.getCellRangeByPosition(8, 3, 9, 3).CellStyle = "EP-sfondo"
-    oSheet.getCellRangeByPosition(0, 3, 26, 3).clearContents(HARDATTR)
+    for el in (11, 15, 19, 26):
+        oSheet.getCellByPosition(el, 3).CellStyle = "EP-mezzo %"
 
-    oSheet.getCellByPosition(11, 3).Formula = '=N4/$N$2'
-    #~ oSheet.getCellByPosition(11, 3).Formula = '=IF(ISERROR(N4/$N$2);"--";N4/$N$2)'
-    oSheet.getCellByPosition(11, 3).CellStyle = 'EP-mezzo %'
+    for el in (12, 16, 20, 21):#(12, 16, 20):
+        oSheet.getCellByPosition(el, 3).CellStyle = 'EP statistiche_q'
+
+    for el in (13, 17, 23, 24, 25):#(12, 16, 20):
+        oSheet.getCellByPosition(el, 3).CellStyle = 'EP statistiche'
+
+    oSheet.getCellRangeByPosition(0, 3, 26, 3).clearContents(HARDATTR)
+    oSheet.getCellByPosition(11, 3).Formula = '=IF(ISERROR(N4/$N$2);"--";N4/$N$2)'
+    #~ oSheet.getCellByPosition(11, 3).Formula = '=N4/$N$2'
     oSheet.getCellByPosition(12, 3).Formula = '=SUMIF(AA;A4;BB)'
-    oSheet.getCellByPosition(12, 3).CellStyle = 'EP statistiche_q'
-    oSheet.getCellByPosition(13, 3).CellStyle = 'EP statistiche_Contab_q'
     oSheet.getCellByPosition(13, 3).Formula = '=SUMIF(AA;A4;cEuro)'
+
+    #copio le formule dalla riga sotto
+    oRangeAddress = oSheet.getCellRangeByPosition(15, 4, 26, 4).getRangeAddress()
+    oCellAddress = oSheet.getCellByPosition(15,3).getCellAddress()
+    oSheet.copyRange(oCellAddress, oRangeAddress)
 
     refresh (1)
 ########################################################################

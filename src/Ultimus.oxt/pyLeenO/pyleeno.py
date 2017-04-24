@@ -2889,8 +2889,12 @@ def struttura_Elenco (arg=None):
     Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
     '''
+    #~ giallo (16777072,16777120,16777168)
+    #~ verde (9502608,13696976,15794160)
+    #~ viola (12632319,13684991,15790335)
     col1 = 16771481
-    col2 = 16771501
+    #~ col2 = 16771501
+    col2 = 16777168
     col3 = 16771521 #chiaro - sfondo celle elenco prezzi
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDoc.CurrentController.ZoomValue = 400

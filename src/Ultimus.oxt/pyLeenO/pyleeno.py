@@ -2699,7 +2699,8 @@ def ins_voce_elenco (arg=None):
     oRangeAddress = oSheet.getCellRangeByPosition(2, 4, 2, 4).getRangeAddress()
     oCellAddress = oSheet.getCellByPosition(2,3).getCellAddress()
     oSheet.copyRange(oCellAddress, oRangeAddress)
-
+    oSheet.getCellByPosition(2, 3).String = ''
+    
     refresh (1)
 ########################################################################
 # nuova_voce ###########################################################

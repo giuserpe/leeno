@@ -3464,6 +3464,27 @@ Questa operazione potrebbe richiedere diversi minuti.''', 'Richiesta...')
     autoexec()
    
 ########################################################################
+def importa_stili (arg=None):
+    '''
+    Importa tutti gli stili da un documento di riferimento. Se non è
+    selezionato, il file di rifetimento è il template di leenO.
+    '''
+    if DlgSiNo('''Questa operazione sovrascriverà gli stili
+del documento attivo se già presenti!
+
+Se non scegli un file di riferimento, saranno
+importati gli stili di default di LeenO.
+
+Vuoi continuare?''', 'Importa Stili in blocco?') == 3: return
+    filename = filedia('Scegli il file di riferimento...', '*.ods')
+    if filename == None:
+        #~ desktop = XSCRIPTCONTEXT.getDesktop()
+        filename = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
+    else:
+        filename = uno.systemPathToFileUrl (filename)
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oDoc.getStyleFamilies().loadStylesFromURL(filename,list())
+########################################################################
 # parziale_core ########################################################
 def parziale_core(lrow):
     #~ lrow = 7
@@ -4328,7 +4349,7 @@ def debugnn (sCella='', t=''):
         return oString.Text
 
 ########################################################################
-def filedia (titolo='Scegli il file...', est='*.*',  mode=0):
+def filedia (titolo='Scegli il file...', est='*.*', mode=0):
     """
     titolo  { string }  : titolo del FilePicker
     est     { string }  : filtro di visualizzazione file

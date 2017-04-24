@@ -467,43 +467,6 @@ lnumF = stardesktop.frames.getCount
 	sPG1=0
 end sub
 
-sub Importa_STILI &apos;tutti in blocco e sovrascrive 
-	&apos; aggiorno gli stili di cella sulla base di quelli del template di riferimento
-	&apos; attenzione li sovrascrive tutti (modulo suggerito da dfrench - Nuova Zelanda)
-	
-	sSourceURL = GetFileURL( &quot;Cerca il file da cui prelevare gli stili.&quot;)
-	If ismissing(sSourceURL ) or sSourceURL = &quot;&quot; Then &apos;sFileURL
- 		exit sub
-	end if
-&apos;	sSourceURL = ConvertToUrl(sSourceURL)
-	Select case msgbox (&quot;Attenzione!! Sto per importare gli stili da un file modello:&quot; &amp; CHR$(10)_
-					&amp; sSourceURL &amp; CHR$(10)_
-					&amp; &quot;Questa operazione sovrascriverà irrimediabilmente gli eventuali stili con lo stesso nome del doc	attivo!&quot; &amp; CHR$(10)_
-					&amp;&quot; PROSEGUO ?... &quot; &amp; CHR$(10) _
- 					&amp; CHR$(10) &amp; &quot;&quot;,35, &quot;Importa Stili in blocco ?&quot;) 
- 				
-				case 6 &apos;SI
- 					curl = ConvertToUrl(sSourceURL) &apos;sSourceURL
-					styles=thiscomponent.getStyleFamilies() &apos;get the interface to load styles
-					styles.loadStylesFromURL(curl,Array()) &apos; by default loads &amp; overrides all styles
-				case 7
-	 				exit sub
- 	 			case 2
- 					exit sub
- 	end Select
-rem ----------------------------------------------------------------------
-rem adatta altezza righe di tutto il doc
-	Dim lsheet() As object
-	lsheet() = thiscomponent.sheets.elementnames
-	For Each el In lsheet()
-		Adatta_h_riga_intera_tabella(el)
-	Next
-rem ----------------------------------------------------------------------
-end sub 
-
-
-
-
 
 SUB cerca_stile_cella &apos; per trovare se e dove è applicato un certo nome di stile
 &apos; bisogna impostare a mano il nome dello stile da cercare

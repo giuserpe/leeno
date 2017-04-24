@@ -622,7 +622,6 @@ Sub Annulla_Salva_spazio
 				&apos;oSheet.GetCellByPosition(8, i).CellStyle = &quot;comp sotto centro&quot;
 			end if				
 	next i	
-&apos;	Importa_STILI
 End sub
 
 

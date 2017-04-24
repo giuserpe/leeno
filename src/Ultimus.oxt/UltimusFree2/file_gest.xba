@@ -72,8 +72,6 @@ End Sub
 Sub avvia_IDE
 	Dim oLayout
 	oDoc = thiscomponent
-&apos;xray oDoc
-&apos;Print 
 	oLayout = oDoc.CurrentController.getFrame().LayoutManager
 	oDoc.currentcontroller.activesheet.Name
 &apos;	oLayout.isElementFloating(&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;)
@@ -90,7 +88,6 @@ Sub avvia_IDE
 	EndIf
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 316).Value = 1
 	
-&apos;Print convertfromurl(leeno_path)
 End Sub
 rem ----------------------------------------------------------------------
 rem l&apos;estensione va installata solo per l&apos;utente corrente

@@ -2371,7 +2371,6 @@ def elimina_voce (arg=None, lRow=None, msg=1):
         oSheet.getRows().removeByIndex(SR, ER-SR+1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 ########################################################################
-
 def copia_riga_computo(lrow):
     '''
     Inserisce una nuova riga di misurazione nel computo
@@ -2484,6 +2483,32 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
 ########################################################################
+def cerca_partenza(arg=None):
+    '''
+    Conserva, in una variabile globale, il nome del foglio [0] e l'id
+    della riga di codice prezzo componente [1].
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    if oSheet.getCellByPosition(0, lrow).CellStyle in siVoce + siVoce_R:
+        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        global partenza
+        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
+        return partenza
+    else:
+        partenza = None
+########################################################################
+def pesca_cod(arg=None):
+    '''
+    Permette di scegliere il codice della voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name == 'CONTABILITA':
+        lrow = Range2Cell()[1]
+        
+########################################################################
 def inverti_segno (arg=None):
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
@@ -2505,7 +2530,7 @@ def inverti_segno (arg=None):
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
-def debug (arg=None):
+def debug_ConditionalFormat (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
     bar = oDoc.createInstance("com.sun.star.sheet.DataBarAxis")

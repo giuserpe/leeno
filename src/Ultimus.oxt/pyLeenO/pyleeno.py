@@ -2505,6 +2505,24 @@ def inverti_segno (arg=None):
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
+def debug (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
+    bar = oDoc.createInstance("com.sun.star.sheet.DataBarAxis")
+    oCtx = uno.getComponentContext()
+
+    oServiceManager = oCtx.ServiceManager
+    oDlgModel = oServiceManager.createInstance("com.sun.star.sheet")
+
+    mri (oDlgModel)
+    #~ return
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+
+    #~ oSheet.getCellByPosition(3, 53).ConditionalFormat
+    #~ mri(sheet)
+    #~ mri(oDoc.CurrentSelection)
+########################################################################
+
 def debug_tipo_di_valore(arg=None):
 #~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3484,6 +3502,10 @@ Vuoi continuare?''', 'Importa Stili in blocco?') == 3: return
         filename = uno.systemPathToFileUrl (filename)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDoc.getStyleFamilies().loadStylesFromURL(filename,list())
+    for el in oDoc.Sheets.ElementNames:
+        oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
+        adatta_altezza_riga(el)
+    _gotoSheet ('Elenco Prezzi')
 ########################################################################
 # parziale_core ########################################################
 def parziale_core(lrow):

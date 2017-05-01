@@ -2491,9 +2491,13 @@ def cerca_partenza(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
+    global partenza
     if oSheet.getCellByPosition(0, lrow).CellStyle in siVoce + siVoce_R:
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
-        global partenza
+        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
+        return partenza
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
+        sStRange = Circoscrive_Analisi (lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
         return partenza
     else:

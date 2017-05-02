@@ -1299,8 +1299,8 @@ def genera_sommario_run (arg=None):
     sostituisce la sub Rifa_AA_BB_Computo
     serve a generare i sommari in Elenco Prezzi
     '''
-    oDialogo_attesa = dlg_attesa()
-    attesa().start() #mostra il dialogo
+    #~ oDialogo_attesa = dlg_attesa()
+    #~ attesa().start() #mostra il dialogo
     refresh(0)
 
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -1366,7 +1366,7 @@ def genera_sommario_run (arg=None):
     oRange.setFormulaArray(formule)
     refresh(1)
     adatta_altezza_riga(oSheet.Name)
-    oDialogo_attesa.endExecute() #chiude il dialogo
+    #~ oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
 def riordina_ElencoPrezzi (arg=None):
 #~ def debug (arg=None):

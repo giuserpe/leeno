@@ -2492,9 +2492,13 @@ def cerca_partenza(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     global partenza
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_computo_R:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo:
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
+        return partenza
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo_R:
+        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
         return partenza
     elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
         sStRange = Circoscrive_Analisi (lrow)
@@ -2503,15 +2507,53 @@ def cerca_partenza(arg=None):
     else:
         partenza = None
 ########################################################################
-def pesca_cod(arg=None):
+sblocca_computo = 0
+def debug(arg=None):
     '''
-    Permette di scegliere il codice della voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi
+    Permette di scegliere il codice per la voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi.
+    Capisce quando la voce nel libretto delle misure è già registrata o nel documento ci sono già atti contabili emessi.
     '''
+    global sblocca_computo
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name == 'CONTABILITA':
-        lrow = Range2Cell()[1]
-        
+    if oSheet.Name in ('CONTABILITA'):
+        cerca_partenza()
+        try:
+            if partenza[2] == '#reg':
+                if DlgSiNo("""Cambiando il Codice Articolo di questa voce, comprometterai
+la validità degli atti contabili già emessi.
+
+VUOI PROCEDERE?
+
+Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
+                    return
+                else:
+                    _gotoSheet('Elenco Prezzi')
+            else:
+                _gotoSheet('Elenco Prezzi')
+            partenza[2]
+        except TypeError:
+            return
+    if oDoc.NamedRanges.hasByName("#LIB#1") == True:
+        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            if sblocca_computo == 0:
+                if DlgSiNo("Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",'ATTENZIONE!') ==3:
+                    return
+                else:
+                    sblocca_computo = 1
+            cerca_partenza()
+            _gotoSheet('Elenco Prezzi')
+    if oSheet.Name in ('Elenco Prezzi'):
+        try:
+            lrow = Range2Cell()[1]
+            codice = oSheet.getCellByPosition(0, lrow).String
+            _gotoSheet(partenza[0])
+            oSheet = oDoc.CurrentController.ActiveSheet
+            oSheet.getCellByPosition(1, partenza[1]).String = codice
+            _gotoCella(2, partenza[1]+1)
+            #~ chi(partenza)
+        except NameError:
+            return
 ########################################################################
 def inverti_segno (arg=None):
     '''

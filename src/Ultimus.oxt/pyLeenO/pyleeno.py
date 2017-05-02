@@ -378,7 +378,7 @@ def Ins_Categorie(n):
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
     row = Range2Cell()[1]
-    if oSheet.getCellByPosition(0, row).CellStyle in siVoce:
+    if oSheet.getCellByPosition(0, row).CellStyle in stili_computo:
         lrow = next_voice(row, 1)
     elif oSheet.getCellByPosition(0, row).CellStyle in noVoce:
         lrow = row+1
@@ -2099,7 +2099,7 @@ def next_voice (lrow, n=1):
     if lrow >= fine:
         return lrow
 
-    if oSheet.getCellByPosition(0, lrow).CellStyle in siVoce:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo:
         if n==0:
             sopra = Circoscrive_Voce_Computo_Att (lrow).RangeAddress.StartRow
             lrow = sopra
@@ -2492,7 +2492,7 @@ def cerca_partenza(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     global partenza
-    if oSheet.getCellByPosition(0, lrow).CellStyle in siVoce + siVoce_R:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_computo_R:
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
         return partenza
@@ -2837,7 +2837,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + siVoce):
+    if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo):
         lrow = next_voice(lrow, 1)
     else:
         return
@@ -4332,8 +4332,8 @@ Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 16 #'NUOVE FUNZIONALITA'
 Lsubv= "2.dev" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
-siVoce = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
-siVoce_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
+stili_computo = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
+stili_computo_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
 stili_analisi = ('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End', )
 createUnoService = (
         XSCRIPTCONTEXT
@@ -4663,7 +4663,7 @@ def filtra_codice(arg=None):
     oSheet.clearOutline()
     lrow = Range2Cell()[1]
     myrange = ('Comp End Attributo', 'Comp TOTALI',)
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (siVoce + siVoce_R) :
+    if oSheet.getCellByPosition(0, lrow).CellStyle in (stili_computo + stili_computo_R) :
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
         oCellRangeAddr.Sheet = iSheet

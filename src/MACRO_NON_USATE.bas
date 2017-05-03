@@ -1938,3 +1938,307 @@ oBarra.reset()
 _Listino_Crea_Capitoli
 print
 End Sub
+
+Sub Pesca_cod ' [pesca...]
+	Select case ThisComponent.currentcontroller.activesheet.name
+		Case "CONTABILITA"
+			sGVV = "va"
+			lrow = range2cell 'cerca_partenza
+'			PRINT "VAI1"
+			sGDove = "Elenco Prezzi"
+			sGVV = "va"	
+			sGorigine = "CONTABILITA"	
+			cerca_partenza
+			'porta su EP ????
+'			PRINT "VAI2"
+			Pesca_cod_1
+'			PRINT "VAI3"		
+			exit sub
+		Case "COMPUTO", "VARIANTE"
+			 if sGorigine = "CONTABILITA" then
+			 		sGVV = "viene" 'incolla
+			 		sGDove = "CONTABILITA"
+			 		sGorigine = "COMPUTO"
+		 			' esegue viene appropriato
+					'preleva solo i dati (da fare)
+'____________________________________________________________________________________
+					sTitolo = "Click su voce da portare in contabilità (ESC per ANNULLARE)"
+					SelectedRange = getRange(sTitolo) ' richiama il listeners
+					' in caso di selezione nulla:
+				 	if left(SelectedRange,1) <> "$" then ' non funziona agendo col mouse sulla X
+						ThisComponent.currentcontroller.removeRangeSelectionListener(oRangeSelectionListener)	 	
+			 	 	 	RigaVoceGlobal = ""
+						sGVV = ""
+						sGDove = ""
+				 		sGorigine =	""
+						lRowInsert = oPartenza_A.RangeAddress.endRow
+						oSheet = ThisComponent.Sheets.getbyname("CONTABILITA")
+						ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1, lRowInsert+1))	
+			 	 		exit sub
+			 		end if
+					RigaVoceGlobal = getRigaIniziale(SelectedRange)
+'____________________________________________________________________________________
+			 		Pesca_cod__per_reg_A_2
+					sGVV = ""
+					sGDove = ""		
+				 	sGorigine =	""				 		
+			 	else ' 
+			 		sGVV = "va"
+			 		sGDove = "Elenco Prezzi"
+			 		sGorigine = ThisComponent.currentcontroller.activesheet.name
+				 	'porta su EP
+				 	Pesca_cod_1
+			 end if
+			 
+		Case "Elenco Prezzi"
+			'esegui vieni appropriato
+			if sGorigine = "CONTABILITA" then
+				'preleva solo i dati
+				Pesca_solo_dati_metti_in_contab
+				else
+					Pesca_cod_2
+			end if
+			sGVV = ""
+			sGDove = ""		
+		 	sGorigine =	""			
+		 	
+		Case "Analisi di Prezzo"
+			sGVV = "va"
+			sGDove = "Elenco Prezzi"		
+		 	sGorigine =	"Analisi di Prezzo"
+		 	'porta su EP
+		 	Pesca_cod_1
+		 			 
+	end select
+End Sub
+
+SUB Pesca_cod_2
+	dim lrow as long
+	dim oCell as object
+	dim oSheet as object
+'	on error goto errore
+	oSheet = ThisComponent.currentController.activeSheet
+	sSheetName= ThisComponent.currentcontroller.activesheet.name
+	If sSheetName <> "Elenco Prezzi" then 'non mi pare possa succedere... 
+											'ma per il momento la lascio li
+		print "qualcosa non va..."
+		exit sub
+	end if
+
+'	if ismissing(oPartenza) or isNull(oPartenza) then
+'			exit sub
+'	end if
+	if ismissing(oPartenza) or isNull(oPartenza) then 
+	'	Msgbox "Questa macro va esaguita PRIMA dal foglio COMPUTO" & CHR$(10) _
+	'			& "Altrimenti (sul COMPUTO) non ho la posizione della riga di destinazione..." & CHR$(10) _
+	'	 		& "", 16, " Errore! "
+			exit sub
+	end if	
+
+	if oSheet.name = "Elenco Prezzi" then
+		'troviamo la colonna base	"
+ 		lcolbase = Colonna_giusta_EP(oSheet)
+		if lcolbase = "ERRORE! Nell'E.P. puoi aggiungere Max 3 colonne!" then
+			print lcolbase
+			exit sub
+		end if
+ 	end if
+ 	
+	oCell=thisComponent.getCurrentSelection()
+	lrow=oCell.RangeAddress.StartRow 
+	sCodice = oSheet.GetCellByPosition( lcolbase , lrow).string
+	'	filtro
+	
+
+	ThisComponent.CurrentController.Select(oPartenza)
+	lrow = oPartenza.RangeAddress.StartRow 
+
+	oSheet = ThisComponent.currentController.activeSheet
+	if oSheet.name = "COMPUTO" Or oSheet.name = "VARIANTE" then '
+'		if oSheet.GetCellByPosition( 1, lrow).cellstyle <> "comp Art-EP_R" Or _
+'			oSheet.GetCellByPosition( 1, lrow).cellstyle <> "comp Art-EP" Then
+'			sTitolo = "Seleziona la cella di destinazione (Codice) (ESC per Annullare, NO Click su X ) " 
+ '			SelectedRange = getRange(sTitolo) ' richiama il listeners
+ '			if SelectedRange = "" or _
+ '			 	SelectedRange = "ANNULLA" then
+ '			 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+ '			 	exit sub
+'		 	end if
+'			lrow = getRigaIniziale(SelectedRange) 'che restituisce la riga di destinazione
+'			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
+'		end if
+		oPartenza.SetString(sCodice)
+		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+1))
+		unSelect 'unselect ranges 	
+	EndIf
+	if oSheet.name = "Analisi di Prezzo" then
+'	print "eccoci"
+		if oSheet.GetCellByPosition( 0, lrow).cellstyle <> "An-lavoraz-Cod-sx" then
+			sTitolo = "Click sulla cella di destinazione del Codice (ESC per Annullare, NO Click su X ) " 
+ 	 		SelectedRange = getRange(sTitolo) ' richiama il listeners
+ 	 		if SelectedRange = "" or _
+ 	 			SelectedRange = "ANNULLA" then
+ 	 			ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+ 	 			exit sub
+ 			 end if
+			lrow = getRigaIniziale(SelectedRange) 'che restituisce la riga di destinazione
+			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow)
+		end if
+		oPartenza.SetString(sCodice)
+		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 3, lrow))	
+	end if
+	
+	sMemoPesca = empty
+	oPartenza = Nothing 'azzero svuoto la variabile
+	' elimino il puntatore
+	sGVV = ""
+	sGDove = ""		
+ 	sGorigine =	""		
+ 	exit sub
+' 	errore:
+	sMemoPesca = empty
+	oPartenza = Nothing 'azzero svuoto la variabile
+	' elimino il puntatore
+	sGVV = ""
+	sGDove = ""		
+ 	sGorigine =	""	 	
+END SUB
+
+SUB Pesca_cod_1
+dim lrow as long
+dim oCell as object
+
+	on error goto errore
+	'sMemoPesca = "cod"
+	'individua la riga corrente
+	oCell=thisComponent.getCurrentSelection()
+	lrow=oCell.RangeAddress.StartRow 
+	oSheet = ThisComponent.currentController.activeSheet
+
+'	if lRow < 2 then
+'		 MsgBox ("La riga selezionata non è adatta per l'inserimento!" & CHR$(10)_
+'							&	" Selezionane un'altra più in basso....")
+'		exit sub
+'	end if
+
+'0	' controlla se è dentro una voce e centra la posizione 
+	nSheet = ThisComponent.currentcontroller.activesheet.name
+	if nSheet = "COMPUTO" or nSheet = "VARIANTE" then
+		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = "Comp" or _
+			left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = "comp" then
+				oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
+ 			lrow = oRangeVC.RangeAddress.StartRow +1
+ 		else 
+ 			msgbox "Devi agire posizionato dentro una voce!" 
+				exit sub
+		end if
+	end if
+	if nSheet  = "Analisi di Prezzo" then
+		if left((oSheet.GetCellByPosition( 3 , lRow).cellstyle),10) <> "An-lavoraz" then
+			 msgbox "Devi agire posizionato sul componente! ( Annullo! ) " 
+				exit sub
+		end if
+	end if 	
+
+
+'1) registra la posizione
+	Select Case nSheet
+	Case "COMPUTO", "VARIANTE"
+		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
+	Case "Analisi di Prezzo"
+		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
+	End Select
+'	if ThisComponent.currentcontroller.activesheet.name = "COMPUTO" or "VARIANTE" Then 
+'		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
+'	end if 
+'	if ThisComponent.currentcontroller.activesheet.name = "Analisi di Prezzo" then
+'		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
+'	end if 
+
+'2) focus su EP
+
+	Sel_Elenco_Prezzi
+'	PRINT"VAS1"
+'3) fine macro: adesso tocca all'utente cercare il suo codice...
+	'(alla fine dovrà rieseguire la SC)
+	if 	ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,307).value > 0 or _
+ 		ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,316).value > 0 then
+ 		 'non fa nulla
+ 		 else
+			msgbox "Cerca la voce che ti serve.... " & CHR$(10)_
+				& "(puoi usare Shit F3, oppure Ctrl-F, ...)," & CHR$(10)_
+				& "Seleziona la riga della voce e poi ri-aziona 'Pesca...'"& CHR$(10)_
+				& "con Ctrl+8 o Ctrl-Ins" 
+	end if
+	exit sub
+	errore:
+	sMemoPesca = empty
+End SUB
+
+SUB Pesca_solo_dati_metti_in_contab
+dim lrow as long
+dim oCell as object
+dim oSheet as object
+
+'	on error goto errore
+
+	oSheet = ThisComponent.currentController.activeSheet
+	sSheetName= ThisComponent.currentcontroller.activesheet.name
+	If sSheetName <> "Elenco Prezzi" then 'non mi pare possa succedere... 
+											'ma per il momento la lascio li
+		print "qualcosa non va..."
+		exit sub
+	end if
+
+'	if ismissing(oPartenza) or isNull(oPartenza) then
+'			exit sub
+'	end if
+	if ismissing(oPartenza_A) or isNull(oPartenza_A) then 
+	'	Msgbox "Questa macro va esaguita PRIMA dal foglio COMPUTO" & CHR$(10) _
+	'			& "Altrimenti (sul COMPUTO) non ho la posizione della riga di destinazione..." & CHR$(10) _
+	'	 		& "", 16, " Errore! "
+	'print "esce qui"
+				oPartenza_A = ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow, 2, lrow )
+
+			'exit sub
+	end if	
+
+	if oSheet.name = "Elenco Prezzi" then
+		'troviamo la colonna base	
+ 		lcolbase = Colonna_giusta_EP(oSheet)
+ 		if lcolbase = "ERRORE! Nell'E.P. puoi aggiungere Max 3 colonne!" then
+				print lcolbase
+				exit sub
+		end if
+ 	end if
+ 	
+	oCell=thisComponent.getCurrentSelection()
+	lrow=oCell.RangeAddress.StartRow 
+	sCodice = oSheet.GetCellByPosition(lcolbase , lrow).String
+	'	filtro
+	ThisComponent.CurrentController.Select(oPartenza_A) 
+	lrow = oPartenza_A.RangeAddress.StartRow 
+	
+	oSheet = ThisComponent.currentController.activeSheet
+	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice)) ' inserisce il codice
+'	print
+	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2)) ' va sul primo rigo di misurazione
+'	print
+'	end if
+
+	sMemoPesca = empty
+	oPartenza_A = Nothing 'azzero svuoto la variabile
+	' elimino il puntatore
+	sGVV = ""
+	sGDove = ""		
+ 	sGorigine =	""		
+ 	exit sub
+ 	errore:
+	sMemoPesca = empty
+	oPartenza = Nothing 'azzero svuoto la variabile
+	' elimino il puntatore
+	sGVV = ""
+	sGDove = ""		
+ 	sGorigine =	""	 	
+END SUB
+

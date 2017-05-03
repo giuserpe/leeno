@@ -2508,7 +2508,7 @@ def cerca_partenza(arg=None):
         partenza = None
 ########################################################################
 sblocca_computo = 0
-def debug(arg=None):
+def pesca_cod(arg=None):
     '''
     Permette di scegliere il codice per la voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi.
     Capisce quando la voce nel libretto delle misure è già registrata o nel documento ci sono già atti contabili emessi.
@@ -2516,6 +2516,9 @@ def debug(arg=None):
     global sblocca_computo
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_computo_R + stili_analisi + stili_elenco:
+        return
     if oSheet.Name in ('CONTABILITA'):
         cerca_partenza()
         try:
@@ -4374,9 +4377,10 @@ Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 16 #'NUOVE FUNZIONALITA'
 Lsubv= "2.dev" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
-stili_computo = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo', )
-stili_computo_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R', )
-stili_analisi = ('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End', )
+stili_computo = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
+stili_computo_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
+stili_analisi = ('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
+stili_elenco = ('EP-Cs', 'EP-aS')
 createUnoService = (
         XSCRIPTCONTEXT
         .getComponentContext()

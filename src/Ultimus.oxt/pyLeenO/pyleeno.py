@@ -2537,15 +2537,15 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
             partenza[2]
         except TypeError:
             return
-    if oDoc.NamedRanges.hasByName("#LIB#1") == True:
-        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        if oDoc.NamedRanges.hasByName("#LIB#1") == True:
             if sblocca_computo == 0:
                 if DlgSiNo("Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",'ATTENZIONE!') ==3:
                     return
                 else:
                     sblocca_computo = 1
-            cerca_partenza()
-            _gotoSheet('Elenco Prezzi')
+        cerca_partenza()
+        _gotoSheet('Elenco Prezzi')
     if oSheet.Name in ('Elenco Prezzi'):
         try:
             lrow = Range2Cell()[1]

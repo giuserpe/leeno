@@ -115,30 +115,25 @@ def invia_voce_ep(arg=None):
     SR = oRangeAddress.StartRow
     ER = oRangeAddress.EndRow
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, getLastUsedCell(oSheet).EndColumn, ER))
-    
     lista = list()
     for el in range (SR, ER+1):
         if oSheet.getCellByPosition(1, el).Type.value == 'FORMULA':
             lista.append(oSheet.getCellByPosition(0, el).String)
-
     try:
         partenza = uno.fileUrlToSystemPath(oDoc.getURL())
     except:
         MsgBox("E' necessario prima salvare il file di partenza.", "Attenzione!")
         salva_come()
         partenza = uno.fileUrlToSystemPath(oDoc.getURL())
-
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    
     if sUltimus == '':
         MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
         return
- 
     _gotoDoc(sUltimus)
     ddcDoc = XSCRIPTCONTEXT.getDocument()
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
@@ -146,15 +141,13 @@ def invia_voce_ep(arg=None):
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
     dccSheet.getRows().insertByIndex(3, ER-SR+1)
     ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, 3))
-    
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    doppioni()
-    
+    #~ doppioni()
     _gotoDoc(partenza)
     oDoc = XSCRIPTCONTEXT.getDocument()
 
@@ -206,7 +199,6 @@ def invia_voce_ep(arg=None):
 
         _gotoDoc(partenza)
         oDoc.Sheets.removeByName('tmp_DCC')
-    oDialogo_attesa.endExecute()
     oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('Elenco Prezzi'))
 ########################################################################
 def _gotoDoc(sUrl):
@@ -525,9 +517,9 @@ def SubSum_SuperCap (lrow):
     #~ oDoc.enableAutomaticCalculation(False)
     oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
     oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-0-scritta mini val'
-    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-0-scritta mini %'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-0-scritta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-0-scritta mini val'
@@ -551,9 +543,9 @@ def SubSum_SottoCap (lrow):
             break
     oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
     oSheet.getCellByPosition(18, lrow).CellStyle = 'livello2 scritta mini'
-    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'livello2 valuta mini %'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'livello2 valuta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'livello2 valuta mini'
@@ -578,9 +570,9 @@ def SubSum_Cap (lrow):
     #~ oDoc.enableAutomaticCalculation(False)
     oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
     oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-1-scritta mini val'
-    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-1-scritta mini %'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE+1)
+    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-1-scritta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'

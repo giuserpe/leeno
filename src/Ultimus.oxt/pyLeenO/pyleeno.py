@@ -2571,6 +2571,33 @@ def inverti_segno (arg=None):
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
+def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err= False ):
+    '''
+    Validità lista valori
+    Imposta un elenco di valori a cascata, da cui scegliere.
+    oCell       { object }  : cella da validare
+    lista_val   { string }  : lista dei valori in questa forma: '"UNO";"DUE";"TRE"'
+    titoloInput { string }  : titolo del suggerimento che compare passando il cursore sulla cella
+    msgInput    { string }  : suggerimento che compare passando il cursore sulla cella
+    err         { boolean } : permette di abilitare il messaggio di errore per input non validi
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    oTabVal = oCell.getPropertyValue("Validation")
+    oTabVal.setPropertyValue('ConditionOperator', 1)
+
+    oTabVal.setPropertyValue("ShowInputMessage", True) 
+    oTabVal.setPropertyValue("InputTitle", titoloInput)
+    oTabVal.setPropertyValue("InputMessage", msgInput) 
+    oTabVal.setPropertyValue("ErrorMessage", "ERRORE: Questo valore non è consentito.")
+    oTabVal.setPropertyValue("ShowErrorMessage", err)
+    oTabVal.ErrorAlertStyle = uno.Enum("com.sun.star.sheet.ValidationAlertStyle", "STOP")
+    oTabVal.Type = uno.Enum("com.sun.star.sheet.ValidationType", "LIST")
+    oTabVal.Operator = uno.Enum("com.sun.star.sheet.ConditionOperator", "EQUAL")
+    oTabVal.setFormula1(lista_val)
+    oCell.setPropertyValue("Validation", oTabVal)
+
 def debug_ConditionalFormat (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
@@ -2581,12 +2608,6 @@ def debug_ConditionalFormat (arg=None):
     oDlgModel = oServiceManager.createInstance("com.sun.star.sheet")
 
     mri (oDlgModel)
-    #~ return
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
-
-    #~ oSheet.getCellByPosition(3, 53).ConditionalFormat
-    #~ mri(sheet)
-    #~ mri(oDoc.CurrentSelection)
 ########################################################################
 
 def debug_tipo_di_valore(arg=None):

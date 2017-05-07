@@ -147,7 +147,7 @@ def invia_voce_ep(arg=None):
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    doppioni()
+    #~ doppioni()
     _gotoDoc(partenza)
     oDoc = XSCRIPTCONTEXT.getDocument()
 
@@ -1874,10 +1874,16 @@ def XPWE_out(arg=None):
                     Larghezza.text = ''
 ##########################
                 HPeso = SubElement(RGItem,'HPeso')
+                #~ chi(oSheet.getCellRangeByName(xxx).String)
                 if oSheet.getCellByPosition(8, m).Formula.split('=')[-1] == None:
-                    HPeso.text = oSheet.getCellByPosition(8, m).Formula
+                    HPeso.text = oSheet.getCellByPosition(8, m).String
                 else:
                     HPeso.text = str(oSheet.getCellByPosition(8, m).Formula.split('=')[-1])
+                    try:
+                        HPeso.text = str(oSheet.getCellRangeByName(oSheet.getCellByPosition(8, m).Formula.split('=')[-1]).Value)
+                    except:
+                        HPeso.text = str(oSheet.getCellByPosition(8, m).Value)
+                        pass
                 if HPeso.text == ' ':
                     HPeso.text = ''
 ##########################

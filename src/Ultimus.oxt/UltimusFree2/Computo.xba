@@ -21,7 +21,7 @@ Sub genera_variante
 		oSheet = ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;)
 		oSheet.getCellByPosition(2,0).String  = &quot;VARIANTE&quot;
 		oSheet.getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-		oSheet.getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,255,102))
+		oSheet.getCellRangeByName(&quot;C1&quot;).Cellbackcolor = (RGB(255,255,102))
 		oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,255,102))
 		ThisComponent.CurrentController.Select(oSheet)
 		SetTabColorN(RGB(255,255,102))

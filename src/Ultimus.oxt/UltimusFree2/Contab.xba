@@ -25,7 +25,7 @@ Sub attiva_contabilita
 	Svuota_CONTABILITA_esegui
 	oSheet.getCellByPosition(2,0).String  = &quot;CONTABILITA&quot;
 	oSheet.getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-	oSheet.getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,180,175))
+	oSheet.getCellRangeByName(&quot;C1&quot;).Cellbackcolor = (RGB(255,180,175))
 	oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,180,175))
 
 	SetTabColorN(RGB(255,180,175))

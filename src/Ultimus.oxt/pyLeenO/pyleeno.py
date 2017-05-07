@@ -1098,7 +1098,6 @@ def scelta_viste (arg=None):
             oDialog1.getControl('CBCat').State = 0
             oDialog1.getControl('CBTag').State = 0
             oDialog1.getControl('CBFig').State = 0
-            
 
         if oDialog1.getControl('CBMdo').State == 0: #manodopera
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
@@ -1259,7 +1258,13 @@ def scelta_viste (arg=None):
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple (formule)
             oRange.setFormulaArray(formule)
-
+        for el in (11, 15, 19, 26):
+            oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
+        for el in (12, 16, 20, 23):
+            oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
+        for el in (13, 17, 21, 24, 25):
+            oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
+            
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
@@ -2571,6 +2576,19 @@ def inverti_segno (arg=None):
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ mri(oDoc.CurrentSelection.Validation)
+    
+    oSheet.getCellRangeByName('L1').String = 'Ricicla da:'
+    oSheet.getCellRangeByName('L1').CellStyle = 'Reg_prog'
+    oCell= oSheet.getCellRangeByName('N1')
+    if oCell.String not in ("COMPUTO", "VARIANTE", 'Scegli origine'):
+        oCell.CellStyle = 'Menu_sfondo _input_grasBig'
+        valida_cella(oCell, '"COMPUTO";"VARIANTE"',titoloInput='Scegli...', msgInput='COMPUTO o VARIANTE', err=True)
+        oCell.String ='Scegli...'
+    
 def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err= False ):
     '''
     Validità lista valori
@@ -2599,15 +2617,11 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err= False ):
     oCell.setPropertyValue("Validation", oTabVal)
 
 def debug_ConditionalFormat (arg=None):
+#~ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
-    bar = oDoc.createInstance("com.sun.star.sheet.DataBarAxis")
-    oCtx = uno.getComponentContext()
+    oCell= oDoc.CurrentSelection
+    mri(oCell)#.ConditionalFormat)
 
-    oServiceManager = oCtx.ServiceManager
-    oDlgModel = oServiceManager.createInstance("com.sun.star.sheet")
-
-    mri (oDlgModel)
 ########################################################################
 
 def debug_tipo_di_valore(arg=None):

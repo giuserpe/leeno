@@ -2582,7 +2582,26 @@ def inverti_segno (arg=None):
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
 ########################################################################
-def debug(arg=None):
+def valuta_cella(oCell):
+    '''
+    Estrae qualsiasi valore da una cella, restituendo una strigna, indipendentemente dal tipo originario.
+    oCell       { object }  : cella da validare
+    '''
+    if oCell.Type.value == 'FORMULA':
+        try:
+            eval(oCell.Formula.split('=')[-1])
+            return oCell.Formula.split('=')[-1]
+        except:
+            try:
+                return str(oSheet.getCellRangeByName(oCell.Formula.split('=')[-1]).Value)
+            except:
+                return str(oCell.Value)
+            pass
+    elif oCell.Type.value == 'VALUE':
+        return str(oCell.Value)
+    elif oCell.Type.value == 'TEXT':
+        return str(oCell.String)
+def debug_validation(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ mri(oDoc.CurrentSelection.Validation)

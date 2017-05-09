@@ -1846,46 +1846,16 @@ def XPWE_out(arg=None):
                 Descrizione.text = oSheet.getCellByPosition(2, m).String
 ##########################
                 PartiUguali = SubElement(RGItem,'PartiUguali')
-                try:
-                    eval(oSheet.getCellByPosition(5, m).Formula.split('=')[-1].replace('^','**').replace(',','.').replace('1/2','1.0/2'))
-                    PartiUguali.text = oSheet.getCellByPosition(5, m).Formula.split('=')[-1]
-                except:
-                    if oSheet.getCellByPosition(5, m).Value !=0:
-                        PartiUguali.text = str(oSheet.getCellByPosition(5, m).Value)
-                    else:
-                        PartiUguali.text = ''
-                if PartiUguali.text == ' ':
-                    PartiUguali.text = ''
+                PartiUguali.text = valuta_cella(oSheet.getCellByPosition(5, m))
 ##########################
                 Lunghezza = SubElement(RGItem,'Lunghezza')
-                if oSheet.getCellByPosition(6, m).Formula.split('=')[-1] == None:
-                    Lunghezza.text = oSheet.getCellByPosition(6, m).String
-                else:
-                    Lunghezza.text = str(oSheet.getCellByPosition(6, m).Formula.split('=')[-1])
-                if Lunghezza.text == ' ':
-                    Lunghezza.text = ''
+                Lunghezza.text = valuta_cella(oSheet.getCellByPosition(6, m))
 ##########################
                 Larghezza = SubElement(RGItem,'Larghezza')
-                if oSheet.getCellByPosition(7, m).Formula.split('=')[-1] == None:
-                    Larghezza.text = oSheet.getCellByPosition(7, m).String
-                else:
-                    Larghezza.text = str(oSheet.getCellByPosition(7, m).Formula.split('=')[-1])
-                if Larghezza.text == ' ':
-                    Larghezza.text = ''
+                Larghezza.text = valuta_cella(oSheet.getCellByPosition(7, m))
 ##########################
                 HPeso = SubElement(RGItem,'HPeso')
-                #~ chi(oSheet.getCellRangeByName(xxx).String)
-                if oSheet.getCellByPosition(8, m).Formula.split('=')[-1] == None:
-                    HPeso.text = oSheet.getCellByPosition(8, m).String
-                else:
-                    HPeso.text = str(oSheet.getCellByPosition(8, m).Formula.split('=')[-1])
-                    try:
-                        HPeso.text = str(oSheet.getCellRangeByName(oSheet.getCellByPosition(8, m).Formula.split('=')[-1]).Value)
-                    except:
-                        HPeso.text = str(oSheet.getCellByPosition(8, m).Value)
-                        pass
-                if HPeso.text == ' ':
-                    HPeso.text = ''
+                HPeso.text = valuta_cella(oSheet.getCellByPosition(8, m))
 ##########################
                 Quantita = SubElement(RGItem,'Quantita')
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
@@ -2590,17 +2560,20 @@ def valuta_cella(oCell):
     if oCell.Type.value == 'FORMULA':
         try:
             eval(oCell.Formula.split('=')[-1])
-            return oCell.Formula.split('=')[-1]
+            valore = oCell.Formula.split('=')[-1]
         except:
             try:
-                return str(oSheet.getCellRangeByName(oCell.Formula.split('=')[-1]).Value)
+                valore = str(oSheet.getCellRangeByName(oCell.Formula.split('=')[-1]).Value)
             except:
-                return str(oCell.Value)
-            pass
+                valore = str(oCell.Value)
     elif oCell.Type.value == 'VALUE':
-        return str(oCell.Value)
+        valore = str(oCell.Value)
     elif oCell.Type.value == 'TEXT':
-        return str(oCell.String)
+        valore = str(oCell.String)
+    elif oCell.Type.value == 'EMPTY':
+        valore = ''
+    #~ if valore == ' ': valore = ''
+    return valore
 def debug_validation(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

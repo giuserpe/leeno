@@ -344,7 +344,8 @@ IMPOSTO_VALORI_E_FORMULE:
 	oSheet.GetCellByPosition(17 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
 	oSheet.GetCellByPosition(23, lrow+1).setvalue(nSal)								&apos;Numero SAL
 	oSheet.GetCellByPosition(23, lrow+1).cellstyle = &quot;Sal&quot;
-Numera_Voci_Computo (&quot;niente prompt&quot;)
+&apos;	Numera_Voci_Computo (&quot;niente prompt&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Numera_voci&quot;)
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow+2))
 parziale_verifica
 exit sub

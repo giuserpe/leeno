@@ -249,7 +249,8 @@ SISTEMA_I_TAG:
  		print lrow
  		oSheet.GetCellByPosition(0 , lrow +1).string = &quot;&quot;
  		Else
- 	 	Numera_Voci_Computo (&quot;niente prompt&quot;)	&apos; se la ri-numerazione è inibita dalle impostazioni lascia il numero in bianco
+&apos;	Numera_Voci_Computo (&quot;niente prompt&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Numera_voci&quot;)
  	endif 	
  
 &apos; unSelect &apos;unselect ranges 

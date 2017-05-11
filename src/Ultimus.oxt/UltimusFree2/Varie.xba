@@ -377,6 +377,7 @@ SUB Adatta_h_riga_intera_tabella(nSheet as string)
 END SUB
 
 sub Numera_Voci_Computo (optional verbosa as string)&apos; &apos;nuova versione
+Exit Sub 
 	oSheet = ThisComponent.currentController.activeSheet &apos;oggetto sheet
 	iSheet = oSheet.RangeAddress.sheet &apos; index della sheet
 	&apos;inibisce la rinumerazione se la Contabilità è abilita

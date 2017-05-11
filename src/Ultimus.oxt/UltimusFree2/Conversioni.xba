@@ -220,7 +220,8 @@ Barra_Apri_Chiudi_5(&quot;2/4&quot;, 40)
 Controlla_Somme_Componenti
 ScriptPy(&quot;pyleeno.py&quot;, &quot;firme_in_calce&quot;)
 	ThisComponent.CalcAsShown = true 
-Numera_Voci_Computo (&quot;niente prompt&quot;) &apos; NON CHIEDE CONFERMA
+&apos;	Numera_Voci_Computo (&quot;niente prompt&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Numera_voci&quot;)
 Chiudi_o_elimina_tabelle_inutili
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_analisi&quot;)
 rem ----------------------------------------------------------------------

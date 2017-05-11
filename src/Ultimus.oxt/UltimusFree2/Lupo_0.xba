@@ -400,8 +400,8 @@ Colora_Tabs
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;) &apos;visualizza
 Rifa_Somme_TOT_Computo
 ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
-Numera_Voci_Computo (&quot;niente prompt&quot;)
-
+&apos;	Numera_Voci_Computo (&quot;niente prompt&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;Numera_voci&quot;)
 
 		Barra_chiudi_sempre_4
 		Barra_Apri_Chiudi_5(&quot;5.1 Attendi... sto caricando... &quot;, 70)

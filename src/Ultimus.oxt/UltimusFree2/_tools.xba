@@ -140,11 +140,9 @@ sub rir_
 	&apos;print lLastUrow
 		conta_a = 0
 	for i = 1 to lLastUrow
-		For x = 5 To 8
 		IF oSheet.GetCellByPosition(2 , i).cellstyle = &quot;comp 1-a&quot; Then 
-			oSheet.GetCellByPosition(x , i).string = &quot;&quot;
-		end if
-	Next
+			oSheet.GetCellByPosition(2, i).String = &quot;- &quot; &amp; oSheet.GetCellByPosition(2, i).String
+		EndIf
 		Next
 	Print &quot;COMPLETATO!&quot;
 

@@ -93,25 +93,6 @@ def nuovo_computo (arg=None):
 def nuovo_usobollo (arg=None):
     New_file.usobollo()
 ########################################################################
-def debug(arg=None):
-#~ def numera_voci(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value != 0:
-        #~ oSheet.IsVisible = True
-        _gotoSheet('S1')
-        _gotoCella (7, 334)
-        MsgBox('''La rinumerazione delle voci è disabilitata.
-Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
-        return
-    #~ if __________    ('comp progress', 'comp 10 s_R'):
-    #~ if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        #~ stile = 'comp progress'
-    #~ elif oSheet.Name in ('CONTABILITA'):
-        #~ stile = 'comp progress'
-        #~ comp 10 s_R
-    
-########################################################################
 def invia_voce_ep(arg=None):
     '''
     Invia le voci di prezzario selezionate da un elenco prezzi all'Elenco Prezzi del
@@ -2347,8 +2328,11 @@ def elimina_voce (arg=None, lRow=None, msg=1):
     ER = sStRange.RangeAddress.EndRow
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
     if msg==1:
-        if DlgSiNo("""Stai per eliminare la voce selezionata.
-        Vuoi Procedere?""",'Avviso!') ==2:
+        if DlgSiNo("""OPERAZIONE NON ANNULLABILE!
+        
+Stai per eliminare la voce selezionata.
+Vuoi Procedere?
+ """,'AVVISO!') ==2:
             oSheet.getRows().removeByIndex(SR, ER-SR+1)
             Numera_Voci(0)
         else:
@@ -2762,6 +2746,12 @@ def Numera_Voci(bit=1):#
                        0 rinumera dalla voce corrente in giù
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ if oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value != 0:
+        #~ _gotoSheet('S1')
+        #~ _gotoCella (7, 334)
+        #~ MsgBox('''La rinumerazione delle voci è disabilitata.
+#~ Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
+        #~ return
     oSheet = oDoc.CurrentController.ActiveSheet
     lastRow = getLastUsedCell(oSheet).EndRow+1
     lrow = Range2Cell()[1]

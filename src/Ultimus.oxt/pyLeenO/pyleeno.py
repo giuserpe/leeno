@@ -93,11 +93,24 @@ def nuovo_computo (arg=None):
 def nuovo_usobollo (arg=None):
     New_file.usobollo()
 ########################################################################
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ path = uno.fileUrlToSystemPath(oDoc.getURL())
-    #~ url = uno.systemPathToFileUrl(path)
-    #~ chi(uno.sys)
-    #~ chi(url)
+def debug(arg=None):
+#~ def numera_voci(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value != 0:
+        #~ oSheet.IsVisible = True
+        _gotoSheet('S1')
+        _gotoCella (7, 334)
+        MsgBox('''La rinumerazione delle voci è disabilitata.
+Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
+        return
+    #~ if __________    ('comp progress', 'comp 10 s_R'):
+    #~ if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        #~ stile = 'comp progress'
+    #~ elif oSheet.Name in ('CONTABILITA'):
+        #~ stile = 'comp progress'
+        #~ comp 10 s_R
+    
 ########################################################################
 def invia_voce_ep(arg=None):
     '''
@@ -2494,6 +2507,9 @@ def pesca_cod(arg=None):
         return
     if oSheet.Name in ('CONTABILITA'):
         cerca_partenza()
+        if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
+            basic_LeenO('Cerca_Rior.cerca_in_elenco')
+            return
         try:
             if partenza[2] == '#reg':
                 if DlgSiNo("""Cambiando il Codice Articolo di questa voce, comprometterai
@@ -2518,6 +2534,9 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
                 else:
                     sblocca_computo = 1
         cerca_partenza()
+        if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
+            basic_LeenO('Cerca_Rior.cerca_in_elenco')
+            return
         _gotoSheet('Elenco Prezzi')
     if oSheet.Name in ('Elenco Prezzi'):
         try:

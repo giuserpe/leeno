@@ -2301,7 +2301,7 @@ def elimina_voci_azzerate (arg=None):
                 #~ if oSheet.getCellByPosition(9, lrow).String == '0,00':
                 if oSheet.getCellByPosition(2, lrow).String == '*** VOCE AZZERATA ***':
                     elimina_voce(lRow=lrow, msg=0)
-            Numera_Voci(1)
+            numera_voci(1)
     except:
         return
 ########################################################################
@@ -2334,7 +2334,7 @@ Stai per eliminare la voce selezionata.
 Vuoi Procedere?
  """,'AVVISO!') ==2:
             oSheet.getRows().removeByIndex(SR, ER-SR+1)
-            Numera_Voci(0)
+            numera_voci(0)
         else:
             return
     elif msg==0:
@@ -2740,7 +2740,7 @@ def getLastUsedCell(oSheet):
     return aAddress#.EndColumn, aAddress.EndRow)
 ########################################################################
 # numera le voci di computo o contabilità
-def Numera_Voci(bit=1):#
+def numera_voci(bit=1):#
     '''
     bit { integer }  : 1 rinumera tutto
                        0 rinumera dalla voce corrente in giù
@@ -2921,7 +2921,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     else:
         return
     ins_voce_computo_grezza(lrow)
-    Numera_Voci(0)
+    numera_voci(0)
 ########################################################################
 # inizializza_analisi ##################################################
 def inizializza_analisi(arg=None):
@@ -3627,7 +3627,7 @@ def parziale_core(lrow):
     #~ sStRange.RangeAddress
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
-
+    _gotoCella(2, lrow+1)
     if oSheet.Name in ('COMPUTO','VARIANTE'):
         if oSheet.getCellByPosition (0, lrow).CellStyle == 'comp 10 s' and \
         oSheet.getCellByPosition (1, lrow).CellStyle == 'Comp-Bianche in mezzo' and \
@@ -3653,6 +3653,9 @@ def parziale_core(lrow):
                     break
 
             oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
+    if oSheet.Name in ('CONTABILITA'): MsgBox('Invia una mail https://t.me/joinchat/AAAAAEFGWSw-p_N6tUt0FA')
+        
+
 ########################################################################
 # abs2name ############################################################
 def abs2name(nCol, nRow):
@@ -4392,7 +4395,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                 except TypeError:
                     pass
                 SR = SR+1
-    Numera_Voci()
+    numera_voci()
 
     try:
         Rinumera_TUTTI_Capitoli2()
@@ -5499,7 +5502,7 @@ def taglia_x(arg=None):
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = set_larghezza_colonne,
-#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, Numera_Voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
+#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, numera_voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

@@ -1938,3 +1938,151 @@ oBarra.reset()
 _Listino_Crea_Capitoli
 print
 End Sub
+rem ######################################################################
+Sub parziale_core (optional lrow As Long) rem '(C) Giuseppe Vizziello 2015
+rem inserisce una somma parziale sul rigo selezionato
+	Dim osheet As Object
+	Dim sStRange As Object
+	Dim oSrc As Object
+	Dim oDest As Object
+	Dim i As Long
+If lrow = 0 Then Exit Sub
+	osheet = thisComponent.CurrentController.ActiveSheet
+
+	Select Case oSheet.Name
+		Case "COMPUTO", "VARIANTE"
+		If se_contabilita = 1 Then Exit Sub
+rem rigo parziale già esistente:
+			If InStr (oSheet.GetCellByPosition(8 , lrow).string, "Parziale [") Then GoTo procedi
+rem ----------------------------------------------------------------------
+rem rigo normale:
+			If 	osheet.getCellByPosition (0, lrow).CellStyle = "comp 10 s" And _
+				osheet.getCellByPosition (1, lrow).CellStyle = "Comp-Bianche in mezzo" And _
+				osheet.getCellByPosition (2, lrow).CellStyle = "comp 1-a" Then
+				oSheet.getRows.insertByIndex(lrow,1)
+				GoTo procedi
+rem ----------------------------------------------------------------------
+rem ultimo rigo:
+			ElseIf InStr (oSheet.GetCellByPosition(8 , lrow).String, "SOMMANO [") > 0  Then 
+				oSheet.getRows.insertByIndex(lrow,1)
+				GoTo procedi
+			ElseIf 	osheet.getCellByPosition (0, lrow).CellStyle = "Comp End Attributo" Then
+				oSheet.getRows.insertByIndex(lrow,1)
+				GoTo procedi
+			EndIf
+		Exit Sub
+		Case "CONTABILITA"
+rem ----------------------------------------------------------------------
+rem rigo normale:
+'				osheet.getCellByPosition (2, lrow).CellStyle = "comp 1-a" Then
+			If osheet.getCellByPosition (0, lrow).CellStyle = "comp 10 s_R" And _
+				osheet.getCellByPosition (1, lrow).CellStyle = "Comp-Bianche in mezzo_R" Then
+					If InStr (oSheet.GetCellByPosition(8, lrow).string, "Parziale [") = 0 Then
+						oSheet.getRows.insertByIndex(lrow,1)
+					EndIf
+				GoTo procedi
+rem ----------------------------------------------------------------------
+rem rigo positivi e negativi:
+				ElseIf InStr (oSheet.GetCellByPosition(8 , lrow).string, "Somma positivi e negativi [")  Then 
+					ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
+copia_riga_Ent 'copia_riga_C
+				GoTo procedi
+			EndIf
+		Exit Sub
+	End Select
+rem ----------------------------------------------------------------------
+procedi:
+	sStRange = Circoscrive_Voce_Computo_Att (lrow) '(range2cell)
+	With sStRange.RangeAddress
+		lRowI = .StartRow
+		lRowE = .EndRow
+	End With	
+	Select Case oSheet.Name
+		Case "COMPUTO", "VARIANTE"
+rem ---------------------------------------------------------------------
+			oSheet.getCellByPosition(2, lrow).cellstyle = "comp sotto centro"
+			oSheet.getCellRangeByPosition(5, lrow, 7, lrow).cellstyle = "comp sotto centro"
+			oSheet.getCellByPosition(8, lrow).cellstyle = "comp sotto BiancheS"
+			oSheet.getCellByPosition(9, lrow).cellstyle = "Comp-Variante num sotto"
+			oSheet.getCellByPosition(8, lrow).setformula("=CONCATENATE(""Parziale ["";VLOOKUP(B" & lrowi+2 &";elenco_prezzi;3;FALSE());""]"")")
+rem immissione tags cat/subcat
+'			oSheet.getCellByPosition(31, lrow).setformula("=AF$" & lRowE+1)
+'			oSheet.getCellByPosition(32, lrow).setformula("=AG$" & lRowE+1)
+'			oSheet.getCellByPosition(33, lrow).setformula("=AH$" & lRowE+1)
+'			oSheet.getCellByPosition(34, lrow).setformula("=AI$" & lRowE+1)
+'			oSheet.getCellByPosition(35, lrow).setformula("=AJ$" & lRowE+1)
+rem ---------------------------------------------------------------------
+			i = lrow
+			Do While i > 0
+				If osheet.getCellByPosition (9, i-1).CellStyle = "vuote2" Or _
+					osheet.getCellByPosition (9, i-1).CellStyle = "Comp-Variante num sotto" Then
+					dariga=i
+					Exit Do
+				EndIf
+				i=i-1
+			Loop 
+			oSheet.GetCellByPosition(9, lrow).setformula("=SUBTOTAL(9;J" & dariga & ":J" & lrow+1 &")") 'Somma
+		Case "CONTABILITA"
+rem ---------------------------------------------------------------------
+			oSheet.getCellRangeByPosition(2, lrow, 7, lrow).cellstyle = "comp sotto centro_R"
+			oSheet.getCellByPosition(8, lrow).cellstyle = "comp sotto BiancheS_R"
+			oSheet.getCellByPosition(9, lrow).cellstyle = "Comp-Variante num sotto"
+			oSheet.getCellByPosition(8, lrow).setformula("=CONCATENATE(""Parziale ["";VLOOKUP(B" & lrowi+2 &";elenco_prezzi;3;FALSE());""]"")")
+			
+rem immissione tags cat/subcat
+'			oSheet.getCellByPosition(31, lrow).setformula("=AF$" & lRowE+1)
+'			oSheet.getCellByPosition(32, lrow).setformula("=AG$" & lRowE+1)
+'			oSheet.getCellByPosition(33, lrow).setformula("=AH$" & lRowE+1)
+'			oSheet.getCellByPosition(34, lrow).setformula("=AI$" & lRowE+1)
+'			oSheet.getCellByPosition(35, lrow).setformula("=AJ$" & lRowE+1)
+rem ---------------------------------------------------------------------
+			i = lrow
+			Do While i > 0
+				If osheet.getCellByPosition (9, i-1).CellStyle = "vuote2" Or _
+					osheet.getCellByPosition (9, i-1).CellStyle = "Comp-Variante num sotto" Then
+					dariga=i
+					Exit Do
+				EndIf
+				i=i-1
+			Loop 
+			oSheet.GetCellByPosition(9, lrow).setformula("=SUBTOTAL(9;J" & dariga & ":J" & lrow+1 & ")-SUBTOTAL(9;L" & dariga & ":L" & lrow+1 &")") 'Somma
+	End Select 
+rem ----------------------------------------------------------------------
+fine:
+End Sub
+sub Numera_Voci_Computo ()'(optional verbosa as string)' 'nuova versione
+	oSheet = ThisComponent.currentController.activeSheet 'oggetto sheet
+	iSheet = oSheet.RangeAddress.sheet ' index della sheet
+	'inibisce la rinumerazione se la Contabilità è abilita
+	'inibisce la rinumerazione se la var apposita è diversa da 0
+ 	If ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,334).value <> 0 Then
+ 		If oSheet.Name = "COMPUTO" Or oSheet.Name = "VARIANTE" Then
+			msgbox "La rinumerazione è disabilitata: dipende dalla Variabile Generale S1.H335"& CHR$(10)_
+				& "dal Menu Principale>Variabili Generali"
+	 		exit Sub
+ 		End If 
+ 	endif 	
+
+	If oSheet.name = "COMPUTO" Or oSheet.Name = "VARIANTE" Then s_R = ""
+	If oSheet.name = "CONTABILITA" Then s_R = "_R"
+'	lStartRow = oSheet.GetCellByPosition(0 , 0)
+	numV = 1
+
+	lLastUrowNN = getLastUsedRow(oSheet)	
+	For i = 2 to lLastUrowNN
+		if	oSheet.GetCellByPosition(1 , i).CellStyle = "comp Art-EP" Or _
+			oSheet.GetCellByPosition(1 , i).CellStyle = "comp Art-EP_R" Then ' & s_R then '<<< vecchio modulo contabilità	 
+			 oSheet.GetCellByPosition(0 , i).value = numV
+			 numV = numV + 1
+		end if
+	Next
+''Clessid_lock_End
+
+	if IsNull(verbosa) Then
+		if 	ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,307).value = 1 or _
+ 			ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,316).value = 0 then
+	 		MsgBox "Fatto! le voci di questa tabella sono state numerate!!"
+		end if
+	end if
+'Print aa & " - " & (now)
+END Sub

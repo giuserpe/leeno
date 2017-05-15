@@ -345,7 +345,7 @@ IMPOSTO_VALORI_E_FORMULE:
 	oSheet.GetCellByPosition(23, lrow+1).setvalue(nSal)								&apos;Numero SAL
 	oSheet.GetCellByPosition(23, lrow+1).cellstyle = &quot;Sal&quot;
 &apos;	Numera_Voci_Computo (&quot;niente prompt&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;Numera_voci&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;numera_voci&quot;)
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow+2))
 parziale_verifica
 exit sub

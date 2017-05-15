@@ -589,7 +589,7 @@ rem ----------------------------------------------------------------------
 				EndIf
 				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
 oSheet.GetCellByPosition( 10 , ii).formula = &quot;&quot;
-				If InStr (oSheet.GetCellByPosition(8, ii).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then parziale_core (ii)
+				If InStr (oSheet.GetCellByPosition(8, ii).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_core&quot;, ii)
 				i = lRow &apos;+ 1
 			Next
 			For ii = itag To etag-1

@@ -375,122 +375,11 @@ Sub parziale rem &apos;(C) Giuseppe Vizziello 2015
 rem inserisce un parziale e corregge altri parziali della stessa voce
 	osheet = thisComponent.CurrentController.ActiveSheet
 	lrow = range2cell
-parziale_core (lrow)
+ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_core&quot;, lrow)
+&apos;parziale_core (lrow)
 parziale_verifica
 End Sub
 
-rem ######################################################################
-Sub parziale_core (optional lrow As Long) rem &apos;(C) Giuseppe Vizziello 2015
-rem inserisce una somma parziale sul rigo selezionato
-	Dim osheet As Object
-	Dim sStRange As Object
-	Dim oSrc As Object
-	Dim oDest As Object
-	Dim i As Long
-If lrow = 0 Then Exit Sub
-	osheet = thisComponent.CurrentController.ActiveSheet
-
-	Select Case oSheet.Name
-		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-		If se_contabilita = 1 Then Exit Sub
-rem rigo parziale già esistente:
-			If InStr (oSheet.GetCellByPosition(8 , lrow).string, &quot;Parziale [&quot;) Then GoTo procedi
-rem ----------------------------------------------------------------------
-rem rigo normale:
-			If 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s&quot; And _
-				osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; And _
-				osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
-				oSheet.getRows.insertByIndex(lrow,1)
-				GoTo procedi
-rem ----------------------------------------------------------------------
-rem ultimo rigo:
-			ElseIf InStr (oSheet.GetCellByPosition(8 , lrow).String, &quot;SOMMANO [&quot;) &gt; 0  Then 
-				oSheet.getRows.insertByIndex(lrow,1)
-				GoTo procedi
-			ElseIf 	osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then
-				oSheet.getRows.insertByIndex(lrow,1)
-				GoTo procedi
-			EndIf
-		Exit Sub
-		Case &quot;CONTABILITA&quot;
-rem ----------------------------------------------------------------------
-rem rigo normale:
-&apos;				osheet.getCellByPosition (2, lrow).CellStyle = &quot;comp 1-a&quot; Then
-			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
-				osheet.getCellByPosition (1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; Then
-					If InStr (oSheet.GetCellByPosition(8, lrow).string, &quot;Parziale [&quot;) = 0 Then
-						oSheet.getRows.insertByIndex(lrow,1)
-					EndIf
-				GoTo procedi
-rem ----------------------------------------------------------------------
-rem rigo positivi e negativi:
-				ElseIf InStr (oSheet.GetCellByPosition(8 , lrow).string, &quot;Somma positivi e negativi [&quot;)  Then 
-					ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2,lrow-1))
-copia_riga_Ent &apos;copia_riga_C
-				GoTo procedi
-			EndIf
-		Exit Sub
-	End Select
-rem ----------------------------------------------------------------------
-procedi:
-	sStRange = Circoscrive_Voce_Computo_Att (lrow) &apos;(range2cell)
-	With sStRange.RangeAddress
-		lRowI = .StartRow
-		lRowE = .EndRow
-	End With	
-	Select Case oSheet.Name
-		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-rem ---------------------------------------------------------------------
-			oSheet.getCellByPosition(2, lrow).cellstyle = &quot;comp sotto centro&quot;
-			oSheet.getCellRangeByPosition(5, lrow, 7, lrow).cellstyle = &quot;comp sotto centro&quot;
-			oSheet.getCellByPosition(8, lrow).cellstyle = &quot;comp sotto BiancheS&quot;
-			oSheet.getCellByPosition(9, lrow).cellstyle = &quot;Comp-Variante num sotto&quot;
-			oSheet.getCellByPosition(8, lrow).setformula(&quot;=CONCATENATE(&quot;&quot;Parziale [&quot;&quot;;VLOOKUP(B&quot; &amp; lrowi+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
-rem immissione tags cat/subcat
-&apos;			oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lRowE+1)
-rem ---------------------------------------------------------------------
-			i = lrow
-			Do While i &gt; 0
-				If osheet.getCellByPosition (9, i-1).CellStyle = &quot;vuote2&quot; Or _
-					osheet.getCellByPosition (9, i-1).CellStyle = &quot;Comp-Variante num sotto&quot; Then
-					dariga=i
-					Exit Do
-				EndIf
-				i=i-1
-			Loop 
-			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp;&quot;)&quot;) &apos;Somma
-		Case &quot;CONTABILITA&quot;
-rem ---------------------------------------------------------------------
-			oSheet.getCellRangeByPosition(2, lrow, 7, lrow).cellstyle = &quot;comp sotto centro_R&quot;
-			oSheet.getCellByPosition(8, lrow).cellstyle = &quot;comp sotto BiancheS_R&quot;
-			oSheet.getCellByPosition(9, lrow).cellstyle = &quot;Comp-Variante num sotto&quot;
-			oSheet.getCellByPosition(8, lrow).setformula(&quot;=CONCATENATE(&quot;&quot;Parziale [&quot;&quot;;VLOOKUP(B&quot; &amp; lrowi+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;)
-			
-rem immissione tags cat/subcat
-&apos;			oSheet.getCellByPosition(31, lrow).setformula(&quot;=AF$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(32, lrow).setformula(&quot;=AG$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(33, lrow).setformula(&quot;=AH$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(34, lrow).setformula(&quot;=AI$&quot; &amp; lRowE+1)
-&apos;			oSheet.getCellByPosition(35, lrow).setformula(&quot;=AJ$&quot; &amp; lRowE+1)
-rem ---------------------------------------------------------------------
-			i = lrow
-			Do While i &gt; 0
-				If osheet.getCellByPosition (9, i-1).CellStyle = &quot;vuote2&quot; Or _
-					osheet.getCellByPosition (9, i-1).CellStyle = &quot;Comp-Variante num sotto&quot; Then
-					dariga=i
-					Exit Do
-				EndIf
-				i=i-1
-			Loop 
-			oSheet.GetCellByPosition(9, lrow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; dariga &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)-SUBTOTAL(9;L&quot; &amp; dariga &amp; &quot;:L&quot; &amp; lrow+1 &amp;&quot;)&quot;) &apos;Somma
-	End Select 
-rem ----------------------------------------------------------------------
-fine:
-End Sub
 rem ######################################################################
 
 Sub parziale_verifica rem &apos;(C) Giuseppe Vizziello 2015
@@ -514,7 +403,7 @@ rem ---------------------------------------------------------------------
 	For i = lRowI+2 To lRowE-1
 &apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(8, i))
 &apos;Print oSheet.GetCellByPosition(8, i).string
-		If InStr (oSheet.GetCellByPosition(8, i).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then parziale_core (i)
+		If InStr (oSheet.GetCellByPosition(8, i).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_core&quot;, i)
 	Next
 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
 	unSelect &apos;unselect ranges 

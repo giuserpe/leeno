@@ -49,7 +49,7 @@ salto:
 	If lrowF &lt; StartRow-1 Then exit SUB
 	Sposta_range_buono_Att(StartRowM,sStRange)
 &apos;	Numera_Voci_Computo (&quot;niente prompt&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;Numera_voci&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;numera_voci&quot;)
 	Adatta_h_riga_intera_tabella(oSheet.Name)
 END Sub
 

@@ -2821,12 +2821,8 @@ def ins_voce_elenco (arg=None):
     oRangeAddress = oSheet.getCellRangeByPosition(15, 4, 26, 4).getRangeAddress()
     oCellAddress = oSheet.getCellByPosition(15,3).getCellAddress()
     oSheet.copyRange(oCellAddress, oRangeAddress)
-    
-    oRangeAddress = oSheet.getCellRangeByPosition(2, 4, 2, 4).getRangeAddress()
-    oCellAddress = oSheet.getCellByPosition(2,3).getCellAddress()
-    oSheet.copyRange(oCellAddress, oRangeAddress)
-    oSheet.getCellByPosition(2, 3).String = ''
-    
+    oCell = oSheet.getCellByPosition(2, 3)
+    valida_cella(oCell, '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";"',titoloInput='Scegli...', msgInput='Unità di misura')
     refresh (1)
 ########################################################################
 # nuova_voce ###########################################################

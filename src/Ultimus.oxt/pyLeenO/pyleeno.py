@@ -2282,7 +2282,7 @@ def azzera_voce(arg=None):
             dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
             oProp = PropertyValue()
             oProp.Name = 'BackgroundColor'
-            oProp.Value = 8421504
+            oProp.Value = 15066597
             properties = (oProp,)
             dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
             ###
@@ -3611,46 +3611,59 @@ Vuoi continuare?''', 'Importa Stili in blocco?') == 3: return
         adatta_altezza_riga(el)
     _gotoSheet ('Elenco Prezzi')
 ########################################################################
-# parziale_core ########################################################
-def parziale_core(lrow):
-    #~ lrow = 7
-    if lrow == 0:
-        return
+def parziale(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-
+    lrow = Range2Cell()[1]
+    if oSheet.Name in ('COMPUTO','VARIANTE', 'CONTABILITA'):
+        parziale_core(lrow)
+        parziale_verifica()
+def parziale_core(lrow):
+    #~ lrow = 324
+    if lrow == 0: return
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
     sStRange = Circoscrive_Voce_Computo_Att (lrow)
     #~ sStRange.RangeAddress
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
-    _gotoCella(2, lrow+1)
+
     if oSheet.Name in ('COMPUTO','VARIANTE'):
         if oSheet.getCellByPosition (0, lrow).CellStyle == 'comp 10 s' and \
         oSheet.getCellByPosition (1, lrow).CellStyle == 'Comp-Bianche in mezzo' and \
         oSheet.getCellByPosition (2, lrow).CellStyle == 'comp 1-a' or \
         oSheet.getCellByPosition (0, lrow).CellStyle == 'Comp End Attributo':
             oSheet.getRows().insertByIndex(lrow, 1)
-            oSheet.getCellByPosition (1, lrow).CellStyle = 'Comp-Bianche in mezzo'
-            oSheet.getCellRangeByPosition (2, lrow, 7, lrow).CellStyle = 'comp sotto centro'
-            oSheet.getCellByPosition (8, lrow).CellStyle = 'comp sotto BiancheS'
-            oSheet.getCellByPosition (9, lrow).CellStyle = 'Comp-Variante num sotto'
+        elif 'Parziale [' in (oSheet.getCellByPosition (8, lrow).String):
+                pass
+        else:
+            return
+        oSheet.getCellByPosition (1, lrow).CellStyle = 'Comp-Bianche in mezzo'
+        oSheet.getCellRangeByPosition (2, lrow, 7, lrow).CellStyle = 'comp sotto centro'
+        oSheet.getCellByPosition (8, lrow).CellStyle = 'comp sotto BiancheS'
+        oSheet.getCellByPosition (9, lrow).CellStyle = 'Comp-Variante num sotto'
 
-            #~ oSheet.getCellByPosition(31, lrow).Formula ='=AF$' + str(sotto+2)
-            #~ oSheet.getCellByPosition(32, lrow).Formula ='=AG$' + str(sotto+2)
-            #~ oSheet.getCellByPosition(33, lrow).Formula ='=AH$' + str(sotto+2)
-            #~ oSheet.getCellByPosition(34, lrow).Formula ='=AI$' + str(sotto+2)
-            #~ oSheet.getCellByPosition(35, lrow).Formula ='=AJ$' + str(sotto+2)
+        oSheet.getCellByPosition (8, lrow).Formula = '''=CONCATENATE("Parziale [";VLOOKUP(B'''+ str(sopra+2) + ''';elenco_prezzi;3;FALSE());"]")'''
+        for i in reversed(range(0, lrow)):
+            if oSheet.getCellByPosition (9, i-1).CellStyle in ('vuote2', 'Comp-Variante num sotto'):
+                i
+                break
+        oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
+    if oSheet.Name in ('CONTABILITA'): MsgBox('Contatta il canale Telegram https://t.me/joinchat/AAAAAEFGWSw-p_N6tUt0FA')
+###
+def parziale_verifica(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    #~ if oSheet.Name in ('COMPUTO','VARIANTE', 'CONTABILITA'):
+    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    sopra = sStRange.RangeAddress.StartRow
+    sotto = sStRange.RangeAddress.EndRow
+    for n in range (sopra, sotto):
+        if 'Parziale [' in (oSheet.getCellByPosition (8, n).String):
+            parziale_core (n)
+    #~ chi(oDoc.CurrentSelection.CellBackColor)
 
-            oSheet.getCellByPosition (8, lrow).Formula = '''=CONCATENATE("Parziale [";VLOOKUP(B'''+ str(sopra+2) + ''';elenco_prezzi;3;FALSE());"]")'''
-
-            for i in reversed(range(0, lrow)):
-                if oSheet.getCellByPosition (9, i-1).CellStyle in ('vuote2', 'Comp-Variante num sotto'):
-                    i
-                    break
-
-            oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
-    if oSheet.Name in ('CONTABILITA'): MsgBox('Invia una mail https://t.me/joinchat/AAAAAEFGWSw-p_N6tUt0FA')
-        
 
 ########################################################################
 # abs2name ############################################################
@@ -5416,6 +5429,7 @@ def cancella_righe (arg=None):
     è molto lenta perché Calc ricalcola i valori ad ogni cancellazione.
     Conviene inibire il ricalcolo
     '''
+    chi("ljlkjlkj")
     cancella_righe_th().start()
 ########################################################################
 class inserisci_nuova_riga_con_descrizione_th (threading.Thread):

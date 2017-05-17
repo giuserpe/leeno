@@ -125,7 +125,7 @@ vai:
 	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
 	ThisComponent.CurrentController.Select(oRangeSel)
 rem ----------------------------------------------------------------------
-parziale_verifica
+ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_verifica&quot;)
 	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
 	If test = &quot;è Computo&quot; Then
 ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)

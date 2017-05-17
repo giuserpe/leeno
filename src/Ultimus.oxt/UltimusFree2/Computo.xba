@@ -370,45 +370,6 @@ rem riga rossa
 &apos;Rifa_Somme_TOT_Computo &apos; crea anche la struttura del foglio
 End Sub
 rem ######################################################################
-
-Sub parziale rem &apos;(C) Giuseppe Vizziello 2015
-rem inserisce un parziale e corregge altri parziali della stessa voce
-	osheet = thisComponent.CurrentController.ActiveSheet
-	lrow = range2cell
-ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_core&quot;, lrow)
-&apos;parziale_core (lrow)
-parziale_verifica
-End Sub
-
-rem ######################################################################
-
-Sub parziale_verifica rem &apos;(C) Giuseppe Vizziello 2015
-rem questa è inserita anche alla fine della sub elimina_riga
-	osheet = thisComponent.CurrentController.ActiveSheet
-	Select Case osheet.Name
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
-	Case Else
-		Exit Sub 
-	End Select
-rem ----------------------------------------------------------------------
-	lrow = range2cell
-rem ----------------------------------------------------------------------
-	sStRange = Circoscrive_Voce_Computo_Att (lrow)
-	If isNull (sStRange) Or isEmpty (sStRange) Then Exit Sub
-	With sStRange.RangeAddress
-		lRowI = .StartRow
-		lRowE = .EndRow
-	End With
-rem ---------------------------------------------------------------------
-	For i = lRowI+2 To lRowE-1
-&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(8, i))
-&apos;Print oSheet.GetCellByPosition(8, i).string
-		If InStr (oSheet.GetCellByPosition(8, i).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_core&quot;, i)
-	Next
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
-	unSelect &apos;unselect ranges 
-End Sub
-rem ######################################################################
 Function abs2name (nCol As Long, nRow As Long)
 &apos; converte da AbsoluteName a nome cella
 	osheet = thisComponent.CurrentController.ActiveSheet

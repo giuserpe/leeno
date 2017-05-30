@@ -244,7 +244,7 @@ rem  &apos;ripulisco le prime tre righe
 	oSheet.getCellRangeByPosition(0, 0, 100, 2).clearContents(Flags)
 	oSheet.getCellRangeByPosition(12, 0, 16, lRowE).clearContents(Flags)
 	oSheet.getCellRangeByPosition(22, 0, 23, lRowE).clearContents(Flags)
-	oSheet.getCellRangeByPosition(28, 0, 28, lRowE).clearContents(Flags)
+&apos;	oSheet.getCellRangeByPosition(28, 0, 28, lRowE).clearContents(Flags)
 	oSheet.getCellRangeByPosition(0, 0, 100 , 0).cellstyle = &quot;Default&quot;
 	
 	Flags = com.sun.star.sheet.CellFlags.HARDATTR
@@ -259,15 +259,17 @@ rem	riga di controllo importo
 	oSheet.GetCellByPosition(18,1).FORMULA=&quot;=SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo lavori
 	oSheet.GetCellByPosition(0,1).FORMULA=&quot;=AK2&quot;&apos;&quot;=SUBTOTAL(9;S3:S&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo lavori
 
+	oSheet.GetCellByPosition(28,1).FORMULA=&quot;=SUBTOTAL(9;AC3:AC&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo materiali
 
 	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=AE2/S2&quot;  &apos;Incidenza manodopera %
+	oSheet.getCellByPosition(29, 1).cellstyle = &quot;Comp TOTALI %&quot;
 	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=SUBTOTAL(9;AE3:AE&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos;importo manodopera
 	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=SUBTOTAL(9;AK3:AK&quot;&amp; lRowE+1 &amp;&quot;)&quot; &apos; totale computo sole voci senza errori
 
 	oSheet.getCellRangeByPosition(0, 1, 43 , 1).cellstyle = &quot;comp In testa&quot;
 	oSheet.getCellRangeByposition(0, 0, 43 , 2).merge(FALSE)
 	oSheet.getCellRangeByposition(0, 1, 1, 1).merge(TRUE)
-	oSheet.getCellByPosition(29, 1).cellstyle = &quot;Comp TOTALI %&quot;
+
 rem ----------------------------------------------------------------------
 &apos;GoTo questa_sta_in_init_computo:
 rem riga di intestazione

@@ -513,6 +513,7 @@ def SubSum_SuperCap (lrow):
     oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-0-scritta mini val'
     oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-0-scritta mini %'
+    oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
     oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-0-scritta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
@@ -539,6 +540,8 @@ def SubSum_SottoCap (lrow):
     oSheet.getCellByPosition(18, lrow).CellStyle = 'livello2 scritta mini'
     oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'livello2 valuta mini %'
+    oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
+    oSheet.getCellByPosition(28, lrow).CellStyle = 'livello2 scritta mini'
     oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'livello2 valuta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
@@ -566,6 +569,7 @@ def SubSum_Cap (lrow):
     oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-1-scritta mini val'
     oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-1-scritta mini %'
+    oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
     oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-1-scritta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'

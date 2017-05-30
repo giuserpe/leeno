@@ -2086,3 +2086,31 @@ sub Numera_Voci_Computo ()'(optional verbosa as string)' 'nuova versione
 	end if
 'Print aa & " - " & (now)
 END Sub
+rem ######################################################################
+
+Sub parziale_verifica rem '(C) Giuseppe Vizziello 2015
+
+rem questa è inserita anche alla fine della sub elimina_riga
+	osheet = thisComponent.CurrentController.ActiveSheet
+	Select Case osheet.Name
+	Case "COMPUTO", "VARIANTE", "CONTABILITA"
+	Case Else
+		Exit Sub 
+	End Select
+	lrow = range2cell
+	sStRange = Circoscrive_Voce_Computo_Att (lrow)
+	If isNull (sStRange) Or isEmpty (sStRange) Then Exit Sub
+	With sStRange.RangeAddress
+		lRowI = .StartRow
+		lRowE = .EndRow
+	End With
+	i = lRowI+2
+	Do While i < lRowE
+		If InStr (oSheet.GetCellByPosition(8, i).string, "arziale [") <> 0 Then
+			Print i
+			ScriptPy("pyleeno.py","parziale_core", i)
+			i = i+1
+		EndIf 
+	Loop
+End Sub
+rem #####################################################################

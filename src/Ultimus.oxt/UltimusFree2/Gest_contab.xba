@@ -253,6 +253,7 @@ rem colore colonne riga di intestazione
 	oSheet.getCellByPosition(18, 2).cellstyle = &quot;COnt_noP&quot;
 	oSheet.getCellRangeByPosition(0,0,0,3).rows.OptimalHeight = true &apos; ottimizza altezze
 rem	riga di controllo importo
+	oSheet.getCellRangeByPosition(0, 1, 36 , 1).cellstyle = &quot;comp In testa&quot;
 	oSheet.GetCellByPosition(2,1).setstring(&quot;QUESTA RIGA NON VIENE STAMPATA&quot;)
 	oSheet.getCellRangeByposition(0, 1, 1, 1).merge(TRUE)
 	oSheet.GetCellByPosition(13,1).setstring(&quot;TOTALE:&quot;)
@@ -262,10 +263,14 @@ rem	riga di controllo importo
 	oSheet.GetCellByPosition(15,1).FORMULA=&quot;=SUBTOTAL(9;P3:P4)&quot; &apos;importo lavori
 	oSheet.GetCellByPosition(0,1).FORMULA=&quot;=AK2&quot; &apos;importo lavori
 	oSheet.GetCellByPosition(17,1).FORMULA=&quot;=SUBTOTAL(9;R3:R4)&quot; &apos;importo sicurezza
+	
+	oSheet.GetCellByPosition(28,1).FORMULA=&quot;=SUBTOTAL(9;AC3:AC4)&quot; &apos;importo materiali
+	oSheet.GetCellByPosition(29,1).FORMULA=&quot;=AE2/Z2&quot;  &apos;Incidenza manodopera %
+	oSheet.getCellByPosition(29, 1).cellstyle = &quot;Comp TOTALI %&quot;
 	oSheet.GetCellByPosition(30,1).FORMULA=&quot;=SUBTOTAL(9;AE3:AE4)&quot; &apos;importo manodopera
 	oSheet.GetCellByPosition(36,1).FORMULA=&quot;=SUBTOTAL(9;AK3:AK4)&quot; &apos;importo certo
 	
-	oSheet.getCellRangeByPosition(0, 1, 36 , 1).cellstyle = &quot;Reg_prog&quot;
+
 rem riga del totale
 	oSheet.GetCellByPosition(2,3).setstring(&quot;T O T A L E&quot;)
 	oSheet.GetCellByPosition(15,3).FORMULA=&quot;=SUBTOTAL(9;P3:P4)&quot; &apos;importo lavori

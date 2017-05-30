@@ -1094,9 +1094,11 @@ def scelta_viste (arg=None):
             oDialog1.getControl('CBFig').State = 0
 
         if oDialog1.getControl('CBMdo').State == 0: #manodopera
+            oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
         else:
+            oSheet.getColumns().getByIndex(28).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(30).Columns.IsVisible = True
         
@@ -3624,10 +3626,8 @@ def parziale_core(lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     sStRange = Circoscrive_Voce_Computo_Att (lrow)
-    #~ sStRange.RangeAddress
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
-
     if oSheet.Name in ('COMPUTO','VARIANTE'):
         if oSheet.getCellByPosition (0, lrow).CellStyle == 'comp 10 s' and \
         oSheet.getCellByPosition (1, lrow).CellStyle == 'Comp-Bianche in mezzo' and \
@@ -3642,7 +3642,6 @@ def parziale_core(lrow):
         oSheet.getCellRangeByPosition (2, lrow, 7, lrow).CellStyle = 'comp sotto centro'
         oSheet.getCellByPosition (8, lrow).CellStyle = 'comp sotto BiancheS'
         oSheet.getCellByPosition (9, lrow).CellStyle = 'Comp-Variante num sotto'
-
         oSheet.getCellByPosition (8, lrow).Formula = '''=CONCATENATE("Parziale [";VLOOKUP(B'''+ str(sopra+2) + ''';elenco_prezzi;3;FALSE());"]")'''
         for i in reversed(range(0, lrow)):
             if oSheet.getCellByPosition (9, i-1).CellStyle in ('vuote2', 'Comp-Variante num sotto'):
@@ -3657,7 +3656,7 @@ def parziale_verifica(arg=None):
     lrow = Range2Cell()[1]
     #~ if oSheet.Name in ('COMPUTO','VARIANTE', 'CONTABILITA'):
     sStRange = Circoscrive_Voce_Computo_Att (lrow)
-    sopra = sStRange.RangeAddress.StartRow
+    sopra = sStRange.RangeAddress.StartRow+2
     sotto = sStRange.RangeAddress.EndRow
     for n in range (sopra, sotto):
         if 'Parziale [' in (oSheet.getCellByPosition (8, n).String):

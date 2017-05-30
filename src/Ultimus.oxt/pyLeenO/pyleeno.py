@@ -1957,6 +1957,9 @@ def firme_in_calce_run (arg=None):
         if oDoc.getSheets().hasByName('S2') == True:
             ii = 11
             vv = 18
+            ac = 28
+            ad = 29
+            ae = 30
             ss = 41
             col ='S'
         else:
@@ -1981,6 +1984,9 @@ def firme_in_calce_run (arg=None):
         oSheet.getCellByPosition(2 , riga_corrente).String = 'Riepilogo strutturale delle Categorie'
         oSheet.getCellByPosition(ii , riga_corrente).String = 'Incidenze %'
         oSheet.getCellByPosition(vv , riga_corrente).String = 'Importi €'
+        oSheet.getCellByPosition(ac , riga_corrente).String = 'Materiali\ne Noli €'
+        oSheet.getCellByPosition(ad , riga_corrente).String = 'Incidenza\nMDO %'
+        oSheet.getCellByPosition(ae , riga_corrente).String = 'Importo\nMDO €'
         inizio_gruppo = riga_corrente
         riga_corrente += 1
         for i in range (0, lRowF):
@@ -1994,7 +2000,11 @@ def firme_in_calce_run (arg=None):
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
-                oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_totali'
+                oSheet.getCellRangeByPosition(vv , riga_corrente, ae , riga_corrente).CellStyle = 'Ultimus_totali'
+                oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC'+ str(i+1)
+                oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
+                oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
                 riga_corrente += 1
             elif oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-1-scritta':
                 #~ chi(riga_corrente)
@@ -2007,6 +2017,10 @@ def firme_in_calce_run (arg=None):
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
                 oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_bordo'
+                oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC'+ str(i+1)
+                oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
+                oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
                 riga_corrente += 1
             elif oSheet.getCellByPosition(1 , i).CellStyle == 'livello2 valuta':
                 #~ chi(riga_corrente)
@@ -2019,15 +2033,24 @@ def firme_in_calce_run (arg=None):
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
                 oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'ULTIMUS'
+                oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC'+ str(i+1)
+                oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
+                oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
                 riga_corrente += 1
         #~ riga_corrente +=1
      
-        oSheet.getCellRangeByPosition (2,inizio_gruppo,vv,inizio_gruppo).CellStyle = "Ultimus_centro"
+        oSheet.getCellRangeByPosition (2,inizio_gruppo,ae,inizio_gruppo).CellStyle = "Ultimus_centro"
 
         oSheet.getCellByPosition(2 , riga_corrente).String= 'T O T A L E   €'
         oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'Ultimus_destra'
         oSheet.getCellByPosition(vv , riga_corrente).Formula = '=' + col + str(lRowF) 
         oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
+        oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC' + str(lRowF)
+        oSheet.getCellByPosition(ac , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
+        oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE' + str(lRowF)
+        oSheet.getCellByPosition(ae , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
+        oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD' + str(lRowF) + '*100'
         fine_gruppo = riga_corrente
     #~ DATA
         oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'

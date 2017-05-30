@@ -285,6 +285,7 @@ rem riga di intestazione
 	oSheet.GetCellByPosition(18,2).setstring(&quot;Importo €&quot;)
 	oSheet.GetCellByPosition(24,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;sul totale&quot;) &apos; POTREBBE SERVIRE PER INDICARE L&apos;INCIDENZA DI OGNI SINGOLA VOCE
 	oSheet.GetCellByPosition(27,2).setstring(&quot;Sicurezza&quot; + chr(13) +&quot;unitaria&quot;)
+	oSheet.GetCellByPosition(28,2).setstring(&quot;Materiali&quot; + chr(13) +&quot;e Noli (€)&quot;)
 	oSheet.GetCellByPosition(29,2).setstring(&quot;Incidenza&quot; + chr(13) +&quot;MdO %&quot;)
 	oSheet.GetCellByPosition(30,2).setstring(&quot;Importo&quot; + chr(13) +&quot;MdO&quot;)
 	oSheet.GetCellByPosition(31,2).setstring(&quot;Super Cat&quot;)

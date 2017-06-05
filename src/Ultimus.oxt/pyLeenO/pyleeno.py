@@ -3874,6 +3874,23 @@ def XPWE_in (arg=None):
     except AttributeError:
         pass
 ###
+#PweDGWBS
+    try:
+        PweDGWBS = dati.find('PweDGWBS')
+        pass
+    except AttributeError:
+        pass
+###
+    try:
+        PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
+        speseutili = PweDGModuli[0].text
+        spesegenerali = PweDGModuli[1].text
+        utiliimpresa = PweDGModuli[2].text
+        oneriaccessorisc = PweDGModuli[3].text
+        ConfQuantita = PweDGModuli[4].text
+    except IndexError:
+        pass
+###
     try:
         PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
         speseutili = PweDGModuli[0].text
@@ -4064,6 +4081,10 @@ def XPWE_in (arg=None):
                 idsbcat = elem.find('IDSbCat').text
             except AttributeError:
                 idsbcat = ''
+            try:
+                CodiceWBS = elem.find('CodiceWBS').text
+            except AttributeError:
+                CodiceWBS = ''
             righi_mis = elem.getchildren()[-1].findall('RGItem')
             lista_rig = list()
             riga_misura = ()
@@ -4162,7 +4183,7 @@ Si tenga conto che:
         oSheet.getCellByPosition(7,318).Value = float(oneriaccessorisc)/100
         oSheet.getCellByPosition(7,319).Value = float(spesegenerali)/100
         oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
-    except UnboundLocalError:
+    except:
         pass
     oDoc.CurrentController.ZoomValue = 400
 

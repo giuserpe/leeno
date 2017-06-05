@@ -30,7 +30,7 @@
   </dlg:button>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBFig" dlg:tab-index="8" dlg:left="10" dlg:top="49" dlg:width="68" dlg:height="10" dlg:value="Figure e annotazioni" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBSic" dlg:tab-index="2" dlg:left="10" dlg:top="59" dlg:width="68" dlg:height="10" dlg:value="Sicurezza" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBMdo" dlg:tab-index="3" dlg:left="10" dlg:top="69" dlg:width="68" dlg:height="10" dlg:value="Manodopera" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBMdo" dlg:tab-index="3" dlg:left="10" dlg:top="69" dlg:width="68" dlg:height="10" dlg:value="Material, Noli e Manodopera" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBMis" dlg:tab-index="6" dlg:left="10" dlg:top="39" dlg:width="68" dlg:height="10" dlg:value="Colonne misure" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBTag" dlg:tab-index="11" dlg:left="-58" dlg:top="92" dlg:width="56" dlg:height="10" dlg:value="Tag" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBDet" dlg:tab-index="12" dlg:left="10" dlg:top="28" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>

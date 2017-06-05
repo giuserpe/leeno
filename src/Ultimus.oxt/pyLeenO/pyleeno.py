@@ -1861,7 +1861,9 @@ def XPWE_out(arg=None):
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
 ##########################
                 Flags = SubElement(RGItem,'Flags')
-                if "Parziale [" in oSheet.getCellByPosition(8, m).String:
+                if '-' in Quantita.text:
+                    Flags.text = '1'
+                elif "Parziale [" in oSheet.getCellByPosition(8, m).String:
                     Flags.text = '2'
                     HPeso.text = ''
                 elif 'PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
@@ -4966,7 +4968,7 @@ def set_larghezza_colonne (arg=None):
         oSheet.getColumns().getByName('K').Columns.Width = 2000
         oDoc.CurrentController.freezeAtPosition(0, 2)
     if oSheet.Name == 'CONTABILITA':
-        viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTFTTFFFFFF')
+        viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
         oSheet.getCellRangeByPosition(13,0,1023,0).Columns.Width = 1900 # larghezza colonne importi
         oSheet.getCellRangeByPosition(19,0,23,0).Columns.Width = 1000 # larghezza colonne importi
         oSheet.getCellRangeByPosition(51,0,1023,0).Columns.IsVisible = False # nascondi colonne
@@ -4986,6 +4988,9 @@ def set_larghezza_colonne (arg=None):
         oSheet.getColumns().getByName('W').Columns.Width = 1000
         oSheet.getColumns().getByName('X').Columns.Width = 1000
         oSheet.getColumns().getByName('Z').Columns.Width = 1900
+        oSheet.getColumns().getByName('AC').Columns.Width = 1700
+        oSheet.getColumns().getByName('AD').Columns.Width = 1700
+        oSheet.getColumns().getByName('AE').Columns.Width = 1700
         oSheet.getColumns().getByName('AX').Columns.Width = 1900
         oSheet.getColumns().getByName('AY').Columns.Width = 1900
         oDoc.CurrentController.freezeAtPosition(0, 3)
@@ -5000,6 +5005,9 @@ def set_larghezza_colonne (arg=None):
         oSheet.getColumns().getByName('J').Columns.Width = 1700
         oSheet.getColumns().getByName('L').Columns.Width = 1700
         oSheet.getColumns().getByName('S').Columns.Width = 1700
+        oSheet.getColumns().getByName('AC').Columns.Width = 1700
+        oSheet.getColumns().getByName('AD').Columns.Width = 1700
+        oSheet.getColumns().getByName('AE').Columns.Width = 1700
         oDoc.CurrentController.freezeAtPosition(0, 3)
         viste_nuove('TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
     if oSheet.Name == 'Elenco Prezzi':

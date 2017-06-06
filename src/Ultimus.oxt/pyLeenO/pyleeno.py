@@ -1472,8 +1472,8 @@ def XPWE_out(arg=None):
     esporta il documento in formato XPWE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oDialogo_attesa = dlg_attesa()
-    #~ attesa().start() #mostra il dialogo
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
 
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo esistente.','Avviso!')
@@ -1881,7 +1881,7 @@ def XPWE_out(arg=None):
                         Flags.text = '32769'
             n = sotto+1
 ##########################
-    #~ oDialogo_attesa.endExecute()
+    oDialogo_attesa.endExecute()
     out_file = filedia('Salva con nome...', '*.xpwe', 1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':

@@ -1472,7 +1472,7 @@ def XPWE_out(arg=None):
     esporta il documento in formato XPWE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDialogo_attesa = dlg_attesa()
+    oDialogo_attesa = dlg_attesa('LETTURA DATI IN CORSO...')
     attesa().start() #mostra il dialogo
 
     if oDoc.getSheets().hasByName('S2') == False:
@@ -5406,7 +5406,7 @@ def make_pack (arg=None, bar=0):
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile (nomeZip2, nomeZip)
 #######################################################################
-def dlg_attesa(arg=None):
+def dlg_attesa(msg=''):
     '''
     definisce la variabile globale oDialogo_attesa
     che va gestita così negli script:
@@ -5420,6 +5420,14 @@ def dlg_attesa(arg=None):
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     global oDialogo_attesa
     oDialogo_attesa = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgAttesa?language=Basic&location=application")
+
+    oDialog1Model = oDialogo_attesa.Model # oDialogo_attesa è una variabile generale
+    
+    sString = oDialogo_attesa.getControl("Label2")
+    sString.Text = msg #'ATTENDI...'
+    oDialogo_attesa.Title = 'Operazione in corso...'
+    sUrl = LeenO_path()+'/icons/attendi.png'
+    oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
     return oDialogo_attesa
 #~ #
 
@@ -5428,15 +5436,8 @@ class attesa (threading.Thread):
     '''avvia il dialogo di attesa'''
     def __init__(self):
         threading.Thread.__init__(self)
-    def run(self, msg=''):
-        oDialog1Model = oDialogo_attesa.Model # oDialogo_attesa è una variabile generale
-        
-        sString = oDialogo_attesa.getControl("Label1")
-        #~ sString.Text = 'ATTENDI...'
-        oDialogo_attesa.Title = 'Operazione in corso...'
 
-        sUrl = LeenO_path()+'/icons/attendi.png'
-        oDialogo_attesa.getModel().ImageControl1.ImageURL=sUrl
+    def run(self):
         oDialogo_attesa.execute()
         return
 ########################################################################

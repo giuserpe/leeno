@@ -3128,18 +3128,20 @@ def XML_toscana_import (arg=None):
         prezzo = float(el.getchildren()[5].text)
         try:
             mdo = float(el.getchildren()[-1][-1].get('percentuale'))/100
+            mdoE = mdo * prezzo
         except IndexError:
             mdo =''
+            mdoE = ''
 
         if codicesp[0] not in tipo_lista:
             tipo_lista.append(codicesp[0])
-            cap = (codicesp[0], el.getchildren()[0].text, '', '', '', '')
+            cap = (codicesp[0], el.getchildren()[0].text, '', '', '', '', '')
             lista_articoli.append(cap)
         if codicesp[1] not in cap_lista:
             cap_lista.append(codicesp[1])
-            cap = (codicesp[0]+'.'+codicesp[1], el.getchildren()[0].text+'\n'+el.getchildren()[1].text, '', '', '', '')
+            cap = (codicesp[0]+'.'+codicesp[1], el.getchildren()[0].text+'\n'+el.getchildren()[1].text, '', '', '', '', '')
             lista_articoli.append(cap)
-        voceel = (codice, desc_voce, udm, sic, prezzo, mdo)
+        voceel = (codice, desc_voce, udm, sic, prezzo, mdo, mdoE)
         lista_articoli.append(voceel)
 
 # compilo ##############################################################

@@ -3122,14 +3122,14 @@ def XML_toscana_import (arg=None):
         udm = el.getchildren()[4].text
 
         try:
-            sic = el.getchildren()[-1][-4].get('valore')
+            sic = float(el.getchildren()[-1][-4].get('valore'))
         except IndexError:
-            sic ='0'
-        prezzo = el.getchildren()[5].text
+            sic =''
+        prezzo = float(el.getchildren()[5].text)
         try:
-            mdo = el.getchildren()[-1][-1].get('percentuale')
+            mdo = float(el.getchildren()[-1][-1].get('percentuale'))/100
         except IndexError:
-            mdo ='0'
+            mdo =''
 
         if codicesp[0] not in tipo_lista:
             tipo_lista.append(codicesp[0])
@@ -3139,7 +3139,7 @@ def XML_toscana_import (arg=None):
             cap_lista.append(codicesp[1])
             cap = (codicesp[0]+'.'+codicesp[1], el.getchildren()[0].text+'\n'+el.getchildren()[1].text, '', '', '', '')
             lista_articoli.append(cap)
-        voceel = (codice, desc_voce, udm, float(sic), float(prezzo), float(mdo)/100)
+        voceel = (codice, desc_voce, udm, sic, prezzo, mdo)
         lista_articoli.append(voceel)
 
 # compilo ##############################################################
@@ -3182,11 +3182,12 @@ Si consiglia una attenta lettura delle note informative disponibili sul sito ist
     MsgBox('''
 Importazione eseguita con successo!
 
+ATTENZIONE:
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 
-Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
+N.B.: Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
 
     ''','ATTENZIONE!')
     autoexec()    

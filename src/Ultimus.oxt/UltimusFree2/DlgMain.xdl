@@ -5,7 +5,7 @@
   <dlg:style dlg:style-id="0" dlg:border="simple" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="2" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="3" dlg:text-color="0x80" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-relief="engraved"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="228" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;" dlg:button-type="ok">

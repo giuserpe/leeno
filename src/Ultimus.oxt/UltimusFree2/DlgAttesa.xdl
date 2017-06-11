@@ -10,6 +10,7 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="131" dlg:top="41" dlg:width="2" dlg:height="2" dlg:button-type="ok"/>
-  <dlg:text dlg:id="Label1" dlg:tab-index="3" dlg:left="12" dlg:top="53" dlg:width="150" dlg:height="33" dlg:value="Durante l’esecuzione di alcune operazioni, lo zoom&#x0a;potrebbe aumentare per poi tornare normale.&#x0a;Questo aiuta a velocizzare il programma." dlg:align="center"/>
+  <dlg:text dlg:id="Label1" dlg:tab-index="3" dlg:left="11" dlg:top="49" dlg:width="150" dlg:height="26" dlg:value="Durante l’esecuzione di alcune operazioni, lo zoom&#x0a;potrebbe aumentare per poi tornare normale.&#x0a;Questo aiuta a velocizzare il programma." dlg:align="center"/>
+  <dlg:text dlg:id="Label2" dlg:tab-index="4" dlg:left="11" dlg:top="79" dlg:width="150" dlg:height="14" dlg:align="center"/>
  </dlg:bulletinboard>
 </dlg:window>

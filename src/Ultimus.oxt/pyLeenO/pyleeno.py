@@ -2949,6 +2949,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
         return
     ins_voce_computo_grezza(lrow)
     numera_voci(0)
+    pesca_cod()
 ########################################################################
 # inizializza_analisi ##################################################
 def inizializza_analisi(arg=None):
@@ -3070,6 +3071,126 @@ def struttura_Elenco (arg=None):
             oSheet.group(oCellRangeAddr,1)
     oDoc.CurrentController.ZoomValue = 100
 ########################################################################
+# XML_toscana_import ###################################################
+def XML_toscana_import (arg=None):
+#~ def debug (arg=None):
+    '''
+    Importazione di un prezzario XML della regione Toscana 
+    in tabella Elenco Prezzi del template COMPUTO.
+    '''
+    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
+
+    try:
+        filename = filedia('Scegli il file XML Toscana da importare', '*.xml')
+        if filename == None: return
+    except:
+        return
+    New_file.computo(0)
+    # effettua il parsing del file XML
+    tree = ElementTree()
+    tree.parse(filename)
+    
+    # ottieni l'item root
+    root = tree.getroot()
+    iter = tree.getiterator()
+
+    PRT = '{' + str(iter[0].getchildren()[0]).split('}')[0].split('{')[-1] + '}' # xmlns
+    # nome del prezzario
+    intestazione = root.find(PRT+'intestazione')
+    titolo = 'Prezzario '+ intestazione.get('autore') + ' - ' + intestazione[0].get('area') +' '+ intestazione[0].get('anno')
+    licenza = intestazione[1].get('descrizione').split(':')[0] +' '+ intestazione[1].get('tipo')
+    titolo = titolo + '\nCopyright: ' + licenza  + '\nhttp://prezzariollpp.regione.toscana.it'
+
+    Contenuto = root.find(PRT+'Contenuto')
+
+    voci = root.getchildren()[1]
+
+    tipo_lista = list()
+    cap_lista = list ()
+    lista_articoli = list()
+    for el in voci:
+        if el.tag == PRT+'Articolo':
+            codice = el.get('codice')
+            codicesp = codice.split('.')
+        
+        voce = el.getchildren()[2].text
+        articolo = el.getchildren()[3].text
+        if articolo == None:
+            desc_voce = voce
+        else:
+            desc_voce = voce + ' ' + articolo
+        udm = el.getchildren()[4].text
+
+        try:
+            sic = el.getchildren()[-1][-4].get('valore')
+        except IndexError:
+            sic ='0'
+        prezzo = el.getchildren()[5].text
+        try:
+            mdo = el.getchildren()[-1][-1].get('percentuale')
+        except IndexError:
+            mdo ='0'
+
+        if codicesp[0] not in tipo_lista:
+            tipo_lista.append(codicesp[0])
+            cap = (codicesp[0], el.getchildren()[0].text, '', '', '', '')
+            lista_articoli.append(cap)
+        if codicesp[1] not in cap_lista:
+            cap_lista.append(codicesp[1])
+            cap = (codicesp[0]+'.'+codicesp[1], el.getchildren()[0].text+'\n'+el.getchildren()[1].text, '', '', '', '')
+            lista_articoli.append(cap)
+        voceel = (codice, desc_voce, udm, float(sic), float(prezzo), float(mdo)/100)
+        lista_articoli.append(voceel)
+
+# compilo ##############################################################
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellByPosition(2, 2).String = titolo
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getCellByPosition(1, 0).String = titolo
+    oSheet.getCellByPosition(2, 0).String = '''ATTENZIONE!
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al prezzario.'''
+    oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
+    oSheet.getRows().insertByIndex(4, len(lista_articoli))
+
+    lista_come_array = tuple(lista_articoli)
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
+    scarto_righe = 4 # numero righe da saltare a partire dall'alto
+    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+    oRange = oSheet.getCellRangeByPosition( 0, 4, colonne_lista + 0 - 1, righe_lista + 4 - 1)
+    oRange.setDataArray(lista_come_array)
+    oSheet.getRows().removeByIndex(3, 1)
+    oDoc.CurrentController.setActiveSheet(oSheet)
+
+    oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
+    oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
+    oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
+    oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
+    oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
+    oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
+    
+    #~ set_larghezza_colonne()
+    struttura_Elenco()
+    MsgBox('''
+Importazione eseguita con successo!
+
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
+
+    ''','ATTENZIONE!')
+    autoexec()    
+#~ ########################################################################
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):
     MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
@@ -3102,7 +3223,7 @@ def XML_import_ep (arg=None):
     # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))
-    # effettua il parsing di tutti gli elemnti dell'albero XMLsub nuova_voce_computo_at
+    # effettua il parsing di tutti gli elemnti dell'albero
     iter = tree.getiterator()
     listaSOA = []
     articolo = []
@@ -3608,7 +3729,7 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
 Le righe senza prezzo avranno una tonalità di sfondo
 diversa dalle altre e potranno essere facilmente nascoste.
 
-Questa operazione potrebbe richiedere diversi minuti.''', 'Richiesta...')
+Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
     if procedo ==2:
         attesa().start() #mostra il dialogo
         struttura_Elenco()
@@ -3735,7 +3856,7 @@ def XPWE_in (arg=None):
     #~ oDoc.addActionLock
     #~ oDoc.lockControllers #disattiva l'eco a schermo
     ###
-    oDialogo_attesa = dlg_attesa()
+    oDialogo_attesa = dlg_attesa('Caricamento dei dati...')
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo nuovo o già esistente.','ATTENZIONE!')
         return
@@ -5035,10 +5156,10 @@ def set_larghezza_colonne (arg=None):
         oSheet.getColumns().getByName('A').Columns.Width = 1600
         oSheet.getColumns().getByName('B').Columns.Width = 10000
         oSheet.getColumns().getByName('C').Columns.Width = 1500
-        oSheet.getColumns().getByName('D').Columns.Width = 2300
+        oSheet.getColumns().getByName('D').Columns.Width = 1500
         oSheet.getColumns().getByName('E').Columns.Width = 1600
-        oSheet.getColumns().getByName('F').Columns.Width = 2300
-        oSheet.getColumns().getByName('G').Columns.Width = 2300
+        oSheet.getColumns().getByName('F').Columns.Width = 1500
+        oSheet.getColumns().getByName('G').Columns.Width = 1500
         oSheet.getColumns().getByName('H').Columns.Width = 1600
         oSheet.getColumns().getByName('I').Columns.Width = 1200
         oSheet.getColumns().getByName('J').Columns.Width = 1200

@@ -133,7 +133,9 @@ def invia_voce_ep(arg=None):
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
     dccSheet.IsVisible = True
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
+
     dccSheet.getRows().insertByIndex(3, ER-SR+1)
+    
     ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, 3))
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
@@ -193,7 +195,19 @@ def invia_voce_ep(arg=None):
 
         _gotoDoc(partenza)
         oDoc.Sheets.removeByName('tmp_DCC')
+    _gotoDoc(sUltimus)
     oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('Elenco Prezzi'))
+    dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
+    dccSheet.IsVisible = True
+    ddcDoc.CurrentController.setActiveSheet(dccSheet)
+    formule = list()
+    for n in range (3, ER-SR+1+3):
+        formule.append(['=IF(ISERROR(N'+str(n+1)+'/$N$2);"--";N'+str(n+1)+'/$N$2)',
+                        '=SUMIF(AA;A'+str(n+1)+';BB)',
+                        '=SUMIF(AA;A'+str(n+1)+';cEuro)'])
+    oRange = dccSheet.getCellRangeByPosition(11, 3, 13, ER-SR+3)
+    formule = tuple (formule)
+    oRange.setFormulaArray(formule)
 ########################################################################
 def _gotoDoc(sUrl):
     '''
@@ -3177,7 +3191,7 @@ Si consiglia una attenta lettura delle note informative disponibili sul sito ist
     oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
     oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
     oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
-    oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
+    oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche'
     
     #~ set_larghezza_colonne()
     struttura_Elenco()

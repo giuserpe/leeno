@@ -5603,29 +5603,6 @@ class XPWE_export_th (threading.Thread):
 def XPWE_export (arg=None):
     XPWE_export_th().start()
 ########################################################################
-class cancella_righe_th (threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-
-        oDoc = XSCRIPTCONTEXT.getDocument()
-        oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
-
-        oSheet = oDoc.CurrentController.ActiveSheet
-        for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-            if oSheet.getCellByPosition(13, i).Value  == 0:
-                oSheet.getRows().removeByIndex(i, 1)
-        oDoc.enableAutomaticCalculation(True) # riavvio il calcolo automatico
-        #~ oDialogo_attesa.endExecute()
-def cancella_righe (arg=None):
-    '''
-    Questa serve a cancellare righe con valori particolari;
-    è molto lenta perché Calc ricalcola i valori ad ogni cancellazione.
-    Conviene inibire il ricalcolo
-    '''
-    chi("ljlkjlkj")
-    cancella_righe_th().start()
-########################################################################
 class inserisci_nuova_riga_con_descrizione_th (threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)

@@ -1003,7 +1003,7 @@
                   <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inserisci_nuova_riga_con_descrizione?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Titolo all'inizio delle misure</value>
+                  <value>Inserisci titolo all'inizio delle misure</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

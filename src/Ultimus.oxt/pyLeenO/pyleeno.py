@@ -2101,7 +2101,7 @@ def next_voice (lrow, n=1):
     lrow { double }   : riga di riferimento
     n    { integer }  : se 0 sposta prima della voce corrente
                         se 1 sposta dopo della voce corrente
-    sposta il cursore prima o dopola voce corrente restituento un idrow
+    sposta il cursore prima o dopo la voce corrente restituento un idrow
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -2111,7 +2111,7 @@ def next_voice (lrow, n=1):
     if lrow >= fine:
         return lrow
 
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_computo_R:
         if n==0:
             sopra = Circoscrive_Voce_Computo_Att (lrow).RangeAddress.StartRow
             lrow = sopra
@@ -2264,17 +2264,12 @@ def Circoscrive_Voce_Computo_Att (lrow):
     #~ lrow = Range2Cell()[1]
     #~ if oSheet.Name in ('VARIANTE', 'COMPUTO','CONTABILITA'):
     if oSheet.getCellByPosition(0, lrow).CellStyle in ('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-1-scritta', 'livello2 valuta'):
-        if oSheet.getCellByPosition (0, lrow).CellStyle in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-            lrowS=lrow
-        else:
-            while oSheet.getCellByPosition(0, lrow).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-                lrow = lrow-1
-            lrowS=lrow
-        lrow = lrowS
-        ### cerco l'ultima riga
         while oSheet.getCellByPosition (0, lrow).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
-            lrow=lrow+1
+            lrow +=1
         lrowE=lrow
+        while oSheet.getCellByPosition(0, lrow).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+            lrow -=1
+        lrowS=lrow
     celle=oSheet.getCellRangeByPosition(0,lrowS,250,lrowE)
     return celle
 ########################################################################
@@ -5205,49 +5200,80 @@ def set_larghezza_colonne (arg=None):
         #~ threading.Thread.__init__(self)
     #~ def run(self):
         #~ adegua_tmpl_run()
-#~ def adegua_tmpl (arg=None):
-    #~ adegua_tmpl_th().start()
-##########
-#~ def adegua_tmpl_run (arg=None):
 def adegua_tmpl (arg=None):
+    #~ adegua_tmpl_th().start()
+#~ def debug (arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
     - dal 203 (LeenO 3.14.0 ha templ 202) introdotta la Super Categoria con nuovi stili di cella;
         sostituita la colonna "Tag A" con "Tag Super Cat"
+    - dal 207 introdotta la colonna dei materiali in computo e contabilità
     '''
     # cambiare stile http://bit.ly/2cDcCJI
     oDoc = XSCRIPTCONTEXT.getDocument()
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    if ver_tmpl < 203:
-        if DlgSiNo("Vuoi procedere con l'adeguamento di questo file alla versione corrente di LeenO?", "Richiesta") ==2:
-            #~ oDialogo_attesa = dlg_attesa()
-            #~ attesa().start() #mostra il dialogo
-#~ adeguo gli stili secondo il template corrente
-            sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
-            styles = oDoc.getStyleFamilies()
-            styles.loadStylesFromURL(sUrl, list())
-            basic_LeenO('computo.inizializza_computo') #sovrascrive le intestazioni di tabella del computo 
-            oSheet = oDoc.getSheets().getByName('S1')
-            oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 205
-            for el in oDoc.Sheets.ElementNames:
-                oDoc.getSheets().getByName(el).IsVisible = True
-                oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
-                adatta_altezza_riga(el)
-                oDoc.getSheets().getByName(el).IsVisible = False
-            _gotoSheet ('COMPUTO')
+    if ver_tmpl < 207:
+        if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
+alla versione corrente di LeenO?
 
-            oDoc.getSheets().getByName('S1').IsVisible = False
-            #~ oDialogo_attesa.endExecute() #chiude il dialogo
-            #~ oDlgMain.endExecute()
-            MsgBox("Adeguamento del file completato con successo.", "Avviso")
-        else:
+In caso affermativo dovrai attendere il completamento
+dell'operazione che terminerà con un messaggio di avviso.
+''', "Richiesta") !=2:
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
-    if ver_tmpl == 203:
+            return
+        oDialogo_attesa = dlg_attesa("Adeguamento alla versione corrente di LeenO...")
+        oDoc.CurrentController.ZoomValue = 400
+        attesa().start() #mostra il dialogo
+
+#~ adeguo gli stili secondo il template corrente
+        sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
+        styles = oDoc.getStyleFamilies()
+        styles.loadStylesFromURL(sUrl, list())
         oSheet = oDoc.getSheets().getByName('S1')
-        oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 205
+        oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 207
+        for el in oDoc.Sheets.ElementNames:
+            oDoc.getSheets().getByName(el).IsVisible = True
+            oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
+            adatta_altezza_riga(el)
+            oDoc.getSheets().getByName(el).IsVisible = False
+        _gotoSheet ('S5')
+        oSheet = oDoc.getSheets().getByName('S5')
+        oSheet.getCellByPosition(28,11).Formula = '=S12-AE12'
+        oSheet.getCellByPosition(28,11).CellStyle = 'Comp-sotto euri'
+        oSheet.getCellByPosition(28,26).Formula = '=P27-AE27'
+        oSheet.getCellByPosition(28,26).CellStyle = 'Comp-sotto euri'
+        for el in ('CONTABILITA', 'VARIANTE', 'COMPUTO'):
+            if oDoc.getSheets().hasByName(el) == True:
+                _gotoSheet (el)
+                oSheet = oDoc.getSheets().getByName(el)
+                if oSheet.Name != 'CONTABILITA': Rinumera_TUTTI_Capitoli2()
+                oSheet.getCellByPosition(31,2).String = 'Super Cat'
+                oSheet.getCellByPosition(32,2).String = 'Cat'
+                oSheet.getCellByPosition(33,2).String = 'Sub Cat'
+                oSheet.getCellByPosition(28,2).String = 'Materiali\ne Noli €'
+                n = ultima_voce (oSheet)
+                oSheet.getCellByPosition(28,n+1).Formula = '=SUBTOTAL(9;AC3:AC'+ str(n+2)
+                lrow = 0
+                while lrow < n:
+                    try:
+                        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+                        sotto = sStRange.RangeAddress.EndRow
+                        if oSheet.Name == 'CONTABILITA':
+                            oSheet.getCellByPosition(28,sotto).Formula = '=P' + str(sotto+1) + '-AE' + str(sotto+1)
+                        else:
+                            oSheet.getCellByPosition(28,sotto).Formula = '=S' + str(sotto+1) + '-AE' + str(sotto+1)
+                        oSheet.getCellByPosition(28,sotto).CellStyle = 'Comp-sotto euri'
+                        lrow =next_voice(lrow,1)
+                    except:
+                        lrow += 1
+        oDoc.getSheets().getByName('S1').IsVisible = False
+        oDialogo_attesa.endExecute() #chiude il dialogo
+        
+        oDoc.CurrentController.ZoomValue = 80
+        MsgBox("Adeguamento del file completato con successo.", "Avviso")
 #~ ########################################################################
 def r_version_code(arg=None):
     if os.altsep:

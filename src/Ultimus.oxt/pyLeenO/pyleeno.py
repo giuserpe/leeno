@@ -4602,8 +4602,8 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 ########################################################################
 #VARIABILI GLOBALI:
 Lmajor= 3 #'INCOMPATIBILITA'
-Lminor= 16 #'NUOVE FUNZIONALITA'
-Lsubv= "2.dev" #'CORREZIONE BUGS
+Lminor= 17 #'NUOVE FUNZIONALITA'
+Lsubv= "0" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 stili_computo = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_computo_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')

@@ -1039,17 +1039,33 @@ def show_sheets (x=True):
 def nascondi_sheets (arg=None):
     show_sheets (False)
 ########################################################################
-def salva_come (arg=None):
+def salva_come (nomefile=None):
+    '''
+    nomefile   { string } : nome del file di destinazione
+    
+    Se presente l'argomento nomefile, salva il file corrente in nomefile.
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    oProp = PropertyValue()
-    oProp.Name = "FilterName"
-    oProp.Value = "calc8"
-    properties = (oProp,)
+    
+    oProp = []
+    if nomefile != None:
+        oProp0 = PropertyValue()
+        oProp0.Name = "URL"
+        oProp0.Value = nomefile
+        oProp.append(oProp0)
+
+    oProp1 = PropertyValue()
+    oProp1.Name = "FilterName"
+    oProp1.Value = "calc8"
+    oProp.append(oProp1)
+    
+    properties = tuple(oProp)
+
     dispatchHelper.executeDispatch(oFrame, ".uno:SaveAs", "", 0, properties)
 ########################################################################
 def _gotoCella (IDcol=0, IDrow=0):

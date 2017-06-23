@@ -1042,7 +1042,6 @@ def nascondi_sheets (arg=None):
 def salva_come (nomefile=None):
     '''
     nomefile   { string } : nome del file di destinazione
-    
     Se presente l'argomento nomefile, salva il file corrente in nomefile.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -1054,6 +1053,7 @@ def salva_come (nomefile=None):
     
     oProp = []
     if nomefile != None:
+        nomefile = uno.systemPathToFileUrl(nomefile)
         oProp0 = PropertyValue()
         oProp0.Name = "URL"
         oProp0.Value = nomefile
@@ -3206,6 +3206,10 @@ Si consiglia una attenta lettura delle note informative disponibili sul sito ist
     
     #~ set_larghezza_colonne()
     struttura_Elenco()
+    
+    dest = filename[0:-4]+ '.ods'
+    salva_come(dest)
+    
     MsgBox('''
 Importazione eseguita con successo!
 
@@ -3217,7 +3221,6 @@ ATTENZIONE:
 N.B.: Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
 
     ''','ATTENZIONE!')
-    autoexec()    
 #~ ########################################################################
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):

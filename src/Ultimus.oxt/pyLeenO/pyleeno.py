@@ -12,6 +12,7 @@
 ########################################################################
 import locale
 import codecs
+import configparser
 #~ import subprocess
 #~ import psutil
 import os, sys, uno, unohelper, pyuno, logging, shutil, base64
@@ -2567,7 +2568,7 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
         except TypeError:
             return
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        if oDoc.NamedRanges.hasByName("#LIB#1") == True:
+        if oDoc.NamedRanges.hasByName("#Lib#1") == True:
             if sblocca_computo == 0:
                 if DlgSiNo("Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",'ATTENZIONE!') ==3:
                     return
@@ -2976,6 +2977,79 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     numera_voci(0)
     pesca_cod()
 ########################################################################
+# svuota contabilità  ##################################################
+def svuota_contabilita(arg=None):
+#~ def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+    for n in range(1 ,20):
+        if oDoc.NamedRanges.hasByName('#Lib#'+str(n)) == True:
+            oDoc.NamedRanges.removeByName('#Lib#'+str(n))
+            oDoc.NamedRanges.removeByName('#SAL#'+str(n))
+            oDoc.NamedRanges.removeByName('#Reg#'+str(n))
+    for el in ('Registro', 'SAL'):
+        if oDoc.Sheets.hasByName(el):
+            oDoc.Sheets.removeByName(el)
+
+########################################################################
+# leeno.conf  ###############################################
+#~ def configura(arg=None):
+def debug(arg=None):
+    if sys.platform == 'win32':
+        path = os.getenv("HOMEPATH")
+    else:
+        path = os.getenv("HOME")
+    
+    if not os.path.exists(path + '/.config/leeno/'):
+        os.makedirs(path + '/.config/leeno/')
+    #~ shutil.copyfile(orig, dir_bak + dest)
+    path = path + '/.config/leeno/leeno.conf'
+    conf.write (path, 'scuola', 'classeaaa', 'cioll')
+    chi(conf.read(path, 'scuola', 'classeaaa'))
+    
+class conf:
+    def __init__(self, path):
+        #~ config = configparser.SafeConfigParser()
+        #~ config.read(path) 
+        #~ self.path = path
+        pass
+    def write(path, section, option, value):
+        """
+        http://www.programcreek.com/python/example/1033/ConfigParser.SafeConfigParser
+        Write the specified Section.Option to the config file specified by path.
+        Replace any previous value.  If the path doesn't exist, create it.
+        Also add the option the the in-memory config.
+        """
+        config = configparser.SafeConfigParser()
+        config.read(path)
+
+        if not config.has_section(section):
+            config.add_section(section)
+        config.set(section, option, value)
+        fp = open(path, 'w')
+        config.write(fp)
+        fp.close()
+        
+    def read(path, section, option):
+        '''https://pymotw.com/2/ConfigParser/'''
+        config = configparser.SafeConfigParser()
+        config.read(path)
+        return config.get(section, option)
+
+########################################################################
+# attiva contabilità  ##################################################
+def attiva_contabilita(arg=None):
+#~ def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oDoc.Sheets.getByName('S1').getCellByPosition(7,327).Value = 1
+    if oDoc.Sheets.hasByName ('CONTABILITA'):
+        for el in ('Registro', 'SAL','CONTABILITA'):
+            if oDoc.Sheets.hasByName(el):_gotoSheet (el)
+        return
+    else:
+        oDoc.Sheets.insertNewByName('CONTABILITA',3)
+    _gotoSheet ('CONTABILITA')
+########################################################################
 # inizializza_analisi ##################################################
 def inizializza_analisi(arg=None):
     '''
@@ -3063,7 +3137,6 @@ def rifa_nomearea(sSheet, sRange, sName):
     oRanges.addNewByName(sName,sPath,oCellAddress,0)
 ########################################################################
 def struttura_Elenco (arg=None):
-#~ def debug (arg=None):
     '''
     Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
@@ -3098,7 +3171,6 @@ def struttura_Elenco (arg=None):
 ########################################################################
 # XML_toscana_import ###################################################
 def XML_toscana_import (arg=None):
-#~ def debug (arg=None):
     '''
     Importazione di un prezzario XML della regione Toscana 
     in tabella Elenco Prezzi del template COMPUTO.
@@ -5090,7 +5162,7 @@ def autoexec (arg=None):
         oSheet.getCellByPosition(9,295).String = Lsubv
         adegua_tmpl() #esegue degli aggiustamenti del template
         toolbar_vedi()
-        DlgMain()
+        #~ DlgMain()
     except:
         #~ chi("autoexec py")
         return

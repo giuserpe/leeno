@@ -471,8 +471,7 @@ Function Salva_copia_aPerdere &apos; salva il doc corrente come temporaneo (con 
 	sSuffX = &quot;100000&quot;	
 	sName = &quot;cancellami&quot; &amp; &quot;_temp_&quot; &amp; sSuffX &amp; &quot;.ods&quot;
 	sNewURL = sPath &amp; sName 
-
-
+	
 	&apos; get access to the document
 	oDocumentModel = ThisComponent
 	oDocumentView = oDocumentModel.getCurrentController()

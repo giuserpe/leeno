@@ -392,15 +392,7 @@ Sub vedi_voce rem &apos;(C) Giuseppe Vizziello 2013
 	End Select
 
 	goto fine:
-	
-&apos;	if oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;CONTABILITA&quot; then
-&apos;		goto procedi
-&apos;	Else
-&apos;		goto fine
-&apos;		msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
-&apos;		&amp; &quot;Devi trovarti in COMPUTO o CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
-&apos;		
-&apos;	End If 
+
 procedi:
 	oContr = ThisComponent.CurrentController
 	focus = oContr.getFirstVisibleRow

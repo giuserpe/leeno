@@ -53,40 +53,6 @@ ErrH:
  IsDocumentDiUnCertoTipo = bresult
 End Function
 
-Sub Su_nuovo_doc &apos;da template
-
-dim sVer1doc as string
-dim sLib as string
-
-&apos; tenerlo per le palle? proviamo...
- sURL = ConvertToUrl(ThisComponent.getURL()) 
- StarDesktop.loadComponentFromURL(sURL, &quot;_default&quot;,0 , Array())
-&apos;		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-&apos;	If ThisComponent.Sheets.getByName(&quot;S1&quot;)(getCellByPosition (3,15).string)
-	osheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
-&apos;	oSheet.isVisible = TRUE
-&apos;	print
-&apos;	sVer1doc = oSheet.getCellByPosition (1,29).string
-&apos;	print &quot;oooooo &quot; &amp; sVer1doc &amp; &quot;=&quot; &amp; &quot;UF2&quot; 
-&apos;	If sVer1doc = &quot;UF2&quot; then
-&apos;		print &quot;risultano uguali&quot;
-&apos;	 sLib = &quot;UltimusFree2&quot;
-&apos;	 print sLib
-&apos;	 else
-	 &apos; 	print &quot;NON risultano uguali -&quot; &amp; sVer1doc &amp; &quot; = &quot; &amp; &quot;UF2&quot; &apos;&amp; &quot;-&quot;
-&apos;	end if
-	&apos;	sLib=&quot;UltimusFree2&quot; &apos; la libreria di ultimus da usare con questo Template
-		oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
-&apos;xray 	oLibCont	
-&apos;exit sub
- If oLibCont.hasByName(sLib) Then
- &apos; print &quot;ok&quot;
- 	GlobalScope.Basiclibraries.LoadLibrary(sLib)
- 	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-		UltimusFree2.Lupo_0.Su_Apertura_Doc 
-	end If
-End Sub
-
 sub Procedura_di_Controllo &apos; eseguita da menu con il doc già aperto
 	If not thisComponent.Sheets.hasByName(&quot;S1&quot;) and _
 		not thisComponent.Sheets.hasByName(&quot;S2&quot;)and _

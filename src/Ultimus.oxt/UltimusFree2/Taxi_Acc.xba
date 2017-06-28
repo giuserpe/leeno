@@ -15,23 +15,6 @@
 &apos;_______________________________________________________________________________________
 
 
-Sub Sposta_foglio_sincronizza &apos;(sSheetSRC as string, sSheetTarget as string)&apos; il dispacht sballa il riferimento ad S1
-&apos; quindi sposto il foglio allo stesso numero 
- print ThisComponent.CurrentController.Frame.Name
-&apos;	iSheetnumSRC = SheetNameToNumber (sSheetSRC)
-&apos;	iSheetnumT = SheetNameToNumber (sSheetTarget)
-&apos;&apos;print iSheetnumSRC &amp; &quot; - &quot; &amp; iSheetnumT
-&apos;	if iSheetnumSRC &lt;&gt; iSheetnumT then
-&apos;		moveByName(sSheetSRC ,iSheetnumT)
-&apos;	end if
-
-&apos;	iSheetnumSRC = SheetNameToNumber (sSheetSRC)
-&apos;	iSheetnumT = SheetNameToNumber (sSheetTarget)
-&apos;print iSheetnumSRC &apos;&amp; &quot; - &quot; &amp; iSheetnumT
-
-
-end sub
-
 Function Cerca_riferimenti (osheet as object)
 
 dim sLinked_0 as string
@@ -114,19 +97,4 @@ dim ilastUrow as long
 	Cerca_riferimenti = tabLinked
 
 end function
-
-
-
-
-
-
-Function trova_file &apos; file picker (generico) non usato
-	sFileURL = GetFileURL( _
- &quot;Cerca il file .&quot;)
-	If sFileURL = &quot;&quot; Then Exit function
- 			&apos; oSFAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
-	trova_file = sFileURL	
-END FUNCTION
-
-
 </script:module>

@@ -338,21 +338,20 @@ def Inser_SottoCapitolo_arg (lrow, sTesto): #
     ocellBaseA = oSheet.getCellByPosition(1, lrow)
     ocellBaseR = oSheet.getCellByPosition(31, lrow)
 
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,305).Value == 1:
-        lrowProvv = lrow-1
-        while oSheet.getCellByPosition(32, lrowProvv).CellStyle != 'livello2 valuta':
-            if lrowProvv > 4:
-                lrowProvv -=1
-            else:
-                break
-        oSheet.getCellByPosition(32, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
-        lrowProvv = lrow-1
-        while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
-            if lrowProvv > 4:
-                lrowProvv -=1
-            else:
-                break
-        oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value
+    lrowProvv = lrow-1
+    while oSheet.getCellByPosition(32, lrowProvv).CellStyle != 'livello2 valuta':
+        if lrowProvv > 4:
+            lrowProvv -=1
+        else:
+            break
+    oSheet.getCellByPosition(32, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
+    lrowProvv = lrow-1
+    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
+        if lrowProvv > 4:
+            lrowProvv -=1
+        else:
+            break
+    oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value
     #~ SubSum_Cap (lrow)
 
 ########################################################################
@@ -437,14 +436,13 @@ def Inser_SuperCapitolo_arg (lrow, sTesto='Super Categoria'): #
     # rinumero e ricalcolo
     ocellBaseA = oSheet.getCellByPosition(1, lrow)
     ocellBaseR = oSheet.getCellByPosition(31, lrow)
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,305).Value == 1:
-        lrowProvv = lrow-1
-        while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-0-scritta':
-            if lrowProvv > 4:
-                lrowProvv -=1
-            else:
-                break
-        oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
+    lrowProvv = lrow-1
+    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-0-scritta':
+        if lrowProvv > 4:
+            lrowProvv -=1
+        else:
+            break
+    oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
 ########################################################################
 def Inser_Capitolo(arg=None):
     Ins_Categorie(1)
@@ -479,14 +477,13 @@ def Inser_Capitolo_arg (lrow, sTesto='Categoria'): #
     # rinumero e ricalcolo
     ocellBaseA = oSheet.getCellByPosition(1, lrow)
     ocellBaseR = oSheet.getCellByPosition(31, lrow)
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,305).Value == 1:
-        lrowProvv = lrow-1
-        while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
-            if lrowProvv > 4:
-                lrowProvv -=1
-            else:
-                break
-        oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
+    lrowProvv = lrow-1
+    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
+        if lrowProvv > 4:
+            lrowProvv -=1
+        else:
+            break
+    oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
 ########################################################################
 def Rinumera_TUTTI_Capitoli2(arg=None):
     Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
@@ -622,8 +619,6 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor (arg=None):
     datarif = datetime.now()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,304).Value == 0: #se 1 aggiorna gli indici
-        return
     if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
         return
 #    lrow = Range2Cell()[1]
@@ -2977,24 +2972,14 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     numera_voci(0)
     pesca_cod()
 ########################################################################
-# svuota contabilità  ##################################################
-def svuota_contabilita(arg=None):
-#~ def debug(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.Sheets.getByName('CONTABILITA')
-    for n in range(1 ,20):
-        if oDoc.NamedRanges.hasByName('#Lib#'+str(n)) == True:
-            oDoc.NamedRanges.removeByName('#Lib#'+str(n))
-            oDoc.NamedRanges.removeByName('#SAL#'+str(n))
-            oDoc.NamedRanges.removeByName('#Reg#'+str(n))
-    for el in ('Registro', 'SAL'):
-        if oDoc.Sheets.hasByName(el):
-            oDoc.Sheets.removeByName(el)
-
-########################################################################
 # leeno.conf  ###############################################
-#~ def configura(arg=None):
-def debug(arg=None):
+#~ def debug(arg=None):
+def configura(arg=None):
+    pass
+
+def leeno_conf(arg=None):
+#~ def debug(arg=None):
+    '''Imposta i valori di default in configurazione.'''
     if sys.platform == 'win32':
         path = os.getenv("HOMEPATH")
     else:
@@ -3002,11 +2987,44 @@ def debug(arg=None):
     
     if not os.path.exists(path + '/.config/leeno/'):
         os.makedirs(path + '/.config/leeno/')
-    #~ shutil.copyfile(orig, dir_bak + dest)
+        ###
     path = path + '/.config/leeno/leeno.conf'
-    conf.write (path, 'scuola', 'classeaaa', 'cioll')
-    chi(conf.read(path, 'scuola', 'classeaaa'))
+
+    zoom_defaults = {'aggiustamento': '2',
+                    'fattore': '100',
+                    'fattore_ottimale': '81',
+                    'fullscreen': '0',}
+    gen_defaults = {'visualizza': 'dlgmain',
+                    'altezza_celle': '1.25',
+                    'visualizza_tabelle_extra': '1',}
+    an_defaults = {'sicurezza': '0.37',
+                    'spese_generali': '0.15',
+                    'utile_impresa': '10.0',
+                    'accorspa_spese_utili': '1',
+                    'sconto': '-0.11',
+                    'maggiorazione': '0.10',}
+    comp_default = {'riga_bianca_categorie': '1',
+                    'voci_senza_numerazione':  '0',
+                    'inizio_voci_abbreviate' : '160',
+                    'fine_voci_abbreviate' : '100',}
+    cont_default = {'abilita': '0',}
+    default = {'Zoom': zoom_defaults,
+                'Generale': gen_defaults,
+                'Analisi': an_defaults,
+                'Contabilità': cont_default,
+                'Computo' : comp_default,}
+
+    parser = configparser.SafeConfigParser()
     
+    for k in default.keys():
+        if not parser.has_section(k):
+            parser.add_section(k)
+
+        for key in default[k].keys():
+            parser.set(k, key, default[k][key])
+    with open(path, 'w') as f:
+        parser.write(f)
+########################################################################
 class conf:
     def __init__(self, path):
         #~ config = configparser.SafeConfigParser()
@@ -3030,11 +3048,16 @@ class conf:
         config.write(fp)
         fp.close()
         
-    def read(path, section, option):
+    def read(path):#, section, option):
         '''https://pymotw.com/2/ConfigParser/'''
         config = configparser.SafeConfigParser()
         config.read(path)
-        return config.get(section, option)
+        #~ chi(config._sections)
+        my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
+        #~ chi(my_config_parser_dict)
+        #~ chi(dict(config['scuola']))
+        
+        return my_config_parser_dict#, config.get(section, option))
 
 ########################################################################
 # attiva contabilità  ##################################################
@@ -3049,6 +3072,20 @@ def attiva_contabilita(arg=None):
     else:
         oDoc.Sheets.insertNewByName('CONTABILITA',3)
     _gotoSheet ('CONTABILITA')
+########################################################################
+# svuota contabilità  ##################################################
+def svuota_contabilita(arg=None):
+#~ def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+    for n in range(1 ,20):
+        if oDoc.NamedRanges.hasByName('#Lib#'+str(n)) == True:
+            oDoc.NamedRanges.removeByName('#Lib#'+str(n))
+            oDoc.NamedRanges.removeByName('#SAL#'+str(n))
+            oDoc.NamedRanges.removeByName('#Reg#'+str(n))
+    for el in ('Registro', 'SAL'):
+        if oDoc.Sheets.hasByName(el):
+            oDoc.Sheets.removeByName(el)
 ########################################################################
 # inizializza_analisi ##################################################
 def inizializza_analisi(arg=None):

@@ -900,6 +900,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
+<!--
               <node oor:name="m2U05" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -917,6 +918,7 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
               <node oor:name="m2U06" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -961,7 +963,7 @@
                   <value>%origin%/icons/sfera_gialla</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa Stili da altro Doc</value>
+                  <value>Importa Stili da altro File</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1037,7 +1039,7 @@
                   <value>%origin%/icons/image17</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Sproteggi Tutto il Doc     Ctl Shift K</value>
+                  <value>Sproteggi Tutto il file     Ctl Shift K</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1226,7 +1228,7 @@
                   <value>%origin%/icons/sf_blu</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Duplica il foglio attivo in questo Doc</value>
+                  <value>Duplica il foglio attivo in questo file</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1243,7 +1245,7 @@
                   <value>%origin%/icons/sf_bluF</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Duplica il foglio attivo FUORI da questo Doc Calc</value>
+                  <value>Duplica il foglio attivo FUORI da questo file Calc</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1260,7 +1262,7 @@
                   <value>%origin%/icons/sf_bluF</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Duplica e CONSOLIDA il foglio attivo FUORI da questo Documento</value>
+                  <value>Duplica e CONSOLIDA il foglio attivo FUORI da questo file</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1298,7 +1300,7 @@
                   <value>%origin%/icons/vintage</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Mostra le Copertine e i Docs del COMPUTO</value>
+                  <value>Mostra le Copertine e i documenti del COMPUTO</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1315,7 +1317,7 @@
                   <value>%origin%/icons/vintage</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Mostra le Copertine e i Docs di Contabilita'</value>
+                  <value>Mostra le Copertine e i documenti di Contabilita'</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1332,7 +1334,7 @@
                   <value>%origin%/icons/vintage</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Nascondi TUTTE le Copertine e i Docs</value>
+                  <value>Nascondi TUTTE le Copertine e i documenti</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

@@ -3053,12 +3053,11 @@ class conf:
         '''https://pymotw.com/2/ConfigParser/'''
         config = configparser.SafeConfigParser()
         config.read(path)
-        #~ chi(config._sections)
-        my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
-        #~ chi(my_config_parser_dict)
-        #~ chi(dict(config['scuola']))
+        return config.get(section, option)
         
-        return (my_config_parser_dict, config.get(section, option))
+    def diz(path):
+        my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
+        return my_config_parser_dict
 
 ########################################################################
 # attiva contabilità  ##################################################
@@ -5210,7 +5209,7 @@ def autoexec (arg=None):
         #~ chi("autoexec py")
         return
 # scegli cosa visualizzare all'avvio:
-    vedi = conf.read(path_conf, 'Generale', 'visualizza')[1]
+    vedi = conf.read(path_conf, 'Generale', 'visualizza')
     if vedi == 'Menù Principale':
         DlgMain()
     elif vedi == 'Dati Generali':
@@ -5529,8 +5528,8 @@ def DlgMain(arg=None):
         pass
     sString = oDlgMain.getControl("ComboBox1")
     
-    sString.Text = conf.read(path_conf, 'Generale', 'visualizza')[1]
-
+    sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
+    
     oDlgMain.execute()
     sString = oDlgMain.getControl("ComboBox1")
     conf.write(path_conf, 'Generale', 'visualizza', sString.getText())

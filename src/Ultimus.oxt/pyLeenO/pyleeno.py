@@ -13,9 +13,10 @@
 import locale
 import codecs
 import configparser
+import collections
 #~ import subprocess
 #~ import psutil
-import os, sys, uno, unohelper, pyuno, logging, shutil, base64
+import os, unohelper, pyuno, logging, shutil, base64, sys, uno
 import time
 from multiprocessing import Process, freeze_support
 import threading
@@ -270,7 +271,7 @@ def copia_sorgente_per_git(arg=None):
                 os.makedirs(os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\')
             except FileExistsError:
                 pass
-            dest = os.getenv("HOMEDRIVE")  + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
+            dest = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         
@@ -2685,7 +2686,8 @@ def debug_tipo_di_valore(arg=None):
     #~ if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
         #~ MsgBox(oSheet.getCellByPosition(9, 5).Formula)
 ########################################################################
-def debug_clipboard(arg=None):
+def debugpyperclip(arg=None):
+
     #~ mri(XSCRIPTCONTEXT.getComponentContext())
     sText = 'sticazzi'
     #create SystemClipboard instance
@@ -2913,10 +2915,7 @@ def ins_voce_computo_grezza(lrow):
             #~ ultimi = oDoc.Sheets.getByName('S1').getCellByPosition(7,337).Value #S1.H338
             #~ sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<' + str(primi+ultimi) + ';VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());160);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());' + str(ultimi) + ')))'
             sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-            
-            
-            
-            
+
             oSheet.getCellByPosition(2, lrow+1).Formula = sformula
             break
 ########################################################################
@@ -2933,29 +2932,11 @@ def ins_voce_computo_grezza(lrow):
 # correggo alcune formule
     oSheet.getCellByPosition(13,lrow+3).Formula ='=J'+str(lrow+4)
     oSheet.getCellByPosition(35,lrow+3).Formula ='=B'+str(lrow+2)
-# sistemo i LINK dei tagG nelle righe sopra al tag vero e prorio...
-    #~ oSheet.getCellByPosition(31, lrow+2).Formula = '=AF$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(32, lrow+2).Formula = '=AG$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(33, lrow+2).Formula = '=AH$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(34, lrow+2).Formula = '=AI$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(35, lrow+2).Formula = '=AJ$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(31, lrow+1).Formula = '=AF$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(32, lrow+1).Formula = '=AG$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(33, lrow+1).Formula = '=AH$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(34, lrow+1).Formula = '=AI$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(35, lrow+1).Formula = '=AJ$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(31, lrow).Formula = '=AF$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(32, lrow).Formula = '=AG$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(33, lrow).Formula = '=AH$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(34, lrow).Formula = '=AI$'+str(lrow+4)
-    #~ oSheet.getCellByPosition(35, lrow).Formula = '=AJ$'+str(lrow+4)
+
     if oSheet.getCellByPosition(31, lrow-1).CellStyle in ('livello2 valuta', 'Livello-0-scritta', 'Livello-1-scritta', 'compTagRiservato'):
         oSheet.getCellByPosition(31, lrow+3).Value = oSheet.getCellByPosition(31, lrow-1).Value
         oSheet.getCellByPosition(32, lrow+3).Value = oSheet.getCellByPosition(32, lrow-1).Value
         oSheet.getCellByPosition(33, lrow+3).Value = oSheet.getCellByPosition(33, lrow-1).Value
-    #~ celle=oSheet.getCellRangeByPosition(0, lrow, 43,lrow+3)# 'seleziona la cella
-    #~ oDoc.CurrentController.select(celle)
-    #~ celle.Rows.OptimalHeight = True
 ########################################################################
     _gotoCella(1,lrow+1)
 ########################################################################
@@ -2977,56 +2958,76 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
 def configura(arg=None):
     pass
 
+########################################################################
+
+if sys.platform == 'win32':
+    path_conf = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") + '/.config/leeno/leeno.conf'
+else:
+    path_conf = os.getenv("HOME") + '/.config/leeno/leeno.conf'
+
+###
 def leeno_conf(arg=None):
 #~ def debug(arg=None):
-    '''Imposta i valori di default in configurazione.'''
+    '''Crea ed imposta leeno.conf con i valori di default se non presente.'''
     if sys.platform == 'win32':
-        path = os.getenv("HOMEPATH")
+        path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
     else:
         path = os.getenv("HOME")
-    
-    if not os.path.exists(path + '/.config/leeno/'):
-        os.makedirs(path + '/.config/leeno/')
+
+    if not os.path.exists(path_conf):
+        try:
+            os.makedirs(path + '/.config/leeno/')
+        except FileExistsError:
+            pass
         ###
-    path = path + '/.config/leeno/leeno.conf'
+        zoom = collections.OrderedDict()
+        generale = collections.OrderedDict()
+        analisi = collections.OrderedDict()
+        computo = collections.OrderedDict()
+        contab = collections.OrderedDict()
+        defaults = collections.OrderedDict()
 
-    zoom_defaults = {'aggiustamento': '2',
-                    'fattore': '100',
-                    'fattore_ottimale': '81',
-                    'fullscreen': '0',}
-    gen_defaults = {'visualizza': 'dlgmain',
-                    'altezza_celle': '1.25',
-                    'visualizza_tabelle_extra': '1',}
-    an_defaults = {'sicurezza': '0.37',
-                    'spese_generali': '0.15',
-                    'utile_impresa': '10.0',
-                    'accorspa_spese_utili': '1',
-                    'sconto': '-0.11',
-                    'maggiorazione': '0.10',}
-    comp_default = {'riga_bianca_categorie': '1',
-                    'voci_senza_numerazione':  '0',
-                    'inizio_voci_abbreviate' : '160',
-                    'fine_voci_abbreviate' : '100',}
-    cont_default = {'abilita': '0',}
-    default = {'Zoom': zoom_defaults,
-                'Generale': gen_defaults,
-                'Analisi': an_defaults,
-                'Contabilità': cont_default,
-                'Computo' : comp_default,}
+        zoom['aggiustamento'] = '2'
+        zoom['fattore'] = '100'
+        zoom['fattore_ottimale'] = '81'
+        zoom['fullscreen'] = '0'
+        
+        generale['visualizza'] = 'Menù Principale'
+        generale['altezza_celle'] = '1.25'
+        generale['visualizza_tabelle_extra'] = '1'
+        
+        analisi['sicurezza'] = '0.37'
+        analisi['spese_generali'] = '0.15'
+        analisi['utile_impresa'] = '10.0'
+        analisi['accorspa_spese_utili'] = '1'
+        analisi['sconto'] = '-0.11'
+        analisi['maggiorazione'] = '0.10'
+        
+        computo['riga_bianca_categorie'] = '1'
+        computo['voci_senza_numerazione'] = '0'
+        computo['inizio_voci_abbreviate'] = '160'
+        computo['fine_voci_abbreviate'] = '100'
+        
+        contab['abilita'] = '0'
+        
+        defaults['Zoom'] = zoom
+        defaults['Generale'] = generale
+        defaults['Analisi'] = analisi
+        defaults['Contabilità'] = contab
+        defaults['Computo'] = computo
 
-    parser = configparser.SafeConfigParser()
-    
-    for k in default.keys():
-        if not parser.has_section(k):
-            parser.add_section(k)
+        parser = configparser.SafeConfigParser()
+        for k in defaults.keys():
+            if not parser.has_section(k):
+                parser.add_section(k)
 
-        for key in default[k].keys():
-            parser.set(k, key, default[k][key])
-    with open(path, 'w') as f:
-        parser.write(f)
+            for key in defaults[k].keys():
+                parser.set(k, key, defaults[k][key])
+        with open(path_conf, 'w') as f:
+            parser.write(f)
 ########################################################################
 class conf:
-    def __init__(self, path):
+    def __init__(self, path=path_conf):
         #~ config = configparser.SafeConfigParser()
         #~ config.read(path) 
         #~ self.path = path
@@ -3048,7 +3049,7 @@ class conf:
         config.write(fp)
         fp.close()
         
-    def read(path):#, section, option):
+    def read(path, section, option):
         '''https://pymotw.com/2/ConfigParser/'''
         config = configparser.SafeConfigParser()
         config.read(path)
@@ -3057,7 +3058,7 @@ class conf:
         #~ chi(my_config_parser_dict)
         #~ chi(dict(config['scuola']))
         
-        return my_config_parser_dict#, config.get(section, option))
+        return (my_config_parser_dict, config.get(section, option))
 
 ########################################################################
 # attiva contabilità  ##################################################
@@ -3901,7 +3902,10 @@ Vuoi continuare?''', 'Importa Stili in blocco?') == 3: return
     for el in oDoc.Sheets.ElementNames:
         oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
         adatta_altezza_riga(el)
-    _gotoSheet ('Elenco Prezzi')
+    try:
+        _gotoSheet ('Elenco Prezzi')
+    except:
+        pass
 ########################################################################
 def parziale(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -4728,7 +4732,8 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     #~ MsgBox('Importazione eseguita con successo!','')
 # XPWE_in ##########################################################
 ########################################################################
-#VARIABILI GLOBALI:
+#VARIABILI GLOBALI:#####################################################
+########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 17 #'NUOVE FUNZIONALITA'
 Lsubv= "1.dev" #'CORREZIONE BUGS
@@ -4750,6 +4755,7 @@ GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',)
 #
 sUltimus = ''
+########################################################################
 def ssUltimus (arg=None):
     oDlgMain.endExecute()
     '''
@@ -5185,6 +5191,7 @@ def autoexec (arg=None):
     '''
     questa è richiamata da New_File()
     '''
+    leeno_conf()#Crea ed imposta leeno.conf se non presente.
     #~ chi("autoexec py")
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
@@ -5199,10 +5206,18 @@ def autoexec (arg=None):
         oSheet.getCellByPosition(9,295).String = Lsubv
         adegua_tmpl() #esegue degli aggiustamenti del template
         toolbar_vedi()
-        #~ DlgMain()
     except:
         #~ chi("autoexec py")
         return
+# scegli cosa visualizzare all'avvio:
+    vedi = conf.read(path_conf, 'Generale', 'visualizza')[1]
+    if vedi == 'Menù Principale':
+        DlgMain()
+    elif vedi == 'Dati Generali':
+        Vai_a_Variabili()
+    elif vedi in ('Elenco Prezzi', 'COMPUTO'):
+        _gotoSheet(vedi)
+#
 ########################################################################
 def computo_terra_terra (arg=None):
     '''
@@ -5512,8 +5527,13 @@ def DlgMain(arg=None):
         sString.Text = "€ {:,.2f}".format(oSheet.getCellByPosition(15, 1).Value)
     except:
         pass
+    sString = oDlgMain.getControl("ComboBox1")
+    
+    sString.Text = conf.read(path_conf, 'Generale', 'visualizza')[1]
 
     oDlgMain.execute()
+    sString = oDlgMain.getControl("ComboBox1")
+    conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
     return
 ########################################################################
 def InputBox (sCella='', t=''):

@@ -3027,6 +3027,12 @@ def leeno_conf(arg=None):
             parser.write(f)
 ########################################################################
 class conf:
+    '''
+    path    { string }: indirizzo del file di configurazione
+    section { string }: sezione
+    option  { string }: opzione
+    value   { string }: valore
+    '''
     def __init__(self, path=path_conf):
         #~ config = configparser.SafeConfigParser()
         #~ config.read(path) 
@@ -3034,6 +3040,7 @@ class conf:
         pass
     def write(path, section, option, value):
         """
+        Scrive i dati nel file di configurazione.
         http://www.programcreek.com/python/example/1033/ConfigParser.SafeConfigParser
         Write the specified Section.Option to the config file specified by path.
         Replace any previous value.  If the path doesn't exist, create it.
@@ -3050,12 +3057,18 @@ class conf:
         fp.close()
         
     def read(path, section, option):
-        '''https://pymotw.com/2/ConfigParser/'''
+        '''
+        https://pymotw.com/2/ConfigParser/
+        Legge i dati dal file di configurazione.
+        '''
         config = configparser.SafeConfigParser()
         config.read(path)
         return config.get(section, option)
         
     def diz(path):
+        '''
+        Legge tutto il file di configurazione e restituisce un dizionario.
+        '''
         my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
         return my_config_parser_dict
 

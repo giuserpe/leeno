@@ -6,6 +6,7 @@
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="2" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="3" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="228" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;" dlg:button-type="ok">
@@ -48,10 +49,10 @@
   <dlg:button dlg:id="CommandButton11" dlg:tab-index="19" dlg:left="35" dlg:top="145" dlg:width="0" dlg:height="2" dlg:value="CommandButton11">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton10" dlg:tab-index="20" dlg:left="10" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Filtra Computo e fai una copia..." dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton10" dlg:tab-index="20" dlg:left="13" dlg:top="-43" dlg:width="130" dlg:height="15" dlg:value="Filtra Computo e fai una copia..." dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Filtro?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton12" dlg:tab-index="21" dlg:left="148" dlg:top="38" dlg:width="130" dlg:height="15" dlg:value="Cancella voci non usate nel Computo..." dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton12" dlg:tab-index="21" dlg:left="153" dlg:top="-43" dlg:width="130" dlg:height="15" dlg:value="Cancella voci non usate nel Computo..." dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_SegnaVoci?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:text dlg:style-id="2" dlg:id="Label12" dlg:tab-index="22" dlg:left="216" dlg:top="230" dlg:width="62" dlg:height="8" dlg:value="Label12" dlg:align="right">
@@ -62,5 +63,15 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton13" dlg:tab-index="25" dlg:left="10" dlg:top="215" dlg:width="20" dlg:height="15" dlg:value="DCC:">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ssUltimus?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
+  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="26" dlg:left="206" dlg:top="38" dlg:width="72" dlg:height="15" dlg:value="Nessun foglio" dlg:spin="true">
+   <dlg:menupopup>
+    <dlg:menuitem dlg:value="Nessun Foglio"/>
+    <dlg:menuitem dlg:value="Menù Principale"/>
+    <dlg:menuitem dlg:value="Dati Generali"/>
+    <dlg:menuitem dlg:value="Elenco Prezzi"/>
+    <dlg:menuitem dlg:value="COMPUTO"/>
+   </dlg:menupopup>
+  </dlg:combobox>
+  <dlg:text dlg:style-id="4" dlg:id="Label11" dlg:tab-index="27" dlg:left="157" dlg:top="41" dlg:width="43" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
  </dlg:bulletinboard>
 </dlg:window>

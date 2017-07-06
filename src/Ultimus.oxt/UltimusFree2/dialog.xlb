@@ -15,4 +15,5 @@
  <library:element library:name="DlgTesto"/>
  <library:element library:name="DlgFile"/>
  <library:element library:name="DlgMain"/>
+ <library:element library:name="Dlg_config"/>
 </library:library>

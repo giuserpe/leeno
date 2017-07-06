@@ -1112,7 +1112,7 @@ def scelta_viste (arg=None):
         if oSheet.getColumns().getByIndex(17).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
         if oSheet.getColumns().getByIndex(29).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
         if oSheet.getColumns().getByIndex(31).Columns.IsVisible  == True: oDialog1.getControl('CBCat').State = 1
-        if oSheet.getColumns().getByIndex(34).Columns.IsVisible  == True: oDialog1.getControl('CBTag').State = 1
+        #~ if oSheet.getColumns().getByIndex(34).Columns.IsVisible  == True: oDialog1.getControl('CBTag').State = 1
         if oSheet.getColumns().getByIndex(38).Columns.IsVisible  == True: oDialog1.getControl('CBFig').State = 1
         oDialog1.execute()
         
@@ -1146,11 +1146,6 @@ def scelta_viste (arg=None):
             #~ oSheet.getColumns().getByIndex(34).Columns.IsVisible = False
         #~ else:
             #~ oSheet.getColumns().getByIndex(34).Columns.IsVisible = True
-
-        if oDialog1.getControl("CBTag").State == 0: #manodopera
-            oSheet.getColumns().getByIndex(34).Columns.IsVisible = False
-        else:
-            oSheet.getColumns().getByIndex(34).Columns.IsVisible = True
 
         if oDialog1.getControl("CBSic").State == 0: #sicurezza
             oSheet.getColumns().getByIndex(17).Columns.IsVisible = False
@@ -2686,8 +2681,8 @@ def debug_tipo_di_valore(arg=None):
     #~ if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
         #~ MsgBox(oSheet.getCellByPosition(9, 5).Formula)
 ########################################################################
-def debugpyperclip(arg=None):
-
+def debugclip(arg=None):
+    import pyperclip
     #~ mri(XSCRIPTCONTEXT.getComponentContext())
     sText = 'sticazzi'
     #create SystemClipboard instance
@@ -3076,29 +3071,110 @@ class conf:
 # attiva contabilità  ##################################################
 def attiva_contabilita(arg=None):
 #~ def debug(arg=None):
+    '''Se presente, attiva e visualizza le tabelle di contabilità'''
+
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDoc.Sheets.getByName('S1').getCellByPosition(7,327).Value = 1
-    if oDoc.Sheets.hasByName ('CONTABILITA'):
-        for el in ('Registro', 'SAL','CONTABILITA'):
-            if oDoc.Sheets.hasByName(el):_gotoSheet (el)
-        return
-    else:
-        oDoc.Sheets.insertNewByName('CONTABILITA',3)
-    _gotoSheet ('CONTABILITA')
+    if oDoc.Sheets.hasByName ('S1'):
+        oDoc.Sheets.getByName('S1').getCellByPosition(7,327).Value = 1
+        if oDoc.Sheets.hasByName ('CONTABILITA'):
+            for el in ('Registro', 'SAL','CONTABILITA'):
+                if oDoc.Sheets.hasByName(el):_gotoSheet (el)
+            return
+        else:
+            oDoc.Sheets.insertNewByName('CONTABILITA',3)
+        _gotoSheet ('CONTABILITA')
 ########################################################################
 # svuota contabilità  ##################################################
-def svuota_contabilita(arg=None):
-#~ def debug(arg=None):
+#~ def svuota_contabilita(arg=None):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+    #~ oSheet = oDoc.Sheets.getByName('CONTABILITA')
     for n in range(1 ,20):
         if oDoc.NamedRanges.hasByName('#Lib#'+str(n)) == True:
             oDoc.NamedRanges.removeByName('#Lib#'+str(n))
             oDoc.NamedRanges.removeByName('#SAL#'+str(n))
             oDoc.NamedRanges.removeByName('#Reg#'+str(n))
-    for el in ('Registro', 'SAL'):
+    for el in ('Registro', 'SAL', 'CONTABILITA'):
         if oDoc.Sheets.hasByName(el):
             oDoc.Sheets.removeByName(el)
+    
+    oDoc.Sheets.insertNewByName('CONTABILITA',3)
+    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+
+    _gotoSheet ('CONTABILITA')
+    setTabColor (16757935)
+
+    oSheet.getCellByPosition(0,2).String = 'N.'
+    oSheet.getCellByPosition(1,2).String = 'Articolo\nData'
+    oSheet.getCellByPosition(2,2).String = 'LAVORAZIONI\nO PROVVISTE'
+    oSheet.getCellByPosition(5,2).String = 'P.U.\nCoeff.'
+    oSheet.getCellByPosition(6,2).String = 'Lung.'
+    oSheet.getCellByPosition(7,2).String = 'Larg.'
+    oSheet.getCellByPosition(8,2).String = 'Alt.\nPeso'
+    oSheet.getCellByPosition(9,2).String = 'Quantità\nPositive'
+    oSheet.getCellByPosition(11,2).String = 'Quantità\nNegative'
+    oSheet.getCellByPosition(13,2).String = 'Prezzo\nunitario'
+    oSheet.getCellByPosition(15,2).String = 'Importi'
+    oSheet.getCellByPosition(17,2).String = 'Sicurezza\ninclusa'
+    oSheet.getCellByPosition(18,2).String = 'Serve per avere le quantità\nrealizzate "pulite" e sommabili'
+    oSheet.getCellByPosition(19,2).String = 'Lib.\nN.'
+    oSheet.getCellByPosition(20,2).String = 'Lib.\nP.'
+    oSheet.getCellByPosition(22,2).String = 'flag'
+    oSheet.getCellByPosition(23,2).String = 'SAL\nN.'
+    oSheet.getCellByPosition(25,2).String = 'Importi\nSAL parziali'
+    oSheet.getCellByPosition(27,2).String = 'Sicurezza\nunitaria'
+    oSheet.getCellByPosition(28,2).String = 'Materiali\ne Noli €'
+    oSheet.getCellByPosition(29,2).String = 'Incidenza\nMdO %'
+    oSheet.getCellByPosition(30,2).String = 'Importo\nMdO'
+    oSheet.getCellByPosition(31,2).String = 'Super Cat'
+    oSheet.getCellByPosition(32,2).String = 'Cat'
+    oSheet.getCellByPosition(33,2).String = 'Sub Cat'
+    #~ oSheet.getCellByPosition(34,2).String = 'tag B'
+    #~ oSheet.getCellByPosition(35,2).String = 'tag C'
+    oSheet.getCellByPosition(36,2).String = 'Importi\nsenza errori'
+    oSheet.getCellByPosition(0,2).Rows.Height = 800
+    #~ colore colonne riga di intestazione
+    oSheet.getCellRangeByPosition(0, 2, 36 , 2).CellStyle = 'comp Int_colonna_R'
+    oSheet.getCellByPosition(0, 2).CellStyle = 'comp Int_colonna_R_prima'
+    oSheet.getCellByPosition(18, 2).CellStyle = 'COnt_noP'
+    oSheet.getCellRangeByPosition(0,0,0,3).Rows.OptimalHeight = True
+    #~ riga di controllo importo
+    oSheet.getCellRangeByPosition(0, 1, 36 , 1).CellStyle = 'comp In testa'
+    oSheet.getCellByPosition(2,1).String = 'QUESTA RIGA NON VIENE STAMPATA'
+    oSheet.getCellRangeByPosition(0, 1, 1, 1).merge(True)
+    oSheet.getCellByPosition(13,1).String = 'TOTALE:'
+    oSheet.getCellByPosition(20,1).String = 'SAL SUCCESSIVO:'
+    
+    chi(ultima_voce(oSheet))
+    #~ oSheet.getCellByPosition(25, 1).formula = '=$P$2-SUBTOTAL(9;$P$2:$P$' ultimariga+2 ')'
+    #~ 'pippi
+    #~ oSheet.getCellByPosition(15,1).FORMULA='=SUBTOTAL(9;P3:P4)' 'importo lavori
+    #~ oSheet.getCellByPosition(0,1).FORMULA='=AK2' 'importo lavori
+    #~ oSheet.getCellByPosition(17,1).FORMULA='=SUBTOTAL(9;R3:R4)' 'importo sicurezza
+
+    #~ oSheet.getCellByPosition(28,1).FORMULA='=SUBTOTAL(9;AC3:AC4)' 'importo materiali
+    #~ oSheet.getCellByPosition(29,1).FORMULA='=AE2/Z2'  'Incidenza manodopera %
+    #~ oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
+    #~ oSheet.getCellByPosition(30,1).FORMULA='=SUBTOTAL(9;AE3:AE4)' 'importo manodopera
+    #~ oSheet.getCellByPosition(36,1).FORMULA='=SUBTOTAL(9;AK3:AK4)' 'importo certo
+
+
+    #~ rem riga del totale
+    #~ oSheet.getCellByPosition(2,3).String = 'T O T A L E')
+    #~ oSheet.getCellByPosition(15,3).FORMULA='=SUBTOTAL(9;P3:P4)' 'importo lavori
+    #~ oSheet.getCellByPosition(17,3).FORMULA='=SUBTOTAL(9;R3:R4)' 'importo sicurezza
+    #~ oSheet.getCellByPosition(30,3).FORMULA='=SUBTOTAL(9;AE3:AE4)' 'importo manodopera
+    #~ oSheet.getCellRangeByPosition(0, 3, 36 , 3).CellStyle = 'Comp TOTALI'
+    #~ rem riga rossa
+    #~ oSheet.getCellByPosition(0,4).String = 'Fine Computo')
+    #~ oSheet.getCellRangeByPosition(0, 4, 36 , 4).CellStyle = 'Riga_rossa_Chiudi'
+    #~ rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
+    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'A1')
+    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'A2')
+    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'B1')
+    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'B2')
+
+    #~ ScriptPy('pyleeno.py','set_larghezza_colonne')
 ########################################################################
 # inizializza_analisi ##################################################
 def inizializza_analisi(arg=None):

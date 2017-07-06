@@ -95,12 +95,13 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 			If oSheet.GetCellByPosition(0, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; And _
 				oSheet.GetCellByPosition(1, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-generica&quot; Then Exit Sub
 		Case &quot;Elenco Prezzi&quot;
-			Select Case oSheet.GetCellByPosition(0, lrow).CellStyle
-				Case &quot;EP-aS&quot; ,&quot;EP-a&quot;, &quot;EP-Cs&quot;
-					GoTo vai:
-				Case Else
-					Exit Sub
-			End Select
+			Exit Sub
+&apos;			Select Case oSheet.GetCellByPosition(0, lrow).CellStyle
+&apos;				Case &quot;EP-aS&quot; ,&quot;EP-a&quot;, &quot;EP-Cs&quot;
+&apos;					GoTo vai:
+&apos;				Case Else
+&apos;					Exit Sub
+&apos;			End Select
 	End Select
 vai:
 	Dim test As String
@@ -119,17 +120,16 @@ vai:
 	CellRangeAddress.EndRow = lrowEnd
 
 	oSheet.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.ROWS)
-&apos;	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )
 	oSheet=ThisComponent.currentController.activeSheet 	
-&apos;	CellRangeAddress.StartColumn = 	lcolStart
 	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
 	ThisComponent.CurrentController.Select(oRangeSel)
 rem ----------------------------------------------------------------------
-ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_verifica&quot;)
-	If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
-	If test = &quot;è Computo&quot; Then
-ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
-	End If
+	Select Case nome_sheet
+		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
+			ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_verifica&quot;)
+			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
+			If test = &quot;è Computo&quot; Then ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
+	End Select
 END SUB
 rem ######################################################################
 Sub copia_TANTE_righe_Ent

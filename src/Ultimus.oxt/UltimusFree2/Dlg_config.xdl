@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dlg_config" dlg:left="204" dlg:top="214" dlg:width="173" dlg:height="158" dlg:closeable="true" dlg:moveable="true">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:titledbox dlg:id="Generale" dlg:tab-index="0" dlg:left="19" dlg:top="10" dlg:width="138" dlg:height="67">
+   <dlg:title dlg:value="Generale"/>
+  </dlg:titledbox>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox2" dlg:tab-index="1" dlg:left="27" dlg:top="21" dlg:width="68" dlg:height="10" dlg:value="Visualizza tabelle Extra" dlg:checked="false"/>
+  <dlg:text dlg:id="Label1" dlg:tab-index="2" dlg:left="27" dlg:top="36" dlg:width="33" dlg:height="8" dlg:value="Label1"/>
+  <dlg:text dlg:id="Label2" dlg:tab-index="3" dlg:left="62" dlg:top="36" dlg:width="40" dlg:height="11" dlg:help-text="Altezza celle in vista abbreviata" dlg:value="Altezza Celle"/>
+  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="4" dlg:left="27" dlg:top="47" dlg:width="45" dlg:height="15" dlg:value="Senza Menù" dlg:spin="true">
+   <dlg:menupopup>
+    <dlg:menuitem dlg:value="Senza Menù"/>
+    <dlg:menuitem dlg:value="Menù Principale"/>
+    <dlg:menuitem dlg:value="Dati Generali"/>
+    <dlg:menuitem dlg:value="Elenco Prezzi"/>
+    <dlg:menuitem dlg:value="COMPUTO"/>
+   </dlg:menupopup>
+  </dlg:combobox>
+  <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="5" dlg:left="76" dlg:top="51" dlg:width="43" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
+ </dlg:bulletinboard>
+</dlg:window>

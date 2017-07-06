@@ -63,9 +63,9 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton13" dlg:tab-index="25" dlg:left="10" dlg:top="215" dlg:width="20" dlg:height="15" dlg:value="DCC:">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ssUltimus?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="26" dlg:left="206" dlg:top="38" dlg:width="72" dlg:height="15" dlg:value="Nessun foglio" dlg:spin="true">
+  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="26" dlg:left="206" dlg:top="38" dlg:width="72" dlg:height="15" dlg:value="Senza Menù" dlg:spin="true">
    <dlg:menupopup>
-    <dlg:menuitem dlg:value="Nessun Foglio"/>
+    <dlg:menuitem dlg:value="Senza Menù"/>
     <dlg:menuitem dlg:value="Menù Principale"/>
     <dlg:menuitem dlg:value="Dati Generali"/>
     <dlg:menuitem dlg:value="Elenco Prezzi"/>

@@ -999,8 +999,6 @@ def ordina_col (ncol):
     oProp.append(oProp6)
     oProp.append(oProp7)
     properties = tuple(oProp)
-    #~ properties = (oProp,)
-    #~ chi(properties[0][0])
     dispatchHelper.executeDispatch(oFrame, '.uno:DataSort', '', 0, properties)
 ########################################################################
 def setTabColor (colore):
@@ -2669,7 +2667,12 @@ def debug_ConditionalFormat (arg=None):
 #~ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oCell= oDoc.CurrentSelection
-    mri(oCell)#.ConditionalFormat)
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    i =oCell.RangeAddress.StartRow
+    n =oCell.Rows.Count
+    oSheet.getRows().removeByIndex(i, n)
+    #~ mri(oCell)#.ConditionalFormat)
 
 ########################################################################
 
@@ -2700,6 +2703,26 @@ def debugclip(arg=None):
     oClip.setContents( oTR, None )
     sTxtCString = sText
     oClip.flushClipboard()
+########################################################################
+def copy_clip(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
+########################################################################
+def paste_clip(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
 ########################################################################
 def copia_celle_visibili(arg=None):
     '''
@@ -2994,7 +3017,7 @@ def leeno_conf(arg=None):
         analisi['sicurezza'] = '0.37'
         analisi['spese_generali'] = '0.15'
         analisi['utile_impresa'] = '10.0'
-        analisi['accorspa_spese_utili'] = '1'
+        analisi['accorpa_spese_utili'] = '1'
         analisi['sconto'] = '-0.11'
         analisi['maggiorazione'] = '0.10'
         
@@ -3085,8 +3108,8 @@ def attiva_contabilita(arg=None):
         _gotoSheet ('CONTABILITA')
 ########################################################################
 # svuota contabilità  ##################################################
-#~ def svuota_contabilita(arg=None):
-def debug(arg=None):
+def svuota_contabilita(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.Sheets.getByName('CONTABILITA')
     for n in range(1 ,20):
@@ -3419,6 +3442,105 @@ ATTENZIONE:
 N.B.: Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
 
     ''','ATTENZIONE!')
+#~ ########################################################################
+#~ def fuf (arg=None):
+def debug (arg=None):
+    ''' Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
+        E' solo una cortesia per un amico.'''
+    filename = filedia('Scegli il file XML-SIX da importare', '*.dat')
+    #~ filename = 'C:\\Users\\colac\\Desktop\\aaa.DAT'
+    #~ filename = uno.systemPathToFileUrl (filename)
+    #~ chi(filename)
+    #~ return
+    riga = list()
+    f = open(filename, 'r')
+    ordini = list()
+    riga = ('Codice', 'Descrizione articolo', 'Quantità', 'Data consegna','Conto lavoro', 'Prezzo (€)')
+    ordini.append(riga)
+    
+    for row in f:
+        art =row[:15]
+        if art[0:4] not in ('HEAD', 'FEET'):
+            art = art[4:]
+            des =row[22:62]
+            num = 1 #row[72:78].replace(' ','')
+            car =row[78:87]
+            #~ dataO =row[88:96]
+            #~ dataO = dataO[6:]+'/'+dataO[4:6]+'/'+dataO[:4]
+            dataC =row[96:104]
+            #~ dataC = '=DATE('+ dataC[6:]+';'+dataC[4:6]+';'+dataC[:4] + ')'
+            dataC = '=DATE('+ dataC[:4]+';'+dataC[4:6]+';'+dataC[6:] + ')'
+
+            
+            #~ datetime.datetime(int(dataC[:4]), int(dataC[4:6]), int(dataC[6:]))
+            
+            clav =row[120:130]
+            prz =row[142:-1]
+            riga = (art, des, num, dataC, clav, float(prz.strip()))
+            ordini.append(riga)
+    #~ chi(dataC.strptime('2012-02-10' , '%Y-%m-%d')            )
+
+    #~ chi(prz)
+    #~ return
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
+    # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
+    lista_come_array = tuple(ordini)
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+
+    #~ oSheet.getRows().insertByIndex(3, righe_lista)
+    oRange = oSheet.getCellRangeByPosition( 0,
+                                            0,
+                                            colonne_lista -1, # l'indice parte da 0
+                                            righe_lista -1)
+    oRange.setFormulaArray(lista_come_array)
+    
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(3, 1, 3, getLastUsedCell(oSheet).EndRow+1))
+    #~ return
+    copy_clip()
+
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    oProp = []
+    oProp0 = PropertyValue()
+    oProp0.Name = 'Flags'
+    oProp0.Value = 'D'
+    oProp1 = PropertyValue()
+    oProp1.Name = 'FormulaCommand'
+    oProp1.Value = 0
+    oProp2 = PropertyValue()
+    oProp2.Name = 'SkipEmptyCells'
+    oProp2.Value = False
+    oProp3 = PropertyValue()
+    oProp3.Name = 'Transpose'
+    oProp3.Value = False
+    oProp4 = PropertyValue()
+    oProp4.Name = 'AsLink'
+    oProp4.Value = False
+    oProp5 = PropertyValue()
+    oProp5.Name = 'MoveMode'
+    oProp5.Value = 4
+    oProp.append(oProp0)
+    oProp.append(oProp1)
+    oProp.append(oProp2)
+    oProp.append(oProp3)
+    oProp.append(oProp4)
+    oProp.append(oProp5)
+    properties = tuple(oProp)
+    #~ _gotoCella(6,1)
+
+    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
+    #~ paste_clip()
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 1, 5, getLastUsedCell(oSheet).EndRow+1))
+
+    ordina_col(3)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    
 #~ ########################################################################
 # XML_import_ep ########################################################
 def XML_import_ep (arg=None):
@@ -4918,7 +5040,8 @@ def filedia (titolo='Scegli il file...', est='*.*', mode=0):
                 '*.odp' : 'Impress (*.odp)',
                 '*.odf' : 'Math (*.odf)',
                 '*.xpwe': 'Primus (*.xpwe)',
-                '*.xml' : 'XML (*.xml)'
+                '*.xml' : 'XML (*.xml)',
+                '*.dat' : 'dat (*.dat)',
                 }
     try:
         oFilePicker = createUnoService( "com.sun.star.ui.dialogs.OfficeFilePicker" )

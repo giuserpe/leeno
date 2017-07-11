@@ -683,7 +683,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <!-- IMPORTA-->
+        <!-- DEBUG-->
         <node oor:name="m002" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -696,6 +696,31 @@
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>python debug</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="m003" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value />
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>private:separator</value>
+          </prop>
+        </node>
+        <node oor:name="m004" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$fuf?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/falegname</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>importa DAT</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

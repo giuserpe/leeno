@@ -2117,7 +2117,7 @@ def next_voice (lrow, n=1):
     if lrow >= fine:
         return lrow
 
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_computo_R:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
         if n==0:
             sopra = Circoscrive_Voce_Computo_Att (lrow).RangeAddress.StartRow
             lrow = sopra
@@ -2512,7 +2512,7 @@ def cerca_partenza(arg=None):
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
         return partenza
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo_R:
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab:
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
         return partenza
@@ -2533,7 +2533,7 @@ def pesca_cod(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-    if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_computo_R + stili_analisi + stili_elenco:
+    if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
     if oSheet.Name in ('CONTABILITA'):
         cerca_partenza()
@@ -3091,6 +3091,30 @@ class conf:
         return my_config_parser_dict
 
 ########################################################################
+# nuova_voce_contab  ##################################################
+#~ def nuova_voce_contab (arg=None):
+def debug (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    nome = oSheet.Name
+    stile = oSheet.getCellByPosition( 0, lrow).CellStyle
+    if stile == 'comp Int_colonna_R_prima':
+        lrow += 1
+    #~ oSheet.getRows().insertByIndex(lrow,5)
+    #~ if not oDoc.NamedRanges.hasByName("Serv_gen_cont"):
+        #~ rifa_nomearea('S5', '$A$23:$AW$27' , 'Serv_gen_cont')
+    
+        oSheetto = oDoc.getSheets().getByName('S5')
+        #~ oRangeAddress = oSheetto.getCellRangeByName('$A$9:$AR$12').getRangeAddress()
+        oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
+        oCellAddress = oSheet.getCellByPosition(0,lrow).getCellAddress()
+        oSheet.getRows().insertByIndex(lrow, 5) #inserisco le righe
+        oSheet.copyRange(oCellAddress, oRangeAddress)
+        oSheet.getCellRangeByPosition(0, lrow, 48, lrow+5).Rows.OptimalHeight = True
+        _gotoCella(1, lrow+1)
+        
+########################################################################
 # attiva contabilità  ##################################################
 def attiva_contabilita(arg=None):
 #~ def debug(arg=None):
@@ -3102,16 +3126,18 @@ def attiva_contabilita(arg=None):
         if oDoc.Sheets.hasByName ('CONTABILITA'):
             for el in ('Registro', 'SAL','CONTABILITA'):
                 if oDoc.Sheets.hasByName(el):_gotoSheet (el)
-            return
+            #~ return
         else:
             oDoc.Sheets.insertNewByName('CONTABILITA',3)
         _gotoSheet ('CONTABILITA')
+        svuota_contabilita()
+        set_larghezza_colonne()
+        
 ########################################################################
 # svuota contabilità  ##################################################
-def svuota_contabilita(arg=None):
-#~ def debug(arg=None):
+#~ def svuota_contabilita(arg=None):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oSheet = oDoc.Sheets.getByName('CONTABILITA')
     for n in range(1 ,20):
         if oDoc.NamedRanges.hasByName('#Lib#'+str(n)) == True:
             oDoc.NamedRanges.removeByName('#Lib#'+str(n))
@@ -3126,7 +3152,9 @@ def svuota_contabilita(arg=None):
 
     _gotoSheet ('CONTABILITA')
     setTabColor (16757935)
-
+    oSheet.getCellRangeByName('C1').String = 'CONTABILITA'
+    oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
+    oSheet.getCellRangeByName('C1').CellBackColor = 16757935
     oSheet.getCellByPosition(0,2).String = 'N.'
     oSheet.getCellByPosition(1,2).String = 'Articolo\nData'
     oSheet.getCellByPosition(2,2).String = 'LAVORAZIONI\nO PROVVISTE'
@@ -3168,36 +3196,32 @@ def svuota_contabilita(arg=None):
     oSheet.getCellByPosition(13,1).String = 'TOTALE:'
     oSheet.getCellByPosition(20,1).String = 'SAL SUCCESSIVO:'
     
-    chi(ultima_voce(oSheet))
-    #~ oSheet.getCellByPosition(25, 1).formula = '=$P$2-SUBTOTAL(9;$P$2:$P$' ultimariga+2 ')'
+    
+    oSheet.getCellByPosition(25, 1).Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
     #~ 'pippi
-    #~ oSheet.getCellByPosition(15,1).FORMULA='=SUBTOTAL(9;P3:P4)' 'importo lavori
-    #~ oSheet.getCellByPosition(0,1).FORMULA='=AK2' 'importo lavori
-    #~ oSheet.getCellByPosition(17,1).FORMULA='=SUBTOTAL(9;R3:R4)' 'importo sicurezza
+    oSheet.getCellByPosition(15,1).Formula='=SUBTOTAL(9;P3:P4)' #importo lavori
+    oSheet.getCellByPosition(0,1).Formula='=AK2' #importo lavori
+    oSheet.getCellByPosition(17,1).Formula='=SUBTOTAL(9;R3:R4)' #importo sicurezza
+    
 
-    #~ oSheet.getCellByPosition(28,1).FORMULA='=SUBTOTAL(9;AC3:AC4)' 'importo materiali
-    #~ oSheet.getCellByPosition(29,1).FORMULA='=AE2/Z2'  'Incidenza manodopera %
-    #~ oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
-    #~ oSheet.getCellByPosition(30,1).FORMULA='=SUBTOTAL(9;AE3:AE4)' 'importo manodopera
-    #~ oSheet.getCellByPosition(36,1).FORMULA='=SUBTOTAL(9;AK3:AK4)' 'importo certo
+    oSheet.getCellByPosition(28,1).Formula='=SUBTOTAL(9;AC3:AC4)' #importo materiali
+    oSheet.getCellByPosition(29,1).Formula='=AE2/Z2'  #Incidenza manodopera %
+    oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
+    oSheet.getCellByPosition(30,1).Formula='=SUBTOTAL(9;AE3:AE4)' #importo manodopera
+    oSheet.getCellByPosition(36,1).Formula='=SUBTOTAL(9;AK3:AK4)' #importo certo
 
 
     #~ rem riga del totale
-    #~ oSheet.getCellByPosition(2,3).String = 'T O T A L E')
-    #~ oSheet.getCellByPosition(15,3).FORMULA='=SUBTOTAL(9;P3:P4)' 'importo lavori
-    #~ oSheet.getCellByPosition(17,3).FORMULA='=SUBTOTAL(9;R3:R4)' 'importo sicurezza
-    #~ oSheet.getCellByPosition(30,3).FORMULA='=SUBTOTAL(9;AE3:AE4)' 'importo manodopera
-    #~ oSheet.getCellRangeByPosition(0, 3, 36 , 3).CellStyle = 'Comp TOTALI'
+    oSheet.getCellByPosition(2,3).String = 'T O T A L E'
+    oSheet.getCellByPosition(15,3).Formula='=SUBTOTAL(9;P3:P4)' #importo lavori
+    oSheet.getCellByPosition(17,3).Formula='=SUBTOTAL(9;R3:R4)' #importo sicurezza
+    oSheet.getCellByPosition(30,3).Formula='=SUBTOTAL(9;AE3:AE4)' #importo manodopera
+    oSheet.getCellRangeByPosition(0, 3, 36 , 3).CellStyle = 'Comp TOTALI'
     #~ rem riga rossa
-    #~ oSheet.getCellByPosition(0,4).String = 'Fine Computo')
-    #~ oSheet.getCellRangeByPosition(0, 4, 36 , 4).CellStyle = 'Riga_rossa_Chiudi'
-    #~ rem SETTAGGIO ATTRIBUTI PRIME 4 CELLE - retaggio pro compatibilità dei controlli
-    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'A1')
-    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'A2')
-    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'B1')
-    #~ Stora_Attr_sheet_generico('TIPO_CONTABILITA', oSheet, 'B2')
-
-    #~ ScriptPy('pyleeno.py','set_larghezza_colonne')
+    oSheet.getCellByPosition(0,4).String = 'Fine Computo'
+    oSheet.getCellRangeByPosition(0, 4, 36 , 4).CellStyle = 'Riga_rossa_Chiudi'
+    _gotoCella(0, 2)
+    set_larghezza_colonne()
 ########################################################################
 # inizializza_analisi ##################################################
 def inizializza_analisi(arg=None):
@@ -3443,15 +3467,10 @@ N.B.: Si consiglia una attenta lettura delle note informative disponibili sul si
 
     ''','ATTENZIONE!')
 #~ ########################################################################
-#~ def fuf (arg=None):
-def debug (arg=None):
+def fuf (arg=None):
     ''' Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
         E' solo una cortesia per un amico.'''
     filename = filedia('Scegli il file XML-SIX da importare', '*.dat')
-    #~ filename = 'C:\\Users\\colac\\Desktop\\aaa.DAT'
-    #~ filename = uno.systemPathToFileUrl (filename)
-    #~ chi(filename)
-    #~ return
     riga = list()
     f = open(filename, 'r')
     ordini = list()
@@ -3465,41 +3484,30 @@ def debug (arg=None):
             des =row[22:62]
             num = 1 #row[72:78].replace(' ','')
             car =row[78:87]
-            #~ dataO =row[88:96]
-            #~ dataO = dataO[6:]+'/'+dataO[4:6]+'/'+dataO[:4]
             dataC =row[96:104]
-            #~ dataC = '=DATE('+ dataC[6:]+';'+dataC[4:6]+';'+dataC[:4] + ')'
             dataC = '=DATE('+ dataC[:4]+';'+dataC[4:6]+';'+dataC[6:] + ')'
-
-            
-            #~ datetime.datetime(int(dataC[:4]), int(dataC[4:6]), int(dataC[6:]))
-            
             clav =row[120:130]
             prz =row[142:-1]
             riga = (art, des, num, dataC, clav, float(prz.strip()))
             ordini.append(riga)
-    #~ chi(dataC.strptime('2012-02-10' , '%Y-%m-%d')            )
 
-    #~ chi(prz)
-    #~ return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
-    # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
     lista_come_array = tuple(ordini)
-    # Parametrizzo il range di celle a seconda della dimensione della lista
     colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
 
-    #~ oSheet.getRows().insertByIndex(3, righe_lista)
     oRange = oSheet.getCellRangeByPosition( 0,
                                             0,
                                             colonne_lista -1, # l'indice parte da 0
                                             righe_lista -1)
     oRange.setFormulaArray(lista_come_array)
     
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(3, 1, 3, getLastUsedCell(oSheet).EndRow+1))
-    #~ return
+    #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(3, 1, 3, getLastUsedCell(oSheet).EndRow+1))
+    
+    oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Columns.OptimalWidth = True
+
+    return
     copy_clip()
 
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -4949,7 +4957,7 @@ Lminor= 17 #'NUOVE FUNZIONALITA'
 Lsubv= "1.dev" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 stili_computo = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
-stili_computo_R = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
+stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
 stili_analisi = ('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco = ('EP-Cs', 'EP-aS')
 createUnoService = (
@@ -5282,7 +5290,7 @@ def filtra_codice(arg=None):
     oSheet.clearOutline()
     lrow = Range2Cell()[1]
     myrange = ('Comp End Attributo', 'Comp TOTALI',)
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (stili_computo + stili_computo_R) :
+    if oSheet.getCellByPosition(0, lrow).CellStyle in (stili_computo + stili_contab) :
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
         oCellRangeAddr.Sheet = iSheet

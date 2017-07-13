@@ -3094,8 +3094,15 @@ class conf:
 # nuova_voce_contab  ##################################################
 #~ def nuova_voce_contab (arg=None):
 def debug (arg=None):
+    chi(float('+12.0+2'))
+    chi(float('12,23'.replace(',','.')))
+    
+    return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+
+    chi(oSheet.getCellRangeByName('B6').Type.value)
+    return
     lrow = Range2Cell()[1]
     nome = oSheet.Name
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
@@ -3104,7 +3111,6 @@ def debug (arg=None):
     #~ oSheet.getRows().insertByIndex(lrow,5)
     #~ if not oDoc.NamedRanges.hasByName("Serv_gen_cont"):
         #~ rifa_nomearea('S5', '$A$23:$AW$27' , 'Serv_gen_cont')
-    
         oSheetto = oDoc.getSheets().getByName('S5')
         #~ oRangeAddress = oSheetto.getCellRangeByName('$A$9:$AR$12').getRangeAddress()
         oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
@@ -3113,7 +3119,19 @@ def debug (arg=None):
         oSheet.copyRange(oCellAddress, oRangeAddress)
         oSheet.getCellRangeByPosition(0, lrow, 48, lrow+5).Rows.OptimalHeight = True
         _gotoCella(1, lrow+1)
+
+        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        sopra = sStRange.RangeAddress.StartRow
+        sotto = sStRange.RangeAddress.EndRow
         
+        data = str(datetime.now()).split('.')[0].split(' ')[0].split('-')
+        data.reverse()
+        
+        oSheet.getCellByPosition(1, sopra+2).String = '/'.join(data)
+        chi(datetime.now().day)
+        chi(datetime.strptime(str(datetime.now()), '%d %m %Y'))
+        oSheet.getCellByPosition(1, sopra+2).Value = datetime.now()
+    
 ########################################################################
 # attiva contabilità  ##################################################
 def attiva_contabilita(arg=None):
@@ -3135,8 +3153,8 @@ def attiva_contabilita(arg=None):
         
 ########################################################################
 # svuota contabilità  ##################################################
-#~ def svuota_contabilita(arg=None):
-def debug(arg=None):
+def svuota_contabilita(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     for n in range(1 ,20):
         if oDoc.NamedRanges.hasByName('#Lib#'+str(n)) == True:
@@ -4839,26 +4857,22 @@ Si tenga conto che:
 
                 if mis[3] != None: #parti uguali
                     try:
-                        #~ eval(mis[3])
-                        oSheet.getCellByPosition(5, SR).Value = abs(eval(mis[3].replace(',','.')))
+                        oSheet.getCellByPosition(5, SR).Value = float(mis[3].replace(',','.'))
                     except:
                         oSheet.getCellByPosition(5, SR).Formula = '=' + str(mis[3]).split('=')[-1] # tolgo evenutali '=' in eccesso
                 if mis[4] != None: #lunghezza
                     try:
-                        eval(mis[4])
-                        oSheet.getCellByPosition(6, SR).Value = abs(eval(mis[4].replace(',','.')))
+                        oSheet.getCellByPosition(6, SR).Value = float(mis[4].replace(',','.'))
                     except:
                         oSheet.getCellByPosition(6, SR).Formula = '=' + str(mis[4]).split('=')[-1] # tolgo evenutali '=' in eccesso
                 if mis[5] != None: #larghezza
                     try:
-                        eval(mis[5])
-                        oSheet.getCellByPosition(7, SR).Value = abs(eval(mis[5].replace(',','.')))
+                        oSheet.getCellByPosition(7, SR).Value = float(mis[5].replace(',','.'))
                     except:
                         oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5]).split('=')[-1] # tolgo evenutali '=' in eccesso
                 if mis[6] != None: #HPESO
                     try:
-                        eval(mis[6])
-                        oSheet.getCellByPosition(8, SR).Value = abs(eval(mis[6].replace(',','.')))
+                        oSheet.getCellByPosition(8, SR).Value = float(mis[6].replace(',','.'))
                     except:
                         oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6]).split('=')[-1] # tolgo evenutali '=' in eccesso
 
@@ -4869,20 +4883,6 @@ Si tenga conto che:
                     
                 if '-' in mis[7]:
                     oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
-
-                #~ try:
-                    #~ if mis[9] != '-2':
-                        #~ vedi = diz_vv.get(mis[9])
-                        #~ try:
-                            #~ vedi_voce_xpwe(SR, vedi, mis[8])
-                        #~ except:
-                            #~ MsgBox("""Il file di origine è particolarmente disordinato.
-#~ Riordinando il computo trovo riferimenti a voci non ancora inserite.
-
-#~ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
-#~ """\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
-                #~ except:
-                    #~ pass
 
                 va = oSheet.getCellByPosition(5, SR).Value
                 vb = oSheet.getCellByPosition(6, SR).Value
@@ -4947,7 +4947,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     oDialogo_attesa.endExecute()
     #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     doppioni()
-    #~ MsgBox('Importazione eseguita con successo!','')
+    MsgBox('Importazione eseguita con successo!','')
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:#####################################################

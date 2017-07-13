@@ -1893,7 +1893,7 @@ def XPWE_out(arg=None):
 ##########################
                 if 'DETRAE LA PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
                     Flags.text = '32'
-                if ' - vedi voce n. ' in Descrizione.text:
+                if '- vedi voce n. ' in Descrizione.text:
                     IDVV.text = str(int(Descrizione.text.split(' - vedi voce n. ')[1].split(' ')[0])+1)
                     Flags.text = '32768'
                     PartiUguali.text =''
@@ -4762,6 +4762,8 @@ Si tenga conto che:
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         basic_LeenO('Computo.genera_variante')
+    
+    oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName(arg)
     if oSheet.getCellByPosition (1, 4).String == 'Cod. Art.?':
         oSheet.getRows().removeByIndex(3, 4)
@@ -4858,22 +4860,22 @@ Si tenga conto che:
                 if mis[3] != None: #parti uguali
                     try:
                         oSheet.getCellByPosition(5, SR).Value = float(mis[3].replace(',','.'))
-                    except:
+                    except ValueError:
                         oSheet.getCellByPosition(5, SR).Formula = '=' + str(mis[3]).split('=')[-1] # tolgo evenutali '=' in eccesso
                 if mis[4] != None: #lunghezza
                     try:
                         oSheet.getCellByPosition(6, SR).Value = float(mis[4].replace(',','.'))
-                    except:
+                    except ValueError:
                         oSheet.getCellByPosition(6, SR).Formula = '=' + str(mis[4]).split('=')[-1] # tolgo evenutali '=' in eccesso
                 if mis[5] != None: #larghezza
                     try:
                         oSheet.getCellByPosition(7, SR).Value = float(mis[5].replace(',','.'))
-                    except:
+                    except ValueError:
                         oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5]).split('=')[-1] # tolgo evenutali '=' in eccesso
                 if mis[6] != None: #HPESO
                     try:
                         oSheet.getCellByPosition(8, SR).Value = float(mis[6].replace(',','.'))
-                    except:
+                    except ValueError:
                         oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6]).split('=')[-1] # tolgo evenutali '=' in eccesso
 
                 if mis[8] == '2':

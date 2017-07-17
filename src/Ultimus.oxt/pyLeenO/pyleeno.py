@@ -1300,7 +1300,9 @@ def scelta_viste (arg=None):
         oDialog1Model = oDialog1.Model
         oDialog1.execute()
     #~ MsgBox('Operazione eseguita con successo!','')
-
+    if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
+        errori = ('#DIV/0!', '--')
+        hide_error(errori, 26)
 ########################################################################
 class genera_sommario_th (threading.Thread):
     def __init__(self):
@@ -5855,7 +5857,7 @@ def toolbar_vedi (arg=None):
         else:
             for bar in GetmyToolBarNames: #toolbar contestualizzate
                 toolbar_on (bar, 0)
-        #~ oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+        oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
         toolbar_ordina()
         oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
         nSheet = oDoc.CurrentController.ActiveSheet.Name
@@ -6034,19 +6036,6 @@ def inserisci_nuova_riga_con_descrizione (arg=None):
     una nuova riga con una descrizione a scelta
     '''
     inserisci_nuova_riga_con_descrizione_th().start()
-########################################################################
-class nascondi_err_th (threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        errori = ('#DIV/0!',)
-        hide_error(errori, 26)
-def nascondi_err (arg=None):
-    nascondi_err_th().start()
-#~ def nascondi_err(arg=None):
-    #~ if DlgSiNo("Nascondo eventuali righe a '#DIV/0!' nell'ultima colonna?") == 1:
-    #~ errori = ('#DIV/0!', '--')
-    #~ hide_error(errori, 26)
 ########################################################################
 def taglia_x(arg=None):
     '''

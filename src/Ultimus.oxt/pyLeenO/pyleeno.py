@@ -5804,7 +5804,7 @@ def hide_error (lErrori, icol):
                 oCellRangeAddr.StartRow = i
                 oCellRangeAddr.EndRow = i
                 oSheet.group(oCellRangeAddr,1)
-                #~ oSheet.getCellByPosition (0, i).Rows.IsVisible = True
+                oSheet.getCellByPosition (0, i).Rows.IsVisible = False
     oDoc.CurrentController.ZoomValue = 80
 ########################################################################
 def bak_timestamp(arg=None):

@@ -2518,9 +2518,8 @@ def cerca_partenza(arg=None):
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
         return partenza
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
-        sStRange = Circoscrive_Analisi (lrow)
-        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in ('An-lavoraz-Cod-sx'):
+        partenza = (oSheet.Name, lrow)
         return partenza
     else:
         partenza = None
@@ -2537,6 +2536,9 @@ def pesca_cod(arg=None):
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
+    if oSheet.Name in ('Analisi di Prezzo'):
+        cerca_partenza()
+        _gotoSheet('Elenco Prezzi')
     if oSheet.Name in ('CONTABILITA'):
         cerca_partenza()
         if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
@@ -2576,9 +2578,12 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
             codice = oSheet.getCellByPosition(0, lrow).String
             _gotoSheet(partenza[0])
             oSheet = oDoc.CurrentController.ActiveSheet
-            oSheet.getCellByPosition(1, partenza[1]).String = codice
-            _gotoCella(2, partenza[1]+1)
-            #~ chi(partenza)
+            if partenza[0] == 'Analisi di Prezzo':
+                oSheet.getCellByPosition(0, partenza[1]).String = codice
+                _gotoCella(3, partenza[1])
+            else:
+                oSheet.getCellByPosition(1, partenza[1]).String = codice
+                _gotoCella(2, partenza[1]+1)
         except NameError:
             return
 ########################################################################
@@ -3096,43 +3101,42 @@ class conf:
 # nuova_voce_contab  ##################################################
 #~ def nuova_voce_contab (arg=None):
 def debug (arg=None):
-    chi(float('+12.0+2'))
-    chi(float('12,23'.replace(',','.')))
-    
-    return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
-    chi(oSheet.getCellRangeByName('B6').Type.value)
-    return
     lrow = Range2Cell()[1]
     nome = oSheet.Name
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
     if stile == 'comp Int_colonna_R_prima':
         lrow += 1
+    elif stile == 'Comp TOTALI':
+        pass
+    elif stile in stili_contab:
+        lrow = next_voice(lrow)
+    else:
+        return
     #~ oSheet.getRows().insertByIndex(lrow,5)
     #~ if not oDoc.NamedRanges.hasByName("Serv_gen_cont"):
-        #~ rifa_nomearea('S5', '$A$23:$AW$27' , 'Serv_gen_cont')
-        oSheetto = oDoc.getSheets().getByName('S5')
-        #~ oRangeAddress = oSheetto.getCellRangeByName('$A$9:$AR$12').getRangeAddress()
-        oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
-        oCellAddress = oSheet.getCellByPosition(0,lrow).getCellAddress()
-        oSheet.getRows().insertByIndex(lrow, 5) #inserisco le righe
-        oSheet.copyRange(oCellAddress, oRangeAddress)
-        oSheet.getCellRangeByPosition(0, lrow, 48, lrow+5).Rows.OptimalHeight = True
-        _gotoCella(1, lrow+1)
+    #~ rifa_nomearea('S5', '$A$23:$AW$27' , 'Serv_gen_cont')
+    oSheetto = oDoc.getSheets().getByName('S5')
+    #~ oRangeAddress = oSheetto.getCellRangeByName('$A$9:$AR$12').getRangeAddress()
+    oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
+    oCellAddress = oSheet.getCellByPosition(0,lrow).getCellAddress()
+    oSheet.getRows().insertByIndex(lrow, 5) #inserisco le righe
+    oSheet.copyRange(oCellAddress, oRangeAddress)
+    oSheet.getCellRangeByPosition(0, lrow, 48, lrow+5).Rows.OptimalHeight = True
+    _gotoCella(1, lrow+1)
 
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
-        sopra = sStRange.RangeAddress.StartRow
-        sotto = sStRange.RangeAddress.EndRow
-        
-        data = str(datetime.now()).split('.')[0].split(' ')[0].split('-')
-        data.reverse()
-        
-        oSheet.getCellByPosition(1, sopra+2).String = '/'.join(data)
-        chi(datetime.now().day)
-        chi(datetime.strptime(str(datetime.now()), '%d %m %Y'))
-        oSheet.getCellByPosition(1, sopra+2).Value = datetime.now()
+    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    sopra = sStRange.RangeAddress.StartRow
+    sotto = sStRange.RangeAddress.EndRow
+
+    data = str(datetime.now()).split('.')[0].split(' ')[0].split('-')
+    data.reverse()
+
+    #~ oSheet.getCellByPosition(1, sopra+2).String = '/'.join(data)
+    #~ oSheet.getCellByPosition(1, sopra+2).String = datetime.now().strftime('%d/%m/%Y')
+    oSheet.getCellByPosition(1, sopra+2).Value = date.today().toordinal()-693594
     
 ########################################################################
 # attiva contabilità  ##################################################
@@ -5857,7 +5861,7 @@ def toolbar_vedi (arg=None):
         else:
             for bar in GetmyToolBarNames: #toolbar contestualizzate
                 toolbar_on (bar, 0)
-        oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+        #~ oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
         toolbar_ordina()
         oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
         nSheet = oDoc.CurrentController.ActiveSheet.Name

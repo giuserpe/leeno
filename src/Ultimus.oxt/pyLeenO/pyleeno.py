@@ -3103,7 +3103,6 @@ class conf:
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-
     lrow = Range2Cell()[1]
     nome = oSheet.Name
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
@@ -3112,14 +3111,24 @@ def debug (arg=None):
     elif stile == 'Comp TOTALI':
         pass
     elif stile in stili_contab:
+        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        chi (oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow + 1).String)
+        
+        
+        if DlgSiNo("""Inserendo qui una nuova voce, comprometterai
+la validità degli atti contabili già emessi.
+
+VUOI PROCEDERE?
+
+Scegliendo Sì sarai costretto a rigenerarli!
+Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce già registrata!') ==3:
+            return
+
+        data = oSheet.getCellByPosition(1, sStRange.RangeAddress.StartRow + 2).Value
         lrow = next_voice(lrow)
     else:
         return
-    #~ oSheet.getRows().insertByIndex(lrow,5)
-    #~ if not oDoc.NamedRanges.hasByName("Serv_gen_cont"):
-    #~ rifa_nomearea('S5', '$A$23:$AW$27' , 'Serv_gen_cont')
     oSheetto = oDoc.getSheets().getByName('S5')
-    #~ oRangeAddress = oSheetto.getCellRangeByName('$A$9:$AR$12').getRangeAddress()
     oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
     oCellAddress = oSheet.getCellByPosition(0,lrow).getCellAddress()
     oSheet.getRows().insertByIndex(lrow, 5) #inserisco le righe
@@ -3129,15 +3138,12 @@ def debug (arg=None):
 
     sStRange = Circoscrive_Voce_Computo_Att (lrow)
     sopra = sStRange.RangeAddress.StartRow
-    sotto = sStRange.RangeAddress.EndRow
 
-    data = str(datetime.now()).split('.')[0].split(' ')[0].split('-')
-    data.reverse()
+    try:
+        oSheet.getCellByPosition(1, sopra+2).Value = data
+    except:
+        oSheet.getCellByPosition(1, sopra+2).Value = date.today().toordinal()-693594
 
-    #~ oSheet.getCellByPosition(1, sopra+2).String = '/'.join(data)
-    #~ oSheet.getCellByPosition(1, sopra+2).String = datetime.now().strftime('%d/%m/%Y')
-    oSheet.getCellByPosition(1, sopra+2).Value = date.today().toordinal()-693594
-    
 ########################################################################
 # attiva contabilità  ##################################################
 def attiva_contabilita(arg=None):

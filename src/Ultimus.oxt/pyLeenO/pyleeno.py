@@ -3099,8 +3099,8 @@ class conf:
 
 ########################################################################
 # nuova_voce_contab  ##################################################
-#~ def nuova_voce_contab (arg=None):
-def debug (arg=None):
+def nuova_voce_contab (arg=None):
+#~ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
@@ -4238,6 +4238,34 @@ def strall (el, n=3):
     while len(el) < n:
         el = '0' + el
     return el
+
+########################################################################
+def converti_stringhe (arg=None):
+    '''
+    Converte in numeri le stinghe selezionate.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    try:
+        sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
+        sCol = oDoc.getCurrentSelection().getRangeAddresses()[0].StartColumn
+        eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
+        eCol = oDoc.getCurrentSelection().getRangeAddresses()[0].EndColumn
+    except AttributeError:
+        sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
+        sCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
+        eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
+        eCol = oDoc.getCurrentSelection().getRangeAddress().EndColumn
+    oRange = oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow)
+    for y in range (sCol, eCol+1):
+        for x in range (sRow, eRow+1):
+            try:
+                oSheet.getCellByPosition(y, x).Value = float(oSheet.getCellByPosition(y, x).String.replace(',','.'))
+            except:
+                pass
+    return
 
 # XPWE_in ##########################################################
 def XPWE_in (arg=None):

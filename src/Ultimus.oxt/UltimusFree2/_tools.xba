@@ -135,6 +135,7 @@ Function LeenO_Path
 End Function
 rem ----------------------------------------------------------------------
 sub rir_
+xray(date)
 	oSheet = ThisComponent.currentController.activeSheet
 	lLastUrow = getLastUsedRow(oSheet)
 	&apos;print lLastUrow

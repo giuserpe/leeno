@@ -3,7 +3,7 @@
 <library:library xmlns:library="http://openoffice.org/2000/library" library:name="UltimusFree2" library:readonly="false" library:passwordprotected="false">
  <library:element library:name="Dialog_tabellaferri"/>
  <library:element library:name="DlgAttesa"/>
- <library:element library:name="DialogDigest"/>
+ <library:element library:name="Dlg_config"/>
  <library:element library:name="DialogViste_A"/>
  <library:element library:name="Dialog_XLO"/>
  <library:element library:name="Dialog_Filtro"/>
@@ -15,5 +15,4 @@
  <library:element library:name="DlgTesto"/>
  <library:element library:name="DlgFile"/>
  <library:element library:name="DlgMain"/>
- <library:element library:name="Dlg_config"/>
 </library:library>

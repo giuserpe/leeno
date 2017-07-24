@@ -3034,6 +3034,7 @@ def leeno_conf(arg=None):
         computo['fine_voci_abbreviate'] = '100'
         
         contab['abilita'] = '0'
+        contab['idxSAL'] = '30' #numero massimo possibile di SAL
         
         defaults['Zoom'] = zoom
         defaults['Generale'] = generale
@@ -3099,30 +3100,41 @@ class conf:
 
 ########################################################################
 # nuova_voce_contab  ##################################################
-def nuova_voce_contab (arg=None):
-#~ def debug (arg=None):
+#~ def nuova_voce_contab (arg=None):
+def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome = oSheet.Name
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
+
     if stile == 'comp Int_colonna_R_prima':
         lrow += 1
+    elif stile =='Ultimus_centro_bordi_lati':
+        i = lrow
+        while i != 0:
+            if oSheet.getCellByPosition(23, i).Value != 0:
+                nSal = int(oSheet.getCellByPosition(23, i).Value)
+                break
+            i -= 1
+        while oSheet.getCellByPosition( 0, lrow).CellStyle == stile:
+            lrow += 1
+        if oSheet.getCellByPosition( 0, lrow).CellStyle == 'uuuuu':
+            lrow += 1
     elif stile == 'Comp TOTALI':
         pass
     elif stile in stili_contab:
         sStRange = Circoscrive_Voce_Computo_Att (lrow)
-        chi (oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow + 1).String)
-        
-        
-        if DlgSiNo("""Inserendo qui una nuova voce, comprometterai
+        nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
+        if oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow + 1).String == '#reg':
+            if DlgSiNo("""Inserendo qui una nuova voce, comprometterai
 la validità degli atti contabili già emessi.
 
 VUOI PROCEDERE?
 
 Scegliendo Sì sarai costretto a rigenerarli!
 Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce già registrata!') ==3:
-            return
+                return
 
         data = oSheet.getCellByPosition(1, sStRange.RangeAddress.StartRow + 2).Value
         lrow = next_voice(lrow)
@@ -3136,6 +3148,12 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     oSheet.getCellRangeByPosition(0, lrow, 48, lrow+5).Rows.OptimalHeight = True
     _gotoCella(1, lrow+1)
 
+    #~ if (oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress())):
+        #~ chi('appartiene')
+    #~ else:
+        #~ chi('nooooo')
+    #~ return
+
     sStRange = Circoscrive_Voce_Computo_Att (lrow)
     sopra = sStRange.RangeAddress.StartRow
 
@@ -3143,6 +3161,14 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
         oSheet.getCellByPosition(1, sopra+2).Value = data
     except:
         oSheet.getCellByPosition(1, sopra+2).Value = date.today().toordinal()-693594
+
+    
+    if oDoc.NamedRanges.hasByName('#Lib#'+str(nSal)):
+        if lrow -1 == oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress().EndRow:
+            nSal += 1
+
+    oSheet.getCellByPosition(23, sopra + 1).Value = nSal
+    oSheet.getCellByPosition(23, sopra + 1).CellStyle = 'Sal'
 
 ########################################################################
 # attiva contabilità  ##################################################

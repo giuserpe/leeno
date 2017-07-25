@@ -31,7 +31,7 @@ Sub attiva_contabilita
 	SetTabColorN(RGB(255,180,175))
 	Visualizza_sheet_TUTTE
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
-	nuova_voce_contab
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;nuova_voce_contab&quot;)
 	fissa (0,3)
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
 
@@ -112,7 +112,7 @@ salta:
 	Genera_LIBRETTO
 &apos;&apos;	Genera_REGISTRO &apos; questa è annidata in Genera_LIBRETTO per evitare che sia avviata quando non ci sono voci da registrare
 &apos;	ThisComponent.enableAutomaticCalculation(True)
-	oDialogScenari_2.endExecute()
+	Dialogviste_N.endExecute()
 	msgbox (&quot;La generazione degli allegati contabili è stata completata.&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
 	fine:

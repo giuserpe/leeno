@@ -2883,7 +2883,7 @@ def ins_voce_elenco (arg=None):
     oSheet.getCellByPosition(1, 3).CellStyle = "EP-a"
     oSheet.getCellRangeByPosition(2, 3, 7, 3).CellStyle = "EP-mezzo"
     oSheet.getCellRangeByPosition(8, 3, 9, 3).CellStyle = "EP-sfondo"
-    for el in (11, 15, 19, 26):
+    for el in (5, 11, 15, 19, 26):
         oSheet.getCellByPosition(el, 3).CellStyle = "EP-mezzo %"
 
     for el in (12, 16, 20, 21):#(12, 16, 20):
@@ -2994,7 +2994,6 @@ else:
 
 ###
 def leeno_conf(arg=None):
-#~ def debug(arg=None):
     '''Crea ed imposta leeno.conf con i valori di default se non presente.'''
     if sys.platform == 'win32':
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
@@ -3101,15 +3100,33 @@ class conf:
         return my_config_parser_dict
 
 ########################################################################
+def nuova_voce_scelta (arg=None): #assegnato a ctrl-shift-n
+#~ def debug(arg=None):
+    '''
+    Contestualizza in ogni tabella l'inserimento delle voci.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        ins_voce_computo()
+    elif oSheet.Name =='Analisi di Prezzo':
+        inizializza_analisi()
+    elif oSheet.Name =='CONTABILITA':
+        nuova_voce_contab()
+    elif oSheet.Name =='Elenco Prezzi':
+        ins_voce_elenco()
+    
 # nuova_voce_contab  ##################################################
 def nuova_voce_contab (arg=None):
-#~ def debug (arg=None):
+    '''
+    Inserisce una nuova voce in CONTABILITA.
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome = oSheet.Name
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
-
+    nSal = 1
     if stile == 'comp Int_colonna_R_prima':
         lrow += 1
     elif stile =='Ultimus_centro_bordi_lati':
@@ -3123,6 +3140,8 @@ def nuova_voce_contab (arg=None):
             lrow += 1
         if oSheet.getCellByPosition( 0, lrow).CellStyle == 'uuuuu':
             lrow += 1
+            #~ nSal += 1
+        #~ else
     elif stile == 'Comp TOTALI':
         pass
     elif stile in stili_contab:
@@ -3168,14 +3187,20 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     if oDoc.NamedRanges.hasByName('#Lib#'+str(nSal)):
         if lrow -1 == oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress().EndRow:
             nSal += 1
-
+    
     oSheet.getCellByPosition(23, sopra + 1).Value = nSal
     oSheet.getCellByPosition(23, sopra + 1).CellStyle = 'Sal'
+    
+    oSheet.getCellByPosition(35, sopra+4).Formula = '=B'+ str(sopra+2)
+    oSheet.getCellByPosition(36, sopra+4).Formula = '=IF(ISERROR(P'+ str(sopra +5) +');"";IF(P' + str(sopra+5) +'<>"";P' + str(sopra +5) + ';""))'
+    oSheet.getCellByPosition(36, sopra+4).CellStyle = "comp -controolo"
+    
+    numera_voci()
 
 ########################################################################
 # attiva contabilità  ##################################################
-def attiva_contabilita(arg=None):
-#~ def debug(arg=None):
+#~ def attiva_contabilita(arg=None):
+def debug(arg=None):
     '''Se presente, attiva e visualizza le tabelle di contabilità'''
 
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -6103,30 +6128,6 @@ def inserisci_nuova_riga_con_descrizione (arg=None):
     una nuova riga con una descrizione a scelta
     '''
     inserisci_nuova_riga_con_descrizione_th().start()
-########################################################################
-def debug(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oCell= oDoc.CurrentSelection
-    #~ chi(oDoc.CurrentSelection.CellBackColor)
-    oSheet = oDoc.CurrentController.ActiveSheet
-    vie =list()
-    for y in range (0, getLastUsedCell(oSheet).EndRow):
-        if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
-            el =(oSheet.getCellByPosition(0, y).String, '')
-            vie.append (el)
-    oSheet = oDoc.getSheets().getByName('VIE')
-    #~ chi(vie)
-    lista_come_array = tuple(vie)
-    chi(lista_come_array)
-    colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
-    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
-    chi(colonne_lista)
-    #~ chi(righe_lista)
-    oRange = oSheet.getCellRangeByPosition( 0,
-                                            0,
-                                            colonne_lista -1 , # l'indice parte da 0
-                                            righe_lista -1)
-    oRange.setDataArray(lista_come_array)
 ########################################################################
 def ctrl_d(arg=None):
     '''

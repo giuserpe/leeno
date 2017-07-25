@@ -2730,6 +2730,8 @@ def paste_clip(arg=None):
 
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+
 ########################################################################
 def copia_celle_visibili(arg=None):
     '''
@@ -3100,8 +3102,8 @@ class conf:
 
 ########################################################################
 # nuova_voce_contab  ##################################################
-#~ def nuova_voce_contab (arg=None):
-def debug (arg=None):
+def nuova_voce_contab (arg=None):
+#~ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
@@ -6004,6 +6006,7 @@ def make_pack (arg=None, bar=0):
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile (nomeZip2, nomeZip)
+    #~ chi(os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\')
 #######################################################################
 def dlg_attesa(msg=''):
     '''
@@ -6100,6 +6103,51 @@ def inserisci_nuova_riga_con_descrizione (arg=None):
     una nuova riga con una descrizione a scelta
     '''
     inserisci_nuova_riga_con_descrizione_th().start()
+########################################################################
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oCell= oDoc.CurrentSelection
+    #~ chi(oDoc.CurrentSelection.CellBackColor)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    vie =list()
+    for y in range (0, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            el =(oSheet.getCellByPosition(0, y).String, '')
+            vie.append (el)
+    oSheet = oDoc.getSheets().getByName('VIE')
+    #~ chi(vie)
+    lista_come_array = tuple(vie)
+    chi(lista_come_array)
+    colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+    chi(colonne_lista)
+    #~ chi(righe_lista)
+    oRange = oSheet.getCellRangeByPosition( 0,
+                                            0,
+                                            colonne_lista -1 , # l'indice parte da 0
+                                            righe_lista -1)
+    oRange.setDataArray(lista_come_array)
+########################################################################
+def ctrl_d(arg=None):
+    '''
+    Copia il valore della prima cella superiore utile.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oCell= oDoc.CurrentSelection
+    oSheet = oDoc.CurrentController.ActiveSheet
+    x = Range2Cell()[0]
+    lrow = Range2Cell()[1]
+    y = lrow-1
+    try:
+        while oSheet.getCellByPosition(x, y).Type.value == 'EMPTY':
+            y -= 1
+    except:
+        return
+    oDoc.CurrentController.select(oSheet.getCellByPosition(x, y))
+    copy_clip()
+    oDoc.CurrentController.select(oCell)
+    paste_clip()
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def taglia_x(arg=None):
     '''

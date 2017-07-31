@@ -696,5 +696,5 @@ args1(5).Name = &quot;FillMax&quot;
 args1(5).Value = &quot;2E+307&quot;
 
 dispatcher.executeDispatch(document, &quot;.uno:FillSeries&quot;, &quot;&quot;, 0, args1())
-end sub  
+end sub
 </script:module>

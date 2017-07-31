@@ -2978,7 +2978,8 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
         return
     ins_voce_computo_grezza(lrow)
     numera_voci(0)
-    pesca_cod()
+    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
+        pesca_cod()
 ########################################################################
 # leeno.conf  ###############################################
 #~ def debug(arg=None):
@@ -3059,7 +3060,7 @@ def leeno_conf(arg=None):
     except:
         conf.write(path_conf, 'Contabilità', 'idxSAL', '30') #numero massimo di SAL possibili
     try:
-        conf.read(path_conf, 'Generale', 'pesca_auto') 
+        conf.read(path_conf, 'Generale', 'pesca_auto')
     except:
         conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
 
@@ -3209,7 +3210,8 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     oSheet.getCellByPosition(36, sopra+4).CellStyle = "comp -controolo"
     
     numera_voci(0)
-    pesca_cod()
+    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
+        pesca_cod()
 
 ########################################################################
 # attiva contabilità  ##################################################

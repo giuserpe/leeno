@@ -3027,7 +3027,7 @@ def leeno_conf(arg=None):
         analisi['sicurezza'] = '0.37'
         analisi['spese_generali'] = '0.15'
         analisi['utile_impresa'] = '10.0'
-        analisi['accorpa_spese_utili'] = '1'
+        analisi['accorpa_spese_utili'] = '0'
         analisi['sconto'] = '-0.11'
         analisi['maggiorazione'] = '0.10'
         
@@ -3063,6 +3063,7 @@ def leeno_conf(arg=None):
         conf.read(path_conf, 'Generale', 'pesca_auto')
     except:
         conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
+
 
 
             
@@ -5792,9 +5793,69 @@ def XPWE_import_run (arg=None ):
         elif  oDlgXLO.getControl("CON_XLO").State == True:
             XPWE_in('CONTABILITA')
 ########################################################################
+#~ def Dlg_config(arg=None):
+def debug (arg=None):
+    '''
+    Visualizza il menù di configurazione
+    '''
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    #~ global oDlg_config
+    oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
+    oDialog1Model = oDlg_config.Model
+    
+    if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
+    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1
+    sString = oDlg_config.getControl('TextField1')
+    sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
+    
+    sString = oDlg_config.getControl("ComboBox1")
+    sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
+    
+    sString = oDlg_config.getControl('TextField5')
+    sString.Text = conf.read(path_conf, 'Analisi', 'sicurezza')
+
+    sString = oDlg_config.getControl('TextField6')
+    sString.Text = conf.read(path_conf, 'Analisi', 'spese_generali')
+
+    sString = oDlg_config.getControl('TextField7')
+    sString.Text = conf.read(path_conf, 'Analisi', 'utile_impresa')
+    
+    if conf.read(path_conf, 'Analisi', 'accorpa_spese_utili') == '1': oDlg_config.getControl('CheckBox4').State = 1
+    
+    sString = oDlg_config.getControl('TextField8')
+    sString.Text = conf.read(path_conf, 'Analisi', 'sconto')
+    
+    sString = oDlg_config.getControl('TextField9')
+    sString.Text = conf.read(path_conf, 'Analisi', 'maggiorazione')
+    
+    if conf.read(path_conf, 'Zoom', 'fullscreen') == '1': oDlg_config.getControl('CheckBox3').State = 1
+    
+    sString = oDlg_config.getControl('TextField3')
+    sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
+
+    sString = oDlg_config.getControl('TextField2')
+    sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
+    
+    sString = oDlg_config.getControl('TextField10')
+    sString.Text = conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate')
+
+    sString = oDlg_config.getControl('TextField11')
+    sString.Text = conf.read(path_conf, 'Computo', 'fine_voci_abbreviate')
+    
+    if conf.read(path_conf, 'Computo', 'riga_bianca_categorie') == '1': oDlg_config.getControl('CheckBox5').State = 1
+    if conf.read(path_conf, 'Computo', 'voci_senza_numerazione') == '1': oDlg_config.getControl('CheckBox6').State = 1
+    
+    if conf.read(path_conf, 'Contabilità', 'abilita') == '1': oDlg_config.getControl('CheckBox7').State = 1
+    sString = oDlg_config.getControl('TextField13')
+    sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
+    
+
+    oDlg_config.execute()
+########################################################################
 def DlgMain(arg=None):
     '''
-    Viasualizza il menù principale
+    Visualizza il menù principale
     '''
     bak_timestamp() # fa il backup del file
     oDoc = XSCRIPTCONTEXT.getDocument()

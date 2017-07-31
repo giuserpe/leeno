@@ -2994,7 +2994,8 @@ else:
 
 ###
 def leeno_conf(arg=None):
-    '''Crea ed imposta leeno.conf con i valori di default se non presente.'''
+#~ def debug(arg=None):
+    '''Crea ed imposta leeno.conf con i valori di default SOLO SE NON PRESENTE.'''
     if sys.platform == 'win32':
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
     else:
@@ -3035,14 +3036,13 @@ def leeno_conf(arg=None):
         computo['fine_voci_abbreviate'] = '100'
         
         contab['abilita'] = '0'
-        contab['idxSAL'] = '30' #numero massimo possibile di SAL
         
         defaults['Zoom'] = zoom
         defaults['Generale'] = generale
         defaults['Analisi'] = analisi
         defaults['Contabilità'] = contab
         defaults['Computo'] = computo
-
+        
         parser = configparser.SafeConfigParser()
         for k in defaults.keys():
             if not parser.has_section(k):
@@ -3050,8 +3050,21 @@ def leeno_conf(arg=None):
 
             for key in defaults[k].keys():
                 parser.set(k, key, defaults[k][key])
+            
         with open(path_conf, 'w') as f:
             parser.write(f)
+# di seguito ci metto tutte le variabili aggiunte dopo la prima introduzione di /.config/leeno/leeno.conf
+    try:
+        conf.read(path_conf, 'Contabilità', 'idxSAL')
+    except:
+        conf.write(path_conf, 'Contabilità', 'idxSAL', '30') #numero massimo di SAL possibili
+    try:
+        conf.read(path_conf, 'Generale', 'pesca_auto') 
+    except:
+        conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
+
+
+            
 ########################################################################
 class conf:
     '''
@@ -3112,12 +3125,12 @@ def nuova_voce_scelta (arg=None): #assegnato a ctrl-shift-n
     elif oSheet.Name =='Analisi di Prezzo':
         inizializza_analisi()
     elif oSheet.Name =='CONTABILITA':
-        nuova_voce_contab()
+        ins_voce_contab()
     elif oSheet.Name =='Elenco Prezzi':
         ins_voce_elenco()
     
 # nuova_voce_contab  ##################################################
-def nuova_voce_contab (arg=None):
+def ins_voce_contab (arg=None):
     '''
     Inserisce una nuova voce in CONTABILITA.
     '''
@@ -3195,12 +3208,13 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     oSheet.getCellByPosition(36, sopra+4).Formula = '=IF(ISERROR(P'+ str(sopra +5) +');"";IF(P' + str(sopra+5) +'<>"";P' + str(sopra +5) + ';""))'
     oSheet.getCellByPosition(36, sopra+4).CellStyle = "comp -controolo"
     
-    numera_voci()
+    numera_voci(0)
+    pesca_cod()
 
 ########################################################################
 # attiva contabilità  ##################################################
-#~ def attiva_contabilita(arg=None):
-def debug(arg=None):
+def attiva_contabilita(arg=None):
+#~ def debug(arg=None):
     '''Se presente, attiva e visualizza le tabelle di contabilità'''
 
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -5505,7 +5519,7 @@ def autoexec (arg=None):
     '''
     questa è richiamata da New_File()
     '''
-    leeno_conf()#Crea ed imposta leeno.conf se non presente.
+    leeno_conf()#Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
     #~ chi("autoexec py")
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
@@ -6177,6 +6191,100 @@ def taglia_x(arg=None):
     oRange = oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow)
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
+########################################################################
+def debug_mt(arg=None): #COMUNE DI MATERA
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    chi(oSheet.getCellRangeByName('A2235').CellBackColor)
+    return
+    for y in reversed(range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow)):
+        for x in range (0, 5):
+            if oSheet.getCellByPosition(x, y).CellBackColor == 16764057:
+                oSheet.getRows().removeByIndex(y, 1)
+
+                _gotoCella(x, y)
+                return
+    
+    return
+
+#~ SALTA SULLE CELLE 
+    for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
+        for x in range (0, 30):
+            if oSheet.getCellByPosition(x, y).getIsMerged() == True:
+                _gotoCella(x, y)
+                return
+
+#~ SPALMA I VALORI
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).Type.value =='VALUE':
+            #~ valore = oSheet.getCellByPosition(0, y).Value
+        #~ else:
+            #~ oSheet.getCellByPosition(0, y).Value = valore
+
+#~ COLORA VALORI DIFFERENTI
+    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(10, y).String != oSheet.getCellByPosition(11, y).String:
+            #~ if oSheet.getCellByPosition(11, y).String != '':
+                #~ oSheet.getCellByPosition(10, y).CellBackColor = 16777113
+                #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
+
+#~ RECUPERA VIE
+    #~ vie = list()
+    #~ n = 0
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ n += 1
+            #~ testo = oSheet.getCellByPosition(0, y).String
+            #~ el = (n, testo)
+            #~ vie.append(el)
+    
+    #~ oSheet = oDoc.getSheets().getByName('VIE')
+    #~ oRange = oSheet.getCellRangeByPosition(0, 0, len(vie[0])-1, len(vie)-1)
+    #~ lista_come_array = tuple(vie)
+    #~ oRange.setDataArray(lista_come_array) #setFrmulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
+#~ crea via e numero
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
+        #~ if oSheet.getCellByPosition(1, y).CellBackColor == 16777113:
+            #~ oSheet.getCellByPosition(1, y).String = oSheet.getCellByPosition(2, y).String
+            #~ oSheet.getCellByPosition(2, y).String =''
+#~ crea via e numero
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ testo = oSheet.getCellByPosition(1, y).String
+        #~ else:
+            #~ try:
+                #~ oSheet.getCellByPosition(17, y).String = testo + ', ' + oSheet.getCellByPosition(1, y).String.upper()
+            #~ except:
+                #~ pass
+#~ elimina '/' finale
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ try:
+            #~ if oSheet.getCellByPosition(10, y).String[-1] == ',':
+                #~ oSheet.getCellByPosition(10, y).String = oSheet.getCellByPosition(10, y).String[:-1]
+        #~ except:
+            #~ pass
+            
+    #~ return
+#~ ricerca graffate
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if '\n' in oSheet.getCellByPosition(6, y).String:
+            #~ particelle = oSheet.getCellByPosition(6, y).String.split('\n')
+            #~ sub = oSheet.getCellByPosition(7, y).String.split('\n')
+
+            #~ while len (sub) < len(particelle):
+                #~ sub.append('')
+            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 5, y))
+            #~ copy_clip()
+            #~ oSheet.getRows().insertByIndex(y+1, len(particelle)-1)
+            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y+1, 0, y+len(particelle)-1))
+            #~ paste_clip()
+            #~ for n in range(0, len(particelle)):
+                #~ oSheet.getCellByPosition(6, y+n).String = particelle[n]
+                #~ oSheet.getCellByPosition(7, y+n).String = sub[n]
+                #~ oSheet.getCellByPosition(15, y+n).String = particelle[0]+ '/' + sub[0]
+    #~ chi(sub)
+
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = set_larghezza_colonne,

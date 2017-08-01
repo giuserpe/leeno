@@ -3032,31 +3032,32 @@ class conf:
         my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
         return my_config_parser_dict
     
-    def default():
-        conf.write(path_conf, 'Zoom',  'aggiustamento', '2')
-        conf.write(path_conf, 'Zoom', 'fattore', '100')
-        conf.write(path_conf, 'Zoom', 'fattore_ottimale', '81')
-        conf.write(path_conf, 'Zoom', 'fullscreen', '0')
+def default(arg=None):
+    #~ conf.write(path_conf, 'Zoom',  'aggiustamento', '2')
+    
+    conf.write(path_conf, 'Zoom', 'fattore', '100')
+    conf.write(path_conf, 'Zoom', 'fattore_ottimale', '81')
+    conf.write(path_conf, 'Zoom', 'fullscreen', '0')
 
-        conf.write(path_conf, 'Generale', 'visualizza', 'Menù Principale')
-        conf.write(path_conf, 'Generale', 'altezza_celle', '1.25')
-        conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
-        conf.write(path_conf, 'Generale', 'pesca_auto', '1')
+    conf.write(path_conf, 'Generale', 'visualizza', 'Menù Principale')
+    conf.write(path_conf, 'Generale', 'altezza_celle', '1.25')
+    conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
+    conf.write(path_conf, 'Generale', 'pesca_auto', '1')
 
-        conf.write(path_conf, 'Analisi', 'sicurezza', '0.37')
-        conf.write(path_conf, 'Analisi', 'spese_generali', '0.15')
-        conf.write(path_conf, 'Analisi', 'utile_impresa', '10.0')
-        conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', '0')
-        conf.write(path_conf, 'Analisi', 'sconto', '-0.11')
-        conf.write(path_conf, 'Analisi', 'maggiorazione', '0.10')
+    conf.write(path_conf, 'Analisi', 'sicurezza', '0.37')
+    conf.write(path_conf, 'Analisi', 'spese_generali', '0.15')
+    conf.write(path_conf, 'Analisi', 'utile_impresa', '10.0')
+    conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', '0')
+    conf.write(path_conf, 'Analisi', 'sconto', '-0.11')
+    conf.write(path_conf, 'Analisi', 'maggiorazione', '0.10')
 
-        conf.write(path_conf, 'Computo', 'riga_bianca_categorie', '1')
-        conf.write(path_conf, 'Computo', 'voci_senza_numerazione', '0')
-        conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', '160')
-        conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', '100')
+    conf.write(path_conf, 'Computo', 'riga_bianca_categorie', '1')
+    conf.write(path_conf, 'Computo', 'voci_senza_numerazione', '0')
+    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', '160')
+    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', '100')
 
-        conf.write(path_conf, 'Contabilità', 'abilita', '0')
-        conf.write(path_conf, 'Contabilità', 'idxSAL', '30')
+    conf.write(path_conf, 'Contabilità', 'abilita', '0')
+    conf.write(path_conf, 'Contabilità', 'idxSAL', '30')
 
 ########################################################################
 def nuova_voce_scelta (arg=None): #assegnato a ctrl-shift-n
@@ -5472,7 +5473,7 @@ def autoexec (arg=None):
     else:
         path = os.getenv("HOME")
     if not os.path.exists(path_conf):
-        conf.default()
+        default()
 
     #~ chi("autoexec py")
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -5756,8 +5757,8 @@ def XPWE_import_run (arg=None ):
 
 ########################################################################
 # leeno.conf  ##########################################################
-def configura_leeno (arg=None):
-#~ def debug (arg=None):
+#~ def configura_leeno (arg=None):
+def debug (arg=None):
     '''
     Visualizza il menù di configurazione
     '''
@@ -5814,8 +5815,33 @@ def configura_leeno (arg=None):
     sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
     oDlg_config.execute()
     
-    #~ sString = oDlg_config.getControl("ComboBox1")
-    #~ conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
+    #~ mri(oDlg_config.getControl("CommandButton1"))
+    conf.write(path_conf, 'Zoom', 'fattore', oDlg_config.getControl('TextField3').getText())
+    conf.write(path_conf, 'Zoom', 'fattore_ottimale', oDlg_config.getControl('TextField2').getText())
+    conf.write(path_conf, 'Zoom', 'fullscreen', str(oDlg_config.getControl('CheckBox3').State))
+    
+
+    conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
+    conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
+    conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
+    conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
+
+    conf.write(path_conf, 'Analisi', 'sicurezza', oDlg_config.getControl('TextField5').getText())
+    conf.write(path_conf, 'Analisi', 'spese_generali', oDlg_config.getControl('TextField6').getText())
+    conf.write(path_conf, 'Analisi', 'utile_impresa', oDlg_config.getControl('TextField7').getText())
+    conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', str(oDlg_config.getControl('CheckBox4').State))
+    conf.write(path_conf, 'Analisi', 'sconto', oDlg_config.getControl('TextField8').getText())
+    conf.write(path_conf, 'Analisi', 'maggiorazione', oDlg_config.getControl('TextField9').getText())
+
+    conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
+    conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
+    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
+    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
+
+    conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
+    conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
+
+
 ########################################################################
 def DlgMain(arg=None):
     '''
@@ -6360,7 +6386,7 @@ def debug_mt(arg=None): #COMUNE DI MATERA
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = set_larghezza_colonne,
+g_exportedScripts = default,
 #~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, numera_voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################

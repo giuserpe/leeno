@@ -2981,93 +2981,11 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         pesca_cod()
 ########################################################################
-# leeno.conf  ###############################################
-#~ def debug(arg=None):
-def configura(arg=None):
-    pass
-
-########################################################################
-
+#percorso di ricerca di leeno.conf
 if sys.platform == 'win32':
     path_conf = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") + '/.config/leeno/leeno.conf'
 else:
     path_conf = os.getenv("HOME") + '/.config/leeno/leeno.conf'
-
-###
-def leeno_conf(arg=None):
-#~ def debug(arg=None):
-    '''Crea ed imposta leeno.conf con i valori di default SOLO SE NON PRESENTE.'''
-    if sys.platform == 'win32':
-        path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
-    else:
-        path = os.getenv("HOME")
-
-    if not os.path.exists(path_conf):
-        try:
-            os.makedirs(path + '/.config/leeno/')
-        except FileExistsError:
-            pass
-        ###
-        zoom = collections.OrderedDict()
-        generale = collections.OrderedDict()
-        analisi = collections.OrderedDict()
-        computo = collections.OrderedDict()
-        contab = collections.OrderedDict()
-        defaults = collections.OrderedDict()
-
-        zoom['aggiustamento'] = '2'
-        zoom['fattore'] = '100'
-        zoom['fattore_ottimale'] = '81'
-        zoom['fullscreen'] = '0'
-        
-        generale['visualizza'] = 'Menù Principale'
-        generale['altezza_celle'] = '1.25'
-        generale['visualizza_tabelle_extra'] = '1'
-        
-        analisi['sicurezza'] = '0.37'
-        analisi['spese_generali'] = '0.15'
-        analisi['utile_impresa'] = '10.0'
-        analisi['accorpa_spese_utili'] = '0'
-        analisi['sconto'] = '-0.11'
-        analisi['maggiorazione'] = '0.10'
-        
-        computo['riga_bianca_categorie'] = '1'
-        computo['voci_senza_numerazione'] = '0'
-        computo['inizio_voci_abbreviate'] = '160'
-        computo['fine_voci_abbreviate'] = '100'
-        
-        contab['abilita'] = '0'
-        
-        defaults['Zoom'] = zoom
-        defaults['Generale'] = generale
-        defaults['Analisi'] = analisi
-        defaults['Contabilità'] = contab
-        defaults['Computo'] = computo
-        
-        parser = configparser.SafeConfigParser()
-        for k in defaults.keys():
-            if not parser.has_section(k):
-                parser.add_section(k)
-
-            for key in defaults[k].keys():
-                parser.set(k, key, defaults[k][key])
-            
-        with open(path_conf, 'w') as f:
-            parser.write(f)
-# di seguito ci metto tutte le variabili aggiunte dopo la prima introduzione di /.config/leeno/leeno.conf
-    try:
-        conf.read(path_conf, 'Contabilità', 'idxSAL')
-    except:
-        conf.write(path_conf, 'Contabilità', 'idxSAL', '30') #numero massimo di SAL possibili
-    try:
-        conf.read(path_conf, 'Generale', 'pesca_auto')
-    except:
-        conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
-
-
-
-            
-########################################################################
 class conf:
     '''
     path    { string }: indirizzo del file di configurazione
@@ -3113,6 +3031,32 @@ class conf:
         '''
         my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
         return my_config_parser_dict
+    
+    def default():
+        conf.write(path_conf, 'Zoom',  'aggiustamento', '2')
+        conf.write(path_conf, 'Zoom', 'fattore', '100')
+        conf.write(path_conf, 'Zoom', 'fattore_ottimale', '81')
+        conf.write(path_conf, 'Zoom', 'fullscreen', '0')
+
+        conf.write(path_conf, 'Generale', 'visualizza', 'Menù Principale')
+        conf.write(path_conf, 'Generale', 'altezza_celle', '1.25')
+        conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
+        conf.write(path_conf, 'Generale', 'pesca_auto', '1')
+
+        conf.write(path_conf, 'Analisi', 'sicurezza', '0.37')
+        conf.write(path_conf, 'Analisi', 'spese_generali', '0.15')
+        conf.write(path_conf, 'Analisi', 'utile_impresa', '10.0')
+        conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', '0')
+        conf.write(path_conf, 'Analisi', 'sconto', '-0.11')
+        conf.write(path_conf, 'Analisi', 'maggiorazione', '0.10')
+
+        conf.write(path_conf, 'Computo', 'riga_bianca_categorie', '1')
+        conf.write(path_conf, 'Computo', 'voci_senza_numerazione', '0')
+        conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', '160')
+        conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', '100')
+
+        conf.write(path_conf, 'Contabilità', 'abilita', '0')
+        conf.write(path_conf, 'Contabilità', 'idxSAL', '30')
 
 ########################################################################
 def nuova_voce_scelta (arg=None): #assegnato a ctrl-shift-n
@@ -5522,7 +5466,14 @@ def autoexec (arg=None):
     '''
     questa è richiamata da New_File()
     '''
-    leeno_conf()#Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
+#Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
+    if sys.platform == 'win32':
+        path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
+    else:
+        path = os.getenv("HOME")
+    if not os.path.exists(path_conf):
+        conf.default()
+
     #~ chi("autoexec py")
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
@@ -5684,6 +5635,16 @@ def adegua_tmpl (arg=None):
         sostituita la colonna "Tag A" con "Tag Super Cat"
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
     '''
+# di seguito ci metto tutte le variabili aggiunte dopo la prima introduzione di /.config/leeno/leeno.conf
+    try:
+        conf.read(path_conf, 'Contabilità', 'idxSAL')
+    except:
+        conf.write(path_conf, 'Contabilità', 'idxSAL', '30') #numero massimo di SAL possibili
+    try:
+        conf.read(path_conf, 'Generale', 'pesca_auto')
+    except:
+        conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
+
     # cambiare stile http://bit.ly/2cDcCJI
     oDoc = XSCRIPTCONTEXT.getDocument()
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
@@ -5792,9 +5753,11 @@ def XPWE_import_run (arg=None ):
             XPWE_in('VARIANTE')
         elif  oDlgXLO.getControl("CON_XLO").State == True:
             XPWE_in('CONTABILITA')
+
 ########################################################################
-#~ def Dlg_config(arg=None):
-def debug (arg=None):
+# leeno.conf  ##########################################################
+def configura_leeno (arg=None):
+#~ def debug (arg=None):
     '''
     Visualizza il menù di configurazione
     '''
@@ -5849,9 +5812,10 @@ def debug (arg=None):
     if conf.read(path_conf, 'Contabilità', 'abilita') == '1': oDlg_config.getControl('CheckBox7').State = 1
     sString = oDlg_config.getControl('TextField13')
     sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
-    
-
     oDlg_config.execute()
+    
+    #~ sString = oDlg_config.getControl("ComboBox1")
+    #~ conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
 ########################################################################
 def DlgMain(arg=None):
     '''
@@ -6259,17 +6223,63 @@ def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
-    chi(oSheet.getCellRangeByName('A2235').CellBackColor)
-    return
-    for y in reversed(range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow)):
-        for x in range (0, 5):
-            if oSheet.getCellByPosition(x, y).CellBackColor == 16764057:
-                oSheet.getRows().removeByIndex(y, 1)
+    #~ mri(oSheet.getCellRangeByName('A3594:AC3594'))
+    #~ return
+    for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow+1):
+        if '-' in oSheet.getCellByPosition(16, y).String:
+            _gotoCella(16, y)
+            return
+            #~ oSheet.getRows().removeByIndex(y, 1)
 
-                _gotoCella(x, y)
-                return
-    
+            #~ iSheet = oSheet.RangeAddress.Sheet
+            #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+            #~ oCellRangeAddr.Sheet = iSheet
+            #~ oCellRangeAddr.StartColumn = 0
+            #~ oCellRangeAddr.EndColumn = 0
+            #~ oCellRangeAddr.StartRow = y
+            #~ oCellRangeAddr.EndRow = y
+            #~ oSheet.group(oCellRangeAddr, 1)
     return
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
+        #~ if oSheet.getCellByPosition(0, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(1, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(2, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(3, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(4, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(5, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(6, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(7, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(8, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(9, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(10, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(11, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(12, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(13, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(14, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(15, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(16, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(17, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(18, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(19, y).Type.value == 'EMPTY' and \
+        #~ oSheet.getCellByPosition(20, y).Type.value == 'EMPTY':
+            #~ oSheet.getRows().removeByIndex(y, 1)
+        #~ for x in range (0, 5):
+            #~ if oSheet.getCellByPosition(x, y).CellBackColor == 16764057:
+                #~ oSheet.getRows().removeByIndex(y, 1)
+
+                #~ _gotoCella(x, y)
+                #~ return
+    
+    #~ return
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
+        #~ for x in range (0, 5):
+            #~ if oSheet.getCellByPosition(x, y).CellBackColor == 16764057:
+                #~ oSheet.getRows().removeByIndex(y, 1)
+
+                #~ _gotoCella(x, y)
+                #~ return
+    
+    #~ return
 
 #~ SALTA SULLE CELLE 
     for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
@@ -6323,8 +6333,8 @@ def debug_mt(arg=None): #COMUNE DI MATERA
 #~ elimina '/' finale
     #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
         #~ try:
-            #~ if oSheet.getCellByPosition(10, y).String[-1] == ',':
-                #~ oSheet.getCellByPosition(10, y).String = oSheet.getCellByPosition(10, y).String[:-1]
+            #~ if oSheet.getCellByPosition(9, y).String[-1] == '/':
+                #~ oSheet.getCellByPosition(9, y).String = oSheet.getCellByPosition(9, y).String[:-1]
         #~ except:
             #~ pass
             

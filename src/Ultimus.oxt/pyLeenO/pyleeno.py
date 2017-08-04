@@ -1234,11 +1234,11 @@ def scelta_viste (arg=None):
                 formule.append(['=IF(Q' + str(n) + '-M' + str(n) + '=0;"--";Q' + str(n) + '-M' + str(n) + ')',
                                 '=IF(R' + str(n) + '-N' + str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
                                 '=IF(R' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-R' + str(n) + ';"")',
-'=IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')'])
+'=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')/100;"--")'])
 
             n += 1
             for el in (1, ER+1):
-                oSheet.getCellByPosition(26, el).Formula = '=IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')'
+                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')/100;"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple (formule)
             oRange.setFormulaArray(formule)
@@ -1253,10 +1253,10 @@ def scelta_viste (arg=None):
                 formule.append(['=IF(U' + str(n) + '-M' + str(n) + '=0;"--";U' + str(n) + '-M' + str(n) + ')',
                                 '=IF(V' + str(n) + '-N' + str(n) + '>0;V' + str(n) + '-N' + str(n) + ';"")',
                                 '=IF(V' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-V' + str(n) + ';"")',
-'=IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')'])
+'=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')/100;"--")'])
             n += 1
             for el in (1, ER+1):
-                oSheet.getCellByPosition(26, el).Formula = '=IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')'
+                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')/100;"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple (formule)
             oRange.setFormulaArray(formule)
@@ -1271,10 +1271,10 @@ def scelta_viste (arg=None):
                 formule.append(['=IF(U' + str(n) + '-Q' + str(n) + '=0;"--";U' + str(n) + '-Q' + str(n) + ')',
                                 '=IF(V' + str(n) + '-R' + str(n) + '>0;V' + str(n) + '-R' + str(n) + ';"")',
                                 '=IF(V' + str(n) + '-R' + str(n) + '<0;R' + str(n) + '-V' + str(n) + ';"")',
-'=IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')'])
+'=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')/100;"--")'])
             n += 1
             for el in (1, ER+1):
-                oSheet.getCellByPosition(26, el).Formula = '=IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')'
+                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')/100;"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple (formule)
             oRange.setFormulaArray(formule)
@@ -5757,8 +5757,8 @@ def XPWE_import_run (arg=None ):
 
 ########################################################################
 # leeno.conf  ##########################################################
-#~ def configura_leeno (arg=None):
-def debug (arg=None):
+def configura_leeno (arg=None):
+#~ def debug (arg=None):
     '''
     Visualizza il menù di configurazione
     '''
@@ -6245,68 +6245,32 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
-    #~ mri(oSheet.getCellRangeByName('A3594:AC3594'))
+    #~ mri(oSheet.getCellRangeByName('Y254'))
+    #~ mri(oDoc.CurrentSelection)
+    #~ chi(oSheet.getCellRangeByName('Y398').String[-7:])
+    #~ oSheet.getCellRangeByName('Y254').Formula = '=HYPERLINK("http://leeno.org/";"LeenO")'
     #~ return
-    for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow+1):
-        if '-' in oSheet.getCellByPosition(16, y).String:
-            _gotoCella(16, y)
-            return
-            #~ oSheet.getRows().removeByIndex(y, 1)
 
-            #~ iSheet = oSheet.RangeAddress.Sheet
-            #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-            #~ oCellRangeAddr.Sheet = iSheet
-            #~ oCellRangeAddr.StartColumn = 0
-            #~ oCellRangeAddr.EndColumn = 0
-            #~ oCellRangeAddr.StartRow = y
-            #~ oCellRangeAddr.EndRow = y
-            #~ oSheet.group(oCellRangeAddr, 1)
+    for y in range(3, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(24, y).String[-7:] == ' murata':
+            oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]
+            oSheet.getCellByPosition(24, y).String = oSheet.getCellByPosition(24, y).String[:-7]
     return
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
-        #~ if oSheet.getCellByPosition(0, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(1, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(2, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(3, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(4, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(5, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(6, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(7, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(8, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(9, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(10, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(11, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(12, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(13, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(14, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(15, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(16, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(17, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(18, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(19, y).Type.value == 'EMPTY' and \
-        #~ oSheet.getCellByPosition(20, y).Type.value == 'EMPTY':
-            #~ oSheet.getRows().removeByIndex(y, 1)
-        #~ for x in range (0, 5):
-            #~ if oSheet.getCellByPosition(x, y).CellBackColor == 16764057:
-                #~ oSheet.getRows().removeByIndex(y, 1)
-
-                #~ _gotoCella(x, y)
-                #~ return
-    
-    #~ return
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
-        #~ for x in range (0, 5):
-            #~ if oSheet.getCellByPosition(x, y).CellBackColor == 16764057:
-                #~ oSheet.getRows().removeByIndex(y, 1)
-
-                #~ _gotoCella(x, y)
-                #~ return
-    
-    #~ return
-
+    for y in range(3, getLastUsedCell(oSheet).EndRow+1):
+        if oSheet.getCellByPosition(4, y).CellBackColor != 16737792:
+            iSheet = oSheet.RangeAddress.Sheet
+            oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+            oCellRangeAddr.Sheet = iSheet
+            oCellRangeAddr.StartColumn = 0
+            oCellRangeAddr.EndColumn = 0
+            oCellRangeAddr.StartRow = y
+            oCellRangeAddr.EndRow = y
+            oSheet.group(oCellRangeAddr, 1)
+    return
 #~ SALTA SULLE CELLE 
     for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
         for x in range (0, 30):

@@ -2503,7 +2503,7 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
 ########################################################################
 def cerca_partenza(arg=None):
     '''
-    Conserva, in una variabile globale, il nome del foglio [0] e l'id
+    Conserva, nella variabile globale 'partenza', il nome del foglio [0] e l'id
     della riga di codice prezzo componente [1].
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()

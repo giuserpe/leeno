@@ -3143,7 +3143,25 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     except:
         oSheet.getCellByPosition(1, sopra+2).Value = date.today().toordinal()-693594
 
-    
+########################################################################
+# controllo la presenza di voci abbreviate e nel caso adatto la formula
+    for i in range (3, 10):
+        if '=IF(LEN(VLOOKUP(B' in oSheet.getCellByPosition(2, i).getFormula():
+            sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+            oSheet.getCellByPosition(2, lrow+1).Formula = sformula
+            break
+########################################################################
+# raggruppo i righi di mirura
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    oCellRangeAddr.StartColumn = 0
+    oCellRangeAddr.EndColumn = 0
+    oCellRangeAddr.StartRow = lrow+2
+    oCellRangeAddr.EndRow = lrow+2
+    oSheet.group(oCellRangeAddr, 1)
+########################################################################
+
     if oDoc.NamedRanges.hasByName('#Lib#'+str(nSal)):
         if lrow -1 == oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress().EndRow:
             nSal += 1

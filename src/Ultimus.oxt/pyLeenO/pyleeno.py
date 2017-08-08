@@ -2981,6 +2981,92 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         pesca_cod()
 ########################################################################
+# leeno.conf  ##########################################################
+def config_leeno (arg=None):
+#~ def debug (arg=None):
+    '''
+    Visualizza il menù di configurazione
+    '''
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    #~ global oDlg_config
+    oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
+    oDialog1Model = oDlg_config.Model
+    
+    if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
+    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1
+    sString = oDlg_config.getControl('TextField1')
+    sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
+    
+    sString = oDlg_config.getControl("ComboBox1")
+    sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
+    
+    sString = oDlg_config.getControl('TextField5')
+    sString.Text = conf.read(path_conf, 'Analisi', 'sicurezza')
+
+    sString = oDlg_config.getControl('TextField6')
+    sString.Text = conf.read(path_conf, 'Analisi', 'spese_generali')
+
+    sString = oDlg_config.getControl('TextField7')
+    sString.Text = conf.read(path_conf, 'Analisi', 'utile_impresa')
+    
+    if conf.read(path_conf, 'Analisi', 'accorpa_spese_utili') == '1': oDlg_config.getControl('CheckBox4').State = 1
+    
+    sString = oDlg_config.getControl('TextField8')
+    sString.Text = conf.read(path_conf, 'Analisi', 'sconto')
+    
+    sString = oDlg_config.getControl('TextField9')
+    sString.Text = conf.read(path_conf, 'Analisi', 'maggiorazione')
+    
+    if conf.read(path_conf, 'Zoom', 'fullscreen') == '1': oDlg_config.getControl('CheckBox3').State = 1
+    
+    sString = oDlg_config.getControl('TextField3')
+    sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
+
+    sString = oDlg_config.getControl('TextField2')
+    sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
+    
+    sString = oDlg_config.getControl('TextField10')
+    sString.Text = conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate')
+
+    sString = oDlg_config.getControl('TextField11')
+    sString.Text = conf.read(path_conf, 'Computo', 'fine_voci_abbreviate')
+    
+    if conf.read(path_conf, 'Computo', 'riga_bianca_categorie') == '1': oDlg_config.getControl('CheckBox5').State = 1
+    if conf.read(path_conf, 'Computo', 'voci_senza_numerazione') == '1': oDlg_config.getControl('CheckBox6').State = 1
+    
+    if conf.read(path_conf, 'Contabilità', 'abilita') == '1': oDlg_config.getControl('CheckBox7').State = 1
+    sString = oDlg_config.getControl('TextField13')
+    sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
+    oDlg_config.execute()
+    
+    #~ mri(oDlg_config.getControl("CommandButton1"))
+    conf.write(path_conf, 'Zoom', 'fattore', oDlg_config.getControl('TextField3').getText())
+    conf.write(path_conf, 'Zoom', 'fattore_ottimale', oDlg_config.getControl('TextField2').getText())
+    conf.write(path_conf, 'Zoom', 'fullscreen', str(oDlg_config.getControl('CheckBox3').State))
+    
+
+    conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
+    conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
+    conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
+    conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
+
+    conf.write(path_conf, 'Analisi', 'sicurezza', oDlg_config.getControl('TextField5').getText())
+    conf.write(path_conf, 'Analisi', 'spese_generali', oDlg_config.getControl('TextField6').getText())
+    conf.write(path_conf, 'Analisi', 'utile_impresa', oDlg_config.getControl('TextField7').getText())
+    conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', str(oDlg_config.getControl('CheckBox4').State))
+    conf.write(path_conf, 'Analisi', 'sconto', oDlg_config.getControl('TextField8').getText())
+    conf.write(path_conf, 'Analisi', 'maggiorazione', oDlg_config.getControl('TextField9').getText())
+
+    conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
+    conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
+    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
+    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
+
+    conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
+    conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
+
+########################################################################
 #percorso di ricerca di leeno.conf
 if sys.platform == 'win32':
     path_conf = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") + '/.config/leeno/leeno.conf'
@@ -3032,9 +3118,8 @@ class conf:
         my_config_parser_dict = {s:dict(config.items(s)) for s in config.sections()}
         return my_config_parser_dict
     
-def default(arg=None):
+def config_default(arg=None):
     #~ conf.write(path_conf, 'Zoom',  'aggiustamento', '2')
-    
     conf.write(path_conf, 'Zoom', 'fattore', '100')
     conf.write(path_conf, 'Zoom', 'fattore_ottimale', '81')
     conf.write(path_conf, 'Zoom', 'fullscreen', '0')
@@ -3058,7 +3143,8 @@ def default(arg=None):
 
     conf.write(path_conf, 'Contabilità', 'abilita', '0')
     conf.write(path_conf, 'Contabilità', 'idxSAL', '30')
-
+    
+    config_leeno()
 ########################################################################
 def nuova_voce_scelta (arg=None): #assegnato a ctrl-shift-n
 #~ def debug(arg=None):
@@ -5774,93 +5860,6 @@ def XPWE_import_run (arg=None ):
             XPWE_in('CONTABILITA')
 
 ########################################################################
-# leeno.conf  ##########################################################
-def configura_leeno (arg=None):
-#~ def debug (arg=None):
-    '''
-    Visualizza il menù di configurazione
-    '''
-    psm = uno.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    #~ global oDlg_config
-    oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
-    oDialog1Model = oDlg_config.Model
-    
-    if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
-    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1
-    sString = oDlg_config.getControl('TextField1')
-    sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
-    
-    sString = oDlg_config.getControl("ComboBox1")
-    sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
-    
-    sString = oDlg_config.getControl('TextField5')
-    sString.Text = conf.read(path_conf, 'Analisi', 'sicurezza')
-
-    sString = oDlg_config.getControl('TextField6')
-    sString.Text = conf.read(path_conf, 'Analisi', 'spese_generali')
-
-    sString = oDlg_config.getControl('TextField7')
-    sString.Text = conf.read(path_conf, 'Analisi', 'utile_impresa')
-    
-    if conf.read(path_conf, 'Analisi', 'accorpa_spese_utili') == '1': oDlg_config.getControl('CheckBox4').State = 1
-    
-    sString = oDlg_config.getControl('TextField8')
-    sString.Text = conf.read(path_conf, 'Analisi', 'sconto')
-    
-    sString = oDlg_config.getControl('TextField9')
-    sString.Text = conf.read(path_conf, 'Analisi', 'maggiorazione')
-    
-    if conf.read(path_conf, 'Zoom', 'fullscreen') == '1': oDlg_config.getControl('CheckBox3').State = 1
-    
-    sString = oDlg_config.getControl('TextField3')
-    sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
-
-    sString = oDlg_config.getControl('TextField2')
-    sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
-    
-    sString = oDlg_config.getControl('TextField10')
-    sString.Text = conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate')
-
-    sString = oDlg_config.getControl('TextField11')
-    sString.Text = conf.read(path_conf, 'Computo', 'fine_voci_abbreviate')
-    
-    if conf.read(path_conf, 'Computo', 'riga_bianca_categorie') == '1': oDlg_config.getControl('CheckBox5').State = 1
-    if conf.read(path_conf, 'Computo', 'voci_senza_numerazione') == '1': oDlg_config.getControl('CheckBox6').State = 1
-    
-    if conf.read(path_conf, 'Contabilità', 'abilita') == '1': oDlg_config.getControl('CheckBox7').State = 1
-    sString = oDlg_config.getControl('TextField13')
-    sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
-    oDlg_config.execute()
-    
-    #~ mri(oDlg_config.getControl("CommandButton1"))
-    conf.write(path_conf, 'Zoom', 'fattore', oDlg_config.getControl('TextField3').getText())
-    conf.write(path_conf, 'Zoom', 'fattore_ottimale', oDlg_config.getControl('TextField2').getText())
-    conf.write(path_conf, 'Zoom', 'fullscreen', str(oDlg_config.getControl('CheckBox3').State))
-    
-
-    conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
-    conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
-    conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
-    conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
-
-    conf.write(path_conf, 'Analisi', 'sicurezza', oDlg_config.getControl('TextField5').getText())
-    conf.write(path_conf, 'Analisi', 'spese_generali', oDlg_config.getControl('TextField6').getText())
-    conf.write(path_conf, 'Analisi', 'utile_impresa', oDlg_config.getControl('TextField7').getText())
-    conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', str(oDlg_config.getControl('CheckBox4').State))
-    conf.write(path_conf, 'Analisi', 'sconto', oDlg_config.getControl('TextField8').getText())
-    conf.write(path_conf, 'Analisi', 'maggiorazione', oDlg_config.getControl('TextField9').getText())
-
-    conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
-    conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
-    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
-    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
-
-    conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
-    conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
-
-
-########################################################################
 def DlgMain(arg=None):
     '''
     Visualizza il menù principale
@@ -6263,7 +6262,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -6368,7 +6367,7 @@ def debug(arg=None): #COMUNE DI MATERA
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = default,
+g_exportedScripts = config_default,
 #~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, numera_voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################

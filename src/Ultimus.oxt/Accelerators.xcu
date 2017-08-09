@@ -81,13 +81,11 @@
           </prop>
         </node>
         <!--CTRL-D-->
-<!--
         <node oor:name="D_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ctrl_d?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
--->
         <!--CTRL-X-->
         <node oor:name="X_MOD1" oor:op="replace">
           <prop oor:name="Command">

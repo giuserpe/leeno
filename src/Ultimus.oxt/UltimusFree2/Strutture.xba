@@ -218,7 +218,7 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 		Tronca_Altezza_Voci_EP
 	Case &quot;Analisi di Prezzo&quot;
 		Tronca_Altezza_Analisi
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;TIPO_CONTABILITA&quot;&apos; disattivata in contabilità
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;&apos; disattivata in contabilità
 		If abbreviata = 1 Then
 			Tronca_Altezza_Voci_Computo_OFF
 		Else
@@ -291,7 +291,7 @@ Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
 		If ThisComponent.NamedRanges.hasByName(&quot;#LIB#1&quot;) Then
 			MsgBox (&quot;Il cambio della modalità di visualizzazione&quot; &amp; CHR$(13) &amp; _
 					&quot;delle descrizioni è possibile solo&quot; &amp; CHR$(13) &amp; _
-					&quot;se NON è presente ulcun atto contabile registrato!&quot;, 16, &quot;ATTENZIONE!&quot;)
+					&quot;se NON è presente alcun atto contabile registrato!&quot;, 16, &quot;ATTENZIONE!&quot;)
 			Exit Sub
 		EndIf
 		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;

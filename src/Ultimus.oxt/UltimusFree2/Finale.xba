@@ -357,7 +357,8 @@ SUB Duplica_Sheet_new_doc_No_Cons &apos; la esporta così comè con tutte le sue
 	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;, &quot;Analisi di Prezzo&quot;, &quot;Elenco Prezzi&quot;, &quot;CompuM_NoP&quot;
 		GoTo procedi:
 	Case Else
-		Exit Sub
+		GoTo procedi:
+	&apos;	Exit Sub
 	End Select
 procedi:
 &apos;-------------------------------------------------------------------------

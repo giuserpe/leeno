@@ -17,6 +17,7 @@ rem buona parte delle macro in questo modulo sono tratte da
 rem http://www.pitonyak.org/AndrewMacro.odt
 rem ######################################################################
 Sub _nuove_icone
+&apos;https://icons8.com/icon/set/tools/all
 &apos;https://openclipart.org/search/?query=dannya&amp;page=1
 	sURL = LeenO_path +&quot;/icons/py.png&quot;
 	sName = Replace_G(sURL, &quot;.png&quot;, &quot;&quot;)

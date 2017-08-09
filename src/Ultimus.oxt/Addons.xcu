@@ -1884,6 +1884,23 @@
               <value>_self</value>
             </prop>
           </node>
+          <node oor:name="m40" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$config_leeno?language=Python&amp;location=user:uno_packages</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/config</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Opzioni...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
         </node>
       </node>
     </node>

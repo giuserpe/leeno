@@ -6262,31 +6262,33 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
     #~ mri(oSheet.getCellRangeByName('Y254'))
     #~ mri(oDoc.CurrentSelection)
-    #~ chi(oSheet.getCellRangeByName('Y398').String[-7:])
-    #~ oSheet.getCellRangeByName('Y254').Formula = '=HYPERLINK("http://leeno.org/";"LeenO")'
+    #~ chi(oSheet.getCellRangeByName('C42').CellBackColor)
+    #~ oSheet.getCellRangeByName('Y254')
+    
     #~ return
 
-    for y in range(3, getLastUsedCell(oSheet).EndRow):
-        if oSheet.getCellByPosition(24, y).String[-7:] == ' murata':
-            oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]
-            oSheet.getCellByPosition(24, y).String = oSheet.getCellByPosition(24, y).String[:-7]
-    return
+    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(24, y).String[-7:] == ' murata':
+            #~ oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]
+            #~ oSheet.getCellByPosition(24, y).String = oSheet.getCellByPosition(24, y).String[:-7]
+    #~ return
     for y in range(3, getLastUsedCell(oSheet).EndRow+1):
-        if oSheet.getCellByPosition(4, y).CellBackColor != 16737792:
-            iSheet = oSheet.RangeAddress.Sheet
-            oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-            oCellRangeAddr.Sheet = iSheet
-            oCellRangeAddr.StartColumn = 0
-            oCellRangeAddr.EndColumn = 0
-            oCellRangeAddr.StartRow = y
-            oCellRangeAddr.EndRow = y
-            oSheet.group(oCellRangeAddr, 1)
+        if oSheet.getCellByPosition(2, y).CellBackColor == 16770559:
+            oSheet.getCellByPosition(2, y).String = "- " + oSheet.getCellByPosition(2, y).String
+            #~ iSheet = oSheet.RangeAddress.Sheet
+            #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+            #~ oCellRangeAddr.Sheet = iSheet
+            #~ oCellRangeAddr.StartColumn = 0
+            #~ oCellRangeAddr.EndColumn = 0
+            #~ oCellRangeAddr.StartRow = y
+            #~ oCellRangeAddr.EndRow = y
+            #~ oSheet.group(oCellRangeAddr, 1)
     return
 #~ SALTA SULLE CELLE 
     for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):

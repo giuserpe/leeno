@@ -2987,6 +2987,8 @@ def config_leeno (arg=None):
     '''
     Visualizza il menù di configurazione
     '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     #~ global oDlg_config
@@ -2994,48 +2996,53 @@ def config_leeno (arg=None):
     oDialog1Model = oDlg_config.Model
     try:
         if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
-        if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1
+        if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
         sString = oDlg_config.getControl('TextField1')
         sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
         
         sString = oDlg_config.getControl("ComboBox1")
-        sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
+        sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
         
         sString = oDlg_config.getControl('TextField5')
-        sString.Text = conf.read(path_conf, 'Analisi', 'sicurezza')
+        sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
 
         sString = oDlg_config.getControl('TextField6')
-        sString.Text = conf.read(path_conf, 'Analisi', 'spese_generali')
+        sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
 
         sString = oDlg_config.getControl('TextField7')
-        sString.Text = conf.read(path_conf, 'Analisi', 'utile_impresa')
+        sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
         
-        if conf.read(path_conf, 'Analisi', 'accorpa_spese_utili') == '1': oDlg_config.getControl('CheckBox4').State = 1
-        
+        #accorpa_spese_utili
+        if oSheet.getCellRangeByName('S1.H321').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
+
         sString = oDlg_config.getControl('TextField8')
-        sString.Text = conf.read(path_conf, 'Analisi', 'sconto')
+        sString.Text =oSheet.getCellRangeByName('S1.H324').Value * 100 #sconto
         
         sString = oDlg_config.getControl('TextField9')
-        sString.Text = conf.read(path_conf, 'Analisi', 'maggiorazione')
+        sString.Text =oSheet.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
         
-        if conf.read(path_conf, 'Zoom', 'fullscreen') == '1': oDlg_config.getControl('CheckBox3').State = 1
+        #~ if conf.read(path_conf, 'Zoom', 'fullscreen') == '1': oDlg_config.getControl('CheckBox3').State = 1
         
-        sString = oDlg_config.getControl('TextField3')
-        sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
+        #~ sString = oDlg_config.getControl('TextField3')
+        #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
 
-        sString = oDlg_config.getControl('TextField2')
-        sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
+        #~ sString = oDlg_config.getControl('TextField2')
+        #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
         
         sString = oDlg_config.getControl('TextField10')
-        sString.Text = conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate')
+        sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
 
         sString = oDlg_config.getControl('TextField11')
-        sString.Text = conf.read(path_conf, 'Computo', 'fine_voci_abbreviate')
+        sString.Text =oSheet.getCellRangeByName('S1.H338').Value #fine_voci_abbreviate
         
-        if conf.read(path_conf, 'Computo', 'riga_bianca_categorie') == '1': oDlg_config.getControl('CheckBox5').State = 1
-        if conf.read(path_conf, 'Computo', 'voci_senza_numerazione') == '1': oDlg_config.getControl('CheckBox6').State = 1
+        # riga_bianca_categorie
+        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox5').State = 1
         
-        if conf.read(path_conf, 'Contabilità', 'abilita') == '1': oDlg_config.getControl('CheckBox7').State = 1
+        # voci_senza_numerazione
+        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox6').State = 1
+        
+        # Contabilità abilita
+        if oSheet.getCellRangeByName('S1.H328').Value == '1': oDlg_config.getControl('CheckBox7').State = 1
         sString = oDlg_config.getControl('TextField13')
         sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
     except:

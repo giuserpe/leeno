@@ -311,7 +311,7 @@ Sub ApriDialogo_tabelle()
 	
 	
 	Select Case ThisComponent.currentselection.cellstyle
-	Case &quot;comp 1-a&quot;, &quot;comp 1-a peso&quot;,&quot;Default&quot;
+	Case &quot;comp 1-a&quot;, &quot;comp 1-a peso&quot;,&quot;Default&quot;, &quot;An-lavoraz-input&quot;
 		tabelle() = Array(&quot;Tondo per c.a.&quot;, &quot;Reti elettrosaldate&quot;, &quot;Orsogril&quot;, &quot;Travi IPE&quot;, &quot;Travi UPN&quot;, &quot;Travi HEA&quot;, &quot;Travi HEB&quot;, &quot;Travi HEM&quot;, _
 		&quot;Tubi quadrati&quot;, &quot;Tubi rettangolari&quot;, &quot;L lati Uguali sp tondi&quot;, &quot;L lati Disuguali sp tondi&quot;) &apos;
 		d = CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)

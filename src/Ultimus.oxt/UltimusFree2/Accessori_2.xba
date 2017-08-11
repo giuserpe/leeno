@@ -17,9 +17,9 @@
 
 
 sub SwitchDesign &apos;Bozza_on_off 101221 &apos; questo è lo switc
- 	SwitchDesignMode() &apos; basta questa riga
+&apos; 	SwitchDesignMode() &apos; basta questa riga
 &apos;	ThisComponent.ApplyFormDesignMode = False &apos;True
-&apos;ToggleToolbarVisible(ThisComponent, &quot;private:resource/toolbar/formcontrols&quot;, 2)
+ToggleToolbarVisible(ThisComponent, &quot;private:resource/toolbar/formcontrols&quot;, 1)
 &apos;exit sub
 	 If isDesignModeOn() Then
 	&apos; 		ToggleToolbarVisible(ThisComponent, &quot;private:resource/toolbar/formcontrols&quot;, 1)
@@ -31,7 +31,7 @@ end sub
 Sub ToggleToolbarVisible(oDoc, sURL, prepinac)
  Dim oLayout
  oLayout = oDoc.CurrentController.getFrame().LayoutManager
- xray oLayout
+&apos; xray oLayout
 &apos;xray oLayout.isElementVisible(sURL)
 &apos;xray oLayout.isElementLocked(sURL)
 &apos;xray oLayout.isElementFloating(sURL)

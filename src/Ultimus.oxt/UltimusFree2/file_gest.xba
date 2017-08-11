@@ -81,6 +81,7 @@ Sub avvia_IDE
 	If getos()=&quot;OSX&quot; Then
 		shell (&quot;nemo&quot;, 1, leeno_path)
 		shell (&quot;geany&quot;, 1, leeno_path &amp;  &quot;/pyLeenO/pyleeno.py&quot;)
+&apos;		shell (&quot;emacs&quot;, 1, leeno_path &amp;  &quot;/pyLeenO/pyleeno.py&quot;)
 	EndIf
 	If getos()=&quot;WINDOWS&quot; Then
 		shell (&quot;explorer.exe&quot;, 1,  convertfromurl(leeno_path))

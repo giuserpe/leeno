@@ -2994,65 +2994,78 @@ def config_leeno (arg=None):
     #~ global oDlg_config
     oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
     oDialog1Model = oDlg_config.Model
+    #~ try:
+    if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
+    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
+    sString = oDlg_config.getControl('TextField1')
+    sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
+    
+    sString = oDlg_config.getControl("ComboBox1")
+    sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
+    
+    sString = oDlg_config.getControl('TextField5')
+    #~ chi(oSheet.getCellRangeByName('S1.H319').Value)
     try:
-        if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
-        if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
-        sString = oDlg_config.getControl('TextField1')
-        sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
-        
-        sString = oDlg_config.getControl("ComboBox1")
-        sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
-        
-        sString = oDlg_config.getControl('TextField5')
         sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
-
-        sString = oDlg_config.getControl('TextField6')
-        sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
-
-        sString = oDlg_config.getControl('TextField7')
-        sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
-        
-        #accorpa_spese_utili
-        if oSheet.getCellRangeByName('S1.H321').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
-
-        sString = oDlg_config.getControl('TextField8')
-        sString.Text =oSheet.getCellRangeByName('S1.H324').Value * 100 #sconto
-        
-        sString = oDlg_config.getControl('TextField9')
-        sString.Text =oSheet.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
-        
-        #~ if conf.read(path_conf, 'Zoom', 'fullscreen') == '1': oDlg_config.getControl('CheckBox3').State = 1
-        
-        #~ sString = oDlg_config.getControl('TextField3')
-        #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
-
-        #~ sString = oDlg_config.getControl('TextField2')
-        #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
-        
-        sString = oDlg_config.getControl('TextField10')
-        sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
-
-        sString = oDlg_config.getControl('TextField11')
-        sString.Text =oSheet.getCellRangeByName('S1.H338').Value #fine_voci_abbreviate
-        
-        # riga_bianca_categorie
-        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox5').State = 1
-        
-        # voci_senza_numerazione
-        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox6').State = 1
-        
-        # Contabilità abilita
-        if oSheet.getCellRangeByName('S1.H328').Value == '1': oDlg_config.getControl('CheckBox7').State = 1
-        sString = oDlg_config.getControl('TextField13')
-        sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
     except:
-        config_default()
+        sString.Text ='0'
+
+    sString = oDlg_config.getControl('TextField6')
+    sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
+
+    sString = oDlg_config.getControl('TextField7')
+    sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
+    
+    #accorpa_spese_utili
+    if oSheet.getCellRangeByName('S1.H321').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
+
+    sString = oDlg_config.getControl('TextField8')
+    sString.Text =oSheet.getCellRangeByName('S1.H324').Value * 100 #sconto
+    
+    sString = oDlg_config.getControl('TextField9')
+    sString.Text =oSheet.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
+    
+    # fullscreen
+    
+    oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    if oLayout.isElementVisible('private:resource/toolbar/standardbar') == False:
+        oDlg_config.getControl('CheckBox3').State = 1
+    
+    #~ sString = oDlg_config.getControl('TextField3')
+    #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
+
+    #~ sString = oDlg_config.getControl('TextField2')
+    #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
+    
+    sString = oDlg_config.getControl('TextField10')
+    sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
+
+    sString = oDlg_config.getControl('TextField11')
+    sString.Text =oSheet.getCellRangeByName('S1.H338').Value #fine_voci_abbreviate
+    
+    # riga_bianca_categorie
+    if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox5').State = 1
+    
+    # voci_senza_numerazione
+    if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox6').State = 1
+    
+    # Contabilità abilita
+    if oSheet.getCellRangeByName('S1.H328').Value == '1': oDlg_config.getControl('CheckBox7').State = 1
+    sString = oDlg_config.getControl('TextField13')
+    sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
+    #~ except:
+        #~ config_default()
     oDlg_config.execute()
     
     #~ mri(oDlg_config.getControl("CommandButton1"))
-    conf.write(path_conf, 'Zoom', 'fattore', oDlg_config.getControl('TextField3').getText())
-    conf.write(path_conf, 'Zoom', 'fattore_ottimale', oDlg_config.getControl('TextField2').getText())
-    conf.write(path_conf, 'Zoom', 'fullscreen', str(oDlg_config.getControl('CheckBox3').State))
+    #~ conf.write(path_conf, 'Zoom', 'fattore', oDlg_config.getControl('TextField3').getText())
+    #~ conf.write(path_conf, 'Zoom', 'fattore_ottimale', oDlg_config.getControl('TextField2').getText())
+    #~ conf.write(path_conf, 'Zoom', 'fullscreen', str(oDlg_config.getControl('CheckBox3').State))
+    if oDlg_config.getControl('CheckBox3').State == 1:
+        toolbar_switch(0)
+    else:
+        toolbar_switch(1)
+        
     
 
     conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
@@ -6056,7 +6069,20 @@ def toolbar_vedi (arg=None):
             toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
     except:
         pass
-
+def toolbar_switch(arg=1):
+#~ def debug(arg=None):
+    '''Nasconde o mostra le toolbar di Libreoffice.'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    for el in oLayout.Elements:
+        if el.ResourceURL not in GetmyToolBarNames + ('private:resource/menubar/menubar', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 'private:resource/toolbar/findbar','private:resource/statusbar/statusbar',):
+            #~ if oLayout.isElementVisible(el.ResourceURL):
+            if arg == 0:
+                oLayout.hideElement(el.ResourceURL)
+            else:
+                oLayout.showElement(el.ResourceURL)
+    return
+    #~ private:resource/toolbar/standardbar
 def toolbar_on (toolbarURL, flag=1):
     '''
     toolbarURL  { string } : indirizzo toolbar
@@ -6271,7 +6297,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 

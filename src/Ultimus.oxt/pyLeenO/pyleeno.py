@@ -3064,20 +3064,18 @@ def config_leeno(arg=None):
         toolbar_switch(0)
     else:
         toolbar_switch(1)
-        
-    
-
+ 
     conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
     conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
 
-    conf.write(path_conf, 'Analisi', 'sicurezza', oDlg_config.getControl('TextField5').getText())
-    conf.write(path_conf, 'Analisi', 'spese_generali', oDlg_config.getControl('TextField6').getText())
-    conf.write(path_conf, 'Analisi', 'utile_impresa', oDlg_config.getControl('TextField7').getText())
-    conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', str(oDlg_config.getControl('CheckBox4').State))
-    conf.write(path_conf, 'Analisi', 'sconto', oDlg_config.getControl('TextField8').getText())
-    conf.write(path_conf, 'Analisi', 'maggiorazione', oDlg_config.getControl('TextField9').getText())
+    #~ conf.write(path_conf, 'Analisi', 'sicurezza', oDlg_config.getControl('TextField5').getText())
+    #~ conf.write(path_conf, 'Analisi', 'spese_generali', oDlg_config.getControl('TextField6').getText())
+    #~ conf.write(path_conf, 'Analisi', 'utile_impresa', oDlg_config.getControl('TextField7').getText())
+    #~ conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', str(oDlg_config.getControl('CheckBox4').State))
+    #~ conf.write(path_conf, 'Analisi', 'sconto', oDlg_config.getControl('TextField8').getText())
+    #~ conf.write(path_conf, 'Analisi', 'maggiorazione', oDlg_config.getControl('TextField9').getText())
 
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
     conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
@@ -3150,12 +3148,12 @@ def config_default(arg=None):
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
     conf.write(path_conf, 'Generale', 'pesca_auto', '1')
 
-    conf.write(path_conf, 'Analisi', 'sicurezza', '0.37')
-    conf.write(path_conf, 'Analisi', 'spese_generali', '0.15')
-    conf.write(path_conf, 'Analisi', 'utile_impresa', '10.0')
-    conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', '0')
-    conf.write(path_conf, 'Analisi', 'sconto', '-0.11')
-    conf.write(path_conf, 'Analisi', 'maggiorazione', '0.10')
+    #~ conf.write(path_conf, 'Analisi', 'sicurezza', '0.37')
+    #~ conf.write(path_conf, 'Analisi', 'spese_generali', '0.15')
+    #~ conf.write(path_conf, 'Analisi', 'utile_impresa', '10.0')
+    #~ conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', '0')
+    #~ conf.write(path_conf, 'Analisi', 'sconto', '-0.11')
+    #~ conf.write(path_conf, 'Analisi', 'maggiorazione', '0.10')
 
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', '1')
     conf.write(path_conf, 'Computo', 'voci_senza_numerazione', '0')
@@ -5584,6 +5582,8 @@ def struct(l):
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
 def autoexec_off(arg=None):
+    toolbar_switch(1)
+    #~ private:resource/toolbar/standardbar
     sUltimus = ''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('M1')

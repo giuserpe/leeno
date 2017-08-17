@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python
+#!/usr/bin/env python
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 ########################################################################
 # LeenO - Computo Metrico
@@ -27,16 +27,17 @@ from com.sun.star.beans import PropertyValue
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 #~ from com.sun.star.table.CellContentType import TEXT, EMPTY, VALUE, FORMULA
 from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
-    ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED)
+                                          ANNOTATION, FORMULA, HARDATTR,
+                                          OBJECTS, EDITATTR, FORMATTED)
 ########################################################################
 # https://forum.openoffice.org/en/forum/viewtopic.php?f=45&t=27805&p=127383
 import random
 from com.sun.star.script.provider import XScriptProviderFactory
 from com.sun.star.script.provider import XScriptProvider
-def barra_di_stato (testo='', valore=0):
+def barra_di_stato(testo='', valore=0):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oProgressBar = oDoc.CurrentController.Frame.createStatusIndicator()
-    oProgressBar.start ('',100)
+    oProgressBar.start('', 100)
     oProgressBar.Value = valore
     oProgressBar.Text = testo
 def Xray(myObject):
@@ -48,20 +49,20 @@ def Xray(myObject):
     Xscript = scriptPro.getScript("vnd.sun.star.script:XrayTool._Main.Xray?language=Basic&location=application")
     Xscript.invoke((myObject,), None, None)
 
-def basic_LeenO(funcname,*args):
+def basic_LeenO(funcname, *args):
     xCompCont = XSCRIPTCONTEXT.getComponentContext()
     sm = xCompCont.ServiceManager
     mspf = sm.createInstance("com.sun.star.script.provider.MasterScriptProviderFactory")
-    scriptPro = mspf.createScriptProvider("");
+    scriptPro = mspf.createScriptProvider("")
     Xscript = scriptPro.getScript("vnd.sun.star.script:UltimusFree2." + funcname + "?language=Basic&location=application")
-    Result=Xscript.invoke(args,None,None)
+    Result = Xscript.invoke(args, None, None)
     return Result[0]
 ########################################################################
 def LeenO_path(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     pir = ctx.getValueByName('/singletons/com.sun.star.deployment.PackageInformationProvider')
-    expath=pir.getPackageLocation('org.giuseppe-vizziello.leeno')
-    return (expath)
+    expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
+    return expath
 ########################################################################
 class New_file:
     '''Crea un nuovo computo.'''
@@ -74,25 +75,25 @@ class New_file:
         opz.Name = 'AsTemplate'
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
-        if arg==1:
+        if arg == 1:
             MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
             salva_come()
             autoexec()
         #~ salva_come()
-        return (document)
+        return document
     def usobollo():
         desktop = XSCRIPTCONTEXT.getDesktop()
         opz = PropertyValue()
         opz.Name = 'AsTemplate'
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/offmisc/UsoBollo.ott', "_blank", 0, (opz,))
-        return (document)
+        return document
 ########################################################################
-def nuovo_computo (arg=None):
+def nuovo_computo(arg=None):
     New_file.computo()
 ########################################################################
-def nuovo_usobollo (arg=None):
+def nuovo_usobollo(arg=None):
     New_file.usobollo()
 ########################################################################
 def invia_voce_ep(arg=None):
@@ -112,7 +113,7 @@ def invia_voce_ep(arg=None):
     ER = oRangeAddress.EndRow
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, getLastUsedCell(oSheet).EndColumn, ER))
     lista = list()
-    for el in range (SR, ER+1):
+    for el in range(SR, ER+1):
         if oSheet.getCellByPosition(1, el).Type.value == 'FORMULA':
             lista.append(oSheet.getCellByPosition(0, el).String)
     try:
@@ -124,7 +125,7 @@ def invia_voce_ep(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     if sUltimus == '':
@@ -142,7 +143,7 @@ def invia_voce_ep(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     #~ doppioni()
@@ -153,26 +154,23 @@ def invia_voce_ep(arg=None):
         if oDoc.getSheets().hasByName('tmp_DCC') == False:
             sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
             tmp = oDoc.Sheets.insertByName('tmp_DCC', sheet)
-        
         tmp = oDoc.getSheets().getByName('tmp_DCC')
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         oDoc.CurrentController.setActiveSheet(oSheet)
-        
         for el in lista:
             celle = Circoscrive_Analisi(uFindStringCol(el, 0, oSheet))
             oRangeAddress = celle.getRangeAddress()
-            
-            oCellAddress = tmp.getCellByPosition(0,getLastUsedCell(tmp).EndRow).getCellAddress()
+            oCellAddress = tmp.getCellByPosition(0, getLastUsedCell(tmp).EndRow).getCellAddress()
             tmp.copyRange(oCellAddress, oRangeAddress)
         
         nuove_righe = getLastUsedCell(tmp).EndRow+1
-        analisi = tmp.getCellRangeByPosition(0,0,getLastUsedCell(tmp).EndColumn,getLastUsedCell(tmp).EndRow)
+        analisi = tmp.getCellRangeByPosition(0, 0, getLastUsedCell(tmp).EndColumn, getLastUsedCell(tmp).EndRow)
         
         oDoc.CurrentController.select(analisi)
         ctx = XSCRIPTCONTEXT.getComponentContext()
         desktop = XSCRIPTCONTEXT.getDesktop()
         oFrame = desktop.getCurrentFrame()
-        dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+        dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
         dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
         
@@ -203,12 +201,12 @@ def invia_voce_ep(arg=None):
     dccSheet.IsVisible = True
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
     formule = list()
-    for n in range (3, ER-SR+1+3):
+    for n in range(3, ER-SR+1+3):
         formule.append(['=IF(ISERROR(N'+str(n+1)+'/$N$2);"--";N'+str(n+1)+'/$N$2)',
                         '=SUMIF(AA;A'+str(n+1)+';BB)',
                         '=SUMIF(AA;A'+str(n+1)+';cEuro)'])
     oRange = dccSheet.getCellRangeByPosition(11, 3, 13, ER-SR+3)
-    formule = tuple (formule)
+    formule = tuple(formule)
     oRange.setFormulaArray(formule)
 ########################################################################
 def _gotoDoc(sUrl):
@@ -241,7 +239,7 @@ def oggi():
     '''
     restituisce la data di oggi
     '''
-    return ('/'.join(reversed(str(datetime.now()).split(' ')[0].split('-'))))
+    return('/'.join(reversed(str(datetime.now()).split(' ')[0].split('-'))))
 import distutils.dir_util
 ########################################################################
 def copia_sorgente_per_git(arg=None):
@@ -305,14 +303,14 @@ def debugs(arg=None):
 def Inser_SottoCapitolo(arg=None):
     Ins_Categorie(2)
 
-def Inser_SottoCapitolo_arg (lrow, sTesto): #
+def Inser_SottoCapitolo_arg(lrow, sTesto): #
     '''
     lrow    { double } : id della riga di inerimento
     sTesto  { string } : titolo della sottocategoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
     #~ sTesto = 'prova'
@@ -353,7 +351,7 @@ def Inser_SottoCapitolo_arg (lrow, sTesto): #
         else:
             break
     oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value
-    #~ SubSum_Cap (lrow)
+    #~ SubSum_Cap(lrow)
 
 ########################################################################
 def Ins_Categorie(n):
@@ -387,11 +385,11 @@ def Ins_Categorie(n):
         return
 
     if n==0:
-        Inser_SuperCapitolo_arg (lrow, sString)
+        Inser_SuperCapitolo_arg(lrow, sString)
     elif n==1:
-        Inser_Capitolo_arg (lrow, sString)
+        Inser_Capitolo_arg(lrow, sString)
     elif n==2:
-        Inser_SottoCapitolo_arg (lrow, sString)
+        Inser_SottoCapitolo_arg(lrow, sString)
 
     if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
         _gotoCella(2, lrow+1)
@@ -407,14 +405,14 @@ def Ins_Categorie(n):
 def Inser_SuperCapitolo(arg=None):
     Ins_Categorie(0)
 
-def Inser_SuperCapitolo_arg (lrow, sTesto='Super Categoria'): #
+def Inser_SuperCapitolo_arg(lrow, sTesto='Super Categoria'): #
     '''
     lrow    { double } : id della riga di inerimento
     sTesto  { string } : titolo della categoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
     style = oSheet.getCellByPosition(1, lrow).CellStyle
@@ -448,14 +446,14 @@ def Inser_SuperCapitolo_arg (lrow, sTesto='Super Categoria'): #
 def Inser_Capitolo(arg=None):
     Ins_Categorie(1)
 
-def Inser_Capitolo_arg (lrow, sTesto='Categoria'): #
+def Inser_Capitolo_arg(lrow, sTesto='Categoria'): #
     '''
     lrow    { double } : id della riga di inerimento
     sTesto  { string } : titolo della categoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
     style = oSheet.getCellByPosition(1, lrow).CellStyle
@@ -494,30 +492,30 @@ def Tutti_Subtotali(arg=None):
     '''ricalcola i subtotali di categorie e subcategorie'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
-    for n in range (0, ultima_voce(oSheet)+1):
+    for n in range(0, ultima_voce(oSheet)+1):
         if oSheet.getCellByPosition(0, n).CellStyle == 'Livello-0-scritta':
-            SubSum_SuperCap (n)
+            SubSum_SuperCap(n)
         if oSheet.getCellByPosition(0, n).CellStyle == 'Livello-1-scritta':
-            SubSum_Cap (n)
+            SubSum_Cap(n)
         if oSheet.getCellByPosition(0, n).CellStyle == 'livello2 valuta':
-            SubSum_SottoCap (n)
+            SubSum_SottoCap(n)
 ########################################################################
-def SubSum_SuperCap (lrow):
+def SubSum_SuperCap(lrow):
     '''
     lrow    { double } : id della riga di inerimento
     inserisce i dati nella riga di SuperCategoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
     lrowE = ultima_voce(oSheet)+2
     nextCap = lrowE
-    for n in range (lrow+1, lrowE):
-        if oSheet.getCellByPosition(18, n).CellStyle in ('Livello-0-scritta mini val', 'Comp TOTALI'):
+    for n in range(lrow+1, lrowE):
+        if oSheet.getCellByPosition(18, n).CellStyle in('Livello-0-scritta mini val', 'Comp TOTALI'):
             #~ MsgBox(oSheet.getCellByPosition(18, n).CellStyle,'')
             nextCap = n + 1
             break
@@ -533,20 +531,20 @@ def SubSum_SuperCap (lrow):
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-0-scritta mini val'
     #~ oDoc.enableAutomaticCalculation(True)
 ########################################################################
-def SubSum_SottoCap (lrow):
+def SubSum_SottoCap(lrow):
     '''
     lrow    { double } : id della riga di inerimento
     inserisce i dati nella riga di subcategoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #lrow = 0#Range2Cell()[1]
     lrowE = ultima_voce(oSheet)+2
     nextCap = lrowE
-    for n in range (lrow+1, lrowE):
-        if oSheet.getCellByPosition(18, n).CellStyle in ('livello2 scritta mini', 'Livello-0-scritta mini val', 'Livello-1-scritta mini val', 'Comp TOTALI'):
+    for n in range(lrow+1, lrowE):
+        if oSheet.getCellByPosition(18, n).CellStyle in('livello2 scritta mini', 'Livello-0-scritta mini val', 'Livello-1-scritta mini val', 'Comp TOTALI'):
             nextCap = n + 1
             break
     oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
@@ -560,20 +558,20 @@ def SubSum_SottoCap (lrow):
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'livello2 valuta mini'
 ########################################################################
-def SubSum_Cap (lrow):
+def SubSum_Cap(lrow):
     '''
     lrow    { double } : id della riga di inerimento
     inserisce i dati nella riga di categoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
     lrowE = ultima_voce(oSheet)+2
     nextCap = lrowE
-    for n in range (lrow+1, lrowE):
-        if oSheet.getCellByPosition(18, n).CellStyle in ('Livello-1-scritta mini val','Livello-0-scritta mini val',  'Comp TOTALI'):
+    for n in range(lrow+1, lrowE):
+        if oSheet.getCellByPosition(18, n).CellStyle in('Livello-1-scritta mini val','Livello-0-scritta mini val',  'Comp TOTALI'):
             #~ MsgBox(oSheet.getCellByPosition(18, n).CellStyle,'')
             nextCap = n + 1
             break
@@ -612,7 +610,7 @@ def debug_delay(n=None):
         
 
 ########################################################################
-def Sincronizza_SottoCap_Tag_Capitolo_Cor (arg=None):
+def Sincronizza_SottoCap_Tag_Capitolo_Cor(arg=None):
     '''
     lrow    { double } : id della riga di inerimento
     sincronizza il categoria e sottocategorie
@@ -620,7 +618,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor (arg=None):
     datarif = datetime.now()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
 #    lrow = Range2Cell()[1]
     lastRow = ultima_voce(oSheet)+1
@@ -706,25 +704,25 @@ def insRows(lrow, nrighe): #forse inutile
     oCellRangeAddr.EndRow = lrow + nrighe - 1
     oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
 ########################################################################
-def ultima_voce (oSheet):
+def ultima_voce(oSheet):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet
     nRow = getLastUsedCell(oSheet).EndRow
     for n in reversed(range(0, nRow)):
-        if oSheet.getCellByPosition(0, n).CellStyle in ('EP-aS', 'EP-Cs', 'An-sfondo-basso Att End', 'Comp End Attributo',
+        if oSheet.getCellByPosition(0, n).CellStyle in('EP-aS', 'EP-Cs', 'An-sfondo-basso Att End', 'Comp End Attributo',
                                                         'Comp End Attributo_R', 'comp Int_colonna', 'comp Int_colonna_R_prima',
                                                         'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'):
             break
     return n
 ########################################################################
-def uFindStringCol (sString, nCol, oSheet):
+def uFindStringCol(sString, nCol, oSheet):
     '''
     sString { string }  : stringa da cercare
     nCol    { integer } : indice di colonna
     oSheet  { object }  :
 
-    Trova la prima ricorrenza di una stringa (sString) nella
-    colonna nCol di un foglio di calcolo (oSheet) e restituisce
+    Trova la prima ricorrenza di una stringa(sString) nella
+    colonna nCol di un foglio di calcolo(oSheet) e restituisce
     in numero di riga
     '''
     oCell = oSheet.getCellByPosition(0,0)
@@ -733,16 +731,16 @@ def uFindStringCol (sString, nCol, oSheet):
     aAddress = oCursor.RangeAddress
     for nRow in range(0, aAddress.EndRow+1):
         if sString in oSheet.getCellByPosition(nCol,nRow).String:
-            return (nRow)
+            return(nRow)
 ########################################################################
-def uFindString (sString, oSheet):
+def uFindString(sString, oSheet):
     '''
     sString { string }  : stringa da cercare
     oSheet  { object }  :
 
-    Trova la prima ricorrenza di una stringa (sString) riga
-    per riga in un foglio di calcolo (oSheet) e restituisce
-    una tupla (IDcolonna, IDriga)
+    Trova la prima ricorrenza di una stringa(sString) riga
+    per riga in un foglio di calcolo(oSheet) e restituisce
+    una tupla(IDcolonna, IDriga)
     '''
     oCell = oSheet.getCellByPosition(0,0)
     oCursor = oSheet.createCursorByRange(oCell)
@@ -752,7 +750,7 @@ def uFindString (sString, oSheet):
         for nCol in range(0, aAddress.EndColumn+1):
     # ritocco di +Daniele Zambelli:
             if sString in oSheet.getCellByPosition(nCol,nRow).String:
-                return (nCol,nRow)
+                return(nCol,nRow)
 ########################################################################
 def join_sheets(arg=None):
     '''
@@ -776,7 +774,7 @@ def join_sheets(arg=None):
         MsgBox('Il foglio "unione_fogli" è già esistente, quindi non procedo.','Avviso!')
     oDoc.CurrentController.setActiveSheet(unione)
 ########################################################################
-def copia_sheet (nSheet, tag):
+def copia_sheet(nSheet, tag):
     '''
     nSheet   { string } : nome sheet
     tag      { string } : stringa di tag
@@ -798,7 +796,7 @@ def copia_sheet (nSheet, tag):
 def debugpuliscixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx():
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    for lrow in reversed(range(0, ultima_voce (oSheet))):
+    for lrow in reversed(range(0, ultima_voce(oSheet))):
         if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
             oSheet.getCellByPosition(31,lrow).String = ''
             oSheet.getCellByPosition(32,lrow).String = ''
@@ -807,7 +805,7 @@ def debugpuliscixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx():
             oSheet.getCellByPosition(35,lrow).String = ''
     _gotoSheet('S5')
     oSheet = oDoc.CurrentController.ActiveSheet
-    for lrow in reversed(range(0, ultima_voce (oSheet))):
+    for lrow in reversed(range(0, ultima_voce(oSheet))):
         if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
             oSheet.getCellByPosition(31,lrow).String = ''
             oSheet.getCellByPosition(32,lrow).String = ''
@@ -816,7 +814,7 @@ def debugpuliscixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx():
             oSheet.getCellByPosition(35,lrow).String = ''
     _gotoSheet('VARIANTE')
     oSheet = oDoc.CurrentController.ActiveSheet
-    for lrow in reversed(range(0, ultima_voce (oSheet))):
+    for lrow in reversed(range(0, ultima_voce(oSheet))):
         if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
             oSheet.getCellByPosition(31,lrow).String = ''
             oSheet.getCellByPosition(32,lrow).String = ''
@@ -831,11 +829,11 @@ def Filtra_computo(nSheet, nCol, sString):
     crea una nuova sheet contenente le sole voci filtrate
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    copia_sheet (nSheet, sString)
+    copia_sheet(nSheet, sString)
     oSheet = oDoc.CurrentController.ActiveSheet
-    for lrow in reversed(range(0, ultima_voce (oSheet))):
+    for lrow in reversed(range(0, ultima_voce(oSheet))):
         try:
-            sStRange = Circoscrive_Voce_Computo_Att (lrow)
+            sStRange = Circoscrive_Voce_Computo_Att(lrow)
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
             if nCol ==1:
@@ -855,81 +853,81 @@ def Filtra_computo(nSheet, nCol, sString):
 
             oSheet.getRows().removeByIndex(lrow, 1)
 
-    #~ iCellAttr = (oDoc.createInstance("com.sun.star.sheet.CellFlags.OBJECTS"))
+    #~ iCellAttr =(oDoc.createInstance("com.sun.star.sheet.CellFlags.OBJECTS"))
     flags = OBJECTS
-    oSheet.getCellRangeByPosition (0,0,42,0).clearContents(flags) #cancello gli oggetti
+    oSheet.getCellRangeByPosition(0,0,42,0).clearContents(flags) #cancello gli oggetti
     oDoc.CurrentController.select(oSheet.getCellByPosition(0,3))
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-def Vai_a_filtro (arg=None):
+def Vai_a_filtro(arg=None):
     _gotoSheet('S3')
     _primaCella(0,1)
 ########################################################################
-def Filtra_Computo_Cap (arg=None):
+def Filtra_Computo_Cap(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.getCellByPosition(7,8).String
     sString = oSheet.getCellByPosition(7,10).String
     Filtra_computo(nSheet, 31, sString)
 ########################################################################
-def Filtra_Computo_SottCap (arg=None):
+def Filtra_Computo_SottCap(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    nSheet = oSheet.getCellByPosition(7,8).String
-    sString = oSheet.getCellByPosition(7,12).String
+    nSheet = oSheet.getCellByPosition(7, 8).String
+    sString = oSheet.getCellByPosition(7, 12).String
     Filtra_computo(nSheet, 32, sString)
 ########################################################################
-def Filtra_Computo_A (arg=None):
+def Filtra_Computo_A(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    nSheet = oSheet.getCellByPosition(7,8).String
-    sString = oSheet.getCellByPosition(7,14).String
+    nSheet = oSheet.getCellByPosition(7, 8).String
+    sString = oSheet.getCellByPosition(7, 14).String
     Filtra_computo(nSheet, 33, sString)
 ########################################################################
-def Filtra_Computo_B (arg=None):
+def Filtra_Computo_B(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    nSheet = oSheet.getCellByPosition(7,8).String
-    sString = oSheet.getCellByPosition(7,16).String
+    nSheet = oSheet.getCellByPosition(7, 8).String
+    sString = oSheet.getCellByPosition(7, 16).String
     Filtra_computo(nSheet, 34, sString)
 ########################################################################
-def Filtra_Computo_C (arg=None): #filtra in base al codice di prezzo
+def Filtra_Computo_C(arg=None): #filtra in base al codice di prezzo
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    nSheet = oSheet.getCellByPosition(7,8).String
-    sString = oSheet.getCellByPosition(7,20).String
+    nSheet = oSheet.getCellByPosition(7, 8).String
+    sString = oSheet.getCellByPosition(7, 20).String
     Filtra_computo(nSheet, 1, sString)
 ########################################################################
-def Vai_a_M1 (arg=None):
-    _gotoSheet ('M1', 85)
+def Vai_a_M1(arg=None):
+    _gotoSheet('M1', 85)
     _primaCella(0,0)
 ########################################################################
-def Vai_a_S2 (arg=None):
-    _gotoSheet ('S2')
+def Vai_a_S2(arg=None):
+    _gotoSheet('S2')
 ########################################################################
-def Vai_a_S1 (arg=None):
-    _gotoSheet ('S1')
+def Vai_a_S1(arg=None):
+    _gotoSheet('S1')
     _primaCella(0,190)
 ########################################################################
-def Vai_a_ElencoPrezzi (arg=None):
-    _gotoSheet ('Elenco Prezzi')
+def Vai_a_ElencoPrezzi(arg=None):
+    _gotoSheet('Elenco Prezzi')
 ########################################################################
-def Vai_a_Computo (arg=None):
-    _gotoSheet ('COMPUTO')
+def Vai_a_Computo(arg=None):
+    _gotoSheet('COMPUTO')
 ########################################################################
-def Vai_a_Variabili (arg=None):
-    _gotoSheet ('S1', 85)
+def Vai_a_Variabili(arg=None):
+    _gotoSheet('S1', 85)
     _primaCella(6,289)
 ########################################################################
-def Vai_a_Scorciatoie (arg=None):
-    _gotoSheet ('Scorciatoie')
+def Vai_a_Scorciatoie(arg=None):
+    _gotoSheet('Scorciatoie')
     _primaCella(0,0)
 ########################################################################
-def Vai_a_SegnaVoci (arg=None):
-    _gotoSheet ('S3',100)
+def Vai_a_SegnaVoci(arg=None):
+    _gotoSheet('S3',100)
     _primaCella(37,4)
 ########################################################################
-def _gotoSheet (nSheet, fattore=100):
+def _gotoSheet(nSheet, fattore=100):
     '''
     nSheet   { string } : nome Sheet
     attiva e seleziona una sheet
@@ -942,11 +940,11 @@ def _gotoSheet (nSheet, fattore=100):
 
      #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-def _primaCella (IDcol=0, IDrow=0):
+def _primaCella(IDcol=0, IDrow=0):
     '''
     IDcol   { integer } : id colonna
     IDrow   { integer } : id riga
-    settaggio prima cella visibile (IDcol, IDrow)
+    settaggio prima cella visibile(IDcol, IDrow)
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -954,7 +952,7 @@ def _primaCella (IDcol=0, IDrow=0):
     oDoc.CurrentController.setFirstVisibleRow(IDrow)
     return
 ########################################################################
-def ordina_col (ncol):
+def ordina_col(ncol):
     '''
     ncol   { integer } : id colonna
     ordina i dati secondo la colonna con id ncol
@@ -1001,7 +999,7 @@ def ordina_col (ncol):
     properties = tuple(oProp)
     dispatchHelper.executeDispatch(oFrame, '.uno:DataSort', '', 0, properties)
 ########################################################################
-def setTabColor (colore):
+def setTabColor(colore):
     '''
     colore   { integer } : id colore
     attribuisce al foglio corrente un colore a scelta
@@ -1015,10 +1013,10 @@ def setTabColor (colore):
     oProp = PropertyValue()
     oProp.Name = 'TabBgColor'
     oProp.Value = colore
-    properties = (oProp,)
+    properties =(oProp,)
     dispatchHelper.executeDispatch(oFrame, '.uno:SetTabBgColor', '', 0, properties)
 ########################################################################
-def show_sheets (x=True):
+def show_sheets(x=True):
     '''
     x   { boolean } : True = ON, False = OFF
     
@@ -1031,10 +1029,10 @@ def show_sheets (x=True):
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = x
-def nascondi_sheets (arg=None):
-    show_sheets (False)
+def nascondi_sheets(arg=None):
+    show_sheets(False)
 ########################################################################
-def salva_come (nomefile=None):
+def salva_come(nomefile=None):
     '''
     nomefile   { string } : nome del file di destinazione
     Se presente l'argomento nomefile, salva il file corrente in nomefile.
@@ -1063,12 +1061,12 @@ def salva_come (nomefile=None):
 
     dispatchHelper.executeDispatch(oFrame, ".uno:SaveAs", "", 0, properties)
 ########################################################################
-def _gotoCella (IDcol=0, IDrow=0):
+def _gotoCella(IDcol=0, IDrow=0):
     '''
     IDcol   { integer } : id colonna
     IDrow   { integer } : id riga
 
-    muove il cursore nelle cella (IDcol, IDrow)
+    muove il cursore nelle cella(IDcol, IDrow)
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -1077,7 +1075,7 @@ def _gotoCella (IDcol=0, IDrow=0):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     return
 ########################################################################
-def adatta_altezza_riga (nSheet=None):
+def adatta_altezza_riga(nSheet=None):
     '''
     nSheet   { string } : nSheet della sheet
     imposta l'altezza ottimale delle celle
@@ -1088,12 +1086,12 @@ def adatta_altezza_riga (nSheet=None):
         nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
-    if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+    if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
 ########################################################################
 # elenco prezzi ########################################################
-#~ def debug (arg=None):
-def scelta_viste (arg=None):
+#~ def debug(arg=None):
+def scelta_viste(arg=None):
     '''
     Gestisce i dialoghi del menù viste nelle tabelle di Analisi di Prezzo,
     Elenco Prezzi, COMPUTO, VARIANTE, CONTABILITA'
@@ -1103,7 +1101,7 @@ def scelta_viste (arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
-    if oSheet.Name in ('VARIANTE', 'COMPUTO'):
+    if oSheet.Name in('VARIANTE', 'COMPUTO'):
         oDialog1 = dp.createDialog('vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application')
         oDialog1Model = oDialog1.Model
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMis').State = 1
@@ -1171,7 +1169,7 @@ def scelta_viste (arg=None):
         else:
             basic_LeenO('Magic.Formula_magica_aggiorna')
             
-    elif oSheet.Name in ('Elenco Prezzi'):
+    elif oSheet.Name in('Elenco Prezzi'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         if oSheet.getColumns().getByIndex(3).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
@@ -1237,10 +1235,10 @@ def scelta_viste (arg=None):
 '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')/100;"--")'])
 
             n += 1
-            for el in (1, ER+1):
+            for el in(1, ER+1):
                 oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')/100;"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
-            formule = tuple (formule)
+            formule = tuple(formule)
             oRange.setFormulaArray(formule)
 
         if oDialog1.getControl("ComCon").State == True: #Computo - Contabilità
@@ -1255,17 +1253,17 @@ def scelta_viste (arg=None):
                                 '=IF(V' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-V' + str(n) + ';"")',
 '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')/100;"--")'])
             n += 1
-            for el in (1, ER+1):
+            for el in(1, ER+1):
                 oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')/100;"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
-            formule = tuple (formule)
+            formule = tuple(formule)
             oRange.setFormulaArray(formule)
 
         if oDialog1.getControl("VarCon").State == True: #Variante - Contabilità
             genera_sommario()
             oRangeAddress.StartColumn = 11
             oRangeAddress.EndColumn = 14
-            oSheet.group(oRangeAddress,0)
+            oSheet.group(oRangeAddress, 0)
             oSheet.getCellByPosition(23, 0).String = 'Variante - Contabilità'
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(U' + str(n) + '-Q' + str(n) + '=0;"--";U' + str(n) + '-Q' + str(n) + ')',
@@ -1273,19 +1271,19 @@ def scelta_viste (arg=None):
                                 '=IF(V' + str(n) + '-R' + str(n) + '<0;R' + str(n) + '-V' + str(n) + ';"")',
 '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')/100;"--")'])
             n += 1
-            for el in (1, ER+1):
+            for el in(1, ER+1):
                 oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')/100;"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
-            formule = tuple (formule)
+            formule = tuple(formule)
             oRange.setFormulaArray(formule)
-        for el in (11, 15, 19, 26):
+        for el in(11, 15, 19, 26):
             oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
-        for el in (12, 16, 20, 23):
+        for el in(12, 16, 20, 23):
             oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
-        for el in (13, 17, 21, 24, 25):
+        for el in(13, 17, 21, 24, 25):
             oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
             
-    elif oSheet.Name in ('Analisi di Prezzo'):
+    elif oSheet.Name in('Analisi di Prezzo'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         if  oSheet.getCellByPosition(1, 2).Rows.OptimalHeight == False: oDialog1.getControl("CBDesc").State = 1 #descrizione breve
@@ -1295,25 +1293,25 @@ def scelta_viste (arg=None):
             basic_LeenO('Strutture.Tronca_Altezza_Analisi')
         elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
         
-    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
+    elif oSheet.Name in('CONTABILITA', 'Registro', 'SAL'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         oDialog1.execute()
     #~ MsgBox('Operazione eseguita con successo!','')
     if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
-        errori = ('#DIV/0!', '--')
+        errori =('#DIV/0!', '--')
         hide_error(errori, 26)
 ########################################################################
-class genera_sommario_th (threading.Thread):
+class genera_sommario_th(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
         genera_sommario_run()
-def genera_sommario (arg=None):
-#~ def debug (arg=None):
+def genera_sommario(arg=None):
+#~ def debug(arg=None):
     genera_sommario_th().start()
 #~ ###
-def genera_sommario_run (arg=None):
+def genera_sommario_run(arg=None):
     '''
     sostituisce la sub Rifa_AA_BB_Computo
     serve a generare i sommari in Elenco Prezzi
@@ -1381,14 +1379,14 @@ def genera_sommario_run (arg=None):
                         '=SUMIF(GG;A' + str(n) + ';conEuro)'])
         formule.append(stringa)
     oRange = oSheet.getCellRangeByPosition(11, 3, 21, ultima_voce(oSheet))
-    formule = tuple (formule)
+    formule = tuple(formule)
     oRange.setFormulaArray(formule)
     refresh(1)
     adatta_altezza_riga(oSheet.Name)
     #~ oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
-def riordina_ElencoPrezzi (arg=None):
-#~ def debug (arg=None):
+def riordina_ElencoPrezzi(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -1399,7 +1397,7 @@ def riordina_ElencoPrezzi (arg=None):
     ER = oRangeAddress.EndRow-1
     if ER < SR:
         try:
-            uFindStringCol ('Fine elenco', 0, oSheet)
+            uFindStringCol('Fine elenco', 0, oSheet)
         except TypeError:
             inserisci_Riga_rossa()
         test = str(uFindStringCol('Fine elenco', 0, oSheet))
@@ -1414,12 +1412,12 @@ def riordina_ElencoPrezzi (arg=None):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 # L'ATTIVAZIONE DELLA CLASS doppioni_th INTERFERISCE CON invia_voce_ep()
-#~ class doppioni_th (threading.Thread):
+#~ class doppioni_th(threading.Thread):
     #~ def __init__(self):
         #~ threading.Thread.__init__(self)
     #~ def run(self):
         #~ doppioni_run()
-#~ def doppioni (arg=None):
+#~ def doppioni(arg=None):
     #~ doppioni_th().start()
 ###
 #~ def doppioni_run(arg=None):
@@ -1435,7 +1433,7 @@ def doppioni(arg=None):
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         lista_tariffe_analisi = list()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
-        for n in range (0, ultima_voce(oSheet)+1):
+        for n in range(0, ultima_voce(oSheet)+1):
             if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla':
                 lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -1453,11 +1451,11 @@ def doppioni(arg=None):
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
-    lista_come_array = tuple (set(oRange.getDataArray()))
+    lista_come_array = tuple(set(oRange.getDataArray()))
     oSheet.getRows().removeByIndex(SR, ER-SR+1)
     lista_tar = list()
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
-    for el in set (lista_come_array):
+    for el in set(lista_come_array):
         lista_tar.append(el[0])
     colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -1532,7 +1530,7 @@ def XPWE_out(arg=None):
     # evito di esportare in SuperCategorie perché inutile, almeno per ora
     listaspcat = list()
     PweDGSuperCategorie = SubElement(PweDGCapitoliCategorie,'PweDGSuperCategorie')
-    for n in range (0, lastRow):
+    for n in range(0, lastRow):
         if oSheet.getCellByPosition(1, n).CellStyle == 'Livello-0-scritta':
             desc = oSheet.getCellByPosition(2, n).String
             if desc not in listaspcat:
@@ -1632,9 +1630,9 @@ def XPWE_out(arg=None):
 #~ Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     PweElencoPrezzi = SubElement(PweMisurazioni,'PweElencoPrezzi')
-    diz_ep = dict ()
-    lista_AP = list ()
-    for n in range (3, getLastUsedCell(oSheet).EndRow):
+    diz_ep = dict()
+    lista_AP = list()
+    for n in range(3, getLastUsedCell(oSheet).EndRow):
         barra_di_stato(str(n) + ' ' + str(getLastUsedCell(oSheet).EndRow))
         if oSheet.getCellByPosition(1, n).Type.value == 'TEXT' and \
         oSheet.getCellByPosition(2, n).Type.value == 'TEXT':
@@ -1712,7 +1710,7 @@ def XPWE_out(arg=None):
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_AP:
             try:
-                n = (uFindStringCol(el, 0, oSheet))
+                n =(uFindStringCol(el, 0, oSheet))
                 EPItem = SubElement(PweElencoPrezzi,'EPItem')
                 EPItem.set('ID', str(k))
                 TipoEP = SubElement(EPItem,'TipoEP')
@@ -1763,7 +1761,7 @@ def XPWE_out(arg=None):
                 PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
                 PweEPAR = SubElement(PweEPAnalisi,'PweEPAR')
                 nEPARItem = 2
-                for x in range (n, n+100):
+                for x in range(n, n+100):
                     if oSheet.getCellByPosition(0, x).CellStyle == 'An-lavoraz-Cod-sx' and \
                     oSheet.getCellByPosition(1, x).String != '':
                         EPARItem = SubElement(PweEPAR,'EPARItem')
@@ -1817,9 +1815,9 @@ def XPWE_out(arg=None):
     oDoc.CurrentController.setActiveSheet(oSheet)
     #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     nVCItem = 2
-    for n in range (0, ultima_voce(oSheet)):
+    for n in range(0, ultima_voce(oSheet)):
         if oSheet.getCellByPosition(0, n).CellStyle == 'Comp Start Attributo':
-            sStRange = Circoscrive_Voce_Computo_Att (n)
+            sStRange = Circoscrive_Voce_Computo_Att(n)
             sStRange.RangeAddress
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
@@ -1840,22 +1838,22 @@ def XPWE_out(arg=None):
             vFlags.text = '0'
 ##########################
             IDSpCat = SubElement(VCItem,'IDSpCat')
-            IDSpCat.text = str (oSheet.getCellByPosition(31, sotto).String)
+            IDSpCat.text = str(oSheet.getCellByPosition(31, sotto).String)
             if IDSpCat.text == '':
                 IDSpCat.text = '0'
 ##########################
             IDCat = SubElement(VCItem,'IDCat')
-            IDCat.text = str (oSheet.getCellByPosition(32, sotto).String)
+            IDCat.text = str(oSheet.getCellByPosition(32, sotto).String)
             if IDCat.text == '':
                 IDCat.text = '0'
 ##########################
             IDSbCat = SubElement(VCItem,'IDSbCat')
-            IDSbCat.text = str (oSheet.getCellByPosition(33, sotto).String)
+            IDSbCat.text = str(oSheet.getCellByPosition(33, sotto).String)
             if IDSbCat.text == '':
                 IDSbCat.text = '0'
 ##########################
             PweVCMisure = SubElement(VCItem,'PweVCMisure')
-            for m in range (sopra+2, sotto):
+            for m in range(sopra+2, sotto):
                 RGItem = SubElement(PweVCMisure,'RGItem')
                 x = 2
                 RGItem.set('ID', str(x))
@@ -1920,16 +1918,16 @@ def XPWE_out(arg=None):
     except:
         MsgBox('Esportazione non eseguita!\n\nVerifica che il file di destinazione non sia già in uso!','E R R O R E !')
 ########################################################################
-def firme_in_calce_run (arg=None):
+def firme_in_calce_run(arg=None):
     oDialogo_attesa = dlg_attesa()# avvia il diaolgo di attesa che viene chiuso alla fine con 
     '''
-    Inserisce (in COMPUTO o VARIANTE) un riepilogo delle categorie
+    Inserisce(in COMPUTO o VARIANTE) un riepilogo delle categorie
     ed i dati necessari alle firme
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
 
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
+    if oSheet.Name in('Analisi di Prezzo', 'Elenco Prezzi'):
         lRowF = ultima_voce(oSheet)+1
         oDoc.CurrentController.setFirstVisibleRow(lRowF-1)
         lRowE = getLastUsedCell(oSheet).EndRow
@@ -1941,7 +1939,7 @@ def firme_in_calce_run (arg=None):
             oSheet.getRows().removeByIndex(lRowF, lRowE-lRowF)
         riga_corrente = lRowF+1
         oSheet.getRows().insertByIndex(lRowF, 15)
-        oSheet.getCellRangeByPosition (0,lRowF,100,lRowF+15-1).CellStyle = "Ultimus_centro"
+        oSheet.getCellRangeByPosition(0,lRowF,100,lRowF+15-1).CellStyle = "Ultimus_centro"
     #~ raggruppo i righi di mirura
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -1956,14 +1954,14 @@ def firme_in_calce_run (arg=None):
         oSheet.getCellByPosition(1 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
     #~ consolido il risultato
         oRange = oSheet.getCellByPosition(1 , riga_corrente+3)
-        flags = (oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
+        flags =(oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
-        oSheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = 'ULTIMUS'
+        oSheet.getCellRangeByPosition(1,riga_corrente+3,1,riga_corrente+3).CellStyle = 'ULTIMUS'
         oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il progettista'
         oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE("(";$S2.$C$13;")")'
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
         oDoc.CurrentController.ZoomValue = 400
 
         attesa().start()
@@ -2013,7 +2011,7 @@ def firme_in_calce_run (arg=None):
         oSheet.getCellByPosition(ae , riga_corrente).String = 'Importo\nMDO €'
         inizio_gruppo = riga_corrente
         riga_corrente += 1
-        for i in range (0, lRowF):
+        for i in range(0, lRowF):
             if oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-0-scritta':
                 #~ chi(riga_corrente)
                 oSheet.getRows().insertByIndex(riga_corrente,1)
@@ -2035,7 +2033,7 @@ def firme_in_calce_run (arg=None):
                 oSheet.getRows().insertByIndex(riga_corrente,1)
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
                 oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE ("   ";C' + str(i+1) + ')'
+                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE("   ";C' + str(i+1) + ')'
                 #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
@@ -2051,7 +2049,7 @@ def firme_in_calce_run (arg=None):
                 oSheet.getRows().insertByIndex(riga_corrente,1)
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
                 oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE ("      ";C' + str(i+1) + ')'
+                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE("      ";C' + str(i+1) + ')'
                 #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
@@ -2064,7 +2062,7 @@ def firme_in_calce_run (arg=None):
                 riga_corrente += 1
         #~ riga_corrente +=1
      
-        oSheet.getCellRangeByPosition (2,inizio_gruppo,ae,inizio_gruppo).CellStyle = "Ultimus_centro"
+        oSheet.getCellRangeByPosition(2,inizio_gruppo,ae,inizio_gruppo).CellStyle = "Ultimus_centro"
 
         oSheet.getCellByPosition(2 , riga_corrente).String= 'T O T A L E   €'
         oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'Ultimus_destra'
@@ -2080,12 +2078,12 @@ def firme_in_calce_run (arg=None):
         oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
     #~ consolido il risultato
         oRange = oSheet.getCellByPosition(2 , riga_corrente+3)
-        flags = (oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
+        flags =(oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
         
         oSheet.getCellByPosition(2 , riga_corrente+5).Formula = 'Il Progettista'
-        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE ("(";$S2.$C$13;")")'
+        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE("(";$S2.$C$13;")")'
         oSheet.getCellRangeByPosition(2 , riga_corrente+5, 2 , riga_corrente+6).CellStyle = 'Ultimus_centro'
 
         ###  inserisco il salto pagina in cima al riepilogo
@@ -2104,7 +2102,7 @@ def firme_in_calce_run (arg=None):
     oDoc.CurrentController.ZoomValue = 100
 ########################################################################
 
-def next_voice (lrow, n=1):
+def next_voice(lrow, n=1):
     '''
     lrow { double }   : riga di riferimento
     n    { integer }  : se 0 sposta prima della voce corrente
@@ -2121,10 +2119,10 @@ def next_voice (lrow, n=1):
 
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
         if n==0:
-            sopra = Circoscrive_Voce_Computo_Att (lrow).RangeAddress.StartRow
+            sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
             lrow = sopra
         elif n==1:
-            sotto = Circoscrive_Voce_Computo_Att (lrow).RangeAddress.EndRow
+            sotto = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
             lrow = sotto+1
     elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
         lrow +=1
@@ -2149,14 +2147,14 @@ def cancella_analisi_da_ep(arg=None):
         if oSheet.getCellByPosition(0, i).String in lista_an:
             oSheet.getRows().removeByIndex(i, 1)
 ###
-def analisi_in_ElencoPrezzi (arg=None):
+def analisi_in_ElencoPrezzi(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.Name != 'Analisi di Prezzo':
             return
         oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
-        sStRange = Circoscrive_Analisi (Range2Cell()[1])
+        sStRange = Circoscrive_Analisi(Range2Cell()[1])
         riga = sStRange.RangeAddress.StartRow + 1
         
         codice = oSheet.getCellByPosition(0, riga).String
@@ -2190,19 +2188,19 @@ def analisi_in_ElencoPrezzi (arg=None):
         oSheet.getCellByPosition(12,3).Formula = "=SUMIF(AA;A4;BB)"
         oSheet.getCellByPosition(13,3).Formula = "=SUMIF(AA;A4;cEuro)"
         oDoc.enableAutomaticCalculation(True)  # sblocco il calcolo automatico
-        _gotoCella (1, 3)
+        _gotoCella(1, 3)
     except:
         oDoc.enableAutomaticCalculation(True)
 ########################################################################
-def tante_analisi_in_ep (arg=None):
+def tante_analisi_in_ep(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
     voce = list()
     idx = 4
-    for n in range (0, ultima_voce(oSheet)+1):
+    for n in range(0, ultima_voce(oSheet)+1):
         if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla' and oSheet.getCellByPosition(1, n).String != '<<<Scrivi la descrizione della nuova voce da analizzare   ':
-            voce = (oSheet.getCellByPosition(0, n).String,
+            voce =(oSheet.getCellByPosition(0, n).String,
                 "=$'Analisi di Prezzo'.B" + str(n+1),
                 "=$'Analisi di Prezzo'.C" + str(n+1),
                 "=$'Analisi di Prezzo'.K" + str(n+1),
@@ -2235,7 +2233,7 @@ def tante_analisi_in_ep (arg=None):
     oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo %'
     #~ MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 ########################################################################
-def Circoscrive_Analisi (lrow):
+def Circoscrive_Analisi(lrow):
     '''
     lrow    { double }  : riga di riferimento per
                         la selezione dell'intera voce
@@ -2247,19 +2245,19 @@ def Circoscrive_Analisi (lrow):
     #~ lrow = Range2Cell()[1]
     #~ return
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
-        if oSheet.getCellByPosition (0, lrow).CellStyle == stili_analisi[0]:
+        if oSheet.getCellByPosition(0, lrow).CellStyle == stili_analisi[0]:
             lrowS=lrow
         else:
             while oSheet.getCellByPosition(0, lrow).CellStyle != stili_analisi[0]:
                 lrow = lrow-1
             lrowS=lrow
         lrow = lrowS
-        while oSheet.getCellByPosition (0, lrow).CellStyle != stili_analisi[-1]:
+        while oSheet.getCellByPosition(0, lrow).CellStyle != stili_analisi[-1]:
             lrow=lrow+1
         lrowE=lrow+1
     celle=oSheet.getCellRangeByPosition(0,lrowS,250,lrowE)
     return celle
-def Circoscrive_Voce_Computo_Att (lrow):
+def Circoscrive_Voce_Computo_Att(lrow):
     '''
     lrow    { double }  : riga di riferimento per
                         la selezione dell'intera voce
@@ -2270,12 +2268,12 @@ def Circoscrive_Voce_Computo_Att (lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ lrow = Range2Cell()[1]
-    #~ if oSheet.Name in ('VARIANTE', 'COMPUTO','CONTABILITA'):
-    if oSheet.getCellByPosition(0, lrow).CellStyle in ('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-1-scritta', 'livello2 valuta'):
-        while oSheet.getCellByPosition (0, lrow).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
+    #~ if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
+    if oSheet.getCellByPosition(0, lrow).CellStyle in('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-1-scritta', 'livello2 valuta'):
+        while oSheet.getCellByPosition(0, lrow).CellStyle not in('Comp End Attributo', 'Comp End Attributo_R'):
             lrow +=1
         lrowE=lrow
-        while oSheet.getCellByPosition(0, lrow).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+        while oSheet.getCellByPosition(0, lrow).CellStyle not in('Comp Start Attributo', 'Comp Start Attributo_R'):
             lrow -=1
         lrowS=lrow
     celle=oSheet.getCellRangeByPosition(0,lrowS,250,lrowE)
@@ -2305,9 +2303,9 @@ def azzera_voce(arg=None):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
         lrow = Range2Cell()[1]
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sStRange.RangeAddress
         inizio = sStRange.RangeAddress.StartRow
         fine = sStRange.RangeAddress.EndRow
@@ -2331,11 +2329,11 @@ def azzera_voce(arg=None):
             oProp = PropertyValue()
             oProp.Name = 'BackgroundColor'
             oProp.Value = 15066597
-            properties = (oProp,)
+            properties =(oProp,)
             dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
             ###
 ########################################################################
-def elimina_voci_azzerate (arg=None):
+def elimina_voci_azzerate(arg=None):
     '''
     Elimina le voci in cui compare la dicitura '*** VOCE AZZERATA ***'
     in COMPUTO o in VARIANTE, senza chiedere conferma
@@ -2343,7 +2341,7 @@ def elimina_voci_azzerate (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
-        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        if oSheet.Name in('COMPUTO', 'VARIANTE'):
             ER = getLastUsedCell(oSheet).EndRow
             for lrow in reversed(range(0, ER)):
                 #~ if oSheet.getCellByPosition(9, lrow).String == '0,00':
@@ -2353,7 +2351,7 @@ def elimina_voci_azzerate (arg=None):
     except:
         return
 ########################################################################
-def elimina_voce (arg=None, lRow=None, msg=1):
+def elimina_voce(arg=None, lRow=None, msg=1):
     '''
     lRow { long }  : numero riga
     msg  { bit }   : 1 chiedi conferma con messaggio
@@ -2365,10 +2363,10 @@ def elimina_voce (arg=None, lRow=None, msg=1):
     if lRow == None:
         lRow = Range2Cell()[1]
     try:
-        if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-            sStRange = Circoscrive_Voce_Computo_Att (lRow)
+        if oSheet.Name in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+            sStRange = Circoscrive_Voce_Computo_Att(lRow)
         elif oSheet.Name == 'Analisi di Prezzo':
-            sStRange = Circoscrive_Analisi (lRow)
+            sStRange = Circoscrive_Analisi(lRow)
     except:
         return
     sStRange.RangeAddress
@@ -2397,8 +2395,8 @@ def copia_riga_computo(lrow):
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ lrow = Range2Cell()[1]
     stile = oSheet.getCellByPosition(1, lrow).CellStyle
-    if stile in ('comp Art-EP', 'comp Art-EP_R', 'Comp-Bianche in mezzo'):#'Comp-Bianche in mezzo Descr', 'comp 1-a', 'comp sotto centro'):# <stili computo
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    if stile in('comp Art-EP', 'comp Art-EP_R', 'Comp-Bianche in mezzo'):#'Comp-Bianche in mezzo Descr', 'comp 1-a', 'comp sotto centro'):# <stili computo
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sStRange.RangeAddress
         sopra = sStRange.RangeAddress.StartRow
         sotto = sStRange.RangeAddress.EndRow
@@ -2428,8 +2426,8 @@ def copia_riga_contab(lrow):
     stile = oSheet.getCellByPosition(1, lrow).CellStyle
     if  oSheet.getCellByPosition(1, lrow+1).CellStyle == 'comp sotto Bianche_R':
         return
-    if stile in ('comp Art-EP_R', 'Data_bianca', 'Comp-Bianche in mezzo_R'):
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    if stile in('comp Art-EP_R', 'Data_bianca', 'Comp-Bianche in mezzo_R'):
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sStRange.RangeAddress
         sopra = sStRange.RangeAddress.StartRow
         sotto = sStRange.RangeAddress.EndRow
@@ -2462,7 +2460,7 @@ def copia_riga_analisi(lrow):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
-    if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
+    if stile in('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
         lrow=lrow+1
         oSheet.getRows().insertByIndex(lrow,1)
     # imposto gli stili
@@ -2494,7 +2492,7 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome_sheet = oSheet.Name
-    if nome_sheet in ('COMPUTO', 'VARIANTE'):
+    if nome_sheet in('COMPUTO', 'VARIANTE'):
         copia_riga_computo(lrow)
     elif nome_sheet == 'CONTABILITA':
         copia_riga_contab(lrow)
@@ -2511,15 +2509,15 @@ def cerca_partenza(arg=None):
     lrow = Range2Cell()[1]
     global partenza
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo:
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
-        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1)
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        partenza =(oSheet.Name, sStRange.RangeAddress.StartRow+1)
         return partenza
     elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab:
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
-        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        partenza =(oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
         return partenza
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in ('An-lavoraz-Cod-sx'):
-        partenza = (oSheet.Name, lrow)
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in('An-lavoraz-Cod-sx'):
+        partenza =(oSheet.Name, lrow)
         return partenza
     else:
         partenza = None
@@ -2536,10 +2534,10 @@ def pesca_cod(arg=None):
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
-    if oSheet.Name in ('Analisi di Prezzo'):
+    if oSheet.Name in('Analisi di Prezzo'):
         cerca_partenza()
         _gotoSheet('Elenco Prezzi')
-    if oSheet.Name in ('CONTABILITA'):
+    if oSheet.Name in('CONTABILITA'):
         cerca_partenza()
         if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
             basic_LeenO('Cerca_Rior.cerca_in_elenco')
@@ -2560,7 +2558,7 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
             partenza[2]
         except TypeError:
             return
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
         if oDoc.NamedRanges.hasByName("#Lib#1") == True:
             if sblocca_computo == 0:
                 if DlgSiNo("Risulta già registrato un SAL. VUOI PROCEDERE COMUQUE?",'ATTENZIONE!') ==3:
@@ -2572,7 +2570,7 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
             basic_LeenO('Cerca_Rior.cerca_in_elenco')
             return
         _gotoSheet('Elenco Prezzi')
-    if oSheet.Name in ('Elenco Prezzi'):
+    if oSheet.Name in('Elenco Prezzi'):
         try:
             lrow = Range2Cell()[1]
             codice = oSheet.getCellByPosition(0, lrow).String
@@ -2587,21 +2585,21 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
         except NameError:
             return
 ########################################################################
-def inverti_segno (arg=None):
+def inverti_segno(arg=None):
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
     Funziona solo in COMPUTO e VARIANTE.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
         except AttributeError:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
         SR = oRangeAddress.StartRow
         ER = oRangeAddress.EndRow
-        for lrow in range (SR, ER+1):
+        for lrow in range(SR, ER+1):
             if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
                 if '-' in oSheet.getCellByPosition(9, lrow).Formula:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
@@ -2638,7 +2636,7 @@ def debug_validation(arg=None):
     oSheet.getCellRangeByName('L1').String = 'Ricicla da:'
     oSheet.getCellRangeByName('L1').CellStyle = 'Reg_prog'
     oCell= oSheet.getCellRangeByName('N1')
-    if oCell.String not in ("COMPUTO", "VARIANTE", 'Scegli origine'):
+    if oCell.String not in("COMPUTO", "VARIANTE", 'Scegli origine'):
         oCell.CellStyle = 'Menu_sfondo _input_grasBig'
         valida_cella(oCell, '"COMPUTO";"VARIANTE"',titoloInput='Scegli...', msgInput='COMPUTO o VARIANTE', err=True)
         oCell.String ='Scegli...'
@@ -2670,8 +2668,8 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err= False ):
     oTabVal.setFormula1(lista_val)
     oCell.setPropertyValue("Validation", oTabVal)
 
-def debug_ConditionalFormat (arg=None):
-#~ def debug (arg=None):
+def debug_ConditionalFormat(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oCell= oDoc.CurrentSelection
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -2705,7 +2703,7 @@ def debugclip(arg=None):
         #~ chi(aDataFlavor)
         
     return
-    #~ createUnoService = (XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
+    #~ createUnoService =(XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
     #~ oTR = createUnoListener("Tr_", "com.sun.star.datatransfer.XTransferable")
     oClip.setContents( oTR, None )
     sTxtCString = sText
@@ -2793,9 +2791,9 @@ def copia_celle_visibili(arg=None):
     oDoc.CurrentController.setActiveSheet(oSheet)
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(SC, SR, EC, ER))
 # Range2Cell ###########################################################
-def Range2Cell ():
+def Range2Cell():
     '''
-    Restituisce la tupla (IDcolonna, IDriga) della posizione corrnete
+    Restituisce la tupla(IDcolonna, IDriga) della posizione corrnete
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -2806,7 +2804,7 @@ def Range2Cell ():
     except AttributeError:
         nRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
         nCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
-    return (nCol,nRow)
+    return(nCol,nRow)
 ########################################################################
 # restituisce l'ID dell'ultima riga usata
 def getLastUsedCell(oSheet):
@@ -2829,7 +2827,7 @@ def numera_voci(bit=1):#
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value != 0:
         _gotoSheet('S1')
-        _gotoCella (7, 334)
+        _gotoCella(7, 334)
         MsgBox('''La rinumerazione delle voci è disabilitata.
 Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
         return
@@ -2839,20 +2837,20 @@ Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
     n = 1
     if bit==0:
         for x in reversed(range(0, lrow)):
-            if oSheet.getCellByPosition (1,x).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
-                n = oSheet.getCellByPosition (0,x).Value +1
+            if oSheet.getCellByPosition(1,x).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
+                n = oSheet.getCellByPosition(0,x).Value +1
                 break
         for row in range(lrow,lastRow):
-            if oSheet.getCellByPosition (1,row).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
-                oSheet.getCellByPosition (0,row).Value = n
+            if oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
+                oSheet.getCellByPosition(0,row).Value = n
                 n +=1
     if bit==1:
         for row in range(0,lastRow):
-            if oSheet.getCellByPosition (1,row).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
-                oSheet.getCellByPosition (0,row).Value = n
+            if oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
+                oSheet.getCellByPosition(0,row).Value = n
                 n = n+1
 ########################################################################
-def refresh (arg=1):
+def refresh(arg=1):
     '''
     Abilita / disabilita il refresh per accelerare le procedure
     '''
@@ -2869,12 +2867,12 @@ def refresh (arg=1):
         #~ oDoc.removeActionLock()
         #~ oDoc.unlockControllers #attiva l'eco a schermo
 ########################################################################
-def ins_voce_elenco (arg=None):
+def ins_voce_elenco(arg=None):
     '''
     Inserisce una nuova riga voce in Elenco Prezzi
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    refresh (0) 
+    refresh(0) 
     oSheet = oDoc.CurrentController.ActiveSheet
     _gotoCella(0,3)
     oSheet.getRows().insertByIndex(3,1)
@@ -2883,13 +2881,13 @@ def ins_voce_elenco (arg=None):
     oSheet.getCellByPosition(1, 3).CellStyle = "EP-a"
     oSheet.getCellRangeByPosition(2, 3, 7, 3).CellStyle = "EP-mezzo"
     oSheet.getCellRangeByPosition(8, 3, 9, 3).CellStyle = "EP-sfondo"
-    for el in (5, 11, 15, 19, 26):
+    for el in(5, 11, 15, 19, 26):
         oSheet.getCellByPosition(el, 3).CellStyle = "EP-mezzo %"
 
-    for el in (12, 16, 20, 21):#(12, 16, 20):
+    for el in(12, 16, 20, 21):#(12, 16, 20):
         oSheet.getCellByPosition(el, 3).CellStyle = 'EP statistiche_q'
 
-    for el in (13, 17, 23, 24, 25):#(12, 16, 20):
+    for el in(13, 17, 23, 24, 25):#(12, 16, 20):
         oSheet.getCellByPosition(el, 3).CellStyle = 'EP statistiche'
 
     oSheet.getCellRangeByPosition(0, 3, 26, 3).clearContents(HARDATTR)
@@ -2904,7 +2902,7 @@ def ins_voce_elenco (arg=None):
     oSheet.copyRange(oCellAddress, oRangeAddress)
     oCell = oSheet.getCellByPosition(2, 3)
     valida_cella(oCell, '"cad";"corpo";"dm";"dm²";"dm³";"kg";"lt";"m";"m²";"m³";"q";"t";"',titoloInput='Scegli...', msgInput='Unità di misura')
-    refresh (1)
+    refresh(1)
 ########################################################################
 # nuova_voce ###########################################################
 def ins_voce_computo_grezza(lrow):
@@ -2917,14 +2915,14 @@ def ins_voce_computo_grezza(lrow):
 # per ora lascio perdere
     # inserisco le righe ed imposto gli stili
     #~ insRows(lrow,4) #inserisco le righe
-    #~ oSheet.getCellByPosition (0,lrow).CellStyle = 'Comp Start Attributo'
-    #~ oSheet.getCellRangeByPosition (0,lrow,30,lrow).CellStyle = 'Comp-Bianche sopra'
-    #~ oSheet.getCellByPosition (2,lrow).CellStyle = 'Comp-Bianche sopraS'
+    #~ oSheet.getCellByPosition(0,lrow).CellStyle = 'Comp Start Attributo'
+    #~ oSheet.getCellRangeByPosition(0,lrow,30,lrow).CellStyle = 'Comp-Bianche sopra'
+    #~ oSheet.getCellByPosition(2,lrow).CellStyle = 'Comp-Bianche sopraS'
     #~
-    #~ oSheet.getCellByPosition (0,lrow+1).CellStyle = 'comp progress'
-    #~ oSheet.getCellByPosition (1,lrow+1).CellStyle = 'comp Art-EP'
-    #~ oSheet.getCellRangeByPosition (2,lrow+1,8,lrow+1).CellStyle = 'Comp-Bianche in mezzo Descr'
-    #~ oSheet.getCellRangeByPosition (2,lrow+1,8,lrow+1).merge(True)
+    #~ oSheet.getCellByPosition(0,lrow+1).CellStyle = 'comp progress'
+    #~ oSheet.getCellByPosition(1,lrow+1).CellStyle = 'comp Art-EP'
+    #~ oSheet.getCellRangeByPosition(2,lrow+1,8,lrow+1).CellStyle = 'Comp-Bianche in mezzo Descr'
+    #~ oSheet.getCellRangeByPosition(2,lrow+1,8,lrow+1).merge(True)
 ########################################################################
 ## vado alla vecchia maniera ## copio il range di righe computo da S5 ##
     oSheetto = oDoc.getSheets().getByName('S5')
@@ -2935,7 +2933,7 @@ def ins_voce_computo_grezza(lrow):
     oSheet.copyRange(oCellAddress, oRangeAddress)
 ########################################################################
 # controllo la presenza di voci abbreviate e nel caso adatto la formula
-    for i in range (3, 10):
+    for i in range(3, 10):
         if '=IF(LEN(VLOOKUP(B' in oSheet.getCellByPosition(2, i).getFormula():
 
             #~ primi = oDoc.Sheets.getByName('S1').getCellByPosition(7,336).Value #S1.H337
@@ -2960,7 +2958,7 @@ def ins_voce_computo_grezza(lrow):
     oSheet.getCellByPosition(13,lrow+3).Formula ='=J'+str(lrow+4)
     oSheet.getCellByPosition(35,lrow+3).Formula ='=B'+str(lrow+2)
 
-    if oSheet.getCellByPosition(31, lrow-1).CellStyle in ('livello2 valuta', 'Livello-0-scritta', 'Livello-1-scritta', 'compTagRiservato'):
+    if oSheet.getCellByPosition(31, lrow-1).CellStyle in('livello2 valuta', 'Livello-0-scritta', 'Livello-1-scritta', 'compTagRiservato'):
         oSheet.getCellByPosition(31, lrow+3).Value = oSheet.getCellByPosition(31, lrow-1).Value
         oSheet.getCellByPosition(32, lrow+3).Value = oSheet.getCellByPosition(32, lrow-1).Value
         oSheet.getCellByPosition(33, lrow+3).Value = oSheet.getCellByPosition(33, lrow-1).Value
@@ -2972,7 +2970,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo):
+    if oSheet.getCellByPosition(0, lrow).CellStyle in(noVoce + stili_computo):
         lrow = next_voice(lrow, 1)
     else:
         return
@@ -2982,13 +2980,13 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
         pesca_cod()
 ########################################################################
 # leeno.conf  ##########################################################
-def config_leeno (arg=None):
-#~ def debug (arg=None):
+def config_leeno(arg=None):
+#~ def debug(arg=None):
     '''
     Visualizza il menù di configurazione
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName('S1')
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     #~ global oDlg_config
@@ -3005,11 +3003,12 @@ def config_leeno (arg=None):
     
     sString = oDlg_config.getControl('TextField5')
     #~ chi(oSheet.getCellRangeByName('S1.H319').Value)
-    try:
-        sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
-    except:
-        sString.Text ='0'
+    #~ try:
+    sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
+    #~ except:
+        #~ sString.Text ='0'
 
+    #~ chi(oSheet.getCellRangeByName('S1.H320').Value)
     sString = oDlg_config.getControl('TextField6')
     sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
 
@@ -3168,14 +3167,14 @@ def config_default(arg=None):
     
     config_leeno()
 ########################################################################
-def nuova_voce_scelta (arg=None): #assegnato a ctrl-shift-n
+def nuova_voce_scelta(arg=None): #assegnato a ctrl-shift-n
 #~ def debug(arg=None):
     '''
     Contestualizza in ogni tabella l'inserimento delle voci.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
         ins_voce_computo()
     elif oSheet.Name =='Analisi di Prezzo':
         inizializza_analisi()
@@ -3185,7 +3184,7 @@ def nuova_voce_scelta (arg=None): #assegnato a ctrl-shift-n
         ins_voce_elenco()
     
 # nuova_voce_contab  ##################################################
-def ins_voce_contab (arg=None):
+def ins_voce_contab(arg=None):
     '''
     Inserisce una nuova voce in CONTABILITA.
     '''
@@ -3213,7 +3212,7 @@ def ins_voce_contab (arg=None):
     elif stile == 'Comp TOTALI':
         pass
     elif stile in stili_contab:
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
         if oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow + 1).String == '#reg':
             if DlgSiNo("""Inserendo qui una nuova voce, comprometterai
@@ -3237,13 +3236,13 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     oSheet.getCellRangeByPosition(0, lrow, 48, lrow+5).Rows.OptimalHeight = True
     _gotoCella(1, lrow+1)
 
-    #~ if (oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress())):
+    #~ if(oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress())):
         #~ chi('appartiene')
     #~ else:
         #~ chi('nooooo')
     #~ return
 
-    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
 
     try:
@@ -3253,7 +3252,7 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
 
 ########################################################################
 # controllo la presenza di voci abbreviate e nel caso adatto la formula
-    for i in range (3, 10):
+    for i in range(3, 10):
         if '=IF(LEN(VLOOKUP(B' in oSheet.getCellByPosition(2, i).getFormula():
             sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
             oSheet.getCellByPosition(2, lrow+1).Formula = sformula
@@ -3292,15 +3291,15 @@ def attiva_contabilita(arg=None):
     '''Se presente, attiva e visualizza le tabelle di contabilità'''
 
     oDoc = XSCRIPTCONTEXT.getDocument()
-    if oDoc.Sheets.hasByName ('S1'):
+    if oDoc.Sheets.hasByName('S1'):
         oDoc.Sheets.getByName('S1').getCellByPosition(7,327).Value = 1
-        if oDoc.Sheets.hasByName ('CONTABILITA'):
-            for el in ('Registro', 'SAL','CONTABILITA'):
-                if oDoc.Sheets.hasByName(el):_gotoSheet (el)
+        if oDoc.Sheets.hasByName('CONTABILITA'):
+            for el in('Registro', 'SAL','CONTABILITA'):
+                if oDoc.Sheets.hasByName(el):_gotoSheet(el)
             #~ return
         else:
             oDoc.Sheets.insertNewByName('CONTABILITA',3)
-        _gotoSheet ('CONTABILITA')
+        _gotoSheet('CONTABILITA')
         svuota_contabilita()
         set_larghezza_colonne()
         
@@ -3314,15 +3313,15 @@ def svuota_contabilita(arg=None):
             oDoc.NamedRanges.removeByName('#Lib#'+str(n))
             oDoc.NamedRanges.removeByName('#SAL#'+str(n))
             oDoc.NamedRanges.removeByName('#Reg#'+str(n))
-    for el in ('Registro', 'SAL', 'CONTABILITA'):
+    for el in('Registro', 'SAL', 'CONTABILITA'):
         if oDoc.Sheets.hasByName(el):
             oDoc.Sheets.removeByName(el)
     
     oDoc.Sheets.insertNewByName('CONTABILITA',3)
     oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
-    _gotoSheet ('CONTABILITA')
-    setTabColor (16757935)
+    _gotoSheet('CONTABILITA')
+    setTabColor(16757935)
     oSheet.getCellRangeByName('C1').String = 'CONTABILITA'
     oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
     oSheet.getCellRangeByName('C1').CellBackColor = 16757935
@@ -3408,7 +3407,7 @@ def inizializza_analisi(arg=None):
         oSheet.getCellByPosition(0, 1).Value = 0
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
         oDoc.CurrentController.setActiveSheet(oSheet)
-        setTabColor (12189608)
+        setTabColor(12189608)
         oRangeAddress=oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress
         oCellAddress = oSheet.getCellByPosition(0, getLastUsedCell(oSheet).EndRow).getCellAddress()
         oDoc.CurrentController.select(oSheet.getCellByPosition(0,2))
@@ -3419,7 +3418,7 @@ def inizializza_analisi(arg=None):
         oDoc.CurrentController.setActiveSheet(oSheet)
         if oDoc.getSheets().getByName('Analisi di Prezzo').IsVisible == False:
             #~ oDoc.getSheets().getByName('Analisi di Prezzo').IsVisible = True
-            _gotoSheet ('Analisi di Prezzo')
+            _gotoSheet('Analisi di Prezzo')
             return
         lrow = Range2Cell()[1]
         urow = getLastUsedCell(oSheet).EndRow
@@ -3437,7 +3436,7 @@ def inizializza_analisi(arg=None):
     inserisci_Riga_rossa()
     return
 ########################################################################
-def inserisci_Riga_rossa (arg=None):
+def inserisci_Riga_rossa(arg=None):
     '''
     Inserisce la riga rossa di chiusura degli elaborati
     Questa riga è un rigerimento per varie operazioni
@@ -3446,7 +3445,7 @@ def inserisci_Riga_rossa (arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome = oSheet.Name
-    if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+    if nome in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         lrow = ultima_voce(oSheet) + 2
         for n in range(lrow, getLastUsedCell(oSheet).EndRow+2):
             if oSheet.getCellByPosition(0,n).CellStyle == 'Riga_rossa_Chiudi':
@@ -3462,7 +3461,7 @@ def inserisci_Riga_rossa (arg=None):
         lrow = ultima_voce(oSheet) + 2
         oSheet.getCellByPosition( 0, lrow).String = 'Fine elenco'
         oSheet.getCellRangeByPosition(0,lrow,26,lrow).CellStyle='Riga_rossa_Chiudi' 
-    oSheet.getCellByPosition(2, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!! (ma può rimanere tranquillamente NASCOSTA!)'
+    oSheet.getCellByPosition(2, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 ########################################################################
 # rifa_nomearea ########################################################
 def rifa_nomearea(sSheet, sRange, sName):
@@ -3480,14 +3479,14 @@ def rifa_nomearea(sSheet, sRange, sName):
         oRanges.removeByName(sName)
     oRanges.addNewByName(sName,sPath,oCellAddress,0)
 ########################################################################
-def struttura_Elenco (arg=None):
+def struttura_Elenco(arg=None):
     '''
     Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
     '''
-    #~ giallo (16777072,16777120,16777168)
-    #~ verde (9502608,13696976,15794160)
-    #~ viola (12632319,13684991,15790335)
+    #~ giallo(16777072,16777120,16777168)
+    #~ verde(9502608,13696976,15794160)
+    #~ viola(12632319,13684991,15790335)
     col1 = 16771481
     #~ col2 = 16771501
     col2 = 16777168
@@ -3501,7 +3500,7 @@ def struttura_Elenco (arg=None):
     lista = list()
     test = getLastUsedCell(oSheet).EndRow-1
     #~ chi(oSheet.getCellByPosition(2, 2).Type.value)
-    for n in range (3, test):#
+    for n in range(3, test):#
         #~ if oSheet.getCellByPosition(4, n).Type.value == 'EMPTY':
             #~ oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col2
             #~ if oSheet.getCellByPosition(2, n).Type.value == 'EMPTY':
@@ -3514,7 +3513,7 @@ def struttura_Elenco (arg=None):
     oDoc.CurrentController.ZoomValue = 100
 ########################################################################
 # XML_toscana_import ###################################################
-def XML_toscana_import (arg=None):
+def XML_toscana_import(arg=None):
     '''
     Importazione di un prezzario XML della regione Toscana 
     in tabella Elenco Prezzi del template COMPUTO.
@@ -3547,7 +3546,7 @@ def XML_toscana_import (arg=None):
     voci = root.getchildren()[1]
 
     tipo_lista = list()
-    cap_lista = list ()
+    cap_lista = list()
     lista_articoli = list()
     for el in voci:
         if el.tag == PRT+'Articolo':
@@ -3576,13 +3575,13 @@ def XML_toscana_import (arg=None):
 
         if codicesp[0] not in tipo_lista:
             tipo_lista.append(codicesp[0])
-            cap = (codicesp[0], el.getchildren()[0].text, '', '', '', '', '')
+            cap =(codicesp[0], el.getchildren()[0].text, '', '', '', '', '')
             lista_articoli.append(cap)
         if codicesp[1] not in cap_lista:
             cap_lista.append(codicesp[1])
-            cap = (codicesp[0]+'.'+codicesp[1], el.getchildren()[0].text+'\n'+el.getchildren()[1].text, '', '', '', '', '')
+            cap =(codicesp[0]+'.'+codicesp[1], el.getchildren()[0].text+'\n'+el.getchildren()[1].text, '', '', '', '', '')
             lista_articoli.append(cap)
-        voceel = (codice, desc_voce, udm, sic, prezzo, mdo, mdoE)
+        voceel =(codice, desc_voce, udm, sic, prezzo, mdo, mdoE)
         lista_articoli.append(voceel)
 
 # compilo ##############################################################
@@ -3638,19 +3637,19 @@ N.B.: Si consiglia una attenta lettura delle note informative disponibili sul si
 
     ''','ATTENZIONE!')
 #~ ########################################################################
-def fuf (arg=None):
+def fuf(arg=None):
     ''' Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
         E' solo una cortesia per un amico.'''
     filename = filedia('Scegli il file XML-SIX da importare', '*.dat')
     riga = list()
     f = open(filename, 'r')
     ordini = list()
-    riga = ('Codice', 'Descrizione articolo', 'Quantità', 'Data consegna','Conto lavoro', 'Prezzo (€)')
+    riga =('Codice', 'Descrizione articolo', 'Quantità', 'Data consegna','Conto lavoro', 'Prezzo(€)')
     ordini.append(riga)
     
     for row in f:
         art =row[:15]
-        if art[0:4] not in ('HEAD', 'FEET'):
+        if art[0:4] not in('HEAD', 'FEET'):
             art = art[4:]
             des =row[22:62]
             num = 1 #row[72:78].replace(' ','')
@@ -3659,7 +3658,7 @@ def fuf (arg=None):
             dataC = '=DATE('+ dataC[:4]+';'+dataC[4:6]+';'+dataC[6:] + ')'
             clav =row[120:130]
             prz =row[142:-1]
-            riga = (art, des, num, dataC, clav, float(prz.strip()))
+            riga =(art, des, num, dataC, clav, float(prz.strip()))
             ordini.append(riga)
 
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3722,7 +3721,7 @@ def fuf (arg=None):
     
 #~ ########################################################################
 # XML_import_ep ########################################################
-def XML_import_ep (arg=None):
+def XML_import_ep(arg=None):
     MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
     New_file.computo(0)
     '''
@@ -3757,7 +3756,7 @@ def XML_import_ep (arg=None):
     iter = tree.getiterator()
     listaSOA = []
     articolo = []
-    articolo_modificato = ()
+    articolo_modificato =()
     lingua_scelta = 'it'
 ########################################################################
     # nome del prezzario
@@ -3782,7 +3781,7 @@ def XML_import_ep (arg=None):
             autore= elem.get('autore')
             versione= elem.get('versione')
             # inserisci i dati generali
-            #~ self.update_dati_generali (nome=None, cliente=None,
+            #~ self.update_dati_generali(nome=None, cliente=None,
                                        #~ redattore=autore,
                                        #~ ricarico=1,
                                        #~ manodopera=None,
@@ -3792,11 +3791,11 @@ def XML_import_ep (arg=None):
                                        #~ valuta=valuta)
         elif elem.tag == '{six.xsd}categoriaSOA':
             soaId = elem.get('soaId')
-            soaCategoria = elem.get ('soaCategoria')
+            soaCategoria = elem.get('soaCategoria')
             soaDescrizione = elem.find('{six.xsd}soaDescrizione')
             if soaDescrizione != None:
                 breveSOA = soaDescrizione.get('breve')
-            voceSOA = (soaCategoria, soaId, breveSOA)
+            voceSOA =(soaCategoria, soaId, breveSOA)
             listaSOA.append(voceSOA)
         elif elem.tag == '{six.xsd}prezzario':
             prezzarioId = elem.get('prezzarioId')
@@ -3813,7 +3812,7 @@ def XML_import_ep (arg=None):
             #~ unità di misura
             unita_misura = ''
             try:
-                if len (elem.findall('{six.xsd}udmDescrizione')) == 1:
+                if len(elem.findall('{six.xsd}udmDescrizione')) == 1:
                     unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
                 else:
                     if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
@@ -3854,7 +3853,7 @@ def XML_import_ep (arg=None):
             #~ chi(elem.findall('{six.xsd}prdDescrizione')[0].get('breve'))
             #~ return
             try:
-                if len (elem.findall('{six.xsd}prdDescrizione')) == 1:
+                if len(elem.findall('{six.xsd}prdDescrizione')) == 1:
                     desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
                     desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
                 else:
@@ -3870,7 +3869,7 @@ def XML_import_ep (arg=None):
                 pass
             if desc_breve == None: desc_breve = ''
             if desc_estesa == None: desc_estesa = ''
-            if len(desc_breve) > len (desc_estesa): desc_voce = desc_breve
+            if len(desc_breve) > len(desc_estesa): desc_voce = desc_breve
             else: desc_voce = desc_estesa
 ########################################################################
             sub_quot = elem.find('{six.xsd}prdQuotazione')
@@ -3892,7 +3891,7 @@ def XML_import_ep (arg=None):
             if sicurezza != '' and valore != '': elem_11 = valore*sicurezza/100
             # Nota che ora articolo_modificato non è più una lista ma una tupla,
             # riguardo al motivo, vedi commenti in basso
-            articolo_modificato =  (tariffa,          #2  colonna
+            articolo_modificato = (tariffa,          #2  colonna
                                     desc_voce,        #4  colonna
                                     unita_misura,     #6  colonna
                                     '',
@@ -3927,8 +3926,8 @@ def XML_import_ep (arg=None):
     autoexec()
 # XML_import ###########################################################
 ########################################################################
-def XML_import_multi (arg=None):
-    MsgBox ("L'importazione dati dal formato XML-SIX potrebbe richiedere del tempo.", 'Avviso')
+def XML_import_multi(arg=None):
+    MsgBox("L'importazione dati dal formato XML-SIX potrebbe richiedere del tempo.", 'Avviso')
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
@@ -3995,11 +3994,11 @@ def XML_import_multi (arg=None):
             versione= elem.get('versione')
         elif elem.tag == '{six.xsd}categoriaSOA':
             soaId = elem.get('soaId')
-            soaCategoria = elem.get ('soaCategoria')
+            soaCategoria = elem.get('soaCategoria')
             soaDescrizione = elem.find('{six.xsd}soaDescrizione')
             if soaDescrizione != None:
                 breveSOA = soaDescrizione.get('breve')
-            voceSOA = (soaCategoria, soaId, breveSOA)
+            voceSOA =(soaCategoria, soaId, breveSOA)
             listaSOA.append(voceSOA)
         elif elem.tag == '{six.xsd}prezzario':
             prezzarioId = elem.get('prezzarioId')
@@ -4016,7 +4015,7 @@ def XML_import_multi (arg=None):
             #~ unità di misura
             unita_misura = ''
             try:
-                if len (elem.findall('{six.xsd}udmDescrizione')) == 1:
+                if len(elem.findall('{six.xsd}udmDescrizione')) == 1:
                     unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
                 else:
                     if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
@@ -4065,7 +4064,7 @@ def XML_import_multi (arg=None):
                 suffB_DE = suffB_DE + ' '
                 suffE_DE = suffE_DE + ' '
             #~ try:
-            if len (elem.findall('{six.xsd}prdDescrizione')) == 1:
+            if len(elem.findall('{six.xsd}prdDescrizione')) == 1:
                 desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
                 desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
             else:
@@ -4090,7 +4089,7 @@ def XML_import_multi (arg=None):
                     desc_estesa2 = ''
                 desc_breve = suffB_IT + desc_breve1.strip() +'\n§\n'+ suffB_DE + desc_breve2.strip()
                 desc_estesa = suffE_IT + desc_estesa1.strip() +'\n§\n'+ suffE_DE + desc_estesa2.strip()
-            if len(desc_breve) > len (desc_estesa):
+            if len(desc_breve) > len(desc_estesa):
                 desc_voce = desc_breve
             else:
                 desc_voce = desc_estesa
@@ -4114,7 +4113,7 @@ def XML_import_multi (arg=None):
             vuoto = ''
             elem_7 = ''
             elem_11 = ''
-            articolo_modificato =  (tariffa,          #2  colonna
+            articolo_modificato = (tariffa,          #2  colonna
                                     desc_voce,        #4  colonna
                                     unita_misura,     #6  colonna
                                     vuoto,
@@ -4149,26 +4148,26 @@ def XML_import_multi (arg=None):
     autoexec()
 # XML_import_multi ###################################################
 ########################################################################
-class importa_listino_leeno_th (threading.Thread):
+class importa_listino_leeno_th(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        importa_listino_leeno_run ()
-def importa_listino_leeno (arg=None):
-#~ def debug  (arg=None):
+        importa_listino_leeno_run()
+def importa_listino_leeno(arg=None):
+#~ def debug (arg=None):
     importa_listino_leeno_th().start()
 ###
-def importa_listino_leeno_run (arg=None):
+def importa_listino_leeno_run(arg=None):
     '''
-    Esegue la conversione di un listino (formato LeenO) in template Computo
+    Esegue la conversione di un listino(formato LeenO) in template Computo
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ giallo (16777072,16777120,16777168)
-    #~ verde (9502608,13696976,15794160)
-    #~ viola (12632319,13684991,15790335)
+    #~ giallo(16777072,16777120,16777168)
+    #~ verde(9502608,13696976,15794160)
+    #~ viola(12632319,13684991,15790335)
     lista_articoli = list()
-    nome = oSheet.getCellByPosition (2, 0).String
+    nome = oSheet.getCellByPosition(2, 0).String
     test = uFindStringCol('ATTENZIONE!', 5, oSheet)+1
     assembla = DlgSiNo('''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.
@@ -4192,24 +4191,24 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
     attesa().start() #mostra il dialogo
     madre = ''
     for el in range(test, getLastUsedCell(oSheet).EndRow+1):
-        tariffa = oSheet.getCellByPosition (2, el).String
-        descrizione = oSheet.getCellByPosition (4, el).String
-        um = oSheet.getCellByPosition (6, el).String
-        sic = oSheet.getCellByPosition (11, el).String
-        prezzo = oSheet.getCellByPosition (7, el).String
-        mdo_p = oSheet.getCellByPosition (8, el).String
-        mdo = oSheet.getCellByPosition (9, el).String
-        if oSheet.getCellByPosition (2, el).CellBackColor in (16777072,16777120,9502608,13696976,12632319,13684991):
-            articolo = (tariffa,
+        tariffa = oSheet.getCellByPosition(2, el).String
+        descrizione = oSheet.getCellByPosition(4, el).String
+        um = oSheet.getCellByPosition(6, el).String
+        sic = oSheet.getCellByPosition(11, el).String
+        prezzo = oSheet.getCellByPosition(7, el).String
+        mdo_p = oSheet.getCellByPosition(8, el).String
+        mdo = oSheet.getCellByPosition(9, el).String
+        if oSheet.getCellByPosition(2, el).CellBackColor in(16777072,16777120,9502608,13696976,12632319,13684991):
+            articolo =(tariffa,
                         descrizione,
                         um,
                         sic,
                         prezzo,
                         mdo_p,
                         mdo,)
-        elif oSheet.getCellByPosition (2, el).CellBackColor in (16777168,15794160,15790335):
+        elif oSheet.getCellByPosition(2, el).CellBackColor in(16777168,15794160,15790335):
             if assembla ==2: madre = descrizione
-            articolo = (tariffa,
+            articolo =(tariffa,
                         descrizione,
                         um,
                         sic,
@@ -4218,10 +4217,10 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
                         mdo,)
         else:
             if madre == '':
-                descrizione = oSheet.getCellByPosition (4, el).String
+                descrizione = oSheet.getCellByPosition(4, el).String
             else:
-                descrizione = madre + ' \n- ' + oSheet.getCellByPosition (4, el).String
-            articolo = (tariffa,
+                descrizione = madre + ' \n- ' + oSheet.getCellByPosition(4, el).String
+            articolo =(tariffa,
                         descrizione,
                         um,
                         sic,
@@ -4230,7 +4229,7 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
                         mdo,)
         lista_articoli.append(articolo)
     oDialogo_attesa.endExecute()
-    _gotoDoc (dest) #vado sul nuovo file
+    _gotoDoc(dest) #vado sul nuovo file
 # compilo la tabella ###################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDialogo_attesa = dlg_attesa()
@@ -4254,7 +4253,7 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
     oSheet.getRows().removeByIndex(3, 1)
     oDoc.CurrentController.setActiveSheet(oSheet)
     oDialogo_attesa.endExecute()
-    procedo = DlgSiNo ('''Vuoi mettere in ordine la visualizzazione del prezzario?     
+    procedo = DlgSiNo('''Vuoi mettere in ordine la visualizzazione del prezzario?     
 
 Le righe senza prezzo avranno una tonalità di sfondo
 diversa dalle altre e potranno essere facilmente nascoste.
@@ -4268,7 +4267,7 @@ Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
     autoexec()
    
 ########################################################################
-def importa_stili (arg=None):
+def importa_stili(arg=None):
     '''
     Importa tutti gli stili da un documento di riferimento. Se non è
     selezionato, il file di rifetimento è il template di leenO.
@@ -4285,14 +4284,14 @@ Vuoi continuare?''', 'Importa Stili in blocco?') == 3: return
         #~ desktop = XSCRIPTCONTEXT.getDesktop()
         filename = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
     else:
-        filename = uno.systemPathToFileUrl (filename)
+        filename = uno.systemPathToFileUrl(filename)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDoc.getStyleFamilies().loadStylesFromURL(filename,list())
     for el in oDoc.Sheets.ElementNames:
         oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
         adatta_altezza_riga(el)
     try:
-        _gotoSheet ('Elenco Prezzi')
+        _gotoSheet('Elenco Prezzi')
     except:
         pass
 ########################################################################
@@ -4300,7 +4299,7 @@ def parziale(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-    if oSheet.Name in ('COMPUTO','VARIANTE', 'CONTABILITA'):
+    if oSheet.Name in('COMPUTO','VARIANTE', 'CONTABILITA'):
         parziale_core(lrow)
         parziale_verifica()
 def parziale_core(lrow):
@@ -4308,42 +4307,42 @@ def parziale_core(lrow):
     if lrow == 0: return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
-    if oSheet.Name in ('COMPUTO','VARIANTE'):
-        if oSheet.getCellByPosition (0, lrow).CellStyle == 'comp 10 s' and \
-        oSheet.getCellByPosition (1, lrow).CellStyle == 'Comp-Bianche in mezzo' and \
-        oSheet.getCellByPosition (2, lrow).CellStyle == 'comp 1-a' or \
-        oSheet.getCellByPosition (0, lrow).CellStyle == 'Comp End Attributo':
+    if oSheet.Name in('COMPUTO','VARIANTE'):
+        if oSheet.getCellByPosition(0, lrow).CellStyle == 'comp 10 s' and \
+        oSheet.getCellByPosition(1, lrow).CellStyle == 'Comp-Bianche in mezzo' and \
+        oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a' or \
+        oSheet.getCellByPosition(0, lrow).CellStyle == 'Comp End Attributo':
             oSheet.getRows().insertByIndex(lrow, 1)
-        elif 'Parziale [' in (oSheet.getCellByPosition (8, lrow).String):
+        elif 'Parziale [' in(oSheet.getCellByPosition(8, lrow).String):
                 pass
         else:
             return
-        oSheet.getCellByPosition (1, lrow).CellStyle = 'Comp-Bianche in mezzo'
-        oSheet.getCellRangeByPosition (2, lrow, 7, lrow).CellStyle = 'comp sotto centro'
-        oSheet.getCellByPosition (8, lrow).CellStyle = 'comp sotto BiancheS'
-        oSheet.getCellByPosition (9, lrow).CellStyle = 'Comp-Variante num sotto'
-        oSheet.getCellByPosition (8, lrow).Formula = '''=CONCATENATE("Parziale [";VLOOKUP(B'''+ str(sopra+2) + ''';elenco_prezzi;3;FALSE());"]")'''
+        oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo'
+        oSheet.getCellRangeByPosition(2, lrow, 7, lrow).CellStyle = 'comp sotto centro'
+        oSheet.getCellByPosition(8, lrow).CellStyle = 'comp sotto BiancheS'
+        oSheet.getCellByPosition(9, lrow).CellStyle = 'Comp-Variante num sotto'
+        oSheet.getCellByPosition(8, lrow).Formula = '''=CONCATENATE("Parziale [";VLOOKUP(B'''+ str(sopra+2) + ''';elenco_prezzi;3;FALSE());"]")'''
         for i in reversed(range(0, lrow)):
-            if oSheet.getCellByPosition (9, i-1).CellStyle in ('vuote2', 'Comp-Variante num sotto'):
+            if oSheet.getCellByPosition(9, i-1).CellStyle in('vuote2', 'Comp-Variante num sotto'):
                 i
                 break
         oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
-    if oSheet.Name in ('CONTABILITA'): MsgBox('Contatta il canale Telegram https://t.me/joinchat/AAAAAEFGWSw-p_N6tUt0FA')
+    if oSheet.Name in('CONTABILITA'): MsgBox('Contatta il canale Telegram https://t.me/joinchat/AAAAAEFGWSw-p_N6tUt0FA')
 ###
 def parziale_verifica(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-    #~ if oSheet.Name in ('COMPUTO','VARIANTE', 'CONTABILITA'):
-    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    #~ if oSheet.Name in('COMPUTO','VARIANTE', 'CONTABILITA'):
+    sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow+2
     sotto = sStRange.RangeAddress.EndRow
-    for n in range (sopra, sotto):
-        if 'Parziale [' in (oSheet.getCellByPosition (8, n).String):
-            parziale_core (n)
+    for n in range(sopra, sotto):
+        if 'Parziale [' in(oSheet.getCellByPosition(8, n).String):
+            parziale_core(n)
     #~ chi(oDoc.CurrentSelection.CellBackColor)
 
 
@@ -4360,28 +4359,28 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
     """(riga d'inserimento, riga di riferimento)"""
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    sStRange = Circoscrive_Voce_Computo_Att (vRif)
+    sStRange = Circoscrive_Voce_Computo_Att(vRif)
     sStRange.RangeAddress
     idv = sStRange.RangeAddress.StartRow +1
     sotto = sStRange.RangeAddress.EndRow
-    art = abs2name (1, idv)
-    idvoce = abs2name (0, idv)
-    quantity = abs2name (9, sotto)
+    art = abs2name(1, idv)
+    idvoce = abs2name(0, idv)
+    quantity = abs2name(9, sotto)
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
     oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
-    if flags in ('32768', '32769', '32801'):
+    if flags in('32768', '32769', '32801'):
         #~ oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
     #~ else:
         oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
 ########################################################################
-def strall (el, n=3):
+def strall(el, n=3):
     #~ el ='o'
     while len(el) < n:
         el = '0' + el
     return el
 
 ########################################################################
-def converti_stringhe (arg=None):
+def converti_stringhe(arg=None):
     '''
     Converte in numeri le stinghe selezionate.
     '''
@@ -4400,8 +4399,8 @@ def converti_stringhe (arg=None):
         eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
         eCol = oDoc.getCurrentSelection().getRangeAddress().EndColumn
     oRange = oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow)
-    for y in range (sCol, eCol+1):
-        for x in range (sRow, eRow+1):
+    for y in range(sCol, eCol+1):
+        for x in range(sRow, eRow+1):
             try:
                 oSheet.getCellByPosition(y, x).Value = float(oSheet.getCellByPosition(y, x).String.replace(',','.'))
             except:
@@ -4409,7 +4408,7 @@ def converti_stringhe (arg=None):
     return
 
 # XPWE_in ##########################################################
-def XPWE_in (arg=None):
+def XPWE_in(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     refresh(0)
     ###
@@ -4475,7 +4474,7 @@ def XPWE_in (arg=None):
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
                 percentuale = elem.find('Percentuale').text
-                diz = dict ()
+                diz = dict()
                 diz['id_sc'] = id_sc
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
@@ -4489,7 +4488,7 @@ def XPWE_in (arg=None):
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
                 percentuale = elem.find('Percentuale').text
-                diz = dict ()
+                diz = dict()
                 diz['id_sc'] = id_sc
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
@@ -4503,7 +4502,7 @@ def XPWE_in (arg=None):
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
                 percentuale = elem.find('Percentuale').text
-                diz = dict ()
+                diz = dict()
                 diz['id_sc'] = id_sc
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
@@ -4520,7 +4519,7 @@ def XPWE_in (arg=None):
                     percentuale = elem.find('Percentuale').text
                 except AttributeError:
                     percentuale = '0'
-                supcat = (id_sc, dessintetica, percentuale)
+                supcat =(id_sc, dessintetica, percentuale)
                 lista_supcat.append(supcat)
             #~ MsgBox(str(lista_supcat),'') ; return
 ###
@@ -4535,7 +4534,7 @@ def XPWE_in (arg=None):
                     percentuale = elem.find('Percentuale').text
                 except AttributeError:
                     percentuale = '0'
-                cat = (id_sc, dessintetica, percentuale)
+                cat =(id_sc, dessintetica, percentuale)
                 lista_cat.append(cat)
             #~ MsgBox(str(lista_cat),'')
 ###
@@ -4550,7 +4549,7 @@ def XPWE_in (arg=None):
                     percentuale = elem.find('Percentuale').text
                 except AttributeError:
                     percentuale = '0'
-                subcat = (id_sc, dessintetica, percentuale)
+                subcat =(id_sc, dessintetica, percentuale)
                 lista_subcat.append(subcat)
             #~ MsgBox(str(lista_subcat),'') ; return
     except AttributeError:
@@ -4681,7 +4680,7 @@ def XPWE_in (arg=None):
             pweepanalisi = ''
         else:
             pweepanalisi = elem.find('PweEPAnalisi').text
-        #~ chi (pweepanalisi)
+        #~ chi(pweepanalisi)
         diz_ep['tipoep'] = tipoep
         diz_ep['tariffa'] = tariffa
         diz_ep['articolo'] = articolo
@@ -4705,7 +4704,7 @@ def XPWE_in (arg=None):
         diz_ep['xlo_mdop'] = xlo_mdop
         diz_ep['xlo_mdo'] = xlo_mdo
         dict_articoli[id_ep] = diz_ep
-        articolo_modificato =  (tariffa,
+        articolo_modificato = (tariffa,
                                     destestesa,
                                     unmisura,
                                     xlo_sic,
@@ -4718,7 +4717,7 @@ def XPWE_in (arg=None):
         PweEPAR = pweepanalisi.find('PweEPAR')
         if PweEPAR != None:
             EPARItem = PweEPAR.findall('EPARItem')
-            analisi = list ()
+            analisi = list()
             for el in EPARItem:
                 id_an = el.get('ID')
                 an_tipo = el.find('Tipo').text
@@ -4728,7 +4727,7 @@ def XPWE_in (arg=None):
                 an_qt = el.find('Qt').text.replace(' ','')
                 an_pr = el.find('Prezzo').text.replace(' ','')
                 an_fld = el.find('FieldCTL').text
-                an_rigo = (id_ep, an_des, an_um, an_qt, an_pr)
+                an_rigo =(id_ep, an_des, an_um, an_qt, an_pr)
                 analisi.append(an_rigo)
             lista_analisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
             lista_tariffe_analisi.append(tariffa)
@@ -4769,7 +4768,7 @@ def XPWE_in (arg=None):
                 CodiceWBS = ''
             righi_mis = elem.getchildren()[-1].findall('RGItem')
             lista_rig = list()
-            riga_misura = ()
+            riga_misura =()
             lista_righe = list()#[]
             new_id_l = list()
 
@@ -4787,7 +4786,7 @@ def XPWE_in (arg=None):
                 hpeso = el.find('HPeso').text
                 quantita = el.find('Quantita').text
                 flags = el.find('Flags').text
-                riga_misura =  (descrizione,
+                riga_misura = (descrizione,
                                 '',
                                 '',
                                 partiuguali,
@@ -4822,7 +4821,7 @@ def XPWE_in (arg=None):
             diz_misura['lista_rig'] = lista_righe
 
             new_id = strall(idspcat) +'.'+ strall(idcat) +'.'+ strall(idsbcat)
-            new_id_l = (new_id, diz_misura)
+            new_id_l =(new_id, diz_misura)
             prova_l.append(new_id_l)
             
             lista_misure.append(diz_misura)
@@ -4852,7 +4851,7 @@ Si tenga conto che:
 # compilo Anagrafica generale ##########################################
     oSheet = oDoc.getSheets().getByName('S2')
     if oggetto != None:
-        oSheet.getCellByPosition (2,2).String = oggetto
+        oSheet.getCellByPosition(2,2).String = oggetto
     if comune != None:
         oSheet.getCellByPosition(2,3).String = comune
     if committente != None:
@@ -4871,7 +4870,7 @@ Si tenga conto che:
 
 # compilo Elenco Prezzi ################################################
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    # Siccome setDataArray pretende una tupla (array 1D) o una tupla di tuple (array 2D)
+    # Siccome setDataArray pretende una tupla(array 1D) o una tupla di tuple(array 2D)
     # trasformo la lista_articoli da una lista di tuple a una tupla di tuple
     lista_come_array = tuple(lista_articoli)
     # Parametrizzo il range di celle a seconda della dimensione della lista
@@ -4908,10 +4907,10 @@ Si tenga conto che:
 # Compilo Analisi di prezzo ############################################
     #~ if len(lista_analisi) !=0:
     inizializza_analisi()
-    if len (lista_analisi) !=0:
+    if len(lista_analisi) !=0:
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_analisi:
-            sStRange = Circoscrive_Analisi (Range2Cell()[1])
+            sStRange = Circoscrive_Analisi(Range2Cell()[1])
             lrow = sStRange.RangeAddress.StartRow + 1
             oSheet.getCellByPosition(0, lrow).String = el[0]
             oSheet.getCellByPosition(1, lrow).String = el[1]
@@ -4946,7 +4945,7 @@ Si tenga conto che:
     
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName(arg)
-    if oSheet.getCellByPosition (1, 4).String == 'Cod. Art.?':
+    if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
         oSheet.getRows().removeByIndex(3, 4)
     oDoc.CurrentController.select(oSheet)
     iSheet_num = oSheet.RangeAddress.Sheet
@@ -5016,7 +5015,7 @@ Si tenga conto che:
 
             oRangeAddress = oSheet.getCellRangeByPosition(0, SR-1, 250, SR-1).getRangeAddress()
 
-            for n in range (SR, SR+nrighe):
+            for n in range(SR, SR+nrighe):
                 oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
                 oSheet.copyRange(oCellAddress, oRangeAddress)
 
@@ -5138,18 +5137,18 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 17 #'NUOVE FUNZIONALITA'
 Lsubv= "1.dev" #'CORREZIONE BUGS
-noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
-stili_computo = ('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
-stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
-stili_analisi = ('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
-stili_elenco = ('EP-Cs', 'EP-aS')
-createUnoService = (
+noVoce =('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
+stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
+stili_contab =('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
+stili_analisi =('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
+stili_elenco =('EP-Cs', 'EP-aS')
+createUnoService =(
         XSCRIPTCONTEXT
         .getComponentContext()
         .getServiceManager()
         .createInstance
                     )
-GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
+GetmyToolBarNames =('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO',
@@ -5157,10 +5156,10 @@ GetmyToolBarNames = ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
 #
 sUltimus = ''
 ########################################################################
-def ssUltimus (arg=None):
+def ssUltimus(arg=None):
     oDlgMain.endExecute()
     '''
-    Scrive la variabile globale che individua il Documento di Contabilità Corrente (DCC)
+    Scrive la variabile globale che individua il Documento di Contabilità Corrente(DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
     '''
     global sUltimus
@@ -5182,7 +5181,7 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
     DlgMain()
     return
 ########################################################################
-def debugnn (sCella='', t=''):
+def debugnn(sCella='', t=''):
     mri(XSCRIPTCONTEXT.getDocument())
     '''
     sCella  { string } : stringa di default nella casella di testo
@@ -5209,38 +5208,38 @@ def debugnn (sCella='', t=''):
         return oString.Text
 
 ########################################################################
-def filedia (titolo='Scegli il file...', est='*.*', mode=0):
+def filedia(titolo='Scegli il file...', est='*.*', mode=0):
     """
     titolo  { string }  : titolo del FilePicker
     est     { string }  : filtro di visualizzazione file
     mode    { integer } : modalità di gestione del file
 
-    Apri file:  `mode in (0, 6, 7, 8, 9)`
-    Salva file: `mode in (1, 2, 3, 4, 5, 10)`
-    see: ('''http://api.libreoffice.org/docs/idl/ref/
+    Apri file:  `mode in(0, 6, 7, 8, 9)`
+    Salva file: `mode in(1, 2, 3, 4, 5, 10)`
+    see:('''http://api.libreoffice.org/docs/idl/ref/
             namespacecom_1_1sun_1_1star_1_1ui_1_1
             dialogs_1_1TemplateDescription.html''' )
-    see: ('''http://stackoverflow.com/questions/30840736/
+    see:('''http://stackoverflow.com/questions/30840736/
         libreoffice-how-to-create-a-file-dialog-via-python-macro''')
     """
-    estensioni = {'*.*'   : 'Tutti i file (*.*)',
-                '*.odt' : 'Writer (*.odt)',
-                '*.ods' : 'Calc (*.ods)',
-                '*.odb' : 'Base (*.odb)',
-                '*.odg' : 'Draw (*.odg)',
-                '*.odp' : 'Impress (*.odp)',
-                '*.odf' : 'Math (*.odf)',
-                '*.xpwe': 'Primus (*.xpwe)',
-                '*.xml' : 'XML (*.xml)',
-                '*.dat' : 'dat (*.dat)',
+    estensioni = {'*.*'   : 'Tutti i file(*.*)',
+                '*.odt' : 'Writer(*.odt)',
+                '*.ods' : 'Calc(*.ods)',
+                '*.odb' : 'Base(*.odb)',
+                '*.odg' : 'Draw(*.odg)',
+                '*.odp' : 'Impress(*.odp)',
+                '*.odf' : 'Math(*.odf)',
+                '*.xpwe': 'Primus(*.xpwe)',
+                '*.xml' : 'XML(*.xml)',
+                '*.dat' : 'dat(*.dat)',
                 }
     try:
         oFilePicker = createUnoService( "com.sun.star.ui.dialogs.OfficeFilePicker" )
-        oFilePicker.initialize( ( mode,) )
+        oFilePicker.initialize(( mode,) )
         oFilePicker.Title = titolo
 
         app = estensioni.get(est)
-        oFilePicker.appendFilter (app, est)
+        oFilePicker.appendFilter(app, est)
         if oFilePicker.execute():
             oDisp = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
         return oDisp
@@ -5376,7 +5375,7 @@ def MsgBox(s,t=''): # s = messaggio | t = titolo
     #~ s = 'This a message'
     #~ t = 'Title of the box'
     #~ res = MessageBox(parentwin, s, t, QUERYBOX, BUTTONS_YES_NO_CANCEL + DEFAULT_BUTTON_NO)
-    #~ chi (res)
+    #~ chi(res)
     #~ return
     #~ s = res
     #~ t = 'Titolo'
@@ -5421,7 +5420,7 @@ def getFormula(n, a, b):
 
 def getCellStyle(l, n):
     """
-    l { integer } : livello (1 o 2)
+    l { integer } : livello(1 o 2)
     n { integer } : posizione cella
     """
     styles = {
@@ -5445,23 +5444,23 @@ def SubSum(lrow, sub=False):
     sub { boolean } : specifica se sotto-categoria
     """
     if sub:
-        myrange = ('livello2 scritta mini', 'Livello-1-scritta minival', 'Comp TOTALI',)
+        myrange =('livello2 scritta mini', 'Livello-1-scritta minival', 'Comp TOTALI',)
         level = 2
     else:
-        myrange = ('Livello-1-scritta mini val', 'Comp TOTALI',)
+        myrange =('Livello-1-scritta mini val', 'Comp TOTALI',)
         level = 1
 
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     lrowE = ultima_voce(oSheet)+1
     nextCap = lrowE
-    for n in range (lrow+1, lrowE):
+    for n in range(lrow+1, lrowE):
         if oSheet.getCellByPosition(18, n).CellStyle in myrange:
             nextCap = n + 1
             break
-    for n,a,b in ((18, lrow+1, nextCap,), (24, lrow+1, lrowE+1,), (29, lrow+1, lrowE+1,), (30, lrow+1, nextCap,),):
+    for n,a,b in((18, lrow+1, nextCap,),(24, lrow+1, lrowE+1,),(29, lrow+1, lrowE+1,),(30, lrow+1, nextCap,),):
         oSheet.getCellByPosition(n, lrow).Formula = getFormula(n, a, b)
         Sheet.getCellByPosition(18, lrow).CellStyle = getCellStyle(level, n)
 ########################################################################
@@ -5472,12 +5471,12 @@ def filtra_codice(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
     lrow = Range2Cell()[1]
-    myrange = ('Comp End Attributo', 'Comp TOTALI',)
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (stili_computo + stili_contab) :
+    myrange =('Comp End Attributo', 'Comp TOTALI',)
+    if oSheet.getCellByPosition(0, lrow).CellStyle in(stili_computo + stili_contab) :
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
         oCellRangeAddr.Sheet = iSheet
-        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sopra = sStRange.RangeAddress.StartRow
         voce = oSheet.getCellByPosition(1, sopra+1).String
     else:
@@ -5488,8 +5487,8 @@ def filtra_codice(arg=None):
     _gotoCella(0, 0)
 
     for n in range(0, fine):
-        if oSheet.getCellByPosition(0, n).CellStyle in ('Comp Start Attributo','Comp Start Attributo_R'):
-            sStRange = Circoscrive_Voce_Computo_Att (n)
+        if oSheet.getCellByPosition(0, n).CellStyle in('Comp Start Attributo','Comp Start Attributo_R'):
+            sStRange = Circoscrive_Voce_Computo_Att(n)
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
             if oSheet.getCellByPosition(1, sopra+1).String != voce:
@@ -5538,31 +5537,31 @@ def struct(l):
 
     if l == 0:
         stile = 'Livello-0-scritta'
-        myrange = ('Livello-0-scritta', 'Comp TOTALI',)
+        myrange =('Livello-0-scritta', 'Comp TOTALI',)
         Dsopra = 1
         Dsotto = 1
     elif l == 1:
         stile = 'Livello-1-scritta'
-        myrange = ('Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI',)
+        myrange =('Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI',)
         Dsopra = 1
         Dsotto = 1
     elif l == 2:
         stile = 'livello2 valuta'
-        myrange = ('livello2 valuta','Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI',)
+        myrange =('livello2 valuta','Livello-1-scritta', 'Livello-0-scritta', 'Comp TOTALI',)
         Dsopra = 1
         Dsotto = 1
     elif l == 3:
         stile = 'Comp Start Attributo'
-        myrange = ('Comp End Attributo', 'Comp TOTALI',)
+        myrange =('Comp End Attributo', 'Comp TOTALI',)
         Dsopra = 2
         Dsotto = 1
 
     elif l == 4: #Analisi di Prezzo
         stile = 'An-1_sigla'
-        myrange = ('An.1v-Att Start', 'Analisi_Sfondo',)
+        myrange =('An.1v-Att Start', 'Analisi_Sfondo',)
         Dsopra = 1
         Dsotto = -1
-        for n in (3, 5, 7):
+        for n in(3, 5, 7):
             oCellRangeAddr.StartColumn = n
             oCellRangeAddr.EndColumn = n
             oSheet.group(oCellRangeAddr,0)
@@ -5570,10 +5569,10 @@ def struct(l):
 
     test = ultima_voce(oSheet)+2
     lista_cat = list()
-    for n in range (0, test):
+    for n in range(0, test):
         if oSheet.getCellByPosition(0, n).CellStyle == stile:
             sopra = n+Dsopra
-            for n in range (sopra+1, test):
+            for n in range(sopra+1, test):
                 if oSheet.getCellByPosition(0, n).CellStyle in myrange:
                     sotto = n-Dsotto
                     lista_cat.append((sopra, sotto))
@@ -5584,12 +5583,12 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-def autoexec_off (arg=None):
+def autoexec_off(arg=None):
     sUltimus = ''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('M1')
     oSheet.getCellByPosition(2,27).String = ''#sUltimus
-def autoexec (arg=None):
+def autoexec(arg=None):
     '''
     questa è richiamata da New_File()
     '''
@@ -5624,11 +5623,11 @@ def autoexec (arg=None):
         DlgMain()
     elif vedi == 'Dati Generali':
         Vai_a_Variabili()
-    elif vedi in ('Elenco Prezzi', 'COMPUTO'):
+    elif vedi in('Elenco Prezzi', 'COMPUTO'):
         _gotoSheet(vedi)
 #
 ########################################################################
-def computo_terra_terra (arg=None):
+def computo_terra_terra(arg=None):
     '''
     Settaggio base di configuazione colonne in COMPUTO e VARIANTE
     '''
@@ -5637,7 +5636,7 @@ def computo_terra_terra (arg=None):
     oSheet.getCellRangeByPosition(33,0,1023,0).Columns.IsVisible = False
     set_larghezza_colonne()
 ########################################################################
-def viste_nuove (sValori):
+def viste_nuove(sValori):
     '''
     sValori { string } : una tringa di configurazione della visibilità colonne
     permette di visualizzare/nascondere un set di colonne
@@ -5654,7 +5653,7 @@ def viste_nuove (sValori):
             oSheet.getCellByPosition(n, 2).Columns.IsVisible = False
         n += 1
 ########################################################################
-def set_larghezza_colonne (arg=None):
+def set_larghezza_colonne(arg=None):
     '''
     regola la larghezza delle colonne a seconda della sheet
     '''
@@ -5700,7 +5699,7 @@ def set_larghezza_colonne (arg=None):
         oSheet.getColumns().getByName('AX').Columns.Width = 1900
         oSheet.getColumns().getByName('AY').Columns.Width = 1900
         oDoc.CurrentController.freezeAtPosition(0, 3)
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
         oSheet.getColumns().getByName('A').Columns.Width = 600
         oSheet.getColumns().getByName('B').Columns.Width = 1500
         oSheet.getColumns().getByName('C').Columns.Width = 6300 #7800
@@ -5747,18 +5746,18 @@ def set_larghezza_colonne (arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     adatta_altezza_riga(oSheet.Name)
 ########################################################################
-#~ class adegua_tmpl_th (threading.Thread):
+#~ class adegua_tmpl_th(threading.Thread):
     #~ def __init__(self):
         #~ threading.Thread.__init__(self)
     #~ def run(self):
         #~ adegua_tmpl_run()
-def adegua_tmpl (arg=None):
+def adegua_tmpl(arg=None):
     #~ adegua_tmpl_th().start()
-#~ def debug (arg=None):
+#~ def debug(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
-    - dal 203 (LeenO 3.14.0 ha templ 202) introdotta la Super Categoria con nuovi stili di cella;
+    - dal 203(LeenO 3.14.0 ha templ 202) introdotta la Super Categoria con nuovi stili di cella;
         sostituita la colonna "Tag A" con "Tag Super Cat"
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
     '''
@@ -5801,27 +5800,27 @@ dell'operazione che terminerà con un messaggio di avviso.
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
             adatta_altezza_riga(el)
             oDoc.getSheets().getByName(el).IsVisible = False
-        _gotoSheet ('S5')
+        _gotoSheet('S5')
         oSheet = oDoc.getSheets().getByName('S5')
         oSheet.getCellByPosition(28,11).Formula = '=S12-AE12'
         oSheet.getCellByPosition(28,11).CellStyle = 'Comp-sotto euri'
         oSheet.getCellByPosition(28,26).Formula = '=P27-AE27'
         oSheet.getCellByPosition(28,26).CellStyle = 'Comp-sotto euri'
-        for el in ('CONTABILITA', 'VARIANTE', 'COMPUTO'):
+        for el in('CONTABILITA', 'VARIANTE', 'COMPUTO'):
             if oDoc.getSheets().hasByName(el) == True:
-                _gotoSheet (el)
+                _gotoSheet(el)
                 oSheet = oDoc.getSheets().getByName(el)
                 if oSheet.Name != 'CONTABILITA': Rinumera_TUTTI_Capitoli2()
                 oSheet.getCellByPosition(31,2).String = 'Super Cat'
                 oSheet.getCellByPosition(32,2).String = 'Cat'
                 oSheet.getCellByPosition(33,2).String = 'Sub Cat'
                 oSheet.getCellByPosition(28,2).String = 'Materiali\ne Noli €'
-                n = ultima_voce (oSheet)
+                n = ultima_voce(oSheet)
                 oSheet.getCellByPosition(28,n+1).Formula = '=SUBTOTAL(9;AC3:AC'+ str(n+2)
                 lrow = 0
                 while lrow < n:
                     try:
-                        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+                        sStRange = Circoscrive_Voce_Computo_Att(lrow)
                         sotto = sStRange.RangeAddress.EndRow
                         if oSheet.Name == 'CONTABILITA':
                             oSheet.getCellByPosition(28,sotto).Formula = '=P' + str(sotto+1) + '-AE' + str(sotto+1)
@@ -5845,7 +5844,7 @@ def r_version_code(arg=None):
     f = open(code_file, 'r')
     return f.readline().split('-')[-1]
 ########################################################################
-def XPWE_export_run (arg=None ):
+def XPWE_export_run(arg=None ):
     '''
     Viasualizza il menù export/import XPWE
     '''
@@ -5863,7 +5862,7 @@ def XPWE_export_run (arg=None ):
         elif  oDlgXLO.getControl("CON_XLO").State == True:
             XPWE_out('CONTABILITA')
 ########################################################################
-def XPWE_import_run (arg=None ):
+def XPWE_import_run(arg=None ):
     '''
     Viasualizza il menù export/import XPWE
     '''
@@ -5892,7 +5891,7 @@ def DlgMain(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
-            toolbar_on (bar, 0)
+            toolbar_on(bar, 0)
         if len(oDoc.getURL())==0 and \
         getLastUsedCell(oSheet).EndColumn ==0 and \
         getLastUsedCell(oSheet).EndRow ==0:
@@ -5903,7 +5902,7 @@ def DlgMain(arg=None):
     global oDlgMain
     oDlgMain = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application")
     oDialog1Model = oDlgMain.Model
-    oDlgMain.Title = 'Menù Principale (Ctrl+0)'
+    oDlgMain.Title = 'Menù Principale(Ctrl+0)'
     
     sUrl = LeenO_path()+'/icons/Immagine.png'
     oDlgMain.getModel().ImageControl1.ImageURL=sUrl
@@ -5956,7 +5955,7 @@ def DlgMain(arg=None):
     conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
     return
 ########################################################################
-def InputBox (sCella='', t=''):
+def InputBox(sCella='', t=''):
     '''
     sCella  { string } : stringa di default nella casella di testo
     t       { string } : titolo del dialogo
@@ -5980,7 +5979,7 @@ def InputBox (sCella='', t=''):
 
 import zipfile
 ########################################################################
-def hide_error (lErrori, icol):
+def hide_error(lErrori, icol):
     '''
     lErrori  { tuple } : nome dell'errore es.: '#DIV/0!'
     icol { integer } : indice di colonna della riga da nascondere
@@ -5997,11 +5996,11 @@ def hide_error (lErrori, icol):
     oCellRangeAddr.Sheet = iSheet
     for i in range(n, test):
         for el in lErrori:
-            if oSheet.getCellByPosition (icol, i).String == el:
+            if oSheet.getCellByPosition(icol, i).String == el:
                 oCellRangeAddr.StartRow = i
                 oCellRangeAddr.EndRow = i
                 oSheet.group(oCellRangeAddr,1)
-                oSheet.getCellByPosition (0, i).Rows.IsVisible = False
+                oSheet.getCellByPosition(0, i).Rows.IsVisible = False
     oDoc.CurrentController.ZoomValue = 80
 ########################################################################
 def bak_timestamp(arg=None):
@@ -6043,30 +6042,30 @@ def w_version_code(arg=None):
     of.close()
     return str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv +'-'+ tempo[:-2]
 ########################################################################
-def toolbar_vedi (arg=None):
+def toolbar_vedi(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
 
         if oDoc.getSheets().getByName('S1').getCellByPosition(7,316).Value == 0:
             for bar in GetmyToolBarNames: #toolbar sempre visibili
-                toolbar_on (bar)
+                toolbar_on(bar)
         else:
             for bar in GetmyToolBarNames: #toolbar contestualizzate
-                toolbar_on (bar, 0)
+                toolbar_on(bar, 0)
         #~ oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
         toolbar_ordina()
         oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
         nSheet = oDoc.CurrentController.ActiveSheet.Name
 
         if nSheet == 'Elenco Prezzi':
-            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO')
+            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO')
         elif nSheet == 'Analisi di Prezzo':
-            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI')
+            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI')
         elif nSheet == 'CONTABILITA':
-            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
-        elif nSheet in ('COMPUTO','VARIANTE'):
-            toolbar_on ('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
+            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
+        elif nSheet in('COMPUTO','VARIANTE'):
+            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
     except:
         pass
 def toolbar_switch(arg=1):
@@ -6075,7 +6074,7 @@ def toolbar_switch(arg=1):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     for el in oLayout.Elements:
-        if el.ResourceURL not in GetmyToolBarNames + ('private:resource/menubar/menubar', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 'private:resource/toolbar/findbar','private:resource/statusbar/statusbar',):
+        if el.ResourceURL not in GetmyToolBarNames +('private:resource/menubar/menubar', 'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 'private:resource/toolbar/findbar','private:resource/statusbar/statusbar',):
             #~ if oLayout.isElementVisible(el.ResourceURL):
             if arg == 0:
                 oLayout.hideElement(el.ResourceURL)
@@ -6083,7 +6082,7 @@ def toolbar_switch(arg=1):
                 oLayout.showElement(el.ResourceURL)
     return
     #~ private:resource/toolbar/standardbar
-def toolbar_on (toolbarURL, flag=1):
+def toolbar_on(toolbarURL, flag=1):
     '''
     toolbarURL  { string } : indirizzo toolbar
     flag { integer } : 1 = acceso; 0 = spento
@@ -6097,7 +6096,7 @@ def toolbar_on (toolbarURL, flag=1):
         oLayout.showElement(toolbarURL)
 #######################################################################
 from com.sun.star.awt import Point
-def toolbar_ordina (arg=None):
+def toolbar_ordina(arg=None):
     #~ https://www.openoffice.org/api/docs/common/ref/com/sun/star/ui/DockingArea.html
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -6107,11 +6106,11 @@ def toolbar_ordina (arg=None):
         i += 1
     oLayout.dockWindow('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV', 'DOCKINGAREA_RIGHT', Point(0, 0))
 #######################################################################
-def make_pack (arg=None, bar=0):
+def make_pack(arg=None, bar=0):
     '''
     bar { integer } : toolbar 0=spenta 1=accesa
     Pacchettizza l'estensione in duplice copia: LeenO.oxt e LeenO-yyyymmddhhmm.oxt
-    in una directory precisa (per ora - da parametrizzare)
+    in una directory precisa(per ora - da parametrizzare)
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
@@ -6125,7 +6124,7 @@ def make_pack (arg=None, bar=0):
     if bar == 0:
         oDoc = XSCRIPTCONTEXT.getDocument()
         for bar in GetmyToolBarNames: #toolbar sempre visibili
-            toolbar_on (bar, 0)
+            toolbar_on(bar, 0)
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
         oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
@@ -6149,7 +6148,7 @@ def make_pack (arg=None, bar=0):
     
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
-    shutil.copyfile (nomeZip2, nomeZip)
+    shutil.copyfile(nomeZip2, nomeZip)
     #~ chi(os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\')
 #######################################################################
 def dlg_attesa(msg=''):
@@ -6177,7 +6176,7 @@ def dlg_attesa(msg=''):
     return oDialogo_attesa
 #~ #
 
-class attesa (threading.Thread):
+class attesa(threading.Thread):
     #~ http://bit.ly/2fzfsT7
     '''avvia il dialogo di attesa'''
     def __init__(self):
@@ -6187,48 +6186,48 @@ class attesa (threading.Thread):
         oDialogo_attesa.execute()
         return
 ########################################################################
-class firme_in_calce_th (threading.Thread):
+class firme_in_calce_th(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        firme_in_calce_run ()
-def firme_in_calce (arg=None):
+        firme_in_calce_run()
+def firme_in_calce(arg=None):
     firme_in_calce_th().start()
 ########################################################################
-class XPWE_import_th (threading.Thread):
+class XPWE_import_th(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
-        XPWE_import_run ()
-def XPWE_import (arg=None):
+        XPWE_import_run()
+def XPWE_import(arg=None):
     XPWE_import_th().start()
 ########################################################################
-class XPWE_export_th (threading.Thread):
+class XPWE_export_th(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
         XPWE_export_run()
-def XPWE_export (arg=None):
+def XPWE_export(arg=None):
     XPWE_export_th().start()
 ########################################################################
-class inserisci_nuova_riga_con_descrizione_th (threading.Thread):
+class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
     def run(self):
         oDialogo_attesa = dlg_attesa()
         oDoc = XSCRIPTCONTEXT.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
-        if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
+        if oSheet.Name not in('COMPUTO', 'VARIANTE'):
             return
         descrizione = InputBox(t='inserisci una descrizione per la nuova riga')
         attesa().start() #mostra il dialogo
         
         oDoc.CurrentController.ZoomValue = 400
         i =0
-        while (i < getLastUsedCell(oSheet).EndRow):
+        while(i < getLastUsedCell(oSheet).EndRow):
 
             if oSheet.getCellByPosition(2, i ).CellStyle == 'comp 1-a':
-                sStRange = Circoscrive_Voce_Computo_Att (i)
+                sStRange = Circoscrive_Voce_Computo_Att(i)
                 qui = sStRange.RangeAddress.StartRow+1
 
                 i = sotto = sStRange.RangeAddress.EndRow+3
@@ -6241,7 +6240,7 @@ class inserisci_nuova_riga_con_descrizione_th (threading.Thread):
             i += 1
         oDialogo_attesa.endExecute() #chiude il dialogo
         oDoc.CurrentController.ZoomValue = 100
-def inserisci_nuova_riga_con_descrizione (arg=None):
+def inserisci_nuova_riga_con_descrizione(arg=None):
     '''
     inserisce, all'inizio di ogni voce di computo o variante,
     una nuova riga con una descrizione a scelta
@@ -6327,7 +6326,7 @@ def debug_mt(arg=None): #COMUNE DI MATERA
     return
 #~ SALTA SULLE CELLE 
     for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
-        for x in range (0, 30):
+        for x in range(0, 30):
             if oSheet.getCellByPosition(x, y).getIsMerged() == True:
                 _gotoCella(x, y)
                 return
@@ -6353,7 +6352,7 @@ def debug_mt(arg=None): #COMUNE DI MATERA
         #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
             #~ n += 1
             #~ testo = oSheet.getCellByPosition(0, y).String
-            #~ el = (n, testo)
+            #~ el =(n, testo)
             #~ vie.append(el)
     
     #~ oSheet = oDoc.getSheets().getByName('VIE')
@@ -6389,7 +6388,7 @@ def debug_mt(arg=None): #COMUNE DI MATERA
             #~ particelle = oSheet.getCellByPosition(6, y).String.split('\n')
             #~ sub = oSheet.getCellByPosition(7, y).String.split('\n')
 
-            #~ while len (sub) < len(particelle):
+            #~ while len(sub) < len(particelle):
                 #~ sub.append('')
             #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 5, y))
             #~ copy_clip()
@@ -6409,14 +6408,14 @@ g_exportedScripts = config_default,
 ########################################################################
 ########################################################################
 # ... here is the python script code
-# this must be added to every script file (the
+# this must be added to every script file(the
 # name org.openoffice.script.DummyImplementationForPythonScripts should be changed to something
-# different (must be unique within an office installation !)
+# different(must be unique within an office installation !)
 # --- faked component, dummy to allow registration with unopkg, no functionality expected
 #~ import unohelper
 # questo mi consente di inserire i comandi python in Accelerators.xcu
 # vedi pag.264 di "Manuel du programmeur oBasic"
 # <<< vedi in description.xml
 g_ImplementationHelper = unohelper.ImplementationHelper()
-g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno", ("org.giuseppe-vizziello.leeno",),)
+g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("org.giuseppe-vizziello.leeno",),)
 ########################################################################

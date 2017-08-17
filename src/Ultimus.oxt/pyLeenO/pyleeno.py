@@ -18,6 +18,7 @@ import collections
 #~ import psutil
 import os, unohelper, pyuno, logging, shutil, base64, sys, uno
 import time
+import copy
 from multiprocessing import Process, freeze_support
 import threading
 # cos'e' il namespace:
@@ -2980,7 +2981,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
         pesca_cod()
 ########################################################################
 # leeno.conf  ##########################################################
-def config_leeno(arg=None):
+def leeno_conf(arg=None):
 #~ def debug(arg=None):
     '''
     Visualizza il menù di configurazione
@@ -2989,77 +2990,60 @@ def config_leeno(arg=None):
     oSheet = oDoc.getSheets().getByName('S1')
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    #~ global oDlg_config
     oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
     oDialog1Model = oDlg_config.Model
-    #~ try:
-    if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
-    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
-    sString = oDlg_config.getControl('TextField1')
-    sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
-    
-    sString = oDlg_config.getControl("ComboBox1")
-    sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
-    
-    sString = oDlg_config.getControl('TextField5')
-    #~ chi(oSheet.getCellRangeByName('S1.H319').Value)
-    #~ try:
-    sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
-    #~ except:
-        #~ sString.Text ='0'
+    try:
+        if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
+        if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
+        sString = oDlg_config.getControl('TextField1')
+        sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
+        
+        sString = oDlg_config.getControl("ComboBox1")
+        sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
+        
+        sString = oDlg_config.getControl('TextField5')
+        sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
+        sString = oDlg_config.getControl('TextField6')
+        sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
 
-    #~ chi(oSheet.getCellRangeByName('S1.H320').Value)
-    sString = oDlg_config.getControl('TextField6')
-    sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
+        sString = oDlg_config.getControl('TextField7')
+        sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
+        
+        #accorpa_spese_utili
+        if oSheet.getCellRangeByName('S1.H321').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
 
-    sString = oDlg_config.getControl('TextField7')
-    sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
-    
-    #accorpa_spese_utili
-    if oSheet.getCellRangeByName('S1.H321').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
+        sString = oDlg_config.getControl('TextField8')
+        sString.Text =oSheet.getCellRangeByName('S1.H324').Value * 100 #sconto
+        
+        sString = oDlg_config.getControl('TextField9')
+        sString.Text =oSheet.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
+        
+        # fullscreen
+        
+        oLayout = oDoc.CurrentController.getFrame().LayoutManager
+        if oLayout.isElementVisible('private:resource/toolbar/standardbar') == False:
+            oDlg_config.getControl('CheckBox3').State = 1
+        
+        sString = oDlg_config.getControl('TextField10')
+        sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
 
-    sString = oDlg_config.getControl('TextField8')
-    sString.Text =oSheet.getCellRangeByName('S1.H324').Value * 100 #sconto
-    
-    sString = oDlg_config.getControl('TextField9')
-    sString.Text =oSheet.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
-    
-    # fullscreen
-    
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    if oLayout.isElementVisible('private:resource/toolbar/standardbar') == False:
-        oDlg_config.getControl('CheckBox3').State = 1
-    
-    #~ sString = oDlg_config.getControl('TextField3')
-    #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore')
-
-    #~ sString = oDlg_config.getControl('TextField2')
-    #~ sString.Text = conf.read(path_conf, 'Zoom', 'fattore_ottimale')
-    
-    sString = oDlg_config.getControl('TextField10')
-    sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
-
-    sString = oDlg_config.getControl('TextField11')
-    sString.Text =oSheet.getCellRangeByName('S1.H338').Value #fine_voci_abbreviate
-    
-    # riga_bianca_categorie
-    if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox5').State = 1
-    
-    # voci_senza_numerazione
-    if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox6').State = 1
-    
-    # Contabilità abilita
-    if oSheet.getCellRangeByName('S1.H328').Value == '1': oDlg_config.getControl('CheckBox7').State = 1
-    sString = oDlg_config.getControl('TextField13')
-    sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
-    #~ except:
-        #~ config_default()
+        sString = oDlg_config.getControl('TextField11')
+        sString.Text =oSheet.getCellRangeByName('S1.H338').Value #fine_voci_abbreviate
+        
+        # riga_bianca_categorie
+        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox5').State = 1
+        
+        # voci_senza_numerazione
+        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox6').State = 1
+        
+        # Contabilità abilita
+        if oSheet.getCellRangeByName('S1.H328').Value == '1': oDlg_config.getControl('CheckBox7').State = 1
+        sString = oDlg_config.getControl('TextField13')
+        sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
+    except:
+        config_default()
     oDlg_config.execute()
     
-    #~ mri(oDlg_config.getControl("CommandButton1"))
-    #~ conf.write(path_conf, 'Zoom', 'fattore', oDlg_config.getControl('TextField3').getText())
-    #~ conf.write(path_conf, 'Zoom', 'fattore_ottimale', oDlg_config.getControl('TextField2').getText())
-    #~ conf.write(path_conf, 'Zoom', 'fullscreen', str(oDlg_config.getControl('CheckBox3').State))
     if oDlg_config.getControl('CheckBox3').State == 1:
         toolbar_switch(0)
     else:
@@ -3069,13 +3053,6 @@ def config_leeno(arg=None):
     conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
-
-    #~ conf.write(path_conf, 'Analisi', 'sicurezza', oDlg_config.getControl('TextField5').getText())
-    #~ conf.write(path_conf, 'Analisi', 'spese_generali', oDlg_config.getControl('TextField6').getText())
-    #~ conf.write(path_conf, 'Analisi', 'utile_impresa', oDlg_config.getControl('TextField7').getText())
-    #~ conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', str(oDlg_config.getControl('CheckBox4').State))
-    #~ conf.write(path_conf, 'Analisi', 'sconto', oDlg_config.getControl('TextField8').getText())
-    #~ conf.write(path_conf, 'Analisi', 'maggiorazione', oDlg_config.getControl('TextField9').getText())
 
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
     conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
@@ -3117,6 +3094,7 @@ class conf:
         if not config.has_section(section):
             config.add_section(section)
         config.set(section, option, value)
+        
         fp = open(path, 'w')
         config.write(fp)
         fp.close()
@@ -3148,13 +3126,6 @@ def config_default(arg=None):
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
     conf.write(path_conf, 'Generale', 'pesca_auto', '1')
 
-    #~ conf.write(path_conf, 'Analisi', 'sicurezza', '0.37')
-    #~ conf.write(path_conf, 'Analisi', 'spese_generali', '0.15')
-    #~ conf.write(path_conf, 'Analisi', 'utile_impresa', '10.0')
-    #~ conf.write(path_conf, 'Analisi', 'accorpa_spese_utili', '0')
-    #~ conf.write(path_conf, 'Analisi', 'sconto', '-0.11')
-    #~ conf.write(path_conf, 'Analisi', 'maggiorazione', '0.10')
-
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', '1')
     conf.write(path_conf, 'Computo', 'voci_senza_numerazione', '0')
     conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', '160')
@@ -3163,7 +3134,7 @@ def config_default(arg=None):
     conf.write(path_conf, 'Contabilità', 'abilita', '0')
     conf.write(path_conf, 'Contabilità', 'idxSAL', '30')
     
-    config_leeno()
+    #~ leeno_conf()
 ########################################################################
 def nuova_voce_scelta(arg=None): #assegnato a ctrl-shift-n
 #~ def debug(arg=None):
@@ -3490,25 +3461,47 @@ def struttura_Elenco(arg=None):
     col2 = 16777168
     col3 = 16771521 #chiaro - sfondo celle elenco prezzi
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDoc.CurrentController.ZoomValue = 400
+    #~ oDoc.CurrentController.ZoomValue = 400
 
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     lista = list()
     test = getLastUsedCell(oSheet).EndRow-1
-    #~ chi(oSheet.getCellByPosition(2, 2).Type.value)
     for n in range(3, test):#
-        #~ if oSheet.getCellByPosition(4, n).Type.value == 'EMPTY':
-            #~ oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col2
-            #~ if oSheet.getCellByPosition(2, n).Type.value == 'EMPTY':
-                #~ oSheet.getCellRangeByPosition(0, n, 26, n).CellBackColor = col1
         if oSheet.getCellByPosition(4, n).String == '':
             oSheet.getCellRangeByPosition(0, n, 7, n).CellBackColor = col2
-            oCellRangeAddr.StartRow = n
-            oCellRangeAddr.EndRow = n
+            #~ oCellRangeAddr.StartRow = n
+            #~ oCellRangeAddr.EndRow = n
+            #~ oSheet.group(oCellRangeAddr,1)
+    #~ oDoc.CurrentController.ZoomValue = 100
+
+    cap = list()
+    for y in range(3, getLastUsedCell(oSheet).EndRow):
+        if len(oSheet.getCellByPosition(0, y).String)== 8:
+            #~ oCellRangeAddr.StartRow = y
+            #~ oCellRangeAddr.EndRow = n
+            #~ oSheet.group(oCellRangeAddr,1)
+            cap.append(y)
+    cap.append(getLastUsedCell(oSheet).EndRow)
+    #~ chi (cap)
+    test = copy.deepcopy(cap)
+    a = cap.pop(0)
+    for el in test:
+
+
+        try:
+            b = cap.pop(0)
+            oCellRangeAddr.StartRow = a +1
+            oCellRangeAddr.EndRow = b -1
             oSheet.group(oCellRangeAddr,1)
-    oDoc.CurrentController.ZoomValue = 100
+            oSheet.getCellRangeByPosition(0, a+1, 0, b-1).Rows.IsVisible = False
+            oSheet.getCellByPosition(0,el).Rows.Height = 520
+        except IndexError:
+            return
+        #~ chi(a)
+        a = b
+
 ########################################################################
 # XML_toscana_import ###################################################
 def XML_toscana_import(arg=None):
@@ -4404,7 +4397,6 @@ def converti_stringhe(arg=None):
             except:
                 pass
     return
-
 # XPWE_in ##########################################################
 def XPWE_in(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -5588,6 +5580,7 @@ def autoexec_off(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('M1')
     oSheet.getCellByPosition(2,27).String = ''#sUltimus
+
 def autoexec(arg=None):
     '''
     questa è richiamata da New_File()
@@ -5598,9 +5591,8 @@ def autoexec(arg=None):
     else:
         path = os.getenv("HOME")
     if not os.path.exists(path_conf):
-        default()
-
-    #~ chi("autoexec py")
+        os.makedirs(path_conf[:-11])
+        config_default()
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         oSheet = oDoc.getSheets().getByName('S1')

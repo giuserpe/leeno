@@ -3478,7 +3478,7 @@ def struttura_Elenco(arg=None):
 
     cap = list()
     for y in range(3, getLastUsedCell(oSheet).EndRow):
-        if len(oSheet.getCellByPosition(0, y).String)== 8:
+        if len(oSheet.getCellByPosition(0, y).String)== 1:
             #~ oCellRangeAddr.StartRow = y
             #~ oCellRangeAddr.EndRow = n
             #~ oSheet.group(oCellRangeAddr,1)
@@ -3487,9 +3487,8 @@ def struttura_Elenco(arg=None):
     #~ chi (cap)
     test = copy.deepcopy(cap)
     a = cap.pop(0)
+    #~ chi(test)
     for el in test:
-
-
         try:
             b = cap.pop(0)
             oCellRangeAddr.StartRow = a +1
@@ -4462,10 +4461,16 @@ def XPWE_in(arg=None):
             lista_supcap = list()
             for elem in PweDGSuperCapitoli:
                 id_sc = elem.get('ID')
+                codice = elem.find('Codice').text
+                try:
+                    codice = elem.find('Codice').text
+                except AttributeError:
+                    codice = ''
                 dessintetica = elem.find('DesSintetica').text
                 percentuale = elem.find('Percentuale').text
                 diz = dict()
                 diz['id_sc'] = id_sc
+                diz['codice'] = codice
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
                 lista_supcap.append(diz)
@@ -4476,10 +4481,16 @@ def XPWE_in(arg=None):
             lista_cap = list()
             for elem in PweDGCapitoli:
                 id_sc = elem.get('ID')
+                codice = elem.find('Codice').text
+                try:
+                    codice = elem.find('Codice').text
+                except AttributeError:
+                    codice = ''
                 dessintetica = elem.find('DesSintetica').text
                 percentuale = elem.find('Percentuale').text
                 diz = dict()
                 diz['id_sc'] = id_sc
+                diz['codice'] = codice
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
                 lista_cap.append(diz)
@@ -4490,10 +4501,16 @@ def XPWE_in(arg=None):
             lista_subcap = list()
             for elem in PweDGSubCapitoli:
                 id_sc = elem.get('ID')
+                codice = elem.find('Codice').text
+                try:
+                    codice = elem.find('Codice').text
+                except AttributeError:
+                    codice = ''
                 dessintetica = elem.find('DesSintetica').text
                 percentuale = elem.find('Percentuale').text
                 diz = dict()
                 diz['id_sc'] = id_sc
+                diz['codice'] = codice
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
                 lista_subcap.append(diz)
@@ -4813,7 +4830,6 @@ def XPWE_in(arg=None):
             new_id = strall(idspcat) +'.'+ strall(idcat) +'.'+ strall(idsbcat)
             new_id_l =(new_id, diz_misura)
             prova_l.append(new_id_l)
-            
             lista_misure.append(diz_misura)
     except IndexError:
         MsgBox("""Nel file scelto non risultano esserci voci di misurazione,
@@ -4857,6 +4873,20 @@ Si tenga conto che:
     except:
         pass
     oDoc.CurrentController.ZoomValue = 400
+
+# aggiungo i capitoli alla lista delle voci ############################
+    for el in lista_supcap + lista_cap: # + lista_subcap:
+        tariffa = el.get('codice')
+        if tariffa != None:
+                destestesa = el.get('dessintetica')
+                articolo_modificato = (tariffa,
+                                        destestesa,
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '')
+                lista_articoli.append(articolo_modificato)
 
 # compilo Elenco Prezzi ################################################
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -6288,10 +6318,12 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-
+    #~ testo = '''Fornitura e posa in opera di percorsi tattili plantari integrati LOGES-VET-EVOLUTION (LVE) con rilievi trapeziodali equidistanti, con altezza dei rilievi non inferiore a 3 mm e larghezza in accordo con la tabella 3-“WT6” della CEN/TS 15209, con distanza tra i rilievi in accordo con la tabella 1 - “S9” della CEN/TS 15209 costruito in M-PVC-P integrato con TAG – RFID 134.2 Khz idonei alla realizzazione di percorsi intelligenti per consentire a non vedenti ed ipovedenti “l'orientamento e la riconoscibilità dei luoghi e delle fonti di pericolo", come prescritto dalla normativa vigente (D.P.R. 503/1996, D.M. 236/1989, ecc.) con lastre di cemento con colorazioni superficiali variabili. delle dimensioni di cm 30x40 con spessore medio da cm.2.0 a cm 3,3 (UNI EN 1339) con colorazioni superficiali variabili, codice di SVOLTA OBBLIGATA a 90° (n.4 elementi), posate a colla'''.replace('"','""')
+    #~ chi (testo)
+    #~ return
     #~ mri(oSheet.getCellRangeByName('Y254'))
     #~ mri(oDoc.CurrentSelection)
     #~ chi(oSheet.getCellRangeByName('C42').CellBackColor)
@@ -6304,9 +6336,12 @@ def debug_mt(arg=None): #COMUNE DI MATERA
             #~ oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]
             #~ oSheet.getCellByPosition(24, y).String = oSheet.getCellByPosition(24, y).String[:-7]
     #~ return
-    for y in range(3, getLastUsedCell(oSheet).EndRow+1):
-        if oSheet.getCellByPosition(2, y).CellBackColor == 16770559:
-            oSheet.getCellByPosition(2, y).String = "- " + oSheet.getCellByPosition(2, y).String
+    for y in range(3, getLastUsedCell(oSheet).EndRow):
+        testo = oSheet.getCellByPosition(1, y).String.replace('"','""')
+        
+        oSheet.getCellByPosition(1, y).Formula = '=IF(LEN("'+ testo + '")<($S1.$H$337+$S1.$H$338);"'+ testo + '";CONCATENATE(LEFT("'+ testo + '";$S1.$H$337);" [...] ";RIGHT("'+ testo + '";$S1.$H$338)))'
+        #~ if oSheet.getCellByPosition(2, y).CellBackColor == 16770559:
+            #~ oSheet.getCellByPosition(2, y).String = "- " + oSheet.getCellByPosition(2, y).String
             #~ iSheet = oSheet.RangeAddress.Sheet
             #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
             #~ oCellRangeAddr.Sheet = iSheet

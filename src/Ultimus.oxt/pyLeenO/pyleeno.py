@@ -1387,7 +1387,6 @@ def genera_sommario_run(arg=None):
     #~ oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
 def riordina_ElencoPrezzi(arg=None):
-#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -3470,6 +3469,7 @@ def struttura_Elenco(arg=None):
     test = getLastUsedCell(oSheet).EndRow-1
     for n in range(3, test):#
         if oSheet.getCellByPosition(4, n).String == '':
+            #~ pass
             oSheet.getCellRangeByPosition(0, n, 7, n).CellBackColor = col2
             #~ oCellRangeAddr.StartRow = n
             #~ oCellRangeAddr.EndRow = n
@@ -4874,20 +4874,6 @@ Si tenga conto che:
         pass
     oDoc.CurrentController.ZoomValue = 400
 
-# aggiungo i capitoli alla lista delle voci ############################
-    for el in lista_supcap + lista_cap: # + lista_subcap:
-        tariffa = el.get('codice')
-        if tariffa != None:
-                destestesa = el.get('dessintetica')
-                articolo_modificato = (tariffa,
-                                        destestesa,
-                                        '',
-                                        '',
-                                        '',
-                                        '',
-                                        '')
-                lista_articoli.append(articolo_modificato)
-
 # compilo Elenco Prezzi ################################################
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     # Siccome setDataArray pretende una tupla(array 1D) o una tupla di tuple(array 2D)
@@ -4903,15 +4889,138 @@ Si tenga conto che:
                                             colonne_lista -1, # l'indice parte da 0
                                             righe_lista +3-1)
     oRange.setDataArray(lista_come_array)
-    oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
-    oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
-    oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
-    oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
-    oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
+    lrow = getLastUsedCell(oSheet).EndRow -1 
+    oSheet.getCellRangeByPosition(0, 3, 0, lrow).CellStyle = "EP-aS"
+    oSheet.getCellRangeByPosition(1, 3, 1, lrow).CellStyle = "EP-a"
+    oSheet.getCellRangeByPosition(2, 3, 7, lrow).CellStyle = "EP-mezzo"
+    oSheet.getCellRangeByPosition(5, 3, 5, lrow).CellStyle = "EP-mezzo %"
+    oSheet.getCellRangeByPosition(8, 3, 9, lrow).CellStyle = "EP-sfondo"
 
-    oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
-    oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
-    oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
+    oSheet.getCellRangeByPosition(11, 3, 11, lrow).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(12, 3, 12, lrow).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(13, 3, 13, lrow).CellStyle = 'EP statistiche_Contab_q'
+# aggiungo i capitoli alla lista delle voci ############################
+    #~ giallo(16777072,16777120,16777168)
+    #~ verde(9502608,13696976,15794160)
+    #~ viola(12632319,13684991,15790335)
+    col1 = 16777072
+    col2 = 16777120
+    col3 = 16777168
+    capitoli = list()
+# SUPERCAPITOLI
+    for el in lista_supcap:
+        tariffa = el.get('codice')
+        if tariffa != None:
+            destestesa = el.get('dessintetica')
+            titolo = (tariffa,
+                                    destestesa,
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '')
+            capitoli.append(titolo)
+    if len(capitoli) != 0:
+        lista_come_array = tuple(capitoli)
+        colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
+        righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+
+        oSheet.getRows().insertByIndex(3, righe_lista)
+        oRange = oSheet.getCellRangeByPosition( 0,
+                                                3,
+                                                colonne_lista -1, # l'indice parte da 0
+                                                righe_lista +3-1)
+        oRange.setDataArray(lista_come_array)
+        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista +3-1).CellStyle = "EP-aS"
+        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista +3-1).CellStyle = "EP-a"
+        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista +3-1).CellStyle = "EP-mezzo"
+        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista +3-1).CellStyle = "EP-mezzo %"
+        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista +3-1).CellStyle = "EP-sfondo"
+
+        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista +3-1).CellStyle = 'EP-mezzo %'
+        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
+        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
+        oSheet.getCellRangeByPosition(0, 3, 7, righe_lista + 3 - 1).CellBackColor = col1
+
+
+# CAPITOLI
+    capitoli = list()
+    for el in lista_cap: # + lista_subcap:
+        tariffa = el.get('codice')
+        if tariffa != None:
+            destestesa = el.get('dessintetica')
+            titolo = (tariffa,
+                                    destestesa,
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '')
+            capitoli.append(titolo)
+    if len(capitoli) != 0:
+        lista_come_array = tuple(capitoli)
+        colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
+        righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+
+        oSheet.getRows().insertByIndex(3, righe_lista)
+        oRange = oSheet.getCellRangeByPosition( 0,
+                                                3,
+                                                colonne_lista -1, # l'indice parte da 0
+                                                righe_lista +3-1)
+        oRange.setDataArray(lista_come_array)
+        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista +3-1).CellStyle = "EP-aS"
+        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista +3-1).CellStyle = "EP-a"
+        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista +3-1).CellStyle = "EP-mezzo"
+        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista +3-1).CellStyle = "EP-mezzo %"
+        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista +3-1).CellStyle = "EP-sfondo"
+
+        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista +3-1).CellStyle = 'EP-mezzo %'
+        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
+        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
+        oSheet.getCellRangeByPosition(0, 3, 7, righe_lista + 3 - 1).CellBackColor = col2
+
+# SUBCAPITOLI
+    capitoli = list()
+    for el in lista_subcap:
+        tariffa = el.get('codice')
+        if tariffa != None:
+            destestesa = el.get('dessintetica')
+            titolo = (tariffa,
+                                    destestesa,
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '')
+            capitoli.append(titolo)
+    if len(capitoli) != 0:
+        lista_come_array = tuple(capitoli)
+        colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
+        righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+
+        oSheet.getRows().insertByIndex(4, righe_lista)
+        oRange = oSheet.getCellRangeByPosition( 0,
+                                                3,
+                                                colonne_lista -1, # l'indice parte da 0
+                                                righe_lista +3-1)
+        oRange.setDataArray(lista_come_array)
+        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista +3-1).CellStyle = "EP-aS"
+        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista +3-1).CellStyle = "EP-a"
+        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista +3-1).CellStyle = "EP-mezzo"
+        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista +3-1).CellStyle = "EP-mezzo %"
+        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista +3-1).CellStyle = "EP-sfondo"
+
+        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista +3-1).CellStyle = 'EP-mezzo %'
+        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
+        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
+        oSheet.getCellRangeByPosition(0, 3, 7, righe_lista + 3 - 1).CellBackColor = col3
+    for el in(11, 15, 19, 26):
+        oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
+    for el in(12, 16, 20, 23):
+        oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
+    for el in(13, 17, 21, 24, 25):
+        oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
+    riordina_ElencoPrezzi()
 ### elimino le voci che hanno analisi
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:

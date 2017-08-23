@@ -1401,7 +1401,6 @@ def riordina_ElencoPrezzi(arg=None):
         except TypeError:
             inserisci_Riga_rossa()
         test = str(uFindStringCol('Fine elenco', 0, oSheet))
-        return
         rifa_nomearea('Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
         rifa_nomearea('Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
         oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -3447,18 +3446,74 @@ def rifa_nomearea(sSheet, sRange, sName):
         oRanges.removeByName(sName)
     oRanges.addNewByName(sName,sPath,oCellAddress,0)
 ########################################################################
+def struct_colore(l):
+    '''
+    Mette in vista struttura secondo il colore
+    l { integer } : specifica il livello di categoria
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    hriga = oSheet.getCellRangeByName('A4').CharHeight * 60
+    #~ giallo(16777072,16777120,16777168)
+    #~ verde(9502608,13696976,15794160)
+    #~ viola(12632319,13684991,15790335)
+    col0 = 16724787 #riga_rossa
+    col1 = 16777072
+    col2 = 16777120
+    col3 = 16777168
+    if l == 0:
+        colore = col1
+        myrange =(col1, col0)
+    elif l == 1:
+        colore = col2
+        myrange =(col1, col2, col0)
+    elif l == 2:
+        colore = col3
+        myrange =(col1, col2, col3, col0)
+   
+        for n in(3, 5, 7):
+            oCellRangeAddr.StartColumn = n
+            oCellRangeAddr.EndColumn = n
+            oSheet.group(oCellRangeAddr,0)
+            oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible=False
+    test = ultima_voce(oSheet)+2
+    lista = list()
+    for n in range(0, test):
+        if oSheet.getCellByPosition(0, n).CellBackColor == colore:
+            sopra = n+1
+            for n in range(sopra+1, test):
+                if oSheet.getCellByPosition(0, n).CellBackColor in myrange:
+                    oSheet.getCellByPosition(0,n).Rows.Height = hriga
+                    sotto = n-1
+                    lista.append((sopra, sotto))
+                    break
+    for el in lista:
+        oCellRangeAddr.StartRow = el[0]
+        oCellRangeAddr.EndRow = el[1]
+        oSheet.group(oCellRangeAddr,1)
+        oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
+    return
+########################################################################
 def struttura_Elenco(arg=None):
     '''
     Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
     '''
-    #~ giallo(16777072,16777120,16777168)
-    #~ verde(9502608,13696976,15794160)
-    #~ viola(12632319,13684991,15790335)
-    col1 = 16771481
-    #~ col2 = 16771501
-    col2 = 16777168
-    col3 = 16771521 #chiaro - sfondo celle elenco prezzi
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.clearOutline()
+    #~ chi(oSheet.getCellRangeByName('A14976').CellBackColor)
+    #~ return
+    struct_colore(0)
+    struct_colore(1)
+    struct_colore(2)
+    return
+###########################################
+###########################################
+###########################################
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oDoc.CurrentController.ZoomValue = 400
 
@@ -5021,6 +5076,7 @@ Si tenga conto che:
     for el in(13, 17, 21, 24, 25):
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
     riordina_ElencoPrezzi()
+
 ### elimino le voci che hanno analisi
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
@@ -5259,6 +5315,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     doppioni()
     MsgBox('Importazione eseguita con successo!','')
+
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:#####################################################
@@ -6430,21 +6487,20 @@ def taglia_x(arg=None):
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ testo = '''Fornitura e posa in opera di percorsi tattili plantari integrati LOGES-VET-EVOLUTION (LVE) con rilievi trapeziodali equidistanti, con altezza dei rilievi non inferiore a 3 mm e larghezza in accordo con la tabella 3-“WT6” della CEN/TS 15209, con distanza tra i rilievi in accordo con la tabella 1 - “S9” della CEN/TS 15209 costruito in M-PVC-P integrato con TAG – RFID 134.2 Khz idonei alla realizzazione di percorsi intelligenti per consentire a non vedenti ed ipovedenti “l'orientamento e la riconoscibilità dei luoghi e delle fonti di pericolo", come prescritto dalla normativa vigente (D.P.R. 503/1996, D.M. 236/1989, ecc.) con lastre di cemento con colorazioni superficiali variabili. delle dimensioni di cm 30x40 con spessore medio da cm.2.0 a cm 3,3 (UNI EN 1339) con colorazioni superficiali variabili, codice di SVOLTA OBBLIGATA a 90° (n.4 elementi), posate a colla'''.replace('"','""')
-    #~ chi (testo)
-    #~ return
-    #~ mri(oSheet.getCellRangeByName('Y254'))
+    mri(oSheet.getCellRangeByName('A4').CharHeight)
     #~ mri(oDoc.CurrentSelection)
-    #~ chi(oSheet.getCellRangeByName('C42').CellBackColor)
+    #~ chi(oSheet.getCellRangeByName('A6').CellBackColor)
     #~ oSheet.getCellRangeByName('Y254')
     
     #~ return
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor != -1:
+            #~ oSheet.getRows().removeByIndex(y, 1)
 
-    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
         #~ if oSheet.getCellByPosition(24, y).String[-7:] == ' murata':
             #~ oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]
             #~ oSheet.getCellByPosition(24, y).String = oSheet.getCellByPosition(24, y).String[:-7]
-    #~ return
+    return
     for y in range(3, getLastUsedCell(oSheet).EndRow):
         testo = oSheet.getCellByPosition(1, y).String.replace('"','""')
         
@@ -6540,7 +6596,6 @@ def debug(arg=None): #COMUNE DI MATERA
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = config_default,
-#~ g_exportedScripts = ssUltimus, riordina_ElencoPrezzi, Copia_riga_Ent, doppioni, DlgMain, filtra_codice, Filtra_Computo_A, Filtra_Computo_B, Filtra_Computo_C, Filtra_Computo_Cap, Filtra_Computo_SottCap, Filtra_computo, Ins_Categorie, ins_voce_computo, Inser_Capitolo, Inser_SottoCapitolo, numera_voci, Rinumera_TUTTI_Capitoli2, Sincronizza_SottoCap_Tag_Capitolo_Cor, struttura_Analisi, struttura_ComputoM, SubSum, Tutti_Subtotali, Vai_a_M1, XML_import, XPWE_export, XPWE_import, Vai_a_ElencoPrezzi, Vai_a_Computo, Vai_a_Variabili, Vai_a_Scorciatoie, Vai_a_S2, Vai_a_filtro, Vai_a_SegnaVoci, nuovo_computo, nuovo_usobollo, toolbar_vedi, Vai_a_S1, autoexec, nascondi_err, azzera_voce, inizializza_analisi, computo_terra_terra, tante_analisi_in_ep
 ########################################################################
 ########################################################################
 # ... here is the python script code

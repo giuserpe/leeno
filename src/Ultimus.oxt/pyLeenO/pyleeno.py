@@ -34,6 +34,7 @@ from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
 # https://forum.openoffice.org/en/forum/viewtopic.php?f=45&t=27805&p=127383
 import random
 from com.sun.star.script.provider import XScriptProviderFactory
+    
 from com.sun.star.script.provider import XScriptProvider
 def barra_di_stato(testo='', valore=0):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3456,7 +3457,7 @@ def struct_colore(l):
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
-    hriga = oSheet.getCellRangeByName('A4').CharHeight * 60
+    hriga = oSheet.getCellRangeByName('B4').CharHeight * 65
     #~ giallo(16777072,16777120,16777168)
     #~ verde(9502608,13696976,15794160)
     #~ viola(12632319,13684991,15790335)
@@ -3483,10 +3484,10 @@ def struct_colore(l):
     lista = list()
     for n in range(0, test):
         if oSheet.getCellByPosition(0, n).CellBackColor == colore:
+            oSheet.getCellByPosition(0,n).Rows.Height = hriga
             sopra = n+1
             for n in range(sopra+1, test):
                 if oSheet.getCellByPosition(0, n).CellBackColor in myrange:
-                    oSheet.getCellByPosition(0,n).Rows.Height = hriga
                     sotto = n-1
                     lista.append((sopra, sotto))
                     break
@@ -3593,6 +3594,8 @@ def XML_toscana_import(arg=None):
     tipo_lista = list()
     cap_lista = list()
     lista_articoli = list()
+    lista_cap = list()
+    lista_subcap = list()
     for el in voci:
         if el.tag == PRT+'Articolo':
             codice = el.get('codice')
@@ -3617,18 +3620,16 @@ def XML_toscana_import(arg=None):
         except IndexError:
             mdo =''
             mdoE = ''
-
         if codicesp[0] not in tipo_lista:
             tipo_lista.append(codicesp[0])
             cap =(codicesp[0], el.getchildren()[0].text, '', '', '', '', '')
-            lista_articoli.append(cap)
-        if codicesp[1] not in cap_lista:
-            cap_lista.append(codicesp[1])
-            cap =(codicesp[0]+'.'+codicesp[1], el.getchildren()[0].text+'\n'+el.getchildren()[1].text, '', '', '', '', '')
-            lista_articoli.append(cap)
+            lista_cap.append(cap)
+        if codicesp[0]+'.'+codicesp[1] not in cap_lista:
+            cap_lista.append(codicesp[0]+'.'+codicesp[1])
+            cap =(codicesp[0]+'.'+codicesp[1], el.getchildren()[1].text, '', '', '', '', '', '')
+            lista_subcap.append(cap)
         voceel =(codice, desc_voce, udm, sic, prezzo, mdo, mdoE)
         lista_articoli.append(voceel)
-
 # compilo ##############################################################
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('S2')
@@ -3642,34 +3643,42 @@ def XML_toscana_import(arg=None):
 
 Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al prezzario.'''
     oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
-    oSheet.getRows().insertByIndex(4, len(lista_articoli))
+    n = 0
 
-    lista_come_array = tuple(lista_articoli)
-    # Parametrizzo il range di celle a seconda della dimensione della lista
-    scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
-    scarto_righe = 4 # numero righe da saltare a partire dall'alto
-    colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
-    righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
-    oRange = oSheet.getCellRangeByPosition( 0, 4, colonne_lista + 0 - 1, righe_lista + 4 - 1)
-    oRange.setDataArray(lista_come_array)
-    oSheet.getRows().removeByIndex(3, 1)
-    oDoc.CurrentController.setActiveSheet(oSheet)
+    for el in (lista_articoli, lista_cap, lista_subcap):
+        oSheet.getRows().insertByIndex(4, len(el))
+        lista_come_array = tuple(el)
+        # Parametrizzo il range di celle a seconda della dimensione della lista
+        scarto_colonne = 0 # numero colonne da saltare a partire da sinistra
+        scarto_righe = 4 # numero righe da saltare a partire dall'alto
+        colonne_lista = len(lista_come_array[1]) # numero di colonne necessarie per ospitare i dati
+        righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
+        oRange = oSheet.getCellRangeByPosition( 0, 4, colonne_lista + 0 - 1, righe_lista + 4 - 1)
+        oRange.setDataArray(lista_come_array)
+        #~ oSheet.getRows().removeByIndex(3, 1)
+        oDoc.CurrentController.setActiveSheet(oSheet)
 
-    oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
-    oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
-    oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
-    oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
-    oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
-    oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
-    oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
-    oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche'
-    
+        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
+        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
+        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
+        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
+        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
+        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
+        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
+        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche'
+        if n == 1: 
+            oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = 16777120
+        elif n == 2:
+            oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = 16777168
+        n += 1
     #~ set_larghezza_colonne()
+    toolbar_vedi()
+    adatta_altezza_riga('Elenco Prezzi')
+    riordina_ElencoPrezzi()
     struttura_Elenco()
     
     dest = filename[0:-4]+ '.ods'
     salva_come(dest)
-    
     MsgBox('''
 Importazione eseguita con successo!
 
@@ -5075,7 +5084,9 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
     for el in(13, 17, 21, 24, 25):
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
+    #~ adatta_altezza_riga('Elenco Prezzi')
     riordina_ElencoPrezzi()
+    struttura_Elenco()
 
 ### elimino le voci che hanno analisi
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
@@ -6487,8 +6498,14 @@ def taglia_x(arg=None):
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    mri(oSheet.getCellRangeByName('A4').CharHeight)
-    #~ mri(oDoc.CurrentSelection)
+    #~ mri(oSheet.getCellRangeByName('A4').CharHeight)
+    #~ mri(oDoc.createInstance("com.sun.star.document.Settings"))#
+    
+    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    #~ oCellRangeAddr.Sheet = iSheet
+    coso = oDoc.createInstance("com.sun.star.document.Settings")
+    mri (coso)
+    #~ .PrinterIndependentLayout()) #.CurrentSelection)
     #~ chi(oSheet.getCellRangeByName('A6').CellBackColor)
     #~ oSheet.getCellRangeByName('Y254')
     

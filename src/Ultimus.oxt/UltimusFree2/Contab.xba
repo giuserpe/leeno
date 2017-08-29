@@ -11,35 +11,6 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-Sub attiva_contabilita
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
-	chiudi_dialoghi
-	If ThisComponent.Sheets.hasbyname(&quot;CONTABILITA&quot;) Then
-		Sel_CONTABILITA
-		Exit Sub
-	Else
-		thisComponent.getSheets().insertNewByName(&quot;CONTABILITA&quot;,3,0)	
-	EndIf
-	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-	ThisComponent.CurrentController.Select(oSheet)
-	Svuota_CONTABILITA_esegui
-	oSheet.getCellByPosition(2,0).String  = &quot;CONTABILITA&quot;
-	oSheet.getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-	oSheet.getCellRangeByName(&quot;C1&quot;).Cellbackcolor = (RGB(255,180,175))
-	oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,180,175))
-
-	SetTabColorN(RGB(255,180,175))
-	Visualizza_sheet_TUTTE
-	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;nuova_voce_contab&quot;)
-	fissa (0,3)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
-
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;)
-&apos;	ThisComponent.CurrentController.Select(oSheet)
-&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
-End Sub
-
 Sub partita (testo as string)
 	Dim test As String
 	Dim riga_selezione As Integer

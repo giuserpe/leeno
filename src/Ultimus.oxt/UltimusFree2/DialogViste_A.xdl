@@ -12,7 +12,7 @@
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="0" dlg:left="99" dlg:top="33" dlg:width="80" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;" dlg:button-type="ok">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.attiva_contabilita?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$attiva_contabilita?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton7" dlg:tab-index="1" dlg:left="99" dlg:top="13" dlg:width="80" dlg:height="15" dlg:help-text="Mette in struttura" dlg:value="VARIANTE" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.genera_variante?language=Basic&amp;location=application" script:language="Script"/>

@@ -5333,7 +5333,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 17 #'NUOVE FUNZIONALITA'
-Lsubv= "1.dev" #'CORREZIONE BUGS
+Lsubv= "1" #'CORREZIONE BUGS
 noVoce =('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab =('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
@@ -6495,16 +6495,58 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
+    from com.sun.star.document import PrinterIndependentLayout
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    PrinterIndependentLayout = 1
+    chi (PrinterIndependentLayout)
+    return
+ 
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ ctx = XSCRIPTCONTEXT.getComponentContext()
+    #~ desktop = XSCRIPTCONTEXT.getDesktop()
+    #~ oFrame = desktop.getCurrentFrame()
+    #~ dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    #~ oProp = PropertyValue()
+    #~ oProp.Name = 'PrinterIndependentLayout'
+    #~ oProp.Value = 3
+    #~ properties =(oProp,)
+    #~ dispatchHelper.executeDispatch(oFrame, '.uno:OptionsTreeDialog', '', 0, properties)
+    #~ dispatchHelper.disposing
+    #~ return
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oDoc.getPropertyValue('PrinterIndependentLayout')
+    #~ mri(oDoc)
+    #~ oGSheetSettings = createUnoService("com.sun.star.sheet.GlobalSheetSettings")
+    #~ oGSheetSettings.setPropertyValue('PrinterIndependentLayout', 3)
+    #~ mri(oDoc)
+    #~ oGSheetSettings = createUnoService("com.sun.star.sheet.GlobalSheetSettings")
+    #~ oGSheetSettings.setPropertyValue('PrinterIndependentLayout', 3)
+    #~ mri (oGSheetSettings)
+  
+    #~ oGSheetSettings.MoveDirection = com.sun.star.sheet.MoveDirection.LEFT
+    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
+   
+    #~ from com.sun.star.sheet.PrinterIndependentLayout import (
+    #~ mri(coso)
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+
+    coso = oDoc.createInstance("com.sun.star.sheet.DocumentSettings")
+    #~ 'DISABLED', 'ENABLED', 'HIGH_RESOLUTION', 'LOW_RESOLUTION'
+    
+    #~ chi(PrinterIndependentLayout.LOW_RESOLUTION)
+    #~ coso.PrinterIndependentLayout = com.sun.star.document.PrinterIndependentLayout.HIGH_RESOLUTION
+
+    
+    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
+    #~ coso.PrinterIndependentLayout = 1
     #~ mri(oSheet.getCellRangeByName('A4').CharHeight)
     #~ mri(oDoc.createInstance("com.sun.star.document.Settings"))#
     
     #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     #~ oCellRangeAddr.Sheet = iSheet
-    coso = oDoc.createInstance("com.sun.star.document.Settings")
-    mri (coso)
+    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
+    #~ mri (coso)
     #~ .PrinterIndependentLayout()) #.CurrentSelection)
     #~ chi(oSheet.getCellRangeByName('A6').CellBackColor)
     #~ oSheet.getCellRangeByName('Y254')
@@ -6612,7 +6654,7 @@ def debug(arg=None): #COMUNE DI MATERA
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = config_default,
+g_exportedScripts = attiva_contabilita,
 ########################################################################
 ########################################################################
 # ... here is the python script code

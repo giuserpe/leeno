@@ -72,6 +72,6 @@
     <dlg:menuitem dlg:value="COMPUTO"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:text dlg:style-id="4" dlg:id="Label11" dlg:tab-index="27" dlg:left="157" dlg:top="41" dlg:width="43" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
+  <dlg:text dlg:style-id="4" dlg:id="Label11" dlg:tab-index="27" dlg:left="122" dlg:top="41" dlg:width="80" dlg:height="10" dlg:value="All&apos;avvio visualizza:" dlg:align="right"/>
  </dlg:bulletinboard>
 </dlg:window>

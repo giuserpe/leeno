@@ -5004,7 +5004,7 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(11, 3, 11, righe_lista +3-1).CellStyle = 'EP-mezzo %'
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
-        oSheet.getCellRangeByPosition(0, 3, 7, righe_lista + 3 - 1).CellBackColor = col1
+        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col1
 
 
 # CAPITOLI
@@ -5041,7 +5041,7 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(11, 3, 11, righe_lista +3-1).CellStyle = 'EP-mezzo %'
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
-        oSheet.getCellRangeByPosition(0, 3, 7, righe_lista + 3 - 1).CellBackColor = col2
+        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col2
 
 # SUBCAPITOLI
     capitoli = list()
@@ -5077,7 +5077,7 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(11, 3, 11, righe_lista +3-1).CellStyle = 'EP-mezzo %'
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
-        oSheet.getCellRangeByPosition(0, 3, 7, righe_lista + 3 - 1).CellBackColor = col3
+        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col3
     for el in(11, 15, 19, 26):
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
     for el in(12, 16, 20, 23):
@@ -6494,164 +6494,6 @@ def taglia_x(arg=None):
     oRange = oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow)
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
-########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
-    from com.sun.star.document import PrinterIndependentLayout
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    PrinterIndependentLayout = 1
-    chi (PrinterIndependentLayout)
-    return
- 
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
-    #~ ctx = XSCRIPTCONTEXT.getComponentContext()
-    #~ desktop = XSCRIPTCONTEXT.getDesktop()
-    #~ oFrame = desktop.getCurrentFrame()
-    #~ dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    #~ oProp = PropertyValue()
-    #~ oProp.Name = 'PrinterIndependentLayout'
-    #~ oProp.Value = 3
-    #~ properties =(oProp,)
-    #~ dispatchHelper.executeDispatch(oFrame, '.uno:OptionsTreeDialog', '', 0, properties)
-    #~ dispatchHelper.disposing
-    #~ return
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oDoc.getPropertyValue('PrinterIndependentLayout')
-    #~ mri(oDoc)
-    #~ oGSheetSettings = createUnoService("com.sun.star.sheet.GlobalSheetSettings")
-    #~ oGSheetSettings.setPropertyValue('PrinterIndependentLayout', 3)
-    #~ mri(oDoc)
-    #~ oGSheetSettings = createUnoService("com.sun.star.sheet.GlobalSheetSettings")
-    #~ oGSheetSettings.setPropertyValue('PrinterIndependentLayout', 3)
-    #~ mri (oGSheetSettings)
-  
-    #~ oGSheetSettings.MoveDirection = com.sun.star.sheet.MoveDirection.LEFT
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
-   
-    #~ from com.sun.star.sheet.PrinterIndependentLayout import (
-    #~ mri(coso)
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
-
-    coso = oDoc.createInstance("com.sun.star.sheet.DocumentSettings")
-    #~ 'DISABLED', 'ENABLED', 'HIGH_RESOLUTION', 'LOW_RESOLUTION'
-    
-    #~ chi(PrinterIndependentLayout.LOW_RESOLUTION)
-    #~ coso.PrinterIndependentLayout = com.sun.star.document.PrinterIndependentLayout.HIGH_RESOLUTION
-
-    
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
-    #~ coso.PrinterIndependentLayout = 1
-    #~ mri(oSheet.getCellRangeByName('A4').CharHeight)
-    #~ mri(oDoc.createInstance("com.sun.star.document.Settings"))#
-    
-    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    #~ oCellRangeAddr.Sheet = iSheet
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
-    #~ mri (coso)
-    #~ .PrinterIndependentLayout()) #.CurrentSelection)
-    #~ chi(oSheet.getCellRangeByName('A6').CellBackColor)
-    #~ oSheet.getCellRangeByName('Y254')
-    
-    #~ return
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor != -1:
-            #~ oSheet.getRows().removeByIndex(y, 1)
-
-        #~ if oSheet.getCellByPosition(24, y).String[-7:] == ' murata':
-            #~ oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]
-            #~ oSheet.getCellByPosition(24, y).String = oSheet.getCellByPosition(24, y).String[:-7]
-    return
-    for y in range(3, getLastUsedCell(oSheet).EndRow):
-        testo = oSheet.getCellByPosition(1, y).String.replace('"','""')
-        
-        oSheet.getCellByPosition(1, y).Formula = '=IF(LEN("'+ testo + '")<($S1.$H$337+$S1.$H$338);"'+ testo + '";CONCATENATE(LEFT("'+ testo + '";$S1.$H$337);" [...] ";RIGHT("'+ testo + '";$S1.$H$338)))'
-        #~ if oSheet.getCellByPosition(2, y).CellBackColor == 16770559:
-            #~ oSheet.getCellByPosition(2, y).String = "- " + oSheet.getCellByPosition(2, y).String
-            #~ iSheet = oSheet.RangeAddress.Sheet
-            #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-            #~ oCellRangeAddr.Sheet = iSheet
-            #~ oCellRangeAddr.StartColumn = 0
-            #~ oCellRangeAddr.EndColumn = 0
-            #~ oCellRangeAddr.StartRow = y
-            #~ oCellRangeAddr.EndRow = y
-            #~ oSheet.group(oCellRangeAddr, 1)
-    return
-#~ SALTA SULLE CELLE 
-    for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
-        for x in range(0, 30):
-            if oSheet.getCellByPosition(x, y).getIsMerged() == True:
-                _gotoCella(x, y)
-                return
-
-#~ SPALMA I VALORI
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
-        #~ if oSheet.getCellByPosition(0, y).Type.value =='VALUE':
-            #~ valore = oSheet.getCellByPosition(0, y).Value
-        #~ else:
-            #~ oSheet.getCellByPosition(0, y).Value = valore
-
-#~ COLORA VALORI DIFFERENTI
-    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-        #~ if oSheet.getCellByPosition(10, y).String != oSheet.getCellByPosition(11, y).String:
-            #~ if oSheet.getCellByPosition(11, y).String != '':
-                #~ oSheet.getCellByPosition(10, y).CellBackColor = 16777113
-                #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
-
-#~ RECUPERA VIE
-    #~ vie = list()
-    #~ n = 0
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
-            #~ n += 1
-            #~ testo = oSheet.getCellByPosition(0, y).String
-            #~ el =(n, testo)
-            #~ vie.append(el)
-    
-    #~ oSheet = oDoc.getSheets().getByName('VIE')
-    #~ oRange = oSheet.getCellRangeByPosition(0, 0, len(vie[0])-1, len(vie)-1)
-    #~ lista_come_array = tuple(vie)
-    #~ oRange.setDataArray(lista_come_array) #setFrmulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
-#~ crea via e numero
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
-        #~ if oSheet.getCellByPosition(1, y).CellBackColor == 16777113:
-            #~ oSheet.getCellByPosition(1, y).String = oSheet.getCellByPosition(2, y).String
-            #~ oSheet.getCellByPosition(2, y).String =''
-#~ crea via e numero
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
-            #~ testo = oSheet.getCellByPosition(1, y).String
-        #~ else:
-            #~ try:
-                #~ oSheet.getCellByPosition(17, y).String = testo + ', ' + oSheet.getCellByPosition(1, y).String.upper()
-            #~ except:
-                #~ pass
-#~ elimina '/' finale
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
-        #~ try:
-            #~ if oSheet.getCellByPosition(9, y).String[-1] == '/':
-                #~ oSheet.getCellByPosition(9, y).String = oSheet.getCellByPosition(9, y).String[:-1]
-        #~ except:
-            #~ pass
-            
-    #~ return
-#~ ricerca graffate
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        #~ if '\n' in oSheet.getCellByPosition(6, y).String:
-            #~ particelle = oSheet.getCellByPosition(6, y).String.split('\n')
-            #~ sub = oSheet.getCellByPosition(7, y).String.split('\n')
-
-            #~ while len(sub) < len(particelle):
-                #~ sub.append('')
-            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 5, y))
-            #~ copy_clip()
-            #~ oSheet.getRows().insertByIndex(y+1, len(particelle)-1)
-            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y+1, 0, y+len(particelle)-1))
-            #~ paste_clip()
-            #~ for n in range(0, len(particelle)):
-                #~ oSheet.getCellByPosition(6, y+n).String = particelle[n]
-                #~ oSheet.getCellByPosition(7, y+n).String = sub[n]
-                #~ oSheet.getCellByPosition(15, y+n).String = particelle[0]+ '/' + sub[0]
-    #~ chi(sub)
-
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = attiva_contabilita,

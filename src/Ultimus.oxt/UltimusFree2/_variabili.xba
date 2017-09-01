@@ -23,7 +23,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const versioneUF_major= 3			&apos;INCOMPATIBILITA&apos;
 Public Const versioneUF_minor= 17			&apos;NUOVE FUNZIONALITA&apos;
-Public Const versioneUF_subversion= &quot;1&quot;		&apos;CORREZIONE BUGS
+Public Const versioneUF_subversion= &quot;2.dev&quot;&quot;		&apos;CORREZIONE BUGS
 Sub setta_versione
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = versioneUF_major
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = versioneUF_minor

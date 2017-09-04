@@ -26,7 +26,7 @@
   </dlg:radiogroup>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBCat" dlg:tab-index="9" dlg:left="10" dlg:top="79" dlg:width="68" dlg:height="10" dlg:value="Categorie" dlg:checked="false"/>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton19" dlg:tab-index="10" dlg:left="99" dlg:top="53" dlg:width="80" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF" dlg:button-type="ok">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBFig" dlg:tab-index="8" dlg:left="10" dlg:top="49" dlg:width="68" dlg:height="10" dlg:value="Figure e annotazioni" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBSic" dlg:tab-index="2" dlg:left="10" dlg:top="59" dlg:width="68" dlg:height="10" dlg:value="Sicurezza" dlg:checked="false"/>

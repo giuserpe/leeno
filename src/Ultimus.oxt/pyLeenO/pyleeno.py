@@ -1284,6 +1284,9 @@ def scelta_viste(arg=None):
             oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
         for el in(13, 17, 21, 24, 25):
             oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
+        if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
+            errori =('#DIV/0!', '--')
+            hide_error(errori, 26)
             
     elif oSheet.Name in('Analisi di Prezzo'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
@@ -1300,9 +1303,6 @@ def scelta_viste(arg=None):
         oDialog1Model = oDialog1.Model
         oDialog1.execute()
     #~ MsgBox('Operazione eseguita con successo!','')
-    if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
-        errori =('#DIV/0!', '--')
-        hide_error(errori, 26)
 ########################################################################
 class genera_sommario_th(threading.Thread):
     def __init__(self):

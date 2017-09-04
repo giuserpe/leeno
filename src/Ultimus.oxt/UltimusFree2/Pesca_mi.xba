@@ -39,11 +39,6 @@ Sub ANNULLALA
 	sMemoPesca = &quot;&quot;
 End Sub
 
-
-
-
-
-
 function cerca_partenza
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow 

@@ -3264,13 +3264,13 @@ def attiva_contabilita(arg=None):
         if oDoc.Sheets.hasByName('CONTABILITA'):
             for el in('Registro', 'SAL','CONTABILITA'):
                 if oDoc.Sheets.hasByName(el):_gotoSheet(el)
-            #~ return
         else:
             oDoc.Sheets.insertNewByName('CONTABILITA',3)
+            _gotoSheet('CONTABILITA')
+            svuota_contabilita()
+            ins_voce_contab()
+            set_larghezza_colonne()
         _gotoSheet('CONTABILITA')
-        svuota_contabilita()
-        set_larghezza_colonne()
-        
 ########################################################################
 # svuota contabilità  ##################################################
 def svuota_contabilita(arg=None):

@@ -2500,27 +2500,25 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
         copia_riga_analisi(lrow)
 ########################################################################
 def cerca_partenza(arg=None):
+#~ def debug (arg=None):
     '''
     Conserva, nella variabile globale 'partenza', il nome del foglio [0] e l'id
-    della riga di codice prezzo componente [1].
+    della riga di codice prezzo componente [1], il flag '#reg' solo per la contbailità.
+    partenza = (nome_foglio, id_rcodice, flag_contabilità)
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     global partenza
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo: #COMPUTO, VARIANTE
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         partenza =(oSheet.Name, sStRange.RangeAddress.StartRow+1)
-        return partenza
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab:
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab: #CONTABILITA
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         partenza =(oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
-        return partenza
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in('An-lavoraz-Cod-sx'):
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in('An-lavoraz-Cod-sx'): #ANALISI
         partenza =(oSheet.Name, lrow)
-        return partenza
-    else:
-        partenza = None
+    return partenza
 ########################################################################
 sblocca_computo = 0
 def pesca_cod(arg=None):
@@ -6495,7 +6493,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     #~ from com.sun.star.document import PrinterIndependentLayout
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ PrinterIndependentLayout = 1

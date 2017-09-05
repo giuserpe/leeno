@@ -5790,6 +5790,9 @@ def autoexec(arg=None):
     '''
     questa è richiamata da New_File()
     '''
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
 #Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
     if sys.platform == 'win32':
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
@@ -6493,12 +6496,13 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     #~ from com.sun.star.document import PrinterIndependentLayout
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ PrinterIndependentLayout = 1
-    #~ chi (PrinterIndependentLayout)
-    #~ return
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    oGSheetSettings.UsePrinterMetrics = True
+    return
  
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -6630,17 +6634,17 @@ def debug_mt(arg=None): #COMUNE DI MATERA
     #~ lista_come_array = tuple(vie)
     #~ oRange.setDataArray(lista_come_array)
 #~ crea via e numero
-    for y in range(0, getLastUsedCell(oSheet).EndRow+1):
-        if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
-            testo = oSheet.getCellByPosition(0, y).String
-        else:
-            try:
-                if oSheet.getCellByPosition(2, y).String != '':
-                    oSheet.getCellByPosition(12, y).String = testo + ', ' + oSheet.getCellByPosition(2, y).String.upper()
-                else:
-                    oSheet.getCellByPosition(12, y).String = ''
-            except:
-                pass
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ testo = oSheet.getCellByPosition(0, y).String
+        #~ else:
+            #~ try:
+                #~ if oSheet.getCellByPosition(2, y).String != '':
+                    #~ oSheet.getCellByPosition(12, y).String = testo + ', ' + oSheet.getCellByPosition(2, y).String.upper()
+                #~ else:
+                    #~ oSheet.getCellByPosition(12, y).String = ''
+            #~ except:
+                #~ pass
 #~ elimina '/' finale
     #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
         #~ try:
@@ -6650,6 +6654,14 @@ def debug_mt(arg=None): #COMUNE DI MATERA
             #~ pass
             
     #~ return
+ #~ INSERISCI PARTICELLE
+    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
+        if oSheet.getCellByPosition(10, y).String != '':
+            if oSheet.getCellByPosition(11, y).String != '':
+                oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String + '/' + oSheet.getCellByPosition(11, y).String
+            else:
+                oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String
+    
 #~ ricerca graffate
     #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         #~ if '\n' in oSheet.getCellByPosition(6, y).String:

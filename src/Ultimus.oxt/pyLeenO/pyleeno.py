@@ -5779,6 +5779,9 @@ def struct(l):
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
 def autoexec_off(arg=None):
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    oGSheetSettings.MoveDirection = 0 #muove il cursore verso il basso
     toolbar_switch(1)
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
@@ -5793,6 +5796,7 @@ def autoexec(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
+    oGSheetSettings.MoveDirection = 1 #muove il cursore verso destra
 #Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
     if sys.platform == 'win32':
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
@@ -6497,35 +6501,29 @@ def taglia_x(arg=None):
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
 def debug(arg=None): #COMUNE DI MATERA
-    #~ from com.sun.star.document import PrinterIndependentLayout
     oDoc = XSCRIPTCONTEXT.getDocument()
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
-    oGSheetSettings.UsePrinterMetrics = True
+    #~ _gotoSheet("CENSIMENTO DEMANIO")
+    oSheet = oDoc.CurrentController.ActiveSheet
+    y = Range2Cell()[1]
+    oDoc.CurrentSelection.String = oDoc.CurrentSelection.String.upper()
+    
+    return
+    DEMANIO = oDoc.getSheets().getByName('CENSIMENTO DEMANIO')
+    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        try:
+            stringa = oSheet.getCellByPosition(1, y).String
+            yD = uFindStringCol (stringa, 10, DEMANIO)
+            if DEMANIO.getCellByPosition(1, yD).String != '':
+                oSheet.getCellByPosition(8, y).String = 'privata'
+        except:
+            pass
     return
  
-    oSheet = oDoc.CurrentController.ActiveSheet
+
+
     #~ ctx = XSCRIPTCONTEXT.getComponentContext()
-    #~ desktop = XSCRIPTCONTEXT.getDesktop()
-    #~ oFrame = desktop.getCurrentFrame()
-    #~ dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    #~ oProp = PropertyValue()
-    #~ oProp.Name = 'PrinterIndependentLayout'
-    #~ oProp.Value = 3
-    #~ properties =(oProp,)
-    #~ dispatchHelper.executeDispatch(oFrame, '.uno:OptionsTreeDialog', '', 0, properties)
-    #~ dispatchHelper.disposing
-    #~ return
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oDoc.getPropertyValue('PrinterIndependentLayout')
-    #~ mri(oDoc)
-    #~ oGSheetSettings = createUnoService("com.sun.star.sheet.GlobalSheetSettings")
-    #~ oGSheetSettings.setPropertyValue('PrinterIndependentLayout', 3)
-    #~ mri(oDoc)
-    #~ oGSheetSettings = createUnoService("com.sun.star.sheet.GlobalSheetSettings")
-    #~ oGSheetSettings.setPropertyValue('PrinterIndependentLayout', 3)
-    #~ mri (oGSheetSettings)
-  
+    #~ oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    #~ oGSheetSettings.UsePrinterMetrics = True
     #~ oGSheetSettings.MoveDirection = com.sun.star.sheet.MoveDirection.LEFT
     #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
    
@@ -6533,23 +6531,8 @@ def debug(arg=None): #COMUNE DI MATERA
     #~ mri(coso)
     #~ oSheet = oDoc.CurrentController.ActiveSheet
 
-    #~ coso = oDoc.createInstance("com.sun.star.sheet.DocumentSettings")
-    #~ 'DISABLED', 'ENABLED', 'HIGH_RESOLUTION', 'LOW_RESOLUTION'
     
-    #~ chi(PrinterIndependentLayout.LOW_RESOLUTION)
-    #~ coso.PrinterIndependentLayout = com.sun.star.document.PrinterIndependentLayout.HIGH_RESOLUTION
-
-    
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
-    #~ coso.PrinterIndependentLayout = 1
-    #~ mri(oSheet.getCellRangeByName('A4').CharHeight)
-    #~ mri(oDoc.createInstance("com.sun.star.document.Settings"))#
-    
-    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     #~ oCellRangeAddr.Sheet = iSheet
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
-    #~ mri (coso)
-    #~ .PrinterIndependentLayout()) #.CurrentSelection)
     #~ chi(oSheet.getCellRangeByName('b6152').CellBackColor)
     #~ oSheet.getCellRangeByName('Y254')
     

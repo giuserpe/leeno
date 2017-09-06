@@ -1119,7 +1119,7 @@ def scelta_viste(arg=None):
             oDialog1.getControl('CBSic').State = 0
             oDialog1.getControl('CBMdo').State = 0
             oDialog1.getControl('CBCat').State = 0
-            oDialog1.getControl('CBTag').State = 0
+            #~ oDialog1.getControl('CBTag').State = 0
             oDialog1.getControl('CBFig').State = 0
 
         if oDialog1.getControl('CBMdo').State == 0: #manodopera

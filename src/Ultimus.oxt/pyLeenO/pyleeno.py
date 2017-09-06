@@ -4511,16 +4511,15 @@ def XPWE_in(arg=None):
     committente = DatiGenerali[4].text
     impresa = DatiGenerali[5].text
     parteopera = DatiGenerali[6].text
-    
 ###
 #PweDGCapitoliCategorie
     try:
         CapCat = dati.find('PweDGCapitoliCategorie')
 ###
 #PweDGSuperCapitoli
+        lista_supcap = list()
         if CapCat.find('PweDGSuperCapitoli'):
             PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
-            lista_supcap = list()
             for elem in PweDGSuperCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4538,9 +4537,9 @@ def XPWE_in(arg=None):
                 lista_supcap.append(diz)
 ###
 #PweDGCapitoli
+        lista_cap = list()
         if CapCat.find('PweDGCapitoli'):
             PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
-            lista_cap = list()
             for elem in PweDGCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4558,9 +4557,9 @@ def XPWE_in(arg=None):
                 lista_cap.append(diz)
 ###
 #PweDGSubCapitoli
+        lista_subcap = list()
         if CapCat.find('PweDGSubCapitoli'):
             PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
-            lista_subcap = list()
             for elem in PweDGSubCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4578,9 +4577,10 @@ def XPWE_in(arg=None):
                 lista_subcap.append(diz)
 ###
 #PweDGSuperCategorie
+        lista_supcat = list()
         if CapCat.find('PweDGSuperCategorie'):
+            chi(CapCat.find('PweDGSuperCategorie'))
             PweDGSuperCategorie = CapCat.find('PweDGSuperCategorie').getchildren()
-            lista_supcat = list()
             for elem in PweDGSuperCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4593,9 +4593,9 @@ def XPWE_in(arg=None):
             #~ MsgBox(str(lista_supcat),'') ; return
 ###
 #PweDGCategorie
+        lista_cat = list()
         if CapCat.find('PweDGCategorie'):
             PweDGCategorie = CapCat.find('PweDGCategorie').getchildren()
-            lista_cat = list()
             for elem in PweDGCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4608,9 +4608,9 @@ def XPWE_in(arg=None):
             #~ MsgBox(str(lista_cat),'')
 ###
 #PweDGSubCategorie
+        lista_subcat = list()
         if CapCat.find('PweDGSubCategorie'):
             PweDGSubCategorie = CapCat.find('PweDGSubCategorie').getchildren()
-            lista_subcat = list()
             for elem in PweDGSubCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4970,19 +4970,19 @@ Si tenga conto che:
     col3 = 16777168
     capitoli = list()
 # SUPERCAPITOLI
-    for el in lista_supcap:
-        tariffa = el.get('codice')
-        if tariffa != None:
-            destestesa = el.get('dessintetica')
-            titolo = (tariffa,
-                                    destestesa,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    '')
-            capitoli.append(titolo)
-    if len(capitoli) != 0:
+    try:
+        for el in lista_supcap:
+            tariffa = el.get('codice')
+            if tariffa != None:
+                destestesa = el.get('dessintetica')
+                titolo = (tariffa,
+                                        destestesa,
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '')
+                capitoli.append(titolo)
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5003,23 +5003,23 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col1
-
-
+    except:
+        pass
 # CAPITOLI
     capitoli = list()
-    for el in lista_cap: # + lista_subcap:
-        tariffa = el.get('codice')
-        if tariffa != None:
-            destestesa = el.get('dessintetica')
-            titolo = (tariffa,
-                                    destestesa,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    '')
-            capitoli.append(titolo)
-    if len(capitoli) != 0:
+    try:
+        for el in lista_cap: # + lista_subcap:
+            tariffa = el.get('codice')
+            if tariffa != None:
+                destestesa = el.get('dessintetica')
+                titolo = (tariffa,
+                                        destestesa,
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '')
+                capitoli.append(titolo)
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5040,22 +5040,23 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col2
-
+    except:
+        pass
 # SUBCAPITOLI
     capitoli = list()
-    for el in lista_subcap:
-        tariffa = el.get('codice')
-        if tariffa != None:
-            destestesa = el.get('dessintetica')
-            titolo = (tariffa,
-                                    destestesa,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    '')
-            capitoli.append(titolo)
-    if len(capitoli) != 0:
+    try:
+        for el in lista_subcap:
+            tariffa = el.get('codice')
+            if tariffa != None:
+                destestesa = el.get('dessintetica')
+                titolo = (tariffa,
+                                        destestesa,
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '')
+                capitoli.append(titolo)
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5076,6 +5077,8 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col3
+    except:
+        pass
     for el in(11, 15, 19, 26):
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
     for el in(12, 16, 20, 23):
@@ -5158,7 +5161,7 @@ Si tenga conto che:
         idsbcat = el.get('idsbcat')
 
         lrow = ultima_voce(oSheet) + 1
-#~ inserisco le categorie        
+#~ inserisco le categorie
         try:
             if idspcat != testspcat:
                 testspcat = idspcat

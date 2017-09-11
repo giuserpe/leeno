@@ -1119,7 +1119,7 @@ def scelta_viste(arg=None):
             oDialog1.getControl('CBSic').State = 0
             oDialog1.getControl('CBMdo').State = 0
             oDialog1.getControl('CBCat').State = 0
-            #~ oDialog1.getControl('CBTag').State = 0
+            oDialog1.getControl('CBTag').State = 0
             oDialog1.getControl('CBFig').State = 0
 
         if oDialog1.getControl('CBMdo').State == 0: #manodopera
@@ -3002,6 +3002,12 @@ def leeno_conf(arg=None):
         sString = oDlg_config.getControl("ComboBox1")
         sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
         
+        sString = oDlg_config.getControl("ComboBox2")
+        if conf.read(path_conf, 'Generale', 'movedirection')== 1:
+            sString.Text = 'A DESTRA' #visualizza all'avvio
+        elif conf.read(path_conf, 'Generale', 'movedirection')== 0:
+            sString.Text = 'IN BASSO' #visualizza all'avvio
+        
         sString = oDlg_config.getControl('TextField5')
         sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
         sString = oDlg_config.getControl('TextField6')
@@ -3051,6 +3057,15 @@ def leeno_conf(arg=None):
         toolbar_switch(1)
  
     conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
+    
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
+        conf.write(path_conf, 'Generale', 'movedirection', '0')
+        oGSheetSettings.MoveDirection = 0
+    else:
+        conf.write(path_conf, 'Generale', 'movedirection', '1')
+        oGSheetSettings.MoveDirection = 1
     conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
@@ -3126,6 +3141,7 @@ def config_default(arg=None):
     conf.write(path_conf, 'Generale', 'altezza_celle', '1.25')
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
     conf.write(path_conf, 'Generale', 'pesca_auto', '1')
+    conf.write(path_conf, 'Generale', 'movedirection', '0')
 
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', '1')
     conf.write(path_conf, 'Computo', 'voci_senza_numerazione', '0')
@@ -3134,7 +3150,7 @@ def config_default(arg=None):
 
     conf.write(path_conf, 'Contabilità', 'abilita', '0')
     conf.write(path_conf, 'Contabilità', 'idxSAL', '30')
-    
+
     #~ leeno_conf()
 ########################################################################
 def nuova_voce_scelta(arg=None): #assegnato a ctrl-shift-n
@@ -4515,15 +4531,16 @@ def XPWE_in(arg=None):
     committente = DatiGenerali[4].text
     impresa = DatiGenerali[5].text
     parteopera = DatiGenerali[6].text
+    
 ###
 #PweDGCapitoliCategorie
     try:
         CapCat = dati.find('PweDGCapitoliCategorie')
 ###
 #PweDGSuperCapitoli
-        lista_supcap = list()
         if CapCat.find('PweDGSuperCapitoli'):
             PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
+            lista_supcap = list()
             for elem in PweDGSuperCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4541,9 +4558,9 @@ def XPWE_in(arg=None):
                 lista_supcap.append(diz)
 ###
 #PweDGCapitoli
-        lista_cap = list()
         if CapCat.find('PweDGCapitoli'):
             PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
+            lista_cap = list()
             for elem in PweDGCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4561,9 +4578,9 @@ def XPWE_in(arg=None):
                 lista_cap.append(diz)
 ###
 #PweDGSubCapitoli
-        lista_subcap = list()
         if CapCat.find('PweDGSubCapitoli'):
             PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
+            lista_subcap = list()
             for elem in PweDGSubCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4581,9 +4598,9 @@ def XPWE_in(arg=None):
                 lista_subcap.append(diz)
 ###
 #PweDGSuperCategorie
-        lista_supcat = list()
         if CapCat.find('PweDGSuperCategorie'):
             PweDGSuperCategorie = CapCat.find('PweDGSuperCategorie').getchildren()
+            lista_supcat = list()
             for elem in PweDGSuperCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4596,9 +4613,9 @@ def XPWE_in(arg=None):
             #~ MsgBox(str(lista_supcat),'') ; return
 ###
 #PweDGCategorie
-        lista_cat = list()
         if CapCat.find('PweDGCategorie'):
             PweDGCategorie = CapCat.find('PweDGCategorie').getchildren()
+            lista_cat = list()
             for elem in PweDGCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4611,9 +4628,9 @@ def XPWE_in(arg=None):
             #~ MsgBox(str(lista_cat),'')
 ###
 #PweDGSubCategorie
-        lista_subcat = list()
         if CapCat.find('PweDGSubCategorie'):
             PweDGSubCategorie = CapCat.find('PweDGSubCategorie').getchildren()
+            lista_subcat = list()
             for elem in PweDGSubCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4973,19 +4990,19 @@ Si tenga conto che:
     col3 = 16777168
     capitoli = list()
 # SUPERCAPITOLI
-    try:
-        for el in lista_supcap:
-            tariffa = el.get('codice')
-            if tariffa != None:
-                destestesa = el.get('dessintetica')
-                titolo = (tariffa,
-                                        destestesa,
-                                        '',
-                                        '',
-                                        '',
-                                        '',
-                                        '')
-                capitoli.append(titolo)
+    for el in lista_supcap:
+        tariffa = el.get('codice')
+        if tariffa != None:
+            destestesa = el.get('dessintetica')
+            titolo = (tariffa,
+                                    destestesa,
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '')
+            capitoli.append(titolo)
+    if len(capitoli) != 0:
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5006,23 +5023,23 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col1
-    except:
-        pass
+
+
 # CAPITOLI
     capitoli = list()
-    try:
-        for el in lista_cap: # + lista_subcap:
-            tariffa = el.get('codice')
-            if tariffa != None:
-                destestesa = el.get('dessintetica')
-                titolo = (tariffa,
-                                        destestesa,
-                                        '',
-                                        '',
-                                        '',
-                                        '',
-                                        '')
-                capitoli.append(titolo)
+    for el in lista_cap: # + lista_subcap:
+        tariffa = el.get('codice')
+        if tariffa != None:
+            destestesa = el.get('dessintetica')
+            titolo = (tariffa,
+                                    destestesa,
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '')
+            capitoli.append(titolo)
+    if len(capitoli) != 0:
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5043,23 +5060,22 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col2
-    except:
-        pass
+
 # SUBCAPITOLI
     capitoli = list()
-    try:
-        for el in lista_subcap:
-            tariffa = el.get('codice')
-            if tariffa != None:
-                destestesa = el.get('dessintetica')
-                titolo = (tariffa,
-                                        destestesa,
-                                        '',
-                                        '',
-                                        '',
-                                        '',
-                                        '')
-                capitoli.append(titolo)
+    for el in lista_subcap:
+        tariffa = el.get('codice')
+        if tariffa != None:
+            destestesa = el.get('dessintetica')
+            titolo = (tariffa,
+                                    destestesa,
+                                    '',
+                                    '',
+                                    '',
+                                    '',
+                                    '')
+            capitoli.append(titolo)
+    if len(capitoli) != 0:
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5080,8 +5096,6 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col3
-    except:
-        pass
     for el in(11, 15, 19, 26):
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
     for el in(12, 16, 20, 23):
@@ -5164,7 +5178,7 @@ Si tenga conto che:
         idsbcat = el.get('idsbcat')
 
         lrow = ultima_voce(oSheet) + 1
-#~ inserisco le categorie
+#~ inserisco le categorie        
         try:
             if idspcat != testspcat:
                 testspcat = idspcat
@@ -5785,9 +5799,6 @@ def struct(l):
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
 def autoexec_off(arg=None):
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
-    #~ oGSheetSettings.MoveDirection = 0 #muove il cursore verso il basso
     toolbar_switch(1)
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
@@ -5802,7 +5813,12 @@ def autoexec(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
-    oGSheetSettings.MoveDirection = 1 #muove il cursore verso destra
+    
+    if conf.read(path_conf, 'Generale', 'movedirection') == '0':
+        oGSheetSettings.MoveDirection = 0
+    else:
+        oGSheetSettings.MoveDirection = 1
+    
 #Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
     if sys.platform == 'win32':
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
@@ -5980,6 +5996,10 @@ def adegua_tmpl(arg=None):
         conf.read(path_conf, 'Generale', 'pesca_auto')
     except:
         conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
+    try:
+        conf.read(path_conf, 'Generale', 'movedirection')
+    except:
+        conf.write(path_conf, 'Generale', 'movedirection', '0') #muove il cursore in basso
 
     # cambiare stile http://bit.ly/2cDcCJI
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -6461,7 +6481,6 @@ def ctrl_d(arg=None):
     '''
     Copia il valore della prima cella superiore utile.
     '''
-    
     oDoc = XSCRIPTCONTEXT.getDocument()
     oCell= oDoc.CurrentSelection
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6473,12 +6492,11 @@ def ctrl_d(arg=None):
             y -= 1
     except:
         return
-    if oSheet.getCellByPosition(x, y).Type.value == 'FORMULA':
-        oCell.Formula = oSheet.getCellByPosition(x, y).Formula
-    elif oSheet.getCellByPosition(x, y).Type.value == 'TEXT':
-        oCell.String = oSheet.getCellByPosition(x, y).String
-    elif oSheet.getCellByPosition(x, y).Type.value == 'VALUE':
-        oCell.Value = oSheet.getCellByPosition(x, y).Value
+    oDoc.CurrentController.select(oSheet.getCellByPosition(x, y))
+    copy_clip()
+    oDoc.CurrentController.select(oCell)
+    paste_clip()
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def taglia_x(arg=None):
     '''
@@ -6508,44 +6526,54 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
+    #~ from com.sun.star.document import PrinterIndependentLayout
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    mri (oDoc.CurrentSelection)
-    #~ mri(oSheet.getCellByPosition(5, 194)) #CharColor 16724787
-    return
-    
-    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        if oSheet.getCellByPosition(5, y).Value != 0:
-            oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
-        else:
-            oSheet.getCellByPosition(5, y).String = ''
-    return
-    DEMANIO = oDoc.getSheets().getByName('CENSIMENTO DEMANIO')
-    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        try:
-            stringa = oSheet.getCellByPosition(1, y).String
-            yD = uFindStringCol (stringa, 10, DEMANIO)
-            if DEMANIO.getCellByPosition(1, yD).String != '':
-                oSheet.getCellByPosition(8, y).String = 'privata'
-        except:
-            pass
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    oGSheetSettings.UsePrinterMetrics = True
+    oGSheetSettings.MoveDirection = 1
+    chi (oGSheetSettings.MoveDirection)
     return
  
-
-
+    oSheet = oDoc.CurrentController.ActiveSheet
     #~ ctx = XSCRIPTCONTEXT.getComponentContext()
-    #~ oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
-    #~ oGSheetSettings.UsePrinterMetrics = True
-    #~ oGSheetSettings.MoveDirection = com.sun.star.sheet.MoveDirection.LEFT
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
+    #~ desktop = XSCRIPTCONTEXT.getDesktop()
+    #~ oFrame = desktop.getCurrentFrame()
+    #~ dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    #~ oProp = PropertyValue()
+    #~ oProp.Name = 'PrinterIndependentLayout'
+    #~ oProp.Value = 3
+    #~ properties =(oProp,)
+    #~ dispatchHelper.executeDispatch(oFrame, '.uno:OptionsTreeDialog', '', 0, properties)
+    #~ dispatchHelper.disposing
+    #~ return
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oDoc.getPropertyValue('PrinterIndependentLayout')
+    #~ mri(oDoc)
+  
    
     #~ from com.sun.star.sheet.PrinterIndependentLayout import (
     #~ mri(coso)
     #~ oSheet = oDoc.CurrentController.ActiveSheet
 
+    #~ coso = oDoc.createInstance("com.sun.star.sheet.DocumentSettings")
+    #~ 'DISABLED', 'ENABLED', 'HIGH_RESOLUTION', 'LOW_RESOLUTION'
     
+    #~ chi(PrinterIndependentLayout.LOW_RESOLUTION)
+    #~ coso.PrinterIndependentLayout = com.sun.star.document.PrinterIndependentLayout.HIGH_RESOLUTION
+
+    
+    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
+    #~ coso.PrinterIndependentLayout = 1
+    #~ mri(oSheet.getCellRangeByName('A4').CharHeight)
+    #~ mri(oDoc.createInstance("com.sun.star.document.Settings"))#
+    
+    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     #~ oCellRangeAddr.Sheet = iSheet
+    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
+    #~ mri (coso)
+    #~ .PrinterIndependentLayout()) #.CurrentSelection)
     #~ chi(oSheet.getCellRangeByName('b6152').CellBackColor)
     #~ oSheet.getCellRangeByName('Y254')
     

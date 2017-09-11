@@ -2,17 +2,18 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dlg_config" dlg:left="219" dlg:top="111" dlg:width="212" dlg:height="234" dlg:closeable="true" dlg:moveable="true" dlg:title="Impostazioni di Configurazione">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Regular"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular"/>
-  <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:titledbox dlg:id="Generale" dlg:tab-index="0" dlg:left="7" dlg:top="10" dlg:width="198" dlg:height="64">
    <dlg:title dlg:value="Generale"/>
   </dlg:titledbox>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox2" dlg:tab-index="1" dlg:left="12" dlg:top="20" dlg:width="82" dlg:height="10" dlg:value="Visualizza tabelle Extra" dlg:checked="false"/>
-  <dlg:text dlg:id="Label1" dlg:tab-index="2" dlg:left="12" dlg:top="55" dlg:width="39" dlg:height="8" dlg:value="Altezza celle:"/>
+  <dlg:text dlg:id="Label1" dlg:tab-index="2" dlg:left="11" dlg:top="48" dlg:width="39" dlg:height="8" dlg:value="Altezza celle:"/>
   <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="3" dlg:left="119" dlg:top="33" dlg:width="76" dlg:height="15" dlg:value="Senza Menù" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="Senza Menù"/>
@@ -24,8 +25,8 @@
   </dlg:combobox>
   <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="4" dlg:left="119" dlg:top="20" dlg:width="75" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="12" dlg:top="35" dlg:width="82" dlg:height="10" dlg:value="Pesca codice automatico" dlg:checked="false"/>
-  <dlg:textfield dlg:id="TextField1" dlg:tab-index="6" dlg:left="62" dlg:top="55" dlg:width="30" dlg:height="8" dlg:align="center"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="117" dlg:top="57" dlg:width="78" dlg:height="10" dlg:value="Nascondi toolbar di LibreOffice" dlg:checked="false"/>
+  <dlg:textfield dlg:id="TextField1" dlg:tab-index="6" dlg:left="61" dlg:top="49" dlg:width="30" dlg:height="10" dlg:align="center"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="117" dlg:top="57" dlg:width="88" dlg:height="10" dlg:value="Nascondi toolbar di LibreOffice" dlg:checked="false"/>
   <dlg:text dlg:id="Label2" dlg:tab-index="9" dlg:left="237" dlg:top="54" dlg:width="45" dlg:height="8" dlg:value="Fattore ottimale:"/>
   <dlg:textfield dlg:id="TextField2" dlg:tab-index="10" dlg:left="287" dlg:top="54" dlg:width="30" dlg:height="10"/>
   <dlg:titledbox dlg:id="Zoom" dlg:tab-index="7" dlg:left="232" dlg:top="10" dlg:width="95" dlg:height="64">
@@ -62,12 +63,19 @@
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl4" dlg:tab-index="33" dlg:left="111" dlg:top="189" dlg:width="95" dlg:height="32">
    <dlg:title dlg:value="Contabilità"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox7" dlg:tab-index="34" dlg:left="244" dlg:top="197" dlg:width="68" dlg:height="10" dlg:value="Abilita" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CheckBox7" dlg:tab-index="34" dlg:left="244" dlg:top="197" dlg:width="68" dlg:height="10" dlg:value="Abilita" dlg:checked="false"/>
   <dlg:text dlg:id="Label14" dlg:tab-index="35" dlg:left="116" dlg:top="202" dlg:width="45" dlg:height="8" dlg:value="N. max SAL:"/>
   <dlg:textfield dlg:id="TextField13" dlg:tab-index="36" dlg:left="165" dlg:top="202" dlg:width="30" dlg:height="10" dlg:align="center"/>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton1" dlg:tab-index="37" dlg:left="10" dlg:top="208" dlg:width="48" dlg:height="15" dlg:value="Reset" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton1" dlg:tab-index="37" dlg:left="10" dlg:top="208" dlg:width="48" dlg:height="15" dlg:value="Reset" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$config_default?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="38" dlg:left="108" dlg:top="20" dlg:width="5" dlg:height="50" dlg:align="vertical"/>
+  <dlg:text dlg:id="Label7" dlg:tab-index="39" dlg:left="11" dlg:top="62" dlg:width="39" dlg:height="8" dlg:value="Cursore:"/>
+  <dlg:combobox dlg:id="ComboBox2" dlg:tab-index="40" dlg:left="61" dlg:top="62" dlg:width="40" dlg:height="10" dlg:value="A DESTRA" dlg:spin="true">
+   <dlg:menupopup>
+    <dlg:menuitem dlg:value="A DESTRA"/>
+    <dlg:menuitem dlg:value="IN BASSO"/>
+   </dlg:menupopup>
+  </dlg:combobox>
  </dlg:bulletinboard>
 </dlg:window>

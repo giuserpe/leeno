@@ -2601,8 +2601,12 @@ def inverti_segno(arg=None):
             if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
                 if '-' in oSheet.getCellByPosition(9, lrow).Formula:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                    for x in range (2, 8):
+                        oSheet.getCellByPosition(x, lrow).CharColor = -1
                 else:
                     oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                    for x in range (2, 8):
+                        oSheet.getCellByPosition(x, lrow).CharColor = 16724787
 ########################################################################
 def valuta_cella(oCell):
     '''
@@ -4579,7 +4583,6 @@ def XPWE_in(arg=None):
 #PweDGSuperCategorie
         lista_supcat = list()
         if CapCat.find('PweDGSuperCategorie'):
-            chi(CapCat.find('PweDGSuperCategorie'))
             PweDGSuperCategorie = CapCat.find('PweDGSuperCategorie').getchildren()
             for elem in PweDGSuperCategorie:
                 id_sc = elem.get('ID')
@@ -5784,7 +5787,7 @@ def struct(l):
 def autoexec_off(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
-    oGSheetSettings.MoveDirection = 0 #muove il cursore verso il basso
+    #~ oGSheetSettings.MoveDirection = 0 #muove il cursore verso il basso
     toolbar_switch(1)
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
@@ -6458,6 +6461,7 @@ def ctrl_d(arg=None):
     '''
     Copia il valore della prima cella superiore utile.
     '''
+    
     oDoc = XSCRIPTCONTEXT.getDocument()
     oCell= oDoc.CurrentSelection
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6469,11 +6473,12 @@ def ctrl_d(arg=None):
             y -= 1
     except:
         return
-    oDoc.CurrentController.select(oSheet.getCellByPosition(x, y))
-    copy_clip()
-    oDoc.CurrentController.select(oCell)
-    paste_clip()
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    if oSheet.getCellByPosition(x, y).Type.value == 'FORMULA':
+        oCell.Formula = oSheet.getCellByPosition(x, y).Formula
+    elif oSheet.getCellByPosition(x, y).Type.value == 'TEXT':
+        oCell.String = oSheet.getCellByPosition(x, y).String
+    elif oSheet.getCellByPosition(x, y).Type.value == 'VALUE':
+        oCell.Value = oSheet.getCellByPosition(x, y).Value
 ########################################################################
 def taglia_x(arg=None):
     '''
@@ -6505,11 +6510,16 @@ def taglia_x(arg=None):
 ########################################################################
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ _gotoSheet("CENSIMENTO DEMANIO")
     oSheet = oDoc.CurrentController.ActiveSheet
-    y = Range2Cell()[1]
-    oDoc.CurrentSelection.String = oDoc.CurrentSelection.String.upper()
+    mri (oDoc.CurrentSelection)
+    #~ mri(oSheet.getCellByPosition(5, 194)) #CharColor 16724787
+    return
     
+    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(5, y).Value != 0:
+            oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
+        else:
+            oSheet.getCellByPosition(5, y).String = ''
     return
     DEMANIO = oDoc.getSheets().getByName('CENSIMENTO DEMANIO')
     for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):

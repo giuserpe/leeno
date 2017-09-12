@@ -2983,7 +2983,6 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
 ########################################################################
 # leeno.conf  ##########################################################
 def leeno_conf(arg=None):
-#~ def debug(arg=None):
     '''
     Visualizza il menù di configurazione
     '''
@@ -3002,11 +3001,11 @@ def leeno_conf(arg=None):
         sString = oDlg_config.getControl("ComboBox1")
         sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
         
-        sString = oDlg_config.getControl("ComboBox2")
-        if conf.read(path_conf, 'Generale', 'movedirection')== 1:
-            sString.Text = 'A DESTRA' #visualizza all'avvio
-        elif conf.read(path_conf, 'Generale', 'movedirection')== 0:
-            sString.Text = 'IN BASSO' #visualizza all'avvio
+        sString = oDlg_config.getControl("ComboBox2") #spostamento ad INVIO
+        if conf.read(path_conf, 'Generale', 'movedirection')== '1':
+            sString.Text = 'A DESTRA' 
+        elif conf.read(path_conf, 'Generale', 'movedirection')== '0':
+            sString.Text = 'IN BASSO' 
         
         sString = oDlg_config.getControl('TextField5')
         sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
@@ -3060,6 +3059,7 @@ def leeno_conf(arg=None):
     
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    chi(oDlg_config.getControl('ComboBox2').getText())
     if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
         conf.write(path_conf, 'Generale', 'movedirection', '0')
         oGSheetSettings.MoveDirection = 0
@@ -5119,6 +5119,7 @@ Si tenga conto che:
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
             oSheet.getRows().removeByIndex(i, 1)
     if len(lista_misure) == 0:
+        #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
         MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
         oDoc.CurrentController.setActiveSheet(oSheet)
@@ -5348,8 +5349,8 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
         pass
     oDoc.CurrentController.ZoomValue = 100
     refresh(1)
-    oDialogo_attesa.endExecute()
     #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
+    oDialogo_attesa.endExecute()
     doppioni()
     MsgBox('Importazione eseguita con successo!','')
 
@@ -6536,7 +6537,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     #~ from com.sun.star.document import PrinterIndependentLayout
     parametri = (
     ('Computo', 'riga_bianca_categorie', '1'),
@@ -6555,43 +6556,6 @@ def debug(arg=None): #COMUNE DI MATERA
     return
  
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ ctx = XSCRIPTCONTEXT.getComponentContext()
-    #~ desktop = XSCRIPTCONTEXT.getDesktop()
-    #~ oFrame = desktop.getCurrentFrame()
-    #~ dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    #~ oProp = PropertyValue()
-    #~ oProp.Name = 'PrinterIndependentLayout'
-    #~ oProp.Value = 3
-    #~ properties =(oProp,)
-    #~ dispatchHelper.executeDispatch(oFrame, '.uno:OptionsTreeDialog', '', 0, properties)
-    #~ dispatchHelper.disposing
-    #~ return
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oDoc.getPropertyValue('PrinterIndependentLayout')
-    #~ mri(oDoc)
-  
-   
-    #~ from com.sun.star.sheet.PrinterIndependentLayout import (
-    #~ mri(coso)
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
-
-    #~ coso = oDoc.createInstance("com.sun.star.sheet.DocumentSettings")
-    #~ 'DISABLED', 'ENABLED', 'HIGH_RESOLUTION', 'LOW_RESOLUTION'
-    
-    #~ chi(PrinterIndependentLayout.LOW_RESOLUTION)
-    #~ coso.PrinterIndependentLayout = com.sun.star.document.PrinterIndependentLayout.HIGH_RESOLUTION
-
-    
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
-    #~ coso.PrinterIndependentLayout = 1
-    #~ mri(oSheet.getCellRangeByName('A4').CharHeight)
-    #~ mri(oDoc.createInstance("com.sun.star.document.Settings"))#
-    
-    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    #~ oCellRangeAddr.Sheet = iSheet
-    #~ coso = oDoc.createInstance("com.sun.star.document.Settings")
-    #~ mri (coso)
-    #~ .PrinterIndependentLayout()) #.CurrentSelection)
     #~ chi(oSheet.getCellRangeByName('b6152').CellBackColor)
     #~ oSheet.getCellRangeByName('Y254')
     

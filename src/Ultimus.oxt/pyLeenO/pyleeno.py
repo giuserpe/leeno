@@ -3132,24 +3132,30 @@ class conf:
         return my_config_parser_dict
     
 def config_default(arg=None):
-    #~ conf.write(path_conf, 'Zoom',  'aggiustamento', '2')
-    conf.write(path_conf, 'Zoom', 'fattore', '100')
-    conf.write(path_conf, 'Zoom', 'fattore_ottimale', '81')
-    conf.write(path_conf, 'Zoom', 'fullscreen', '0')
-
-    conf.write(path_conf, 'Generale', 'visualizza', 'Menù Principale')
-    conf.write(path_conf, 'Generale', 'altezza_celle', '1.25')
-    conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
-    conf.write(path_conf, 'Generale', 'pesca_auto', '1')
-    conf.write(path_conf, 'Generale', 'movedirection', '0')
-
-    conf.write(path_conf, 'Computo', 'riga_bianca_categorie', '1')
-    conf.write(path_conf, 'Computo', 'voci_senza_numerazione', '0')
-    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', '160')
-    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', '100')
-
-    conf.write(path_conf, 'Contabilità', 'abilita', '0')
-    conf.write(path_conf, 'Contabilità', 'idxSAL', '30')
+    '''
+    Imposta i parametri di default in leeno.conf
+    '''
+    parametri = (
+    ('Zoom', 'fattore', '100'),
+    ('Zoom', 'fattore_ottimale', '81'),
+    ('Zoom', 'fullscreen', '0'),
+    ('Generale', 'visualizza', 'Menù Principale'),
+    ('Generale', 'altezza_celle', '1.25'),
+    ('Generale', 'visualizza_tabelle_extra', '1'),
+    ('Generale', 'pesca_auto', '1'),
+    ('Generale', 'movedirection', '0'),
+    ('Computo', 'riga_bianca_categorie', '1'),
+    ('Computo', 'voci_senza_numerazione', '0'),
+    ('Computo', 'inizio_voci_abbreviate', '160'),
+    ('Computo', 'fine_voci_abbreviate', '100'),
+    ('Contabilità', 'abilita', '0'),
+    ('Contabilità', 'idxSAL', '30')
+    )
+    for el in parametri:
+        try:
+            conf.read(path_conf, el[0], el[1])
+        except:
+            conf.write(path_conf, el[0], el[1], el[2])
 
     #~ leeno_conf()
 ########################################################################
@@ -4531,16 +4537,15 @@ def XPWE_in(arg=None):
     committente = DatiGenerali[4].text
     impresa = DatiGenerali[5].text
     parteopera = DatiGenerali[6].text
-    
 ###
 #PweDGCapitoliCategorie
     try:
         CapCat = dati.find('PweDGCapitoliCategorie')
 ###
 #PweDGSuperCapitoli
+        lista_supcap = list()
         if CapCat.find('PweDGSuperCapitoli'):
             PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
-            lista_supcap = list()
             for elem in PweDGSuperCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4558,9 +4563,9 @@ def XPWE_in(arg=None):
                 lista_supcap.append(diz)
 ###
 #PweDGCapitoli
+        lista_cap = list()
         if CapCat.find('PweDGCapitoli'):
             PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
-            lista_cap = list()
             for elem in PweDGCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4578,9 +4583,9 @@ def XPWE_in(arg=None):
                 lista_cap.append(diz)
 ###
 #PweDGSubCapitoli
+        lista_subcap = list()
         if CapCat.find('PweDGSubCapitoli'):
             PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
-            lista_subcap = list()
             for elem in PweDGSubCapitoli:
                 id_sc = elem.get('ID')
                 codice = elem.find('Codice').text
@@ -4598,9 +4603,9 @@ def XPWE_in(arg=None):
                 lista_subcap.append(diz)
 ###
 #PweDGSuperCategorie
+        lista_supcat = list()
         if CapCat.find('PweDGSuperCategorie'):
             PweDGSuperCategorie = CapCat.find('PweDGSuperCategorie').getchildren()
-            lista_supcat = list()
             for elem in PweDGSuperCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4613,9 +4618,9 @@ def XPWE_in(arg=None):
             #~ MsgBox(str(lista_supcat),'') ; return
 ###
 #PweDGCategorie
+        lista_cat = list()
         if CapCat.find('PweDGCategorie'):
             PweDGCategorie = CapCat.find('PweDGCategorie').getchildren()
-            lista_cat = list()
             for elem in PweDGCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4628,9 +4633,9 @@ def XPWE_in(arg=None):
             #~ MsgBox(str(lista_cat),'')
 ###
 #PweDGSubCategorie
+        lista_subcat = list()
         if CapCat.find('PweDGSubCategorie'):
             PweDGSubCategorie = CapCat.find('PweDGSubCategorie').getchildren()
-            lista_subcat = list()
             for elem in PweDGSubCategorie:
                 id_sc = elem.get('ID')
                 dessintetica = elem.find('DesSintetica').text
@@ -4990,19 +4995,19 @@ Si tenga conto che:
     col3 = 16777168
     capitoli = list()
 # SUPERCAPITOLI
-    for el in lista_supcap:
-        tariffa = el.get('codice')
-        if tariffa != None:
-            destestesa = el.get('dessintetica')
-            titolo = (tariffa,
-                                    destestesa,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    '')
-            capitoli.append(titolo)
-    if len(capitoli) != 0:
+    try:
+        for el in lista_supcap:
+            tariffa = el.get('codice')
+            if tariffa != None:
+                destestesa = el.get('dessintetica')
+                titolo = (tariffa,
+                                        destestesa,
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '')
+                capitoli.append(titolo)
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5023,23 +5028,23 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col1
-
-
+    except:
+        pass
 # CAPITOLI
     capitoli = list()
-    for el in lista_cap: # + lista_subcap:
-        tariffa = el.get('codice')
-        if tariffa != None:
-            destestesa = el.get('dessintetica')
-            titolo = (tariffa,
-                                    destestesa,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    '')
-            capitoli.append(titolo)
-    if len(capitoli) != 0:
+    try:
+        for el in lista_cap: # + lista_subcap:
+            tariffa = el.get('codice')
+            if tariffa != None:
+                destestesa = el.get('dessintetica')
+                titolo = (tariffa,
+                                        destestesa,
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '')
+                capitoli.append(titolo)
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5060,22 +5065,23 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col2
-
+    except:
+        pass
 # SUBCAPITOLI
     capitoli = list()
-    for el in lista_subcap:
-        tariffa = el.get('codice')
-        if tariffa != None:
-            destestesa = el.get('dessintetica')
-            titolo = (tariffa,
-                                    destestesa,
-                                    '',
-                                    '',
-                                    '',
-                                    '',
-                                    '')
-            capitoli.append(titolo)
-    if len(capitoli) != 0:
+    try:
+        for el in lista_subcap:
+            tariffa = el.get('codice')
+            if tariffa != None:
+                destestesa = el.get('dessintetica')
+                titolo = (tariffa,
+                                        destestesa,
+                                        '',
+                                        '',
+                                        '',
+                                        '',
+                                        '')
+                capitoli.append(titolo)
         lista_come_array = tuple(capitoli)
         colonne_lista = len(lista_come_array[0]) # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array) # numero di righe necessarie per ospitare i dati
@@ -5096,6 +5102,8 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(12, 3, 12, righe_lista +3-1).CellStyle = 'EP statistiche_q'
         oSheet.getCellRangeByPosition(13, 3, 13, righe_lista +3-1).CellStyle = 'EP statistiche_Contab_q'
         oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col3
+    except:
+        pass
     for el in(11, 15, 19, 26):
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
     for el in(12, 16, 20, 23):
@@ -5178,7 +5186,7 @@ Si tenga conto che:
         idsbcat = el.get('idsbcat')
 
         lrow = ultima_voce(oSheet) + 1
-#~ inserisco le categorie        
+#~ inserisco le categorie
         try:
             if idspcat != testspcat:
                 testspcat = idspcat
@@ -5813,11 +5821,13 @@ def autoexec(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
-    
-    if conf.read(path_conf, 'Generale', 'movedirection') == '0':
-        oGSheetSettings.MoveDirection = 0
-    else:
-        oGSheetSettings.MoveDirection = 1
+    try:
+        if conf.read(path_conf, 'Generale', 'movedirection') == '0':
+            oGSheetSettings.MoveDirection = 0
+        else:
+            oGSheetSettings.MoveDirection = 1
+    except:
+        config_default()
     
 #Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
     if sys.platform == 'win32':
@@ -6526,8 +6536,16 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     #~ from com.sun.star.document import PrinterIndependentLayout
+    parametri = (
+    ('Computo', 'riga_bianca_categorie', '1'),
+    ('Computo', 'voci_senza_numerazione', '0'),
+    ('Computo', 'inizio_voci_abbreviate', '160'),
+    ('Computo', 'fine_voci_abbreviate', '100'),
+    )
+    chi (parametri)
+    return
     oDoc = XSCRIPTCONTEXT.getDocument()
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)

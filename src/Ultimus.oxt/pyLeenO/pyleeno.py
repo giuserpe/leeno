@@ -3050,10 +3050,13 @@ def leeno_conf(arg=None):
         if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox5').State = 1
         
         # voci_senza_numerazione
-        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox6').State = 1
+        if oSheet.getCellRangeByName('S1.H335').Value == 1:
+            oDlg_config.getControl('CheckBox6').State = 0
+        else:
+            oDlg_config.getControl('CheckBox6').State = 1
         
         # Contabilità abilita
-        if oSheet.getCellRangeByName('S1.H328').Value == '1': oDlg_config.getControl('CheckBox7').State = 1
+        if oSheet.getCellRangeByName('S1.H328').Value == 1: oDlg_config.getControl('CheckBox7').State = 1
         sString = oDlg_config.getControl('TextField13')
         sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
     except:
@@ -3080,7 +3083,11 @@ def leeno_conf(arg=None):
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
 
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
-    conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
+    #~ conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
+    if oDlg_config.getControl('CheckBox6').State == 1:
+        oSheet.getCellRangeByName('S1.H335').Value = 0
+    else:
+        oSheet.getCellRangeByName('S1.H335').Value = 1
     conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
     conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
 
@@ -3154,7 +3161,7 @@ def config_default(arg=None):
     ('Generale', 'pesca_auto', '1'),
     ('Generale', 'movedirection', '0'),
     ('Computo', 'riga_bianca_categorie', '1'),
-    ('Computo', 'voci_senza_numerazione', '0'),
+    #~ ('Computo', 'voci_senza_numerazione', '0'),
     ('Computo', 'inizio_voci_abbreviate', '160'),
     ('Computo', 'fine_voci_abbreviate', '100'),
     ('Contabilità', 'abilita', '0'),
@@ -4240,8 +4247,8 @@ class importa_listino_leeno_th(threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         importa_listino_leeno_run()
-#~ def importa_listino_leeno(arg=None):
-def debug (arg=None):
+def importa_listino_leeno(arg=None):
+#~ def debug (arg=None):
     importa_listino_leeno_th().start()
 ###
 def importa_listino_leeno_run(arg=None):
@@ -5997,9 +6004,9 @@ def set_larghezza_colonne(arg=None):
         #~ threading.Thread.__init__(self)
     #~ def run(self):
         #~ adegua_tmpl_run()
-def adegua_tmpl(arg=None):
+#~ def adegua_tmpl(arg=None):
     #~ adegua_tmpl_th().start()
-#~ def debug(arg=None):
+def debug(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
@@ -6007,6 +6014,15 @@ def adegua_tmpl(arg=None):
         sostituita la colonna "Tag A" con "Tag Super Cat"
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
     '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+#qui le cose da cambiare comunque
+    
+    oSheet = oDoc.getSheets().getByName('S1')
+    flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
+    #cancello da S! le variabili gestite in leeno.conf
+    for x in (333, 335):
+        oSheet.getCellRangeByPosition(6, x, 30, x).clearContents(flags)
+
 # di seguito ci metto tutte le variabili aggiunte dopo la prima introduzione di /.config/leeno/leeno.conf
     try:
         conf.read(path_conf, 'Contabilità', 'idxSAL')
@@ -6022,7 +6038,7 @@ def adegua_tmpl(arg=None):
         conf.write(path_conf, 'Generale', 'movedirection', '0') #muove il cursore in basso
 
     # cambiare stile http://bit.ly/2cDcCJI
-    oDoc = XSCRIPTCONTEXT.getDocument()
+    
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
@@ -6043,7 +6059,7 @@ dell'operazione che terminerà con un messaggio di avviso.
         sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
         styles = oDoc.getStyleFamilies()
         styles.loadStylesFromURL(sUrl, list())
-        oSheet = oDoc.getSheets().getByName('S1')
+        
         oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 207
         for el in oDoc.Sheets.ElementNames:
             oDoc.getSheets().getByName(el).IsVisible = True
@@ -6546,7 +6562,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debugmt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 

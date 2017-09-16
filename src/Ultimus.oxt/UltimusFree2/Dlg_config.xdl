@@ -26,7 +26,7 @@
   <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="4" dlg:left="119" dlg:top="20" dlg:width="75" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="12" dlg:top="35" dlg:width="82" dlg:height="10" dlg:value="Pesca codice automatico" dlg:checked="false"/>
   <dlg:textfield dlg:id="TextField1" dlg:tab-index="6" dlg:left="61" dlg:top="49" dlg:width="30" dlg:height="10" dlg:align="center"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="117" dlg:top="57" dlg:width="88" dlg:height="10" dlg:value="Nascondi toolbar di LibreOffice" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="117" dlg:top="57" dlg:width="85" dlg:height="10" dlg:value="Nascondi toolbar di LibreOffice" dlg:checked="false"/>
   <dlg:text dlg:id="Label2" dlg:tab-index="9" dlg:left="237" dlg:top="54" dlg:width="45" dlg:height="8" dlg:value="Fattore ottimale:"/>
   <dlg:textfield dlg:id="TextField2" dlg:tab-index="10" dlg:left="287" dlg:top="54" dlg:width="30" dlg:height="10"/>
   <dlg:titledbox dlg:id="Zoom" dlg:tab-index="7" dlg:left="232" dlg:top="10" dlg:width="95" dlg:height="64">
@@ -70,7 +70,7 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$config_default?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="38" dlg:left="108" dlg:top="20" dlg:width="5" dlg:height="50" dlg:align="vertical"/>
-  <dlg:text dlg:id="Label7" dlg:tab-index="39" dlg:left="11" dlg:top="62" dlg:width="39" dlg:height="8" dlg:value="Cursore:"/>
+  <dlg:text dlg:id="Label7" dlg:tab-index="39" dlg:left="11" dlg:top="62" dlg:width="39" dlg:height="8" dlg:value="Spostamento:"/>
   <dlg:combobox dlg:id="ComboBox2" dlg:tab-index="40" dlg:left="61" dlg:top="62" dlg:width="40" dlg:height="10" dlg:value="A DESTRA" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="A DESTRA"/>

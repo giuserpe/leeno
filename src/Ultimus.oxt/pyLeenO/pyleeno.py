@@ -119,11 +119,11 @@ def invia_voce_ep(arg=None):
         if oSheet.getCellByPosition(1, el).Type.value == 'FORMULA':
             lista.append(oSheet.getCellByPosition(0, el).String)
     try:
-        partenza = uno.fileUrlToSystemPath(oDoc.getURL())
+        fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     except:
-        MsgBox("E' necessario prima salvare il file di partenza.", "Attenzione!")
+        MsgBox("E' necessario prima salvare il file di fpartenza.", "Attenzione!")
         salva_come()
-        partenza = uno.fileUrlToSystemPath(oDoc.getURL())
+        fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -149,7 +149,7 @@ def invia_voce_ep(arg=None):
     dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     #~ doppioni()
-    _gotoDoc(partenza)
+    _gotoDoc(fpartenza)
     oDoc = XSCRIPTCONTEXT.getDocument()
 
     if len(lista) > 0:
@@ -195,7 +195,7 @@ def invia_voce_ep(arg=None):
         doppioni()
         ddcDoc.CurrentController.setActiveSheet(ddcDoc.getSheets().getByName('Elenco Prezzi'))
 
-        _gotoDoc(partenza)
+        _gotoDoc(fpartenza)
         oDoc.Sheets.removeByName('tmp_DCC')
     _gotoDoc(sUltimus)
     oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('Elenco Prezzi'))
@@ -1119,7 +1119,7 @@ def scelta_viste(arg=None):
             oDialog1.getControl('CBSic').State = 0
             oDialog1.getControl('CBMdo').State = 0
             oDialog1.getControl('CBCat').State = 0
-            oDialog1.getControl('CBTag').State = 0
+            #~ oDialog1.getControl('CBTag').State = 0
             oDialog1.getControl('CBFig').State = 0
 
         if oDialog1.getControl('CBMdo').State == 0: #manodopera
@@ -2500,7 +2500,6 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
         copia_riga_analisi(lrow)
 ########################################################################
 def cerca_partenza(arg=None):
-#~ def debug (arg=None):
     '''
     Conserva, nella variabile globale 'partenza', il nome del foglio [0] e l'id
     della riga di codice prezzo componente [1], il flag '#reg' solo per la contbailità.
@@ -2582,6 +2581,14 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
                 _gotoCella(2, partenza[1]+1)
         except NameError:
             return
+########################################################################
+def ricicla_misure(arg=None):
+#~ def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name == 'CONTABILITA':
+        cerca_partenza()
+    chi(partenza)
 ########################################################################
 def inverti_segno(arg=None):
     '''
@@ -2987,7 +2994,10 @@ def leeno_conf(arg=None):
     Visualizza il menù di configurazione
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByName('S1')
+    try:
+        oSheet = oDoc.getSheets().getByName('S1')
+    except:
+        return
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
@@ -3059,7 +3069,6 @@ def leeno_conf(arg=None):
     
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
-    chi(oDlg_config.getControl('ComboBox2').getText())
     if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
         conf.write(path_conf, 'Generale', 'movedirection', '0')
         oGSheetSettings.MoveDirection = 0
@@ -4231,8 +4240,8 @@ class importa_listino_leeno_th(threading.Thread):
         threading.Thread.__init__(self)
     def run(self):
         importa_listino_leeno_run()
-def importa_listino_leeno(arg=None):
-#~ def debug (arg=None):
+#~ def importa_listino_leeno(arg=None):
+def debug (arg=None):
     importa_listino_leeno_th().start()
 ###
 def importa_listino_leeno_run(arg=None):
@@ -4246,6 +4255,7 @@ def importa_listino_leeno_run(arg=None):
     #~ viola(12632319,13684991,15790335)
     lista_articoli = list()
     nome = oSheet.getCellByPosition(2, 0).String
+    chi(8)
     test = uFindStringCol('ATTENZIONE!', 5, oSheet)+1
     assembla = DlgSiNo('''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.
@@ -5822,14 +5832,6 @@ def autoexec(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
-    try:
-        if conf.read(path_conf, 'Generale', 'movedirection') == '0':
-            oGSheetSettings.MoveDirection = 0
-        else:
-            oGSheetSettings.MoveDirection = 1
-    except:
-        config_default()
-    
 #Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
     if sys.platform == 'win32':
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
@@ -5837,6 +5839,13 @@ def autoexec(arg=None):
         path = os.getenv("HOME")
     if not os.path.exists(path_conf):
         os.makedirs(path_conf[:-11])
+        config_default()
+    try:
+        if conf.read(path_conf, 'Generale', 'movedirection') == '0':
+            oGSheetSettings.MoveDirection = 0
+        else:
+            oGSheetSettings.MoveDirection = 1
+    except:
         config_default()
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
@@ -6537,32 +6546,30 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
-    #~ from com.sun.star.document import PrinterIndependentLayout
-    parametri = (
-    ('Computo', 'riga_bianca_categorie', '1'),
-    ('Computo', 'voci_senza_numerazione', '0'),
-    ('Computo', 'inizio_voci_abbreviate', '160'),
-    ('Computo', 'fine_voci_abbreviate', '100'),
-    )
-    chi (parametri)
-    return
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
-    oGSheetSettings.UsePrinterMetrics = True
-    oGSheetSettings.MoveDirection = 1
-    chi (oGSheetSettings.MoveDirection)
-    return
- 
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ chi(oSheet.getCellRangeByName('b6152').CellBackColor)
+
+    #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
+    #~ return
+ 
+
     #~ oSheet.getCellRangeByName('Y254')
     
     #~ return
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor != -1:
-            #~ oSheet.getRows().removeByIndex(y, 1)
+    col1 = 16777072 #16771481
+    col2 = 16777120 #16771501
+    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, y).CellBackColor == 16771481:
+            oSheet.getCellByPosition(0, y).CellBackColor = 16777072
+            oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
+        if oSheet.getCellByPosition(0, y).CellBackColor == 16771501:
+            oSheet.getCellByPosition(0, y).CellBackColor = 16777120
+            oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
+    return
+
+            
+
 
         #~ if oSheet.getCellByPosition(24, y).String[-7:] == ' murata':
             #~ oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]

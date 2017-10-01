@@ -3734,9 +3734,13 @@ N.B.: Si consiglia una attenta lettura delle note informative disponibili sul si
 def fuf(arg=None):
     ''' Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
         E' solo una cortesia per un amico.'''
+    bak_timestamp()
     filename = filedia('Scegli il file XML-SIX da importare', '*.dat')
     riga = list()
-    f = open(filename, 'r')
+    try:
+        f = open(filename, 'r')
+    except TypeError:
+        return
     ordini = list()
     riga =('Codice', 'Descrizione articolo', 'Quantità', 'Data consegna','Conto lavoro', 'Prezzo(€)')
     ordini.append(riga)
@@ -6004,9 +6008,9 @@ def set_larghezza_colonne(arg=None):
         #~ threading.Thread.__init__(self)
     #~ def run(self):
         #~ adegua_tmpl_run()
-#~ def adegua_tmpl(arg=None):
+def adegua_tmpl(arg=None):
     #~ adegua_tmpl_th().start()
-def debug(arg=None):
+#~ def debug(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
@@ -6562,7 +6566,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debugmt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -6573,40 +6577,21 @@ def debugmt(arg=None): #COMUNE DI MATERA
     #~ oSheet.getCellRangeByName('Y254')
     
     #~ return
-    col1 = 16777072 #16771481
-    col2 = 16777120 #16771501
-    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        if oSheet.getCellByPosition(0, y).CellBackColor == 16771481:
-            oSheet.getCellByPosition(0, y).CellBackColor = 16777072
-            oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
-        if oSheet.getCellByPosition(0, y).CellBackColor == 16771501:
-            oSheet.getCellByPosition(0, y).CellBackColor = 16777120
-            oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
-    return
-
-            
-
-
-        #~ if oSheet.getCellByPosition(24, y).String[-7:] == ' murata':
-            #~ oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(24, y).String[-7:]
-            #~ oSheet.getCellByPosition(24, y).String = oSheet.getCellByPosition(24, y).String[:-7]
+    #~ col1 = 16777072 #16771481
+    #~ col2 = 16777120 #16771501
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771481:
+            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777072
+            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771501:
+            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777120
+            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
     #~ return
     #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-        #~ testo = oSheet.getCellByPosition(1, y).String.replace('"','""')
-        
-        #~ oSheet.getCellByPosition(1, y).Formula = '=IF(LEN("'+ testo + '")<($S1.$H$337+$S1.$H$338);"'+ testo + '";CONCATENATE(LEFT("'+ testo + '";$S1.$H$337);" [...] ";RIGHT("'+ testo + '";$S1.$H$338)))'
-        #~ if oSheet.getCellByPosition(2, y).CellBackColor == 16770559:
-            #~ oSheet.getCellByPosition(2, y).String = "- " + oSheet.getCellByPosition(2, y).String
-            #~ iSheet = oSheet.RangeAddress.Sheet
-            #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-            #~ oCellRangeAddr.Sheet = iSheet
-            #~ oCellRangeAddr.StartColumn = 0
-            #~ oCellRangeAddr.EndColumn = 0
-            #~ oCellRangeAddr.StartRow = y
-            #~ oCellRangeAddr.EndRow = y
-            #~ oSheet.group(oCellRangeAddr, 1)
+        #~ for x in (29, 30):
+            #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
     #~ return
-#~ SALTA SULLE CELLE 
+# SALTA SULLE CELLE 
     #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
         #~ for x in range(0, 30):
             #~ if oSheet.getCellByPosition(x, y).getIsMerged() == True:
@@ -6627,17 +6612,13 @@ def debugmt(arg=None): #COMUNE DI MATERA
                 #~ oSheet.getCellByPosition(10, y).CellBackColor = 16777113
                 #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
 
-# SOSTITUZIONI
-    #~ test = getLastUsedCell(oSheet).EndRow+1
+#~ # SOSTITUZIONI
+    test = getLastUsedCell(oSheet).EndRow+1
     #~ for y in range(Range2Cell()[1]+1, test):
-        #~ if './' in oSheet.getCellByPosition(15, y).String:
-            #~ testo = oSheet.getCellByPosition(15, y).String.split('./')
-            #~ oSheet.getCellByPosition(15, y).String = testo[0] + '.' + testo[1]
-            #~ _gotoCella(15, y)
-            #~ break
-    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-        #~ oSheet.getCellByPosition(25, y).String = oSheet.getCellByPosition(25, y).String.upper()
-    #~ return
+    for y in range(3, test):
+        if '-' in oSheet.getCellByPosition(13, y).String:
+            oSheet.getCellByPosition(13, y).String = oSheet.getCellByPosition(13, y).String.replace('-','/')
+    return
 # inserisce numero tabella
     #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
         #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
@@ -6684,12 +6665,12 @@ def debugmt(arg=None): #COMUNE DI MATERA
             
     #~ return
  #~ INSERISCI PARTICELLE
-    for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
-        if oSheet.getCellByPosition(10, y).String != '':
-            if oSheet.getCellByPosition(11, y).String != '':
-                oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String + '/' + oSheet.getCellByPosition(11, y).String
-            else:
-                oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
+        #~ if oSheet.getCellByPosition(10, y).String != '':
+            #~ if oSheet.getCellByPosition(11, y).String != '':
+                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String + '/' + oSheet.getCellByPosition(11, y).String
+            #~ else:
+                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String
     
 #~ ricerca graffate
     #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):

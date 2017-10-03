@@ -2101,7 +2101,6 @@ def firme_in_calce_run(arg=None):
     oDialogo_attesa.endExecute()
     oDoc.CurrentController.ZoomValue = 100
 ########################################################################
-
 def next_voice(lrow, n=1):
     '''
     lrow { double }   : riga di riferimento
@@ -2124,6 +2123,11 @@ def next_voice(lrow, n=1):
         elif n==1:
             sotto = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
             lrow = sotto+1
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in ('Ultimus_centro_bordi_lati',):
+        for y in range(lrow, getLastUsedCell(oSheet).EndRow+1):
+            if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
+                lrow = y
+                break
     elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
         lrow +=1
     else:
@@ -2582,13 +2586,20 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
         except NameError:
             return
 ########################################################################
-def ricicla_misure(arg=None):
-#~ def debug(arg=None):
+#~ def ricicla_misure(arg=None):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name == 'CONTABILITA':
-        cerca_partenza()
-    chi(partenza)
+    if oSheet.Name != 'CONTABILITA': return
+    lrow = Range2Cell()[1]
+    #~ chi(lrow)
+    if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + ('Comp TOTALI', 'Ultimus_centro_bordi_lati',):
+        return
+    chi(next_voice(lrow))
+    #~ cerca_partenza()
+    #~ chi(partenza)
+    #~ lrowE = ultima_voce(oSheet)+1
+    #~ chi(lrowE)
 ########################################################################
 def inverti_segno(arg=None):
     '''
@@ -5382,7 +5393,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 17 #'NUOVE FUNZIONALITA'
 Lsubv= "2.dev" #'CORREZIONE BUGS
-noVoce =('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna')
+noVoce =('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab =('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
 stili_analisi =('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
@@ -6566,7 +6577,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debugmt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 

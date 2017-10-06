@@ -487,8 +487,8 @@ def Inser_Capitolo_arg(lrow, sTesto='Categoria'): #
     oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1 , lrowProvv).Value + 1
 ########################################################################
 def Rinumera_TUTTI_Capitoli2(arg=None):
-    Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
     Sincronizza_SottoCap_Tag_Capitolo_Cor()# sistemo gli idcat voce per voce
+    Tutti_Subtotali()# ricalcola i totali di categorie e subcategorie
 
 def Tutti_Subtotali(arg=None):
     '''ricalcola i subtotali di categorie e subcategorie'''
@@ -503,6 +503,13 @@ def Tutti_Subtotali(arg=None):
             SubSum_Cap(n)
         if oSheet.getCellByPosition(0, n).CellStyle == 'livello2 valuta':
             SubSum_SottoCap(n)
+# TOTALI GENERALI
+    lrow = ultima_voce(oSheet)+1
+    for x in (1, lrow):
+        oSheet.getCellByPosition(17, x).Formula = '=SUBTOTAL(9;R4:R' + str(lrow+1) + ')'
+        oSheet.getCellByPosition(18, x).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
+        oSheet.getCellByPosition(30, x).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow+1) + ')'
+        oSheet.getCellByPosition(36, x).Formula = '=SUBTOTAL(9;AK4:AK' + str(lrow+1) + ')'
 ########################################################################
 def SubSum_SuperCap(lrow):
     '''
@@ -5870,6 +5877,10 @@ def autoexec(arg=None):
     except:
         config_default()
     oDoc = XSCRIPTCONTEXT.getDocument()
+#~ RegularExpressions and Wildcards are mutually exclusive, only one can have the value TRUE.
+#~ If both are set to TRUE via API calls then the last one set takes precedence.
+    oDoc.Wildcards = False
+    oDoc.RegularExpressions = True
     try:
         oSheet = oDoc.getSheets().getByName('S1')
         oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione

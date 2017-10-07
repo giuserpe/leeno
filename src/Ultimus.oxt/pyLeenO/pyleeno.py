@@ -316,7 +316,7 @@ def Inser_SottoCapitolo_arg(lrow, sTesto): #
         return
     #~ lrow = Range2Cell()[1]
     #~ sTesto = 'prova'
-    style = oSheet.getCellByPosition(1, lrow).CellStyle
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi' : lrow -= 1 #se riga rossa
     if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
         insRows(lrow, 2)
         oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
@@ -385,7 +385,6 @@ def Ins_Categorie(n):
         lrow = row+1
     else:
         return
-
     if n==0:
         Inser_SuperCapitolo_arg(lrow, sString)
     elif n==1:
@@ -417,7 +416,7 @@ def Inser_SuperCapitolo_arg(lrow, sTesto='Super Categoria'): #
     if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
-    style = oSheet.getCellByPosition(1, lrow).CellStyle
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi' : lrow -= 1 #se riga rossa
     if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
         insRows(lrow, 2)
         oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
@@ -458,7 +457,7 @@ def Inser_Capitolo_arg(lrow, sTesto='Categoria'): #
     if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
-    style = oSheet.getCellByPosition(1, lrow).CellStyle
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi' : lrow -= 1 #se riga rossa
     if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
         insRows(lrow, 2)
         oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'

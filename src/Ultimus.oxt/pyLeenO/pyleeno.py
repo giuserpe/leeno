@@ -4526,17 +4526,13 @@ def converti_stringhe(arg=None):
 def XPWE_in(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     refresh(0)
-    ###
-    #~ oDoc.enableAutomaticCalculation(False) # blocco il calcolo automatico
-    #~ oDoc.addActionLock
-    #~ oDoc.lockControllers #disattiva l'eco a schermo
-    ###
     oDialogo_attesa = dlg_attesa('Caricamento dei dati...')
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo nuovo o già esistente.','ATTENZIONE!')
         return
     else:
         MsgBox("Il contenuto dell'archivio XPWE sarà aggiunto a questo file.",'Avviso!')
+    _gotoSheet('COMPUTO')
     oDoc.CurrentController.select(oDoc.getSheets().hasByName('COMPUTO')) # per evitare che lo script parta da un altro documento
     filename = filedia('Scegli il file XPWE da importare...','*.xpwe')#'*.xpwe')
     '''xml auto indent: http://www.freeformatter.com/xml-formatter.html'''
@@ -5316,9 +5312,9 @@ Si tenga conto che:
                 if mis[6] != None: #HPESO
                     try:
                         oSheet.getCellByPosition(8, SR).Value = float(mis[6].replace(',','.'))
-                    except ValueError:
+                        
+                    except:
                         oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6]).split('=')[-1] # tolgo evenutali '=' in eccesso
-
                 if mis[8] == '2':
                     parziale_core(SR)
                     oSheet.getRows().removeByIndex(SR+1, 1)
@@ -5327,57 +5323,55 @@ Si tenga conto che:
                 if '-' in mis[7]:
                     oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
 
-                va = oSheet.getCellByPosition(5, SR).Value
-                vb = oSheet.getCellByPosition(6, SR).Value
-                vc = oSheet.getCellByPosition(7, SR).Value
-                vd = oSheet.getCellByPosition(8, SR).Value
+                if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
+                    va = oSheet.getCellByPosition(5, SR).Formula
+                else:
+                    va = oSheet.getCellByPosition(5, SR).Value
+
+                if oSheet.getCellByPosition(6, SR).Type.value == 'FORMULA':
+                    vb = oSheet.getCellByPosition(6, SR).Formula
+                else:
+                    vb = oSheet.getCellByPosition(6, SR).Value
+                    
+                if oSheet.getCellByPosition(7, SR).Type.value == 'FORMULA':
+                    vc = oSheet.getCellByPosition(7, SR).Formula
+                else:
+                    vc = oSheet.getCellByPosition(7, SR).Value
+
+                if oSheet.getCellByPosition(8, SR).Type.value == 'FORMULA':
+                    vd = oSheet.getCellByPosition(8, SR).Formula
+                else:
+                    vd = oSheet.getCellByPosition(8, SR).Value
 
                 if mis[3] == None:
-                    va =1
+                    va =''
                 else:
                     if '^' in mis[3]:
                         va = eval(mis[3].replace('^','**'))
                     else:
                         va = eval(mis[3])
-                if vb ==0:
-                    vb =1
-                if vc ==0:
-                    vc =1
-                if vd ==0:
-                    vd =1
-                try:
-                    if mis[9] != '-2':
-                        vedi = diz_vv.get(mis[9])
-                        try:
-                            vedi_voce_xpwe(SR, vedi, mis[8])
-                        except:
-                            MsgBox("""Il file di origine è particolarmente disordinato.
+                lista_n = list()
+                if mis[9] != '-2':
+                    for el in (va, vb, vc, vd):
+                        if el != 0 : lista_n.append(el)
+                    vedi = diz_vv.get(mis[9])
+                    try:
+                        vedi_voce_xpwe(SR, vedi, mis[8])
+                    except:
+                        MsgBox("""Il file di origine è particolarmente disordinato.
 Riordinando il computo trovo riferimenti a voci non ancora inserite.
 
 Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
 """\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
-                        lista_n = [va, vb, vc, vd]
-                        lista_p = list()
-                        if va*vb*vc*vd != 1:
-                            for n in lista_n:
-                                if n != 1:
-                                    lista_p.append(n)
-                                else:
-                                    lista_p.append(0)
-                            x = 0
-
-                        lista_p.sort()
-
-                        lista_p = lista_p [1:]
-                        for n in reversed(lista_p):
-                            if n== 0:
-                                oSheet.getCellByPosition(8-x, SR).String = ''
-                            else:
+                    x = 0
+                    if len(lista_n) != 0:
+                        for n in lista_n:
+                            try: 
+                                float(n)
                                 oSheet.getCellByPosition(8-x, SR).Value = n
+                            except:
+                                oSheet.getCellByPosition(8-x, SR).Formula = n
                             x +=1
-
-                except TypeError:
-                    pass
                 SR = SR+1
     numera_voci()
 
@@ -6587,10 +6581,10 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debugmt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-
+    chi(oSheet.getCellRangeByName('I42').Type.value)
     #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
     #~ return
  

@@ -30,7 +30,6 @@ dim sString$, xA, sTag as string
 
 		exit sub
 	end if
-
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 &apos;	ThisComponent.CurrentController.Select(oSheet)
 	iRrow = 3

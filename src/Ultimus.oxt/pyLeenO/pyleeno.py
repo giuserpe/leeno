@@ -6362,7 +6362,7 @@ def toolbar_vedi(arg=None):
         else:
             for bar in GetmyToolBarNames: #toolbar contestualizzate
                 toolbar_on(bar, 0)
-        #~ oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+        oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
         toolbar_ordina()
         oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
         nSheet = oDoc.CurrentController.ActiveSheet.Name

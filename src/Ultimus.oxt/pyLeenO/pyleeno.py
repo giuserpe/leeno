@@ -210,6 +210,8 @@ def invia_voce_ep(arg=None):
     oRange = dccSheet.getCellRangeByPosition(11, 3, 13, ER-SR+3)
     formule = tuple(formule)
     oRange.setFormulaArray(formule)
+    if conf.read(path_conf, 'Generale', 'torna_a_ep') == '1':
+        _gotoDoc(fpartenza)
 ########################################################################
 def _gotoDoc(sUrl):
     '''
@@ -3071,6 +3073,10 @@ def leeno_conf(arg=None):
             oDlg_config.getControl('CheckBox6').State = 0
         else:
             oDlg_config.getControl('CheckBox6').State = 1
+            
+        # voci_senza_numerazione
+        if conf.read(path_conf, 'Generale', 'torna_a_ep') == '1': oDlg_config.getControl('CheckBox8').State = 1
+
         
         # Contabilità abilita
         if oSheet.getCellRangeByName('S1.H328').Value == 1: oDlg_config.getControl('CheckBox7').State = 1
@@ -3098,6 +3104,9 @@ def leeno_conf(arg=None):
     conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
+    conf.write(path_conf, 'Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State)) #torna su prezzario
+        
+
 
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
     #~ conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
@@ -3510,6 +3519,9 @@ def struct_colore(l):
     l { integer } : specifica il livello di categoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+
+    #~ oDoc.CurrentController.ZoomValue = 400
+
     oSheet = oDoc.CurrentController.ActiveSheet
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -3522,6 +3534,14 @@ def struct_colore(l):
     col1 = 16777072
     col2 = 16777120
     col3 = 16777168
+# attribuisce i colori
+    for y in range(3, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(0, y).String == '':
+            oSheet.getCellByPosition(0, y).CellBackColor = col3
+        elif len(oSheet.getCellByPosition(0, y).String.split('.')) == 2:
+            oSheet.getCellByPosition(0, y).CellBackColor = col2
+        elif len(oSheet.getCellByPosition(0, y).String.split('.')) == 1:
+            oSheet.getCellByPosition(0, y).CellBackColor = col1
     if l == 0:
         colore = col1
         myrange =(col1, col0)
@@ -3553,6 +3573,7 @@ def struct_colore(l):
         oCellRangeAddr.EndRow = el[1]
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
+    oDoc.CurrentController.ZoomValue = 100
     return
 ########################################################################
 def struttura_Elenco(arg=None):
@@ -3565,13 +3586,16 @@ def struttura_Elenco(arg=None):
     oSheet.clearOutline()
     #~ chi(oSheet.getCellRangeByName('A14976').CellBackColor)
     #~ return
-    struct_colore(0)
+    struct_colore(0) #attribuisce i colori
     struct_colore(1)
     struct_colore(2)
     return
 ###########################################
 ###########################################
 ###########################################
+    col1 = 16777072
+    col2 = 16777120
+    col3 = 16777168
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oDoc.CurrentController.ZoomValue = 400
 
@@ -3583,7 +3607,7 @@ def struttura_Elenco(arg=None):
     for n in range(3, test):#
         if oSheet.getCellByPosition(4, n).String == '':
             #~ pass
-            oSheet.getCellRangeByPosition(0, n, 7, n).CellBackColor = col2
+            oSheet.getCellRangeByPosition(0, n, 0, n).CellBackColor = col2
             #~ oCellRangeAddr.StartRow = n
             #~ oCellRangeAddr.EndRow = n
             #~ oSheet.group(oCellRangeAddr,1)
@@ -6584,7 +6608,8 @@ def taglia_x(arg=None):
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi(oSheet.getCellRangeByName('I42').Type.value)
+    #~ chi(oSheet.getCellRangeByName('B278').Type.value)
+    #~ return
     #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
     #~ return
  
@@ -6605,13 +6630,38 @@ def debug(arg=None): #COMUNE DI MATERA
     #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
         #~ for x in (29, 30):
             #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
+    #~ chi(len(oSheet.getCellRangeByName('A6').String.split('.')))
     #~ return
 # SALTA SULLE CELLE 
     #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
-        #~ for x in range(0, 30):
+    for y in range(0, getLastUsedCell(oSheet).EndRow+1):
+        if len(oSheet.getCellByPosition(0, y).String.split('.')) == 3 and \
+        oSheet.getCellByPosition(4, y).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(5, y).Type.value == 'EMPTY':
+            oSheet.getRows().removeByIndex(y, 1)
+            #~ chi (len(oSheet.getCellByPosition(0, y).String.split('.')))
+            #~ _gotoCella(4, y)
+            
+            #~ return
+            #~ oSheet.getCellByPosition(6, y).Value = oSheet.getCellByPosition(5, y).Value / 100
+    
+            
+             
+        #~ if len (oSheet.getCellByPosition(2, y).String) > 5:
+            #~ oSheet.getCellByPosition(4, y).String = ''
+        #~ for x in range(3, 3):
+        #~ if oSheet.getCellByPosition(2, y).Type.value == 'TEXT' and oSheet.getCellByPosition(3, y).Type.value == 'TEXT':
+            #~ oSheet.getCellByPosition(1, y).String = oSheet.getCellByPosition(1, y).String +' '+oSheet.getCellByPosition(2, y).String
+            #~ oSheet.getCellByPosition(2, y).String = oSheet.getCellByPosition(3, y).String
+            #~ oSheet.getCellByPosition(3, y).Value = oSheet.getCellByPosition(4, y).Value
+            #~ oSheet.getCellByPosition(4, y).Value = oSheet.getCellByPosition(5, y).Value
+            #~ oSheet.getCellByPosition(5, y).String = ''
+            
             #~ if oSheet.getCellByPosition(x, y).getIsMerged() == True:
-                #~ _gotoCella(x, y)
-                #~ return
+            #~ _gotoCella(2, y)
+            #~ return
+    chi("fine")
+    return
 
 # SPALMA I VALORI
     #~ for y in range(0, getLastUsedCell(oSheet).EndRow):

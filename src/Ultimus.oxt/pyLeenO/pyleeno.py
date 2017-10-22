@@ -5345,6 +5345,12 @@ Si tenga conto che:
                     descrizione =''
                     
                 if '-' in mis[7]:
+                    for x in range(5, 8):
+                        try:
+                            if oSheet.getCellByPosition(x, SR).Value != 0:
+                                oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
+                        except:
+                            pass
                     oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
 
                 if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
@@ -6608,6 +6614,8 @@ def taglia_x(arg=None):
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    chi(abs(-500))
+    return
     #~ chi(oSheet.getCellRangeByName('B278').Type.value)
     #~ return
     #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 

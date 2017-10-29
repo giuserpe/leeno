@@ -316,17 +316,11 @@ def Inser_SottoCapitolo_arg(lrow, sTesto): #
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
-    #~ lrow = Range2Cell()[1]
-    #~ sTesto = 'prova'
-    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi' : lrow -= 1 #se riga rossa
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
-        insRows(lrow, 2)
-        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
-        lrow += 1
-        oSheet.getCellByPosition(2, lrow).String = sTesto
-    else:
-        insRows(lrow, 1)
-        oSheet.getCellByPosition(2, lrow).String = sTesto
+
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default': lrow -= 2#se oltre la riga rossa
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi': lrow -= 1#se riga rossa
+    insRows(lrow, 1)
+    oSheet.getCellByPosition(2, lrow).String = sTesto
 # inserisco i valori e le formule
     oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello2 valuta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'livello2_'
@@ -366,19 +360,8 @@ def Ins_Categorie(n):
     2 = SubCategoria
     '''
     #~ datarif = datetime.now()
-    sTesto = ''
-    if n==0:
-        sTesto = 'Inserisci il titolo per la Supercategoria'
-    elif n==1:
-        sTesto = 'Inserisci il titolo per la Categoria'
-    elif n==2:
-        sTesto = 'Inserisci il titolo per la Sottocategoria'
-    sString = InputBox('', sTesto)
-    if sString ==None:
-        return
 
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
     row = Range2Cell()[1]
     if oSheet.getCellByPosition(0, row).CellStyle in stili_computo:
@@ -387,6 +370,17 @@ def Ins_Categorie(n):
         lrow = row+1
     else:
         return
+    sTesto = ''
+    if n==0:
+        sTesto = 'Inserisci il titolo per la Supercategoria'
+    elif n==1:
+        sTesto = 'Inserisci il titolo per la Categoria'
+    elif n==2:
+        sTesto = 'Inserisci il titolo per la Sottocategoria'
+    sString = InputBox('', sTesto)
+    if sString == None or sString == '':
+        return
+    oDoc.CurrentController.ZoomValue = 400
     if n==0:
         Inser_SuperCapitolo_arg(lrow, sString)
     elif n==1:
@@ -394,10 +388,7 @@ def Ins_Categorie(n):
     elif n==2:
         Inser_SottoCapitolo_arg(lrow, sString)
 
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
-        _gotoCella(2, lrow+1)
-    else:
-        _gotoCella(2, lrow)
+    _gotoCella(2, lrow)
     Rinumera_TUTTI_Capitoli2()
     oDoc.CurrentController.ZoomValue = 100
     oDoc.CurrentController.setFirstVisibleColumn(0)
@@ -418,15 +409,10 @@ def Inser_SuperCapitolo_arg(lrow, sTesto='Super Categoria'): #
     if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
-    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi' : lrow -= 1 #se riga rossa
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
-        insRows(lrow, 2)
-        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
-        lrow += 1
-        oSheet.getCellByPosition(2, lrow).String = sTesto
-    else:
-        insRows(lrow, 1)
-        oSheet.getCellByPosition(2, lrow).String = sTesto
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default': lrow -= 2#se oltre la riga rossa
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi': lrow -= 1#se riga rossa
+    insRows(lrow, 1)
+    oSheet.getCellByPosition(2, lrow).String = sTesto
     # inserisco i valori e le formule
     oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-0-scritta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-0-scritta mini'
@@ -459,15 +445,10 @@ def Inser_Capitolo_arg(lrow, sTesto='Categoria'): #
     if oSheet.Name not in('COMPUTO', 'VARIANTE'):
         return
     #~ lrow = Range2Cell()[1]
-    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi' : lrow -= 1 #se riga rossa
-    if oDoc.getSheets().getByName('S1').getCellByPosition(7,333).Value == 1: #con riga bianca
-        insRows(lrow, 2)
-        oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello-1-sopra'
-        lrow += 1
-        oSheet.getCellByPosition(2, lrow).String = sTesto
-    else:
-        insRows(lrow, 1)
-        oSheet.getCellByPosition(2, lrow).String = sTesto
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default': lrow -= 2#se oltre la riga rossa
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi': lrow -= 1#se riga rossa
+    insRows(lrow, 1)
+    oSheet.getCellByPosition(2, lrow).String = sTesto
     # inserisco i valori e le formule
     oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-1-scritta'
     oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
@@ -5265,6 +5246,7 @@ Si tenga conto che:
         try:
             if idsbcat != testsbcat:
                 testsbcat = idsbcat
+                
                 Inser_SottoCapitolo_arg(lrow, lista_subcat[eval(idsbcat)-1][1])
         except UnboundLocalError:
             pass
@@ -6614,8 +6596,7 @@ def taglia_x(arg=None):
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi(abs(-500))
-    return
+
     #~ chi(oSheet.getCellRangeByName('B278').Type.value)
     #~ return
     #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
@@ -6643,10 +6624,13 @@ def debug(arg=None): #COMUNE DI MATERA
 # SALTA SULLE CELLE 
     #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
     for y in range(0, getLastUsedCell(oSheet).EndRow+1):
-        if len(oSheet.getCellByPosition(0, y).String.split('.')) == 3 and \
-        oSheet.getCellByPosition(4, y).Type.value == 'EMPTY' and \
-        oSheet.getCellByPosition(5, y).Type.value == 'EMPTY':
-            oSheet.getRows().removeByIndex(y, 1)
+        if  '- vedi voce ' in oSheet.getCellByPosition(2, y).String:
+            #~ testo = oSheet.getCellByPosition(2, y).String.split('- art. ')[1]
+
+            #~ oSheet.getCellByPosition(2, y).String = '- vedi voce art. ' + testo
+            oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
+            #~ _gotoCella(2, y)
+            #~ oSheet.getRows().removeByIndex(y, 1)
             #~ chi (len(oSheet.getCellByPosition(0, y).String.split('.')))
             #~ _gotoCella(4, y)
             
@@ -6666,7 +6650,7 @@ def debug(arg=None): #COMUNE DI MATERA
             #~ oSheet.getCellByPosition(5, y).String = ''
             
             #~ if oSheet.getCellByPosition(x, y).getIsMerged() == True:
-            #~ _gotoCella(2, y)
+            
             #~ return
     chi("fine")
     return

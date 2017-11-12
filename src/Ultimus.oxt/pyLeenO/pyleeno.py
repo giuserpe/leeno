@@ -2292,127 +2292,86 @@ def ColumnNameToNumber(oSheet,cColumnName):
 ########################################################################
 def azzera_voce(arg=None):
     '''
-    Azzera la quantità di una voce
+    Azzera la quantità di una voce e ne raggruppa le relative righe
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
-        #~ lrow = Range2Cell()[1]
 #########################################
         try:
             sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
-            #~ sCol = oDoc.getCurrentSelection().getRangeAddresses()[0].StartColumn
             eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
-            #~ eCol = oDoc.getCurrentSelection().getRangeAddresses()[0].EndColumn
 
         except:
             sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
-            #~ sCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
             eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
-            #~ eCol = oDoc.getCurrentSelection().getRangeAddress().EndColumn
-            #~ if oSheet.getCellByPosition(0, eRow).CellStyle in('Comp End Attributo', 'Comp End Attributo_R'):
-                #~ eRow -= 1
         if sRow == eRow: eRow += 1
-        #~ chi (sRow)
-        #~ chi (eRow)
+
+        sStRange = Circoscrive_Voce_Computo_Att(sRow)
+        sStRange.RangeAddress
+        sRow = sStRange.RangeAddress.StartRow
+        sStRange = Circoscrive_Voce_Computo_Att(eRow)
+        sStRange.RangeAddress
+        inizio = sStRange.RangeAddress.StartRow
+        eRow = sStRange.RangeAddress.EndRow+1
         
         lrow = sRow
-        
+        fini = list()
         for x in range(sRow, eRow):
-            if lrow < eRow or lrow == eRow:
-            
-            #~ if lrow == eRow:
-                #~ chi("lkjlkjl")
-                try:
-                    sStRange = Circoscrive_Voce_Computo_Att(lrow)
-                    sStRange.RangeAddress
-                    inizio = sStRange.RangeAddress.StartRow
-                    fine = sStRange.RangeAddress.EndRow
-                    ########################################################################
-                    # raggruppo i righi di mirura
-                    iSheet = oSheet.RangeAddress.Sheet
-                    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-                    oCellRangeAddr.Sheet = iSheet
-                    oCellRangeAddr.StartColumn = 0
-                    oCellRangeAddr.EndColumn = 0
-                    oCellRangeAddr.StartRow = inizio
-                    oCellRangeAddr.EndRow = fine+1
-                    ########################################################################
-                    _gotoCella(2, fine-1)
-                    #~ eRow += 1 
-                    if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
-                        ### elimino il colore di sfondo
-                        oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
-                        oSheet.ungroup(oCellRangeAddr, 1)
-                        oSheet.getRows().removeByIndex(fine-1, 1)
-                        fine -=1
-                        _gotoCella(2, fine-1)
-                        lrow += 2
-                    else:
-                        Copia_riga_Ent()
-                        oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
-                        oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
-                        ### cambio il colore di sfondo
-                        oDoc.CurrentController.select(sStRange)
-
-                        oSheet.group(oCellRangeAddr, 1)
-
-                        ctx = XSCRIPTCONTEXT.getComponentContext()
-                        desktop = XSCRIPTCONTEXT.getDesktop()
-                        oFrame = desktop.getCurrentFrame()
-                        dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-                        oProp = PropertyValue()
-                        oProp.Name = 'BackgroundColor'
-                        oProp.Value = 15066597
-                        properties =(oProp,)
-                        dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
-                        _gotoCella(2, fine)
-                        #~ lrow = Range2Cell()[1]
-                        #~ lrow = next_voice(lrow, 1)
-                    #~ lrow += 2
-                        ###   
-                    lrow = Range2Cell()[1]
-                    lrow = next_voice(lrow, 1)
-                except:
-                    pass
-            #~ eles:
-                #~ return
-            #~ chi(str(lrow)+' ' + str(eRow))
-            
-            if lrow >= eRow: return
-
-            
-
+            if oSheet.getCellByPosition(0, x).CellStyle in('Comp End Attributo', 'Comp End Attributo_R'):
+                fini.append(x)
+    idx = 0
+    for lrow in fini:
+        lrow += idx
+        try:
+            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            sStRange.RangeAddress
+            inizio = sStRange.RangeAddress.StartRow
+            fine = sStRange.RangeAddress.EndRow
+            ########################################################################
+            # raggruppo i righi di mirura
+            iSheet = oSheet.RangeAddress.Sheet
+            oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+            oCellRangeAddr.Sheet = iSheet
+            oCellRangeAddr.StartColumn = 0
+            oCellRangeAddr.EndColumn = 0
+            oCellRangeAddr.StartRow = inizio
+            oCellRangeAddr.EndRow = fine+1
+            ########################################################################
+            _gotoCella(2, fine-1)
+            if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
+                ### elimino il colore di sfondo
+                oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
+                oSheet.ungroup(oCellRangeAddr, 1)
+                #~ oSheet.getCellRangeByPosition(0, inizio, 0, fine+1).Rows.IsVisible=True
+                oSheet.getRows().removeByIndex(fine-1, 1)
+                fine -=1
+                _gotoCella(2, fine-1)
+                idx -= 1
+            else:
+                Copia_riga_Ent()
+                oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
+                oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
+                ### cambio il colore di sfondo
+                oDoc.CurrentController.select(sStRange)
+                oSheet.group(oCellRangeAddr, 1)
+                #~ oSheet.getCellRangeByPosition(0, inizio, 0, fine+1).Rows.IsVisible=False
+                ctx = XSCRIPTCONTEXT.getComponentContext()
+                desktop = XSCRIPTCONTEXT.getDesktop()
+                oFrame = desktop.getCurrentFrame()
+                dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+                oProp = PropertyValue()
+                oProp.Name = 'BackgroundColor'
+                oProp.Value = 15066597
+                properties =(oProp,)
+                dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
+                _gotoCella(2, fine)
+                ###   
+            lrow = Range2Cell()[1]
+            lrow = next_voice(lrow, 1)
+        except:
+            pass
     return
-#########################################
-
-        #~ sStRange = Circoscrive_Voce_Computo_Att(lrow)
-        #~ sStRange.RangeAddress
-        #~ inizio = sStRange.RangeAddress.StartRow
-        #~ fine = sStRange.RangeAddress.EndRow
-        #~ _gotoCella(2, fine-1)
-        #~ if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
-            #~ ### elimino il colore di sfondo
-            #~ oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
-            
-            #~ oSheet.getRows().removeByIndex(fine-1, 1)
-            #~ _gotoCella(2, fine-2)
-        #~ else:
-            #~ Copia_riga_Ent()
-            #~ oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
-            #~ oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
-            #~ ### cambio il colore di sfondo
-            #~ oDoc.CurrentController.select(sStRange)
-            #~ ctx = XSCRIPTCONTEXT.getComponentContext()
-            #~ desktop = XSCRIPTCONTEXT.getDesktop()
-            #~ oFrame = desktop.getCurrentFrame()
-            #~ dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-            #~ oProp = PropertyValue()
-            #~ oProp.Name = 'BackgroundColor'
-            #~ oProp.Value = 15066597
-            #~ properties =(oProp,)
-            #~ dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
-            #~ ###
 ########################################################################
 def elimina_voci_azzerate(arg=None):
     '''
@@ -5940,6 +5899,7 @@ def struct(l):
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
 def autoexec_off(arg=None):
+    bak_timestamp()
     toolbar_switch(1)
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
@@ -6711,14 +6671,15 @@ def debug(arg=None): #COMUNE DI MATERA
     #~ return
 # SALTA SULLE CELLE 
     #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
-    for y in range(0, getLastUsedCell(oSheet).EndRow+1):
-        if  '- vedi voce ' in oSheet.getCellByPosition(2, y).String:
+    for y in reversed(range(0, getLastUsedCell(oSheet).EndRow+1)):
+        if  oSheet.getCellByPosition(0, y).CellStyle in ('Livello-0-scritta', 'Livello-1-scritta'):
+            oSheet.getRows().removeByIndex(y, 1)
+
             #~ testo = oSheet.getCellByPosition(2, y).String.split('- art. ')[1]
 
             #~ oSheet.getCellByPosition(2, y).String = '- vedi voce art. ' + testo
-            oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
+            #~ oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
             #~ _gotoCella(2, y)
-            #~ oSheet.getRows().removeByIndex(y, 1)
             #~ chi (len(oSheet.getCellByPosition(0, y).String.split('.')))
             #~ _gotoCella(4, y)
             

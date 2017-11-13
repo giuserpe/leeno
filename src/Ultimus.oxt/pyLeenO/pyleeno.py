@@ -2923,6 +2923,173 @@ def refresh(arg=1):
         #~ oDoc.removeActionLock()
         #~ oDoc.unlockControllers #attiva l'eco a schermo
 ########################################################################
+def debug(arg=None):
+#~ def richiesta_offerta(arg=None):
+    '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi, ma senza i prezzi'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    _gotoSheet('Elenco Prezzi')
+    #~ genera_sommario()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        oDoc.Sheets.copyByName(oSheet.Name,'Elenco Prezzi', 5)
+    except:
+        pass
+    nSheet = oDoc.getSheets().getByIndex(5).Name
+    _gotoSheet(nSheet)
+    setTabColor(10079487)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = getLastUsedCell(oSheet).EndRow+1
+    oRange = oSheet.getCellRangeByPosition (12,3,12, fine)
+    aSaveData = oRange.getDataArray()
+    oRange = oSheet.getCellRangeByPosition (3,3,3, fine)
+    oRange.CellStyle = 'EP statistiche_q'
+    oRange.setDataArray(aSaveData)
+    
+
+    
+    oSheet.getCellByPosition(3 , 2).String = 'Quantità\na Computo'
+    oSheet.getCellByPosition(5 , 2).String = 'Prezzo Unitario \n in lettere'
+    oSheet.getCellByPosition(6 , 2).String = 'Importo'
+    oSheet.Columns.removeByIndex(7, 100)
+    oSheet.getColumns().getByName("D").IsVisible = True
+    oSheet.getColumns().getByName("F").IsVisible = True
+    oSheet.getColumns().getByName("G").IsVisible = True
+    oSheet.getColumns().getByName("A").Columns.Width = 1600
+    oSheet.getColumns().getByName("B").Columns.Width = 8000
+    oSheet.getColumns().getByName("C").Columns.Width = 1200
+    oSheet.getColumns().getByName("D").Columns.Width = 1600
+    oSheet.getColumns().getByName("E").Columns.Width = 1500
+    oSheet.getColumns().getByName("F").Columns.Width = 4000
+    oSheet.getColumns().getByName("G").Columns.Width = 1800
+    oDoc.CurrentController.freezeAtPosition(0, 1)
+    
+    formule = list()
+    for x in range(3,getLastUsedCell(oSheet).EndRow-1):
+        oSheet.getCellByPosition(7,x).Formula ='=IF(F' + str(x+1) + '<>"";E' + str(x+1) + '*F' + str(x+1) + ';""'
+        #~ formule.append(['=IF(F' + str(x+1) + '<>"";E' + str(x+1) + '*F' + str(x+1) + ';""'])
+    #~ chi (formule)
+    #~ oRange = oSheet.getCellRangeByPosition (6,3,6,fine)
+    #~ formule = tuple(formule)
+    #~ chi (formule)
+    #~ oRange.setFormulaArray(formule)
+    
+    oSheet.getCellRangeByPosition(5, 3, 5, fine).clearContents(VALUE + DATETIME + STRING +
+                                          ANNOTATION + FORMULA + HARDATTR +
+                                          OBJECTS + EDITATTR + FORMATTED)
+    
+    
+    oSheet.getCellByPosition(6,fine).Formula="=SUBTOTAL(9;G2:G"+ str(fine) +")"
+    oSheet.getCellByPosition(2,fine).String="TOTALI COMPUTO"
+    oSheet.getCellByPosition(0,fine).CellStyle="Comp TOTALI"
+
+    oSheet.Columns.insertByIndex(0, 1)
+    oSrc = oSheet.getCellRangeByPosition(1,0,1, fine).RangeAddress
+    oDest = oSheet.getCellByPosition(0,0 ).CellAddress
+    oSheet.copyRange(oDest, oSrc)
+    oSheet.getCellByPosition(0,2).String="N."
+    for x in range(3, fine-1):
+        oSheet.getCellByPosition(0,x).Value = x-2
+    
+    _gotoCella(0, 1)
+    adatta_altezza_riga(nSheet)
+
+	
+	#~ iCellAttr = _
+	#~ com.sun.star.sheet.CellFlags.VALUE + _
+	#~ com.sun.star.sheet.CellFlags.DATETIME + _
+	#~ com.sun.star.sheet.CellFlags.STRING + _
+	#~ com.sun.star.sheet.CellFlags.ANNOTATION + _
+	#~ com.sun.star.sheet.CellFlags.FORMULA + _
+	#~ com.sun.star.sheet.CellFlags.OBJECTS + _
+	#~ com.sun.star.sheet.CellFlags.HARDATTR + _
+	#~ com.sun.star.sheet.CellFlags.EDITATTR
+	#~ '			com.sun.star.sheet.CellFlags.STYLES 
+
+	
+	#~ 'impostare la Pagestyle
+	#~ '	osheet.PageStyle = "PageStyle_EP_LISTA"
+	#~ osheet.PageStyle = "PageStyle_COMPUTO_A4" rem PREFERISCO...
+	
+	
+	#~ ' nasconde la riga di Fine Elenco
+	#~ oSheet.getRows().getByIndex (lrowFine).isVisible = false 
+	
+	#~ ' elimino proprio tutte le colonne dopo la 19 
+	#~ oSheet.Columns.removeByindex(7, 100)	
+	#~ oSheet.Rows.removeByindex(0,2)
+	#~ fissa (0,1)
+	#~ Scrivi_header_moduli
+	
+	#~ lRowE = ultima_voce+1
+	
+	#~ osheet.getCellRangeByPosition (0,lRowE,100,lRowE).ClearContents(iCellAttr)	 
+	
+	#~ oSheet.GetCellByPosition(6,lRowE).FORMULA="=SUBTOTAL(9;G2:G"& lRowE &")"
+	#~ oSheet.GetCellByPosition(1,lRowE).String="TOTALI COMPUTO"
+	#~ osheet.getCellRangeByPosition (0,lRowE,6,lRowE).cellstyle="Comp TOTALI"
+	
+	#~ oSheet.getColumns.insertByIndex(0, 1)
+	#~ oSrc = oSheet.getCellRangeByPosition(1,0,1,lrowfine).RangeAddress
+	#~ oDest = oSheet.GetCellByPosition(0,0 ).CellAddress
+	#~ oSheet.copyRange(oDest, oSrc)
+	#~ oSheet.GetCellByPosition(0,0).String="N."
+	
+	#~ Thiscomponent.currentcontroller.select(oSheet.getCellRangeByPosition(0,1,0,lrowe-1))
+	#~ fill_serie ("D")
+	#~ unSelect 'deseleziona
+	#~ oSheet.Rows.removeByindex(lrowe+1,1)
+	#~ Sbianca_e_o_consolida(1) ' USANDO 1 SBIANCA SOLAMENTE
+	#~ oSheet.getColumns().getByName("A").Columns.Width = 650
+	
+	#~ oSheet.GetCellByPosition(2,lRowE+3).String="(diconsi euro - in lettere)"
+	#~ osheet.getCellRangeByPosition (2,lRowE+3,6,lRowE+3).cellstyle="List-intest_med_c"
+
+	#~ oSheet.GetCellByPosition(2,lRowE+5).String="Pari a Ribasso del ___________%"
+	
+	#~ oSheet.GetCellByPosition(2,lRowE+8).String="(ribasso in lettere)"
+	#~ osheet.getCellRangeByPosition (2,lRowE+8,6,lRowE+8).cellstyle="List-intest_med_c"
+	
+	#~ rem INSERISCI LA DATA E L'OFFERENTE
+		#~ oSheet.GetCellByPosition(2 , lRowE+10).setformula("=CONCATENATE(""Data, "";TEXT(NOW();""DD/MM/YYYY""))")
+		#~ osheet.getCellRangeByPosition (2,lRowE+10,2,lRowE+10).CellStyle = "Ultimus"
+		#~ oSheet.GetCellByPosition(2, lRowE+12).setformula("L'OFFERENTE")
+		#~ oSheet.GetCellByPosition(2, lRowE+12).CellStyle = "centro_grassetto"
+		#~ oSheet.GetCellByPosition(2, lRowE+13).String="(timbro e firma)"
+		#~ oSheet.GetCellByPosition(2, lRowE+13).CellStyle = "centro_corsivo"
+#~ '		oSheet.GetCellByPosition(5 , lRowE+12).setformula("=CONCATENATE(""("";$S2.$C$13;"")"")")
+
+	#~ rem CONSOLIDA LA DATA	
+		#~ oRange = oSheet.getCellRangeByPosition (2,lRowE+10,2,lRowE+10)
+		#~ Flags = com.sun.star.sheet.CellFlags.FORMULA
+		#~ aSaveData = oRange.getDataArray()
+ 		#~ oRange.setDataArray(aSaveData)
+	
+	#~ 'impostare l'area di stampa
+	#~ lRowE = getLastUsedRow(oSheet)
+	#~ Dim selArea(0) as new com.sun.star.table.CellRangeAddress
+	#~ selArea(0).EndColumn = 7
+	#~ selArea(0).EndRow = lRowE
+	
+	#~ oSheet.setPrintTitleRows(True)
+	#~ oTitles = createUnoStruct("com.sun.star.table.CellRangeAddress")
+	#~ oTitles.startRow = 0' headstart - 1
+	#~ oTitles.EndRow = 0 'headend - 1
+	#~ oTitles.startColumn = 0
+	#~ oTitles.EndColumn = 7
+	#~ oSheet.setPrintTitleRows(true)
+	#~ oSheet.setTitleRows(oTitles)
+	
+	#~ '		oSheet.setTitleRows(oSheet.getCellRangeByName("A1","H2").getRangeAddress())' non funzionava bene
+	#~ 'Le due linee sopra impostano la riga da ripetere in ciascuna pagina che viene stampata
+	#~ 'o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
+	
+	#~ oSheet.setPrintareas(selArea())
+	#~ Barra_chiudi_sempre_4
+	#~ msgbox "Questa è la  Lista delle Lavorazioni e Forniture previste per l'esecuzione dell'appalto." & CHR$(10)_
+	#~ & "Può essere stampato direttamente in PDF e/o esportato come documento Calc autonomo per la distribuzione in formato editabile" & CHR$(10) & CHR$(10)_
+	#~ & "(Menu LeenO > UTILITY > Duplica il foglio attivo FUORI da questo Doc Calc)"
+#~ end Sub
+########################################################################
 def ins_voce_elenco(arg=None):
     '''
     Inserisce una nuova riga voce in Elenco Prezzi
@@ -6398,7 +6565,7 @@ def toolbar_vedi(arg=None):
         else:
             for bar in GetmyToolBarNames: #toolbar contestualizzate
                 toolbar_on(bar, 0)
-        oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+        #~ oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
         toolbar_ordina()
         oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
         nSheet = oDoc.CurrentController.ActiveSheet.Name
@@ -6641,7 +6808,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 

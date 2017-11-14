@@ -10,6 +10,7 @@
 # Sono inoltre graditi suggerimenti in merito alle gestione della
 # Contabilità Lavori e per l'ottimizzazione del codice.
 ########################################################################
+#~ documentazione ufficiale: https://api.libreoffice.org/
 import locale
 import codecs
 import configparser
@@ -2925,7 +2926,8 @@ def refresh(arg=1):
 ########################################################################
 def debug(arg=None):
 #~ def richiesta_offerta(arg=None):
-    '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi, ma senza i prezzi'''
+    '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi,
+per la formulazione dell'offerta'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     _gotoSheet('Elenco Prezzi')
     #~ genera_sommario()
@@ -2945,10 +2947,8 @@ def debug(arg=None):
     oRange.CellStyle = 'EP statistiche_q'
     oRange.setDataArray(aSaveData)
     
-
-    
     oSheet.getCellByPosition(3 , 2).String = 'Quantità\na Computo'
-    oSheet.getCellByPosition(5 , 2).String = 'Prezzo Unitario \n in lettere'
+    oSheet.getCellByPosition(5 , 2).String = 'Prezzo Unitario\nin lettere'
     oSheet.getCellByPosition(6 , 2).String = 'Importo'
     oSheet.Columns.removeByIndex(7, 100)
     oSheet.getColumns().getByName("D").IsVisible = True
@@ -2965,22 +2965,19 @@ def debug(arg=None):
     
     formule = list()
     for x in range(3,getLastUsedCell(oSheet).EndRow-1):
-        oSheet.getCellByPosition(7,x).Formula ='=IF(F' + str(x+1) + '<>"";E' + str(x+1) + '*F' + str(x+1) + ';""'
-        #~ formule.append(['=IF(F' + str(x+1) + '<>"";E' + str(x+1) + '*F' + str(x+1) + ';""'])
-    #~ chi (formule)
-    #~ oRange = oSheet.getCellRangeByPosition (6,3,6,fine)
-    #~ formule = tuple(formule)
-    #~ chi (formule)
-    #~ oRange.setFormulaArray(formule)
+        #~ oSheet.getCellByPosition(6,x).Formula ='=IF(E' + str(x+1) + '<>"";D' + str(x+1) + '*E' + str(x+1) + ';""'
+        formule.append(['=IF(E' + str(x+1) + '<>"";D' + str(x+1) + '*E' + str(x+1) + ';""'])
+    oSheet.getCellRangeByPosition (6,3,6,len(formule)+2).CellBackColor = 15757935
+    oRange = oSheet.getCellRangeByPosition (6,3,6,len(formule)+2)
+    formule = tuple(formule)
+    oRange.setFormulaArray(formule)
+    #~ return
     
-    oSheet.getCellRangeByPosition(5, 3, 5, fine).clearContents(VALUE + DATETIME + STRING +
+    oSheet.getCellRangeByPosition(4, 3, 4, fine).clearContents(VALUE + DATETIME + STRING +
                                           ANNOTATION + FORMULA + HARDATTR +
                                           OBJECTS + EDITATTR + FORMATTED)
-    
-    
-    oSheet.getCellByPosition(6,fine).Formula="=SUBTOTAL(9;G2:G"+ str(fine) +")"
-    oSheet.getCellByPosition(2,fine).String="TOTALI COMPUTO"
-    oSheet.getCellByPosition(0,fine).CellStyle="Comp TOTALI"
+
+    oSheet.getCellRangeByPosition(0, fine-1, 100, fine+1).clearContents(VALUE + FORMULA + STRING)
 
     oSheet.Columns.insertByIndex(0, 1)
     oSrc = oSheet.getCellRangeByPosition(1,0,1, fine).RangeAddress
@@ -2989,50 +2986,67 @@ def debug(arg=None):
     oSheet.getCellByPosition(0,2).String="N."
     for x in range(3, fine-1):
         oSheet.getCellByPosition(0,x).Value = x-2
+    oSheet.getColumns().getByName("A").Columns.Width = 650
+
+    oSheet.getCellByPosition(7,fine).Formula="=SUBTOTAL(9;H2:H"+ str(fine) +")"
+    oSheet.getCellByPosition(2,fine).String="TOTALE COMPUTO"
+    oSheet.getCellRangeByPosition(0,fine,7,fine).CellStyle="Comp TOTALI"
+    oSheet.Rows.removeByIndex(fine-1, 1)
+    oSheet.Rows.removeByIndex(0, 2)
+
+    oSheet.getCellByPosition(2,fine+3).String="(diconsi euro - in lettere)"
+    oSheet.getCellRangeByPosition (2,fine+3,6,fine+3).CellStyle="List-intest_med_c"
+
+    oSheet.getCellByPosition(2,fine+5).String="Pari a Ribasso del ___________%"
+
+    oSheet.getCellByPosition(2,fine+8).String="(ribasso in lettere)"
+    oSheet.getCellRangeByPosition (2,fine+8,6,fine+8).CellStyle="List-intest_med_c"
     
+    # INSERISCI LA DATA E L'OFFERENTE
+    oSheet.getCellByPosition(2, fine+10).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
+    oSheet.getCellRangeByPosition (2,fine+10,2,fine+10).CellStyle = "Ultimus"
+    oSheet.getCellByPosition(2, fine+12).String = "L'OFFERENTE"
+    oSheet.getCellByPosition(2, fine+12).CellStyle = 'centro_grassetto'
+    oSheet.getCellByPosition(2, fine+13).String= '(timbro e firma)'
+    oSheet.getCellByPosition(2, fine+13).CellStyle = 'centro_corsivo'
+    
+    # CONSOLIDA LA DATA	
+    oRange = oSheet.getCellRangeByPosition (2,fine+10,2,fine+10)
+    #~ Flags = com.sun.star.sheet.CellFlags.FORMULA
+    aSaveData = oRange.getDataArray()
+    oRange.setDataArray(aSaveData)
+
+    oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).CellBackColor = -1
+
     _gotoCella(0, 1)
     adatta_altezza_riga(nSheet)
+    
+    oSheet.PageStyle = 'PageStyle_COMPUTO_A4'
+    pagestyle = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
+    mri(pagestyle.RightPageFooterContent.LeftText.String)
+    left = pagestyle.RightPageFooterContent.LeftText.String
+    left.Text.setString('provadelnove')
+    #~ mri (pagestyle)
 
-	
-	#~ iCellAttr = _
-	#~ com.sun.star.sheet.CellFlags.VALUE + _
-	#~ com.sun.star.sheet.CellFlags.DATETIME + _
-	#~ com.sun.star.sheet.CellFlags.STRING + _
-	#~ com.sun.star.sheet.CellFlags.ANNOTATION + _
-	#~ com.sun.star.sheet.CellFlags.FORMULA + _
-	#~ com.sun.star.sheet.CellFlags.OBJECTS + _
-	#~ com.sun.star.sheet.CellFlags.HARDATTR + _
-	#~ com.sun.star.sheet.CellFlags.EDITATTR
-	#~ '			com.sun.star.sheet.CellFlags.STYLES 
-
+    return
+    #~ LeftPageFooterContent
+    #~ LeftPageHeaderContent
+    #~ RightPageFooterContent
+    #~ RightPageHeaderContent
+    
 	
 	#~ 'impostare la Pagestyle
 	#~ '	osheet.PageStyle = "PageStyle_EP_LISTA"
 	#~ osheet.PageStyle = "PageStyle_COMPUTO_A4" rem PREFERISCO...
 	
 	
-	#~ ' nasconde la riga di Fine Elenco
-	#~ oSheet.getRows().getByIndex (lrowFine).isVisible = false 
-	
-	#~ ' elimino proprio tutte le colonne dopo la 19 
-	#~ oSheet.Columns.removeByindex(7, 100)	
-	#~ oSheet.Rows.removeByindex(0,2)
-	#~ fissa (0,1)
 	#~ Scrivi_header_moduli
 	
 	#~ lRowE = ultima_voce+1
 	
 	#~ osheet.getCellRangeByPosition (0,lRowE,100,lRowE).ClearContents(iCellAttr)	 
 	
-	#~ oSheet.GetCellByPosition(6,lRowE).FORMULA="=SUBTOTAL(9;G2:G"& lRowE &")"
-	#~ oSheet.GetCellByPosition(1,lRowE).String="TOTALI COMPUTO"
-	#~ osheet.getCellRangeByPosition (0,lRowE,6,lRowE).cellstyle="Comp TOTALI"
-	
-	#~ oSheet.getColumns.insertByIndex(0, 1)
-	#~ oSrc = oSheet.getCellRangeByPosition(1,0,1,lrowfine).RangeAddress
-	#~ oDest = oSheet.GetCellByPosition(0,0 ).CellAddress
-	#~ oSheet.copyRange(oDest, oSrc)
-	#~ oSheet.GetCellByPosition(0,0).String="N."
+
 	
 	#~ Thiscomponent.currentcontroller.select(oSheet.getCellRangeByPosition(0,1,0,lrowe-1))
 	#~ fill_serie ("D")
@@ -3041,28 +3055,8 @@ def debug(arg=None):
 	#~ Sbianca_e_o_consolida(1) ' USANDO 1 SBIANCA SOLAMENTE
 	#~ oSheet.getColumns().getByName("A").Columns.Width = 650
 	
-	#~ oSheet.GetCellByPosition(2,lRowE+3).String="(diconsi euro - in lettere)"
-	#~ osheet.getCellRangeByPosition (2,lRowE+3,6,lRowE+3).cellstyle="List-intest_med_c"
 
-	#~ oSheet.GetCellByPosition(2,lRowE+5).String="Pari a Ribasso del ___________%"
 	
-	#~ oSheet.GetCellByPosition(2,lRowE+8).String="(ribasso in lettere)"
-	#~ osheet.getCellRangeByPosition (2,lRowE+8,6,lRowE+8).cellstyle="List-intest_med_c"
-	
-	#~ rem INSERISCI LA DATA E L'OFFERENTE
-		#~ oSheet.GetCellByPosition(2 , lRowE+10).setformula("=CONCATENATE(""Data, "";TEXT(NOW();""DD/MM/YYYY""))")
-		#~ osheet.getCellRangeByPosition (2,lRowE+10,2,lRowE+10).CellStyle = "Ultimus"
-		#~ oSheet.GetCellByPosition(2, lRowE+12).setformula("L'OFFERENTE")
-		#~ oSheet.GetCellByPosition(2, lRowE+12).CellStyle = "centro_grassetto"
-		#~ oSheet.GetCellByPosition(2, lRowE+13).String="(timbro e firma)"
-		#~ oSheet.GetCellByPosition(2, lRowE+13).CellStyle = "centro_corsivo"
-#~ '		oSheet.GetCellByPosition(5 , lRowE+12).setformula("=CONCATENATE(""("";$S2.$C$13;"")"")")
-
-	#~ rem CONSOLIDA LA DATA	
-		#~ oRange = oSheet.getCellRangeByPosition (2,lRowE+10,2,lRowE+10)
-		#~ Flags = com.sun.star.sheet.CellFlags.FORMULA
-		#~ aSaveData = oRange.getDataArray()
- 		#~ oRange.setDataArray(aSaveData)
 	
 	#~ 'impostare l'area di stampa
 	#~ lRowE = getLastUsedRow(oSheet)
@@ -3579,7 +3573,7 @@ def svuota_contabilita(arg=None):
     oSheet.getCellByPosition(31,2).String = 'Super Cat'
     oSheet.getCellByPosition(32,2).String = 'Cat'
     oSheet.getCellByPosition(33,2).String = 'Sub Cat'
-    #~ oSheet.getCellByPosition(34,2).String = 'tag B'
+    #~ oSheet.getCellByPosition(34,2).String = 'tag B'sub Scrivi_header_moduli
     #~ oSheet.getCellByPosition(35,2).String = 'tag C'
     oSheet.getCellByPosition(36,2).String = 'Importi\nsenza errori'
     oSheet.getCellByPosition(0,2).Rows.Height = 800

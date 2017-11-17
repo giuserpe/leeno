@@ -2951,8 +2951,7 @@ def refresh(arg=1):
         #~ oDoc.removeActionLock()
         #~ oDoc.unlockControllers #attiva l'eco a schermo
 ########################################################################
-def debug(arg=None):
-#~ def richiesta_offerta(arg=None):
+def richiesta_offerta(arg=None):
     '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi,
 per la formulazione dell'offerta'''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -2992,7 +2991,6 @@ per la formulazione dell'offerta'''
     
     formule = list()
     for x in range(3,getLastUsedCell(oSheet).EndRow-1):
-        #~ oSheet.getCellByPosition(6,x).Formula ='=IF(E' + str(x+1) + '<>"";D' + str(x+1) + '*E' + str(x+1) + ';""'
         formule.append(['=IF(E' + str(x+1) + '<>"";D' + str(x+1) + '*E' + str(x+1) + ';""'])
     oSheet.getCellRangeByPosition (6,3,6,len(formule)+2).CellBackColor = 15757935
     oRange = oSheet.getCellRangeByPosition (6,3,6,len(formule)+2)
@@ -3048,6 +3046,7 @@ per la formulazione dell'offerta'''
     _gotoCella(0, 1)
     adatta_altezza_riga(nSheet)
     
+# imposta stile pagina ed intestazioni
     oSheet.PageStyle = 'PageStyle_COMPUTO_A4'
     pagestyle = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
     pagestyle.HeaderIsOn =  True
@@ -3055,7 +3054,10 @@ per la formulazione dell'offerta'''
     
     pagestyle.HeaderIsOn= True
     oHContent=pagestyle.RightPageHeaderContent
-    oHContent.LeftText.String = uno.fileUrlToSystemPath(oDoc.getURL())
+    filename = uno.fileUrlToSystemPath(oDoc.getURL())
+    if len(filename) > 50:
+        filename = filename[:20] + ' ... ' + filename[-20:]
+    oHContent.LeftText.String = filename
     oHContent.CenterText.String=''
     oHContent.RightText.String = tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
 
@@ -3272,9 +3274,11 @@ def leeno_conf(arg=None):
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
     conf.write(path_conf, 'Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State)) #torna su prezzario
+    
+    oSheet.getCellRangeByName('S1.H319').Value = float(oDlg_config.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
+    oSheet.getCellRangeByName('S1.H320').Value = float(oDlg_config.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
+    oSheet.getCellRangeByName('S1.H321').Value = float(oDlg_config.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
         
-
-
     conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
     #~ conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
     if oDlg_config.getControl('CheckBox6').State == 1:
@@ -5630,7 +5634,6 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
     except:
         return
     oSheet = oDoc.getSheets().getByName('M1')
-    
     oSheet.getCellByPosition(2,27).String = sUltimus
     DlgMain()
     return
@@ -6961,7 +6964,7 @@ def debug_mt(arg=None): #COMUNE DI MATERA
     #~ return
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = attiva_contabilita,
+#~ g_exportedScripts = richiesta_offerta,
 ########################################################################
 ########################################################################
 # ... here is the python script code

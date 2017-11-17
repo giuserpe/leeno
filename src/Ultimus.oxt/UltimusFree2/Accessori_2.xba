@@ -517,7 +517,7 @@ ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quo
 		exit sub
 	end If
 	lrowF=oEnd.RangeAddress.EndRow
-	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
+	oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 	rIntest=oStart.CellAddress.Row+1
 	lcolbase = Colonna_giusta_EP (oSheet)
 		

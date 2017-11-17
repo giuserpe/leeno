@@ -928,7 +928,7 @@ def _gotoSheet(nSheet, fattore=100):
     oSheet = oDoc.Sheets.getByName(nSheet)
     oSheet.IsVisible = True
     oDoc.CurrentController.setActiveSheet(oSheet)
-    oDoc.CurrentController.ZoomValue = fattore
+    #~ oDoc.CurrentController.ZoomValue = fattore
 
      #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
@@ -1949,7 +1949,7 @@ def firme_in_calce_run(arg=None):
         oRange.setDataArray(aSaveData)
         oSheet.getCellRangeByPosition(1,riga_corrente+3,1,riga_corrente+3).CellStyle = 'ULTIMUS'
         oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il progettista'
-        oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE("(";$S2.$C$13;")")'
+        oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE($S2.$C$13)'
 
     if oSheet.Name in('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
         oDoc.CurrentController.ZoomValue = 400
@@ -2073,7 +2073,7 @@ def firme_in_calce_run(arg=None):
         oRange.setDataArray(aSaveData)
         
         oSheet.getCellByPosition(2 , riga_corrente+5).Formula = 'Il Progettista'
-        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE("(";$S2.$C$13;")")'
+        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE($S2.$C$13)'
         oSheet.getCellRangeByPosition(2 , riga_corrente+5, 2 , riga_corrente+6).CellStyle = 'Ultimus_centro'
 
         ###  inserisco il salto pagina in cima al riepilogo
@@ -2306,8 +2306,6 @@ def azzera_voce(arg=None):
         except:
             sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
             eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
-        if sRow == eRow: eRow += 1
-
         sStRange = Circoscrive_Voce_Computo_Att(sRow)
         sStRange.RangeAddress
         sRow = sStRange.RangeAddress.StartRow
@@ -2329,22 +2327,12 @@ def azzera_voce(arg=None):
             sStRange.RangeAddress
             inizio = sStRange.RangeAddress.StartRow
             fine = sStRange.RangeAddress.EndRow
-            ########################################################################
-            # raggruppo i righi di mirura
-            iSheet = oSheet.RangeAddress.Sheet
-            oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-            oCellRangeAddr.Sheet = iSheet
-            oCellRangeAddr.StartColumn = 0
-            oCellRangeAddr.EndColumn = 0
-            oCellRangeAddr.StartRow = inizio
-            oCellRangeAddr.EndRow = fine+1
-            ########################################################################
+
             _gotoCella(2, fine-1)
             if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
                 ### elimino il colore di sfondo
                 oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
-                oSheet.ungroup(oCellRangeAddr, 1)
-                #~ oSheet.getCellRangeByPosition(0, inizio, 0, fine+1).Rows.IsVisible=True
+                raggruppa_righe_voce(lrow, 0)
                 oSheet.getRows().removeByIndex(fine-1, 1)
                 fine -=1
                 _gotoCella(2, fine-1)
@@ -2355,8 +2343,7 @@ def azzera_voce(arg=None):
                 oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
                 ### cambio il colore di sfondo
                 oDoc.CurrentController.select(sStRange)
-                oSheet.group(oCellRangeAddr, 1)
-                #~ oSheet.getCellRangeByPosition(0, inizio, 0, fine+1).Rows.IsVisible=False
+                raggruppa_righe_voce (lrow, 1)
                 ctx = XSCRIPTCONTEXT.getComponentContext()
                 desktop = XSCRIPTCONTEXT.getDesktop()
                 oFrame = desktop.getCurrentFrame()
@@ -2385,10 +2372,50 @@ def elimina_voci_azzerate(arg=None):
         if oSheet.Name in('COMPUTO', 'VARIANTE'):
             ER = getLastUsedCell(oSheet).EndRow
             for lrow in reversed(range(0, ER)):
-                #~ if oSheet.getCellByPosition(9, lrow).String == '0,00':
                 if oSheet.getCellByPosition(2, lrow).String == '*** VOCE AZZERATA ***':
                     elimina_voce(lRow=lrow, msg=0)
             numera_voci(1)
+    except:
+        return
+########################################################################
+def raggruppa_righe_voce (lrow, flag=1):
+    '''
+    Raggruppa le righe che compongono una singola voce.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ lrow = Range2Cell()[1]
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        sStRange = Circoscrive_Voce_Computo_Att (lrow)
+        sStRange.RangeAddress
+
+        iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+        oCellRangeAddr.StartColumn = sStRange.RangeAddress.StartColumn
+        oCellRangeAddr.EndColumn = sStRange.RangeAddress.EndColumn
+        oCellRangeAddr.StartRow = sStRange.RangeAddress.StartRow
+        oCellRangeAddr.EndRow = sStRange.RangeAddress.EndRow
+        if flag == 1:
+            oSheet.group(oCellRangeAddr, 1)
+        else:
+            oSheet.ungroup(oCellRangeAddr, 1)
+########################################################################
+#~ def debug(arg=None):
+def nasconde_voci_azzerate(arg=None):
+    '''
+    Nasconde le voci in cui compare la dicitura '*** VOCE AZZERATA ***'
+    in COMPUTO o in VARIANTE.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        if oSheet.Name in('COMPUTO', 'VARIANTE'):
+            oSheet.clearOutline()
+            ER = getLastUsedCell(oSheet).EndRow
+            for lrow in reversed(range(0, ER)):
+                if oSheet.getCellByPosition(2, lrow).String == '*** VOCE AZZERATA ***':
+                    raggruppa_righe_voce(lrow, 1)
     except:
         return
 ########################################################################
@@ -2623,8 +2650,8 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
         except NameError:
             return
 ########################################################################
-#~ def ricicla_misure(arg=None):
-def debug(arg=None):
+def ricicla_misure(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA': return
@@ -2988,7 +3015,7 @@ per la formulazione dell'offerta'''
         oSheet.getCellByPosition(0,x).Value = x-2
     oSheet.getColumns().getByName("A").Columns.Width = 650
 
-    oSheet.getCellByPosition(7,fine).Formula="=SUBTOTAL(9;H2:H"+ str(fine) +")"
+    oSheet.getCellByPosition(7,fine).Formula="=SUBTOTAL(9;H2:H"+ str(fine+1) +")"
     oSheet.getCellByPosition(2,fine).String="TOTALE COMPUTO"
     oSheet.getCellRangeByPosition(0,fine,7,fine).CellStyle="Comp TOTALI"
     oSheet.Rows.removeByIndex(fine-1, 1)
@@ -3023,66 +3050,17 @@ per la formulazione dell'offerta'''
     
     oSheet.PageStyle = 'PageStyle_COMPUTO_A4'
     pagestyle = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
-    mri(pagestyle.RightPageFooterContent.LeftText.String)
-    left = pagestyle.RightPageFooterContent.LeftText.String
-    left.Text.setString('provadelnove')
-    #~ mri (pagestyle)
-
-    return
-    #~ LeftPageFooterContent
-    #~ LeftPageHeaderContent
-    #~ RightPageFooterContent
-    #~ RightPageHeaderContent
+    pagestyle.HeaderIsOn =  True
+    left = pagestyle.RightPageHeaderContent.LeftText.Text
     
-	
-	#~ 'impostare la Pagestyle
-	#~ '	osheet.PageStyle = "PageStyle_EP_LISTA"
-	#~ osheet.PageStyle = "PageStyle_COMPUTO_A4" rem PREFERISCO...
-	
-	
-	#~ Scrivi_header_moduli
-	
-	#~ lRowE = ultima_voce+1
-	
-	#~ osheet.getCellRangeByPosition (0,lRowE,100,lRowE).ClearContents(iCellAttr)	 
-	
+    pagestyle.HeaderIsOn= True
+    oHContent=pagestyle.RightPageHeaderContent
+    oHContent.LeftText.String = uno.fileUrlToSystemPath(oDoc.getURL())
+    oHContent.CenterText.String=''
+    oHContent.RightText.String = tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
 
-	
-	#~ Thiscomponent.currentcontroller.select(oSheet.getCellRangeByPosition(0,1,0,lrowe-1))
-	#~ fill_serie ("D")
-	#~ unSelect 'deseleziona
-	#~ oSheet.Rows.removeByindex(lrowe+1,1)
-	#~ Sbianca_e_o_consolida(1) ' USANDO 1 SBIANCA SOLAMENTE
-	#~ oSheet.getColumns().getByName("A").Columns.Width = 650
-	
-
-	
-	
-	#~ 'impostare l'area di stampa
-	#~ lRowE = getLastUsedRow(oSheet)
-	#~ Dim selArea(0) as new com.sun.star.table.CellRangeAddress
-	#~ selArea(0).EndColumn = 7
-	#~ selArea(0).EndRow = lRowE
-	
-	#~ oSheet.setPrintTitleRows(True)
-	#~ oTitles = createUnoStruct("com.sun.star.table.CellRangeAddress")
-	#~ oTitles.startRow = 0' headstart - 1
-	#~ oTitles.EndRow = 0 'headend - 1
-	#~ oTitles.startColumn = 0
-	#~ oTitles.EndColumn = 7
-	#~ oSheet.setPrintTitleRows(true)
-	#~ oSheet.setTitleRows(oTitles)
-	
-	#~ '		oSheet.setTitleRows(oSheet.getCellRangeByName("A1","H2").getRangeAddress())' non funzionava bene
-	#~ 'Le due linee sopra impostano la riga da ripetere in ciascuna pagina che viene stampata
-	#~ 'o esportata e sono uguali per i tre tipi di fogli, logicamente varia il range
-	
-	#~ oSheet.setPrintareas(selArea())
-	#~ Barra_chiudi_sempre_4
-	#~ msgbox "Questa è la  Lista delle Lavorazioni e Forniture previste per l'esecuzione dell'appalto." & CHR$(10)_
-	#~ & "Può essere stampato direttamente in PDF e/o esportato come documento Calc autonomo per la distribuzione in formato editabile" & CHR$(10) & CHR$(10)_
-	#~ & "(Menu LeenO > UTILITY > Duplica il foglio attivo FUORI da questo Doc Calc)"
-#~ end Sub
+    pagestyle.RightPageHeaderContent=oHContent
+    return
 ########################################################################
 def ins_voce_elenco(arg=None):
     '''

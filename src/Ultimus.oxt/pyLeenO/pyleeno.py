@@ -2310,7 +2310,10 @@ def azzera_voce(arg=None):
         sStRange.RangeAddress
         sRow = sStRange.RangeAddress.StartRow
         sStRange = Circoscrive_Voce_Computo_Att(eRow)
-        sStRange.RangeAddress
+        try:
+            sStRange.RangeAddress
+        except:
+            return
         inizio = sStRange.RangeAddress.StartRow
         eRow = sStRange.RangeAddress.EndRow+1
         
@@ -6072,6 +6075,8 @@ def autoexec(arg=None):
     except:
         config_default()
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
 #~ RegularExpressions and Wildcards are mutually exclusive, only one can have the value TRUE.
 #~ If both are set to TRUE via API calls then the last one set takes precedence.
     oDoc.Wildcards = False

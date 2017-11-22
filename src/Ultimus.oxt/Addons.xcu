@@ -547,7 +547,7 @@
             <value>%origin%/icons/strutt_voci_zero</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Azzera una voce di computo</value>
+            <value>Nascondi le voci azzerate</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

@@ -83,7 +83,6 @@ salta:
 	Genera_LIBRETTO
 &apos;&apos;	Genera_REGISTRO &apos; questa è annidata in Genera_LIBRETTO per evitare che sia avviata quando non ci sono voci da registrare
 &apos;	ThisComponent.enableAutomaticCalculation(True)
-	Dialogviste_N.endExecute()
 	msgbox (&quot;La generazione degli allegati contabili è stata completata.&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
 	fine:

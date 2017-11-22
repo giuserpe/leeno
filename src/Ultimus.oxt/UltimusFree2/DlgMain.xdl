@@ -58,7 +58,7 @@
   <dlg:text dlg:style-id="2" dlg:id="Label12" dlg:tab-index="22" dlg:left="216" dlg:top="230" dlg:width="62" dlg:height="8" dlg:value="Label12" dlg:align="right">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:text>
-  <dlg:img dlg:style-id="0" dlg:id="ImageControl1" dlg:tab-index="23" dlg:left="12" dlg:top="65" dlg:width="262" dlg:height="78"/>
+  <dlg:img dlg:style-id="0" dlg:id="ImageControl1" dlg:tab-index="23" dlg:left="12" dlg:top="70" dlg:width="262" dlg:height="65"/>
   <dlg:text dlg:style-id="3" dlg:id="Label_DDC" dlg:tab-index="24" dlg:left="33" dlg:top="217" dlg:width="244" dlg:height="10" dlg:value="Documento di Contabilità Corrente"/>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton13" dlg:tab-index="25" dlg:left="10" dlg:top="215" dlg:width="20" dlg:height="15" dlg:value="DCC:">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ssUltimus?language=Python&amp;location=user:uno_packages" script:language="Script"/>

@@ -21,7 +21,6 @@ Exit Sub
 	if Not isNull (oDialogScenari_EP) then oDialogScenari_EP.endExecute() 
 	if Not isNull (oDialogScenari_AN) then oDialogScenari_AN.endExecute() 
 	if Not isNull (oDialogScenari_2) then oDialogScenari_2.endExecute()
-&apos;	Dialogviste_N = CreateUnoDialog( DialogLibraries.UltimusFree2.DlgMain) &apos; Inizializza il dialogo
 	if Not isNull (oDlgMain) then CreateUnoDialog( DialogLibraries.UltimusFree2.DlgMain).endExecute()
 END SUB
 </script:module>

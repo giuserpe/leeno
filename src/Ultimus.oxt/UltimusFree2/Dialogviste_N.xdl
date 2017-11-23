@@ -52,7 +52,7 @@
   <dlg:button dlg:style-id="1" dlg:id="CommandButton14" dlg:tab-index="11" dlg:left="5" dlg:top="165" dlg:width="95" dlg:height="15" dlg:help-text="Svuota da tutti i dati la tab di contabilità" dlg:value="Svuota TUTTA la Contabilità" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Gest_contab.Svuota_CONTABILITA?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="2" dlg:id="CommandButton15" dlg:tab-index="12" dlg:left="110" dlg:top="135" dlg:width="95" dlg:height="15" dlg:help-text="Scrive i numeri di pagina del Libretto delle misure - .Finale.annota_num_pag_libretto" dlg:value="Genera Atti Contabili" dlg:multiline="true">
+  <dlg:button dlg:style-id="2" dlg:id="CommandButton15" dlg:tab-index="12" dlg:left="110" dlg:top="135" dlg:width="95" dlg:height="15" dlg:help-text="Scrive i numeri di pagina del Libretto delle misure - .Finale.annota_num_pag_libretto" dlg:value="Genera Atti Contabili" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.GENERA_Atti_Contabili?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton16" dlg:tab-index="13" dlg:left="-150" dlg:top="-60" dlg:width="86" dlg:height="16" dlg:help-text="Attiva la vista come Libretto delle Misure" dlg:value="Libretto delle misure" dlg:multiline="true">

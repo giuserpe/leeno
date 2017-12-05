@@ -517,7 +517,7 @@ def SubSum_SuperCap(lrow):
     oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-0-scritta mini %'
     oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
+    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow + 1)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-0-scritta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-0-scritta mini val'
@@ -545,7 +545,7 @@ def SubSum_SottoCap(lrow):
     oSheet.getCellByPosition(24, lrow).CellStyle = 'livello2 valuta mini %'
     oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
     oSheet.getCellByPosition(28, lrow).CellStyle = 'livello2 scritta mini'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
+    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow +1)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'livello2 valuta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'livello2 valuta mini'
@@ -573,7 +573,7 @@ def SubSum_Cap(lrow):
     oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
     oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-1-scritta mini %'
     oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrowE)
+    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow + 1)
     oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-1-scritta mini %'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
@@ -3288,8 +3288,11 @@ def leeno_conf(arg=None):
         oSheet.getCellRangeByName('S1.H335').Value = 0
     else:
         oSheet.getCellRangeByName('S1.H335').Value = 1
-    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
-    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
+    
+    # ~ conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
+    oSheet.getCellRangeByName('S1.H337').Value = float(oDlg_config.getControl('TextField10').getText())
+    # ~ conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
+    oSheet.getCellRangeByName('S1.H338').Value = float(oDlg_config.getControl('TextField11').getText())
 
     conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
     conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
@@ -5863,7 +5866,7 @@ def mri(target):
 ########################################################################
 #codice di Manuele Pesenti #############################################
 ########################################################################
-def getFormula(n, a, b):
+def get_Formula(n, a, b):
     """
     n { integer } : posizione cella
     a  { string } : primo parametro da sostituire
@@ -5921,7 +5924,7 @@ def SubSum(lrow, sub=False):
             nextCap = n + 1
             break
     for n,a,b in((18, lrow+1, nextCap,),(24, lrow+1, lrowE+1,),(29, lrow+1, lrowE+1,),(30, lrow+1, nextCap,),):
-        oSheet.getCellByPosition(n, lrow).Formula = getFormula(n, a, b)
+        oSheet.getCellByPosition(n, lrow).Formula = get_Formula(n, a, b)
         Sheet.getCellByPosition(18, lrow).CellStyle = getCellStyle(level, n)
 ########################################################################
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################

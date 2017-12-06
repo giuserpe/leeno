@@ -1067,6 +1067,17 @@ def _gotoCella(IDcol=0, IDrow=0):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     return
 ########################################################################
+def loVersion(arg=None):
+    '''
+    Legge il numero di versione di LibreOffice.
+    '''
+    sAccess = createUnoService("com.sun.star.configuration.ConfigurationAccess")
+    aConfigProvider = createUnoService("com.sun.star.configuration.ConfigurationProvider")
+    arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
+    arg.Name = "nodepath"
+    arg.Value = '/org.openoffice.Setup/Product'
+    return aConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,)).ooSetupVersionAboutBox
+#~ ########################################################################
 def adatta_altezza_riga(nSheet=None):
     '''
     nSheet   { string } : nSheet della sheet
@@ -1077,12 +1088,17 @@ def adatta_altezza_riga(nSheet=None):
     if nSheet == None:
         nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
+    test = getLastUsedCell(oSheet).EndRow+1
+    
+    #~ for y in reversed(range(0, test)):
+    #~     oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    return
 ########################################################################
 # elenco prezzi ########################################################
-#~ def debug(arg=None):
+#~ def debug(arg=None):\
 def scelta_viste(arg=None):
     '''
     Gestisce i dialoghi del menù viste nelle tabelle di Analisi di Prezzo,
@@ -6790,7 +6806,212 @@ def taglia_x(arg=None):
     oRange = oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow)
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
+########################################################################
+def debug(arg=None): #COMUNE DI MATERA
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
 
+    #~ chi(oSheet.getCellRangeByName('B278').Type.value)
+    #~ return
+    #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
+    #~ return
+ 
+
+    #~ oSheet.getCellRangeByName('Y254')
+    
+    #~ return
+    #~ col1 = 16777072 #16771481
+    #~ col2 = 16777120 #16771501
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771481:
+            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777072
+            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771501:
+            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777120
+            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
+    #~ return
+    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+        #~ for x in (29, 30):
+            #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
+    #~ chi(len(oSheet.getCellRangeByName('A6').String.split('.')))
+    #~ return
+# SALTA SULLE CELLE 
+    #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
+    # ~ for y in reversed(range(0, getLastUsedCell(oSheet).EndRow+1)):
+        # ~ if  oSheet.getCellByPosition(0, y).CellStyle in ('Livello-0-scritta', 'Livello-1-scritta'):
+            # ~ oSheet.getRows().removeByIndex(y, 1)
+
+            #~ testo = oSheet.getCellByPosition(2, y).String.split('- art. ')[1]
+
+            #~ oSheet.getCellByPosition(2, y).String = '- vedi voce art. ' + testo
+            #~ oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
+            #~ _gotoCella(2, y)
+            #~ chi (len(oSheet.getCellByPosition(0, y).String.split('.')))
+            #~ _gotoCella(4, y)
+            
+            #~ return
+            #~ oSheet.getCellByPosition(6, y).Value = oSheet.getCellByPosition(5, y).Value / 100
+    
+            
+             
+        #~ if len (oSheet.getCellByPosition(2, y).String) > 5:
+            #~ oSheet.getCellByPosition(4, y).String = ''
+        #~ for x in range(3, 3):
+        #~ if oSheet.getCellByPosition(2, y).Type.value == 'TEXT' and oSheet.getCellByPosition(3, y).Type.value == 'TEXT':
+            #~ oSheet.getCellByPosition(1, y).String = oSheet.getCellByPosition(1, y).String +' '+oSheet.getCellByPosition(2, y).String
+            #~ oSheet.getCellByPosition(2, y).String = oSheet.getCellByPosition(3, y).String
+            #~ oSheet.getCellByPosition(3, y).Value = oSheet.getCellByPosition(4, y).Value
+            #~ oSheet.getCellByPosition(4, y).Value = oSheet.getCellByPosition(5, y).Value
+            #~ oSheet.getCellByPosition(5, y).String = ''
+            
+            #~ if oSheet.getCellByPosition(x, y).getIsMerged() == True:
+            
+            #~ return
+    # ~ chi("fine")
+    # ~ return
+
+# SPALMA I VALORI
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).Type.value =='VALUE':
+            #~ valore = oSheet.getCellByPosition(0, y).Value
+        #~ else:
+            #~ oSheet.getCellByPosition(0, y).Value = valore
+
+# COLORA VALORI DIFFERENTI
+    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(10, y).String != oSheet.getCellByPosition(11, y).String:
+            #~ if oSheet.getCellByPosition(11, y).String != '':
+                #~ oSheet.getCellByPosition(10, y).CellBackColor = 16777113
+                #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
+
+#~ # SOSTITUZIONI
+    #~ chi(oSheet.getCellRangeByName('R19').String)
+    test = getLastUsedCell(oSheet).EndRow+1
+    for y in reversed(range(0, test)):
+        if oSheet.getCellByPosition(0, y).String == '' :
+            oSheet.getRows().removeByIndex(y, 1)
+
+    return
+    # ~ for y in range(Range2Cell()[1]+1, test):
+    #~ chi(datetime.strptime(testo.split(' ')[0],'%H:%M').split(' ')[-1])
+
+    for y in range(0, test):
+        if ' ' in oSheet.getCellByPosition(16, y).String:
+            try:
+                testo = oSheet.getCellByPosition(16, y).String
+                oSheet.getCellByPosition(17, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
+                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
+                
+                oSheet.getCellByPosition(18, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
+                oSheet.getCellByPosition(18, y).Value = oSheet.getCellByPosition(18, y).Value
+
+                oSheet.getCellByPosition(19, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
+                oSheet.getCellByPosition(19, y).Value = oSheet.getCellByPosition(19, y).Value 
+                oSheet.getCellByPosition(20, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
+                oSheet.getCellByPosition(20, y).Value = oSheet.getCellByPosition(20, y).Value 
+                oSheet.getCellByPosition(21, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
+                oSheet.getCellByPosition(21, y).Value = oSheet.getCellByPosition(21, y).Value 
+                oSheet.getCellByPosition(22, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
+                oSheet.getCellByPosition(22, y).Value = oSheet.getCellByPosition(22, y).Value 
+
+            except:
+                pass
+# inserisce numero tabella
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ oSheet.getCellByPosition(13, y).Formula = '=VLOOKUP(A'+ str(y+1) + ';strade;2;0)'
+            #~ oSheet.getCellByPosition(13, y).String = oSheet.getCellByPosition(13, y).String
+            #~ oSheet.getCellRangeByPosition(0, y, 11, y).merge(True)
+
+    #~ return  
+#~ RECUPERA VIE
+    #~ vie = list()
+    #~ n = 0
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ oSheet.getCellByPosition(12, y).CellBackColor = 16777113
+            #~ n += 1
+            #~ testo = oSheet.getCellByPosition(0, y).String
+            #~ num = oSheet.getCellByPosition(13, y).Value
+            #~ el =(n, testo, num)
+            #~ vie.append(el)
+    
+    #~ oSheet = oDoc.getSheets().getByName('VIE')
+    #~ oRange = oSheet.getCellRangeByPosition(0, 1, len(vie[0])-1, len(vie))
+    #~ lista_come_array = tuple(vie)
+    #~ oRange.setDataArray(lista_come_array)
+#~ crea via e numero
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ testo = oSheet.getCellByPosition(0, y).String
+        #~ else:
+            #~ try:
+                #~ if oSheet.getCellByPosition(2, y).String != '':
+                    #~ oSheet.getCellByPosition(12, y).String = testo + ', ' + oSheet.getCellByPosition(2, y).String.upper()
+                #~ else:
+                    #~ oSheet.getCellByPosition(12, y).String = ''
+            #~ except:
+                #~ pass
+#~ elimina '/' finale
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ try:
+            #~ if oSheet.getCellByPosition(9, y).String[-1] == '/':
+                #~ oSheet.getCellByPosition(9, y).String = oSheet.getCellByPosition(9, y).String[:-1]
+        #~ except:
+            #~ pass
+            
+    #~ return
+ #~ INSERISCI PARTICELLE
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
+        #~ if oSheet.getCellByPosition(10, y).String != '':
+            #~ if oSheet.getCellByPosition(11, y).String != '':
+                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String + '/' + oSheet.getCellByPosition(11, y).String
+            #~ else:
+                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String
+    
+#~ ricerca graffate
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if '\n' in oSheet.getCellByPosition(6, y).String:
+            #~ particelle = oSheet.getCellByPosition(6, y).String.split('\n')
+            #~ sub = oSheet.getCellByPosition(7, y).String.split('\n')
+
+            #~ while len(sub) < len(particelle):
+                #~ sub.append('')
+            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 5, y))
+            #~ copy_clip()
+            #~ oSheet.getRows().insertByIndex(y+1, len(particelle)-1)
+            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y+1, 0, y+len(particelle)-1))
+            #~ paste_clip()
+            #~ for n in range(0, len(particelle)):
+                #~ oSheet.getCellByPosition(6, y+n).String = particelle[n]
+                #~ oSheet.getCellByPosition(7, y+n).String = sub[n]
+                #~ oSheet.getCellByPosition(15, y+n).String = particelle[0]+ '/' + sub[0]
+    #~ chi(sub)
+#RAGGRUPPA LE RIGHE SECONDO IL COLoRE
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ iSheet = oSheet.RangeAddress.Sheet
+    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    #~ oCellRangeAddr.Sheet = iSheet
+    #~ lista = list()
+    #~ test = getLastUsedCell(oSheet).EndRow-1
+    #~ for n in range(0, test):
+        #~ if oSheet.getCellByPosition(0, n).CellBackColor == 16777113:
+            #~ sopra = n+1
+            
+            #~ for n in range(sopra+1, test):
+                #~ if oSheet.getCellByPosition(0, n).CellBackColor == 16777113:
+                    #~ sotto = n-1
+                    #~ lista.append((sopra, sotto))
+
+                    #~ break
+    #~ for el in lista:
+        #~ oCellRangeAddr.StartRow = el[0]
+        #~ oCellRangeAddr.EndRow = el[1]
+        #~ oSheet.group(oCellRangeAddr,1)
+        #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
+    return
+########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 #~ g_exportedScripts = richiesta_offerta,
 ########################################################################
@@ -6807,3 +7028,79 @@ def taglia_x(arg=None):
 g_ImplementationHelper = unohelper.ImplementationHelper()
 g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("org.giuseppe-vizziello.leeno",),)
 ########################################################################
+class Office:
+    '''Frequently used methods in office context'''
+    def __init__(self, ctx=uno.getComponentContext()):
+        self.ctx = ctx
+        self.smgr = self.ctx.ServiceManager
+        
+    def createUnoService(self, service):
+        return self.smgr.createInstance(service)
+
+    def getDesktop(self):
+        return self.smgr.createInstanceWithContext("com.sun.star.frame.Desktop",self.ctx)
+
+    def getCurrentComponent(self):
+        return self.getDesktop().getCurrentComponent()
+
+    def getCurrentFrame(self):
+        return self.getDesktop().getCurrentFrame()
+
+    def getCurrentComponentWindow(self):
+        return self.getCurrentFrame().getComponentWindow()
+
+    def getCurrentContainerWindow(self):
+        return self.getCurrentFrame().getContainerWindow()
+
+    def getCurrentController(self):
+        return self.getCurrentFrame().getController()
+
+    def callXray(self, obj=None):
+        """Macro to call Basic XRay by Bernard Marcelly from Python.
+        If no object is given, the current document's selection is used"""
+        sURL = "vnd.sun.star.script:XRayTool._Main.Xray?language=Basic&location=application"
+        if not obj:
+            obj = self.getCurrentController().getSelection()
+
+        oMSPF = self.createUnoService("com.sun.star.script.provider.MasterScriptProviderFactory")
+        oMSP = oMSPF.createScriptProvider('')
+        oScript = oMSP.getScript(sURL)
+        oScript.invoke((obj,), (), ()) 
+
+
+        oMSPF = self.createUnoService("com.sun.star.script.provider.MasterScriptProviderFactory")
+        oMSP = oMSPF.createScriptProvider('')
+        oScript = oMSP.getScript(sURL)
+        x = oScript.invoke((thisComponent,), (), ())
+
+    def callMRI(self,obj=None):
+        '''Create an instance of MRI inspector and inspect the given object (default is selection)'''
+        if not obj:
+            obj = self.getCurrentController().getSelection()
+        mri = self.createUnoService("mytools.Mri")
+        mri.inspect(obj)
+
+    def getOOoSetupNode(self, sNodePath):
+        aConfigProvider = self.createUnoService("com.sun.star.configuration.ConfigurationProvider")
+        arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
+        arg.Name = "nodepath"
+        arg.Value = sNodePath
+        return aConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,))
+
+    def getOOoSetupValue(self, sNodePath,sProperty):
+        oNode = self.getOOoSetupNode(sNodePath)
+        return oNode.getByName(sProperty)
+
+    def setOOoSetupValue(self, sNodePath, sProperty, sValue):
+        xconfig = self.createUnoService("com.sun.star.configuration.ConfigurationProvider")
+        arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
+        arg.Name = "nodepath"
+        arg.Value = sNodePath
+        try:
+            xAccess = xconfig.createInstanceWithArguments("com.sun.star.configuration.ConfigurationUpdateAccess",(arg,))
+            xAccess.setPropertyValue(sProperty, sValue)
+            xAccess.commitChanges()
+        except:
+            return False
+        else:
+            return True

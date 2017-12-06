@@ -3150,17 +3150,8 @@ def ins_voce_computo_grezza(lrow):
     oSheet.getRows().insertByIndex(lrow, 4)#~ insRows(lrow,4) #inserisco le righe
     oSheet.copyRange(oCellAddress, oRangeAddress)
 ########################################################################
-# controllo la presenza di voci abbreviate e nel caso adatto la formula
-    for i in range(3, 10):
-        if '=IF(LEN(VLOOKUP(B' in oSheet.getCellByPosition(2, i).getFormula():
-
-            #~ primi = oDoc.Sheets.getByName('S1').getCellByPosition(7,336).Value #S1.H337
-            #~ ultimi = oDoc.Sheets.getByName('S1').getCellByPosition(7,337).Value #S1.H338
-            #~ sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<' + str(primi+ultimi) + ';VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());160);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());' + str(ultimi) + ')))'
-            sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-
-            oSheet.getCellByPosition(2, lrow+1).Formula = sformula
-            break
+    sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+    oSheet.getCellByPosition(2, lrow+1).Formula = sformula
 ########################################################################
 # raggruppo i righi di mirura
     iSheet = oSheet.RangeAddress.Sheet
@@ -3478,14 +3469,9 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
         oSheet.getCellByPosition(1, sopra+2).Value = data
     except:
         oSheet.getCellByPosition(1, sopra+2).Value = date.today().toordinal()-693594
-
 ########################################################################
-# controllo la presenza di voci abbreviate e nel caso adatto la formula
-    for i in range(3, 10):
-        if '=IF(LEN(VLOOKUP(B' in oSheet.getCellByPosition(2, i).getFormula():
-            sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-            oSheet.getCellByPosition(2, lrow+1).Formula = sformula
-            break
+    sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+    oSheet.getCellByPosition(2, lrow+1).Formula = sformula
 ########################################################################
 # raggruppo i righi di mirura
     iSheet = oSheet.RangeAddress.Sheet

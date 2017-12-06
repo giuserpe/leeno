@@ -21,24 +21,6 @@ global oProgressBar as object
 Global sTemp as string
 &apos;global sVer2 as string &apos;versione della libreria installata
 
-
-
-sub mostra
-xray ThisComponent.DocumentProperties
-	sFrame = ThisComponent.CurrentController.Frame.title
-	sFrame = RTrimStr (sFrame, &quot; - OpenOffice.org Calc&quot;)
-	&apos;sTitle = ThisComponent.DocumentInfo.Title
-	sTitle = ThisComponent.DocumentProperties.Title
-Msgbox &quot;sUltimus: &quot; &amp; sUltimus &amp; CHR$(10)_
-		&amp; &quot;sUltimus2: &quot; &amp; sUltimus2 &amp; CHR$(10)_
-			 &amp; &quot; Frame &quot; &amp; sFrame &amp; CHR$(10)_
-			 &amp; &quot;Title &quot; &amp; sTitle
-	print sUltimus		 
-END SUB
-
-
-
-
 Function IsDocumentDiUnCertoTipo(oDoc) As Boolean
 Dim bResult As Boolean
  bResult = False
@@ -795,22 +777,6 @@ print	iViewPathLen
 	CutPathView = sViewPath
 	print CutPathView
 END SUB
-
-
-Function OOoVersion() As String
- &apos;Retreives the running OOO version
- Dim aSettings, aConfigProvider
- Dim aParams2(0) As new com.sun.star.beans.PropertyValue
- Dim sProvider$, sAccess$
- sProvider = &quot;com.sun.star.configuration.ConfigurationProvider&quot;
- sAccess = &quot;com.sun.star.configuration.ConfigurationAccess&quot;
- aConfigProvider = createUnoService(sProvider)
- aParams2(0).Name = &quot;nodepath&quot;
- aParams2(0).Value = &quot;/org.openoffice.Setup/Product&quot;
- aSettings = aConfigProvider.createInstanceWithArguments(sAccess, aParams2())
- OOOVersion=aSettings.getbyname(&quot;ooSetupVersion&quot;)
- Print OOOVersion
-End Function
 
 &apos;***************************************************************+
 Sub crea_stile_cella_1

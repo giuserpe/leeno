@@ -1089,10 +1089,12 @@ def adatta_altezza_riga(nSheet=None):
         nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
     test = getLastUsedCell(oSheet).EndRow+1
-    
-    #~ for y in reversed(range(0, test)):
-    #~     oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
-    oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
+    #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando riga per riga
+    if float(loVersion()[:3]) > 5.2:
+        for y in reversed(range(0, test)):
+            oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+    else:
+        oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
     return

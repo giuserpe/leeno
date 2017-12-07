@@ -1099,6 +1099,28 @@ def adatta_altezza_riga(nSheet=None):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
     return
 ########################################################################
+#~ def debug(arg=None):
+def voce_breve(arg=None):
+    '''
+    Cambia il numero di caratteri visualizzati per la desctizione voce.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    try:
+        oSheet = oDoc.getSheets().getByName('S1')
+    except:
+        return
+    if oSheet.getCellRangeByName('S1.H337').Value < 10000:
+        conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
+        oSheet.getCellRangeByName('S1.H337').Value = 10000
+    else:
+        oSheet.getCellRangeByName('S1.H337').Value = int(conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate'))
+    if oSheet.getCellRangeByName('S1.H338').Value < 10000:
+        conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
+        oSheet.getCellRangeByName('S1.H338').Value = 10000
+    else:
+        oSheet.getCellRangeByName('S1.H338').Value = int(conf.read(path_conf, 'Computo', 'fine_voci_abbreviate'))
+    adatta_altezza_riga()
+########################################################################
 # elenco prezzi ########################################################
 #~ def debug(arg=None):\
 def scelta_viste(arg=None):
@@ -3298,10 +3320,12 @@ def leeno_conf(arg=None):
     else:
         oSheet.getCellRangeByName('S1.H335').Value = 1
     
-    # ~ conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
+#il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
     oSheet.getCellRangeByName('S1.H337').Value = float(oDlg_config.getControl('TextField10').getText())
-    # ~ conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
+    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
     oSheet.getCellRangeByName('S1.H338').Value = float(oDlg_config.getControl('TextField11').getText())
+    adatta_altezza_riga()
 
     conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
     conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
@@ -6795,7 +6819,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -7016,79 +7040,3 @@ def debug(arg=None): #COMUNE DI MATERA
 g_ImplementationHelper = unohelper.ImplementationHelper()
 g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("org.giuseppe-vizziello.leeno",),)
 ########################################################################
-class Office:
-    '''Frequently used methods in office context'''
-    def __init__(self, ctx=uno.getComponentContext()):
-        self.ctx = ctx
-        self.smgr = self.ctx.ServiceManager
-        
-    def createUnoService(self, service):
-        return self.smgr.createInstance(service)
-
-    def getDesktop(self):
-        return self.smgr.createInstanceWithContext("com.sun.star.frame.Desktop",self.ctx)
-
-    def getCurrentComponent(self):
-        return self.getDesktop().getCurrentComponent()
-
-    def getCurrentFrame(self):
-        return self.getDesktop().getCurrentFrame()
-
-    def getCurrentComponentWindow(self):
-        return self.getCurrentFrame().getComponentWindow()
-
-    def getCurrentContainerWindow(self):
-        return self.getCurrentFrame().getContainerWindow()
-
-    def getCurrentController(self):
-        return self.getCurrentFrame().getController()
-
-    def callXray(self, obj=None):
-        """Macro to call Basic XRay by Bernard Marcelly from Python.
-        If no object is given, the current document's selection is used"""
-        sURL = "vnd.sun.star.script:XRayTool._Main.Xray?language=Basic&location=application"
-        if not obj:
-            obj = self.getCurrentController().getSelection()
-
-        oMSPF = self.createUnoService("com.sun.star.script.provider.MasterScriptProviderFactory")
-        oMSP = oMSPF.createScriptProvider('')
-        oScript = oMSP.getScript(sURL)
-        oScript.invoke((obj,), (), ()) 
-
-
-        oMSPF = self.createUnoService("com.sun.star.script.provider.MasterScriptProviderFactory")
-        oMSP = oMSPF.createScriptProvider('')
-        oScript = oMSP.getScript(sURL)
-        x = oScript.invoke((thisComponent,), (), ())
-
-    def callMRI(self,obj=None):
-        '''Create an instance of MRI inspector and inspect the given object (default is selection)'''
-        if not obj:
-            obj = self.getCurrentController().getSelection()
-        mri = self.createUnoService("mytools.Mri")
-        mri.inspect(obj)
-
-    def getOOoSetupNode(self, sNodePath):
-        aConfigProvider = self.createUnoService("com.sun.star.configuration.ConfigurationProvider")
-        arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
-        arg.Name = "nodepath"
-        arg.Value = sNodePath
-        return aConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,))
-
-    def getOOoSetupValue(self, sNodePath,sProperty):
-        oNode = self.getOOoSetupNode(sNodePath)
-        return oNode.getByName(sProperty)
-
-    def setOOoSetupValue(self, sNodePath, sProperty, sValue):
-        xconfig = self.createUnoService("com.sun.star.configuration.ConfigurationProvider")
-        arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
-        arg.Name = "nodepath"
-        arg.Value = sNodePath
-        try:
-            xAccess = xconfig.createInstanceWithArguments("com.sun.star.configuration.ConfigurationUpdateAccess",(arg,))
-            xAccess.setPropertyValue(sProperty, sValue)
-            xAccess.commitChanges()
-        except:
-            return False
-        else:
-            return True

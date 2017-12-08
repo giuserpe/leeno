@@ -218,12 +218,8 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 		Tronca_Altezza_Voci_EP
 	Case &quot;Analisi di Prezzo&quot;
 		Tronca_Altezza_Analisi
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;&apos; disattivata in contabilità
-		If abbreviata = 1 Then
-			Tronca_Altezza_Voci_Computo_OFF
-		Else
-			Tronca_Altezza_Voci_Computo_ON
-		EndIf
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot; &apos;, &quot;CONTABILITA&quot;&apos; disattivata in contabilità
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;voce_breve&quot;)
 	End Select
 	If ThisComponent.currentController.activeSheet.name = &quot;Listino&quot; Then	 		
 		Tronca_Altezza_Voci_Listino
@@ -233,183 +229,7 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 	thisComponent.currentController.Select(oCell)
 	unSelect &apos;unselect ranges 
 end sub
-
-Function abbreviata
-	oSheet = ThisComponent.currentController.activeSheet
-	Select Case oSheet.Name
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-		stile = &quot;Comp-Bianche in mezzo Descr&quot;
-	Case &quot;CONTABILITA&quot;
-		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;
-	End Select
-
-	For i = 2 To 10	
-		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2 ,i))
-			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
-				abbreviata = 1
-				Exit For
-			Else
-				abbreviata = 0
-				Exit For
-			EndIf
-		EndIf
-	Next i
-End Function
-
-Sub Tronca_Altezza_Voci_Computo_ON &apos; (c) Giuseppe Vizziello 2015
-&apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO, VARIANTE e CONTABILITA
-&apos; verifico la compatibilità ed adatto
-&apos;chiudi_dialoghi &apos; chiude tutti i dialoghi
-Barra_chiudi_sempre_4
-Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
-&apos;	oDialogScenari_A = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgAttesa) &apos; Inizializza il dialogo
-&apos;	oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
-	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-	if	oSheet.GetCellByPosition(7,336).value = 0 Then
-		oSheet.GetCellByPosition(6,336).String = &quot;Descrizioni abbreviate: primi caratteri della voce&quot;
-		oSheet.GetCellByPosition(6,336).CellStyle = &quot;Setvar b&quot;
-		oSheet.GetCellByPosition(7,336).value = 160
-		oSheet.GetCellByPosition(7,336).CellStyle = &quot;Setvar C&quot;
-		oSheet.GetCellByPosition(8,336).String = &quot;Quanti caratteri vuoi visualizzare partendo dall&apos;INIZIO della descrizione?&quot;
-		oSheet.GetCellRangeByPosition(8,336,20,336).CellStyle = &quot;Setvar D&quot;
-		oSheet.GetCellByPosition(6,337).String = &quot;Descrizioni abbreviate: ultimi caratteri della voce&quot;
-		oSheet.GetCellByPosition(6,337).CellStyle = &quot;Setvar b&quot;
-		oSheet.GetCellByPosition(7,337).value = 100
-		oSheet.GetCellByPosition(7,337).CellStyle = &quot;Setvar C&quot;
-		oSheet.GetCellByPosition(8,337).String = &quot;Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?&quot;
-		oSheet.GetCellRangeByPosition(8,337,20,337).CellStyle = &quot;Setvar D&quot;
-	EndIf
-&apos;	primi = oSheet.GetCellByPosition(7,336).value &apos;$S1.$H$337
-&apos;	ultimi = oSheet.GetCellByPosition(7,337).value &apos;$S1.$H$338
-
-	oSheet = ThisComponent.currentController.activeSheet
-	Select Case oSheet.Name
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-		stile = &quot;Comp-Bianche in mezzo Descr&quot;
-	Case &quot;CONTABILITA&quot;
-		If ThisComponent.NamedRanges.hasByName(&quot;#LIB#1&quot;) Then
-			MsgBox (&quot;Il cambio della modalità di visualizzazione&quot; &amp; CHR$(13) &amp; _
-					&quot;delle descrizioni è possibile solo&quot; &amp; CHR$(13) &amp; _
-					&quot;se NON è presente alcun atto contabile registrato!&quot;, 16, &quot;ATTENZIONE!&quot;)
-			Exit Sub
-		EndIf
-		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;
-	End Select
-
-Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
-
-	i = getLastUsedRow(oSheet)
-&apos;	If abbrevia = 0 Then
-		While i &gt; 2
-			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-				sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;($S1.$H$337+$S1.$H$338);VLOOKUP(B&quot; &amp; _
-				i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; &quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());$S1.$H$337);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
-				&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());$S1.$H$338))&quot;
-				oSheet.GetCellByPosition(2 ,i).formula = sformula
-			EndIf
-			i = i-1
-			Barra_Apri_Chiudi_5(i, 25)
-		Wend
-&apos;	Else
-&apos;		While i &gt; 2
-&apos;			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-&apos;			sformula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
-&apos;				oSheet.GetCellByPosition(2 ,i).formula = sformula
-&apos;			EndIf
-&apos;			i = i-1
-&apos;			Barra_Apri_Chiudi_5(i, 25)
-&apos;		Wend
-&apos;	EndIf
-Adatta_h_riga_intera_tabella(oSheet.Name)
-&apos;chiudi_dialoghi
-		 	Barra_chiudi_sempre_4	
-&apos;	MsgBox (&quot;La visualizzazione delle descrizioni è stata cambiata!.&quot;, , &quot;AVVISO!&quot;)
-End Sub
 &apos;#########################################################################
-Sub Tronca_Altezza_Voci_Computo_OFF &apos; (c) Giuseppe Vizziello 2015
-&apos; visualizzazione abbreviata ON/OFF delle descrizioni in COMPUTO, VARIANTE e CONTABILITA
-&apos; verifico la compatibilità ed adatto
-&apos;chiudi_dialoghi &apos; chiude tutti i dialoghi
-Barra_chiudi_sempre_4
-Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 25)
-&apos;	oDialogScenari_A = CreateUnoDialog(DialogLibraries.UltimusFree2.DlgAttesa) &apos; Inizializza il dialogo
-&apos;	oDialogScenari_A.Execute() &apos; Esegue il dialogo, cioè appare sullo schermo	
-&apos;	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
-&apos;	if	oSheet.GetCellByPosition(7,336).value = 0 Then
-&apos;		oSheet.GetCellByPosition(6,336).String = &quot;Descrizioni abbreviate: primi caratteri della voce&quot;
-&apos;		oSheet.GetCellByPosition(6,336).CellStyle = &quot;Setvar b&quot;
-&apos;		oSheet.GetCellByPosition(7,336).value = 160
-&apos;		oSheet.GetCellByPosition(7,336).CellStyle = &quot;Setvar C&quot;
-&apos;		oSheet.GetCellByPosition(8,336).String = &quot;Quanti caratteri vuoi visualizzare partendo dall&apos;INIZIO della descrizione?&quot;
-&apos;		oSheet.GetCellRangeByPosition(8,336,20,336).CellStyle = &quot;Setvar D&quot;
-&apos;		oSheet.GetCellByPosition(6,337).String = &quot;Descrizioni abbreviate: ultimi caratteri della voce&quot;
-&apos;		oSheet.GetCellByPosition(6,337).CellStyle = &quot;Setvar b&quot;
-&apos;		oSheet.GetCellByPosition(7,337).value = 100
-&apos;		oSheet.GetCellByPosition(7,337).CellStyle = &quot;Setvar C&quot;
-&apos;		oSheet.GetCellByPosition(8,337).String = &quot;Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?&quot;
-&apos;		oSheet.GetCellRangeByPosition(8,337,20,337).CellStyle = &quot;Setvar D&quot;
-&apos;	EndIf
-&apos;	primi = oSheet.GetCellByPosition(7,336).value
-&apos;	ultimi = oSheet.GetCellByPosition(7,337).value
-
-	oSheet = ThisComponent.currentController.activeSheet
-	Select Case oSheet.Name
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-		stile = &quot;Comp-Bianche in mezzo Descr&quot;
-	Case &quot;CONTABILITA&quot;
-		If ThisComponent.NamedRanges.hasByName(&quot;#LIB#1&quot;) Then
-			MsgBox (&quot;Il cambio della modalità di visualizzazione&quot; &amp; CHR$(13) &amp; _
-					&quot;delle descrizioni è possibile solo&quot; &amp; CHR$(13) &amp; _
-					&quot;se NON è presente ulcun atto contabile registrato!&quot;, 16, &quot;ATTENZIONE!&quot;)
-			Exit Sub
-		EndIf
-		stile = &quot;Comp-Bianche in mezzo Descr_R&quot;
-	End Select
-
-Barra_Apri_Chiudi_5(&quot;Procedo, attendi...&quot;, 50)
-
-&apos; switch ON/OFF
-&apos;	For i = 2 To 10	
-&apos;		If oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-&apos;			If InStr (oSheet.GetCellByPosition(2,i).Formula, &quot; [...] &quot;) &lt;&gt; 0 Then
-&apos;				abbrevia = 1
-&apos;				Exit For
-&apos;			Else
-&apos;				abbrevia = 0
-&apos;				Exit For
-&apos;			EndIf
-&apos;		EndIf
-&apos;	Next i
-	i = getLastUsedRow(oSheet)
-&apos;	If abbrevia = 0 Then
-&apos;		While i &gt; 2
-&apos;			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-&apos;				sformula = &quot;=IF(LEN(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE()))&lt;&quot; &amp; primi+ultimi &amp; _
-&apos;					&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; _
-&apos;					&quot;CONCATENATE(LEFT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&amp; primi &amp;&quot;);&quot;&quot; [...] &quot;&quot;;&quot; &amp; _
-&apos;					&quot;RIGHT(VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot; &amp; ultimi &amp; &quot;))&quot;
-&apos;				oSheet.GetCellByPosition(2 ,i).formula = sformula
-&apos;			EndIf
-&apos;			i = i-1
-&apos;			Barra_Apri_Chiudi_5(i, 25)
-&apos;		Wend
-&apos;	Else
-		While i &gt; 2
-			If  oSheet.GetCellByPosition(2 ,i).CellStyle = stile Then
-			sformula = &quot;=CONCATENATE(&quot;&quot; &quot;&quot;;VLOOKUP(B&quot; &amp; i+1 &amp; &quot;;elenco_prezzi;2;FALSE());&quot;&quot; &quot;&quot;)&quot;
-				oSheet.GetCellByPosition(2 ,i).formula = sformula
-			EndIf
-			i = i-1
-			Barra_Apri_Chiudi_5(i, 25)
-		Wend
-&apos;	EndIf
-Adatta_h_riga_intera_tabella(oSheet.Name)
-&apos;chiudi_dialoghi
-		 	Barra_chiudi_sempre_4	
-&apos;	MsgBox (&quot;La visualizzazione delle descrizioni è stata cambiata!.&quot;, , &quot;AVVISO!&quot;)
-End Sub
-&apos; ########################################################################
 sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle descrizioni per visualizzare più righe/voci
  &apos;	msgbox &quot;Spiacente ma funziona solo sulla tab &apos;Elenco Prezzi&apos;&quot;&amp; CHR$(10)_
  	&apos;		&amp; &quot; e NON sui suoi duplicati!&quot;				
@@ -440,9 +260,6 @@ sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle des
 					oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = 1300
 			end if
 	endif 	
-&apos;	ThisComponent.CurrentController.Select(oActiveCell1) 
-&apos;	unSelect &apos;unselect ranges 	
-	&apos; toglie la selezione 	
 end sub
 
 
@@ -524,83 +341,5 @@ sub Tronca_Altezza_Voci_Listino &apos; sull&apos;E.P. limita l&apos;altezza dell
 	unSelect &apos;unselect ranges 	
 	&apos; toglie la selezione 	
 end sub
-
-function fnColLtr2Number_(sCol as string) as integer
-	dim i as integer, nCol as integer
-
-	nCol = 0
-	for i = 1 to len(sCol)
-	 nCol=nCol*26 + asc(mid(sCol,i,1)) - 64
-	next
-	colLtr2Number = nCol - 1
-end function 
-
-SUB SubTot_in_mezzo &apos;rifa la somma &apos;riporta i subTotali (fa solo un link) NON USATA ma da studiarci sopra
-					&apos; a fianco al titolo del Cap e del SubCap
-
-	oSheet1 = ThisComponent.currentController.activeSheet
-	&apos;	lrow= Range2Cell &apos; per ridurre a cella iniziale un eventuale range
-	oCell1=oSheet1.GetCellByPosition(2 , lrow)
-	oSheet = ThisComponent.currentController.activeSheet
-&apos;	sAttributo = Trova_Attr_Sheet
- If osheet.Name &lt;&gt; &quot;COMPUTO&quot; Then	
- 			 msgbox &quot;#7 Questo comando si può usare solo&quot; &amp; CHR$(10)_
- 			 &amp;&quot; in una tabella di COMPUTO!&quot;, 16, &quot;AVVISO!&quot;
-			exit sub
-	end if
-	goto saltalo
-	if msgbox ( &quot;Vuoi nascondere (e spostare) il Codice Voce ? &quot;&amp; CHR$(10)_
-					&amp; &quot;?&quot; ,36, &quot;&quot;) = 6 then
-			sCodici=1
-	end if
-	if msgbox ( &quot;Vuoi nascondere (e spostare) l&apos;Unità di Misura ? &quot;&amp; CHR$(10)_
-					&amp; &quot;?&quot; ,36, &quot;&quot;) = 6 then
-			sUM=1
-	end if
-	saltalo:
-	Ripristina_statusLine
-	Barra_Apri_Chiudi_5(&quot; Sto elaborando... Aspetta...&quot;, 60)
-	
-	lStartRow = oSheet.GetCellByPosition( 0 , 0)
-	lLastUrowNN = getLastUsedRow(oSheet)
-	lCap = 1
-	lSotCap = 1
-	For i = 2 to lLastUrowNN 
-		if	oSheet.GetCellByPosition(1 , (i)).CellStyle = &quot;Livello-1-scritta&quot; then &apos; link a subTot CAP
-			sformula = &quot;=CONCATENATE(&quot;&quot;(SUBTOTAL &quot;&quot;;TEXT(AO&quot; &amp; i+1 &amp; &quot;;&quot; &amp; _
-						 &quot;&quot;&quot;[$€-410] #.##0,00;-[$€-410] #.##0,00&quot;&quot;&quot; &amp; &quot;);&quot;&quot;&quot; &amp; &quot;)&quot;&quot;&quot; &amp; &quot;)&quot;
-			oSheet.GetCellByPosition(9 , (i)).setformula(sformula)
-			oSheet.GetCellByPosition(9 , (i)).CellStyle = &quot;Livello-1-subT&quot;
-			oSheet.GetCellByPosition(18 , (i)).string = &quot;&quot; &apos;cancello l&apos;altra scritta &quot;subtotale &gt;&quot;
-			If not ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
-				&apos;nel caso sia su una tabella &quot;sbiancata&quot;, sbianca LA CELLA
-				oSheet.GetCellByPosition(9 , (i)).CellBackColor = RGB(255,255,255)
-			end if
-
-		end if
-		if	oSheet.GetCellByPosition(2 , (i)).CellStyle = &quot;livello2_&quot; then &apos; link a subTot sottoCAP
-			sformula = &quot;=CONCATENATE(&quot;&quot;(SUBTOTAL &quot;&quot;;TEXT(AN&quot; &amp; i+1 &amp; &quot;;&quot; &amp; _
-						 &quot;&quot;&quot;[$€-410] #.##0,00;-[$€-410] #.##0,00&quot;&quot;&quot; &amp; &quot;);&quot;&quot;&quot; &amp; &quot;)&quot;&quot;&quot; &amp; &quot;)&quot;
-			oSheet.GetCellByPosition(9 , (i)).formula = sformula
-			oSheet.GetCellByPosition(9 , (i)).CellStyle = &quot;Livello-2-subT&quot;
-			If not ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; then
-				&apos;nel caso sia su una tabella &quot;sbiancata&quot;, sbianca la cella
-				oSheet.GetCellByPosition(9 , (i)).CellBackColor = RGB(255,255,255)
-			end if
-		end if
-		if sUM = 1 then
-			
-		end if
-		if sCodici=1 then
-			if	oSheet.GetCellByPosition(2 , (i)).CellStyle = &quot;Comp-Bianche sopra&quot; or &quot;Comp-Bianche sopraS&quot; then
-			&apos;	sCod = 
-			end if
-		end if
-	next
-	Ripristina_statusLine
-print &quot;finito&quot;
-	&apos;BART! RICORDATI DI SCRIVERE LE FUNZIONI IN INGLESE!!
-END SUB
-
 
 </script:module>

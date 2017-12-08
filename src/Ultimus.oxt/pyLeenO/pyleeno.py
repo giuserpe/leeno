@@ -3173,8 +3173,8 @@ def ins_voce_computo_grezza(lrow):
     oSheet.getRows().insertByIndex(lrow, 4)#~ insRows(lrow,4) #inserisco le righe
     oSheet.copyRange(oCellAddress, oRangeAddress)
 ########################################################################
-    sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-    oSheet.getCellByPosition(2, lrow+1).Formula = sformula
+    #~ sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+    #~ oSheet.getCellByPosition(2, lrow+1).Formula = sformula
 ########################################################################
 # raggruppo i righi di mirura
     iSheet = oSheet.RangeAddress.Sheet
@@ -3495,8 +3495,8 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     except:
         oSheet.getCellByPosition(1, sopra+2).Value = date.today().toordinal()-693594
 ########################################################################
-    sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-    oSheet.getCellByPosition(2, lrow+1).Formula = sformula
+    #~ sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+    #~ oSheet.getCellByPosition(2, lrow+1).Formula = sformula
 ########################################################################
 # raggruppo i righi di mirura
     iSheet = oSheet.RangeAddress.Sheet
@@ -6343,8 +6343,8 @@ dell'operazione che terminerà con un messaggio di avviso.
         test = getLastUsedCell(oSheet).EndRow+1
         for y in range(0, test):
             if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
-                if '[...]' in oSheet.getCellByPosition(2, y).Formula:
-                    break
+                #~ if '[...]' in oSheet.getCellByPosition(2, y).Formula:
+                    #~ break
                 sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
                 oSheet.getCellByPosition(2, y).Formula = sformula
         if oDoc.getSheets().hasByName('VARIANTE') == True:
@@ -6353,8 +6353,8 @@ dell'operazione che terminerà con un messaggio di avviso.
             test = getLastUsedCell(oSheet).EndRow+1
             for y in range(0, test):
                 if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
-                    if '[...]' in oSheet.getCellByPosition(2, y).Formula:
-                        break
+                    #~ if '[...]' in oSheet.getCellByPosition(2, y).Formula:
+                        #~ break
                     sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
                     oSheet.getCellByPosition(2, y).Formula = sformula
         if oDoc.getSheets().hasByName('CONTABILITA') == True:
@@ -6363,8 +6363,8 @@ dell'operazione che terminerà con un messaggio di avviso.
             test = getLastUsedCell(oSheet).EndRow+1
             for y in range(0, test):
                 if oSheet.getCellByPosition(1, y).CellStyle == 'comp Art-EP_R':
-                    if '[...]' in oSheet.getCellByPosition(2, y).Formula:
-                        break
+                    #~ if '[...]' in oSheet.getCellByPosition(2, y).Formula:
+                        #~ break
                     sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
                     oSheet.getCellByPosition(2, y).Formula = sformula
 

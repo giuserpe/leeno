@@ -1102,7 +1102,8 @@ def adatta_altezza_riga(nSheet=None):
 #~ def debug(arg=None):
 def voce_breve(arg=None):
     '''
-    Cambia il numero di caratteri visualizzati per la desctizione voce.
+    Cambia il numero di caratteri visualizzati per la descrizione voce in COMUTO,
+    CONTABILITA E VARIANTE.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
@@ -6299,7 +6300,8 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    if ver_tmpl < 207:
+    adegua_a = 208
+    if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione corrente di LeenO?
 
@@ -6311,24 +6313,71 @@ dell'operazione che terminerà con un messaggio di avviso.
         oDialogo_attesa = dlg_attesa("Adeguamento alla versione corrente di LeenO...")
         oDoc.CurrentController.ZoomValue = 400
         attesa().start() #mostra il dialogo
-
 #~ adeguo gli stili secondo il template corrente
         sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
         styles = oDoc.getStyleFamilies()
         styles.loadStylesFromURL(sUrl, list())
         
-        oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 207
+        oSheet.getCellRangeByName('S1.H291').Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
         for el in oDoc.Sheets.ElementNames:
             oDoc.getSheets().getByName(el).IsVisible = True
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
             adatta_altezza_riga(el)
             oDoc.getSheets().getByName(el).IsVisible = False
+        ### dal temnplate 208
+        # adegua le formule delle descrizioni di voci
+        _gotoSheet('S1')
+        oSheet = oDoc.getSheets().getByName('S1')
+        oSheet.getCellRangeByName('G337').String = 'Descrizioni abbreviate: primi caratteri della voce'
+        oSheet.getCellRangeByName('H337').Value = 160
+        oSheet.getCellRangeByName('I337').String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
+        oSheet.getCellRangeByName('G338').String = 'Descrizioni abbreviate: ultimi caratteri della voce'
+        oSheet.getCellRangeByName('H338').Value = 100
+        oSheet.getCellRangeByName('I338').String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
+        oSheet.getCellRangeByName('G337:G338').CellStyle = 'Setvar b'
+        oSheet.getCellRangeByName('H337:H338').CellStyle = 'Setvar C'
+        oSheet.getCellRangeByName('I337:I338').CellStyle = 'Setvar D'
+
+        _gotoSheet('COMPUTO')
+        oSheet = oDoc.getSheets().getByName('COMPUTO')
+        test = getLastUsedCell(oSheet).EndRow+1
+        for y in range(0, test):
+            if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
+                if '[...]' in oSheet.getCellByPosition(2, y).Formula:
+                    break
+                sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+                oSheet.getCellByPosition(2, y).Formula = sformula
+        if oDoc.getSheets().hasByName('VARIANTE') == True:
+            _gotoSheet('VARIANTE')
+            oSheet = oDoc.getSheets().getByName('VARIANTE')
+            test = getLastUsedCell(oSheet).EndRow+1
+            for y in range(0, test):
+                if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
+                    if '[...]' in oSheet.getCellByPosition(2, y).Formula:
+                        break
+                    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+                    oSheet.getCellByPosition(2, y).Formula = sformula
+        if oDoc.getSheets().hasByName('CONTABILITA') == True:
+            _gotoSheet('CONTABILITA')
+            oSheet = oDoc.getSheets().getByName('CONTABILITA')
+            test = getLastUsedCell(oSheet).EndRow+1
+            for y in range(0, test):
+                if oSheet.getCellByPosition(1, y).CellStyle == 'comp Art-EP_R':
+                    if '[...]' in oSheet.getCellByPosition(2, y).Formula:
+                        break
+                    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+                    oSheet.getCellByPosition(2, y).Formula = sformula
+
         _gotoSheet('S5')
         oSheet = oDoc.getSheets().getByName('S5')
-        oSheet.getCellByPosition(28,11).Formula = '=S12-AE12'
-        oSheet.getCellByPosition(28,11).CellStyle = 'Comp-sotto euri'
-        oSheet.getCellByPosition(28,26).Formula = '=P27-AE27'
-        oSheet.getCellByPosition(28,26).CellStyle = 'Comp-sotto euri'
+        oSheet.getCellRangeByName('C10').Formula ='=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$338)))'
+        oSheet.getCellRangeByName('C24').Formula ='=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B24;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$338)))'
+        
+        ###
+        oSheet.getCellRangeByName('AC12').Formula = '=S12-AE12'
+        oSheet.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
+        oSheet.getCellRangeByName('AC27').Formula = '=P27-AE27'
+        oSheet.getCellRangeByName('AC27').CellStyle = 'Comp-sotto euri'
         for el in('CONTABILITA', 'VARIANTE', 'COMPUTO'):
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)

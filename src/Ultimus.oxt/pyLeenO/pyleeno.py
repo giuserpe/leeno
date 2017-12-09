@@ -2953,12 +2953,12 @@ def numera_voci(bit=1):#
                        0 rinumera dalla voce corrente in giù
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    if oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value != 0:
-        _gotoSheet('S1')
-        _gotoCella(7, 334)
-        MsgBox('''La rinumerazione delle voci è disabilitata.
-Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
-        return
+    #~ if oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value != 0:
+        #~ _gotoSheet('S1')
+        #~ _gotoCella(7, 334)
+        #~ MsgBox('''La rinumerazione delle voci è disabilitata.
+#~ Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
+        #~ return
     oSheet = oDoc.CurrentController.ActiveSheet
     lastRow = getLastUsedCell(oSheet).EndRow+1
     lrow = Range2Cell()[1]

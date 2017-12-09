@@ -190,7 +190,7 @@ sub Setta_Var_Gen_Default
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 1 &apos;Categorie e subcategorie: riga bianca ON/OFF
 
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 1
+
 end sub
 
 
@@ -229,7 +229,7 @@ sub Setta_Var_Gen_Bart
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 1
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = 1 &apos;Categorie e subcategorie: riga bianca ON/OFF
 
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = 0
+
 end sub
 
 sub Carica_Var_Gen_Personali
@@ -276,7 +276,7 @@ dim lriga as long
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332+lriga).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333+lriga).value &apos;Categorie e subcategorie: riga bianca ON/OFF
 
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335+lriga).value
+
 end sub
 
 
@@ -324,7 +324,7 @@ dim lriga as long
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,333).value
 
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335+lriga).value = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,335).value
+
 end sub
 
 

@@ -218,7 +218,7 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 		Tronca_Altezza_Voci_EP
 	Case &quot;Analisi di Prezzo&quot;
 		Tronca_Altezza_Analisi
-	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot; &apos;, &quot;CONTABILITA&quot;&apos; disattivata in contabilità
+	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
 		ScriptPy(&quot;pyleeno.py&quot;,&quot;voce_breve&quot;)
 	End Select
 	If ThisComponent.currentController.activeSheet.name = &quot;Listino&quot; Then	 		

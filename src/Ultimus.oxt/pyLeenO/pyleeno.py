@@ -6326,17 +6326,17 @@ dell'operazione che terminerà con un messaggio di avviso.
             oDoc.getSheets().getByName(el).IsVisible = False
         ### dal temnplate 208
         # adegua le formule delle descrizioni di voci
-        _gotoSheet('S1')
-        oSheet = oDoc.getSheets().getByName('S1')
-        oSheet.getCellRangeByName('G337').String = 'Descrizioni abbreviate: primi caratteri della voce'
-        oSheet.getCellRangeByName('H337').Value = 160
-        oSheet.getCellRangeByName('I337').String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
-        oSheet.getCellRangeByName('G338').String = 'Descrizioni abbreviate: ultimi caratteri della voce'
-        oSheet.getCellRangeByName('H338').Value = 100
-        oSheet.getCellRangeByName('I338').String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
-        oSheet.getCellRangeByName('G337:G338').CellStyle = 'Setvar b'
-        oSheet.getCellRangeByName('H337:H338').CellStyle = 'Setvar C'
-        oSheet.getCellRangeByName('I337:I338').CellStyle = 'Setvar D'
+        #~ _gotoSheet('S1')
+        #~ oSheet = oDoc.getSheets().getByName('S1')
+        #~ oSheet.getCellRangeByName('G337').String = 'Descrizioni abbreviate: primi caratteri della voce'
+        #~ oSheet.getCellRangeByName('H337').Value = 160
+        #~ oSheet.getCellRangeByName('I337').String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
+        #~ oSheet.getCellRangeByName('G338').String = 'Descrizioni abbreviate: ultimi caratteri della voce'
+        #~ oSheet.getCellRangeByName('H338').Value = 100
+        #~ oSheet.getCellRangeByName('I338').String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
+        #~ oSheet.getCellRangeByName('G337:G338').CellStyle = 'Setvar b'
+        #~ oSheet.getCellRangeByName('H337:H338').CellStyle = 'Setvar C'
+        #~ oSheet.getCellRangeByName('I337:I338').CellStyle = 'Setvar D'
 
         _gotoSheet('COMPUTO')
         oSheet = oDoc.getSheets().getByName('COMPUTO')

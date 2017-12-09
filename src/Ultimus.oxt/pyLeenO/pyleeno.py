@@ -1106,21 +1106,39 @@ def voce_breve(arg=None):
     CONTABILITA E VARIANTE.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    try:
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oDoc.getSheets().hasByName('S1') == False: return
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         oSheet = oDoc.getSheets().getByName('S1')
-    except:
-        return
-    if oSheet.getCellRangeByName('S1.H337').Value < 10000:
-        conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
-        oSheet.getCellRangeByName('S1.H337').Value = 10000
-    else:
-        oSheet.getCellRangeByName('S1.H337').Value = int(conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate'))
-    if oSheet.getCellRangeByName('S1.H338').Value < 10000:
-        conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
-        oSheet.getCellRangeByName('S1.H338').Value = 10000
-    else:
-        oSheet.getCellRangeByName('S1.H338').Value = int(conf.read(path_conf, 'Computo', 'fine_voci_abbreviate'))
-    adatta_altezza_riga()
+        if oSheet.getCellRangeByName('S1.H337').Value < 10000:
+            conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
+            oSheet.getCellRangeByName('S1.H337').Value = 10000
+        else:
+            oSheet.getCellRangeByName('S1.H337').Value = int(conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate'))
+        if oSheet.getCellRangeByName('S1.H338').Value < 10000:
+            conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
+            oSheet.getCellRangeByName('S1.H338').Value = 10000
+        else:
+            oSheet.getCellRangeByName('S1.H338').Value = int(conf.read(path_conf, 'Computo', 'fine_voci_abbreviate'))
+        adatta_altezza_riga()
+        
+    elif oSheet.Name == 'CONTABILITA':
+        oSheet = oDoc.getSheets().getByName('S1')
+        if oDoc.NamedRanges.hasByName("#Lib#1") == True:
+            MsgBox("Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",'ATTENZIONE!')
+            return
+        else:
+            if oSheet.getCellRangeByName('S1.H335').Value < 10000:
+                conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
+                oSheet.getCellRangeByName('S1.H335').Value = 10000
+            else:
+                oSheet.getCellRangeByName('S1.H335').Value = int(conf.read(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate'))
+            if oSheet.getCellRangeByName('S1.H336').Value < 10000:
+                conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H336').String)
+                oSheet.getCellRangeByName('S1.H336').Value = 10000
+            else:
+                oSheet.getCellRangeByName('S1.H336').Value = int(conf.read(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate'))
+            adatta_altezza_riga()
 ########################################################################
 # elenco prezzi ########################################################
 #~ def debug(arg=None):\
@@ -2953,12 +2971,6 @@ def numera_voci(bit=1):#
                        0 rinumera dalla voce corrente in giù
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ if oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value != 0:
-        #~ _gotoSheet('S1')
-        #~ _gotoCella(7, 334)
-        #~ MsgBox('''La rinumerazione delle voci è disabilitata.
-#~ Questo dipende dalla Variabile Generale qui evidenziata.''', "Avviso!")
-        #~ return
     oSheet = oDoc.CurrentController.ActiveSheet
     lastRow = getLastUsedCell(oSheet).EndRow+1
     lrow = Range2Cell()[1]
@@ -3263,25 +3275,18 @@ def leeno_conf(arg=None):
         if oLayout.isElementVisible('private:resource/toolbar/standardbar') == False:
             oDlg_config.getControl('CheckBox3').State = 1
         
+        sString = oDlg_config.getControl('TextField4')
+        sString.Text =oSheet.getCellRangeByName('S1.H335').Value #cont_inizio_voci_abbreviate
+        sString = oDlg_config.getControl('TextField12')
+        sString.Text =oSheet.getCellRangeByName('S1.H336').Value #cont_fine_voci_abbreviate
+
         sString = oDlg_config.getControl('TextField10')
         sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
-
         sString = oDlg_config.getControl('TextField11')
         sString.Text =oSheet.getCellRangeByName('S1.H338').Value #fine_voci_abbreviate
         
-        # riga_bianca_categorie
-        if oSheet.getCellRangeByName('S1.H334').Value == 1: oDlg_config.getControl('CheckBox5').State = 1
-        
-        # voci_senza_numerazione
-        if oSheet.getCellRangeByName('S1.H335').Value == 1:
-            oDlg_config.getControl('CheckBox6').State = 0
-        else:
-            oDlg_config.getControl('CheckBox6').State = 1
-            
-        # voci_senza_numerazione
         if conf.read(path_conf, 'Generale', 'torna_a_ep') == '1': oDlg_config.getControl('CheckBox8').State = 1
 
-        
         # Contabilità abilita
         if oSheet.getCellRangeByName('S1.H328').Value == 1: oDlg_config.getControl('CheckBox7').State = 1
         sString = oDlg_config.getControl('TextField13')
@@ -3314,18 +3319,17 @@ def leeno_conf(arg=None):
     oSheet.getCellRangeByName('S1.H320').Value = float(oDlg_config.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
     oSheet.getCellRangeByName('S1.H321').Value = float(oDlg_config.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
         
-    conf.write(path_conf, 'Computo', 'riga_bianca_categorie', str(oDlg_config.getControl('CheckBox5').State))
-    #~ conf.write(path_conf, 'Computo', 'voci_senza_numerazione', str(oDlg_config.getControl('CheckBox6').State))
-    if oDlg_config.getControl('CheckBox6').State == 1:
-        oSheet.getCellRangeByName('S1.H335').Value = 0
-    else:
-        oSheet.getCellRangeByName('S1.H335').Value = 1
     
 #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
     conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
     oSheet.getCellRangeByName('S1.H337').Value = float(oDlg_config.getControl('TextField10').getText())
     conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
     oSheet.getCellRangeByName('S1.H338').Value = float(oDlg_config.getControl('TextField11').getText())
+#il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+    conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
+    oSheet.getCellRangeByName('S1.H335').Value = float(oDlg_config.getControl('TextField4').getText())
+    conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
+    oSheet.getCellRangeByName('S1.H336').Value = float(oDlg_config.getControl('TextField12').getText())
     adatta_altezza_riga()
 
     conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
@@ -3397,10 +3401,12 @@ def config_default(arg=None):
     ('Generale', 'visualizza_tabelle_extra', '1'),
     ('Generale', 'pesca_auto', '1'),
     ('Generale', 'movedirection', '0'),
-    ('Computo', 'riga_bianca_categorie', '1'),
+    #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
-    ('Computo', 'inizio_voci_abbreviate', '160'),
-    ('Computo', 'fine_voci_abbreviate', '100'),
+    ('Computo', 'inizio_voci_abbreviate', '100'),
+    ('Computo', 'fine_voci_abbreviate', '120'),
+    ('Contabilità', 'cont_inizio_voci_abbreviate', '100'),
+    ('Contabilità', 'cont_fine_voci_abbreviate', '120'),
     ('Contabilità', 'abilita', '0'),
     ('Contabilità', 'idxSAL', '30')
     )
@@ -6278,14 +6284,22 @@ def adegua_tmpl(arg=None):
     oSheet = oDoc.getSheets().getByName('S1')
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     #cancello da S! le variabili gestite in leeno.conf
-    for x in (333, 335):
-        oSheet.getCellRangeByPosition(6, x, 30, x).clearContents(flags)
+    #~ for x in (333, 335):
+        #~ oSheet.getCellRangeByPosition(6, x, 30, x).clearContents(flags)
 
 # di seguito ci metto tutte le variabili aggiunte dopo la prima introduzione di /.config/leeno/leeno.conf
     try:
         conf.read(path_conf, 'Contabilità', 'idxSAL')
     except:
         conf.write(path_conf, 'Contabilità', 'idxSAL', '30') #numero massimo di SAL possibili
+    try:
+        conf.read(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate')
+    except:
+        conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', '100')
+    try:
+        conf.read(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate')
+    except:
+        conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', '120')
     try:
         conf.read(path_conf, 'Generale', 'pesca_auto')
     except:
@@ -6365,13 +6379,13 @@ dell'operazione che terminerà con un messaggio di avviso.
                 if oSheet.getCellByPosition(1, y).CellStyle == 'comp Art-EP_R':
                     #~ if '[...]' in oSheet.getCellByPosition(2, y).Formula:
                         #~ break
-                    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+                    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$336)))'
                     oSheet.getCellByPosition(2, y).Formula = sformula
 
         _gotoSheet('S5')
         oSheet = oDoc.getSheets().getByName('S5')
         oSheet.getCellRangeByName('C10').Formula ='=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$338)))'
-        oSheet.getCellRangeByName('C24').Formula ='=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B24;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$338)))'
+        oSheet.getCellRangeByName('C24').Formula ='=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B24;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$336)))'
         
         ###
         oSheet.getCellRangeByName('AC12').Formula = '=S12-AE12'

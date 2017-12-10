@@ -1089,11 +1089,14 @@ def adatta_altezza_riga(nSheet=None):
         nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
     test = getLastUsedCell(oSheet).EndRow+1
-    #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando riga per riga
+    #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2:
-        for y in reversed(range(0, test)):
-            oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+        #~ for y in reversed(range(0, test)):
+            #~ oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+        for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
+            oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
     else:
+        
         oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
@@ -6882,12 +6885,12 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-
-    #~ chi(oSheet.getCellRangeByName('B278').Type.value)
-    #~ return
+    oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
+    return
+    #~ oSheet.getCellRangeByName('G210').CellBackColor= 6124544
     #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
     #~ return
  

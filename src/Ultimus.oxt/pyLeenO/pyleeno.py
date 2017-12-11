@@ -1086,23 +1086,29 @@ def adatta_altezza_riga(nSheet=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oDoc.getSheets().hasByName('S1') == False: return
+
     if nSheet == None:
         nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2:
+
         for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
             oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
     else:
         oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    # ~if nSheet == 'Elenco Prezzi':
+        # ~chi(5454564)
+    test = getLastUsedCell(oSheet).EndRow+1
+    for y in range(0, test):
+        oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
     return
 ########################################################################
-#~ def debug(arg=None):
 def voce_breve(arg=None):
     '''
-    Cambia il numero di caratteri visualizzati per la descrizione voce in COMUTO,
+    Cambia il numero di caratteri visualizzati per la descrizione voce in COMPUTO,
     CONTABILITA E VARIANTE.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()

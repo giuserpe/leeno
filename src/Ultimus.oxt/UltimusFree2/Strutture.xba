@@ -245,7 +245,8 @@ sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle des
 
 	if oSheet.GetCellByPosition(1 ,lrow).Rows.OptimalHeight = false then
 			&apos; se la riga corrente è non &quot;adattata&quot; le allunga
-				oRange.Rows.OptimalHeight = true
+		&apos;		oRange.Rows.OptimalHeight = true
+				ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 		 else
 			If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).string = &quot;&quot; Then
@@ -255,7 +256,8 @@ sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle des
 					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value &lt;&gt; &quot;&quot; Then
 						oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height =_
 						ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value * 1000
-					end if	
+					end If
+
 				else
 					oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = 1300
 			end if

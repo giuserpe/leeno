@@ -30,7 +30,6 @@ rem ----------------------------------------------------------------------
 	sPath$ = extensionLocation &amp; filepath
 	oDoc = StarDesktop.LoadComponentFromUrl(sPath$, &quot;_blank&quot; , 0, a())
 End Sub
-
 rem ----------------------------------------------------------------------
 Sub New_LeenO_to (flag As String, sNewURL$ As string)
   Dim oDoc

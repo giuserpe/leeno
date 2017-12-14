@@ -38,21 +38,17 @@ from com.sun.star.script.provider import XScriptProviderFactory
     
 from com.sun.star.script.provider import XScriptProvider
 def barra_di_stato(testo='', valore=0):
+    '''Informa l'utente sullo stato progressivo dell'eleborazione.'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oProgressBar = oDoc.CurrentController.Frame.createStatusIndicator()
     oProgressBar.start('', 100)
     oProgressBar.Value = valore
     oProgressBar.Text = testo
-def Xray(myObject):
-    # Taken from http://www.oooforum.org/forum/viewtopic.phtml?t=23577
-    xCompCont = XSCRIPTCONTEXT.getComponentContext()
-    sm = xCompCont.ServiceManager
-    mspf = sm.createInstance("com.sun.star.script.provider.MasterScriptProviderFactory")
-    scriptPro = mspf.createScriptProvider("")
-    Xscript = scriptPro.getScript("vnd.sun.star.script:XrayTool._Main.Xray?language=Basic&location=application")
-    Xscript.invoke((myObject,), None, None)
+    oProgressBar.reset()
+    oProgressBar.end
 
 def basic_LeenO(funcname, *args):
+    '''Richiama funzioni definite in Basic'''
     xCompCont = XSCRIPTCONTEXT.getComponentContext()
     sm = xCompCont.ServiceManager
     mspf = sm.createInstance("com.sun.star.script.provider.MasterScriptProviderFactory")
@@ -62,13 +58,13 @@ def basic_LeenO(funcname, *args):
     return Result[0]
 ########################################################################
 def LeenO_path(arg=None):
+    '''Restituisce il percorso di installazione di LeenO.oxt'''
     ctx = XSCRIPTCONTEXT.getComponentContext()
     pir = ctx.getValueByName('/singletons/com.sun.star.deployment.PackageInformationProvider')
     expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
     return expath
 ########################################################################
 class New_file:
-    '''Crea un nuovo computo.'''
     def __init__(self):#, computo):
         pass
     def computo(arg=1):
@@ -95,8 +91,10 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
 ########################################################################
 def nuovo_computo(arg=None):
     New_file.computo()
+    '''Crea un nuovo computo vuoto.'''
 ########################################################################
 def nuovo_usobollo(arg=None):
+    '''Crea un nuovo documento in formato uso bollo.'''
     New_file.usobollo()
 ########################################################################
 def invia_voce_ep(arg=None):
@@ -1080,15 +1078,15 @@ def loVersion(arg=None):
 #~ ########################################################################
 def adatta_altezza_riga(nSheet=None):
     '''
+    Adattal'altezza delle righe al contenuto delle celle.
+    
     nSheet   { string } : nSheet della sheet
     imposta l'altezza ottimale delle celle
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oDoc.getSheets().hasByName('S1') == False: return
-
-    if nSheet == None:
-        nSheet = oSheet.Name
+    nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2:
@@ -1099,11 +1097,10 @@ def adatta_altezza_riga(nSheet=None):
         oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
-    # ~if nSheet == 'Elenco Prezzi':
-        # ~chi(5454564)
-    test = getLastUsedCell(oSheet).EndRow+1
-    for y in range(0, test):
-        oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+    if nSheet == 'Elenco Prezzi':
+        test = getLastUsedCell(oSheet).EndRow+1
+        for y in range(0, test):
+            oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
     return
 ########################################################################
 def voce_breve(arg=None):
@@ -1688,7 +1685,6 @@ def XPWE_out(arg=None):
     diz_ep = dict()
     lista_AP = list()
     for n in range(3, getLastUsedCell(oSheet).EndRow):
-        barra_di_stato(str(n) + ' ' + str(getLastUsedCell(oSheet).EndRow))
         if oSheet.getCellByPosition(1, n).Type.value == 'TEXT' and \
         oSheet.getCellByPosition(2, n).Type.value == 'TEXT':
             EPItem = SubElement(PweElencoPrezzi,'EPItem')
@@ -3537,11 +3533,8 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
         pesca_cod()
 
 ########################################################################
-# attiva contabilità  ##################################################
 def attiva_contabilita(arg=None):
-#~ def debug(arg=None):
-    '''Se presente, attiva e visualizza le tabelle di contabilità'''
-
+    '''Se presenti, attiva e visualizza le tabelle di contabilità'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.Sheets.hasByName('S1'):
         oDoc.Sheets.getByName('S1').getCellByPosition(7,327).Value = 1
@@ -3556,9 +3549,8 @@ def attiva_contabilita(arg=None):
             set_larghezza_colonne()
         _gotoSheet('CONTABILITA')
 ########################################################################
-# svuota contabilità  ##################################################
 def svuota_contabilita(arg=None):
-#~ def debug(arg=None):
+    '''Ricrea il foglio di contabilità partendo da zero.'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     for n in range(1 ,20):
         if oDoc.NamedRanges.hasByName('#Lib#'+str(n)) == True:
@@ -3617,21 +3609,18 @@ def svuota_contabilita(arg=None):
     oSheet.getCellRangeByPosition(0, 1, 1, 1).merge(True)
     oSheet.getCellByPosition(13,1).String = 'TOTALE:'
     oSheet.getCellByPosition(20,1).String = 'SAL SUCCESSIVO:'
-    
-    
+
     oSheet.getCellByPosition(25, 1).Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
     #~ 'pippi
     oSheet.getCellByPosition(15,1).Formula='=SUBTOTAL(9;P3:P4)' #importo lavori
     oSheet.getCellByPosition(0,1).Formula='=AK2' #importo lavori
     oSheet.getCellByPosition(17,1).Formula='=SUBTOTAL(9;R3:R4)' #importo sicurezza
     
-
     oSheet.getCellByPosition(28,1).Formula='=SUBTOTAL(9;AC3:AC4)' #importo materiali
     oSheet.getCellByPosition(29,1).Formula='=AE2/Z2'  #Incidenza manodopera %
     oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
     oSheet.getCellByPosition(30,1).Formula='=SUBTOTAL(9;AE3:AE4)' #importo manodopera
     oSheet.getCellByPosition(36,1).Formula='=SUBTOTAL(9;AK3:AK4)' #importo certo
-
 
     #~ rem riga del totale
     oSheet.getCellByPosition(2,3).String = 'T O T A L E'
@@ -3645,7 +3634,6 @@ def svuota_contabilita(arg=None):
     _gotoCella(0, 2)
     set_larghezza_colonne()
 ########################################################################
-# inizializza_analisi ##################################################
 def inizializza_analisi(arg=None):
     '''
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
@@ -3715,7 +3703,6 @@ def inserisci_Riga_rossa(arg=None):
         oSheet.getCellRangeByPosition(0,lrow,26,lrow).CellStyle='Riga_rossa_Chiudi' 
     oSheet.getCellByPosition(2, lrow).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 ########################################################################
-# rifa_nomearea ########################################################
 def rifa_nomearea(sSheet, sRange, sName):
     '''
     Definisce o ridefinisce un'area di dati a cui far riferimento
@@ -3857,7 +3844,6 @@ def struttura_Elenco(arg=None):
         a = b
 
 ########################################################################
-# XML_toscana_import ###################################################
 def XML_toscana_import(arg=None):
     '''
     Importazione di un prezzario XML della regione Toscana 
@@ -3991,8 +3977,10 @@ N.B.: Si consiglia una attenta lettura delle note informative disponibili sul si
     ''','ATTENZIONE!')
 #~ ########################################################################
 def fuf(arg=None):
-    ''' Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
-        E' solo una cortesia per un amico.'''
+    '''
+    Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
+    E' solo una cortesia per un amico.
+    '''
     bak_timestamp()
     filename = filedia('Scegli il file XML-SIX da importare', '*.dat')
     riga = list()
@@ -4077,14 +4065,13 @@ def fuf(arg=None):
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     
 #~ ########################################################################
-# XML_import_ep ########################################################
 def XML_import_ep(arg=None):
-    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
-    New_file.computo(0)
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
     '''
+    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
+    New_file.computo(0)
     try:
         filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
         if filename == None:
@@ -4284,7 +4271,6 @@ def XML_import_ep(arg=None):
 # XML_import ###########################################################
 ########################################################################
 def XML_import_multi(arg=None):
-    MsgBox("L'importazione dati dal formato XML-SIX potrebbe richiedere del tempo.", 'Avviso')
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
@@ -4292,6 +4278,7 @@ def XML_import_multi(arg=None):
     di <Davide Vescovini> <davide.vescovini@gmail.com>
     *Versione bilingue*
     '''
+    MsgBox("L'importazione dati dal formato XML-SIX potrebbe richiedere del tempo.", 'Avviso')
     New_file.computo(0)
     try:
         filename = filedia('Scegli il file XML-SIX da importare', '*.xml')
@@ -4654,6 +4641,9 @@ Vuoi continuare?''', 'Importa Stili in blocco?') == 3: return
         pass
 ########################################################################
 def parziale(arg=None):
+    '''
+    Inserisce una riga con l'indicazione della somma parziale.
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
@@ -4732,6 +4722,9 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
         oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
 ########################################################################
 def strall(el, n=3):
+    '''
+    Allunga una stringa fino a n.
+    '''
     #~ el ='o'
     while len(el) < n:
         el = '0' + el
@@ -6891,7 +6884,8 @@ def taglia_x(arg=None):
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
+    chi(LeenO_path())
+    # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
     return
     #~ oSheet.getCellRangeByName('G210').CellBackColor= 6124544
     #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
@@ -6967,12 +6961,25 @@ def debug(arg=None): #COMUNE DI MATERA
 
 #~ # SOSTITUZIONI
     #~ chi(oSheet.getCellRangeByName('R19').String)
-    test = getLastUsedCell(oSheet).EndRow+1
-    for y in reversed(range(0, test)):
-        if oSheet.getCellByPosition(0, y).String == '' :
-            oSheet.getRows().removeByIndex(y, 1)
-
+# ~CALENDARIO
+    test = getLastUsedCell(oSheet).EndColumn+1
+    slist = list()
+    for x in range(0, test):
+        if oSheet.getCellByPosition(x, 3).String == 's' or oSheet.getCellByPosition(x, 3).String == 'd':
+            slist.append(x)
+    for x in range(2, getLastUsedCell(oSheet).EndColumn+1):
+        for y in range(2, getLastUsedCell(oSheet).EndRow+1):
+            if x in slist:
+                oSheet.getCellByPosition(x, y).CellStyle = 'ok'
+            else:
+                oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
+        # ~slist.append(
+    # ~for y in reversed(range(0, test)):
+        # ~if oSheet.getCellByPosition(0, y).String == '' :
+            # ~oSheet.getRows().removeByIndex(y, 1)
+
+    # ~return
     # ~ for y in range(Range2Cell()[1]+1, test):
     #~ chi(datetime.strptime(testo.split(' ')[0],'%H:%M').split(' ')[-1])
 

@@ -2359,7 +2359,6 @@ def azzera_voce(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
-#########################################
         try:
             sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
             eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
@@ -2483,12 +2482,13 @@ def nasconde_voci_azzerate(arg=None):
     except:
         return
 ########################################################################
-def elimina_voce(arg=None, lRow=None, msg=1):
+def elimina_voce(lRow=None, msg=1):
     '''
+    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+
     lRow { long }  : numero riga
     msg  { bit }   : 1 chiedi conferma con messaggio
                      0 egegui senza conferma
-    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

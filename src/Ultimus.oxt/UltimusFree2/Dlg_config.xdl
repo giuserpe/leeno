@@ -22,7 +22,7 @@
    </dlg:menupopup>
   </dlg:combobox>
   <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="4" dlg:left="119" dlg:top="20" dlg:width="84" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="12" dlg:top="35" dlg:width="82" dlg:height="10" dlg:value="Pesca codice automatico" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="117" dlg:top="190" dlg:width="82" dlg:height="10" dlg:value="Pesca codice automatico" dlg:checked="false"/>
   <dlg:textfield dlg:id="TextField1" dlg:tab-index="6" dlg:left="61" dlg:top="49" dlg:width="30" dlg:height="10" dlg:align="center"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="117" dlg:top="51" dlg:width="85" dlg:height="10" dlg:value="Nascondi toolbar di LibreOffice" dlg:checked="false"/>
   <dlg:text dlg:id="Label2" dlg:tab-index="9" dlg:left="237" dlg:top="54" dlg:width="45" dlg:height="8" dlg:value="Fattore ottimale:"/>
@@ -73,8 +73,8 @@
   <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl2" dlg:tab-index="38" dlg:left="117" dlg:top="94" dlg:width="89" dlg:height="43">
    <dlg:title dlg:value="Computo e Variante"/>
   </dlg:titledbox>
-  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="39" dlg:left="117" dlg:top="188" dlg:width="90" dlg:height="3"/>
-  <dlg:checkbox dlg:id="CheckBox8" dlg:tab-index="40" dlg:left="117" dlg:top="193" dlg:width="90" dlg:height="7" dlg:value="Torna a prezzario dopo invio" dlg:checked="false"/>
+  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="39" dlg:left="117" dlg:top="185" dlg:width="90" dlg:height="3"/>
+  <dlg:checkbox dlg:id="CheckBox8" dlg:tab-index="40" dlg:left="12" dlg:top="35" dlg:width="96" dlg:height="7" dlg:value="Torna a prezzario dopo invio" dlg:checked="false"/>
   <dlg:text dlg:id="Label13" dlg:tab-index="41" dlg:left="120" dlg:top="150" dlg:width="34" dlg:height="7" dlg:value="Inizio voce:"/>
   <dlg:textfield dlg:id="TextField4" dlg:tab-index="42" dlg:left="162" dlg:top="150" dlg:width="40" dlg:height="10" dlg:align="center"/>
   <dlg:text dlg:id="Label15" dlg:tab-index="43" dlg:left="120" dlg:top="167" dlg:width="33" dlg:height="7" dlg:value="Fine voce:"/>

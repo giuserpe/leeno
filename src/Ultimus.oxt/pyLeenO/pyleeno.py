@@ -1143,8 +1143,6 @@ def voce_breve(arg=None):
                 oSheet.getCellRangeByName('S1.H336').Value = int(conf.read(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate'))
             adatta_altezza_riga()
 ########################################################################
-# elenco prezzi ########################################################
-#~ def debug(arg=None):\
 def scelta_viste(arg=None):
     '''
     Gestisce i dialoghi del menù viste nelle tabelle di Analisi di Prezzo,
@@ -1362,9 +1360,8 @@ class genera_sommario_th(threading.Thread):
     def run(self):
         genera_sommario_run()
 def genera_sommario(arg=None):
-#~ def debug(arg=None):
     genera_sommario_th().start()
-#~ ###
+
 def genera_sommario_run(arg=None):
     '''
     sostituisce la sub Rifa_AA_BB_Computo
@@ -2464,7 +2461,6 @@ def raggruppa_righe_voce (lrow, flag=1):
         else:
             oSheet.ungroup(oCellRangeAddr, 1)
 ########################################################################
-#~ def debug(arg=None):
 def nasconde_voci_azzerate(arg=None):
     '''
     Nasconde le voci in cui compare la dicitura '*** VOCE AZZERATA ***'
@@ -2647,7 +2643,7 @@ def cerca_partenza(arg=None):
     elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab: #CONTABILITA
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         partenza =(oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in('An-lavoraz-Cod-sx'): #ANALISI
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in('An-lavoraz-Cod-sx','Comp TOTALI'): #ANALISI o riga totale
         partenza =(oSheet.Name, lrow)
     return partenza
 ########################################################################
@@ -2714,18 +2710,18 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
         except NameError:
             return
 ########################################################################
-def ricicla_misure(arg=None):
-#~ def debug(arg=None):
+#~ def ricicla_misure(arg=None):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA': return
     lrow = Range2Cell()[1]
-    #~ chi(lrow)
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + ('Comp TOTALI', 'Ultimus_centro_bordi_lati',):
         return
     chi(next_voice(lrow))
-    #~ cerca_partenza()
-    #~ chi(partenza)
+    _gotoCella(2, next_voice(lrow))
+    cerca_partenza()
+    chi(partenza)
     #~ lrowE = ultima_voce(oSheet)+1
     #~ chi(lrowE)
 ########################################################################
@@ -2817,7 +2813,6 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err= False ):
     oCell.setPropertyValue("Validation", oTabVal)
 
 def debug_ConditionalFormat(arg=None):
-#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oCell= oDoc.CurrentSelection
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -2828,9 +2823,7 @@ def debug_ConditionalFormat(arg=None):
     #~ mri(oCell)#.ConditionalFormat)
 
 ########################################################################
-
 def debug_tipo_di_valore(arg=None):
-#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     chi(oSheet.getCellByPosition(Range2Cell()[0],Range2Cell()[10]).Type.value)
@@ -3421,7 +3414,6 @@ def config_default(arg=None):
     #~ leeno_conf()
 ########################################################################
 def nuova_voce_scelta(arg=None): #assegnato a ctrl-shift-n
-#~ def debug(arg=None):
     '''
     Contestualizza in ogni tabella l'inserimento delle voci.
     '''
@@ -4498,12 +4490,11 @@ class importa_listino_leeno_th(threading.Thread):
     def run(self):
         importa_listino_leeno_run()
 def importa_listino_leeno(arg=None):
-#~ def debug (arg=None):
     importa_listino_leeno_th().start()
 ###
 def importa_listino_leeno_run(arg=None):
     '''
-    Esegue la conversione di un listino(formato LeenO) in template Computo
+    Esegue la conversione di un listino (formato LeenO) in template Computo
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6269,20 +6260,20 @@ def set_larghezza_colonne(arg=None):
         #~ adegua_tmpl_run()
 def adegua_tmpl(arg=None):
     #~ adegua_tmpl_th().start()
-#~ def debug(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
     - dal 203(LeenO 3.14.0 ha templ 202) introdotta la Super Categoria con nuovi stili di cella;
         sostituita la colonna "Tag A" con "Tag Super Cat"
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
+    
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
 #qui le cose da cambiare comunque
     
     oSheet = oDoc.getSheets().getByName('S1')
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
-    #cancello da S! le variabili gestite in leeno.conf
+    #cancello da S1 le variabili gestite in leeno.conf
     #~ for x in (333, 335):
         #~ oSheet.getCellRangeByPosition(6, x, 30, x).clearContents(flags)
 
@@ -6653,8 +6644,8 @@ def toolbar_vedi(arg=None):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
     except:
         pass
+#######################################################################
 def toolbar_switch(arg=1):
-#~ def debug(arg=None):
     '''Nasconde o mostra le toolbar di Libreoffice.'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -6881,12 +6872,12 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debugmt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi(LeenO_path())
+    # ~chi(LeenO_path())
     # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
-    return
+    # ~return
     #~ oSheet.getCellRangeByName('G210').CellBackColor= 6124544
     #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
     #~ return
@@ -6965,10 +6956,10 @@ def debug(arg=None): #COMUNE DI MATERA
     test = getLastUsedCell(oSheet).EndColumn+1
     slist = list()
     for x in range(0, test):
-        if oSheet.getCellByPosition(x, 3).String == 's' or oSheet.getCellByPosition(x, 3).String == 'd':
+        if oSheet.getCellByPosition(x, 2).String == 's' or oSheet.getCellByPosition(x, 2).String == 'd':
             slist.append(x)
     for x in range(2, getLastUsedCell(oSheet).EndColumn+1):
-        for y in range(2, getLastUsedCell(oSheet).EndRow+1):
+        for y in range(1, getLastUsedCell(oSheet).EndRow+1):
             if x in slist:
                 oSheet.getCellByPosition(x, y).CellStyle = 'ok'
             else:

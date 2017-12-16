@@ -1088,13 +1088,13 @@ def adatta_altezza_riga(nSheet=None):
     if oDoc.getSheets().hasByName('S1') == False: return
     nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
+    oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2:
 
         for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
             oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
-    else:
-        oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
+        
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
     if nSheet == 'Elenco Prezzi':
@@ -1110,6 +1110,7 @@ def voce_breve(arg=None):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     if oDoc.getSheets().hasByName('S1') == False: return
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         oSheet = oDoc.getSheets().getByName('S1')
@@ -2637,13 +2638,14 @@ def cerca_partenza(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     global partenza
+
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo: #COMPUTO, VARIANTE
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         partenza =(oSheet.Name, sStRange.RangeAddress.StartRow+1)
     elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab: #CONTABILITA
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         partenza =(oSheet.Name, sStRange.RangeAddress.StartRow+1, oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow+1).String)
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in('An-lavoraz-Cod-sx','Comp TOTALI'): #ANALISI o riga totale
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in ('An-lavoraz-Cod-sx', 'Comp TOTALI'): #ANALISI o riga totale
         partenza =(oSheet.Name, lrow)
     return partenza
 ########################################################################
@@ -2718,8 +2720,10 @@ def debug(arg=None):
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + ('Comp TOTALI', 'Ultimus_centro_bordi_lati',):
         return
-    chi(next_voice(lrow))
-    _gotoCella(2, next_voice(lrow))
+    #~ chi(next_voice(lrow))
+    #~ _gotoCella(2, next_voice(lrow))
+    
+    ins_voce_contab(arg = 0)
     cerca_partenza()
     chi(partenza)
     #~ lrowE = ultima_voce(oSheet)+1
@@ -3429,7 +3433,7 @@ def nuova_voce_scelta(arg=None): #assegnato a ctrl-shift-n
         ins_voce_elenco()
     
 # nuova_voce_contab  ##################################################
-def ins_voce_contab(arg=None):
+def ins_voce_contab(arg=1):
     '''
     Inserisce una nuova voce in CONTABILITA.
     '''
@@ -3522,6 +3526,7 @@ Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce g
     
     numera_voci(0)
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
+        if arg == 0 : return
         pesca_cod()
 
 ########################################################################
@@ -5628,7 +5633,7 @@ Lminor= 17 #'NUOVE FUNZIONALITA'
 Lsubv= "3.dev" #'CORREZIONE BUGS
 noVoce =('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
-stili_contab =('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
+stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
 stili_analisi =('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco =('EP-Cs', 'EP-aS')
 createUnoService =(

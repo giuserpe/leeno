@@ -2489,13 +2489,22 @@ def elimina_voce(lRow=None, msg=1):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if lRow == None:
+    if lRow == None or lRow == 0:
         lRow = Range2Cell()[1]
     try:
-        if oSheet.Name in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        if oSheet.Name in('COMPUTO', 'VARIANTE'):
             sStRange = Circoscrive_Voce_Computo_Att(lRow)
         elif oSheet.Name == 'Analisi di Prezzo':
             sStRange = Circoscrive_Analisi(lRow)
+        if oSheet.Name =='CONTABILITA':
+            cerca_partenza()
+            if partenza[2] == '#reg':
+                sblocca_cont()
+                if sblocca_computo == 0:
+                    return
+                sStRange = Circoscrive_Voce_Computo_Att(lRow)
+            else:
+                sStRange = Circoscrive_Voce_Computo_Att(lRow)
     except:
         return
     sStRange.RangeAddress
@@ -2650,6 +2659,30 @@ def cerca_partenza(arg=None):
     return partenza
 ########################################################################
 sblocca_computo = 0
+def sblocca_cont():
+#~ def debug(arg=None):
+    global sblocca_computo
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name in('CONTABILITA'):
+        cerca_partenza()
+        if sblocca_computo == 1:
+            pass
+        else:
+            if partenza[2] == '':
+                pass
+            if partenza[2] == '#reg':
+                if DlgSiNo("""Cambiando il Codice Articolo di questa voce, comprometterai
+la validità degli atti contabili già emessi.
+
+VUOI PROCEDERE?
+
+SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!""", 'Voce già registrata!') ==3:
+                    p
+                else:
+                    sblocca_computo = 1
+    chi (sblocca_computo)
+########################################################################
 def pesca_cod(arg=None):
     '''
     Permette di scegliere il codice per la voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi.
@@ -2664,27 +2697,32 @@ def pesca_cod(arg=None):
     if oSheet.Name in('Analisi di Prezzo'):
         cerca_partenza()
         _gotoSheet('Elenco Prezzi')
+###
     if oSheet.Name in('CONTABILITA'):
         cerca_partenza()
-        if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
-            basic_LeenO('Cerca_Rior.cerca_in_elenco')
-            return
-        try:
+        if sblocca_computo == 1:
+            if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
+                basic_LeenO('Cerca_Rior.cerca_in_elenco')
+            _gotoSheet('Elenco Prezzi')
+        else:
+            if partenza[2] == '':
+                if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
+                    basic_LeenO('Cerca_Rior.cerca_in_elenco')
+                _gotoSheet('Elenco Prezzi')
             if partenza[2] == '#reg':
                 if DlgSiNo("""Cambiando il Codice Articolo di questa voce, comprometterai
 la validità degli atti contabili già emessi.
 
 VUOI PROCEDERE?
 
-Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
+SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!""", 'Voce già registrata!') ==3:
                     return
                 else:
+                    sblocca_computo = 1
+                    if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
+                        basic_LeenO('Cerca_Rior.cerca_in_elenco')
                     _gotoSheet('Elenco Prezzi')
-            else:
-                _gotoSheet('Elenco Prezzi')
-            partenza[2]
-        except TypeError:
-            return
+###
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
         if oDoc.NamedRanges.hasByName("#Lib#1") == True:
             if sblocca_computo == 0:
@@ -2697,6 +2735,7 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
             basic_LeenO('Cerca_Rior.cerca_in_elenco')
             return
         _gotoSheet('Elenco Prezzi')
+###
     if oSheet.Name in('Elenco Prezzi'):
         try:
             lrow = Range2Cell()[1]
@@ -2712,8 +2751,8 @@ Scegliendo Sì sarai costretto a rigenerarli!""", 'Voce già registrata!') ==3:
         except NameError:
             return
 ########################################################################
-#~ def ricicla_misure(arg=None):
-def debug(arg=None):
+def ricicla_misure(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA': return
@@ -2936,9 +2975,10 @@ def copia_celle_visibili(arg=None):
     oDoc.CurrentController.setActiveSheet(oSheet)
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(SC, SR, EC, ER))
 # Range2Cell ###########################################################
-def Range2Cell():
+def Range2Cell(arg=None):
+#~ def debug(arg=None):
     '''
-    Restituisce la tupla(IDcolonna, IDriga) della posizione corrnete
+    Restituisce la tupla(IDcolonna, IDriga) della posizione corrente
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -2949,7 +2989,7 @@ def Range2Cell():
     except AttributeError:
         nRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
         nCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
-    return(nCol,nRow)
+    return(nCol, nRow)
 ########################################################################
 # restituisce l'ID dell'ultima riga usata
 def getLastUsedCell(oSheet):

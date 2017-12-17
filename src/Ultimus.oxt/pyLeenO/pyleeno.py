@@ -3498,6 +3498,16 @@ def ins_voce_contab(arg=1):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome = oSheet.Name
+    ### controllo che non ci siano atti registrati
+    cerca_partenza()
+    if partenza[2] == '#reg':
+        sblocca_cont()
+        if sblocca_computo == 0:
+            return
+        pass
+    else:
+        pass
+    ###
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
     nSal = 1
     if stile == 'comp Int_colonna_R_prima':
@@ -3520,17 +3530,6 @@ def ins_voce_contab(arg=1):
     elif stile in stili_contab:
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
-        if oSheet.getCellByPosition(22, sStRange.RangeAddress.StartRow + 1).String == '#reg':
-            if DlgSiNo("""Inserendo qui una nuova voce, comprometterai
-la validità degli atti contabili già emessi.
-
-VUOI PROCEDERE?
-
-Scegliendo Sì sarai costretto a rigenerarli!
-Scegliendo No, potrai decidere una diversa posizione di inserimento.""", 'Voce già registrata!') ==3:
-                return
-
-        data = oSheet.getCellByPosition(1, sStRange.RangeAddress.StartRow + 2).Value
         lrow = next_voice(lrow)
     else:
         return

@@ -2677,7 +2677,7 @@ def sblocca_cont():
             if partenza[2] == '':
                 pass
             if partenza[2] == '#reg':
-                if DlgSiNo("""Lavorando in questo punto del foglio
+                if DlgSiNo("""Lavorando in questo punto del foglio,
 comprometterai la validità degli atti contabili già emessi.
 
 Vuoi procedere?
@@ -2745,8 +2745,8 @@ def pesca_cod(arg=None):
         except NameError:
             return
 ########################################################################
-#~ def ricicla_misure(arg=None):
-def debug(arg=None):
+def ricicla_misure(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name =='CONTABILITA':
@@ -2763,12 +2763,9 @@ def debug(arg=None):
 
         lrow = Range2Cell()[1]
         if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab: return
-        #~ chi(next_voice(lrow))
-        #~ _gotoCella(2, next_voice(lrow))
-        
         ins_voce_contab(arg = 0)
         cerca_partenza()
-        _gotoSheet('COMPUTO')
+        _gotoSheet(conf.read(path_conf, 'Contabilità', 'ricicla_da'))
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = Range2Cell()[1]
@@ -2780,10 +2777,13 @@ def debug(arg=None):
         oDest = oDoc.getSheets().getByName('CONTABILITA')
         oCellAddress = oDest.getCellByPosition(2, partenza[1]+1).getCellAddress()
         _gotoSheet('CONTABILITA')
-        for n in range (sopra, sotto-1):
+        for n in range (sopra, sotto):
             copia_riga_contab(partenza[1])
         oDest.copyRange(oCellAddress, oSrc)
+        
+        oDest.getCellByPosition(1, partenza[1]).String = oSheet.getCellByPosition(1, sopra-1).String
         parziale_verifica()
+        _gotoCella(2, partenza[1]+1)
 ########################################################################
 def inverti_segno(arg=None):
     '''
@@ -3347,8 +3347,12 @@ def leeno_conf(arg=None):
         if oSheet.getCellRangeByName('S1.H328').Value == 1: oDlg_config.getControl('CheckBox7').State = 1
         sString = oDlg_config.getControl('TextField13')
         sString.Text = conf.read(path_conf, 'Contabilità', 'idxSAL')
+        sString = oDlg_config.getControl('ComboBox3')
+        sString.Text = conf.read(path_conf, 'Contabilità', 'ricicla_da')
+
     except:
         config_default()
+### MOSTRA IL DIALOGO
     oDlg_config.execute()
     
     if oDlg_config.getControl('CheckBox3').State == 1:
@@ -3390,6 +3394,7 @@ def leeno_conf(arg=None):
 
     conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
     conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
+    conf.write(path_conf, 'Contabilità', 'ricicla_da', oDlg_config.getControl('ComboBox3').getText())
 
 ########################################################################
 #percorso di ricerca di leeno.conf
@@ -3464,7 +3469,8 @@ def config_default(arg=None):
     ('Contabilità', 'cont_inizio_voci_abbreviate', '100'),
     ('Contabilità', 'cont_fine_voci_abbreviate', '120'),
     ('Contabilità', 'abilita', '0'),
-    ('Contabilità', 'idxSAL', '30')
+    ('Contabilità', 'idxSAL', '30'),
+    ('Contabilità', 'ricicla_da', 'COMPUTO')
     )
     for el in parametri:
         try:
@@ -4730,7 +4736,9 @@ def parziale_core(lrow):
                 i
                 break
         oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
-    if oSheet.Name in('CONTABILITA'): MsgBox('Contatta il canale Telegram https://t.me/joinchat/AAAAAEFGWSw-p_N6tUt0FA')
+    #~ if oSheet.Name in('CONTABILITA'): MsgBox('''Per segnalare questo problema,
+#~ contatta il canale Telegram
+#~ https://t.me/leeno_computometrico''', 'ERRORE!')
 ###
 def parziale_verifica(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -6359,6 +6367,10 @@ def adegua_tmpl(arg=None):
         conf.read(path_conf, 'Generale', 'movedirection')
     except:
         conf.write(path_conf, 'Generale', 'movedirection', '0') #muove il cursore in basso
+    try:
+        conf.read(path_conf, 'Contabilità', 'ricicla_da')
+    except:
+        conf.write(path_conf, 'Contabilità', 'ricicla_da', 'COMPUTO') #muove il cursore in basso
 
     # cambiare stile http://bit.ly/2cDcCJI
     

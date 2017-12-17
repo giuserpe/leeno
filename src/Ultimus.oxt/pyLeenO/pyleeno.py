@@ -2745,24 +2745,27 @@ def pesca_cod(arg=None):
         except NameError:
             return
 ########################################################################
-def ricicla_misure(arg=None):
-#~ def debug(arg=None):
+#~ def ricicla_misure(arg=None):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name =='CONTABILITA':
-        ### controllo che non ci siano atti registrati
-        cerca_partenza()
-        if partenza[2] == '#reg':
-            sblocca_cont()
-            if sblocca_computo == 0:
-                return
+        try:
+            ### controllo che non ci siano atti registrati
+            cerca_partenza()
+            if partenza[2] == '#reg':
+                sblocca_cont()
+                if sblocca_computo == 0:
+                    return
+                pass
+            else:
+                pass
+            ###
+        except:
             pass
-        else:
-            pass
-        ###
 
         lrow = Range2Cell()[1]
-        if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab: return
+        if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + ('comp Int_colonna_R_prima',): return
         ins_voce_contab(arg = 0)
         cerca_partenza()
         _gotoSheet(conf.read(path_conf, 'Contabilità', 'ricicla_da'))
@@ -3504,16 +3507,19 @@ def ins_voce_contab(arg=1):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome = oSheet.Name
-    ### controllo che non ci siano atti registrati
-    cerca_partenza()
-    if partenza[2] == '#reg':
-        sblocca_cont()
-        if sblocca_computo == 0:
-            return
+    try:
+        ### controllo che non ci siano atti registrati
+        cerca_partenza()
+        if partenza[2] == '#reg':
+            sblocca_cont()
+            if sblocca_computo == 0:
+                return
+            pass
+        else:
+            pass
+        ###
+    except:
         pass
-    else:
-        pass
-    ###
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
     nSal = 1
     if stile == 'comp Int_colonna_R_prima':

@@ -10,6 +10,11 @@
 # Sono inoltre graditi suggerimenti in merito alle gestione della
 # Contabilità Lavori e per l'ottimizzazione del codice.
 ########################################################################
+
+#~ MsgBox('''Per segnalare questo problema,
+#~ contatta il canale Telegram
+#~ https://t.me/leeno_computometrico''', 'ERRORE!')
+
 #~ documentazione ufficiale: https://api.libreoffice.org/
 import locale
 import codecs
@@ -2745,8 +2750,11 @@ def pesca_cod(arg=None):
         except NameError:
             return
 ########################################################################
-#~ def ricicla_misure(arg=None):
-def debug(arg=None):
+def ricicla_misure(arg=None):
+    '''
+    In CONTABILITA consente l'inserimento di nuove voci di misurazione
+    partendo da voci già inserite in COMPUTO o VARIANTE.
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name =='CONTABILITA':
@@ -4714,8 +4722,12 @@ def parziale(arg=None):
     if oSheet.Name in('COMPUTO','VARIANTE', 'CONTABILITA'):
         parziale_core(lrow)
         parziale_verifica()
+###
 def parziale_core(lrow):
-    #~ lrow = 324
+    '''
+    lrow    { double } : id della riga di inerimento
+    '''
+
     if lrow == 0: return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -4728,10 +4740,7 @@ def parziale_core(lrow):
         oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a' or \
         oSheet.getCellByPosition(0, lrow).CellStyle == 'Comp End Attributo':
             oSheet.getRows().insertByIndex(lrow, 1)
-        elif 'Parziale [' in(oSheet.getCellByPosition(8, lrow).String):
-                pass
-        else:
-            return
+
         oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo'
         oSheet.getCellRangeByPosition(2, lrow, 7, lrow).CellStyle = 'comp sotto centro'
         oSheet.getCellByPosition(8, lrow).CellStyle = 'comp sotto BiancheS'
@@ -4742,11 +4751,33 @@ def parziale_core(lrow):
                 i
                 break
         oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
-    #~ if oSheet.Name in('CONTABILITA'): MsgBox('''Per segnalare questo problema,
-#~ contatta il canale Telegram
-#~ https://t.me/leeno_computometrico''', 'ERRORE!')
+
+    if oSheet.Name in('CONTABILITA'):
+        if oSheet.getCellByPosition (0, lrow).CellStyle == "comp 10 s_R" and \
+        oSheet.getCellByPosition (1, lrow).CellStyle == "Comp-Bianche in mezzo_R" and \
+        oSheet.getCellByPosition (2, lrow).CellStyle == "comp 1-a" or \
+        'Somma positivi e negativi [' in oSheet.getCellByPosition (8, lrow).String:
+            oSheet.getRows().insertByIndex(lrow, 1)
+
+        oSheet.getCellByPosition(2, lrow).CellStyle = "comp sotto centro"
+        oSheet.getCellRangeByPosition(5, lrow, 7, lrow).CellStyle = "comp sotto centro"
+        oSheet.getCellByPosition(8, lrow).CellStyle = "comp sotto BiancheS"
+        oSheet.getCellByPosition(9, lrow).CellStyle = "Comp-Variante num sotto"
+        oSheet.getCellByPosition(8, lrow).Formula ='=CONCATENATE("Parziale [";VLOOKUP(B' + str(sopra+2) + ';elenco_prezzi;3;FALSE());"]")'
+
+        i = lrow
+        while i > 0:
+            if oSheet.getCellByPosition (9, i-1).CellStyle in ('vuote2', 'Comp-Variante num sotto'):
+                da=i
+                break
+            i -= 1
+        oSheet.getCellByPosition(9, lrow).Formula = '=SUBTOTAL(9;J' + str(da) + ':J' + str(lrow+1) + ')-SUBTOTAL(9;L' + str(da) + ':L' + str(lrow+1) + ')'
 ###
 def parziale_verifica(arg=None):
+    '''
+    Controlla l'esattezza del calcolo del parziale quanto le righe di
+    misura vengono aggiunte o cancellate.
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
@@ -4757,8 +4788,6 @@ def parziale_verifica(arg=None):
     for n in range(sopra, sotto):
         if 'Parziale [' in(oSheet.getCellByPosition(8, n).String):
             parziale_core(n)
-    #~ chi(oDoc.CurrentSelection.CellBackColor)
-
 
 ########################################################################
 # abs2name ############################################################

@@ -5831,8 +5831,10 @@ def filedia(titolo='Scegli il file...', est='*.*', mode=0):
     try:
         oFilePicker = createUnoService( "com.sun.star.ui.dialogs.OfficeFilePicker" )
         oFilePicker.initialize(( mode,) )
+        oDoc = XSCRIPTCONTEXT.getDocument()
+        oFilePicker.setDisplayDirectory(os.path.dirname(oDoc.getURL()))
+        #~ oFilePicker.setDisplayDirectory(uno.systemPathToFileUrl(''))
         oFilePicker.Title = titolo
-
         app = estensioni.get(est)
         oFilePicker.appendFilter(app, est)
         if oFilePicker.execute():
@@ -5841,7 +5843,6 @@ def filedia(titolo='Scegli il file...', est='*.*', mode=0):
     except:
         MsgBox('Il file non è stato selezionato', 'ATTENZIONE!')
         return
-
 ########################################################################
 import traceback
 from com.sun.star.awt import Rectangle

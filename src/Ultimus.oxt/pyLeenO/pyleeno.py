@@ -584,28 +584,6 @@ def SubSum_Cap(lrow):
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
     oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
     #~ oDoc.enableAutomaticCalculation(True)
-########################################################################
-def debug_delay(n=None):
-    '''
-    sCella  { string } : stringa di default nella casella di testo
-    t       { string } : titolo del dialogo
-    Viasualizza un dialogo di richiesta testo
-    '''
-
-    psm = uno.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgAttesa?language=Basic&location=application")
-    oDialog1Model = oDialog1.Model
-
-    oDialog1Model.Title = 'tiolo'
-    
-    if n==1:
-        oDialog1.execute()
-        #~ chi(oDialog1)
-    elif n==0:
-        oDialog1.endDialog()
-        oDialog1.endExecute()
-        
 
 ########################################################################
 def Sincronizza_SottoCap_Tag_Capitolo_Cor(arg=None):
@@ -791,34 +769,6 @@ def copia_sheet(nSheet, tag):
         oDoc.CurrentController.setActiveSheet(oSheet)
         #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-def debugpuliscixxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx():
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    for lrow in reversed(range(0, ultima_voce(oSheet))):
-        if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
-            oSheet.getCellByPosition(31,lrow).String = ''
-            oSheet.getCellByPosition(32,lrow).String = ''
-            oSheet.getCellByPosition(33,lrow).String = ''
-            oSheet.getCellByPosition(34,lrow).String = ''
-            oSheet.getCellByPosition(35,lrow).String = ''
-    _gotoSheet('S5')
-    oSheet = oDoc.CurrentController.ActiveSheet
-    for lrow in reversed(range(0, ultima_voce(oSheet))):
-        if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
-            oSheet.getCellByPosition(31,lrow).String = ''
-            oSheet.getCellByPosition(32,lrow).String = ''
-            oSheet.getCellByPosition(33,lrow).String = ''
-            oSheet.getCellByPosition(34,lrow).String = ''
-            oSheet.getCellByPosition(35,lrow).String = ''
-    _gotoSheet('VARIANTE')
-    oSheet = oDoc.CurrentController.ActiveSheet
-    for lrow in reversed(range(0, ultima_voce(oSheet))):
-        if oSheet.getCellByPosition(31,lrow).CellStyle == 'compTagG' :
-            oSheet.getCellByPosition(31,lrow).String = ''
-            oSheet.getCellByPosition(32,lrow).String = ''
-            oSheet.getCellByPosition(33,lrow).String = ''
-            oSheet.getCellByPosition(34,lrow).String = ''
-            oSheet.getCellByPosition(35,lrow).String = ''
 def Filtra_computo(nSheet, nCol, sString):
     '''
     nSheet   { string } : nome Sheet
@@ -1099,9 +1049,14 @@ def adatta_altezza_riga(nSheet=None):
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2:
-
         for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
             oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+
+        if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA'):
+            test = getLastUsedCell(oSheet).EndRow+1
+            for y in range(0, test):
+                if oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
+                    oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
         
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
@@ -1469,7 +1424,7 @@ def riordina_ElencoPrezzi(arg=None):
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-# L'ATTIVAZIONE DELLA CLASS doppioni_th INTERFERISCE CON invia_voce_ep()
+#~ L'ATTIVAZIONE DELLA CLASS doppioni_th INTERFERISCE CON invia_voce_ep()
 #~ class doppioni_th(threading.Thread):
     #~ def __init__(self):
         #~ threading.Thread.__init__(self)
@@ -2894,15 +2849,6 @@ def debug_ConditionalFormat(arg=None):
     i =oCell.RangeAddress.StartRow
     n =oCell.Rows.Count
     oSheet.getRows().removeByIndex(i, n)
-    #~ mri(oCell)#.ConditionalFormat)
-
-########################################################################
-def debug_tipo_di_valore(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    chi(oSheet.getCellByPosition(Range2Cell()[0],Range2Cell()[10]).Type.value)
-    #~ if oSheet.getCellByPosition(2, 5).Type.value == 'FORMULA':
-        #~ MsgBox(oSheet.getCellByPosition(9, 5).Formula)
 ########################################################################
 def debugclip(arg=None):
     import pyperclip
@@ -3161,7 +3107,7 @@ per la formulazione dell'offerta'''
     oSheet.getCellByPosition(2, fine+13).String= '(timbro e firma)'
     oSheet.getCellByPosition(2, fine+13).CellStyle = 'centro_corsivo'
     
-    # CONSOLIDA LA DATA	
+    # CONSOLIDA LA DATA    
     oRange = oSheet.getCellRangeByPosition (2,fine+10,2,fine+10)
     #~ Flags = com.sun.star.sheet.CellFlags.FORMULA
     aSaveData = oRange.getDataArray()
@@ -3236,7 +3182,7 @@ def ins_voce_computo_grezza(lrow):
 # questo sistema eviterebbe l'uso della sheet S5 da cui copiare i range campione
 # potrei svuotare la S5 ma allungando di molto il codice per la generazione della voce
 # per ora lascio perdere
-    # inserisco le righe ed imposto gli stili
+
     #~ insRows(lrow,4) #inserisco le righe
     #~ oSheet.getCellByPosition(0,lrow).CellStyle = 'Comp Start Attributo'
     #~ oSheet.getCellRangeByPosition(0,lrow,30,lrow).CellStyle = 'Comp-Bianche sopra'
@@ -3345,6 +3291,8 @@ def leeno_conf(arg=None):
         if oLayout.isElementVisible('private:resource/toolbar/standardbar') == False:
             oDlg_config.getControl('CheckBox3').State = 1
         
+        sString = oDlg_config.getControl('TextField14')
+        sString.Text =oSheet.getCellRangeByName('S1.H334').Value #vedi_voce_breve
         sString = oDlg_config.getControl('TextField4')
         sString.Text =oSheet.getCellRangeByName('S1.H335').Value #cont_inizio_voci_abbreviate
         sString = oDlg_config.getControl('TextField12')
@@ -3400,6 +3348,8 @@ def leeno_conf(arg=None):
     conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
     oSheet.getCellRangeByName('S1.H338').Value = float(oDlg_config.getControl('TextField11').getText())
 #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+    conf.write(path_conf, 'Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
+    oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
     conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
     oSheet.getCellRangeByName('S1.H335').Value = float(oDlg_config.getControl('TextField4').getText())
     conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
@@ -4791,16 +4741,7 @@ def parziale_verifica(arg=None):
     for n in range(sopra, sotto):
         if 'Parziale [' in(oSheet.getCellByPosition(8, n).String):
             parziale_core(n)
-
 ########################################################################
-# abs2name ############################################################
-def abs2name(nCol, nRow):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    idvoce = oSheet.getCellByPosition(nCol, nRow).AbsoluteName.split('$')
-    return idvoce[2]+idvoce[3]
-########################################################################
-# vedi_voce_xpwe ############################################################
 def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
     """(riga d'inserimento, riga di riferimento)"""
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -4809,16 +4750,111 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
     sStRange.RangeAddress
     idv = sStRange.RangeAddress.StartRow +1
     sotto = sStRange.RangeAddress.EndRow
-    art = abs2name(1, idv)
-    idvoce = abs2name(0, idv)
-    quantity = abs2name(9, sotto)
+    art = 'B$' + str(idv+1)
+    idvoce = 'A$' + str(idv+1)
+    des = 'C$' + str(idv+1)
+    quantity = 'J$' + str(sotto+1)
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
-    oSheet.getCellByPosition(2, riga_corrente).Formula='=CONCATENATE("";" - vedi voce n. ";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
+    
+    if oSheet.Name == 'CONTABILITA':
+        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
+    else:
+        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';S1.H334)'    
+    oSheet.getCellByPosition(2, riga_corrente).Formula= sformula
+    
     if flags in('32768', '32769', '32801'):
-        #~ oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
-    #~ else:
+        oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
+    else:
         oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
+    if oSheet.getCellByPosition(5, riga_corrente).Value < 0:
+        oSheet.getCellRangeByPosition(2, riga_corrente, 10, riga_corrente).CharColor = 16724787
+    #~ else:
+        #~ oSheet.getCellRangeByPosition(2, riga_corrente, 10, riga_corrente).CharColor = -1
+
 ########################################################################
+#~ def vedi_voce(arg=None):
+def debug(arg=None):
+    '''
+    Inserisce un riferimento a voce precedente sulla riga corrente.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    to = basic_LeenO('ListenersSelectRange.getRange', 'prova')
+    to = int(to.split('$')[-1])-1
+    _gotoCella(2, lrow)
+    focus = oDoc.CurrentController.getFirstVisibleRow
+    if to < lrow:
+        vedi_voce_xpwe(lrow, to,)
+
+
+    #~ riga_corrente=riga_corrente+1
+    #~ copia_riga_Ent
+    #~ '    print "PARTITA PROVVISORIA"
+    #~ end If
+    #~ sTitolo = "Selezionare una voce precedente..."
+    #~ SelectedRange = getRange(sTitolo) ' richiama il listeners
+    #~ if SelectedRange = "" or _
+        #~ SelectedRange = "ANNULLA" or _
+        #~ SelectedRange = "GNente" then
+        #~ ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
+        #~ exit Sub
+    #~ end If
+    #~ riga_selezione = getRigaIniziale(SelectedRange) 'che restituisce la riga di vedi voce da riportare
+    #~ if riga_corrente < riga_selezione or _
+        #~ riga_corrente = riga_selezione Then
+        #~ msgbox ("Devi selezioanre una voce precendente alla attuale.", 0,"ERRORE!")
+        #~ goto fine:
+    #~ end if
+    #~ test = "style_cella"
+    #~ i = 0
+    #~ For i = 0 To 1000
+        #~ test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
+        #~ If test = "Comp Start Attributo" or test = "Comp Start Attributo_R" then
+            #~ riga_selezione = riga_selezione+1
+            
+            #~ art = abs2name (1,riga_selezione)
+            #~ idvoce = abs2name (0,riga_selezione)
+            
+            #~ i = i+10000
+        #~ Else
+            #~ riga_selezione = riga_selezione-1
+            #~ i = i+1
+        #~ EndIf
+    #~ Next
+    #~ i = 0 
+    #~ For i = 0 to 1000
+        #~ test = oSheet.GetCellByPosition(0,riga_selezione).cellstyle
+        #~ if test = "Comp End Attributo" or test = "Comp End Attributo_R" then
+
+            #~ quantity= abs2name (9,riga_selezione)
+            
+            #~ oRange = oSheet.getCellRangeByPosition (9,riga_selezione,9,riga_selezione)
+            #~ oRange.CellBackColor = RGB(255,225,200)'(255, 204, 153)
+            
+            #~ i = i+10000
+        #~ Else
+            #~ riga_selezione = riga_selezione+1
+            #~ i = i+1
+        #~ end If
+    #~ Next
+    #~ rem descrizione opzionale
+    #~ If ThisComponent.Sheets.getByName("S1").GetCellByPosition(7,316).value=0 then 
+        #~ InputDesc = InputBox("Inserire descrizione:", "Descrizione della misurazione", " ")
+    #~ Else
+        #~ InputDesc =""
+    #~ End If 
+    #~ id = Circoscrive_Voce_Computo_Att (riga_corrente).RangeAddress.StartRow+2
+    #~ um ="VLOOKUP(" & art & ";elenco_prezzi;3;FALSE())"
+    #~ oSheet.GetCellByPosition(2 , riga_corrente).formula="=CONCATENATE("""& InputDesc &""";"" - vedi voce n."";TEXT(" & idvoce &";""@"");"" - art. "";" & art & ";"" ["";" & um & ";""]"""
+    
+    #~ oSheet.GetCellByPosition(5 , riga_corrente).setformula("=" & segno & quantity)
+    #~ oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
+    #~ oRange.CellBackColor = RGB(255,225,200)'(255, 204, 153)
+    #~ oContr.setFirstVisibleRow(focus)
+    #~ fine:
+#~ end sub
+
 def strall(el, n=3):
     '''
     Allunga una stringa fino a n.
@@ -4855,7 +4891,7 @@ def converti_stringhe(arg=None):
             except:
                 pass
     return
-# XPWE_in ##########################################################
+########################################################################
 def XPWE_in(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     refresh(0)
@@ -5776,33 +5812,6 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
     DlgMain()
     return
 ########################################################################
-def debugnn(sCella='', t=''):
-    mri(XSCRIPTCONTEXT.getDocument())
-    '''
-    sCella  { string } : stringa di default nella casella di testo
-    t       { string } : titolo del dialogo
-    Viasualizza un dialogo di richiesta testo
-    '''
-    chi(sys)
-    return
-    psm = uno.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgFile?language=Basic&location=application")
-    oDialog1Model = oDialog1.Model
-
-    oDialog1Model.Title = t
-
-    oString = oDialog1.getControl("FileControl1")
-    chi(oString)
-    oString.Text = sCella
-    #~ oDialog1.execute()
-    if oDialog1.execute()==0:
-        return
-    else:
-        MsgBox(oString.Text)
-        return oString.Text
-
-########################################################################
 def filedia(titolo='Scegli il file...', est='*.*', mode=0):
     """
     titolo  { string }  : titolo del FilePicker
@@ -5843,96 +5852,6 @@ def filedia(titolo='Scegli il file...', est='*.*', mode=0):
     except:
         MsgBox('Il file non è stato selezionato', 'ATTENZIONE!')
         return
-########################################################################
-import traceback
-from com.sun.star.awt import Rectangle
-
-def filedia_(titolo=''):
-# http://openoffice3.web.fc2.com/Python_Macro_Calc.html#OOoCCB01 #
-    try:
-        oCtx = uno.getComponentContext()
-        oServiceManager = oCtx.ServiceManager
-        oDlgModel = oServiceManager.createInstance('com.sun.star.awt.UnoControlDialogModel')
-        # Size of Dialog
-        oDlgWth = 200
-        oDlgHgt = 75
-        oDlgModel.Width = oDlgWth
-        oDlgModel.Height = oDlgHgt
-        oDlgModel.PositionX = 150
-        oDlgModel.PositionY = 200
-        oDlgModel.BackgroundColor = 0xafd2fc
-        # Title of Dialog
-        oDlgModel.Title = titolo #'Scegli il file da convertire...'
-        #
-        # ***** [ OK / Cancel  Button 設定 ] *****
-        # OK Button 仕様
-        oModel = oDlgModel.createInstance('com.sun.star.awt.UnoControlButtonModel')
-        oTabIndex = 0
-        oModel.Name = 'OkBtn'
-        oModel.TabIndex = oTabIndex
-        oModel.PositionX = oDlgWth/2 - 50
-        oModel.PositionY = oDlgHgt - 20
-        oModel.Width = 40
-        oModel.Height = 15
-        oModel.Label = u'OK'
-        oModel.PushButtonType = 1       # 1 : OK
-        # Dialog Modelの仕様に Step Button の仕様を設定
-        oDlgModel.insertByName('OkBtn', oModel)
-        # ***** [ OK / Cancel  Button 設定 ] *****
-        #
-        # ***** [ OK / Cancel  Button 設定 ] *****
-        # OK Button 仕様
-        oModel = oDlgModel.createInstance('com.sun.star.awt.UnoControlButtonModel')
-        oTabIndex = 0
-        oModel.Name = 'AnnullaBtn'
-        oModel.TabIndex = oTabIndex
-        oModel.PositionX = oDlgWth/2 + 10
-        oModel.PositionY = oDlgHgt - 20
-        oModel.Width = 40
-        oModel.Height = 15
-        oModel.Label = u'Annulla'
-        oModel.PushButtonType = 2       # 1 : CANCEL
-        # Dialog Modelの仕様に Step Button の仕様を設定
-        oDlgModel.insertByName('AnnullaBtn', oModel)
-        # ***** [ OK / Cancel  Button Setting ] *****
-        #
-        # ***** [ FileCntrol Setting ] *****
-        # FileCntrol specifiche
-        oModel = oDlgModel.createInstance('com.sun.star.awt.UnoControlFileControlModel')
-        oTabIndex = oTabIndex + 1
-        oModel.Name = 'FileCtrl'
-        oModel.TabIndex = oTabIndex
-        oModel.PositionX = 10
-        oModel.PositionY = oDlgHgt - 60
-        oModel.Width = oDlgWth - 20
-        oModel.Height = 15
-        oModel.Enabled = 1
-        oModel.Border = 1
-        # Dialog Model FileCntrol
-        oDlgModel.insertByName('FileCtrl', oModel)
-        # ***** [ FileCntrol 設定 ] *****
-        #
-        # Create the dialog and set the model
-        oDlg = oServiceManager.createInstance('com.sun.star.awt.UnoControlDialog')
-        oDlg.setModel(oDlgModel)
-        #
-        # Create a window and then tell the dialog to use the created window.
-        oWindow = oServiceManager.createInstance('com.sun.star.awt.Toolkit')
-        oDlg.createPeer(oWindow,None)        # None : OK / none : NG
-        #
-        # Dialogの表示実行
-        oClick = oDlg.execute()
-        if oClick == 1:
-            oSelFile = oDlgModel.getByName('FileCtrl')
-            oDisp = oSelFile.Text
-        else:
-            oDisp = u'Cancel' # 'Cancel' è il risultato del tasto
-        # End Dialog
-        oDlg.endExecute()
-    except:
-        oDisp = traceback.format_exc(sys.exc_info()[2])
-    finally:
-        return oDisp
 
 ########################################################################
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK, BUTTONS_OK_CANCEL, BUTTONS_YES_NO, BUTTONS_YES_NO_CANCEL, BUTTONS_RETRY_CANCEL, BUTTONS_ABORT_IGNORE_RETRY
@@ -6398,6 +6317,10 @@ def adegua_tmpl(arg=None):
         conf.read(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate')
     except:
         conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', '120')
+    try:
+        conf.read(path_conf, 'Generale', 'vedi_voce_breve')
+    except:
+        conf.write(path_conf, 'Generale', 'vedi_voce_breve', '50') #abilita il pesca dopo inserimento nuova voce
     try:
         conf.read(path_conf, 'Generale', 'pesca_auto')
     except:
@@ -7218,4 +7141,6 @@ def debugmt(arg=None): #COMUNE DI MATERA
 # <<< vedi in description.xml
 g_ImplementationHelper = unohelper.ImplementationHelper()
 g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("org.giuseppe-vizziello.leeno",),)
+########################################################################
+########################################################################
 ########################################################################

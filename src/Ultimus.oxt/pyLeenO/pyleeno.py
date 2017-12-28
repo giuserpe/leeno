@@ -2317,72 +2317,76 @@ def azzera_voce(arg=None):
     '''
     Azzera la quantità di una voce e ne raggruppa le relative righe
     '''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name in('COMPUTO', 'VARIANTE'):
-        try:
-            sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
-            eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
+    try:
+        oDoc = XSCRIPTCONTEXT.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        if oSheet.Name in('COMPUTO', 'VARIANTE'):
+            try:
+                sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
+                eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
 
-        except:
-            sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
-            eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
-        sStRange = Circoscrive_Voce_Computo_Att(sRow)
-        sStRange.RangeAddress
-        sRow = sStRange.RangeAddress.StartRow
-        sStRange = Circoscrive_Voce_Computo_Att(eRow)
-        try:
+            except:
+                sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
+                eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
+            sStRange = Circoscrive_Voce_Computo_Att(sRow)
             sStRange.RangeAddress
-        except:
-            return
-        inizio = sStRange.RangeAddress.StartRow
-        eRow = sStRange.RangeAddress.EndRow+1
-        
-        lrow = sRow
-        fini = list()
-        for x in range(sRow, eRow):
-            if oSheet.getCellByPosition(0, x).CellStyle in('Comp End Attributo', 'Comp End Attributo_R'):
-                fini.append(x)
-    idx = 0
-    for lrow in fini:
-        lrow += idx
-        try:
-            sStRange = Circoscrive_Voce_Computo_Att(lrow)
-            sStRange.RangeAddress
+            sRow = sStRange.RangeAddress.StartRow
+            sStRange = Circoscrive_Voce_Computo_Att(eRow)
+            try:
+                sStRange.RangeAddress
+            except:
+                return
             inizio = sStRange.RangeAddress.StartRow
-            fine = sStRange.RangeAddress.EndRow
+            eRow = sStRange.RangeAddress.EndRow+1
+            
+            lrow = sRow
+            fini = list()
+            for x in range(sRow, eRow):
+                if oSheet.getCellByPosition(0, x).CellStyle in('Comp End Attributo', 'Comp End Attributo_R'):
+                    fini.append(x)
+        idx = 0
 
-            _gotoCella(2, fine-1)
-            if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
-                ### elimino il colore di sfondo
-                oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
-                raggruppa_righe_voce(lrow, 0)
-                oSheet.getRows().removeByIndex(fine-1, 1)
-                fine -=1
+        for lrow in fini:
+            lrow += idx
+            try:
+                sStRange = Circoscrive_Voce_Computo_Att(lrow)
+                sStRange.RangeAddress
+                inizio = sStRange.RangeAddress.StartRow
+                fine = sStRange.RangeAddress.EndRow
+
                 _gotoCella(2, fine-1)
-                idx -= 1
-            else:
-                Copia_riga_Ent()
-                oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
-                oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
-                ### cambio il colore di sfondo
-                oDoc.CurrentController.select(sStRange)
-                raggruppa_righe_voce (lrow, 1)
-                ctx = XSCRIPTCONTEXT.getComponentContext()
-                desktop = XSCRIPTCONTEXT.getDesktop()
-                oFrame = desktop.getCurrentFrame()
-                dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-                oProp = PropertyValue()
-                oProp.Name = 'BackgroundColor'
-                oProp.Value = 15066597
-                properties =(oProp,)
-                dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
-                _gotoCella(2, fine)
-                ###   
-            lrow = Range2Cell()[1]
-            lrow = next_voice(lrow, 1)
-        except:
-            pass
+                if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
+                    ### elimino il colore di sfondo
+                    oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
+                    raggruppa_righe_voce(lrow, 0)
+                    oSheet.getRows().removeByIndex(fine-1, 1)
+                    fine -=1
+                    _gotoCella(2, fine-1)
+                    idx -= 1
+                else:
+                    Copia_riga_Ent()
+                    oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
+                    oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
+                    ### cambio il colore di sfondo
+                    oDoc.CurrentController.select(sStRange)
+                    raggruppa_righe_voce (lrow, 1)
+                    ctx = XSCRIPTCONTEXT.getComponentContext()
+                    desktop = XSCRIPTCONTEXT.getDesktop()
+                    oFrame = desktop.getCurrentFrame()
+                    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+                    oProp = PropertyValue()
+                    oProp.Name = 'BackgroundColor'
+                    oProp.Value = 15066597
+                    properties =(oProp,)
+                    dispatchHelper.executeDispatch(oFrame, '.uno:BackgroundColor', '', 0, properties)
+                    _gotoCella(2, fine)
+                    ###   
+                lrow = Range2Cell()[1]
+                lrow = next_voice(lrow, 1)
+            except:
+                pass
+    except:
+        pass
     return
 ########################################################################
 def elimina_voci_azzerate(arg=None):
@@ -6363,20 +6367,30 @@ dell'operazione che terminerà con un messaggio di avviso.
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
             adatta_altezza_riga(el)
             oDoc.getSheets().getByName(el).IsVisible = False
-        ### dal temnplate 208
-        # adegua le formule delle descrizioni di voci
-        #~ _gotoSheet('S1')
-        #~ oSheet = oDoc.getSheets().getByName('S1')
-        #~ oSheet.getCellRangeByName('G337').String = 'Descrizioni abbreviate: primi caratteri della voce'
-        #~ oSheet.getCellRangeByName('H337').Value = 160
-        #~ oSheet.getCellRangeByName('I337').String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
-        #~ oSheet.getCellRangeByName('G338').String = 'Descrizioni abbreviate: ultimi caratteri della voce'
-        #~ oSheet.getCellRangeByName('H338').Value = 100
-        #~ oSheet.getCellRangeByName('I338').String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
-        #~ oSheet.getCellRangeByName('G337:G338').CellStyle = 'Setvar b'
-        #~ oSheet.getCellRangeByName('H337:H338').CellStyle = 'Setvar C'
-        #~ oSheet.getCellRangeByName('I337:I338').CellStyle = 'Setvar D'
-
+        ### dal template 208
+        #> adegua le formule delle descrizioni di voci
+        _gotoSheet('S1')
+        oSheet = oDoc.getSheets().getByName('S1')
+        oSheet.getCellRangeByName('G334').String = '[Computo e Variante] Vedi Voce: PRIMI caratteri della voce'
+        oSheet.getCellRangeByName('H334').Value = 50
+        oSheet.getCellRangeByName('I334').String = "Quanti caratteri della descrizione vuoi visualizzare usando il Vedi Voce?"
+        oSheet.getCellRangeByName('G335').String = '[Contabilità] Descrizioni abbreviate: PRIMI caratteri della voce'
+        oSheet.getCellRangeByName('H335').Value = 100
+        oSheet.getCellRangeByName('I335').String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
+        oSheet.getCellRangeByName('G336').String = 'Descrizioni abbreviate: primi caratteri della voce'
+        oSheet.getCellRangeByName('H336').Value = 120
+        oSheet.getCellRangeByName('I336').String = "[Contabilità] Descrizioni abbreviate: ULTIMI caratteri della voce"
+        oSheet.getCellRangeByName('G337').String = 'Descrizioni abbreviate: primi caratteri della voce'
+        oSheet.getCellRangeByName('H337').Value = 100
+        oSheet.getCellRangeByName('I337').String = "Quanti caratteri vuoi visualizzare partendo dall'INIZIO della descrizione?"
+        oSheet.getCellRangeByName('G338').String = 'Descrizioni abbreviate: ultimi caratteri della voce'
+        oSheet.getCellRangeByName('H338').Value = 120
+        oSheet.getCellRangeByName('I338').String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
+        oSheet.getCellRangeByName('G297:G338').CellStyle = 'Setvar b'
+        oSheet.getCellRangeByName('H297:H338').CellStyle = 'Setvar C'
+        oSheet.getCellRangeByName('I297:I338').CellStyle = 'Setvar D'
+        #< adegua le formule delle descrizioni di voci
+        
         _gotoSheet('COMPUTO')
         oSheet = oDoc.getSheets().getByName('COMPUTO')
         test = getLastUsedCell(oSheet).EndRow+1

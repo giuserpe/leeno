@@ -90,7 +90,7 @@
     <dlg:menuitem dlg:value="VARIANTE"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:text dlg:id="Label17" dlg:tab-index="48" dlg:left="10" dlg:top="80" dlg:width="41" dlg:height="7" dlg:printable="false" dlg:value="Vedi voce:"/>
+  <dlg:text dlg:id="Label17" dlg:tab-index="48" dlg:left="10" dlg:top="80" dlg:width="50" dlg:height="7" dlg:printable="false" dlg:value="Testo del Vedi voce:"/>
   <dlg:textfield dlg:id="TextField14" dlg:tab-index="49" dlg:left="65" dlg:top="81" dlg:width="30" dlg:height="10" dlg:printable="false" dlg:align="center"/>
  </dlg:bulletinboard>
 </dlg:window>

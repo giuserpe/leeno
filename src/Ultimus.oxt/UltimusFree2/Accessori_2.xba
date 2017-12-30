@@ -77,7 +77,7 @@ Sub SwitchDesign____ &apos; By Andrew Pitonyak &apos; quella buona
 &apos; print &quot;è on e lo metto off&quot;
  	 	SwitchDesignMode()
 		ThisComponent.ApplyFormDesignMode = True
-		sproteggi_sheet_TUTTE
+		ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
  	else
  &apos;	print &quot;è off e lo metto on&quot;
 		SwitchDesignMode()
@@ -91,7 +91,7 @@ Sub SwitchDesign___ &apos; By Andrew Pitonyak
  print &quot;è on e lo metto off&quot;
  	 	SwitchDesignMode()
 		ThisComponent.ApplyFormDesignMode = True
-		sproteggi_sheet_TUTTE
+		ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
  	else
  	print &quot;è off e lo metto on&quot;
 		SwitchDesignMode()
@@ -217,22 +217,13 @@ Sub sproteggi_sheet_corrente
 	oSheet = ThisComponent.currentController.activeSheet
 &apos; oSheet.protect(&quot;&quot;)
 &apos; oSheet.unprotect(&quot;&quot;)
- sproteggi_sheet_TUTTE
+ ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 &apos;Dim myProtection As New com.sun.star.util.CellProtection
 &apos;ocell = mysheet.getCellByPosition(0,0)
 &apos;myProtection.IsLocked=false
 &apos;oCell.CellProtection=myProtection
 &apos;oSheet.protect()
 
-End Sub
-
-Sub sproteggi_sheet_TUTTE
-
-	oSheets = ThisComponent.Sheets
-	For I = 0 to oSheets.Count -1 
-		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
-		oCalcSheet.unprotect(&quot;&quot;)
-	Next I	
 End Sub
 
 Sub refreshAllSheetLinks() &apos;fa il refresh dei link esterni&apos;

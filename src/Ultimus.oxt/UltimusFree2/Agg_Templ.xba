@@ -288,7 +288,7 @@ Dim I As Integer
 Doc = StarDesktop.CurrentComponent
 StyleFamilies = Doc.StyleFamilies
 CellStyles = StyleFamilies.getByName(&quot;CellStyles&quot;)
-sproteggi_sheet_TUTTE
+ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 For I = 0 To CellStyles.Count - 1
  CellStyle = CellStyles(I)
  if CellStyle.name = sNom_V then

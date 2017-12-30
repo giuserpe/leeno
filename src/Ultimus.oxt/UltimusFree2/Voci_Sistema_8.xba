@@ -16,7 +16,7 @@ Sub Tempo &apos; &apos; mette formule di Vlookup per le desc... serve per pet 05
 						Case 7
 								exit sub
 					end select	
-			sproteggi_sheet_TUTTE
+			ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
 			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 			lLastUrow = getLastUsedRow(oSheet)
@@ -67,7 +67,7 @@ Sub Riformatta_Voci_computo &apos; &apos; mette gli attributi voce anche a un co
 						Case 7
 							goto passa_oltre &apos; cioè salta la procedura
 					end select	
-			sproteggi_sheet_TUTTE
+			ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
 			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 			lLastUrow = getLastUsedRow(oSheet)

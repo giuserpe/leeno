@@ -448,7 +448,7 @@ end sub
 END SUB 
 
 sub Rimetti_in_ordine_tab
-	sproteggi_sheet_TUTTE
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 	thisComponent.Sheets.moveByName(&quot;Elenco Prezzi&quot;,0)
 	If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
 		thisComponent.Sheets.moveByName(&quot;Analisi di Prezzo&quot;,1)
@@ -618,7 +618,7 @@ annullato:
 	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;4 Pazienta... &quot;, 40)
-	sproteggi_sheet_TUTTE
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 	Visualizza_sheet_TUTTE
 	
 	&apos;metto la tab da trasferire in pool position
@@ -726,7 +726,7 @@ annullato:
 	&apos; fine registrazione... prima o poi usando aSheetNames si ripristina la situazione com&apos;era
 
 
-	sproteggi_sheet_TUTTE
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 	Visualizza_sheet_TUTTE
 	
 	&apos; controlla se sul Target esiste la tab

@@ -306,7 +306,7 @@ rem ----------------------------------------------------------------------
 	
  &apos; mettere qui le leggere modifiche al template
  &apos; si fanno e si rifanno senza dire niente a nessuno
-	sproteggi_sheet_TUTTE
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
  	
 	crea_stile_cella_1 &apos; inserisce uno stile di cella per distingere le voci che sono in contab direttamente dall&apos;EP
 	crea_stile_cella_2 &apos; modifica lo stile &quot;data_bianca&quot; da 01/01/2011 a 01/01/11
@@ -330,7 +330,7 @@ rem ----------------------------------------------------------------------
 	&apos;Registra_Variabili AL MOMENTO SEMBRA PREFERIBILE UN RIFERIMENTO DIRETTO!
 
 	Attiva_Sheets_di_Servizio
-	sproteggi_sheet_TUTTE 
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;) 
 
 
 	Barra_chiudi_sempre_4

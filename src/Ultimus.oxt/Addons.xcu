@@ -414,7 +414,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Computo.vedi_voce?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$vedi_voce?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/vedivoce</value>
@@ -631,7 +631,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Computo.vedi_voce?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$vedi_voce?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/vedivoce</value>

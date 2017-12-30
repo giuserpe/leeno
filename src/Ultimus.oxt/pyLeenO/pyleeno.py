@@ -947,6 +947,16 @@ def ordina_col(ncol):
     properties = tuple(oProp)
     dispatchHelper.executeDispatch(oFrame, '.uno:DataSort', '', 0, properties)
 ########################################################################
+def sproteggi_sheet_TUTTE(arg=None):
+    '''
+    Sprotegge tutti fogli del documento.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheets = oDoc.Sheets.ElementNames
+    for nome in oSheets:
+        oSheet = oDoc.getSheets().getByName(nome)
+        oSheet.unprotect('')
+########################################################################
 def setTabColor(colore):
     '''
     colore   { integer } : id colore
@@ -1048,10 +1058,10 @@ def adatta_altezza_riga(nSheet=None):
     oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
+    sproteggi_sheet_TUTTE()
     if float(loVersion()[:3]) > 5.2:
         for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
             oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
-
         if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA'):
             test = getLastUsedCell(oSheet).EndRow+1
             for y in range(0, test):
@@ -4776,8 +4786,6 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
         #~ oSheet.getCellRangeByPosition(2, riga_corrente, 10, riga_corrente).CharColor = -1
 
 ########################################################################
-def debug(arg=None):
-    basic_LeenO('Computo.vedi_voce')
 def vedi_voce(arg=None):
     '''
     Inserisce un riferimento a voce precedente sulla riga corrente.
@@ -6922,8 +6930,7 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
-#~ def calendario_mensile(arg=None):
-def debug(arg=None):
+def calendario_mensile(arg=None):
     '''
     Colora le colonne del sabato e della domenica, oltre le festività,
     nel file ../PRIVATO/LeenO/extra/calendario.ods che potrei implementare

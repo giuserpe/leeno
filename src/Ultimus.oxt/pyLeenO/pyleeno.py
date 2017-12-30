@@ -4776,8 +4776,9 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
         #~ oSheet.getCellRangeByPosition(2, riga_corrente, 10, riga_corrente).CharColor = -1
 
 ########################################################################
-#~ def vedi_voce(arg=None):
 def debug(arg=None):
+    basic_LeenO('Computo.vedi_voce')
+def vedi_voce(arg=None):
     '''
     Inserisce un riferimento a voce precedente sulla riga corrente.
     '''
@@ -6921,6 +6922,40 @@ def taglia_x(arg=None):
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow).clearContents(flags)
 ########################################################################
+#~ def calendario_mensile(arg=None):
+def debug(arg=None):
+    '''
+    Colora le colonne del sabato e della domenica, oltre le festività,
+    nel file ../PRIVATO/LeenO/extra/calendario.ods che potrei implementare
+    in LeenO per la gestione delle ore in economia o del diagramma di Gantt.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('elenco festività')
+    oRangeAddress=oDoc.NamedRanges.feste.ReferredCells.RangeAddress
+    SR = oRangeAddress.StartRow
+    ER = oRangeAddress.EndRow
+    lFeste = list()
+    for x in range(SR, ER):
+        if oSheet.getCellByPosition(0, x).Value != 0:
+            lFeste.append(oSheet.getCellByPosition(0, x).String)
+    oSheet = oDoc.getSheets().getByName('CALENDARIO')
+    test = getLastUsedCell(oSheet).EndColumn+1
+    slist = list()
+    for x in range(0, test):
+        if oSheet.getCellByPosition(x, 3).String == 's' or oSheet.getCellByPosition(x, 3).String == 'd':
+            slist.append(x)
+    for x in range(0, test):
+        if oSheet.getCellByPosition(x, 1).String in lFeste:
+            slist.append(x)
+
+    for x in range(2, getLastUsedCell(oSheet).EndColumn+1):
+        for y in range(1, getLastUsedCell(oSheet).EndRow+1):
+            if x in slist:
+                oSheet.getCellByPosition(x, y).CellStyle = 'ok'
+            else:
+                oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
+    return
+########################################################################
 def debugmt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -7000,21 +7035,6 @@ def debugmt(arg=None): #COMUNE DI MATERA
                 #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
 
 #~ # SOSTITUZIONI
-    #~ chi(oSheet.getCellRangeByName('R19').String)
-# ~CALENDARIO
-    test = getLastUsedCell(oSheet).EndColumn+1
-    slist = list()
-    for x in range(0, test):
-        if oSheet.getCellByPosition(x, 2).String == 's' or oSheet.getCellByPosition(x, 2).String == 'd':
-            slist.append(x)
-    for x in range(2, getLastUsedCell(oSheet).EndColumn+1):
-        for y in range(1, getLastUsedCell(oSheet).EndRow+1):
-            if x in slist:
-                oSheet.getCellByPosition(x, y).CellStyle = 'ok'
-            else:
-                oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
-    return
-        # ~slist.append(
     # ~for y in reversed(range(0, test)):
         # ~if oSheet.getCellByPosition(0, y).String == '' :
             # ~oSheet.getRows().removeByIndex(y, 1)
@@ -7022,25 +7042,27 @@ def debugmt(arg=None): #COMUNE DI MATERA
     # ~return
     # ~ for y in range(Range2Cell()[1]+1, test):
     #~ chi(datetime.strptime(testo.split(' ')[0],'%H:%M').split(' ')[-1])
-
+# MINUTI
+    ''' Mette in ordine i mituti lavorati '''
+    test = getLastUsedCell(oSheet).EndRow+1
     for y in range(0, test):
-        if ' ' in oSheet.getCellByPosition(16, y).String:
+        if ' ' in oSheet.getCellByPosition(6, y).String:
             try:
-                testo = oSheet.getCellByPosition(16, y).String
-                oSheet.getCellByPosition(17, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
-                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
+                testo = oSheet.getCellByPosition(6, y).String
+                oSheet.getCellByPosition(7, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
+                oSheet.getCellByPosition(7, y).Value = oSheet.getCellByPosition(7, y).Value
                 
-                oSheet.getCellByPosition(18, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
-                oSheet.getCellByPosition(18, y).Value = oSheet.getCellByPosition(18, y).Value
+                oSheet.getCellByPosition(8, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
+                oSheet.getCellByPosition(8, y).Value = oSheet.getCellByPosition(8, y).Value
 
-                oSheet.getCellByPosition(19, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
-                oSheet.getCellByPosition(19, y).Value = oSheet.getCellByPosition(19, y).Value 
-                oSheet.getCellByPosition(20, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
-                oSheet.getCellByPosition(20, y).Value = oSheet.getCellByPosition(20, y).Value 
-                oSheet.getCellByPosition(21, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
-                oSheet.getCellByPosition(21, y).Value = oSheet.getCellByPosition(21, y).Value 
-                oSheet.getCellByPosition(22, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
-                oSheet.getCellByPosition(22, y).Value = oSheet.getCellByPosition(22, y).Value 
+                oSheet.getCellByPosition(9, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
+                oSheet.getCellByPosition(9, y).Value = oSheet.getCellByPosition(9, y).Value 
+                oSheet.getCellByPosition(10, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
+                oSheet.getCellByPosition(10, y).Value = oSheet.getCellByPosition(10, y).Value 
+                oSheet.getCellByPosition(11, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
+                oSheet.getCellByPosition(11, y).Value = oSheet.getCellByPosition(11, y).Value 
+                oSheet.getCellByPosition(12, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
+                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value 
 
             except:
                 pass

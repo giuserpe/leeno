@@ -382,6 +382,7 @@ Function abs2name (nCol As Long, nRow As Long)
 End Function
 &apos;#########################################################################
 Sub vedi_voce rem &apos;(C) Giuseppe Vizziello 2013
+&apos; già tradotto da cancellare
 	Dim test As String
 	Dim riga_selezione As Integer
 	Dim focus as integer

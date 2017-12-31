@@ -3311,7 +3311,6 @@ def leeno_conf(arg=None):
         sString.Text =oSheet.getCellRangeByName('S1.H335').Value #cont_inizio_voci_abbreviate
         sString = oDlg_config.getControl('TextField12')
         sString.Text =oSheet.getCellRangeByName('S1.H336').Value #cont_fine_voci_abbreviate
-
         sString = oDlg_config.getControl('TextField10')
         sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
         sString = oDlg_config.getControl('TextField11')
@@ -3354,18 +3353,25 @@ def leeno_conf(arg=None):
     oSheet.getCellRangeByName('S1.H319').Value = float(oDlg_config.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
     oSheet.getCellRangeByName('S1.H320').Value = float(oDlg_config.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
     oSheet.getCellRangeByName('S1.H321').Value = float(oDlg_config.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
-        
     
 #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+    if oDlg_config.getControl('TextField10').getText() != '10000': _
     conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
     oSheet.getCellRangeByName('S1.H337').Value = float(oDlg_config.getControl('TextField10').getText())
+
+    if oDlg_config.getControl('TextField11').getText() != '10000': _
     conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
     oSheet.getCellRangeByName('S1.H338').Value = float(oDlg_config.getControl('TextField11').getText())
-#il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+
+    if oDlg_config.getControl('TextField14').getText() != '10000': _
     conf.write(path_conf, 'Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
     oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
+
+    if oDlg_config.getControl('TextField4').getText() != '10000': _
     conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
     oSheet.getCellRangeByName('S1.H335').Value = float(oDlg_config.getControl('TextField4').getText())
+
+    if oDlg_config.getControl('TextField12').getText() != '10000': _
     conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
     oSheet.getCellRangeByName('S1.H336').Value = float(oDlg_config.getControl('TextField12').getText())
     adatta_altezza_riga()

@@ -3355,24 +3355,19 @@ def leeno_conf(arg=None):
     oSheet.getCellRangeByName('S1.H321').Value = float(oDlg_config.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
     
 #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
-    if oDlg_config.getControl('TextField10').getText() != '10000': _
-    conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
+    if oDlg_config.getControl('TextField10').getText() != '10000': conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
     oSheet.getCellRangeByName('S1.H337').Value = float(oDlg_config.getControl('TextField10').getText())
 
-    if oDlg_config.getControl('TextField11').getText() != '10000': _
-    conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
+    if oDlg_config.getControl('TextField11').getText() != '10000': conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
     oSheet.getCellRangeByName('S1.H338').Value = float(oDlg_config.getControl('TextField11').getText())
 
-    if oDlg_config.getControl('TextField14').getText() != '10000': _
-    conf.write(path_conf, 'Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
+    if oDlg_config.getControl('TextField14').getText() != '10000': conf.write(path_conf, 'Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
     oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
 
-    if oDlg_config.getControl('TextField4').getText() != '10000': _
-    conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
+    if oDlg_config.getControl('TextField4').getText() != '10000': conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
     oSheet.getCellRangeByName('S1.H335').Value = float(oDlg_config.getControl('TextField4').getText())
 
-    if oDlg_config.getControl('TextField12').getText() != '10000': _
-    conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
+    if oDlg_config.getControl('TextField12').getText() != '10000': conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
     oSheet.getCellRangeByName('S1.H336').Value = float(oDlg_config.getControl('TextField12').getText())
     adatta_altezza_riga()
 
@@ -4779,7 +4774,7 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
     if oSheet.Name == 'CONTABILITA':
         sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
     else:
-        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';S1.H334)'    
+        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';$S1.$H$334)'    
     oSheet.getCellByPosition(2, riga_corrente).Formula= sformula
     
     if flags in('32768', '32769', '32801'):
@@ -6405,37 +6400,42 @@ dell'operazione che terminerà con un messaggio di avviso.
         oSheet.getCellRangeByName('H297:H338').CellStyle = 'Setvar C'
         oSheet.getCellRangeByName('I297:I338').CellStyle = 'Setvar D'
         #< adegua le formule delle descrizioni di voci
-        
-        _gotoSheet('COMPUTO')
-        oSheet = oDoc.getSheets().getByName('COMPUTO')
-        test = getLastUsedCell(oSheet).EndRow+1
-        for y in range(0, test):
-            if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
-                #~ if '[...]' in oSheet.getCellByPosition(2, y).Formula:
-                    #~ break
-                sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-                oSheet.getCellByPosition(2, y).Formula = sformula
-        if oDoc.getSheets().hasByName('VARIANTE') == True:
-            _gotoSheet('VARIANTE')
-            oSheet = oDoc.getSheets().getByName('VARIANTE')
-            test = getLastUsedCell(oSheet).EndRow+1
-            for y in range(0, test):
-                if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
-                    #~ if '[...]' in oSheet.getCellByPosition(2, y).Formula:
-                        #~ break
-                    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-                    oSheet.getCellByPosition(2, y).Formula = sformula
-        if oDoc.getSheets().hasByName('CONTABILITA') == True:
-            _gotoSheet('CONTABILITA')
-            oSheet = oDoc.getSheets().getByName('CONTABILITA')
-            test = getLastUsedCell(oSheet).EndRow+1
-            for y in range(0, test):
-                if oSheet.getCellByPosition(1, y).CellStyle == 'comp Art-EP_R':
-                    #~ if '[...]' in oSheet.getCellByPosition(2, y).Formula:
-                        #~ break
-                    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$336)))'
-                    oSheet.getCellByPosition(2, y).Formula = sformula
+        for el in ('COMPUTO', 'VARIANTE'):
+            if oDoc.getSheets().hasByName(el) == True:
+                _gotoSheet(el)
+                oSheet = oDoc.getSheets().getByName(el)
+                test = getLastUsedCell(oSheet).EndRow+1
+                for y in range(0, test):
+                    # aggiorna formula della descrizione
+                    if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
+                        sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+                        oSheet.getCellByPosition(2, y).Formula = sformula
+                # ~test = getLastUsedCell(oSheet).EndRow+1
+                # ~for y in range(0, test):
+                    # aggiorna formula vedi voce
+                    if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
+                        if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
+                            n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
+                        else:
+                            n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[1].split(';')[0]
+                        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(A$' +n+ ';"@");" - art. ";B$' +n+ ';" [";VLOOKUP(B$' +n+ ';elenco_prezzi;3;FALSE());"] - ";LEFT(C$' +n+ ';$S1.$H$334))'
+                        oSheet.getCellByPosition(2, y).Formula = sformula
+                    if '=J' in oSheet.getCellByPosition(5, y).Formula:
+                        if '$' in oSheet.getCellByPosition(5, y).Formula:
+                            n = oSheet.getCellByPosition(5, y).Formula.split('$')[1]
+                        else:
+                            n = oSheet.getCellByPosition(5, y).Formula.split('J')[1]
+                        oSheet.getCellByPosition(5, y).Formula = '=J$' + n
 
+        if oDoc.getSheets().hasByName('CONTABILITA'):
+            MsgBox('''L'adeguamento del foglio di contabilità sarà attivato
+            nelle successive versioni di LeenO.
+
+            contatta il canale Telegram
+            https://t.me/leeno_computometrico''', 'AVVISO!')
+        ########################################################################
+        ### RINVIO L'ADEGUAMENTO DELLA CONTABILITÀ A QUANDO L'AVRÒ COMPLETATA
+        ########################################################################
         _gotoSheet('S5')
         oSheet = oDoc.getSheets().getByName('S5')
         oSheet.getCellRangeByName('C10').Formula ='=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$338)))'
@@ -6969,9 +6969,14 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-def debugmt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    y = 1
+    chi(str(5454))
+    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+    chi (sformula)
+    return
     # ~chi(LeenO_path())
     # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
     # ~return
@@ -7048,37 +7053,60 @@ def debugmt(arg=None): #COMUNE DI MATERA
                 #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
 
 #~ # SOSTITUZIONI
-    # ~for y in reversed(range(0, test)):
-        # ~if oSheet.getCellByPosition(0, y).String == '' :
-            # ~oSheet.getRows().removeByIndex(y, 1)
-
-    # ~return
+    test = getLastUsedCell(oSheet).EndRow+1
+    for y in range(0, test):
+        if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
+            if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
+                str = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
+            else:
+                str = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[1].split(';')[0]
+            sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(A$' +str+ ';"@");" - art. ";B$' +str+ ';" [";VLOOKUP(B$' +str+ ';elenco_prezzi;3;FALSE());"] - ";LEFT(C$' +str+ ';$S1.$H$334))'
+            oSheet.getCellByPosition(2, y).Formula = sformula
+        if '=J' in oSheet.getCellByPosition(5, y).Formula:
+            if '$' in oSheet.getCellByPosition(5, y).Formula:
+                str = oSheet.getCellByPosition(5, y).Formula.split('$')[1]
+            else:
+                str = oSheet.getCellByPosition(5, y).Formula.split('J')[1]
+            oSheet.getCellByPosition(5, y).Formula = '=J$' + str
+    return
     # ~ for y in range(Range2Cell()[1]+1, test):
     #~ chi(datetime.strptime(testo.split(' ')[0],'%H:%M').split(' ')[-1])
 # MINUTI
-    ''' Mette in ordine i mituti lavorati '''
+    ''' Mette in ordine i minuti lavorati '''
     test = getLastUsedCell(oSheet).EndRow+1
-    for y in range(0, test):
+    for y in range(2, test):
+        #~ if oSheet.getCellByPosition(2, y).String in ('F', 'R'): oSheet.getRows().removeByIndex(y, 1)
         if ' ' in oSheet.getCellByPosition(6, y).String:
             try:
                 testo = oSheet.getCellByPosition(6, y).String
-                oSheet.getCellByPosition(7, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
-                oSheet.getCellByPosition(7, y).Value = oSheet.getCellByPosition(7, y).Value
-                
-                oSheet.getCellByPosition(8, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
-                oSheet.getCellByPosition(8, y).Value = oSheet.getCellByPosition(8, y).Value
-
-                oSheet.getCellByPosition(9, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
-                oSheet.getCellByPosition(9, y).Value = oSheet.getCellByPosition(9, y).Value 
-                oSheet.getCellByPosition(10, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
-                oSheet.getCellByPosition(10, y).Value = oSheet.getCellByPosition(10, y).Value 
-                oSheet.getCellByPosition(11, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
-                oSheet.getCellByPosition(11, y).Value = oSheet.getCellByPosition(11, y).Value 
-                oSheet.getCellByPosition(12, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
-                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value 
-
+                oSheet.getCellByPosition(12, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
+                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value
+                oSheet.getCellByPosition(13, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
+                oSheet.getCellByPosition(13, y).Value = oSheet.getCellByPosition(13, y).Value
+                oSheet.getCellByPosition(14, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
+                oSheet.getCellByPosition(14, y).Value = oSheet.getCellByPosition(14, y).Value 
+                oSheet.getCellByPosition(15, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
+                oSheet.getCellByPosition(15, y).Value = oSheet.getCellByPosition(15, y).Value 
+                oSheet.getCellByPosition(16, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
+                oSheet.getCellByPosition(16, y).Value = oSheet.getCellByPosition(16, y).Value 
+                oSheet.getCellByPosition(17, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
+                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
             except:
                 pass
+        oSheet.getCellRangeByPosition(12, y, 25, y).CellStyle = 'MINUTI'
+        oSheet.getCellRangeByPosition(19, y, 24, y).CellStyle = 'minuti_bis'
+        oSheet.getCellByPosition(18, y).CellStyle = 'DATE'
+        if oSheet.getCellByPosition(0, y).String not in ('Sabato', 'Domenica') and oSheet.getCellByPosition(12, y).Value != 0:
+            oSheet.getCellByPosition(18, y).Formula = '=B' + str(y+1)
+            oSheet.getCellByPosition(25, y).Formula = '=U' + str(y+1) + '-T' + str(y+1) + '+W' + str(y+1) + '-V' + str(y+1) + '+Y' + str(y+1) + '-X' + str(y+1)
+            oSheet.getCellByPosition(19, y).Formula = '=IF(M' + str(y+1) + '>=TIME(7;50;0);M' + str(y+1) + ';TIME(7;50;0))+TIME(6;0;0)'
+            oSheet.getCellByPosition(20, y).Formula = '=N' + str(y+1)
+        if oSheet.getCellByPosition(0, y).String in ('Martedì', 'Giovedì') and oSheet.getCellByPosition(14, y).Value != 0:
+            oSheet.getCellByPosition(21, y).Formula = '=IF(O' + str(y+1) + '<=TIME(15;30;0);O' + str(y+1) + ';0)'
+            oSheet.getCellByPosition(22, y).Formula = '=TIME(15;30;0)'
+            oSheet.getCellByPosition(23, y).Formula = '=TIME(18;30;0)'
+            oSheet.getCellByPosition(24, y).Formula = '=P' + str(y+1)
+
 # inserisce numero tabella
     #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
         #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:

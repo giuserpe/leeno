@@ -3286,12 +3286,11 @@ def leeno_conf(arg=None):
         sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
         sString = oDlg_config.getControl('TextField6')
         sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
-
         sString = oDlg_config.getControl('TextField7')
         sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
         
         #accorpa_spese_utili
-        if oSheet.getCellRangeByName('S1.H321').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
+        if oSheet.getCellRangeByName('S1.H323').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
 
         sString = oDlg_config.getControl('TextField8')
         sString.Text =oSheet.getCellRangeByName('S1.H324').Value * 100 #sconto
@@ -3353,6 +3352,9 @@ def leeno_conf(arg=None):
     oSheet.getCellRangeByName('S1.H319').Value = float(oDlg_config.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
     oSheet.getCellRangeByName('S1.H320').Value = float(oDlg_config.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
     oSheet.getCellRangeByName('S1.H321').Value = float(oDlg_config.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
+    oSheet.getCellRangeByName('S1.H323').Value = oDlg_config.getControl('CheckBox4').State
+    oSheet.getCellRangeByName('S1.H324').Value = float(oDlg_config.getControl('TextField8').getText().replace(',','.')) / 100  #sconto
+    oSheet.getCellRangeByName('S1.H326').Value = float(oDlg_config.getControl('TextField9').getText().replace(',','.')) / 100  #maggiorazione
     
 #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
     if oDlg_config.getControl('TextField10').getText() != '10000': conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
@@ -3374,7 +3376,6 @@ def leeno_conf(arg=None):
     conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
     conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
     conf.write(path_conf, 'Contabilità', 'ricicla_da', oDlg_config.getControl('ComboBox3').getText())
-
 ########################################################################
 #percorso di ricerca di leeno.conf
 if sys.platform == 'win32':
@@ -4658,7 +4659,7 @@ def importa_stili(arg=None):
     selezionato, il file di rifetimento è il template di leenO.
     '''
     if DlgSiNo('''Questa operazione sovrascriverà gli stili
-del documento attivo se già presenti!
+del documento attivo, se già presenti!
 
 Se non scegli un file di riferimento, saranno
 importati gli stili di default di LeenO.
@@ -7052,61 +7053,8 @@ def debug(arg=None): #COMUNE DI MATERA
                 #~ oSheet.getCellByPosition(10, y).CellBackColor = 16777113
                 #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
 
-#~ # SOSTITUZIONI
-    test = getLastUsedCell(oSheet).EndRow+1
-    for y in range(0, test):
-        if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
-            if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
-                str = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
-            else:
-                str = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[1].split(';')[0]
-            sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(A$' +str+ ';"@");" - art. ";B$' +str+ ';" [";VLOOKUP(B$' +str+ ';elenco_prezzi;3;FALSE());"] - ";LEFT(C$' +str+ ';$S1.$H$334))'
-            oSheet.getCellByPosition(2, y).Formula = sformula
-        if '=J' in oSheet.getCellByPosition(5, y).Formula:
-            if '$' in oSheet.getCellByPosition(5, y).Formula:
-                str = oSheet.getCellByPosition(5, y).Formula.split('$')[1]
-            else:
-                str = oSheet.getCellByPosition(5, y).Formula.split('J')[1]
-            oSheet.getCellByPosition(5, y).Formula = '=J$' + str
-    return
     # ~ for y in range(Range2Cell()[1]+1, test):
     #~ chi(datetime.strptime(testo.split(' ')[0],'%H:%M').split(' ')[-1])
-# MINUTI
-    ''' Mette in ordine i minuti lavorati '''
-    test = getLastUsedCell(oSheet).EndRow+1
-    for y in range(2, test):
-        #~ if oSheet.getCellByPosition(2, y).String in ('F', 'R'): oSheet.getRows().removeByIndex(y, 1)
-        if ' ' in oSheet.getCellByPosition(6, y).String:
-            try:
-                testo = oSheet.getCellByPosition(6, y).String
-                oSheet.getCellByPosition(12, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
-                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value
-                oSheet.getCellByPosition(13, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
-                oSheet.getCellByPosition(13, y).Value = oSheet.getCellByPosition(13, y).Value
-                oSheet.getCellByPosition(14, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
-                oSheet.getCellByPosition(14, y).Value = oSheet.getCellByPosition(14, y).Value 
-                oSheet.getCellByPosition(15, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
-                oSheet.getCellByPosition(15, y).Value = oSheet.getCellByPosition(15, y).Value 
-                oSheet.getCellByPosition(16, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
-                oSheet.getCellByPosition(16, y).Value = oSheet.getCellByPosition(16, y).Value 
-                oSheet.getCellByPosition(17, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
-                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
-            except:
-                pass
-        oSheet.getCellRangeByPosition(12, y, 25, y).CellStyle = 'MINUTI'
-        oSheet.getCellRangeByPosition(19, y, 24, y).CellStyle = 'minuti_bis'
-        oSheet.getCellByPosition(18, y).CellStyle = 'DATE'
-        if oSheet.getCellByPosition(0, y).String not in ('Sabato', 'Domenica') and oSheet.getCellByPosition(12, y).Value != 0:
-            oSheet.getCellByPosition(18, y).Formula = '=B' + str(y+1)
-            oSheet.getCellByPosition(25, y).Formula = '=U' + str(y+1) + '-T' + str(y+1) + '+W' + str(y+1) + '-V' + str(y+1) + '+Y' + str(y+1) + '-X' + str(y+1)
-            oSheet.getCellByPosition(19, y).Formula = '=IF(M' + str(y+1) + '>=TIME(7;50;0);M' + str(y+1) + ';TIME(7;50;0))+TIME(6;0;0)'
-            oSheet.getCellByPosition(20, y).Formula = '=N' + str(y+1)
-        if oSheet.getCellByPosition(0, y).String in ('Martedì', 'Giovedì') and oSheet.getCellByPosition(14, y).Value != 0:
-            oSheet.getCellByPosition(21, y).Formula = '=IF(O' + str(y+1) + '<=TIME(15;30;0);O' + str(y+1) + ';0)'
-            oSheet.getCellByPosition(22, y).Formula = '=TIME(15;30;0)'
-            oSheet.getCellByPosition(23, y).Formula = '=TIME(18;30;0)'
-            oSheet.getCellByPosition(24, y).Formula = '=P' + str(y+1)
-
 # inserisce numero tabella
     #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
         #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:

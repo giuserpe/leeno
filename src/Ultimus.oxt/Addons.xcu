@@ -1092,7 +1092,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Accessori_2.sproteggi_sheet_TUTTE?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$sproteggi_sheet_TUTTE?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image17</value>
@@ -1404,7 +1404,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Accessori_2.Visualizza_sheet_TUTTE?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$sproteggi_sheet_TUTTE?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/vintage</value>

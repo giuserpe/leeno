@@ -5919,6 +5919,7 @@ def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTT
     sm = ctx.ServiceManager
     sv = sm.createInstanceWithContext('com.sun.star.awt.Toolkit', ctx)
     myBox = sv.createMessageBox(ParentWin, MsgType, MsgButtons, MsgTitle, MsgText)
+   
     return myBox.execute()
 # [　入手元　]
 
@@ -6400,6 +6401,10 @@ dell'operazione che terminerà con un messaggio di avviso.
         oSheet.getCellRangeByName('G297:G338').CellStyle = 'Setvar b'
         oSheet.getCellRangeByName('H297:H338').CellStyle = 'Setvar C'
         oSheet.getCellRangeByName('I297:I338').CellStyle = 'Setvar D'
+        oSheet.getCellRangeByName('H319:H326').CellStyle = 'Setvar C_3'
+        oSheet.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
+        oSheet.getCellRangeByName('H323').CellStyle = 'Setvar C'
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = 672 #percentuale negativo
         #< adegua le formule delle descrizioni di voci
         for el in ('COMPUTO', 'VARIANTE'):
             if oDoc.getSheets().hasByName(el) == True:
@@ -6429,11 +6434,11 @@ dell'operazione che terminerà con un messaggio di avviso.
                         oSheet.getCellByPosition(5, y).Formula = '=J$' + n
 
         if oDoc.getSheets().hasByName('CONTABILITA'):
-            MsgBox('''L'adeguamento del foglio di contabilità sarà attivato
-            nelle successive versioni di LeenO.
+            MsgBox('''L'adeguamento del foglio di contabilità sarà
+attivato nelle successive versioni di LeenO.
 
-            contatta il canale Telegram
-            https://t.me/leeno_computometrico''', 'AVVISO!')
+contatta il canale Telegram
+https://t.me/leeno_computometrico''', 'AVVISO!')
         ########################################################################
         ### RINVIO L'ADEGUAMENTO DELLA CONTABILITÀ A QUANDO L'AVRÒ COMPLETATA
         ########################################################################
@@ -6973,10 +6978,27 @@ def calendario_mensile(arg=None):
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    y = 1
-    chi(str(5454))
-    sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-    chi (sformula)
+
+
+    window = oDoc.getCurrentController().getFrame().getContainerWindow()
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    def create(name):
+        return ctx.getServiceManager().createInstanceWithContext(name, ctx)
+    
+    toolkit = create("com.sun.star.awt.Toolkit")
+    msgbox = toolkit.createMessageBox(window, 0, 1, "Message", 'foo')
+    
+    link = create("com.sun.star.awt.UnoControlFixedHyperlink")
+    link_model = create("com.sun.star.awt.UnoControlFixedHyperlinkModel")
+    link.setModel(link_model)
+    link.createPeer(toolkit, msgbox)
+    link.setPosSize(35, 8, 100, 15, 15)
+    link.setText("Canale Telegram")
+    link.setURL("https://t.me/leeno_computometrico")
+    link.setVisible(True)
+    
+    msgbox.execute()
+    msgbox.dispose()
     return
     # ~chi(LeenO_path())
     # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True

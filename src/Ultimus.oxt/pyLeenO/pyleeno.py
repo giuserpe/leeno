@@ -2757,7 +2757,10 @@ def ricicla_misure(arg=None):
         sotto = sStRange.RangeAddress.EndRow-1
 
         oSrc = oSheet.getCellRangeByPosition(2, sopra, 8, sotto).getRangeAddress()
-        oDest = oDoc.getSheets().getByName('CONTABILITA')
+        try:
+            oDest = oDoc.getSheets().getByName('CONTABILITA')
+        except:
+            return
         oCellAddress = oDest.getCellByPosition(2, partenza[1]+1).getCellAddress()
         _gotoSheet('CONTABILITA')
         for n in range (sopra, sotto):
@@ -6775,9 +6778,12 @@ def make_pack(arg=None, bar=0):
         oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-        nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-        os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
+        #~ nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+        #~ nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+        cartella = '/media/' + os.getenv("PWD")[5:]
+        nomeZip2= cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+        nomeZip = cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+        os.system('nemo ' + cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
             try:

@@ -4781,7 +4781,7 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
         sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';$S1.$H$334)'    
     oSheet.getCellByPosition(2, riga_corrente).Formula= sformula
     
-    if flags in('32768', '32769', '32801'):
+    if flags in('32769', '32801'): # 32768
         oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
     else:
         oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity

@@ -36,6 +36,8 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
                                           ANNOTATION, FORMULA, HARDATTR,
                                           OBJECTS, EDITATTR, FORMATTED)
+
+from com.sun.star.beans.PropertyAttribute import (MAYBEVOID, REMOVEABLE, MAYBEDEFAULT)
 ########################################################################
 # https://forum.openoffice.org/en/forum/viewtopic.php?f=45&t=27805&p=127383
 import random
@@ -5785,8 +5787,8 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 #VARIABILI GLOBALI:#####################################################
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
-Lminor= 17 #'NUOVE FUNZIONALITA'
-Lsubv= "3.dev" #'CORREZIONE BUGS
+Lminor= 18 #'NUOVE FUNZIONALITA'
+Lsubv= "0" #'CORREZIONE BUGS
 noVoce =('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
@@ -6155,18 +6157,28 @@ def autoexec(arg=None):
 #~ If both are set to TRUE via API calls then the last one set takes precedence.
     oDoc.Wildcards = False
     oDoc.RegularExpressions = True
+    oSheet = oDoc.getSheets().getByName('S1')
+    adegua_tmpl() #esegue degli aggiustamenti del template
+    toolbar_vedi()
     try:
-        oSheet = oDoc.getSheets().getByName('S1')
-        oSheet.getCellByPosition(7, 290).Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
-        oSheet.getCellByPosition(7,193).Value = r_version_code()
-        oSheet.getCellByPosition(8,193).Value = Lmajor
-        oSheet.getCellByPosition(9,193).Value = Lminor
-        oSheet.getCellByPosition(10,193).String = Lsubv
-        oSheet.getCellByPosition(7,295).Value = Lmajor
-        oSheet.getCellByPosition(8,295).Value = Lminor
-        oSheet.getCellByPosition(9,295).String = Lsubv
-        adegua_tmpl() #esegue degli aggiustamenti del template
-        toolbar_vedi()
+        oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
+
+        oSheet.getCellRangeByName('H194').Value = r_version_code()
+        oSheet.getCellRangeByName('I194').Value = Lmajor
+        oSheet.getCellRangeByName('J194').Value = Lminor
+        
+        oSheet.getCellRangeByName('H291').Value = oUDP.Versione
+        oSheet.getCellRangeByName('I291').String = oUDP.Versione_LeenO.split('.')[0]
+        oSheet.getCellRangeByName('J291').String = oUDP.Versione_LeenO.split('.')[1]
+
+        oSheet.getCellRangeByName('H295').String = oUDP.Versione_LeenO.split('.')[0]
+        oSheet.getCellRangeByName('I295').String = oUDP.Versione_LeenO.split('.')[1]
+        oSheet.getCellRangeByName('J295').String = oUDP.Versione_LeenO.split('.')[2]
+        
+        oSheet.getCellRangeByName('K194').String = Lsubv
+        oSheet.getCellRangeByName('H296').Value = Lmajor
+        oSheet.getCellRangeByName('I296').Value = Lminor
+        oSheet.getCellRangeByName('J296').String = Lsubv
     except:
         #~ chi("autoexec py")
         return
@@ -6312,7 +6324,7 @@ def adegua_tmpl(arg=None):
     - dal 203(LeenO 3.14.0 ha templ 202) introdotta la Super Categoria con nuovi stili di cella;
         sostituita la colonna "Tag A" con "Tag Super Cat"
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
-    
+    - dal 209 cambia il nome di propietà del file in "Versione_LeenO"
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
 #qui le cose da cambiare comunque
@@ -6358,7 +6370,7 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 208
+    adegua_a = 209
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione corrente di LeenO?
@@ -6408,6 +6420,12 @@ dell'operazione che terminerà con un messaggio di avviso.
         oSheet.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
         oSheet.getCellRangeByName('H323').CellStyle = 'Setvar C'
         oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = 672 #percentuale negativo
+        #dal 209 cambia nome di custom propierty
+        oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
+        oUDP.removeProperty('Versione LeenO')
+        if not oUDP.getPropertySetInfo().hasPropertyByName("Versione_LeenO"):
+            oUDP.addProperty('Versione_LeenO', MAYBEVOID + REMOVEABLE + MAYBEDEFAULT, str(Lmajor) +'.'+ str(Lminor) +'.x')
+
         #< adegua le formule delle descrizioni di voci
         for el in ('COMPUTO', 'VARIANTE'):
             if oDoc.getSheets().hasByName(el) == True:
@@ -6981,203 +6999,6 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-
-
-    window = oDoc.getCurrentController().getFrame().getContainerWindow()
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    def create(name):
-        return ctx.getServiceManager().createInstanceWithContext(name, ctx)
-    
-    toolkit = create("com.sun.star.awt.Toolkit")
-    msgbox = toolkit.createMessageBox(window, 0, 1, "Message", 'foo')
-    
-    link = create("com.sun.star.awt.UnoControlFixedHyperlink")
-    link_model = create("com.sun.star.awt.UnoControlFixedHyperlinkModel")
-    link.setModel(link_model)
-    link.createPeer(toolkit, msgbox)
-    link.setPosSize(35, 8, 100, 15, 15)
-    link.setText("Canale Telegram")
-    link.setURL("https://t.me/leeno_computometrico")
-    link.setVisible(True)
-    
-    msgbox.execute()
-    msgbox.dispose()
-    return
-    # ~chi(LeenO_path())
-    # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
-    # ~return
-    #~ oSheet.getCellRangeByName('G210').CellBackColor= 6124544
-    #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
-    #~ return
- 
-
-    #~ oSheet.getCellRangeByName('Y254')
-    
-    #~ return
-    #~ col1 = 16777072 #16771481
-    #~ col2 = 16777120 #16771501
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771481:
-            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777072
-            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771501:
-            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777120
-            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
-    #~ return
-    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-        #~ for x in (29, 30):
-            #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
-    #~ chi(len(oSheet.getCellRangeByName('A6').String.split('.')))
-    #~ return
-# SALTA SULLE CELLE 
-    #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
-    # ~ for y in reversed(range(0, getLastUsedCell(oSheet).EndRow+1)):
-        # ~ if  oSheet.getCellByPosition(0, y).CellStyle in ('Livello-0-scritta', 'Livello-1-scritta'):
-            # ~ oSheet.getRows().removeByIndex(y, 1)
-
-            #~ testo = oSheet.getCellByPosition(2, y).String.split('- art. ')[1]
-
-            #~ oSheet.getCellByPosition(2, y).String = '- vedi voce art. ' + testo
-            #~ oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
-            #~ _gotoCella(2, y)
-            #~ chi (len(oSheet.getCellByPosition(0, y).String.split('.')))
-            #~ _gotoCella(4, y)
-            
-            #~ return
-            #~ oSheet.getCellByPosition(6, y).Value = oSheet.getCellByPosition(5, y).Value / 100
-    
-            
-             
-        #~ if len (oSheet.getCellByPosition(2, y).String) > 5:
-            #~ oSheet.getCellByPosition(4, y).String = ''
-        #~ for x in range(3, 3):
-        #~ if oSheet.getCellByPosition(2, y).Type.value == 'TEXT' and oSheet.getCellByPosition(3, y).Type.value == 'TEXT':
-            #~ oSheet.getCellByPosition(1, y).String = oSheet.getCellByPosition(1, y).String +' '+oSheet.getCellByPosition(2, y).String
-            #~ oSheet.getCellByPosition(2, y).String = oSheet.getCellByPosition(3, y).String
-            #~ oSheet.getCellByPosition(3, y).Value = oSheet.getCellByPosition(4, y).Value
-            #~ oSheet.getCellByPosition(4, y).Value = oSheet.getCellByPosition(5, y).Value
-            #~ oSheet.getCellByPosition(5, y).String = ''
-            
-            #~ if oSheet.getCellByPosition(x, y).getIsMerged() == True:
-            
-            #~ return
-    # ~ chi("fine")
-    # ~ return
-
-# SPALMA I VALORI
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
-        #~ if oSheet.getCellByPosition(0, y).Type.value =='VALUE':
-            #~ valore = oSheet.getCellByPosition(0, y).Value
-        #~ else:
-            #~ oSheet.getCellByPosition(0, y).Value = valore
-
-# COLORA VALORI DIFFERENTI
-    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-        #~ if oSheet.getCellByPosition(10, y).String != oSheet.getCellByPosition(11, y).String:
-            #~ if oSheet.getCellByPosition(11, y).String != '':
-                #~ oSheet.getCellByPosition(10, y).CellBackColor = 16777113
-                #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
-
-    # ~ for y in range(Range2Cell()[1]+1, test):
-    #~ chi(datetime.strptime(testo.split(' ')[0],'%H:%M').split(' ')[-1])
-# inserisce numero tabella
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
-            #~ oSheet.getCellByPosition(13, y).Formula = '=VLOOKUP(A'+ str(y+1) + ';strade;2;0)'
-            #~ oSheet.getCellByPosition(13, y).String = oSheet.getCellByPosition(13, y).String
-            #~ oSheet.getCellRangeByPosition(0, y, 11, y).merge(True)
-
-    #~ return  
-#~ RECUPERA VIE
-    #~ vie = list()
-    #~ n = 0
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
-            #~ oSheet.getCellByPosition(12, y).CellBackColor = 16777113
-            #~ n += 1
-            #~ testo = oSheet.getCellByPosition(0, y).String
-            #~ num = oSheet.getCellByPosition(13, y).Value
-            #~ el =(n, testo, num)
-            #~ vie.append(el)
-    
-    #~ oSheet = oDoc.getSheets().getByName('VIE')
-    #~ oRange = oSheet.getCellRangeByPosition(0, 1, len(vie[0])-1, len(vie))
-    #~ lista_come_array = tuple(vie)
-    #~ oRange.setDataArray(lista_come_array)
-#~ crea via e numero
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
-        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
-            #~ testo = oSheet.getCellByPosition(0, y).String
-        #~ else:
-            #~ try:
-                #~ if oSheet.getCellByPosition(2, y).String != '':
-                    #~ oSheet.getCellByPosition(12, y).String = testo + ', ' + oSheet.getCellByPosition(2, y).String.upper()
-                #~ else:
-                    #~ oSheet.getCellByPosition(12, y).String = ''
-            #~ except:
-                #~ pass
-#~ elimina '/' finale
-    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
-        #~ try:
-            #~ if oSheet.getCellByPosition(9, y).String[-1] == '/':
-                #~ oSheet.getCellByPosition(9, y).String = oSheet.getCellByPosition(9, y).String[:-1]
-        #~ except:
-            #~ pass
-            
-    #~ return
- #~ INSERISCI PARTICELLE
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
-        #~ if oSheet.getCellByPosition(10, y).String != '':
-            #~ if oSheet.getCellByPosition(11, y).String != '':
-                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String + '/' + oSheet.getCellByPosition(11, y).String
-            #~ else:
-                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String
-    
-#~ ricerca graffate
-    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
-        #~ if '\n' in oSheet.getCellByPosition(6, y).String:
-            #~ particelle = oSheet.getCellByPosition(6, y).String.split('\n')
-            #~ sub = oSheet.getCellByPosition(7, y).String.split('\n')
-
-            #~ while len(sub) < len(particelle):
-                #~ sub.append('')
-            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 5, y))
-            #~ copy_clip()
-            #~ oSheet.getRows().insertByIndex(y+1, len(particelle)-1)
-            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y+1, 0, y+len(particelle)-1))
-            #~ paste_clip()
-            #~ for n in range(0, len(particelle)):
-                #~ oSheet.getCellByPosition(6, y+n).String = particelle[n]
-                #~ oSheet.getCellByPosition(7, y+n).String = sub[n]
-                #~ oSheet.getCellByPosition(15, y+n).String = particelle[0]+ '/' + sub[0]
-    #~ chi(sub)
-#RAGGRUPPA LE RIGHE SECONDO IL COLoRE
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
-    #~ iSheet = oSheet.RangeAddress.Sheet
-    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    #~ oCellRangeAddr.Sheet = iSheet
-    #~ lista = list()
-    #~ test = getLastUsedCell(oSheet).EndRow-1
-    #~ for n in range(0, test):
-        #~ if oSheet.getCellByPosition(0, n).CellBackColor == 16777113:
-            #~ sopra = n+1
-            
-            #~ for n in range(sopra+1, test):
-                #~ if oSheet.getCellByPosition(0, n).CellBackColor == 16777113:
-                    #~ sotto = n-1
-                    #~ lista.append((sopra, sotto))
-
-                    #~ break
-    #~ for el in lista:
-        #~ oCellRangeAddr.StartRow = el[0]
-        #~ oCellRangeAddr.EndRow = el[1]
-        #~ oSheet.group(oCellRangeAddr,1)
-        #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
-    return
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 #~ g_exportedScripts = richiesta_offerta,

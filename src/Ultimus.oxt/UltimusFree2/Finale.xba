@@ -869,15 +869,15 @@ Verifica_chiudi_preview
 
 &apos; fine modulo di controllo e modifica stile di pagina
 	
-	Select Case sAttributo
-		Case &quot;TIPO_COMPUTO&quot;
-			Visualizza_PageBreak
-		Case &quot;TIPO_CONTABILITA&quot;
-			Visualizza_PageBreak
-		Case &quot;TIPO_ANALISI&quot;
+	Select Case sSheetName
+&apos;		Case &quot;COMPUTO&quot;
+&apos;			Visualizza_PageBreak
+&apos;		Case &quot;CONTABILITA&quot;
+&apos;			Visualizza_PageBreak
+		Case &quot;Analisi di Prezzo&quot;
 			Visualizza_PageBreak
 			Impagina_Analisi_N
-		Case &quot;TIPO_ELENCOP&quot;, &quot;Tipo_Elenco&quot; 
+&apos;		Case &quot;Elenco Prezzi&quot; 
 	&apos;		msgbox &quot;Questo sembra essere un Elenco prezzi, e non serve una impagninazione automatica dei salti pagina...&quot;
 			exit sub
 		Case &quot;&quot;

@@ -3833,23 +3833,27 @@ def struttura_Elenco(arg=None):
     Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
     '''
+    if DlgSiNo('''Adesso puoi dare ai titoli di capitolo e sottocapitolo
+una tonalità di colore che ne facilita la leggibilità, ma
+il risultato finale dipende dalla struttura dei codici di voce.
+
+QUESTA OPERAZIONE RICHIEDE DEL TEMPO E
+LibreOffice POTREBBE SEMBRARE BLOCCATO!
+
+Vuoi procedere con la creazione della struttura dei capitoli?''', 'Avviso') == 3:
+            return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
-    #~ chi(oSheet.getCellRangeByName('A14976').CellBackColor)
-    #~ return
     struct_colore(0) #attribuisce i colori
     struct_colore(1)
     struct_colore(2)
-    return
-###########################################
-###########################################
-###########################################
     col1 = 16777072
     col2 = 16777120
     col3 = 16777168
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oDoc.CurrentController.ZoomValue = 400
+    
+    oDoc.CurrentController.ZoomValue = 400
 
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
@@ -3858,25 +3862,17 @@ def struttura_Elenco(arg=None):
     test = getLastUsedCell(oSheet).EndRow-1
     for n in range(3, test):#
         if oSheet.getCellByPosition(4, n).String == '':
-            #~ pass
             oSheet.getCellRangeByPosition(0, n, 0, n).CellBackColor = col2
-            #~ oCellRangeAddr.StartRow = n
-            #~ oCellRangeAddr.EndRow = n
-            #~ oSheet.group(oCellRangeAddr,1)
-    #~ oDoc.CurrentController.ZoomValue = 100
+
 
     cap = list()
     for y in range(3, getLastUsedCell(oSheet).EndRow):
         if len(oSheet.getCellByPosition(0, y).String)== 1:
-            #~ oCellRangeAddr.StartRow = y
-            #~ oCellRangeAddr.EndRow = n
-            #~ oSheet.group(oCellRangeAddr,1)
             cap.append(y)
     cap.append(getLastUsedCell(oSheet).EndRow)
-    #~ chi (cap)
     test = copy.deepcopy(cap)
     a = cap.pop(0)
-    #~ chi(test)
+
     for el in test:
         try:
             b = cap.pop(0)
@@ -3889,6 +3885,7 @@ def struttura_Elenco(arg=None):
             return
         #~ chi(a)
         a = b
+    oDoc.CurrentController.ZoomValue = 100
 
 ########################################################################
 def XML_toscana_import(arg=None):
@@ -4007,7 +4004,7 @@ Si consiglia una attenta lettura delle note informative disponibili sul sito ist
     toolbar_vedi()
     adatta_altezza_riga('Elenco Prezzi')
     riordina_ElencoPrezzi()
-    struttura_Elenco()
+    #~ struttura_Elenco()
     
     dest = filename[0:-4]+ '.ods'
     salva_come(dest)
@@ -4191,7 +4188,10 @@ def XML_import_ep(arg=None):
         elif elem.tag == '{six.xsd}prezzario':
             prezzarioId = elem.get('prezzarioId')
             przId= elem.get('przId')
-            livelli_struttura= len(elem.get('prdStruttura').split('.'))
+            try:
+                livelli_struttura = len(elem.get('prdStruttura').split('.'))
+            except:
+                pass
             categoriaPrezzario= elem.get('categoriaPrezzario')
 ########################################################################
         elif elem.tag == '{six.xsd}unitaDiMisura':
@@ -4394,7 +4394,10 @@ def XML_import_multi(arg=None):
         elif elem.tag == '{six.xsd}prezzario':
             prezzarioId = elem.get('prezzarioId')
             przId= elem.get('przId')
-            livelli_struttura= len(elem.get('prdStruttura').split('.'))
+            try:
+                livelli_struttura = len(elem.get('prdStruttura').split('.'))
+            except:
+                pass
             categoriaPrezzario= elem.get('categoriaPrezzario')
 ########################################################################
         elif elem.tag == '{six.xsd}unitaDiMisura':
@@ -4533,7 +4536,7 @@ def XML_import_multi(arg=None):
     oRange.setDataArray(lista_come_array)
     oSheet.getRows().removeByIndex(3, 1)
     oDoc.CurrentController.setActiveSheet(oSheet)
-    struttura_Elenco()
+    #~ struttura_Elenco()
     oDialogo_attesa.endExecute()
     MsgBox('Importazione eseguita con successo!','')
     autoexec()
@@ -4652,7 +4655,7 @@ diversa dalle altre e potranno essere facilmente nascoste.
 Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
     if procedo ==2:
         attesa().start() #mostra il dialogo
-        struttura_Elenco()
+        #~ struttura_Elenco()
         oDialogo_attesa.endExecute()
     MsgBox('Conversione eseguita con successo!','')
     autoexec()
@@ -5535,7 +5538,7 @@ Si tenga conto che:
         oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
     #~ adatta_altezza_riga('Elenco Prezzi')
     riordina_ElencoPrezzi()
-    struttura_Elenco()
+    #~ struttura_Elenco()
 
 ### elimino le voci che hanno analisi
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
@@ -6999,9 +7002,213 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
+def debug(arg=None): #COMUNE DI MATERA
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')
+    while '  ' in testo:
+        testo = testo.replace('  ',' ')
+    oDoc.getCurrentSelection().String = testo
+    return
+########
+    window = oDoc.getCurrentController().getFrame().getContainerWindow()
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    def create(name):
+        return ctx.getServiceManager().createInstanceWithContext(name, ctx)
+    
+    toolkit = create("com.sun.star.awt.Toolkit")
+    msgbox = toolkit.createMessageBox(window, 0, 1, "Message", 'foo')
+    
+    link = create("com.sun.star.awt.UnoControlFixedHyperlink")
+    link_model = create("com.sun.star.awt.UnoControlFixedHyperlinkModel")
+    link.setModel(link_model)
+    link.createPeer(toolkit, msgbox)
+    link.setPosSize(35, 8, 100, 15, 15)
+    link.setText("Canale Telegram")
+    link.setURL("https://t.me/leeno_computometrico")
+    link.setVisible(True)
+    
+    msgbox.execute()
+    msgbox.dispose()
+    return
+########
+    # ~chi(LeenO_path())
+    # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
+    # ~return
+    #~ oSheet.getCellRangeByName('G210').CellBackColor= 6124544
+    #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
+    #~ return
+ 
+
+    #~ oSheet.getCellRangeByName('Y254')
+    
+    #~ return
+    #~ col1 = 16777072 #16771481
+    #~ col2 = 16777120 #16771501
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771481:
+            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777072
+            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771501:
+            #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777120
+            #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
+    #~ return
+    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+        #~ for x in (29, 30):
+            #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
+    #~ chi(len(oSheet.getCellRangeByName('A6').String.split('.')))
+    #~ return
+# SALTA SULLE CELLE 
+    #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
+    # ~ for y in reversed(range(0, getLastUsedCell(oSheet).EndRow+1)):
+        # ~ if  oSheet.getCellByPosition(0, y).CellStyle in ('Livello-0-scritta', 'Livello-1-scritta'):
+            # ~ oSheet.getRows().removeByIndex(y, 1)
+
+            #~ testo = oSheet.getCellByPosition(2, y).String.split('- art. ')[1]
+
+            #~ oSheet.getCellByPosition(2, y).String = '- vedi voce art. ' + testo
+            #~ oSheet.getCellByPosition(5, y).Value = oSheet.getCellByPosition(5, y).Value
+            #~ _gotoCella(2, y)
+            #~ chi (len(oSheet.getCellByPosition(0, y).String.split('.')))
+            #~ _gotoCella(4, y)
+            
+            #~ return
+            #~ oSheet.getCellByPosition(6, y).Value = oSheet.getCellByPosition(5, y).Value / 100
+    
+            
+             
+        #~ if len (oSheet.getCellByPosition(2, y).String) > 5:
+            #~ oSheet.getCellByPosition(4, y).String = ''
+        #~ for x in range(3, 3):
+        #~ if oSheet.getCellByPosition(2, y).Type.value == 'TEXT' and oSheet.getCellByPosition(3, y).Type.value == 'TEXT':
+            #~ oSheet.getCellByPosition(1, y).String = oSheet.getCellByPosition(1, y).String +' '+oSheet.getCellByPosition(2, y).String
+            #~ oSheet.getCellByPosition(2, y).String = oSheet.getCellByPosition(3, y).String
+            #~ oSheet.getCellByPosition(3, y).Value = oSheet.getCellByPosition(4, y).Value
+            #~ oSheet.getCellByPosition(4, y).Value = oSheet.getCellByPosition(5, y).Value
+            #~ oSheet.getCellByPosition(5, y).String = ''
+            
+            #~ if oSheet.getCellByPosition(x, y).getIsMerged() == True:
+            
+            #~ return
+    # ~ chi("fine")
+    # ~ return
+
+# SPALMA I VALORI
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).Type.value =='VALUE':
+            #~ valore = oSheet.getCellByPosition(0, y).Value
+        #~ else:
+            #~ oSheet.getCellByPosition(0, y).Value = valore
+
+# COLORA VALORI DIFFERENTI
+    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(10, y).String != oSheet.getCellByPosition(11, y).String:
+            #~ if oSheet.getCellByPosition(11, y).String != '':
+                #~ oSheet.getCellByPosition(10, y).CellBackColor = 16777113
+                #~ oSheet.getCellByPosition(11, y).CellBackColor = 16777113
+
+    # ~ for y in range(Range2Cell()[1]+1, test):
+    #~ chi(datetime.strptime(testo.split(' ')[0],'%H:%M').split(' ')[-1])
+# inserisce numero tabella
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ oSheet.getCellByPosition(13, y).Formula = '=VLOOKUP(A'+ str(y+1) + ';strade;2;0)'
+            #~ oSheet.getCellByPosition(13, y).String = oSheet.getCellByPosition(13, y).String
+            #~ oSheet.getCellRangeByPosition(0, y, 11, y).merge(True)
+
+    #~ return  
+#~ RECUPERA VIE
+    #~ vie = list()
+    #~ n = 0
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ oSheet.getCellByPosition(12, y).CellBackColor = 16777113
+            #~ n += 1
+            #~ testo = oSheet.getCellByPosition(0, y).String
+            #~ num = oSheet.getCellByPosition(13, y).Value
+            #~ el =(n, testo, num)
+            #~ vie.append(el)
+    
+    #~ oSheet = oDoc.getSheets().getByName('VIE')
+    #~ oRange = oSheet.getCellRangeByPosition(0, 1, len(vie[0])-1, len(vie))
+    #~ lista_come_array = tuple(vie)
+    #~ oRange.setDataArray(lista_come_array)
+#~ crea via e numero
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow+1):
+        #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16777113:
+            #~ testo = oSheet.getCellByPosition(0, y).String
+        #~ else:
+            #~ try:
+                #~ if oSheet.getCellByPosition(2, y).String != '':
+                    #~ oSheet.getCellByPosition(12, y).String = testo + ', ' + oSheet.getCellByPosition(2, y).String.upper()
+                #~ else:
+                    #~ oSheet.getCellByPosition(12, y).String = ''
+            #~ except:
+                #~ pass
+#~ elimina '/' finale
+    #~ for y in range(0, getLastUsedCell(oSheet).EndRow):
+        #~ try:
+            #~ if oSheet.getCellByPosition(9, y).String[-1] == '/':
+                #~ oSheet.getCellByPosition(9, y).String = oSheet.getCellByPosition(9, y).String[:-1]
+        #~ except:
+            #~ pass
+            
+    #~ return
+ #~ INSERISCI PARTICELLE
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow+1)):
+        #~ if oSheet.getCellByPosition(10, y).String != '':
+            #~ if oSheet.getCellByPosition(11, y).String != '':
+                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String + '/' + oSheet.getCellByPosition(11, y).String
+            #~ else:
+                #~ oSheet.getCellByPosition(0, y).String = oSheet.getCellByPosition(10, y).String
+    
+#~ ricerca graffate
+    #~ for y in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
+        #~ if '\n' in oSheet.getCellByPosition(6, y).String:
+            #~ particelle = oSheet.getCellByPosition(6, y).String.split('\n')
+            #~ sub = oSheet.getCellByPosition(7, y).String.split('\n')
+
+            #~ while len(sub) < len(particelle):
+                #~ sub.append('')
+            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 5, y))
+            #~ copy_clip()
+            #~ oSheet.getRows().insertByIndex(y+1, len(particelle)-1)
+            #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y+1, 0, y+len(particelle)-1))
+            #~ paste_clip()
+            #~ for n in range(0, len(particelle)):
+                #~ oSheet.getCellByPosition(6, y+n).String = particelle[n]
+                #~ oSheet.getCellByPosition(7, y+n).String = sub[n]
+                #~ oSheet.getCellByPosition(15, y+n).String = particelle[0]+ '/' + sub[0]
+    #~ chi(sub)
+#RAGGRUPPA LE RIGHE SECONDO IL COLoRE
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ iSheet = oSheet.RangeAddress.Sheet
+    #~ oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    #~ oCellRangeAddr.Sheet = iSheet
+    #~ lista = list()
+    #~ test = getLastUsedCell(oSheet).EndRow-1
+    #~ for n in range(0, test):
+        #~ if oSheet.getCellByPosition(0, n).CellBackColor == 16777113:
+            #~ sopra = n+1
+            
+            #~ for n in range(sopra+1, test):
+                #~ if oSheet.getCellByPosition(0, n).CellBackColor == 16777113:
+                    #~ sotto = n-1
+                    #~ lista.append((sopra, sotto))
+
+                    #~ break
+    #~ for el in lista:
+        #~ oCellRangeAddr.StartRow = el[0]
+        #~ oCellRangeAddr.EndRow = el[1]
+        #~ oSheet.group(oCellRangeAddr,1)
+        #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
+    return
+
+########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-#~ g_exportedScripts = richiesta_offerta,
+g_exportedScripts = struttura_Elenco,
 ########################################################################
 ########################################################################
 # ... here is the python script code

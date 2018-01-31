@@ -986,6 +986,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
+<!--
               <node oor:name="m2U07" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1003,6 +1004,8 @@
                   <value>_self</value>
                 </prop>
               </node>
+-->
+<!--
               <node oor:name="m2U07.1" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -1011,6 +1014,7 @@
                   <value>private:separator</value>
                 </prop>
               </node>
+-->
               <node oor:name="m2U07.2" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

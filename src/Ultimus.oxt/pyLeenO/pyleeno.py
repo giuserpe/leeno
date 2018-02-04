@@ -1975,7 +1975,7 @@ def firme_in_calce_run(arg=None):
         oSheet.group(oCellRangeAddr, 1)
         
 #~ INSERISCI LA DATA E IL PROGETTISTA
-        oSheet.getCellByPosition(1 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
+        oSheet.getCellByPosition(1 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"GG/MM/AAAA"))'
     #~ consolido il risultato
         oRange = oSheet.getCellByPosition(1 , riga_corrente+3)
         flags =(oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
@@ -2099,7 +2099,7 @@ def firme_in_calce_run(arg=None):
         oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD' + str(lRowF) + '*100'
         fine_gruppo = riga_corrente
     #~ DATA
-        oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
+        oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"GG/MM/AAAA"))'
     #~ consolido il risultato
         oRange = oSheet.getCellByPosition(2 , riga_corrente+3)
         flags =(oDoc.createInstance('com.sun.star.sheet.CellFlags.FORMULA'))
@@ -3119,7 +3119,7 @@ per la formulazione dell'offerta'''
     oSheet.getCellRangeByPosition (2,fine+8,6,fine+8).CellStyle="List-intest_med_c"
     
     # INSERISCI LA DATA E L'OFFERENTE
-    oSheet.getCellByPosition(2, fine+10).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"DD/MM/YYYY"))'
+    oSheet.getCellByPosition(2, fine+10).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"GG/MM/AAAA"))'
     oSheet.getCellRangeByPosition (2,fine+10,2,fine+10).CellStyle = "Ultimus"
     oSheet.getCellByPosition(2, fine+12).String = "L'OFFERENTE"
     oSheet.getCellByPosition(2, fine+12).CellStyle = 'centro_grassetto'
@@ -3267,6 +3267,8 @@ def leeno_conf(arg=None):
     try:
         oSheet = oDoc.getSheets().getByName('S1')
     except:
+        for bar in GetmyToolBarNames:
+            toolbar_on(bar, 0)
         return
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")

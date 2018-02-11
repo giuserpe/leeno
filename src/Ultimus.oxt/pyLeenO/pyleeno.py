@@ -2650,6 +2650,8 @@ def sblocca_cont():
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in('CONTABILITA'):
         cerca_partenza()
+        chi(partenza[2])
+        chi(sblocca_computo)
         if sblocca_computo == 1:
             pass
         else:
@@ -2665,6 +2667,7 @@ SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!""", 'Voce già registrata!') ==3:
                     pass
                 else:
                     sblocca_computo = 1
+        chi(sblocca_computo)
 ########################################################################
 def pesca_cod(arg=None):
     '''
@@ -2818,7 +2821,7 @@ def valuta_cella(oCell):
         valore = str(oCell.String)
     elif oCell.Type.value == 'EMPTY':
         valore = ''
-    #~ if valore == ' ': valore = ''
+    if valore == ' ': valore = ''
     return valore
 def debug_validation(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -6334,7 +6337,6 @@ def adegua_tmpl(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
 #qui le cose da cambiare comunque
     
-    oSheet = oDoc.getSheets().getByName('S1')
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
     #cancello da S1 le variabili gestite in leeno.conf
     #~ for x in (333, 335):
@@ -6375,7 +6377,7 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 209
+    adegua_a = 210
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione corrente di LeenO?
@@ -6392,8 +6394,9 @@ dell'operazione che terminerà con un messaggio di avviso.
         sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
         styles = oDoc.getStyleFamilies()
         styles.loadStylesFromURL(sUrl, list())
-        
+        oSheet = oDoc.getSheets().getByName('S1')
         oSheet.getCellRangeByName('S1.H291').Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
+            
         for el in oDoc.Sheets.ElementNames:
             oDoc.getSheets().getByName(el).IsVisible = True
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
@@ -6427,8 +6430,8 @@ dell'operazione che terminerà con un messaggio di avviso.
         oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = 672 #percentuale negativo
         #dal 209 cambia nome di custom propierty
         oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
-        oUDP.removeProperty('Versione LeenO')
-        if not oUDP.getPropertySetInfo().hasPropertyByName("Versione_LeenO"):
+        if oUDP.getPropertySetInfo().hasPropertyByName("Versione LeenO"):
+            oUDP.removeProperty('Versione LeenO')
             oUDP.addProperty('Versione_LeenO', MAYBEVOID + REMOVEABLE + MAYBEDEFAULT, str(Lmajor) +'.'+ str(Lminor) +'.x')
 
         #< adegua le formule delle descrizioni di voci
@@ -6442,6 +6445,7 @@ dell'operazione che terminerà con un messaggio di avviso.
                     if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
                         sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
                         oSheet.getCellByPosition(2, y).Formula = sformula
+                        oSheet.getCellByPosition(8, y).String = ''
                 # ~test = getLastUsedCell(oSheet).EndRow+1
                 # ~for y in range(0, test):
                     # aggiorna formula vedi voce
@@ -6460,19 +6464,26 @@ dell'operazione che terminerà con un messaggio di avviso.
                         oSheet.getCellByPosition(5, y).Formula = '=J$' + n
 
         if oDoc.getSheets().hasByName('CONTABILITA'):
-            MsgBox('''L'adeguamento del foglio di contabilità sarà
-attivato nelle successive versioni di LeenO.
+            oSheet = oDoc.getSheets().getByName('CONTABILITA')
+            test = getLastUsedCell(oSheet).EndRow+1
+            for y in range(0, test):
+                if oSheet.getCellByPosition(1, y).CellStyle == 'comp Art-EP_R':
+                    oSheet.getCellByPosition(8, y).CellStyle = 'Comp-Bianche in mezzo_R'
+            
+            #~ MsgBox('''L'adeguamento del foglio di contabilità sarà
+#~ attivato nelle successive versioni di LeenO.
 
-contatta il canale Telegram
-https://t.me/leeno_computometrico''', 'AVVISO!')
+#~ contatta il canale Telegram
+#~ https://t.me/leeno_computometrico''', 'AVVISO!')
         ########################################################################
         ### RINVIO L'ADEGUAMENTO DELLA CONTABILITÀ A QUANDO L'AVRÒ COMPLETATA
         ########################################################################
         _gotoSheet('S5')
         oSheet = oDoc.getSheets().getByName('S5')
+        
         oSheet.getCellRangeByName('C10').Formula ='=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$338)))'
         oSheet.getCellRangeByName('C24').Formula ='=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B24;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$336)))'
-        
+        oSheet.getCellRangeByName('I24').CellStyle = 'Comp-Bianche in mezzo_R'
         ###
         oSheet.getCellRangeByName('AC12').Formula = '=S12-AE12'
         oSheet.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
@@ -7004,7 +7015,7 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def sistema_cose(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')
@@ -7033,13 +7044,74 @@ def debug(arg=None): #COMUNE DI MATERA
     msgbox.execute()
     msgbox.dispose()
     return
+########################################################################
+def allarga_descrizione (arg=None):
+#~ def debug(arg=None):
+    '''
+    Consente di estedere su più colonne o ridurre ad una colonna lo spazio
+    occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName('S5')
+    if oSheet.getCellRangeByName('C9').IsMerged == True:
+        flag = False
+    else:
+        flag = True
+
+    oSheet.getCellRangeByName('C9:I9').merge(flag)
+    oSheet.getCellRangeByName('C10:I10').merge(flag)
+
+    oSheet = oDoc.getSheets().getByName('COMPUTO')
+    for y in range(3, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
+            oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
+    if oDoc.getSheets().hasByName('VARIANTE') == True:
+        oSheet = oDoc.getSheets().getByName('VARIANTE')
+        for y in range(3, getLastUsedCell(oSheet).EndRow):
+            if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
+                oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
+    if oDoc.getSheets().hasByName('CONTABILITA') == True:
+        if oDoc.NamedRanges.hasByName("#Lib#1") == True:
+            MsgBox("Risulta già registrato un SAL. NON E' POSSIBILE PROCEDERE.",'ATTENZIONE!')
+            return
+        oSheet = oDoc.getSheets().getByName('S5')
+        oSheet.getCellRangeByName('C23').merge(flag)
+        oSheet.getCellRangeByName('C24').merge(flag)
+        oSheet = oDoc.getSheets().getByName('CONTABILITA')
+        for y in range(3, getLastUsedCell(oSheet).EndRow):
+            if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopra_R', 'Comp-Bianche in mezzo Descr_R'):
+                oSheet.getCellRangeByPosition(2, y, 8, y).merge(flag)
+    else:
+            oSheet = oDoc.getSheets().getByName('S5')
+            oSheet.getCellRangeByName('C23:I23').merge(flag)
+            oSheet.getCellRangeByName('C24:I24').merge(flag)
+    return
+    #~ else:
+        #~ oSheet.getCellRangeByName('C9:I9').merge(True)
+        #~ oSheet.getCellRangeByName('C10:I10').merge(True)
+        #~ oSheet.getCellRangeByName('C23:I23').merge(True)
+        #~ oSheet.getCellRangeByName('C24:I24').merge(True)
+
+        #~ oSheet = oDoc.getSheets().getByName('COMPUTO')
+        #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+            #~ if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
+                #~ oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
+        #~ if oDoc.getSheets().hasByName('VARIANTE') == True:
+            #~ oSheet = oDoc.getSheets().getByName('VARIANTE')
+            #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
+                #~ if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
+                    #~ oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
+########################################################################
+def debug_(arg=None): #COMUNE DI MATERA
+    return
 ########
     # ~chi(LeenO_path())
     # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
     # ~return
-    #~ oSheet.getCellRangeByName('G210').CellBackColor= 6124544
-    #~ chi(oSheet.getCellRangeByName('a6').CellBackColor)# 
-    #~ return
+    # ~oSheet.getCellRangeByName('C7').CellBackColor= 6124544
+    # ~mri(oSheet.getCellRangeByName('C7'))
+    # ~return
  
 
     #~ oSheet.getCellRangeByName('Y254')
@@ -7054,12 +7126,20 @@ def debug(arg=None): #COMUNE DI MATERA
         #~ if oSheet.getCellByPosition(0, y).CellBackColor == 16771501:
             #~ oSheet.getCellByPosition(0, y).CellBackColor = 16777120
             #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
-    #~ return
-    #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-        #~ for x in (29, 30):
+    # ~return
+    for y in range(3, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(2, y).CellStyle == 'Comp-Bianche in mezzo Descr':
+            if oSheet.getCellByPosition(2, y).IsMerged == False:
+                # ~flag = False
+                # ~break
+                oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
+                oSheet.getCellRangeByPosition(2, y-1, 8, y-1).merge(True)
+            else:
+                oSheet.getCellRangeByPosition(2, y, 8, y).merge(False)
+                oSheet.getCellRangeByPosition(2, y-1, 8, y-1).merge(False)
             #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
     #~ chi(len(oSheet.getCellRangeByName('A6').String.split('.')))
-    #~ return
+    return
 # SALTA SULLE CELLE 
     #~ for y in range(Range2Cell()[1]+1, getLastUsedCell(oSheet).EndRow):
     # ~ for y in reversed(range(0, getLastUsedCell(oSheet).EndRow+1)):

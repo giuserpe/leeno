@@ -3268,7 +3268,7 @@ def leeno_conf(arg=None):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
-        oSheet = oDoc.getSheets().getByName('S1')
+        oDoc.getSheets().hasByName('S1')
     except:
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)
@@ -3280,6 +3280,16 @@ def leeno_conf(arg=None):
     try:
         if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
         if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
+        
+        oSheet = oDoc.getSheets().getByName('S5')
+        # descrizione_in_una_colonna
+        if oSheet.getCellRangeByName('C9').IsMerged == False:
+            oDlg_config.getControl('CheckBox5').State = 1
+        else:
+            oDlg_config.getControl('CheckBox5').State = 0
+        
+        #~ if conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna') == '1': oDlg_config.getControl('CheckBox5').State = 1
+        
         sString = oDlg_config.getControl('TextField1')
         sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
         
@@ -3291,7 +3301,7 @@ def leeno_conf(arg=None):
             sString.Text = 'A DESTRA' 
         elif conf.read(path_conf, 'Generale', 'movedirection')== '0':
             sString.Text = 'IN BASSO' 
-        
+        oSheet = oDoc.getSheets().getByName('S1')
         sString = oDlg_config.getControl('TextField5')
         sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
         sString = oDlg_config.getControl('TextField6')
@@ -3357,8 +3367,14 @@ def leeno_conf(arg=None):
     conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
-    conf.write(path_conf, 'Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State)) #torna su prezzario
+    conf.write(path_conf, 'Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
+
+    if oDlg_config.getControl('CheckBox5').State == 1:
+        descrizione_in_una_colonna(False)
+    else:
+        descrizione_in_una_colonna(True)
     
+    conf.write(path_conf, 'Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State)) #torna su prezzario
     oSheet.getCellRangeByName('S1.H319').Value = float(oDlg_config.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
     oSheet.getCellRangeByName('S1.H320').Value = float(oDlg_config.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
     oSheet.getCellRangeByName('S1.H321').Value = float(oDlg_config.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
@@ -3452,6 +3468,8 @@ def config_default(arg=None):
     ('Generale', 'visualizza_tabelle_extra', '1'),
     ('Generale', 'pesca_auto', '1'),
     ('Generale', 'movedirection', '0'),
+    ('Generale', 'descrizione_in_una_colonna', '0'),
+    
     #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
     ('Computo', 'inizio_voci_abbreviate', '100'),
@@ -6364,6 +6382,10 @@ def adegua_tmpl(arg=None):
     except:
         conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
     try:
+        conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna')
+    except:
+        conf.write(path_conf, 'Generale', 'descrizione_in_una_colonna', '0')
+    try:
         conf.read(path_conf, 'Generale', 'movedirection')
     except:
         conf.write(path_conf, 'Generale', 'movedirection', '0') #muove il cursore in basso
@@ -7045,7 +7067,7 @@ def sistema_cose(arg=None):
     msgbox.dispose()
     return
 ########################################################################
-def allarga_descrizione (arg=None):
+def descrizione_in_una_colonna (flag=False):
 #~ def debug(arg=None):
     '''
     Consente di estedere su più colonne o ridurre ad una colonna lo spazio
@@ -7054,11 +7076,10 @@ def allarga_descrizione (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('S5')
-    if oSheet.getCellRangeByName('C9').IsMerged == True:
-        flag = False
-    else:
-        flag = True
-
+    #~ if oSheet.getCellRangeByName('C9').IsMerged == True:
+        #~ flag = False
+    #~ else:
+        #~ flag = True
     oSheet.getCellRangeByName('C9:I9').merge(flag)
     oSheet.getCellRangeByName('C10:I10').merge(flag)
 

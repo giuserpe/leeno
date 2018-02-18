@@ -3328,8 +3328,12 @@ def leeno_conf(arg=None):
         sString.Text =oSheet.getCellRangeByName('S1.H334').Value #vedi_voce_breve
         sString = oDlg_config.getControl('TextField4')
         sString.Text =oSheet.getCellRangeByName('S1.H335').Value #cont_inizio_voci_abbreviate
+        if oDoc.NamedRanges.hasByName("#Lib#1") == True:
+            sString.setEnable(False)
         sString = oDlg_config.getControl('TextField12')
         sString.Text =oSheet.getCellRangeByName('S1.H336').Value #cont_fine_voci_abbreviate
+        if oDoc.NamedRanges.hasByName("#Lib#1") == True:
+            sString.setEnable(False)
         sString = oDlg_config.getControl('TextField10')
         sString.Text =oSheet.getCellRangeByName('S1.H337').Value #inizio_voci_abbreviate
         sString = oDlg_config.getControl('TextField11')

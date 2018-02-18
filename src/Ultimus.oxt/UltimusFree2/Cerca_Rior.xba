@@ -301,6 +301,7 @@ On Error GoTo fine:
 	If codice_da_cercare &lt;&gt; &quot;&quot; Then
 	&apos;	Print codice_da_cercare
 		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
+		oSheet.IsVisible = True
 		oCell=uFindString(codice_da_cercare, oSheet)
 		ThisComponent.CurrentController.Select(oCell)
 		ThisComponent.CurrentController.setFirstVisibleRow(oCell.RangeAddress.StartRow)
@@ -309,7 +310,7 @@ On Error GoTo fine:
 		&apos;	Print oSheet.getCellByPosition(1,lRow).String
 			codice_da_cercare = oSheet.getCellByPosition(0,lRow).String
 		oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-
+		oSheet.IsVisible = True
 		oCell=uFindString(codice_da_cercare, oSheet)
 		ThisComponent.CurrentController.Select(oCell)
 		ThisComponent.CurrentController.setFirstVisibleRow(oCell.RangeAddress.StartRow)

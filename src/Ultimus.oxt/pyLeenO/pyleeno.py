@@ -1710,21 +1710,18 @@ def XPWE_out(arg=None):
             AdrInternet = SubElement(EPItem,'AdrInternet')
             AdrInternet.text = ''
             PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
-            xlo_sic = SubElement(EPItem,'xlo_sic')
+            IncSIC = SubElement(EPItem,'IncSIC')
             if oSheet.getCellByPosition(3, n).Value == 0.0:
-                xlo_sic.text = ''
+                IncSIC.text = ''
             else:
-                xlo_sic.text = str(oSheet.getCellByPosition(3, n).Value)
-            xlo_mdop = SubElement(EPItem,'xlo_mdop')
+                IncSIC.text = str(oSheet.getCellByPosition(3, n).Value)
+            IncMDO = SubElement(EPItem,'IncMDO')
             if oSheet.getCellByPosition(5, n).Value == 0.0:
-                xlo_mdop.text = ''
+                IncMDO.text = ''
+                
             else:
-                xlo_mdop.text = str(oSheet.getCellByPosition(5, n).Value)
-            xlo_mdo = SubElement(EPItem,'xlo_mdo')
-            if oSheet.getCellByPosition(6, n).Value == 0.0:
-                xlo_mdo.text = ''
-            else:
-                xlo_mdo.text = str(oSheet.getCellByPosition(6, n).Value)
+                IncMDO.text = str(oSheet.getCellByPosition(5, n).Value * 100)
+
         elif oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and \
         oSheet.getCellByPosition(2, n).Type.value == 'FORMULA':
             lista_AP.append(oSheet.getCellByPosition(0, n).String)
@@ -1813,23 +1810,17 @@ def XPWE_out(arg=None):
                     elif oSheet.getCellByPosition(0, x).CellStyle == 'An-sfondo-basso Att End':
                         break
 
-                xlo_sic = SubElement(EPItem,'xlo_sic')
+                IncSIC = SubElement(EPItem,'IncSIC')
                 if oSheet.getCellByPosition(10, n).Value == 0.0:
-                    xlo_sic.text = ''
+                    IncSIC.text = ''
                 else:
-                    xlo_sic.text = str(oSheet.getCellByPosition(10, n).Value)
+                    IncSIC.text = str(oSheet.getCellByPosition(10, n).Value)
                     
-                xlo_mdop = SubElement(EPItem,'xlo_mdop')
+                IncMDO = SubElement(EPItem,'IncMDO')
                 if oSheet.getCellByPosition(8, n).Value == 0.0:
-                    xlo_mdop.text = ''
+                    IncMDO.text = ''
                 else:
-                    xlo_mdop.text = str(oSheet.getCellByPosition(5, n).Value)
-                
-                xlo_mdo = SubElement(EPItem,'xlo_mdo')
-                if oSheet.getCellByPosition(9, n).Value == 0.0:
-                    xlo_mdo.text = ''
-                else:
-                    xlo_mdo.text = str(oSheet.getCellByPosition(9, n).Value)
+                    IncMDO.text = str(oSheet.getCellByPosition(5, n).Value * 100)
                 k += 1
             except:
                 pass
@@ -3267,9 +3258,7 @@ def leeno_conf(arg=None):
     Visualizza il menù di configurazione
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    try:
-        oDoc.getSheets().hasByName('S1')
-    except:
+    if not oDoc.getSheets().hasByName('S1'):
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)
         return
@@ -5209,14 +5198,17 @@ def XPWE_in(arg=None):
         except AttributeError:
             data = ''
             
-        xlo_sic = ''
-        xlo_mdop = ''
-        xlo_mdo = ''
+        IncSIC = ''
+        IncMDO = ''
+        IncMAT = ''
+        IncATTR= ''
 
         try:
-            xlo_sic = float(elem.find('xlo_sic').text)
-            xlo_mdop = float(elem.find('xlo_mdop').text)
-            xlo_mdo = float(elem.find('xlo_mdo').text)
+            if float(elem.find('IncSIC').text) != 0 : IncSIC = float(elem.find('IncSIC').text) / 100
+            IncMDO = float(elem.find('IncMDO').text) / 100
+            IncMAT = float(elem.find('IncMAT').text) / 100
+            IncATTR = float(elem.find('IncATTR').text) / 100
+
         except: # AttributeError TypeError:
             pass
         try:
@@ -5247,17 +5239,20 @@ def XPWE_in(arg=None):
         diz_ep['data'] = data
         diz_ep['adrinternet'] = adrinternet
         #~ diz_ep['pweepanalisi'] = pweepanalisi
-        diz_ep['xlo_sic'] = xlo_sic
-        diz_ep['xlo_mdop'] = xlo_mdop
-        diz_ep['xlo_mdo'] = xlo_mdo
+        diz_ep['IncSIC'] = IncSIC
+        diz_ep['IncMDO'] = IncMDO
+        diz_ep['IncMAT'] = IncMDO
+        diz_ep['IncATTR'] = IncMDO
+        
         dict_articoli[id_ep] = diz_ep
         articolo_modificato = (tariffa,
                                     destestesa,
                                     unmisura,
-                                    xlo_sic,
+                                    IncSIC,
                                     float(prezzo1),
-                                    xlo_mdop,
-                                    xlo_mdo)
+                                    IncMDO,
+                                    IncMAT,
+                                    IncATTR)
         lista_articoli.append(articolo_modificato)
 ### leggo analisi di prezzo
         pweepanalisi = elem.find('PweEPAnalisi')

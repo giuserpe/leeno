@@ -1710,17 +1710,30 @@ def XPWE_out(arg=None):
             AdrInternet = SubElement(EPItem,'AdrInternet')
             AdrInternet.text = ''
             PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
+            
             IncSIC = SubElement(EPItem,'IncSIC')
             if oSheet.getCellByPosition(3, n).Value == 0.0:
                 IncSIC.text = ''
             else:
-                IncSIC.text = str(oSheet.getCellByPosition(3, n).Value)
+                IncSIC.text = str(oSheet.getCellByPosition(3, n).Value * 100)
+                
             IncMDO = SubElement(EPItem,'IncMDO')
             if oSheet.getCellByPosition(5, n).Value == 0.0:
                 IncMDO.text = ''
-                
             else:
                 IncMDO.text = str(oSheet.getCellByPosition(5, n).Value * 100)
+                
+            IncMAT = SubElement(EPItem,'IncMAT')
+            if oSheet.getCellByPosition(6, n).Value == 0.0:
+                IncMAT.text = ''
+            else:
+                IncMAT.text = str(oSheet.getCellByPosition(6, n).Value * 100)
+            
+            IncATTR = SubElement(EPItem,'IncATTR')
+            if oSheet.getCellByPosition(7, n).Value == 0.0:
+                IncATTR.text = ''
+            else:
+                IncATTR.text = str(oSheet.getCellByPosition(7, n).Value * 100)
 
         elif oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and \
         oSheet.getCellByPosition(2, n).Type.value == 'FORMULA':

@@ -1910,6 +1910,7 @@ def XPWE_out(arg=None):
 ##########################
                 Flags = SubElement(RGItem,'Flags')
                 if '-' in Quantita.text:
+                    PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
                     Flags.text = '1'
                 elif "Parziale [" in oSheet.getCellByPosition(8, m).String:
                     Flags.text = '2'
@@ -1927,6 +1928,7 @@ def XPWE_out(arg=None):
                     PartiUguali.text =''
                     if '-' in Quantita.text:
                         Flags.text = '32769'
+                        
             n = sotto+1
 ##########################
     oDialogo_attesa.endExecute()
@@ -3877,45 +3879,7 @@ Vuoi procedere con la creazione della struttura dei capitoli?''', 'Avviso') == 3
     struct_colore(0) #attribuisce i colori
     struct_colore(1)
     struct_colore(2)
-    col1 = 16777072
-    col2 = 16777120
-    col3 = 16777168
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    
-    oDoc.CurrentController.ZoomValue = 400
-
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.clearOutline()
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    lista = list()
-    test = getLastUsedCell(oSheet).EndRow-1
-    for n in range(3, test):#
-        if oSheet.getCellByPosition(4, n).String == '':
-            oSheet.getCellRangeByPosition(0, n, 0, n).CellBackColor = col2
-
-
-    cap = list()
-    for y in range(3, getLastUsedCell(oSheet).EndRow):
-        if len(oSheet.getCellByPosition(0, y).String)== 1:
-            cap.append(y)
-    cap.append(getLastUsedCell(oSheet).EndRow)
-    test = copy.deepcopy(cap)
-    a = cap.pop(0)
-
-    for el in test:
-        try:
-            b = cap.pop(0)
-            oCellRangeAddr.StartRow = a +1
-            oCellRangeAddr.EndRow = b -1
-            oSheet.group(oCellRangeAddr,1)
-            oSheet.getCellRangeByPosition(0, a+1, 0, b-1).Rows.IsVisible = False
-            oSheet.getCellByPosition(0,el).Rows.Height = 520
-        except IndexError:
-            return
-        #~ chi(a)
-        a = b
-    oDoc.CurrentController.ZoomValue = 100
-
+    return
 ########################################################################
 def XML_toscana_import(arg=None):
     '''
@@ -5185,11 +5149,16 @@ def XPWE_in(arg=None):
             unmisura = elem.find('UnMisura').text
         else:
             unmisura = ''
-        prezzo1 = elem.find('Prezzo1').text
+        # ~prezzo1 = elem.find('Prezzo1').text
+        if elem.find('Prezzo1').text == '0' :
+            prezzo1 = ''
+        else:
+            prezzo1 = float(elem.find('Prezzo1').text)
         prezzo2 = elem.find('Prezzo2').text
         prezzo3 = elem.find('Prezzo3').text
         prezzo4 = elem.find('Prezzo4').text
         prezzo5 = elem.find('Prezzo5').text
+        
         try:
             idspcap = elem.find('IDSpCap').text
         except AttributeError:
@@ -5218,10 +5187,18 @@ def XPWE_in(arg=None):
 
         try:
             if float(elem.find('IncSIC').text) != 0 : IncSIC = float(elem.find('IncSIC').text) / 100
-            IncMDO = float(elem.find('IncMDO').text) / 100
-            IncMAT = float(elem.find('IncMAT').text) / 100
-            IncATTR = float(elem.find('IncATTR').text) / 100
-
+        except: # AttributeError TypeError:
+            pass
+        try:
+            if float(elem.find('IncMDO').text) != 0 : IncMDO = float(elem.find('IncMDO').text) / 100
+        except: # AttributeError TypeError:
+            pass
+        try:
+            if float(elem.find('IncMAT').text) != 0 : IncMAT = float(elem.find('IncMAT').text) / 100
+        except: # AttributeError TypeError:
+            pass
+        try:
+            if float(elem.find('IncATTR').text) != 0 : IncATTR = float(elem.find('IncATTR').text) / 100
         except: # AttributeError TypeError:
             pass
         try:
@@ -5262,7 +5239,8 @@ def XPWE_in(arg=None):
                                     destestesa,
                                     unmisura,
                                     IncSIC,
-                                    float(prezzo1),
+                                    # ~float(prezzo1),
+                                    prezzo1,
                                     IncMDO,
                                     IncMAT,
                                     IncATTR)

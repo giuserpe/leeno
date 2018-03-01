@@ -1909,8 +1909,11 @@ def XPWE_out(arg=None):
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
 ##########################
                 Flags = SubElement(RGItem,'Flags')
-                if '-' in Quantita.text:
+                if '*** VOCE AZZERATA ***' in Descrizione.text:
                     PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
+                    Flags.text = '1'
+                elif '-' in Quantita.text:
+                    # ~PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
                     Flags.text = '1'
                 elif "Parziale [" in oSheet.getCellByPosition(8, m).String:
                     Flags.text = '2'
@@ -1933,9 +1936,12 @@ def XPWE_out(arg=None):
 ##########################
     oDialogo_attesa.endExecute()
     out_file = filedia('Salva con nome...', '*.xpwe', 1)
+    # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
+    # ~mri (uno.fileUrlToSystemPath(oDoc.getURL()))
+    # ~chi(out_file)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
-            out_file = out_file + '-'+ arg + '.xlo.xpwe'
+            out_file = out_file + '-'+ arg + '.xpwe'
     except AttributeError:
         return
     riga = str(tostring(top, encoding="unicode"))
@@ -7114,7 +7120,10 @@ def descrizione_in_una_colonna (flag=False):
                 #~ if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
                     #~ oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
 ########################################################################
-def debug_(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    
+    mri (uno.fileUrlToSystemPath(oDoc.getURL()))
     return
 ########
     # ~chi(LeenO_path())

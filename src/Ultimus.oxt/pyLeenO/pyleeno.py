@@ -4784,16 +4784,10 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
     else:
         sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';$S1.$H$334)'    
     oSheet.getCellByPosition(2, riga_corrente).Formula= sformula
-    
+    oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
     if flags in('32769', '32801'): # 32768
-        oSheet.getCellByPosition(5, riga_corrente).Formula='=-' + quantity
-    else:
-        oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
-    if oSheet.getCellByPosition(5, riga_corrente).Value < 0:
+        inverti_segno()
         oSheet.getCellRangeByPosition(2, riga_corrente, 10, riga_corrente).CharColor = 16724787
-    #~ else:
-        #~ oSheet.getCellRangeByPosition(2, riga_corrente, 10, riga_corrente).CharColor = -1
-
 ########################################################################
 def vedi_voce(arg=None):
     '''
@@ -5695,9 +5689,6 @@ Si tenga conto che:
 
         ###
         # INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
-
-    # metodo veloce, ma ignora le formule
-    # va bene se lista_righe viene convertito come tupla
             SR = SR - 1
             for mis in el.get('lista_rig'):
                 if mis[0] != None: #descrizione

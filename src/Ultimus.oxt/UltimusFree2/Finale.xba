@@ -792,7 +792,6 @@ END SUB
 
 &apos;------------------------------------------------------------------------
 SUB Impagina_N &apos; richiamata con shortcut da una tabella
-&apos; versione nuova elaborata su xp in vbox
 
 &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 Verifica_chiudi_preview

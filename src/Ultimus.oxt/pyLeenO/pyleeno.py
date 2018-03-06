@@ -1651,6 +1651,40 @@ def XPWE_out(arg=None):
     UtiliImpresa.text = oSheet.getCellByPosition(7,320).String[:-1].replace(',','.')
     OneriAccessoriSc.text = oSheet.getCellByPosition(7,318).String[:-1].replace(',','.')
     SpeseGenerali.text = oSheet.getCellByPosition(7,319).String[:-1].replace(',','.')
+    
+#~ Configurazioni
+    PweDGConfigurazione = SubElement(PweDatiGenerali,'PweDGConfigurazione')
+    PweDGConfigNumeri = SubElement(PweDGConfigurazione,'PweDGConfigNumeri')
+    Divisa = SubElement(PweDGConfigNumeri,'Divisa')
+    Divisa.text = 'euro'
+    ConversioniIN = SubElement(PweDGConfigNumeri,'ConversioniIN')
+    ConversioniIN.text = 'lire'
+    FattoreConversione = SubElement(PweDGConfigNumeri,'FattoreConversione')
+    FattoreConversione.text = '1936.27'
+    Cambio = SubElement(PweDGConfigNumeri,'Cambio')
+    Cambio.text = '1'
+    PartiUguali = SubElement(PweDGConfigNumeri,'PartiUguali')
+    PartiUguali.text = '9.3|0'
+    Lunghezza = SubElement(PweDGConfigNumeri,'Lunghezza')
+    Lunghezza.text = '9.3|0'
+    Larghezza = SubElement(PweDGConfigNumeri,'Larghezza')
+    Larghezza.text = '9.3|0'
+    HPeso = SubElement(PweDGConfigNumeri,'HPeso')
+    HPeso.text = '9.3|0'
+    Quantita = SubElement(PweDGConfigNumeri,'Quantita')
+    Quantita.text = '10.2|1'
+    Prezzi = SubElement(PweDGConfigNumeri,'Prezzi')
+    Prezzi.text = '10.2|1'
+    PrezziTotale = SubElement(PweDGConfigNumeri,'PrezziTotale')
+    PrezziTotale.text = '14.2|1'
+    ConvPrezzi = SubElement(PweDGConfigNumeri,'ConvPrezzi')
+    ConvPrezzi.text = '11.0|1'
+    ConvPrezziTotale = SubElement(PweDGConfigNumeri,'ConvPrezziTotale')
+    ConvPrezziTotale.text = '15.0|1'
+    IncidenzaPercentuale = SubElement(PweDGConfigNumeri,'IncidenzaPercentuale')
+    IncidenzaPercentuale.text = '7.3|0'
+    Aliquote = SubElement(PweDGConfigNumeri,'Aliquote')
+    Aliquote.text = '7.3|0'
 
 #~ Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')

@@ -1964,7 +1964,7 @@ def XPWE_out(arg=None):
                 if 'DETRAE LA PARTITA IN CONTO PROVVISORIO' in Descrizione.text:
                     Flags.text = '32'
                 if '- vedi voce n.' in Descrizione.text:
-                    IDVV.text = str(int(Descrizione.text.split(' - vedi voce n.')[1].split(' ')[0])+1)
+                    IDVV.text = str(int(Descrizione.text.split('- vedi voce n.')[1].split(' ')[0])+1)
                     Flags.text = '32768'
                     PartiUguali.text =''
                     if '-' in Quantita.text:
@@ -4818,9 +4818,9 @@ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
     
     if oSheet.Name == 'CONTABILITA':
-        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
+        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
     else:
-        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';$S1.$H$334)'    
+        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';$S1.$H$334)'    
     oSheet.getCellByPosition(2, riga_corrente).Formula= sformula
     oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
     if flags in('32769', '32801'): # 32768
@@ -4900,7 +4900,7 @@ def vedi_voce(arg=None):
     #~ End If 
     #~ id = Circoscrive_Voce_Computo_Att (riga_corrente).RangeAddress.StartRow+2
     #~ um ="VLOOKUP(" & art & ";elenco_prezzi;3;FALSE())"
-    #~ oSheet.GetCellByPosition(2 , riga_corrente).formula="=CONCATENATE("""& InputDesc &""";"" - vedi voce n."";TEXT(" & idvoce &";""@"");"" - art. "";" & art & ";"" ["";" & um & ";""]"""
+    #~ oSheet.GetCellByPosition(2 , riga_corrente).formula="=CONCATENATE("""& InputDesc &""";""- vedi voce n."";TEXT(" & idvoce &";""@"");"" - art. "";" & art & ";"" ["";" & um & ";""]"""
     
     #~ oSheet.GetCellByPosition(5 , riga_corrente).setformula("=" & segno & quantity)
     #~ oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
@@ -6501,7 +6501,7 @@ dell'operazione che terminerà con un messaggio di avviso.
                             n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
                         else:
                             n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[1].split(';')[0]
-                        sformula = '=CONCATENATE("";" - vedi voce n.";TEXT(A$' +n+ ';"@");" - art. ";B$' +n+ ';" [";VLOOKUP(B$' +n+ ';elenco_prezzi;3;FALSE());"] - ";LEFT(C$' +n+ ';$S1.$H$334))'
+                        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(A$' +n+ ';"@");" - art. ";B$' +n+ ';" [";VLOOKUP(B$' +n+ ';elenco_prezzi;3;FALSE());"] - ";LEFT(C$' +n+ ';$S1.$H$334))'
                         oSheet.getCellByPosition(2, y).Formula = sformula
                     if '=J' in oSheet.getCellByPosition(5, y).Formula:
                         if '$' in oSheet.getCellByPosition(5, y).Formula:
@@ -7151,9 +7151,8 @@ def descrizione_in_una_colonna (flag=False):
 ########################################################################
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
-    
-    mri (uno.fileUrlToSystemPath(oDoc.getURL()))
-    return
+    oSheet = oDoc.CurrentController.ActiveSheet
+
 ########
     # ~chi(LeenO_path())
     # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
@@ -7177,15 +7176,9 @@ def debug(arg=None): #COMUNE DI MATERA
             #~ oSheet.getCellRangeByPosition(1, y, 26, y).clearContents(HARDATTR)
     # ~return
     for y in range(3, getLastUsedCell(oSheet).EndRow):
-        if oSheet.getCellByPosition(2, y).CellStyle == 'Comp-Bianche in mezzo Descr':
-            if oSheet.getCellByPosition(2, y).IsMerged == False:
-                # ~flag = False
-                # ~break
-                oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
-                oSheet.getCellRangeByPosition(2, y-1, 8, y-1).merge(True)
-            else:
-                oSheet.getCellRangeByPosition(2, y, 8, y).merge(False)
-                oSheet.getCellRangeByPosition(2, y-1, 8, y-1).merge(False)
+        if oSheet.getCellByPosition(7, y).Value != 0:
+            
+            oSheet.getCellByPosition(44, y).Formula = '=RAND()*H' + str(y+1)
             #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
     #~ chi(len(oSheet.getCellRangeByName('A6').String.split('.')))
     return

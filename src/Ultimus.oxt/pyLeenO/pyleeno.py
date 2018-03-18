@@ -1136,7 +1136,6 @@ def scelta_viste(arg=None):
         if oSheet.getColumns().getByIndex(17).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
         if oSheet.getColumns().getByIndex(29).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
         if oSheet.getColumns().getByIndex(31).Columns.IsVisible  == True: oDialog1.getControl('CBCat').State = 1
-        #~ if oSheet.getColumns().getByIndex(34).Columns.IsVisible  == True: oDialog1.getControl('CBTag').State = 1
         if oSheet.getColumns().getByIndex(38).Columns.IsVisible  == True: oDialog1.getControl('CBFig').State = 1
         oDialog1.execute()
         
@@ -1145,7 +1144,6 @@ def scelta_viste(arg=None):
             oDialog1.getControl('CBSic').State = 0
             oDialog1.getControl('CBMdo').State = 0
             oDialog1.getControl('CBCat').State = 0
-            #~ oDialog1.getControl('CBTag').State = 0
             oDialog1.getControl('CBFig').State = 0
 
         if oDialog1.getControl('CBMdo').State == 0: #manodopera
@@ -1165,11 +1163,6 @@ def scelta_viste(arg=None):
             oSheet.getColumns().getByIndex(31).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(32).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(33).Columns.IsVisible = True
-
-        #~ if oDialog1.getControl("CBTag").State == 0: #TAG
-            #~ oSheet.getColumns().getByIndex(34).Columns.IsVisible = False
-        #~ else:
-            #~ oSheet.getColumns().getByIndex(34).Columns.IsVisible = True
 
         if oDialog1.getControl("CBSic").State == 0: #sicurezza
             oSheet.getColumns().getByIndex(17).Columns.IsVisible = False
@@ -1233,19 +1226,12 @@ def scelta_viste(arg=None):
         if oDialog1.getControl("CBSom").State == 1:
             genera_sommario()
 
-        #~ if oDialog1.getControl("CBUsa").State == 0: #usato
-            #~ oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
-            #~ oSheet.getColumns().getByIndex(9).Columns.IsVisible = False
-        #~ else:
-            #~ oSheet.getColumns().getByIndex(8).Columns.IsVisible = True
-            #~ oSheet.getColumns().getByIndex(9).Columns.IsVisible = True
-            
         oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         SR = oRangeAddress.StartRow+1
         ER = oRangeAddress.EndRow-1
         oSheet.ungroup(oRangeAddress,0) #colonne
         oSheet.ungroup(oRangeAddress,1) #righe
-        oSheet.getCellRangeByPosition(15, 0, 26, 0).Columns.IsVisible = True
+        oSheet.getCellRangeByPosition(11, 0, 26, 0).Columns.IsVisible = True
         oSheet.getCellRangeByPosition(23 , SR, 25, ER).CellStyle = 'EP statistiche'
         oSheet.getCellRangeByPosition(26, SR, 26, ER+1).CellStyle = 'EP-mezzo %'
         
@@ -1255,11 +1241,11 @@ def scelta_viste(arg=None):
         oSheet.getCellByPosition(19, 0).String = "CONTABILITA"
         if oDialog1.getControl("ComVar").State == True: #Computo - Variante
             genera_sommario()
+            
             oRangeAddress.StartColumn = 19
             oRangeAddress.EndColumn = 22
-            #~ oSheet.group(oRangeAddress,0)
+
             oSheet.getCellByPosition(23, 0).String = 'COMPUTO - VARIANTE'
-            
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(Q' + str(n) + '-M' + str(n) + '=0;"--";Q' + str(n) + '-M' + str(n) + ')',
                                 '=IF(R' + str(n) + '-N' + str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
@@ -1277,7 +1263,7 @@ def scelta_viste(arg=None):
             genera_sommario()
             oRangeAddress.StartColumn = 15
             oRangeAddress.EndColumn = 18
-            #~ oSheet.group(oRangeAddress,0)
+
             oSheet.getCellByPosition(23, 0).String = 'COMPUTO - CONTABILITÀ'
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(U' + str(n) + '-M' + str(n) + '=0;"--";U' + str(n) + '-M' + str(n) + ')',
@@ -1293,9 +1279,10 @@ def scelta_viste(arg=None):
 
         if oDialog1.getControl("VarCon").State == True: #Variante - Contabilità
             genera_sommario()
+
             oRangeAddress.StartColumn = 11
             oRangeAddress.EndColumn = 14
-            #~ oSheet.group(oRangeAddress, 0)
+            
             oSheet.getCellByPosition(23, 0).String = 'VARIANTE - CONTABILITÀ'
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(U' + str(n) + '-Q' + str(n) + '=0;"--";U' + str(n) + '-Q' + str(n) + ')',
@@ -1317,7 +1304,7 @@ def scelta_viste(arg=None):
         if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
             errori =('#DIV/0!', '--')
             hide_error(errori, 26)
-            
+
         oSheet.group(oRangeAddress, 0)
         oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
 
@@ -1371,18 +1358,9 @@ Cancello le voci di misurazione?
     else:
         _gotoSheet('VARIANTE')
 ########################################################################
-class genera_sommario_th(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        genera_sommario_run()
 def genera_sommario(arg=None):
-    genera_sommario_th().start()
-
-def genera_sommario_run(arg=None):
     '''
-    sostituisce la sub Rifa_AA_BB_Computo
-    serve a generare i sommari in Elenco Prezzi
+    Genera i sommari in Elenco Prezzi
     '''
     #~ oDialogo_attesa = dlg_attesa()
     #~ attesa().start() #mostra il dialogo

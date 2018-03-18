@@ -186,7 +186,6 @@ rem Recupero i dati dal libretto
 	for i = daRiga to aRiga
 		if oSheet.GetCellByPosition(idxcol+0, i).cellstyle = &quot;Comp Start Attributo_R&quot; then &apos;i = inizio voce
 			sStRange = Circoscrive_Voce_Computo_Att (i)
-&apos;			print i
 			f = sStRange.RangeAddress.EndRow		&apos;fine voce
 			num		= oSheet.GetCellByPosition(idxcol+0, i+1).getstring &apos;num. voce
 			art		= oSheet.GetCellByPosition(idxcol+1, i+1).getstring &apos;articolo
@@ -385,7 +384,6 @@ initRegistro: rem INIZIO COMPILAZIONE REGISTRO
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
 	ThisComponent.CurrentController.Select(oSheetReg)
 	SetTabColorN(RGB(255,225,225))
-	
 	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(0,0,0,0))
 	&apos;fcol = 0 &apos;prima colonna inserimento in Registro
 rem RIGA RIPORTO
@@ -438,7 +436,6 @@ consolida_clip &apos; consolida la data
 firme (inizioFirme)
 &apos;print
 	fineFirme = getLastUsedRow(oSheetReg)
-
 	If precRowReg&lt;fRow Then precRowReg =fRow
 rem ----------------------------------------------------------------------
 rem set area del REGISTRO
@@ -497,7 +494,7 @@ adatta_altezza:
 	oCell=oSheetReg.getCellRangeByPosition(fcol+0, daRiga, fcol+9, fineFirme)
 	ThisComponent.CurrentController.Select(oCell)
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
-	
+
 i=1
 	Do While oSheetReg.GetCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
 &apos;		oSheetReg.GetCellByPosition(fcol+1 , fineFirme).setstring(&quot;Sto sistemando il Registro...&quot;)
@@ -510,10 +507,10 @@ i=1
 		i=i+1
 	Loop
 	fineFirme = fineFirme-1
-	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, daqui))
-copy_clip
-	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(fcol+1, daqui, fcol+1, fineFirme-2))
-paste_clip
+&apos;	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, daqui))
+&apos;copy_clip
+&apos;	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(fcol+1, daqui, fcol+1, fineFirme-2))
+&apos;paste_clip
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$J$&quot;&amp;getLastUsedRow(oSheetReg)&apos;-1
 ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Registro&quot;, area , nomearea)
 

@@ -1250,22 +1250,25 @@ def scelta_viste(arg=None):
         oSheet.getCellRangeByPosition(26, SR, 26, ER+1).CellStyle = 'EP-mezzo %'
         
         formule = list()
+        oSheet.getCellByPosition(11, 0).String = 'COMPUTO'
+        oSheet.getCellByPosition(15, 0).String = 'VARIANTE'
+        oSheet.getCellByPosition(19, 0).String = "CONTABILITA"
         if oDialog1.getControl("ComVar").State == True: #Computo - Variante
             genera_sommario()
             oRangeAddress.StartColumn = 19
             oRangeAddress.EndColumn = 22
-            oSheet.group(oRangeAddress,0)
-            oSheet.getCellByPosition(23, 0).String = 'Computo - Variante'
+            #~ oSheet.group(oRangeAddress,0)
+            oSheet.getCellByPosition(23, 0).String = 'COMPUTO - VARIANTE'
             
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(Q' + str(n) + '-M' + str(n) + '=0;"--";Q' + str(n) + '-M' + str(n) + ')',
                                 '=IF(R' + str(n) + '-N' + str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
                                 '=IF(R' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-R' + str(n) + ';"")',
-'=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')/100;"--")'])
+'=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'])
 
             n += 1
             for el in(1, ER+1):
-                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-100;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ')/100;"--")'
+                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple(formule)
             oRange.setFormulaArray(formule)
@@ -1274,16 +1277,16 @@ def scelta_viste(arg=None):
             genera_sommario()
             oRangeAddress.StartColumn = 15
             oRangeAddress.EndColumn = 18
-            oSheet.group(oRangeAddress,0)
-            oSheet.getCellByPosition(23, 0).String = 'Computo - Contabilità'
+            #~ oSheet.group(oRangeAddress,0)
+            oSheet.getCellByPosition(23, 0).String = 'COMPUTO - CONTABILITÀ'
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(U' + str(n) + '-M' + str(n) + '=0;"--";U' + str(n) + '-M' + str(n) + ')',
                                 '=IF(V' + str(n) + '-N' + str(n) + '>0;V' + str(n) + '-N' + str(n) + ';"")',
                                 '=IF(V' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-V' + str(n) + ';"")',
-'=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')/100;"--")'])
+'=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'])
             n += 1
             for el in(1, ER+1):
-                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);100;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ')/100;"--")'
+                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple(formule)
             oRange.setFormulaArray(formule)
@@ -1292,16 +1295,16 @@ def scelta_viste(arg=None):
             genera_sommario()
             oRangeAddress.StartColumn = 11
             oRangeAddress.EndColumn = 14
-            oSheet.group(oRangeAddress, 0)
-            oSheet.getCellByPosition(23, 0).String = 'Variante - Contabilità'
+            #~ oSheet.group(oRangeAddress, 0)
+            oSheet.getCellByPosition(23, 0).String = 'VARIANTE - CONTABILITÀ'
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(U' + str(n) + '-Q' + str(n) + '=0;"--";U' + str(n) + '-Q' + str(n) + ')',
                                 '=IF(V' + str(n) + '-R' + str(n) + '>0;V' + str(n) + '-R' + str(n) + ';"")',
                                 '=IF(V' + str(n) + '-R' + str(n) + '<0;R' + str(n) + '-V' + str(n) + ';"")',
-'=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')/100;"--")'])
+'=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);1;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'])
             n += 1
             for el in(1, ER+1):
-                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ')/100;"--")'
+                oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'
             oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
             formule = tuple(formule)
             oRange.setFormulaArray(formule)
@@ -1315,6 +1318,9 @@ def scelta_viste(arg=None):
             errori =('#DIV/0!', '--')
             hide_error(errori, 26)
             
+        oSheet.group(oRangeAddress, 0)
+        oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
+
     elif oSheet.Name in('Analisi di Prezzo'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
@@ -5676,7 +5682,7 @@ Si tenga conto che:
     tante_analisi_in_ep()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
-        basic_LeenO('Computo.genera_variante')
+        genera_variante()
     
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName(arg)
@@ -7184,7 +7190,7 @@ def descrizione_in_una_colonna (flag=False):
                 #~ if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
                     #~ oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
 ########################################################################
-def debug_mt(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 

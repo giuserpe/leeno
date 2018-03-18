@@ -1256,6 +1256,7 @@ def scelta_viste(arg=None):
             oRangeAddress.EndColumn = 22
             oSheet.group(oRangeAddress,0)
             oSheet.getCellByPosition(23, 0).String = 'Computo - Variante'
+            
             for n in range(4, ultima_voce(oSheet)+2):
                 formule.append(['=IF(Q' + str(n) + '-M' + str(n) + '=0;"--";Q' + str(n) + '-M' + str(n) + ')',
                                 '=IF(R' + str(n) + '-N' + str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
@@ -1330,6 +1331,40 @@ def scelta_viste(arg=None):
         oDialog1.execute()
     #~ MsgBox('Operazione eseguita con successo!','')
 ########################################################################
+def genera_variante(arg=None):
+    '''Genera il foglio di VARIANTE a partire dal COMPUTO'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    if oDoc.getSheets().hasByName('VARIANTE') == False:
+        if oDoc.NamedRanges.hasByName("AA") == True:
+            oDoc.NamedRanges.removeByName("AA")
+            oDoc.NamedRanges.removeByName("BB")
+        oDoc.Sheets.copyByName('COMPUTO','VARIANTE', 4)
+        oSheet = oDoc.getSheets().getByName('COMPUTO')
+        lRow = getLastUsedCell(oSheet).EndRow
+        rifa_nomearea('COMPUTO', '$AJ$3:$AJ$' + str(lRow), 'AA')
+        rifa_nomearea('COMPUTO', '$N$3:$N$'  + str(lRow), "BB")
+        rifa_nomearea('COMPUTO', '$AK$3:$AK$' + str(lRow), "cEuro")
+        oSheet = oDoc.getSheets().getByName('VARIANTE')
+        _gotoSheet('VARIANTE')
+        setTabColor(16777062)
+        oSheet.getCellByPosition(2,0).String  = "VARIANTE"
+        oSheet.getCellByPosition(2,0).CellStyle = "comp Int_colonna"
+        oSheet.getCellRangeByName("C1").CellBackColor = 16777062
+        oSheet.getCellRangeByPosition(0,2,42,2).CellBackColor = 16777062
+        if DlgSiNo("""Vuoi svuotare la VARIANTE appena generata?
+
+Se decidi di continuare, cancellerai tutte le voci di
+misurazione già presenti in questo elaborato.
+Cancello le voci di misurazione?
+ """,'ATTENZIONE!') ==2:
+            lrow = getLastUsedCell(oSheet).EndRow-2
+            oSheet.Rows.removeByIndex(3, lrow-2)
+            _gotoCella(0,2)
+            ins_voce_computo()
+            adatta_altezza_riga('VARIANTE')
+    else:
+        _gotoSheet('VARIANTE')
+########################################################################
 class genera_sommario_th(threading.Thread):
     def __init__(self):
         threading.Thread.__init__(self)
@@ -1354,7 +1389,6 @@ def genera_sommario_run(arg=None):
     rifa_nomearea('COMPUTO', '$N$3:$N$'  + str(lRow), "BB")
     rifa_nomearea('COMPUTO', '$AK$3:$AK$' + str(lRow), "cEuro")
 
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     if oDoc.getSheets().hasByName('VARIANTE') == True:
         oSheet = oDoc.getSheets().getByName('VARIANTE')
         lRow = getLastUsedCell(oSheet).EndRow
@@ -1371,6 +1405,7 @@ def genera_sommario_run(arg=None):
         rifa_nomearea('CONTABILITA', '$AK$3:$AK$' + str(lRow), "conEuro")
         
     formule = list()
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     for n in range(4, ultima_voce(oSheet)+2):
         stringa =(['=N' + str(n) + '/$N$2',
                         '=SUMIF(AA;A' + str(n) + ';BB)',
@@ -7149,7 +7184,7 @@ def descrizione_in_una_colonna (flag=False):
                 #~ if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
                     #~ oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -7178,7 +7213,7 @@ def debug(arg=None): #COMUNE DI MATERA
     for y in range(3, getLastUsedCell(oSheet).EndRow):
         if oSheet.getCellByPosition(7, y).Value != 0:
             
-            oSheet.getCellByPosition(44, y).Formula = '=RAND()*H' + str(y+1)
+            oSheet.getCellByPosition(44, y).Formula = '=(1,1+(RANDBETWEEN(-1;1)*RAND()))*H'+ str(y+1)
             #~ oSheet.getCellByPosition(x, y).String= oSheet.getCellByPosition(x, y).String.replace(' ','\n')
     #~ chi(len(oSheet.getCellRangeByName('A6').String.split('.')))
     return
@@ -7332,7 +7367,7 @@ def debug(arg=None): #COMUNE DI MATERA
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = struttura_Elenco,
+g_exportedScripts = genera_variante,
 ########################################################################
 ########################################################################
 # ... here is the python script code

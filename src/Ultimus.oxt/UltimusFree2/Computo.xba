@@ -11,45 +11,6 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-
-Sub genera_variante
-	chiudi_dialoghi
-	If ultima_voce = 2 Then Exit sub
-&apos;	Visualizza_sheet_TUTTE
-	If Not ThisComponent.Sheets.hasbyname(&quot;VARIANTE&quot;) Then
-		ThisComponent.Sheets.CopybyName(&quot;COMPUTO&quot;, &quot;VARIANTE&quot;, 4)
-		oSheet = ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;)
-		oSheet.getCellByPosition(2,0).String  = &quot;VARIANTE&quot;
-		oSheet.getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
-		oSheet.getCellRangeByName(&quot;C1&quot;).Cellbackcolor = (RGB(255,255,102))
-		oSheet.getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,255,102))
-		ThisComponent.CurrentController.Select(oSheet)
-		SetTabColorN(RGB(255,255,102))
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,0))
-		eventi_assegna
-	Else
-		ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;).IsVisible = True
-		ThisComponent.CurrentController.setActiveSheet(ThisComponent.Sheets.getByName(&quot;VARIANTE&quot;))
-		Exit Sub
-	EndIf
-
-
-		test = msgbox (&quot;Vuoi svuotare la VARIANTE appena generata?.&quot; &amp; CHR$(10) &amp; CHR$(10) _
-		&amp; &quot;Se decidi di continuare, cancellerai tutte le voci di&quot; &amp; CHR$(10) _
-		&amp; &quot;misurazione già presenti in questo elaborato.&quot; &amp; CHR$(10) &amp; CHR$(10) _
-		&amp; &quot;Cancello le voci di misurazione?&quot; &amp; CHR$(10) &amp; CHR$(10), 4 +32 , &quot;ATTENZIONE!&quot;)
-		If test = 7 Then
-			Exit Sub
-		Else
-			
-			oSheet.rows.removeByIndex (3,ultima_voce-2)&apos;cancella tutto il foglio
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0,2))
-			ScriptPy(&quot;pyleeno.py&quot;, &quot;ins_voce_computo&quot;)
-		EndIf
-
-End Sub
-
-
 Sub inizializza_elenco &apos;(C) Giuseppe Vizziello 2014
 	Dim oSheet As Object
 	Dim oEnd As Object

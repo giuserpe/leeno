@@ -7174,27 +7174,28 @@ def descrizione_in_una_colonna (flag=False):
             oSheet.getCellRangeByName('C23:I23').merge(flag)
             oSheet.getCellRangeByName('C24:I24').merge(flag)
     return
-    #~ else:
-        #~ oSheet.getCellRangeByName('C9:I9').merge(True)
-        #~ oSheet.getCellRangeByName('C10:I10').merge(True)
-        #~ oSheet.getCellRangeByName('C23:I23').merge(True)
-        #~ oSheet.getCellRangeByName('C24:I24').merge(True)
-
-        #~ oSheet = oDoc.getSheets().getByName('COMPUTO')
-        #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-            #~ if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
-                #~ oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
-        #~ if oDoc.getSheets().hasByName('VARIANTE') == True:
-            #~ oSheet = oDoc.getSheets().getByName('VARIANTE')
-            #~ for y in range(3, getLastUsedCell(oSheet).EndRow):
-                #~ if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
-                    #~ oSheet.getCellRangeByPosition(2, y, 8, y).merge(True)
+########################################################################
+def numera_colonna(arg=None):
+    '''Inserisce l'indice di colonna nelle prime 100 colonne del rigo selezionato
+Associato a Atrl+Shift+C'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    for x in range(0, 100):
+        if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
+            oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
+            oSheet.getCellByPosition(x, lrow).HoriJustify = 'CENTER'
+        elif oSheet.getCellByPosition(x, lrow).Formula == '=CELL("col")-1':
+            oSheet.getCellByPosition(x, lrow).String = ''
+            oSheet.getCellByPosition(x, lrow).HoriJustify = 'STANDARD'
+    return
 ########################################################################
 def debug(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    #~ mri(oDoc.getCurrentSelection())
     oSheet = oDoc.CurrentController.ActiveSheet
 
-########
     # ~chi(LeenO_path())
     # ~oDoc.StyleFamilies.getByName("CellStyles").getByName('Comp-Bianche in mezzo Descr').IsTextWrapped = True
     # ~return

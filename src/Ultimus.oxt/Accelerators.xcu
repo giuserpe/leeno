@@ -152,14 +152,12 @@
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Voci_Sposta.spostaVCA?language=Basic&amp;location=application</value>
           </prop>
         </node>
-        <!--CTRL-SHIFT-D-->
-<!--
-        <node oor:name="D_SHIFT_MOD1" oor:op="replace">
+        <!--CTRL-SHIFT-C-->
+        <node oor:name="C_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Finale.Duplica_Sheet_in_Doc?language=Basic&amp;location=application</value>
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$numera_colonna?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
--->
         <!--CTRL-SHIFT-E *** VOCE AZZERATA *** -->
         <node oor:name="E_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">

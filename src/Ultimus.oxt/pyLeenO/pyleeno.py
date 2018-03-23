@@ -5132,25 +5132,13 @@ def XPWE_in(arg=None):
     except AttributeError:
         pass
 ###
-    try:
-        PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
-        speseutili = PweDGModuli[0].text
-        spesegenerali = PweDGModuli[1].text
-        utiliimpresa = PweDGModuli[2].text
-        oneriaccessorisc = PweDGModuli[3].text
-        ConfQuantita = PweDGModuli[4].text
-    except IndexError:
-        pass
-###
-    try:
-        PweDGModuli = dati.getchildren()[2][0].getchildren()    #PweDGModuli
-        speseutili = PweDGModuli[0].text
-        spesegenerali = PweDGModuli[1].text
-        utiliimpresa = PweDGModuli[2].text
-        oneriaccessorisc = PweDGModuli[3].text
-        ConfQuantita = PweDGModuli[4].text
-    except IndexError:
-        pass
+#PweDGAnalisi
+    PweDGAnalisi = dati.find('PweDGModuli').getchildren()[0]
+    speseutili = PweDGAnalisi.find('SpeseUtili').text
+    spesegenerali = PweDGAnalisi.find('SpeseGenerali').text
+    utiliimpresa = PweDGAnalisi.find('UtiliImpresa').text
+    oneriaccessorisc = PweDGAnalisi.find('OneriAccessoriSc').text
+    confquantita = PweDGAnalisi.find('ConfQuantita').text
 ###
     try:
         PweDGConfigurazione = dati.getchildren()[3][0].getchildren()    #PweDGConfigurazione
@@ -5634,7 +5622,7 @@ Si tenga conto che:
             oSheet.getCellByPosition(0, lrow).String = el[0]
             oSheet.getCellByPosition(1, lrow).String = el[1]
             oSheet.getCellByPosition(2, lrow).String = el[2]
-            oSheet.getCellByPosition(6, lrow).Value = el[4]
+            #~ oSheet.getCellByPosition(6, lrow).Value = el[4]
             n = lrow + 2
             y = 0
             for x in el[3]:

@@ -3347,6 +3347,7 @@ def leeno_conf(arg=None):
     try:
         if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
         if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
+        if conf.read(path_conf, 'Generale', 'toolbar_contestuali') == '1': oDlg_config.getControl('CheckBox6').State = 1
         
         oSheet = oDoc.getSheets().getByName('S5')
         # descrizione_in_una_colonna
@@ -3439,12 +3440,13 @@ def leeno_conf(arg=None):
     conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
     conf.write(path_conf, 'Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
-
+    conf.write(path_conf, 'Generale', 'toolbar_contestuali', str(oDlg_config.getControl('CheckBox6').State))
+    toolbar_vedi()
     if oDlg_config.getControl('CheckBox5').State == 1:
         descrizione_in_una_colonna(False)
     else:
         descrizione_in_una_colonna(True)
-    
+
     conf.write(path_conf, 'Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State)) #torna su prezzario
     oSheet.getCellRangeByName('S1.H319').Value = float(oDlg_config.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
     oSheet.getCellRangeByName('S1.H320').Value = float(oDlg_config.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
@@ -3540,6 +3542,7 @@ def config_default(arg=None):
     ('Generale', 'pesca_auto', '1'),
     ('Generale', 'movedirection', '0'),
     ('Generale', 'descrizione_in_una_colonna', '0'),
+    ('Generale', 'toolbar_contestuali', '1'),
     
     #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
@@ -5139,6 +5142,19 @@ def XPWE_in(arg=None):
     utiliimpresa = PweDGAnalisi.find('UtiliImpresa').text
     oneriaccessorisc = PweDGAnalisi.find('OneriAccessoriSc').text
     confquantita = PweDGAnalisi.find('ConfQuantita').text
+    oSheet = oDoc.getSheets().getByName('S1')
+    try:
+        oSheet.getCellByPosition(7,318).Value = float(oneriaccessorisc)/100
+    except:
+        pass
+    try:
+        oSheet.getCellByPosition(7,319).Value = float(spesegenerali)/100
+    except:
+        pass
+    try:
+        oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
+    except:
+        pass
 ###
     try:
         PweDGConfigurazione = dati.getchildren()[3][0].getchildren()    #PweDGConfigurazione
@@ -5436,13 +5452,7 @@ Si tenga conto che:
     if impresa != None:
         oSheet.getCellByPosition(3,16).String = impresa
 ###
-    try:
-        oSheet = oDoc.getSheets().getByName('S1')
-        oSheet.getCellByPosition(7,318).Value = float(oneriaccessorisc)/100
-        oSheet.getCellByPosition(7,319).Value = float(spesegenerali)/100
-        oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
-    except:
-        pass
+
     oDoc.CurrentController.ZoomValue = 400
 
 # compilo Elenco Prezzi ################################################
@@ -6422,6 +6432,10 @@ def adegua_tmpl(arg=None):
     except:
         conf.write(path_conf, 'Generale', 'descrizione_in_una_colonna', '0')
     try:
+        conf.read(path_conf, 'Generale', 'toolbar_contestuali')
+    except:
+        conf.write(path_conf, 'Generale', 'toolbar_contestuali', '1')
+    try:
         conf.read(path_conf, 'Generale', 'movedirection')
     except:
         conf.write(path_conf, 'Generale', 'movedirection', '0') #muove il cursore in basso
@@ -6788,7 +6802,8 @@ def toolbar_vedi(arg=None):
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
 
-        if oDoc.getSheets().getByName('S1').getCellByPosition(7,316).Value == 0:
+        if conf.read(path_conf, 'Generale', 'toolbar_contestuali') == '0':
+        #~ if oDoc.getSheets().getByName('S1').getCellByPosition(7,316).Value == 0:
             for bar in GetmyToolBarNames: #toolbar sempre visibili
                 toolbar_on(bar)
         else:

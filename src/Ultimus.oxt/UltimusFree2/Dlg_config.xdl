@@ -8,12 +8,12 @@
   <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:titledbox dlg:id="Generale" dlg:tab-index="0" dlg:left="5" dlg:top="10" dlg:width="210" dlg:height="70">
+  <dlg:titledbox dlg:id="Generale" dlg:tab-index="0" dlg:left="5" dlg:top="3" dlg:width="210" dlg:height="77">
    <dlg:title dlg:value="Generale"/>
   </dlg:titledbox>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox2" dlg:tab-index="1" dlg:left="12" dlg:top="20" dlg:width="82" dlg:height="10" dlg:value="Visualizza tabelle Extra" dlg:checked="false"/>
   <dlg:text dlg:id="Label1" dlg:tab-index="2" dlg:left="11" dlg:top="50" dlg:width="39" dlg:height="8" dlg:value="Altezza celle:"/>
-  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="3" dlg:left="120" dlg:top="35" dlg:width="84" dlg:height="12" dlg:value="Senza Menù" dlg:spin="true">
+  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="3" dlg:left="119" dlg:top="21" dlg:width="84" dlg:height="12" dlg:value="Senza Menù" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="Senza Menù"/>
     <dlg:menuitem dlg:value="Menù Principale"/>
@@ -22,10 +22,10 @@
     <dlg:menuitem dlg:value="COMPUTO"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="4" dlg:left="120" dlg:top="20" dlg:width="84" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="4" dlg:left="119" dlg:top="11" dlg:width="84" dlg:height="10" dlg:value="All&apos;avvio visualizza:"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="122" dlg:top="211" dlg:width="82" dlg:height="10" dlg:value="Pesca codice automatico" dlg:checked="false"/>
   <dlg:textfield dlg:id="TextField1" dlg:tab-index="6" dlg:left="65" dlg:top="50" dlg:width="30" dlg:height="10" dlg:align="center"/>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="120" dlg:top="50" dlg:width="85" dlg:height="10" dlg:value="Nascondi toolbar di LibreOffice" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="120" dlg:top="36" dlg:width="85" dlg:height="10" dlg:value="Nascondi toolbar di LibreOffice" dlg:checked="false"/>
   <dlg:text dlg:id="Label2" dlg:tab-index="9" dlg:left="237" dlg:top="54" dlg:width="45" dlg:height="8" dlg:value="Fattore ottimale:"/>
   <dlg:textfield dlg:id="TextField2" dlg:tab-index="10" dlg:left="287" dlg:top="54" dlg:width="30" dlg:height="10"/>
   <dlg:titledbox dlg:id="Zoom" dlg:tab-index="7" dlg:left="232" dlg:top="10" dlg:width="95" dlg:height="64">
@@ -54,7 +54,7 @@
   <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl4" dlg:tab-index="29" dlg:left="5" dlg:top="216" dlg:width="100" dlg:height="47">
    <dlg:title dlg:value="Contabilità"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox7" dlg:tab-index="30" dlg:left="120" dlg:top="65" dlg:width="84" dlg:height="10" dlg:value="Abilita dialogo di attesa" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox7" dlg:tab-index="30" dlg:left="120" dlg:top="49" dlg:width="84" dlg:height="10" dlg:value="Abilita dialogo di attesa" dlg:checked="false"/>
   <dlg:text dlg:id="Label14" dlg:tab-index="31" dlg:left="10" dlg:top="229" dlg:width="39" dlg:height="8" dlg:value="N. max SAL:"/>
   <dlg:textfield dlg:id="TextField13" dlg:tab-index="32" dlg:left="60" dlg:top="229" dlg:width="40" dlg:height="10" dlg:align="center"/>
   <dlg:button dlg:style-id="2" dlg:id="CommandButton1" dlg:tab-index="33" dlg:left="165" dlg:top="249" dlg:width="48" dlg:height="15" dlg:value="Reset" dlg:button-type="ok" dlg:multiline="true">
@@ -93,5 +93,6 @@
   <dlg:text dlg:id="Label17" dlg:tab-index="48" dlg:left="122" dlg:top="190" dlg:width="50" dlg:height="7" dlg:printable="false" dlg:value="Testo del Vedi voce:"/>
   <dlg:textfield dlg:id="TextField14" dlg:tab-index="49" dlg:left="177" dlg:top="191" dlg:width="23" dlg:height="10" dlg:printable="false" dlg:align="center"/>
   <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox5" dlg:tab-index="50" dlg:left="122" dlg:top="226" dlg:width="82" dlg:height="10" dlg:value="Descrizione in una colonna" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="0" dlg:id="CheckBox6" dlg:tab-index="51" dlg:left="120" dlg:top="63" dlg:width="84" dlg:height="10" dlg:value="Toolbar contestuali" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

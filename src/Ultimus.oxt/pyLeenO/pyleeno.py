@@ -6397,6 +6397,7 @@ def adegua_tmpl(arg=None):
         sostituita la colonna "Tag A" con "Tag Super Cat"
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
     - dal 209 cambia il nome di propietà del file in "Versione_LeenO"
+    - dal 211 cambiano le formule del prezzo unitario e dell'importo in Computo e Contabilità
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
 #qui le cose da cambiare comunque
@@ -6449,7 +6450,7 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 210
+    adegua_a = 211
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione corrente di LeenO?
@@ -6518,8 +6519,6 @@ dell'operazione che terminerà con un messaggio di avviso.
                         sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
                         oSheet.getCellByPosition(2, y).Formula = sformula
                         oSheet.getCellByPosition(8, y).String = ''
-                # ~test = getLastUsedCell(oSheet).EndRow+1
-                # ~for y in range(0, test):
                     # aggiorna formula vedi voce
                     if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
                         if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
@@ -6534,6 +6533,15 @@ dell'operazione che terminerà con un messaggio di avviso.
                         else:
                             n = oSheet.getCellByPosition(5, y).Formula.split('J')[1]
                         oSheet.getCellByPosition(5, y).Formula = '=J$' + n
+                    #cambia le formule di prezzo unitario e importo
+                    if '%' in oSheet.getCellByPosition(18, y).Formula:
+                        sStRange = Circoscrive_Voce_Computo_Att(y)
+                        sStRange.RangeAddress
+                        inizio = sStRange.RangeAddress.StartRow
+                        fine = sStRange.RangeAddress.EndRow
+                        oSheet.getCellByPosition(18, y).Formula = '=J'+ str(y+1) +'*L'+ str(y+1)
+                        # ~oSheet.getCellByPosition(11, y).Formula = '=IF(VLOOKUP(B'+ str(inizio+2) +';elenco_prezzi;3;FALSE())="%";VLOOKUP(B'+ str(inizio+2) +';elenco_prezzi;5;FALSE())*100;VLOOKUP(B'+ str(inizio+2) +';elenco_prezzi;5;FALSE()))'
+
 
         if oDoc.getSheets().hasByName('CONTABILITA'):
             oSheet = oDoc.getSheets().getByName('CONTABILITA')
@@ -6556,6 +6564,11 @@ dell'operazione che terminerà con un messaggio di avviso.
         oSheet.getCellRangeByName('C10').Formula ='=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$338)))'
         oSheet.getCellRangeByName('C24').Formula ='=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B24;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$336)))'
         oSheet.getCellRangeByName('I24').CellStyle = 'Comp-Bianche in mezzo_R'
+        # ~oSheet.getCellRangeByName('L12').Formula ='=IF(VLOOKUP(B10;elenco_prezzi;3;FALSE())="%";VLOOKUP(B10;elenco_prezzi;5;FALSE())*100;VLOOKUP(B10;elenco_prezzi;5;FALSE()))'
+        oSheet.getCellRangeByName('S12').Formula ='=J12*L12'
+        # ~oSheet.getCellRangeByName('N27').Formula ='=IF(VLOOKUP(B24;elenco_prezzi;3;FALSE())="%";VLOOKUP(B24;elenco_prezzi;5;FALSE())*100;VLOOKUP(B24;elenco_prezzi;5;FALSE()))'
+        oSheet.getCellRangeByName('P27').Formula ='=N27*J27'
+        
         ###
         oSheet.getCellRangeByName('AC12').Formula = '=S12-AE12'
         oSheet.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
@@ -7088,7 +7101,8 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-def sistema_cose(arg=None):
+# ~def sistema_cose(arg=None):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')
@@ -7175,7 +7189,7 @@ Associato a Atrl+Shift+C'''
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'STANDARD'
     return
 ########################################################################
-def debug(arg=None): #COMUNE DI MATERA
+def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     #~ mri(oDoc.getCurrentSelection())

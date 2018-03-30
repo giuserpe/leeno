@@ -248,19 +248,9 @@ sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle des
 		&apos;		oRange.Rows.OptimalHeight = true
 				ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
 		 else
-			If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).string = &quot;&quot; Then
-						oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = 1200
+		 hriga = oSheet.getCellRangeByName(&quot;B4&quot;).CharHeight * 65 * 2 +100
+						oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = hriga
 
-					end if
-					If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value &lt;&gt; &quot;&quot; Then
-						oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height =_
-						ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value * 1000
-					end If
-
-				else
-					oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = 1300
-			end if
 	endif 	
 end sub
 

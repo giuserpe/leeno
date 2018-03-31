@@ -415,7 +415,7 @@ unSelect &apos;deselezion
 	end if
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;6... Attendi ancora&quot;, 70)
-	Rimetti_in_ordine_tab
+&apos;	Rimetti_in_ordine_tab
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,317).value = 1 then 
 &apos;					&apos;And ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &lt;&gt; 0 then 

@@ -178,7 +178,7 @@ end sub
 
 sub Colora_Tabs &apos;sistena i colori delle tabs e riordina
 	&apos; le apre tutte
-	Visualizza_sheet_TUTTE
+&apos;	Visualizza_sheet_TUTTE
 	&apos; prima tutte circa come defaults
 	SetTabColorAll
 	&apos;poi procede a colorarle una per una in base a nomi e/o criteri

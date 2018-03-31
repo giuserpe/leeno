@@ -247,20 +247,15 @@ Sub refreshAllSheetLinks() &apos;fa il refresh dei link esterni&apos;
 	 Clessid_lock_End
 End Sub
 
-Sub Visualizza_sheet_TUTTE
-Rimetti_in_ordine_tab
-	oSheets = ThisComponent.Sheets
-	For I = 0 to oSheets.Count -1 
-		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
+&apos;Sub Visualizza_sheet_TUTTE
+&apos;Rimetti_in_ordine_tab
+&apos;	oSheets = ThisComponent.Sheets
+&apos;	For I = 0 to oSheets.Count -1 
+&apos;		oCalcSheet = ThisComponent.Sheets.getByIndex(I)
 &apos;		oCalcSheet.unprotect(&quot;&quot;)
-		oCalcSheet.isVisible = TRUE
-	Next I	
-End Sub
-
-
-
-
-
+&apos;		oCalcSheet.isVisible = TRUE
+&apos;	Next I	
+&apos;End Sub
 Sub Protect_alcune_tabelle
 	If thisComponent.Sheets.hasByName(&quot;Scorciatoie&quot;) and nome &lt;&gt; &quot;Scorciatoie&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).protect(&quot;&quot;)

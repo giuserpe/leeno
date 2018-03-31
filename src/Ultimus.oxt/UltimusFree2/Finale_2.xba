@@ -114,7 +114,7 @@ rem rimuovo le aree di stampa che non interessano
 	SBIANCA_ANNULLA
 	unSelect &apos;unselect ranges
 	
-	Rimetti_in_ordine_tab
+&apos;	Rimetti_in_ordine_tab
 	Chiudi_o_elimina_tabelle_inutili
 	oSheet = ThisComponent.Sheets.getByName(oActiveSheet)
 	oSheet.IsVisible = True

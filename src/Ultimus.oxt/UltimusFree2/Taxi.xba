@@ -447,36 +447,34 @@ end sub
  oRanges.addNewByName(sAreaName, sDefArea , oCellAddress, 0)
 END SUB 
 
-sub Rimetti_in_ordine_tab
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
-	thisComponent.Sheets.moveByName(&quot;Elenco Prezzi&quot;,0)
-	If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
-		thisComponent.Sheets.moveByName(&quot;Analisi di Prezzo&quot;,1)
-	EndIf
-	thisComponent.Sheets.moveByName(&quot;COMPUTO&quot;,2)
-	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
-		thisComponent.Sheets.moveByName(&quot;VARIANTE&quot;,3)
-	end if
-	If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
-		thisComponent.Sheets.moveByName(&quot;CONTABILITA&quot;,4)
-	end If
-
-	If thisComponent.Sheets.hasByName(&quot;M1&quot;)then
-		thisComponent.Sheets.moveByName(&quot;M1&quot;,5)
-	end if
-	thisComponent.Sheets.moveByName(&quot;S1&quot;,6)
-	thisComponent.Sheets.moveByName(&quot;S2&quot;,7)
-	thisComponent.Sheets.moveByName(&quot;S3&quot;,8)
-	thisComponent.Sheets.moveByName(&quot;S4&quot;,9)
-	if 	thisComponent.Sheets.hasByName(&quot;S5&quot;) then
-		thisComponent.Sheets.moveByName(&quot;S5&quot;,10)	
-	end if
-	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then
-		thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,thisComponent.Sheets.count)
-	end if
-end sub 
-
-
+&apos;sub Rimetti_in_ordine_tab
+&apos;	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
+&apos;	thisComponent.Sheets.moveByName(&quot;Elenco Prezzi&quot;,0)
+&apos;	If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
+&apos;		thisComponent.Sheets.moveByName(&quot;Analisi di Prezzo&quot;,1)
+&apos;	EndIf
+&apos;	thisComponent.Sheets.moveByName(&quot;COMPUTO&quot;,2)
+&apos;	If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
+&apos;		thisComponent.Sheets.moveByName(&quot;VARIANTE&quot;,3)
+&apos;	end if
+&apos;	If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
+&apos;		thisComponent.Sheets.moveByName(&quot;CONTABILITA&quot;,4)
+&apos;	end If
+&apos;
+&apos;	If thisComponent.Sheets.hasByName(&quot;M1&quot;)then
+&apos;		thisComponent.Sheets.moveByName(&quot;M1&quot;,5)
+&apos;	end if
+&apos;	thisComponent.Sheets.moveByName(&quot;S1&quot;,6)
+&apos;	thisComponent.Sheets.moveByName(&quot;S2&quot;,7)
+&apos;	thisComponent.Sheets.moveByName(&quot;S3&quot;,8)
+&apos;	thisComponent.Sheets.moveByName(&quot;S4&quot;,9)
+&apos;	if 	thisComponent.Sheets.hasByName(&quot;S5&quot;) then
+&apos;		thisComponent.Sheets.moveByName(&quot;S5&quot;,10)	
+&apos;	end if
+&apos;	If thisComponent.Sheets.hasByName(&quot;copyright_LeenO&quot;) Then
+&apos;		thisComponent.Sheets.moveByName(&quot;copyright_LeenO&quot;,thisComponent.Sheets.count)
+&apos;	end if
+&apos;end sub 
 
 Function DCC_non_Definito
 	sSourceURL = GetFileURL( &quot;Cerca il file da cui prelevare gli stili.&quot;)
@@ -619,7 +617,7 @@ annullato:
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;4 Pazienta... &quot;, 40)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
-	Visualizza_sheet_TUTTE
+&apos;	Visualizza_sheet_TUTTE
 	
 	&apos;metto la tab da trasferire in pool position
 	thisComponent.Sheets.moveByName(sSheetSRC ,0)
@@ -727,7 +725,7 @@ annullato:
 
 
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
-	Visualizza_sheet_TUTTE
+&apos;	Visualizza_sheet_TUTTE
 	
 	&apos; controlla se sul Target esiste la tab
 	if thisComponent.Sheets.hasByName(sSheetSRC) Then

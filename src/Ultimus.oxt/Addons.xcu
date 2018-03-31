@@ -1403,57 +1403,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m3U03" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nascondi_sheets?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/vintage</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Nascondi TUTTE le Copertine e i documenti</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m3U04" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$sproteggi_sheet_TUTTE?language=Python&amp;location=user:uno_packages</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/vintage</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Visualizza (mostra) TUTTI i fogli</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="m3U05" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Taxi.Rimetti_in_ordine_tab?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/vintage</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Riordina i fogli/Tab (ordine predefinito)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
             </node>
           </node>
           <node oor:name="m06" oor:op="replace">

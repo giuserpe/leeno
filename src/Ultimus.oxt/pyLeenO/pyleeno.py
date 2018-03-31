@@ -81,12 +81,11 @@ class New_file:
         opz.Name = 'AsTemplate'
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
+        autoexec()
         if arg == 1:
             MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
             salva_come()
-            autoexec()
-        #~ salva_come()
         return document
     def usobollo():
         desktop = XSCRIPTCONTEXT.getDesktop()
@@ -958,6 +957,7 @@ def sproteggi_sheet_TUTTE(arg=None):
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.unprotect('')
+        
 ########################################################################
 def setTabColor(colore):
     '''
@@ -1060,7 +1060,6 @@ def adatta_altezza_riga(nSheet=None):
     oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
-    sproteggi_sheet_TUTTE()
     if float(loVersion()[:3]) > 5.2:
         for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
             oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
@@ -3421,6 +3420,11 @@ def leeno_conf(arg=None):
 ### MOSTRA IL DIALOGO
     oDlg_config.execute()
     
+    if oDlg_config.getControl('CheckBox2').State == 1:
+        show_sheets(True)
+    else:
+        show_sheets(False)
+
     if oDlg_config.getControl('CheckBox3').State == 1:
         toolbar_switch(0)
     else:
@@ -6816,7 +6820,6 @@ def toolbar_vedi(arg=None):
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
 
         if conf.read(path_conf, 'Generale', 'toolbar_contestuali') == '0':
-        #~ if oDoc.getSheets().getByName('S1').getCellByPosition(7,316).Value == 0:
             for bar in GetmyToolBarNames: #toolbar sempre visibili
                 toolbar_on(bar)
         else:

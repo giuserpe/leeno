@@ -950,14 +950,32 @@ def ordina_col(ncol):
 ########################################################################
 def sproteggi_sheet_TUTTE(arg=None):
     '''
-    Sprotegge tutti fogli del documento.
+    Sprotegge e riordina tutti fogli del documento.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheets = oDoc.Sheets.ElementNames
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.unprotect('')
-        
+    #riordino le sheet
+    oDoc.Sheets.moveByName("Elenco Prezzi", 0)
+    if oDoc.Sheets.hasByName("Analisi di Prezzo"):
+        oDoc.Sheets.moveByName("Analisi di Prezzo", 1)
+    oDoc.Sheets.moveByName("COMPUTO", 2)
+    if oDoc.Sheets.hasByName("VARIANTE"):
+        oDoc.Sheets.moveByName("VARIANTE", 3)
+    if oDoc.Sheets.hasByName("CONTABILITA"):
+        oDoc.Sheets.moveByName("CONTABILITA", 4)
+    if oDoc.Sheets.hasByName("M1"):
+        oDoc.Sheets.moveByName("M1", 5)
+    oDoc.Sheets.moveByName("S1", 6)
+    oDoc.Sheets.moveByName("S2", 7)
+    oDoc.Sheets.moveByName("S3", 8)
+    oDoc.Sheets.moveByName("S4", 9)
+    if oDoc.Sheets.hasByName("S5"):
+        oDoc.Sheets.moveByName("S5", 10)
+    if oDoc.Sheets.hasByName("copyright_LeenO"):
+        oDoc.Sheets.moveByName("copyright_LeenO", oDoc.Sheets.Count)
 ########################################################################
 def setTabColor(colore):
     '''
@@ -3343,6 +3361,7 @@ def leeno_conf(arg=None):
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
     oDialog1Model = oDlg_config.Model
+    if oDoc.getSheets().getByName("copyright_LeenO").IsVisible == True: conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
     try:
         if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
         if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico

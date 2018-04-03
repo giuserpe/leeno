@@ -2755,6 +2755,38 @@ SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!""", 'Voce già registrata!') ==3:
                     sblocca_computo = 1
         chi(sblocca_computo)
 ########################################################################
+def cerca_in_elenco(arg=None):
+    '''Evidenzia il codice di elenco prezzi della voce corrente.'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    if oSheet.Name in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
+        if oSheet.Name == 'Analisi di Prezzo':
+            if oSheet.getCellByPosition(0, lrow).CellStyle == 'An-lavoraz-Cod-sx':
+                codice_da_cercare = oSheet.getCellByPosition(0, lrow).String
+            else:
+                return
+        else:
+            sStRange = Circoscrive_Voce_Computo_Att (lrow)
+            sopra = sStRange.RangeAddress.StartRow
+            codice_da_cercare = oSheet.getCellByPosition(1,sopra+1).String
+        oSheet = oDoc.getSheets().getByName("Elenco Prezzi")
+        oSheet.IsVisible = True
+        _gotoSheet('Elenco Prezzi')
+    elif oSheet.Name in ('Elenco Prezzi'):
+        if oSheet.getCellByPosition(1, lrow).Type.value == 'FORMULA':
+            codice_da_cercare = oSheet.getCellByPosition(0, lrow).String
+        else:
+            return
+        oSheet = oDoc.getSheets().getByName("Analisi di Prezzo")
+        oSheet.IsVisible = True
+        _gotoSheet('Analisi di Prezzo')
+    if codice_da_cercare == "Cod. Art.?":
+        return
+    if codice_da_cercare != '':
+        oCell=uFindString (codice_da_cercare, oSheet)
+        _gotoCella(oCell[0], oCell[1])
+########################################################################
 def pesca_cod(arg=None):
     '''
     Permette di scegliere il codice per la voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi.
@@ -2768,6 +2800,7 @@ def pesca_cod(arg=None):
         return
     if oSheet.Name in('Analisi di Prezzo'):
         cerca_partenza()
+        cerca_in_elenco()
         _gotoSheet('Elenco Prezzi')
 ###
     if oSheet.Name in('CONTABILITA'):
@@ -2782,7 +2815,7 @@ def pesca_cod(arg=None):
             pass
         ###
         if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
-            basic_LeenO('Cerca_Rior.cerca_in_elenco')
+            cerca_in_elenco()
             _gotoSheet('Elenco Prezzi')
 ###
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
@@ -2794,7 +2827,7 @@ def pesca_cod(arg=None):
                     sblocca_computo = 1
         cerca_partenza()
         if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
-            basic_LeenO('Cerca_Rior.cerca_in_elenco')
+            cerca_in_elenco()
             return
         _gotoSheet('Elenco Prezzi')
 ###
@@ -5901,6 +5934,7 @@ GetmyToolBarNames =('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',)
 #
+codice_da_cercare = ''
 sUltimus = ''
 ########################################################################
 def ssUltimus(arg=None):
@@ -7123,8 +7157,7 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-# ~def sistema_cose(arg=None):
-def debug(arg=None):
+def sistema_cose(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')

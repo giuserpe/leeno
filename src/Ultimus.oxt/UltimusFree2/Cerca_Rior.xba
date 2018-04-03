@@ -282,43 +282,6 @@ Function Colonna_giusta_EP (oSheet as object)
 
 end Function
 
-Global codice_da_cercare as String
-Sub cerca_in_elenco
-On Error GoTo fine:
-	osheet = thisComponent.CurrentController.ActiveSheet
-	lrow = range2cell
-	Select Case oSheet.Name
-		Case &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;, &quot;VARIANTE&quot;
-			sStRange = Circoscrive_Voce_Computo_Att (lrow)
-			With sStRange.RangeAddress
-		 		lRow = .StartRow+1
-			End With
-		&apos;	Print oSheet.getCellByPosition(1,lRow).String
-			codice_da_cercare = oSheet.getCellByPosition(1,lRow).String
-		&apos;	ScriptPy(&quot;pyleeno.py&quot;,&quot;_gotoSheet&quot;,&quot;Elenco Prezzi&quot;)
-			
-	If codice_da_cercare = &quot;Cod. Art.?&quot;  Then Exit Sub
-	If codice_da_cercare &lt;&gt; &quot;&quot; Then
-	&apos;	Print codice_da_cercare
-		oSheet = ThisComponent.Sheets.getByName(&quot;Elenco Prezzi&quot;)
-		oSheet.IsVisible = True
-		oCell=uFindString(codice_da_cercare, oSheet)
-		ThisComponent.CurrentController.Select(oCell)
-		ThisComponent.CurrentController.setFirstVisibleRow(oCell.RangeAddress.StartRow)
-	EndIf
-		Case &quot;Elenco Prezzi&quot;
-		&apos;	Print oSheet.getCellByPosition(1,lRow).String
-			codice_da_cercare = oSheet.getCellByPosition(0,lRow).String
-		oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
-		oSheet.IsVisible = True
-		oCell=uFindString(codice_da_cercare, oSheet)
-		ThisComponent.CurrentController.Select(oCell)
-		ThisComponent.CurrentController.setFirstVisibleRow(oCell.RangeAddress.StartRow)
-&apos;			ScriptPy(&quot;pyleeno.py&quot;,&quot;_gotoSheet&quot;,&quot;Analisi di Prezzo&quot;)
-	End Select
-fine:
-End Sub
-
 Function ultima_voce__
 	oSheet = thisComponent.CurrentController.ActiveSheet
 	Dim test As Long

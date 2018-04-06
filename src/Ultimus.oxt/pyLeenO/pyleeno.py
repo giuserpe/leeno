@@ -1136,6 +1136,25 @@ def voce_breve(arg=None):
                 oSheet.getCellRangeByName('S1.H336').Value = int(conf.read(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate'))
             adatta_altezza_riga()
 ########################################################################
+def voce_breve_ep(arg=None):
+    '''
+    Ottimizza l'altezza delle celle di Elenco Prezzi o visualizza solo
+    tre righe della descrizione.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    oRange=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    SR = oRange.StartRow+1
+    ER = oRange.EndRow-1
+
+    if oSheet.getCellByPosition(1, 3).Rows.OptimalHeight == False:
+        adatta_altezza_riga()
+    else:
+        hriga = oSheet.getCellRangeByName('B4').CharHeight * 65 * 2 + 100 #visualizza tre righe
+        oSheet.getCellRangeByPosition(0, SR, 0, ER).Rows.Height = hriga
+
+########################################################################
 def scelta_viste(arg=None):
     '''
     Gestisce i dialoghi del menù viste nelle tabelle di Analisi di Prezzo,
@@ -7157,7 +7176,8 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-def sistema_cose(arg=None):
+#~ # ~def sistema_cose(arg=None):
+#~ def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')
@@ -7243,6 +7263,18 @@ Associato a Atrl+Shift+C'''
             oSheet.getCellByPosition(x, lrow).String = ''
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'STANDARD'
     return
+########################################################################
+# ~def debug(arg=None):
+def subst_str (arg=None):
+    '''
+    Sostituisce scringhe di testi nel foglio corrente
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ReplaceDescriptor = oSheet.createReplaceDescriptor()
+    ReplaceDescriptor.SearchString = "str1"
+    ReplaceDescriptor.ReplaceString = "str2"
+    oSheet.replaceAll(ReplaceDescriptor)
 ########################################################################
 def debug_mt(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()

@@ -110,22 +110,6 @@ function cerca_in_array(anArray as object, aString as string) as string
  next
 end function
 
-
-
-SUB paolom
-mAreas() = oSheet.getPrintAreas()
-aRangeAddress = mAreas(0)
-
-
-&apos;Come per tutti gli array in Basic puoi eseguire un ciclo anche senza usare direttamente gli indici (ciclo For Each...)
-
-mAreas() = oSheet.getPrintAreas()
-For Each aRangeAddress in mAreas()
- xray aRangeAddress
-Next 
-end sub
-
-
 SUB Rifa_nomi_area____ &apos; questa li rifà e basta
 
 &apos;impostazione dei dati delle aree

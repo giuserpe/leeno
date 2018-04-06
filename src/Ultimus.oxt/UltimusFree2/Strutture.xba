@@ -215,7 +215,7 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 	
 	Select case ThisComponent.currentController.activeSheet.Name
 	Case &quot;Elenco Prezzi&quot;
-		Tronca_Altezza_Voci_EP
+		ScriptPy(&quot;pyleeno.py&quot;,&quot;voce_breve_ep&quot;)
 	Case &quot;Analisi di Prezzo&quot;
 		Tronca_Altezza_Analisi
 	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
@@ -230,31 +230,6 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 	unSelect &apos;unselect ranges 
 end sub
 &apos;#########################################################################
-sub Tronca_Altezza_Voci_EP &apos; sull&apos;E.P. limita l&apos;altezza delle descrizioni per visualizzare più righe/voci
- &apos;	msgbox &quot;Spiacente ma funziona solo sulla tab &apos;Elenco Prezzi&apos;&quot;&amp; CHR$(10)_
- 	&apos;		&amp; &quot; e NON sui suoi duplicati!&quot;				
-	oSheet = ThisComponent.currentController.activeSheet										
-	oRange = thiscomponent.NamedRanges.elenco_prezzi.ReferredCells&apos;
-	with oRange.RangeAddress
-		lrowStart= .startRow+1
-		lrowEnd= .Endrow-1
-	end with
-	&apos;---------------
-	lrow = range2cell
-	if lrow = 0 Then lrow = 3 &apos; altrimenti rileva la riga di intestazione che è sempre uguale (e non commuta)
-
-	if oSheet.GetCellByPosition(1 ,lrow).Rows.OptimalHeight = false then
-			&apos; se la riga corrente è non &quot;adattata&quot; le allunga
-		&apos;		oRange.Rows.OptimalHeight = true
-				ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
-		 else
-		 hriga = oSheet.getCellRangeByName(&quot;B4&quot;).CharHeight * 65 * 2 +100
-						oSheet.GetCellRangeByPosition(0 , lrowStart, 0, lrowEnd).Rows.Height = hriga
-
-	endif 	
-end sub
-
-
 sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descrizioni per visualizzare più righe/voci							
 	oSheet = ThisComponent.currentController.activeSheet		
 		 	Barra_chiudi_sempre_4	

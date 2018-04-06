@@ -41,7 +41,7 @@
  <library:element library:name="VarGlobal"/>
  <library:element library:name="Agg_Templ"/>
  <library:element library:name="CRONO"/>
- <library:element library:name="Import_acc"/>
+ <library:element library:name="_tools"/>
  <library:element library:name="Taxi_temp"/>
  <library:element library:name="X_TMP"/>
  <library:element library:name="AAA_TO_DO"/>
@@ -55,7 +55,7 @@
  <library:element library:name="Pesca_mi_reg_A"/>
  <library:element library:name="Viste_2"/>
  <library:element library:name="Gestione_Var"/>
- <library:element library:name="export"/>
+ <library:element library:name="Da_prezzario_2"/>
  <library:element library:name="Magic"/>
  <library:element library:name="Taxi_Acc"/>
  <library:element library:name="Conversioni"/>
@@ -73,7 +73,4 @@
  <library:element library:name="Analisi"/>
  <library:element library:name="Contab"/>
  <library:element library:name="celle"/>
- <library:element library:name="_tools"/>
- <library:element library:name="_Disattivate"/>
- <library:element library:name="Da_prezzario_2"/>
 </library:library>

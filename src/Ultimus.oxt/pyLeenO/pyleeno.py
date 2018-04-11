@@ -2375,8 +2375,6 @@ def Circoscrive_Analisi(lrow):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ lrow = Range2Cell()[1]
-    #~ return
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
         if oSheet.getCellByPosition(0, lrow).CellStyle == stili_analisi[0]:
             lrowS=lrow
@@ -3228,7 +3226,6 @@ per la formulazione dell'offerta'''
     oRange = oSheet.getCellRangeByPosition (6,3,6,len(formule)+2)
     formule = tuple(formule)
     oRange.setFormulaArray(formule)
-    #~ return
     
     oSheet.getCellRangeByPosition(4, 3, 4, fine).clearContents(VALUE + DATETIME + STRING +
                                           ANNOTATION + FORMULA + HARDATTR +
@@ -5043,7 +5040,7 @@ def converti_stringhe(arg=None):
                 pass
     return
 ########################################################################
-def XPWE_in(arg=None):
+def XPWE_in(arg):
     oDoc = XSCRIPTCONTEXT.getDocument()
     refresh(0)
     oDialogo_attesa = dlg_attesa('Caricamento dei dati...')
@@ -5080,7 +5077,6 @@ def XPWE_in(arg=None):
         nome_file = root.find('FileNameDocumento').text
     else:
         nome_file = "nome_file"
-
 ###
     dati = root.find('PweDatiGenerali')
     DatiGenerali = dati.getchildren()[0][0]
@@ -5801,8 +5797,6 @@ Si tenga conto che:
         SR = lrow + 2 + 1
         nrighe = len(el.get('lista_rig')) - 1
 
-        #~ chi(el.get('lista_rig'))
-        #~ return
         if nrighe > -1:
             EC = SC + len(el.get('lista_rig')[0])
             ER = SR + nrighe
@@ -5906,15 +5900,19 @@ Riordinando il computo trovo riferimenti a voci non ancora inserite.
 
 Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
 """\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
-                    x = 0
-                    if len(lista_n) != 0:
-                        for n in lista_n:
-                            try: 
-                                float(n)
-                                oSheet.getCellByPosition(8-x, SR).Value = n
-                            except:
-                                oSheet.getCellByPosition(8-x, SR).Formula = n
-                            x +=1
+                    try:
+                        root.find('CopyRight').text
+                        x = 0
+                        if len(lista_n) != 0:
+                            for n in reversed(lista_n):
+                                try: 
+                                    float(n)
+                                    oSheet.getCellByPosition(8-x, SR).Value = n
+                                except:
+                                    oSheet.getCellByPosition(8-x, SR).Formula = n
+                                x +=1
+                    except:
+                        pass
                 SR = SR+1
     numera_voci()
 
@@ -5927,6 +5925,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     oDialogo_attesa.endExecute()
     doppioni()
+    _gotoSheet(arg)
     MsgBox('Importazione eseguita con successo!','')
 
 # XPWE_in ##########################################################
@@ -6532,7 +6531,7 @@ def adegua_tmpl(arg=None):
 alla versione corrente di LeenO?
 
 In caso affermativo dovrai attendere il completamento
-dell'operazione che terminerà con un messaggio di avviso.
+dell'operazione che terminerà con un avviso.
 ''', "Richiesta") !=2:
             MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
             return

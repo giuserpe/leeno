@@ -1386,8 +1386,7 @@ Se decidi di continuare, cancellerai tutte le voci di
 misurazione già presenti in questo elaborato.
 Cancello le voci di misurazione?
  """,'ATTENZIONE!') ==2:
-            lrow = getLastUsedCell(oSheet).EndRow-2
-            oSheet.Rows.removeByIndex(3, lrow-2)
+            lrow = uFindStringCol('TOTALI COMPUTO', 2, oSheet) -3
             _gotoCella(0,2)
             ins_voce_computo()
             adatta_altezza_riga('VARIANTE')

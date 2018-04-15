@@ -5042,6 +5042,7 @@ def converti_stringhe(arg=None):
 ########################################################################
 def XPWE_in(arg):
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
     refresh(0)
     oDialogo_attesa = dlg_attesa('Caricamento dei dati...')
     if oDoc.getSheets().hasByName('S2') == False:
@@ -5762,7 +5763,7 @@ Si tenga conto che:
                 testspcat = idspcat
                 testcat = '0'
                 Inser_SuperCapitolo_arg(lrow, lista_supcat[eval(idspcat)-1][1])
-                lrow = lrow + 2
+                lrow = lrow + 1
         except UnboundLocalError:
             pass
         try:
@@ -5770,7 +5771,7 @@ Si tenga conto che:
                 testcat = idcat
                 testsbcat = '0'
                 Inser_Capitolo_arg(lrow, lista_cat[eval(idcat)-1][1])
-                lrow = lrow + 2
+                lrow = lrow + 1
         except UnboundLocalError:
             pass
         try:
@@ -5890,7 +5891,7 @@ Si tenga conto che:
                 lista_n = list()
                 if mis[9] != '-2':
                     for el in (va, vb, vc, vd):
-                        if el != 0 : lista_n.append(el)
+                        if el != '' : lista_n.append(el)
                     vedi = diz_vv.get(mis[9])
                     try:
                         vedi_voce_xpwe(SR, vedi, mis[8])
@@ -5904,18 +5905,19 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                         root.find('CopyRight').text
                         x = 0
                         if len(lista_n) != 0:
-                            for n in reversed(lista_n):
-                                try: 
-                                    float(n)
-                                    oSheet.getCellByPosition(8-x, SR).Value = n
-                                except:
-                                    oSheet.getCellByPosition(8-x, SR).Formula = n
+                            lista_n.remove('')
+                            for n in lista_n:
+                                if n != '':
+                                    try: 
+                                        float(n)
+                                        oSheet.getCellByPosition(6+x, SR).Value = n
+                                    except:
+                                        oSheet.getCellByPosition(6+x, SR).Formula = n
                                 x +=1
                     except:
                         pass
                 SR = SR+1
     numera_voci()
-
     try:
         Rinumera_TUTTI_Capitoli2()
     except:
@@ -5926,8 +5928,9 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     oDialogo_attesa.endExecute()
     doppioni()
     _gotoSheet(arg)
+    if uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet) !='None':
+        firme_in_calce()
     MsgBox('Importazione eseguita con successo!','')
-
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:#####################################################

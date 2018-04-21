@@ -3742,7 +3742,6 @@ def ins_voce_contab(arg=1):
     oSheet.getCellByPosition(35, sopra+4).Formula = '=B'+ str(sopra+2)
     oSheet.getCellByPosition(36, sopra+4).Formula = '=IF(ISERROR(P'+ str(sopra +5) +');"";IF(P' + str(sopra+5) +'<>"";P' + str(sopra +5) + ';""))'
     oSheet.getCellByPosition(36, sopra+4).CellStyle = "comp -controolo"
-    
     numera_voci(0)
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         if arg == 0 : return
@@ -6305,7 +6304,10 @@ def autoexec(arg=None):
     oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
 #~ RegularExpressions and Wildcards are mutually exclusive, only one can have the value TRUE.
 #~ If both are set to TRUE via API calls then the last one set takes precedence.
-    oDoc.Wildcards = False
+    try:
+        oDoc.Wildcards = False
+    except:
+        pass
     oDoc.RegularExpressions = True
     oSheet = oDoc.getSheets().getByName('S1')
     adegua_tmpl() #esegue degli aggiustamenti del template

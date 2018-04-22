@@ -1002,11 +1002,13 @@ def show_sheets(x=True):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
-    oSheets.remove('COMPUTO')
     oSheets.remove('Elenco Prezzi')
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = x
+    for nome in ('COMPUTO', 'Elenco Prezzi'):
+        oSheet = oDoc.getSheets().getByName(nome)
+        oSheet.IsVisible = True
 def nascondi_sheets(arg=None):
     show_sheets(False)
 ########################################################################
@@ -3410,9 +3412,18 @@ def leeno_conf(arg=None):
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
     oDialog1Model = oDlg_config.Model
-    if oDoc.getSheets().getByName("copyright_LeenO").IsVisible == True: conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', '1')
     try:
-        if conf.read(path_conf, 'Generale', 'visualizza_tabelle_extra') == '1': oDlg_config.getControl('CheckBox2').State = 1
+        oSheets = list(oDoc.getSheets().getElementNames())
+        for nome in oSheets:
+            oSheet = oDoc.getSheets().getByName(nome)
+            if oSheet.IsVisible == False:
+                oDlg_config.getControl('CheckBox2').State = 0
+                test = 0
+                break
+            else:
+                oDlg_config.getControl('CheckBox2').State = 1
+                test = 1
+        if oDoc.getSheets().getByName("copyright_LeenO").IsVisible == True: oDlg_config.getControl('CheckBox2').State = 1
         if conf.read(path_conf, 'Generale', 'pesca_auto') == '1': oDlg_config.getControl('CheckBox1').State = 1 #pesca codice automatico
         if conf.read(path_conf, 'Generale', 'toolbar_contestuali') == '1': oDlg_config.getControl('CheckBox6').State = 1
         
@@ -3487,11 +3498,12 @@ def leeno_conf(arg=None):
         config_default()
 ### MOSTRA IL DIALOGO
     oDlg_config.execute()
-    
-    if oDlg_config.getControl('CheckBox2').State == 1:
-        show_sheets(True)
-    else:
-        show_sheets(False)
+
+    if oDlg_config.getControl('CheckBox2').State != test:
+        if oDlg_config.getControl('CheckBox2').State == 1:
+            show_sheets(True)
+        else:
+            show_sheets(False)
 
     if oDlg_config.getControl('CheckBox3').State == 1:
         toolbar_switch(0)
@@ -3509,7 +3521,7 @@ def leeno_conf(arg=None):
         conf.write(path_conf, 'Generale', 'movedirection', '1')
         oGSheetSettings.MoveDirection = 1
     conf.write(path_conf, 'Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
-    conf.write(path_conf, 'Generale', 'visualizza_tabelle_extra', str(oDlg_config.getControl('CheckBox2').State))
+  
     conf.write(path_conf, 'Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
     conf.write(path_conf, 'Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
     conf.write(path_conf, 'Generale', 'toolbar_contestuali', str(oDlg_config.getControl('CheckBox6').State))
@@ -3610,7 +3622,6 @@ def config_default(arg=None):
     ('Zoom', 'fullscreen', '0'),
     ('Generale', 'visualizza', 'Menù Principale'),
     ('Generale', 'altezza_celle', '1.25'),
-    ('Generale', 'visualizza_tabelle_extra', '1'),
     ('Generale', 'pesca_auto', '1'),
     ('Generale', 'movedirection', '0'),
     ('Generale', 'descrizione_in_una_colonna', '0'),

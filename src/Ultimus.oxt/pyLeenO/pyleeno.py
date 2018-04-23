@@ -1003,6 +1003,7 @@ def show_sheets(x=True):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
     oSheets.remove('Elenco Prezzi')
+    oSheets.remove('COMPUTO')
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = x

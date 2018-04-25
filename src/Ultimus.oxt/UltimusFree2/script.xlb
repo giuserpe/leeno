@@ -61,7 +61,7 @@
  <library:element library:name="Conversioni"/>
  <library:element library:name="Da_prezzario"/>
  <library:element library:name="Gest_contab"/>
- <library:element library:name="Pulizia_1"/>
+ <library:element library:name="celle"/>
  <library:element library:name="Cerca_Rior_2"/>
  <library:element library:name="Taxi"/>
  <library:element library:name="Lupo_tmp"/>
@@ -72,5 +72,4 @@
  <library:element library:name="Computo"/>
  <library:element library:name="Analisi"/>
  <library:element library:name="Contab"/>
- <library:element library:name="celle"/>
 </library:library>

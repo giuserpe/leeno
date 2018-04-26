@@ -1139,6 +1139,59 @@ def voce_breve(arg=None):
                 oSheet.getCellRangeByName('S1.H336').Value = int(conf.read(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate'))
             adatta_altezza_riga()
 ########################################################################
+def cancella_voci_non_usate(arg=None):
+    '''
+    Ricerca le voci di prezzo non utilizzate.
+    '''
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
+
+    if DlgSiNo('''Questo comando ripulisce l'Elenco Prezzi
+dalle voci non utilizzate in nessuno degli altri elaborati.
+
+LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
+
+Vuoi procedere comunque?''', 'AVVISO!') == 3:
+        oDialogo_attesa.endExecute() #chiude il dialogo
+        return
+
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oDoc.enableAutomaticCalculation(False)
+    oDoc.CurrentController.ZoomValue = 400
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    oRange=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    SR = oRange.StartRow+1
+    ER = oRange.EndRow
+    lista_prezzi = list()
+    for n in range(SR, ER):
+        lista_prezzi.append (oSheet.getCellByPosition(0, n).String)
+    lista = list()
+    for tab in ('COMPUTO','Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
+        try:
+            oSheet = oDoc.getSheets().getByName(tab)
+            if tab == 'Analisi di Prezzo':
+                col = 0
+            else:
+                col = 1
+            for el in lista_prezzi:
+                if uFindStringCol (el, col, oSheet):
+                    lista.append(el)
+        except:
+            pass
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    da_cancellare = set(lista_prezzi).difference(set(lista))
+    for n in reversed(range(SR, ER-1)):
+        if oSheet.getCellByPosition(0, n).String in da_cancellare:
+            oSheet.Rows.removeByIndex(n, 1)
+    oDoc.enableAutomaticCalculation(True)
+    oDoc.CurrentController.ZoomValue = 100
+    _gotoCella(0, 3)
+    oDialogo_attesa.endExecute() #chiude il dialogo
+
+
+########################################################################
 def voce_breve_ep(arg=None):
     '''
     Ottimizza l'altezza delle celle di Elenco Prezzi o visualizza solo
@@ -1236,7 +1289,6 @@ def scelta_viste(arg=None):
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
         if oSheet.getCellByPosition(1, 3).Rows.OptimalHeight == False: oDialog1.getControl('CBDesc').State = 1
         if oSheet.getColumns().getByIndex(7).Columns.IsVisible  == True: oDialog1.getControl('CBOrig').State = 1
-        if oSheet.getColumns().getByIndex(8).Columns.IsVisible  == True: oDialog1.getControl('CBUsa').State = 1
         oDialog1.execute()
 
         if oDialog1.getControl("CBSic").State == 0: #sicurezza
@@ -1340,13 +1392,12 @@ def scelta_viste(arg=None):
             oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
         for el in(13, 17, 21, 24, 25):
             oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
-        if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
-            errori =('#DIV/0!', '--')
-            hide_error(errori, 26)
-
-        oSheet.group(oRangeAddress, 0)
-        oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
-
+        if oRangeAddress.StartColumn != 0:
+            if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
+                errori =('#DIV/0!', '--')
+                hide_error(errori, 26)
+                oSheet.group(oRangeAddress, 0)
+                oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
     elif oSheet.Name in('Analisi di Prezzo'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
@@ -6245,7 +6296,8 @@ def autoexec(arg=None):
         config_default()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+    if 'Esempio_' not in oDoc.getURL():
+        oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
 #~ RegularExpressions and Wildcards are mutually exclusive, only one can have the value TRUE.
 #~ If both are set to TRUE via API calls then the last one set takes precedence.
     try:
@@ -7227,7 +7279,7 @@ def subst_str (arg=None):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = genera_variante,
+g_exportedScripts = cancella_voci_non_usate,
 ########################################################################
 ########################################################################
 # ... here is the python script code

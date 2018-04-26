@@ -1141,7 +1141,7 @@ def voce_breve(arg=None):
 ########################################################################
 def cancella_voci_non_usate(arg=None):
     '''
-    Ricerca le voci di prezzo non utilizzate.
+    Cancella le voci di prezzo non utilizzate.
     '''
     oDialogo_attesa = dlg_attesa()
     attesa().start() #mostra il dialogo
@@ -1154,7 +1154,6 @@ LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 Vuoi procedere comunque?''', 'AVVISO!') == 3:
         oDialogo_attesa.endExecute() #chiude il dialogo
         return
-
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDoc.enableAutomaticCalculation(False)
     oDoc.CurrentController.ZoomValue = 400
@@ -1189,8 +1188,6 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oDoc.CurrentController.ZoomValue = 100
     _gotoCella(0, 3)
     oDialogo_attesa.endExecute() #chiude il dialogo
-
-
 ########################################################################
 def voce_breve_ep(arg=None):
     '''

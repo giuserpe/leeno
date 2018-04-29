@@ -4,4 +4,4 @@ Copyright (C) 2014-2018 Giuseppe Vizziello
 Software Libero per computi metrici estimativi
 
 Questa estensione si basa su UltimusFree di Bartolomeo Aimar
-E' distribuita con licenza LGPL
+ed è distribuita con licenza LGPL

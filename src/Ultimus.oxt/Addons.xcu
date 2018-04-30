@@ -22,23 +22,6 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma10" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Focus.APPROSSIMA_ZOOM?language=Basic&amp;location=application</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image2</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Zoom a Default</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
         <node oor:name="Ma19" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />

@@ -291,7 +291,6 @@ rem ----------------------------------------------------------------------
 			&apos;Barra_apri_chiudi_4 
 			&apos;Vai_a_M1
 			Visualizza_normale_esegui
-			APPROSSIMA_ZOOM
 			Sel_Altre_Opz &apos;vai al menu principale
 			Barra_chiudi_sempre_4 
 			exit sub
@@ -361,14 +360,6 @@ ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
 
 	If Constrolla_se_M1 = true then
 			Vai_a_M1
-								
-			&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-			Trova_ZOOM
-			&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-	
-	 		&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	 		APPROSSIMA_ZOOM
-	 		&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 
 			oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 			oSheet.protect(&quot;&quot;)

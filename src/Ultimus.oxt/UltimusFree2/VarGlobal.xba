@@ -75,28 +75,6 @@ SUB Detentore_On_Off()
 END SUB
 
 
-
-Sub DETENTORE_GENERALE_ERRORI____________
-Clessid_lock_End
-Ripristina_controlli_con_nuovaFinestra
-	If msgbox (&quot;Si è verificato un errore durante l&apos;esecuzione di questa macro!&quot;&amp; CHR$(10) &amp; CHR$(10)_
-		&amp; &quot; Disattivo il detentore di errore per il Debug?&quot;&amp; CHR$(10)_
-		&amp; &quot;&quot;&amp; CHR$(10), 292, &quot; ..........ERRORE..............&quot;) = 6 then
-		print ErroreDet
-			ErroreDet = 0
-			print ErroreDet
-		else 
-		print ErroreDet
-			ErroreDet = 1
-			print ErroreDet
-	end if
-End Sub
-
-Sub Altro_Detentore_generale_errore
-	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
-	 ThisComponent.unlockControllers 	
-End sub
-
 Sub DETENTORE_GENERALE_ERRORI(sModulSubName as string, Erl as string, Err as string, Error$ as string )
 
 print &quot;sModulSubName&quot; &amp; &quot; - &quot; &amp; Erl &amp; &quot; - &quot; &amp; Err &amp; &quot; - &quot; &amp; Error$
@@ -118,18 +96,6 @@ print &quot;sModulSubName&quot; &amp; &quot; - &quot; &amp; Erl &amp; &quot; - &
 	end if
 Clessid_lock_End	
 &apos;Ripristina_controlli_con_nuovaFinestra
-End Sub
-
-Sub DETENTORE_GENERALE_ERRORI_0
-Clessid_lock_End
-Ripristina_controlli_con_nuovaFinestra
-MsgBox _
-	&quot; Nella SUB: &quot; &amp; sModulSubName &amp; &quot;&quot; &amp; CHR(10)_
-	 &amp; &quot;Colonna nr.: &quot; &amp; Erl &amp; &quot;- Riga nr. &quot; &amp;CHR(10)_
-	 &amp; &quot;Si è verificato questo errore: &quot;&amp;CHR(10)_
-	 &amp; Err &amp; &quot;: &quot; &amp; Error$ 
-	 
-	 &apos;salvare in un file?
 End Sub
 
 

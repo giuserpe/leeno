@@ -1515,7 +1515,7 @@ rem annoto ultimo numero di pagina
 	oSheetCont.GetCellByPosition(20 , fineFirme).CellStyle = &quot;num centro&quot;
 rem ----------------------------------------------------------------------
 &apos;fissa (0,idxrow+1)
-APPROSSIMA_ZOOM &apos; ripristina il fattore di zoom scelto dall&apos;utente
+
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 	rem ----------------------------------------------------------------------
 rem inserisco la prima riga GIALLA del LIBRETTO

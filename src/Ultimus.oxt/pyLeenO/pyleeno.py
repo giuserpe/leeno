@@ -20,7 +20,7 @@ import locale
 import codecs
 import configparser
 import collections
-#~ import subprocess
+import subprocess
 #~ import psutil
 import os, unohelper, pyuno, logging, shutil, base64, sys, uno
 import time
@@ -7261,7 +7261,6 @@ Associato a Atrl+Shift+C'''
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'STANDARD'
     return
 ########################################################################
-# ~def debug(arg=None):
 def subst_str (arg=None):
     '''
     Sostituisce scringhe di testi nel foglio corrente
@@ -7273,6 +7272,13 @@ def subst_str (arg=None):
     ReplaceDescriptor.ReplaceString = "str2"
     oSheet.replaceAll(ReplaceDescriptor)
 
+#~ def progesso (arg):
+def debug(arg=None):
+    ps = subprocess.Popen("ps -A", shell=True, stdout=subprocess.PIPE)
+    #~ chi (str(ps.stdout.read()))
+    arg = 'soffice'
+    if arg in (str(ps.stdout.read())):
+        chi ('ci stà')
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

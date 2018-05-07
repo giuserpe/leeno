@@ -1303,7 +1303,7 @@ def scelta_viste(arg=None):
         if oDialog1.getControl("CBDesc").State == 1: #descrizione
             oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
             oSheet.getCellByPosition(1, 3).Rows.OptimalHeight
-            basic_LeenO('Strutture.Tronca_altezza_voci_ep')
+            voce_breve_ep()
         elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
 
         if oDialog1.getControl("CBOrig").State == 0: #origine

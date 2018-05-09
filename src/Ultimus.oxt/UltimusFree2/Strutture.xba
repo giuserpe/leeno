@@ -171,7 +171,7 @@ Sub Struttura_Contab (tag As string) &apos; (c) Giuseppe Vizziello 2014
 	Dim LSaln As Integer
 	Dim oSheet As Object
 	Dim oRanges As Object
-	Togli_Struttura
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_off&quot;)
 	ThisComponent.CurrentController.ZoomValue = 100
 	oSheet = ThisComponent.currentController.activeSheet
 	oRanges = ThisComponent.NamedRanges
@@ -203,11 +203,6 @@ Raggruppa_righe &apos; raggruppo
 	Loop
 	oRanges.getByName(tag &amp; LSal).referredCells.Rows.IsVisible=True
 End Sub
-
-Sub Togli_Struttura ()
-	oSheet = ThisComponent.currentController.activeSheet
-	oSheet.clearOutline()
-end sub
 
 &apos;__________visione &quot;corta&quot; delle voci&quot;__________________________________________________________
 Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione breve

@@ -320,14 +320,9 @@ Function ultima_voce
 
 End Function
 
-Sub filtra_codice
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;filtra_codice&quot;)
-End Sub
-
-
 Sub nuova_struttura
 	chiudi_dialoghi
-	Togli_Struttura
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_off&quot;)
 &apos;ThisComponent.enableAutomaticCalculation(False)
 	Dim oCRA As New com.sun.star.table.CellRangeAddress
 	osheet = ThisComponent.currentController.activeSheet

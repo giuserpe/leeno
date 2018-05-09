@@ -50,7 +50,7 @@ rem ----------------------------------------------------------------------
 	ThisComponent.CurrentController.Select(oSheet)
 	ThisComponent.CurrentController.ZoomValue = 100
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;computo_terra_terra&quot;)
-Togli_Struttura
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_off&quot;)
 	Select Case idxtemplate
 		Case 191, 192
 		lRowE=cerca_riga_rossa (&quot;COMPUTO&quot;)

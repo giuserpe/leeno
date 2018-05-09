@@ -64,7 +64,6 @@ Function Duplica_Sheet_in_Doc &apos;Questa sub duplica
 Verifica_chiudi_preview
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
 &apos;Elimina prima les strutture
-&apos;Togli_Struttura
 	Duplica_Sheet_in_Doc = DuplicaSheetinDoc
 	
 END Function

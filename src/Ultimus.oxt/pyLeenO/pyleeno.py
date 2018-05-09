@@ -6195,6 +6195,15 @@ def struttura_Analisi(arg=None):
     oSheet.clearOutline()
     struct(4)
 
+def struttura_off(arg=None):
+    '''Cancella la vista in struttura'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    lrow = Range2Cell()[1]
+    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.clearOutline()
+    oDoc.CurrentController.setFirstVisibleColumn(0)
+    oDoc.CurrentController.setFirstVisibleRow(lrow-4)
+
 def struct(l):
     ''' mette in vista struttura secondo categorie
     l { integer } : specifica il livello di categoria

@@ -10,7 +10,7 @@ args = parser.parse_args()
 
 def compress():
     """
-    Compress all directory under src in a zip archive under bin
+    Compress all directory under src in LeenO.oxt extension for LibreOffice
     """
     for rootname in os.walk('src').next()[1]:
         archname = 'LeenO.oxt'
@@ -20,9 +20,10 @@ def compress():
         if args.ext:
             fileExtension = args.ext
         archname = '%s.%s' % (fileName, fileExtension)
-        archpath = os.path.join('bin', archname)
-        if not os.path.isdir('bin'):
-            os.mkdir('bin')
+        #~ archpath = os.path.join('bin', archname)
+        archpath = os.path.join('', archname)
+        #~ if not os.path.isdir('bin'):
+            #~ os.mkdir('bin')
         with zipfile.ZipFile(archpath, "w") as archive:
             n = 0
             for dirname, dirnames, filenames in os.walk(os.path.join('src', rootname)):

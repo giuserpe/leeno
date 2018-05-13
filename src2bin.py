@@ -20,10 +20,9 @@ def compress():
         if args.ext:
             fileExtension = args.ext
         archname = '%s.%s' % (fileName, fileExtension)
-        #~ archpath = os.path.join('bin', archname)
-        archpath = os.path.join('', archname)
-        #~ if not os.path.isdir('bin'):
-            #~ os.mkdir('bin')
+        archpath = os.path.join('bin', archname)
+        if not os.path.isdir('bin'):
+            os.mkdir('bin')
         with zipfile.ZipFile(archpath, "w") as archive:
             n = 0
             for dirname, dirnames, filenames in os.walk(os.path.join('src', rootname)):
@@ -34,6 +33,15 @@ def compress():
                     filepath = os.path.join(dirname, filename)
                     relpath = os.path.relpath(filepath, os.path.join('src', rootname))
                     archive.write(filepath, relpath)
+    print ('''\n\nLeenO - Computo metrico assistito
+Copyright (C) 2014-2018 Giuseppe Vizziello
+
+Software Libero per computi metrici estimativi
+
+Questa estensione si basa su UltimusFree di Bartolomeo Aimar
+ed è distribuita con licenza LGPL
+
+File di installazione generato correttamente: ''' + archpath +'\n')
 
 if __name__=="__main__":
     compress()

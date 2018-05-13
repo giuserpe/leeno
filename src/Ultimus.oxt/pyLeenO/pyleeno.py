@@ -290,6 +290,19 @@ def copia_sorgente_per_git(arg=None):
     distutils.dir_util.copy_tree(oxt_path, dest)
     return
 ########################################################################
+def avvia_IDE(arg=None):
+    '''Avvia la modifica di pyleeno.py con geany'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+
+    if sys.platform == 'linux' or sys.platform == 'darwin':
+        os.system ('nemo ' + LeenO_path() + '&& geany ' + LeenO_path() + '/pyLeenO/pyleeno.py')
+    elif sys.platform == 'win32':
+        os.system ('explorer.exe ' + LeenO_path())
+        os.system ('C:\Program Files (x86)\Geany\bin\geany.exe' + LeenO_path() + '/pyLeenO/pyleeno.py')
+    return
+########################################################################
 def debugs(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     desktop = XSCRIPTCONTEXT.getDesktop()
@@ -1189,6 +1202,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     _gotoCella(0, 3)
     oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
+    
 def voce_breve_ep(arg=None):
     '''
     Ottimizza l'altezza delle celle di Elenco Prezzi o visualizza solo
@@ -4987,12 +5001,13 @@ def vedi_voce(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-    to = basic_LeenO('ListenersSelectRange.getRange', 'prova')
-    to = int(to.split('$')[-1])-1
-    _gotoCella(2, lrow)
-    focus = oDoc.CurrentController.getFirstVisibleRow
-    if to < lrow:
-        vedi_voce_xpwe(lrow, to,)
+    if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
+        to = basic_LeenO('ListenersSelectRange.getRange', 'prova')
+        to = int(to.split('$')[-1])-1
+        _gotoCella(2, lrow)
+        focus = oDoc.CurrentController.getFirstVisibleRow
+        if to < lrow:
+            vedi_voce_xpwe(lrow, to,)
 
 def strall(el, n=3):
     '''
@@ -7182,8 +7197,7 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-#~ # ~def sistema_cose(arg=None):
-#~ def debug(arg=None):
+def sistema_cose(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')
@@ -7192,6 +7206,9 @@ def calendario_mensile(arg=None):
     oDoc.getCurrentSelection().String = testo
     return
 ########
+def debug_link(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+
     window = oDoc.getCurrentController().getFrame().getContainerWindow()
     ctx = XSCRIPTCONTEXT.getComponentContext()
     def create(name):
@@ -7280,9 +7297,10 @@ def subst_str (arg=None):
     ReplaceDescriptor.SearchString = "str1"
     ReplaceDescriptor.ReplaceString = "str2"
     oSheet.replaceAll(ReplaceDescriptor)
-
-#~ def progesso (arg):
-def debug(arg=None):
+    
+def processo (arg):
+    '''Verifica l'esistenza di un processo di sistema'''
+# ~def debug(arg=None):
     ps = subprocess.Popen("ps -A", shell=True, stdout=subprocess.PIPE)
     #~ chi (str(ps.stdout.read()))
     arg = 'soffice'

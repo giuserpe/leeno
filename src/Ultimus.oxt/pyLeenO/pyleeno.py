@@ -292,6 +292,7 @@ def copia_sorgente_per_git(arg=None):
 ########################################################################
 def avvia_IDE(arg=None):
     '''Avvia la modifica di pyleeno.py con geany'''
+    basic_LeenO('file_gest.avvia_IDE')
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
@@ -300,30 +301,8 @@ def avvia_IDE(arg=None):
         os.system ('nemo ' + LeenO_path() + '&& geany ' + LeenO_path() + '/pyLeenO/pyleeno.py')
     elif sys.platform == 'win32':
         os.system ('explorer.exe ' + LeenO_path())
-        os.system ('C:\Program Files (x86)\Geany\bin\geany.exe' + LeenO_path() + '/pyLeenO/pyleeno.py')
+        os.system ('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py')
     return
-########################################################################
-def debugs(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    desktop = XSCRIPTCONTEXT.getDesktop()
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    
-
-    oSheet.getCellByPosition(1,7).String = oDoc.getURL()
-    oSheet.getCellByPosition(1,8).String = dir(os).__str__()
-    oSheet.getCellByPosition(1, 9).String = dir(uno.__package__.title.__name__).__str__()
-    oSheet.getCellByPosition(1, 10).String = dir(unohelper).__str__()
-    #~ oSheet.getCellRangeByName('A12').String = sys.__doc__
-    #~ oSheet.getCellRangeByName('A13').String = dir(uno).__str__()
-    #~ oSheet.getCellRangeByName('A14').String = dir(unohelper).__str__()
-    #~ oSheet.getCellRangeByName('A15').String = dir(pyuno).__str__()
-    #~ oSheet.getCellRangeByName('A11').String = dir(pyuno).__str__()
-    #~ n = 1
-    #~ for el in dir(uno):
-        #~ oSheet.getCellRangeByName('A' + str(n)).String = 'uno.' +
-    #~ oSheet.getCellRangeByName('A12').String = sys.__doc__
-
 ########################################################################
 def Inser_SottoCapitolo(arg=None):
     Ins_Categorie(2)

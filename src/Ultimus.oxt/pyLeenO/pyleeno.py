@@ -800,10 +800,6 @@ def Filtra_computo(nSheet, nCol, sString):
     oDoc.CurrentController.select(oSheet.getCellByPosition(0,3))
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-def Vai_a_filtro(arg=None):
-    _gotoSheet('S3')
-    _primaCella(0,1)
-########################################################################
 def Filtra_Computo_Cap(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -863,10 +859,6 @@ def Vai_a_Variabili(arg=None):
 def Vai_a_Scorciatoie(arg=None):
     _gotoSheet('Scorciatoie')
     _primaCella(0,0)
-########################################################################
-def Vai_a_SegnaVoci(arg=None):
-    _gotoSheet('S3',100)
-    _primaCella(37,4)
 ########################################################################
 def _gotoSheet(nSheet, fattore=100):
     '''
@@ -1002,6 +994,9 @@ def show_sheets(x=True):
     for nome in ('COMPUTO', 'Elenco Prezzi'):
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = True
+    #~ if x == True:
+        #~ for nome in ('M1', 'S1', 'S2', 'S3', 'S4', 'S5'):
+            #~ oSheet = oDoc.getSheets().getByName(nome).IsVisible = False
 def nascondi_sheets(arg=None):
     show_sheets(False)
 ########################################################################

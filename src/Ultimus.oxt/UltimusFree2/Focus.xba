@@ -125,27 +125,6 @@ Sub Sel_Elenco_Prezzi() &apos; vai al py:Vai_a_ElencoPrezzi
 END SUB
 
 &apos;##############################################################
-Sub Logo_Avvio
-	dim osheet as object
-	dim oAreaR as object
-&apos;	ThisComponent.unlockControllers()
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-		If oSheet.isVisible = false then
- 		oSheet.isVisible = true
-		end if 
-	else 
- 		exit sub
-	end if		
-&apos;	oAreaR = Osheet.getCellRangeByName (&quot;A388:P421&quot;)
-&apos;	Thiscomponent.currentcontroller.select(oAreaR)
-	oContr = ThisComponent.CurrentController
-	oContr.Select(oSheet.getCellByPosition(0, 388))
-	oContr.Select(thisComponent.CreateInstance(&quot;com.sun.star.sheet.SheetCellRanges&quot;)) &apos;unselect ranges
-&apos;	oContr.setFirstVisibleColumn (0)
-	oContr.setFirstVisibleRow(388)	
-END SUB
-
 Sub Vai_allo_schema_viste()
 	dim osheet as object
 	dim oAreaR as object
@@ -304,7 +283,7 @@ Sub Vai_a_M1()
 	oContr.setFirstVisibleColumn (0)&apos;( lprimaCol )
 	oContr.setFirstVisibleRow(0 )
 
-	If sNomesheet = &quot;S1&quot; or sNomesheet =&quot;S2&quot; or sNomesheet = &quot;S3&quot; or sNomesheet = &quot;S4&quot; then 
+	If sNomesheet = &quot;S1&quot; or sNomesheet =&quot;S2&quot; or sNomesheet = &quot;S4&quot; then 
 		oSheetCurrent.isVisible = false 
 	EndIf 
 

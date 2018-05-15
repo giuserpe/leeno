@@ -257,6 +257,7 @@ End Sub
 &apos;	Next I	
 &apos;End Sub
 Sub Protect_alcune_tabelle
+	Exit sub
 	If thisComponent.Sheets.hasByName(&quot;Scorciatoie&quot;) and nome &lt;&gt; &quot;Scorciatoie&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;Scorciatoie&quot;).protect(&quot;&quot;)
 	end if
@@ -271,9 +272,6 @@ Sub Protect_alcune_tabelle
 	end if 
 	If thisComponent.Sheets.hasByName(&quot;S2&quot;) and nome &lt;&gt; &quot;S2&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S2&quot;).protect(&quot;&quot;)
-	end if 
-	If thisComponent.Sheets.hasByName(&quot;S3&quot;)and nome &lt;&gt; &quot;S3&quot; Then &apos; se la sheet esiste
-		thisComponent.Sheets.getByName(&quot;S3&quot;).protect(&quot;&quot;)
 	end if 
 	If thisComponent.Sheets.hasByName(&quot;M1&quot;)and nome &lt;&gt; &quot;M1&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;M1&quot;).protect(&quot;&quot;)
@@ -314,9 +312,6 @@ Sub Chiudi_o_elimina_tabelle_inutili
 	end if 
 	If thisComponent.Sheets.hasByName(&quot;S2&quot;) and nome &lt;&gt; &quot;S2&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;S2&quot;).isVisible = FALSE 
-	end if 
-	If thisComponent.Sheets.hasByName(&quot;S3&quot;)and nome &lt;&gt; &quot;S3&quot; Then &apos; se la sheet esiste
-		thisComponent.Sheets.getByName(&quot;S3&quot;).isVisible = FALSE 
 	end if 
 	If thisComponent.Sheets.hasByName(&quot;M1&quot;)and nome &lt;&gt; &quot;M1&quot; Then &apos; se la sheet esiste
 		thisComponent.Sheets.getByName(&quot;M1&quot;).isVisible = FALSE 

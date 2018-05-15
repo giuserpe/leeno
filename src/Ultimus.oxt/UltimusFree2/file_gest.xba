@@ -69,7 +69,7 @@ Sub file2template
 End Sub 
 &apos;#########################################################################
 Sub avvia_IDE
-print &quot;chiamata da Python!&quot;
+	print &quot;OK per Python - Annulla per Basic&quot;
 End Sub
 rem ----------------------------------------------------------------------
 rem l&apos;estensione va installata solo per l&apos;utente corrente

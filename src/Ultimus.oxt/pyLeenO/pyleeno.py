@@ -954,7 +954,6 @@ def sproteggi_sheet_TUTTE(arg=None):
         oDoc.Sheets.moveByName("M1", 5)
     oDoc.Sheets.moveByName("S1", 6)
     oDoc.Sheets.moveByName("S2", 7)
-    oDoc.Sheets.moveByName("S3", 8)
     oDoc.Sheets.moveByName("S4", 9)
     if oDoc.Sheets.hasByName("S5"):
         oDoc.Sheets.moveByName("S5", 10)
@@ -1070,7 +1069,10 @@ def adatta_altezza_riga(nSheet=None):
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2:
         for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
-            oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+            try:
+                oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+            except:
+                pass
         if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA'):
             test = getLastUsedCell(oSheet).EndRow+1
             for y in range(0, test):
@@ -5957,8 +5959,6 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
         sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
     except:
         return
-    oSheet = oDoc.getSheets().getByName('M1')
-    oSheet.getCellByPosition(2,27).String = sUltimus
     DlgMain()
     return
 ########################################################################
@@ -6264,8 +6264,6 @@ def autoexec_off(arg=None):
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByName('M1')
-    oSheet.getCellByPosition(2,27).String = ''#sUltimus
  
 def autoexec(arg=None):
     '''
@@ -6756,7 +6754,7 @@ def DlgMain(arg=None):
     sString.Text = f.readline()
     
     sString = oDlgMain.getControl("Label_DDC")
-    sString.Text = sUltimus #oSheet.getCellByPosition(2,27).String
+    sString.Text = sUltimus 
 
     sString = oDlgMain.getControl("Label1")
     sString.Text = str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv

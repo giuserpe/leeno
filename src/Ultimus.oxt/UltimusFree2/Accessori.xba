@@ -32,20 +32,20 @@ Function Constrolla_se_M1
 	end Function 
 	
 	
-	Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
-		oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;)
-		If oSheet.isVisible = false then
-					oSheet.isVisible = TRUE
-					Thiscomponent.currentcontroller.setactivesheet(oSheet)
-			else
-					oSheet.isVisible = false
-					If Constrolla_se_M1 = true then
-								Vai_a_M1
-						else
-								Sel_Altre_Opz
-					end if
-		end if
-	END SUB
+Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
+	oSheet = ThisComponent.Sheets.getByName(&quot;copyright_LeenO&quot;)
+	If oSheet.isVisible = false then
+				oSheet.isVisible = TRUE
+				Thiscomponent.currentcontroller.setactivesheet(oSheet)
+		else
+				oSheet.isVisible = false
+				If Constrolla_se_M1 = true then
+							Vai_a_M1
+					else
+							Sel_Altre_Opz
+				end if
+	end if
+END Sub
 	
 	
 	

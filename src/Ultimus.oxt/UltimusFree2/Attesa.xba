@@ -458,7 +458,6 @@ End Sub
 SUB macromagica1 &apos;eseguendo questa &quot;magicamente&quot; si ripristina 
 				&apos; la riga di status
 	oSheet = ThisComponent.currentController.activeSheet			
-	&apos;oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
 	oMioRange = osheet.getCellRangeByPosition (0,390,2,400)
 	Dim oSheetDSC,oDSCRange As Object
 	Dim aSortFields(0) As New com.sun.star.util.SortField

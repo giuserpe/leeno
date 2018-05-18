@@ -73,9 +73,6 @@ sub AGGIORNA_TEMPLATE &apos;main
 
 	&apos;azzera la variabile che altrimenti inibisce il controllo in apertura
  SGenericoMemo = &quot;&quot;	
- 
- &apos;Vai_a_M1 &apos; magari fargli eseguire la procedura in apertura? 
-	&apos; dava errore su computi molto vecchi (privi di M1) meglio andare da un&apos;altra parte
 	Sel_Elenco_Prezzi
 	
  wait 1000

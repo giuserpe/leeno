@@ -212,12 +212,6 @@ dim nEndCol as long
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
-&apos;	sNomeSrc = FileNameoutofPath(UrlSrc)
-&apos;xray UrlSrc
-&apos;	sUrlsrc = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus) &apos; file destinazione
-&apos;	sNameDest = FileNameoutofPath(sUrl2)
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	fine pezzo in prova
-
 	lnumSheet=oSheet.RangeAddress.Sheet
 	sOK = &quot;OK&quot; &apos; questo serve solo a rendere la var not isMissing...????
 
@@ -603,13 +597,6 @@ dim nEndCol as long
 	End If 
 	oDocSrc = ThisComponent &apos;.getURL() &apos; file sorgente
 	SUrlSrc = ThisComponent.getURL() &apos; file sorgente
-&apos;	sNomeSrc = FileNameoutofPath(UrlSrc)
-&apos;xray UrlSrc
-&apos;	sUrlsrc = ConvertToUrl (UltimusFree2.Lupo_0.sUltimus) &apos; file destinazione
-&apos;	sNameDest = FileNameoutofPath(sUrl2)
-&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;	fine pezzo in prova
-
-&apos;	lnumSheet=oSheet.RangeAddress.Sheet
 	lnumSheet=6
 	sOK = &quot;OK&quot; &apos; questo serve solo a rendere la var not isMissing...????
 

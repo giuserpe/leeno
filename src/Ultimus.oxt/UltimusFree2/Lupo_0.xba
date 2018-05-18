@@ -46,12 +46,6 @@ Sub Attiva_Sheets_di_Servizio
  	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)
  	oSheet.isVisible = TRUE
  end if
- &apos;	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
- &apos;	oSheet.isVisible = TRUE 
- If thisComponent.Sheets.hasByName(&quot;FiltroTMP&quot;) Then
- 	oSheet = ThisComponent.Sheets.getByName(&quot;FiltroTMP&quot;)
- 	oSheet.isVisible = TRUE
- end if
  	If Constrolla_se_M1 = true then
  	 	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
  			oSheet.isVisible = TRUE
@@ -81,7 +75,6 @@ dim Esiste as Boolean
  print &quot;perso slib ?(&quot; &amp; sLib &amp; &quot;)&quot;
  	exit sub
  end if
-	&apos;print &quot;1 &quot; &amp; thisComponent.sheets.getbyname(&quot;M1&quot;).isprotected
 	Osheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
 	oSheet.unprotect(&quot;&quot;)
 	&apos;xray oSheet
@@ -95,8 +88,8 @@ rem ----------------------------------------------------------------------
 
  	oSheet = ThisComponent.Sheets.getByName(&quot;M1&quot;)
 
-	oMycell2 = oSheet.getCellByPosition (2,27)&apos;(lcolS ,lrowS)
-	oMycell2.string = &quot;&quot;
+&apos;	oMycell2 = oSheet.getCellByPosition (2,27)&apos;(lcolS ,lrowS)
+&apos;	oMycell2.string = &quot;&quot;
 	oMycell2.string = sUltimus
  Dim sURLStr as String
  Dim sFileName as String
@@ -109,7 +102,7 @@ rem ----------------------------------------------------------------------
  sFileName = FileNameOutOfPath(sURLStr)
  
  
- ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,24).string = ConvertFromUrl (sURLStr)
+&apos; ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,24).string = ConvertFromUrl (sURLStr)
 	&apos; aggiorna contemporaneamente header e footer sulla scorta dei dati in Anagrafica
 	Agg_Dati_Comp	
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -188,8 +181,8 @@ Sub Scrivi_Globale &apos; versione semplice
 	&apos;GlobalScope.Basiclibraries.LoadLibrary &quot;UltimusFree2&quot; &apos; rende attiva la libreria condivisa)
 	&apos; dove è scritta la variabile globale
 	&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;ssUltimus&quot;)
-sUltimus = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string
+&apos;	ScriptPy(&quot;pyleeno.py&quot;,&quot;ssUltimus&quot;)
+&apos;sUltimus = ThisComponent.Sheets.getByName(&quot;M1&quot;).getCellByPosition(2,27).string
 END SUB 
 
 

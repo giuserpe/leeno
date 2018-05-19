@@ -3899,6 +3899,80 @@ def svuota_contabilita(arg=None):
     _gotoCella(0, 2)
     set_larghezza_colonne()
 ########################################################################
+def inizializza_elenco(arg=None):
+    '''
+    Riscrive le intestazioni di colonna e le formule dei totali in Elenco Prezzi.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
+    oDoc.CurrentController.freezeAtPosition(0, 3)
+    oSheet.getCellRangeByPosition(0, 0, 100 , 0).CellStyle = "Default"
+#~ riscrivo le intestazioni di colonna
+    set_larghezza_colonne()
+    oSheet.getCellRangeByName('L1').String ='COMPUTO'
+    oSheet.getCellRangeByName('P1').String ='VARIANTE'
+    oSheet.getCellRangeByName('T1').String ='CONTABILITA'
+    oSheet.getCellRangeByName('B2').String ='QUESTA RIGA NON VIENE STAMPATA'
+    oSheet.getCellRangeByName("'Elenco Prezzi'.A2:AA2").CellStyle = "comp In testa"
+    oSheet.getCellRangeByName("'Elenco Prezzi'.A3:AA3").CellStyle = "EP-a -Top"
+    oSheet.getCellRangeByName('A3').String ='Codice\nArticolo'
+    oSheet.getCellRangeByName('B3').String ='DESCRIZIONE DEI LAVORI\nE DELLE SOMMINISTRAZIONI'
+    oSheet.getCellRangeByName('C3').String ='Unità\ndi misura'
+    oSheet.getCellRangeByName('D3').String ='Sicurezza\ninclusa'
+    oSheet.getCellRangeByName('E3').String ='Prezzo\nunitario'
+    oSheet.getCellRangeByName('F3').String ='Incidenza\nMdO'
+    oSheet.getCellRangeByName('G3').String ='Importo\nMdO'
+    oSheet.getCellRangeByName('H3').String ='Codice di origine'
+    oSheet.getCellRangeByName('L3').String ='Inc. % \ncomputo'
+    oSheet.getCellRangeByName('M3').String ='Quantità\ncomputo'
+    oSheet.getCellRangeByName('N3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('L3:N3').CellBackColor = 16762855
+    oSheet.getCellRangeByName('P3').String ='Inc. % \ncomputo'
+    oSheet.getCellRangeByName('Q3').String ='Quantità\ncomputo'
+    oSheet.getCellRangeByName('R3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('P3:R3').CellBackColor = 16777062
+    oSheet.getCellRangeByName('T3').String ='Inc. % \ncomputo'
+    oSheet.getCellRangeByName('U3').String ='Quantità\ncomputo'
+    oSheet.getCellRangeByName('V3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('T3:V3').CellBackColor = 16757935
+    oSheet.getCellRangeByName('X3').String ='Quantità\nvariaz.'
+    oSheet.getCellRangeByName('Y3').String ='IMPORTI\nin più'
+    oSheet.getCellRangeByName('Z3').String ='IMPORTI\nin meno'
+    oSheet.getCellRangeByName('AA3').String ='VAR. %'
+
+    oSheet.getCellRangeByName('I1:J1').Columns.IsVisible = False
+
+    y = uFindStringCol('Fine elenco', 0, oSheet) + 1
+    oSheet.getCellRangeByName('N2').Formula='=SUBTOTAL(9;N3:N' + str(y) +')'
+    oSheet.getCellRangeByName('R2').Formula='=SUBTOTAL(9;R3:R' + str(y) +')'
+    oSheet.getCellRangeByName('V2').Formula='=SUBTOTAL(9;V3:V' + str(y) +')'
+    oSheet.getCellRangeByName('Y2').Formula='=SUBTOTAL(9;Y3:Y' + str(y) +')'
+    oSheet.getCellRangeByName('Z2').Formula='=SUBTOTAL(9;Z3:Z' + str(y) +')'
+#~  riga di totale importo COMPUTO
+    y -=1
+    oSheet.getCellByPosition(12, y).String='TOTALE'
+    oSheet.getCellByPosition(13, y).Formula='=SUBTOTAL(9;N3:N' + str(y) +')'
+#~ riga di totale importo CONTABILITA'
+    oSheet.getCellByPosition(16, y).String='TOTALE'
+    oSheet.getCellByPosition(17, y).Formula='=SUBTOTAL(9;R3:R' + str(y) +')'
+#~ rem	riga di totale importo VARIANTE
+    oSheet.getCellByPosition(20, y).String='TOTALE'
+    oSheet.getCellByPosition(21, y).Formula='=SUBTOTAL(9;V3:V' + str(y) +')'
+#~ rem	riga di totale importo PARALLELO
+    oSheet.getCellByPosition(23, y).String='TOTALE'
+    oSheet.getCellByPosition(24, y).Formula='=SUBTOTAL(9;Y3:Y' + str(y) +')'
+    oSheet.getCellByPosition(25, y).Formula='=SUBTOTAL(9;Z3:Z' + str(y) +')'
+    oSheet.getCellRangeByPosition(10, y, 26 , y).CellStyle = 'EP statistiche_Contab'
+    y +=1
+    #~ oSheet.getCellRangeByName('C2').String = 'prezzi'
+    #~ oSheet.getCellRangeByName('E2').Formula = '=COUNT(E3:E' + str(y) +')'
+    oSheet.getCellRangeByName('K2:K' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByName('O2:O' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByName('S2:S' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByName('W2:W' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByPosition(3, 3, 250, y +10).clearContents(HARDATTR)
+    MsgBox('Rigenerazione del foglio eseguita!','')
+########################################################################
 def inizializza_analisi(arg=None):
     '''
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
@@ -6985,7 +7059,6 @@ def make_pack(arg=None, bar=0):
             nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
             os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')
-    
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile(nomeZip2, nomeZip)
@@ -7281,7 +7354,7 @@ def processo (arg):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = cancella_voci_non_usate,
+g_exportedScripts = inizializza_elenco,
 ########################################################################
 ########################################################################
 # ... here is the python script code

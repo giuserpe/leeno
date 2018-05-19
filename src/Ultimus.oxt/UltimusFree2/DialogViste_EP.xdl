@@ -12,7 +12,7 @@
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton18" dlg:tab-index="1" dlg:left="105" dlg:top="10" dlg:width="90" dlg:height="15" dlg:printable="false" dlg:help-text="Rigenera le intestazioni e calcella i sommari" dlg:value="Refresh del foglio" dlg:button-type="ok" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.inizializza_elenco?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inizializza_elenco?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton26" dlg:tab-index="0" dlg:left="105" dlg:top="30" dlg:width="90" dlg:height="15" dlg:help-text="Forza il riordino (alfabetico) dell&apos;Elenco Prezzi" dlg:value="Riordina voci" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$riordina_ElencoPrezzi?language=Python&amp;location=user:uno_packages" script:language="Script"/>

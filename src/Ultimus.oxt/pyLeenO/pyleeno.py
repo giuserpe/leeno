@@ -1535,23 +1535,11 @@ def riordina_ElencoPrezzi(arg=None):
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-#~ L'ATTIVAZIONE DELLA CLASS doppioni_th INTERFERISCE CON invia_voce_ep()
-#~ class doppioni_th(threading.Thread):
-    #~ def __init__(self):
-        #~ threading.Thread.__init__(self)
-    #~ def run(self):
-        #~ doppioni_run()
-#~ def doppioni(arg=None):
-    #~ doppioni_th().start()
-###
-#~ def doppioni_run(arg=None):
 def doppioni(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
-    #~ oDialogo_attes = dlg_attesa()
-    #~ attesa().start() #mostra il dialogo
     oDoc.CurrentController.ZoomValue = 400
     refresh(0)
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
@@ -1597,16 +1585,13 @@ def doppioni(arg=None):
     oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
     oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
     oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
-    #~ oDoc.CurrentController.select(oRange)
-    #~ ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         tante_analisi_in_ep()
-    riordina_ElencoPrezzi()
     refresh(1)
     oDoc.CurrentController.ZoomValue = 100
     adatta_altezza_riga(oSheet.Name)
-    #~ oDialogo_attesa.endExecute() #chiude il dialogo
+    riordina_ElencoPrezzi()
     if len(set(lista_tar)) != len(set(lista_come_array)):
         MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
 ########################################################################
@@ -4132,6 +4117,7 @@ LibreOffice POTREBBE SEMBRARE BLOCCATO!
 
 Vuoi procedere con la creazione della struttura dei capitoli?''', 'Avviso') == 3:
             return
+    riordina_ElencoPrezzi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()

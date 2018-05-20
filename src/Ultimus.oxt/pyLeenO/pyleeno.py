@@ -1307,8 +1307,7 @@ def scelta_viste(arg=None):
         oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         SR = oRangeAddress.StartRow+1
         ER = oRangeAddress.EndRow-1
-        oSheet.ungroup(oRangeAddress,0) #colonne
-        oSheet.ungroup(oRangeAddress,1) #righe
+
         oSheet.getCellRangeByPosition(11, 0, 26, 0).Columns.IsVisible = True
         oSheet.getCellRangeByPosition(23 , SR, 25, ER).CellStyle = 'EP statistiche'
         oSheet.getCellRangeByPosition(26, SR, 26, ER+1).CellStyle = 'EP-mezzo %'
@@ -3939,7 +3938,6 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('Y3').String ='IMPORTI\nin più'
     oSheet.getCellRangeByName('Z3').String ='IMPORTI\nin meno'
     oSheet.getCellRangeByName('AA3').String ='VAR. %'
-
     oSheet.getCellRangeByName('I1:J1').Columns.IsVisible = False
 
     y = uFindStringCol('Fine elenco', 0, oSheet) + 1

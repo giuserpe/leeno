@@ -177,7 +177,6 @@ end sub
 &apos;_________________________________________________________________________________________________________________________
 SUB ACCODA_PREZZO_UNIVERS_TV_SIC &apos; versione con incidenza + sicurezza. variante con livelli ( per elettrici Piemonte)
 &apos; al momento è strutturarata per digerire Milano e Piemonte, Cuneo, Marche
-
 dim xA as string
 dim xC as string
 dim xD as string

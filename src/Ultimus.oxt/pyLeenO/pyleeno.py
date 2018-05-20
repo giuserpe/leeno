@@ -1593,7 +1593,7 @@ def doppioni(arg=None):
     adatta_altezza_riga(oSheet.Name)
     riordina_ElencoPrezzi()
     if len(set(lista_tar)) != len(set(lista_come_array)):
-        MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
+        MsgBox('Ci sono ancora 2 o più voci che hanno lo stesso Codice Articolo, pur essendo diverse.', 'C o n t r o l l a!')
 ########################################################################
 # Scrive un file.
 def XPWE_out(arg=None):

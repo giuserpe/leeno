@@ -5,11 +5,10 @@
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="3" dlg:background-color="0xb9f0a8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton26" dlg:tab-index="0" dlg:left="105" dlg:top="30" dlg:width="90" dlg:height="15" dlg:help-text="Forza il riordino (alfabetico) dell&apos;Elenco Prezzi" dlg:value="Riordina voci" dlg:button-type="ok" dlg:multiline="true">
@@ -31,24 +30,21 @@
   <dlg:checkbox dlg:style-id="2" dlg:id="CBDesc" dlg:tab-index="3" dlg:left="13" dlg:top="56" dlg:width="70" dlg:height="7" dlg:value="Descrizione breve" dlg:checked="false"/>
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="10" dlg:left="92" dlg:top="10" dlg:width="9" dlg:height="130" dlg:align="vertical"/>
   <dlg:checkbox dlg:style-id="2" dlg:id="CBOrig" dlg:tab-index="9" dlg:left="13" dlg:top="46" dlg:width="70" dlg:height="7" dlg:value="Codice di origine" dlg:checked="false"/>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton9" dlg:tab-index="11" dlg:left="105" dlg:top="90" dlg:width="90" dlg:height="15" dlg:value="Analisi di Prezzo" dlg:button-type="ok" dlg:multiline="true">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.inizializza_analisi?language=Basic&amp;location=application" script:language="Script"/>
-  </dlg:button>
-  <dlg:checkbox dlg:style-id="2" dlg:id="CBSom" dlg:tab-index="12" dlg:left="13" dlg:top="66" dlg:width="70" dlg:height="7" dlg:value="Sommari" dlg:checked="false"/>
-  <dlg:button dlg:style-id="2" dlg:id="Lista Lavorazioni e Forniture" dlg:tab-index="13" dlg:left="105" dlg:top="111" dlg:width="90" dlg:height="14" dlg:value="Lista Lavorazioni e Forniture" dlg:button-type="ok">
+  <dlg:checkbox dlg:style-id="2" dlg:id="CBSom" dlg:tab-index="11" dlg:left="13" dlg:top="66" dlg:width="70" dlg:height="7" dlg:value="Sommari" dlg:checked="false"/>
+  <dlg:button dlg:style-id="2" dlg:id="Lista Lavorazioni e Forniture" dlg:tab-index="12" dlg:left="105" dlg:top="90" dlg:width="90" dlg:height="15" dlg:value="Lista Lavorazioni e Forniture" dlg:button-type="ok">
    <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$richiesta_offerta?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton1" dlg:tab-index="14" dlg:left="168" dlg:top="132" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton1" dlg:tab-index="13" dlg:left="155" dlg:top="120" dlg:width="40" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton3" dlg:tab-index="15" dlg:left="136" dlg:top="132" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:multiline="true"/>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton4" dlg:tab-index="16" dlg:left="105" dlg:top="50" dlg:width="90" dlg:height="15" dlg:value="Crea Struttura" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton3" dlg:tab-index="14" dlg:left="105" dlg:top="120" dlg:width="40" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton4" dlg:tab-index="15" dlg:left="105" dlg:top="50" dlg:width="90" dlg:height="15" dlg:value="Crea Struttura" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$struttura_Elenco?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="6" dlg:id="CommandButton5" dlg:tab-index="17" dlg:left="105" dlg:top="70" dlg:width="90" dlg:height="15" dlg:value="Cancella voci non usate" dlg:button-type="ok">
+  <dlg:button dlg:style-id="5" dlg:id="CommandButton5" dlg:tab-index="16" dlg:left="105" dlg:top="70" dlg:width="90" dlg:height="15" dlg:value="Cancella voci non usate" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$cancella_voci_non_usate?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton2" dlg:tab-index="18" dlg:left="105" dlg:top="10" dlg:width="90" dlg:height="15" dlg:value="Rigenera il foglio" dlg:button-type="ok">
+  <dlg:button dlg:style-id="6" dlg:id="CommandButton2" dlg:tab-index="17" dlg:left="105" dlg:top="10" dlg:width="90" dlg:height="15" dlg:value="Rigenera il foglio" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inizializza_elenco?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

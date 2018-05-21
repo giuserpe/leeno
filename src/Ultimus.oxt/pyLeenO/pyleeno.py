@@ -1307,8 +1307,7 @@ def scelta_viste(arg=None):
         oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         SR = oRangeAddress.StartRow+1
         ER = oRangeAddress.EndRow-1
-        oSheet.ungroup(oRangeAddress,0) #colonne
-        oSheet.ungroup(oRangeAddress,1) #righe
+
         oSheet.getCellRangeByPosition(11, 0, 26, 0).Columns.IsVisible = True
         oSheet.getCellRangeByPosition(23 , SR, 25, ER).CellStyle = 'EP statistiche'
         oSheet.getCellRangeByPosition(26, SR, 26, ER+1).CellStyle = 'EP-mezzo %'
@@ -1536,23 +1535,11 @@ def riordina_ElencoPrezzi(arg=None):
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
-#~ L'ATTIVAZIONE DELLA CLASS doppioni_th INTERFERISCE CON invia_voce_ep()
-#~ class doppioni_th(threading.Thread):
-    #~ def __init__(self):
-        #~ threading.Thread.__init__(self)
-    #~ def run(self):
-        #~ doppioni_run()
-#~ def doppioni(arg=None):
-    #~ doppioni_th().start()
-###
-#~ def doppioni_run(arg=None):
 def doppioni(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
-    #~ oDialogo_attes = dlg_attesa()
-    #~ attesa().start() #mostra il dialogo
     oDoc.CurrentController.ZoomValue = 400
     refresh(0)
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
@@ -1598,18 +1585,15 @@ def doppioni(arg=None):
     oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
     oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
     oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
-    #~ oDoc.CurrentController.select(oRange)
-    #~ ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         tante_analisi_in_ep()
-    riordina_ElencoPrezzi()
     refresh(1)
     oDoc.CurrentController.ZoomValue = 100
     adatta_altezza_riga(oSheet.Name)
-    #~ oDialogo_attesa.endExecute() #chiude il dialogo
+    riordina_ElencoPrezzi()
     if len(set(lista_tar)) != len(set(lista_come_array)):
-        MsgBox('Probabilmente ci sono ancora 2 o più voci\nche hanno lo stesso Codice Articolo. Controlla.', 'Attenzione!')
+        MsgBox('Ci sono ancora 2 o più voci che hanno lo stesso Codice Articolo, pur essendo diverse.', 'C o n t r o l l a!')
 ########################################################################
 # Scrive un file.
 def XPWE_out(arg=None):
@@ -3899,6 +3883,79 @@ def svuota_contabilita(arg=None):
     _gotoCella(0, 2)
     set_larghezza_colonne()
 ########################################################################
+def inizializza_elenco(arg=None):
+    '''
+    Riscrive le intestazioni di colonna e le formule dei totali in Elenco Prezzi.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
+    oDoc.CurrentController.freezeAtPosition(0, 3)
+    oSheet.getCellRangeByPosition(0, 0, 100 , 0).CellStyle = "Default"
+#~ riscrivo le intestazioni di colonna
+    set_larghezza_colonne()
+    oSheet.getCellRangeByName('L1').String ='COMPUTO'
+    oSheet.getCellRangeByName('P1').String ='VARIANTE'
+    oSheet.getCellRangeByName('T1').String ='CONTABILITA'
+    oSheet.getCellRangeByName('B2').String ='QUESTA RIGA NON VIENE STAMPATA'
+    oSheet.getCellRangeByName("'Elenco Prezzi'.A2:AA2").CellStyle = "comp In testa"
+    oSheet.getCellRangeByName("'Elenco Prezzi'.A3:AA3").CellStyle = "EP-a -Top"
+    oSheet.getCellRangeByName('A3').String ='Codice\nArticolo'
+    oSheet.getCellRangeByName('B3').String ='DESCRIZIONE DEI LAVORI\nE DELLE SOMMINISTRAZIONI'
+    oSheet.getCellRangeByName('C3').String ='Unità\ndi misura'
+    oSheet.getCellRangeByName('D3').String ='Sicurezza\ninclusa'
+    oSheet.getCellRangeByName('E3').String ='Prezzo\nunitario'
+    oSheet.getCellRangeByName('F3').String ='Incidenza\nMdO'
+    oSheet.getCellRangeByName('G3').String ='Importo\nMdO'
+    oSheet.getCellRangeByName('H3').String ='Codice di origine'
+    oSheet.getCellRangeByName('L3').String ='Inc. % \ncomputo'
+    oSheet.getCellRangeByName('M3').String ='Quantità\ncomputo'
+    oSheet.getCellRangeByName('N3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('L3:N3').CellBackColor = 16762855
+    oSheet.getCellRangeByName('P3').String ='Inc. % \ncomputo'
+    oSheet.getCellRangeByName('Q3').String ='Quantità\ncomputo'
+    oSheet.getCellRangeByName('R3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('P3:R3').CellBackColor = 16777062
+    oSheet.getCellRangeByName('T3').String ='Inc. % \ncomputo'
+    oSheet.getCellRangeByName('U3').String ='Quantità\ncomputo'
+    oSheet.getCellRangeByName('V3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('T3:V3').CellBackColor = 16757935
+    oSheet.getCellRangeByName('X3').String ='Quantità\nvariaz.'
+    oSheet.getCellRangeByName('Y3').String ='IMPORTI\nin più'
+    oSheet.getCellRangeByName('Z3').String ='IMPORTI\nin meno'
+    oSheet.getCellRangeByName('AA3').String ='VAR. %'
+    oSheet.getCellRangeByName('I1:J1').Columns.IsVisible = False
+
+    y = uFindStringCol('Fine elenco', 0, oSheet) + 1
+    oSheet.getCellRangeByName('N2').Formula='=SUBTOTAL(9;N3:N' + str(y) +')'
+    oSheet.getCellRangeByName('R2').Formula='=SUBTOTAL(9;R3:R' + str(y) +')'
+    oSheet.getCellRangeByName('V2').Formula='=SUBTOTAL(9;V3:V' + str(y) +')'
+    oSheet.getCellRangeByName('Y2').Formula='=SUBTOTAL(9;Y3:Y' + str(y) +')'
+    oSheet.getCellRangeByName('Z2').Formula='=SUBTOTAL(9;Z3:Z' + str(y) +')'
+#~  riga di totale importo COMPUTO
+    y -=1
+    oSheet.getCellByPosition(12, y).String='TOTALE'
+    oSheet.getCellByPosition(13, y).Formula='=SUBTOTAL(9;N3:N' + str(y) +')'
+#~ riga di totale importo CONTABILITA'
+    oSheet.getCellByPosition(16, y).String='TOTALE'
+    oSheet.getCellByPosition(17, y).Formula='=SUBTOTAL(9;R3:R' + str(y) +')'
+#~ rem	riga di totale importo VARIANTE
+    oSheet.getCellByPosition(20, y).String='TOTALE'
+    oSheet.getCellByPosition(21, y).Formula='=SUBTOTAL(9;V3:V' + str(y) +')'
+#~ rem	riga di totale importo PARALLELO
+    oSheet.getCellByPosition(23, y).String='TOTALE'
+    oSheet.getCellByPosition(24, y).Formula='=SUBTOTAL(9;Y3:Y' + str(y) +')'
+    oSheet.getCellByPosition(25, y).Formula='=SUBTOTAL(9;Z3:Z' + str(y) +')'
+    oSheet.getCellRangeByPosition(10, y, 26 , y).CellStyle = 'EP statistiche_Contab'
+    y +=1
+    #~ oSheet.getCellRangeByName('C2').String = 'prezzi'
+    #~ oSheet.getCellRangeByName('E2').Formula = '=COUNT(E3:E' + str(y) +')'
+    oSheet.getCellRangeByName('K2:K' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByName('O2:O' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByName('S2:S' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByName('W2:W' + str(y)).CellStyle = 'Default'
+    oSheet.getCellRangeByPosition(3, 3, 250, y +10).clearContents(HARDATTR)
+    MsgBox('Rigenerazione del foglio eseguita!','')
+########################################################################
 def inizializza_analisi(arg=None):
     '''
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
@@ -4060,6 +4117,7 @@ LibreOffice POTREBBE SEMBRARE BLOCCATO!
 
 Vuoi procedere con la creazione della struttura dei capitoli?''', 'Avviso') == 3:
             return
+    riordina_ElencoPrezzi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
@@ -6452,11 +6510,6 @@ def set_larghezza_colonne(arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     adatta_altezza_riga(oSheet.Name)
 ########################################################################
-#~ class adegua_tmpl_th(threading.Thread):
-    #~ def __init__(self):
-        #~ threading.Thread.__init__(self)
-    #~ def run(self):
-        #~ adegua_tmpl_run()
 def adegua_tmpl(arg=None):
 # ~def debug(arg=None):
     #~ adegua_tmpl_th().start()
@@ -6468,6 +6521,7 @@ def adegua_tmpl(arg=None):
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
     - dal 209 cambia il nome di propietà del file in "Versione_LeenO"
     - dal 211 cambiano le formule del prezzo unitario e dell'importo in Computo e Contabilità
+    - dal 212 vengono cancellate le celle che indicano il DCC nel foglio M1
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
 #qui le cose da cambiare comunque
@@ -6520,7 +6574,7 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 211 #VERSIONE CORRENTE
+    adegua_a = 212 #VERSIONE CORRENTE
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione corrente di LeenO?
@@ -6546,6 +6600,13 @@ dell'operazione che terminerà con un avviso.
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
             adatta_altezza_riga(el)
             oDoc.getSheets().getByName(el).IsVisible = False
+        
+        ### dal template 212
+        flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR
+        _gotoSheet('M1')
+        oSheet = oDoc.getSheets().getByName('M1')
+        oSheet.getCellRangeByName('B23:E30').clearContents(flags)
+        oSheet.getCellRangeByName('B23:E30').CellStyle = 'M1 scritte noP'
         ### dal template 208
         #> adegua le formule delle descrizioni di voci
         _gotoSheet('S1')
@@ -6987,7 +7048,6 @@ def make_pack(arg=None, bar=0):
             nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
             os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')
-    
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile(nomeZip2, nomeZip)
@@ -7283,7 +7343,7 @@ def processo (arg):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = cancella_voci_non_usate,
+g_exportedScripts = inizializza_elenco,
 ########################################################################
 ########################################################################
 # ... here is the python script code

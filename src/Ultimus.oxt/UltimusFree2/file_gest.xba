@@ -79,23 +79,7 @@ sub make_LOportable
 	nomeZip = ConvertToUrl (&quot;x:\LibreOfficePortablePrevious_4.2.6-secfix_LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;)
 	zipfolder(appLocation,nomeZip)
 end Sub
-rem The paths should NOT be URLs.
-rem Warning, the created ZIP file contains two extra artifacts.
-rem (1) A Meta-Inf direction, which contains a manifest file.
-rem (2) A mime-type file of zero length.
 
-Sub apri_manuale
-	Dim oSvc as Object, pip As Object, extensionLocation As String, sUrl As String
-rem ----------------------------------------------------------------------
-REM vedi in &quot;_variabili&quot;
-&apos;	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot; 
-	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
-	extensionLocation = pip.getPackageLocation(extensionIdentifier)
-rem ----------------------------------------------------------------------
-	sUrl = extensionLocation &amp; &quot;/MANUALE_LeenO.pdf&quot;
-	oSvc = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;) 
-	oSvc.execute(sUrl,&quot;&quot;, 0)
-End Sub
 
 
 </script:module>

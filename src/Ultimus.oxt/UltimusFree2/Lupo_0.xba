@@ -118,7 +118,7 @@ rem ----------------------------------------------------------------------
 END SUB
 
 Sub Colora_M1(sURLStr as string)
-
+Exit sub
 	oSheets = ThisComponent.getSheets()
 	aSheetNames = oSheets.getElementNames()
  For i = LBound( aSheetNames ) To UBound( aSheetNames )

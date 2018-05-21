@@ -6316,6 +6316,10 @@ def struct(l):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
+def apri_manuale(arg=None):
+    apri = createUnoService("com.sun.star.system.SystemShellExecute")
+    apri.execute("https://leeno.org/download/LeenO/LeenO/MANUALE_LeenO.pdf","", 0)
+########################################################################
 def autoexec_off(arg=None):
     bak_timestamp()
     toolbar_switch(1)

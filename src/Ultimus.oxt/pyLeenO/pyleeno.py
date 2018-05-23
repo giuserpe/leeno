@@ -6318,7 +6318,7 @@ def struct(l):
 ########################################################################
 def apri_manuale(arg=None):
     apri = createUnoService("com.sun.star.system.SystemShellExecute")
-    apri.execute("https://leeno.org/download/LeenO/LeenO/MANUALE_LeenO.pdf","", 0)
+    apri.execute(LeenO_path() + '/MANUALE_LeenO.pdf',"", 0)
 ########################################################################
 def autoexec_off(arg=None):
     bak_timestamp()

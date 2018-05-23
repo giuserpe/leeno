@@ -86,7 +86,8 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$cerca_in_elenco?language=Python&amp;location=user:uno_packages</value>          </prop>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$cerca_in_elenco?language=Python&amp;location=user:uno_packages</value>
+          </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/findcode</value>
           </prop>
@@ -761,7 +762,7 @@
         </node>
       </node>
     </node>
-    <!--                                                               -->
+    <!--                                                     -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -819,7 +820,6 @@
               <value>Importa/Esporta...</value>
             </prop>
             <node oor:name="Submenu">
-                
               <node oor:name="IE000" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -833,7 +833,7 @@
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
                 </prop>
-              </node> 
+              </node>
               <node oor:name="IE005" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -841,7 +841,7 @@
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>private:separator</value>
                 </prop>
-              </node>              
+              </node>
               <node oor:name="IE006" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -958,25 +958,25 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-<!--
-              <node oor:name="m2U05" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Taxi.Main_Importa_Altro_Computo?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image35</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Esporta/Accoda i Dati di questo Doc > in DCC (Doc Contab. Corrente)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
+              <!--
+                   <node oor:name="m2U05" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.Taxi.Main_Importa_Altro_Computo?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/image35</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>Esporta/Accoda i Dati di questo Doc > in DCC (Doc Contab. Corrente)</value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
               <node oor:name="m2U06" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -985,35 +985,35 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-<!--
-              <node oor:name="m2U07" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Taxi.gina?language=Basic&amp;location=application</value>
-                </prop>
-                <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                  <value>%origin%/icons/image35</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Duplica il foglio attivo > in DCC (Doc Contab. Corrente)</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
--->
-<!--
-              <node oor:name="m2U07.1" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value />
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>private:separator</value>
-                </prop>
-              </node>
--->
+              <!--
+                   <node oor:name="m2U07" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>vnd.sun.star.script:UltimusFree2.Taxi.gina?language=Basic&amp;location=application</value>
+                   </prop>
+                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
+                   <value>%origin%/icons/image35</value>
+                   </prop>
+                   <prop oor:name="Title" oor:type="xs:string">
+                   <value>Duplica il foglio attivo > in DCC (Doc Contab. Corrente)</value>
+                   </prop>
+                   <prop oor:name="Target" oor:type="xs:string">
+                   <value>_self</value>
+                   </prop>
+                   </node>
+              -->
+              <!--
+                   <node oor:name="m2U07.1" oor:op="replace">
+                   <prop oor:name="Context" oor:type="xs:string">
+                   <value />
+                   </prop>
+                   <prop oor:name="URL" oor:type="xs:string">
+                   <value>private:separator</value>
+                   </prop>
+                   </node>
+              -->
               <node oor:name="m2U07.2" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1468,7 +1468,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$struttura_off?language=Python&amp;location=user:uno_packages</value>
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$struttura_off?language=Python&amp;location=user:uno_packages</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image9</value>
@@ -1860,6 +1860,11 @@
             <prop oor:name="URL" oor:type="xs:string">
               <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$apri_manuale?language=Python&amp;location=user:uno_packages</value>
             </prop>
+            <!--
+                 <prop oor:name="URL" oor:type="xs:string">
+                 <value>.uno:OpenHyperlink?URL:string=https://leeno.org/download/LeenO/LeenO/MANUALE_LeenO.pdf</value>
+                 </prop>
+            -->
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/manuale</value>
             </prop>

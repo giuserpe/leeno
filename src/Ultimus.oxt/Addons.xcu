@@ -762,7 +762,7 @@
         </node>
       </node>
     </node>
-    <!--                                                     -->
+    <!--                                           -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -1853,28 +1853,6 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m33" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$apri_manuale?language=Python&amp;location=user:uno_packages</value>
-            </prop>
-            <!--
-                 <prop oor:name="URL" oor:type="xs:string">
-                 <value>.uno:OpenHyperlink?URL:string=https://leeno.org/download/LeenO/LeenO/MANUALE_LeenO.pdf</value>
-                 </prop>
-            -->
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/manuale</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Manuale...</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
           <node oor:name="m40" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1887,6 +1865,86 @@
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Opzioni...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m50" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value />
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>private:separator</value>
+            </prop>
+          </node>
+          <node oor:name="m60" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$apri_manuale?language=Python&amp;location=user:uno_packages</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/manuale</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Manuale...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m70" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+                 <prop oor:name="URL" oor:type="xs:string">
+                   <value>.uno:OpenHyperlink?URL:string=https://leeno.org/donazioni/</value>
+                 </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+<!--
+              <value>%origin%/icons/leeno</value>
+-->
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Sostieni LeenO...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m81" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+                 <prop oor:name="URL" oor:type="xs:string">
+                   <value>.uno:OpenHyperlink?URL:string=https://leeno.org/licenza-2/</value>
+                 </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+<!--
+              <value>%origin%/icons/leeno</value>
+-->
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Licenza...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m82" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+                 <prop oor:name="URL" oor:type="xs:string">
+                   <value>.uno:OpenHyperlink?URL:string=https://leeno.org/about-leeno/</value>
+                 </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/leeno</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>About LeenO...</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>

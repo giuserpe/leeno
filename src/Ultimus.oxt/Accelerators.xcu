@@ -118,7 +118,7 @@
         <!--SHIFT-F10-->
         <node oor:name="F10_SHIFT" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Viste.Scelta_Viste?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$scelta_viste?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-F3-->
@@ -129,11 +129,6 @@
           </prop>
         </node>
         <!--CTRL-SHIFT-F10-->
-        <node oor:name="F10_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Viste.Scelta_Viste?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
         <!--CTRL-SHIFT-5-->
         <node oor:name="5_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">

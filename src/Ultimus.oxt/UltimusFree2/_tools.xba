@@ -16,14 +16,12 @@ Sub ReadDataFromProgeCAD()
     Dim entType As String
     Dim entLayer As String
     Dim entHandle As String
-
     Dim iLine as Integer
     Dim iColumn as Integer
     Dim Doc As Object
     Dim Sheet As Object
     Dim CellRange As Object
     Dim Cell As Object
-
     Dim DwgFileName as String
 
     DwgFileName = &quot;W:\_dwg\amenta1.dwg&quot;
@@ -96,7 +94,6 @@ Function getOS()as String
      getOS=&quot;UNIX&quot;
     Endif
   End Select
-&apos;  Print getOS
 End Function
 rem ----------------------------------------------------------------------
 Function fsGetSetting(sA)
@@ -124,30 +121,11 @@ Function LeenO_Path
 	End If
 	Dim pip As Object, extensionLocation As String
 	Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
-	&apos; Const extensionIdentifier = &quot;put the identifier value from the description.xml here&quot;
 	pip = GetDefaultContext.getValueByName(&quot;/singletons/com.sun.star.deployment.PackageInformationProvider&quot;)
 	extensionLocation = pip.getPackageLocation(extensionIdentifier)
-&apos;	display a human readable address
-&apos;	MsgBox(ConvertFromURL(extensionLocation)
 	sURL = (ConvertFromURL(extensionLocation))
-&apos;	LeenO_Path = FileNameoutofPath(sURL)
 	LeenO_Path = extensionLocation &apos; full path
 End Function
-rem ----------------------------------------------------------------------
-sub rir_
-xray(date)
-	oSheet = ThisComponent.currentController.activeSheet
-	lLastUrow = getLastUsedRow(oSheet)
-	&apos;print lLastUrow
-		conta_a = 0
-	for i = 1 to lLastUrow
-		IF oSheet.GetCellByPosition(2 , i).cellstyle = &quot;comp 1-a&quot; Then 
-			oSheet.GetCellByPosition(2, i).String = &quot;- &quot; &amp; oSheet.GetCellByPosition(2, i).String
-		EndIf
-		Next
-	Print &quot;COMPLETATO!&quot;
-
-end sub
 rem ----------------------------------------------------------------------
 Sub _accoda_files_in_unico
 &apos;ACCODA PIù FILE DI CALC IN UNO SOLO

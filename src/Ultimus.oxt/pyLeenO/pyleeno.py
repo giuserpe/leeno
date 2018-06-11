@@ -6334,6 +6334,12 @@ def autoexec(arg=None):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
+
+#attiva 'copia sempre copia di backup', ma dall'apertura successiva di LibreOffice
+    node = GetRegistryKeyContent("/org.openoffice.Office.Common/Save/Document", True)
+    node.CreateBackup = True
+    node.commitChanges()
+    
 #Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
     if sys.platform == 'win32':
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
@@ -7344,6 +7350,19 @@ def processo (arg):
     arg = 'soffice'
     if arg in (str(ps.stdout.read())):
         chi ('ci stà')
+
+########################################################################
+def GetRegistryKeyContent(sKeyName, bForUpdate):
+    '''Dà accesso alla configurazione utente di LibreOffice'''
+    oConfigProvider = createUnoService("com.sun.star.configuration.ConfigurationProvider")
+    arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
+    arg.Name = "nodepath"
+    arg.Value = sKeyName
+    if bForUpdate:
+        GetRegistryKeyContent = oConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationUpdateAccess", (arg,))
+    else:
+        GetRegistryKeyContent = oConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,))
+    return GetRegistryKeyContent
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

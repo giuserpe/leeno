@@ -424,6 +424,4 @@ Sub numeri_computo
 		oSheet.GetCellByPosition(36 , I).String = test
 	next
 End Sub
-
-
 </script:module>

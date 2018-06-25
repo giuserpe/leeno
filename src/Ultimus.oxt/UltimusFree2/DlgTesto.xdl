@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgTesto" dlg:left="191" dlg:top="168" dlg:width="250" dlg:height="49" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgTesto" dlg:left="191" dlg:top="168" dlg:width="251" dlg:height="49" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:textfield dlg:id="TextField1" dlg:tab-index="0" dlg:left="7" dlg:top="10" dlg:width="234" dlg:height="14"/>

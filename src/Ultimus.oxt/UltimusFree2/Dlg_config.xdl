@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dlg_config" dlg:left="219" dlg:top="111" dlg:width="220" dlg:height="271" dlg:closeable="true" dlg:moveable="true" dlg:title="Impostazioni di Configurazione">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dlg_config" dlg:left="219" dlg:top="111" dlg:width="221" dlg:height="271" dlg:closeable="true" dlg:moveable="true" dlg:title="Impostazioni di Configurazione">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular"/>
-  <dlg:style dlg:style-id="3" dlg:font-name="DejaVu Sans" dlg:font-height="9" dlg:font-stylename="Book" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="3" dlg:font-name="DejaVu Sans" dlg:font-height="10" dlg:font-stylename="Book" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="4" dlg:font-name="DejaVu Sans" dlg:font-stylename="Book" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>

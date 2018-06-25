@@ -2,7 +2,7 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgCompletato" dlg:left="148" dlg:top="144" dlg:width="180" dlg:height="50" dlg:closeable="true" dlg:moveable="true" dlg:title="OPERAZIONE COMPLETATA!">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:text dlg:id="Label1" dlg:tab-index="0" dlg:left="7" dlg:top="6" dlg:width="168" dlg:height="17" dlg:value="Ho conservato una copia di sicurezza del file non convertito.&#x0a;Grazie per l&apos;attesa." dlg:align="center"/>

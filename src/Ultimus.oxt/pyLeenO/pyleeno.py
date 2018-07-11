@@ -143,6 +143,7 @@ def invia_voce_ep(arg=None):
         return
     _gotoDoc(sUltimus)
     ddcDoc = XSCRIPTCONTEXT.getDocument()
+    #~ nSheet = oDoc.CurrentController.ActiveSheet.Name
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
     dccSheet.IsVisible = True
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
@@ -218,6 +219,7 @@ def invia_voce_ep(arg=None):
     oRange = dccSheet.getCellRangeByPosition(11, 3, 13, ER-SR+3)
     formule = tuple(formule)
     oRange.setFormulaArray(formule)
+    
     if conf.read(path_conf, 'Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
 ########################################################################
@@ -870,8 +872,7 @@ def _gotoSheet(nSheet, fattore=100):
     oSheet.IsVisible = True
     oDoc.CurrentController.setActiveSheet(oSheet)
     #~ oDoc.CurrentController.ZoomValue = fattore
-
-     #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def _primaCella(IDcol=0, IDrow=0):
     '''
@@ -5036,6 +5037,9 @@ def vedi_voce(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
+    if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
+        copia_riga_computo(lrow)
+        lrow += 1   
     if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
         to = basic_LeenO('ListenersSelectRange.getRange', 'prova')
         to = int(to.split('$')[-1])-1
@@ -7364,6 +7368,48 @@ def GetRegistryKeyContent(sKeyName, bForUpdate):
     else:
         GetRegistryKeyContent = oConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,))
     return GetRegistryKeyContent
+#~ EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA 
+def debug (arg):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    struttura_off()
+    #~ for n in(3, 5, 7):
+        #~ oCellRangeAddr.StartColumn = n
+        #~ oCellRangeAddr.EndColumn = n
+        #~ oSheet.group(oCellRangeAddr,0)
+        #~ oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible=False
+
+    #~ test =  (oSheet)+2
+    lista_cat = list()
+    sotto = getLastUsedCell(oSheet).EndRow
+    for n in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(1, n).String == '-':
+            sopra = n+1
+            lista_cat.append((sopra, sotto))
+            if oSheet.getCellByPosition(0, n-1).String == '-':
+                sotto = n-2
+            else:
+                sotto = n-1
+    #~ for el in lista_cat:
+        #~ oCellRangeAddr.StartRow = el[0]
+        #~ oCellRangeAddr.EndRow = el[1]
+        #~ oSheet.group(oCellRangeAddr,1)
+
+    sotto = getLastUsedCell(oSheet).EndRow
+    for n in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, n).String == '-':
+            sopra = n+1
+            lista_cat.append((sopra, sotto))
+            sotto = n-1
+    for el in lista_cat:
+        oCellRangeAddr.StartRow = el[0]
+        oCellRangeAddr.EndRow = el[1]
+        oSheet.group(oCellRangeAddr,1)
+        #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
+    
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

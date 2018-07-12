@@ -143,7 +143,7 @@ def invia_voce_ep(arg=None):
         return
     _gotoDoc(sUltimus)
     ddcDoc = XSCRIPTCONTEXT.getDocument()
-    #~ nSheet = oDoc.CurrentController.ActiveSheet.Name
+    nSheet = ddcDoc.CurrentController.ActiveSheet.Name
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
     dccSheet.IsVisible = True
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
@@ -220,6 +220,8 @@ def invia_voce_ep(arg=None):
     formule = tuple(formule)
     oRange.setFormulaArray(formule)
     
+    ddcDoc.CurrentController.setActiveSheet(ddcDoc.getSheets().getByName(nSheet))
+
     if conf.read(path_conf, 'Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
 ########################################################################

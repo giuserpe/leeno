@@ -3425,6 +3425,33 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         pesca_cod()
 ########################################################################
+# ins_voce_computo #####################################################
+def rispristina_voce(arg=None):
+#~ def debug(arg=None):
+    '''
+    Ripristina le formule di descrizione e somma di una voce.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    sopra = sStRange.RangeAddress.StartRow
+    sotto = sStRange.RangeAddress.EndRow
+    oSheet.getCellByPosition(2, sopra+1).Formula = '=IF(LEN(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+    oSheet.getCellByPosition(8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;3;FALSE());"]")'
+    oSheet.getCellByPosition(9, sotto).Formula = '=SUBTOTAL(9;J'+ str(sopra+2) + ':J'+ str(sotto+1) + ')'
+    oSheet.getCellByPosition(11, sotto).Formula = '=VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;5;FALSE())'
+    oSheet.getCellByPosition(13, sotto).Formula = '=J'+ str(sotto+1)
+    oSheet.getCellByPosition(17, sotto).Formula = '=AB'+ str(sotto+1) +'*J'+ str(sotto+1)
+    oSheet.getCellByPosition(18, sotto).Formula = '=J'+ str(sotto+1) +'*L'+ str(sotto+1)
+    oSheet.getCellByPosition(27, sotto).Formula = '=VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;4;FALSE())'
+    #~ return
+    oSheet.getCellByPosition(28, sotto).Formula = '=S'+ str(sotto+1) +'-AE'+ str(sotto+1)
+    oSheet.getCellByPosition(29, sotto).Formula = '=VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;6;FALSE())'
+    oSheet.getCellByPosition(30, sotto).Formula = '=IF(AD'+ str(sotto+1) +'<>""; PRODUCT(AD'+ str(sotto+1) +'*S'+ str(sotto+1) +'))'
+    oSheet.getCellByPosition(35, sotto).Formula = '=B'+ str(sopra+2)
+    oSheet.getCellByPosition(36, sotto).Formula = '=IF(ISERROR(S'+ str(sotto+1) +');"";IF(S'+ str(sotto+1) +'<>"";S'+ str(sotto+1) +';""))'
+########################################################################
 # leeno.conf  ##########################################################
 def leeno_conf(arg=None):
     '''
@@ -7371,7 +7398,9 @@ def GetRegistryKeyContent(sKeyName, bForUpdate):
         GetRegistryKeyContent = oConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,))
     return GetRegistryKeyContent
 #~ EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA 
-def debug (arg):
+#~ def debug (arg):
+def EXTRA (arg):
+    
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     iSheet = oSheet.RangeAddress.Sheet

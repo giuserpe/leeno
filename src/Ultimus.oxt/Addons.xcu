@@ -1681,7 +1681,7 @@
               <value>vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>Descriziona abbreviata ON/OFF</value>
+              <value>Descrizione abbreviata ON/OFF</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>

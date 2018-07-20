@@ -6393,6 +6393,8 @@ def autoexec_off(arg=None):
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.getSheets().getByName('COMPUTO')
+    oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
  
 def autoexec(arg=None):
     '''

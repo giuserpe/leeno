@@ -103,8 +103,11 @@ def nuovo_usobollo(arg=None):
     '''Crea un nuovo documento in formato uso bollo.'''
     New_file.usobollo()
 ########################################################################
-# ~def invia_voce(arg=None):
-def debug(arg=None):
+def invia_voce(arg=None):
+    '''
+    Invia la voce di prezzo del COMPUTO oppure le voci di Elenco Prezzi
+    con relative analisi all'Elenco Prezzi del DCC.
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
@@ -113,13 +116,14 @@ def debug(arg=None):
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sopra = sStRange.RangeAddress.StartRow
         sotto = sStRange.RangeAddress.EndRow
-    cerca_in_elenco(lrow)
-    invia_voce_ep()
+        cerca_in_elenco(lrow)
+        invia_voce_ep()
+        _gotoDoc(fpartenza)
+        _gotoSheet(oSheet.Name)
+        
+    else:
+        invia_voce_ep()
 
-    # ~oSheet = oDoc.Sheets.getByName(oSheet.Name)
-
-    _gotoDoc(fpartenza)
-    _gotoSheet(oSheet.Name)
     _gotoDoc(sUltimus)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -134,7 +138,6 @@ def debug(arg=None):
         else:
             nuova_voce_scelta()
             pesca_cod()
-    # ~oDoc.CurrentController.setActiveSheet(oSheet)
 
 def invia_voce_ep(arg=None):
     '''
@@ -6073,9 +6076,6 @@ def ssUltimus(arg=None):
     
     global sUltimus
     oDoc = XSCRIPTCONTEXT.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-    # ~oSheet.getCellRangeByPosition("A1:S1").CellBackColor = -1
-
     if oDoc.getSheets().hasByName('M1') == False:
         return
     if len(oDoc.getURL()) == 0:

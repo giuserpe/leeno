@@ -6083,12 +6083,7 @@ def ssUltimus(arg=None):
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
         salva_come()
         autoexec()
-    try:
-        sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
-        oSheet = oDoc.CurrentController.ActiveSheet
-        oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
-    except:
-        return
+    sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
     DlgMain()
     return
 ########################################################################
@@ -6871,6 +6866,10 @@ def DlgMain(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
+    if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+        oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
+    else:
+        oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)

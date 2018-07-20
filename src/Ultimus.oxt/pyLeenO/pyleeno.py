@@ -103,6 +103,39 @@ def nuovo_usobollo(arg=None):
     '''Crea un nuovo documento in formato uso bollo.'''
     New_file.usobollo()
 ########################################################################
+# ~def invia_voce(arg=None):
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
+    lrow = Range2Cell()[1]
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sopra = sStRange.RangeAddress.StartRow
+        sotto = sStRange.RangeAddress.EndRow
+    cerca_in_elenco(lrow)
+    invia_voce_ep()
+
+    # ~oSheet = oDoc.Sheets.getByName(oSheet.Name)
+
+    _gotoDoc(fpartenza)
+    _gotoSheet(oSheet.Name)
+    _gotoDoc(sUltimus)
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sopra = sStRange.RangeAddress.StartRow
+        sotto = sStRange.RangeAddress.EndRow
+        if oSheet.getCellByPosition(1, sopra+1).String == 'Cod. Art.?':
+            pesca_cod()
+            pesca_cod()
+        else:
+            nuova_voce_scelta()
+            pesca_cod()
+    # ~oDoc.CurrentController.setActiveSheet(oSheet)
+
 def invia_voce_ep(arg=None):
     '''
     Invia le voci di prezzario selezionate da un elenco prezzi all'Elenco Prezzi del
@@ -3425,11 +3458,10 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         pesca_cod()
 ########################################################################
-# ins_voce_computo #####################################################
 def rispristina_voce(arg=None):
-#~ def debug(arg=None):
+# ~def debug(arg=None):
     '''
-    Ripristina le formule di descrizione e somma di una voce.
+    Ripristina/ricalcola le formule di descrizione e somma di una voce.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6038,8 +6070,12 @@ def ssUltimus(arg=None):
     Scrive la variabile globale che individua il Documento di Contabilità Corrente(DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
     '''
+    
     global sUltimus
     oDoc = XSCRIPTCONTEXT.getDocument()
+    # ~oSheet = oDoc.CurrentController.ActiveSheet
+    # ~oSheet.getCellRangeByPosition("A1:S1").CellBackColor = -1
+
     if oDoc.getSheets().hasByName('M1') == False:
         return
     if len(oDoc.getURL()) == 0:
@@ -6049,6 +6085,8 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
         autoexec()
     try:
         sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
+        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
     except:
         return
     DlgMain()

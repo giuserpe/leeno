@@ -111,6 +111,12 @@ def invia_voce(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
+    if fpartenza == sUltimus:
+        MsgBox("Questo file coincide con il Documento di Contabilità Corrente.", "Attenzione!")
+        return
+    elif sUltimus == '':
+        MsgBox("E' necessario impostare il Documento di Contabilità Corrente.", "Attenzione!")
+        return
     lrow = Range2Cell()[1]
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
@@ -129,10 +135,17 @@ def invia_voce(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        try:
+            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        except:
+            nuova_voce_scelta()
+            _gotoDoc(sUltimus)
+            _gotoSheet(oSheet.Name)
+            lrow = Range2Cell()[1]
+            sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sopra = sStRange.RangeAddress.StartRow
         sotto = sStRange.RangeAddress.EndRow
-        if oSheet.getCellByPosition(1, sopra+1).String == 'Cod. Art.?':
+        if oSheet.getCellByPosition(1, sopra+1).String in ('Cod. Art.?', ''):
             pesca_cod()
             pesca_cod()
         else:
@@ -175,7 +188,7 @@ def invia_voce_ep(arg=None):
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     if sUltimus == '':
-        MsgBox("E' necessario impostare il Documento di contabilità Corrente.", "Attenzione!")
+        MsgBox("E' necessario impostare il Documento di Contabilità Corrente.", "Attenzione!")
         return
     _gotoDoc(sUltimus)
     ddcDoc = XSCRIPTCONTEXT.getDocument()
@@ -1107,15 +1120,15 @@ def adatta_altezza_riga(nSheet=None):
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2:
-        for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
-            try:
-                oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
-            except:
-                pass
+        # ~for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
+            # ~try:
+                # ~oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+            # ~except:
+                # ~pass
         if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA'):
             test = getLastUsedCell(oSheet).EndRow+1
             for y in range(0, test):
-                if oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
+                if oSheet.getCellByPosition(2, y).CellStyle in ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr'):
                     oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
         
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
@@ -7314,7 +7327,9 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-def sistema_cose(arg=None):
+# ~def sistema_cose(arg=None):
+def debug(arg=None):
+    
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')

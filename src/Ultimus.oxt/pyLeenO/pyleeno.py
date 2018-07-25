@@ -3037,6 +3037,52 @@ def valuta_cella(oCell):
         valore = ''
     if valore == ' ': valore = ''
     return valore
+########################################################################
+#~ def dettaglio_misure(bit):
+def debug(bit):
+    '''
+    Indica il dettaglio delle misure nel rigo di descrizione quando
+    incontra delle formule nei valori immessi.
+    bit { integer }  : 1 rinumera tutto
+                       0 rinumera dalla voce corrente in giù
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ER = getLastUsedCell(oSheet).EndRow
+    bit = 1
+    if bit == 1:
+        for lrow in range(0, ER):
+            if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a'):
+                for el in range(5, 9):
+                    if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
+                        stringa =''
+                        break
+                    else:
+                        stringa = None
+                if stringa == '':
+                    for el in range(5, 9):
+                        test = '>('
+                        if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
+                            if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
+                                stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')+'
+                        else:
+                            stringa = stringa + '+' + str(oSheet.getCellByPosition(el, lrow).String) + '+'
+                    while '++' in stringa:
+                        stringa=stringa.replace('++','+')
+                    if stringa[0] == '+':
+                        stringa = stringa[1:-1]
+                    else:
+                        stringa = stringa[0:-1]
+                    stringa = ' >(' + stringa + ')'
+                    if oSheet.getCellByPosition(2, lrow).Type.value != 'FORMULA':
+                        oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(2, lrow).String + stringa.replace('.',',')
+    else:
+        for lrow in range(0, ER):
+            if ' >(' in oSheet.getCellByPosition(2, lrow).String:
+                oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(2, lrow).String.split(' >(')[0]
+    return
+
+########################################################################
 def debug_validation(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -7327,8 +7373,8 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-# ~def sistema_cose(arg=None):
-def debug(arg=None):
+def sistema_cose(arg=None):
+# ~def debug(arg=None):
     
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -7421,7 +7467,7 @@ Associato a Atrl+Shift+C'''
 ########################################################################
 def subst_str (arg=None):
     '''
-    Sostituisce scringhe di testi nel foglio corrente
+    Sostituisce stringhe di testi nel foglio corrente
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

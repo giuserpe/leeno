@@ -71,7 +71,7 @@ SUB Set_Header_Footer (optional sMessaggio as string)
 	oProgetto_8 = oCell.String
 	
 	oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
-	oData= oCell.String
+	oData= &quot;&quot; &apos; oCell.String
 	
 	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
 	oBozza_8 = oCell.String
@@ -171,7 +171,7 @@ oCell = oSheet.getCellRangeByName(&quot;Progetto_8&quot;)
 oProgetto_8 = oCell.String
 
 oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
-oData= oCell.String
+oData= &quot;&quot; &apos; oCell.String
 
 oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
 oBozza_8 = oCell.String
@@ -441,14 +441,14 @@ End Sub
 SUB Set_HF_turbo (optional sMessaggio as string)
 &apos;Print 
 &apos; initialize &apos;
-On Error Goto Errore
+&apos;On Error Goto Errore
 &apos;Call SetModuleVars 
 sDocURL = thisComponent.getURL()
-	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
-			on error goto Errore 
-		end if 
-	END IF
+&apos;	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
+&apos;		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+&apos;			on error goto Errore 
+&apos;		end if 
+&apos;	END IF
 	
 	If not thisComponent.Sheets.hasByName(&quot;M1&quot;) Then exit sub
 &apos;Aggiorniamoli
@@ -462,13 +462,14 @@ rem ----------------------------------------------------------------------
 rem dati di questo doc
 	DXX = oSheet.getCellRangeByName(&quot;Super_ego_8&quot;).String			&apos;committente
 &apos;	oProgetto_8 = oSheet.getCellRangeByName(&quot;Progetto_8&quot;).String	&apos;titolo
-	oData = oSheet.getCellRangeByName(&quot;oData_8&quot;).String				&apos;data
+	oData = &quot;&quot; &apos;oSheet.getCellRangeByName(&quot;oData_8&quot;).String				&apos;data
 &apos;	oData = &quot;LeenO.org&quot;
-	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;).String				&apos;intestazione destra
+	oBozza_8 = oSheet.getCellRangeByName(&quot;Bozza_8&quot;).String				&apos;intestazione destra
 rem ----------------------------------------------------------------------
-	If oBozza_8 &lt;&gt; &quot;&quot; Then
-		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
-	End If
+&apos;	If oBozza_8 &lt;&gt; &quot;&quot; Then
+&apos;		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
+&apos;	End If
+	Bozza = oBozza_8
 	
 &apos;	oCell = oSheet.getCellRangeByName(&quot;data_prog_8&quot;)
 &apos;	oCentro = oCell.String
@@ -505,18 +506,18 @@ rem ----------------------------------------------------------------------
 			dx = dxx &amp; CHR$(10) &amp; &quot;Registro di contabilità n.&quot;
 		Case &quot;PageStyle_COMPUTO_A4&quot;
 &apos;		Print FileNameOutOfPath(sDocURL)
-			dx = dxx &amp; CHR$(10) &amp; FileNameOutOfPath(sDocURL)
+			dx = dxx &apos;&amp; CHR$(10) &amp; FileNameOutOfPath(sDocURL)
 	End Select
 
 		oAktPage.HeaderIsOn = True 
 		oHeader = oAktPage.RightPageHeaderContent
-		
+
 		oHLText = oHeader.LeftText.text 
 		oHLText.String = DX 
 		oHCText = oHeader.CenterText.Text
 		oHCText.String = oProgetto_8
-		oHRText = oHeader.RightText
-		oHRText.String = Bozza 
+		oHRText = oHeader.RightText.Text
+		oHRText.String = oBozza_8
 &apos; update header
 		oAktPage.RightPageHeaderContent = oHeader
 	salta:
@@ -559,9 +560,9 @@ rem ----------------------------------------------------------------------
 		end if
 		Exit Sub
 
-		Errore:
-		Msgbox &quot;Questo file non ha ancora un nome.&quot;
-		ScriptPy(&quot;pyleeno.py&quot;,&quot;salva_come&quot;) &apos;visualizza
+&apos;		Errore:
+&apos;		Msgbox &quot;Questo file non ha ancora un nome.&quot;
+&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;salva_come&quot;) &apos;visualizza
 &apos;		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 	END SUB
 

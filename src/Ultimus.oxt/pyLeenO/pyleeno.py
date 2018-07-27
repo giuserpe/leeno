@@ -1333,9 +1333,10 @@ def scelta_viste(arg=None):
             oSheet.getColumns().getByIndex(8).Columns.IsVisible = True            
 
         if oDialog1.getControl("CBDet").State == 0: #
-            basic_LeenO('Magic.Formula_magica_off')
+            dettaglio_misure(0)
         else:
-            basic_LeenO('Magic.Formula_magica_aggiorna')
+            dettaglio_misure(0)
+            dettaglio_misure(1)
             
     elif oSheet.Name in('Elenco Prezzi'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application")
@@ -2303,6 +2304,9 @@ def firme_in_calce_run(arg=None):
         oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE' + str(lRowF)
         oSheet.getCellByPosition(ae , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
         oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD' + str(lRowF) + '*100'
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
+        txt_Format('Bold')
+        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
         fine_gruppo = riga_corrente
     #~ DATA
         oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"GG/MM/AAAA"))'
@@ -3072,7 +3076,7 @@ def dettaglio_misure(bit):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     ER = getLastUsedCell(oSheet).EndRow
-    bit = 1
+    # ~bit = 1
     if bit == 1:
         for lrow in range(0, ER):
             if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a'):
@@ -3430,7 +3434,7 @@ per la formulazione dell'offerta'''
     
     pagestyle.HeaderIsOn= True
     oHContent=pagestyle.RightPageHeaderContent
-    filename = uno.fileUrlToSystemPath(oDoc.getURL())
+    filename = '' #uno.fileUrlToSystemPath(oDoc.getURL())
     if len(filename) > 50:
         filename = filename[:20] + ' ... ' + filename[-20:]
     oHContent.LeftText.String = filename
@@ -6950,10 +6954,11 @@ def DlgMain(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
-    if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-        oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
-    else:
-        oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
+    if oDoc.getURL() != '':
+        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+            oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
+        else:
+            oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)
@@ -7748,7 +7753,7 @@ def debug(arg=None): #COMUNE DI MATERA
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-#~ g_exportedScripts = ,
+# ~g_exportedScripts = richiesta_offerta,
 ########################################################################
 ########################################################################
 # ... here is the python script code

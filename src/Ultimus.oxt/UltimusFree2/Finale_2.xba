@@ -796,11 +796,11 @@ Sub Scrivi_header_moduli
 	
 	
 	oCell = oSheet.getCellRangeByName(&quot;oData_8&quot;)
-	oData= oCell.String
+	oData= &quot;&quot; &apos;oCell.String
 	
 	oCell = oSheet.getCellRangeByName(&quot;Bozza_8&quot;)
 	oBozza_8 = oCell.String
-&apos;print oBozza_8
+print oBozza_8
 	If oBozza_8 &lt;&gt; &quot;&quot; Then
 		Bozza = oBozza_8 &amp; &quot; &quot; &amp; oData
 	End If
@@ -839,7 +839,7 @@ Sub Scrivi_header_moduli
 	oHCText = oHeader.CenterText.Text
 	oHCText.String = oProgetto_8
 	oHRText = oHeader.RightText
-	oHRText.String = Bozza 
+	oHRText.String = Bozza_8
 &apos; update header
 	oAktPage.RightPageHeaderContent = oHeader
 	if sHide=&quot;Nascosta&quot; then &apos; la rimette come l&apos;ha trovata

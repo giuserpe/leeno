@@ -1279,6 +1279,7 @@ def scelta_viste(arg=None):
     if oSheet.Name in('VARIANTE', 'COMPUTO'):
         oDialog1 = dp.createDialog('vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application')
         oDialog1Model = oDialog1.Model
+        oDialog1.getControl('CBDet').State = 1
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMis').State = 1
         if oSheet.getColumns().getByIndex(17).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
         if oSheet.getColumns().getByIndex(29).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
@@ -6954,11 +6955,10 @@ def DlgMain(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oDoc.getURL() != '':
-        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-            oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
-        else:
-            oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
+    if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+        oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
+    else:
+        oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)

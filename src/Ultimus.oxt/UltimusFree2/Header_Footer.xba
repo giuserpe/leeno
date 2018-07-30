@@ -532,12 +532,12 @@ rem ----------------------------------------------------------------------
 		oHLText = oFooter.CenterText.text
 		oHLText.String = oCentro
 
-&apos;		oHLText = oFooter.LeftText.text
-&apos;		oHLText.String = &quot;LeenO.org&quot;
+		oHLText = oFooter.LeftText.text
+		oHLText.String = &quot;realizzato con LeenO.org&quot; &amp; CHR$(10) &amp; FileNameOutOfPath(sDocURL)
 &apos; update footer
 		oAktPage.RightPageFooterContent= oFooter
 	next i
-		
+
 		
 		if not ismissing (sMessaggio) then
 			if sMessaggio &lt;&gt; &quot;no messaggio&quot; then

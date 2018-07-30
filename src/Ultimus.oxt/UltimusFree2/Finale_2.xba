@@ -842,6 +842,7 @@ print oBozza_8
 	oHRText.String = Bozza_8
 &apos; update header
 	oAktPage.RightPageHeaderContent = oHeader
+&apos;	xray oAktPage
 	if sHide=&quot;Nascosta&quot; then &apos; la rimette come l&apos;ha trovata
 		osheet.isvisible=false
 	end if

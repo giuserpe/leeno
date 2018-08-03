@@ -1281,11 +1281,25 @@ def scelta_viste(arg=None):
         oDialog1Model = oDialog1.Model
         oDialog1.getControl('CBDet').State = 1
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMis').State = 1
-        if oSheet.getColumns().getByIndex(17).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
-        if oSheet.getColumns().getByIndex(29).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
-        if oSheet.getColumns().getByIndex(31).Columns.IsVisible  == True: oDialog1.getControl('CBCat').State = 1
-        if oSheet.getColumns().getByIndex(38).Columns.IsVisible  == True: oDialog1.getControl('CBFig').State = 1
+        if oSheet.getColumns().getByIndex(17).Columns.IsVisible == True: oDialog1.getControl('CBSic').State = 1
+        if oSheet.getColumns().getByIndex(28).Columns.IsVisible == True: oDialog1.getControl('CBMat').State = 1
+        if oSheet.getColumns().getByIndex(29).Columns.IsVisible == True: oDialog1.getControl('CBMdo').State = 1
+        if oSheet.getColumns().getByIndex(31).Columns.IsVisible == True: oDialog1.getControl('CBCat').State = 1
+        if oSheet.getColumns().getByIndex(38).Columns.IsVisible == True: oDialog1.getControl('CBFig').State = 1
+
+        sString = oDialog1.getControl('TextField10')
+        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName('H337').Value #inizio_voci_abbreviate
+        sString = oDialog1.getControl('TextField11')
+        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName('H338').Value #fine_voci_abbreviate
+        
         oDialog1.execute()
+
+    #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+        if oDialog1.getControl('TextField10').getText() != '10000': conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDialog1.getControl('TextField10').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H337').Value = float(oDialog1.getControl('TextField10').getText())
+
+        if oDialog1.getControl('TextField11').getText() != '10000': conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDialog1.getControl('TextField11').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H338').Value = float(oDialog1.getControl('TextField11').getText())
         
         if oDialog1.getControl('OBTerra').State == True:
             computo_terra_terra()
@@ -1295,13 +1309,20 @@ def scelta_viste(arg=None):
             oDialog1.getControl('CBFig').State = 0
 
         if oDialog1.getControl('CBMdo').State == 0: #manodopera
-            oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
         else:
-            oSheet.getColumns().getByIndex(28).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(30).Columns.IsVisible = True
+            adatta_altezza_riga(oSheet)
+            oSheet.clearOutline()
+            struct(3)
+
+        if oDialog1.getControl('CBMat').State == 0: #materiali
+            oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
+
+        else:
+            oSheet.getColumns().getByIndex(28).Columns.IsVisible = True
         
         if oDialog1.getControl('CBCat').State == 0: #categorie
             oSheet.getColumns().getByIndex(31).Columns.IsVisible = False
@@ -6630,6 +6651,7 @@ def set_larghezza_colonne(arg=None):
         oSheet.getColumns().getByName('AY').Columns.Width = 1900
         oDoc.CurrentController.freezeAtPosition(0, 3)
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        oSheet.getCellRangeByPosition(5,0,8,0).Columns.IsVisible = True # nascondi colonne
         oSheet.getColumns().getByName('A').Columns.Width = 600
         oSheet.getColumns().getByName('B').Columns.Width = 1500
         oSheet.getColumns().getByName('C').Columns.Width = 6300 #7800
@@ -6955,10 +6977,11 @@ def DlgMain(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
-    if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-        oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
-    else:
-        oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
+    if oDoc.getURL() != '':
+        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+            oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
+        else:
+            oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)
@@ -7569,8 +7592,8 @@ def EXTRA (arg):
         oSheet.group(oCellRangeAddr,1)
         #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-#~ def debug (arg=None):
-def sistema_pagine (arg=None):
+def debug (arg=None):
+#~ def sistema_pagine (arg=None):
     '''
     Configura intestazioni e pie' di pagina degli stili di stampa
     '''
@@ -7578,9 +7601,10 @@ def sistema_pagine (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('M1') == False:
         return
-    su_sx = oDoc.NamedRanges.Super_ego_8.ReferredCells.String #committente
-    data = oDoc.NamedRanges.oData_8.ReferredCells.String
-    su_dx = oDoc.NamedRanges.Bozza_8.ReferredCells.String
+    #~ committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String 
+    committente = oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String #committente
+    luogo = oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
+    #~ su_dx = oDoc.NamedRanges.Bozza_8.ReferredCells.String
     
     ### cancella stili di pagina #######################################
     #~ stili_pagina = list()
@@ -7589,7 +7613,7 @@ def sistema_pagine (arg=None):
         #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
         #~ stili_pagina.append(oAktPage.DisplayName)
     #~ for el in stili_pagina:
-        #~ if el not in ('Page_Style_COPERTINE', 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4'):
+        #~ if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE', 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4'):
             #~ oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
     #~ return
     ### cancella stili di pagina #######################################
@@ -7604,53 +7628,39 @@ def sistema_pagine (arg=None):
         if oAktPage.DisplayName == 'Page_Style_COPERTINE':
             oAktPage.HeaderIsOn = False
             oAktPage.FooterIsOn = False
-        elif oAktPage.DisplayName == 'PageStyle_COMPUTO_A4':
+        if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo', 'PageStyle_COMPUTO_A4'):
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
-            oHLText = oHeader.LeftText.Text 
-            oHLText.String = su_sx
-
-            #~ oHLText = oHeader.CenterText.Text 
-            #~ oHLText.String = ''
-
-            oHRText = oHeader.RightText.Text
-            oHRText.String = su_dx
+            oHLText = oHeader.LeftText.Text.String = committente
+            #~ oHLText = oHeader.CenterText.Text.String = ''
+            oHRText = oHeader.RightText.Text.String = luogo
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
-            
             oFooter = oAktPage.RightPageFooterContent
-            oHLText = oFooter.CenterText.Text
-            oHLText.String = ''
-
-            oHLText = oFooter.LeftText.Text
-            oHLText.String = "\nrealizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
+            oHLText = oFooter.CenterText.Text.String = ''
+            # ~oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
             oAktPage.RightPageFooterContent= oFooter
-        elif oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
-            su_sx = su_sx + '\nLibretto delle misure n.'
-            oCentro = "\nL'IMPRESA						IL DIRETTORE DEI LAVORI\n\n\n\n"
+        if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
+            # ~HEADER
+            oHeader = oAktPage.RightPageHeaderContent
+            oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle misure n.'
+            #~ oHLText = oHeader.CenterText.Text.String = ''
+            oHRText = oHeader.RightText.Text.String = luogo
+            oAktPage.RightPageHeaderContent = oHeader
+            # ~FOOTER
+            oFooter = oAktPage.RightPageFooterContent
+            oHLText = oFooter.CenterText.Text.String = ''
+            oHLText = oFooter.CenterText.Text.String = "\n\n\n\nL'IMPRESA					IL DIRETTORE DEI LAVORI"
+            # ~oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
+            oAktPage.RightPageFooterContent= oFooter
             
-        elif oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
-            su_sx = su_sx + '\nRegistro di contabilità n.'
+        if oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
+            committente + '\nRegistro di contabilità n.'
+        oFooter = oAktPage.RightPageFooterContent
+        oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
+        oAktPage.RightPageFooterContent= oFooter
     return
-        
-    # ~HEADER
-    oHeader = oAktPage.RightPageHeaderContent
-    oHLText = oHeader.LeftText.Text 
-    oHLText.String = su_sx 
 
-    oHRText = oHeader.RightText.Text
-    oHRText.String = su_dx
-    oAktPage.RightPageHeaderContent = oHeader
-    # ~FOOTER
-    
-    oFooter = oAktPage.RightPageFooterContent
-    oHLText = oFooter.CenterText.Text
-    oHLText.String = oCentro
-
-    oHLText = oFooter.LeftText.Text
-    oHLText.String = "\nrealizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
-    oAktPage.RightPageFooterContent= oFooter
-    return
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

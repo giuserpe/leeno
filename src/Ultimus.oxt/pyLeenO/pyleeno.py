@@ -1141,10 +1141,10 @@ def adatta_altezza_riga(nSheet=None):
                 # ~oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
             # ~except:
                 # ~pass
-        if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA'):
+        if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA', 'Elenco Prezzi_2'):
             test = getLastUsedCell(oSheet).EndRow+1
             for y in range(0, test):
-                if oSheet.getCellByPosition(2, y).CellStyle in ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr'):
+                if oSheet.getCellByPosition(2, y).CellStyle in ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr', 'EP-a'):
                     oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
         
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
@@ -3088,7 +3088,6 @@ def valuta_cella(oCell):
     return valore
 ########################################################################
 def dettaglio_misure(bit):
-# ~def debug(bit):
     '''
     Indica il dettaglio delle misure nel rigo di descrizione quando
     incontra delle formule nei valori immessi.
@@ -3098,7 +3097,6 @@ def dettaglio_misure(bit):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     ER = getLastUsedCell(oSheet).EndRow
-    # ~bit = 1
     if bit == 1:
         for lrow in range(0, ER):
             if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a'):
@@ -3113,12 +3111,12 @@ def dettaglio_misure(bit):
                         test = '>('
                         if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                             if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
-                                stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')+'
+                                stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
                         else:
-                            stringa = stringa + '+' + str(oSheet.getCellByPosition(el, lrow).String) + '+'
-                    while '++' in stringa:
-                        stringa=stringa.replace('++','+')
-                    if stringa[0] == '+':
+                            stringa = stringa + '*' + str(oSheet.getCellByPosition(el, lrow).String) + '*'
+                    while '**' in stringa:
+                        stringa=stringa.replace('**','*')
+                    if stringa[0] == '*':
                         stringa = stringa[1:-1]
                     else:
                         stringa = stringa[0:-1]
@@ -3130,7 +3128,6 @@ def dettaglio_misure(bit):
             if ' >(' in oSheet.getCellByPosition(2, lrow).String:
                 oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(2, lrow).String.split(' >(')[0]
     return
-
 ########################################################################
 def debug_validation(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3391,7 +3388,6 @@ per la formulazione dell'offerta'''
     oSheet.getColumns().getByName("F").Columns.Width = 4000
     oSheet.getColumns().getByName("G").Columns.Width = 1800
     oDoc.CurrentController.freezeAtPosition(0, 1)
-    
     formule = list()
     for x in range(3,getLastUsedCell(oSheet).EndRow-1):
         formule.append(['=IF(E' + str(x+1) + '<>"";D' + str(x+1) + '*E' + str(x+1) + ';""'])
@@ -7613,11 +7609,28 @@ def debug (arg=None):
         #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
         #~ stili_pagina.append(oAktPage.DisplayName)
     #~ for el in stili_pagina:
-        #~ if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE', 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4'):
+        #~ if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE', 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
             #~ oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
     #~ return
     ### cancella stili di pagina #######################################
     oCentro = ''
+    #~ return
+    stili = {
+        'COMPUTO': 'PageStyle_COMPUTO_A4',
+        'VARIANTE': 'PageStyle_COMPUTO_A4',
+        'Elenco Prezzi': 'PageStyle_Elenco Prezzi',
+        'Analisi di Prezzo': 'PageStyle_Analisi di Prezzo',
+        'CONTABILITA': 'Page_Style_Libretto_Misure2',
+        'Registro': 'PageStyle_REGISTRO_A4',
+        'SAL': 'PageStyle_REGISTRO_A4',
+        }
+    for el in stili.keys():
+        try:
+            oDoc.getSheets().getByName(el).PageStyle = stili[el]
+        except:
+            pass
+    #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
+    #~ mri(oAktPage)
     #~ return
     for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
         oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
@@ -7628,37 +7641,57 @@ def debug (arg=None):
         if oAktPage.DisplayName == 'Page_Style_COPERTINE':
             oAktPage.HeaderIsOn = False
             oAktPage.FooterIsOn = False
-        if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo', 'PageStyle_COMPUTO_A4'):
+        if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo', 'PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
+            #bordo lato destro in attesa di LibreOffice 6.2
+            bordo = oAktPage.RightBorder
+            bordo.LineWidth = 2
+            bordo.OuterLineWidth = 2
+            oAktPage.RightBorder = bordo
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
+            oAktPage.PageScale = 110
             oHLText = oHeader.LeftText.Text.String = committente
-            #~ oHLText = oHeader.CenterText.Text.String = ''
             oHRText = oHeader.RightText.Text.String = luogo
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
             oFooter = oAktPage.RightPageFooterContent
             oHLText = oFooter.CenterText.Text.String = ''
-            # ~oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
+            oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
             oAktPage.RightPageFooterContent= oFooter
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
             oHLText = oHeader.LeftText.Text.String = committente + '\nLibretto delle misure n.'
-            #~ oHLText = oHeader.CenterText.Text.String = ''
+            oHRText = oHeader.RightText.Text.String = luogo
+            oAktPage.RightPageHeaderContent = oHeader
+            # ~FOOTER
+            oFooter = oAktPage.RightPageFooterContent
+            oHLText = oFooter.CenterText.Text.String = "L'IMPRESA					IL DIRETTORE DEI LAVORI"
+            oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL() + '\n\n\n')
+            oAktPage.RightPageFooterContent= oFooter
+            
+        if oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
+            # ~HEADER
+            oHeader = oAktPage.RightPageHeaderContent
+            oHLText = oHeader.LeftText.Text.String =  committente + '\nRegistro di contabilità n.'
             oHRText = oHeader.RightText.Text.String = luogo
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
             oFooter = oAktPage.RightPageFooterContent
             oHLText = oFooter.CenterText.Text.String = ''
-            oHLText = oFooter.CenterText.Text.String = "\n\n\n\nL'IMPRESA					IL DIRETTORE DEI LAVORI"
-            # ~oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
+            oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL() + '\n\n\n')
             oAktPage.RightPageFooterContent= oFooter
-            
-        if oAktPage.DisplayName == 'PageStyle_REGISTRO_A4':
-            committente + '\nRegistro di contabilità n.'
+
         oFooter = oAktPage.RightPageFooterContent
-        oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
+        oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans'
+        oHRText = oFooter.LeftText.Text.Text.CharHeight = 8.0
         oAktPage.RightPageFooterContent= oFooter
+        #bordo lato destro in attesa di LibreOffice 6.2
+        #~ bordo = oAktPage.RightBorder
+        #~ bordo.LineWidth = 0
+        #~ bordo.OuterLineWidth = 0
+        #~ oAktPage.RightBorder = bordo
+        
     return
 
 ########################################################################

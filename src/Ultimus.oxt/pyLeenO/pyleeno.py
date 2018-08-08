@@ -1300,23 +1300,44 @@ def scelta_viste(arg=None):
 
         if oDialog1.getControl('TextField11').getText() != '10000': conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDialog1.getControl('TextField11').getText())
         oDoc.getSheets().getByName('S1').getCellRangeByName('H338').Value = float(oDialog1.getControl('TextField11').getText())
-        
+        #~ oDialog1.getControl('CBMdo').State = False
+        #~ if oSheet.getColumns().getByIndex(29).Columns.IsVisible == True:
+            #~ oDialog1.getControl('CBMdo').State = True
+
         if oDialog1.getControl('OBTerra').State == True:
             computo_terra_terra()
             oDialog1.getControl('CBSic').State = 0
             oDialog1.getControl('CBMdo').State = 0
             oDialog1.getControl('CBCat').State = 0
             oDialog1.getControl('CBFig').State = 0
+            oDialog1.getControl('CBMis').State = 1
 
-        if oDialog1.getControl('CBMdo').State == 0: #manodopera
-            oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
+            
+        if oDialog1.getControl("CBMis").State == 0: #misure
+            oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
         else:
+            oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(8).Columns.IsVisible = True   
+
+        if oDialog1.getControl('CBMdo').State == True: #manodopera
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = True
             oSheet.getColumns().getByIndex(30).Columns.IsVisible = True
+            oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
             adatta_altezza_riga(oSheet)
             oSheet.clearOutline()
             struct(3)
+        else:
+            oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
+            oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
+
 
         if oDialog1.getControl('CBMat').State == 0: #materiali
             oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
@@ -1342,17 +1363,6 @@ def scelta_viste(arg=None):
             oSheet.getColumns().getByIndex(38).Columns.IsVisible = False
         else:
             oSheet.getColumns().getByIndex(38).Columns.IsVisible = True
-            
-        if oDialog1.getControl("CBMis").State == 0: #misure
-            oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
-            oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
-        else:
-            oSheet.getColumns().getByIndex(5).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(6).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(7).Columns.IsVisible = True
-            oSheet.getColumns().getByIndex(8).Columns.IsVisible = True            
 
         if oDialog1.getControl("CBDet").State == 0: #
             dettaglio_misure(0)
@@ -1373,7 +1383,7 @@ def scelta_viste(arg=None):
             else:
                 oSheet.getColumns().getByIndex(3).Columns.IsVisible = True
 
-            if oDialog1.getControl("CBMdo").State == 0: #sicurezza
+            if oDialog1.getControl("CBMdo").State == 0: #manodopera
                 oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
                 oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
             else:
@@ -6647,7 +6657,7 @@ def set_larghezza_colonne(arg=None):
         oSheet.getColumns().getByName('AY').Columns.Width = 1900
         oDoc.CurrentController.freezeAtPosition(0, 3)
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
-        oSheet.getCellRangeByPosition(5,0,8,0).Columns.IsVisible = True # nascondi colonne
+        oSheet.getCellRangeByPosition(5,0,8,0).Columns.IsVisible = True # mostra colonne
         oSheet.getColumns().getByName('A').Columns.Width = 600
         oSheet.getColumns().getByName('B').Columns.Width = 1500
         oSheet.getColumns().getByName('C').Columns.Width = 6300 #7800

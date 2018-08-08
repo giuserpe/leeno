@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgAttesa" dlg:disabled="true" dlg:left="117" dlg:top="230" dlg:width="168" dlg:height="98" dlg:closeable="true" dlg:moveable="true" dlg:image-src="file:///W:/_dwg/ULTIMUSFREE/logo/gif/gallery_loader.gif">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgAttesa" dlg:disabled="true" dlg:left="117" dlg:top="230" dlg:width="168" dlg:height="98" dlg:closeable="true" dlg:moveable="true">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:border="simple" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>

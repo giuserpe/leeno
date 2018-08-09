@@ -81,7 +81,7 @@ class New_file:
         opz.Name = 'AsTemplate'
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
-        autoexec()
+        # ~autoexec()
         if arg == 1:
             MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
@@ -7639,9 +7639,9 @@ def debug (arg=None):
             oDoc.getSheets().getByName(el).PageStyle = stili[el]
         except:
             pass
-    #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
-    #~ mri(oAktPage)
-    #~ return
+    # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
+    # ~mri(oAktPage)
+    # ~return
     for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
         oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
         # ~chi((n , oAktPage.DisplayName))
@@ -7659,15 +7659,25 @@ def debug (arg=None):
             oAktPage.RightBorder = bordo
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
-            oAktPage.PageScale = 110
+            # ~oAktPage.PageScale = 95
             oHLText = oHeader.LeftText.Text.String = committente
+            oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oHeader.LeftText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
             oHRText = oHeader.RightText.Text.String = luogo
+            oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oHeader.RightText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
+            
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
             oFooter = oAktPage.RightPageFooterContent
             oHLText = oFooter.CenterText.Text.String = ''
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
+            oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oFooter.LeftText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
+            oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oFooter.RightText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
             oAktPage.RightPageFooterContent= oFooter
+            
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
@@ -7692,10 +7702,8 @@ def debug (arg=None):
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL() + '\n\n\n')
             oAktPage.RightPageFooterContent= oFooter
 
-        oFooter = oAktPage.RightPageFooterContent
-        oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans'
-        oHRText = oFooter.LeftText.Text.Text.CharHeight = 8.0
-        oAktPage.RightPageFooterContent= oFooter
+        
+
         #bordo lato destro in attesa di LibreOffice 6.2
         #~ bordo = oAktPage.RightBorder
         #~ bordo.LineWidth = 0

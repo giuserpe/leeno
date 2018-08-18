@@ -129,7 +129,6 @@ def invia_voce(arg=None):
         
     else:
         invia_voce_ep()
-
     _gotoDoc(sUltimus)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -142,7 +141,15 @@ def invia_voce(arg=None):
             _gotoDoc(sUltimus)
             _gotoSheet(oSheet.Name)
             lrow = Range2Cell()[1]
-            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            try:
+                sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            except UnboundLocalError:
+                fine = ultima_voce(oSheet)+1
+                if lrow >= fine:
+                    #~ lrow = fine -2
+                    _gotoCella(2, fine -2)
+                    lrow = Range2Cell()[1]
+                sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sopra = sStRange.RangeAddress.StartRow
         sotto = sStRange.RangeAddress.EndRow
         if oSheet.getCellByPosition(1, sopra+1).String in ('Cod. Art.?', ''):
@@ -178,7 +185,7 @@ def invia_voce_ep(arg=None):
     try:
         fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     except:
-        MsgBox("E' necessario prima salvare il file di fpartenza.", "Attenzione!")
+        MsgBox("E' necessario prima salvare il file di partenza.", "Attenzione!")
         salva_come()
         fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -219,6 +226,7 @@ def invia_voce_ep(arg=None):
         oDoc.CurrentController.setActiveSheet(oSheet)
         for el in lista:
             celle = Circoscrive_Analisi(uFindStringCol(el, 0, oSheet))
+            #~ voce = oSheet.getCellByPosition(0, celle.RangeAddress.StartRow+1).String
             oRangeAddress = celle.getRangeAddress()
             oCellAddress = tmp.getCellByPosition(0, getLastUsedCell(tmp).EndRow).getCellAddress()
             tmp.copyRange(oCellAddress, oRangeAddress)
@@ -238,6 +246,7 @@ def invia_voce_ep(arg=None):
         ddcDoc = XSCRIPTCONTEXT.getDocument()
         if ddcDoc.getSheets().hasByName('Analisi di Prezzo') == False:
             inizializza_analisi()
+        _gotoSheet('Analisi di Prezzo')
         dccSheet = ddcDoc.getSheets().getByName('Analisi di Prezzo')
         lrow = getLastUsedCell(dccSheet).EndRow
         
@@ -4155,13 +4164,10 @@ def inizializza_analisi(arg=None):
         oDoc.CurrentController.select(oSheet.getCellByPosition(0,2))
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
         set_larghezza_colonne()
-    else:
+    else: 
+        _gotoSheet('Analisi di Prezzo')
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
         oDoc.CurrentController.setActiveSheet(oSheet)
-        if oDoc.getSheets().getByName('Analisi di Prezzo').IsVisible == False:
-            #~ oDoc.getSheets().getByName('Analisi di Prezzo').IsVisible = True
-            _gotoSheet('Analisi di Prezzo')
-            return
         lrow = Range2Cell()[1]
         urow = getLastUsedCell(oSheet).EndRow
         if lrow >= urow:

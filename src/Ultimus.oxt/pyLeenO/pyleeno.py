@@ -188,12 +188,7 @@ def invia_voce_ep(arg=None):
         MsgBox("E' necessario prima salvare il file di partenza.", "Attenzione!")
         salva_come()
         fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    desktop = XSCRIPTCONTEXT.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
-    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    copy_clip()
     if sUltimus == '':
         MsgBox("E' necessario impostare il Documento di Contabilità Corrente.", "Attenzione!")
         return
@@ -207,15 +202,11 @@ def invia_voce_ep(arg=None):
     dccSheet.getRows().insertByIndex(3, ER-SR+1)
     
     ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, 3))
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    desktop = XSCRIPTCONTEXT.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx )
-    dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
-    ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    #~ doppioni()
+    paste_clip()
+    doppioni()
     _gotoDoc(fpartenza)
     oDoc = XSCRIPTCONTEXT.getDocument()
+    costi = list()
 
     if len(lista) > 0:
         if oDoc.getSheets().hasByName('tmp_DCC') == False:
@@ -229,19 +220,16 @@ def invia_voce_ep(arg=None):
             #~ voce = oSheet.getCellByPosition(0, celle.RangeAddress.StartRow+1).String
             oRangeAddress = celle.getRangeAddress()
             oCellAddress = tmp.getCellByPosition(0, getLastUsedCell(tmp).EndRow).getCellAddress()
+
             tmp.copyRange(oCellAddress, oRangeAddress)
-        
         nuove_righe = getLastUsedCell(tmp).EndRow+1
         analisi = tmp.getCellRangeByPosition(0, 0, getLastUsedCell(tmp).EndColumn, getLastUsedCell(tmp).EndRow)
-        
+        for el in range(0, getLastUsedCell(tmp).EndRow):
+            if tmp.getCellByPosition(0, el).CellStyle == 'An-lavoraz-Cod-sx' and tmp.getCellByPosition(0, el).Type.value == 'TEXT':
+                costi.append(tmp.getCellByPosition(0, el).String)
         oDoc.CurrentController.select(analisi)
-        ctx = XSCRIPTCONTEXT.getComponentContext()
-        desktop = XSCRIPTCONTEXT.getDesktop()
-        oFrame = desktop.getCurrentFrame()
-        dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
-        dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
-        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-        
+        copy_clip()
+
         _gotoDoc(sUltimus)
         ddcDoc = XSCRIPTCONTEXT.getDocument()
         if ddcDoc.getSheets().hasByName('Analisi di Prezzo') == False:
@@ -252,23 +240,31 @@ def invia_voce_ep(arg=None):
         
         dccSheet.getRows().insertByIndex(lrow, nuove_righe)
         ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, lrow))
-    
-        ctx = XSCRIPTCONTEXT.getComponentContext()
-        desktop = XSCRIPTCONTEXT.getDesktop()
-        oFrame = desktop.getCurrentFrame()
-        dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-        dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
-        ddcDoc.CurrentController.select(ddcDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+        paste_clip()
         doppioni()
         ddcDoc.CurrentController.setActiveSheet(ddcDoc.getSheets().getByName('Elenco Prezzi'))
 
         _gotoDoc(fpartenza)
         oDoc.Sheets.removeByName('tmp_DCC')
+        costi = set(costi)
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        tipo_selezione(1)
+        for el in costi:
+            y = uFindStringCol(el, 0, oSheet)
+            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 26, y))
+        copy_clip()
+        #~ tipo_selezione(0)
+    mri(oDoc.CurrentController)
+    return
     _gotoDoc(sUltimus)
     oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('Elenco Prezzi'))
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
     dccSheet.IsVisible = True
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
+    dccSheet.getRows().insertByIndex(3, len(costi))
+    _gotoCella(0,3)
+    paste_clip()
+
     formule = list()
     for n in range(3, ER-SR+1+3):
         formule.append(['=IF(ISERROR(N'+str(n+1)+'/$N$2);"--";N'+str(n+1)+'/$N$2)',
@@ -1129,6 +1125,28 @@ def loVersion(arg=None):
     arg.Name = "nodepath"
     arg.Value = '/org.openoffice.Setup/Product'
     return aConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,)).ooSetupVersionAboutBox
+########################################################################
+def tipo_selezione(arg=0):
+    '''
+    Decide il tipo di selezione.
+    arg   { integer } : id selezione
+    0 normale
+    1 estesa
+    2 aggiunge
+    3 blocco
+    '''
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatcher = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    oProp = []
+    oProp0 = PropertyValue()
+    oProp0.Name = 'StatusSelectionMode'
+    oProp0.Value = arg
+    oProp.append(oProp0)
+    properties = tuple(oProp)
+    dispatcher.executeDispatch(oFrame, '.uno:StatusSelectionMode', '', 0, properties)
+    return
 #~ ########################################################################
 def adatta_altezza_riga(nSheet=None):
     '''
@@ -7604,8 +7622,8 @@ def EXTRA (arg):
         oSheet.group(oCellRangeAddr,1)
         #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-def debug (arg=None):
-#~ def sistema_pagine (arg=None):
+#~ def debug (arg=None):
+def sistema_pagine (arg=None):
     '''
     Configura intestazioni e pie' di pagina degli stili di stampa
     '''

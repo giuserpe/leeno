@@ -106,7 +106,7 @@ def nuovo_usobollo(arg=None):
 def invia_voce(arg=None):
     '''
     Invia la voce di prezzo del COMPUTO oppure le voci di Elenco Prezzi
-    con relative analisi all'Elenco Prezzi del DCC.
+    con relative analisi al DCC.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -118,6 +118,7 @@ def invia_voce(arg=None):
         MsgBox("E' necessario impostare il Documento di Contabilità Corrente.", "Attenzione!")
         return
     lrow = Range2Cell()[1]
+    
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sopra = sStRange.RangeAddress.StartRow
@@ -146,28 +147,36 @@ def invia_voce(arg=None):
             except UnboundLocalError:
                 fine = ultima_voce(oSheet)+1
                 if lrow >= fine:
-                    #~ lrow = fine -2
                     _gotoCella(2, fine -2)
                     lrow = Range2Cell()[1]
                 sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sopra = sStRange.RangeAddress.StartRow
         sotto = sStRange.RangeAddress.EndRow
         if oSheet.getCellByPosition(1, sopra+1).String in ('Cod. Art.?', ''):
-            pesca_cod()
-            pesca_cod()
+            oSheet.getCellByPosition(1, sopra+1).String = cod
         else:
             nuova_voce_scelta()
-            pesca_cod()
+            _gotoSheet(oSheet.Name)
+            lrow = Range2Cell()[1]
+            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            sopra = sStRange.RangeAddress.StartRow
+            oSheet.getCellByPosition(1, sopra+1).String = cod
 
 def invia_voce_ep(arg=None):
     '''
-    Invia le voci di prezzario selezionate da un elenco prezzi all'Elenco Prezzi del
-    Documento di Contabilità Corrente DCC. Trasferisce anche le Analisi di Prezzo.
+    Invia le voci di prezzario selezionate da un elenco prezzi all'Elenco
+    Prezzi del Documento di Contabilità Corrente DCC. Trasferisce anche
+    le Analisi di Prezzo con i relativi costi elementari.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
+    global cod
+    if oSheet.Name == 'Elenco Prezzi':
+        cod = oSheet.getCellByPosition(0, lrow).String
+    elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+        cod = oSheet.getCellByPosition(1, sopra+1).String
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
     except AttributeError:
@@ -248,22 +257,33 @@ def invia_voce_ep(arg=None):
         oDoc.Sheets.removeByName('tmp_DCC')
         costi = set(costi)
         oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        tipo_selezione(1)
+        _gotoSheet('Elenco Prezzi')
+        lrow = Range2Cell()[1]
+        el_y = list()
         for el in costi:
-            y = uFindStringCol(el, 0, oSheet)
-            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, y, 26, y))
+            el_y.append(uFindStringCol(el, 0, oSheet))
+        selezione = list()
+        for y in el_y:
+            ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+            rangen = oSheet.getCellRangeByPosition(0, y, 26, y).RangeAddress
+            selezione.append(rangen)
+        ranges.addRangeAddresses(selezione, True)
+        oDoc.CurrentController.select(ranges)
         copy_clip()
-        #~ tipo_selezione(0)
-    mri(oDoc.CurrentController)
-    return
+        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+        _gotoCella(0, lrow)
+        cod = oSheet.getCellByPosition(0, lrow).String
     _gotoDoc(sUltimus)
     oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName('Elenco Prezzi'))
     dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
     dccSheet.IsVisible = True
     ddcDoc.CurrentController.setActiveSheet(dccSheet)
-    dccSheet.getRows().insertByIndex(3, len(costi))
-    _gotoCella(0,3)
-    paste_clip()
+    try:
+        dccSheet.getRows().insertByIndex(3, len(costi))
+        _gotoCella(0,3)
+        paste_clip()
+    except:
+        pass
 
     formule = list()
     for n in range(3, ER-SR+1+3):
@@ -278,6 +298,7 @@ def invia_voce_ep(arg=None):
 
     if conf.read(path_conf, 'Generale', 'torna_a_ep') == '1':
         _gotoDoc(fpartenza)
+    return
 ########################################################################
 def _gotoDoc(sUrl):
     '''
@@ -285,9 +306,6 @@ def _gotoDoc(sUrl):
     porta il focus su di un determinato documento
     '''
     sUrl = uno.systemPathToFileUrl(sUrl)
-    #~ target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
-    #~ target.getCurrentController().Frame.ContainerWindow.toFront()
-    #~ target.getCurrentController().Frame.activate()
     if sys.platform == 'linux' or sys.platform == 'darwin':
         oDialogo_attesa = dlg_attesa()
         attesa().start() #mostra il dialogo
@@ -296,10 +314,6 @@ def _gotoDoc(sUrl):
         target.getCurrentController().Frame.activate()
         oDialogo_attesa.endExecute()
     elif sys.platform == 'win32':
-        #~ target = XSCRIPTCONTEXT.getDesktop().loadComponentFromURL(sUrl, "_default", 0, list())
-        #~ target.getCurrentController().Frame.ContainerWindow.toFront()
-        #~ target.getCurrentController().Frame.activate()
-        
         desktop = XSCRIPTCONTEXT.getDesktop()
         oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
         target = desktop.loadComponentFromURL(sUrl, "_default", 0, list())
@@ -3318,9 +3332,8 @@ def copia_celle_visibili(arg=None):
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(SC, SR, EC, ER))
 # Range2Cell ###########################################################
 def Range2Cell(arg=None):
-#~ def debug(arg=None):
     '''
-    Restituisce la tupla(IDcolonna, IDriga) della posizione corrente
+    Restituisce la tupla (IDcolonna, IDriga, NameSheet) della posizione corrente
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -3331,7 +3344,7 @@ def Range2Cell(arg=None):
     except AttributeError:
         nRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
         nCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
-    return(nCol, nRow)
+    return(nCol, nRow, oSheet.Name)
 ########################################################################
 # restituisce l'ID dell'ultima riga usata
 def getLastUsedCell(oSheet):
@@ -7735,7 +7748,6 @@ def sistema_pagine (arg=None):
         #~ oAktPage.RightBorder = bordo
         
     return
-
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

@@ -1139,28 +1139,6 @@ def loVersion(arg=None):
     arg.Name = "nodepath"
     arg.Value = '/org.openoffice.Setup/Product'
     return aConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,)).ooSetupVersionAboutBox
-########################################################################
-def tipo_selezione(arg=0):
-    '''
-    Decide il tipo di selezione.
-    arg   { integer } : id selezione
-    0 normale
-    1 estesa
-    2 aggiunge
-    3 blocco
-    '''
-    ctx = XSCRIPTCONTEXT.getComponentContext()
-    desktop = XSCRIPTCONTEXT.getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatcher = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    oProp = []
-    oProp0 = PropertyValue()
-    oProp0.Name = 'StatusSelectionMode'
-    oProp0.Value = arg
-    oProp.append(oProp0)
-    properties = tuple(oProp)
-    dispatcher.executeDispatch(oFrame, '.uno:StatusSelectionMode', '', 0, properties)
-    return
 #~ ########################################################################
 def adatta_altezza_riga(nSheet=None):
     '''

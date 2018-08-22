@@ -6544,8 +6544,13 @@ def autoexec_off(arg=None):
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.getSheets().getByName('COMPUTO')
-    oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
+    for el in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
+        try:
+            oSheet = oDoc.Sheets.getByName(el)
+            oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
+            oSheet.getCellRangeByName("A1").String = '' 
+        except:
+            pass
  
 def autoexec(arg=None):
     '''
@@ -7019,12 +7024,19 @@ def DlgMain(arg=None):
     bak_timestamp() # fa il backup del file
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
-    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
     if oDoc.getURL() != '':
-        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-            oSheet.getCellRangeByName("A1:S1").CellBackColor = 13434777
-        else:
-            oSheet.getCellRangeByName("A1:S1").CellBackColor = -1
+        for el in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
+            try:
+                oSheet = oDoc.Sheets.getByName(el)
+                if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+                    oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777
+                    oSheet.getCellRangeByName("A1").String = 'DCC'
+                else:
+                    oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
+                    oSheet.getCellRangeByName("A1").String = '' 
+            except:
+                pass
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)

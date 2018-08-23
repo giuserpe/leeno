@@ -275,6 +275,23 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="Ma140" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$sistema_pagine?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/print_ok</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Sistema intestazioni e pie' di pagina</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
       </node>
     </node>
     <!-- ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO ELENCO -->

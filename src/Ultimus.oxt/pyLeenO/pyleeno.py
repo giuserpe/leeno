@@ -7002,7 +7002,7 @@ def DlgMain(arg=None):
     bak_timestamp() # fa il backup del file
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.CurrentController.ActiveSheet
     if oDoc.getURL() != '':
         for el in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
             try:
@@ -7625,8 +7625,8 @@ def EXTRA (arg):
         oSheet.group(oCellRangeAddr,1)
         #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-#~ def debug (arg=None):
-def sistema_pagine (arg=None):
+def debug (arg=None):
+#~ def sistema_pagine (arg=None):
     '''
     Configura intestazioni e pie' di pagina degli stili di stampa
     '''
@@ -7688,10 +7688,10 @@ def sistema_pagine (arg=None):
             oHeader = oAktPage.RightPageHeaderContent
             # ~oAktPage.PageScale = 95
             oHLText = oHeader.LeftText.Text.String = committente
-            oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHRText = oHeader.LeftText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
             oHRText = oHeader.RightText.Text.String = luogo
-            oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHRText = oHeader.RightText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
             
             oAktPage.RightPageHeaderContent = oHeader
@@ -7699,9 +7699,9 @@ def sistema_pagine (arg=None):
             oFooter = oAktPage.RightPageFooterContent
             oHLText = oFooter.CenterText.Text.String = ''
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
-            oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHRText = oFooter.LeftText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
-            oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans'
+            oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHRText = oFooter.RightText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
             oAktPage.RightPageFooterContent= oFooter
             

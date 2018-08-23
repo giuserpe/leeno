@@ -7666,9 +7666,9 @@ def debug (arg=None):
             oDoc.getSheets().getByName(el).PageStyle = stili[el]
         except:
             pass
-    # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
-    # ~mri(oAktPage)
-    # ~return
+    #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
+    #~ mri(oAktPage)
+    #~ return
     for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
         oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
         # ~chi((n , oAktPage.DisplayName))
@@ -7684,15 +7684,17 @@ def debug (arg=None):
             bordo.LineWidth = 2
             bordo.OuterLineWidth = 2
             oAktPage.RightBorder = bordo
+            oAktPage.PageScale = 0
+            oAktPage.ScaleToPagesX = 1
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
             # ~oAktPage.PageScale = 95
             oHLText = oHeader.LeftText.Text.String = committente
             oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.LeftText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
+            oHRText = oHeader.LeftText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
             oHRText = oHeader.RightText.Text.String = luogo
             oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.RightText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
+            oHRText = oHeader.RightText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
             
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
@@ -7700,9 +7702,9 @@ def debug (arg=None):
             oHLText = oFooter.CenterText.Text.String = ''
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
             oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oFooter.LeftText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
+            oHRText = oFooter.LeftText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
             oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oFooter.RightText.Text.Text.CharHeight = 8.0 / oAktPage.PageScale * 100
+            oHRText = oFooter.RightText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
             oAktPage.RightPageFooterContent= oFooter
             
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':

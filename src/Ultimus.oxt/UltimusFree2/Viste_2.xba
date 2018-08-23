@@ -46,14 +46,6 @@ sub Apri_CONTABILITA_C
 	Carica_vista_da_schema(Tabella1, Config1)
 end sub
 
-Sub fixme &apos; questa è appiccicata ad eventi di Analisi di Prezzo
-&apos;Print &quot;lkl&quot;
-&apos;	if ThisComponent.currentcontroller.activesheet.name = &quot;CONTABILITA&quot; then
-&apos;		ThisComponent.CurrentController().freezeAtPosition(0,2)
-&apos;	end if
-&apos;		
-end sub
-
 sub manodopera_on_off
 	dim Tabella1 as string
 	dim Config1 as string

@@ -1327,6 +1327,7 @@ def scelta_viste(arg=None):
             computo_terra_terra()
             oDialog1.getControl('CBSic').State = 0
             oDialog1.getControl('CBMdo').State = 0
+            oDialog1.getControl('CBMat').State = 0
             oDialog1.getControl('CBCat').State = 0
             oDialog1.getControl('CBFig').State = 0
             oDialog1.getControl('CBMis').State = 1
@@ -7625,12 +7626,10 @@ def EXTRA (arg):
         oSheet.group(oCellRangeAddr,1)
         #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
-def debug (arg=None):
-#~ def sistema_pagine (arg=None):
+def sistema_pagine (arg=None):
     '''
     Configura intestazioni e pie' di pagina degli stili di stampa
     '''
-
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('M1') == False:
         return

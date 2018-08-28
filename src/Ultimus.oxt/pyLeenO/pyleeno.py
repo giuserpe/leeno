@@ -1031,6 +1031,23 @@ def sproteggi_sheet_TUTTE(arg=None):
     if oDoc.Sheets.hasByName("copyright_LeenO"):
         oDoc.Sheets.moveByName("copyright_LeenO", oDoc.Sheets.Count)
 ########################################################################
+def setPreview(arg=0):
+    '''
+    colore   { integer } : id colore
+    attribuisce al foglio corrente un colore a scelta
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    oProp = PropertyValue()
+    #~ oProp.Name = 'TabBgColor'
+    #~ oProp.Value = colore
+    properties =(oProp,)
+    dispatchHelper.executeDispatch(oFrame, '.uno:PrintPreview', '', arg, properties)
+########################################################################
 def setTabColor(colore):
     '''
     colore   { integer } : id colore
@@ -4995,7 +5012,7 @@ def importa_listino_leeno_run(arg=None):
     #~ viola(12632319,13684991,15790335)
     lista_articoli = list()
     nome = oSheet.getCellByPosition(2, 0).String
-    #~ chi(8)
+    chi(8)
     test = uFindStringCol('ATTENZIONE!', 5, oSheet)+1
     assembla = DlgSiNo('''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.
@@ -7650,8 +7667,8 @@ def sistema_pagine (arg=None):
     #~ return
     ### cancella stili di pagina #######################################
     oCentro = ''
-    #~ return
     stili = {
+        'cP_Cop' : 'Page_Style_COPERTINE',
         'COMPUTO': 'PageStyle_COMPUTO_A4',
         'VARIANTE': 'PageStyle_COMPUTO_A4',
         'Elenco Prezzi': 'PageStyle_Elenco Prezzi',
@@ -7668,6 +7685,10 @@ def sistema_pagine (arg=None):
     #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
     #~ mri(oAktPage)
     #~ return
+    try:
+        setPreview(1)
+    except:
+        pass
     for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
         oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
         # ~chi((n , oAktPage.DisplayName))
@@ -7678,11 +7699,27 @@ def sistema_pagine (arg=None):
             oAktPage.HeaderIsOn = False
             oAktPage.FooterIsOn = False
         if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo', 'PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
-            #bordo lato destro in attesa di LibreOffice 6.2
+            bordo = oAktPage.TopBorder
+            bordo.LineWidth = 0
+            bordo.OuterLineWidth = 0
+            oAktPage.TopBorder = bordo
+
+            bordo = oAktPage.BottomBorder
+            bordo.LineWidth = 0
+            bordo.OuterLineWidth = 0
+            oAktPage.BottomBorder = bordo
+
+            bordo = oAktPage.LeftBorder
+            bordo.LineWidth = 0
+            bordo.OuterLineWidth = 0
+            oAktPage.LeftBorder = bordo
+            #bordo lato destro ativo in attesa di LibreOffice 6.2
             bordo = oAktPage.RightBorder
+            bordo.Color = 0
             bordo.LineWidth = 2
             bordo.OuterLineWidth = 2
             oAktPage.RightBorder = bordo
+            # Adatto lo zoom alla larghezza pagina
             oAktPage.PageScale = 0
             oAktPage.ScaleToPagesX = 1
             # ~HEADER
@@ -7704,6 +7741,7 @@ def sistema_pagine (arg=None):
             oHRText = oFooter.LeftText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
             oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
             oHRText = oFooter.RightText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
+            #~ oHRText = oFooter.RightText.Text.String = '#/##'
             oAktPage.RightPageFooterContent= oFooter
             
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':

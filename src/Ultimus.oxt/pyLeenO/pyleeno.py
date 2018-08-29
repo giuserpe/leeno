@@ -7685,6 +7685,7 @@ def sistema_pagine (arg=None):
     #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
     #~ mri(oAktPage)
     #~ return
+    
     try:
         setPreview(1)
     except:
@@ -7698,6 +7699,11 @@ def sistema_pagine (arg=None):
         if oAktPage.DisplayName == 'Page_Style_COPERTINE':
             oAktPage.HeaderIsOn = False
             oAktPage.FooterIsOn = False
+            # Adatto lo zoom alla larghezza pagina
+            oAktPage.PageScale = 0
+            oAktPage.CenterHorizontally = True
+            oAktPage.ScaleToPagesX = 1
+            oAktPage.ScaleToPagesY = 0
         if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo', 'PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
             bordo = oAktPage.TopBorder
             bordo.LineWidth = 0
@@ -7722,6 +7728,8 @@ def sistema_pagine (arg=None):
             # Adatto lo zoom alla larghezza pagina
             oAktPage.PageScale = 0
             oAktPage.ScaleToPagesX = 1
+            oAktPage.ScaleToPagesY = 0
+
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
             # ~oAktPage.PageScale = 95

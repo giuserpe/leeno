@@ -1,5 +1,6 @@
 LeenO - Computo metrico assistito con LibreOffice
 =====
+Estensione per LibreOffice basata su UltimusFree di Bartolomeo Aimar e distribuita con licenza LGPL.
 
 Cos’è LeenO
 ===========

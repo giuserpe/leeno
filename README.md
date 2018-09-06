@@ -1,6 +1,8 @@
 LeenO - Computo metrico assistito con LibreOffice
 =====
 
+Estensione per LibreOffice basata su UltimusFree di Bartolomeo Aimar e distribuita con licenza LGPL.
+
 Cos’è LeenO
 ===========
 
@@ -18,6 +20,9 @@ Ho cercato il massimo della flessibilità e della potenza, talvolta a scapito de
 
 LibreOffice genera e gestisce file in formato OpenDocument (ODF) ISO/IEC 26300:2006 che è l’unico formato standard aperto riconosciuto. LeenO, essendo un add-on per LibreOffice, aderisce perfettamente allo stesso standard.
 OpenDocument, in quanto standard ISO, garantisce interoperabilità senza barriere tecniche e legali anche tra sistemi operativi diversi, assicurando la scambio dei dati corretto e sicuro oltre che l’accesso agli stessi a lungo termine. Le sue specifiche tecniche sono di pubblico dominio, per cui favorisce la concorrenza impedendo che dette specifiche siano detenute da un singolo produttore di software.
+
+Bartolomeo Aimar
+
 
 Installazione
 =============

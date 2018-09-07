@@ -212,7 +212,7 @@ def invia_voce_ep(arg=None):
     
     ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, 3))
     paste_clip()
-    doppioni()
+    # ~doppioni()
     _gotoDoc(fpartenza)
     oDoc = XSCRIPTCONTEXT.getDocument()
     costi = list()
@@ -250,7 +250,7 @@ def invia_voce_ep(arg=None):
         dccSheet.getRows().insertByIndex(lrow, nuove_righe)
         ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, lrow))
         paste_clip()
-        doppioni()
+        # ~doppioni()
         ddcDoc.CurrentController.setActiveSheet(ddcDoc.getSheets().getByName('Elenco Prezzi'))
 
         _gotoDoc(fpartenza)
@@ -2890,6 +2890,7 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
     lrow = Range2Cell()[1]
     nome_sheet = oSheet.Name
     if nome_sheet in('COMPUTO', 'VARIANTE'):
+        dettaglio_misura_rigo()
         copia_riga_computo(lrow)
     elif nome_sheet == 'CONTABILITA':
         copia_riga_contab(lrow)
@@ -3133,6 +3134,45 @@ def valuta_cella(oCell):
         valore = ''
     if valore == ' ': valore = ''
     return valore
+########################################################################
+def dettaglio_misura_rigo(arg=None):
+# ~def debug(arg=None):
+    '''
+    Indica il dettaglio delle misure nel rigo di descrizione quando
+    incontra delle formule nei valori immessi.
+    bit { integer }  : 1 inserisce i dettagli
+                       0 cancella i dettagli
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    if ' >(' in oSheet.getCellByPosition(2, lrow).String:
+        oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(2, lrow).String.split(' >(')[0]
+    if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a'):
+        for el in range(5, 9):
+            if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
+                stringa =''
+                break
+            else:
+                stringa = None
+
+        if stringa == '':
+            for el in range(5, 9):
+                test = '>('
+                if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
+                    if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
+                        stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
+                else:
+                    stringa = stringa + '*' + str(oSheet.getCellByPosition(el, lrow).String) + '*'
+            while '**' in stringa:
+                stringa=stringa.replace('**','*')
+            if stringa[0] == '*':
+                stringa = stringa[1:-1]
+            else:
+                stringa = stringa[0:-1]
+            stringa = ' >(' + stringa + ')'
+            if oSheet.getCellByPosition(2, lrow).Type.value != 'FORMULA':
+                oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(2, lrow).String + stringa.replace('.',',')
 ########################################################################
 def dettaglio_misure(bit):
     '''
@@ -5452,7 +5492,7 @@ def XPWE_in(arg):
                     percentuale = '0'
                 subcat =(id_sc, dessintetica, percentuale)
                 lista_subcat.append(subcat)
-            #~ MsgBox(str(lista_subcat),'') ; return
+                # ~MsgBox(str(lista_subcat),'') ; return
     except AttributeError:
         pass
 ###
@@ -5503,7 +5543,6 @@ def XPWE_in(arg):
         Aliquote = PweDGConfigurazione[14].text
     except IndexError:
         pass
-    
 ###
     misurazioni = root.find('PweMisurazioni')
     PweElencoPrezzi = misurazioni.getchildren()[0]
@@ -5640,16 +5679,34 @@ def XPWE_in(arg):
         if PweEPAR != None:
             EPARItem = PweEPAR.findall('EPARItem')
             analisi = list()
+            # ~chi(lista_analisi)
             for el in EPARItem:
                 id_an = el.get('ID')
+                # ~chi(id_an)
                 an_tipo = el.find('Tipo').text
+                # ~chi(an_tipo)
                 id_ep = el.find('IDEP').text
+                # ~chi(id_ep)
                 an_des = el.find('Descrizione').text
+                # ~chi(an_des)
                 an_um = el.find('Misura').text
-                an_qt = el.find('Qt').text.replace(' ','')
-                an_pr = el.find('Prezzo').text.replace(' ','')
+                if an_um == None: an_um = ''
+                # ~chi(an_um)
+                try:
+                    an_qt = el.find('Qt').text.replace(' ','')
+                except:
+                    an_qt = ''
+                # ~chi(an_qt)
+                try:
+                    an_pr = el.find('Prezzo').text.replace(' ','')
+                except:
+                    an_pr = ''
+                # ~chi(an_pr)
                 an_fld = el.find('FieldCTL').text
+                # ~chi(an_fld)
                 an_rigo =(id_ep, an_des, an_um, an_qt, an_pr)
+                # ~chi(an_rigo)
+                #
                 analisi.append(an_rigo)
             lista_analisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
             lista_tariffe_analisi.append(tariffa)
@@ -7682,10 +7739,13 @@ def sistema_pagine (arg=None):
             oDoc.getSheets().getByName(el).PageStyle = stili[el]
         except:
             pass
-    #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
-    #~ mri(oAktPage)
-    #~ return
-    
+    ###
+    # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
+    # ~mri(oAktPage)
+    # ~return
+    ###
+    dettaglio_misure(0)
+    dettaglio_misure(1)
     try:
         setPreview(1)
     except:
@@ -7783,12 +7843,11 @@ def sistema_pagine (arg=None):
         #~ bordo.LineWidth = 0
         #~ bordo.OuterLineWidth = 0
         #~ oAktPage.RightBorder = bordo
-        
     return
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-# ~g_exportedScripts = richiesta_offerta,
+g_exportedScripts = genera_variante,
 ########################################################################
 ########################################################################
 # ... here is the python script code

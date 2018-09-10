@@ -152,7 +152,7 @@ Sub elenco_OnUnFocus
 End Sub
 Sub analisi_OnFocus
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
-	ThisComponent.CurrentController().freezeAtPosition(0,2)
+	&apos;ThisComponent.CurrentController().freezeAtPosition(0,2)
 End Sub
 Sub analisi_OnUnFocus
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)

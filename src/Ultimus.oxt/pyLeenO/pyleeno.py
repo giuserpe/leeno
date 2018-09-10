@@ -1037,7 +1037,6 @@ def setPreview(arg=0):
     attribuisce al foglio corrente un colore a scelta
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1746,6 +1745,8 @@ def XPWE_out(arg=None):
     if oDoc.getSheets().hasByName('S2') == False:
         MsgBox('Puoi usare questo comando da un file di computo esistente.','Avviso!')
         return
+    dettaglio_misure(0)
+    numera_voci(1)
     top = Element('PweDocumento')
 #~ dati generali
     PweDatiGenerali = SubElement(top,'PweDatiGenerali')
@@ -2196,6 +2197,7 @@ def XPWE_out(arg=None):
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
     # ~mri (uno.fileUrlToSystemPath(oDoc.getURL()))
     # ~chi(out_file)
+    dettaglio_misure(1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
             out_file = out_file + '-'+ arg + '.xpwe'
@@ -2251,7 +2253,7 @@ def firme_in_calce_run(arg=None):
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
         oSheet.getCellRangeByPosition(1,riga_corrente+3,1,riga_corrente+3).CellStyle = 'ULTIMUS'
-        oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il progettista'
+        oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il Progettista'
         oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE($S2.$C$13)'
 
     if oSheet.Name in('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
@@ -2320,6 +2322,7 @@ def firme_in_calce_run(arg=None):
                 oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
                 oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
+                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
                 oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
                 txt_Format('Bold')
                 oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
@@ -2356,6 +2359,7 @@ def firme_in_calce_run(arg=None):
                 oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
                 oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
+                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
                 oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
                 txt_Format('Italic')
                 oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
@@ -2365,7 +2369,9 @@ def firme_in_calce_run(arg=None):
         oSheet.getCellRangeByPosition(2,inizio_gruppo,ae,inizio_gruppo).CellStyle = "Ultimus_centro"
 
         oSheet.getCellByPosition(2 , riga_corrente).String= 'T O T A L E   €'
+        oSheet.getCellByPosition(ii, riga_corrente).Value = 100
         oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'Ultimus_destra'
+        oSheet.getCellByPosition(ii , riga_corrente).CellStyle = 'Ultimus %'
         oSheet.getCellByPosition(vv , riga_corrente).Formula = '=' + col + str(lRowF) 
         oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
         oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC' + str(lRowF)
@@ -3148,7 +3154,7 @@ def dettaglio_misura_rigo(arg=None):
     lrow = Range2Cell()[1]
     if ' >(' in oSheet.getCellByPosition(2, lrow).String:
         oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(2, lrow).String.split(' >(')[0]
-    if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a'):
+    if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a') and "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2, lrow).String:
         for el in range(5, 9):
             if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                 stringa =''
@@ -3182,11 +3188,12 @@ def dettaglio_misure(bit):
                        0 cancella i dettagli
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+
     oSheet = oDoc.CurrentController.ActiveSheet
     ER = getLastUsedCell(oSheet).EndRow
     if bit == 1:
         for lrow in range(0, ER):
-            if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a'):
+            if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a') and "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2, lrow).String:
                 for el in range(5, 9):
                     if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                         stringa =''
@@ -7713,15 +7720,15 @@ def sistema_pagine (arg=None):
     #~ su_dx = oDoc.NamedRanges.Bozza_8.ReferredCells.String
     
     ### cancella stili di pagina #######################################
-    #~ stili_pagina = list()
-    #~ fine = oDoc.StyleFamilies.getByName('PageStyles').Count
-    #~ for n in range(0, fine):
-        #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
-        #~ stili_pagina.append(oAktPage.DisplayName)
-    #~ for el in stili_pagina:
-        #~ if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE', 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
-            #~ oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
-    #~ return
+    # ~stili_pagina = list()
+    # ~fine = oDoc.StyleFamilies.getByName('PageStyles').Count
+    # ~for n in range(0, fine):
+        # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
+        # ~stili_pagina.append(oAktPage.DisplayName)
+    # ~for el in stili_pagina:
+        # ~if el not in ('PageStyle_Analisi di Prezzo', 'Page_Style_COPERTINE', 'Page_Style_Libretto_Misure2', 'PageStyle_REGISTRO_A4', 'PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
+            # ~oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
+    # ~return
     ### cancella stili di pagina #######################################
     oCentro = ''
     stili = {
@@ -7739,11 +7746,11 @@ def sistema_pagine (arg=None):
             oDoc.getSheets().getByName(el).PageStyle = stili[el]
         except:
             pass
-    ###
+    # ~###
     # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
     # ~mri(oAktPage)
     # ~return
-    ###
+    # ~###
     dettaglio_misure(0)
     dettaglio_misure(1)
     try:
@@ -7795,10 +7802,10 @@ def sistema_pagine (arg=None):
             # ~oAktPage.PageScale = 95
             oHLText = oHeader.LeftText.Text.String = committente
             oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.LeftText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
+            oHRText = oHeader.LeftText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
             oHRText = oHeader.RightText.Text.String = luogo
             oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.RightText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
+            oHRText = oHeader.RightText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
             
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
@@ -7806,9 +7813,9 @@ def sistema_pagine (arg=None):
             oHLText = oFooter.CenterText.Text.String = ''
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
             oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oFooter.LeftText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
+            oHRText = oFooter.LeftText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
             oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oFooter.RightText.Text.Text.CharHeight = 7.0 #/ oAktPage.PageScale * 100
+            oHRText = oFooter.RightText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
             #~ oHRText = oFooter.RightText.Text.String = '#/##'
             oAktPage.RightPageFooterContent= oFooter
             

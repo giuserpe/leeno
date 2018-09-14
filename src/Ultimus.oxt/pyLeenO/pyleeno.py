@@ -7048,7 +7048,14 @@ def XPWE_export_run(arg=None ):
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgXLO = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application")
+    oSheet = oDoc.CurrentController.ActiveSheet
     oDialog1Model = oDlgXLO.Model
+    if oSheet.Name == "COMPUTO":
+        oDlgXLO.getControl("CME_XLO").State = True
+    elif oSheet.Name == "VARIANTE":
+        oDlgXLO.getControl("VAR_XLO").State = True
+    elif oSheet.Name == "CONTABILITA":
+        oDlgXLO.getControl("VAR_XLO").State = True
     oDlgXLO.Title = 'Menù export XPWE'
     if oDlgXLO.execute() ==1:
         if oDlgXLO.getControl("CME_XLO").State == True:

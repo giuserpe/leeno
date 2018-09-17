@@ -1037,13 +1037,12 @@ def setPreview(arg=0):
     attribuisce al foglio corrente un colore a scelta
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet #se questa dà errore, il preview è già attivo
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     oProp = PropertyValue()
-    #~ oProp.Name = 'TabBgColor'
-    #~ oProp.Value = colore
     properties =(oProp,)
     dispatchHelper.executeDispatch(oFrame, '.uno:PrintPreview', '', arg, properties)
 ########################################################################
@@ -3188,8 +3187,10 @@ def dettaglio_misure(bit):
                        0 cancella i dettagli
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-
-    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        oSheet = oDoc.CurrentController.ActiveSheet
+    except:
+        return
     ER = getLastUsedCell(oSheet).EndRow
     if bit == 1:
         for lrow in range(0, ER):
@@ -7737,7 +7738,6 @@ def sistema_pagine (arg=None):
             # ~oDoc.StyleFamilies.getByName('PageStyles').removeByName(el)
     # ~return
     ### cancella stili di pagina #######################################
-    oCentro = ''
     stili = {
         'cP_Cop' : 'Page_Style_COPERTINE',
         'COMPUTO': 'PageStyle_COMPUTO_A4',
@@ -7753,17 +7753,13 @@ def sistema_pagine (arg=None):
             oDoc.getSheets().getByName(el).PageStyle = stili[el]
         except:
             pass
-    # ~###
-    # ~oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
-    # ~mri(oAktPage)
-    # ~return
-    # ~###
+    ###
+    #~ oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByName('PageStyle_COMPUTO_A4')
+    #~ mri(oAktPage)
+    #~ return
+    ###
     dettaglio_misure(0)
     dettaglio_misure(1)
-    try:
-        setPreview(1)
-    except:
-        pass
     for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
         oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
         # ~chi((n , oAktPage.DisplayName))
@@ -7850,8 +7846,10 @@ def sistema_pagine (arg=None):
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL() + '\n\n\n')
             oAktPage.RightPageFooterContent= oFooter
 
-        
-
+    try:
+        setPreview(1)
+    except:
+        pass
         #bordo lato destro in attesa di LibreOffice 6.2
         #~ bordo = oAktPage.RightBorder
         #~ bordo.LineWidth = 0

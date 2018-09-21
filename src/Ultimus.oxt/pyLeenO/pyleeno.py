@@ -2679,6 +2679,7 @@ def azzera_voce(arg=None):
                 lrow = next_voice(lrow, 1)
             except:
                 pass
+        numera_voci(1)
     except:
         pass
     return
@@ -3415,18 +3416,23 @@ def numera_voci(bit=1):#
     n = 1
     if bit==0:
         for x in reversed(range(0, lrow)):
-            if oSheet.getCellByPosition(1,x).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
+            if oSheet.getCellByPosition(1,x).CellStyle in('comp Art-EP', 'comp Art-EP_R') and oSheet.getCellByPosition(1,x).CellBackColor != 15066597:
                 n = oSheet.getCellByPosition(0,x).Value +1
                 break
         for row in range(lrow,lastRow):
-            if oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
+            if oSheet.getCellByPosition(1,row).CellBackColor == 15066597:
+                oSheet.getCellByPosition(0,row).String = ''
+            elif oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
                 oSheet.getCellByPosition(0,row).Value = n
                 n +=1
     if bit==1:
         for row in range(0,lastRow):
-            if oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
+            if oSheet.getCellByPosition(1,row).CellBackColor == 15066597:
+                oSheet.getCellByPosition(0,row).String = ''
+            elif oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
                 oSheet.getCellByPosition(0,row).Value = n
                 n = n+1
+
 ########################################################################
 def refresh(arg=1):
     '''
@@ -7547,8 +7553,8 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-def sistema_cose(arg=None):
-# ~def debug(arg=None):
+# ~def sistema_cose(arg=None):
+def debug(arg=None):
     
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet

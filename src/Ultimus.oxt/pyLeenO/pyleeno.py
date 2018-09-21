@@ -7150,6 +7150,8 @@ def DlgMain(arg=None):
     except:
         return
     sString.Text = oDoc.getDocumentProperties().getUserDefinedProperties().Versione #oSheet.getCellByPosition(7, 290).String
+    sString = oDlgMain.getControl("Label14") #Oggetto del lavoro
+    sString.Text = oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String
     try:
         oSheet = oDoc.Sheets.getByName('COMPUTO')
         sString = oDlgMain.getControl("Label8")

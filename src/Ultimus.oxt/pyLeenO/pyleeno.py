@@ -4346,7 +4346,7 @@ def struct_colore(l):
         colore = col3
         myrange =(col1, col2, col3, col0)
    
-        for n in(3, 5, 7):
+        for n in(3, 7):
             oCellRangeAddr.StartColumn = n
             oCellRangeAddr.EndColumn = n
             oSheet.group(oCellRangeAddr,0)
@@ -5822,9 +5822,10 @@ def XPWE_in(arg):
 perciò saranno importate le sole voci di Elenco Prezzi.
 
 Si tenga conto che:
-    - sarà importato solo il "Prezzo 1" dell'elenco;
-    - il formato XPWE non conserva alcuni dati come
-      le incidenze di sicurezza e di manodopera!""",'ATTENZIONE!')
+- sarà importato solo il "Prezzo 1" dell'elenco;
+- a seconda della versione, il formato XPWE potrebbe
+  non conservare alcuni dati come le incidenze di
+  sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
     if len(lista_misure) != 0:
         if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
@@ -6022,8 +6023,9 @@ Si tenga conto che:
 ###
 # Compilo Analisi di prezzo ############################################
     #~ if len(lista_analisi) !=0:
-    inizializza_analisi()
+    
     if len(lista_analisi) !=0:
+        inizializza_analisi()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_analisi:
             sStRange = Circoscrive_Analisi(Range2Cell()[1])
@@ -6059,6 +6061,8 @@ Si tenga conto che:
             inizializza_analisi()
     #~ #basic_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
     tante_analisi_in_ep()
+    if len(lista_misure) == 0:
+        return
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         genera_variante()
@@ -7135,6 +7139,12 @@ def DlgMain(arg=None):
         code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep + 'leeno_version_code')
     f = open(code_file, 'r')
     
+    sString = oDlgMain.getControl("CommandButton13")
+    if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+        sString.setEnable(False)
+    else:
+        sString.setEnable(True)
+
     sString = oDlgMain.getControl("Label12")
     sString.Text = f.readline()
     

@@ -212,6 +212,10 @@ def invia_voce_ep(arg=None):
     
     ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, 3))
     paste_clip()
+    for el in reversed (range (3, 3+ER-SR+1)):
+        if dccSheet.getCellByPosition(1, el).String == '0,00':
+            dccSheet.getRows().removeByIndex(el, 1)
+
     # ~doppioni()
     _gotoDoc(fpartenza)
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -250,6 +254,7 @@ def invia_voce_ep(arg=None):
         dccSheet.getRows().insertByIndex(lrow, nuove_righe)
         ddcDoc.CurrentController.select(dccSheet.getCellByPosition(0, lrow))
         paste_clip()
+        analisi_in_ElencoPrezzi()
         # ~doppioni()
         ddcDoc.CurrentController.setActiveSheet(ddcDoc.getSheets().getByName('Elenco Prezzi'))
 
@@ -6022,8 +6027,6 @@ Si tenga conto che:
         return
 ###
 # Compilo Analisi di prezzo ############################################
-    #~ if len(lista_analisi) !=0:
-    
     if len(lista_analisi) !=0:
         inizializza_analisi()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')

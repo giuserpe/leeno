@@ -40,7 +40,7 @@
   <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="14" dlg:left="12" dlg:top="146" dlg:width="31" dlg:height="7" dlg:value="Fine voce:"/>
   <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="16" dlg:left="88" dlg:top="11" dlg:width="12" dlg:height="146" dlg:align="vertical"/>
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl1" dlg:tab-index="17" dlg:left="7" dlg:top="117" dlg:width="80" dlg:height="42">
-   <dlg:title dlg:value="Descrizione"/>
+   <dlg:title dlg:value="Caratteri Descrizione"/>
   </dlg:titledbox>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBMat" dlg:tab-index="18" dlg:left="12" dlg:top="92" dlg:width="68" dlg:height="10" dlg:value="Materiali" dlg:checked="false"/>
   <dlg:textfield dlg:id="TextField10" dlg:tab-index="13" dlg:left="50" dlg:top="131" dlg:width="30" dlg:height="10" dlg:help-text="Indica il numero di caratteri da visualizzare a partire dall&apos;inizio della descrizione." dlg:align="center"/>

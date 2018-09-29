@@ -86,6 +86,7 @@ class New_file:
             MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
             salva_come()
+            DlgMain()
         return document
     def usobollo():
         desktop = XSCRIPTCONTEXT.getDesktop()
@@ -364,6 +365,8 @@ def copia_sorgente_per_git(arg=None):
         
             #~ os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
             os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
+    chi(oxt_path)
+    chi(dest)
     distutils.dir_util.copy_tree(oxt_path, dest)
     return
 ########################################################################
@@ -3838,11 +3841,6 @@ def leeno_conf(arg=None):
     oSheet.getCellRangeByName('S1.H326').Value = float(oDlg_config.getControl('TextField9').getText().replace(',','.')) / 100  #maggiorazione
     
 #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
-    if oDlg_config.getControl('TextField10').getText() != '10000': conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oDlg_config.getControl('TextField10').getText())
-    oSheet.getCellRangeByName('S1.H337').Value = float(oDlg_config.getControl('TextField10').getText())
-
-    if oDlg_config.getControl('TextField11').getText() != '10000': conf.write(path_conf, 'Computo', 'fine_voci_abbreviate', oDlg_config.getControl('TextField11').getText())
-    oSheet.getCellRangeByName('S1.H338').Value = float(oDlg_config.getControl('TextField11').getText())
 
     if oDlg_config.getControl('TextField14').getText() != '10000': conf.write(path_conf, 'Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
     oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
@@ -6690,14 +6688,15 @@ def autoexec(arg=None):
     except:
         #~ chi("autoexec py")
         return
-# scegli cosa visualizzare all'avvio:
-    vedi = conf.read(path_conf, 'Generale', 'visualizza')
-    if vedi == 'Menù Principale':
-        DlgMain()
-    elif vedi == 'Dati Generali':
-        Vai_a_Variabili()
-    elif vedi in('Elenco Prezzi', 'COMPUTO'):
-        _gotoSheet(vedi)
+    if len(oDoc.getURL()) != 0:
+    # scegli cosa visualizzare all'avvio:
+        vedi = conf.read(path_conf, 'Generale', 'visualizza')
+        if vedi == 'Menù Principale':
+            DlgMain()
+        elif vedi == 'Dati Generali':
+            Vai_a_Variabili()
+        elif vedi in('Elenco Prezzi', 'COMPUTO'):
+            _gotoSheet(vedi)
 #
 ########################################################################
 def computo_terra_terra(arg=None):
@@ -7143,10 +7142,14 @@ def DlgMain(arg=None):
     f = open(code_file, 'r')
     
     sString = oDlgMain.getControl("CommandButton13")
-    if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-        sString.setEnable(False)
-    else:
-        sString.setEnable(True)
+
+    try:
+        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+            sString.setEnable(False)
+        else:
+            sString.setEnable(True)
+    except:
+        pass
 
     sString = oDlgMain.getControl("Label12")
     sString.Text = f.readline()

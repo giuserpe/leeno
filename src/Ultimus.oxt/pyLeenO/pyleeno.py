@@ -362,11 +362,9 @@ def copia_sorgente_per_git(arg=None):
             dest = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-        
             #~ os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
-            os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
-    chi(oxt_path)
-    chi(dest)
+            #~ os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
+            os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"')
     distutils.dir_util.copy_tree(oxt_path, dest)
     return
 ########################################################################
@@ -2317,30 +2315,33 @@ def firme_in_calce_run(arg=None):
             if oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-0-scritta':
                 #~ chi(riga_corrente)
                 oSheet.getRows().insertByIndex(riga_corrente,1)
+                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).CellStyle = 'ULTIMUS_1'
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
-                oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
+                oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra_1'
                 oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
                 #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
-                oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %_1'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
-                oSheet.getCellRangeByPosition(vv , riga_corrente, ae , riga_corrente).CellStyle = 'Ultimus_totali'
+                oSheet.getCellRangeByPosition(vv , riga_corrente, ae , riga_corrente).CellStyle = 'Ultimus_totali_1'
                 oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC'+ str(i+1)
                 oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
-                oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %_1'
                 oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
-                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
-                oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
-                txt_Format('Bold')
-                oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+                #~ oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
+                #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
+                #~ txt_Format('Bold')
+                #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
                 riga_corrente += 1
             elif oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-1-scritta':
                 #~ chi(riga_corrente)
                 oSheet.getRows().insertByIndex(riga_corrente,1)
-                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
+                #~ oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
+                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).CellStyle = 'ULTIMUS_2'
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
                 oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE("   ";C' + str(i+1) + ')'
+                #~ oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE("   ";C' + str(i+1) + ')'
+                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
                 #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
@@ -2354,22 +2355,23 @@ def firme_in_calce_run(arg=None):
             elif oSheet.getCellByPosition(1 , i).CellStyle == 'livello2 valuta':
                 #~ chi(riga_corrente)
                 oSheet.getRows().insertByIndex(riga_corrente,1)
+                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).CellStyle = 'ULTIMUS_3'
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
-                oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE("      ";C' + str(i+1) + ')'
+                oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra_3'
+                oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
                 #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
-                oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %_3'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
-                oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'ULTIMUS'
+                oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'ULTIMUS_3'
                 oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC'+ str(i+1)
                 oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
-                oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %'
+                oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %_3'
                 oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
-                oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
-                oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
-                txt_Format('Italic')
-                oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+                #~ oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
+                #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
+                #~ txt_Format('Italic')
+                #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
                 riga_corrente += 1
         #~ riga_corrente +=1
      
@@ -2378,7 +2380,7 @@ def firme_in_calce_run(arg=None):
         oSheet.getCellByPosition(2 , riga_corrente).String= 'T O T A L E   €'
         oSheet.getCellByPosition(ii, riga_corrente).Value = 100
         oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'Ultimus_destra'
-        oSheet.getCellByPosition(ii , riga_corrente).CellStyle = 'Ultimus %'
+        oSheet.getCellByPosition(ii , riga_corrente).CellStyle = 'Ultimus %_1'
         oSheet.getCellByPosition(vv , riga_corrente).Formula = '=' + col + str(lRowF) 
         oSheet.getCellByPosition(vv , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
         oSheet.getCellByPosition(ac , riga_corrente).Formula = '=AC' + str(lRowF)
@@ -3175,7 +3177,12 @@ def dettaglio_misura_rigo(arg=None):
                 test = '>('
                 if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                     if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
-                        stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
+                        try:
+                            eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1])
+                            stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
+                        except:
+                            stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).String.split('=')[-1] + ')*'
+                            pass
                 else:
                     stringa = stringa + '*' + str(oSheet.getCellByPosition(el, lrow).String) + '*'
             while '**' in stringa:
@@ -3215,7 +3222,12 @@ def dettaglio_misure(bit):
                         test = '>('
                         if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                             if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
-                                stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
+                                try:
+                                    eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1])
+                                    stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
+                                except:
+                                    stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).String.split('=')[-1] + ')*'
+                                    pass
                         else:
                             stringa = stringa + '*' + str(oSheet.getCellByPosition(el, lrow).String) + '*'
                     while '**' in stringa:
@@ -7799,6 +7811,9 @@ def sistema_pagine (arg=None):
             oAktPage.ScaleToPagesX = 1
             oAktPage.ScaleToPagesY = 0
         if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo', 'PageStyle_COMPUTO_A4', 'PageStyle_Elenco Prezzi'):
+            htxt = 8.0
+            if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo'):
+                htxt = 10.0
             bordo = oAktPage.TopBorder
             bordo.LineWidth = 0
             bordo.OuterLineWidth = 0
@@ -7829,10 +7844,10 @@ def sistema_pagine (arg=None):
             # ~oAktPage.PageScale = 95
             oHLText = oHeader.LeftText.Text.String = committente
             oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.LeftText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
+            oHRText = oHeader.LeftText.Text.Text.CharHeight = htxt #/ 100 * oAktPage.PageScale
             oHRText = oHeader.RightText.Text.String = luogo
             oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oHeader.RightText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
+            oHRText = oHeader.RightText.Text.Text.CharHeight = htxt #/ 100 * oAktPage.PageScale
             
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
@@ -7840,9 +7855,9 @@ def sistema_pagine (arg=None):
             oHLText = oFooter.CenterText.Text.String = ''
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
             oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oFooter.LeftText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
+            oHRText = oFooter.LeftText.Text.Text.CharHeight = htxt #/ 100 * oAktPage.PageScale
             oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHRText = oFooter.RightText.Text.Text.CharHeight = 8.0 #/ 100 * oAktPage.PageScale
+            oHRText = oFooter.RightText.Text.Text.CharHeight = htxt #/ 100 * oAktPage.PageScale
             #~ oHRText = oFooter.RightText.Text.String = '#/##'
             oAktPage.RightPageFooterContent= oFooter
             
@@ -7880,6 +7895,10 @@ def sistema_pagine (arg=None):
         #~ bordo.OuterLineWidth = 0
         #~ oAktPage.RightBorder = bordo
     return
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    mri(oSheet.getCellRangeByName('E4'))
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

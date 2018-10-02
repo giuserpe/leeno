@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_A" dlg:left="178" dlg:top="146" dlg:width="186" dlg:height="163" dlg:help-text="Viste del Computo" dlg:closeable="true" dlg:moveable="true" dlg:title="Scenari, Viste e Azioni su COMPUTO ">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_A" dlg:left="178" dlg:top="146" dlg:width="186" dlg:height="163" dlg:help-text="&amp;45.DialogViste_A.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;46.DialogViste_A.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:background-color="0xffb4af" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:background-color="0xffff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -12,48 +12,48 @@
   <dlg:style dlg:style-id="7" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="0" dlg:left="102" dlg:top="33" dlg:width="80" dlg:height="15" dlg:help-text="Scenario standard per il Computo con i Tag e altre colonne" dlg:value="CONTABILITA&apos;" dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="0" dlg:left="102" dlg:top="33" dlg:width="80" dlg:height="15" dlg:help-text="&amp;47.DialogViste_A.CommandButton8.HelpText" dlg:value="&amp;48.DialogViste_A.CommandButton8.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$attiva_contabilita?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton7" dlg:tab-index="1" dlg:left="102" dlg:top="13" dlg:width="80" dlg:height="15" dlg:value="VARIANTE" dlg:button-type="ok">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton7" dlg:tab-index="1" dlg:left="102" dlg:top="13" dlg:width="80" dlg:height="15" dlg:help-text="&amp;49.DialogViste_A.CommandButton7.HelpText" dlg:value="&amp;50.DialogViste_A.CommandButton7.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$genera_variante?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="3" dlg:left="7" dlg:top="42" dlg:width="80" dlg:height="72">
-   <dlg:title dlg:value="Visualizza "/>
+  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="3" dlg:left="7" dlg:top="42" dlg:width="80" dlg:height="72" dlg:help-text="&amp;51.DialogViste_A.FrameControl2.HelpText">
+   <dlg:title dlg:value="&amp;52.DialogViste_A.FrameControl2.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBCat" dlg:tab-index="6" dlg:left="12" dlg:top="102" dlg:width="68" dlg:height="10" dlg:value="Categorie" dlg:checked="false"/>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton19" dlg:tab-index="7" dlg:left="102" dlg:top="53" dlg:width="80" dlg:height="15" dlg:help-text="Visualizza la vista accorciata (troncata)" dlg:value="Descrizione breve ON/OFF" dlg:button-type="ok">
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBCat" dlg:tab-index="6" dlg:left="12" dlg:top="102" dlg:width="68" dlg:height="10" dlg:help-text="&amp;53.DialogViste_A.CBCat.HelpText" dlg:value="&amp;54.DialogViste_A.CBCat.Label" dlg:checked="false"/>
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton19" dlg:tab-index="7" dlg:left="102" dlg:top="53" dlg:width="80" dlg:height="15" dlg:help-text="&amp;55.DialogViste_A.CommandButton19.HelpText" dlg:value="&amp;56.DialogViste_A.CommandButton19.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBFig" dlg:tab-index="5" dlg:left="12" dlg:top="72" dlg:width="68" dlg:height="10" dlg:value="Figure e annotazioni" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBSic" dlg:tab-index="2" dlg:left="12" dlg:top="82" dlg:width="68" dlg:height="10" dlg:value="Sicurezza" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBMis" dlg:tab-index="4" dlg:left="12" dlg:top="62" dlg:width="68" dlg:height="10" dlg:value="Colonne misure" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBDet" dlg:tab-index="8" dlg:left="12" dlg:top="52" dlg:width="68" dlg:height="10" dlg:value="Dettaglio misure" dlg:checked="false"/>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton22" dlg:tab-index="9" dlg:left="102" dlg:top="73" dlg:width="80" dlg:height="15" dlg:value="Rigenera formule" dlg:button-type="ok">
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBFig" dlg:tab-index="5" dlg:left="12" dlg:top="72" dlg:width="68" dlg:height="10" dlg:help-text="&amp;57.DialogViste_A.CBFig.HelpText" dlg:value="&amp;58.DialogViste_A.CBFig.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBSic" dlg:tab-index="2" dlg:left="12" dlg:top="82" dlg:width="68" dlg:height="10" dlg:help-text="&amp;59.DialogViste_A.CBSic.HelpText" dlg:value="&amp;60.DialogViste_A.CBSic.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBMis" dlg:tab-index="4" dlg:left="12" dlg:top="62" dlg:width="68" dlg:height="10" dlg:help-text="&amp;61.DialogViste_A.CBMis.HelpText" dlg:value="&amp;62.DialogViste_A.CBMis.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBDet" dlg:tab-index="8" dlg:left="12" dlg:top="52" dlg:width="68" dlg:height="10" dlg:help-text="&amp;63.DialogViste_A.CBDet.HelpText" dlg:value="&amp;64.DialogViste_A.CBDet.Label" dlg:checked="false"/>
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton22" dlg:tab-index="9" dlg:left="102" dlg:top="73" dlg:width="80" dlg:height="15" dlg:help-text="&amp;65.DialogViste_A.CommandButton22.HelpText" dlg:value="&amp;66.DialogViste_A.CommandButton22.Label" dlg:button-type="ok">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Computo.Rifa_Formule_Orizzontali?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton10" dlg:tab-index="10" dlg:left="156" dlg:top="134" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton10" dlg:tab-index="10" dlg:left="156" dlg:top="134" dlg:width="25" dlg:height="15" dlg:help-text="&amp;67.DialogViste_A.CommandButton10.HelpText" dlg:default="true" dlg:value="&amp;68.DialogViste_A.CommandButton10.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton12" dlg:tab-index="11" dlg:left="124" dlg:top="134" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:multiline="true"/>
-  <dlg:text dlg:style-id="5" dlg:id="Label1" dlg:tab-index="12" dlg:left="12" dlg:top="131" dlg:width="31" dlg:height="7" dlg:value="Inizio voce:"/>
-  <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="14" dlg:left="12" dlg:top="146" dlg:width="31" dlg:height="7" dlg:value="Fine voce:"/>
-  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="16" dlg:left="88" dlg:top="11" dlg:width="12" dlg:height="146" dlg:align="vertical"/>
-  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl1" dlg:tab-index="17" dlg:left="7" dlg:top="117" dlg:width="80" dlg:height="42">
-   <dlg:title dlg:value="Caratteri Descrizione"/>
+  <dlg:button dlg:style-id="3" dlg:id="CommandButton12" dlg:tab-index="11" dlg:left="124" dlg:top="134" dlg:width="25" dlg:height="15" dlg:help-text="&amp;69.DialogViste_A.CommandButton12.HelpText" dlg:default="true" dlg:value="&amp;70.DialogViste_A.CommandButton12.Label" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label1" dlg:tab-index="12" dlg:left="12" dlg:top="131" dlg:width="31" dlg:height="7" dlg:help-text="&amp;71.DialogViste_A.Label1.HelpText" dlg:value="&amp;72.DialogViste_A.Label1.Label"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="14" dlg:left="12" dlg:top="146" dlg:width="31" dlg:height="7" dlg:help-text="&amp;73.DialogViste_A.Label2.HelpText" dlg:value="&amp;74.DialogViste_A.Label2.Label"/>
+  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="16" dlg:left="88" dlg:top="11" dlg:width="12" dlg:height="146" dlg:help-text="&amp;75.DialogViste_A.FixedLine2.HelpText" dlg:value="&amp;76.DialogViste_A.FixedLine2.Label" dlg:align="vertical"/>
+  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl1" dlg:tab-index="17" dlg:left="7" dlg:top="117" dlg:width="80" dlg:height="42" dlg:help-text="&amp;77.DialogViste_A.FrameControl1.HelpText">
+   <dlg:title dlg:value="&amp;78.DialogViste_A.FrameControl1.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBMat" dlg:tab-index="18" dlg:left="12" dlg:top="92" dlg:width="68" dlg:height="10" dlg:value="Materiali" dlg:checked="false"/>
-  <dlg:textfield dlg:id="TextField10" dlg:tab-index="13" dlg:left="50" dlg:top="131" dlg:width="30" dlg:height="10" dlg:help-text="Indica il numero di caratteri da visualizzare a partire dall&apos;inizio della descrizione." dlg:align="center"/>
-  <dlg:textfield dlg:id="TextField11" dlg:tab-index="15" dlg:left="50" dlg:top="145" dlg:width="30" dlg:height="10" dlg:help-text="Indica il numero di caratteri da visualizzare a partire dalla fine della descrizione." dlg:align="center"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBMat" dlg:tab-index="18" dlg:left="12" dlg:top="92" dlg:width="68" dlg:height="10" dlg:help-text="&amp;79.DialogViste_A.CBMat.HelpText" dlg:value="&amp;80.DialogViste_A.CBMat.Label" dlg:checked="false"/>
+  <dlg:textfield dlg:id="TextField10" dlg:tab-index="13" dlg:left="50" dlg:top="131" dlg:width="30" dlg:height="10" dlg:help-text="&amp;81.DialogViste_A.TextField10.HelpText" dlg:align="center" dlg:value="&amp;82.DialogViste_A.TextField10.Text"/>
+  <dlg:textfield dlg:id="TextField11" dlg:tab-index="15" dlg:left="50" dlg:top="145" dlg:width="30" dlg:height="10" dlg:help-text="&amp;83.DialogViste_A.TextField11.HelpText" dlg:align="center" dlg:value="&amp;84.DialogViste_A.TextField11.Text"/>
   <dlg:radiogroup>
-   <dlg:radio dlg:id="CBMdoCBMdo" dlg:tab-index="19" dlg:left="12" dlg:top="-94" dlg:width="68" dlg:height="10" dlg:value="Incidenza Manodopera"/>
+   <dlg:radio dlg:id="CBMdoCBMdo" dlg:tab-index="19" dlg:left="12" dlg:top="-94" dlg:width="68" dlg:height="10" dlg:help-text="&amp;85.DialogViste_A.CBMdoCBMdo.HelpText" dlg:value="&amp;86.DialogViste_A.CBMdoCBMdo.Label"/>
   </dlg:radiogroup>
-  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl4" dlg:tab-index="20" dlg:left="7" dlg:top="11" dlg:width="80" dlg:height="30">
-   <dlg:title dlg:value="Vista"/>
+  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl4" dlg:tab-index="20" dlg:left="7" dlg:top="11" dlg:width="80" dlg:height="30" dlg:help-text="&amp;87.DialogViste_A.FrameControl4.HelpText">
+   <dlg:title dlg:value="&amp;88.DialogViste_A.FrameControl4.Label"/>
   </dlg:titledbox>
   <dlg:radiogroup>
-   <dlg:radio dlg:style-id="6" dlg:id="OBTerra" dlg:tab-index="21" dlg:left="10" dlg:top="20" dlg:width="75" dlg:height="10" dlg:value="Terra-terra (reset)"/>
-   <dlg:radio dlg:style-id="6" dlg:id="CBMdo" dlg:tab-index="22" dlg:left="10" dlg:top="30" dlg:width="75" dlg:height="10" dlg:value="Incidenza Manodopera"/>
+   <dlg:radio dlg:style-id="6" dlg:id="OBTerra" dlg:tab-index="21" dlg:left="10" dlg:top="20" dlg:width="75" dlg:height="10" dlg:help-text="&amp;89.DialogViste_A.OBTerra.HelpText" dlg:value="&amp;90.DialogViste_A.OBTerra.Label"/>
+   <dlg:radio dlg:style-id="6" dlg:id="CBMdo" dlg:tab-index="22" dlg:left="10" dlg:top="30" dlg:width="75" dlg:height="10" dlg:help-text="&amp;91.DialogViste_A.CBMdo.HelpText" dlg:value="&amp;92.DialogViste_A.CBMdo.Label"/>
   </dlg:radiogroup>
  </dlg:bulletinboard>
 </dlg:window>

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog_Filtro" dlg:left="73" dlg:top="15" dlg:width="261" dlg:height="197" dlg:closeable="true" dlg:moveable="true" dlg:title="    Inserisci i criteri del filtro">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog_Filtro" dlg:left="73" dlg:top="15" dlg:width="261" dlg:height="197" dlg:help-text="&amp;0.Dialog_Filtro.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;1.Dialog_Filtro.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-height="12"/>
   <dlg:style dlg:style-id="1" dlg:font-height="11" dlg:font-slant="oblique"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="3" dlg:left="104" dlg:top="167" dlg:width="115" dlg:height="20" dlg:value="OK!  Filtra">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="3" dlg:left="104" dlg:top="167" dlg:width="115" dlg:height="20" dlg:help-text="&amp;2.Dialog_Filtro.CommandButton2.HelpText" dlg:value="&amp;3.Dialog_Filtro.CommandButton2.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Filtra_2.Dialog_Filtro_Chiudi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="4" dlg:left="26" dlg:top="168" dlg:width="54" dlg:height="20" dlg:value="Annulla" dlg:button-type="cancel">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="4" dlg:left="26" dlg:top="168" dlg:width="54" dlg:height="20" dlg:help-text="&amp;4.Dialog_Filtro.CommandButton3.HelpText" dlg:value="&amp;5.Dialog_Filtro.CommandButton3.Label" dlg:button-type="cancel">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Filtra_2.Dialog_Filtro_Annulla?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:style-id="1" dlg:id="Label1" dlg:tab-index="5" dlg:left="4" dlg:top="5" dlg:width="200" dlg:height="11" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="Sono consentite fino a tre parole da cercare  " dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
-  <dlg:text dlg:style-id="1" dlg:id="Label2" dlg:tab-index="6" dlg:left="6" dlg:top="18" dlg:width="231" dlg:height="11" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="Ad esempio scrivendo nei tre campi le parole:  gatto   pelle   zia" dlg:multiline="true" dlg:tabstop="true"/>
-  <dlg:text dlg:style-id="1" dlg:id="Label5" dlg:tab-index="7" dlg:left="4" dlg:top="29" dlg:width="200" dlg:height="11" dlg:help-text="NB:  Igora le spunte sopra" dlg:value="Trovera la voce contenete la frase: " dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
-  <dlg:text dlg:style-id="1" dlg:id="Label6" dlg:tab-index="8" dlg:left="17" dlg:top="40" dlg:width="200" dlg:height="11" dlg:help-text="NB:  Igora le spunte sopra" dlg:value=" &quot;Il gatto dorme sul divano di pelle della zia&quot;" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
-  <dlg:textfield dlg:id="TextField1" dlg:tab-index="0" dlg:left="30" dlg:top="91" dlg:width="174" dlg:height="15"/>
-  <dlg:textfield dlg:id="TextField2" dlg:tab-index="1" dlg:left="30" dlg:top="116" dlg:width="174" dlg:height="13"/>
-  <dlg:textfield dlg:id="TextField3" dlg:tab-index="2" dlg:left="30" dlg:top="143" dlg:width="174" dlg:height="15"/>
-  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="9" dlg:left="32" dlg:top="61" dlg:width="45" dlg:height="20" dlg:spin="true"/>
+  <dlg:text dlg:style-id="1" dlg:id="Label1" dlg:tab-index="5" dlg:left="4" dlg:top="5" dlg:width="200" dlg:height="11" dlg:help-text="&amp;6.Dialog_Filtro.Label1.HelpText" dlg:value="&amp;7.Dialog_Filtro.Label1.Label" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="1" dlg:id="Label2" dlg:tab-index="6" dlg:left="6" dlg:top="18" dlg:width="231" dlg:height="11" dlg:help-text="&amp;8.Dialog_Filtro.Label2.HelpText" dlg:value="&amp;9.Dialog_Filtro.Label2.Label" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="1" dlg:id="Label5" dlg:tab-index="7" dlg:left="4" dlg:top="29" dlg:width="200" dlg:height="11" dlg:help-text="&amp;10.Dialog_Filtro.Label5.HelpText" dlg:value="&amp;11.Dialog_Filtro.Label5.Label" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:text dlg:style-id="1" dlg:id="Label6" dlg:tab-index="8" dlg:left="17" dlg:top="40" dlg:width="200" dlg:height="11" dlg:help-text="&amp;12.Dialog_Filtro.Label6.HelpText" dlg:value="&amp;13.Dialog_Filtro.Label6.Label" dlg:align="center" dlg:multiline="true" dlg:tabstop="true"/>
+  <dlg:textfield dlg:id="TextField1" dlg:tab-index="0" dlg:left="30" dlg:top="91" dlg:width="174" dlg:height="15" dlg:help-text="&amp;14.Dialog_Filtro.TextField1.HelpText" dlg:value="&amp;15.Dialog_Filtro.TextField1.Text"/>
+  <dlg:textfield dlg:id="TextField2" dlg:tab-index="1" dlg:left="30" dlg:top="116" dlg:width="174" dlg:height="13" dlg:help-text="&amp;16.Dialog_Filtro.TextField2.HelpText" dlg:value="&amp;17.Dialog_Filtro.TextField2.Text"/>
+  <dlg:textfield dlg:id="TextField3" dlg:tab-index="2" dlg:left="30" dlg:top="143" dlg:width="174" dlg:height="15" dlg:help-text="&amp;18.Dialog_Filtro.TextField3.HelpText" dlg:value="&amp;19.Dialog_Filtro.TextField3.Text"/>
+  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="9" dlg:left="32" dlg:top="61" dlg:width="45" dlg:height="20" dlg:help-text="&amp;20.Dialog_Filtro.ComboBox1.HelpText" dlg:value="&amp;21.Dialog_Filtro.ComboBox1.Text" dlg:spin="true"/>
  </dlg:bulletinboard>
 </dlg:window>

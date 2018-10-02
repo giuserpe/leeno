@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgSiNo" dlg:left="231" dlg:top="170" dlg:width="180" dlg:height="61" dlg:closeable="true" dlg:moveable="true">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgSiNo" dlg:left="231" dlg:top="170" dlg:width="180" dlg:height="61" dlg:help-text="&amp;397.DlgSiNo.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;398.DlgSiNo.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:text dlg:id="Label1" dlg:tab-index="0" dlg:left="10" dlg:top="8" dlg:width="159" dlg:height="24" dlg:value="Label1"/>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="1" dlg:left="145" dlg:top="39" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:text dlg:id="Label1" dlg:tab-index="0" dlg:left="10" dlg:top="8" dlg:width="159" dlg:height="24" dlg:help-text="&amp;399.DlgSiNo.Label1.HelpText" dlg:value="&amp;400.DlgSiNo.Label1.Label"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="1" dlg:left="145" dlg:top="39" dlg:width="25" dlg:height="15" dlg:help-text="&amp;401.DlgSiNo.CommandButton3.HelpText" dlg:default="true" dlg:value="&amp;402.DlgSiNo.CommandButton3.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton4" dlg:tab-index="2" dlg:left="114" dlg:top="39" dlg:width="25" dlg:height="15" dlg:help-text="Anche Esc chiude la finestra di dialogo" dlg:default="true" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton4" dlg:tab-index="2" dlg:left="114" dlg:top="39" dlg:width="25" dlg:height="15" dlg:help-text="&amp;403.DlgSiNo.CommandButton4.HelpText" dlg:default="true" dlg:value="&amp;404.DlgSiNo.CommandButton4.Label" dlg:button-type="cancel" dlg:multiline="true"/>
  </dlg:bulletinboard>
 </dlg:window>

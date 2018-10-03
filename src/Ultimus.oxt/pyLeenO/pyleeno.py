@@ -6895,7 +6895,7 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 212 #VERSIONE CORRENTE
+    adegua_a = 213 #VERSIONE CORRENTE
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione corrente di LeenO?

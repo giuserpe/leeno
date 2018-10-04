@@ -2289,7 +2289,6 @@ def firme_in_calce_run(arg=None):
             vv = 9
             ss = 9
             col ='J'
-        #~ mri(oSheet.getCellByPosition(lRowF,0).Rows)
         oSheet.getRows().insertByIndex(lRowF, 17)
         oSheet.getCellRangeByPosition(0, lRowF, ss, lRowF+17-1).CellStyle = 'ULTIMUS'
         # raggruppo i righi di mirura
@@ -2313,13 +2312,11 @@ def firme_in_calce_run(arg=None):
         riga_corrente += 1
         for i in range(0, lRowF):
             if oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-0-scritta':
-                #~ chi(riga_corrente)
                 oSheet.getRows().insertByIndex(riga_corrente,1)
                 oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).CellStyle = 'ULTIMUS_1'
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
                 oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra_1'
                 oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
-                #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %_1'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
@@ -2328,21 +2325,13 @@ def firme_in_calce_run(arg=None):
                 oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
                 oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %_1'
                 oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
-                #~ oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
-                #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
-                #~ txt_Format('Bold')
-                #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
                 riga_corrente += 1
             elif oSheet.getCellByPosition(1 , i).CellStyle == 'Livello-1-scritta':
-                #~ chi(riga_corrente)
                 oSheet.getRows().insertByIndex(riga_corrente,1)
-                #~ oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
                 oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).CellStyle = 'ULTIMUS_2'
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
                 oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra'
-                #~ oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE("   ";C' + str(i+1) + ')'
                 oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
-                #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
@@ -2353,13 +2342,11 @@ def firme_in_calce_run(arg=None):
                 oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
                 riga_corrente += 1
             elif oSheet.getCellByPosition(1 , i).CellStyle == 'livello2 valuta':
-                #~ chi(riga_corrente)
                 oSheet.getRows().insertByIndex(riga_corrente,1)
                 oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).CellStyle = 'ULTIMUS_3'
                 oSheet.getCellByPosition(1 , riga_corrente).Formula = '=B' + str(i+1) 
                 oSheet.getCellByPosition(1 , riga_corrente).CellStyle = 'Ultimus_destra_3'
                 oSheet.getCellByPosition(2 , riga_corrente).Formula = '=C' + str(i+1)
-                #~ chi(formulaSCat)
                 oSheet.getCellByPosition(ii , riga_corrente).Formula = '=' + col + str(riga_corrente+1) + '/' + col + str(lRowF) + '*100'
                 oSheet.getCellByPosition(ii, riga_corrente).CellStyle = 'Ultimus %_3'
                 oSheet.getCellByPosition(vv , riga_corrente).Formula = '='+ col + str(i+1) 
@@ -2368,16 +2355,8 @@ def firme_in_calce_run(arg=None):
                 oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD'+ str(i+1) + '*100'
                 oSheet.getCellByPosition(ad, riga_corrente).CellStyle = 'Ultimus %_3'
                 oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE'+ str(i+1)
-                #~ oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente).clearContents(HARDATTR)
-                #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
-                #~ txt_Format('Italic')
-                #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
                 riga_corrente += 1
-        #~ riga_corrente +=1
-     
         oSheet.getCellRangeByPosition(2,inizio_gruppo,ae,inizio_gruppo).CellStyle = "Ultimus_centro"
-
-        oSheet.getCellByPosition(2 , riga_corrente).String= 'T O T A L E   €'
         oSheet.getCellByPosition(ii, riga_corrente).Value = 100
         oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'Ultimus_destra'
         oSheet.getCellByPosition(ii , riga_corrente).CellStyle = 'Ultimus %_1'
@@ -2388,9 +2367,8 @@ def firme_in_calce_run(arg=None):
         oSheet.getCellByPosition(ae , riga_corrente).Formula = '=AE' + str(lRowF)
         oSheet.getCellByPosition(ae , riga_corrente).CellStyle = 'Ultimus_Bordo_sotto'
         oSheet.getCellByPosition(ad , riga_corrente).Formula = '=AD' + str(lRowF) + '*100'
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, riga_corrente, 30, riga_corrente))
-        txt_Format('Bold')
-        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+        oSheet.getCellByPosition(2 , riga_corrente).String= '          T O T A L E   €'
+        oSheet.getCellByPosition(2 , riga_corrente).CellStyle = 'ULTIMUS_1'
         fine_gruppo = riga_corrente
     #~ DATA
         oSheet.getCellByPosition(2 , riga_corrente+3).Formula = '=CONCATENATE("Data, ";TEXT(NOW();"GG/MM/AAAA"))'
@@ -2415,7 +2393,6 @@ def firme_in_calce_run(arg=None):
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
         ###
         #~ oSheet.getCellByPosition(lRowF,0).Rows.IsManualPageBreak = True
-
     oDialogo_attesa.endExecute()
     oDoc.CurrentController.ZoomValue = 100
 ########################################################################
@@ -7895,10 +7872,57 @@ def sistema_pagine (arg=None):
         #~ bordo.OuterLineWidth = 0
         #~ oAktPage.RightBorder = bordo
     return
-def debug(arg=None):
+########################################################################
+# ~def debug(arg=None):
+def minuti(arg=None): #COMUNE DI MATERA
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    mri(oSheet.getCellRangeByName('E4'))
+    ''' Mette in ordine i minuti lavorati '''
+    test = getLastUsedCell(oSheet).EndRow+1
+    for y in range(2, test):
+        if ' ' in oSheet.getCellByPosition(6, y).String:
+            try:
+                testo = oSheet.getCellByPosition(6, y).String
+                oSheet.getCellByPosition(12, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
+                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value
+                oSheet.getCellByPosition(13, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
+                oSheet.getCellByPosition(13, y).Value = oSheet.getCellByPosition(13, y).Value
+                oSheet.getCellByPosition(14, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
+                oSheet.getCellByPosition(14, y).Value = oSheet.getCellByPosition(14, y).Value 
+                oSheet.getCellByPosition(15, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
+                oSheet.getCellByPosition(15, y).Value = oSheet.getCellByPosition(15, y).Value 
+                oSheet.getCellByPosition(16, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
+                oSheet.getCellByPosition(16, y).Value = oSheet.getCellByPosition(16, y).Value 
+                oSheet.getCellByPosition(17, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
+                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
+            except:
+                pass
+        oSheet.getCellRangeByPosition(12, y, 25, y).CellStyle = 'MINUTI'
+        oSheet.getCellRangeByPosition(19, y, 24, y).CellStyle = 'minuti_bis'
+        oSheet.getCellByPosition(18, y).CellStyle = 'DATE'
+        if oSheet.getCellByPosition(0, y).String not in ('Domenica') and oSheet.getCellByPosition(12, y).Value != 0:
+            oSheet.getCellByPosition(18, y).Formula = '=B' + str(y+1)
+            oSheet.getCellByPosition(25, y).Formula = '=U' + str(y+1) + '-T' + str(y+1) + '+W' + str(y+1) + '-V' + str(y+1) + '+Y' + str(y+1) + '-X' + str(y+1)
+            oSheet.getCellByPosition(20, y).Formula = '=N' + str(y+1)
+            if oSheet.getCellByPosition(0, y).String in ('Sabato'):
+                oSheet.getCellByPosition(19, y).String = ''
+                oSheet.getCellByPosition(20, y).String = ''
+                oSheet.getCellByPosition(21, y).Formula = '=M' + str(y+1)
+                oSheet.getCellByPosition(22, y).String = ''
+                oSheet.getCellByPosition(23, y).String = ''
+                oSheet.getCellByPosition(24, y).Formula = '=N' + str(y+1)
+            else:
+                oSheet.getCellByPosition(19, y).Formula = '=IF(M' + str(y+1) + '>=TIME(7;50;0);M' + str(y+1) + ';TIME(7;50;0))+TIME(6;0;0)'
+        if oSheet.getCellByPosition(0, y).String in ('Lunedì', 'Mecoledì', 'Venerdì') and oSheet.getCellByPosition(14, y).Value != 0:
+            oSheet.getCellByPosition(21, y).Formula = '=O' + str(y+1)
+            oSheet.getCellByPosition(22, y).String  = ''
+            oSheet.getCellByPosition(23, y).String  = ''
+            oSheet.getCellByPosition(24, y).Formula = '=P' + str(y+1)
+        if oSheet.getCellByPosition(0, y).String in ('Martedì', 'Giovedì') and oSheet.getCellByPosition(14, y).Value != 0:
+            oSheet.getCellByPosition(21, y).Formula = '=O' + str(y+1)
+            oSheet.getCellByPosition(22, y).Formula = '=IF(V'+ str(y+1) +'<=TIME(15;30;0);TIME(15;30;0);V'+ str(y+1) +')'
+            oSheet.getCellByPosition(23, y).Formula = '=W'+ str(y+1) +'+TIME(3;00;0)'
+            oSheet.getCellByPosition(24, y).Formula = '=P' + str(y+1)
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

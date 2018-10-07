@@ -756,17 +756,19 @@ def ultima_voce(oSheet):
     #~ oSheet = oDoc.CurrentController.ActiveSheet
     nRow = getLastUsedCell(oSheet).EndRow
     for n in reversed(range(0, nRow)):
+        #~ if oSheet.getCellByPosition(0, n).CellStyle in('Comp TOTALI'):
         if oSheet.getCellByPosition(0, n).CellStyle in('EP-aS', 'EP-Cs', 'An-sfondo-basso Att End', 'Comp End Attributo',
                                                         'Comp End Attributo_R', 'comp Int_colonna', 'comp Int_colonna_R_prima',
                                                         'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'):
             break
     return n
 ########################################################################
-def uFindStringCol(sString, nCol, oSheet):
+def uFindStringCol(sString, nCol, oSheet, start=0):
     '''
     sString { string }  : stringa da cercare
     nCol    { integer } : indice di colonna
     oSheet  { object }  :
+    start   { integer } : riga di partenza
 
     Trova la prima ricorrenza di una stringa(sString) nella
     colonna nCol di un foglio di calcolo(oSheet) e restituisce
@@ -776,7 +778,7 @@ def uFindStringCol(sString, nCol, oSheet):
     oCursor = oSheet.createCursorByRange(oCell)
     oCursor.gotoEndOfUsedArea(True)
     aAddress = oCursor.RangeAddress
-    for nRow in range(0, aAddress.EndRow+1):
+    for nRow in range(start, aAddress.EndRow+1):
         if sString in oSheet.getCellByPosition(nCol,nRow).String:
             return(nRow)
 ########################################################################
@@ -1101,9 +1103,9 @@ def show_sheets(x=True):
     for nome in ('COMPUTO', 'Elenco Prezzi'):
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = True
-    #~ if x == True:
-        #~ for nome in ('M1', 'S1', 'S2', 'S3', 'S4', 'S5'):
-            #~ oSheet = oDoc.getSheets().getByName(nome).IsVisible = False
+    if x == True:
+        for nome in ('M1', 'S1', 'S2', 'S3', 'S4', 'S5'):
+            oSheet = oDoc.getSheets().getByName(nome).IsVisible = False
 def nascondi_sheets(arg=None):
     show_sheets(False)
 ########################################################################
@@ -1175,7 +1177,7 @@ def adatta_altezza_riga(nSheet=None):
     oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
-    if float(loVersion()[:3]) > 5.2:
+    if float(loVersion()[:3]) > 5.2 and float(loVersion()[:3]) < 6.2:
         # ~for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
             # ~try:
                 # ~oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
@@ -2410,7 +2412,6 @@ def next_voice(lrow, n=1):
     fine = ultima_voce(oSheet)+1
     if lrow >= fine:
         return lrow
-
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
         if n==0:
             sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
@@ -2424,9 +2425,10 @@ def next_voice(lrow, n=1):
                 lrow = y
                 break
     elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-        lrow +=1
-    else:
-        return
+        while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+            lrow +=1
+    #~ else:
+        #~ return
     return lrow
 ########################################################################
 def cancella_analisi_da_ep(arg=None):
@@ -2566,7 +2568,8 @@ def Circoscrive_Voce_Computo_Att(lrow):
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ lrow = Range2Cell()[1]
     #~ if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
-    if oSheet.getCellByPosition(0, lrow).CellStyle in('comp progress', 'comp 10 s', 'Comp Start Attributo', 'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-1-scritta', 'livello2 valuta'):
+    if oSheet.getCellByPosition(0, lrow).CellStyle in('comp progress', 'comp 10 s', 'Comp Start Attributo',
+    'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'):
         while oSheet.getCellByPosition(0, lrow).CellStyle not in('Comp End Attributo', 'Comp End Attributo_R'):
             lrow +=1
         lrowE=lrow
@@ -6004,14 +6007,6 @@ Si tenga conto che:
     for i in reversed(range(3, getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
             oSheet.getRows().removeByIndex(i, 1)
-    if len(lista_misure) == 0:
-        #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
-        MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
-        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        oDoc.CurrentController.setActiveSheet(oSheet)
-        oDoc.CurrentController.ZoomValue = 100
-        oDialogo_attesa.endExecute()
-        return
 ###
 # Compilo Analisi di prezzo ############################################
     if len(lista_analisi) !=0:
@@ -6023,24 +6018,23 @@ Si tenga conto che:
             oSheet.getCellByPosition(0, lrow).String = el[0]
             oSheet.getCellByPosition(1, lrow).String = el[1]
             oSheet.getCellByPosition(2, lrow).String = el[2]
-            #~ oSheet.getCellByPosition(6, lrow).Value = el[4]
-            n = lrow + 2
             y = 0
+            n = lrow + 2
             for x in el[3]:
-                copia_riga_analisi(n)
+                if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
+                    copia_riga_analisi(n)
                 try:
                     oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
                 except:
-                    oSheet.getCellByPosition(0, n).String = '--'
-                    oSheet.getCellByPosition(1, n).String = el[3][y][1]
-                    oSheet.getCellByPosition(2, n).String = el[3][y][2]
-                    oSheet.getCellByPosition(4, n).Value = el[3][y][4]
-                    oSheet.getCellByPosition(8, n).Value = 0
-                try:
-                    float (el[3][y][3])
-                    oSheet.getCellByPosition(3, n).Value = el[3][y][3]
-                except:
-                    oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
+                    n = uFindStringCol(el[3][y][1], 1, oSheet, lrow)
+
+                if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
+                    try:
+                        float (el[3][y][3])
+                        oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                    except:
+                        #~ pass
+                        oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
             oSheet.getRows().removeByIndex(n, 3)
@@ -6049,10 +6043,23 @@ Si tenga conto che:
             oSheet.getCellByPosition(0, n+8).String = ''
             oSheet.getCellByPosition(0, n+11).String = ''
             inizializza_analisi()
-    #~ #basic_LeenO('Voci_Sposta.elimina_voce') #rinvia a basic
+    elimina_voce (ultima_voce(oSheet), 0)
     tante_analisi_in_ep()
+    for n in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
+        if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?' and oSheet.getCellByPosition(0, n-1).CellStyle == 'An-lavoraz-Cod-sx':
+            oSheet.getRows().removeByIndex(n, 1)
+        if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?':
+            oSheet.getCellByPosition(0, n).String = ''
     if len(lista_misure) == 0:
+        #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
+        MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oDoc.CurrentController.setActiveSheet(oSheet)
+        oDoc.CurrentController.ZoomValue = 100
+        refresh(1)
+        oDialogo_attesa.endExecute()
         return
+        
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         genera_variante()
@@ -6259,7 +6266,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 18 #'NUOVE FUNZIONALITA'
 Lsubv= "4.dev" #'CORREZIONE BUGS
-noVoce =('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
+noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
 stili_analisi =('An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
@@ -6645,7 +6652,7 @@ def autoexec(arg=None):
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if 'Esempio_' not in oDoc.getURL():
         oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
-#~ RegularExpressions and Wildcards are mutually exclusive, only one can have the value TRUE.
+#~ RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
 #~ If both are set to TRUE via API calls then the last one set takes precedence.
     try:
         oDoc.Wildcards = False
@@ -7295,6 +7302,7 @@ def toolbar_vedi(arg=None):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
         elif nSheet in('COMPUTO','VARIANTE'):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
+        fissa()
     except:
         pass
 #######################################################################
@@ -7873,56 +7881,35 @@ def sistema_pagine (arg=None):
         #~ oAktPage.RightBorder = bordo
     return
 ########################################################################
-# ~def debug(arg=None):
-def minuti(arg=None): #COMUNE DI MATERA
+def debug(arg=None):
+    '''
+    ripristina le formule
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    ''' Mette in ordine i minuti lavorati '''
-    test = getLastUsedCell(oSheet).EndRow+1
-    for y in range(2, test):
-        if ' ' in oSheet.getCellByPosition(6, y).String:
-            try:
-                testo = oSheet.getCellByPosition(6, y).String
-                oSheet.getCellByPosition(12, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
-                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value
-                oSheet.getCellByPosition(13, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
-                oSheet.getCellByPosition(13, y).Value = oSheet.getCellByPosition(13, y).Value
-                oSheet.getCellByPosition(14, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
-                oSheet.getCellByPosition(14, y).Value = oSheet.getCellByPosition(14, y).Value 
-                oSheet.getCellByPosition(15, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
-                oSheet.getCellByPosition(15, y).Value = oSheet.getCellByPosition(15, y).Value 
-                oSheet.getCellByPosition(16, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
-                oSheet.getCellByPosition(16, y).Value = oSheet.getCellByPosition(16, y).Value 
-                oSheet.getCellByPosition(17, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
-                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
-            except:
-                pass
-        oSheet.getCellRangeByPosition(12, y, 25, y).CellStyle = 'MINUTI'
-        oSheet.getCellRangeByPosition(19, y, 24, y).CellStyle = 'minuti_bis'
-        oSheet.getCellByPosition(18, y).CellStyle = 'DATE'
-        if oSheet.getCellByPosition(0, y).String not in ('Domenica') and oSheet.getCellByPosition(12, y).Value != 0:
-            oSheet.getCellByPosition(18, y).Formula = '=B' + str(y+1)
-            oSheet.getCellByPosition(25, y).Formula = '=U' + str(y+1) + '-T' + str(y+1) + '+W' + str(y+1) + '-V' + str(y+1) + '+Y' + str(y+1) + '-X' + str(y+1)
-            oSheet.getCellByPosition(20, y).Formula = '=N' + str(y+1)
-            if oSheet.getCellByPosition(0, y).String in ('Sabato'):
-                oSheet.getCellByPosition(19, y).String = ''
-                oSheet.getCellByPosition(20, y).String = ''
-                oSheet.getCellByPosition(21, y).Formula = '=M' + str(y+1)
-                oSheet.getCellByPosition(22, y).String = ''
-                oSheet.getCellByPosition(23, y).String = ''
-                oSheet.getCellByPosition(24, y).Formula = '=N' + str(y+1)
-            else:
-                oSheet.getCellByPosition(19, y).Formula = '=IF(M' + str(y+1) + '>=TIME(7;50;0);M' + str(y+1) + ';TIME(7;50;0))+TIME(6;0;0)'
-        if oSheet.getCellByPosition(0, y).String in ('Lunedì', 'Mecoledì', 'Venerdì') and oSheet.getCellByPosition(14, y).Value != 0:
-            oSheet.getCellByPosition(21, y).Formula = '=O' + str(y+1)
-            oSheet.getCellByPosition(22, y).String  = ''
-            oSheet.getCellByPosition(23, y).String  = ''
-            oSheet.getCellByPosition(24, y).Formula = '=P' + str(y+1)
-        if oSheet.getCellByPosition(0, y).String in ('Martedì', 'Giovedì') and oSheet.getCellByPosition(14, y).Value != 0:
-            oSheet.getCellByPosition(21, y).Formula = '=O' + str(y+1)
-            oSheet.getCellByPosition(22, y).Formula = '=IF(V'+ str(y+1) +'<=TIME(15;30;0);TIME(15;30;0);V'+ str(y+1) +')'
-            oSheet.getCellByPosition(23, y).Formula = '=W'+ str(y+1) +'+TIME(3;00;0)'
-            oSheet.getCellByPosition(24, y).Formula = '=P' + str(y+1)
+    row = 6
+    last = ultima_voce(oSheet)
+    # ~chi((row, last))
+    while row < last:
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row))
+        rispristina_voce()
+        row = next_voice(row, 1)
+    Rinumera_TUTTI_Capitoli2()
+    return
+
+########################################################################
+def fissa (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name in('COMPUTO', 'VARIANTE', ' Elenco Prezzi'):
+        oDoc.CurrentController.freezeAtPosition(0, 3)
+    elif oSheet.Name in('Analisi di Prezzo'):
+        oDoc.CurrentController.freezeAtPosition(0, 2)
+def debug (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    chi(uFindStringCol('MANODOPERA', 1, oSheet, 20))
+    
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

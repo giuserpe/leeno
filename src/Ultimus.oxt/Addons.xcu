@@ -286,7 +286,7 @@
             <value>%origin%/icons/print_ok</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Sistema intestazioni e pie' di pagina</value>
+            <value>Anteprima di stampa</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

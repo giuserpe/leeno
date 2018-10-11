@@ -3123,11 +3123,17 @@ def inverti_segno(arg=None):
         for lrow in range(SR, ER+1):
             if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
                 if '-' in oSheet.getCellByPosition(9, lrow).Formula:
-                    oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                    if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
+                        oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
+                    else:
+                        oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
                     for x in range (2, 10):
                         oSheet.getCellByPosition(x, lrow).CharColor = -1
                 else:
-                    oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                    if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
+                        oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
+                    else:
+                        oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
                     for x in range (2, 10):
                         oSheet.getCellByPosition(x, lrow).CharColor = 16724787
 ########################################################################
@@ -5330,7 +5336,6 @@ def vedi_voce_xpwe(lrow,vRif,flags=''):
     if oSheet.Name == 'CONTABILITA':
         sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
     else:
-        #~ sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';$S1.$H$334)'
         sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art +';" - ";LEFT(' + des + ';$S1.$H$334);" - [";' + um + ';" ";'+ quantity+ ';"]";)'
     oSheet.getCellByPosition(2, lrow).Formula= sformula
     oSheet.getCellByPosition(4, lrow).Formula='=' + quantity

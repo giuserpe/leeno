@@ -2061,6 +2061,29 @@ def XPWE_out(arg=None):
                 PweEPAR = SubElement(PweEPAnalisi,'PweEPAR')
                 nEPARItem = 2
                 for x in range(n, n+100):
+                    if oSheet.getCellByPosition(0, x).CellStyle == 'An-lavoraz-desc':
+                        EPARItem = SubElement(PweEPAR,'EPARItem')
+                        EPARItem.set('ID', str(nEPARItem))
+                        nEPARItem += 1
+                        Tipo = SubElement(EPARItem,'Tipo')
+                        Tipo.text = '0'
+                        IDEP = SubElement(EPARItem,'IDEP')
+                        IDEP.text = diz_ep.get(oSheet.getCellByPosition(0, x).String)
+                        if IDEP.text == None:
+                            IDEP.text ='-2'
+                        Descrizione = SubElement(EPARItem,'Descrizione')
+                        if '=IF(' in oSheet.getCellByPosition(1, x).String:
+                            Descrizione.text = ''
+                        else:
+                            Descrizione.text = oSheet.getCellByPosition(1, x).String
+                        Misura = SubElement(EPARItem,'Misura')
+                        Misura.text = ''
+                        Qt = SubElement(EPARItem,'Qt')
+                        Qt.text = ''
+                        Prezzo = SubElement(EPARItem,'Prezzo')
+                        Prezzo.text = ''
+                        FieldCTL = SubElement(EPARItem,'FieldCTL')
+                        FieldCTL.text = '0'
                     if oSheet.getCellByPosition(0, x).CellStyle == 'An-lavoraz-Cod-sx' and \
                     oSheet.getCellByPosition(1, x).String != '':
                         EPARItem = SubElement(PweEPAR,'EPARItem')
@@ -2427,8 +2450,8 @@ def next_voice(lrow, n=1):
     elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
         while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
             lrow +=1
-    #~ else:
-        #~ return
+    else:
+        return
     return lrow
 ########################################################################
 def cancella_analisi_da_ep(arg=None):
@@ -6037,19 +6060,20 @@ Si tenga conto che:
                         oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
-            oSheet.getRows().removeByIndex(n, 3)
-            oSheet.getCellByPosition(0, n+2).String = ''
-            oSheet.getCellByPosition(0, n+5).String = ''
-            oSheet.getCellByPosition(0, n+8).String = ''
-            oSheet.getCellByPosition(0, n+11).String = ''
+            #~ oSheet.getRows().removeByIndex(n, 3)
+            # ~oSheet.getCellByPosition(0, n+2).String = ''
+            # ~oSheet.getCellByPosition(0, n+5).String = ''
+            # ~oSheet.getCellByPosition(0, n+8).String = ''
+            # ~oSheet.getCellByPosition(0, n+11).String = ''
             inizializza_analisi()
-    elimina_voce (ultima_voce(oSheet), 0)
-    tante_analisi_in_ep()
-    for n in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
-        if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?' and oSheet.getCellByPosition(0, n-1).CellStyle == 'An-lavoraz-Cod-sx':
-            oSheet.getRows().removeByIndex(n, 1)
-        if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?':
-            oSheet.getCellByPosition(0, n).String = ''
+        elimina_voce (ultima_voce(oSheet), 0)
+        tante_analisi_in_ep()
+        fine = getLastUsedCell(oSheet).EndRow
+        for n in reversed(range(0, fine)):
+            if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?' and oSheet.getCellByPosition(0, n-1).CellStyle == 'An-lavoraz-Cod-sx':
+                oSheet.getRows().removeByIndex(n, 1)
+            if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?':
+                oSheet.getCellByPosition(0, n).String = ''
     if len(lista_misure) == 0:
         #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
         MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')
@@ -6091,7 +6115,7 @@ Si tenga conto che:
                 testspcat = idspcat
                 testcat = '0'
                 Inser_SuperCapitolo_arg(lrow, lista_supcat[eval(idspcat)-1][1])
-                lrow = lrow + 1
+                lrow +=1
         except UnboundLocalError:
             pass
         try:
@@ -6099,13 +6123,12 @@ Si tenga conto che:
                 testcat = idcat
                 testsbcat = '0'
                 Inser_Capitolo_arg(lrow, lista_cat[eval(idcat)-1][1])
-                lrow = lrow + 1
+                lrow +=1
         except UnboundLocalError:
             pass
         try:
             if idsbcat != testsbcat:
                 testsbcat = idsbcat
-                
                 Inser_SottoCapitolo_arg(lrow, lista_subcat[eval(idsbcat)-1][1])
         except UnboundLocalError:
             pass
@@ -6218,22 +6241,27 @@ Si tenga conto che:
                         va = eval(mis[3])
                 lista_n = list()
                 if mis[9] != '-2':
+                    oSheet.getCellRangeByPosition(6, SR, 8, SR).clearContents(VALUE + FORMULA)
                     for el in (va, vb, vc, vd):
-                        if el != '' : lista_n.append(el)
+                        if el != '' and el != 0.0 : lista_n.append(el)
                     vedi = diz_vv.get(mis[9])
                     try:
                         vedi_voce_xpwe(SR, vedi, mis[8])
                     except:
-                        MsgBox("""Il file di origine è particolarmente disordinato.
-Riordinando il computo trovo riferimenti a voci non ancora inserite.
+                        # ~MsgBox("""Il file di origine è particolarmente disordinato.
+# ~Riordinando il computo trovo riferimenti a voci non ancora inserite.
 
-Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
-"""\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
+# ~Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
+# ~"""\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
+                        oSheet.getCellByPosition(44, SR).String = dict_articoli.get(ID).get('tariffa')
+                    if len(lista_n) == 4:
+                        val = '=(' + str(lista_n[2]) + ')*(' + str(lista_n[3]) + ')'
+                        val.replace('(=','(')
+                        lista_n = (lista_n[0], lista_n[1], val)
                     try:
                         root.find('CopyRight').text
                         x = 0
                         if len(lista_n) != 0:
-                            lista_n.remove('')
                             for n in lista_n:
                                 if n != '':
                                     try: 
@@ -7908,7 +7936,14 @@ def fissa (arg=None):
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi(uFindStringCol('MANODOPERA', 1, oSheet, 20))
+    fine = getLastUsedCell(oSheet).EndRow
+    for n in range(0, fine):
+        if oSheet.getCellByPosition(1, n).Value - \
+        oSheet.getCellByPosition(2, n).Value != 0:
+            oSheet.getCellByPosition(3, n).Value = \
+            oSheet.getCellByPosition(1, n).Value - \
+            oSheet.getCellByPosition(2, n).Value
+            # ~oSheet.getRows().removeByIndex(n, 1)
     
 ########################################################################
 ########################################################################

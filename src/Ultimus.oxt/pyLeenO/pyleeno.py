@@ -6233,7 +6233,19 @@ Si tenga conto che:
                     parziale_core(SR)
                     oSheet.getRows().removeByIndex(SR+1, 1)
                     descrizione =''
-                    
+
+                if mis[9] != '-2':
+                    vedi = diz_vv.get(mis[9])
+                    try:
+                        vedi_voce_xpwe(SR, vedi, mis[8])
+                    except:
+                        MsgBox("""Il file di origine è particolarmente disordinato.
+Riordinando il computo trovo riferimenti a voci non ancora inserite.
+
+Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
+"""\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
+                        oSheet.getCellByPosition(44, SR).String = dict_articoli.get(ID).get('tariffa')
+                # ~
                 if '-' in mis[7]:
                     for x in range(5, 8):
                         try:
@@ -6241,7 +6253,11 @@ Si tenga conto che:
                                 oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
                         except:
                             pass
-                    oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
+                    # ~inverti_segno()
+                    if oSheet.getCellByPosition(4, SR).Type.value == 'EMPTY':
+                        oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
+                    else:
+                        oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + '))'
 
                 if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
                     va = oSheet.getCellByPosition(5, SR).Formula
@@ -6270,39 +6286,6 @@ Si tenga conto che:
                         va = eval(mis[3].replace('^','**'))
                     else:
                         va = eval(mis[3])
-                lista_n = list()
-                if mis[9] != '-2':
-                    oSheet.getCellRangeByPosition(6, SR, 8, SR).clearContents(VALUE + FORMULA)
-                    for el in (va, vb, vc, vd):
-                        if el != '' and el != 0.0 : lista_n.append(el)
-                    vedi = diz_vv.get(mis[9])
-                    try:
-                        vedi_voce_xpwe(SR, vedi, mis[8])
-                    except:
-                        # ~MsgBox("""Il file di origine è particolarmente disordinato.
-# ~Riordinando il computo trovo riferimenti a voci non ancora inserite.
-
-# ~Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
-# ~"""\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
-                        oSheet.getCellByPosition(44, SR).String = dict_articoli.get(ID).get('tariffa')
-                    if len(lista_n) == 4:
-                        val = '=(' + str(lista_n[2]) + ')*(' + str(lista_n[3]) + ')'
-                        val.replace('(=','(')
-                        lista_n = (lista_n[0], lista_n[1], val)
-                    try:
-                        root.find('CopyRight').text
-                        x = 0
-                        if len(lista_n) != 0:
-                            for n in lista_n:
-                                if n != '':
-                                    try: 
-                                        float(n)
-                                        oSheet.getCellByPosition(6+x, SR).Value = n
-                                    except:
-                                        oSheet.getCellByPosition(6+x, SR).Formula = n
-                                x +=1
-                    except:
-                        pass
                 SR = SR+1
     numera_voci()
     try:

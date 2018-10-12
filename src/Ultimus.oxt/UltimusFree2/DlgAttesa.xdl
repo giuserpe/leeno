@@ -9,7 +9,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="333" dlg:top="55" dlg:width="3" dlg:height="0" dlg:help-text="&amp;317.DlgAttesa.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;318.DlgAttesa.CommandButton1.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="131" dlg:top="41" dlg:width="2" dlg:height="2" dlg:help-text="&amp;319.DlgAttesa.CommandButton2.HelpText" dlg:value="&amp;320.DlgAttesa.CommandButton2.Label" dlg:button-type="ok"/>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="0" dlg:top="0" dlg:width="2" dlg:height="2" dlg:help-text="&amp;319.DlgAttesa.CommandButton2.HelpText" dlg:value="&amp;320.DlgAttesa.CommandButton2.Label" dlg:button-type="ok"/>
   <dlg:text dlg:id="Label1" dlg:tab-index="3" dlg:left="11" dlg:top="49" dlg:width="150" dlg:height="26" dlg:help-text="&amp;321.DlgAttesa.Label1.HelpText" dlg:value="&amp;322.DlgAttesa.Label1.Label" dlg:align="center"/>
   <dlg:text dlg:id="Label2" dlg:tab-index="4" dlg:left="11" dlg:top="79" dlg:width="150" dlg:height="14" dlg:help-text="&amp;323.DlgAttesa.Label2.HelpText" dlg:value="&amp;324.DlgAttesa.Label2.Label" dlg:align="center"/>
  </dlg:bulletinboard>

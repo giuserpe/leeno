@@ -6979,7 +6979,7 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('H319:H326').CellStyle = 'Setvar C_3'
         oSheet.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
         oSheet.getCellRangeByName('H323').CellStyle = 'Setvar C'
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = 672 #percentuale negativo
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = 11 #percentuale
         #dal 209 cambia nome di custom propierty
         oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
         if oUDP.getPropertySetInfo().hasPropertyByName("Versione LeenO"):
@@ -7949,6 +7949,9 @@ def fissa (arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 2)
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
+    cell = oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat
+    chi(cell)
+    return
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = getLastUsedCell(oSheet).EndRow
     for n in reversed(range(0, fine)):

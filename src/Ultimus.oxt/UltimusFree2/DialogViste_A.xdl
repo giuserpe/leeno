@@ -2,7 +2,7 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_A" dlg:left="178" dlg:top="146" dlg:width="186" dlg:height="163" dlg:help-text="&amp;45.DialogViste_A.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;46.DialogViste_A.Title">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0xffb4af" dlg:font-name="Arial Narrow" dlg:font-height="10" dlg:font-stylename="Normale" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xffb4af" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:background-color="0xffff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="2" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>

@@ -7951,14 +7951,10 @@ def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = getLastUsedCell(oSheet).EndRow
-    for n in range(0, fine):
-        if oSheet.getCellByPosition(1, n).Value - \
-        oSheet.getCellByPosition(2, n).Value != 0:
-            oSheet.getCellByPosition(3, n).Value = \
-            oSheet.getCellByPosition(1, n).Value - \
-            oSheet.getCellByPosition(2, n).Value
-            # ~oSheet.getRows().removeByIndex(n, 1)
-    
+    for n in reversed(range(0, fine)):
+        if oSheet.getCellByPosition(27, n).Type.value != 'EMPTY':
+            oSheet.getCellByPosition(28, n).Formula = '=IF(N' +str(n+1)+ '-AB' +str(n+1)+ '=0;"";N' +str(n+1)+ '-AB' +str(n+1)+ ')'
+            #~ oSheet.getRows().removeByIndex(n, 1)
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

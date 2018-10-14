@@ -5574,6 +5574,7 @@ def XPWE_in(arg):
     oneriaccessorisc = PweDGAnalisi.find('OneriAccessoriSc').text
     confquantita = PweDGAnalisi.find('ConfQuantita').text
     oSheet = oDoc.getSheets().getByName('S1')
+    
     try:
         oSheet.getCellByPosition(7,318).Value = float(oneriaccessorisc)/100
     except:
@@ -7039,7 +7040,7 @@ dell'operazione che terminerà con un avviso.
         ########################################################################
         _gotoSheet('S5')
         oSheet = oDoc.getSheets().getByName('S5')
-        
+        oSheet.getCellRangeByPosition(0, 0, 250, getLastUsedCell(oSheet).EndRow).clearContents(EDITATTR + FORMATTED + HARDATTR)
         oSheet.getCellRangeByName('C10').Formula ='=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$338)))'
         oSheet.getCellRangeByName('C24').Formula ='=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B24;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$336)))'
         oSheet.getCellRangeByName('I24').CellStyle = 'Comp-Bianche in mezzo_R'
@@ -7057,6 +7058,15 @@ dell'operazione che terminerà con un avviso.
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)
                 oSheet = oDoc.getSheets().getByName(el)
+                # sposto il vedivoce nella colonna E
+                fine = getLastUsedCell(oSheet).EndRow
+                oSheet.getCellRangeByPosition(3, 0, 4, fine).clearContents(HARDATTR)
+                for n in range(0, fine):
+                    if '=CONCATENATE("' in oSheet.getCellByPosition(2,n).Formula and oSheet.getCellByPosition(4, n).Type.value == 'EMPTY':
+                        oSheet.getCellByPosition(4, n).Formula = oSheet.getCellByPosition(5, n).Formula
+                        oSheet.getCellByPosition(5, n).String = ''
+                        oSheet.getCellByPosition(9, n).Formula='=IF(PRODUCT(E' + str(n+1) + ':I' + str(n+1) + ')=0;"";PRODUCT(E' + str(n+1) + ':I' + str(n+1) + '))'
+                # sposto il vedivoce nella colonna E/
                 if oSheet.Name != 'CONTABILITA': Rinumera_TUTTI_Capitoli2()
                 oSheet.getCellByPosition(31,2).String = 'Super Cat'
                 oSheet.getCellByPosition(32,2).String = 'Cat'

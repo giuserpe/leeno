@@ -6925,15 +6925,15 @@ def adegua_tmpl(arg=None):
     adegua_a = 213 #VERSIONE CORRENTE
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
-alla versione corrente di LeenO?
+alla versione di LeenO installata?
 
 In caso affermativo dovrai attendere il completamento
 dell'operazione che terminerà con un avviso.
 ''', "Richiesta") !=2:
-            MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione corrente di LeenO, potresti avere dei malfunzionamenti!''', 'Avviso!')
+            MsgBox('''Non avendo effettuato l'adeguamento del lavoro alla versione di LeenO installata, potresti avere dei malfunzionamenti!''', 'Avviso!')
             return
         sproteggi_sheet_TUTTE()
-        oDialogo_attesa = dlg_attesa("Adeguamento alla versione corrente di LeenO...")
+        oDialogo_attesa = dlg_attesa("Adeguamento alla versione di LeenO installata...")
         oDoc.CurrentController.ZoomValue = 400
         attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
@@ -7943,7 +7943,7 @@ def debug(arg=None):
     last = ultima_voce(oSheet)
     # ~chi((row, last))
     while row < last:
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row))
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row)).oSheet.getCellRangeByName("C1")
         rispristina_voce()
         row = next_voice(row, 1)
     Rinumera_TUTTI_Capitoli2()
@@ -7959,10 +7959,11 @@ def fissa (arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 2)
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    cell = oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat
-    chi(cell)
-    return
+    cell = oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU')
     oSheet = oDoc.CurrentController.ActiveSheet
+    #~ mri(oSheet.getCellRangeByName("F17"))
+    mri(cell)
+    return
     fine = getLastUsedCell(oSheet).EndRow
     for n in reversed(range(0, fine)):
         if oSheet.getCellByPosition(27, n).Type.value != 'EMPTY':

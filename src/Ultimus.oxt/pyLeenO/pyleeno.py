@@ -30,6 +30,7 @@ import threading
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 from datetime import datetime, date
+#~ from com.sun.star.lang import Locale
 from com.sun.star.beans import PropertyValue
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 #~ from com.sun.star.table.CellContentType import TEXT, EMPTY, VALUE, FORMULA
@@ -5399,6 +5400,26 @@ def converti_stringhe(arg=None):
                 pass
     return
 ########################################################################
+def getNumFormat (NumberFormats):
+    '''
+    Restituisce il numero identificativo del formato sulla base di una
+    stringa di rifetrimento.
+    FormatString { string } : codifica letterale del numero; es.: "#.##0,00"
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    LocalSettings = uno.createUnoStruct("com.sun.star.lang.Locale")
+    LocalSettings.Language = "it"
+    LocalSettings.Country = "IT"
+    NumberFormats = oDoc.NumberFormats
+    FormatString # = "#.##0,00"
+    NumberFormatId = NumberFormats.queryKey(FormatString, LocalSettings, True)
+
+    if NumberFormatId == -1:
+       NumberFormatId = NumberFormats.addNew(FormatString, LocalSettings)
+    return NumberFormatId
+########################################################################
 def XPWE_in(arg):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -5587,24 +5608,39 @@ def XPWE_in(arg):
         oSheet.getCellByPosition(7,320).Value = float(utiliimpresa)/100
     except:
         pass
-###
+### imposto le approssimazioni
     try:
-        PweDGConfigurazione = dati.getchildren()[3][0].getchildren()    #PweDGConfigurazione
-        Divisa = PweDGConfigurazione[0].text
-        ConversioniIN = PweDGConfigurazione[1].text
-        FattoreConversione = PweDGConfigurazione[2].text
-        Cambio = PweDGConfigurazione[3].text
-        PartiUguali = PweDGConfigurazione[4].text
-        PartiUguali = PweDGConfigurazione[5].text
-        Larghezza = PweDGConfigurazione[6].text
-        HPeso = PweDGConfigurazione[7].text
-        Quantita = PweDGConfigurazione[8].text
-        Prezzi = PweDGConfigurazione[9].text
-        PrezziTotale = PweDGConfigurazione[10].text
-        ConvPrezzi= PweDGConfigurazione[11].text
-        ConvPrezziTotale = PweDGConfigurazione[12].text
-        IncidenzaPercentuale = PweDGConfigurazione[13].text
-        Aliquote = PweDGConfigurazione[14].text
+        dec = {0 : 143,
+        1 : 142,
+        2 : 135,
+        3 : 141,
+        4 : 782,
+        5 : 783,
+        6 : 784,
+        7 : 623,
+        8 : 786,
+        9 : 787,
+        }
+        PweDGConfigNumeri = dati.find('PweDGConfigurazione').getchildren()[0]
+        Divisa = PweDGConfigNumeri.find('Divisa').text
+        ConversioniIN = PweDGConfigNumeri.find('ConversioniIN').text
+        FattoreConversione = PweDGConfigNumeri.find('FattoreConversione').text
+        Cambio = PweDGConfigNumeri.find('Cambio').text
+        PartiUguali = PweDGConfigNumeri.find('PartiUguali').text.split('.')[-1].split('|')[0]
+        Larghezza = PweDGConfigNumeri.find('Larghezza').text.split('.')[-1].split('|')[0]
+        Lunghezza = PweDGConfigNumeri.find('Lunghezza').text.split('.')[-1].split('|')[0]
+        HPeso = PweDGConfigNumeri.find('HPeso').text.split('.')[-1].split('|')[0]
+        Quantita = PweDGConfigNumeri.find('Quantita').text.split('.')[-1].split('|')[0]
+        Prezzi = PweDGConfigNumeri.find('Prezzi').text.split('.')[-1].split('|')[0]
+        PrezziTotale = PweDGConfigNumeri.find('PrezziTotale').text.split('.')[-1].split('|')[0]
+        ConvPrezzi = PweDGConfigNumeri.find('ConvPrezzi').text.split('.')[-1].split('|')[0]
+        ConvPrezziTotale = PweDGConfigNumeri.find('ConvPrezziTotale').text.split('.')[-1].split('|')[0]
+        IncidenzaPercentuale = PweDGConfigNumeri.find('IncidenzaPercentuale').text.split('.')[-1].split('|')[0]
+        Aliquote = PweDGConfigNumeri.find('Aliquote').text.split('.')[-1].split('|')[0]
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU').NumberFormat = dec.get(int(PartiUguali))
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LUNG').NumberFormat = dec.get(int(Lunghezza))
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat = dec.get(int(Larghezza))
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat = dec.get(int(HPeso))
     except IndexError:
         pass
 ###
@@ -7959,16 +7995,16 @@ def fissa (arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 2)
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    cell = oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU')
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ mri(oSheet.getCellRangeByName("F17"))
-    mri(cell)
-    return
     fine = getLastUsedCell(oSheet).EndRow
+    #~ chi (Locale)
+    chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat)
+    return
     for n in reversed(range(0, fine)):
         if oSheet.getCellByPosition(27, n).Type.value != 'EMPTY':
             oSheet.getCellByPosition(28, n).Formula = '=IF(N' +str(n+1)+ '-AB' +str(n+1)+ '=0;"";N' +str(n+1)+ '-AB' +str(n+1)+ ')'
             #~ oSheet.getRows().removeByIndex(n, 1)
+
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

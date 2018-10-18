@@ -375,9 +375,9 @@ def avvia_IDE(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
-
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        os.system ('nemo ' + LeenO_path() + '&& geany ' + LeenO_path() + '/pyLeenO/pyleeno.py')
+        subprocess.Popen('nemo ' + LeenO_path(), shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen('geany ' + LeenO_path() + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         os.system ('explorer.exe ' + LeenO_path())
         os.system ('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py')
@@ -7764,7 +7764,7 @@ def processo (arg):
 # ~def debug(arg=None):
     ps = subprocess.Popen("ps -A", shell=True, stdout=subprocess.PIPE)
     #~ chi (str(ps.stdout.read()))
-    arg = 'soffice'
+    #~ arg = 'soffice'
     if arg in (str(ps.stdout.read())):
         chi ('ci stà')
 

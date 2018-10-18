@@ -333,6 +333,7 @@ def oggi():
     return('/'.join(reversed(str(datetime.now()).split(' ')[0].split('-'))))
 import distutils.dir_util
 ########################################################################
+gitk = 0
 def copia_sorgente_per_git(arg=None):
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
@@ -348,12 +349,11 @@ def copia_sorgente_per_git(arg=None):
     make_pack(bar=1)
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        pass
+        global gitk
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-        
-        #~ os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt')
-        os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
-
+        if gitk == 0:
+            os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
+            gitk = 1
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
             try:
@@ -7758,16 +7758,15 @@ def subst_str (arg=None):
     ReplaceDescriptor.SearchString = "str1"
     ReplaceDescriptor.ReplaceString = "str2"
     oSheet.replaceAll(ReplaceDescriptor)
-    
+########################################################################
 def processo (arg):
     '''Verifica l'esistenza di un processo di sistema'''
-# ~def debug(arg=None):
     ps = subprocess.Popen("ps -A", shell=True, stdout=subprocess.PIPE)
-    #~ chi (str(ps.stdout.read()))
     #~ arg = 'soffice'
     if arg in (str(ps.stdout.read())):
-        chi ('ci stà')
-
+        return True
+    else:
+        return False
 ########################################################################
 def GetRegistryKeyContent(sKeyName, bForUpdate):
     '''Dà accesso alla configurazione utente di LibreOffice'''

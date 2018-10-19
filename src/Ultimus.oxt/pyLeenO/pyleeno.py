@@ -5417,12 +5417,22 @@ def getNumFormat (FormatString):
     LocalSettings.Language = "it"
     LocalSettings.Country = "IT"
     NumberFormats = oDoc.NumberFormats
-    FormatString # = "#.##0,00"
+    #~ FormatString # = "#.##0,00"
     NumberFormatId = NumberFormats.queryKey(FormatString, LocalSettings, True)
 
     if NumberFormatId == -1:
        NumberFormatId = NumberFormats.addNew(FormatString, LocalSettings)
     return NumberFormatId
+########################################################################
+def getFormatString (stile_cella):
+    '''
+    Recupera la stringa di riferimento dal nome dello stile di cella.
+    stile_cella { string } : nome dello stile di cella
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    num = oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).NumberFormat
+    return oDoc.getNumberFormats().getByKey(num).FormatString
 ########################################################################
 def XPWE_in(arg):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -5472,12 +5482,11 @@ def XPWE_in(arg):
     committente = DatiGenerali[4].text
     impresa = DatiGenerali[5].text
     parteopera = DatiGenerali[6].text
-###
-#PweDGCapitoliCategorie
+
+### PweDGCapitoliCategorie
     try:
         CapCat = dati.find('PweDGCapitoliCategorie')
-###
-#PweDGSuperCapitoli
+### PweDGSuperCapitoli
         lista_supcap = list()
         if CapCat.find('PweDGSuperCapitoli'):
             PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
@@ -5496,8 +5505,7 @@ def XPWE_in(arg):
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
                 lista_supcap.append(diz)
-###
-#PweDGCapitoli
+### PweDGCapitoli
         lista_cap = list()
         if CapCat.find('PweDGCapitoli'):
             PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
@@ -5516,8 +5524,7 @@ def XPWE_in(arg):
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
                 lista_cap.append(diz)
-###
-#PweDGSubCapitoli
+### PweDGSubCapitoli
         lista_subcap = list()
         if CapCat.find('PweDGSubCapitoli'):
             PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
@@ -5536,8 +5543,7 @@ def XPWE_in(arg):
                 diz['dessintetica'] = dessintetica
                 diz['percentuale'] = percentuale
                 lista_subcap.append(diz)
-###
-#PweDGSuperCategorie
+### PweDGSuperCategorie
         lista_supcat = list()
         if CapCat.find('PweDGSuperCategorie'):
             PweDGSuperCategorie = CapCat.find('PweDGSuperCategorie').getchildren()
@@ -5550,9 +5556,7 @@ def XPWE_in(arg):
                     percentuale = '0'
                 supcat =(id_sc, dessintetica, percentuale)
                 lista_supcat.append(supcat)
-            #~ MsgBox(str(lista_supcat),'') ; return
-###
-#PweDGCategorie
+### PweDGCategorie
         lista_cat = list()
         if CapCat.find('PweDGCategorie'):
             PweDGCategorie = CapCat.find('PweDGCategorie').getchildren()
@@ -5565,9 +5569,7 @@ def XPWE_in(arg):
                     percentuale = '0'
                 cat =(id_sc, dessintetica, percentuale)
                 lista_cat.append(cat)
-            #~ MsgBox(str(lista_cat),'')
-###
-#PweDGSubCategorie
+### PweDGSubCategorie
         lista_subcat = list()
         if CapCat.find('PweDGSubCategorie'):
             PweDGSubCategorie = CapCat.find('PweDGSubCategorie').getchildren()
@@ -5580,18 +5582,15 @@ def XPWE_in(arg):
                     percentuale = '0'
                 subcat =(id_sc, dessintetica, percentuale)
                 lista_subcat.append(subcat)
-                # ~MsgBox(str(lista_subcat),'') ; return
     except AttributeError:
         pass
-###
-#PweDGWBS
+### PweDGWBS
     try:
         PweDGWBS = dati.find('PweDGWBS')
         pass
     except AttributeError:
         pass
-###
-#PweDGAnalisi
+### PweDGAnalisi
     PweDGAnalisi = dati.find('PweDGModuli').getchildren()[0]
     speseutili = PweDGAnalisi.find('SpeseUtili').text
     spesegenerali = PweDGAnalisi.find('SpeseGenerali').text
@@ -5649,8 +5648,8 @@ def XPWE_in(arg):
 ###
     misurazioni = root.find('PweMisurazioni')
     PweElencoPrezzi = misurazioni.getchildren()[0]
-###
-# leggo l'elenco prezzi ################################################
+
+### leggo l'elenco prezzi ##############################################
     epitems = PweElencoPrezzi.findall('EPItem')
     dict_articoli = dict()
     lista_articoli = list()
@@ -5782,34 +5781,23 @@ def XPWE_in(arg):
         if PweEPAR != None:
             EPARItem = PweEPAR.findall('EPARItem')
             analisi = list()
-            # ~chi(lista_analisi)
             for el in EPARItem:
                 id_an = el.get('ID')
-                # ~chi(id_an)
                 an_tipo = el.find('Tipo').text
-                # ~chi(an_tipo)
                 id_ep = el.find('IDEP').text
-                # ~chi(id_ep)
                 an_des = el.find('Descrizione').text
-                # ~chi(an_des)
                 an_um = el.find('Misura').text
                 if an_um == None: an_um = ''
-                # ~chi(an_um)
                 try:
                     an_qt = el.find('Qt').text.replace(' ','')
                 except:
                     an_qt = ''
-                # ~chi(an_qt)
                 try:
                     an_pr = el.find('Prezzo').text.replace(' ','')
                 except:
                     an_pr = ''
-                # ~chi(an_pr)
                 an_fld = el.find('FieldCTL').text
-                # ~chi(an_fld)
                 an_rigo =(id_ep, an_des, an_um, an_qt, an_pr)
-                # ~chi(an_rigo)
-                #
                 analisi.append(an_rigo)
             lista_analisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
             lista_tariffe_analisi.append(tariffa)
@@ -5855,7 +5843,6 @@ def XPWE_in(arg):
             new_id_l = list()
 
             for el in righi_mis:
-                #~ diz_rig = dict()
                 rgitem = el.get('ID')
                 idvv = el.find('IDVV').text
                 if el.find('Descrizione').text != None:
@@ -6131,11 +6118,6 @@ Si tenga conto che:
                         oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
-            #~ oSheet.getRows().removeByIndex(n, 3)
-            # ~oSheet.getCellByPosition(0, n+2).String = ''
-            # ~oSheet.getCellByPosition(0, n+5).String = ''
-            # ~oSheet.getCellByPosition(0, n+8).String = ''
-            # ~oSheet.getCellByPosition(0, n+11).String = ''
             inizializza_analisi()
         elimina_voce (ultima_voce(oSheet), 0)
         tante_analisi_in_ep()
@@ -7998,20 +7980,17 @@ def fissa (arg=None):
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    PartiUguali = '3'
-    chi(int(PartiUguali))
-    chi(strall("#.##0,", 6+int(PartiUguali), pos=1))
-    chi(getNumFormat(strall("#.##0,", 6+int(PartiUguali), 1)))
+    mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
+
     return
     fine = getLastUsedCell(oSheet).EndRow
     #~ chi (Locale)
-    chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat)
+    chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat)
     return
     for n in reversed(range(0, fine)):
         if oSheet.getCellByPosition(27, n).Type.value != 'EMPTY':
             oSheet.getCellByPosition(28, n).Formula = '=IF(N' +str(n+1)+ '-AB' +str(n+1)+ '=0;"";N' +str(n+1)+ '-AB' +str(n+1)+ ')'
             #~ oSheet.getRows().removeByIndex(n, 1)
-
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

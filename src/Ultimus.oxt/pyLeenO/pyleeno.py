@@ -5634,6 +5634,16 @@ def XPWE_in(arg):
         oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LUNG').NumberFormat = getNumFormat(strall("#.##0,", 6+int(Lunghezza), 1))
         oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat = getNumFormat(strall("#.##0,", 6+int(Larghezza), 1))
         oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat = getNumFormat(strall("#.##0,", 6+int(HPeso), 1))
+        for el in ('Comp-Variante num sotto', 'An-lavoraz-input', 'Blu'):
+            oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat = getNumFormat(strall("#.##0,", 6+int(Quantita), 1))
+        for el in ('comp sotto Unitario', 'An-lavoraz-generica'):
+            oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat = getNumFormat(strall("#.##0,", 6+int(PrezziTotale), 1))
+        for el in ('comp sotto Euro Originale', 'Livello-0-scritta mini val',
+        'Livello-1-scritta mini val', 'livello2 scritta mini', 'Comp TOTALI',
+        'Ultimus_totali_1', 'Ultimus_bordo', 'ULTIMUS_3', 'Ultimus_Bordo_sotto',
+        'Comp-Variante num sotto','An-valuta-dx', 'An-1v-dx', 'An-lavoraz-generica',
+        'An-lavoraz-Utili-num sin'):
+            oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat = getNumFormat(strall("#.##0,", 6+int(PrezziTotale), 1))
     except IndexError:
         pass
 ###

@@ -333,7 +333,6 @@ def oggi():
     return('/'.join(reversed(str(datetime.now()).split(' ')[0].split('-'))))
 import distutils.dir_util
 ########################################################################
-gitk = 0
 def copia_sorgente_per_git(arg=None):
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
@@ -349,11 +348,9 @@ def copia_sorgente_per_git(arg=None):
     make_pack(bar=1)
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        global gitk
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-        if gitk == 0:
+        if processo('wish') == False:
             os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
-            gitk = 1
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
             try:
@@ -5363,13 +5360,20 @@ def vedi_voce(arg=None):
         if to < lrow:
             vedi_voce_xpwe(lrow, to,)
 
-def strall(el, n=3):
+def strall(el, n=3, pos=0):
     '''
     Allunga una stringa fino a n.
+    el  { string }   : stringa di partenza
+    n   { int }      : numero di caratteri da aggiungere
+    pos { int }      : 0 = prefisso; 1 = suffisso
+
     '''
     #~ el ='o'
     while len(el) < n:
-        el = '0' + el
+        if pos == 0:
+            el = '0' + el
+        else:
+            el = el + '0'
     return el
 
 ########################################################################
@@ -5400,7 +5404,7 @@ def converti_stringhe(arg=None):
                 pass
     return
 ########################################################################
-def getNumFormat (NumberFormats):
+def getNumFormat (FormatString):
     '''
     Restituisce il numero identificativo del formato sulla base di una
     stringa di rifetrimento.
@@ -5610,17 +5614,6 @@ def XPWE_in(arg):
         pass
 ### imposto le approssimazioni
     try:
-        dec = {0 : 143,
-        1 : 142,
-        2 : 135,
-        3 : 141,
-        4 : 782,
-        5 : 783,
-        6 : 784,
-        7 : 623,
-        8 : 786,
-        9 : 787,
-        }
         PweDGConfigNumeri = dati.find('PweDGConfigurazione').getchildren()[0]
         Divisa = PweDGConfigNumeri.find('Divisa').text
         ConversioniIN = PweDGConfigNumeri.find('ConversioniIN').text
@@ -5637,10 +5630,10 @@ def XPWE_in(arg):
         ConvPrezziTotale = PweDGConfigNumeri.find('ConvPrezziTotale').text.split('.')[-1].split('|')[0]
         IncidenzaPercentuale = PweDGConfigNumeri.find('IncidenzaPercentuale').text.split('.')[-1].split('|')[0]
         Aliquote = PweDGConfigNumeri.find('Aliquote').text.split('.')[-1].split('|')[0]
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU').NumberFormat = dec.get(int(PartiUguali))
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LUNG').NumberFormat = dec.get(int(Lunghezza))
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat = dec.get(int(Larghezza))
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat = dec.get(int(HPeso))
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU').NumberFormat = getNumFormat(strall("#.##0,", 6+int(PartiUguali), 1))
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LUNG').NumberFormat = getNumFormat(strall("#.##0,", 6+int(Lunghezza), 1))
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat = getNumFormat(strall("#.##0,", 6+int(Larghezza), 1))
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat = getNumFormat(strall("#.##0,", 6+int(HPeso), 1))
     except IndexError:
         pass
 ###
@@ -7995,6 +7988,11 @@ def fissa (arg=None):
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    PartiUguali = '3'
+    chi(int(PartiUguali))
+    chi(strall("#.##0,", 6+int(PartiUguali), pos=1))
+    chi(getNumFormat(strall("#.##0,", 6+int(PartiUguali), 1)))
+    return
     fine = getLastUsedCell(oSheet).EndRow
     #~ chi (Locale)
     chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat)

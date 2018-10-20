@@ -360,8 +360,6 @@ def copia_sorgente_per_git(arg=None):
             dest = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-            #~ os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt\\')
-            #~ os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe" && "C:/Program Files/Git/cmd/gitk.exe"')
             os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"')
     distutils.dir_util.copy_tree(oxt_path, dest)
     return
@@ -6907,6 +6905,8 @@ def adegua_tmpl(arg=None):
     - dal 209 cambia il nome di propietà del file in "Versione_LeenO"
     - dal 211 cambiano le formule del prezzo unitario e dell'importo in Computo e Contabilità
     - dal 212 vengono cancellate le celle che indicano il DCC nel foglio M1
+    - dal 213 sposta il VediVoce nella colonna E
+    - dal 214 assegna un'approssimazione diversa per ognuno dei valori di misurazione
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
 #qui le cose da cambiare comunque
@@ -6959,7 +6959,7 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 213 #VERSIONE CORRENTE
+    adegua_a = 214 #VERSIONE CORRENTE
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione di LeenO installata?
@@ -7030,13 +7030,20 @@ dell'operazione che terminerà con un avviso.
                 _gotoSheet(el)
                 oSheet = oDoc.getSheets().getByName(el)
                 test = getLastUsedCell(oSheet).EndRow+1
+                # 214 aggiorna stili di cella per ogni colonna
+                for y in range(0, test):
+                    if oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
+                        oSheet.getCellByPosition(5, y).CellStyle = 'comp 1-a PU'
+                        oSheet.getCellByPosition(6, y).CellStyle = 'comp 1-a LUNG'
+                        oSheet.getCellByPosition(7, y).CellStyle = 'comp 1-a LARG'
+                        oSheet.getCellByPosition(8, y).CellStyle = 'comp 1-a peso'
                 for y in range(0, test):
                     # aggiorna formula della descrizione
                     if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
                         sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
                         oSheet.getCellByPosition(2, y).Formula = sformula
                         oSheet.getCellByPosition(8, y).String = ''
-                    # aggiorna formula vedi voce
+                    # aggiorna formula vedi voce #213
                     if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
                         if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
                             n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
@@ -7057,7 +7064,6 @@ dell'operazione che terminerà con un avviso.
                         inizio = sStRange.RangeAddress.StartRow
                         fine = sStRange.RangeAddress.EndRow
                         oSheet.getCellByPosition(18, y).Formula = '=J'+ str(y+1) +'*L'+ str(y+1)
-                        # ~oSheet.getCellByPosition(11, y).Formula = '=IF(VLOOKUP(B'+ str(inizio+2) +';elenco_prezzi;3;FALSE())="%";VLOOKUP(B'+ str(inizio+2) +';elenco_prezzi;5;FALSE())*100;VLOOKUP(B'+ str(inizio+2) +';elenco_prezzi;5;FALSE()))'
 
 
         if oDoc.getSheets().hasByName('CONTABILITA'):
@@ -8000,7 +8006,7 @@ def fissa (arg=None):
 def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi(dec_pl('Blu', 10))
+    chi(oSheet.getCellRangeByName('B53').Type.value)
     #~ chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat)
     return
     for n in reversed(range(0, fine)):

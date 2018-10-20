@@ -5369,11 +5369,10 @@ def strall(el, n=3, pos=0):
 
     '''
     #~ el ='o'
-    while len(el) < n:
-        if pos == 0:
-            el = '0' + el
-        else:
-            el = el + '0'
+    if pos == 0:
+        el = n * '0' + el
+    else:
+        el = el + n * '0'
     return el
 
 ########################################################################
@@ -5433,6 +5432,23 @@ def getFormatString (stile_cella):
     oSheet = oDoc.CurrentController.ActiveSheet
     num = oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).NumberFormat
     return oDoc.getNumberFormats().getByKey(num).FormatString
+########################################################################
+def dec_pl (nome_stile, n):
+    '''
+    Cambia il numero dei decimali dello stile di cella.
+    stile_cella { string } : nome stile di cella
+    n { int } : nuovo numero decimali
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    stringa = getFormatString(nome_stile).split(';')
+    new = list()
+    for el in stringa:
+        new.append (el.split(',')[0] + ',' + '0'* n)
+    #~ oDoc.StyleFamilies.getByName('CellStyles').getByName(nome_stile).NumberFormat = getNumFormat(strall("#.##0,", 6+int(PartiUguali), 1))
+    oDoc.StyleFamilies.getByName('CellStyles').getByName(nome_stile).NumberFormat = getNumFormat(';'.join(new))
+    return 
+
 ########################################################################
 def XPWE_in(arg):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -5629,20 +5645,20 @@ def XPWE_in(arg):
         ConvPrezziTotale = PweDGConfigNumeri.find('ConvPrezziTotale').text.split('.')[-1].split('|')[0]
         IncidenzaPercentuale = PweDGConfigNumeri.find('IncidenzaPercentuale').text.split('.')[-1].split('|')[0]
         Aliquote = PweDGConfigNumeri.find('Aliquote').text.split('.')[-1].split('|')[0]
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU').NumberFormat = getNumFormat(strall("#.##0,", 6+int(PartiUguali), 1))
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LUNG').NumberFormat = getNumFormat(strall("#.##0,", 6+int(Lunghezza), 1))
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a LARG').NumberFormat = getNumFormat(strall("#.##0,", 6+int(Larghezza), 1))
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat = getNumFormat(strall("#.##0,", 6+int(HPeso), 1))
+        dec_pl('comp 1-a PU', int(PartiUguali))
+        dec_pl('comp 1-a LUNG', int(Lunghezza))
+        dec_pl('comp 1-a LARG', int(Larghezza))
+        dec_pl('comp 1-a peso', int(HPeso))
         for el in ('Comp-Variante num sotto', 'An-lavoraz-input', 'Blu'):
-            oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat = getNumFormat(strall("#.##0,", 6+int(Quantita), 1))
+            dec_pl(el, int(Quantita))
         for el in ('comp sotto Unitario', 'An-lavoraz-generica'):
-            oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat = getNumFormat(strall("#.##0,", 6+int(PrezziTotale), 1))
+            dec_pl(el, int(Prezzi))
         for el in ('comp sotto Euro Originale', 'Livello-0-scritta mini val',
         'Livello-1-scritta mini val', 'livello2 scritta mini', 'Comp TOTALI',
         'Ultimus_totali_1', 'Ultimus_bordo', 'ULTIMUS_3', 'Ultimus_Bordo_sotto',
         'Comp-Variante num sotto','An-valuta-dx', 'An-1v-dx', 'An-lavoraz-generica',
         'An-lavoraz-Utili-num sin'):
-            oDoc.StyleFamilies.getByName("CellStyles").getByName(el).NumberFormat = getNumFormat(strall("#.##0,", 6+int(PrezziTotale), 1))
+            dec_pl(el, int(PrezziTotale))
     except IndexError:
         pass
 ###
@@ -7977,15 +7993,15 @@ def fissa (arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
-def debug (arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
-
     return
     fine = getLastUsedCell(oSheet).EndRow
     #~ chi (Locale)
-    chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat)
+
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    chi(dec_pl('Blu', 10))
+    #~ chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat)
     return
     for n in reversed(range(0, fine)):
         if oSheet.getCellByPosition(27, n).Type.value != 'EMPTY':

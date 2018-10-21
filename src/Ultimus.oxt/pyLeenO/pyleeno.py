@@ -1880,6 +1880,13 @@ def XPWE_out(arg=None):
     SpeseGenerali.text = oSheet.getCellByPosition(7,319).String[:-1].replace(',','.')
     
 #~ Configurazioni
+    PU  = str(len(getFormatString('comp 1-a PU').split(',')[-1]))
+    LUN = str(len(getFormatString('comp 1-a LUNG').split(',')[-1]))
+    LAR = str(len(getFormatString('comp 1-a LARG').split(',')[-1]))
+    PES = str(len(getFormatString('comp 1-a peso').split(',')[-1]))
+    QUA = str(len(getFormatString('Blu').split(',')[-1]))
+    PR = str(len(getFormatString('comp sotto Unitario').split(',')[-1]))
+    TOT = str(len(getFormatString('An-1v-dx').split(',')[-1]))
     PweDGConfigurazione = SubElement(PweDatiGenerali,'PweDGConfigurazione')
     PweDGConfigNumeri = SubElement(PweDGConfigurazione,'PweDGConfigNumeri')
     Divisa = SubElement(PweDGConfigNumeri,'Divisa')
@@ -1891,19 +1898,19 @@ def XPWE_out(arg=None):
     Cambio = SubElement(PweDGConfigNumeri,'Cambio')
     Cambio.text = '1'
     PartiUguali = SubElement(PweDGConfigNumeri,'PartiUguali')
-    PartiUguali.text = '9.3|0'
+    PartiUguali.text = '9.' + PU + '|0'
     Lunghezza = SubElement(PweDGConfigNumeri,'Lunghezza')
-    Lunghezza.text = '9.3|0'
+    Lunghezza.text = '9.'+ LUN + '|0'
     Larghezza = SubElement(PweDGConfigNumeri,'Larghezza')
-    Larghezza.text = '9.3|0'
+    Larghezza.text = '9.'+ LAR + '|0'
     HPeso = SubElement(PweDGConfigNumeri,'HPeso')
-    HPeso.text = '9.3|0'
+    HPeso.text = '9.' + PES + '|0'
     Quantita = SubElement(PweDGConfigNumeri,'Quantita')
-    Quantita.text = '10.2|1'
+    Quantita.text = '10.'+ QUA + '|1'
     Prezzi = SubElement(PweDGConfigNumeri,'Prezzi')
-    Prezzi.text = '10.2|1'
+    Prezzi.text = '10.' + PR + '|1'
     PrezziTotale = SubElement(PweDGConfigNumeri,'PrezziTotale')
-    PrezziTotale.text = '14.2|1'
+    PrezziTotale.text = '14.'+ TOT +'|1'
     ConvPrezzi = SubElement(PweDGConfigNumeri,'ConvPrezzi')
     ConvPrezzi.text = '11.0|1'
     ConvPrezziTotale = SubElement(PweDGConfigNumeri,'ConvPrezziTotale')
@@ -2197,7 +2204,6 @@ def XPWE_out(arg=None):
                     PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
                     Flags.text = '1'
                 elif '-' in Quantita.text:
-                    # ~PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
                     Flags.text = '1'
                 elif "Parziale [" in oSheet.getCellByPosition(8, m).String:
                     Flags.text = '2'
@@ -2212,10 +2218,9 @@ def XPWE_out(arg=None):
                 if '- vedi voce n.' in Descrizione.text:
                     IDVV.text = str(int(Descrizione.text.split('- vedi voce n.')[1].split(' ')[0])+1)
                     Flags.text = '32768'
-                    PartiUguali.text =''
+                    #~ PartiUguali.text =''
                     if '-' in Quantita.text:
                         Flags.text = '32769'
-                        
             n = sotto+1
 ##########################
     oDialogo_attesa.endExecute()
@@ -6555,11 +6560,11 @@ def SubSum(lrow, sub=False):
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################
 ########################################################################
 def filtra_codice(arg=None):
+    refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
     lrow = Range2Cell()[1]
-    myrange =('Comp End Attributo', 'Comp TOTALI',)
     if oSheet.getCellByPosition(0, lrow).CellStyle in(stili_computo + stili_contab) :
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -6573,7 +6578,6 @@ def filtra_codice(arg=None):
     fine = ultima_voce(oSheet)+1
     lista_pt = list()
     _gotoCella(0, 0)
-
     for n in range(0, fine):
         if oSheet.getCellByPosition(0, n).CellStyle in('Comp Start Attributo','Comp Start Attributo_R'):
             sStRange = Circoscrive_Voce_Computo_Att(n)
@@ -6588,6 +6592,7 @@ def filtra_codice(arg=None):
         oSheet.group(oCellRangeAddr,1)
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
     _gotoCella(0, lrow)
+    refresh(1)
     MsgBox('Filtro attivato in base al codice!','Codice voce: ' + voce)
 
 def struttura_ComputoM(arg=None):
@@ -8000,19 +8005,19 @@ def fissa (arg=None):
     elif oSheet.Name in('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
     return
-    fine = getLastUsedCell(oSheet).EndRow
     #~ chi (Locale)
 
 def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi(oSheet.getCellRangeByName('B53').Type.value)
-    #~ chi(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a peso').NumberFormat)
+    chi(valuta_cella(oSheet.getCellRangeByName('F372')))
+    
     return
+    fine = getLastUsedCell(oSheet).EndRow
     for n in reversed(range(0, fine)):
-        if oSheet.getCellByPosition(27, n).Type.value != 'EMPTY':
-            oSheet.getCellByPosition(28, n).Formula = '=IF(N' +str(n+1)+ '-AB' +str(n+1)+ '=0;"";N' +str(n+1)+ '-AB' +str(n+1)+ ')'
-            #~ oSheet.getRows().removeByIndex(n, 1)
+        if oSheet.getCellRangeByName('F372').Type.value == 'EMPTY':
+            #~ oSheet.getCellByPosition(28, n).Formula = '=IF(N' +str(n+1)+ '-AB' +str(n+1)+ '=0;"";N' +str(n+1)+ '-AB' +str(n+1)+ ')'
+            oSheet.getRows().removeByIndex(n, 1)
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

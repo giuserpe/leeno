@@ -5381,7 +5381,7 @@ def strall(el, n=3, pos=0):
 ########################################################################
 def converti_stringhe(arg=None):
     '''
-    Converte in numeri le stinghe selezionate.
+    Converte in numeri le stinghe o viceversa.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -5401,7 +5401,10 @@ def converti_stringhe(arg=None):
     for y in range(sCol, eCol+1):
         for x in range(sRow, eRow+1):
             try:
-                oSheet.getCellByPosition(y, x).Value = float(oSheet.getCellByPosition(y, x).String.replace(',','.'))
+                if oSheet.getCellByPosition(y, x).Type.value == 'TEXT':
+                    oSheet.getCellByPosition(y, x).Value = float(oSheet.getCellByPosition(y, x).String.replace(',','.'))
+                else:
+                    oSheet.getCellByPosition(y, x).String = oSheet.getCellByPosition(y, x).String
             except:
                 pass
     return

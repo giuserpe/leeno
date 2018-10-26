@@ -5337,7 +5337,8 @@ def vedi_voce_xpwe(lrow,vRif,flags=''):
     if oSheet.Name == 'CONTABILITA':
         sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
     else:
-        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art +';" - ";LEFT(' + des + ';$S1.$H$334);" - [";' + um + ';" ";'+ quantity+ ';"]";)'
+        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art +';" - ";LEFT(' + des + ';$S1.$H$334);" - [";' + um + ';" ";TEXT('+ quantity +';"0,00");"]";)'
+        
     oSheet.getCellByPosition(2, lrow).Formula= sformula
     oSheet.getCellByPosition(4, lrow).Formula='=' + quantity
     oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
@@ -6902,8 +6903,6 @@ def set_larghezza_colonne(arg=None):
     adatta_altezza_riga(oSheet.Name)
 ########################################################################
 def adegua_tmpl(arg=None):
-# ~def debug(arg=None):
-    #~ adegua_tmpl_th().start()
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
@@ -7051,14 +7050,16 @@ dell'operazione che terminerà con un avviso.
                         sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
                         oSheet.getCellByPosition(2, y).Formula = sformula
                         oSheet.getCellByPosition(8, y).String = ''
-                    # aggiorna formula vedi voce #213
+                    # aggiorna formula vedi voce #214
                     if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
-                        if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
-                            n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
-                        else:
-                            n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[1].split(';')[0]
-                        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(A$' +n+ ';"@");" - art. ";B$' +n+ ';" [";VLOOKUP(B$' +n+ ';elenco_prezzi;3;FALSE());"] - ";LEFT(C$' +n+ ';$S1.$H$334))'
-                        oSheet.getCellByPosition(2, y).Formula = sformula
+                        vRif = int(oSheet.getCellByPosition(5, y).Formula.split('=J$')[-1])-1
+                        oSheet.getCellByPosition(5, y).clearContents(FORMULA + EDITATTR)
+                        vedi_voce_xpwe(y, vRif)
+                        #~ if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
+                            #~ n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
+                        #~ else:
+                            #~ n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[1].split(';')[0]
+                        #~ oSheet.getCellByPosition(2, y).Formula = sformula
                     if '=J' in oSheet.getCellByPosition(5, y).Formula:
                         if '$' in oSheet.getCellByPosition(5, y).Formula:
                             n = oSheet.getCellByPosition(5, y).Formula.split('$')[1]
@@ -7671,8 +7672,8 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-# ~def sistema_cose(arg=None):
-def debug(arg=None):
+def sistema_cose(arg=None):
+#~ def debug(arg=None):
     
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -7983,7 +7984,7 @@ def sistema_pagine (arg=None):
         #~ oAktPage.RightBorder = bordo
     return
 ########################################################################
-def debug(arg=None):
+def debug__(arg=None):
     '''
     ripristina le formule
     '''
@@ -8010,7 +8011,7 @@ def fissa (arg=None):
     return
     #~ chi (Locale)
 
-def debug(arg=None):
+def debug_(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     chi(valuta_cella(oSheet.getCellRangeByName('F372')))

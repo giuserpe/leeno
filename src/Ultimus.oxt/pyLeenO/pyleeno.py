@@ -5092,7 +5092,6 @@ def importa_listino_leeno_run(arg=None):
     #~ viola(12632319,13684991,15790335)
     lista_articoli = list()
     nome = oSheet.getCellByPosition(2, 0).String
-    chi(8)
     test = uFindStringCol('ATTENZIONE!', 5, oSheet)+1
     assembla = DlgSiNo('''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.

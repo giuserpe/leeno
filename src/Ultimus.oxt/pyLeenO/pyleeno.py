@@ -1519,6 +1519,7 @@ def scelta_viste(arg=None):
                 oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
             if oRangeAddress.StartColumn != 0:
                 if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
+                    refresh(0)
                     errori =('#DIV/0!', '--')
                     hide_error(errori, 26)
                     oSheet.group(oRangeAddress, 0)
@@ -1534,11 +1535,11 @@ def scelta_viste(arg=None):
         if  oSheet.getCellByPosition(1, 2).Rows.OptimalHeight == True and oDialog1.getControl("CBDesc").State == 1: #descrizione breve
             basic_LeenO('Strutture.Tronca_Altezza_Analisi')
         elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
-        
     elif oSheet.Name in('CONTABILITA', 'Registro', 'SAL'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         oDialog1.execute()
+    refresh(1)
     #~ MsgBox('Operazione eseguita con successo!','')
 ########################################################################
 def genera_variante(arg=None):
@@ -7030,7 +7031,6 @@ dell'operazione che terminerà con un avviso.
         if oUDP.getPropertySetInfo().hasPropertyByName("Versione LeenO"):
             oUDP.removeProperty('Versione LeenO')
             oUDP.addProperty('Versione_LeenO', MAYBEVOID + REMOVEABLE + MAYBEDEFAULT, str(Lmajor) +'.'+ str(Lminor) +'.x')
-
         #< adegua le formule delle descrizioni di voci
         for el in ('COMPUTO', 'VARIANTE'):
             if oDoc.getSheets().hasByName(el) == True:
@@ -7051,15 +7051,19 @@ dell'operazione che terminerà con un avviso.
                         oSheet.getCellByPosition(2, y).Formula = sformula
                         oSheet.getCellByPosition(8, y).String = ''
                     # aggiorna formula vedi voce #214
-                    if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
+                    if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a' and \
+                    oSheet.getCellByPosition(5, y).Type.value == 'FORMULA':
                         vRif = int(oSheet.getCellByPosition(5, y).Formula.split('=J$')[-1])-1
-                        oSheet.getCellByPosition(5, y).clearContents(FORMULA + EDITATTR)
+                        if oSheet.getCellByPosition(9, y).Value < 0:
+                            _gotoCella(2, y)
+                            inverti = 1
+                        oSheet.getCellByPosition(5, y).String = ''
                         vedi_voce_xpwe(y, vRif)
-                        #~ if oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0] != '':
-                            #~ n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[0].split(';')[0]
-                        #~ else:
-                            #~ n = oSheet.getCellByPosition(2, y).Formula.split('TEXT(A')[1].split('$')[1].split(';')[0]
-                        #~ oSheet.getCellByPosition(2, y).Formula = sformula
+                        try:
+                            inverti
+                            inverti_segno()
+                        except:
+                            pass
                     if '=J' in oSheet.getCellByPosition(5, y).Formula:
                         if '$' in oSheet.getCellByPosition(5, y).Formula:
                             n = oSheet.getCellByPosition(5, y).Formula.split('$')[1]
@@ -7073,8 +7077,6 @@ dell'operazione che terminerà con un avviso.
                         inizio = sStRange.RangeAddress.StartRow
                         fine = sStRange.RangeAddress.EndRow
                         oSheet.getCellByPosition(18, y).Formula = '=J'+ str(y+1) +'*L'+ str(y+1)
-
-
         if oDoc.getSheets().hasByName('CONTABILITA'):
             oSheet = oDoc.getSheets().getByName('CONTABILITA')
             test = getLastUsedCell(oSheet).EndRow+1

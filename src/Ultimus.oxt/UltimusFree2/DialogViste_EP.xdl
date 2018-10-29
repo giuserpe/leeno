@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="1" dlg:id="DialogViste_EP" dlg:left="179" dlg:top="215" dlg:width="205" dlg:height="158" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="1" dlg:id="DialogViste_EP" dlg:left="175" dlg:top="145" dlg:width="205" dlg:height="158" dlg:help-text="&amp;111.DialogViste_EP.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;112.DialogViste_EP.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:font-weight="150"/>
@@ -29,9 +29,6 @@
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="10" dlg:left="97" dlg:top="10" dlg:width="5" dlg:height="130" dlg:help-text="&amp;131.DialogViste_EP.FixedLine1.HelpText" dlg:value="&amp;132.DialogViste_EP.FixedLine1.Label" dlg:align="vertical"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBOrig" dlg:tab-index="9" dlg:left="9" dlg:top="47" dlg:width="75" dlg:height="7" dlg:help-text="&amp;133.DialogViste_EP.CBOrig.HelpText" dlg:value="&amp;134.DialogViste_EP.CBOrig.Label" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="3" dlg:id="CBSom" dlg:tab-index="11" dlg:left="9" dlg:top="67" dlg:width="75" dlg:height="7" dlg:help-text="&amp;135.DialogViste_EP.CBSom.HelpText" dlg:value="&amp;136.DialogViste_EP.CBSom.Label" dlg:checked="false"/>
-  <dlg:button dlg:style-id="3" dlg:id="Lista Lavorazioni e Forniture" dlg:tab-index="12" dlg:left="105" dlg:top="90" dlg:width="90" dlg:height="15" dlg:help-text="&amp;137.DialogViste_EP.Lista Lavorazioni e Forniture.HelpText" dlg:value="&amp;138.DialogViste_EP.Lista Lavorazioni e Forniture.Label" dlg:button-type="ok">
-   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$richiesta_offerta?language=Python&amp;location=user:uno_packages" script:language="Script"/>
-  </dlg:button>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton1" dlg:tab-index="13" dlg:left="155" dlg:top="120" dlg:width="40" dlg:height="15" dlg:help-text="&amp;139.DialogViste_EP.CommandButton1.HelpText" dlg:default="true" dlg:value="&amp;140.DialogViste_EP.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
@@ -44,6 +41,9 @@
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="17" dlg:left="105" dlg:top="10" dlg:width="90" dlg:height="15" dlg:help-text="&amp;147.DialogViste_EP.CommandButton2.HelpText" dlg:help-url="Elimina tutte le voci non utilizzate nel documento," dlg:value="&amp;148.DialogViste_EP.CommandButton2.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inizializza_elenco?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="3" dlg:id="Lista Lavorazioni" dlg:tab-index="12" dlg:left="105" dlg:top="90" dlg:width="90" dlg:height="15" dlg:help-text="&amp;421.DialogViste_EP.Lista Lavorazioni.HelpText" dlg:value="&amp;421.DialogViste_EP.Lista Lavorazioni.Label" dlg:button-type="ok">
+   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$richiesta_offerta?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>
 </dlg:window>

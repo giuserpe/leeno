@@ -1,31 +1,47 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DialogViste_AN" dlg:left="176" dlg:top="231" dlg:width="170" dlg:height="78" dlg:help-text="&amp;93.DialogViste_AN.HelpText" dlg:help-url="http://aimar.mrjive.it/files/MANUALE%20D%27USO%20di%20Ultimus-3.5-101130.pdf" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;94.DialogViste_AN.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DialogViste_AN" dlg:left="175" dlg:top="145" dlg:width="178" dlg:height="170" dlg:help-text="&amp;93.DialogViste_AN.HelpText" dlg:help-url="http://aimar.mrjive.it/files/MANUALE%20D%27USO%20di%20Ultimus-3.5-101130.pdf" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;94.DialogViste_AN.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="2" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="0" dlg:left="5" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="&amp;95.DialogViste_AN.CommandButton5.HelpText" dlg:value="&amp;96.DialogViste_AN.CommandButton5.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="0" dlg:left="95" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="&amp;95.DialogViste_AN.CommandButton5.HelpText" dlg:value="&amp;96.DialogViste_AN.CommandButton5.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ANALISI_IN_ELENCOPREZZI?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="5" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="&amp;97.DialogViste_AN.CommandButton2.HelpText" dlg:tabstop="true" dlg:value="&amp;98.DialogViste_AN.CommandButton2.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="95" dlg:top="45" dlg:width="75" dlg:height="15" dlg:help-text="&amp;97.DialogViste_AN.CommandButton2.HelpText" dlg:tabstop="true" dlg:value="&amp;98.DialogViste_AN.CommandButton2.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Main_Riordina_Analisi_Alfabetico?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="2" dlg:left="90" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="&amp;99.DialogViste_AN.CommandButton3.HelpText" dlg:value="&amp;100.DialogViste_AN.CommandButton3.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="2" dlg:left="95" dlg:top="65" dlg:width="75" dlg:height="15" dlg:help-text="&amp;99.DialogViste_AN.CommandButton3.HelpText" dlg:value="&amp;100.DialogViste_AN.CommandButton3.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="90" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="&amp;101.DialogViste_AN.CommandButton4.HelpText" dlg:value="&amp;102.DialogViste_AN.CommandButton4.Label" dlg:button-type="ok">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="95" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="&amp;101.DialogViste_AN.CommandButton4.HelpText" dlg:value="&amp;102.DialogViste_AN.CommandButton4.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$tante_analisi_in_ep?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="5" dlg:left="5" dlg:top="44" dlg:width="75" dlg:height="25" dlg:help-text="&amp;103.DialogViste_AN.FrameControl2.HelpText">
+  <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="5" dlg:left="6" dlg:top="135" dlg:width="85" dlg:height="25" dlg:help-text="&amp;103.DialogViste_AN.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;104.DialogViste_AN.FrameControl2.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CBDesc" dlg:tab-index="4" dlg:left="8" dlg:top="56" dlg:width="65" dlg:height="7" dlg:help-text="&amp;105.DialogViste_AN.CBDesc.HelpText" dlg:value="&amp;106.DialogViste_AN.CBDesc.Label" dlg:checked="false"/>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton6" dlg:tab-index="6" dlg:left="140" dlg:top="53" dlg:width="25" dlg:height="15" dlg:help-text="&amp;107.DialogViste_AN.CommandButton6.HelpText" dlg:default="true" dlg:value="&amp;108.DialogViste_AN.CommandButton6.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:checkbox dlg:style-id="1" dlg:id="CBDesc" dlg:tab-index="4" dlg:left="9" dlg:top="146" dlg:width="72" dlg:height="7" dlg:help-text="&amp;105.DialogViste_AN.CBDesc.HelpText" dlg:value="&amp;106.DialogViste_AN.CBDesc.Label" dlg:checked="false"/>
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton6" dlg:tab-index="6" dlg:left="140" dlg:top="143" dlg:width="25" dlg:height="15" dlg:help-text="&amp;107.DialogViste_AN.CommandButton6.HelpText" dlg:default="true" dlg:value="&amp;108.DialogViste_AN.CommandButton6.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton7" dlg:tab-index="7" dlg:left="108" dlg:top="53" dlg:width="25" dlg:height="15" dlg:help-text="&amp;109.DialogViste_AN.CommandButton7.HelpText" dlg:default="true" dlg:value="&amp;110.DialogViste_AN.CommandButton7.Label" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton7" dlg:tab-index="7" dlg:left="108" dlg:top="143" dlg:width="25" dlg:height="15" dlg:help-text="&amp;109.DialogViste_AN.CommandButton7.HelpText" dlg:default="true" dlg:value="&amp;110.DialogViste_AN.CommandButton7.Label" dlg:button-type="cancel" dlg:multiline="true"/>
+  <dlg:titledbox dlg:id="FrameControl1" dlg:tab-index="8" dlg:left="6" dlg:top="3" dlg:width="84" dlg:height="125" dlg:help-text="&amp;446.DialogViste_AN.FrameControl1.HelpText">
+   <dlg:title dlg:value="&amp;447.DialogViste_AN.FrameControl1.Label"/>
+  </dlg:titledbox>
+  <dlg:text dlg:style-id="3" dlg:id="Label1" dlg:tab-index="9" dlg:left="11" dlg:top="21" dlg:width="51" dlg:height="8" dlg:help-text="&amp;448.DialogViste_AN.Label1.HelpText" dlg:value="&amp;449.DialogViste_AN.Label1.Label"/>
+  <dlg:textfield dlg:id="TextField1" dlg:tab-index="10" dlg:left="55" dlg:top="21" dlg:width="30" dlg:height="10" dlg:help-text="&amp;450.DialogViste_AN.TextField1.HelpText" dlg:align="center" dlg:value="&amp;451.DialogViste_AN.TextField1.Text"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label2" dlg:tab-index="11" dlg:left="11" dlg:top="37" dlg:width="51" dlg:height="8" dlg:help-text="&amp;452.DialogViste_AN.Label2.HelpText" dlg:value="&amp;453.DialogViste_AN.Label2.Label"/>
+  <dlg:textfield dlg:id="TextField2" dlg:tab-index="12" dlg:left="55" dlg:top="37" dlg:width="30" dlg:height="10" dlg:help-text="&amp;454.DialogViste_AN.TextField2.HelpText" dlg:align="center" dlg:value="&amp;455.DialogViste_AN.TextField2.Text"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label3" dlg:tab-index="13" dlg:left="11" dlg:top="56" dlg:width="51" dlg:height="8" dlg:help-text="&amp;456.DialogViste_AN.Label3.HelpText" dlg:value="&amp;457.DialogViste_AN.Label3.Label"/>
+  <dlg:textfield dlg:id="TextField3" dlg:tab-index="14" dlg:left="55" dlg:top="56" dlg:width="30" dlg:height="10" dlg:help-text="&amp;458.DialogViste_AN.TextField3.HelpText" dlg:align="center" dlg:value="&amp;459.DialogViste_AN.TextField3.Text"/>
+  <dlg:checkbox dlg:style-id="4" dlg:id="CheckBox1" dlg:tab-index="15" dlg:left="11" dlg:top="72" dlg:width="74" dlg:height="10" dlg:help-text="&amp;460.DialogViste_AN.CheckBox1.HelpText" dlg:value="&amp;461.DialogViste_AN.CheckBox1.Label" dlg:checked="false"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label4" dlg:tab-index="16" dlg:left="11" dlg:top="90" dlg:width="51" dlg:height="8" dlg:help-text="&amp;462.DialogViste_AN.Label4.HelpText" dlg:value="&amp;463.DialogViste_AN.Label4.Label"/>
+  <dlg:textfield dlg:id="TextField4" dlg:tab-index="17" dlg:left="55" dlg:top="90" dlg:width="30" dlg:height="10" dlg:help-text="&amp;464.DialogViste_AN.TextField4.HelpText" dlg:align="center" dlg:value="&amp;465.DialogViste_AN.TextField4.Text"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label5" dlg:tab-index="18" dlg:left="11" dlg:top="107" dlg:width="51" dlg:height="8" dlg:help-text="&amp;466.DialogViste_AN.Label5.HelpText" dlg:value="&amp;467.DialogViste_AN.Label5.Label"/>
+  <dlg:textfield dlg:id="TextField5" dlg:tab-index="19" dlg:left="55" dlg:top="107" dlg:width="30" dlg:height="10" dlg:help-text="&amp;468.DialogViste_AN.TextField5.HelpText" dlg:align="center" dlg:value="&amp;469.DialogViste_AN.TextField5.Text"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -82,7 +82,7 @@ class New_file:
         opz.Name = 'AsTemplate'
         opz.Value = True
         document = desktop.loadComponentFromURL(LeenO_path()+'/template/leeno/Computo_LeenO.ots', "_blank", 0, (opz,))
-        # ~autoexec()
+        autoexec()
         if arg == 1:
             MsgBox('''Prima di procedere è consigliabile salvare il lavoro.
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
@@ -3697,7 +3697,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
         pesca_cod()
 ########################################################################
 def rispristina_voce(arg=None):
-# ~def debug(arg=None):
+#~ def debug(arg=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
     '''
@@ -5295,30 +5295,6 @@ def parziale_verifica(arg=None):
     for n in range(sopra, sotto):
         if 'Parziale [' in(oSheet.getCellByPosition(8, n).String):
             parziale_core(n)
-#~ ########################################################################
-#~ def vedi_voce_xpwe(riga_corrente,vRif,flags=''):
-    #~ """(riga d'inserimento, riga di riferimento)"""
-    #~ oDoc = XSCRIPTCONTEXT.getDocument()
-    #~ oSheet = oDoc.CurrentController.ActiveSheet
-    #~ sStRange = Circoscrive_Voce_Computo_Att(vRif)
-    #~ sStRange.RangeAddress
-    #~ idv = sStRange.RangeAddress.StartRow +1
-    #~ sotto = sStRange.RangeAddress.EndRow
-    #~ art = 'B$' + str(idv+1)
-    #~ idvoce = 'A$' + str(idv+1)
-    #~ des = 'C$' + str(idv+1)
-    #~ quantity = 'J$' + str(sotto+1)
-    #~ um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
-    
-    #~ if oSheet.Name == 'CONTABILITA':
-        #~ sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
-    #~ else:
-        #~ sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"] - ";LEFT(' + des + ';$S1.$H$334)'    
-    #~ oSheet.getCellByPosition(2, riga_corrente).Formula= sformula
-    #~ oSheet.getCellByPosition(5, riga_corrente).Formula='=' + quantity
-    #~ if flags in('32769', '32801'): # 32768
-        #~ inverti_segno()
-        #~ oSheet.getCellRangeByPosition(2, riga_corrente, 10, riga_corrente).CharColor = 16724787
 ########################################################################
 def vedi_voce_xpwe(lrow,vRif,flags=''):
     """(riga d'inserimento, riga di riferimento)"""

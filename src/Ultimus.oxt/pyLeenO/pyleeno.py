@@ -1530,15 +1530,49 @@ def scelta_viste(arg=None):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         if  oSheet.getCellByPosition(1, 2).Rows.OptimalHeight == False: oDialog1.getControl("CBDesc").State = 1 #descrizione breve
-        oDialog1.execute()
+
+        oS1 = oDoc.getSheets().getByName('S1')
+        sString = oDialog1.getControl('TextField5')
+        sString.Text =oS1.getCellRangeByName('S1.H319').Value * 100 #sicurezza
+        sString = oDialog1.getControl('TextField6')
+        sString.Text =oS1.getCellRangeByName('S1.H320').Value * 100 #spese_generali
+        sString = oDialog1.getControl('TextField7')
+        sString.Text =oS1.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
+        
+        #accorpa_spese_utili
+        if oS1.getCellRangeByName('S1.H323').Value == 1: oDialog1.getControl('CheckBox4').State = 1
+        sString = oDialog1.getControl('TextField8')
+        sString.Text =oS1.getCellRangeByName('S1.H324').Value * 100 #sconto
+        sString = oDialog1.getControl('TextField9')
+        sString.Text =oS1.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
+
+        oDialog1.execute() #mostra il dialogo
         
         if  oSheet.getCellByPosition(1, 2).Rows.OptimalHeight == True and oDialog1.getControl("CBDesc").State == 1: #descrizione breve
             basic_LeenO('Strutture.Tronca_Altezza_Analisi')
         elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
+
+        #~ sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
+        oS1.getCellRangeByName('S1.H319').Value = float(oDialog1.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
+        oS1.getCellRangeByName('S1.H320').Value = float(oDialog1.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
+        oS1.getCellRangeByName('S1.H321').Value = float(oDialog1.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
+        oS1.getCellRangeByName('S1.H323').Value = oDialog1.getControl('CheckBox4').State
+        oS1.getCellRangeByName('S1.H324').Value = float(oDialog1.getControl('TextField8').getText().replace(',','.')) / 100  #sconto
+        oS1.getCellRangeByName('S1.H326').Value = float(oDialog1.getControl('TextField9').getText().replace(',','.')) / 100  #maggiorazione
+
+        #accorpa_spese_utili
+        if oS1.getCellRangeByName('S1.H323').Value == 1: oDialog1.getControl('CheckBox4').State = 1
+        sString = oDialog1.getControl('TextField8')
+        sString.Text =oS1.getCellRangeByName('S1.H324').Value * 100 #sconto
+        sString = oDialog1.getControl('TextField9')
+        sString.Text =oS1.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
+        
     elif oSheet.Name in('CONTABILITA', 'Registro', 'SAL'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         oDialog1.execute()
+
+    
     refresh(1)
     #~ MsgBox('Operazione eseguita con successo!','')
 ########################################################################
@@ -3772,24 +3806,8 @@ def leeno_conf(arg=None):
         elif conf.read(path_conf, 'Generale', 'movedirection')== '0':
             sString.Text = 'IN BASSO' 
         oSheet = oDoc.getSheets().getByName('S1')
-        sString = oDlg_config.getControl('TextField5')
-        sString.Text =oSheet.getCellRangeByName('S1.H319').Value * 100 #sicurezza
-        sString = oDlg_config.getControl('TextField6')
-        sString.Text =oSheet.getCellRangeByName('S1.H320').Value * 100 #spese_generali
-        sString = oDlg_config.getControl('TextField7')
-        sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
-        
-        #accorpa_spese_utili
-        if oSheet.getCellRangeByName('S1.H323').Value == 1: oDlg_config.getControl('CheckBox4').State = 1
-
-        sString = oDlg_config.getControl('TextField8')
-        sString.Text =oSheet.getCellRangeByName('S1.H324').Value * 100 #sconto
-        
-        sString = oDlg_config.getControl('TextField9')
-        sString.Text =oSheet.getCellRangeByName('S1.H326').Value * 100 #maggiorazione
         
         # fullscreen
-        
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
         if oLayout.isElementVisible('private:resource/toolbar/standardbar') == False:
             oDlg_config.getControl('CheckBox3').State = 1
@@ -3854,14 +3872,7 @@ def leeno_conf(arg=None):
         descrizione_in_una_colonna(False)
     else:
         descrizione_in_una_colonna(True)
-
     conf.write(path_conf, 'Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State)) #torna su prezzario
-    oSheet.getCellRangeByName('S1.H319').Value = float(oDlg_config.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
-    oSheet.getCellRangeByName('S1.H320').Value = float(oDlg_config.getControl('TextField6').getText().replace(',','.')) / 100  #spese generali
-    oSheet.getCellRangeByName('S1.H321').Value = float(oDlg_config.getControl('TextField7').getText().replace(',','.')) / 100  #utile_impresa
-    oSheet.getCellRangeByName('S1.H323').Value = oDlg_config.getControl('CheckBox4').State
-    oSheet.getCellRangeByName('S1.H324').Value = float(oDlg_config.getControl('TextField8').getText().replace(',','.')) / 100  #sconto
-    oSheet.getCellRangeByName('S1.H326').Value = float(oDlg_config.getControl('TextField9').getText().replace(',','.')) / 100  #maggiorazione
     
 #il salvataggio anche su leeno.conf serve alla funzione voce_breve()
 
@@ -7119,7 +7130,7 @@ dell'operazione che terminerà con un avviso.
         oDoc.getSheets().getByName('S1').IsVisible = False
         oDialogo_attesa.endExecute() #chiude il dialogo
         
-        oDoc.CurrentController.ZoomValue = 80
+        oDoc.CurrentController.ZoomValue = 100
         MsgBox("Adeguamento del file completato con successo.", "Avviso")
 #~ ########################################################################
 def r_version_code(arg=None):
@@ -7176,7 +7187,7 @@ def XPWE_import_run(arg=None ):
 ########################################################################
 def DlgMain(arg=None):
     '''
-    Visualizza il menù principale
+    Visualizza il menù principaledialog_fil
     '''
     bak_timestamp() # fa il backup del file
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -7318,7 +7329,7 @@ def hide_error(lErrori, icol):
                 oCellRangeAddr.EndRow = i
                 oSheet.group(oCellRangeAddr,1)
                 oSheet.getCellByPosition(0, i).Rows.IsVisible = False
-    oDoc.CurrentController.ZoomValue = 80
+    oDoc.CurrentController.ZoomValue = 100
 ########################################################################
 def bak_timestamp(arg=None):
     '''
@@ -7988,7 +7999,14 @@ def fissa (arg=None):
     return
     #~ chi (Locale)
 
-def debug_(arg=None):
+def debug(arg=None):
+    LocalSettings = uno.createUnoStruct("com.sun.star.lang.Locale")
+    LocalSettings.Language = "it"
+    LocalSettings.Country = "IT"
+    #~ locale.setlocale(locale.LC_ALL, 'it_IT')
+    from kiwi.datatypes import currency
+    chi(currency('10.5').format())
+    return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     chi(valuta_cella(oSheet.getCellRangeByName('F372')))

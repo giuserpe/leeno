@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog_tabellaferri" dlg:left="122" dlg:top="95" dlg:width="140" dlg:height="135" dlg:help-text="&amp;22.Dialog_tabellaferri.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;23.Dialog_tabellaferri.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dialog_tabellaferri" dlg:left="175" dlg:top="145" dlg:width="140" dlg:height="135" dlg:help-text="&amp;22.Dialog_tabellaferri.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;23.Dialog_tabellaferri.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:background-color="0xffccff" dlg:font-name="Liberation Mono" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="modern"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Liberation Mono" dlg:font-stylename="Standard" dlg:font-family="modern"/>
-  <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="12" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:combobox dlg:style-id="0" dlg:id="ComboBox1" dlg:tab-index="0" dlg:left="10" dlg:top="10" dlg:width="120" dlg:height="10" dlg:help-text="&amp;24.Dialog_tabellaferri.ComboBox1.HelpText" dlg:value="&amp;25.Dialog_tabellaferri.ComboBox1.Text" dlg:hide-inactive-selection="false" dlg:spin="true" dlg:linecount="20">

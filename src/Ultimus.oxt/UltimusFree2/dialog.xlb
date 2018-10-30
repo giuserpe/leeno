@@ -7,11 +7,9 @@
  <library:element library:name="DialogViste_A"/>
  <library:element library:name="Dialog_XLO"/>
  <library:element library:name="Dialog_Filtro"/>
- <library:element library:name="DlgSiNo"/>
- <library:element library:name="DlgCompletato"/>
+ <library:element library:name="DlgTesto"/>
+ <library:element library:name="DlgMain"/>
  <library:element library:name="DialogViste_AN"/>
  <library:element library:name="Dialogviste_N"/>
  <library:element library:name="DialogViste_EP"/>
- <library:element library:name="DlgTesto"/>
- <library:element library:name="DlgMain"/>
 </library:library>

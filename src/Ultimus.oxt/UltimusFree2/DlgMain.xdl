@@ -2,12 +2,12 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="pippi" dlg:left="66" dlg:top="125" dlg:width="285" dlg:height="241" dlg:help-text="&amp;331.DlgMain.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;332.DlgMain.Title">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:border="simple" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="0" dlg:border="simple" dlg:font-name="Liberation Sans Narrow" dlg:font-height="12" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="1" dlg:font-name="Liberation Sans Narrow" dlg:font-height="12" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="2" dlg:background-color="0xeeeeee" dlg:border="3d" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="4" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:border="3d" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="5" dlg:background-color="0xccff99" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="5" dlg:background-color="0xccff99" dlg:font-name="Liberation Sans Narrow" dlg:font-height="12" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-height="12" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="7" dlg:background-color="0xeeeeee" dlg:border="3d" dlg:font-height="11" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="8" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>

@@ -1091,17 +1091,19 @@ def show_sheets(x=True):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
-    oSheets.remove('Elenco Prezzi')
-    oSheets.remove('COMPUTO')
+    for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+        oSheets.remove(nome)
+    #~ oSheets.remove('Elenco Prezzi')
+    #~ oSheets.remove('COMPUTO')
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = x
     for nome in ('COMPUTO', 'Elenco Prezzi'):
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = True
-    if x == True:
-        for nome in ('M1', 'S1', 'S2', 'S3', 'S4', 'S5'):
-            oSheet = oDoc.getSheets().getByName(nome).IsVisible = False
+    #~ if x == True:
+        #~ for nome in ('M1', 'S1', 'S2', 'S4', 'S5'):
+            #~ oSheet = oDoc.getSheets().getByName(nome).IsVisible = False
 def nascondi_sheets(arg=None):
     show_sheets(False)
 ########################################################################
@@ -3770,8 +3772,11 @@ def leeno_conf(arg=None):
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg_config = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application")
     oDialog1Model = oDlg_config.Model
+
     try:
         oSheets = list(oDoc.getSheets().getElementNames())
+        for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+            oSheets.remove(nome)
         for nome in oSheets:
             oSheet = oDoc.getSheets().getByName(nome)
             if oSheet.IsVisible == False:
@@ -3796,7 +3801,7 @@ def leeno_conf(arg=None):
         
         sString = oDlg_config.getControl('TextField1')
         sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
-        
+
         sString = oDlg_config.getControl("ComboBox1")
         sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
         
@@ -8020,7 +8025,7 @@ def debug(arg=None):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = genera_variante,
+g_exportedScripts = richiesta_offerta,
 ########################################################################
 ########################################################################
 # ... here is the python script code

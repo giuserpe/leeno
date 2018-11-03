@@ -2236,6 +2236,8 @@ def XPWE_out(arg=None):
                 Quantita = SubElement(RGItem,'Quantita')
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
 ##########################
+                if PartiUguali.text == '' and Lunghezza.text == '' and  Larghezza.text == '' and  HPeso.text == '':
+                    PartiUguali.text = Quantita.text
                 Flags = SubElement(RGItem,'Flags')
                 if '*** VOCE AZZERATA ***' in Descrizione.text:
                     PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))

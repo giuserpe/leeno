@@ -8039,7 +8039,7 @@ def debug_(arg=None):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = rigenera_tutte,
+g_exportedScripts = voce_breve,
 ########################################################################
 ########################################################################
 # ... here is the python script code

@@ -3734,7 +3734,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         pesca_cod()
 ########################################################################
-def rispristina_voce(arg=None):
+def rigenera_voce(arg=None):
 #~ def debug(arg=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
@@ -3745,6 +3745,12 @@ def rispristina_voce(arg=None):
     sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
+    for r in range(sopra+2, sotto):
+        if oSheet.getCellByPosition(2, r).CellStyle == 'comp 1-a' and oSheet.getCellByPosition(9, r).Type.value != 'FORMULA':
+            if oSheet.getCellByPosition(4, r).Type.value == 'EMPTY':
+                oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(F' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(F' + str(r+1) + ':I' + str(r+1) + '))'
+            else:
+                oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(E' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(E' + str(r+1) + ':I' + str(r+1) + '))'
     oSheet.getCellByPosition(2, sopra+1).Formula = '=IF(LEN(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
     oSheet.getCellByPosition(8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;3;FALSE());"]")'
     oSheet.getCellByPosition(9, sotto).Formula = '=SUBTOTAL(9;J'+ str(sopra+2) + ':J'+ str(sotto+1) + ')'
@@ -3759,6 +3765,29 @@ def rispristina_voce(arg=None):
     oSheet.getCellByPosition(30, sotto).Formula = '=IF(AD'+ str(sotto+1) +'<>""; PRODUCT(AD'+ str(sotto+1) +'*S'+ str(sotto+1) +'))'
     oSheet.getCellByPosition(35, sotto).Formula = '=B'+ str(sopra+2)
     oSheet.getCellByPosition(36, sotto).Formula = '=IF(ISERROR(S'+ str(sotto+1) +');"";IF(S'+ str(sotto+1) +'<>"";S'+ str(sotto+1) +';""))'
+########################################################################
+def rigenera_tutte(arg=None):
+    '''
+    Ripristina le formule in tutto il foglio
+    '''
+    oDialogo_attesa = dlg_attesa()
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    refresh(0)
+    oDoc.CurrentController.ZoomValue = 400
+    row = 3
+    last = ultima_voce(oSheet)
+    attesa().start() #mostra il dialogo
+    while row < last:
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row))
+        rigenera_voce()
+        row = next_voice(row, 1)
+    Rinumera_TUTTI_Capitoli2()
+    oDoc.CurrentController.ZoomValue = 100
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    refresh(1)
+    oDialogo_attesa.endExecute()
+    return
 ########################################################################
 # leeno.conf  ##########################################################
 def leeno_conf(arg=None):
@@ -7979,23 +8008,6 @@ def sistema_pagine (arg=None):
         #~ oAktPage.RightBorder = bordo
     return
 ########################################################################
-def debug__(arg=None):
-    '''
-    ripristina le formule
-    '''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    row = 6
-    last = ultima_voce(oSheet)
-    # ~chi((row, last))
-    while row < last:
-        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row)).oSheet.getCellRangeByName("C1")
-        rispristina_voce()
-        row = next_voice(row, 1)
-    Rinumera_TUTTI_Capitoli2()
-    return
-
-########################################################################
 def fissa (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -8006,7 +8018,7 @@ def fissa (arg=None):
     return
     #~ chi (Locale)
 
-def debug(arg=None):
+def debug_(arg=None):
     LocalSettings = uno.createUnoStruct("com.sun.star.lang.Locale")
     LocalSettings.Language = "it"
     LocalSettings.Country = "IT"
@@ -8027,7 +8039,7 @@ def debug(arg=None):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = richiesta_offerta,
+g_exportedScripts = rigenera_tutte,
 ########################################################################
 ########################################################################
 # ... here is the python script code

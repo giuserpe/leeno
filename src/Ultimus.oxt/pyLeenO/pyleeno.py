@@ -3924,7 +3924,10 @@ def leeno_conf(arg=None):
 
     conf.write(path_conf, 'Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
     conf.write(path_conf, 'Contabilità', 'idxSAL', oDlg_config.getControl('TextField13').getText())
-    conf.write(path_conf, 'Contabilità', 'ricicla_da', oDlg_config.getControl('ComboBox3').getText())
+    if oDlg_config.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
+        conf.write(path_conf, 'Contabilità', 'ricicla_da', 'COMPUTO')
+    else:
+        conf.write(path_conf, 'Contabilità', 'ricicla_da', 'VARIANTE')
 ########################################################################
 #percorso di ricerca di leeno.conf
 if sys.platform == 'win32':

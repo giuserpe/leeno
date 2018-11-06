@@ -5,24 +5,23 @@
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:border="simple" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="2" dlg:background-color="0xeeeeee" dlg:border="3d" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="3" dlg:font-name="Liberation Sans Narrow" dlg:font-height="12" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="4" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:border="3d" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="5" dlg:background-color="0xccff99" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="6" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="7" dlg:background-color="0xeeeeee" dlg:border="3d" dlg:font-height="11" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="8" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:border="3d" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="4" dlg:background-color="0xccff99" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="6" dlg:background-color="0xeeeeee" dlg:border="3d" dlg:font-height="11" dlg:font-weight="100"/>
+  <dlg:style dlg:style-id="7" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="225" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;333.DlgMain.CommandButton1.HelpText" dlg:value="&amp;334.DlgMain.CommandButton1.Label" dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="225" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;333.DlgMain.CommandButton1.HelpText" dlg:value="&amp;334.DlgMain.CommandButton1.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$attiva_contabilita?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="170" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;335.DlgMain.CommandButton2.HelpText" dlg:value="&amp;336.DlgMain.CommandButton2.Label" dlg:button-type="ok">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="170" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;335.DlgMain.CommandButton2.HelpText" dlg:value="&amp;336.DlgMain.CommandButton2.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$genera_variante?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton3" dlg:tab-index="2" dlg:left="64" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;337.DlgMain.CommandButton3.HelpText" dlg:value="&amp;338.DlgMain.CommandButton3.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton3" dlg:tab-index="3" dlg:left="64" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;337.DlgMain.CommandButton3.HelpText" dlg:value="&amp;338.DlgMain.CommandButton3.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inizializza_analisi?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="3" dlg:left="118" dlg:top="175" dlg:width="47" dlg:height="15" dlg:help-text="&amp;339.DlgMain.CommandButton4.HelpText" dlg:value="&amp;340.DlgMain.CommandButton4.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="0" dlg:left="118" dlg:top="175" dlg:width="47" dlg:height="15" dlg:help-text="&amp;339.DlgMain.CommandButton4.HelpText" dlg:value="&amp;340.DlgMain.CommandButton4.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Computo?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="10" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;341.DlgMain.CommandButton5.HelpText" dlg:value="&amp;342.DlgMain.CommandButton5.Label" dlg:button-type="ok" dlg:multiline="true">
@@ -40,30 +39,24 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="8" dlg:left="145" dlg:top="155" dlg:width="130" dlg:height="15" dlg:help-text="&amp;349.DlgMain.CommandButton9.HelpText" dlg:value="&amp;350.DlgMain.CommandButton9.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S2?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:style-id="2" dlg:id="Label2" dlg:tab-index="10" dlg:left="215" dlg:top="54" dlg:width="60" dlg:height="8" dlg:help-text="&amp;353.DlgMain.Label2.HelpText" dlg:value="&amp;354.DlgMain.Label2.Label"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="11" dlg:left="140" dlg:top="44" dlg:width="74" dlg:height="8" dlg:help-text="&amp;355.DlgMain.Label3.HelpText" dlg:value="&amp;356.DlgMain.Label3.Label"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label4" dlg:tab-index="12" dlg:left="140" dlg:top="54" dlg:width="74" dlg:height="8" dlg:help-text="&amp;357.DlgMain.Label4.HelpText" dlg:value="&amp;358.DlgMain.Label4.Label"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label5" dlg:tab-index="13" dlg:left="65" dlg:top="54" dlg:width="50" dlg:height="8" dlg:help-text="&amp;359.DlgMain.Label5.HelpText" dlg:value="&amp;360.DlgMain.Label5.Label" dlg:align="right"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label6" dlg:tab-index="14" dlg:left="10" dlg:top="44" dlg:width="51" dlg:height="8" dlg:help-text="&amp;361.DlgMain.Label6.HelpText" dlg:value="&amp;362.DlgMain.Label6.Label"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label7" dlg:tab-index="15" dlg:left="10" dlg:top="54" dlg:width="51" dlg:height="8" dlg:help-text="&amp;363.DlgMain.Label7.HelpText" dlg:value="&amp;364.DlgMain.Label7.Label"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label8" dlg:tab-index="16" dlg:left="65" dlg:top="44" dlg:width="50" dlg:height="8" dlg:help-text="&amp;365.DlgMain.Label8.HelpText" dlg:value="&amp;366.DlgMain.Label8.Label" dlg:align="right"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label9" dlg:tab-index="17" dlg:left="65" dlg:top="64" dlg:width="50" dlg:height="8" dlg:help-text="&amp;367.DlgMain.Label9.HelpText" dlg:value="&amp;368.DlgMain.Label9.Label" dlg:align="right"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label10" dlg:tab-index="18" dlg:left="10" dlg:top="64" dlg:width="51" dlg:height="8" dlg:help-text="&amp;369.DlgMain.Label10.HelpText" dlg:value="&amp;370.DlgMain.Label10.Label"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label2" dlg:tab-index="10" dlg:left="215" dlg:top="60" dlg:width="60" dlg:height="10" dlg:help-text="&amp;353.DlgMain.Label2.HelpText" dlg:value="&amp;354.DlgMain.Label2.Label"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label3" dlg:tab-index="11" dlg:left="135" dlg:top="44" dlg:width="80" dlg:height="10" dlg:help-text="&amp;355.DlgMain.Label3.HelpText" dlg:value="&amp;356.DlgMain.Label3.Label"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label4" dlg:tab-index="12" dlg:left="135" dlg:top="60" dlg:width="80" dlg:height="10" dlg:help-text="&amp;357.DlgMain.Label4.HelpText" dlg:value="&amp;358.DlgMain.Label4.Label"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label5" dlg:tab-index="13" dlg:left="65" dlg:top="60" dlg:width="50" dlg:height="10" dlg:help-text="&amp;359.DlgMain.Label5.HelpText" dlg:value="&amp;360.DlgMain.Label5.Label" dlg:align="right"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label6" dlg:tab-index="14" dlg:left="10" dlg:top="44" dlg:width="54" dlg:height="10" dlg:help-text="&amp;361.DlgMain.Label6.HelpText" dlg:value="&amp;362.DlgMain.Label6.Label"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label7" dlg:tab-index="15" dlg:left="10" dlg:top="60" dlg:width="54" dlg:height="10" dlg:help-text="&amp;363.DlgMain.Label7.HelpText" dlg:value="&amp;364.DlgMain.Label7.Label"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label8" dlg:tab-index="16" dlg:left="65" dlg:top="44" dlg:width="50" dlg:height="10" dlg:help-text="&amp;365.DlgMain.Label8.HelpText" dlg:value="&amp;366.DlgMain.Label8.Label" dlg:align="right"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label9" dlg:tab-index="17" dlg:left="65" dlg:top="75" dlg:width="50" dlg:height="10" dlg:help-text="&amp;367.DlgMain.Label9.HelpText" dlg:value="&amp;368.DlgMain.Label9.Label" dlg:align="right"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label10" dlg:tab-index="18" dlg:left="10" dlg:top="75" dlg:width="54" dlg:height="10" dlg:help-text="&amp;369.DlgMain.Label10.HelpText" dlg:value="&amp;370.DlgMain.Label10.Label"/>
   <dlg:button dlg:id="CommandButton11" dlg:tab-index="19" dlg:left="35" dlg:top="145" dlg:width="0" dlg:height="2" dlg:help-text="&amp;371.DlgMain.CommandButton11.HelpText" dlg:value="&amp;372.DlgMain.CommandButton11.Label">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton10" dlg:tab-index="20" dlg:left="13" dlg:top="-43" dlg:width="130" dlg:height="15" dlg:help-text="&amp;373.DlgMain.CommandButton10.HelpText" dlg:value="&amp;374.DlgMain.CommandButton10.Label" dlg:button-type="ok">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_Filtro?language=Python&amp;location=user:uno_packages" script:language="Script"/>
-  </dlg:button>
-  <dlg:button dlg:style-id="3" dlg:id="CommandButton12" dlg:tab-index="21" dlg:left="153" dlg:top="-43" dlg:width="130" dlg:height="15" dlg:help-text="&amp;375.DlgMain.CommandButton12.HelpText" dlg:value="&amp;376.DlgMain.CommandButton12.Label" dlg:button-type="ok">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_SegnaVoci?language=Python&amp;location=user:uno_packages" script:language="Script"/>
-  </dlg:button>
-  <dlg:img dlg:style-id="1" dlg:id="ImageControl1" dlg:tab-index="23" dlg:left="10" dlg:top="90" dlg:width="265" dlg:height="55" dlg:help-text="&amp;379.DlgMain.ImageControl1.HelpText"/>
-  <dlg:text dlg:style-id="4" dlg:id="Label_DDC" dlg:tab-index="24" dlg:left="35" dlg:top="217" dlg:width="240" dlg:height="10" dlg:help-text="&amp;380.DlgMain.Label_DDC.HelpText" dlg:value="&amp;381.DlgMain.Label_DDC.Label"/>
-  <dlg:button dlg:style-id="5" dlg:id="CommandButton13" dlg:tab-index="25" dlg:left="10" dlg:top="217" dlg:width="20" dlg:height="10" dlg:help-text="&amp;382.DlgMain.CommandButton13.HelpText" dlg:value="&amp;383.DlgMain.CommandButton13.Label" dlg:toggled="1">
+  <dlg:img dlg:style-id="1" dlg:id="ImageControl1" dlg:tab-index="21" dlg:left="10" dlg:top="90" dlg:width="265" dlg:height="60" dlg:help-text="&amp;379.DlgMain.ImageControl1.HelpText"/>
+  <dlg:text dlg:style-id="3" dlg:id="Label_DDC" dlg:tab-index="22" dlg:left="35" dlg:top="217" dlg:width="240" dlg:height="12" dlg:help-text="&amp;380.DlgMain.Label_DDC.HelpText" dlg:value="&amp;381.DlgMain.Label_DDC.Label"/>
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton13" dlg:tab-index="23" dlg:left="10" dlg:top="217" dlg:width="20" dlg:height="12" dlg:help-text="&amp;382.DlgMain.CommandButton13.HelpText" dlg:value="&amp;383.DlgMain.CommandButton13.Label" dlg:toggled="1">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ssUltimus?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:combobox dlg:style-id="6" dlg:id="ComboBox1" dlg:tab-index="26" dlg:left="215" dlg:top="64" dlg:width="60" dlg:height="10" dlg:help-text="&amp;384.DlgMain.ComboBox1.HelpText" dlg:value="&amp;390.DlgMain.ComboBox1.Text" dlg:spin="true">
+  <dlg:combobox dlg:style-id="5" dlg:id="ComboBox1" dlg:tab-index="24" dlg:left="215" dlg:top="75" dlg:width="60" dlg:height="10" dlg:help-text="&amp;384.DlgMain.ComboBox1.HelpText" dlg:value="&amp;390.DlgMain.ComboBox1.Text" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;385.ComboBox1.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;386.ComboBox1.StringItemList"/>
@@ -72,11 +65,11 @@
     <dlg:menuitem dlg:value="&amp;389.ComboBox1.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:text dlg:style-id="0" dlg:id="Label11" dlg:tab-index="27" dlg:left="140" dlg:top="64" dlg:width="74" dlg:height="8" dlg:help-text="&amp;391.DlgMain.Label11.HelpText" dlg:value="&amp;392.DlgMain.Label11.Label"/>
-  <dlg:text dlg:style-id="0" dlg:id="Label13" dlg:tab-index="28" dlg:left="10" dlg:top="12" dlg:width="25" dlg:height="10" dlg:help-text="&amp;393.DlgMain.Label13.HelpText" dlg:value="&amp;394.DlgMain.Label13.Label"/>
-  <dlg:text dlg:style-id="7" dlg:id="Label14" dlg:tab-index="29" dlg:left="35" dlg:top="12" dlg:width="240" dlg:height="25" dlg:help-text="&amp;395.DlgMain.Label14.HelpText" dlg:value="&amp;396.DlgMain.Label14.Label" dlg:valign="top" dlg:multiline="true"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label12" dlg:tab-index="9" dlg:left="215" dlg:top="44" dlg:width="60" dlg:height="8" dlg:help-text="&amp;417.DlgMain.Label12.HelpText" dlg:value="&amp;418.DlgMain.Label12.Label"/>
-  <dlg:text dlg:style-id="8" dlg:id="Label1" dlg:tab-index="22" dlg:left="213" dlg:top="230" dlg:width="61" dlg:height="8" dlg:help-text="&amp;419.DlgMain.Label1.HelpText" dlg:value="&amp;420.DlgMain.Label1.Label" dlg:align="right">
+  <dlg:text dlg:style-id="0" dlg:id="Label11" dlg:tab-index="25" dlg:left="135" dlg:top="75" dlg:width="80" dlg:height="10" dlg:help-text="&amp;391.DlgMain.Label11.HelpText" dlg:value="&amp;392.DlgMain.Label11.Label"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label13" dlg:tab-index="26" dlg:left="10" dlg:top="12" dlg:width="25" dlg:height="10" dlg:help-text="&amp;393.DlgMain.Label13.HelpText" dlg:value="&amp;394.DlgMain.Label13.Label"/>
+  <dlg:text dlg:style-id="6" dlg:id="Label14" dlg:tab-index="27" dlg:left="35" dlg:top="10" dlg:width="240" dlg:height="25" dlg:help-text="&amp;395.DlgMain.Label14.HelpText" dlg:value="&amp;396.DlgMain.Label14.Label" dlg:valign="top" dlg:multiline="true"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label12" dlg:tab-index="9" dlg:left="215" dlg:top="44" dlg:width="60" dlg:height="10" dlg:help-text="&amp;417.DlgMain.Label12.HelpText" dlg:value="&amp;418.DlgMain.Label12.Label"/>
+  <dlg:text dlg:style-id="7" dlg:id="Label1" dlg:tab-index="20" dlg:left="213" dlg:top="230" dlg:width="61" dlg:height="8" dlg:help-text="&amp;419.DlgMain.Label1.HelpText" dlg:value="&amp;420.DlgMain.Label1.Label" dlg:align="right">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:text>
  </dlg:bulletinboard>

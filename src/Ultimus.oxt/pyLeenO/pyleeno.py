@@ -3054,6 +3054,7 @@ def pesca_cod(arg=None):
         cerca_in_elenco()
         _gotoSheet('Elenco Prezzi')
 ###
+
     if oSheet.Name in('CONTABILITA'):
         ### controllo che non ci siano atti registrati
         cerca_partenza()
@@ -3065,9 +3066,6 @@ def pesca_cod(arg=None):
         else:
             pass
         ###
-        if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
-            cerca_in_elenco()
-            _gotoSheet('Elenco Prezzi')
 ###
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
         if oDoc.NamedRanges.hasByName("#Lib#1") == True:
@@ -3077,10 +3075,9 @@ def pesca_cod(arg=None):
                 else:
                     sblocca_computo = 1
         cerca_partenza()
-        if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
-            cerca_in_elenco()
-            return
-        _gotoSheet('Elenco Prezzi')
+    if oSheet.getCellByPosition(1, partenza[1]).String != 'Cod. Art.?':
+        cerca_in_elenco()
+    _gotoSheet('Elenco Prezzi')
 ###
     if oSheet.Name in('Elenco Prezzi'):
         try:

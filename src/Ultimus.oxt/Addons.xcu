@@ -168,7 +168,7 @@
             <value>%origin%/icons/compo</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Aggiungi Componente</value>
+            <value>Aggiungi rigo di misura</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

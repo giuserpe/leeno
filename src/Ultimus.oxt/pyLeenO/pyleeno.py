@@ -1225,7 +1225,7 @@ def voce_breve(arg=None):
             return
         else:
             if oSheet.getCellRangeByName('S1.H335').Value < 10000:
-                conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
+                conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
                 oSheet.getCellRangeByName('S1.H335').Value = 10000
             else:
                 oSheet.getCellRangeByName('S1.H335').Value = int(conf.read(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate'))
@@ -1319,7 +1319,7 @@ def scelta_viste(arg=None):
     if oSheet.Name in('VARIANTE', 'COMPUTO'):
         oDialog1 = dp.createDialog('vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application')
         oDialog1Model = oDialog1.Model
-        oDialog1.getControl('CBDet').State = 1
+        oDialog1.getControl('Dettaglio').State = conf.read(path_conf, 'Generale', 'dettaglio')
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMis').State = 1
         if oSheet.getColumns().getByIndex(17).Columns.IsVisible == True: oDialog1.getControl('CBSic').State = 1
         if oSheet.getColumns().getByIndex(28).Columns.IsVisible == True: oDialog1.getControl('CBMat').State = 1
@@ -1405,9 +1405,11 @@ def scelta_viste(arg=None):
         else:
             oSheet.getColumns().getByIndex(38).Columns.IsVisible = True
 
-        if oDialog1.getControl("CBDet").State == 0: #
+        if oDialog1.getControl('Dettaglio').State == 0: #
+            conf.write(path_conf, 'Generale', 'dettaglio', '0')
             dettaglio_misure(0)
         else:
+            conf.write(path_conf, 'Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
             
@@ -2949,7 +2951,8 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
     lrow = Range2Cell()[1]
     nome_sheet = oSheet.Name
     if nome_sheet in('COMPUTO', 'VARIANTE'):
-        dettaglio_misura_rigo()
+        if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+            dettaglio_misura_rigo()
         copia_riga_computo(lrow)
     elif nome_sheet == 'CONTABILITA':
         copia_riga_contab(lrow)
@@ -3989,9 +3992,11 @@ def config_default(arg=None):
     ('Generale', 'visualizza', 'Menù Principale'),
     ('Generale', 'altezza_celle', '1.25'),
     ('Generale', 'pesca_auto', '1'),
-    ('Generale', 'movedirection', '0'),
+    ('Generale', 'movedirection', '1'),
     ('Generale', 'descrizione_in_una_colonna', '0'),
     ('Generale', 'toolbar_contestuali', '1'),
+    ('Generale', 'vedi_voce_breve', '50'),
+    ('Generale', 'dettaglio', '1'),
     
     #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
@@ -4008,8 +4013,6 @@ def config_default(arg=None):
             conf.read(path_conf, el[0], el[1])
         except:
             conf.write(path_conf, el[0], el[1], el[2])
-
-    #~ leeno_conf()
 ########################################################################
 def nuova_voce_scelta(arg=None): #assegnato a ctrl-shift-n
     '''
@@ -6748,16 +6751,19 @@ def autoexec(arg=None):
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
     else:
         path = os.getenv("HOME")
-    if not os.path.exists(path_conf):
-        os.makedirs(path_conf[:-11])
-        config_default()
+    chi(path_conf)
     try:
-        if conf.read(path_conf, 'Generale', 'movedirection') == '0':
-            oGSheetSettings.MoveDirection = 0
-        else:
-            oGSheetSettings.MoveDirection = 1
+        os.path.exists(path_conf)
     except:
-        config_default()
+        os.makedirs(path_conf[:-11])
+    config_default()
+    #~ try:
+    if conf.read(path_conf, 'Generale', 'movedirection') == '0':
+        oGSheetSettings.MoveDirection = 0
+    else:
+        oGSheetSettings.MoveDirection = 1
+    #~ except:
+        #~ config_default()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if 'Esempio_' not in oDoc.getURL():
@@ -6946,43 +6952,7 @@ def adegua_tmpl(arg=None):
     #~ for x in (333, 335):
         #~ oSheet.getCellRangeByPosition(6, x, 30, x).clearContents(flags)
 
-# di seguito ci metto tutte le variabili aggiunte dopo la prima introduzione di /.config/leeno/leeno.conf
-    try:
-        conf.read(path_conf, 'Contabilità', 'idxSAL')
-    except:
-        conf.write(path_conf, 'Contabilità', 'idxSAL', '30') #numero massimo di SAL possibili
-    try:
-        conf.read(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate')
-    except:
-        conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate', '100')
-    try:
-        conf.read(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate')
-    except:
-        conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate', '120')
-    try:
-        conf.read(path_conf, 'Generale', 'vedi_voce_breve')
-    except:
-        conf.write(path_conf, 'Generale', 'vedi_voce_breve', '50') #abilita il pesca dopo inserimento nuova voce
-    try:
-        conf.read(path_conf, 'Generale', 'pesca_auto')
-    except:
-        conf.write(path_conf, 'Generale', 'pesca_auto', '1') #abilita il pesca dopo inserimento nuova voce
-    try:
-        conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna')
-    except:
-        conf.write(path_conf, 'Generale', 'descrizione_in_una_colonna', '0')
-    try:
-        conf.read(path_conf, 'Generale', 'toolbar_contestuali')
-    except:
-        conf.write(path_conf, 'Generale', 'toolbar_contestuali', '1')
-    try:
-        conf.read(path_conf, 'Generale', 'movedirection')
-    except:
-        conf.write(path_conf, 'Generale', 'movedirection', '0') #muove il cursore in basso
-    try:
-        conf.read(path_conf, 'Contabilità', 'ricicla_da')
-    except:
-        conf.write(path_conf, 'Contabilità', 'ricicla_da', 'COMPUTO') #muove il cursore in basso
+# LE VARIABILI NUOVE VANNO AGGIUNTE IN config_default()
 
     # cambiare stile http://bit.ly/2cDcCJI
     
@@ -7906,8 +7876,11 @@ def sistema_pagine (arg=None):
     #~ mri(oAktPage)
     #~ return
     ###
-    dettaglio_misure(0)
-    dettaglio_misure(1)
+    if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+        dettaglio_misure(0)
+        dettaglio_misure(1)
+    else:
+        dettaglio_misure(0)
     for n in range(0, oDoc.StyleFamilies.getByName('PageStyles').Count):
         oAktPage = oDoc.StyleFamilies.getByName('PageStyles').getByIndex(n)
         # ~chi((n , oAktPage.DisplayName))

@@ -6751,7 +6751,6 @@ def autoexec(arg=None):
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
     else:
         path = os.getenv("HOME")
-    chi(path_conf)
     try:
         os.path.exists(path_conf)
     except:
@@ -7199,6 +7198,8 @@ def DlgMain(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
+    x = Range2Cell()[0]
+    y = Range2Cell()[1]
     if oDoc.getURL() != '':
         for el in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
             try:
@@ -7224,7 +7225,7 @@ def DlgMain(arg=None):
     global oDlgMain
     oDlgMain = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgMain?language=Basic&location=application")
     oDialog1Model = oDlgMain.Model
-    oDlgMain.Title = 'Menù Principale(Ctrl+0)'
+    oDlgMain.Title = 'Menù Principale (Ctrl+0)'
     
     sUrl = LeenO_path()+'/icons/Immagine.png'
     oDlgMain.getModel().ImageControl1.ImageURL=sUrl
@@ -7283,7 +7284,7 @@ def DlgMain(arg=None):
     sString = oDlgMain.getControl("ComboBox1")
     
     sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
-    
+    _gotoCella(x, y)
     oDlgMain.execute()
     sString = oDlgMain.getControl("ComboBox1")
     conf.write(path_conf, 'Generale', 'visualizza', sString.getText())

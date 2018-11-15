@@ -6377,8 +6377,8 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 #VARIABILI GLOBALI:#####################################################
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
-Lminor= 18 #'NUOVE FUNZIONALITA'
-Lsubv= "4.dev" #'CORREZIONE BUGS
+Lminor= 19 #'NUOVE FUNZIONALITA'
+Lsubv= "0" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
@@ -7790,49 +7790,6 @@ def GetRegistryKeyContent(sKeyName, bForUpdate):
     else:
         GetRegistryKeyContent = oConfigProvider.createInstanceWithArguments("com.sun.star.configuration.ConfigurationAccess", (arg,))
     return GetRegistryKeyContent
-#~ EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA EXTRA 
-#~ def debug (arg):
-def EXTRA (arg):
-    
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    struttura_off()
-    #~ for n in(3, 5, 7):
-        #~ oCellRangeAddr.StartColumn = n
-        #~ oCellRangeAddr.EndColumn = n
-        #~ oSheet.group(oCellRangeAddr,0)
-        #~ oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible=False
-
-    #~ test =  (oSheet)+2
-    lista_cat = list()
-    sotto = getLastUsedCell(oSheet).EndRow
-    for n in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
-        if oSheet.getCellByPosition(1, n).String == '-':
-            sopra = n+1
-            lista_cat.append((sopra, sotto))
-            if oSheet.getCellByPosition(0, n-1).String == '-':
-                sotto = n-2
-            else:
-                sotto = n-1
-    #~ for el in lista_cat:
-        #~ oCellRangeAddr.StartRow = el[0]
-        #~ oCellRangeAddr.EndRow = el[1]
-        #~ oSheet.group(oCellRangeAddr,1)
-
-    sotto = getLastUsedCell(oSheet).EndRow
-    for n in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
-        if oSheet.getCellByPosition(0, n).String == '-':
-            sopra = n+1
-            lista_cat.append((sopra, sotto))
-            sotto = n-1
-    for el in lista_cat:
-        oCellRangeAddr.StartRow = el[0]
-        oCellRangeAddr.EndRow = el[1]
-        oSheet.group(oCellRangeAddr,1)
-        #~ oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
 ########################################################################
 def sistema_pagine (arg=None):
     '''
@@ -7990,26 +7947,6 @@ def fissa (arg=None):
     elif oSheet.Name in('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
     return
-    #~ chi (Locale)
-
-def debug_(arg=None):
-    LocalSettings = uno.createUnoStruct("com.sun.star.lang.Locale")
-    LocalSettings.Language = "it"
-    LocalSettings.Country = "IT"
-    #~ locale.setlocale(locale.LC_ALL, 'it_IT')
-    from kiwi.datatypes import currency
-    chi(currency('10.5').format())
-    return
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    chi(valuta_cella(oSheet.getCellRangeByName('F372')))
-    
-    return
-    fine = getLastUsedCell(oSheet).EndRow
-    for n in reversed(range(0, fine)):
-        if oSheet.getCellRangeByName('F372').Type.value == 'EMPTY':
-            #~ oSheet.getCellByPosition(28, n).Formula = '=IF(N' +str(n+1)+ '-AB' +str(n+1)+ '=0;"";N' +str(n+1)+ '-AB' +str(n+1)+ ')'
-            oSheet.getRows().removeByIndex(n, 1)
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

@@ -6378,7 +6378,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 19 #'NUOVE FUNZIONALITA'
-Lsubv= "0" #'CORREZIONE BUGS
+Lsubv= "0.dev" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
@@ -7017,12 +7017,12 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
         oSheet.getCellRangeByName('H323').CellStyle = 'Setvar C'
         oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = 11 #percentuale
-        #dal 209 cambia nome di custom propierty
-        oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
-        if oUDP.getPropertySetInfo().hasPropertyByName("Versione LeenO"):
-            oUDP.removeProperty('Versione LeenO')
-            oUDP.addProperty('Versione_LeenO', MAYBEVOID + REMOVEABLE + MAYBEDEFAULT, str(Lmajor) +'.'+ str(Lminor) +'.x')
         #< adegua le formule delle descrizioni di voci
+#dal 209 cambia nome di custom propierty
+        oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
+        if oUDP.getPropertySetInfo().hasPropertyByName("Versione LeenO"): oUDP.removeProperty('Versione LeenO')
+        if oUDP.getPropertySetInfo().hasPropertyByName("Versione_LeenO"): oUDP.removeProperty('Versione_LeenO')
+        oUDP.addProperty('Versione_LeenO', MAYBEVOID + REMOVEABLE + MAYBEDEFAULT, str(Lmajor) +'.'+ str(Lminor) +'.x')
         for el in ('COMPUTO', 'VARIANTE'):
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)

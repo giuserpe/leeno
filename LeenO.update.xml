@@ -3,7 +3,7 @@
     <src xlink:href="https://leeno.org/download/LeenO/LeenO/LeenO.oxt" />
   </update-download>
   <identifier value="org.giuseppe-vizziello.leeno" />
-  <version value="3.18.4" />
+  <version value="3.19.1" />
   <publisher>
     <name xlink:href="https://leeno.org/staff/" lang="it">Giuseppe Vizziello</name>
   </publisher>

@@ -6741,7 +6741,7 @@ def autoexec(arg=None):
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
 
-#attiva 'copia sempre copia di backup', ma dall'apertura successiva di LibreOffice
+#attiva 'copia di backup', ma dall'apertura successiva di LibreOffice
     node = GetRegistryKeyContent("/org.openoffice.Office.Common/Save/Document", True)
     node.CreateBackup = True
     node.commitChanges()
@@ -6751,18 +6751,13 @@ def autoexec(arg=None):
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
     else:
         path = os.getenv("HOME")
-    try:
-        os.path.exists(path_conf)
-    except:
+    if os.path.exists(path_conf) == False:
         os.makedirs(path_conf[:-11])
     config_default()
-    #~ try:
     if conf.read(path_conf, 'Generale', 'movedirection') == '0':
         oGSheetSettings.MoveDirection = 0
     else:
         oGSheetSettings.MoveDirection = 1
-    #~ except:
-        #~ config_default()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if 'Esempio_' not in oDoc.getURL():
@@ -7282,7 +7277,6 @@ def DlgMain(arg=None):
     except:
         pass
     sString = oDlgMain.getControl("ComboBox1")
-    
     sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
     _gotoCella(x, y)
     oDlgMain.execute()

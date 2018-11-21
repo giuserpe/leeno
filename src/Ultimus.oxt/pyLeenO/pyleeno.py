@@ -3931,7 +3931,7 @@ def leeno_conf(arg=None):
 ########################################################################
 #percorso di ricerca di leeno.conf
 if sys.platform == 'win32':
-    path_conf = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") + '/.config/leeno/leeno.conf'
+    path_conf = os.getenv("APPDATA") + '/.config/leeno/leeno.conf'
 else:
     path_conf = os.getenv("HOME") + '/.config/leeno/leeno.conf'
 class conf:
@@ -6378,7 +6378,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 19 #'NUOVE FUNZIONALITA'
-Lsubv= "1" #'CORREZIONE BUGS
+Lsubv= "1.dev" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')

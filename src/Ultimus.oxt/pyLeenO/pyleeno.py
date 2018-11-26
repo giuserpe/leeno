@@ -2808,6 +2808,7 @@ def elimina_voce(lRow=None, msg=1):
     oSheet = oDoc.CurrentController.ActiveSheet
     if lRow == None or lRow == 0:
         lRow = Range2Cell()[1]
+    if oSheet.Name in('Elenco Prezzi'): return
     try:
         if oSheet.Name in('COMPUTO', 'VARIANTE'):
             sStRange = Circoscrive_Voce_Computo_Att(lRow)
@@ -3052,6 +3053,7 @@ def pesca_cod(arg=None):
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
+    if oSheet.Name in('Elenco Prezzi'): return
     if oSheet.Name in('Analisi di Prezzo'):
         cerca_partenza()
         cerca_in_elenco()
@@ -3997,6 +3999,7 @@ def config_default(arg=None):
     ('Generale', 'toolbar_contestuali', '1'),
     ('Generale', 'vedi_voce_breve', '50'),
     ('Generale', 'dettaglio', '1'),
+    ('Generale', 'torna_a_ep', '1'),
     
     #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
@@ -7941,6 +7944,23 @@ def fissa (arg=None):
     elif oSheet.Name in('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
     return
+
+########################################################################
+import traceback
+
+def debug(arg=None):
+    #~ sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    #~ return
+
+    try:
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+
+    except Exception as e:
+        MsgBox ("CSV Import failure exception " + str(type(e)) +
+                " message " + str(e) + " args " + str(e.args) +
+                traceback.format_exc());
+
+
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
@@ -7961,3 +7981,4 @@ g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("
 ########################################################################
 ########################################################################
 ########################################################################
+

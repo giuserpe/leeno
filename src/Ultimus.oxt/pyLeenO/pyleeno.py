@@ -3053,7 +3053,6 @@ def pesca_cod(arg=None):
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
-    if oSheet.Name in('Elenco Prezzi'): return
     if oSheet.Name in('Analisi di Prezzo'):
         cerca_partenza()
         cerca_in_elenco()
@@ -6980,7 +6979,7 @@ dell'operazione che terminerà con un avviso.
         for el in oDoc.Sheets.ElementNames:
             oDoc.getSheets().getByName(el).IsVisible = True
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
-            adatta_altezza_riga(el)
+            # ~adatta_altezza_riga(el)
             oDoc.getSheets().getByName(el).IsVisible = False
         
         ### dal template 212
@@ -7462,12 +7461,13 @@ def make_pack(arg=None, bar=0):
         oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        #~ nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-        #~ nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-        cartella = '/media/' + os.getenv("PWD")[5:]
-        nomeZip2= cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-        nomeZip = cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-        os.system('nemo ' + cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
+        nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+        nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+        #~ cartella = '/media/' + os.getenv("PWD")[5:]
+        #~ nomeZip2= cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+        #~ nomeZip = cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+        #~ os.system('nemo ' + cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
+        os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/')
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
             try:
@@ -7948,7 +7948,7 @@ def fissa (arg=None):
 ########################################################################
 import traceback
 
-def debug(arg=None):
+def debug_(arg=None):
     #~ sStRange = Circoscrive_Voce_Computo_Att(lrow)
     #~ return
 

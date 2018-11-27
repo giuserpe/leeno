@@ -183,6 +183,14 @@ def invia_voce_ep(arg=None):
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
     except AttributeError:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    ######
+    #~ try:
+        #~ len(oRangeAddress)
+        #~ for el in oRangeAddress:
+            #~ chi ((el.StartRow, el.EndRow))
+    #~ except TypeError:
+            #~ chi ((oRangeAddress.StartRow, oRangeAddress.EndRow))
+    ######
     try:
         SR = oRangeAddress.StartRow
     except AttributeError:
@@ -6418,6 +6426,8 @@ Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...
         salva_come()
         autoexec()
     sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777
     DlgMain()
     return
 ########################################################################
@@ -7947,8 +7957,7 @@ def fissa (arg=None):
 
 ########################################################################
 import traceback
-
-def debug_(arg=None):
+def debug_errore(arg=None):
     #~ sStRange = Circoscrive_Voce_Computo_Att(lrow)
     #~ return
 
@@ -7956,11 +7965,29 @@ def debug_(arg=None):
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
 
     except Exception as e:
-        MsgBox ("CSV Import failure exception " + str(type(e)) +
-                " message " + str(e) + " args " + str(e.args) +
+        #~ MsgBox ("CSV Import failure exception " + str(type(e)) +
+                #~ ". Messaggio: " + str(e) + " args " + str(e.args) +
+                #~ traceback.format_exc());
+        MsgBox ("Eccezione " + str(type(e)) +
+                "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
-
-
+########################################################################
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    try:
+        len(oRangeAddress)
+        for el in oRangeAddress:
+            chi ((el.StartRow, el.EndRow))
+    except TypeError:
+            chi ((oRangeAddress.StartRow, oRangeAddress.EndRow))
+        
+        
+        
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

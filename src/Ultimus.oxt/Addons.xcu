@@ -11,9 +11,6 @@
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
             <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
-<!--
-            <value>service:org.giuseppe-vizziello.leeno.pyleeno.DlgMain?execute</value>
--->
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -803,7 +800,7 @@
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
-          <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
         </prop>
         <prop oor:name="Title" oor:type="xs:string">
           <value>LeenO</value>
@@ -811,7 +808,7 @@
         <node oor:name="Submenu">
           <node oor:name="m00" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+              <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
             </prop>
             <!-- sottomenu Nuovo -->
             <prop oor:name="Title" oor:type="xs:string">
@@ -820,7 +817,7 @@
             <node oor:name="Submenu">
               <node oor:name="N010" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                  <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_computo?language=Python&amp;location=user:uno_packages</value>
@@ -837,7 +834,7 @@
               </node>
               <node oor:name="N020" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                  <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
                   <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_usobollo?language=Python&amp;location=user:uno_packages</value>
@@ -848,7 +845,6 @@
               </node>
             </node>
           </node>
-          #########################################################################
           <node oor:name="m01" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>

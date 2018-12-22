@@ -2075,21 +2075,19 @@ def genera_sommario(arg=None):
     #~ oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
 def riordina_ElencoPrezzi(arg=None):
+    '''Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    rifa_nomearea('Elenco Prezzi', "$A$3:$AF$4", 'elenco_prezzi')
-    oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    SC = oRangeAddress.StartColumn
-    EC = oRangeAddress.EndColumn
-    SR = oRangeAddress.StartRow+1
-    ER = oRangeAddress.EndRow-1
     if uFindStringCol('Fine elenco', 0, oSheet) == None:
         inserisci_Riga_rossa()
     test = str(uFindStringCol('Fine elenco', 0, oSheet))
     rifa_nomearea('Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
     rifa_nomearea('Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    ER = oRangeAddress.EndRow-1
+    SC = oRangeAddress.StartColumn
+    EC = oRangeAddress.EndColumn
+    SR = oRangeAddress.StartRow+1
+    ER = oRangeAddress.EndRow
     if SR > ER: return
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
     oDoc.CurrentController.select(oRange)

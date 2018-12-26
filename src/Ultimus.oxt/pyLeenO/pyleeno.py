@@ -348,7 +348,7 @@ def debug(arg=None):
             MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     #~ chi(len(analisi))
-    
+    chi(oDoc.getURL())
     if analisi:
         #~ chi(len(analisi))
         _gotoDoc(fpartenza)
@@ -360,15 +360,17 @@ def debug(arg=None):
         lista = list()
         
         for el in analisi:
-            chi((el, (uFindStringCol(analisi[0], 0, oSheet))))
-            sStRange = Circoscrive_Analisi(uFindStringCol(el, 0, oSheet))
+            chi(uFindStringCol(el, 0, oSheet))
+            y = uFindStringCol(el, 0, oSheet)
+            sStRange = Circoscrive_Analisi(y)
+            oDoc.CurrentController.select(sStRange) # seleziono le voci di analisi
             SR = sStRange.RangeAddress.StartRow
             ER = sStRange.RangeAddress.EndRow
             lista.append((SR, ER))
             selezione.append(sStRange.RangeAddress)
         ranges.addRangeAddresses(selezione, True)
         oDoc.CurrentController.select(ranges) # seleziono le voci di analisi
-        return
+        #~ return
         copy_clip()
         costi = list()
         for el in lista:
@@ -394,9 +396,7 @@ def debug(arg=None):
         el_y = list()
 
         for el in costi:
-            chi(el)
             el_y.append(uFindStringCol(el, 0, oSheet))
-        #~ chi(Range2Cell()[1])
         chi(('costi', costi, el_y))
         selezione = list()
         ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
@@ -405,7 +405,11 @@ def debug(arg=None):
             selezione.append(rangen)
         ranges.addRangeAddresses(selezione, True)
         oDoc.CurrentController.select(ranges)
+        return
         copy_clip()
+        
+        
+        
         #~ chi('sono arrivato qui: devo controllare se le analisi vengono trasferita al DocPrincipale')
         _gotoDoc(sUltimus)
         ddcDoc = XSCRIPTCONTEXT.getDocument()
@@ -414,6 +418,7 @@ def debug(arg=None):
         ddcDoc.CurrentController.setActiveSheet(dccSheet)
         _gotoCella(0, 3)
         paste_clip()
+        chi(999)
         #~ return
 
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
@@ -2895,6 +2900,7 @@ def next_voice(lrow, n=1):
     #~ n =0
     #~ lrow = Range2Cell()[1]
     fine = ultima_voce(oSheet)+1
+    if lrow <= 1: lrow = 2
     if lrow >= fine:
         return lrow
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
@@ -3892,7 +3898,6 @@ def paste_clip(arg=None):
     # ~dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     # ~dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-
 
     oProp = []
     oProp0 = PropertyValue()
@@ -7470,6 +7475,13 @@ def set_larghezza_colonne(arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     adatta_altezza_riga(oSheet.Name)
 ########################################################################
+def debug (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    lrow = next_voice(lrow)
+    oDoc.CurrentController.select(oSheet.getCellByPosition(0, lrow))
+
 def adegua_tmpl(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
@@ -7629,16 +7641,23 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('C10').Formula ='=IF(LEN(VLOOKUP(B10;elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B10;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B10;elenco_prezzi;2;FALSE());$S1.$H$338)))'
         oSheet.getCellRangeByName('C24').Formula ='=IF(LEN(VLOOKUP(B24;elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B24;elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B24;elenco_prezzi;2;FALSE());$S1.$H$336)))'
         oSheet.getCellRangeByName('I24').CellStyle = 'Comp-Bianche in mezzo_R'
-        # ~oSheet.getCellRangeByName('L12').Formula ='=IF(VLOOKUP(B10;elenco_prezzi;3;FALSE())="%";VLOOKUP(B10;elenco_prezzi;5;FALSE())*100;VLOOKUP(B10;elenco_prezzi;5;FALSE()))'
-        oSheet.getCellRangeByName('S12').Formula ='=J12*L12'
-        # ~oSheet.getCellRangeByName('N27').Formula ='=IF(VLOOKUP(B24;elenco_prezzi;3;FALSE())="%";VLOOKUP(B24;elenco_prezzi;5;FALSE())*100;VLOOKUP(B24;elenco_prezzi;5;FALSE()))'
-        oSheet.getCellRangeByName('P27').Formula ='=N27*J27'
+        oSheet.getCellRangeByName('S12').Formula ='=IF(VLOOKUP(B10;elenco_prezzi;3;FALSE())="%";J12*L12/100;J12*L12)'
+        #~ oSheet.getCellRangeByName('S12').Formula ='=J12*L12'
+        oSheet.getCellRangeByName('P27').Formula ='=IF(VLOOKUP(B24;elenco_prezzi;3;FALSE())="%";J27*N27/100;J27*N27)'
+        #~ oSheet.getCellRangeByName('P27').Formula ='=N27*J27'
         
         ###
         oSheet.getCellRangeByName('AC12').Formula = '=S12-AE12'
         oSheet.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
         oSheet.getCellRangeByName('AC27').Formula = '=P27-AE27'
         oSheet.getCellRangeByName('AC27').CellStyle = 'Comp-sotto euri'
+        for el in('VARIANTE', 'COMPUTO'):
+            if oDoc.getSheets().hasByName(el) == True:
+                _gotoSheet(el)
+                oSheet = oDoc.getSheets().getByName(el)
+                fine = getLastUsedCell(oSheet).EndRow
+                #~ for n in range(0, fine):
+
         for el in('CONTABILITA', 'VARIANTE', 'COMPUTO'):
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)

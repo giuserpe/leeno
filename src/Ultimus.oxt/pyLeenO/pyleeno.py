@@ -2901,8 +2901,7 @@ def next_voice(lrow, n=1):
     #~ lrow = Range2Cell()[1]
     fine = ultima_voce(oSheet)+1
     if lrow <= 1: lrow = 2
-    if lrow >= fine:
-        return lrow
+    if lrow >= fine or oSheet.getCellByPosition(0, lrow).CellStyle in('Comp TOTALI'): return lrow
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
         if n==0:
             sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
@@ -2915,11 +2914,8 @@ def next_voice(lrow, n=1):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
                 lrow = y
                 break
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-        while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-            lrow +=1
-    else:
-        return
+    while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+        lrow +=1
     return lrow
 ########################################################################
 def cancella_analisi_da_ep(arg=None):
@@ -7475,13 +7471,6 @@ def set_larghezza_colonne(arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     adatta_altezza_riga(oSheet.Name)
 ########################################################################
-def debug (arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = Range2Cell()[1]
-    lrow = next_voice(lrow)
-    oDoc.CurrentController.select(oSheet.getCellByPosition(0, lrow))
-
 def adegua_tmpl(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:

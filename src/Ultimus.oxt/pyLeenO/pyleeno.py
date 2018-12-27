@@ -3055,12 +3055,14 @@ def Circoscrive_Voce_Computo_Att(lrow):
     #~ if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
     if oSheet.getCellByPosition(0, lrow).CellStyle in('comp progress', 'comp 10 s', 'Comp Start Attributo',
     'Comp End Attributo', 'Comp Start Attributo_R', 'comp 10 s_R', 'Comp End Attributo_R', 'Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'):
-        while oSheet.getCellByPosition(0, lrow).CellStyle not in('Comp End Attributo', 'Comp End Attributo_R'):
-            lrow +=1
-        lrowE=lrow
-        while oSheet.getCellByPosition(0, lrow).CellStyle not in('Comp Start Attributo', 'Comp Start Attributo_R'):
-            lrow -=1
-        lrowS=lrow
+        y = lrow
+        while oSheet.getCellByPosition(0, y).CellStyle not in('Comp End Attributo', 'Comp End Attributo_R'):
+            y +=1
+        lrowE=y
+        y = lrow
+        while oSheet.getCellByPosition(0, y).CellStyle not in('Comp Start Attributo', 'Comp Start Attributo_R'):
+            y -=1
+        lrowS=y
     celle=oSheet.getCellRangeByPosition(0,lrowS,250,lrowE)
     return celle
 ########################################################################
@@ -4282,6 +4284,7 @@ def rigenera_voce(lrow):
 #~ def debug(arg=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
+    in CPMPUTO e VARIANTE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -4301,27 +4304,27 @@ def rigenera_voce(lrow):
     oSheet.getCellByPosition(11, sotto).Formula = '=VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;5;FALSE())'
     oSheet.getCellByPosition(13, sotto).Formula = '=J'+ str(sotto+1)
     oSheet.getCellByPosition(17, sotto).Formula = '=AB'+ str(sotto+1) +'*J'+ str(sotto+1)
-    oSheet.getCellByPosition(18, sotto).Formula = '=J'+ str(sotto+1) +'*L'+ str(sotto+1)
+    #~ oSheet.getCellByPosition(18, sotto).Formula = '=J'+ str(sotto+1) +'*L'+ str(sotto+1)
+    oSheet.getCellByPosition(18, sotto).Formula = '=IF(VLOOKUP(B' + str(sopra+2) + ';elenco_prezzi;3;FALSE())="%";J'+ str(sotto+1) +'*L'+ str(sotto+1) +'/100;J'+ str(sotto+1) +'*L'+ str(sotto+1) +')'
     oSheet.getCellByPosition(27, sotto).Formula = '=VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;4;FALSE())'
-    #~ return
     oSheet.getCellByPosition(28, sotto).Formula = '=S'+ str(sotto+1) +'-AE'+ str(sotto+1)
     oSheet.getCellByPosition(29, sotto).Formula = '=VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;6;FALSE())'
     oSheet.getCellByPosition(30, sotto).Formula = '=IF(AD'+ str(sotto+1) +'<>""; PRODUCT(AD'+ str(sotto+1) +'*S'+ str(sotto+1) +'))'
     oSheet.getCellByPosition(35, sotto).Formula = '=B'+ str(sopra+2)
     oSheet.getCellByPosition(36, sotto).Formula = '=IF(ISERROR(S'+ str(sotto+1) +');"";IF(S'+ str(sotto+1) +'<>"";S'+ str(sotto+1) +';""))'
 ########################################################################
-def rigenera_tutte(arg=None):
+def rigenera_tutte(arg=None, attesa=False):
     '''
     Ripristina le formule in tutto il foglio
     '''
-    oDialogo_attesa = dlg_attesa()
+    if attesa == True: oDialogo_attesa = dlg_attesa()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     refresh(0)
-    oDoc.CurrentController.ZoomValue = 400
-    row = 3
+    #~ oDoc.CurrentController.ZoomValue = 400
+    row = next_voice(0)
     last = ultima_voce(oSheet)
-    attesa().start() #mostra il dialogo
+    if attesa == True: attesa().start() #mostra il dialogo
     while row < last:
         #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row))
         rigenera_voce(row)
@@ -4330,7 +4333,7 @@ def rigenera_tutte(arg=None):
     oDoc.CurrentController.ZoomValue = 100
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     refresh(1)
-    oDialogo_attesa.endExecute()
+    if attesa == True: oDialogo_attesa.endExecute()
     return
 ########################################################################
 # leeno.conf  ##########################################################
@@ -7483,23 +7486,21 @@ def adegua_tmpl(arg=None):
     - dal 212 vengono cancellate le celle che indicano il DCC nel foglio M1
     - dal 213 sposta il VediVoce nella colonna E
     - dal 214 assegna un'approssimazione diversa per ognuno dei valori di misurazione
+    - dal 215 adegua del formule degli importi ai prezzi in %
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ refresh(0)
+
 #qui le cose da cambiare comunque
     
     flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
-    #cancello da S1 le variabili gestite in leeno.conf
-    #~ for x in (333, 335):
-        #~ oSheet.getCellRangeByPosition(6, x, 30, x).clearContents(flags)
 
 # LE VARIABILI NUOVE VANNO AGGIUNTE IN config_default()
-
     # cambiare stile http://bit.ly/2cDcCJI
-    
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 214 #VERSIONE CORRENTE
+    adegua_a = 215 #VERSIONE CORRENTE
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione di LeenO installata?
@@ -7519,13 +7520,12 @@ dell'operazione che terminerà con un avviso.
         styles.loadStylesFromURL(sUrl, list())
         oSheet = oDoc.getSheets().getByName('S1')
         oSheet.getCellRangeByName('S1.H291').Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
-            
         for el in oDoc.Sheets.ElementNames:
             oDoc.getSheets().getByName(el).IsVisible = True
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
             # ~adatta_altezza_riga(el)
             oDoc.getSheets().getByName(el).IsVisible = False
-        
+
         ### dal template 212
         flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR
         _gotoSheet('M1')
@@ -7557,7 +7557,7 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('H319:H326').CellStyle = 'Setvar C_3'
         oSheet.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
         oSheet.getCellRangeByName('H323').CellStyle = 'Setvar C'
-        oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = 11 #percentuale
+        oDoc.StyleFamilies.getByName("CellStyles").getByName('Setvar C_3').NumberFormat = getNumFormat('0,00%') #percentuale
         #< adegua le formule delle descrizioni di voci
 #dal 209 cambia nome di custom propierty
         oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
@@ -7565,6 +7565,7 @@ dell'operazione che terminerà con un avviso.
         if oUDP.getPropertySetInfo().hasPropertyByName("Versione_LeenO"): oUDP.removeProperty('Versione_LeenO')
         oUDP.addProperty('Versione_LeenO', MAYBEVOID + REMOVEABLE + MAYBEDEFAULT, str(Lmajor) +'.'+ str(Lminor) +'.x')
         for el in ('COMPUTO', 'VARIANTE'):
+            rigenera_tutte()
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)
                 oSheet = oDoc.getSheets().getByName(el)
@@ -7577,11 +7578,7 @@ dell'operazione che terminerà con un avviso.
                         oSheet.getCellByPosition(7, y).CellStyle = 'comp 1-a LARG'
                         oSheet.getCellByPosition(8, y).CellStyle = 'comp 1-a peso'
                 for y in range(0, test):
-                    # aggiorna formula della descrizione
-                    if oSheet.getCellByPosition(0, y).CellStyle == 'comp progress':
-                        sformula = '=IF(LEN(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(y+1) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-                        oSheet.getCellByPosition(2, y).Formula = sformula
-                        oSheet.getCellByPosition(8, y).String = ''
+
                     # aggiorna formula vedi voce #214
                     if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a' and \
                     oSheet.getCellByPosition(5, y).Type.value == 'FORMULA':
@@ -7603,12 +7600,6 @@ dell'operazione che terminerà con un avviso.
                             n = oSheet.getCellByPosition(5, y).Formula.split('J')[1]
                         oSheet.getCellByPosition(5, y).Formula = '=J$' + n
                     #cambia le formule di prezzo unitario e importo
-                    if '%' in oSheet.getCellByPosition(18, y).Formula:
-                        sStRange = Circoscrive_Voce_Computo_Att(y)
-                        sStRange.RangeAddress
-                        inizio = sStRange.RangeAddress.StartRow
-                        fine = sStRange.RangeAddress.EndRow
-                        oSheet.getCellByPosition(18, y).Formula = '=J'+ str(y+1) +'*L'+ str(y+1)
         if oDoc.getSheets().hasByName('CONTABILITA'):
             oSheet = oDoc.getSheets().getByName('CONTABILITA')
             test = getLastUsedCell(oSheet).EndRow+1
@@ -7682,7 +7673,8 @@ dell'operazione che terminerà con un avviso.
                         lrow += 1
         oDoc.getSheets().getByName('S1').IsVisible = False
         oDialogo_attesa.endExecute() #chiude il dialogo
-        
+        #~ refresh(0)
+
         oDoc.CurrentController.ZoomValue = 100
         MsgBox("Adeguamento del file completato con successo.", "Avviso")
 #~ ########################################################################

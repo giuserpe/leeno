@@ -2441,6 +2441,7 @@ def doppioni(arg=None):
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
+    zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     refresh(0)
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
@@ -2490,7 +2491,7 @@ def doppioni(arg=None):
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         tante_analisi_in_ep()
     refresh(1)
-    oDoc.CurrentController.ZoomValue = 100
+    oDoc.CurrentController.ZoomValue = zoom
     adatta_altezza_riga(oSheet.Name)
     riordina_ElencoPrezzi()
     if len(set(lista_tar)) != len(set(lista_come_array)):
@@ -3193,7 +3194,6 @@ def next_voice(lrow, n=1):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ n =0
     #~ lrow = Range2Cell()[1]
     fine = ultima_voce(oSheet)+1
     # la parte che segue sposta il focus dopo della voce corrente (ad esempio sul titolo di categoria)
@@ -3212,8 +3212,8 @@ def next_voice(lrow, n=1):
                 lrow = y
                 break
     elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-        while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-            lrow +=1
+        # ~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+        lrow +=1
     else:
         return
     return lrow

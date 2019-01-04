@@ -3196,8 +3196,9 @@ def next_voice(lrow, n=1):
     #~ n =0
     #~ lrow = Range2Cell()[1]
     fine = ultima_voce(oSheet)+1
-    if lrow <= 1: lrow = 2
-    if lrow >= fine or oSheet.getCellByPosition(0, lrow).CellStyle in('Comp TOTALI'): return lrow
+    # la parte che segue sposta il focus dopo della voce corrente (ad esempio sul titolo di categoria)
+    if lrow >= fine:
+        return lrow
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
         if n==0:
             sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
@@ -3210,9 +3211,31 @@ def next_voice(lrow, n=1):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
                 lrow = y
                 break
-    while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-        lrow +=1
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+        while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+            lrow +=1
+    else:
+        return
     return lrow
+    # la parte che segue sposta il focus all'effettivo inizio della voce successiva
+    # ~fine = ultima_voce(oSheet)+1
+    # ~if lrow <= 1: lrow = 2
+    # ~if lrow >= fine or oSheet.getCellByPosition(0, lrow).CellStyle in('Comp TOTALI'): return lrow
+    # ~if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
+        # ~if n==0:
+            # ~sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+            # ~lrow = sopra
+        # ~elif n==1:
+            # ~sotto = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
+            # ~lrow = sotto+1
+    # ~elif oSheet.getCellByPosition(0, lrow).CellStyle in ('Ultimus_centro_bordi_lati',):
+        # ~for y in range(lrow, getLastUsedCell(oSheet).EndRow+1):
+            # ~if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
+                # ~lrow = y
+                # ~break
+    # ~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+        # ~lrow +=1
+    # ~return lrow
 ########################################################################
 def cancella_analisi_da_ep(arg=None):
     '''
@@ -4023,7 +4046,8 @@ def dettaglio_misura_rigo(arg=None):
                 if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                     if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
                         try:
-                            eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1])
+                            eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1].replace('^','**'))
+                            # ~eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1])
                             stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
                         except:
                             stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).String.split('=')[-1] + ')*'
@@ -4053,6 +4077,7 @@ def dettaglio_misure(bit):
     except:
         return
     ER = getLastUsedCell(oSheet).EndRow
+    chi(888)
     if bit == 1:
         for lrow in range(0, ER):
             if oSheet.getCellByPosition(2, lrow).CellStyle in ('comp 1-a') and "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(2, lrow).String:
@@ -4068,7 +4093,8 @@ def dettaglio_misure(bit):
                         if oSheet.getCellByPosition(el, lrow).Type.value == 'FORMULA':
                             if '$' not in oSheet.getCellByPosition(el, lrow).Formula:
                                 try:
-                                    eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1])
+                                    eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1].replace('^','**'))
+                                    # ~eval(oSheet.getCellByPosition(el, lrow).Formula.split('=')[1])
                                     stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).Formula.split('=')[-1] + ')*'
                                 except:
                                     stringa = stringa + '(' + oSheet.getCellByPosition(el, lrow).String.split('=')[-1] + ')*'

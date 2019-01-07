@@ -221,16 +221,16 @@ def debug(arg=None):
                     if oSheet.getCellByPosition(0, y).CellStyle == 'An-lavoraz-Cod-sx' and \
                     oSheet.getCellByPosition(0, y).Type.value != 'EMPTY':
                         costi.append(oSheet.getCellByPosition(0, y).String)
-
-            _gotoSheet('Elenco Prezzi')
-            oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-            el_y = list()
-            for el in costi:
-                el_y.append(uFindStringCol(el, 0, oSheet))
-            for y in el_y:
-                rangen = oSheet.getCellRangeByPosition(0, y, 100, y).RangeAddress
-                selezione.append(rangen)
-            voci.addRangeAddresses(selezione, True)
+            if len(costi) > 0:
+                _gotoSheet('Elenco Prezzi')
+                oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+                el_y = list()
+                for el in costi:
+                    el_y.append(uFindStringCol(el, 0, oSheet))
+                for y in el_y:
+                    rangen = oSheet.getCellRangeByPosition(0, y, 100, y).RangeAddress
+                    selezione.append(rangen)
+                voci.addRangeAddresses(selezione, True)
         oDoc.CurrentController.select(voci)
         #~ return
         copy_clip()
@@ -2960,8 +2960,8 @@ def XPWE_out(arg=None):
                 Quantita = SubElement(RGItem,'Quantita')
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
 ##########################
-                if PartiUguali.text == '' and Lunghezza.text == '' and  Larghezza.text == '' and  HPeso.text == '':
-                    PartiUguali.text = Quantita.text
+                #~ if PartiUguali.text == '' and Lunghezza.text == '' and  Larghezza.text == '' and  HPeso.text == '':
+                    #~ PartiUguali.text = Quantita.text
                 Flags = SubElement(RGItem,'Flags')
                 if '*** VOCE AZZERATA ***' in Descrizione.text:
                     PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
@@ -3176,7 +3176,6 @@ def firme_in_calce_run(arg=None):
         ctx = XSCRIPTCONTEXT.getComponentContext()
         desktop = XSCRIPTCONTEXT.getDesktop()
         oFrame = desktop.getCurrentFrame()
-
         dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
         dispatchHelper.executeDispatch(oFrame, ".uno:InsertRowBreak", "", 0, list())
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
@@ -8831,6 +8830,21 @@ def debug_errore(arg=None):
                 "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
 ########################################################################
+def giornale(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for i in range (5, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(0, i).String == 'Data:':
+            oSheet.getCellByPosition(0, i).Rows.IsStartOfNewPage = True
+    
+    
+    # ~oDoc.CurrentController.select(oSheet.getCellByPosition(0, lRowF))
+    # ~ctx = XSCRIPTCONTEXT.getComponentContext()
+    # ~desktop = XSCRIPTCONTEXT.getDesktop()
+    # ~oFrame = desktop.getCurrentFrame()
+    # ~dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    # ~dispatchHelper.executeDispatch(oFrame, ".uno:InsertRowBreak", "", 0, list())
+    # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 #~ def debug(arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet

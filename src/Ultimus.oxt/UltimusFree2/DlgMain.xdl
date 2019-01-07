@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="pippi" dlg:left="66" dlg:top="125" dlg:width="285" dlg:height="241" dlg:help-text="&amp;331.DlgMain.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;332.DlgMain.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="pippi" dlg:left="66" dlg:top="125" dlg:width="285" dlg:height="242" dlg:help-text="&amp;331.DlgMain.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;332.DlgMain.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:border="simple" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -8,8 +8,8 @@
   <dlg:style dlg:style-id="3" dlg:background-color="0xccff99" dlg:text-color="0x80" dlg:border="3d" dlg:font-name="Liberation Sans Narrow" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="4" dlg:background-color="0xccff99" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="9" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="6" dlg:background-color="0xeeeeee" dlg:border="3d" dlg:font-height="11" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="7" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="6" dlg:text-color="0x333333" dlg:font-name="Liberation Sans Narrow" dlg:font-height="8" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="225" dlg:top="175" dlg:width="50" dlg:height="15" dlg:help-text="&amp;333.DlgMain.CommandButton1.HelpText" dlg:value="&amp;334.DlgMain.CommandButton1.Label" dlg:button-type="ok">
@@ -67,10 +67,10 @@
   </dlg:combobox>
   <dlg:text dlg:style-id="0" dlg:id="Label11" dlg:tab-index="25" dlg:left="135" dlg:top="75" dlg:width="80" dlg:height="10" dlg:help-text="&amp;391.DlgMain.Label11.HelpText" dlg:value="&amp;392.DlgMain.Label11.Label"/>
   <dlg:text dlg:style-id="0" dlg:id="Label13" dlg:tab-index="26" dlg:left="10" dlg:top="12" dlg:width="25" dlg:height="10" dlg:help-text="&amp;393.DlgMain.Label13.HelpText" dlg:value="&amp;394.DlgMain.Label13.Label"/>
-  <dlg:text dlg:style-id="6" dlg:id="Label14" dlg:tab-index="27" dlg:left="35" dlg:top="10" dlg:width="240" dlg:height="25" dlg:help-text="&amp;395.DlgMain.Label14.HelpText" dlg:value="&amp;396.DlgMain.Label14.Label" dlg:valign="top" dlg:multiline="true"/>
   <dlg:text dlg:style-id="2" dlg:id="Label12" dlg:tab-index="9" dlg:left="215" dlg:top="44" dlg:width="60" dlg:height="10" dlg:help-text="&amp;417.DlgMain.Label12.HelpText" dlg:value="&amp;418.DlgMain.Label12.Label"/>
-  <dlg:text dlg:style-id="7" dlg:id="Label1" dlg:tab-index="20" dlg:left="213" dlg:top="230" dlg:width="61" dlg:height="8" dlg:help-text="&amp;419.DlgMain.Label1.HelpText" dlg:value="&amp;420.DlgMain.Label1.Label" dlg:align="right">
+  <dlg:text dlg:style-id="6" dlg:id="Label1" dlg:tab-index="20" dlg:left="213" dlg:top="230" dlg:width="61" dlg:height="8" dlg:help-text="&amp;419.DlgMain.Label1.HelpText" dlg:value="&amp;420.DlgMain.Label1.Label" dlg:align="right">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:text>
+  <dlg:textfield dlg:style-id="7" dlg:id="TextField1" dlg:tab-index="27" dlg:left="35" dlg:top="10" dlg:width="240" dlg:height="25" dlg:help-text="&amp;498.DlgMain.TextField1.HelpText" dlg:multiline="true" dlg:value="&amp;499.DlgMain.TextField1.Text"/>
  </dlg:bulletinboard>
 </dlg:window>

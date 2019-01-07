@@ -7015,7 +7015,7 @@ Si tenga conto che:
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_analisi:
             sStRange = Circoscrive_Analisi(Range2Cell()[1])
-            lrow = sStRange.RangeAddress.StartRow + 1
+            lrow = sStRange.RangeAddress.StartRow + 2
             oSheet.getCellByPosition(0, lrow).String = el[0]
             oSheet.getCellByPosition(1, lrow).String = el[1]
             oSheet.getCellByPosition(2, lrow).String = el[2]

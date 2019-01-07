@@ -287,7 +287,7 @@ def debug(arg=None):
             SR = oRangeAddress.StartRow
             SR = Circoscrive_Voce_Computo_Att(SR).RangeAddress.StartRow
         except AttributeError:
-            MsgBox('La selezione di PARTENZA deve essere contigua.','ATTENZIONE!')
+            MsgBox('La selezione delle voci dal COMPUTO di partenza\ndeve essere contigua.','ATTENZIONE!')
             return
         ER = oRangeAddress.EndRow
         ER = Circoscrive_Voce_Computo_Att(ER).RangeAddress.EndRow
@@ -346,7 +346,7 @@ def debug(arg=None):
             ranges.addRangeAddresses(selezione, True)
             oDoc.CurrentController.select(ranges)
             copy_clip()
-            chi('stop')
+            #~ chi('stop')
 #### prendo l'elenco delle analisi
             #~ try:
                 #~ analisi = getAnalisi(oSheet)
@@ -366,15 +366,17 @@ def debug(arg=None):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             _gotoSheet('Elenco Prezzi')
             _gotoCella(0, 4)
-            chi(('stop', ddcDoc.getURL()) )
+            #~ chi(('stop', ddcDoc.getURL()) )
 
             paste_clip()
             #~ doppioni()
         if nSheetDCC in ('Elenco Prezzi'):
             MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
+            return
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    #~ chi(len(analisi))
-    if analisi:
+    try:
+        len (analisi)
+ 
         selezione = list()
         lista = list()
         
@@ -440,6 +442,8 @@ def debug(arg=None):
         #~ _gotoCella(0, 3)
         #~ paste_clip()
         #~ # chi(999)
+    except:
+        pass
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     _gotoDoc(fpartenza)
     _gotoSheet(nSheet)
@@ -625,7 +629,7 @@ def invia_voce(arg=None): #funzionante
             ranges.addRangeAddresses(selezione, True)
             oDoc.CurrentController.select(ranges)
             copy_clip()
-            chi('stop')
+            #~ chi('stop')
 #### prendo l'elenco delle analisi
             #~ try:
                 #~ analisi = getAnalisi(oSheet)
@@ -645,7 +649,7 @@ def invia_voce(arg=None): #funzionante
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             _gotoSheet('Elenco Prezzi')
             _gotoCella(0, 4)
-            chi(('stop', ddcDoc.getURL()) )
+            #~ chi(('stop', ddcDoc.getURL()) )
 
             paste_clip()
             #~ doppioni()

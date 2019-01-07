@@ -8123,7 +8123,9 @@ def DlgMain(arg=None):
     except:
         return
     sString.Text = oDoc.getDocumentProperties().getUserDefinedProperties().Versione #oSheet.getCellByPosition(7, 290).String
-    sString = oDlgMain.getControl("Label14") #Oggetto del lavoro
+    #~ sString = oDlgMain.getControl("Label14") #Oggetto del lavoro
+    sString = oDlgMain.getControl("TextField1") #Oggetto del lavoro
+    
     sString.Text = oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String
     try:
         oSheet = oDoc.Sheets.getByName('COMPUTO')
@@ -8149,6 +8151,7 @@ def DlgMain(arg=None):
     oDlgMain.execute()
     sString = oDlgMain.getControl("ComboBox1")
     conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
+    oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String = oDlgMain.getControl("TextField1").Text
     return
 ########################################################################
 def InputBox(sCella='', t=''):

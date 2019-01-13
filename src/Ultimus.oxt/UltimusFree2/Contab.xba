@@ -11,49 +11,6 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-Sub partita (testo as string)
-	Dim test As String
-	Dim riga_selezione As Integer
-	Dim focus as integer
-	
-	osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
- 	if oSheet.name = &quot;CONTABILITA&quot; then
- 	 goto procedi
- 	 else
- 	 	msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi trovarti in CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
-		goto fine
- 	end if
- 	procedi:
-
-	riga_corrente = range2cell &apos; thisComponent.getCurrentSelection.celladdress.row
-	if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
-		EXIT SUB	
-		msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi selezionare un rigo di misurazione.&quot;, 0,&quot;ERRORE!&quot;)
-		EXIT SUB
-	end if
-		oSheet.GetCellByPosition(2 , riga_corrente).setstring(testo)
-		oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
-		oRange.CellBackColor = RGB(255, 255, 153)
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(5,riga_corrente))
- 	fine:
-end Sub
-rem ######################################################################
-
-sub partita_provvisoria
-	dim testo as string
-	testo = &quot;PARTITA PROVVISORIA&quot;
-	partita (testo)
-end Sub
-
-sub detrai_partita_provvisoria
-	dim testo as string
-	testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
-	partita (testo)
-end Sub
-rem ######################################################################
-
 sub GENERA_Atti_Contabili &apos;(C) Giuseppe Vizziello 2014
 &apos;	ThisComponent.enableAutomaticCalculation(False)
 chiudi_dialoghi

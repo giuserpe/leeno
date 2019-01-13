@@ -11,6 +11,9 @@
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
             <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
+<!--
+            <value>service:org.giuseppe-vizziello.leeno?DlgMain</value>
+-->
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -699,7 +702,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Contab.partita_provvisoria?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$partita_aggiungi?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/part_agg</value>
@@ -716,7 +719,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Contab.detrai_partita_provvisoria?language=Basic&amp;location=application</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$partita_detrai?language=Python&amp;location=user:uno_packages</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/part_det</value>

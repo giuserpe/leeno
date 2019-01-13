@@ -4377,8 +4377,8 @@ def ins_voce_contab(arg=1):
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         if arg == 0 : return
         pesca_cod()
-
 ########################################################################
+# CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #
 def attiva_contabilita(arg=None):
     '''Se presenti, attiva e visualizza le tabelle di contabilità'''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -4479,6 +4479,26 @@ def svuota_contabilita(arg=None):
     oSheet.getCellRangeByPosition(0, 4, 36 , 4).CellStyle = 'Riga_rossa_Chiudi'
     _gotoCella(0, 2)
     set_larghezza_colonne()
+########################################################################
+def partita (testo):
+    '''
+    Aggiunge/dedrae rigo di PARTITA PROVVISORIA
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    if oSheet.Name != "CONTABILITA": return
+    x = Range2Cell()[1]
+    if oSheet.getCellByPosition(0, x).CellStyle == 'comp 10 s_R':
+        if oSheet.getCellByPosition(2, x).Type.value != 'EMPTY':
+            Copia_riga_Ent()
+            x +=1
+        oSheet.getCellByPosition(2, x).String = testo
+        oSheet.getCellRangeByPosition(2, x, 8, x).CellBackColor = 16777113
+        _gotoCella(5, x)
+def partita_aggiungi(arg=None):
+    partita('PARTITA PROVVISORIA')
+def partita_detrai(arg=None):
+    partita('SI DETRAE PARTITA PROVVISORIA')
 ########################################################################
 def inizializza_elenco(arg=None):
     '''
@@ -8227,7 +8247,6 @@ def debug_errore(arg=None):
     #~ except TypeError:
             #~ chi ((oRangeAddress.StartRow, oRangeAddress.EndRow))
 ########################################################################
-########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = voce_breve,
 ########################################################################
@@ -8241,9 +8260,13 @@ g_exportedScripts = voce_breve,
 # questo mi consente di inserire i comandi python in Accelerators.xcu
 # vedi pag.264 di "Manuel du programmeur oBasic"
 # <<< vedi in description.xml
+########################################################################
+# https://forum.openoffice.org/it/forum/viewtopic.php?f=27&t=9470
+def trigger(self, argomento):
+    globals()[argomento]()
 g_ImplementationHelper = unohelper.ImplementationHelper()
-g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("org.giuseppe-vizziello.leeno",),)
+#~ g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("org.giuseppe-vizziello.leeno",),)
+g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",())
 ########################################################################
 ########################################################################
 ########################################################################
-

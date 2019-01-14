@@ -6894,7 +6894,7 @@ def filtra_codice(arg=None):
         oSheet.getCellRangeByPosition(0, el[0], 0, el[1]).Rows.IsVisible=False
     _gotoCella(0, lrow)
     refresh(1)
-    MsgBox('Filtro attivato in base al codice!','Codice voce: ' + voce)
+    # ~MsgBox('Filtro attivato in base al codice!','Codice voce: ' + voce)
 
 def struttura_ComputoM(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -8233,6 +8233,10 @@ def debug_errore(arg=None):
                 "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
 ########################################################################
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    mri(oDoc.CurrentSelection)
 #~ def debug(arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet

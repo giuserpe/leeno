@@ -3339,6 +3339,7 @@ def ricicla_misure(arg=None):
         _gotoCella(2, partenza[1]+1)
 ########################################################################
 def inverti_segno(arg=None):
+#~ def debug(arg=None):
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
     Funziona solo in COMPUTO e VARIANTE.
@@ -4499,6 +4500,21 @@ def partita_aggiungi(arg=None):
     partita('PARTITA PROVVISORIA')
 def partita_detrai(arg=None):
     partita('SI DETRAE PARTITA PROVVISORIA')
+########################################################################
+#~ def genera_atti_contabili(arg=None):
+def debug(arg=None):
+    if DlgSiNo('''Prima di procedere è consigliabile salvare il lavoro.
+Puoi continuare, ma a tuo rischio!
+Se decidi di continuare, devi attendere il messaggio di procedura completata senza interferire con mouse e/o tastiera.
+Procedo senza salvare?''', 'Avviso') == 3:
+        return
+    else:
+        #~ genera_libretto()
+        MsgBox('''La generazione degli allegati contabili è stata completata.
+Grazie per l'attesa.''','Voci registrate!')
+
+
+# FINE_CONTABILITA ## FINE_CONTABILITA ## FINE_CONTABILITA ## FINE_CONTABILITA
 ########################################################################
 def inizializza_elenco(arg=None):
     '''
@@ -7618,11 +7634,13 @@ def bak_timestamp(arg=None):
     if len(orig) ==0:
         return
     orig = uno.fileUrlToSystemPath(orig)
-    dir_bak = uno.fileUrlToSystemPath(dir_bak)
+    # ~dir_bak = uno.fileUrlToSystemPath(dir_bak)
     dest = uno.fileUrlToSystemPath(dest)
-    if not os.path.exists(dir_bak):
-        os.makedirs(dir_bak)
-    shutil.copyfile(orig, dir_bak + dest)
+    # ~if not os.path.exists(dir_bak):
+        # ~os.makedirs(dir_bak)
+    # ~shutil.copyfile(orig, dir_bak + dest)
+    chi(dir_bak + dest)
+    oDoc.storeToURL(dir_bak + dest, list())
     return
 ########################################################################
 # Scrive un file.
@@ -8233,10 +8251,27 @@ def debug_errore(arg=None):
                 "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
 ########################################################################
+import threading, time
+
+
+class tsave(threading.Thread):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    def __init__ (self):
+        threading.Thread.__init__(self)
+      
+    def run(self):
+        while True:
+            time.sleep(10)
+            oDoc.store()
+def debug_autosave(self):
+    utsave = tsave()
+    utsave.start()
+########################################################################
 def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    mri(oDoc.CurrentSelection)
+    mri(oDoc)
+
+########################################################################
 #~ def debug(arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet

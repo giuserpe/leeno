@@ -7434,12 +7434,18 @@ def XPWE_export_run(arg=None ):
     oDlgXLO = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application")
     oSheet = oDoc.CurrentController.ActiveSheet
     oDialog1Model = oDlgXLO.Model
+
     if oSheet.Name == "COMPUTO":
         oDlgXLO.getControl("CME_XLO").State = True
-    elif oSheet.Name == "VARIANTE":
+    if oSheet.Name == "VARIANTE":
         oDlgXLO.getControl("VAR_XLO").State = True
-    elif oSheet.Name == "CONTABILITA":
+    elif oDoc.getSheets().hasByName('VARIANTE') == False:
+        oDlgXLO.getControl("VAR_XLO").Enable = False
+    if oSheet.Name == "CONTABILITA":
         oDlgXLO.getControl("CON_XLO").State = True
+    elif oDoc.getSheets().hasByName('CONTABILITA') == False:
+        oDlgXLO.getControl("CON_XLO").Enable = False
+
     oDlgXLO.Title = 'Menù export XPWE'
     if oDlgXLO.execute() ==1:
         if oDlgXLO.getControl("CME_XLO").State == True:

@@ -3143,6 +3143,8 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
             dettaglio_misura_rigo()
         copia_riga_computo(lrow)
     elif nome_sheet == 'CONTABILITA':
+        if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+            dettaglio_misura_rigo()
         copia_riga_contab(lrow)
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)

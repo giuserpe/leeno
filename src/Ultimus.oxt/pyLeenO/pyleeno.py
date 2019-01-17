@@ -1879,9 +1879,6 @@ def XPWE_out(arg=None):
     oDialogo_attesa = dlg_attesa('LETTURA DATI IN CORSO...')
     attesa().start() #mostra il dialogo
 
-    if oDoc.getSheets().hasByName('S2') == False:
-        MsgBox('Puoi usare questo comando da un file di computo esistente.','Avviso!')
-        return
     dettaglio_misure(0)
     numera_voci(1)
     top = Element('PweDocumento')
@@ -2262,14 +2259,15 @@ def XPWE_out(arg=None):
                 k += 1
             except:
                 pass
-#COMPUTO/VARIANTE
+#COMPUTO/VARIANTE/CONTABILITA
     oSheet = oDoc.getSheets().getByName(arg)
+
     PweVociComputo = SubElement(PweMisurazioni,'PweVociComputo')
     oDoc.CurrentController.setActiveSheet(oSheet)
     #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     nVCItem = 2
     for n in range(0, ultima_voce(oSheet)):
-        if oSheet.getCellByPosition(0, n).CellStyle == 'Comp Start Attributo':
+        if oSheet.getCellByPosition(0, n).CellStyle in ('Comp Start Attributo', 'Comp Start Attributo_R'):
             sStRange = Circoscrive_Voce_Computo_Att(n)
             sStRange.RangeAddress
             sopra = sStRange.RangeAddress.StartRow
@@ -7430,6 +7428,7 @@ def XPWE_export_run(arg=None ):
     Viasualizza il menù export/import XPWE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
+    if oDoc.getSheets().hasByName('S2') == False: return
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgXLO = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application")
@@ -7440,7 +7439,7 @@ def XPWE_export_run(arg=None ):
     elif oSheet.Name == "VARIANTE":
         oDlgXLO.getControl("VAR_XLO").State = True
     elif oSheet.Name == "CONTABILITA":
-        oDlgXLO.getControl("VAR_XLO").State = True
+        oDlgXLO.getControl("CON_XLO").State = True
     oDlgXLO.Title = 'Menù export XPWE'
     if oDlgXLO.execute() ==1:
         if oDlgXLO.getControl("CME_XLO").State == True:
@@ -7630,17 +7629,33 @@ def bak_timestamp(arg=None):
 
     orig = oDoc.getURL()
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-' + tempo + '.ods'
+    #~ dest2 = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
     if len(orig) ==0:
         return
     orig = uno.fileUrlToSystemPath(orig)
-    # ~dir_bak = uno.fileUrlToSystemPath(dir_bak)
     dest = uno.fileUrlToSystemPath(dest)
-    # ~if not os.path.exists(dir_bak):
-        # ~os.makedirs(dir_bak)
-    # ~shutil.copyfile(orig, dir_bak + dest)
-    chi(dir_bak + dest)
-    oDoc.storeToURL(dir_bak + dest, list())
+    if not os.path.exists(dir_bak):
+        os.makedirs(dir_bak)
+
+    #~ oDoc.storeToURL(dir_bak + dest2, list())
+    dir_bak = uno.fileUrlToSystemPath(dir_bak)
+    shutil.copyfile(orig, dir_bak + dest)
+    return
+########################################################################
+def bak(arg=None):
+    '''
+    Fa al volo il backup del file di lavoro 
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+
+    orig = oDoc.getURL()
+    dest2 = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.bak.ods'
+    dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
+    if len(orig) ==0: return
+    if not os.path.exists(dir_bak):
+        os.makedirs(dir_bak)
+    oDoc.storeToURL(dir_bak + dest2, list())
     return
 ########################################################################
 # Scrive un file.
@@ -8251,26 +8266,16 @@ def debug_errore(arg=None):
                 "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
 ########################################################################
-import threading, time
-
-
 class tsave(threading.Thread):
-    oDoc = XSCRIPTCONTEXT.getDocument()
     def __init__ (self):
         threading.Thread.__init__(self)
-      
     def run(self):
         while True:
-            time.sleep(10)
-            oDoc.store()
-def debug_autosave(self):
+            time.sleep(800)
+            bak()
+def debug(self):
     utsave = tsave()
     utsave.start()
-########################################################################
-def debug(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    mri(oDoc)
-
 ########################################################################
 #~ def debug(arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()

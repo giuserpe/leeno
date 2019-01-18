@@ -5647,7 +5647,6 @@ def vedi_voce_xpwe(lrow,vRif,flags=''):
         sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
     else:
         sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art +';" - ";LEFT(' + des + ';$S1.$H$334);" - [";' + um + ';" ";TEXT('+ quantity +';"0,00");"]";)'
-        
     oSheet.getCellByPosition(2, lrow).Formula= sformula
     oSheet.getCellByPosition(4, lrow).Formula='=' + quantity
     oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
@@ -8274,7 +8273,7 @@ def debug_errore(arg=None):
                 "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
 ########################################################################
-class tsave(threading.Thread):
+class trun(threading.Thread):
     def __init__ (self):
         threading.Thread.__init__(self)
     def run(self):
@@ -8282,7 +8281,7 @@ class tsave(threading.Thread):
             time.sleep(800)
             bak()
 def debug(self):
-    utsave = tsave()
+    utsave = trun()
     utsave.start()
 ########################################################################
 #~ def debug(arg=None):

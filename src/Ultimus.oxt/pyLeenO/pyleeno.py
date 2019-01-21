@@ -6875,7 +6875,7 @@ def SubSum(lrow, sub=False):
 ########################################################################
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################
 ########################################################################
-def filtra_codice(arg=None):
+def filtra_codice(voce=None):
     refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6887,7 +6887,8 @@ def filtra_codice(arg=None):
         oCellRangeAddr.Sheet = iSheet
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
         sopra = sStRange.RangeAddress.StartRow
-        voce = oSheet.getCellByPosition(1, sopra+1).String
+        if not voce:
+            voce = oSheet.getCellByPosition(1, sopra+1).String
     else:
         MsgBox('Devi prima selezionare una voce di misurazione.','Avviso!')
         return
@@ -7636,33 +7637,45 @@ def bak_timestamp(arg=None):
 
     orig = oDoc.getURL()
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-' + tempo + '.ods'
-    #~ dest2 = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
     if len(orig) ==0:
         return
     orig = uno.fileUrlToSystemPath(orig)
+    dir_bak = uno.fileUrlToSystemPath(dir_bak)
     dest = uno.fileUrlToSystemPath(dest)
     if not os.path.exists(dir_bak):
         os.makedirs(dir_bak)
-
-    #~ oDoc.storeToURL(dir_bak + dest2, list())
-    dir_bak = uno.fileUrlToSystemPath(dir_bak)
     shutil.copyfile(orig, dir_bak + dest)
+    #~ bak()
     return
 ########################################################################
 def bak(arg=None):
+#~ def debug(arg=None):
     '''
     Fa al volo il backup del file di lavoro 
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
 
     orig = oDoc.getURL()
+    if len(orig) ==0: return
     dest2 = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
-    if len(orig) ==0: return
+    dir_bak = uno.fileUrlToSystemPath(dir_bak)
     if not os.path.exists(dir_bak):
         os.makedirs(dir_bak)
+    dir_bak = uno.systemPathToFileUrl(dir_bak)
+    dest2 = uno.fileUrlToSystemPath(dest2)
     oDoc.storeToURL(dir_bak + dest2, list())
+    chi(os.path.basename(dest2))
+    return
+    n = 0
+    while n != 3:
+        dest2 = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.' + str(n) + '.ods'
+        chi(os.path.basename(dest2))
+        if not os.path.basename(dest2):
+            dest2 = uno.fileUrlToSystemPath(dest2)
+            oDoc.storeToURL(dir_bak + dest2, list())
+        n +=1
     return
 ########################################################################
 # Scrive un file.
@@ -8280,9 +8293,51 @@ class trun(threading.Thread):
         while True:
             time.sleep(800)
             bak()
-def debug(self):
+def debug__(self):
     utsave = trun()
     utsave.start()
+
+def ricorrenze(arg=None):
+    '''Trova i codici di prezzo ricorrenti nel COMPUTO'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    struttura_off()
+    last = getLastUsedCell(oSheet).EndRow
+    lista = list()
+    for n in range (3, last):
+        if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
+            lista.append(oSheet.getCellByPosition(1, n).String)
+    unici = (set(lista))
+    for el in unici:
+        lista.remove(el)
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    lrow = 0 
+    for n in range (0, last):
+        if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
+            if oSheet.getCellByPosition(1, n).String not in lista:
+                oRange = Circoscrive_Voce_Computo_Att(n).RangeAddress
+                oCellRangeAddr.StartRow = oRange.StartRow
+                oCellRangeAddr.EndRow = oRange.EndRow
+                oSheet.group(oCellRangeAddr, 1)
+    return lista
+########################################################################
+def debug(arg=None):
+    global lista_ricorrenze
+    try:
+        lista_ricorrenze
+    except:
+        lista_ricorrenze = ricorrenze()
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDlg = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_tabellaferri?language=Basic&location=application")
+    oDialog1Model = oDlg.Model
+    oDlg.Title = 'Menù Principale (Ctrl+0)'
+    oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
+    oDlg.execute()
+    filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
+    return
 ########################################################################
 #~ def debug(arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()

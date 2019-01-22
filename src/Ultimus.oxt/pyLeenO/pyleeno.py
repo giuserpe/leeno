@@ -8297,8 +8297,8 @@ def debug__(self):
     utsave = trun()
     utsave.start()
 ########################################################################
-def debug(arg=None):
-# ~def trova_ricorrenze(arg=None):
+#~ def debug(arg=None):
+def trova_ricorrenze(arg=None):
     '''
     Consente la visualizzazione selettiva delle voci di COMPUTO che fanno
     capo alla stezza voce di Elenco Prezzi.
@@ -8348,7 +8348,6 @@ def debug(arg=None):
         oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
         oDlg.getControl('CheckBox1').State = 0
         oDlg.execute()
-
     filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
     return
 ########################################################################
@@ -8367,7 +8366,7 @@ def debug(arg=None):
             #~ chi ((oRangeAddress.StartRow, oRangeAddress.EndRow))
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = voce_breve,
+g_exportedScripts = trova_ricorrenze,
 ########################################################################
 ########################################################################
 # ... here is the python script code

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="7" dlg:id="DialogViste_A" dlg:left="175" dlg:top="145" dlg:width="187" dlg:height="150" dlg:help-text="&amp;45.DialogViste_A.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;46.DialogViste_A.Title">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="8" dlg:id="DialogViste_A" dlg:left="175" dlg:top="145" dlg:width="187" dlg:height="167" dlg:help-text="&amp;45.DialogViste_A.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;46.DialogViste_A.Title">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:background-color="0xffb4af" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:background-color="0xffff66" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
@@ -9,7 +9,8 @@
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="5" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="6" dlg:font-height="11"/>
-  <dlg:style dlg:style-id="7" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="8" dlg:font-name="Arial" dlg:font-height="9" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="1" dlg:left="102" dlg:top="97" dlg:width="80" dlg:height="15" dlg:help-text="&amp;47.DialogViste_A.CommandButton8.HelpText" dlg:value="&amp;48.DialogViste_A.CommandButton8.Label" dlg:button-type="ok">
@@ -52,5 +53,8 @@
    <dlg:radio dlg:style-id="5" dlg:id="CBMdo" dlg:tab-index="21" dlg:left="10" dlg:top="30" dlg:width="75" dlg:height="10" dlg:help-text="&amp;91.DialogViste_A.CBMdo.HelpText" dlg:value="&amp;92.DialogViste_A.CBMdo.Label"/>
   </dlg:radiogroup>
   <dlg:checkbox dlg:style-id="3" dlg:id="Dettaglio" dlg:tab-index="9" dlg:left="12" dlg:top="58" dlg:width="68" dlg:height="10" dlg:help-text="&amp;494.DialogViste_A.Dettaglio.HelpText" dlg:value="&amp;495.DialogViste_A.Dettaglio.Label" dlg:checked="false"/>
+  <dlg:button dlg:style-id="7" dlg:id="CommandButton2" dlg:tab-index="22" dlg:left="7" dlg:top="147" dlg:width="80" dlg:height="15" dlg:help-text="&amp;515.DialogViste_A.CommandButton2.HelpText" dlg:value="&amp;516.DialogViste_A.CommandButton2.Label" dlg:button-type="ok">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$trova_ricorrenze?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+  </dlg:button>
  </dlg:bulletinboard>
 </dlg:window>

@@ -12,4 +12,5 @@
  <library:element library:name="DialogViste_AN"/>
  <library:element library:name="Dialogviste_N"/>
  <library:element library:name="DialogViste_EP"/>
+ <library:element library:name="DlgLista"/>
 </library:library>

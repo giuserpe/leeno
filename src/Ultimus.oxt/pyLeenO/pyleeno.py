@@ -7646,7 +7646,7 @@ def bak_timestamp(arg=None):
     if not os.path.exists(dir_bak):
         os.makedirs(dir_bak)
     shutil.copyfile(orig, dir_bak + dest)
-    #~ bak()
+    bak()
     return
 ########################################################################
 def bak(arg=None):
@@ -7666,7 +7666,7 @@ def bak(arg=None):
     dir_bak = uno.systemPathToFileUrl(dir_bak)
     dest2 = uno.fileUrlToSystemPath(dest2)
     oDoc.storeToURL(dir_bak + dest2, list())
-    chi(os.path.basename(dest2))
+    # ~chi(os.path.basename(dest2))
     return
     n = 0
     while n != 3:
@@ -8296,34 +8296,40 @@ class trun(threading.Thread):
 def debug__(self):
     utsave = trun()
     utsave.start()
-
-def ricorrenze(arg=None):
-    '''Trova i codici di prezzo ricorrenti nel COMPUTO'''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    struttura_off()
-    last = getLastUsedCell(oSheet).EndRow
-    lista = list()
-    for n in range (3, last):
-        if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
-            lista.append(oSheet.getCellByPosition(1, n).String)
-    unici = (set(lista))
-    for el in unici:
-        lista.remove(el)
-    iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    lrow = 0 
-    for n in range (0, last):
-        if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
-            if oSheet.getCellByPosition(1, n).String not in lista:
-                oRange = Circoscrive_Voce_Computo_Att(n).RangeAddress
-                oCellRangeAddr.StartRow = oRange.StartRow
-                oCellRangeAddr.EndRow = oRange.EndRow
-                oSheet.group(oCellRangeAddr, 1)
-    return lista
 ########################################################################
 def debug(arg=None):
+# ~def trova_ricorrenze(arg=None):
+    '''
+    Consente la visualizzazione selettiva delle voci di COMPUTO che fanno
+    capo alla stezza voce di Elenco Prezzi.
+    '''
+    def ricorrenze(arg=None):
+        '''Trova i codici di prezzo ricorrenti nel COMPUTO'''
+        oDoc = XSCRIPTCONTEXT.getDocument()
+        oSheet = oDoc.CurrentController.ActiveSheet
+        struttura_off()
+        last = getLastUsedCell(oSheet).EndRow
+        lista = list()
+        for n in range (3, last):
+            if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
+                lista.append(oSheet.getCellByPosition(1, n).String)
+        unici = (set(lista))
+        for el in unici:
+            lista.remove(el)
+        iSheet = oSheet.RangeAddress.Sheet
+        oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+        oCellRangeAddr.Sheet = iSheet
+        lrow = 0 
+        for n in range (0, last):
+            if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
+                if oSheet.getCellByPosition(1, n).String not in lista:
+                    oRange = Circoscrive_Voce_Computo_Att(n).RangeAddress
+                    oCellRangeAddr.StartRow = oRange.StartRow
+                    oCellRangeAddr.EndRow = oRange.EndRow
+                    oSheet.group(oCellRangeAddr, 1)
+        lista = list(set(lista))
+        lista.sort()
+        return lista
     global lista_ricorrenze
     try:
         lista_ricorrenze
@@ -8331,11 +8337,18 @@ def debug(arg=None):
         lista_ricorrenze = ricorrenze()
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDlg = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_tabellaferri?language=Basic&location=application")
+    oDlg = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgLista?language=Basic&location=application")
     oDialog1Model = oDlg.Model
-    oDlg.Title = 'Menù Principale (Ctrl+0)'
+    oDlg.Title = 'Voci di prezzo che si ripetono'
     oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
     oDlg.execute()
+    if oDlg.getControl('CheckBox1').State == 1:
+        oDlg.getControl('ListBox1').removeItems(0, len(lista_ricorrenze))
+        lista_ricorrenze = ricorrenze()
+        oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
+        oDlg.getControl('CheckBox1').State = 0
+        oDlg.execute()
+
     filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
     return
 ########################################################################

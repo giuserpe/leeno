@@ -3339,20 +3339,18 @@ def ricicla_misure(arg=None):
         _gotoCella(2, partenza[1]+1)
 ########################################################################
 def inverti_segno(arg=None):
-#~ def debug(arg=None):
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
-    Funziona solo in COMPUTO e VARIANTE.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    SR = oRangeAddress.StartRow
+    ER = oRangeAddress.EndRow
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
-        try:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
-        except AttributeError:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-        SR = oRangeAddress.StartRow
-        ER = oRangeAddress.EndRow
         for lrow in range(SR, ER+1):
             if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
                 if '-' in oSheet.getCellByPosition(9, lrow).Formula:
@@ -3360,15 +3358,24 @@ def inverti_segno(arg=None):
                         oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
                     else:
                         oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-                    for x in range (2, 10):
-                        oSheet.getCellByPosition(x, lrow).CharColor = -1
+                        oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = -1
                 else:
                     if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
                         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
                     else:
                         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-                    for x in range (2, 10):
-                        oSheet.getCellByPosition(x, lrow).CharColor = 16724787
+                        oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = 16724787
+    if oSheet.Name in('CONTABILITA'):
+        for lrow in range(SR, ER+1):
+            if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
+                formula1 = oSheet.getCellByPosition(9, lrow).Formula
+                formula2 = oSheet.getCellByPosition(11, lrow).Formula
+                oSheet.getCellByPosition(11, lrow).Formula = formula1
+                oSheet.getCellByPosition(9, lrow).Formula = formula2
+                if oSheet.getCellByPosition(11, lrow).Value > 0:
+                    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).CharColor = 16724787
+                else:
+                    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).CharColor = -1
 ########################################################################
 def valuta_cella(oCell):
     '''

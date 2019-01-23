@@ -8335,6 +8335,9 @@ def trova_ricorrenze(arg=None):
         lista_ricorrenze
     except:
         lista_ricorrenze = ricorrenze()
+    if len(lista_ricorrenze) == 0:
+        MsgBox('Non ci sono voci di prezzo ricorrenti.', 'Informazione')
+        return
     psm = uno.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgLista?language=Basic&location=application")

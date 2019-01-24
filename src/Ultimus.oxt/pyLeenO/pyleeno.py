@@ -2837,7 +2837,11 @@ def azzera_voce(arg=None):
                 else:
                     Copia_riga_Ent()
                     oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
-                    oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
+                    if oSheet.Name == 'CONTABILITA':
+                        oSheet.getCellByPosition(9, fine).Formula = '=-SUM(J' + str(inizio+1) + ':J' + str(fine) + ')'
+                        oSheet.getCellByPosition(11, fine).Formula = '=-SUM(L' + str(inizio+1) + ':L' + str(fine) + ')'
+                    else:
+                        oSheet.getCellByPosition(5, fine).Formula = '=-SUBTOTAL(9;J' + str(inizio+1) + ':J' + str(fine) + ')'
                     ### cambio il colore di sfondo
                     oDoc.CurrentController.select(sStRange)
                     raggruppa_righe_voce (lrow, 1)

@@ -646,6 +646,7 @@
     <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
     <node oor:name="OfficeToolBar">
       <node oor:name="ULTIMUS_3.OfficeToolBar_CONTABILITA" oor:op="replace">
+<!--
         <node oor:name="COa00" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -697,6 +698,7 @@
             <value>_self</value>
           </prop>
         </node>
+-->
         <node oor:name="COa30" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1416,6 +1418,20 @@
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Mostra le Copertine e i documenti di Contabilita'</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U03" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$mostra_fogli?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Mostra tutti i fogli</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

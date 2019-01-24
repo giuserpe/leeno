@@ -914,6 +914,13 @@ def join_sheets(arg=None):
         MsgBox('Il foglio "unione_fogli" è già esistente, quindi non procedo.','Avviso!')
     oDoc.CurrentController.setActiveSheet(unione)
 ########################################################################
+def mostra_fogli(arg=None):
+    '''Mostra tutti i foglio fogli'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    lista_fogli = oDoc.Sheets.ElementNames
+    for el in lista_fogli:
+        oDoc.getSheets().getByName(el).IsVisible = True
+########################################################################
 def copia_sheet(nSheet, tag):
     '''
     nSheet   { string } : nome sheet
@@ -2737,7 +2744,7 @@ def Circoscrive_Voce_Computo_Att(lrow):
     lrow    { int }  : riga di riferimento per
                         la selezione dell'intera voce
 
-    Circoscrive una voce di computo, variante o contabilità
+    Circoscrive una voce di COMPUTO, VARIANTE o CONTABILITÀ
     partendo dalla posizione corrente del cursore
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -2782,7 +2789,7 @@ def azzera_voce(arg=None):
     try:
         oDoc = XSCRIPTCONTEXT.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
-        if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        if oSheet.Name in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             try:
                 sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
                 eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
@@ -2804,10 +2811,11 @@ def azzera_voce(arg=None):
             lrow = sRow
             fini = list()
             for x in range(sRow, eRow):
-                if oSheet.getCellByPosition(0, x).CellStyle in('Comp End Attributo', 'Comp End Attributo_R'):
+                if oSheet.getCellByPosition(0, x).CellStyle == 'Comp End Attributo':
                     fini.append(x)
+                elif oSheet.getCellByPosition(0, x).CellStyle == 'Comp End Attributo_R':
+                    fini.append(x-2)
         idx = 0
-
         for lrow in fini:
             lrow += idx
             try:
@@ -2815,7 +2823,8 @@ def azzera_voce(arg=None):
                 sStRange.RangeAddress
                 inizio = sStRange.RangeAddress.StartRow
                 fine = sStRange.RangeAddress.EndRow
-
+                if oSheet.Name == 'CONTABILITA':
+                    fine -=1
                 _gotoCella(2, fine-1)
                 if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
                     ### elimino il colore di sfondo
@@ -4508,8 +4517,8 @@ def partita_aggiungi(arg=None):
 def partita_detrai(arg=None):
     partita('SI DETRAE PARTITA PROVVISORIA')
 ########################################################################
-#~ def genera_atti_contabili(arg=None):
-def debug(arg=None):
+def genera_atti_contabili(arg=None):
+# ~def debug(arg=None):
     if DlgSiNo('''Prima di procedere è consigliabile salvare il lavoro.
 Puoi continuare, ma a tuo rischio!
 Se decidi di continuare, devi attendere il messaggio di procedura completata senza interferire con mouse e/o tastiera.
@@ -7722,10 +7731,11 @@ def toolbar_vedi(arg=None):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO')
         elif nSheet == 'Analisi di Prezzo':
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI')
-        elif nSheet == 'CONTABILITA':
-            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
-        elif nSheet in('COMPUTO','VARIANTE'):
+        #~ elif nSheet == 'CONTABILITA':
+            #~ toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
+        elif nSheet in('COMPUTO','VARIANTE','CONTABILITA'):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
+            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
         fissa()
     except:
         pass
@@ -8376,7 +8386,7 @@ def trova_ricorrenze(arg=None):
             #~ chi ((oRangeAddress.StartRow, oRangeAddress.EndRow))
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = trova_ricorrenze,
+g_exportedScripts = mostra_fogli,
 ########################################################################
 ########################################################################
 # ... here is the python script code

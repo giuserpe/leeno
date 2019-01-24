@@ -2828,7 +2828,10 @@ def azzera_voce(arg=None):
                 _gotoCella(2, fine-1)
                 if oSheet.getCellByPosition(2, fine-1).String == '*** VOCE AZZERATA ***':
                     ### elimino il colore di sfondo
-                    oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
+                    if oSheet.Name == 'CONTABILITA':
+                        oSheet.getCellRangeByPosition(0, inizio, 250, fine+1).clearContents(HARDATTR)
+                    else:
+                        oSheet.getCellRangeByPosition(0, inizio, 250, fine).clearContents(HARDATTR)
                     raggruppa_righe_voce(lrow, 0)
                     oSheet.getRows().removeByIndex(fine-1, 1)
                     fine -=1
@@ -7245,6 +7248,7 @@ def adegua_tmpl(arg=None):
     - dal 213 sposta il VediVoce nella colonna E
     - dal 214 assegna un'approssimazione diversa per ognuno dei valori di misurazione
     - dal 215 adegua del formule degli importi ai prezzi in %
+    - dal 216 aggiorna le formule in CONTABILITA
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ refresh(0)
@@ -7258,7 +7262,7 @@ def adegua_tmpl(arg=None):
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
-    adegua_a = 215 #VERSIONE CORRENTE
+    adegua_a = 216 #VERSIONE CORRENTE
     if ver_tmpl < adegua_a:
         if DlgSiNo('''Vuoi procedere con l'adeguamento di questo file
 alla versione di LeenO installata?
@@ -7390,6 +7394,9 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
         oSheet.getCellRangeByName('AC27').Formula = '=P27-AE27'
         oSheet.getCellRangeByName('AC27').CellStyle = 'Comp-sotto euri'
+        
+        oSheet.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;J24:J26)<0;"";SUBTOTAL(9;J24:J26))'
+        oSheet.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;L24:L26)<0;"";SUBTOTAL(9;L24:L26))'
         for el in('VARIANTE', 'COMPUTO'):
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)
@@ -7421,9 +7428,28 @@ dell'operazione che terminerà con un avviso.
                 while lrow < n:
                     try:
                         sStRange = Circoscrive_Voce_Computo_Att(lrow)
+                        sopra = sStRange.RangeAddress.StartRow
                         sotto = sStRange.RangeAddress.EndRow
                         if oSheet.Name == 'CONTABILITA':
                             oSheet.getCellByPosition(28,sotto).Formula = '=P' + str(sotto+1) + '-AE' + str(sotto+1)
+                            oSheet.getCellByPosition(9,sotto-1).Formula = '=IF(SUBTOTAL(9;J' + str(sopra+2) + ':J' + str(sotto) + ')<0;"";SUBTOTAL(9;J' + str(sopra+2) + ':J' + str(sotto) + '))'
+                            oSheet.getCellByPosition(11,sotto-1).Formula = '=IF(SUBTOTAL(9;L' + str(sopra+2) + ':L' + str(sotto) + ')<0;"";SUBTOTAL(9;L' + str(sopra+2) + ':L' + str(sotto) + '))'
+                            for x in range (sopra+1, sotto-1):
+                                if oSheet.getCellByPosition(2, x).CellStyle == 'comp 1-a':
+                                    oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU'
+                                    oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG'
+                                    oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG'
+                                    oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso'
+                                    oSheet.getCellByPosition(9, x).CellStyle = 'Blu'
+                                    oSheet.getCellByPosition(11, x).CellStyle = 'Blu'
+                                    oSheet.getCellByPosition(11, sotto).CellStyle = 'Comp-Variante num sotto'
+                                    oSheet.getCellByPosition(13, sotto).CellStyle = 'comp sotto Unitario'
+                                    oSheet.getCellByPosition(15, sotto).CellStyle = 'comp sotto Euro Originale'
+                                    oSheet.getCellByPosition(17, sotto).CellStyle = 'comp sotto Euro Originale'
+                                if oSheet.getCellByPosition(9, x).String == '':
+                                    oSheet.getCellByPosition(9, x).String = ''
+                                else:
+                                    oSheet.getCellByPosition(11, x).String = ''
                         else:
                             oSheet.getCellByPosition(28,sotto).Formula = '=S' + str(sotto+1) + '-AE' + str(sotto+1)
                         oSheet.getCellByPosition(28,sotto).CellStyle = 'Comp-sotto euri'
@@ -8090,6 +8116,9 @@ Associato a Atrl+Shift+C'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
+    for x in range(0, 50):
+        oSheet.getCellByPosition(x, lrow).String = oSheet.getCellByPosition(x, lrow).CellStyle
+    return
     for x in range(0, 100):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
             oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'

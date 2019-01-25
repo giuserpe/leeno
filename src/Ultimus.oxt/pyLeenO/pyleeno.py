@@ -3364,10 +3364,19 @@ def inverti_segno(arg=None):
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
     except AttributeError:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-    SR = oRangeAddress.StartRow
-    ER = oRangeAddress.EndRow
+    el_y = list()
+    try:
+        len(oRangeAddress)
+        for el in oRangeAddress:
+            el_y.append((el.StartRow, el.EndRow))
+    except TypeError:
+        el_y.append ((oRangeAddress.StartRow, oRangeAddress.EndRow))
+    lista = list()
+    for y in el_y:
+        for el in range (y[0], y[1]+1):
+            lista.append(el)
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
-        for lrow in range(SR, ER+1):
+        for lrow in lista:
             if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
                 if '-' in oSheet.getCellByPosition(9, lrow).Formula:
                     if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
@@ -3382,7 +3391,7 @@ def inverti_segno(arg=None):
                         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
                         oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = 16724787
     if oSheet.Name in('CONTABILITA'):
-        for lrow in range(SR, ER+1):
+        for lrow in lista:
             if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
                 formula1 = oSheet.getCellByPosition(9, lrow).Formula
                 formula2 = oSheet.getCellByPosition(11, lrow).Formula

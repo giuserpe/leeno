@@ -2279,7 +2279,7 @@ def XPWE_out(arg=None):
             sStRange.RangeAddress
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
-
+            if arg == 'CONTABILITA': sotto -=1
             VCItem = SubElement(PweVociComputo,'VCItem')
             VCItem.set('ID', str(nVCItem))
             nVCItem += 1
@@ -2344,7 +2344,7 @@ def XPWE_out(arg=None):
                 if '*** VOCE AZZERATA ***' in Descrizione.text:
                     PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
                     Flags.text = '1'
-                elif '-' in Quantita.text:
+                elif '-' in Quantita.text or oSheet.getCellByPosition(11, m).Value !=0:
                     Flags.text = '1'
                 elif "Parziale [" in oSheet.getCellByPosition(8, m).String:
                     Flags.text = '2'
@@ -2360,7 +2360,7 @@ def XPWE_out(arg=None):
                     IDVV.text = str(int(Descrizione.text.split('- vedi voce n.')[1].split(' ')[0])+1)
                     Flags.text = '32768'
                     #~ PartiUguali.text =''
-                    if '-' in Quantita.text:
+                    if '-' in Quantita.text or oSheet.getCellByPosition(11, m).Value !=0:
                         Flags.text = '32769'
             n = sotto+1
 ##########################
@@ -8125,10 +8125,10 @@ Associato a Atrl+Shift+C'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
+    #~ for x in range(0, 50):
+        #~ oSheet.getCellByPosition(x, lrow).String = oSheet.getCellByPosition(x, lrow).CellStyle
+    #~ return
     for x in range(0, 50):
-        oSheet.getCellByPosition(x, lrow).String = oSheet.getCellByPosition(x, lrow).CellStyle
-    return
-    for x in range(0, 100):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
             oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
             oSheet.getCellByPosition(x, lrow).HoriJustify = 'CENTER'

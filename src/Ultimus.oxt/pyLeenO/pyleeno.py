@@ -4802,9 +4802,14 @@ def XML_toscana_import(arg=None):
     New_file.computo(0)
     # effettua il parsing del file XML
     tree = ElementTree()
-    tree.parse(filename)
-    
-    # ottieni l'item root
+    # ~tree.parse(filename)
+    try:
+        tree.parse(filename)
+    except Exception as e:
+        MsgBox ("Eccezione " + str(type(e)) +
+                "\nMessaggio: " + str(e.args) + '\n' +
+                traceback.format_exc());
+        return
     root = tree.getroot()
     iter = tree.getiterator()
 
@@ -4841,7 +4846,10 @@ def XML_toscana_import(arg=None):
             sic = float(el.getchildren()[-1][-4].get('valore'))
         except IndexError:
             sic =''
-        prezzo = float(el.getchildren()[5].text)
+        try:
+            prezzo = float(el.getchildren()[5].text)
+        except:
+            prezzo = float(el.getchildren()[5].text.split('.')[0]+el.getchildren()[5].text.split('.')[1]+'.'+el.getchildren()[5].text.split('.')[2])
         try:
             mdo = float(el.getchildren()[-1][-1].get('percentuale'))/100
             mdoE = mdo * prezzo
@@ -4869,7 +4877,7 @@ def XML_toscana_import(arg=None):
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 
-Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al prezzario.'''
+Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
     oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
     n = 0
 
@@ -5556,7 +5564,7 @@ Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
     autoexec()
    
 ########################################################################
-def importa_stili(arg=None):
+def importa_stili(filename=None):
     '''
     Importa tutti gli stili da un documento di riferimento. Se non è
     selezionato, il file di rifetimento è il template di leenO.
@@ -5675,10 +5683,10 @@ def vedi_voce_xpwe(lrow,vRif,flags=''):
     quantity = 'J$' + str(sotto+1)
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
     
-    if oSheet.Name == 'CONTABILITA':
-        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
-    else:
-        sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art +';" - ";LEFT(' + des + ';$S1.$H$334);" - [";' + um + ';" ";TEXT('+ quantity +';"0,00");"]";)'
+    #~ if oSheet.Name == 'CONTABILITA':
+        #~ sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art + ';" [";' + um + ';"]"'
+    #~ else:
+    sformula = '=CONCATENATE("";"- vedi voce n.";TEXT(' + idvoce +';"@");" - art. ";' + art +';" - ";LEFT(' + des + ';$S1.$H$334);" - [";' + um + ';" ";TEXT('+ quantity +';"0,00");"]";)'
     oSheet.getCellByPosition(2, lrow).Formula= sformula
     oSheet.getCellByPosition(4, lrow).Formula='=' + quantity
     oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
@@ -5694,7 +5702,10 @@ def vedi_voce(arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
-        copia_riga_computo(lrow)
+        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            copia_riga_computo(lrow)
+        elif oSheet.Name in ('CONTABILITA'):
+            copia_riga_contab(lrow)
         lrow += 1   
     if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
         to = basic_LeenO('ListenersSelectRange.getRange', 'prova')
@@ -6641,11 +6652,11 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                                 oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
                         except:
                             pass
-                    # ~inverti_segno()
-                    if oSheet.getCellByPosition(4, SR).Type.value == 'EMPTY':
-                        oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
-                    else:
-                        oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + '))'
+                    inverti_segno()
+                    #~ if oSheet.getCellByPosition(4, SR).Type.value == 'EMPTY':
+                        #~ oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
+                    #~ else:
+                        #~ oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + '))'
 
                 if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
                     va = oSheet.getCellByPosition(5, SR).Formula
@@ -7287,9 +7298,9 @@ dell'operazione che terminerà con un avviso.
         oDoc.CurrentController.ZoomValue = 400
         attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
-        sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
-        styles = oDoc.getStyleFamilies()
-        styles.loadStylesFromURL(sUrl, list())
+        #~ sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
+        #~ styles = oDoc.getStyleFamilies()
+        #~ styles.loadStylesFromURL(sUrl, list())
         oSheet = oDoc.getSheets().getByName('S1')
         oSheet.getCellRangeByName('S1.H291').Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
         for el in oDoc.Sheets.ElementNames:
@@ -7323,6 +7334,7 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('G338').String = 'Descrizioni abbreviate: ultimi caratteri della voce'
         oSheet.getCellRangeByName('H338').Value = 120
         oSheet.getCellRangeByName('I338').String = "Quanti caratteri vuoi visualizzare partendo dalla FINE della descrizione?"
+        oSheet.getCellRangeByName('L25').String = ''
         oSheet.getCellRangeByName('G297:G338').CellStyle = 'Setvar b'
         oSheet.getCellRangeByName('H297:H338').CellStyle = 'Setvar C'
         oSheet.getCellRangeByName('I297:I338').CellStyle = 'Setvar D'
@@ -7378,6 +7390,8 @@ dell'operazione che terminerà con un avviso.
             for y in range(0, test):
                 if oSheet.getCellByPosition(1, y).CellStyle == 'comp Art-EP_R':
                     oSheet.getCellByPosition(8, y).CellStyle = 'Comp-Bianche in mezzo_R'
+                if oSheet.getCellByPosition(9, y).String == '': oSheet.getCellByPosition(9, y).String == ''
+                if oSheet.getCellByPosition(11, y).String == '': oSheet.getCellByPosition(11, y).String == ''
             
             #~ MsgBox('''L'adeguamento del foglio di contabilità sarà
 #~ attivato nelle successive versioni di LeenO.
@@ -7468,7 +7482,9 @@ dell'operazione che terminerà con un avviso.
         oDoc.getSheets().getByName('S1').IsVisible = False
         oDialogo_attesa.endExecute() #chiude il dialogo
         #~ refresh(0)
-
+        for el in oDoc.Sheets.ElementNames:
+            oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
+            adatta_altezza_riga(el)
         oDoc.CurrentController.ZoomValue = zoom
         MsgBox("Adeguamento del file completato con successo.", "Avviso")
 #~ ########################################################################

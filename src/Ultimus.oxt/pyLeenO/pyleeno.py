@@ -1279,7 +1279,7 @@ def adatta_altezza_riga(nSheet=None):
     oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
-    if float(loVersion()[:3]) > 5.2 and float(loVersion()[:3]) < 6.2:
+    if float(loVersion()[:3]) > 5.2: # and float(loVersion()[:3]) < 6.2: NELLA VERSIONE 6.2 IL PROBLEMA NON è ANCORA RISOLTO
         # ~for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
             # ~try:
                 # ~oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
@@ -2786,6 +2786,7 @@ def azzera_voce(arg=None):
     '''
     Azzera la quantità di una voce e ne raggruppa le relative righe
     '''
+    refresh(0)
     try:
         oDoc = XSCRIPTCONTEXT.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
@@ -2863,9 +2864,10 @@ def azzera_voce(arg=None):
                 lrow = next_voice(lrow, 1)
             except:
                 pass
-        numera_voci(1)
+        # ~numera_voci(1)
     except:
         pass
+    refresh(1)
     return
 ########################################################################
 def elimina_voci_azzerate(arg=None):
@@ -3070,10 +3072,13 @@ def copia_riga_computo(lrow):
         oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo'
         oSheet.getCellByPosition(2, lrow).CellStyle = 'comp 1-a'
         oSheet.getCellRangeByPosition(3, lrow, 4, lrow).CellStyle = 'Comp-Bianche in mezzo bordate_R'
+        oSheet.getCellByPosition(5, lrow).CellStyle = 'comp 1-a PU'
+        oSheet.getCellByPosition(6, lrow).CellStyle = 'comp 1-a LUNG'
+        oSheet.getCellByPosition(7, lrow).CellStyle = 'comp 1-a LARG'
         oSheet.getCellByPosition(8, lrow).CellStyle = 'comp 1-a peso'
         oSheet.getCellByPosition(9, lrow).CellStyle = 'Blu'
 # ci metto le formule
-        oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+        oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
         oSheet.getCellByPosition(10 , lrow).Formula = ""
         #~ _gotoCella(2, lrow)
         oDoc.CurrentController.select(oSheet.getCellByPosition(2, lrow))
@@ -3106,7 +3111,7 @@ def copia_riga_contab(lrow):
         oSheet.getCellRangeByPosition(9, lrow, 11, lrow).CellStyle = 'Comp-Variante'
     # ci metto le formule
         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')<=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-        oSheet.getCellByPosition(11, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')>=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')*-1)'
+        # ~oSheet.getCellByPosition(11, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')>=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')*-1)'
     # preserva la data di misura
         if oSheet.getCellByPosition(1, lrow+1).CellStyle == 'Data_bianca':
             oRangeAddress = oSheet.getCellByPosition(1, lrow+1).getRangeAddress()
@@ -3377,30 +3382,40 @@ def inverti_segno(arg=None):
             lista.append(el)
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
         for lrow in lista:
-            if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
-                if '-' in oSheet.getCellByPosition(9, lrow).Formula:
+            if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+                if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
+                    # ~chi(20000)
+                    # ~return
                     if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
                         oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
                     else:
                         oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-                        oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = -1
+                        # ~oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = -1
+                    for x in range (2, 9):
+                        oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0]
                 else:
+                    
                     if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
                         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
                     else:
                         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-                        oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = 16724787
+                    for x in range (2, 9):
+                        oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO'
+                        # ~oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = 16724787
     if oSheet.Name in('CONTABILITA'):
         for lrow in lista:
-            if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
+            if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
                 formula1 = oSheet.getCellByPosition(9, lrow).Formula
                 formula2 = oSheet.getCellByPosition(11, lrow).Formula
                 oSheet.getCellByPosition(11, lrow).Formula = formula1
                 oSheet.getCellByPosition(9, lrow).Formula = formula2
                 if oSheet.getCellByPosition(11, lrow).Value > 0:
-                    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).CharColor = 16724787
+                    for x in range (2, 12):
+                        oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO'
                 else:
-                    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).CharColor = -1
+                    for x in range (2, 12):
+                        oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0]
+
 ########################################################################
 def valuta_cella(oCell):
     '''
@@ -3771,11 +3786,13 @@ def numera_voci(bit=1):#
                 n +=1
     if bit==1:
         for row in range(0,lastRow):
-            if oSheet.getCellByPosition(1,row).CellBackColor == 15066597:
-                oSheet.getCellByPosition(0,row).String = ''
-            elif oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
-                oSheet.getCellByPosition(0,row).Value = n
-                n = n+1
+            # ~if oSheet.getCellByPosition(1,row).CellBackColor == 15066597:
+                # ~oSheet.getCellByPosition(0,row).String = ''
+            # ~elif oSheet.getCellByPosition(1,row).CellStyle in('comp Art-EP', 'comp Art-EP_R'):
+                # ~oSheet.getCellByPosition(0,row).Value = n
+                # ~n = n+1
+            oSheet.getCellByPosition(0,row).Value = n
+            n = n+1
 
 ########################################################################
 def refresh(arg=1):
@@ -4023,10 +4040,13 @@ def rigenera_voce(lrow):
     sotto = sStRange.RangeAddress.EndRow
     for r in range(sopra+2, sotto):
         if oSheet.getCellByPosition(2, r).CellStyle == 'comp 1-a' and oSheet.getCellByPosition(9, r).Type.value != 'FORMULA':
-            if oSheet.getCellByPosition(4, r).Type.value == 'EMPTY':
-                oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(F' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(F' + str(r+1) + ':I' + str(r+1) + '))'
-            else:
-                oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(E' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(E' + str(r+1) + ':I' + str(r+1) + '))'
+            if oSheet.Name in('COMPUTO', 'VARIANTE'):
+                if oSheet.getCellByPosition(4, r).Type.value == 'EMPTY':
+                    oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(E' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(E' + str(r+1) + ':I' + str(r+1) + '))'
+                else:
+                    oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(F' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(F' + str(r+1) + ':I' + str(r+1) + '))'
+            if oSheet.Name in('CONTABILITA'):
+                pass #in questo caso la formula dei negativi deve essere condizionata da uno specifico stile di cella (ROSSO)
     oSheet.getCellByPosition(2, sopra+1).Formula = '=IF(LEN(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
     oSheet.getCellByPosition(8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B'+ str(sopra+2) + ';elenco_prezzi;3;FALSE());"]")'
     oSheet.getCellByPosition(9, sotto).Formula = '=SUBTOTAL(9;J'+ str(sopra+2) + ':J'+ str(sotto+1) + ')'
@@ -6653,10 +6673,6 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                         except:
                             pass
                     inverti_segno()
-                    #~ if oSheet.getCellByPosition(4, SR).Type.value == 'EMPTY':
-                        #~ oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(F' + str(SR+1) + ':I' + str(SR+1) + '))'
-                    #~ else:
-                        #~ oSheet.getCellByPosition(9, SR).Formula = '=IF(PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + ')=0;"";-PRODUCT(E' + str(SR+1) + ':I' + str(SR+1) + '))'
 
                 if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
                     va = oSheet.getCellByPosition(5, SR).Formula
@@ -7062,11 +7078,25 @@ def autoexec_off(arg=None):
             oSheet.getCellRangeByName("A1").String = '' 
         except:
             pass
- 
+########################################################################
+class trun(threading.Thread):
+    def __init__ (self):
+        threading.Thread.__init__(self)
+    def run(self):
+        while True:
+            time.sleep(1000)
+            bak()
+def autostart(arg=None):
+    #~ global utsave
+    utsave = trun()
+    utsave._stop()
+    utsave.start()
+########################################################################
 def autoexec(arg=None):
     '''
     questa è richiamata da New_File()
     '''
+    autostart()
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     oGSheetSettings.UsePrinterMetrics = True #Usa i parametri della stampante per la formattazione del testo
@@ -7255,7 +7285,15 @@ def set_larghezza_colonne(arg=None):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     adatta_altezza_riga(oSheet.Name)
 ########################################################################
+def elimina_stili_cella(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
+    for el in stili:
+        if oDoc.StyleFamilies.getByName('CellStyles').getByName(el).isInUse() == False:
+            oDoc.StyleFamilies.getByName('CellStyles').removeByName(el)
+########################################################################
 def adegua_tmpl(arg=None):
+#~ def debug(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
@@ -7298,9 +7336,22 @@ dell'operazione che terminerà con un avviso.
         oDoc.CurrentController.ZoomValue = 400
         attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
+        stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
+        diz_stili = dict ()
+############
+# aggiungi stili di cella
+        for el in ('comp 1-a PU', 'comp 1-a LUNG','comp 1-a LARG','comp 1-a peso','comp 1-a', 'Blu','Comp-Variante num sotto'):
+            oStileCella = oDoc.createInstance("com.sun.star.style.CellStyle")
+            if oDoc.StyleFamilies.getByName("CellStyles").hasByName(el + ' ROSSO') == False:
+                oDoc.StyleFamilies.getByName('CellStyles').insertByName(el + ' ROSSO', oStileCella)
+                oStileCella.ParentStyle = el
+                oDoc.StyleFamilies.getByName("CellStyles").getByName(el + ' ROSSO').CharColor = 16711680
+############
+# copia gli stili di cella dal template, ma non va perché tocca lavorare sulla FormatString - quando imparerò
         #~ sUrl = LeenO_path()+'/template/leeno/Computo_LeenO.ots'
         #~ styles = oDoc.getStyleFamilies()
         #~ styles.loadStylesFromURL(sUrl, list())
+############
         oSheet = oDoc.getSheets().getByName('S1')
         oSheet.getCellRangeByName('S1.H291').Value = oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
         for el in oDoc.Sheets.ElementNames:
@@ -7308,7 +7359,6 @@ dell'operazione che terminerà con un avviso.
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
             # ~adatta_altezza_riga(el)
             oDoc.getSheets().getByName(el).IsVisible = False
-
         ### dal template 212
         flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR
         _gotoSheet('M1')
@@ -7387,15 +7437,16 @@ dell'operazione che terminerà con un avviso.
         if oDoc.getSheets().hasByName('CONTABILITA'):
             oSheet = oDoc.getSheets().getByName('CONTABILITA')
             test = getLastUsedCell(oSheet).EndRow+1
-            for y in range(0, test):
-                if oSheet.getCellByPosition(1, y).CellStyle == 'comp Art-EP_R':
-                    oSheet.getCellByPosition(8, y).CellStyle = 'Comp-Bianche in mezzo_R'
-                if oSheet.getCellByPosition(9, y).String == '': oSheet.getCellByPosition(9, y).String == ''
-                if oSheet.getCellByPosition(11, y).String == '': oSheet.getCellByPosition(11, y).String == ''
-            
-            #~ MsgBox('''L'adeguamento del foglio di contabilità sarà
-#~ attivato nelle successive versioni di LeenO.
-
+            for n in range(0, test):
+                if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
+                    oSheet.getCellByPosition(8, n).CellStyle = 'Comp-Bianche in mezzo_R'
+                if oSheet.getCellByPosition(9, n).String == '': oSheet.getCellByPosition(9, n).String == ''
+                else:
+                    oSheet.getCellByPosition(9, n).Formula =='=IF(PRODUCT(E' + str(n+1) + ':I' + str(n+1) + ')=0;"";PRODUCT(E' + str(n+1) + ':I' + str(n+1) + '))'
+                if oSheet.getCellByPosition(11, n).String == '':
+                    oSheet.getCellByPosition(11, n).String == ''
+                else:
+                    oSheet.getCellByPosition(11, n).Formula =='=IF(PRODUCT(E' + str(n+1) + ':I' + str(n+1) + ')=0;"";PRODUCT(E' + str(n+1) + ':I' + str(n+1) + '))'
 #~ contatta il canale Telegram
 #~ https://t.me/leeno_computometrico''', 'AVVISO!')
         ########################################################################
@@ -7411,7 +7462,6 @@ dell'operazione che terminerà con un avviso.
         #~ oSheet.getCellRangeByName('S12').Formula ='=J12*L12'
         oSheet.getCellRangeByName('P27').Formula ='=IF(VLOOKUP(B24;elenco_prezzi;3;FALSE())="%";J27*N27/100;J27*N27)'
         #~ oSheet.getCellRangeByName('P27').Formula ='=N27*J27'
-        
         ###
         oSheet.getCellRangeByName('AC12').Formula = '=S12-AE12'
         oSheet.getCellRangeByName('AC12').CellStyle = 'Comp-sotto euri'
@@ -7419,7 +7469,8 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('AC27').CellStyle = 'Comp-sotto euri'
         
         oSheet.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;J24:J26)<0;"";SUBTOTAL(9;J24:J26))'
-        oSheet.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;L24:L26)<0;"";SUBTOTAL(9;L24:L26))'
+        oSheet.getCellRangeByName('L26').Formula = '=IF(SUBTOTAL(9;L24:L26)<0;"";SUBTOTAL(9;L24:L26))'
+        oSheet.getCellRangeByName('L26').CellStyle = 'Comp-Variante num sotto ROSSO'
         for el in('VARIANTE', 'COMPUTO'):
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)
@@ -7465,7 +7516,7 @@ dell'operazione che terminerà con un avviso.
                                     oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso'
                                     oSheet.getCellByPosition(9, x).CellStyle = 'Blu'
                                     oSheet.getCellByPosition(11, x).CellStyle = 'Blu'
-                                    oSheet.getCellByPosition(11, sotto).CellStyle = 'Comp-Variante num sotto'
+                                    oSheet.getCellByPosition(11, sotto-1).CellStyle = 'Comp-Variante num sotto ROSSO'
                                     oSheet.getCellByPosition(13, sotto).CellStyle = 'comp sotto Unitario'
                                     oSheet.getCellByPosition(15, sotto).CellStyle = 'comp sotto Euro Originale'
                                     oSheet.getCellByPosition(17, sotto).CellStyle = 'comp sotto Euro Originale'
@@ -8360,17 +8411,6 @@ def debug_errore(arg=None):
         MsgBox ("Eccezione " + str(type(e)) +
                 "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
-########################################################################
-class trun(threading.Thread):
-    def __init__ (self):
-        threading.Thread.__init__(self)
-    def run(self):
-        while True:
-            time.sleep(800)
-            bak()
-def debug__(self):
-    utsave = trun()
-    utsave.start()
 ########################################################################
 #~ def debug(arg=None):
 def trova_ricorrenze(arg=None):

@@ -444,9 +444,7 @@ def copia_sorgente_per_git(arg=None):
     if sys.platform == 'linux' or sys.platform == 'darwin':
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         if processo('wish') == False:
-            # ~os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
             subprocess.Popen('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &', shell=True, stdout=subprocess.PIPE)
-
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
             try:
@@ -456,8 +454,6 @@ def copia_sorgente_per_git(arg=None):
             dest = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-            # ~os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"')
-            # ~subprocess.Popen('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
             subprocess.Popen('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
     distutils.dir_util.copy_tree(oxt_path, dest)
     return
@@ -472,9 +468,7 @@ def avvia_IDE(arg=None):
         subprocess.Popen('nemo ' + LeenO_path(), shell=True, stdout=subprocess.PIPE)
         subprocess.Popen('geany ' + LeenO_path() + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
-        # ~os.system ('explorer.exe ' + LeenO_path())
-        # ~os.system ('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py')
-        subprocess.Popen('explorer.exe ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen('explorer.exe ' + uno.fileUrlToSystemPath(LeenO_path()), shell=True, stdout=subprocess.PIPE)
         subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     return
 ########################################################################
@@ -2570,6 +2564,7 @@ def firme_in_calce_run(arg=None):
     oDoc.CurrentController.ZoomValue = zoom
 ########################################################################
 def next_voice(lrow, n=1):
+# ~def debug (arg=None, n=1):
     '''
     lrow { double }   : riga di riferimento
     n    { integer }  : se 0 sposta prima della voce corrente
@@ -2578,7 +2573,11 @@ def next_voice(lrow, n=1):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ lrow = Range2Cell()[1]
+    # ~lrow = Range2Cell()[1]
+    if lrow==0:
+        while oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab:
+            lrow +=1
+        return lrow
     fine = ultima_voce(oSheet)+1
     # la parte che segue sposta il focus dopo della voce corrente (ad esempio sul titolo di categoria)
     if lrow >= fine:
@@ -4028,21 +4027,21 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
         pesca_cod()
 ########################################################################
 def rigenera_voce(lrow):
-#~ def debug(arg=None):
+# ~def debug(arg=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
     in CPMPUTO e VARIANTE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ lrow = Range2Cell()[1]
+    # ~lrow = Range2Cell()[1]
     sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
     for r in range(sopra+2, sotto):
-        if oSheet.getCellByPosition(2, r).CellStyle == 'comp 1-a' and oSheet.getCellByPosition(9, r).Type.value != 'FORMULA':
+        if 'comp 1-a' in (oSheet.getCellByPosition(2, r).CellStyle) and oSheet.getCellByPosition(9, r).Type.value != 'FORMULA':
             if oSheet.Name in('COMPUTO', 'VARIANTE'):
-                if oSheet.getCellByPosition(4, r).Type.value == 'EMPTY':
+                if oSheet.getCellByPosition(4, r).Type.value != 'EMPTY':
                     oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(E' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(E' + str(r+1) + ':I' + str(r+1) + '))'
                 else:
                     oSheet.getCellByPosition(9, r).Formula = '=IF(PRODUCT(F' + str(r+1) + ':I' + str(r+1) + ')=0;"";PRODUCT(F' + str(r+1) + ':I' + str(r+1) + '))'
@@ -4063,25 +4062,26 @@ def rigenera_voce(lrow):
     oSheet.getCellByPosition(35, sotto).Formula = '=B'+ str(sopra+2)
     oSheet.getCellByPosition(36, sotto).Formula = '=IF(ISERROR(S'+ str(sotto+1) +');"";IF(S'+ str(sotto+1) +'<>"";S'+ str(sotto+1) +';""))'
 ########################################################################
-def rigenera_tutte(arg=None, attesa=False):
+def rigenera_tutte(arg=None,):
     '''
     Ripristina le formule in tutto il foglio
     '''
-    if attesa == True: oDialogo_attesa = dlg_attesa()
     oDoc = XSCRIPTCONTEXT.getDocument()
-    
     oSheet = oDoc.CurrentController.ActiveSheet
     refresh(0)
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
-    for el in ('COMPUTO', 'VARIANTE'):
+    nome = oSheet.Name
+    oDialogo_attesa = dlg_attesa('Rigenerazione delle formule in ' + oSheet.Name + '...')
+    attesa().start() #mostra il dialogo
+    # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, 30, 0))
+    if nome in ('COMPUTO', 'VARIANTE'):
         try:
-            oSheet = oDoc.Sheets.getByName(el)
-            row = next_voice(0)
-            last = getLastUsedCell(oSheet).EndRow
-            if attesa == True: attesa().start() #mostra il dialogo
+            oSheet = oDoc.Sheets.getByName(nome)
+            row = next_voice(0, 1)
+            last = ultima_voce(oSheet)
             while row < last:
-                #~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row))
+                oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, row, 30, row))
                 rigenera_voce(row)
                 row = next_voice(row, 1)
             Rinumera_TUTTI_Capitoli2()
@@ -4090,7 +4090,7 @@ def rigenera_tutte(arg=None, attesa=False):
     oDoc.CurrentController.ZoomValue = zoom
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     refresh(1)
-    if attesa == True: oDialogo_attesa.endExecute()
+    oDialogo_attesa.endExecute()
     return
 ########################################################################
 # leeno.conf  ##########################################################
@@ -7410,13 +7410,20 @@ dell'operazione che terminerà con un avviso.
                 test = getLastUsedCell(oSheet).EndRow+1
                 # 214 aggiorna stili di cella per ogni colonna
                 for y in range(0, test):
-                    if oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a':
-                        oSheet.getCellByPosition(5, y).CellStyle = 'comp 1-a PU'
-                        oSheet.getCellByPosition(6, y).CellStyle = 'comp 1-a LUNG'
-                        oSheet.getCellByPosition(7, y).CellStyle = 'comp 1-a LARG'
-                        oSheet.getCellByPosition(8, y).CellStyle = 'comp 1-a peso'
+                    if 'comp 1-a' in oSheet.getCellByPosition(2, y).CellStyle:
+                        if oSheet.getCellByPosition(9, y).Value < 0:
+                            oSheet.getCellByPosition(2, y).CellStyle = 'comp 1-a ROSSO'
+                            oSheet.getCellByPosition(5, y).CellStyle = 'comp 1-a PU ROSSO'
+                            oSheet.getCellByPosition(6, y).CellStyle = 'comp 1-a LUNG ROSSO'
+                            oSheet.getCellByPosition(7, y).CellStyle = 'comp 1-a LARG ROSSO'
+                            oSheet.getCellByPosition(8, y).CellStyle = 'comp 1-a peso ROSSO'
+                        #~  == 'comp 1-a':
+                        else:
+                            oSheet.getCellByPosition(5, y).CellStyle = 'comp 1-a PU'
+                            oSheet.getCellByPosition(6, y).CellStyle = 'comp 1-a LUNG'
+                            oSheet.getCellByPosition(7, y).CellStyle = 'comp 1-a LARG'
+                            oSheet.getCellByPosition(8, y).CellStyle = 'comp 1-a peso'
                 for y in range(0, test):
-
                     # aggiorna formula vedi voce #214
                     if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a' and \
                     oSheet.getCellByPosition(5, y).Type.value == 'FORMULA':
@@ -7535,7 +7542,8 @@ dell'operazione che terminerà con un avviso.
                     except:
                         lrow += 1
         oDoc.getSheets().getByName('S1').IsVisible = False
-        oDialogo_attesa.endExecute() #chiude il dialogo
+        while oDialogo_attesa.isVisible() == True:
+            oDialogo_attesa.endExecute() #chiude il dialogo
         #~ refresh(0)
         for el in oDoc.Sheets.ElementNames:
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
@@ -7912,11 +7920,6 @@ def make_pack(arg=None, bar=0):
     if sys.platform == 'linux' or sys.platform == 'darwin':
         nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
         nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-        #~ cartella = '/media/' + os.getenv("PWD")[5:]
-        #~ nomeZip2= cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-        #~ nomeZip = cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-        #~ os.system('nemo ' + cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
-        # ~os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/')
         subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
@@ -7926,18 +7929,14 @@ def make_pack(arg=None, bar=0):
                 pass
             nomeZip2= os.getenv("HOMEPATH") +'/'+ src_oxt +'/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = os.getenv("HOMEPATH") +'/'+ src_oxt +'/OXT/LeenO.oxt'
-            # ~os.system('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\')
             subprocess.Popen('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\', shell=True, stdout=subprocess.PIPE)
-
         else:
             nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-            # ~os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')
             subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\', shell=True, stdout=subprocess.PIPE)
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile(nomeZip2, nomeZip)
-    #~ chi(os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\')
 #######################################################################
 def dlg_attesa(msg=''):
     '''
@@ -8476,9 +8475,14 @@ def trova_ricorrenze(arg=None):
         oDlg.execute()
     filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
     return
+
 ########################################################################
 def debug(arg=None):
-    chi(datetime.now().year)
+    oDialogo_attesa = dlg_attesa()
+    chi(oDialogo_attesa.isVisible())
+    attesa().start() #mostra il dialogo
+    chi(oDialogo_attesa.isVisible())
+    oDialogo_attesa.endExecute() #chiude il dialogo
 #~ def debug(arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet

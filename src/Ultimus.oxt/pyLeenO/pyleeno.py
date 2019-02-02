@@ -444,7 +444,9 @@ def copia_sorgente_per_git(arg=None):
     if sys.platform == 'linux' or sys.platform == 'darwin':
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         if processo('wish') == False:
-            os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
+            # ~os.system('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &')
+            subprocess.Popen('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &', shell=True, stdout=subprocess.PIPE)
+
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
             try:
@@ -454,7 +456,9 @@ def copia_sorgente_per_git(arg=None):
             dest = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-            os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"')
+            # ~os.system('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"')
+            # ~subprocess.Popen('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
+            subprocess.Popen('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
     distutils.dir_util.copy_tree(oxt_path, dest)
     return
 ########################################################################
@@ -468,8 +472,10 @@ def avvia_IDE(arg=None):
         subprocess.Popen('nemo ' + LeenO_path(), shell=True, stdout=subprocess.PIPE)
         subprocess.Popen('geany ' + LeenO_path() + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
-        os.system ('explorer.exe ' + LeenO_path())
-        os.system ('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py')
+        # ~os.system ('explorer.exe ' + LeenO_path())
+        # ~os.system ('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py')
+        subprocess.Popen('explorer.exe ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     return
 ########################################################################
 def Inser_SottoCapitolo(arg=None):
@@ -3384,24 +3390,20 @@ def inverti_segno(arg=None):
         for lrow in lista:
             if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
                 if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
-                    # ~chi(20000)
-                    # ~return
+
                     if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
                         oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
                     else:
                         oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-                        # ~oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = -1
                     for x in range (2, 9):
                         oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0]
                 else:
-                    
                     if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
                         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
                     else:
                         oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
                     for x in range (2, 9):
                         oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO'
-                        # ~oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = 16724787
     if oSheet.Name in('CONTABILITA'):
         for lrow in lista:
             if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
@@ -3415,7 +3417,6 @@ def inverti_segno(arg=None):
                 else:
                     for x in range (2, 12):
                         oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0]
-
 ########################################################################
 def valuta_cella(oCell):
     '''
@@ -7119,6 +7120,9 @@ def autoexec(arg=None):
     else:
         oGSheetSettings.MoveDirection = 1
     oDoc = XSCRIPTCONTEXT.getDocument()
+    oDoc.getSheets().getByName('copyright_LeenO').getCellRangeByName('A3').String = '# © 2001-2013 Bartolomeo Aimar - © 2014-'+str(datetime.now().year)+' Giuseppe Vizziello'
+    oDoc.getSheets().getByName('S1').getCellRangeByName('G219').String = 'Copyright 2014-'+str(datetime.now().year)
+    
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if 'Esempio_' not in oDoc.getURL():
         oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
@@ -7912,7 +7916,8 @@ def make_pack(arg=None, bar=0):
         #~ nomeZip2= cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
         #~ nomeZip = cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
         #~ os.system('nemo ' + cartella +'/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT')
-        os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/')
+        # ~os.system('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/')
+        subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
             try:
@@ -7921,11 +7926,14 @@ def make_pack(arg=None, bar=0):
                 pass
             nomeZip2= os.getenv("HOMEPATH") +'/'+ src_oxt +'/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = os.getenv("HOMEPATH") +'/'+ src_oxt +'/OXT/LeenO.oxt'
-            os.system('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\')
+            # ~os.system('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\')
+            subprocess.Popen('explorer.exe ' + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\OXT\\', shell=True, stdout=subprocess.PIPE)
+
         else:
             nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-            os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')
+            # ~os.system('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\')
+            subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\', shell=True, stdout=subprocess.PIPE)
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile(nomeZip2, nomeZip)
@@ -8469,6 +8477,8 @@ def trova_ricorrenze(arg=None):
     filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
     return
 ########################################################################
+def debug(arg=None):
+    chi(datetime.now().year)
 #~ def debug(arg=None):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet

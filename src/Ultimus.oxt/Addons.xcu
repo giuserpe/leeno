@@ -1281,25 +1281,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <!--
-                   <node oor:name="m2U19" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Finale_2.Modulo_Lista_categorie_appalto?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/sf_Ver</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>APP- Crea Lista Lavorazioni e Forniture</value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m2U20" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

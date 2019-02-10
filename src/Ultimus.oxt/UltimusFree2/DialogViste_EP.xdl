@@ -42,7 +42,7 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="15" dlg:left="109" dlg:top="14" dlg:width="90" dlg:height="15" dlg:help-text="&amp;147.DialogViste_EP.CommandButton2.HelpText" dlg:help-url="Elimina tutte le voci non utilizzate nel documento," dlg:value="&amp;148.DialogViste_EP.CommandButton2.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inizializza_elenco?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="16" dlg:left="109" dlg:top="94" dlg:width="90" dlg:height="15" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="&amp;489.DialogViste_EP.CommandButton6.Label">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="16" dlg:left="109" dlg:top="94" dlg:width="90" dlg:height="15" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="&amp;489.DialogViste_EP.CommandButton6.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$richiesta_offerta?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>

@@ -309,20 +309,18 @@ rem https://forum.openoffice.org/it/forum/viewtopic.php?f=26&amp;t=7144&amp;p=37
 Sub ApriDialogo_tabelle()
 	oSheet = ThisComponent.currentController.activeSheet &apos; presumo sia il foglio CONTABILITA
 &apos;	lrow = range2cell
-	
-	
+
 	Select Case ThisComponent.currentselection.cellstyle
 	Case &quot;comp 1-a&quot;, &quot;comp 1-a PU&quot;, &quot;comp 1-a LUNG&quot;, &quot;comp 1-a LARG&quot;, &quot;comp 1-a peso&quot;,&quot;Default&quot;, &quot;An-lavoraz-input&quot;
 		tabelle() = Array(&quot;Tondo per c.a.&quot;, &quot;Reti elettrosaldate&quot;, &quot;Orsogril&quot;, &quot;Travi IPE&quot;, &quot;Travi UPN&quot;, &quot;Travi HEA&quot;, &quot;Travi HEB&quot;, &quot;Travi HEM&quot;, _
 		&quot;Tubi quadrati&quot;, &quot;Tubi rettangolari&quot;, &quot;Tubi circolari&quot;, &quot;L lati Uguali sp tondi&quot;, &quot;L lati Disuguali sp tondi&quot;) &apos;
 		d = CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
-	
 		ComboBox=d.getControl(&quot;ComboBox1&quot;)
 		ComboBox.addItems(tabelle(), 0)
-		
 		ListBox=d.getControl(&quot;ListBox1&quot;)
 &apos;		d.execute()
-		
+	FerroTondo() = Array(&quot;ø4  - 0,099&quot;, &quot;ø5  - 0,154&quot;, &quot;ø6  - 0,222&quot;, &quot;ø7  - 0,302&quot;, &quot;ø8  - 0,395&quot;, &quot;ø9  - 0,499&quot;, &quot;ø10 - 0,617&quot;, &quot;ø11 - 0,746&quot;, &quot;ø12 - 0,888&quot;, &quot;ø13 - 1,042&quot;, &quot;ø14 - 1,208&quot;, &quot;ø15 - 1,387&quot;, &quot;ø16 - 1,578&quot;, &quot;ø17 - 1,782&quot;, &quot;ø18 - 1,998&quot;, &quot;ø19 - 2,226&quot;, &quot;ø20 - 2,466&quot;, &quot;ø21 - 2,719&quot;, &quot;ø22 - 2,984&quot;, &quot;ø23 - 3,261&quot;, &quot;ø24 - 3,551&quot;, &quot;ø25 - 3,853&quot;, &quot;ø26 - 4,168&quot;, &quot;ø27 - 4,495&quot;, &quot;ø28 - 4,834&quot;, &quot;ø29 - 5,185&quot;, &quot;ø30 - 5,549&quot;, &quot;ø31 - 5,925&quot;, &quot;ø32 - 6,313&quot;)
+		ListBox.addItems(FerroTondo(), 0)
 		Select Case d.Execute()
 		Case 1
 &apos;			MsgBox &quot;Premuto Ok&quot;

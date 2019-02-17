@@ -14,9 +14,9 @@
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="5" dlg:left="32" dlg:top="70" dlg:width="25" dlg:height="15" dlg:help-text="&amp;43.Dialog_XLO.CommandButton4.HelpText" dlg:default="true" dlg:value="&amp;44.Dialog_XLO.CommandButton4.Label" dlg:button-type="cancel" dlg:multiline="true"/>
   <dlg:radiogroup>
-   <dlg:radio dlg:style-id="1" dlg:id="CME_XLO_" dlg:tab-index="2" dlg:left="12" dlg:top="25" dlg:width="70" dlg:height="10" dlg:help-text="&amp;525.Dialog_XLO.CME_XLO_.HelpText" dlg:value="&amp;526.Dialog_XLO.CME_XLO_.Label" dlg:checked="true"/>
-   <dlg:radio dlg:style-id="1" dlg:id="VAR_XLO_" dlg:tab-index="3" dlg:left="12" dlg:top="35" dlg:width="70" dlg:height="10" dlg:help-text="&amp;529.Dialog_XLO.VAR_XLO_.HelpText" dlg:value="&amp;530.Dialog_XLO.VAR_XLO_.Label"/>
-   <dlg:radio dlg:style-id="1" dlg:id="CON_XLO_" dlg:tab-index="4" dlg:left="12" dlg:top="45" dlg:width="70" dlg:height="10" dlg:help-text="&amp;533.Dialog_XLO.CON_XLO_.HelpText" dlg:value="&amp;534.Dialog_XLO.CON_XLO_.Label"/>
+   <dlg:radio dlg:style-id="1" dlg:id="CME_XLO" dlg:tab-index="2" dlg:left="12" dlg:top="25" dlg:width="70" dlg:height="10" dlg:help-text="&amp;602.Dialog_XLO.CME_XLO.HelpText" dlg:value="&amp;603.Dialog_XLO.CME_XLO.Label" dlg:checked="true"/>
+   <dlg:radio dlg:style-id="1" dlg:id="VAR_XLO" dlg:tab-index="3" dlg:left="12" dlg:top="35" dlg:width="70" dlg:height="10" dlg:help-text="&amp;604.Dialog_XLO.VAR_XLO.HelpText" dlg:value="&amp;605.Dialog_XLO.VAR_XLO.Label"/>
+   <dlg:radio dlg:style-id="1" dlg:id="CON_XLO" dlg:tab-index="4" dlg:left="12" dlg:top="45" dlg:width="70" dlg:height="10" dlg:help-text="&amp;606.Dialog_XLO.CON_XLO.HelpText" dlg:value="&amp;607.Dialog_XLO.CON_XLO.Label"/>
   </dlg:radiogroup>
  </dlg:bulletinboard>
 </dlg:window>

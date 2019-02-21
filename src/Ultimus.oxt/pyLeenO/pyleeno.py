@@ -854,7 +854,7 @@ def ultima_voce(oSheet):
             break
     return n
 ########################################################################
-def uFindStringCol(sString, nCol, oSheet, start=0):
+def uFindStringCol(sString, nCol, oSheet, start=2):
     '''
     sString { string }  : stringa da cercare
     nCol    { integer } : indice di colonna
@@ -1627,6 +1627,15 @@ def scelta_viste(arg=None):
             for el in(13, 17, 21, 24, 25):
                 oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
             if oRangeAddress.StartColumn != 0:
+                if DlgSiNo("Nascondo eventuali voci non ancora contabilizzate?") == 2:
+                    struttura_off()
+                    oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+                    for el in range(3, getLastUsedCell(oSheet).EndRow):
+                        if oSheet.getCellByPosition(20, el).Value == 0:
+                            oCellRangeAddr.StartRow = el
+                            oCellRangeAddr.EndRow = el
+                            oSheet.group(oCellRangeAddr, 1)
+                            oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
                 if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
                     refresh(0)
                     errori =('#DIV/0!', '--')
@@ -1679,9 +1688,15 @@ def scelta_viste(arg=None):
     elif oSheet.Name in('CONTABILITA', 'Registro', 'SAL'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
+        oDialog1.getControl('Dettaglio').State = conf.read(path_conf, 'Generale', 'dettaglio')
         oDialog1.execute()
-
-    
+        if oDialog1.getControl('Dettaglio').State == 0: #
+            conf.write(path_conf, 'Generale', 'dettaglio', '0')
+            dettaglio_misure(0)
+        else:
+            conf.write(path_conf, 'Generale', 'dettaglio', '1')
+            dettaglio_misure(0)
+            dettaglio_misure(1)
     refresh(1)
     #~ MsgBox('Operazione eseguita con successo!','')
 ########################################################################
@@ -1891,8 +1906,8 @@ def XPWE_out(elaborato, out_file):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDialogo_attesa = dlg_attesa('Esportazione di ' + elaborato + ' in corso...')
     attesa().start() #mostra il dialogo
-
-    dettaglio_misure(0)
+    if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+        dettaglio_misure(0)
     numera_voci(1)
     top = Element('PweDocumento')
 #~ dati generali
@@ -2070,7 +2085,10 @@ def XPWE_out(elaborato, out_file):
     diz_ep = dict()
     lista_AP = list()
     for n in range(3, getLastUsedCell(oSheet).EndRow):
-        if oSheet.getCellByPosition(1, n).Type.value == 'TEXT' and \
+        if oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and \
+        oSheet.getCellByPosition(2, n).Type.value == 'FORMULA':
+            lista_AP.append(oSheet.getCellByPosition(0, n).String)
+        elif oSheet.getCellByPosition(1, n).Type.value == 'TEXT' and \
         oSheet.getCellByPosition(2, n).Type.value == 'TEXT':
             EPItem = SubElement(PweElencoPrezzi,'EPItem')
             EPItem.set('ID', str(n))
@@ -2146,29 +2164,25 @@ def XPWE_out(elaborato, out_file):
                 IncATTR.text = ''
             else:
                 IncATTR.text = str(oSheet.getCellByPosition(7, n).Value * 100)
-
-        elif oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and \
-        oSheet.getCellByPosition(2, n).Type.value == 'FORMULA':
-            lista_AP.append(oSheet.getCellByPosition(0, n).String)
 #Analisi di prezzo
     if len(lista_AP) != 0:
-        k = n+1
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        k = n+1
         for el in lista_AP:
             try:
-                n =(uFindStringCol(el, 0, oSheet))
+                m = uFindStringCol(el, 0, oSheet)
                 EPItem = SubElement(PweElencoPrezzi,'EPItem')
                 EPItem.set('ID', str(k))
                 TipoEP = SubElement(EPItem,'TipoEP')
                 TipoEP.text = '0'
                 Tariffa = SubElement(EPItem,'Tariffa')
                 id_tar = str(k)
-                Tariffa.text = oSheet.getCellByPosition(0, n).String
-                diz_ep[oSheet.getCellByPosition(0, n).String] = id_tar
+                Tariffa.text = oSheet.getCellByPosition(0, m).String
+                diz_ep[oSheet.getCellByPosition(0, m).String] = id_tar
                 Articolo = SubElement(EPItem,'Articolo')
                 Articolo.text = ''
                 DesEstesa = SubElement(EPItem,'DesEstesa')
-                DesEstesa.text = oSheet.getCellByPosition(1, n).String
+                DesEstesa.text = oSheet.getCellByPosition(1, m).String
                 DesRidotta = SubElement(EPItem,'DesRidotta')
                 if len(DesEstesa.text) > 120:
                     DesRidotta.text = DesEstesa.text[:60] + ' ... ' + DesEstesa.text[-60:]
@@ -2179,11 +2193,10 @@ def XPWE_out(elaborato, out_file):
                     DesBreve.text = DesEstesa.text[:30] + ' ... ' + DesEstesa.text[-30:]
                 else:
                     DesBreve.text = DesEstesa.text
-
                 UnMisura = SubElement(EPItem,'UnMisura')
-                UnMisura.text = oSheet.getCellByPosition(2, n).String
+                UnMisura.text = oSheet.getCellByPosition(2, m).String
                 Prezzo1 = SubElement(EPItem,'Prezzo1')
-                Prezzo1.text = str(oSheet.getCellByPosition(6, n).Value)
+                Prezzo1.text = str(oSheet.getCellByPosition(6, m).Value)
                 Prezzo2 = SubElement(EPItem,'Prezzo2')
                 Prezzo2.text = '0'
                 Prezzo3 = SubElement(EPItem,'Prezzo3')
@@ -2207,7 +2220,7 @@ def XPWE_out(elaborato, out_file):
                 PweEPAnalisi = SubElement(EPItem,'PweEPAnalisi')
                 PweEPAR = SubElement(PweEPAnalisi,'PweEPAR')
                 nEPARItem = 2
-                for x in range(n, n+100):
+                for x in range(m, m+100):
                     if oSheet.getCellByPosition(0, x).CellStyle == 'An-lavoraz-desc':
                         EPARItem = SubElement(PweEPAR,'EPARItem')
                         EPARItem.set('ID', str(nEPARItem))
@@ -2297,7 +2310,10 @@ def XPWE_out(elaborato, out_file):
             Quantita.text = oSheet.getCellByPosition(9, sotto).String
 ##########################
             DataMis = SubElement(VCItem,'DataMis')
-            DataMis.text = oggi() #'26/12/1952'#'28/09/2013'###
+            if elaborato == 'CONTABILITA':
+                DataMis.text = oSheet.getCellByPosition(1, sopra+2).String
+            else:
+                DataMis.text = oggi() #'26/12/1952'#'28/09/2013'###
             vFlags = SubElement(VCItem,'Flags')
             vFlags.text = '0'
 ##########################
@@ -2378,7 +2394,8 @@ def XPWE_out(elaborato, out_file):
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
     # ~mri (uno.fileUrlToSystemPath(oDoc.getURL()))
     # ~chi(out_file)
-    dettaglio_misure(1)
+    if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+        dettaglio_misure(1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
             out_file = out_file + '-'+ elaborato + '.xpwe'
@@ -2693,6 +2710,7 @@ def analisi_in_ElencoPrezzi(arg=None):
         oDoc.enableAutomaticCalculation(True)
 ########################################################################
 def tante_analisi_in_ep(arg=None):
+    refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
@@ -2731,6 +2749,7 @@ def tante_analisi_in_ep(arg=None):
     oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-Cs'
     oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-C'
     oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo %'
+    refresh(1)
     #~ MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 ########################################################################
 def Circoscrive_Analisi(lrow):
@@ -5747,7 +5766,9 @@ def vedi_voce(arg=None):
             copia_riga_contab(lrow)
         lrow += 1   
     if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
-        to = basic_LeenO('ListenersSelectRange.getRange', 'prova')
+        to = basic_LeenO('ListenersSelectRange.getRange', "Seleziona voce di riferimento o indica n. d'ordine")
+        if not oSheet.Name in to:
+            to ='$' + oSheet.Name + '.$C$' + str(uFindStringCol(to, 0, oSheet))
         try:
             to = int(to.split('$')[-1])-1
         except ValueError:
@@ -7385,10 +7406,10 @@ dell'operazione che terminerà con un avviso.
             MsgBox('''Non avendo effettuato l'adeguamento del file alla versione di LeenO installata, potresti avere dei malfunzionamenti!''', 'Avviso!')
             return
         sproteggi_sheet_TUTTE()
-        oDialogo_attesa = dlg_attesa("Adeguamento file alla versione di LeenO installata...")
+        # ~oDialogo_attesa = dlg_attesa("Adeguamento file alla versione di LeenO installata...")
         zoom = oDoc.CurrentController.ZoomValue
         oDoc.CurrentController.ZoomValue = 400
-        attesa().start() #mostra il dialogo
+        # ~attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
         stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
         diz_stili = dict ()
@@ -7592,8 +7613,8 @@ dell'operazione che terminerà con un avviso.
                     except:
                         lrow += 1
         oDoc.getSheets().getByName('S1').IsVisible = False
-        while oDialogo_attesa.isVisible() == True:
-            oDialogo_attesa.endExecute() #chiude il dialogo
+        # ~while oDialogo_attesa.isVisible() == True:
+            # ~oDialogo_attesa.endExecute() #chiude il dialogo
         #~ refresh(0)
         for el in oDoc.Sheets.ElementNames:
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
@@ -8544,12 +8565,13 @@ def debug_(arg=None):
             sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
             eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
     chi((sRow, eRow))
-# ~def debug(arg=None):
-    # ~oDialogo_attesa = dlg_attesa()
-    # ~chi(oDialogo_attesa.isVisible())
-    # ~attesa().start() #mostra il dialogo
-    # ~chi(oDialogo_attesa.isVisible())
-    # ~oDialogo_attesa.endExecute() #chiude il dialogo
+def debug(arg=None):
+    refresh(1)
+    oDialogo_attesa = dlg_attesa()
+    chi(oDialogo_attesa.isVisible())
+    attesa().start() #mostra il dialogo
+    chi(oDialogo_attesa.isVisible())
+    oDialogo_attesa.endExecute() #chiude il dialogo
 def debug_(arg=None):
     refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -8607,9 +8629,10 @@ def trova_np(arg=None ):
             # ~oSheet.getCellByPosition(7, el).CellStyle = 'comp 1-a LARG'
             # ~oSheet.getCellByPosition(8, el).CellStyle = 'comp 1-a peso'
         # ~oSheet.getCellByPosition(5, el).String = '- formulario del ' + oSheet.getCellByPosition(3, el).String
-# ~def debug(arg=None ):
-    # ~oDoc = XSCRIPTCONTEXT.getDocument()
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
+def debug(arg=None ):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    chi (uFindStringCol('AN_Arredo', 0, oSheet))
     # ~oCell = oSheet.getCellByPosition(0,0)
     # ~oCursor = oSheet.createCursorByRange(oCell)
     # ~mri(oCursor)

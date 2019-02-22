@@ -1417,6 +1417,7 @@ def scelta_viste(arg=None):
     Elenco Prezzi, COMPUTO, VARIANTE, CONTABILITA'
     Genera i raffronti tra COMPUTO e VARIANTE e CONTABILITA'
     '''
+    refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     psm = uno.getComponentContext().ServiceManager
@@ -1627,9 +1628,13 @@ def scelta_viste(arg=None):
             for el in(13, 17, 21, 24, 25):
                 oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
             if oRangeAddress.StartColumn != 0:
+            # evidenzia le quantità eccedenti il VI/I
+                for el in range (3, getLastUsedCell(oSheet).EndRow):
+                    if oSheet.getCellByPosition(26, el).Value >= 0.2 or oSheet.getCellByPosition(26, el).String == '20,00%':
+                        oSheet.getCellRangeByPosition(0, el, 25, el).CellBackColor = 16777062
+                oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
                 if DlgSiNo("Nascondo eventuali voci non ancora contabilizzate?") == 2:
                     struttura_off()
-                    oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
                     for el in range(3, getLastUsedCell(oSheet).EndRow):
                         if oSheet.getCellByPosition(20, el).Value == 0:
                             oCellRangeAddr.StartRow = el
@@ -1637,11 +1642,22 @@ def scelta_viste(arg=None):
                             oSheet.group(oCellRangeAddr, 1)
                             oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
                 if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
-                    refresh(0)
                     errori =('#DIV/0!', '--')
                     hide_error(errori, 26)
                     oSheet.group(oRangeAddress, 0)
                     oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
+                oCellRangeAddr.StartColumn = 3
+                oCellRangeAddr.EndColumn = 3
+                oSheet.group(oCellRangeAddr, 0)
+                oSheet.getCellRangeByPosition(3, 0, 3, 0).Columns.IsVisible = False
+                oCellRangeAddr.StartColumn = 5
+                oCellRangeAddr.EndColumn = 11
+                oSheet.group(oCellRangeAddr, 0)
+                oSheet.getCellRangeByPosition(5, 0, 11, 0).Columns.IsVisible = False
+                oCellRangeAddr.StartColumn = 15
+                oCellRangeAddr.EndColumn = 19
+                oSheet.group(oCellRangeAddr, 0)
+                oSheet.getCellRangeByPosition(15, 0, 19, 0).Columns.IsVisible = False
         else: return
 
     elif oSheet.Name in('Analisi di Prezzo'):
@@ -1813,7 +1829,10 @@ def genera_sommario(arg=None):
 ########################################################################
 def riordina_ElencoPrezzi(arg=None):
     '''Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo'''
+    refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     if uFindStringCol('Fine elenco', 0, oSheet) == None:
         inserisci_Riga_rossa()
@@ -1830,6 +1849,8 @@ def riordina_ElencoPrezzi(arg=None):
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    refresh(1)
+    oDoc.CurrentController.ZoomValue = zoom
 ########################################################################
 def doppioni(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -2681,10 +2702,10 @@ def analisi_in_ElencoPrezzi(arg=None):
         
         oSheet.getRows().insertByIndex(3,1)
 
-        oSheet.getCellByPosition(0,3).CellStyle = 'EP-Cs'
-        oSheet.getCellByPosition(1,3).CellStyle = 'EP-C'
-        oSheet.getCellRangeByPosition(2,3,8,3).CellStyle = 'EP-C mezzo'
-        oSheet.getCellByPosition(5,3).CellStyle = 'EP-C mezzo %'
+        oSheet.getCellByPosition(0,3).CellStyle = 'EP-aS'
+        oSheet.getCellByPosition(1,3).CellStyle = 'EP-a'
+        oSheet.getCellRangeByPosition(2,3,8,3).CellStyle = 'EP-mezzo'
+        oSheet.getCellByPosition(5,3).CellStyle = 'EP-mezzo %'
         oSheet.getCellByPosition(9,3).CellStyle = 'EP-sfondo'
         oSheet.getCellByPosition(10,3).CellStyle = 'Default'
         oSheet.getCellByPosition(11,3).CellStyle = 'EP-mezzo %'
@@ -2746,9 +2767,9 @@ def tante_analisi_in_ep(arg=None):
         for x in range(1, 8): #evito il codice articolo, altrimenti me lo converte in numero
             oSheet.getCellByPosition(x, y).Formula = oSheet.getCellByPosition(x, y).String
     oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo'
-    oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-Cs'
-    oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-C'
-    oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo %'
+    oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-aS'
+    oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-a'
+    oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo %'
     refresh(1)
     #~ MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 ########################################################################
@@ -4630,17 +4651,17 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('F3').String ='Incidenza\nMdO'
     oSheet.getCellRangeByName('G3').String ='Importo\nMdO'
     oSheet.getCellRangeByName('H3').String ='Codice di origine'
-    oSheet.getCellRangeByName('L3').String ='Inc. % \ncomputo'
-    oSheet.getCellRangeByName('M3').String ='Quantità\ncomputo'
-    oSheet.getCellRangeByName('N3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('L3').String ='Inc. % \nComputo'
+    oSheet.getCellRangeByName('M3').String ='Quantità\nComputo'
+    oSheet.getCellRangeByName('N3').String ='Importi\ncCmputo'
     oSheet.getCellRangeByName('L3:N3').CellBackColor = 16762855
-    oSheet.getCellRangeByName('P3').String ='Inc. % \ncomputo'
-    oSheet.getCellRangeByName('Q3').String ='Quantità\ncomputo'
-    oSheet.getCellRangeByName('R3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('P3').String ='Inc. % \nVeriante'
+    oSheet.getCellRangeByName('Q3').String ='Quantità\nVeriante'
+    oSheet.getCellRangeByName('R3').String ='Importi\nVeriante'
     oSheet.getCellRangeByName('P3:R3').CellBackColor = 16777062
-    oSheet.getCellRangeByName('T3').String ='Inc. % \ncomputo'
-    oSheet.getCellRangeByName('U3').String ='Quantità\ncomputo'
-    oSheet.getCellRangeByName('V3').String ='Importi\ncomputo'
+    oSheet.getCellRangeByName('T3').String ='Inc. % \nContabilità'
+    oSheet.getCellRangeByName('U3').String ='Quantità\nContabilità'
+    oSheet.getCellRangeByName('V3').String ='Importi\nContabilità'
     oSheet.getCellRangeByName('T3:V3').CellBackColor = 16757935
     oSheet.getCellRangeByName('X3').String ='Quantità\nvariaz.'
     oSheet.getCellRangeByName('Y3').String ='IMPORTI\nin più'
@@ -8632,7 +8653,9 @@ def trova_np(arg=None ):
 def debug(arg=None ):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    chi (uFindStringCol('AN_Arredo', 0, oSheet))
+    for el in range (3, getLastUsedCell(oSheet).EndRow):
+        if oSheet.getCellByPosition(26, el).Value >= 0.2 or oSheet.getCellByPosition(26, el).String == '20,00%':
+            oSheet.getCellRangeByPosition(0, el, 25, el).CellBackColor = 16777062
     # ~oCell = oSheet.getCellByPosition(0,0)
     # ~oCursor = oSheet.createCursorByRange(oCell)
     # ~mri(oCursor)

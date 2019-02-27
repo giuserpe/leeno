@@ -4637,9 +4637,9 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByPosition(0, 0, 100 , 0).CellStyle = "Default"
 #~ riscrivo le intestazioni di colonna
     set_larghezza_colonne()
-    oSheet.getCellRangeByName('L1').String ='COMPUTO'
-    oSheet.getCellRangeByName('P1').String ='VARIANTE'
-    oSheet.getCellRangeByName('T1').String ='CONTABILITA'
+    #~ oSheet.getCellRangeByName('L1').String ='COMPUTO'
+    #~ oSheet.getCellRangeByName('P1').String ='VARIANTE'
+    #~ oSheet.getCellRangeByName('T1').String ='CONTABILITA'
     oSheet.getCellRangeByName('B2').String ='QUESTA RIGA NON VIENE STAMPATA'
     oSheet.getCellRangeByName("'Elenco Prezzi'.A2:AA2").CellStyle = "comp In testa"
     oSheet.getCellRangeByName("'Elenco Prezzi'.A3:AA3").CellStyle = "EP-a -Top"
@@ -4649,7 +4649,7 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('D3').String ='Sicurezza\ninclusa'
     oSheet.getCellRangeByName('E3').String ='Prezzo\nunitario'
     oSheet.getCellRangeByName('F3').String ='Incidenza\nMdO'
-    oSheet.getCellRangeByName('G3').String ='Importo\nMdO'
+    oSheet.getCellRangeByName('G3').String ='Importo\nSicurezza'
     oSheet.getCellRangeByName('H3').String ='Codice di origine'
     oSheet.getCellRangeByName('L3').String ='Inc. % \nComputo'
     oSheet.getCellRangeByName('M3').String ='Quantità\nComputo'

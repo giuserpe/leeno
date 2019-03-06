@@ -27,6 +27,7 @@ import time
 import copy
 from multiprocessing import Process, freeze_support
 import threading
+import re
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 from datetime import datetime, date
@@ -117,10 +118,10 @@ def invia_voce(arg=None):
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     if fpartenza == sUltimus:
-        MsgBox("Questo file coincide con il Documento di Contabilità Corrente.", "Attenzione!")
+        MsgBox("Questo file coincide con il Documento Principale (DCC).", "Attenzione!")
         return
     elif sUltimus == '':
-        MsgBox("E' necessario impostare il Documento di Contabilità Corrente.", "Attenzione!")
+        MsgBox("E' necessario impostare il Documento Principale (DCC).", "Attenzione!")
         return
     nSheetDCC = getDCCSheet()
     lrow = Range2Cell()[1]
@@ -222,7 +223,7 @@ def invia_voce(arg=None):
             _gotoCella(0, 3)
             paste_clip()
             #~ doppioni()
-        if nome in ('COMPUTO', 'VARIANTE'):
+        if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             dccSheet.IsVisible = True
             ddcDoc.CurrentController.setActiveSheet(dccSheet)
@@ -251,7 +252,7 @@ def invia_voce(arg=None):
             else:
                 return
 ###### partenza
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
         cod = cod_voce(lrow)
         try:
@@ -367,7 +368,7 @@ def cod_voce(lrow, cod=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #~ lrow = Range2Cell()[1]
-    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
     elif oSheet.Name in ('Analisi di Prezzo'):
         sopra = Circoscrive_Analisi(lrow).RangeAddress.StartRow+1
@@ -2935,7 +2936,7 @@ def elimina_voci_azzerate(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
-        if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        if oSheet.Name in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             ER = getLastUsedCell(oSheet).EndRow
             for lrow in reversed(range(0, ER)):
                 if oSheet.getCellByPosition(2, lrow).String == '*** VOCE AZZERATA ***':
@@ -3094,6 +3095,17 @@ def elimina_voce(lRow=None, msg=1):
     SR = sStRange.RangeAddress.StartRow
     ER = sStRange.RangeAddress.EndRow
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    return
+
+
+
+
+
+
+
+
+
+    
     if msg==1:
         if DlgSiNo("""OPERAZIONE NON ANNULLABILE!
         
@@ -3473,15 +3485,21 @@ def valuta_cella(oCell):
     Estrae qualsiasi valore da una cella, restituendo una strigna, indipendentemente dal tipo originario.
     oCell       { object }  : cella da validare
     '''
+    # ~if oCell.Type.value == 'FORMULA':
+        # ~try:
+            # ~eval(oCell.Formula.split('=')[-1])
+            # ~valore = oCell.Formula.split('=')[-1]
+        # ~except:
+            # ~try:
+                # ~valore = str(oSheet.getCellRangeByName(oCell.Formula.split('=')[-1]).Value)
+            # ~except:
+                # ~valore = str(oCell.Value)
     if oCell.Type.value == 'FORMULA':
-        try:
-            eval(oCell.Formula.split('=')[-1])
+        if re.search('[a-zA-Z]', oCell.Formula):
+            chi(oCell.Formula)
+            valore = str(oCell.Value)
+        else:
             valore = oCell.Formula.split('=')[-1]
-        except:
-            try:
-                valore = str(oSheet.getCellRangeByName(oCell.Formula.split('=')[-1]).Value)
-            except:
-                valore = str(oCell.Value)
     elif oCell.Type.value == 'VALUE':
         valore = str(oCell.Value)
     elif oCell.Type.value == 'TEXT':
@@ -4637,9 +4655,9 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByPosition(0, 0, 100 , 0).CellStyle = "Default"
 #~ riscrivo le intestazioni di colonna
     set_larghezza_colonne()
-    #~ oSheet.getCellRangeByName('L1').String ='COMPUTO'
-    #~ oSheet.getCellRangeByName('P1').String ='VARIANTE'
-    #~ oSheet.getCellRangeByName('T1').String ='CONTABILITA'
+    oSheet.getCellRangeByName('L1').String ='COMPUTO'
+    oSheet.getCellRangeByName('P1').String ='VARIANTE'
+    oSheet.getCellRangeByName('T1').String ='CONTABILITA'
     oSheet.getCellRangeByName('B2').String ='QUESTA RIGA NON VIENE STAMPATA'
     oSheet.getCellRangeByName("'Elenco Prezzi'.A2:AA2").CellStyle = "comp In testa"
     oSheet.getCellRangeByName("'Elenco Prezzi'.A3:AA3").CellStyle = "EP-a -Top"
@@ -4649,7 +4667,7 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('D3').String ='Sicurezza\ninclusa'
     oSheet.getCellRangeByName('E3').String ='Prezzo\nunitario'
     oSheet.getCellRangeByName('F3').String ='Incidenza\nMdO'
-    oSheet.getCellRangeByName('G3').String ='Importo\nSicurezza'
+    oSheet.getCellRangeByName('G3').String ='Importo\nMdO'
     oSheet.getCellRangeByName('H3').String ='Codice di origine'
     oSheet.getCellRangeByName('L3').String ='Inc. % \nComputo'
     oSheet.getCellRangeByName('M3').String ='Quantità\nComputo'
@@ -6745,6 +6763,9 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                         oSheet.getCellByPosition(44, SR).String = dict_articoli.get(ID).get('tariffa')
                 # ~
                 if '-' in mis[7]:
+                    # ~chi(mis)
+                    # ~chi(mis[7])
+                    # ~return
                     for x in range(5, 8):
                         try:
                             if oSheet.getCellByPosition(x, SR).Value != 0:
@@ -6752,6 +6773,9 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                         except:
                             pass
                     inverti_segno()
+                    chi('invertito')
+                    chi(Range2Cell()[1])
+                    return
 
                 if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
                     va = oSheet.getCellByPosition(5, SR).Formula
@@ -6826,7 +6850,7 @@ sUltimus = ''
 def ssUltimus(arg=None):
     oDlgMain.endExecute()
     '''
-    Scrive la variabile globale che individua il Documento di Contabilità Corrente(DCC)
+    Scrive la variabile globale che individua il Documento Principale (DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
     '''
     
@@ -7022,7 +7046,10 @@ def filtra_codice(voce=None):
     if oSheet.Name == "Elenco Prezzi":
         voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(0, Range2Cell()[1]).String
     # ~oSheet = oDoc.CurrentController.ActiveSheet
-        elaborato = scegli_elaborato('Ricerca di ' + voce)
+        try:
+            elaborato = scegli_elaborato('Ricerca di ' + voce)
+        except:
+            return
         _gotoSheet(elaborato)
         oSheet = oDoc.Sheets.getByName(elaborato)
         _gotoCella(0,6)
@@ -8650,16 +8677,28 @@ def trova_np(arg=None ):
             # ~oSheet.getCellByPosition(7, el).CellStyle = 'comp 1-a LARG'
             # ~oSheet.getCellByPosition(8, el).CellStyle = 'comp 1-a peso'
         # ~oSheet.getCellByPosition(5, el).String = '- formulario del ' + oSheet.getCellByPosition(3, el).String
-def debug(arg=None ):
+def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    for el in range (3, getLastUsedCell(oSheet).EndRow):
-        if oSheet.getCellByPosition(26, el).Value >= 0.2 or oSheet.getCellByPosition(26, el).String == '20,00%':
-            oSheet.getCellRangeByPosition(0, el, 25, el).CellBackColor = 16777062
-    # ~oCell = oSheet.getCellByPosition(0,0)
-    # ~oCursor = oSheet.createCursorByRange(oCell)
-    # ~mri(oCursor)
-    # ~autorun()
+    lrow = Range2Cell()[1]
+    if oSheet.getCellByPosition(5, lrow).Value == 0.5:
+        oSheet.getCellByPosition(5, lrow).Formula = '=('+ oSheet.getCellByPosition(8, lrow).Formula[1:] + ')*' + str(oSheet.getCellByPosition(6, lrow).Value) + '/2'
+        oSheet.getCellByPosition(6, lrow).String = ''
+        oSheet.getCellByPosition(7, lrow).String = ''
+        oSheet.getCellByPosition(8, lrow).String = ''
+
+def debug(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lrow = Range2Cell()[1]
+    # ~chi(oSheet.getCellRangeByName('F563').Formula)
+    # ~chi(oSheet.getCellRangeByName('F563').Formula)
+    test = oSheet.getCellRangeByName('F563').Formula
+    chi(re)
+    # ~chi (re.match('[a-zA-Z]', test))
+    # ~chi (re.search('[a-zA-Z]', test))
+    if re.search('[a-zA-Z]', oSheet.getCellRangeByName('F563').Formula):
+        chi('kkk')
 
 ########################################################################
 ########################################################################

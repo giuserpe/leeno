@@ -7251,7 +7251,8 @@ def autoexec(arg=None):
         oDoc.Wildcards = False
     except:
         pass
-    oDoc.RegularExpressions = True
+    oDoc.RegularExpressions = False
+    oDoc.CalcAsShown = True #precisione come mostrato
     oSheet = oDoc.getSheets().getByName('S1')
     adegua_tmpl() #esegue degli aggiustamenti del template
     toolbar_vedi()
@@ -8689,16 +8690,10 @@ def debug(arg=None):
 
 def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = Range2Cell()[1]
-    # ~chi(oSheet.getCellRangeByName('F563').Formula)
-    # ~chi(oSheet.getCellRangeByName('F563').Formula)
-    test = oSheet.getCellRangeByName('F563').Formula
-    chi(re)
-    # ~chi (re.match('[a-zA-Z]', test))
-    # ~chi (re.search('[a-zA-Z]', test))
-    if re.search('[a-zA-Z]', oSheet.getCellRangeByName('F563').Formula):
-        chi('kkk')
+    oDoc.RegularExpressions = False
+    oDoc.Wildcards = False
+    mri(oDoc)
+
 
 ########################################################################
 ########################################################################

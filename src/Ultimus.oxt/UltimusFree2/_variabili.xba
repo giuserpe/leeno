@@ -72,7 +72,6 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 		Dim oSheet As Object
 		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	EndIf
-	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	eventi_assegna
 &apos;	Elimina_Nomi_Area_errati
 &apos;assegna le macro agli eventi di ogni foglio e del documento:

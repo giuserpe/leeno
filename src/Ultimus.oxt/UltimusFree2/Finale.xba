@@ -528,7 +528,6 @@ procedi:
 	oSheet.setPrintAreas(print_area)
 	oSheet.setTitleRows(RepeatRows)
 	oSheet.setPrintTitleRows(PrintRepeatRows)
-	ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
 	lRow = getlastusedrow (oSheet)
 &apos;#########################################################################
 &apos; questo serve ad evitare l&apos;errore di riferimento circolare in excel

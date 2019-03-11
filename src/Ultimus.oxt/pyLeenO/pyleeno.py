@@ -2736,18 +2736,18 @@ def tante_analisi_in_ep(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
+    rifa_nomearea('Analisi di Prezzo', '$A$3:$K$' + str(getLastUsedCell(oSheet).EndRow), 'analisi')
     voce = list()
     idx = 4
     for n in range(0, ultima_voce(oSheet)+1):
         if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla' and oSheet.getCellByPosition(1, n).String != '<<<Scrivi la descrizione della nuova voce da analizzare   ':
             voce =(oSheet.getCellByPosition(0, n).String,
-                "=$'Analisi di Prezzo'.B" + str(n+1),
-                "=$'Analisi di Prezzo'.C" + str(n+1),
-                "=$'Analisi di Prezzo'.K" + str(n+1),
-                "=$'Analisi di Prezzo'.G" + str(n+1),
-                "=$'Analisi di Prezzo'.I" + str(n+1),
-                "=F"+ str(idx)+"*E"+ str(idx),
-                "=$'Analisi di Prezzo'.A" + str(n+1),
+                '=VLOOKUP(A' + str(idx) + ';analisi;2;FALSE())',
+                '=VLOOKUP(A' + str(idx) + ';analisi;3;FALSE())',
+                '=VLOOKUP(A' + str(idx) + ';analisi;11;FALSE())',
+                '=VLOOKUP(A' + str(idx) + ';analisi;7;FALSE())',
+                '=VLOOKUP(A' + str(idx) + ';analisi;9;FALSE())',
+                '=VLOOKUP(A' + str(idx) + ';analisi;10;FALSE())',
             )
             lista_analisi.append(voce)
             idx += 1
@@ -2756,13 +2756,13 @@ def tante_analisi_in_ep(arg=None):
         oSheet.getRows().insertByIndex(3,len(lista_analisi))
     else:
         return
-    oRange = oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1)
+    oRange = oSheet.getCellRangeByPosition(0, 3, 6, 3+len(lista_analisi)-1)
     lista_come_array = tuple(lista_analisi)
     
     oSheet.getCellRangeByPosition(11, 3, 11, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo %'
     oSheet.getCellRangeByPosition(12, 3, 12, 3+len(lista_analisi)-1).CellStyle = 'EP statistiche_q'
     oSheet.getCellRangeByPosition(13, 3, 13, 3+len(lista_analisi)-1).CellStyle = 'EP statistiche_Contab_q'
-    
+    # ~chi(lista_come_array)
     oRange.setDataArray(lista_come_array) #setFrmulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
     for y in range(3, 3+len(lista_analisi)):
         for x in range(1, 8): #evito il codice articolo, altrimenti me lo converte in numero
@@ -8241,8 +8241,8 @@ def calendario_mensile(arg=None):
                 oSheet.getCellByPosition(x, y).CellStyle = 'tabella'
     return
 ########################################################################
-# ~def sistema_cose(arg=None):
-def debug(arg=None):
+def sistema_cose(arg=None):
+# ~def debug(arg=None):
     
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -8690,9 +8690,8 @@ def debug(arg=None):
 
 def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDoc.RegularExpressions = False
-    oDoc.Wildcards = False
-    mri(oDoc)
+
+    oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
 
 
 ########################################################################

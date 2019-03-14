@@ -161,15 +161,7 @@ rem Recupero i dati dal libretto
 		end if
 		i=f
 		&apos;voce = array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo)
-rem ----------------------------------------------------------------------
-rem approssimazione dei valori a idxdec dopo la virgola
-rem con ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
-&apos;GoTo provo_ed_evitare:
-&apos;		quant=myround(quant,idxdec)
-&apos;		importo=myround(importo,idxdec)
-&apos;		sicurezza=myround(sicurezza,idxdec)
-&apos;		mdo=myround(mdo,idxdec)
-&apos;provo_ed_evitare:
+
 rem ----------------------------------------------------------------------
 		AppendItem(elVoci(), array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo, sicurezza, mdo))
 &apos;		Barra_Apri_Chiudi_5(&quot;                                Restano &quot;&amp; aRiga-i &amp;&quot; righe...&quot;, 0)

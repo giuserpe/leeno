@@ -1859,7 +1859,7 @@ def doppioni(arg=None):
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
     zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
+    # ~oDoc.CurrentController.ZoomValue = 400
     refresh(0)
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         lista_tariffe_analisi = list()
@@ -1869,11 +1869,14 @@ def doppioni(arg=None):
                 lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
-    oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    SR = oRangeAddress.StartRow+1
-    ER = oRangeAddress.EndRow-1
-    oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
-    
+    # ~oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    # ~SR = oRangeAddress.StartRow+1
+    # ~ER = oRangeAddress.EndRow-1
+    # ~oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
+
+    SR = 0
+    ER = getLastUsedCell(oSheet).EndRow
+
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         for i in reversed(range(SR, ER)):
             if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
@@ -1883,6 +1886,8 @@ def doppioni(arg=None):
     ER = oRangeAddress.EndRow-1
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
     lista_come_array = tuple(set(oRange.getDataArray()))
+    chi ([len(lista_come_array),(lista_come_array)])
+    return
     oSheet.getRows().removeByIndex(SR, ER-SR+1)
     lista_tar = list()
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
@@ -3427,12 +3432,50 @@ def ricicla_misure(arg=None):
         parziale_verifica()
         _gotoCella(2, partenza[1]+1)
 ########################################################################
+def inverti_un_segno(lrow):
+    '''
+    Inverte il segno delle formule di quantità nel rigo di misurazione lrow.
+    lrow    { int }  : riga di riferimento
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    # ~lrow = Range2Cell()[1]
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+            if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
+                if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
+                    oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
+                else:
+                    oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                for x in range (2, 9):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0]
+            else:
+                if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
+                    oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
+                else:
+                    oSheet.getCellByPosition(9, lrow).Formula = '=IF(PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";-PRODUCT(F' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                for x in range (2, 9):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO'
+    if oSheet.Name in('CONTABILITA'):
+        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+            formula1 = oSheet.getCellByPosition(9, lrow).Formula
+            formula2 = oSheet.getCellByPosition(11, lrow).Formula
+            oSheet.getCellByPosition(11, lrow).Formula = formula1
+            oSheet.getCellByPosition(9, lrow).Formula = formula2
+            if oSheet.getCellByPosition(11, lrow).Value > 0:
+                for x in range (2, 12):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO'
+            else:
+                for x in range (2, 12):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0]
+########################################################################
 def inverti_segno(arg=None):
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    lista = list()
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
     except AttributeError:
@@ -3444,10 +3487,12 @@ def inverti_segno(arg=None):
             el_y.append((el.StartRow, el.EndRow))
     except TypeError:
         el_y.append ((oRangeAddress.StartRow, oRangeAddress.EndRow))
-    lista = list()
     for y in el_y:
         for el in range (y[0], y[1]+1):
             lista.append(el)
+    # ~for lrow in lista:
+        # ~inverti_segno_core(lrow)
+    # ~return
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
         for lrow in lista:
             if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
@@ -4587,7 +4632,7 @@ def svuota_contabilita(arg=None):
     oSheet.getCellByPosition(20,1).String = 'SAL SUCCESSIVO:'
 
     oSheet.getCellByPosition(25, 1).Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
-    #~ 'pippi
+
     oSheet.getCellByPosition(15,1).Formula='=SUBTOTAL(9;P3:P4)' #importo lavori
     oSheet.getCellByPosition(0,1).Formula='=AK2' #importo lavori
     oSheet.getCellByPosition(17,1).Formula='=SUBTOTAL(9;R3:R4)' #importo sicurezza
@@ -6772,10 +6817,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
                                 oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
                         except:
                             pass
-                    inverti_segno()
-                    chi('invertito')
-                    chi(Range2Cell()[1])
-                    return
+                    inverti_un_segno(SR)
 
                 if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
                     va = oSheet.getCellByPosition(5, SR).Formula
@@ -7679,7 +7721,7 @@ def r_version_code(arg=None):
     f = open(code_file, 'r')
     return f.readline().split('-')[-1]
 ########################################################################
-def XPWE_export_run(arg=None ):
+def XPWE_export_run(arg=None):
     '''
     Viasualizza il menù export/import XPWE
     '''
@@ -7700,19 +7742,18 @@ def XPWE_export_run(arg=None ):
         except:
             Dialog_XPWE.getControl(el).Enable = False
     Dialog_XPWE.Title = 'Esportazione XPWE'
-    Dialog_XPWE.getControl(oSheet.Name).State = True
-    # ~chi(Dialog_XPWE.getControl('COMPUTO').State)
-    
-    
+    try:
+        Dialog_XPWE.getControl(oSheet.Name).State = True
+    except:
+        pass
     Dialog_XPWE.getControl('FileControl1').Text = 'C:\\tmp\\prova.txt'#uno.fileUrlToSystemPath(oDoc.getURL())
     # ~systemPathToFileUrl
     lista = list()
-    try:
-        Dialog_XPWE.getControl('TextField1').Text = pippi
-        Dialog_XPWE.execute()
-    except:
-        pass
-    # ~Dialog_XPWE.getControl('TextField1').Text = 'pippi'
+    Dialog_XPWE.execute()
+    # ~try:
+        # ~Dialog_XPWE.execute()
+    # ~except:
+        # ~pass
     if Dialog_XPWE.execute() ==1:
         for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
             if Dialog_XPWE.getControl(el).State == 1:
@@ -8687,12 +8728,6 @@ def debug(arg=None):
         oSheet.getCellByPosition(6, lrow).String = ''
         oSheet.getCellByPosition(7, lrow).String = ''
         oSheet.getCellByPosition(8, lrow).String = ''
-
-def debug(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-
-    oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
-
 
 ########################################################################
 ########################################################################

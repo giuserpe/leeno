@@ -16,6 +16,7 @@
 #~ https://t.me/leeno_computometrico''', 'ERRORE!')
 
 #~ documentazione ufficiale: https://api.libreoffice.org/
+# ~import pydevd
 import locale
 import codecs
 import configparser
@@ -1281,17 +1282,16 @@ def adatta_altezza_riga(nSheet=None):
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     if float(loVersion()[:3]) > 5.2: # and float(loVersion()[:3]) < 6.2: NELLA VERSIONE 6.2 IL PROBLEMA NON è ANCORA RISOLTO
-        # ~for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
-            # ~try:
-                # ~oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
-            # ~except:
-                # ~pass
-        #~ if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA', 'Richiesta offerta'):
+        #~ for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
+            #~ try:
+                #~ oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+            #~ except:
+                #~ pass
+        #~ #if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA', 'Richiesta offerta'):
         test = getLastUsedCell(oSheet).EndRow+1
         for y in range(0, test):
             if oSheet.getCellByPosition(2, y).CellStyle in ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr', 'EP-a'):
                 oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
-        
     if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
     if nSheet == 'Elenco Prezzi':
@@ -1869,25 +1869,23 @@ def doppioni(arg=None):
                 lista_tariffe_analisi.append(oSheet.getCellByPosition(0, n).String)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
-    # ~oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    # ~SR = oRangeAddress.StartRow+1
-    # ~ER = oRangeAddress.EndRow-1
-    # ~oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
-
     SR = 0
     ER = getLastUsedCell(oSheet).EndRow
 
-    if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
+    try:
+        lista_tariffe_analisi
         for i in reversed(range(SR, ER)):
             if oSheet.getCellByPosition(0, i).String in lista_tariffe_analisi:
                 oSheet.getRows().removeByIndex(i, 1)
+    except:
+        pass
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
     lista_come_array = tuple(set(oRange.getDataArray()))
-    chi ([len(lista_come_array),(lista_come_array)])
-    return
+    # ~chi ([len(lista_come_array),(lista_come_array)])
+    # ~return
     oSheet.getRows().removeByIndex(SR, ER-SR+1)
     lista_tar = list()
     oSheet.getRows().insertByIndex(SR, len(set(lista_come_array)))
@@ -2777,6 +2775,7 @@ def tante_analisi_in_ep(arg=None):
     oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-a'
     oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo %'
     refresh(1)
+    _gotoSheet('Elenco Prezzi')
     #~ MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')
 ########################################################################
 def Circoscrive_Analisi(lrow):
@@ -6856,7 +6855,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     refresh(1)
     #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     oDialogo_attesa.endExecute()
-    doppioni()
+    # ~doppioni()
     _gotoSheet(arg)
     if uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet) !='None':
         firme_in_calce()
@@ -7749,7 +7748,7 @@ def XPWE_export_run(arg=None):
     Dialog_XPWE.getControl('FileControl1').Text = 'C:\\tmp\\prova.txt'#uno.fileUrlToSystemPath(oDoc.getURL())
     # ~systemPathToFileUrl
     lista = list()
-    Dialog_XPWE.execute()
+    #~ Dialog_XPWE.execute()
     # ~try:
         # ~Dialog_XPWE.execute()
     # ~except:
@@ -8728,7 +8727,22 @@ def debug(arg=None):
         oSheet.getCellByPosition(6, lrow).String = ''
         oSheet.getCellByPosition(7, lrow).String = ''
         oSheet.getCellByPosition(8, lrow).String = ''
-
+def debug(arg=None):
+    # ~pydevd.settrace()
+    pathsstring = "paths \n"
+    somestring = ''
+    for i in sys.path:
+        somestring = somestring + i +"\n"
+    chi(somestring)
+def debug(arg=None):
+    sistema_cose()
+# ~C:\Program Files\LibreOffice\program\python-core-3.5.5\lib
+# ~C:\Program Files\LibreOffice\program\python-core-3.5.5\lib\site-packages
+# ~C:\Program Files\LibreOffice\program
+# ~C:\Program Files\LibreOffice\program\python35.zip
+# ~C:\Program Files\LibreOffice\program\python-core-3.5.5\DLLs
+# ~C:\Program Files\LibreOffice\program\python-core-3.5.5
+# ~C:\Program Files\LibreOffice\share\extensions\dict-en\pythonpath
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

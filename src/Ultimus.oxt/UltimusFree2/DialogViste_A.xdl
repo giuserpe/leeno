@@ -21,13 +21,13 @@
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="4" dlg:left="7" dlg:top="46" dlg:width="80" dlg:height="75" dlg:help-text="&amp;51.DialogViste_A.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;52.DialogViste_A.FrameControl2.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBCat" dlg:tab-index="7" dlg:left="12" dlg:top="108" dlg:width="68" dlg:height="10" dlg:help-text="&amp;53.DialogViste_A.CBCat.HelpText" dlg:value="&amp;54.DialogViste_A.CBCat.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBCat" dlg:tab-index="7" dlg:left="12" dlg:top="108" dlg:width="68" dlg:height="10" dlg:help-text="&amp;53.DialogViste_A.CBCat.HelpText" dlg:value="&amp;54.DialogViste_A.CBCat.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton19" dlg:tab-index="8" dlg:left="104" dlg:top="52" dlg:width="76" dlg:height="15" dlg:help-text="&amp;55.DialogViste_A.CommandButton19.HelpText" dlg:value="&amp;56.DialogViste_A.CommandButton19.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$voce_breve?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBFig" dlg:tab-index="6" dlg:left="12" dlg:top="78" dlg:width="68" dlg:height="10" dlg:help-text="&amp;57.DialogViste_A.CBFig.HelpText" dlg:value="&amp;58.DialogViste_A.CBFig.Label" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBSic" dlg:tab-index="3" dlg:left="12" dlg:top="88" dlg:width="68" dlg:height="10" dlg:help-text="&amp;59.DialogViste_A.CBSic.HelpText" dlg:value="&amp;60.DialogViste_A.CBSic.Label" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBMis" dlg:tab-index="5" dlg:left="12" dlg:top="68" dlg:width="68" dlg:height="10" dlg:help-text="&amp;61.DialogViste_A.CBMis.HelpText" dlg:value="&amp;62.DialogViste_A.CBMis.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBFig" dlg:tab-index="6" dlg:left="12" dlg:top="78" dlg:width="68" dlg:height="10" dlg:help-text="&amp;57.DialogViste_A.CBFig.HelpText" dlg:value="&amp;58.DialogViste_A.CBFig.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBSic" dlg:tab-index="3" dlg:left="12" dlg:top="88" dlg:width="68" dlg:height="10" dlg:help-text="&amp;59.DialogViste_A.CBSic.HelpText" dlg:value="&amp;60.DialogViste_A.CBSic.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBMis" dlg:tab-index="5" dlg:left="12" dlg:top="68" dlg:width="68" dlg:height="10" dlg:help-text="&amp;61.DialogViste_A.CBMis.HelpText" dlg:value="&amp;62.DialogViste_A.CBMis.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton22" dlg:tab-index="10" dlg:left="7" dlg:top="128" dlg:width="80" dlg:height="15" dlg:help-text="&amp;65.DialogViste_A.CommandButton22.HelpText" dlg:value="&amp;66.DialogViste_A.CommandButton22.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$rigenera_tutte?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
@@ -35,23 +35,23 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton12" dlg:tab-index="11" dlg:left="125" dlg:top="128" dlg:width="25" dlg:height="15" dlg:help-text="&amp;69.DialogViste_A.CommandButton12.HelpText" dlg:default="true" dlg:value="&amp;70.DialogViste_A.CommandButton12.Label" dlg:button-type="cancel" dlg:multiline="true"/>
-  <dlg:text dlg:style-id="5" dlg:id="Label1" dlg:tab-index="12" dlg:left="111" dlg:top="21" dlg:width="31" dlg:height="8" dlg:help-text="&amp;71.DialogViste_A.Label1.HelpText" dlg:value="&amp;72.DialogViste_A.Label1.Label"/>
-  <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="14" dlg:left="111" dlg:top="38" dlg:width="31" dlg:height="8" dlg:help-text="&amp;73.DialogViste_A.Label2.HelpText" dlg:value="&amp;74.DialogViste_A.Label2.Label"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label1" dlg:tab-index="12" dlg:left="111" dlg:top="21" dlg:width="31" dlg:height="8" dlg:help-text="&amp;71.DialogViste_A.Label1.HelpText" dlg:value="&amp;72.DialogViste_A.Label1.Label" dlg:valign="center"/>
+  <dlg:text dlg:style-id="5" dlg:id="Label2" dlg:tab-index="14" dlg:left="111" dlg:top="38" dlg:width="31" dlg:height="8" dlg:help-text="&amp;73.DialogViste_A.Label2.HelpText" dlg:value="&amp;74.DialogViste_A.Label2.Label" dlg:valign="center"/>
   <dlg:fixedline dlg:style-id="6" dlg:id="FixedLine2" dlg:tab-index="16" dlg:left="91" dlg:top="11" dlg:width="9" dlg:height="128" dlg:help-text="&amp;75.DialogViste_A.FixedLine2.HelpText" dlg:value="&amp;76.DialogViste_A.FixedLine2.Label" dlg:align="vertical"/>
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl1" dlg:tab-index="17" dlg:left="102" dlg:top="10" dlg:width="80" dlg:height="60" dlg:help-text="&amp;77.DialogViste_A.FrameControl1.HelpText">
    <dlg:title dlg:value="&amp;78.DialogViste_A.FrameControl1.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="3" dlg:id="CBMat" dlg:tab-index="18" dlg:left="12" dlg:top="98" dlg:width="68" dlg:height="10" dlg:help-text="&amp;79.DialogViste_A.CBMat.HelpText" dlg:value="&amp;80.DialogViste_A.CBMat.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="CBMat" dlg:tab-index="18" dlg:left="12" dlg:top="98" dlg:width="68" dlg:height="10" dlg:help-text="&amp;79.DialogViste_A.CBMat.HelpText" dlg:value="&amp;80.DialogViste_A.CBMat.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:textfield dlg:style-id="6" dlg:id="TextField10" dlg:tab-index="13" dlg:left="142" dlg:top="21" dlg:width="30" dlg:height="11" dlg:help-text="&amp;81.DialogViste_A.TextField10.HelpText" dlg:align="center" dlg:value="&amp;82.DialogViste_A.TextField10.Text"/>
   <dlg:textfield dlg:style-id="6" dlg:id="TextField11" dlg:tab-index="15" dlg:left="142" dlg:top="37" dlg:width="30" dlg:height="11" dlg:help-text="&amp;83.DialogViste_A.TextField11.HelpText" dlg:align="center" dlg:value="&amp;84.DialogViste_A.TextField11.Text"/>
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl4" dlg:tab-index="19" dlg:left="7" dlg:top="10" dlg:width="80" dlg:height="33" dlg:help-text="&amp;87.DialogViste_A.FrameControl4.HelpText">
    <dlg:title dlg:value="&amp;88.DialogViste_A.FrameControl4.Label"/>
   </dlg:titledbox>
   <dlg:radiogroup>
-   <dlg:radio dlg:style-id="5" dlg:id="OBTerra" dlg:tab-index="20" dlg:left="10" dlg:top="20" dlg:width="75" dlg:height="10" dlg:help-text="&amp;89.DialogViste_A.OBTerra.HelpText" dlg:value="&amp;90.DialogViste_A.OBTerra.Label"/>
-   <dlg:radio dlg:style-id="5" dlg:id="CBMdo" dlg:tab-index="21" dlg:left="10" dlg:top="30" dlg:width="75" dlg:height="10" dlg:help-text="&amp;91.DialogViste_A.CBMdo.HelpText" dlg:value="&amp;92.DialogViste_A.CBMdo.Label"/>
+   <dlg:radio dlg:style-id="5" dlg:id="OBTerra" dlg:tab-index="20" dlg:left="10" dlg:top="20" dlg:width="75" dlg:height="10" dlg:help-text="&amp;89.DialogViste_A.OBTerra.HelpText" dlg:value="&amp;90.DialogViste_A.OBTerra.Label" dlg:valign="center"/>
+   <dlg:radio dlg:style-id="5" dlg:id="CBMdo" dlg:tab-index="21" dlg:left="10" dlg:top="30" dlg:width="75" dlg:height="10" dlg:help-text="&amp;91.DialogViste_A.CBMdo.HelpText" dlg:value="&amp;92.DialogViste_A.CBMdo.Label" dlg:valign="center"/>
   </dlg:radiogroup>
-  <dlg:checkbox dlg:style-id="3" dlg:id="Dettaglio" dlg:tab-index="9" dlg:left="12" dlg:top="58" dlg:width="68" dlg:height="10" dlg:help-text="&amp;494.DialogViste_A.Dettaglio.HelpText" dlg:value="&amp;495.DialogViste_A.Dettaglio.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="3" dlg:id="Dettaglio" dlg:tab-index="9" dlg:left="12" dlg:top="58" dlg:width="68" dlg:height="10" dlg:help-text="&amp;494.DialogViste_A.Dettaglio.HelpText" dlg:value="&amp;495.DialogViste_A.Dettaglio.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:button dlg:style-id="5" dlg:id="CommandButton2" dlg:tab-index="22" dlg:left="7" dlg:top="147" dlg:width="80" dlg:height="15" dlg:help-text="&amp;515.DialogViste_A.CommandButton2.HelpText" dlg:value="&amp;516.DialogViste_A.CommandButton2.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$trova_ricorrenze?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>

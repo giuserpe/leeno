@@ -12,8 +12,8 @@
   <dlg:titledbox dlg:style-id="0" dlg:id="Generale" dlg:tab-index="0" dlg:left="6" dlg:top="7" dlg:width="230" dlg:height="117" dlg:help-text="&amp;211.Dlg_config.Generale.HelpText">
    <dlg:title dlg:value="&amp;212.Dlg_config.Generale.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox2" dlg:tab-index="1" dlg:left="124" dlg:top="105" dlg:width="104" dlg:height="10" dlg:help-text="&amp;213.Dlg_config.CheckBox2.HelpText" dlg:value="&amp;214.Dlg_config.CheckBox2.Label" dlg:checked="false"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label1" dlg:tab-index="2" dlg:left="18" dlg:top="100" dlg:width="34" dlg:height="12" dlg:help-text="&amp;215.Dlg_config.Label1.HelpText" dlg:value="&amp;216.Dlg_config.Label1.Label"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox2" dlg:tab-index="1" dlg:left="124" dlg:top="105" dlg:width="104" dlg:height="10" dlg:help-text="&amp;213.Dlg_config.CheckBox2.HelpText" dlg:value="&amp;214.Dlg_config.CheckBox2.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label1" dlg:tab-index="2" dlg:left="18" dlg:top="100" dlg:width="34" dlg:height="12" dlg:help-text="&amp;215.Dlg_config.Label1.HelpText" dlg:value="&amp;216.Dlg_config.Label1.Label" dlg:valign="center"/>
   <dlg:combobox dlg:style-id="2" dlg:id="ComboBox1" dlg:tab-index="3" dlg:left="175" dlg:top="18" dlg:width="58" dlg:height="15" dlg:help-text="&amp;217.Dlg_config.ComboBox1.HelpText" dlg:value="&amp;223.Dlg_config.ComboBox1.Text" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;218.ComboBox1.StringItemList"/>
@@ -23,10 +23,10 @@
     <dlg:menuitem dlg:value="&amp;222.ComboBox1.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:text dlg:style-id="1" dlg:id="Label3" dlg:tab-index="4" dlg:left="123" dlg:top="18" dlg:width="50" dlg:height="15" dlg:help-text="&amp;224.Dlg_config.Label3.HelpText" dlg:value="&amp;225.Dlg_config.Label3.Label"/>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="10" dlg:top="18" dlg:width="95" dlg:height="10" dlg:help-text="&amp;226.Dlg_config.CheckBox1.HelpText" dlg:value="&amp;227.Dlg_config.CheckBox1.Label" dlg:checked="false"/>
+  <dlg:text dlg:style-id="1" dlg:id="Label3" dlg:tab-index="4" dlg:left="123" dlg:top="18" dlg:width="50" dlg:height="15" dlg:help-text="&amp;224.Dlg_config.Label3.HelpText" dlg:value="&amp;225.Dlg_config.Label3.Label" dlg:valign="center"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox1" dlg:tab-index="5" dlg:left="10" dlg:top="18" dlg:width="95" dlg:height="10" dlg:help-text="&amp;226.Dlg_config.CheckBox1.HelpText" dlg:value="&amp;227.Dlg_config.CheckBox1.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:textfield dlg:style-id="3" dlg:id="TextField1" dlg:tab-index="6" dlg:left="63" dlg:top="100" dlg:width="29" dlg:height="12" dlg:help-text="&amp;228.Dlg_config.TextField1.HelpText" dlg:align="center" dlg:value="&amp;229.Dlg_config.TextField1.Text"/>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="124" dlg:top="60" dlg:width="104" dlg:height="10" dlg:help-text="&amp;230.Dlg_config.CheckBox3.HelpText" dlg:value="&amp;231.Dlg_config.CheckBox3.Label" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox3" dlg:tab-index="8" dlg:left="124" dlg:top="60" dlg:width="104" dlg:height="10" dlg:help-text="&amp;230.Dlg_config.CheckBox3.HelpText" dlg:value="&amp;231.Dlg_config.CheckBox3.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:text dlg:id="Label2" dlg:tab-index="9" dlg:left="268" dlg:top="55" dlg:width="45" dlg:height="8" dlg:help-text="&amp;232.Dlg_config.Label2.HelpText" dlg:value="&amp;233.Dlg_config.Label2.Label"/>
   <dlg:textfield dlg:id="TextField2" dlg:tab-index="10" dlg:left="318" dlg:top="55" dlg:width="30" dlg:height="10" dlg:help-text="&amp;234.Dlg_config.TextField2.HelpText" dlg:value="&amp;235.Dlg_config.TextField2.Text"/>
   <dlg:titledbox dlg:id="Zoom" dlg:tab-index="7" dlg:left="263" dlg:top="11" dlg:width="95" dlg:height="64" dlg:help-text="&amp;236.Dlg_config.Zoom.HelpText">
@@ -37,14 +37,14 @@
   <dlg:titledbox dlg:style-id="0" dlg:id="FrameControl4" dlg:tab-index="13" dlg:left="6" dlg:top="130" dlg:width="230" dlg:height="50" dlg:help-text="&amp;266.Dlg_config.FrameControl4.HelpText">
    <dlg:title dlg:value="&amp;267.Dlg_config.FrameControl4.Label"/>
   </dlg:titledbox>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox7" dlg:tab-index="14" dlg:left="124" dlg:top="75" dlg:width="104" dlg:height="10" dlg:help-text="&amp;268.Dlg_config.CheckBox7.HelpText" dlg:value="&amp;269.Dlg_config.CheckBox7.Label" dlg:checked="false"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label14" dlg:tab-index="15" dlg:left="11" dlg:top="144" dlg:width="40" dlg:height="12" dlg:help-text="&amp;270.Dlg_config.Label14.HelpText" dlg:value="&amp;271.Dlg_config.Label14.Label"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox7" dlg:tab-index="14" dlg:left="124" dlg:top="75" dlg:width="104" dlg:height="10" dlg:help-text="&amp;268.Dlg_config.CheckBox7.HelpText" dlg:value="&amp;269.Dlg_config.CheckBox7.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label14" dlg:tab-index="15" dlg:left="11" dlg:top="144" dlg:width="40" dlg:height="12" dlg:help-text="&amp;270.Dlg_config.Label14.HelpText" dlg:value="&amp;271.Dlg_config.Label14.Label" dlg:valign="center"/>
   <dlg:textfield dlg:style-id="3" dlg:id="TextField13" dlg:tab-index="16" dlg:left="56" dlg:top="142" dlg:width="50" dlg:height="12" dlg:help-text="&amp;272.Dlg_config.TextField13.HelpText" dlg:align="center" dlg:value="&amp;273.Dlg_config.TextField13.Text"/>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton1" dlg:tab-index="17" dlg:left="177" dlg:top="186" dlg:width="48" dlg:height="15" dlg:help-text="&amp;274.Dlg_config.CommandButton1.HelpText" dlg:value="&amp;275.Dlg_config.CommandButton1.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$config_default?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:fixedline dlg:style-id="3" dlg:id="FixedLine1" dlg:tab-index="18" dlg:left="116" dlg:top="12" dlg:width="5" dlg:height="111" dlg:help-text="&amp;276.Dlg_config.FixedLine1.HelpText" dlg:value="&amp;277.Dlg_config.FixedLine1.Label" dlg:align="vertical"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label7" dlg:tab-index="19" dlg:left="124" dlg:top="37" dlg:width="38" dlg:height="12" dlg:help-text="&amp;278.Dlg_config.Label7.HelpText" dlg:value="&amp;279.Dlg_config.Label7.Label"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label7" dlg:tab-index="19" dlg:left="124" dlg:top="37" dlg:width="38" dlg:height="12" dlg:help-text="&amp;278.Dlg_config.Label7.HelpText" dlg:value="&amp;279.Dlg_config.Label7.Label" dlg:valign="center"/>
   <dlg:combobox dlg:style-id="2" dlg:id="ComboBox2" dlg:tab-index="20" dlg:left="175" dlg:top="37" dlg:width="58" dlg:height="12" dlg:help-text="&amp;280.Dlg_config.ComboBox2.HelpText" dlg:value="&amp;283.Dlg_config.ComboBox2.Text" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;281.ComboBox2.StringItemList"/>
@@ -52,22 +52,22 @@
    </dlg:menupopup>
   </dlg:combobox>
   <dlg:fixedline dlg:style-id="3" dlg:id="FixedLine2" dlg:tab-index="21" dlg:left="6" dlg:top="66" dlg:width="100" dlg:height="3" dlg:help-text="&amp;286.Dlg_config.FixedLine2.HelpText" dlg:value="&amp;287.Dlg_config.FixedLine2.Label"/>
-  <dlg:checkbox dlg:style-id="2" dlg:id="CheckBox8" dlg:tab-index="22" dlg:left="10" dlg:top="33" dlg:width="106" dlg:height="10" dlg:help-text="&amp;288.Dlg_config.CheckBox8.HelpText" dlg:value="&amp;289.Dlg_config.CheckBox8.Label" dlg:checked="false"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label13" dlg:tab-index="23" dlg:left="148" dlg:top="143" dlg:width="35" dlg:height="12" dlg:help-text="&amp;290.Dlg_config.Label13.HelpText" dlg:value="&amp;291.Dlg_config.Label13.Label"/>
+  <dlg:checkbox dlg:style-id="2" dlg:id="CheckBox8" dlg:tab-index="22" dlg:left="10" dlg:top="33" dlg:width="106" dlg:height="10" dlg:help-text="&amp;288.Dlg_config.CheckBox8.HelpText" dlg:value="&amp;289.Dlg_config.CheckBox8.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label13" dlg:tab-index="23" dlg:left="148" dlg:top="143" dlg:width="35" dlg:height="12" dlg:help-text="&amp;290.Dlg_config.Label13.HelpText" dlg:value="&amp;291.Dlg_config.Label13.Label" dlg:valign="center"/>
   <dlg:textfield dlg:style-id="3" dlg:id="TextField4" dlg:tab-index="24" dlg:left="184" dlg:top="141" dlg:width="45" dlg:height="12" dlg:help-text="&amp;292.Dlg_config.TextField4.HelpText" dlg:align="center" dlg:value="&amp;293.Dlg_config.TextField4.Text"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label15" dlg:tab-index="25" dlg:left="148" dlg:top="162" dlg:width="34" dlg:height="12" dlg:help-text="&amp;294.Dlg_config.Label15.HelpText" dlg:value="&amp;295.Dlg_config.Label15.Label"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label15" dlg:tab-index="25" dlg:left="148" dlg:top="162" dlg:width="34" dlg:height="12" dlg:help-text="&amp;294.Dlg_config.Label15.HelpText" dlg:value="&amp;295.Dlg_config.Label15.Label" dlg:valign="center"/>
   <dlg:textfield dlg:style-id="3" dlg:id="TextField12" dlg:tab-index="26" dlg:left="184" dlg:top="161" dlg:width="45" dlg:height="12" dlg:help-text="&amp;296.Dlg_config.TextField12.HelpText" dlg:align="center" dlg:value="&amp;297.Dlg_config.TextField12.Text"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label16" dlg:tab-index="27" dlg:left="11" dlg:top="163" dlg:width="40" dlg:height="12" dlg:help-text="&amp;300.Dlg_config.Label16.HelpText" dlg:value="&amp;301.Dlg_config.Label16.Label"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label16" dlg:tab-index="27" dlg:left="11" dlg:top="163" dlg:width="40" dlg:height="12" dlg:help-text="&amp;300.Dlg_config.Label16.HelpText" dlg:value="&amp;301.Dlg_config.Label16.Label" dlg:valign="center"/>
   <dlg:combobox dlg:style-id="2" dlg:id="ComboBox3" dlg:tab-index="28" dlg:left="56" dlg:top="162" dlg:width="50" dlg:height="12" dlg:help-text="&amp;302.Dlg_config.ComboBox3.HelpText" dlg:value="&amp;305.Dlg_config.ComboBox3.Text" dlg:spin="true">
    <dlg:menupopup>
     <dlg:menuitem dlg:value="&amp;303.ComboBox3.StringItemList"/>
     <dlg:menuitem dlg:value="&amp;304.ComboBox3.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
-  <dlg:text dlg:style-id="2" dlg:id="Label17" dlg:tab-index="29" dlg:left="17" dlg:top="80" dlg:width="36" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;306.Dlg_config.Label17.HelpText" dlg:value="&amp;307.Dlg_config.Label17.Label"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label17" dlg:tab-index="29" dlg:left="17" dlg:top="80" dlg:width="36" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;306.Dlg_config.Label17.HelpText" dlg:value="&amp;307.Dlg_config.Label17.Label" dlg:valign="center"/>
   <dlg:textfield dlg:style-id="3" dlg:id="TextField14" dlg:tab-index="30" dlg:left="63" dlg:top="81" dlg:width="29" dlg:height="12" dlg:printable="false" dlg:help-text="&amp;308.Dlg_config.TextField14.HelpText" dlg:align="center" dlg:value="&amp;309.Dlg_config.TextField14.Text"/>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox5" dlg:tab-index="31" dlg:left="10" dlg:top="48" dlg:width="106" dlg:height="10" dlg:help-text="&amp;310.Dlg_config.CheckBox5.HelpText" dlg:value="&amp;311.Dlg_config.CheckBox5.Label" dlg:checked="false"/>
-  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox6" dlg:tab-index="32" dlg:left="124" dlg:top="90" dlg:width="104" dlg:height="10" dlg:help-text="&amp;312.Dlg_config.CheckBox6.HelpText" dlg:value="&amp;313.Dlg_config.CheckBox6.Label" dlg:checked="false"/>
-  <dlg:text dlg:id="Label5" dlg:tab-index="33" dlg:left="116" dlg:top="126" dlg:width="0" dlg:height="2" dlg:help-text="&amp;492.Dlg_config.Label5.HelpText" dlg:value="&amp;493.Dlg_config.Label5.Label"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox5" dlg:tab-index="31" dlg:left="10" dlg:top="48" dlg:width="106" dlg:height="10" dlg:help-text="&amp;310.Dlg_config.CheckBox5.HelpText" dlg:value="&amp;311.Dlg_config.CheckBox5.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox6" dlg:tab-index="32" dlg:left="124" dlg:top="90" dlg:width="104" dlg:height="10" dlg:help-text="&amp;312.Dlg_config.CheckBox6.HelpText" dlg:value="&amp;313.Dlg_config.CheckBox6.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:text dlg:id="Label5" dlg:tab-index="33" dlg:left="171" dlg:top="85" dlg:width="0" dlg:height="2" dlg:help-text="&amp;492.Dlg_config.Label5.HelpText" dlg:value="&amp;493.Dlg_config.Label5.Label"/>
  </dlg:bulletinboard>
 </dlg:window>

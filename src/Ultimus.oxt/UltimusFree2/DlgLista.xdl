@@ -12,6 +12,6 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="50" dlg:top="125" dlg:width="25" dlg:height="15" dlg:help-text="&amp;511.DlgLista.CommandButton2.HelpText" dlg:default="true" dlg:value="Annulla" dlg:button-type="cancel" dlg:multiline="true"/>
-  <dlg:checkbox dlg:style-id="2" dlg:id="CheckBox1" dlg:tab-index="3" dlg:left="10" dlg:top="8" dlg:width="95" dlg:height="10" dlg:help-text="&amp;513.DlgLista.CheckBox1.HelpText" dlg:value="Rigenera lista" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="2" dlg:id="CheckBox1" dlg:tab-index="3" dlg:left="10" dlg:top="8" dlg:width="95" dlg:height="10" dlg:help-text="&amp;513.DlgLista.CheckBox1.HelpText" dlg:value="Rigenera lista" dlg:valign="center" dlg:checked="false"/>
  </dlg:bulletinboard>
 </dlg:window>

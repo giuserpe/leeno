@@ -5962,7 +5962,10 @@ def XPWE_import(arg=None):
     '''
     Viasualizza il menù Esporta XPWE
     '''
-    XPWE_in(scegli_elaborato('Esporta nel formato XPWE'))
+    try:
+        XPWE_in(scegli_elaborato('Esporta nel formato XPWE'))
+    except:
+        return
 ########################################################################
 # ~def XPWE_import_run(elaborato):
     # ~'''
@@ -8734,15 +8737,30 @@ def debug(arg=None):
     for i in sys.path:
         somestring = somestring + i +"\n"
     chi(somestring)
-def debug(arg=None):
-    sistema_cose()
-# ~C:\Program Files\LibreOffice\program\python-core-3.5.5\lib
-# ~C:\Program Files\LibreOffice\program\python-core-3.5.5\lib\site-packages
-# ~C:\Program Files\LibreOffice\program
-# ~C:\Program Files\LibreOffice\program\python35.zip
-# ~C:\Program Files\LibreOffice\program\python-core-3.5.5\DLLs
-# ~C:\Program Files\LibreOffice\program\python-core-3.5.5
-# ~C:\Program Files\LibreOffice\share\extensions\dict-en\pythonpath
+def debug_progressbar (arg=None):
+    try:
+        oDoc = XSCRIPTCONTEXT.getDocument()
+# set up Status Indicator
+        oCntl = oDoc.getCurrentController()
+        oFrame = oCntl.getFrame()
+        oSI = oFrame.createStatusIndicator()
+        oEnd = 100
+        oSI.reset        # Reset : NG
+        oSI.start('Excuting',oEnd)    # Start : NG
+
+        for i in range(1,11):
+            oSI.setText('Processing: ' + str(i) )
+            oSI.setValue(20*i)
+            time.sleep(0.1)
+
+        oSI.setText('Finished')
+        oDisp = 'Success'
+    except Exception as er:
+        oDisp = ''
+        oDisp = str(traceback.format_exc()) + '\n' + str(er)
+    finally:
+        MsgBox(oDisp)
+        oSI.end()
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

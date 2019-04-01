@@ -4182,8 +4182,8 @@ def rigenera_tutte(arg=None,):
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     nome = oSheet.Name
-    oDialogo_attesa = dlg_attesa('Rigenerazione delle formule in ' + oSheet.Name + '...')
-    attesa().start() #mostra il dialogo
+    #~ oDialogo_attesa = dlg_attesa('Rigenerazione delle formule in ' + oSheet.Name + '...')
+    #~ attesa().start() #mostra il dialogo
     # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, 30, 0))
     if nome in ('COMPUTO', 'VARIANTE'):
         try:
@@ -4199,8 +4199,8 @@ def rigenera_tutte(arg=None,):
             pass
     oDoc.CurrentController.ZoomValue = zoom
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    #~ oDialogo_attesa.endExecute()
     refresh(1)
-    oDialogo_attesa.endExecute()
     return
 ########################################################################
 # leeno.conf  ##########################################################
@@ -4661,39 +4661,36 @@ def partita_detrai(arg=None):
 def genera_libretto():
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name != "CONTABILITA": return
-
-    if oDoc.NamedRanges.hasByName("#Lib#1") == True:
-        nSal=1
+    if oSheet.Name != 'CONTABILITA': return
+    numera_voci()
+    oRanges = oDoc.NamedRanges
+    nSal=1
+    if oRanges.hasByName("#Lib#1") == True:
+        nSal=10
     else:
         nSal = conf.read(path_conf, 'Contabilità', 'idxsal')
-    
-		#~ nSal=idxsal 'variabile impostata nel modulo _variabili
-		#~ Do while nSal > 0
-			#~ IF oRanges.hasByName("#Lib#" & nSal) Then
-		#~ '			nSal=nSal-1
-				#~ exit do
-			#~ end if
-		#~ nSal=nSal-1
-		#~ Loop
-		#~ nSal=nSal+1
-	#~ end if
-#~ '	print nSal
-#~ rem ----------------------------------------------------------------------
-#~ rem Recupero la prima riga non registrata
-	#~ If nSal > 1 Then
-#~ '	xray oRanges.getByName("#Lib#" & nSal-1)
-		#~ oNamedRange=oRanges.getByName("#Lib#" & nSal-1).referredCells'.RangeAddress
-		#~ With oNamedRange.RangeAddress
-			#~ fRow = .StartRow
-			#~ lRow = .EndRow
-			#~ daVoce = .EndRow+2
-		#~ End With
-#~ rem ----------------------------------------------------------------------
+
+    while nSal > 0:
+        if oRanges.hasByName("#Lib#" + str(nSal)):
+            break
+        nSal = nSal-1
+    #~ Recupero la prima riga non registrata
+    if nSal >= 1:
+        oNamedRange = oRanges.getByName("#Lib#" + str(nSal)).ReferredCells.RangeAddress
+        fRow = oNamedRange.StartRow
+        lRow = oNamedRange.EndRow
+        daVoce = oNamedRange.EndRow+2
+    #~ mri(oRanges.getByName("#Lib#" + str(nSal)).ReferredCells.RangeAddress)
+    #~ chi(daVoce)
 #~ rem recuperno l'ultimo numero di pagina usato (serve in caso di libretto unico)
-		#~ old_nPage=oSheetCont.getcellbyposition(20,lRow).value
-#~ 'Print old_nPage
-		#~ daVoce = oSheetCont.getcellbyposition(0,daVoce).getstring()
+    oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
+    old_nPage = int(oSheetCont.getCellByPosition(20,lRow).Value)
+    daVoce = int(oSheetCont.getCellByPosition(0,daVoce).Value)
+    chi(daVoce)
+    if daVoce == 0:
+        MsgBox('Non ci sono voci di misurazione da registrare.','ATTENZIONE!')
+        return
+		#~ 
 		#~ If cint(davoce)=0 Then 
 			#~ msgbox 	"Non ci sono voci da registrare",48, "AVVISO!"
 			#~ Exit sub
@@ -7782,10 +7779,10 @@ dell'operazione che terminerà con un avviso.
             MsgBox('''Non avendo effettuato l'adeguamento del file alla versione di LeenO installata, potresti avere dei malfunzionamenti!''', 'Avviso!')
             return
         sproteggi_sheet_TUTTE()
-        # ~oDialogo_attesa = dlg_attesa("Adeguamento file alla versione di LeenO installata...")
+        oDialogo_attesa = dlg_attesa("Adeguamento file alla versione di LeenO installata...")
         zoom = oDoc.CurrentController.ZoomValue
         oDoc.CurrentController.ZoomValue = 400
-        # ~attesa().start() #mostra il dialogo
+        attesa().start() #mostra il dialogo
 #~ adeguo gli stili secondo il template corrente
         stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
         diz_stili = dict ()
@@ -7850,11 +7847,11 @@ dell'operazione che terminerà con un avviso.
         if oUDP.getPropertySetInfo().hasPropertyByName("Versione_LeenO"): oUDP.removeProperty('Versione_LeenO')
         oUDP.addProperty('Versione_LeenO', MAYBEVOID + REMOVEABLE + MAYBEDEFAULT, str(Lmajor) +'.'+ str(Lminor) +'.x')
         for el in ('COMPUTO', 'VARIANTE'):
-            rigenera_tutte()
             if oDoc.getSheets().hasByName(el) == True:
                 _gotoSheet(el)
                 oSheet = oDoc.getSheets().getByName(el)
                 test = getLastUsedCell(oSheet).EndRow+1
+                rigenera_tutte()
                 # 214 aggiorna stili di cella per ogni colonna
                 for y in range(0, test):
                     if 'comp 1-a' in oSheet.getCellByPosition(2, y).CellStyle:
@@ -7929,12 +7926,6 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;J24:J26)<0;"";SUBTOTAL(9;J24:J26))'
         oSheet.getCellRangeByName('L26').Formula = '=IF(SUBTOTAL(9;L24:L26)<0;"";SUBTOTAL(9;L24:L26))'
         oSheet.getCellRangeByName('L26').CellStyle = 'Comp-Variante num sotto ROSSO'
-        for el in('VARIANTE', 'COMPUTO'):
-            if oDoc.getSheets().hasByName(el) == True:
-                _gotoSheet(el)
-                oSheet = oDoc.getSheets().getByName(el)
-                fine = getLastUsedCell(oSheet).EndRow
-                #~ for n in range(0, fine):
 
         for el in('CONTABILITA', 'VARIANTE', 'COMPUTO'):
             if oDoc.getSheets().hasByName(el) == True:
@@ -7989,13 +7980,12 @@ dell'operazione che terminerà con un avviso.
                     except:
                         lrow += 1
         oDoc.getSheets().getByName('S1').IsVisible = False
-        # ~while oDialogo_attesa.isVisible() == True:
-            # ~oDialogo_attesa.endExecute() #chiude il dialogo
-        #~ refresh(0)
         for el in oDoc.Sheets.ElementNames:
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
             adatta_altezza_riga(el)
         oDoc.CurrentController.ZoomValue = zoom
+        _gotoSheet('COMPUTO')
+        oDialogo_attesa.endExecute() #chiude il dialogo
         MsgBox("Adeguamento del file completato con successo.", "Avviso")
 #~ ########################################################################
 def r_version_code(arg=None):
@@ -9015,6 +9005,10 @@ def debug_progressbar (arg=None):
     finally:
         MsgBox(oDisp)
         oSI.end()
+
+def debug (arg=None):
+    genera_libretto()
+
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

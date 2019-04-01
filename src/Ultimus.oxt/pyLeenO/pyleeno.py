@@ -3519,18 +3519,8 @@ def valuta_cella(oCell):
     Estrae qualsiasi valore da una cella, restituendo una strigna, indipendentemente dal tipo originario.
     oCell       { object }  : cella da validare
     '''
-    # ~if oCell.Type.value == 'FORMULA':
-        # ~try:
-            # ~eval(oCell.Formula.split('=')[-1])
-            # ~valore = oCell.Formula.split('=')[-1]
-        # ~except:
-            # ~try:
-                # ~valore = str(oSheet.getCellRangeByName(oCell.Formula.split('=')[-1]).Value)
-            # ~except:
-                # ~valore = str(oCell.Value)
     if oCell.Type.value == 'FORMULA':
         if re.search('[a-zA-Z]', oCell.Formula):
-            chi(oCell.Formula)
             valore = str(oCell.Value)
         else:
             valore = oCell.Formula.split('=')[-1]

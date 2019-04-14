@@ -39,6 +39,7 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
                                           ANNOTATION, FORMULA, HARDATTR,
                                           OBJECTS, EDITATTR, FORMATTED)
+#~ from com.sun.star.sheet.GeneralFunction import (MAX, MIN)
 
 from com.sun.star.beans.PropertyAttribute import (MAYBEVOID, REMOVEABLE, MAYBEDEFAULT)
 ########################################################################
@@ -1521,6 +1522,7 @@ def scelta_viste(arg=None):
             dettaglio_misure(1)
             
     elif oSheet.Name in('Elenco Prezzi'):
+        oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
         if oSheet.getColumns().getByIndex(3).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
@@ -1585,6 +1587,18 @@ def scelta_viste(arg=None):
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
+                ###
+                if oRangeAddress.StartColumn != 0:
+                    oCellRangeAddr.StartColumn = 18
+                    oCellRangeAddr.EndColumn = 21
+                    oSheet.group(oCellRangeAddr, 0)
+                    oSheet.getCellRangeByPosition(18, 0, 21, 0).Columns.IsVisible = False
+                    
+                    oCellRangeAddr.StartColumn = 15
+                    oCellRangeAddr.EndColumn = 15
+                    oSheet.group(oCellRangeAddr, 0)
+                    oSheet.getCellRangeByPosition(15, 0, 15, 0).Columns.IsVisible = False
+                ###
 
             if oDialog1.getControl("ComCon").State == True: #Computo - Contabilità
                 genera_sommario()
@@ -1603,6 +1617,31 @@ def scelta_viste(arg=None):
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
+                ###
+                if oRangeAddress.StartColumn != 0:
+                # evidenzia le quantità eccedenti il VI/I
+                    for el in range (3, getLastUsedCell(oSheet).EndRow):
+                        if oSheet.getCellByPosition(26, el).Value >= 0.2 or oSheet.getCellByPosition(26, el).String == '20,00%':
+                            oSheet.getCellRangeByPosition(0, el, 25, el).CellBackColor = 16777062
+                    #~ oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+                    if DlgSiNo("Nascondo eventuali voci non ancora contabilizzate?") == 2:
+                        struttura_off()
+                        for el in range(3, getLastUsedCell(oSheet).EndRow):
+                            if oSheet.getCellByPosition(20, el).Value == 0:
+                                oCellRangeAddr.StartRow = el
+                                oCellRangeAddr.EndRow = el
+                                oSheet.group(oCellRangeAddr, 1)
+                                oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
+
+                    oCellRangeAddr.StartColumn = 5
+                    oCellRangeAddr.EndColumn = 11
+                    oSheet.group(oCellRangeAddr, 0)
+                    oSheet.getCellRangeByPosition(5, 0, 11, 0).Columns.IsVisible = False
+                    oCellRangeAddr.StartColumn = 15
+                    oCellRangeAddr.EndColumn = 19
+                    oSheet.group(oCellRangeAddr, 0)
+                    oSheet.getCellRangeByPosition(15, 0, 19, 0).Columns.IsVisible = False
+                ###
 
             if oDialog1.getControl("VarCon").State == True: #Variante - Contabilità
                 genera_sommario()
@@ -1622,43 +1661,28 @@ def scelta_viste(arg=None):
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
+
+
+            # operazioni comuni
             for el in(11, 15, 19, 26):
                 oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
             for el in(12, 16, 20, 23):
                 oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
             for el in(13, 17, 21, 24, 25):
                 oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP statistiche'
-            if oRangeAddress.StartColumn != 0:
-            # evidenzia le quantità eccedenti il VI/I
-                for el in range (3, getLastUsedCell(oSheet).EndRow):
-                    if oSheet.getCellByPosition(26, el).Value >= 0.2 or oSheet.getCellByPosition(26, el).String == '20,00%':
-                        oSheet.getCellRangeByPosition(0, el, 25, el).CellBackColor = 16777062
-                oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-                if DlgSiNo("Nascondo eventuali voci non ancora contabilizzate?") == 2:
-                    struttura_off()
-                    for el in range(3, getLastUsedCell(oSheet).EndRow):
-                        if oSheet.getCellByPosition(20, el).Value == 0:
-                            oCellRangeAddr.StartRow = el
-                            oCellRangeAddr.EndRow = el
-                            oSheet.group(oCellRangeAddr, 1)
-                            oSheet.getCellRangeByPosition(0, el, 1, el).Rows.IsVisible = False
-                if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
-                    errori =('#DIV/0!', '--')
-                    hide_error(errori, 26)
-                    oSheet.group(oRangeAddress, 0)
-                    oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
-                oCellRangeAddr.StartColumn = 3
-                oCellRangeAddr.EndColumn = 3
-                oSheet.group(oCellRangeAddr, 0)
-                oSheet.getCellRangeByPosition(3, 0, 3, 0).Columns.IsVisible = False
-                oCellRangeAddr.StartColumn = 5
-                oCellRangeAddr.EndColumn = 11
-                oSheet.group(oCellRangeAddr, 0)
-                oSheet.getCellRangeByPosition(5, 0, 11, 0).Columns.IsVisible = False
-                oCellRangeAddr.StartColumn = 15
-                oCellRangeAddr.EndColumn = 19
-                oSheet.group(oCellRangeAddr, 0)
-                oSheet.getCellRangeByPosition(15, 0, 19, 0).Columns.IsVisible = False
+            oCellRangeAddr.StartColumn = 3
+            oCellRangeAddr.EndColumn = 3
+            oSheet.group(oCellRangeAddr, 0)
+            oSheet.getCellRangeByPosition(3, 0, 3, 0).Columns.IsVisible = False
+            oCellRangeAddr.StartColumn = 5
+            oCellRangeAddr.EndColumn = 11
+            oSheet.group(oCellRangeAddr, 0)
+            oSheet.getCellRangeByPosition(5, 0, 11, 0).Columns.IsVisible = False
+            if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
+                errori =('#DIV/0!', '--')
+                hide_error(errori, 26)
+                oSheet.group(oRangeAddress, 0)
+                oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
         else: return
 
     elif oSheet.Name in('Analisi di Prezzo'):
@@ -1758,6 +1782,7 @@ def genera_sommario(arg=None):
     #~ oDialogo_attesa = dlg_attesa()
     #~ attesa().start() #mostra il dialogo
     refresh(0)
+    struttura_off()
 
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.getSheets().getByName('COMPUTO')
@@ -1935,22 +1960,6 @@ def XPWE_out(elaborato, out_file):
         dettaglio_misure(0)
     numera_voci(1)
     top = Element('PweDocumento')
-#~ intestazioni
-    CopyRight = SubElement(top,'CopyRight')
-    CopyRight.text = 'Copyright ACCA software S.p.A.'
-    TipoDocumento = SubElement(top,'TipoDocumento')
-    TipoDocumento.text = '1'
-    TipoFormato = SubElement(top,'TipoFormato')
-    TipoFormato.text = 'XMLPwe'
-    Versione = SubElement(top,'Versione')
-    Versione.text = ''
-    SourceVersione = SubElement(top,'SourceVersione')
-    release = str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv
-    SourceVersione.text = release
-    SourceNome = SubElement(top,'SourceNome')
-    SourceNome.text = 'LeenO.org'
-    FileNameDocumento = SubElement(top,'FileNameDocumento')
-    
 #~ dati generali
     PweDatiGenerali = SubElement(top,'PweDatiGenerali')
     PweMisurazioni = SubElement(top,'PweMisurazioni')
@@ -2440,10 +2449,8 @@ def XPWE_out(elaborato, out_file):
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
             out_file = out_file + '-'+ elaborato + '.xpwe'
-        FileNameDocumento.text = out_file
     except AttributeError:
         return
-        
     riga = str(tostring(top, encoding="unicode"))
     #~ if len(lista_AP) != 0:
         #~ riga = riga.replace('<PweDatiGenerali>','<Fgs>131072</Fgs><PweDatiGenerali>')
@@ -4665,6 +4672,28 @@ def partita_aggiungi(arg=None):
     partita('PARTITA PROVVISORIA')
 def partita_detrai(arg=None):
     partita('SI DETRAE PARTITA PROVVISORIA')
+#~ ########################################################################
+#~ def InputBox (label, titolo, valore=''):
+    #~ '''
+    #~ Attende l'input dell'utente e ne restituisce il valore
+    #~ label   { string }  : etichetta di richiesta
+    #~ titolo  { string }  : titolo della finestra
+    #~ valore  { any }     : valore di default
+    #~ '''
+    #~ psm = uno.getComponentContext().ServiceManager
+    #~ dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    #~ oDlg_input = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_input?language=Basic&location=application")
+    #~ oDialog1Model = oDlg_input.Model
+
+    #~ oDlg_input.Title = titolo #Menù input
+    #~ oDlg_input.getControl('Label1').Text = label
+    #~ oDlg_input.getControl('TextField1').Text = str(valore)
+    #~ oDlg_input.execute()
+
+    #~ if oDlg_input.execute()==0:
+        #~ return
+    #~ else:
+        #~ return oDlg_input.getControl('TextField1').Text
 ########################################################################
 def genera_libretto():
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -4688,7 +4717,7 @@ def genera_libretto():
         lrow = oNamedRange.EndRow
         daVoce = oNamedRange.EndRow+2
         #~ mri(oRanges.getByName("#Lib#" + str(nSal)).ReferredCells.RangeAddress)
-    #~ rem recuperno l'ultimo numero di pagina usato (serve in caso di libretto unico)
+    #~ recuperno l'ultimo numero di pagina usato (serve in caso di libretto unico)
         oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
         old_nPage = int(oSheetCont.getCellByPosition(20,lrow).Value)
         daVoce = int(oSheetCont.getCellByPosition(0,daVoce).Value)
@@ -4700,24 +4729,18 @@ def genera_libretto():
         oCell.Rows.IsVisible=False
     else:
         daVoce=1
-    chi(daVoce)
-    #~ rem ----------------------------------------------------------------------
-    #~ rem PRIMA RIGA
-        #~ daVoce = InputBox ("Da voce n.:", "REGISTRA", daVoce)
-        #~ odaVoce=uFindString_1(daVoce, oSheetCont, 0)
-    #~ With odaVoce.RangeAddress
-        #~ lrow =.StartRow
-    #~ End With
-    #~ sStRange = Circoscrive_Voce_Computo_Att (lrow)
-    #~ With sStRange.RangeAddress
-        #~ primariga =.StartRow
-    #~ End With
-    #~ rem ----------------------------------------------------------------------     
-    #~ rem ULTIMA RIGA
-    #~ Dim oCellRange as object
-    #~ oCellRange = oSheetCont.getCellRangeByPosition(0,3,0,getLastUsedRow(oSheetCont)-2)'.rangeaddress
-    
-    #~ aVoce = oCellRange.computeFunction(com.sun.star.sheet.GeneralFunction.MAX)
+#############
+# PRIMA RIGA
+    daVoce = InputBox (str(daVoce), "Registra voci Libretto da n.")
+    lrow = int(uFindStringCol(daVoce, 0, oSheet))
+    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    primariga = sStRange.RangeAddress.StartRow
+#############
+#  ULTIMA RIGA
+    oCellRange = oSheetCont.getCellRangeByPosition(0,3,0,getLastUsedCell(oSheetCont).EndRow -2)
+    aVoce = oCellRange #.computeFunction('com.sun.star.sheet.GeneralFunction')
+    aVoce = oDoc.createInstance("com.sun.star.sheet.GeneralFunction.MAX")
+    mri(aVoce)
 #~ 'end sub
     
         #~ aVoce = InputBox ("A voce n.:", "REGISTRA", aVoce)
@@ -5040,7 +5063,7 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('S2:S' + str(y)).CellStyle = 'Default'
     oSheet.getCellRangeByName('W2:W' + str(y)).CellStyle = 'Default'
     oSheet.getCellRangeByPosition(3, 3, 250, y +10).clearContents(HARDATTR)
-    MsgBox('Rigenerazione del foglio eseguita!','')
+    #~ MsgBox('Rigenerazione del foglio eseguita!','')
 ########################################################################
 def inizializza_analisi(arg=None):
     '''
@@ -6284,7 +6307,7 @@ def XPWE_in(arg):
     except PermissionError:
         MsgBox('Accertati che il nome del file sia corretto.', 'ATTENZIONE! Impossibile procedere.')
         return
-    #~ # ottieni l'item root
+    # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))
     # effettua il parsing di tutti gli elementi dell'albero XML
@@ -7150,7 +7173,6 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 19 #'NUOVE FUNZIONALITA'
 Lsubv= "1.dev" #'CORREZIONE BUGS
-
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
@@ -7481,11 +7503,11 @@ def struct(l):
         myrange =('An.1v-Att Start', 'Analisi_Sfondo',)
         Dsopra = 1
         Dsotto = -1
-        for n in(3, 5, 7):
-            oCellRangeAddr.StartColumn = n
-            oCellRangeAddr.EndColumn = n
-            oSheet.group(oCellRangeAddr,0)
-            oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible=False
+        # ~for n in(3, 5, 7):
+            # ~oCellRangeAddr.StartColumn = n
+            # ~oCellRangeAddr.EndColumn = n
+            # ~oSheet.group(oCellRangeAddr,0)
+            # ~oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible=False
 
     test = ultima_voce(oSheet)+2
     lista_cat = list()
@@ -7528,7 +7550,7 @@ class trun(threading.Thread):
     def run(self):
         while True:
             # ~datarif = datetime.now()
-            time.sleep(600)
+            time.sleep(300) #5 min
             bak()
             # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 def autorun(arg=None):
@@ -8182,8 +8204,6 @@ def InputBox(sCella='', t=''):
         return
     else:
         return sString.Text
-
-#~ import zipfile
 ########################################################################
 def hide_error(lErrori, icol):
     '''
@@ -8195,7 +8215,7 @@ def hide_error(lErrori, icol):
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.clearOutline()
+    #~ oSheet.clearOutline()
     n = 3
     test = ultima_voce(oSheet)+1
     iSheet = oSheet.RangeAddress.Sheet
@@ -8688,6 +8708,7 @@ def GetRegistryKeyContent(sKeyName, bForUpdate):
 def sistema_pagine (arg=None):
     '''
     Configura intestazioni e pie' di pagina degli stili di stampa
+    e propone un'anteprima
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('M1') == False:
@@ -9006,34 +9027,79 @@ def debug_progressbar (arg=None):
     finally:
         MsgBox(oDisp)
         oSI.end()
+########################################################################
+# ~def minuti(arg=None): #COMUNE DI MATERA
+def debug(arg=None): #COMUNE DI MATERA
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ''' Mette in ordine i minuti lavorati '''
+    test = getLastUsedCell(oSheet).EndRow+1
+    test0 =  int(oSheet.getCellByPosition(32, 0).Value)
+    for y in range(test0, test):
+        if ' ' in oSheet.getCellByPosition(6, y).String:
+            try:
+                testo = oSheet.getCellByPosition(6, y).String
+                oSheet.getCellByPosition(12, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
+                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value
+                oSheet.getCellByPosition(13, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
+                oSheet.getCellByPosition(13, y).Value = oSheet.getCellByPosition(13, y).Value
+                oSheet.getCellByPosition(14, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
+                oSheet.getCellByPosition(14, y).Value = oSheet.getCellByPosition(14, y).Value 
+                oSheet.getCellByPosition(15, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
+                oSheet.getCellByPosition(15, y).Value = oSheet.getCellByPosition(15, y).Value 
+                oSheet.getCellByPosition(16, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
+                oSheet.getCellByPosition(16, y).Value = oSheet.getCellByPosition(16, y).Value 
+                oSheet.getCellByPosition(17, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
+                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
+            except:
+                pass
+
+        # ~oSheet.getCellRangeByPosition(12, y, 27, y).CellStyle = 'MINUTI'
+        # ~oSheet.getCellRangeByPosition(21, y, 26, y).CellStyle = 'minuti_bis'
+        # ~oSheet.getCellByPosition(18, y).CellStyle = 'DATE'
+        if oSheet.getCellByPosition(0, y).String not in ('Domenica') and oSheet.getCellByPosition(12, y).Value != 0:
+            oSheet.getCellByPosition(18, y).Formula = '=B' + str(y+1)
+            oSheet.getCellByPosition(25, y).Formula = '=U' + str(y+1) + '-T' + str(y+1) + '+W' + str(y+1) + '-V' + str(y+1) + '+Y' + str(y+1) + '-X' + str(y+1)
+            oSheet.getCellByPosition(26, y).Formula = '=N' + str(y+1) + '-M' + str(y+1)
+            oSheet.getCellByPosition(27, y).Formula = '=P' + str(y+1) + '-O' + str(y+1)
+            oSheet.getCellByPosition(28, y).Formula = '=AB' + str(y+1) + '+AA' + str(y+1)
+            
+            
+            oSheet.getCellByPosition(22, y).Formula = '=N' + str(y+1)
+            if oSheet.getCellByPosition(0, y).String in ('Sabato'):
+                oSheet.getCellByPosition(21, y).String = ''
+                oSheet.getCellByPosition(22, y).String = ''
+                oSheet.getCellByPosition(23, y).Formula = '=M' + str(y+1)
+                oSheet.getCellByPosition(24, y).String = ''
+                oSheet.getCellByPosition(25, y).String = ''
+                oSheet.getCellByPosition(26, y).Formula = '=N' + str(y+1)
+                oSheet.getCellByPosition(31, y).Formula = '=AC' + str(y+1)
+            else:
+                oSheet.getCellByPosition(21, y).Formula = '=IF(M' + str(y+1) + '>=TIME(7;50;0);M' + str(y+1) + ';TIME(7;50;0))+TIME(6;0;0)'
+        if oSheet.getCellByPosition(0, y).String in ('Lunedì', 'Mercoledì', 'Venerdì') and oSheet.getCellByPosition(14, y).Value != 0:
+            oSheet.getCellByPosition(23, y).Formula = '=O' + str(y+1)
+            oSheet.getCellByPosition(24, y).String  = ''
+            oSheet.getCellByPosition(25, y).String  = ''
+            oSheet.getCellByPosition(26, y).Formula = '=P' + str(y+1)
+            oSheet.getCellByPosition(31, y).Formula = '=AC' + str(y+1) + '-6/24'
+            
+        if oSheet.getCellByPosition(0, y).String in ('Martedì', 'Giovedì') and oSheet.getCellByPosition(14, y).Value != 0:
+            oSheet.getCellByPosition(23, y).Formula = '=O' + str(y+1)
+            oSheet.getCellByPosition(24, y).Formula = '=IF(V'+ str(y+1) +'<=TIME(15;30;0);TIME(15;30;0);V'+ str(y+1) +')'
+            oSheet.getCellByPosition(25, y).Formula = '=W'+ str(y+1) +'+TIME(3;00;0)'
+            oSheet.getCellByPosition(26, y).Formula = '=P' + str(y+1)
+            oSheet.getCellByPosition(31, y).Formula = '=AC' + str(y+1) + '-9/24'
 
 def debug (arg=None):
-    genera_libretto()
-#~ def debug (label, titolo, valore):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    test = getLastUsedCell(oSheet).EndRow+1
+    for y in range(0, test):
+        mia=oSheet.getCellByPosition(0, y).String.split(' : ')[-1]
+        oSheet.getCellByPosition(0, y).String = mia
 def debug (arg=None):
-    label = 'Da voce n.:'
-    titolo = 'REGISTRA'
-    valore = 125
-    '''
-    Attende l'input dell'utente e ne restituisce il valore
-    label   { string }  : etichetta di richiesta
-    titolo  { string }  : titolo della finestra
-    valore  { any }     : valore di default
-    '''
-    psm = uno.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDlg_input = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_input?language=Basic&location=application")
-    oDialog1Model = oDlg_input.Model
-
-    oDlg_input.Title = titolo #Menù input
-    oDlg_input.getControl('Label1').Text = label
-    oDlg_input.getControl('TextField1').Text = str(valore)
-    oDlg_input.execute()
-    #~ mri(oDlg_input.getControl('CommandButton1'))
-    #~ mri(oDlg_input.getControl('CommandButton2'))
-    #~ chi(oDlg_input.getControl('CommandButton2').State)
-    chi(oDlg_input.getControl('TextField1').Text)
-#~ InputBox ("Da voce n.:", "REGISTRA", daVoce)
+    #~ # ~genera_libretto()
+    sistema_cose()
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

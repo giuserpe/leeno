@@ -1960,6 +1960,24 @@ def XPWE_out(elaborato, out_file):
         dettaglio_misure(0)
     numera_voci(1)
     top = Element('PweDocumento')
+    
+#~ intestazioni
+    CopyRight = SubElement(top,'CopyRight')
+    CopyRight.text = 'Copyright ACCA software S.p.A.'
+    TipoDocumento = SubElement(top,'TipoDocumento')
+    TipoDocumento.text = '1'
+    TipoFormato = SubElement(top,'TipoFormato')
+    TipoFormato.text = 'XMLPwe'
+    Versione = SubElement(top,'Versione')
+    Versione.text = ''
+    SourceVersione = SubElement(top,'SourceVersione')
+    release = str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv
+    SourceVersione.text = release
+    SourceNome = SubElement(top,'SourceNome')
+    SourceNome.text = 'LeenO.org'
+    FileNameDocumento = SubElement(top,'FileNameDocumento')
+
+
 #~ dati generali
     PweDatiGenerali = SubElement(top,'PweDatiGenerali')
     PweMisurazioni = SubElement(top,'PweMisurazioni')
@@ -2449,6 +2467,7 @@ def XPWE_out(elaborato, out_file):
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
             out_file = out_file + '-'+ elaborato + '.xpwe'
+        FileNameDocumento.text = out_file
     except AttributeError:
         return
     riga = str(tostring(top, encoding="unicode"))
@@ -4717,7 +4736,7 @@ def genera_libretto():
         lrow = oNamedRange.EndRow
         daVoce = oNamedRange.EndRow+2
         #~ mri(oRanges.getByName("#Lib#" + str(nSal)).ReferredCells.RangeAddress)
-    #~ recuperno l'ultimo numero di pagina usato (serve in caso di libretto unico)
+    #~ recupero l'ultimo numero di pagina usato (serve in caso di libretto unico)
         oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
         old_nPage = int(oSheetCont.getCellByPosition(20,lrow).Value)
         daVoce = int(oSheetCont.getCellByPosition(0,daVoce).Value)
@@ -6980,11 +6999,13 @@ Si tenga conto che:
         refresh(1)
         oDialogo_attesa.endExecute()
         return
-        
+    refresh(0)
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         genera_variante()
-    zoom = oDoc.CurrentController.ZoomValue
+    elif arg == 'CONTABILITA':
+        attiva_contabilita()
+    #~ zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName(arg)
     if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
@@ -7030,7 +7051,10 @@ Si tenga conto che:
         except UnboundLocalError:
             pass
         lrow = ultima_voce(oSheet) + 1
-        ins_voce_computo_grezza(lrow)
+        if arg == 'CONTABILITA':
+            ins_voce_contab()
+        else:
+            ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')
         id_vc = el.get('id_vc')
 
@@ -7111,11 +7135,7 @@ Riordinando il computo trovo riferimenti a voci non ancora inserite.
 Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
 """\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
                         oSheet.getCellByPosition(44, SR).String = dict_articoli.get(ID).get('tariffa')
-                # ~
                 if '-' in mis[7]:
-                    # ~chi(mis)
-                    # ~chi(mis[7])
-                    # ~return
                     for x in range(5, 8):
                         try:
                             if oSheet.getCellByPosition(x, SR).Value != 0:

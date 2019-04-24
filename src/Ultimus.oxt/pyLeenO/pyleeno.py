@@ -4584,7 +4584,7 @@ def attiva_contabilita(arg=None):
             _gotoSheet('CONTABILITA')
             svuota_contabilita()
             ins_voce_contab()
-            set_larghezza_colonne()
+            #~ set_larghezza_colonne()
         _gotoSheet('CONTABILITA')
 ########################################################################
 def svuota_contabilita(arg=None):

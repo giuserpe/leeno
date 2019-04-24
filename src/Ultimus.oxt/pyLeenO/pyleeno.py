@@ -4473,13 +4473,14 @@ def nuova_voce_scelta(arg=None): #assegnato a ctrl-shift-n
         ins_voce_elenco()
     
 # nuova_voce_contab  ##################################################
-def ins_voce_contab(arg=1):
+def ins_voce_contab(lrow=0, arg=1):
     '''
     Inserisce una nuova voce in CONTABILITA.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    lrow = Range2Cell()[1]
+    if lrow == 0:
+        lrow = Range2Cell()[1]
     nome = oSheet.Name
     try:
         ### controllo che non ci siano atti registrati
@@ -4535,7 +4536,6 @@ def ins_voce_contab(arg=1):
 
     sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
-
     try:
         oSheet.getCellByPosition(1, sopra+2).Value = data
     except:
@@ -7004,6 +7004,7 @@ Si tenga conto che:
     if arg == 'VARIANTE':
         genera_variante()
     elif arg == 'CONTABILITA':
+        conf.write(path_conf, 'Generale', 'pesca_auto', '0')
         attiva_contabilita()
     #~ zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
@@ -7051,8 +7052,10 @@ Si tenga conto che:
         except UnboundLocalError:
             pass
         lrow = ultima_voce(oSheet) + 1
+        #~ oDoc.CurrentController.ZoomValue = 100
+        #~ chi(lrow)
         if arg == 'CONTABILITA':
-            ins_voce_contab()
+            ins_voce_contab(lrow = ultima_voce(oSheet) + 1)
         else:
             ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')

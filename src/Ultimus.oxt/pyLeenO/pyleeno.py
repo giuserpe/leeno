@@ -6096,11 +6096,16 @@ def parziale_core(lrow):
         oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow+1) + ")"
 
     if oSheet.Name in('CONTABILITA'):
+        
         if oSheet.getCellByPosition (0, lrow).CellStyle == "comp 10 s_R" and \
         oSheet.getCellByPosition (1, lrow).CellStyle == "Comp-Bianche in mezzo_R" and \
         oSheet.getCellByPosition (2, lrow).CellStyle == "comp 1-a" or \
         'Somma positivi e negativi [' in oSheet.getCellByPosition (8, lrow).String:
             oSheet.getRows().insertByIndex(lrow, 1)
+        elif oSheet.getCellByPosition (0, lrow).CellStyle == "Comp End Attributo_R" or \
+        oSheet.getCellByPosition (1, lrow).CellStyle == "Data_bianca" or \
+        oSheet.getCellByPosition (1, lrow).CellStyle == "comp Art-EP_R":
+            return
 
         oSheet.getCellByPosition(2, lrow).CellStyle = "comp sotto centro"
         oSheet.getCellRangeByPosition(5, lrow, 7, lrow).CellStyle = "comp sotto centro"
@@ -6115,6 +6120,8 @@ def parziale_core(lrow):
                 break
             i -= 1
         oSheet.getCellByPosition(9, lrow).Formula = '=SUBTOTAL(9;J' + str(da) + ':J' + str(lrow+1) + ')-SUBTOTAL(9;L' + str(da) + ':L' + str(lrow+1) + ')'
+
+    
 ###
 def parziale_verifica(arg=None):
     '''
@@ -7004,7 +7011,7 @@ Si tenga conto che:
     if arg == 'VARIANTE':
         genera_variante()
     elif arg == 'CONTABILITA':
-        conf.write(path_conf, 'Generale', 'pesca_auto', '0')
+        #~ conf.write(path_conf, 'Generale', 'pesca_auto', '0')
         attiva_contabilita()
     #~ zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
@@ -7055,7 +7062,7 @@ Si tenga conto che:
         #~ oDoc.CurrentController.ZoomValue = 100
         #~ chi(lrow)
         if arg == 'CONTABILITA':
-            ins_voce_contab(lrow = ultima_voce(oSheet) + 1)
+            ins_voce_contab(lrow = ultima_voce(oSheet) + 1, arg=0)
         else:
             ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')

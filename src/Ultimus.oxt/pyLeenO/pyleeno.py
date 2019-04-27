@@ -1940,7 +1940,7 @@ def doppioni(arg=None):
     adatta_altezza_riga(oSheet.Name)
     riordina_ElencoPrezzi()
     if len(set(lista_tar)) != len(set(lista_come_array)):
-        MsgBox('Ci sono ancora 2 o più voci che hanno lo stesso Codice Articolo, pur essendo diverse.', 'C o n t r o l l a!')
+        MsgBox('Ci sono ancora 2 o più voci che hanno lo stesso Codice Articolo pur essendo diverse.', 'C o n t r o l l a!')
 ########################################################################
 # Scrive un file.
 def XPWE_out(elaborato, out_file):
@@ -6773,7 +6773,7 @@ Si tenga conto che:
   non conservare alcuni dati come le incidenze di
   sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
-    if len(lista_misure) != 0:
+    if len(lista_misure) != 0 and arg != 'CONTABILITA':
         if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
 
     Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente disordinato, riceverai un messaggio che ti indica come intervenire.
@@ -6830,10 +6830,10 @@ Si tenga conto che:
     #~ giallo(16777072,16777120,16777168)
     #~ verde(9502608,13696976,15794160)
     #~ viola(12632319,13684991,15790335)
-    col1 = 16777072
-    col2 = 16777120
-    col3 = 16777168
-    capitoli = list()
+    #~ col1 = 16777072
+    #~ col2 = 16777120
+    #~ col3 = 16777168
+    #~ capitoli = list()
 # SUPERCAPITOLI
     try:
         for el in lista_supcap:
@@ -7007,17 +7007,18 @@ Si tenga conto che:
         oDialogo_attesa.endExecute()
         return
     refresh(0)
+    doppioni()
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         genera_variante()
     elif arg == 'CONTABILITA':
-        #~ conf.write(path_conf, 'Generale', 'pesca_auto', '0')
         attiva_contabilita()
-    #~ zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName(arg)
     if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
-        oSheet.getRows().removeByIndex(3, 4)
+        if arg == 'CONTABILITA':
+            oSheet.getRows().removeByIndex(3, 5)
+        else:
+            oSheet.getRows().removeByIndex(3, 4)
     oDoc.CurrentController.select(oSheet)
     iSheet_num = oSheet.RangeAddress.Sheet
 ###
@@ -7030,6 +7031,7 @@ Si tenga conto che:
     testsbcat = '0'
     x = 1
     for el in lista_misure:
+        datamis = el.get('datamis')
         idspcat = el.get('idspcat')
         idcat = el.get('idcat')
         idsbcat = el.get('idsbcat')
@@ -7059,8 +7061,6 @@ Si tenga conto che:
         except UnboundLocalError:
             pass
         lrow = ultima_voce(oSheet) + 1
-        #~ oDoc.CurrentController.ZoomValue = 100
-        #~ chi(lrow)
         if arg == 'CONTABILITA':
             ins_voce_contab(lrow = ultima_voce(oSheet) + 1, arg=0)
         else:
@@ -7072,7 +7072,6 @@ Si tenga conto che:
             oSheet.getCellByPosition(1, lrow+1).String = dict_articoli.get(ID).get('tariffa')
         except:
             pass
-
         diz_vv[id_vc] = lrow+1
         oSheet.getCellByPosition(0, lrow+1).String = str(x)
         x = x+1
@@ -7092,6 +7091,9 @@ Si tenga conto che:
             for n in range(SR, SR+nrighe):
                 oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
                 oSheet.copyRange(oCellAddress, oRangeAddress)
+                if arg == 'CONTABILITA':
+                    oSheet.getCellByPosition(1, n).String = ''
+                    oSheet.getCellByPosition(1, n).CellStyle  = 'Comp-Bianche in mezzo_R'
 
             oCellRangeAddr.StartColumn = SC
             oCellRangeAddr.StartRow = SR
@@ -7101,6 +7103,8 @@ Si tenga conto che:
         ###
         # INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
             SR = SR - 1
+            if arg == 'CONTABILITA':
+                oSheet.getCellByPosition(1, SR).String = datamis
             for mis in el.get('lista_rig'):
                 if mis[0] != None: #descrizione
                     descrizione = mis[0].strip()
@@ -7195,7 +7199,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     _gotoSheet(arg)
     #~ if uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet) !='None':
         #~ firme_in_calce()
-    MsgBox('Importazione eseguita con successo!','')
+    MsgBox('Importazione di\n' + arg + '\neseguita con successo!', '')
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:#####################################################
@@ -9128,8 +9132,10 @@ def debug (arg=None):
         mia=oSheet.getCellByPosition(0, y).String.split(' : ')[-1]
         oSheet.getCellByPosition(0, y).String = mia
 def debug (arg=None):
+    
+    chi(datetime)
     #~ # ~genera_libretto()
-    sistema_cose()
+    #~ sistema_cose()
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

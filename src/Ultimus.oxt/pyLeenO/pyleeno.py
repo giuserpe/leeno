@@ -2426,12 +2426,11 @@ def XPWE_out(elaborato, out_file):
 ##########################
                 Quantita = SubElement(RGItem,'Quantita')
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
-                if elaborato == 'CONTABILITA':
-                    if oSheet.getCellByPosition(9, m).Value == 'EMPTY':
-                        Quantita.text = str('-' + oSheet.getCellByPosition(11, m).Value)
+                #~ if elaborato == 'CONTABILITA' and oSheet.getCellByPosition(9, m).Value == 0:
+                if oSheet.getCellByPosition(11, m).Value != 0:
+                    Quantita.text = '-' + oSheet.getCellByPosition(11, m).String
+
 ##########################
-                #~ if PartiUguali.text == '' and Lunghezza.text == '' and  Larghezza.text == '' and  HPeso.text == '':
-                    #~ PartiUguali.text = Quantita.text
                 Flags = SubElement(RGItem,'Flags')
                 if '*** VOCE AZZERATA ***' in Descrizione.text:
                     PartiUguali.text = str(abs(float(valuta_cella(oSheet.getCellByPosition(5, m)))))
@@ -9133,13 +9132,12 @@ def debug (arg=None):
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-
-    #~ oDoc.getCurrentSelection().Value = date_time_obj
-
-    try:
-        oDoc.getCurrentSelection().Value = data
-    except:
-        oDoc.getCurrentSelection().Value = date.today().fromordinal('43582')
+    if oDoc.getCurrentSelection().Value == 0:
+        chi('Vuoto')
+    else:
+        chi('Pieno')
+    #~ chi(oDoc.getCurrentSelection().Value)
+    return
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

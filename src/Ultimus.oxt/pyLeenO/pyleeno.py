@@ -1884,7 +1884,6 @@ def doppioni(arg=None):
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
     zoom = oDoc.CurrentController.ZoomValue
-    # ~oDoc.CurrentController.ZoomValue = 400
     refresh(0)
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == True:
         lista_tariffe_analisi = list()
@@ -7104,7 +7103,8 @@ Si tenga conto che:
         # INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
             SR = SR - 1
             if arg == 'CONTABILITA':
-                oSheet.getCellByPosition(1, SR).String = datamis
+                oSheet.getCellByPosition(1, SR).Formula = '=DATE(' + datamis.split('/')[2] +';' + datamis.split('/')[1] +';' + datamis.split('/')[0] + ')'
+                oSheet.getCellByPosition(1, SR).Value = oSheet.getCellByPosition(1, SR).Value
             for mis in el.get('lista_rig'):
                 if mis[0] != None: #descrizione
                     descrizione = mis[0].strip()
@@ -7195,11 +7195,10 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     refresh(1)
     #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
     oDialogo_attesa.endExecute()
-    # ~doppioni()
     _gotoSheet(arg)
     #~ if uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet) !='None':
         #~ firme_in_calce()
-    MsgBox('Importazione di\n' + arg + '\neseguita con successo!', '')
+    MsgBox('Importazione di\n\n' + arg + '\n\neseguita con successo!', '')
 # XPWE_in ##########################################################
 ########################################################################
 #VARIABILI GLOBALI:#####################################################
@@ -9132,10 +9131,15 @@ def debug (arg=None):
         mia=oSheet.getCellByPosition(0, y).String.split(' : ')[-1]
         oSheet.getCellByPosition(0, y).String = mia
 def debug (arg=None):
-    
-    chi(datetime)
-    #~ # ~genera_libretto()
-    #~ sistema_cose()
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    #~ oDoc.getCurrentSelection().Value = date_time_obj
+
+    try:
+        oDoc.getCurrentSelection().Value = data
+    except:
+        oDoc.getCurrentSelection().Value = date.today().fromordinal('43582')
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

@@ -2354,10 +2354,8 @@ def XPWE_out(elaborato, out_file):
                 pass
 #COMPUTO/VARIANTE/CONTABILITA
     oSheet = oDoc.getSheets().getByName(elaborato)
-
     PweVociComputo = SubElement(PweMisurazioni,'PweVociComputo')
     oDoc.CurrentController.setActiveSheet(oSheet)
-    #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     nVCItem = 2
     for n in range(0, ultima_voce(oSheet)):
         if oSheet.getCellByPosition(0, n).CellStyle in ('Comp Start Attributo', 'Comp Start Attributo_R'):
@@ -2426,10 +2424,9 @@ def XPWE_out(elaborato, out_file):
 ##########################
                 Quantita = SubElement(RGItem,'Quantita')
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
-                #~ if elaborato == 'CONTABILITA' and oSheet.getCellByPosition(9, m).Value == 0:
+                # se negativa in CONTABILITA:
                 if oSheet.getCellByPosition(11, m).Value != 0:
                     Quantita.text = '-' + oSheet.getCellByPosition(11, m).String
-
 ##########################
                 Flags = SubElement(RGItem,'Flags')
                 if '*** VOCE AZZERATA ***' in Descrizione.text:
@@ -6290,7 +6287,7 @@ def XPWE_import(arg=None):
     Viasualizza il menù Esporta XPWE
     '''
     try:
-        XPWE_in(scegli_elaborato('Esporta nel formato XPWE'))
+        XPWE_in(scegli_elaborato('Importa dal formato XPWE'))
     except:
         return
 ########################################################################
@@ -8105,6 +8102,18 @@ def scegli_elaborato(titolo):
     oDlgXLO = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application")
     oDialog1Model = oDlgXLO.Model
     oDlgXLO.Title = titolo #'Menù import XPWE'
+
+    for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+        try:
+            importo = oDoc.getSheets().getByName(el).getCellRangeByName('A2').String
+            if el == 'COMPUTO':  oDlgXLO.getControl("CME_XLO").Label     = 'Accoda a Computo:     € ' + importo
+            if el == 'VARIANTE':  oDlgXLO.getControl("VAR_XLO").Label    = 'Accoda a Variante:    € ' + importo
+            if el == 'CONTABILITA': oDlgXLO.getControl("CON_XLO").Label  = 'Accoda a Contabilità: € ' + importo
+            #~ else:
+                #~ oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: €: 0,0'
+        except:
+            pass
+
     if oDlgXLO.execute() ==1:
         if oDlgXLO.getControl("CME_XLO").State == True:
             elaborato ='COMPUTO'
@@ -9122,22 +9131,7 @@ def debug(arg=None): #COMUNE DI MATERA
             oSheet.getCellByPosition(26, y).Formula = '=P' + str(y+1)
             oSheet.getCellByPosition(31, y).Formula = '=AC' + str(y+1) + '-9/24'
 
-def debug (arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    test = getLastUsedCell(oSheet).EndRow+1
-    for y in range(0, test):
-        mia=oSheet.getCellByPosition(0, y).String.split(' : ')[-1]
-        oSheet.getCellByPosition(0, y).String = mia
-def debug (arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oDoc.getCurrentSelection().Value == 0:
-        chi('Vuoto')
-    else:
-        chi('Pieno')
-    #~ chi(oDoc.getCurrentSelection().Value)
-    return
+
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

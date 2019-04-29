@@ -8111,9 +8111,9 @@ def scegli_elaborato(titolo):
     for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
         try:
             importo = oDoc.getSheets().getByName(el).getCellRangeByName('A2').String
-            if el == 'COMPUTO':  oDlgXLO.getControl("CME_XLO").Label     = 'Accoda a Computo:     € ' + importo
-            if el == 'VARIANTE':  oDlgXLO.getControl("VAR_XLO").Label    = 'Accoda a Variante:    € ' + importo
-            if el == 'CONTABILITA': oDlgXLO.getControl("CON_XLO").Label  = 'Accoda a Contabilità: € ' + importo
+            if el == 'COMPUTO':  oDlgXLO.getControl("CME_XLO").Label     = 'Computo:     € ' + importo
+            if el == 'VARIANTE':  oDlgXLO.getControl("VAR_XLO").Label    = 'Variante:    € ' + importo
+            if el == 'CONTABILITA': oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: € ' + importo
             #~ else:
                 #~ oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: €: 0,0'
         except:

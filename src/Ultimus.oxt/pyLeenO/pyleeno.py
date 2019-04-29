@@ -6768,7 +6768,7 @@ Si tenga conto che:
   non conservare alcuni dati come le incidenze di
   sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
-    if len(lista_misure) != 0 and arg != 'CONTABILITA':
+    if len(lista_misure) != 0 and arg not in ('Elenco', 'CONTABILITA'):
         if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
 
     Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente disordinato, riceverai un messaggio che ti indica come intervenire.
@@ -7003,6 +7003,11 @@ Si tenga conto che:
         return
     refresh(0)
     doppioni()
+    if arg == 'Elenco':
+        oDoc.CurrentController.ZoomValue = zoom
+        refresh(1)
+        oDialogo_attesa.endExecute()
+        return
 # Inserisco i dati nel COMPUTO #########################################
     if arg == 'VARIANTE':
         genera_variante()
@@ -8121,6 +8126,8 @@ def scegli_elaborato(titolo):
             elaborato ='VARIANTE'
         elif  oDlgXLO.getControl("CON_XLO").State == True:
             elaborato ='CONTABILITA'
+        elif  oDlgXLO.getControl("EP_XLO").State == True:
+            elaborato ='Elenco'
     return elaborato
 ########################################################################
 def DlgMain(arg=None):

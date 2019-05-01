@@ -8891,6 +8891,10 @@ def sistema_pagine (arg=None):
             oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL() + '\n\n\n')
             oAktPage.RightPageFooterContent= oFooter
     try:
+        if oDoc.CurrentController.ActiveSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'Elenco Prezzi'):
+            _gotoCella(0, 3)
+        if oDoc.CurrentController.ActiveSheet.Name in ('Analisi di Prezzo'):
+            _gotoCella(0, 2)
         setPreview(1)
     except:
         pass
@@ -8906,7 +8910,7 @@ def fissa (arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = Range2Cell()[0]
     lrow = Range2Cell()[1]
-    if oSheet.Name in('COMPUTO', 'VARIANTE', ' Elenco Prezzi'):
+    if oSheet.Name in('COMPUTO', 'VARIANTE', ' Elenco Prezzi', 'CONTABILITA',):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)

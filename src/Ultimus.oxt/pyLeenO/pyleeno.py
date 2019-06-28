@@ -4988,8 +4988,8 @@ def genera_libretto():
             #~ end Sub
 
 ########################################################################
-#~ def genera_atti_contabili(arg=None):
-def debug(arg=None):
+def genera_atti_contabili(arg=None):
+# ~def debug(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA": return
@@ -5498,7 +5498,21 @@ def XML_import_ep(arg=None):
     tree = ElementTree()
     if filename == None:
         return
-    tree.parse(filename)
+    #~ f = open(filename, 'r')
+    f = codecs.open(filename,'r','utf-8')
+    out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
+    of = codecs.open(out_file,'w','utf-8')
+    
+    #~ rows = list()
+    for row in f:
+        nrow = row.replace('&#x13;','').replace('&#xD;&#xA;',' ').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
+        #~ re.search('[a-zA-Z]', oCell.Formula):
+        of.write(nrow)
+
+    from yattag import indent
+    
+    #~ tree.parse(filename)
+    tree.parse(out_file)
     # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))
@@ -8627,14 +8641,33 @@ def calendario_mensile(arg=None):
     return
 ########################################################################
 def sistema_cose(arg=None):
-# ~def debug(arg=None):
-    
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ')
-    while '  ' in testo:
-        testo = testo.replace('  ',' ')
-    oDoc.getCurrentSelection().String = testo
+    lcol = Range2Cell()[0]
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    el_y = list()
+    el_x = list()
+    lista_y = list()
+    try:
+        len(oRangeAddress)
+        for el in oRangeAddress:
+            el_y.append((el.StartRow, el.EndRow))
+    except TypeError:
+        el_y.append ((oRangeAddress.StartRow, oRangeAddress.EndRow))
+    for y in el_y:
+        for el in range (y[0], y[1]+1):
+            lista_y.append(el)
+    for y in lista_y:
+        oDoc.CurrentController.select(oSheet.getCellByPosition(lcol, y))
+        testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à')
+        # ~testo = oDoc.getCurrentSelection().String.replace('\r','fbfxvcbsc')
+        # ~testo = testo.replace(' \n','\n')
+        while '  ' in testo:
+            testo = testo.replace('  ',' ')
+        oDoc.getCurrentSelection().String = testo
     return
 ########
 def debug_link(arg=None):
@@ -9080,67 +9113,8 @@ def debug_progressbar (arg=None):
         MsgBox(oDisp)
         oSI.end()
 ########################################################################
-# ~def minuti(arg=None): #COMUNE DI MATERA
-def debug(arg=None): #COMUNE DI MATERA
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    ''' Mette in ordine i minuti lavorati '''
-    test = getLastUsedCell(oSheet).EndRow+1
-    test0 =  int(oSheet.getCellByPosition(32, 0).Value)
-    for y in range(test0, test):
-        if ' ' in oSheet.getCellByPosition(6, y).String:
-            try:
-                testo = oSheet.getCellByPosition(6, y).String
-                oSheet.getCellByPosition(12, y).Formula ='=TIME('+ testo.split(' ')[0].split(':')[0]+';'+ testo.split(' ')[0].split(':')[1]+';0)'
-                oSheet.getCellByPosition(12, y).Value = oSheet.getCellByPosition(12, y).Value
-                oSheet.getCellByPosition(13, y).Formula = '=TIME('+ testo.split(' ')[1].split(':')[0]+';'+ testo.split(' ')[1].split(':')[1]+';0)'
-                oSheet.getCellByPosition(13, y).Value = oSheet.getCellByPosition(13, y).Value
-                oSheet.getCellByPosition(14, y).Formula = '=TIME('+ testo.split(' ')[2].split(':')[0]+';'+ testo.split(' ')[2].split(':')[1]+';0)'
-                oSheet.getCellByPosition(14, y).Value = oSheet.getCellByPosition(14, y).Value 
-                oSheet.getCellByPosition(15, y).Formula = '=TIME('+ testo.split(' ')[3].split(':')[0]+';'+ testo.split(' ')[3].split(':')[1]+';0)'
-                oSheet.getCellByPosition(15, y).Value = oSheet.getCellByPosition(15, y).Value 
-                oSheet.getCellByPosition(16, y).Formula = '=TIME('+ testo.split(' ')[4].split(':')[0]+';'+ testo.split(' ')[4].split(':')[1]+';0)'
-                oSheet.getCellByPosition(16, y).Value = oSheet.getCellByPosition(16, y).Value 
-                oSheet.getCellByPosition(17, y).Formula = '=TIME('+ testo.split(' ')[5].split(':')[0]+';'+ testo.split(' ')[5].split(':')[1]+';0)'
-                oSheet.getCellByPosition(17, y).Value = oSheet.getCellByPosition(17, y).Value
-            except:
-                pass
-
-        # ~oSheet.getCellRangeByPosition(12, y, 27, y).CellStyle = 'MINUTI'
-        # ~oSheet.getCellRangeByPosition(21, y, 26, y).CellStyle = 'minuti_bis'
-        # ~oSheet.getCellByPosition(18, y).CellStyle = 'DATE'
-        if oSheet.getCellByPosition(0, y).String not in ('Domenica') and oSheet.getCellByPosition(12, y).Value != 0:
-            oSheet.getCellByPosition(18, y).Formula = '=B' + str(y+1)
-            oSheet.getCellByPosition(25, y).Formula = '=U' + str(y+1) + '-T' + str(y+1) + '+W' + str(y+1) + '-V' + str(y+1) + '+Y' + str(y+1) + '-X' + str(y+1)
-            oSheet.getCellByPosition(26, y).Formula = '=N' + str(y+1) + '-M' + str(y+1)
-            oSheet.getCellByPosition(27, y).Formula = '=P' + str(y+1) + '-O' + str(y+1)
-            oSheet.getCellByPosition(28, y).Formula = '=AB' + str(y+1) + '+AA' + str(y+1)
-            
-            
-            oSheet.getCellByPosition(22, y).Formula = '=N' + str(y+1)
-            if oSheet.getCellByPosition(0, y).String in ('Sabato'):
-                oSheet.getCellByPosition(21, y).String = ''
-                oSheet.getCellByPosition(22, y).String = ''
-                oSheet.getCellByPosition(23, y).Formula = '=M' + str(y+1)
-                oSheet.getCellByPosition(24, y).String = ''
-                oSheet.getCellByPosition(25, y).String = ''
-                oSheet.getCellByPosition(26, y).Formula = '=N' + str(y+1)
-                oSheet.getCellByPosition(31, y).Formula = '=AC' + str(y+1)
-            else:
-                oSheet.getCellByPosition(21, y).Formula = '=IF(M' + str(y+1) + '>=TIME(7;50;0);M' + str(y+1) + ';TIME(7;50;0))+TIME(6;0;0)'
-        if oSheet.getCellByPosition(0, y).String in ('Lunedì', 'Mercoledì', 'Venerdì') and oSheet.getCellByPosition(14, y).Value != 0:
-            oSheet.getCellByPosition(23, y).Formula = '=O' + str(y+1)
-            oSheet.getCellByPosition(24, y).String  = ''
-            oSheet.getCellByPosition(25, y).String  = ''
-            oSheet.getCellByPosition(26, y).Formula = '=P' + str(y+1)
-            oSheet.getCellByPosition(31, y).Formula = '=AC' + str(y+1) + '-6/24'
-            
-        if oSheet.getCellByPosition(0, y).String in ('Martedì', 'Giovedì') and oSheet.getCellByPosition(14, y).Value != 0:
-            oSheet.getCellByPosition(23, y).Formula = '=O' + str(y+1)
-            oSheet.getCellByPosition(24, y).Formula = '=IF(V'+ str(y+1) +'<=TIME(15;30;0);TIME(15;30;0);V'+ str(y+1) +')'
-            oSheet.getCellByPosition(25, y).Formula = '=W'+ str(y+1) +'+TIME(3;00;0)'
-            oSheet.getCellByPosition(26, y).Formula = '=P' + str(y+1)
-            oSheet.getCellByPosition(31, y).Formula = '=AC' + str(y+1) + '-9/24'
+def debug(arg=None):
+    sistema_cose()
 
 
 ########################################################################

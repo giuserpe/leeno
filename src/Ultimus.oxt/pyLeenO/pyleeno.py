@@ -849,6 +849,8 @@ def ultima_voce(oSheet):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet
     nRow = getLastUsedCell(oSheet).EndRow
+    if nRow ==0:
+        return 0
     for n in reversed(range(0, nRow)):
         #~ if oSheet.getCellByPosition(0, n).CellStyle in('Comp TOTALI'):
         if oSheet.getCellByPosition(0, n).CellStyle in('EP-aS', 'EP-Cs', 'An-sfondo-basso Att End', 'Comp End Attributo',
@@ -4775,9 +4777,9 @@ def genera_libretto():
     #~ nomearea="#Lib#"+nsal
     #~ rem annota importo parziale SAL
 #~ 'Print ultimariga & " - " & "SAL n." & nSal
-    #~ oSheetCont.GetCellByPosition(25, ultimariga-1).string = "SAL n." & nSal
-    #~ oSheetCont.GetCellByPosition(25, ultimariga).formula = "=SUBTOTAL(9;P" & primariga+1 & ":P" & ultimariga+1 & ")"
-    #~ oSheetCont.GetCellByPosition(25, ultimariga).cellstyle = "comp sotto Euro 3_R"
+    #~ oSheetCont.getCellByPosition(25, ultimariga-1).string = "SAL n." & nSal
+    #~ oSheetCont.getCellByPosition(25, ultimariga).formula = "=SUBTOTAL(9;P" & primariga+1 & ":P" & ultimariga+1 & ")"
+    #~ oSheetCont.getCellByPosition(25, ultimariga).cellstyle = "comp sotto Euro 3_R"
     #~ rem immetti le firme
     #~ inizioFirme = ultimariga+1
     #~ firme (ultimariga+1)' riga di inserimento
@@ -4824,11 +4826,11 @@ def genera_libretto():
     #~ rem ----------------------------------------------------------------------
     #~ ThisComponent.CurrentController.setFirstVisibleRow (fineFirme-3) 'solo debug
     #~ i=1
-    #~ Do While oSheetCont.GetCellByPosition(1,fineFirme).rows.IsStartOfNewPage = False
-#~ '    oSheetCont.GetCellByPosition(2 ,fineFirme).setstring("Sto sistemando il Libretto...")
+    #~ Do While oSheetCont.getCellByPosition(1,fineFirme).rows.IsStartOfNewPage = False
+#~ '    oSheetCont.getCellByPosition(2 ,fineFirme).setstring("Sto sistemando il Libretto...")
         #~ insRows (fineFirme,1) 'insertByIndex non funziona
         #~ If i=3 Then
-            #~ oSheetCont.GetCellByPosition(2, fineFirme).setstring("====================")
+            #~ oSheetCont.getCellByPosition(2, fineFirme).setstring("====================")
             #~ daqui=fineFirme
         #~ End If 
         #~ fineFirme = fineFirme+1
@@ -4856,9 +4858,9 @@ def genera_libretto():
     #~ oCell = oSheetCont.getCellRangeByPosition(0,primariga,25,finefirme)
     #~ oSheetCont.getCellRangeByPosition (0,inizioFirme,25,finefirme).CellStyle = "Ultimus_centro_bordi_lati"
     #~ oCell = oSheetCont.getCellRangeByPosition (0,finefirme,35,finefirme)
-    #~ oSheetCont.GetCellByPosition(2 , inizioFirme+1).CellStyle = "ULTIMUS" 'stile data
+    #~ oSheetCont.getCellByPosition(2 , inizioFirme+1).CellStyle = "ULTIMUS" 'stile data
     #~ rem recupero la data
-    #~ datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).value, 10)
+    #~ datafirma = Right (oSheetCont.getCellByPosition(2 , inizioFirme+1).value, 10)
     #~ ThisComponent.CurrentController.Select(oCell)
     #~ bordo_sotto
     #~ ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
@@ -4883,11 +4885,11 @@ def genera_libretto():
     #~ xS2=oEnd.RangeAddress.EndRow        'riga
     #~ yS2=oEnd.RangeAddress.EndColumn    'colonna
     
-    #~ oS2.GetCellByPosition(yS2+nSal,xS2+1).value = nSal 'numero sal
+    #~ oS2.getCellByPosition(yS2+nSal,xS2+1).value = nSal 'numero sal
 #~ '    Print "datafirma " & datafirma
-    #~ oS2.GetCellByPosition(yS2+nSal,xS2+2).value = datafirma 'data
-    #~ oS2.GetCellByPosition(yS2+nSal,xS2+24).value = aVoce ' ultima voce libretto
-    #~ oS2.GetCellByPosition(yS2+nSal,xS2+25).value = inumPag ' ultima pagina libretto
+    #~ oS2.getCellByPosition(yS2+nSal,xS2+2).value = datafirma 'data
+    #~ oS2.getCellByPosition(yS2+nSal,xS2+24).value = aVoce ' ultima voce libretto
+    #~ oS2.getCellByPosition(yS2+nSal,xS2+25).value = inumPag ' ultima pagina libretto
     #~ ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 #~ '#########################################################################
     
@@ -4900,19 +4902,19 @@ def genera_libretto():
     #~ rem ----------------------------------------------------------------------
     #~ rem col seguente ciclo FOR inserisco i dati ma non il numero di pagina
     #~ For i = primariga to fineFirme
-        #~ IF     oSheetCont.GetCellByPosition( 1 , i).cellstyle = "comp Art-EP_R" then
+        #~ IF     oSheetCont.getCellByPosition( 1 , i).cellstyle = "comp Art-EP_R" then
             #~ if primariga=0 then
                 #~ sStRange = Circoscrive_Voce_Computo_Att (i)
                 #~ With sStRange.RangeAddress
                     #~ primariga =.StartRow
                 #~ End With
             #~ end If
-            #~ oSheetCont.GetCellByPosition(19, i).value= nLib '1 ' numero libretto
-            #~ oSheetCont.GetCellByPosition(22, i).string= "#reg" ' flag registrato
-            #~ oSheetCont.GetCellByPosition(23, i).value= nSal ' numero SAL
-            #~ oSheetCont.GetCellByPosition(23, i).cellstyle = "Sal"
+            #~ oSheetCont.getCellByPosition(19, i).value= nLib '1 ' numero libretto
+            #~ oSheetCont.getCellByPosition(22, i).string= "#reg" ' flag registrato
+            #~ oSheetCont.getCellByPosition(23, i).value= nSal ' numero SAL
+            #~ oSheetCont.getCellByPosition(23, i).cellstyle = "Sal"
 #~ '        else
-#~ '        oSheetCont.GetCellByPosition( 1 , i).Rows.Height = 500 'altezza riga
+#~ '        oSheetCont.getCellByPosition( 1 , i).Rows.Height = 500 'altezza riga
         #~ end if
     #~ Next
     #~ inumPag = 0'+ old_nPage 'SE IL LIBRETTO è UNICO
@@ -4928,13 +4930,13 @@ def genera_libretto():
     #~ For i = primariga to fineFirme
         #~ For n = LBound(IntPag) To UBound(IntPag)
             #~ if i < IntPag(n).Position Then
-                #~ if oSheetCont.GetCellByPosition( 1 , i).cellstyle = "comp Art-EP_R" then
+                #~ if oSheetCont.getCellByPosition( 1 , i).cellstyle = "comp Art-EP_R" then
                     #~ inumPag = n ' + old_nPage 'SE IL LIBRETTO è UNICO
-                    #~ oSheetCont.GetCellByPosition(20, i).value = inumPag 'numero Pagina
-#~ '    oSheetCont.GetCellByPosition(19, i).value= nLib '1 ' numero libretto
-#~ '    oSheetCont.GetCellByPosition(22, i).string= "#reg" ' flag registrato
-#~ '    oSheetCont.GetCellByPosition(23, i).value= nSal ' numero SAL
-#~ '    oSheetCont.GetCellByPosition(23, i).cellstyle = "Sal"
+                    #~ oSheetCont.getCellByPosition(20, i).value = inumPag 'numero Pagina
+#~ '    oSheetCont.getCellByPosition(19, i).value= nLib '1 ' numero libretto
+#~ '    oSheetCont.getCellByPosition(22, i).string= "#reg" ' flag registrato
+#~ '    oSheetCont.getCellByPosition(23, i).value= nSal ' numero SAL
+#~ '    oSheetCont.getCellByPosition(23, i).cellstyle = "Sal"
                     #~ Exit For
                 #~ end If
             #~ end if
@@ -4942,8 +4944,8 @@ def genera_libretto():
             #~ Next i
             #~ rem ----------------------------------------------------------------------
             #~ rem annoto ultimo numero di pagina 
-            #~ oSheetCont.GetCellByPosition(20 , fineFirme).value = UBound(IntPag)'inumPag
-            #~ oSheetCont.GetCellByPosition(20 , fineFirme).CellStyle = "num centro"
+            #~ oSheetCont.getCellByPosition(20 , fineFirme).value = UBound(IntPag)'inumPag
+            #~ oSheetCont.getCellByPosition(20 , fineFirme).CellStyle = "num centro"
             #~ rem ----------------------------------------------------------------------
 #~ 'fissa (0,idxrow+1)
             
@@ -4958,22 +4960,22 @@ def genera_libretto():
             #~ rem ----------------------------------------------------------------------
             #~ rem ci metto un po' di informazioni
             #~ oSheetCont.getCellByPosition(2,ins).string = "segue Libretto delle Misure n." & nSal & " - " & davoce & "÷" & avoce
-            #~ oSheetCont.GetCellByPosition(20,ins).value =  UBound(IntPag) 'ultimo numero pagina
-            #~ oSheetCont.GetCellByPosition(19, ins).value= nLib '1 ' numero libretto
-            #~ oSheetCont.GetCellByPosition(23, ins).value= nSal ' numero SAL
-            #~ oSheetCont.GetCellByPosition(25, ins).formula = "=SUBTOTAL(9;$P$" & primariga+1 & ":$P$" & ultimariga+2 & ")"
-            #~ oSheetCont.GetCellByPosition(25, ins).cellstyle = "comp sotto Euro 3_R"
+            #~ oSheetCont.getCellByPosition(20,ins).value =  UBound(IntPag) 'ultimo numero pagina
+            #~ oSheetCont.getCellByPosition(19, ins).value= nLib '1 ' numero libretto
+            #~ oSheetCont.getCellByPosition(23, ins).value= nSal ' numero SAL
+            #~ oSheetCont.getCellByPosition(25, ins).formula = "=SUBTOTAL(9;$P$" & primariga+1 & ":$P$" & ultimariga+2 & ")"
+            #~ oSheetCont.getCellByPosition(25, ins).cellstyle = "comp sotto Euro 3_R"
             #~ rem ----------------------------------------------------------------------
             #~ rem annoto il sal corrente sulla riga di intestazione
             #~ ins =uFindString("LAVORAZIONI"+ chr(10) + "O PROVVISTE", oSheetCont).RangeAddress.EndRow
             #~ oSheetCont.getCellByPosition(25,ins).value = nSal
-            #~ oSheetCont.GetCellByPosition(25, ins).cellstyle = "Menu_sfondo _input_grasBig"
-#~ '    oSheetCont.GetCellByPosition(25, ins-1).formula = "=SUBTOTAL(9;$P$" & primariga+1 & ":$P$" & ultimariga+2 & ")"
-            #~ oSheetCont.GetCellByPosition(25, ins-1).formula = "=$P$2-SUBTOTAL(9;$P$" & IdxRow & ":$P$" & ultimariga+2 & ")"
+            #~ oSheetCont.getCellByPosition(25, ins).cellstyle = "Menu_sfondo _input_grasBig"
+#~ '    oSheetCont.getCellByPosition(25, ins-1).formula = "=SUBTOTAL(9;$P$" & primariga+1 & ":$P$" & ultimariga+2 & ")"
+            #~ oSheetCont.getCellByPosition(25, ins-1).formula = "=$P$2-SUBTOTAL(9;$P$" & IdxRow & ":$P$" & ultimariga+2 & ")"
             #~ rem ----------------------------------------------------------------------
             #~ rem fisso la riga alla prima voce
             #~ For i= 2 To 100
-                #~ If oSheetCont.getCellbyPosition(1,i).CellStyle = "Comp-Bianche sopra_R" Then
+                #~ If oSheetCont.getCellByPosition(1,i).CellStyle = "Comp-Bianche sopra_R" Then
                     #~ Exit For
                     #~ EndIf
                     
@@ -5079,6 +5081,111 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByPosition(3, 3, 250, y +10).clearContents(HARDATTR)
     #~ MsgBox('Rigenerazione del foglio eseguita!','')
 ########################################################################
+def inizializza_computo(arg=None):
+    '''
+    Riscrive le intestazioni di colonna e le formule dei totali in COMPUTO.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.Sheets.getByName('COMPUTO')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    oDoc.CurrentController.freezeAtPosition(0, 3)
+
+    lRow = ultima_voce(oSheet)+1
+    #~ arg = "cancella"
+    #~ if arg == "cancella":
+        #~ oSheet.Rows.removeByIndex(0, getLastUsedCell(oSheet).EndRow+1)
+
+    if ultima_voce(oSheet) == 0:
+        oRow=uFindString("TOTALI COMPUTO", oSheet)
+        try:
+            lRowE=oRow.CellAddress.Row
+        except:
+            lRowE = 3
+    else:
+        lRowE = lRow
+    
+    Flags = STRING + VALUE + FORMULA
+    oSheet.getCellRangeByPosition(0, 0, 100, 2).clearContents(Flags)
+    oSheet.getCellRangeByPosition(12, 0, 16, lRowE).clearContents(Flags)
+    oSheet.getCellRangeByPosition(22, 0, 23, lRowE).clearContents(Flags)
+    oSheet.getCellRangeByPosition(0, 0, 100 , 0).CellStyle = "Default"
+    oSheet.getCellRangeByPosition(0, 0, 100 , 0).clearContents(HARDATTR)
+    oSheet.getCellRangeByPosition(44, 0, 100 , lRowE+10).CellStyle = "Default"
+    #~ oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
+    #~ oSheet.getCellRangeByName('C1').CellBackColor = 16762855
+    #~ oSheet.getCellRangeByName('C1').String = 'COMPUTO'
+
+    oSheet.getCellByPosition(2,1).String = 'QUESTA RIGA NON VIENE STAMPATA'
+    oSheet.getCellByPosition(17,1).Formula = '=SUBTOTAL(9;R3:R' + str(lRowE+1) + ')' #sicurezza
+    oSheet.getCellByPosition(18,1).Formula = '=SUBTOTAL(9;S3:S' + str(lRowE+1) + ')' #importo lavori
+    oSheet.getCellByPosition(0,1).Formula = '=AK2'
+
+    oSheet.getCellByPosition(28,1).Formula= '=SUBTOTAL(9;AC3:AC' + str(lRowE+1) + ')' #importo materiali
+
+    oSheet.getCellByPosition(29,1).Formula= '=AE2/S2'  #Incidenza manodopera %
+    oSheet.getCellByPosition(29, 1).CellStyle = "Comp TOTALI %"
+    oSheet.getCellByPosition(30,1).Formula= '=SUBTOTAL(9;AE3:AE' + str(lRowE+1) + ')' #importo manodopera
+    oSheet.getCellByPosition(36,1).Formula= '=SUBTOTAL(9;AK3:AK' + str(lRowE+1) + ')' #totale computo sole voci senza errori
+
+    oSheet.getCellRangeByPosition(0, 1, 43, 1).CellStyle = "comp In testa"
+    oSheet.getCellRangeByPosition(0, 0, 43, 2).merge(False)
+    oSheet.getCellRangeByPosition(0, 1, 1, 1).merge(True)
+
+#~ rem riga di intestazione
+    oSheet.getCellByPosition(0,2).String = 'N.'
+    oSheet.getCellByPosition(1,2).String = 'Articolo\nData'
+    oSheet.getCellByPosition(2,2).String = 'DESIGNAZIONE DEI LAVORI\nE DELLE SOMMINISTRAZIONI'
+    oSheet.getCellByPosition(5,2).String = 'P.U.\nCoeff.'
+    oSheet.getCellByPosition(6,2).String = 'Lung.'
+    oSheet.getCellByPosition(7,2).String = 'Larg.'
+    oSheet.getCellByPosition(8,2).String = 'Alt.\nPeso'
+    oSheet.getCellByPosition(9,2).String = 'Quantità'
+    oSheet.getCellByPosition(11,2).String = 'Prezzo\nunitario'
+    oSheet.getCellByPosition(13,2).String = 'Serve per avere le quantità\nrealizzate "pulite" e sommabili'
+    oSheet.getCellByPosition(17,2).String = 'di cui\nsicurezza'
+    oSheet.getCellByPosition(18,2).String = 'Importo €'
+    oSheet.getCellByPosition(24,2).String = 'Incidenza\nsul totale' # POTREBBE SERVIRE PER INDICARE L'INCIDENZA DI OGNI SINGOLA VOCE
+    oSheet.getCellByPosition(27,2).String = 'Sicurezza\nunitaria'
+    oSheet.getCellByPosition(28,2).String = 'Materiali\ne Noli €'
+    oSheet.getCellByPosition(29,2).String = 'Incidenza\nMdO %'
+    oSheet.getCellByPosition(30,2).String = 'Importo\nMdO'
+    oSheet.getCellByPosition(31,2).String = 'Super Cat'
+    oSheet.getCellByPosition(32,2).String = 'Cat'
+    oSheet.getCellByPosition(33,2).String = 'Sub Cat'
+    oSheet.getCellByPosition(34,2).String = 'tag B'
+    oSheet.getCellByPosition(35,2).String = 'tag C'
+    oSheet.getCellByPosition(36,2).String = 'importo totale computo\nsole voci senza errori'
+    oSheet.getCellByPosition(38,2).String = 'Figure e\nannotazioni'
+    oSheet.getCellByPosition(43,2).String = 'riservato per annotare\nil numero della voce'
+    oSheet.getCellRangeByPosition(0, 2, 43 , 2).CellStyle = 'comp Int_colonna'
+    oSheet.getCellByPosition(13,2).CellStyle = 'COnt_noP'
+    oSheet.getCellByPosition(19,2).CellStyle = 'COnt_noP'
+    oSheet.getCellByPosition(36,2).CellStyle = 'COnt_noP'
+    oSheet.getCellByPosition(43,2).CellStyle = 'COnt_noP'
+    oCell=oSheet.getCellRangeByPosition(0, 0, 43, 2)
+
+#~ rem riga del totale
+    oSheet.getCellByPosition(2,lRowE).String = "TOTALI COMPUTO"
+    oSheet.getCellByPosition(17,lRowE).Formula="=SUBTOTAL(9;R3:R" + str(lRowE+1) + ")" #importo sicurezza
+    oSheet.getCellByPosition(18,lRowE).Formula="=SUBTOTAL(9;S3:S" + str(lRowE+1) + ")" #importo lavori
+    oSheet.getCellByPosition(29,lRowE).Formula="=AE" + str(lRowE+1) + "/S" + str(lRowE+1) + ""  #Incidenza manodopera %
+    oSheet.getCellByPosition(30,lRowE).Formula="=SUBTOTAL(9;AE3:AE" + str(lRowE+1) + ")" #importo manodopera
+    oSheet.getCellByPosition(36,lRowE).Formula="=SUBTOTAL(9;AK3:AK" + str(lRowE+1) + ")" #totale computo sole voci senza errori
+    oSheet.getCellRangeByPosition(0, lRowE, 36 , lRowE).CellStyle = "Comp TOTALI"
+    oSheet.getCellByPosition(24,lRowE).CellStyle = "Comp TOTALI %"
+    oSheet.getCellByPosition(29,lRowE).CellStyle = "Comp TOTALI %"
+
+    inserisci_Riga_rossa()
+
+    oSheet = oDoc.Sheets.getByName('S1')
+    oSheet.getCellByPosition(9, 190).Formula="=$COMPUTO.$S$2"
+    oSheet = oDoc.Sheets.getByName('M1')
+    oSheet.getCellByPosition(3, 0).Formula="=$COMPUTO.$S$2"
+    oSheet = oDoc.Sheets.getByName('S2')
+    oSheet.getCellByPosition(4, 0).Formula="=$COMPUTO.$S$2"
+    set_larghezza_colonne()
+    setTabColor(16762855)
+########################################################################
 def inizializza_analisi(arg=None):
     '''
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
@@ -5121,7 +5228,7 @@ def inizializza_analisi(arg=None):
 def inserisci_Riga_rossa(arg=None):
     '''
     Inserisce la riga rossa di chiusura degli elaborati
-    Questa riga è un rigerimento per varie operazioni
+    Questa riga è un riferimento per varie operazioni
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -9112,12 +9219,7 @@ def debug_progressbar (arg=None):
     finally:
         MsgBox(oDisp)
         oSI.end()
-########################################################################
-def debug(arg=None):
-    sistema_cose()
-
-
-########################################################################
+#######################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = trova_np,

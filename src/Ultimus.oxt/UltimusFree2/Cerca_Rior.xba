@@ -282,30 +282,6 @@ Function Colonna_giusta_EP (oSheet as object)
 
 end Function
 
-Function ultima_voce__
-	oSheet = thisComponent.CurrentController.ActiveSheet
-	Dim test As Long
-If NOT GlobalScope.BasicLibraries.isLibraryLoaded(&quot;Tools&quot;) Then GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;) 
-	test = getlastusedrow(osheet)
-	
-	Select Case oSheet.Name
-		Case &quot;Elenco Prezzi&quot;
-			stile = &quot;EP-aS&quot;
-		Case &quot;Analisi di Prezzo&quot;
-			stile = &quot;An-sfondo-basso Att End&quot;
-		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-			stile = &quot;Comp End Attributo&quot;
-		Case &quot;CONTABILITA&quot;
-			stile = &quot;Comp End Attributo_R&quot;
-	End Select
-	For i = test To 0 Step -1
-		If oSheet.getCellByPosition(0, i).cellstyle = stile Then
-			ultima_voce = i
-			Exit Function
-		EndIf 
-	next
-End Function
-
 Function ultima_voce
 	oSheet = thisComponent.CurrentController.ActiveSheet
     nRow = getlastusedrow(oSheet)

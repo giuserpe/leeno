@@ -7271,42 +7271,46 @@ Riordinando il computo trovo riferimenti a voci non ancora inserite.
 Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
 """\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
                         oSheet.getCellByPosition(44, SR).String = dict_articoli.get(ID).get('tariffa')
-                if '-' in mis[7]:
-                    for x in range(5, 8):
-                        try:
-                            if oSheet.getCellByPosition(x, SR).Value != 0:
-                                oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
-                        except:
-                            pass
-                    inverti_un_segno(SR)
+                try:
+                    mis[7]
+                    if '-' in mis[7]:
+                        for x in range(5, 8):
+                            try:
+                                if oSheet.getCellByPosition(x, SR).Value != 0:
+                                    oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
+                            except:
+                                pass
+                        inverti_un_segno(SR)
 
-                if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
-                    va = oSheet.getCellByPosition(5, SR).Formula
-                else:
-                    va = oSheet.getCellByPosition(5, SR).Value
-
-                if oSheet.getCellByPosition(6, SR).Type.value == 'FORMULA':
-                    vb = oSheet.getCellByPosition(6, SR).Formula
-                else:
-                    vb = oSheet.getCellByPosition(6, SR).Value
-                    
-                if oSheet.getCellByPosition(7, SR).Type.value == 'FORMULA':
-                    vc = oSheet.getCellByPosition(7, SR).Formula
-                else:
-                    vc = oSheet.getCellByPosition(7, SR).Value
-
-                if oSheet.getCellByPosition(8, SR).Type.value == 'FORMULA':
-                    vd = oSheet.getCellByPosition(8, SR).Formula
-                else:
-                    vd = oSheet.getCellByPosition(8, SR).Value
-
-                if mis[3] == None:
-                    va =''
-                else:
-                    if '^' in mis[3]:
-                        va = eval(mis[3].replace('^','**'))
+                    if oSheet.getCellByPosition(5, SR).Type.value == 'FORMULA':
+                        va = oSheet.getCellByPosition(5, SR).Formula
                     else:
-                        va = eval(mis[3])
+                        va = oSheet.getCellByPosition(5, SR).Value
+
+                    if oSheet.getCellByPosition(6, SR).Type.value == 'FORMULA':
+                        vb = oSheet.getCellByPosition(6, SR).Formula
+                    else:
+                        vb = oSheet.getCellByPosition(6, SR).Value
+                        
+                    if oSheet.getCellByPosition(7, SR).Type.value == 'FORMULA':
+                        vc = oSheet.getCellByPosition(7, SR).Formula
+                    else:
+                        vc = oSheet.getCellByPosition(7, SR).Value
+
+                    if oSheet.getCellByPosition(8, SR).Type.value == 'FORMULA':
+                        vd = oSheet.getCellByPosition(8, SR).Formula
+                    else:
+                        vd = oSheet.getCellByPosition(8, SR).Value
+
+                    if mis[3] == None:
+                        va =''
+                    else:
+                        if '^' in mis[3]:
+                            va = eval(mis[3].replace('^','**'))
+                        else:
+                            va = eval(mis[3])
+                except:
+                    pass
                 SR = SR+1
     numera_voci()
     try:
@@ -9219,7 +9223,17 @@ def debug_progressbar (arg=None):
     finally:
         MsgBox(oDisp)
         oSI.end()
-#######################################################################
+########################################################################
+def debug (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = getLastUsedCell(oSheet).EndRow+1
+    for i in reversed (range (0, fine)):
+        if oSheet.getCellByPosition(16, i).String == '1,00':
+            _gotoCella(16, i)
+            oSheet.getRows().removeByIndex(i, 1)
+
+########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = trova_np,

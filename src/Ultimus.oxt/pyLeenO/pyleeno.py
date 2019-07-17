@@ -8053,7 +8053,10 @@ dell'operazione che terminerà con un avviso.
                     # aggiorna formula vedi voce #214
                     if oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a' and \
                     oSheet.getCellByPosition(5, y).Type.value == 'FORMULA':
-                        vRif = int(oSheet.getCellByPosition(5, y).Formula.split('=J$')[-1])-1
+                        try:
+                            vRif = int(oSheet.getCellByPosition(5, y).Formula.split('=J$')[-1])-1
+                        except:
+                            vRif = int(oSheet.getCellByPosition(5, y).Formula.split('=J')[-1])-1
                         if oSheet.getCellByPosition(9, y).Value < 0:
                             _gotoCella(2, y)
                             inverti = 1

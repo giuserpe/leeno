@@ -5036,9 +5036,9 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('M3').String ='Quantità\nComputo'
     oSheet.getCellRangeByName('N3').String ='Importi\ncCmputo'
     oSheet.getCellRangeByName('L3:N3').CellBackColor = 16762855
-    oSheet.getCellRangeByName('P3').String ='Inc. % \nVeriante'
-    oSheet.getCellRangeByName('Q3').String ='Quantità\nVeriante'
-    oSheet.getCellRangeByName('R3').String ='Importi\nVeriante'
+    oSheet.getCellRangeByName('P3').String ='Inc. % \nVariante'
+    oSheet.getCellRangeByName('Q3').String ='Quantità\nVariante'
+    oSheet.getCellRangeByName('R3').String ='Importi\nVariante'
     oSheet.getCellRangeByName('P3:R3').CellBackColor = 16777062
     oSheet.getCellRangeByName('T3').String ='Inc. % \nContabilità'
     oSheet.getCellRangeByName('U3').String ='Quantità\nContabilità'
@@ -5079,6 +5079,7 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('S2:S' + str(y)).CellStyle = 'Default'
     oSheet.getCellRangeByName('W2:W' + str(y)).CellStyle = 'Default'
     oSheet.getCellRangeByPosition(3, 3, 250, y +10).clearContents(HARDATTR)
+    riga_rossa()
     #~ MsgBox('Rigenerazione del foglio eseguita!','')
 ########################################################################
 def inizializza_computo(arg=None):
@@ -9228,14 +9229,29 @@ def debug_progressbar (arg=None):
         oSI.end()
 ########################################################################
 def debug (arg=None):
+    'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
+    _gotoSheet('Elenco Prezzi')
     oSheet = oDoc.CurrentController.ActiveSheet
+    riordina_ElencoPrezzi()
     fine = getLastUsedCell(oSheet).EndRow+1
-    for i in reversed (range (0, fine)):
-        if oSheet.getCellByPosition(16, i).String == '1,00':
-            _gotoCella(16, i)
-            oSheet.getRows().removeByIndex(i, 1)
 
+    oSheet.getCellByPosition(30, 3).Formula = '=IF(A4=A3;1;0)'
+    oDoc.CurrentController.select(oSheet.getCellByPosition(30, 3))
+    copy_clip()
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(30, 3, 30, fine))
+    paste_clip()
+    # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    # ~for i in range (3, fine):
+        # ~oSheet.getCellByPosition(30, i).Formula = '=IF(A' + str(i+1) + '=A' + str(i) + ';1;0)'
+    # ~return
+    
+        
+    for i in reversed (range (0, fine)):
+        if oSheet.getCellByPosition(30, i).Value == 1:
+            _gotoCella(30, i)
+            oSheet.getRows().removeByIndex(i, 1)
+    oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

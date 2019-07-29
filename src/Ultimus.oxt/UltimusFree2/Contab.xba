@@ -459,7 +459,7 @@ i=1
 &apos;	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, daqui))
 &apos;copy_clip
 &apos;	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(fcol+1, daqui, fcol+1, fineFirme-2))
-&apos;paste_clip
+&apos;ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$J$&quot;&amp;getLastUsedRow(oSheetReg)&apos;-1
 ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Registro&quot;, area , nomearea)
 
@@ -796,7 +796,7 @@ firme (InsRow+17)
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, InsRow+27))
 copy_clip
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellRangeByPosition(fcol+1, InsRow+27, fcol+1, getLastUsedRow(oSheetSal)-1))
-paste_clip
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 	oSheetSal.rows.removeByIndex (InsRow+27,1)
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 Ripristina_statusLine &apos;Barra_chiudi_sempre_4
@@ -1120,7 +1120,7 @@ rem risistemo intestazioni
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,daVoce-1))
 copy_clip
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,ins-1))
-paste_clip
+ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 						oCell = oSheet.getCellRangeByPosition(0,daVoce,11,aVoce)
 						oCell.Rows.IsVisible=true
 						ThisComponent.CurrentController.Select(oCell)
@@ -1362,7 +1362,7 @@ fineFirme = fineFirme-1
 copy_clip
 		ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(2, daqui, 2, finefirme-1))
 &apos;Print finefirme-1
-paste_clip
+ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 	End If
 
 rem ----------------------------------------------------------------------

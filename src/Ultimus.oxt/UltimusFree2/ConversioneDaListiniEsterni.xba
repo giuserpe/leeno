@@ -194,7 +194,7 @@ copy_clip
 Focus_su_altro_Doc (newCap)
 uriga=getLastUsedRow(oSheetDest)+1
 	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0,uriga))
-paste_clip
+ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 	unSelect &apos;unselect ranges
 rem ----------------------------------------------------------------------
 rem inserisce il numero di prezzi
@@ -209,7 +209,7 @@ copy_clip
 Focus_su_altro_Doc (newCap)
 	oSheetNote = ThisComponent.Sheets.getByName(&quot;Note&quot;)
 	ThisComponent.CurrentController.Select(oSheetNote.GetCellByPosition(0,0))
-paste_clip
+ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 	unSelect &apos;unselect ranges
 	nomeCap =thisComponent.currentController.title
 rem ----------------------------------------------------------------------		

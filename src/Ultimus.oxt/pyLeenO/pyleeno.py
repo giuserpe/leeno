@@ -4308,8 +4308,10 @@ def leeno_conf(arg=None):
     # Contabilità abilita
     if oSheet.getCellRangeByName('S1.H328').Value == 1: oDlg_config.getControl('CheckBox7').State = 1
     sString = oDlg_config.getControl('TextField13')
-    #~ chi(conf.read(path_conf, 'Contabilità', 'idxsal'))
-    sString.Text = conf.read(path_conf, 'Contabilità', 'idxsal')
+    if conf.read(path_conf, 'Contabilità', 'idxsal') == '&273.Dlg_config.TextField13.Text':
+        sString.Text = '20'
+    else:
+        sString.Text = conf.read(path_conf, 'Contabilità', 'idxsal')
     sString = oDlg_config.getControl('ComboBox3')
     sString.Text = conf.read(path_conf, 'Contabilità', 'ricicla_da')
 
@@ -4445,7 +4447,7 @@ def config_default(arg=None):
     ('Contabilità', 'cont_inizio_voci_abbreviate', '100'),
     ('Contabilità', 'cont_fine_voci_abbreviate', '120'),
     ('Contabilità', 'abilita', '0'),
-    ('Contabilità', 'idxsal', '30'),
+    ('Contabilità', 'idxsal', '20'),
     ('Contabilità', 'ricicla_da', 'COMPUTO')
     )
     for el in parametri:
@@ -4711,7 +4713,8 @@ def partita_detrai(arg=None):
     #~ else:
         #~ return oDlg_input.getControl('TextField1').Text
 ########################################################################
-def genera_libretto():
+#~ def genera_libretto():
+def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA': return
@@ -4722,6 +4725,7 @@ def genera_libretto():
         nSal=10
     else:
         nSal = int(conf.read(path_conf, 'Contabilità', 'idxsal'))
+    chi(nSal )
     while nSal > 0:
         if oRanges.hasByName("#Lib#" + str(nSal)):
             break
@@ -9228,7 +9232,7 @@ def debug_progressbar (arg=None):
         MsgBox(oDisp)
         oSI.end()
 ########################################################################
-def debug (arg=None):
+def debug_elimina_voci_doppie (arg=None):
     'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
     _gotoSheet('Elenco Prezzi')

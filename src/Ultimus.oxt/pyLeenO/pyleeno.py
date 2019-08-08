@@ -39,7 +39,7 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
                                           ANNOTATION, FORMULA, HARDATTR,
                                           OBJECTS, EDITATTR, FORMATTED)
-#~ from com.sun.star.sheet.GeneralFunction import (MAX, MIN)
+from com.sun.star.sheet.GeneralFunction import (SUM, COUNT, AVERAGE, MAX, MIN, PRODUCT, COUNTNUMS)
 
 from com.sun.star.beans.PropertyAttribute import (MAYBEVOID, REMOVEABLE, MAYBEDEFAULT)
 ########################################################################
@@ -1074,8 +1074,8 @@ def ordina_col(ncol):
     ncol   { integer } : id colonna
     ordina i dati secondo la colonna con id ncol
     '''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -3739,23 +3739,52 @@ def debugclip(arg=None):
     sTxtCString = sText
     oClip.flushClipboard()
 ########################################################################
-def delete (arg=None):
+def rimuovi_area_di_stampa (arg=None):
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, ".uno:DeletePrintArea", "", 0, list())
+########################################################################
+def visualizza_PageBreak (arg=None):
+    '''
+
+    '''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    oProp = PropertyValue()
+    oProp.Name = 'PagebreakMode'
+    oProp.Value = True
+    properties =(oProp,)
+
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, ".uno:PagebreakMode", "", 0, properties)
+########################################################################
+def delete (arg=None):
+    '''
+    Elimina righe o colonne.
+    arg       { string }  : 'R' per righe
+                            'C' per colonne
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
     oProp = PropertyValue()
     oProp.Name = 'Flags'
-    oProp.Value = 'R'
+    oProp.Value = arg
     properties =(oProp,)
 
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:DeleteCell", "", 0, properties)
 ########################################################################
 def copy_clip(arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -3765,7 +3794,7 @@ def copy_clip(arg=None):
 ########################################################################
 def paste_clip(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    #~ oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -3907,6 +3936,7 @@ def numera_voci(bit=1):#
     lastRow = getLastUsedCell(oSheet).EndRow+1
     lrow = Range2Cell()[1]
     n = 1
+    
     if bit==0:
         for x in reversed(range(0, lrow)):
             if oSheet.getCellByPosition(1,x).CellStyle in('comp Art-EP', 'comp Art-EP_R') and oSheet.getCellByPosition(1,x).CellBackColor != 15066597:
@@ -3930,7 +3960,6 @@ def numera_voci(bit=1):#
                 n = n+1
             # ~oSheet.getCellByPosition(0,row).Value = n
             # ~n = n+1
-
 ########################################################################
 def refresh(arg=1):
     '''
@@ -4312,6 +4341,8 @@ def leeno_conf(arg=None):
         sString.Text = '20'
     else:
         sString.Text = conf.read(path_conf, 'Contabilità', 'idxsal')
+        if sString.Text == '':
+            sString.Text = '20'
     sString = oDlg_config.getControl('ComboBox3')
     sString.Text = conf.read(path_conf, 'Contabilità', 'ricicla_da')
 
@@ -4690,28 +4721,7 @@ def partita_aggiungi(arg=None):
     partita('PARTITA PROVVISORIA')
 def partita_detrai(arg=None):
     partita('SI DETRAE PARTITA PROVVISORIA')
-#~ ########################################################################
-#~ def InputBox (label, titolo, valore=''):
-    #~ '''
-    #~ Attende l'input dell'utente e ne restituisce il valore
-    #~ label   { string }  : etichetta di richiesta
-    #~ titolo  { string }  : titolo della finestra
-    #~ valore  { any }     : valore di default
-    #~ '''
-    #~ psm = uno.getComponentContext().ServiceManager
-    #~ dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    #~ oDlg_input = dp.createDialog("vnd.sun.star.script:UltimusFree2.Dlg_input?language=Basic&location=application")
-    #~ oDialog1Model = oDlg_input.Model
 
-    #~ oDlg_input.Title = titolo #Menù input
-    #~ oDlg_input.getControl('Label1').Text = label
-    #~ oDlg_input.getControl('TextField1').Text = str(valore)
-    #~ oDlg_input.execute()
-
-    #~ if oDlg_input.execute()==0:
-        #~ return
-    #~ else:
-        #~ return oDlg_input.getControl('TextField1').Text
 ########################################################################
 #~ def genera_libretto():
 def debug (arg=None):
@@ -4722,23 +4732,25 @@ def debug (arg=None):
     oRanges = oDoc.NamedRanges
     nSal=1
     if oRanges.hasByName("#Lib#1") == True:
-        nSal=10
+        nSal=20
     else:
-        nSal = int(conf.read(path_conf, 'Contabilità', 'idxsal'))
-    chi(nSal )
+        try:
+            nSal = int(conf.read(path_conf, 'Contabilità', 'idxsal'))
+        except ValueError:
+            nSal = 20
     while nSal > 0:
         if oRanges.hasByName("#Lib#" + str(nSal)):
             break
         nSal = nSal-1
     #~ Recupero la prima riga non registrata
+    oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
     if nSal >= 1:
         oNamedRange = oRanges.getByName("#Lib#" + str(nSal)).ReferredCells.RangeAddress
         frow = oNamedRange.StartRow
         lrow = oNamedRange.EndRow
         daVoce = oNamedRange.EndRow+2
-        #~ mri(oRanges.getByName("#Lib#" + str(nSal)).ReferredCells.RangeAddress)
     #~ recupero l'ultimo numero di pagina usato (serve in caso di libretto unico)
-        oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
+        #~ oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
         old_nPage = int(oSheetCont.getCellByPosition(20,lrow).Value)
         daVoce = int(oSheetCont.getCellByPosition(0,daVoce).Value)
         if daVoce == 0:
@@ -4752,31 +4764,32 @@ def debug (arg=None):
 #############
 # PRIMA RIGA
     daVoce = InputBox (str(daVoce), "Registra voci Libretto da n.")
-    lrow = int(uFindStringCol(daVoce, 0, oSheet))
+    try:
+        lrow = int(uFindStringCol(daVoce, 0, oSheet))
+    except TypeError:
+        return
     sStRange = Circoscrive_Voce_Computo_Att (lrow)
     primariga = sStRange.RangeAddress.StartRow
 #############
 #  ULTIMA RIGA
     oCellRange = oSheetCont.getCellRangeByPosition(0,3,0,getLastUsedCell(oSheetCont).EndRow -2)
-    aVoce = oCellRange #.computeFunction('com.sun.star.sheet.GeneralFunction')
-    aVoce = oDoc.createInstance("com.sun.star.sheet.GeneralFunction.MAX")
-    mri(aVoce)
-#~ 'end sub
-    
-        #~ aVoce = InputBox ("A voce n.:", "REGISTRA", aVoce)
-        #~ oaVoce=uFindString_1(aVoce, oSheetCont, 0)
-    #~ lrow =oaVoce.RangeAddress.StartRow ' posizione ultima voce
-    #~ sStRange = Circoscrive_Voce_Computo_Att (lrow)
-    #~ ultimariga =sStRange.RangeAddress.EndRow 'ultima riga dell'ultima voce
-    
-    #~ lrowDown =uFindString("T O T A L E", oSheetCont).RangeAddress.EndRow
-    #~ oCell = oSheetCont.getCellRangeByPosition(19,primariga,25,lrowDown)'ultimariga) rem ultima riga del range
-    #~ ThisComponent.CurrentController.Select(oCell)
-    #~ rimuovi_area_di_stampa
-#~ 'Cancella_dati 'pulisco le colonne Lib.N., Lib.P., flag, SAL N., Importo parziale
-    #~ ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) 'deseleziona
-    #~ togli_salti_pagina
-    #~ Visualizza_PageBreak
+    aVoce = int(oCellRange.computeFunction(MAX))
+    aVoce = InputBox (str(aVoce), "A voce n.:")
+    try:
+        lrow = int(uFindStringCol(aVoce, 0, oSheet))
+    except TypeError:
+        return 
+    sStRange = Circoscrive_Voce_Computo_Att (lrow)
+    ultimariga = sStRange.RangeAddress.EndRow
+
+    lrowDown =uFindStringCol("T O T A L E", 2, oSheetCont)
+    oCell = oSheetCont.getCellRangeByPosition(19,primariga,25,lrowDown)
+    oDoc.CurrentController.select(oCell)
+    rimuovi_area_di_stampa()
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    oSheetCont.removeAllManualPageBreaks()
+    visualizza_PageBreak()
+
     
     #~ nomearea="#Lib#"+nsal
     #~ rem annota importo parziale SAL

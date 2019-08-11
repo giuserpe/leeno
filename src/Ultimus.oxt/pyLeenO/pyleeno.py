@@ -8605,7 +8605,9 @@ def make_pack(arg=None, bar=0):
             nomeZip2= os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO.oxt'
             binZip = os.getenv("HOME") +'/'+ src_oxt +'/leeno/bin/LeenO.oxt'
-        else:
+            subprocess.Popen('nemo '+ os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT', shell=True, stdout=subprocess.PIPE)
+
+        else: 
             nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
             subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)

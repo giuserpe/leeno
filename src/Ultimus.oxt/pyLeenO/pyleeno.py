@@ -446,8 +446,19 @@ def copia_sorgente_per_git(arg=None):
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
+        if not os.path.exists(dest):
+            try:
+                dest = os.getenv("HOME") +'/'+ src_oxt +'/leeno/src/Ultimus.oxt/'
+                os.makedirs(dest)
+                os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/leeno/bin/')
+                os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT')
+            except FileExistsError:
+                pass
+            comandi = 'cd ' + dest +' && gnome-terminal && gitk &'
+        else:
+            comandi = 'cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &'
         if processo('wish') == False:
-            subprocess.Popen('cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &', shell=True, stdout=subprocess.PIPE)
+            subprocess.Popen(comandi, shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
             try:
@@ -8582,9 +8593,22 @@ def make_pack(arg=None, bar=0):
         oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-        nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-        subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
+        dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
+        if not os.path.exists(dest):
+            try:
+                dest = os.getenv("HOME") +'/'+ src_oxt +'/leeno/src/Ultimus.oxt/'
+                os.makedirs(dest)
+                os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/bin/')
+                os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT')
+            except FileExistsError:
+                pass
+            nomeZip2= os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO-' + tempo + '.oxt'
+            nomeZip = os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO.oxt'
+            binZip = os.getenv("HOME") +'/'+ src_oxt +'/leeno/bin/LeenO.oxt'
+        else:
+            nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+            nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+            subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
             try:
@@ -8601,6 +8625,7 @@ def make_pack(arg=None, bar=0):
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile(nomeZip2, nomeZip)
+    shutil.copyfile(nomeZip2, binZip)
 #######################################################################
 def dlg_attesa(msg=''):
     '''

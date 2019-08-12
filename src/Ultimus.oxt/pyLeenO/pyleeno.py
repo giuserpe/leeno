@@ -2113,7 +2113,6 @@ def XPWE_out(elaborato, out_file):
     UtiliImpresa.text = oSheet.getCellByPosition(7,320).String[:-1].replace(',','.')
     OneriAccessoriSc.text = oSheet.getCellByPosition(7,318).String[:-1].replace(',','.')
     SpeseGenerali.text = oSheet.getCellByPosition(7,319).String[:-1].replace(',','.')
-    chi(444)
 
 #~ Configurazioni
     PU  = str(len(getFormatString('comp 1-a PU').split(',')[-1]))
@@ -8111,7 +8110,22 @@ dell'operazione che terminerà con un avviso.
                     #cambia le formule di prezzo unitario e importo
         if oDoc.getSheets().hasByName('CONTABILITA'):
             oSheet = oDoc.getSheets().getByName('CONTABILITA')
+            oSheet.getCellRangeByName('A2').Formula = '=P2'
             test = getLastUsedCell(oSheet).EndRow+1
+            for y in range(0, test):
+                if 'comp 1-a' in oSheet.getCellByPosition(2, y).CellStyle:
+                    if oSheet.getCellByPosition(9, y).Value < 0:
+                        oSheet.getCellByPosition(2, y).CellStyle = 'comp 1-a ROSSO'
+                        oSheet.getCellByPosition(5, y).CellStyle = 'comp 1-a PU ROSSO'
+                        oSheet.getCellByPosition(6, y).CellStyle = 'comp 1-a LUNG ROSSO'
+                        oSheet.getCellByPosition(7, y).CellStyle = 'comp 1-a LARG ROSSO'
+                        oSheet.getCellByPosition(8, y).CellStyle = 'comp 1-a peso ROSSO'
+                    #~  == 'comp 1-a':
+                    else:
+                        oSheet.getCellByPosition(5, y).CellStyle = 'comp 1-a PU'
+                        oSheet.getCellByPosition(6, y).CellStyle = 'comp 1-a LUNG'
+                        oSheet.getCellByPosition(7, y).CellStyle = 'comp 1-a LARG'
+                        oSheet.getCellByPosition(8, y).CellStyle = 'comp 1-a peso'
             for n in range(0, test):
                 if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
                     oSheet.getCellByPosition(8, n).CellStyle = 'Comp-Bianche in mezzo_R'

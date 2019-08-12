@@ -1972,7 +1972,6 @@ def XPWE_out(elaborato, out_file):
         dettaglio_misure(0)
     numera_voci(1)
     top = Element('PweDocumento')
-    
 #~ intestazioni
     CopyRight = SubElement(top,'CopyRight')
     CopyRight.text = 'Copyright ACCA software S.p.A.'
@@ -1988,8 +1987,6 @@ def XPWE_out(elaborato, out_file):
     SourceNome = SubElement(top,'SourceNome')
     SourceNome.text = 'LeenO.org'
     FileNameDocumento = SubElement(top,'FileNameDocumento')
-
-
 #~ dati generali
     PweDatiGenerali = SubElement(top,'PweDatiGenerali')
     PweMisurazioni = SubElement(top,'PweMisurazioni')
@@ -2014,7 +2011,6 @@ def XPWE_out(elaborato, out_file):
     ParteOpera.text = ''
 #~ Capitoli e Categorie
     PweDGCapitoliCategorie = SubElement(PweDatiGenerali,'PweDGCapitoliCategorie')
-
 #~ SuperCategorie
     oSheet = oDoc.getSheets().getByName(elaborato)
     lastRow = ultima_voce(oSheet)+1
@@ -2117,7 +2113,8 @@ def XPWE_out(elaborato, out_file):
     UtiliImpresa.text = oSheet.getCellByPosition(7,320).String[:-1].replace(',','.')
     OneriAccessoriSc.text = oSheet.getCellByPosition(7,318).String[:-1].replace(',','.')
     SpeseGenerali.text = oSheet.getCellByPosition(7,319).String[:-1].replace(',','.')
-    
+    chi(444)
+
 #~ Configurazioni
     PU  = str(len(getFormatString('comp 1-a PU').split(',')[-1]))
     LUN = str(len(getFormatString('comp 1-a LUNG').split(',')[-1]))
@@ -2244,6 +2241,7 @@ def XPWE_out(elaborato, out_file):
                 IncATTR.text = ''
             else:
                 IncATTR.text = str(oSheet.getCellByPosition(7, n).Value * 100)
+
 #Analisi di prezzo
     if len(lista_AP) != 0:
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
@@ -2365,6 +2363,7 @@ def XPWE_out(elaborato, out_file):
                 k += 1
             except:
                 pass
+
 #COMPUTO/VARIANTE/CONTABILITA
     oSheet = oDoc.getSheets().getByName(elaborato)
     PweVociComputo = SubElement(PweMisurazioni,'PweVociComputo')
@@ -4737,6 +4736,8 @@ def partita_detrai(arg=None):
 #~ def genera_libretto():
 def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
+    mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
+    return
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA': return
     numera_voci()
@@ -8001,9 +8002,14 @@ dell'operazione che terminerà con un avviso.
 # aggiungi stili di cella
         for el in ('comp 1-a PU', 'comp 1-a LUNG','comp 1-a LARG','comp 1-a peso','comp 1-a', 'Blu','Comp-Variante num sotto'):
             oStileCella = oDoc.createInstance("com.sun.star.style.CellStyle")
+            if oDoc.StyleFamilies.getByName('CellStyles').hasByName(el) == False:
+                oDoc.StyleFamilies.getByName('CellStyles').insertByName(el, oStileCella)
+                oStileCella.ParentStyle = 'comp 1-a'
+        for el in ('comp 1-a PU', 'comp 1-a LUNG','comp 1-a LARG','comp 1-a peso','comp 1-a', 'Blu','Comp-Variante num sotto'):
+            oStileCella = oDoc.createInstance("com.sun.star.style.CellStyle")
             if oDoc.StyleFamilies.getByName("CellStyles").hasByName(el + ' ROSSO') == False:
                 oDoc.StyleFamilies.getByName('CellStyles').insertByName(el + ' ROSSO', oStileCella)
-                oStileCella.ParentStyle = el
+                oStileCella.ParentStyle = 'comp 1-a'
                 oDoc.StyleFamilies.getByName("CellStyles").getByName(el + ' ROSSO').CharColor = 16711680
 ############
 # copia gli stili di cella dal template, ma non va perché tocca lavorare sulla FormatString - quando imparerò

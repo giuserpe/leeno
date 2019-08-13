@@ -1571,12 +1571,12 @@ def scelta_viste(arg=None):
 
             oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
             SR = oRangeAddress.StartRow+1
-            ER = oRangeAddress.EndRow-1
+            ER = oRangeAddress.EndRow#-1
 
             oSheet.getCellRangeByPosition(11, 0, 26, 0).Columns.IsVisible = True
             oSheet.getCellRangeByPosition(23 , SR, 25, ER).CellStyle = 'EP statistiche'
             oSheet.getCellRangeByPosition(26, SR, 26, ER+1).CellStyle = 'EP-mezzo %'
-            
+            oSheet.getCellRangeByName('AA2').CellStyle = 'EP-mezzo %'
             formule = list()
             oSheet.getCellByPosition(11, 0).String = 'COMPUTO'
             oSheet.getCellByPosition(15, 0).String = 'VARIANTE'
@@ -5051,6 +5051,8 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('T1').String ='CONTABILITA'
     oSheet.getCellRangeByName('B2').String ='QUESTA RIGA NON VIENE STAMPATA'
     oSheet.getCellRangeByName("'Elenco Prezzi'.A2:AA2").CellStyle = "comp In testa"
+    oSheet.getCellRangeByName("'Elenco Prezzi'.AA2").CellStyle = 'EP-mezzo %'
+
     oSheet.getCellRangeByName("'Elenco Prezzi'.A3:AA3").CellStyle = "EP-a -Top"
     oSheet.getCellRangeByName('A3').String ='Codice\nArticolo'
     oSheet.getCellRangeByName('B3').String ='DESCRIZIONE DEI LAVORI\nE DELLE SOMMINISTRAZIONI'
@@ -9292,7 +9294,8 @@ def debug_progressbar (arg=None):
         MsgBox(oDisp)
         oSI.end()
 ########################################################################
-def debug_elimina_voci_doppie (arg=None):
+# ~ def debug_elimina_voci_doppie (arg=None):
+def debug (arg=None):
     'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
     _gotoSheet('Elenco Prezzi')

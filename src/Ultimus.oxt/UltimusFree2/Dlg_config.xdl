@@ -7,7 +7,6 @@
   <dlg:style dlg:style-id="2" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="3" dlg:font-height="11"/>
   <dlg:style dlg:style-id="4" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="5" dlg:font-height="11"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:titledbox dlg:style-id="0" dlg:id="Generale" dlg:tab-index="0" dlg:left="6" dlg:top="7" dlg:width="230" dlg:height="117" dlg:help-text="&amp;211.Dlg_config.Generale.HelpText">
@@ -69,6 +68,6 @@
   <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox5" dlg:tab-index="30" dlg:left="10" dlg:top="48" dlg:width="106" dlg:height="10" dlg:help-text="&amp;310.Dlg_config.CheckBox5.HelpText" dlg:value="&amp;311.Dlg_config.CheckBox5.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox6" dlg:tab-index="31" dlg:left="124" dlg:top="90" dlg:width="104" dlg:height="10" dlg:help-text="&amp;312.Dlg_config.CheckBox6.HelpText" dlg:value="&amp;313.Dlg_config.CheckBox6.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:text dlg:id="Label5" dlg:tab-index="32" dlg:left="171" dlg:top="85" dlg:width="0" dlg:height="2" dlg:help-text="&amp;492.Dlg_config.Label5.HelpText" dlg:value="&amp;493.Dlg_config.Label5.Label"/>
-  <dlg:textfield dlg:style-id="5" dlg:id="TextField13" dlg:tab-index="33" dlg:left="56" dlg:top="142" dlg:width="50" dlg:height="12" dlg:help-text="&amp;668.Dlg_config.TextField13.HelpText" dlg:align="center" dlg:value="&amp;669.Dlg_config.TextField13.Text"/>
+  <dlg:textfield dlg:style-id="3" dlg:id="TextField13" dlg:tab-index="33" dlg:left="56" dlg:top="142" dlg:width="50" dlg:height="12" dlg:help-text="&amp;668.Dlg_config.TextField13.HelpText" dlg:align="center" dlg:value="&amp;669.Dlg_config.TextField13.Text"/>
  </dlg:bulletinboard>
 </dlg:window>

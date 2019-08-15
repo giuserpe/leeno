@@ -28,9 +28,11 @@ import time
 import copy
 from multiprocessing import Process, freeze_support
 import threading
+import traceback
 import re
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
+from com.sun.star.task import XJobExecutor
 from datetime import datetime, date
 #~ from com.sun.star.lang import Locale
 from com.sun.star.beans import PropertyValue
@@ -9132,7 +9134,6 @@ def fissa (arg=None):
     return
 
 ########################################################################
-import traceback
 def debug_errore(arg=None):
     #~ sStRange = Circoscrive_Voce_Computo_Att(lrow)
     #~ return
@@ -9320,6 +9321,14 @@ def debug (arg=None):
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
 ########################################################################
+def trigger(self, arg):
+    # ~ globals() DlgMain()
+    chi(arg)
+    if arg=='DlgMain': DlgMain()
+########################################################################
+def errore(arg=None):
+    MsgBox (traceback.format_exc())
+########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 g_exportedScripts = trova_np,
@@ -9336,11 +9345,11 @@ g_exportedScripts = trova_np,
 # <<< vedi in description.xml
 ########################################################################
 # https://forum.openoffice.org/it/forum/viewtopic.php?f=27&t=9470
-def trigger(self, argomento):
-    globals()[argomento]()
 g_ImplementationHelper = unohelper.ImplementationHelper()
-#~ g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",("org.giuseppe-vizziello.leeno",),)
-g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",())
+g_ImplementationHelper.addImplementation(None,                          # UNO object class
+                                        "org.giuseppe-vizziello.leeno", # implemenation name
+                                        ("bart.aimar.leeno",),)         # list of implemented services
+# ~ g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",())
 ########################################################################
 ########################################################################
 ########################################################################

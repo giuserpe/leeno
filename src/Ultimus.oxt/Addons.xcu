@@ -10,10 +10,10 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
 <!--
-            <value>service:bart.aimar.leeno?DlgMain</value>
+            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
 -->
+            <value>service:org.bart.aimar.leeno?DlgMain</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>

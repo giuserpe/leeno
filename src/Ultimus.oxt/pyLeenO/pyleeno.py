@@ -7371,12 +7371,7 @@ stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
 stili_analisi =('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc',
 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco =('EP-Cs', 'EP-aS')
-createUnoService =(
-        XSCRIPTCONTEXT
-        .getComponentContext()
-        .getServiceManager()
-        .createInstance
-                    )
+createUnoService =(XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
 GetmyToolBarNames =('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI',
@@ -9344,12 +9339,27 @@ g_exportedScripts = trova_np,
 # vedi pag.264 di "Manuel du programmeur oBasic"
 # <<< vedi in description.xml
 ########################################################################
+# ~ def createUnoService(service, ctx):
+    # ~ return ctx.ServiceManager.createInstanceWithContext(service, ctx)
+########################################################################
+class pyLeenO( unohelper.Base, XJobExecutor ):
+    def __init__( self, ctx ):
+        self.ctx = ctx
+    def trigger( self, args ):
+        if arg=='DlgMain': DlgMain()
+########################################################################
 # https://forum.openoffice.org/it/forum/viewtopic.php?f=27&t=9470
 g_ImplementationHelper = unohelper.ImplementationHelper()
-g_ImplementationHelper.addImplementation(None,                          # UNO object class
+g_ImplementationHelper.addImplementation(pyLeenO,                       # UNO object class
                                         "org.giuseppe-vizziello.leeno", # implemenation name
-                                        ("bart.aimar.leeno",),)         # list of implemented services
-# ~ g_ImplementationHelper.addImplementation(None, "org.giuseppe-vizziello.leeno",())
+                                        ("org.bart.aimar.leeno",),)     # list of implemented services
+########################################################################
+# ~ g_ImplementationHelper = unohelper.ImplementationHelper()
+# ~ g_ImplementationHelper.addImplementation(None,                          # UNO object class
+                                        # ~ "org.giuseppe-vizziello.leeno", # implemenation name
+                                        # ~ ("org.giuseppe-vizziello.leeno",),)         # list of implemented services
 ########################################################################
 ########################################################################
-########################################################################
+# ~ if __name__ == '__main__':    
+    # ~ from Office.Bridge import XSCRIPTCONTEXT  
+    # ~ main()

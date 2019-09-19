@@ -10,10 +10,10 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-<!--
             <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
--->
-            <value>service:org.bart.aimar.leeno?DlgMain</value>
+            <!--
+                 <value>service:org.giuseppe-vizziello.leeno?DlgMain</value>
+            -->
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -801,7 +801,7 @@
         </node>
       </node>
     </node>
-    <!--                                      -->
+    <!--                  -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">

@@ -114,7 +114,7 @@ FAI:
 &apos;1) registra la posizione
 	oPartenza_A = ThisComponent.currentController.activeSheet.getCellRangeByPosition( 1, lrow, 2, lrow )
 &apos;2) focus su Computo
-	Sel_Computo
+		ScriptPy(&quot;pyleeno.py&quot;, &quot;vai_a_Computo&quot;)
 &apos;3) fine macro: adesso tocca all&apos;utente cercare il suo codice...
 	&apos;(alla fine dovrà rieseguire la SC)
 	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1 and _

@@ -145,6 +145,7 @@ Sub computo_OnSelect
 End Sub
 
 Sub elenco_OnFocus
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
 Sub elenco_OnUnFocus

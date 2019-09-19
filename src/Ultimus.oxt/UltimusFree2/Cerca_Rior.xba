@@ -43,54 +43,6 @@ unSelect &apos;unselect ranges
 	Riordina_0 = lrowF
 End Function 
 
-sub cella_cella() &apos; passa cella per cella e copiando dati (o altro) da una sheet ad un&apos;altra 
-&apos; nome sheet sorgente: lo stesso con aggiunto un suffisso &quot;_2&quot;
- Dim nCurCol As Integer
- Dim nCurRow As Integer
- Dim nEndCol As Integer
- Dim nEndRow As Integer
- Dim oCell As Object
- Dim oCursor As Object
- Dim aAddress As Variant
- Dim sFind As String
-
-oSheetDest = ThisComponent.currentController.activeSheet
-oSheetsrc = ThisComponent.Sheets.getByName((ThisComponent.currentcontroller.activesheet.name &amp; &quot;_2&quot;))
-&apos;xray oSheetsrc
-&apos;exit sub
- oCell = oSheetsrc.GetCellbyPosition( 0, 0 )
- oCursor = oSheetsrc.createCursorByRange(oCell)
- oCursor.GotoEndOfUsedArea(True)
- aAddress = oCursor.RangeAddress
- 
-&apos; nEndRow = aAddress.EndRow &apos;DEFINIRE QUI IL RANGE
- nEndRow = 929					&apos;DEFINIRE QUI IL RANGE
- &apos; nEndCol = aAddress.EndColumn &apos;DEFINIRE QUI IL RANGE
- nEndCol = 9					&apos;DEFINIRE QUI IL RANGE
- Clessid_lock_Start
-&apos;Barra_Apri_Chiudi_4
- For nCurCol = 0 To nEndCol &apos;Go through the range column by column,
- For nCurRow = 0 To nEndRow &apos;row by row.
- oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
- lcolorSRC=oCellSRC.Cellbackcolor
- lCharColorSRC=oCellSRC.CharColor
- &apos; xray oCellSRC
- oCellDest = oSheetDest.GetCellByPosition( nCurCol, nCurRow )
- oCellDest.Cellbackcolor = lcolorSRC 
- oCellDest.CharColor = lCharColorSRC 
- &apos; CharColor 
- &apos; sFind = oCell.String &apos;Get cell contents.
- &apos; If sFind = sString then
- &apos; uFindString = oCell
- &apos; Exit sub
- &apos; End If
- Next
- Next
- Clessid_lock_End
- &apos; oProgressbar.End
- msgbox &quot;Finito!&quot;
-End Sub
-
 rem Return the cell that contains the text
 Function uFindString(sString$, oSheet ) As Variant &apos; richiamata da diverse cose
 	Dim nCurCol As Integer

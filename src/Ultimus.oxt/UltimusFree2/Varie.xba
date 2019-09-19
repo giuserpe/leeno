@@ -95,13 +95,13 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 			If oSheet.GetCellByPosition(0, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; And _
 				oSheet.GetCellByPosition(1, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-generica&quot; Then Exit Sub
 		Case &quot;Elenco Prezzi&quot;
-			Exit Sub
-&apos;			Select Case oSheet.GetCellByPosition(0, lrow).CellStyle
-&apos;				Case &quot;EP-aS&quot; ,&quot;EP-a&quot;, &quot;EP-Cs&quot;
-&apos;					GoTo vai:
-&apos;				Case Else
-&apos;					Exit Sub
-&apos;			End Select
+&apos;			Exit Sub
+			Select Case oSheet.GetCellByPosition(0, lrow).CellStyle
+				Case &quot;EP-aS&quot; ,&quot;EP-a&quot;, &quot;EP-Cs&quot;
+					GoTo vai:
+				Case Else
+					Exit Sub
+			End Select
 	End Select
 vai:
 	Dim test As String

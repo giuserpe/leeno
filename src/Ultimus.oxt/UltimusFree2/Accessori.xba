@@ -40,7 +40,7 @@ Sub Apri_sheet_licenza &apos; apre banalmente un foglio nascosto
 		else
 				oSheet.isVisible = false
 				If Constrolla_se_M1 = true then
-							Vai_a_M1
+								ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_M1&quot;)
 					else
 							Sel_Altre_Opz
 				end if

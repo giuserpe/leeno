@@ -5,10 +5,6 @@
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Accelerators.xcu" />
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.basic-library" manifest:full-path="UltimusFree2/" />
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script" manifest:full-path="pyLeenO" />
-<!--
-   <manifest:file-entry manifest:full-path="pyLeenO/pyleeno.py" manifest:media-type="application/vnd.sun.star.uno-component;type=Python"/>
--->
-
   <!--
        <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/DrawWindowState.xcu" />
        <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/CalcWindowState.xcu" />

@@ -470,7 +470,7 @@ def copia_sorgente_per_git(arg=None):
             dest = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH") +'\\'+ src_oxt +'\\leeno\\src\\Ultimus.oxt\\'
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
-            subprocess.Popen('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen('w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"', shell=True, stdout=subprocess.PIPE)
     distutils.dir_util.copy_tree(oxt_path, dest)
     return
 ########################################################################
@@ -1031,28 +1031,29 @@ def Filtra_Computo_C(arg=None): #filtra in base al codice di prezzo
     sString = oSheet.getCellByPosition(7, 20).String
     Filtra_computo(nSheet, 1, sString)
 ########################################################################
-def Vai_a_M1(arg=None):
+def vai_a_M1(arg=None):
     _gotoSheet('M1', 85)
     _primaCella(0,0)
 ########################################################################
-def Vai_a_S2(arg=None):
+def vai_a_S2(arg=None):
     _gotoSheet('S2')
+    _primaCella(0,0)
 ########################################################################
 def Vai_a_S1(arg=None):
     _gotoSheet('S1')
     _primaCella(0,190)
 ########################################################################
-def Vai_a_ElencoPrezzi(arg=None):
+def vai_a_ElencoPrezzi(arg=None):
     _gotoSheet('Elenco Prezzi')
 ########################################################################
-def Vai_a_Computo(arg=None):
+def vai_a_Computo(arg=None):
     _gotoSheet('COMPUTO')
 ########################################################################
-def Vai_a_Variabili(arg=None):
+def vai_a_variabili(arg=None):
     _gotoSheet('S1', 85)
     _primaCella(6,289)
 ########################################################################
-def Vai_a_Scorciatoie(arg=None):
+def vai_a_Scorciatoie(arg=None):
     _gotoSheet('Scorciatoie')
     _primaCella(0,0)
 ########################################################################
@@ -1151,7 +1152,7 @@ def sproteggi_sheet_TUTTE(arg=None):
         oDoc.Sheets.moveByName("M1", 5)
     oDoc.Sheets.moveByName("S1", 6)
     oDoc.Sheets.moveByName("S2", 7)
-    oDoc.Sheets.moveByName("S4", 9)
+    # ~oDoc.Sheets.moveByName("S4", 9)
     if oDoc.Sheets.hasByName("S5"):
         oDoc.Sheets.moveByName("S5", 10)
     if oDoc.Sheets.hasByName("copyright_LeenO"):
@@ -1213,7 +1214,8 @@ def show_sheets(x=True):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
-    for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+    # ~for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+    for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
         oSheets.remove(nome)
     #~ oSheets.remove('Elenco Prezzi')
     #~ oSheets.remove('COMPUTO')
@@ -4290,7 +4292,8 @@ def leeno_conf(arg=None):
     oDialog1Model = oDlg_config.Model
 
     oSheets = list(oDoc.getSheets().getElementNames())
-    for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+    # ~for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+    for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
         oSheets.remove(nome)
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
@@ -7582,9 +7585,9 @@ def filtra_codice(voce=None):
     # ~oSheet = oDoc.CurrentController.ActiveSheet
         try:
             elaborato = scegli_elaborato('Ricerca di ' + voce)
+            _gotoSheet(elaborato)
         except:
             return
-        _gotoSheet(elaborato)
         oSheet = oDoc.Sheets.getByName(elaborato)
         _gotoCella(0,6)
         next_voice(Range2Cell()[1],1)
@@ -7737,7 +7740,7 @@ class trun(threading.Thread):
     def run(self):
         while True:
             # ~datarif = datetime.now()
-            time.sleep(300) #5 min
+            time.sleep(900) #5 min
             bak()
             # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 def autorun(arg=None):
@@ -7818,7 +7821,7 @@ def autoexec(arg=None):
         if vedi == 'Menù Principale':
             DlgMain()
         elif vedi == 'Dati Generali':
-            Vai_a_Variabili()
+            vai_a_variabili()
         elif vedi in('Elenco Prezzi', 'COMPUTO'):
             _gotoSheet(vedi)
 #
@@ -8629,6 +8632,7 @@ def make_pack(arg=None, bar=0):
         else: 
             nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+            binZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/bin/LeenO.oxt'
             subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
@@ -8642,6 +8646,7 @@ def make_pack(arg=None, bar=0):
         else:
             nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+            binZip = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/bin/LeenO.oxt'
             subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\', shell=True, stdout=subprocess.PIPE)
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
@@ -8975,6 +8980,8 @@ def sistema_pagine (arg=None):
     #~ committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String 
     committente = oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String #committente
     luogo = oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
+    oSheet = oDoc.CurrentController.ActiveSheet
+    adatta_altezza_riga(oSheet.Name)
     #~ su_dx = oDoc.NamedRanges.Bozza_8.ReferredCells.String
     
     ### cancella stili di pagina #######################################
@@ -9121,7 +9128,10 @@ def fissa (arg=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = Range2Cell()[0]
     lrow = Range2Cell()[1]
-    if oSheet.Name in('COMPUTO', 'VARIANTE', ' Elenco Prezzi', 'CONTABILITA',):
+    if oSheet.Name in('COMPUTO', 'VARIANTE', 'CONTABILITA',):
+        oDoc.CurrentController.freezeAtPosition(0, 3)
+    elif oSheet.Name in('Elenco Prezzi'):
+        #~ _gotoCella(0, 3)
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
@@ -9290,8 +9300,8 @@ def debug_progressbar (arg=None):
         MsgBox(oDisp)
         oSI.end()
 ########################################################################
-# ~ def debug_elimina_voci_doppie (arg=None):
-def debug (arg=None):
+def debug_elimina_voci_doppie (arg=None):
+# ~def debug (arg=None):
     'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
     _gotoSheet('Elenco Prezzi')
@@ -9316,10 +9326,9 @@ def debug (arg=None):
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
 ########################################################################
-def trigger(self, arg):
-    # ~ globals() DlgMain()
-    chi(arg)
-    if arg=='DlgMain': DlgMain()
+def debug (arg=None):
+    #~ debug_elimina_voci_doppie()
+    autorun()
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())
@@ -9339,27 +9348,9 @@ g_exportedScripts = trova_np,
 # vedi pag.264 di "Manuel du programmeur oBasic"
 # <<< vedi in description.xml
 ########################################################################
-# ~ def createUnoService(service, ctx):
-    # ~ return ctx.ServiceManager.createInstanceWithContext(service, ctx)
-########################################################################
-class pyLeenO( unohelper.Base, XJobExecutor ):
-    def __init__( self, ctx ):
-        self.ctx = ctx
-    def trigger( self, args ):
-        if arg=='DlgMain': DlgMain()
-########################################################################
 # https://forum.openoffice.org/it/forum/viewtopic.php?f=27&t=9470
-g_ImplementationHelper = unohelper.ImplementationHelper()
-g_ImplementationHelper.addImplementation(pyLeenO,                       # UNO object class
-                                        "org.giuseppe-vizziello.leeno", # implemenation name
-                                        ("org.bart.aimar.leeno",),)     # list of implemented services
+# ~g_ImplementationHelper = unohelper.ImplementationHelper()
+# ~g_ImplementationHelper.addImplementation(None,                          # UNO object class
+                                        # ~"org.giuseppe-vizziello.leeno", # implemenation name
+                                        # ~("org.giuseppe-vizziello.leeno",),)         # list of implemented services
 ########################################################################
-# ~ g_ImplementationHelper = unohelper.ImplementationHelper()
-# ~ g_ImplementationHelper.addImplementation(None,                          # UNO object class
-                                        # ~ "org.giuseppe-vizziello.leeno", # implemenation name
-                                        # ~ ("org.giuseppe-vizziello.leeno",),)         # list of implemented services
-########################################################################
-########################################################################
-# ~ if __name__ == '__main__':    
-    # ~ from Office.Bridge import XSCRIPTCONTEXT  
-    # ~ main()

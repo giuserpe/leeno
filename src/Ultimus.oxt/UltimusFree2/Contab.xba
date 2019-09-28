@@ -14,6 +14,7 @@
 sub GENERA_Atti_Contabili &apos;(C) Giuseppe Vizziello 2014
 &apos;	ThisComponent.enableAutomaticCalculation(False)
 chiudi_dialoghi
+	ThisComponent.CurrentController.ZoomValue = 400
 	testa = msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 	&amp; &quot;Puoi continuare, ma a tuo rischio!&quot; &amp; CHR$(10) &amp; CHR$(10) _
 	&amp; &quot;Se decidi di continuare, devi attendere il messaggio di procedura completata senza interferire con mouse e/o tastiera.&quot; &amp; CHR$(10) &amp; CHR$(10) _
@@ -43,6 +44,7 @@ salta:
 	msgbox (&quot;La generazione degli allegati contabili è stata completata.&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
 	fine:
+	ThisComponent.CurrentController.ZoomValue = 100
 &apos;Barra_Chiudi
 end Sub
 rem ######################################################################
@@ -59,7 +61,7 @@ sub Genera_REGISTRO &apos;(C) Giuseppe Vizziello 2014
 rem ----------------------------------------------------------------------
 rem idxCol e idxRow sono costanti settate nel modulo &quot;_variabili&quot;
 rem ----------------------------------------------------------------------
-	ThisComponent.CurrentController.ZoomValue = 100
+&apos;	ThisComponent.CurrentController.ZoomValue = 100
 fRow = idxRow rem prima riga tabella
 fcol = idxCol rem prima colonna
 	&apos;goto main:
@@ -594,7 +596,7 @@ rem chiudo il vecchio SAL
 			oCell = oSheetSAL.getCellRangeByPosition(0,fRow,6,lRow)
 			oCell.Rows.IsVisible=false &apos; chiudi gruppo
 	End Select
-	ThisComponent.CurrentController.ZoomValue = 100
+&apos;	ThisComponent.CurrentController.ZoomValue = 100
 
 &apos;fissa (0,fRow+1)
 fissa (0,idxrow+1)
@@ -1207,7 +1209,7 @@ sub Genera_LIBRETTO&apos; (C) Giuseppe Vizziello 2014
 	oSheetCont.Unprotect &quot;&quot;
 
 	ThisComponent.CurrentController.Select(oSheetCont)
-	ThisComponent.CurrentController.ZoomValue = 100
+&apos;	ThisComponent.CurrentController.ZoomValue = 400
 	oSheetCont.PageStyle = &quot;Page_Style_Libretto_Misure2&quot; 
 Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Libetto delle Misure...&quot;, 25)
 rem MI SPOSTO SUL FOGLIO GIUSTO
@@ -1378,7 +1380,8 @@ rem raggruppo
 	oCell = oSheetCont.getCellRangeByPosition (0,finefirme,35,finefirme)
 	oSheetCont.GetCellByPosition(2 , inizioFirme+1).CellStyle = &quot;ULTIMUS&quot; &apos;stile data
 rem recupero la data
-	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).value, 10)
+&apos;	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).Value, 10)
+	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).String, 10)
 	ThisComponent.CurrentController.Select(oCell)
 bordo_sotto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
@@ -1404,8 +1407,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	yS2=oEnd.RangeAddress.EndColumn	&apos;colonna
 	
 	oS2.GetCellByPosition(yS2+nSal,xS2+1).value = nSal &apos;numero sal
-&apos;	Print &quot;datafirma &quot; &amp; datafirma
-	oS2.GetCellByPosition(yS2+nSal,xS2+2).value = datafirma &apos;data
+	oS2.GetCellByPosition(yS2+nSal,xS2+2).Formula = &quot;=VALUE(&quot;&quot;&quot; &amp; datafirma &amp; &quot;&quot;&quot;)&quot;&apos;data
 	oS2.GetCellByPosition(yS2+nSal,xS2+24).value = aVoce &apos; ultima voce libretto
 	oS2.GetCellByPosition(yS2+nSal,xS2+25).value = inumPag &apos; ultima pagina libretto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)

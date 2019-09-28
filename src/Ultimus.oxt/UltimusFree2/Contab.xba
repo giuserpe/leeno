@@ -332,7 +332,9 @@ initRegistro: rem INIZIO COMPILAZIONE REGISTRO
 
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
 	ThisComponent.CurrentController.Select(oSheetReg)
-	SetTabColorN(RGB(255,225,225))
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;setTabColor&quot;, 16769505)
+	
+	
 	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(0,0,0,0))
 	&apos;fcol = 0 &apos;prima colonna inserimento in Registro
 rem RIGA RIPORTO
@@ -550,7 +552,8 @@ rem ######################################################################
 			oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;) &apos; setta come corrente
 			oSheetSAL.PageStyle = &quot;PageStyle_REGISTRO_A4&quot; &apos; imposta stile pagina
 			ThisComponent.CurrentController.Select(oSheetSAL) &apos; seleziona la tag
-			SetTabColorN(RGB(255,225,225))	&apos; colora la tag
+
+			ScriptPy(&quot;pyleeno.py&quot;,&quot;setTabColor&quot;, 16769505)
 			ThisComponent.CurrentController.Select(oSheetSAL.getCellRangeByPosition(0,0,0,0)) &apos; focus sulla prima cella SAL
 &apos;Annulla_atto_contabile(&quot;SAL&quot;)
 rem ----------------------------------------------------------------------
@@ -1344,27 +1347,26 @@ rem ----------------------------------------------------------------------
 i=1
 	Do While oSheetCont.GetCellByPosition(1,fineFirme).rows.IsStartOfNewPage = False
 	&apos;	oSheetCont.GetCellByPosition(2 ,fineFirme).setstring(&quot;Sto sistemando il Libretto...&quot;)
-		insRows (fineFirme,1) &apos;insertByIndex non funziona
+	&apos;	insRows (fineFirme,1) &apos;insertByIndex non funziona
+        oSheetCont.getRows().insertByIndex(fineFirme, 1)
+
 		If i=3 Then
-			oSheetCont.GetCellByPosition(2, fineFirme).setstring(&quot;====================&quot;)
+			oSheetCont.GetCellByPosition(2, fineFirme).String = &quot;====================&quot;
 			daqui=fineFirme
 		End If 
 		fineFirme = fineFirme+1
 		i=i+1
 	Loop
 	oSheetCont.rows.removeByIndex (fineFirme-1, 1)
-
 rem ----------------------------------------------------------------------
 rem cancella l&apos;ultima riga
 fineFirme = fineFirme-1
 	If daqui&lt;&gt;0 then
 		ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(2, daqui))
-copy_clip
+ScriptPy(&quot;pyleeno.py&quot;,&quot;copy_clip&quot;)
 		ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(2, daqui, 2, finefirme-1))
-&apos;Print finefirme-1
 ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 	End If
-
 rem ----------------------------------------------------------------------
 rem definisci il range del #Lib#
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
@@ -1470,7 +1472,8 @@ rem ----------------------------------------------------------------------
 rem inserisco la prima riga GIALLA del LIBRETTO
 	oNamedRange=oRanges.getByName(nomearea).referredCells
 	ins = oNamedRange.RangeAddress.StartRow
-	insRows (ins, 1) &apos;insertByIndex non funziona
+	&apos;insRows (ins, 1) &apos;insertByIndex non funziona
+    oSheetCont.getRows().insertByIndex(ins, 1)
 	oSheetCont.getCellRangeByPosition (0,ins,25,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
 fissa (0, ins + 1)
 rem ----------------------------------------------------------------------

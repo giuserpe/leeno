@@ -939,6 +939,29 @@ def mostra_fogli(arg=None):
     for el in lista_fogli:
         oDoc.getSheets().getByName(el).IsVisible = True
 ########################################################################
+def mostra_tabs_contab(arg=None):
+    '''Mostra tutti i foglio fogli'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    lista_fogli = oDoc.Sheets.ElementNames
+    sproteggi_sheet_TUTTE()
+    for el in lista_fogli:
+        oDoc.getSheets().getByName(el).IsVisible = True
+        for nome in ('cP_', 'M1', 'S1', 'S2', 'S5', 'QUADRO ECONOMICO', '_LeenO', 'Scorciatoie'):
+            if nome in el:
+                oDoc.getSheets().getByName(el).IsVisible = False
+########################################################################
+def mostra_tabs_computo(arg=None):
+    '''Mostra tutti i foglio fogli'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    lista_fogli = oDoc.Sheets.ElementNames
+    sproteggi_sheet_TUTTE()
+    for el in lista_fogli:
+        oDoc.getSheets().getByName(el).IsVisible = True
+        for nome in ('cT_', 'M1', 'S1', 'S2', 'S5', 'QUADRO ECONOMICO', '_LeenO', 'Scorciatoie'):
+            if nome in el:
+                oDoc.getSheets().getByName(el).IsVisible = False
+    
+########################################################################
 def copia_sheet(nSheet, tag):
     '''
     nSheet   { string } : nome sheet
@@ -3266,7 +3289,7 @@ def copia_riga_analisi(lrow):
 ########################################################################
 def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia di tabelle è
     # ~datarif = datetime.now()
-    refresh(0)
+    #~ refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
@@ -3281,7 +3304,7 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
         copia_riga_contab(lrow)
     elif nome_sheet == 'Analisi di Prezzo':
         copia_riga_analisi(lrow)
-    refresh(1)
+    #~ refresh(1)
     # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 
 ########################################################################
@@ -3833,15 +3856,15 @@ def paste_clip(arg=None):
     oProp4 = PropertyValue()
     oProp4.Name = 'AsLink'
     oProp4.Value = False
-    oProp5 = PropertyValue()
-    oProp5.Name = 'MoveMode'
-    oProp5.Value = 0
+    #~ oProp5 = PropertyValue()
+    #~ oProp5.Name = 'MoveMode'
+    #~ oProp5.Value = 0
     oProp.append(oProp0)
     oProp.append(oProp1)
     oProp.append(oProp2)
     oProp.append(oProp3)
     oProp.append(oProp4)
-    oProp.append(oProp5)
+    #~ oProp.append(oProp5)
     properties = tuple(oProp)
     #~ _gotoCella(6,1)
 
@@ -9327,8 +9350,24 @@ def debug_elimina_voci_doppie (arg=None):
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
 ########################################################################
 def debug (arg=None):
-    #~ debug_elimina_voci_doppie()
-    autorun()
+    mostra_tabs_contab()
+    return
+    
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    mri(oSheet)
+    return
+    oSheet0 = oDoc.getSheets().getByName('Table 1_2')
+    # ~oSheet1 = oDoc.getSheets().getByName('Table 1_2_2')
+    for y in range (4, 135):
+        for x in range (3, 17):
+            if oSheet0.getCellByPosition (y, x).Type.value == 'FORMULA':
+                oSheet0.getCellByPosition (y, x).String = oSheet0.getCellByPosition (y, x).String
+                
+            # ~if oSheet1.getCellByPosition (y, x).String == '':
+                # ~oSheet0.getCellByPosition (y, x).CellBackColor = 15757935
+                # ~oSheet0.getCellByPosition (y, x).String = oSheet1.getCellByPosition (y, x).String
+    
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

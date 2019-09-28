@@ -801,7 +801,7 @@
         </node>
       </node>
     </node>
-    <!--                  -->
+    <!--             -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -1375,7 +1375,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_COMPUTO?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$mostra_tabs_computo?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/vintage</value>
@@ -1392,7 +1392,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_contabilita_soltanto?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$mostra_tabs_contab?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/vintage</value>

@@ -9350,7 +9350,7 @@ def debug_elimina_voci_doppie (arg=None):
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
 ########################################################################
 def debug (arg=None):
-    mostra_tabs_contab()
+    rigenera_tutte()
     return
     
     oDoc = XSCRIPTCONTEXT.getDocument()

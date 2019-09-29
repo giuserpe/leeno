@@ -1381,7 +1381,7 @@
                   <value>%origin%/icons/vintage</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Mostra le Copertine e i documenti del COMPUTO</value>
+                  <value>Mostra le Copertine del COMPUTO</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1398,13 +1398,27 @@
                   <value>%origin%/icons/vintage</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Mostra le Copertine e i documenti di Contabilita'</value>
+                  <value>Mostra le Copertine di Contabilita'</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
                 </prop>
               </node>
               <node oor:name="m3U03" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$mostra_fogli_principali?language=Python&amp;location=user:uno_packages</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Mostra solo i fogli principali</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U04" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>

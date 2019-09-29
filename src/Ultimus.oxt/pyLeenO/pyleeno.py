@@ -939,6 +939,16 @@ def mostra_fogli(arg=None):
     for el in lista_fogli:
         oDoc.getSheets().getByName(el).IsVisible = True
 ########################################################################
+def mostra_fogli_principali(arg=None):
+    '''Mostra tutti i foglio fogli'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    lista_fogli = oDoc.Sheets.ElementNames
+    for el in lista_fogli:
+        oDoc.getSheets().getByName(el).IsVisible = True
+        for nome in ('cP_', 'cT_', 'M1', 'S1', 'S2', 'S5', 'QUADRO ECONOMICO', '_LeenO', 'Scorciatoie'):
+            if nome in el:
+                oDoc.getSheets().getByName(el).IsVisible = False
+########################################################################
 def mostra_tabs_contab(arg=None):
     '''Mostra tutti i foglio fogli'''
     oDoc = XSCRIPTCONTEXT.getDocument()

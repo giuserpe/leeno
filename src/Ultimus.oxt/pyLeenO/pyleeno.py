@@ -4508,6 +4508,7 @@ def config_default(arg=None):
     ('Zoom', 'fattore', '100'),
     ('Zoom', 'fattore_ottimale', '81'),
     ('Zoom', 'fullscreen', '0'),
+    ('Generale', 'dialogo', '1'),
     ('Generale', 'visualizza', 'Menù Principale'),
     ('Generale', 'altezza_celle', '1.25'),
     ('Generale', 'pesca_auto', '1'),
@@ -8436,10 +8437,16 @@ def DlgMain(arg=None):
         pass
     sString = oDlgMain.getControl("ComboBox1")
     sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
+    oDlgMain.getControl('CheckBox1').State = int(conf.read(path_conf, 'Generale', 'dialogo'))
     _gotoCella(x, y)
     oDlgMain.execute()
-    sString = oDlgMain.getControl("ComboBox1")
-    conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
+    if oDlgMain.getControl('CheckBox1').State == 1:
+        conf.write(path_conf, 'Generale', 'dialogo', '1')
+        sString = oDlgMain.getControl("ComboBox1")
+        conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
+    else:
+        conf.write(path_conf, 'Generale', 'dialogo', '0')
+        conf.write(path_conf, 'Generale', 'visualizza', 'Senza Menù')
     oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String = oDlgMain.getControl("TextField1").Text
     return
 ########################################################################

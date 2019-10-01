@@ -4353,8 +4353,8 @@ def leeno_conf(arg=None):
     sString = oDlg_config.getControl('TextField1')
     sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
 
-    sString = oDlg_config.getControl("ComboBox1")
-    sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
+    #~ sString = oDlg_config.getControl("ComboBox1")
+    #~ sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
     
     sString = oDlg_config.getControl("ComboBox2") #spostamento ad INVIO
     if conf.read(path_conf, 'Generale', 'movedirection')== '1':
@@ -4407,7 +4407,7 @@ def leeno_conf(arg=None):
     else:
         toolbar_switch(1)
  
-    conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
+    #~ conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
     
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
@@ -4509,7 +4509,7 @@ def config_default(arg=None):
     ('Zoom', 'fattore_ottimale', '81'),
     ('Zoom', 'fullscreen', '0'),
     ('Generale', 'dialogo', '1'),
-    ('Generale', 'visualizza', 'Menù Principale'),
+    #~ ('Generale', 'visualizza', 'Menù Principale'),
     ('Generale', 'altezza_celle', '1.25'),
     ('Generale', 'pesca_auto', '1'),
     ('Generale', 'movedirection', '1'),
@@ -7849,15 +7849,15 @@ def autoexec(arg=None):
     except:
         #~ chi("autoexec py")
         return
-    if len(oDoc.getURL()) != 0:
+    #~ if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
-        vedi = conf.read(path_conf, 'Generale', 'visualizza')
-        if vedi == 'Menù Principale':
-            DlgMain()
-        elif vedi == 'Dati Generali':
-            vai_a_variabili()
-        elif vedi in('Elenco Prezzi', 'COMPUTO'):
-            _gotoSheet(vedi)
+        #~ vedi = conf.read(path_conf, 'Generale', 'visualizza')
+        #~ if vedi == 'Menù Principale':
+            #~ DlgMain()
+        #~ elif vedi == 'Dati Generali':
+            #~ vai_a_variabili()
+        #~ elif vedi in('Elenco Prezzi', 'COMPUTO'):
+            #~ _gotoSheet(vedi)
 #
 ########################################################################
 def computo_terra_terra(arg=None):
@@ -8435,18 +8435,18 @@ def DlgMain(arg=None):
         sString.Text = "€ {:,.2f}".format(oSheet.getCellByPosition(15, 1).Value)
     except:
         pass
-    sString = oDlgMain.getControl("ComboBox1")
-    sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
+    #~ sString = oDlgMain.getControl("ComboBox1")
+    #~ sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
     oDlgMain.getControl('CheckBox1').State = int(conf.read(path_conf, 'Generale', 'dialogo'))
     _gotoCella(x, y)
     oDlgMain.execute()
     if oDlgMain.getControl('CheckBox1').State == 1:
         conf.write(path_conf, 'Generale', 'dialogo', '1')
-        sString = oDlgMain.getControl("ComboBox1")
-        conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
+        #~ sString = oDlgMain.getControl("ComboBox1")
+        #~ conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
     else:
         conf.write(path_conf, 'Generale', 'dialogo', '0')
-        conf.write(path_conf, 'Generale', 'visualizza', 'Senza Menù')
+        #~ conf.write(path_conf, 'Generale', 'visualizza', 'Senza Menù')
     oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String = oDlgMain.getControl("TextField1").Text
     return
 ########################################################################

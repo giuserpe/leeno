@@ -3838,7 +3838,7 @@ def copy_clip(arg=None):
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
 ########################################################################
-def paste_clip(arg=None):
+def paste_clip(arg=None, insCells = 1):
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -3849,7 +3849,6 @@ def paste_clip(arg=None):
     #~ dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
     #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     #~ return
-
     oProp = []
     oProp0 = PropertyValue()
     oProp0.Name = 'Flags'
@@ -3866,15 +3865,17 @@ def paste_clip(arg=None):
     oProp4 = PropertyValue()
     oProp4.Name = 'AsLink'
     oProp4.Value = False
-    #~ oProp5 = PropertyValue()
-    #~ oProp5.Name = 'MoveMode'
-    #~ oProp5.Value = 0
     oProp.append(oProp0)
     oProp.append(oProp1)
     oProp.append(oProp2)
     oProp.append(oProp3)
     oProp.append(oProp4)
-    #~ oProp.append(oProp5)
+    # insert mode ON
+    if insCells == 1:
+        oProp5 = PropertyValue()
+        oProp5.Name = 'MoveMode'
+        oProp5.Value = 0
+        oProp.append(oProp5)
     properties = tuple(oProp)
     #~ _gotoCella(6,1)
 
@@ -8799,7 +8800,7 @@ def ctrl_d(arg=None):
     oDoc.CurrentController.select(oSheet.getCellByPosition(x, y))
     copy_clip()
     oDoc.CurrentController.select(oCell)
-    paste_clip()
+    paste_clip(insCell = 0)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def taglia_x(arg=None):

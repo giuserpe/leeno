@@ -1415,7 +1415,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
 
     oRange=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow+1
-    ER = oRange.EndRow
+    ER = oRange.EndRow+1
     lista_prezzi = list()
     for n in range(SR, ER):
         lista_prezzi.append (oSheet.getCellByPosition(0, n).String)
@@ -1435,8 +1435,12 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     da_cancellare = set(lista_prezzi).difference(set(lista))
-    for n in reversed(range(SR, ER-1)):
+    for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:
+            oSheet.Rows.removeByIndex(n, 1)
+        if oSheet.getCellByPosition(0, n).String == '' and \
+        oSheet.getCellByPosition(1, n).String == '' and \
+        oSheet.getCellByPosition(4, n).String == '':
             oSheet.Rows.removeByIndex(n, 1)
     oDoc.enableAutomaticCalculation(True)
     oDoc.CurrentController.ZoomValue = zoom
@@ -1728,13 +1732,15 @@ def scelta_viste(arg=None):
             oCellRangeAddr.EndColumn = 11
             oSheet.group(oCellRangeAddr, 0)
             oSheet.getCellRangeByPosition(5, 0, 11, 0).Columns.IsVisible = False
-            if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
-                errori =('#DIV/0!', '--')
-                hide_error(errori, 26)
-                oSheet.group(oRangeAddress, 0)
-                oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
-        else: return
-
+            if oDoc.getSheets().hasByName('VARIANTE') == True or \
+            oDoc.getSheets().hasByName('CONTABILITA') == True:
+                if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
+                    errori =('#DIV/0!', '--')
+                    hide_error(errori, 26)
+                    oSheet.group(oRangeAddress, 0)
+                    oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
+        else:
+            return
     elif oSheet.Name in('Analisi di Prezzo'):
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_AN?language=Basic&location=application")
         oDialog1Model = oDialog1.Model

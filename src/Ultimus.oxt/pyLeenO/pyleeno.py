@@ -4249,7 +4249,7 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         pesca_cod()
 ########################################################################
-def rigenera_voce(lrow):
+def rigenera_voce(lrow = Range2Cell()[1]):
 # ~def debug(arg=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
@@ -8601,6 +8601,11 @@ def toolbar_vedi(arg=None):
         fissa()
     except:
         pass
+########################################################################
+def grid_switch(arg=None):
+    '''Mostra / nasconde griglia'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oDoc.CurrentController.ShowGrid = not oDoc.CurrentController.ShowGrid
 #######################################################################
 def toolbar_switch(arg=1):
     '''Nasconde o mostra le toolbar di Libreoffice.'''

@@ -130,42 +130,8 @@ sub dialogo_chiudi
 	bContinua = true
 end sub
 
-sub setVirgola
-	a3 = 0
-end sub
 
-sub setPunto
-	a3 = 1
-end sub
-
-sub dialogo3
-	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-	Dlg2=CreateUnoDialog(DialogLibraries.UltimusFree2.DialogDigest)
-	Dlg2.execute()
-end sub
-
-sub dialogo3_annulla
-	Dlg2.endExecute()
-	bContinua = false
-end sub
-
-&apos;	sDec=Dlg2&apos;.getControl(&quot;TextField1&quot;)
-&apos;	xray sDec
- &apos;ldec= sDec.text
- &apos; print a
  
-sub dialogo3_chiudi
-	if a3 = -1 then
-		if msgbox(&quot;Non hai selezionato il separatore dei decimali.&quot; &amp; chr(13) &amp; &quot;Vuoi uscire senza procedere?&quot;, 4) = 6 then
-			bContinua = false
-			Dlg2.endExecute()
-			exit sub
-		end if
-		else
-			bContinua = true
-			Dlg2.endExecute()
-	end if
-end sub
 
 sub accorpa_stringhe &apos;da eseguire a manina or aggiungendo un pulsante 
 &apos;serve per i prezzari Marche per accorpare i sottocodici della colo 3 insieme ai codici della 2

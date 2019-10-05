@@ -302,12 +302,6 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 END SUB
 &apos;&apos;***************************************************************+
 
-Sub ToggleGrid &apos; Attiva/disattiva griglia
-ThisComponent.CurrentController.ShowGrid = _
-Not ThisComponent.CurrentController.ShowGrid
-END SUB
-
-
 sub copia_solo_colore_Sfondo &apos; funziona alla grande 
 
 Dim oSheetSRC as object 

@@ -11,41 +11,12 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-&apos;pubblic sFrName as string
-&apos;Global sFrName as string
-&apos;Global iwait as integer
-&apos;Global waitI as integer
+
 Global sAnnulla as string
 dim elenco as integer
 dim DlgAc as object&apos; Questa variabile va dichiarata perchè viene utilizzata
 					&apos; dalle altre sub per chiudere il dialogo
 dim check as string
-
-&apos;dim iAnnota as integer
-&apos;dim iAnnota as integer
-&apos;global mantieni_S2 as boolean
-&apos;Global oProgressbar As Object
-&apos;global anche_computo as boolean
-&apos;global anche_Dati as boolean
-&apos;global Anche_VG as boolean
-
-
-
-
-sub DlgAcApri &apos; probabilmente non serve
-	sAnnulla = &quot;tieni&quot;
-&apos;print &quot;1 &quot; &amp; sAnnulla
-	DialogLibraries.LoadLibrary(&quot;UltimusFree2&quot;)
-	DlgAc=CreateUnoDialog(DialogLibraries.UltimusFree2.DialogAccoda)
-	DlgAc.execute()
-end sub
-
-Sub DlgAcChiudi
-		sAnnulla = &quot;tieni&quot;
-		if Not isNull (DlgAc) then 
-			DlgAc.endExecute() 
-		end if
-end sub
 
 
 Sub DlgAcAnnulla

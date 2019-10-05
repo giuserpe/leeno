@@ -801,7 +801,7 @@
         </node>
       </node>
     </node>
-    <!--             -->
+    <!--        -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -996,25 +996,6 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              <!--
-                   <node oor:name="m2U05" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Taxi.Main_Importa_Altro_Computo?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/image35</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>Esporta/Accoda i Dati di questo Doc > in DCC (Doc Contab. Corrente)</value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m2U06" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -1039,16 +1020,6 @@
                    </prop>
                    <prop oor:name="Target" oor:type="xs:string">
                    <value>_self</value>
-                   </prop>
-                   </node>
-              -->
-              <!--
-                   <node oor:name="m2U07.1" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value />
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>private:separator</value>
                    </prop>
                    </node>
               -->
@@ -1111,7 +1082,7 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m2U08" oor:op="replace">
+              <node oor:name="m2U08a" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -1128,7 +1099,15 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m2U09" oor:op="replace">
+              <node oor:name="m2U08b" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+              <node oor:name="m2U09a" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
@@ -1143,6 +1122,14 @@
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m2U09z" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
                 </prop>
               </node>
               <node oor:name="m2U11" oor:op="replace">
@@ -1201,7 +1188,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Accessori.ToggleGrid?language=Basic&amp;location=application</value>
+                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$grid_switch?language=Python&amp;location=user:uno_packages</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/griglia3</value>

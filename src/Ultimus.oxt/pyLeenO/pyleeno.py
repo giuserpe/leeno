@@ -4257,7 +4257,6 @@ def rigenera_voce(lrow = Range2Cell()[1]):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    # ~lrow = Range2Cell()[1]
     sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
@@ -4399,6 +4398,11 @@ def leeno_conf(arg=None):
             sString.Text = '20'
     sString = oDlg_config.getControl('ComboBox3')
     sString.Text = conf.read(path_conf, 'Contabilità', 'ricicla_da')
+    
+    sString = oDlg_config.getControl('ComboBox4')
+    sString.Text = conf.read(path_conf, 'Generale', 'copie_backup')
+    sString = oDlg_config.getControl('TextField5')
+    sString.Text = conf.read(path_conf, 'Generale', 'pausa_backup')
 
 ### MOSTRA IL DIALOGO
     oDlg_config.execute()
@@ -4454,6 +4458,8 @@ def leeno_conf(arg=None):
         conf.write(path_conf, 'Contabilità', 'ricicla_da', 'COMPUTO')
     else:
         conf.write(path_conf, 'Contabilità', 'ricicla_da', 'VARIANTE')
+    conf.write(path_conf, 'Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
+    conf.write(path_conf, 'Generale', 'pausa_backup', oDlg_config.getControl('TextField5').getText())
 ########################################################################
 #percorso di ricerca di leeno.conf
 if sys.platform == 'win32':
@@ -4525,6 +4531,8 @@ def config_default(arg=None):
     ('Generale', 'vedi_voce_breve', '50'),
     ('Generale', 'dettaglio', '1'),
     ('Generale', 'torna_a_ep', '1'),
+    ('Generale', 'copie_backup', '5'),
+    ('Generale', 'pausa_backup', '5'),
     
     #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
@@ -5574,7 +5582,7 @@ def fuf(arg=None):
     Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
     E' solo una cortesia per un amico.
     '''
-    bak_timestamp()
+    #~ bak_timestamp()
     filename = filedia('Scegli il file XML-SIX da importare', '*.dat')
     riga = list()
     try:
@@ -7761,7 +7769,7 @@ def apri_manuale(arg=None):
     apri.execute(LeenO_path() + '/MANUALE_LeenO.pdf',"", 0)
 ########################################################################
 def autoexec_off(arg=None):
-    bak_timestamp()
+    #~ bak_timestamp()
     toolbar_switch(1)
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
@@ -7781,7 +7789,8 @@ class trun(threading.Thread):
     def run(self):
         while True:
             # ~datarif = datetime.now()
-            time.sleep(900) #5 min
+            minuti = 60 * conf.read(path_conf, 'Generale', 'pausa_backup')
+            time.sleep(minuti)
             bak()
             # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 def autorun(arg=None):
@@ -7794,6 +7803,7 @@ def autoexec(arg=None):
     '''
     questa è richiamata da New_File()
     '''
+    bak0()
     autorun()
     ctx = XSCRIPTCONTEXT.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
@@ -8504,56 +8514,49 @@ def hide_error(lErrori, icol):
                 oSheet.getCellByPosition(0, i).Rows.IsVisible = False
     oDoc.CurrentController.ZoomValue = zoom
 ########################################################################
-def bak_timestamp(arg=None):
-    '''
-    fa il backup del file di lavoro, partendo dall'ultimo salvataggio certo,
-    in una directory con nome "/percorso_file/leeno-bk/"
-    viene avviato con DlgMain()
-    '''
-    tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
-    oDoc = XSCRIPTCONTEXT.getDocument()
-
-    orig = oDoc.getURL()
-    dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-' + tempo + '.ods'
-    dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
-    if len(orig) ==0:
-        return
-    orig = uno.fileUrlToSystemPath(orig)
-    dir_bak = uno.fileUrlToSystemPath(dir_bak)
-    dest = uno.fileUrlToSystemPath(dest)
-    if not os.path.exists(dir_bak):
-        os.makedirs(dir_bak)
-    shutil.copyfile(orig, dir_bak + dest)
-    # ~bak()
-    return
-########################################################################
-def bak(arg=None):
-#~ def debug(arg=None):
+def bak0(arg=None):
     '''
     Fa al volo il backup del file di lavoro 
     '''
+    tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))[:12]
     oDoc = XSCRIPTCONTEXT.getDocument()
-
     orig = oDoc.getURL()
-    if len(orig) ==0: return
-    dest2 = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.bak.ods'
+    dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
-    dir_bak = uno.fileUrlToSystemPath(dir_bak)
-    if not os.path.exists(dir_bak):
-        os.makedirs(dir_bak)
-    dir_bak = uno.systemPathToFileUrl(dir_bak)
-    dest2 = uno.fileUrlToSystemPath(dest2)
-    oDoc.storeToURL(dir_bak + dest2, list())
-    # ~chi(os.path.basename(dest2))
-    return
-    n = 0
-    while n != 3:
-        dest2 = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '.' + str(n) + '.ods'
-        chi(os.path.basename(dest2))
-        if not os.path.basename(dest2):
-            dest2 = uno.fileUrlToSystemPath(dest2)
-            oDoc.storeToURL(dir_bak + dest2, list())
-        n +=1
+    filename = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-'
+    if len(orig) ==0:
+        return
+    if not os.path.exists(uno.fileUrlToSystemPath(dir_bak)):
+        os.makedirs(uno.fileUrlToSystemPath(dir_bak))
+    orig = uno.fileUrlToSystemPath(orig)
+    dest = uno.fileUrlToSystemPath(dest)
+    shutil.copyfile(orig, uno.fileUrlToSystemPath(dir_bak) + dest)
+########################################################################
+def bak(arg=None):
+    '''
+    Fa al volo il backup del file di lavoro 
+    '''
+    tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))[:12]
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    orig = oDoc.getURL()
+    dest = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-' + tempo + '.ods'
+    dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
+    filename = '.'.join(os.path.basename(orig).split('.')[0:-1])+ '-'
+    if len(orig) ==0:
+        return
+    if not os.path.exists(uno.fileUrlToSystemPath(dir_bak)):
+        os.makedirs(uno.fileUrlToSystemPath(dir_bak))
+    orig = uno.fileUrlToSystemPath(orig)
+    dest = uno.fileUrlToSystemPath(dest)
+    oDoc.storeToURL(dir_bak + dest, list())
+    lista = os.listdir(uno.fileUrlToSystemPath(dir_bak))
+    n =0
+    nb = conf.read(path_conf, 'Generale', 'copie_backup') #numero di copie
+    for el in reversed (lista):
+        if filename in el:
+            if n > nb-1:
+                os.remove(uno.fileUrlToSystemPath(dir_bak)+el)
+            n += 1
     return
 ########################################################################
 # Scrive un file.
@@ -9206,7 +9209,6 @@ def debug_errore(arg=None):
                 "\nMessaggio: " + str(e.args) + '\n' +
                 traceback.format_exc());
 ########################################################################
-#~ def debug(arg=None):
 def trova_ricorrenze(arg=None):
     '''
     Consente la visualizzazione selettiva delle voci di COMPUTO che fanno
@@ -9240,10 +9242,10 @@ def trova_ricorrenze(arg=None):
         lista.sort()
         return lista
     global lista_ricorrenze
-    try:
-        lista_ricorrenze
-    except:
-        lista_ricorrenze = ricorrenze()
+    #~ try:
+        #~ lista_ricorrenze
+    #~ except:
+    lista_ricorrenze = ricorrenze()
     if len(lista_ricorrenze) == 0:
         MsgBox('Non ci sono voci di prezzo ricorrenti.', 'Informazione')
         return
@@ -9251,17 +9253,20 @@ def trova_ricorrenze(arg=None):
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgLista?language=Basic&location=application")
     oDialog1Model = oDlg.Model
-    oDlg.Title = 'Si ripetono '+ str(len(lista_ricorrenze)) + ' voci di prezzo'
+    #~ oDlg.Title = 'Si ripetono '+ str(len(lista_ricorrenze)) + ' voci di prezzo'
+    oDlg.Title = 'Seleziona il codice e dai OK...'
     oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
-    oDlg.execute()
-    if oDlg.getControl('CheckBox1').State == 1:
-        oDlg.getControl('ListBox1').removeItems(0, len(lista_ricorrenze))
-        lista_ricorrenze = ricorrenze()
-        oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
-        oDlg.getControl('CheckBox1').State = 0
-        oDlg.execute()
-    filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
-    return
+    if oDlg.execute() == 0:
+        return
+    else:
+        filtra_codice(oDlg.getControl('ListBox1').SelectedItem)
+    #~ if oDlg.getControl('CheckBox1').State == 1:
+        #~ oDlg.getControl('ListBox1').removeItems(0, len(lista_ricorrenze))
+        #~ lista_ricorrenze = ricorrenze()
+        #~ oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
+        #~ oDlg.getControl('CheckBox1').State = 0
+        #~ oDlg.execute()
+
 
 ########################################################################
 def debug_(arg=None):

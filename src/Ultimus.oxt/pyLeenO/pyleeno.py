@@ -4460,6 +4460,7 @@ def leeno_conf(arg=None):
         conf.write(path_conf, 'Contabilità', 'ricicla_da', 'VARIANTE')
     conf.write(path_conf, 'Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
     conf.write(path_conf, 'Generale', 'pausa_backup', oDlg_config.getControl('TextField5').getText())
+    autorun()
 ########################################################################
 #percorso di ricerca di leeno.conf
 if sys.platform == 'win32':
@@ -4532,7 +4533,7 @@ def config_default(arg=None):
     ('Generale', 'dettaglio', '1'),
     ('Generale', 'torna_a_ep', '1'),
     ('Generale', 'copie_backup', '5'),
-    ('Generale', 'pausa_backup', '5'),
+    ('Generale', 'pausa_backup', '15'),
     
     #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
@@ -7789,7 +7790,7 @@ class trun(threading.Thread):
     def run(self):
         while True:
             # ~datarif = datetime.now()
-            minuti = 60 * conf.read(path_conf, 'Generale', 'pausa_backup')
+            minuti = 60 * int(conf.read(path_conf, 'Generale', 'pausa_backup'))
             time.sleep(minuti)
             bak()
             # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
@@ -8364,7 +8365,6 @@ def DlgMain(arg=None):
     '''
     Visualizza il menù principaledialog_fil
     '''
-    bak_timestamp() # fa il backup del file
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -8516,7 +8516,7 @@ def hide_error(lErrori, icol):
 ########################################################################
 def bak0(arg=None):
     '''
-    Fa al volo il backup del file di lavoro 
+    Fa il backup del file di lavoro all'aperura. 
     '''
     tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))[:12]
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -8534,7 +8534,7 @@ def bak0(arg=None):
 ########################################################################
 def bak(arg=None):
     '''
-    Fa al volo il backup del file di lavoro 
+    Esegue un numero definito di backup durante il lavoro.
     '''
     tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))[:12]
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -8551,7 +8551,7 @@ def bak(arg=None):
     oDoc.storeToURL(dir_bak + dest, list())
     lista = os.listdir(uno.fileUrlToSystemPath(dir_bak))
     n =0
-    nb = conf.read(path_conf, 'Generale', 'copie_backup') #numero di copie
+    nb = int(conf.read(path_conf, 'Generale', 'copie_backup')) #numero di copie)
     for el in reversed (lista):
         if filename in el:
             if n > nb-1:

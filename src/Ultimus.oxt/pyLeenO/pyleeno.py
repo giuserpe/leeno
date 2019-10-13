@@ -2571,7 +2571,7 @@ def firme_in_calce_run(arg=None):
         oRange.setDataArray(aSaveData)
         oSheet.getCellRangeByPosition(1,riga_corrente+3,1,riga_corrente+3).CellStyle = 'ULTIMUS'
         oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il Progettista'
-        oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE($S2.$C$13)'
+        oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=$S2.$C$13'
 
     if oSheet.Name in('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
         zoom = oDoc.CurrentController.ZoomValue
@@ -2692,7 +2692,7 @@ def firme_in_calce_run(arg=None):
         oRange.setDataArray(aSaveData)
         
         oSheet.getCellByPosition(2 , riga_corrente+5).Formula = 'Il Progettista'
-        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE($S2.$C$13)'
+        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '$S2.$C$13'
         oSheet.getCellRangeByPosition(2 , riga_corrente+5, 2 , riga_corrente+6).CellStyle = 'Ultimus_centro'
 
         ###  inserisco il salto pagina in cima al riepilogo
@@ -5583,7 +5583,6 @@ def fuf(arg=None):
     Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
     E' solo una cortesia per un amico.
     '''
-    #~ bak_timestamp()
     filename = filedia('Scegli il file XML-SIX da importare', '*.dat')
     riga = list()
     try:
@@ -7770,7 +7769,6 @@ def apri_manuale(arg=None):
     apri.execute(LeenO_path() + '/MANUALE_LeenO.pdf',"", 0)
 ########################################################################
 def autoexec_off(arg=None):
-    #~ bak_timestamp()
     toolbar_switch(1)
     #~ private:resource/toolbar/standardbar
     sUltimus = ''

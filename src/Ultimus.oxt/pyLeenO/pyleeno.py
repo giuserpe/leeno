@@ -2571,7 +2571,7 @@ def firme_in_calce_run(arg=None):
         oRange.setDataArray(aSaveData)
         oSheet.getCellRangeByPosition(1,riga_corrente+3,1,riga_corrente+3).CellStyle = 'ULTIMUS'
         oSheet.getCellByPosition(1 , riga_corrente+5).Formula = 'Il Progettista'
-        oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=$S2.$C$13'
+        oSheet.getCellByPosition(1 , riga_corrente+6).Formula = '=CONCATENATE($S2.$C$13)' #senza concatenate, se la cella di origine è vuota il risultato è '0,00'
 
     if oSheet.Name in('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
         zoom = oDoc.CurrentController.ZoomValue
@@ -2692,7 +2692,7 @@ def firme_in_calce_run(arg=None):
         oRange.setDataArray(aSaveData)
         
         oSheet.getCellByPosition(2 , riga_corrente+5).Formula = 'Il Progettista'
-        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '$S2.$C$13'
+        oSheet.getCellByPosition(2 , riga_corrente+6).Formula = '=CONCATENATE($S2.$C$13)' #senza concatenate, se la cella di origine è vuota il risultato è '0,00'
         oSheet.getCellRangeByPosition(2 , riga_corrente+5, 2 , riga_corrente+6).CellStyle = 'Ultimus_centro'
 
         ###  inserisco il salto pagina in cima al riepilogo

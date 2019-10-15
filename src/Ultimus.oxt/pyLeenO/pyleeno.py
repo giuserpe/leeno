@@ -4630,6 +4630,12 @@ def ins_voce_contab(lrow=0, arg=1):
 
     sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
+    for n in reversed(range(0, sopra)):
+        if oSheet.getCellByPosition(1, n).CellStyle == 'Ultimus_centro_bordi_lati':
+            break
+        if oSheet.getCellByPosition(1, n).CellStyle == 'Data_bianca':
+            data = oSheet.getCellByPosition(1, n).Value
+            break
     try:
         oSheet.getCellByPosition(1, sopra+2).Value = data
     except:

@@ -1332,23 +1332,24 @@ def adatta_altezza_riga(nSheet=None):
     oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
+    lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr', 'EP-a', 'Ultimus_centro_bordi_lati')
     if float(loVersion()[:3]) > 5.2: # and float(loVersion()[:3]) < 6.2: NELLA VERSIONE 6.2 IL PROBLEMA NON è ANCORA RISOLTO
-        #~ for stile_cella in ('Comp-Bianche in mezzo Descr', 'comp 1-a', 'Comp-Bianche in mezzo Descr_R'):
-            #~ try:
-                #~ oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
-            #~ except:
-                #~ pass
+        for stile_cella in lista_stili:
+            try:
+                oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+            except:
+                pass
         #~ #if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA', 'Richiesta offerta'):
-        test = getLastUsedCell(oSheet).EndRow+1
-        for y in range(0, test):
-            if oSheet.getCellByPosition(2, y).CellStyle in ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr', 'EP-a', 'Ultimus_centro_bordi_lati'):
-                oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
-    if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
-        oSheet.getCellByPosition(0, 2).Rows.Height = 800
-    if nSheet == 'Elenco Prezzi':
-        test = getLastUsedCell(oSheet).EndRow+1
-        for y in range(0, test):
-            oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+        # ~test = getLastUsedCell(oSheet).EndRow+1
+        # ~for y in range(0, test):
+            # ~if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
+                # ~oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+    # ~if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+        # ~oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    # ~if nSheet == 'Elenco Prezzi':
+        # ~test = getLastUsedCell(oSheet).EndRow+1
+        # ~for y in range(0, test):
+            # ~oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
     return
 ########################################################################
 def voce_breve(arg=None):

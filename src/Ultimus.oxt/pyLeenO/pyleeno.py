@@ -225,14 +225,14 @@ def invia_voce(arg=None):
         if nome in ('Elenco Prezzi'):
             ddcDoc.CurrentController.setActiveSheet(dccSheet)
             _gotoCella(0, 3)
-            paste_clip()
+            paste_clip(1)
             #~ doppioni()
         if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             dccSheet.IsVisible = True
             ddcDoc.CurrentController.setActiveSheet(dccSheet)
             _gotoCella(0, 3)
-            paste_clip()
+            paste_clip(1)
             #~ doppioni()
             _gotoDoc(sUltimus)
             ddcDoc = XSCRIPTCONTEXT.getDocument()
@@ -296,7 +296,7 @@ def invia_voce(arg=None):
             else:
                 lrow = next_voice(Range2Cell()[1], 1)
             _gotoCella(0, lrow)
-            paste_clip()
+            paste_clip(1)
             numera_voci(1)
             last = lrow+ER-SR+1
             while lrow < last:
@@ -325,7 +325,7 @@ def invia_voce(arg=None):
             _gotoCella(0, 4)
             #~ chi(('stop', ddcDoc.getURL()) )
 
-            paste_clip()
+            paste_clip(1)
             #~ doppioni()
         if nSheetDCC in ('Elenco Prezzi'):
             MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
@@ -349,7 +349,7 @@ def invia_voce(arg=None):
         ddcDoc = XSCRIPTCONTEXT.getDocument()
         inizializza_analisi()
         _gotoCella(0, 0)
-        paste_clip()
+        paste_clip(1)
         tante_analisi_in_ep()
     except:
         pass
@@ -3845,7 +3845,7 @@ def copy_clip(arg=None):
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, ".uno:Copy", "", 0, list())
 ########################################################################
-def paste_clip(arg=None, insCells = 1):
+def paste_clip(arg=None, insCells = 0):
     oDoc = XSCRIPTCONTEXT.getDocument()
     #~ oSheet = oDoc.CurrentController.ActiveSheet
     ctx = XSCRIPTCONTEXT.getComponentContext()
@@ -9375,7 +9375,7 @@ def debug_elimina_voci_doppie (arg=None):
     oDoc.CurrentController.select(oSheet.getCellByPosition(30, 3))
     copy_clip()
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(30, 3, 30, fine))
-    paste_clip()
+    paste_clip(1)
     # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     # ~for i in range (3, fine):
         # ~oSheet.getCellByPosition(30, i).Formula = '=IF(A' + str(i+1) + '=A' + str(i) + ';1;0)'

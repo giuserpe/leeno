@@ -152,15 +152,8 @@ Function SimpleSheetSearch(sString$, oSheet, nStartCol, nStartRow, nEndCol, nEnd
  rem Find the first one
  oFound = oSheet.findFirst(oDescriptor)
  SimpleSheetSearch = oFound
- &apos;xray ofound
- rem Do you really want to find more instances
- rem You can continue the search using a cell if you want!
- &apos;Do While Not IsNull(oFound)
- &apos; Print oFound.getString()
- &apos; oFound = oSheet.findNext( oFound, oDescriptor)
- &apos;Loop
 End Function
-&apos;=================================================================================
+
 
 
 Sub RiDefinisci_Area_Elenco_prezzi () &apos; viene richiamata da Riordina l&apos;elenco Prezzi

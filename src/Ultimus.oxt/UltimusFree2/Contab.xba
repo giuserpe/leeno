@@ -801,7 +801,7 @@ firme (InsRow+17)
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, InsRow+27))
 copy_clip
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellRangeByPosition(fcol+1, InsRow+27, fcol+1, getLastUsedRow(oSheetSal)-1))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;insCells = 0&quot;) &apos;sovrappone dati
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	oSheetSal.rows.removeByIndex (InsRow+27,1)
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 Ripristina_statusLine &apos;Barra_chiudi_sempre_4
@@ -1125,7 +1125,7 @@ rem risistemo intestazioni
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,daVoce-1))
 copy_clip
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,ins-1))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;insCells = 0&quot;) &apos;sovrappone dati
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 						oCell = oSheet.getCellRangeByPosition(0,daVoce,11,aVoce)
 						oCell.Rows.IsVisible=true
 						ThisComponent.CurrentController.Select(oCell)
@@ -1367,7 +1367,7 @@ fineFirme = fineFirme-1
 		ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(2, daqui))
 ScriptPy(&quot;pyleeno.py&quot;,&quot;copy_clip&quot;)
 		ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(2, daqui, 2, finefirme-1))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;insCells = 0&quot;) &apos;sovrappone dati
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	End If
 rem ----------------------------------------------------------------------
 rem definisci il range del #Lib#

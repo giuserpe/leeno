@@ -13,31 +13,31 @@
   <dlg:style dlg:style-id="8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="221" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;333.DlgMain.CommandButton1.HelpText" dlg:value="&amp;334.DlgMain.CommandButton1.Label" dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="1" dlg:left="221" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;333.DlgMain.CommandButton1.HelpText" dlg:value="&amp;334.DlgMain.CommandButton1.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.attiva_contabilita?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="166" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;335.DlgMain.CommandButton2.HelpText" dlg:value="&amp;336.DlgMain.CommandButton2.Label" dlg:valign="center" dlg:button-type="ok">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="166" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;335.DlgMain.CommandButton2.HelpText" dlg:value="&amp;336.DlgMain.CommandButton2.Label" dlg:valign="center">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.genera_variante?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton3" dlg:tab-index="3" dlg:left="60" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;337.DlgMain.CommandButton3.HelpText" dlg:value="&amp;338.DlgMain.CommandButton3.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton3" dlg:tab-index="3" dlg:left="60" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;337.DlgMain.CommandButton3.HelpText" dlg:value="&amp;338.DlgMain.CommandButton3.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.inizializza_analisi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="0" dlg:left="114" dlg:top="164" dlg:width="47" dlg:height="15" dlg:help-text="&amp;339.DlgMain.CommandButton4.HelpText" dlg:value="&amp;340.DlgMain.CommandButton4.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="0" dlg:left="114" dlg:top="164" dlg:width="47" dlg:height="15" dlg:help-text="&amp;339.DlgMain.CommandButton4.HelpText" dlg:value="&amp;340.DlgMain.CommandButton4.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_Computo?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="6" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;341.DlgMain.CommandButton5.HelpText" dlg:value="&amp;342.DlgMain.CommandButton5.Label" dlg:button-type="ok" dlg:multiline="true">
+  <dlg:button dlg:style-id="1" dlg:id="CommandButton5" dlg:tab-index="4" dlg:left="6" dlg:top="164" dlg:width="50" dlg:height="15" dlg:help-text="&amp;341.DlgMain.CommandButton5.HelpText" dlg:value="&amp;342.DlgMain.CommandButton5.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_ElencoPrezzi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="5" dlg:left="6" dlg:top="183" dlg:width="130" dlg:height="15" dlg:help-text="&amp;343.DlgMain.CommandButton6.HelpText" dlg:value="&amp;344.DlgMain.CommandButton6.Label" dlg:button-type="ok">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_variabili?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="6" dlg:left="141" dlg:top="183" dlg:width="130" dlg:height="15" dlg:help-text="&amp;345.DlgMain.CommandButton7.HelpText" dlg:value="&amp;346.DlgMain.CommandButton7.Label" dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="6" dlg:left="141" dlg:top="183" dlg:width="130" dlg:height="15" dlg:help-text="&amp;345.DlgMain.CommandButton7.HelpText" dlg:value="&amp;346.DlgMain.CommandButton7.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_Scorciatoie?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="7" dlg:left="6" dlg:top="145" dlg:width="130" dlg:height="15" dlg:help-text="&amp;347.DlgMain.CommandButton8.HelpText" dlg:value="&amp;348.DlgMain.CommandButton8.Label" dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton8" dlg:tab-index="7" dlg:left="6" dlg:top="145" dlg:width="130" dlg:height="15" dlg:help-text="&amp;347.DlgMain.CommandButton8.HelpText" dlg:value="&amp;348.DlgMain.CommandButton8.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_M1?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="8" dlg:left="141" dlg:top="145" dlg:width="130" dlg:height="15" dlg:help-text="&amp;349.DlgMain.CommandButton9.HelpText" dlg:value="&amp;350.DlgMain.CommandButton9.Label" dlg:button-type="ok">
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton9" dlg:tab-index="8" dlg:left="141" dlg:top="145" dlg:width="130" dlg:height="15" dlg:help-text="&amp;349.DlgMain.CommandButton9.HelpText" dlg:value="&amp;350.DlgMain.CommandButton9.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.vai_a_S2?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:text dlg:style-id="2" dlg:id="Label2" dlg:tab-index="10" dlg:left="211" dlg:top="53" dlg:width="60" dlg:height="10" dlg:help-text="&amp;353.DlgMain.Label2.HelpText" dlg:value="&amp;354.DlgMain.Label2.Label" dlg:valign="center"/>

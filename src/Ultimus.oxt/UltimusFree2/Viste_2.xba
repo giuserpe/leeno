@@ -1,4 +1,211 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_2" script:language="StarBasic">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Viste_2" script:language="StarBasic">rem ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO - Computo Metrico
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+sub temp_carica
+	dim Tabella1 as string
+	dim Config1 as string
+	oSheet = ThisComponent.currentController.activeSheet
+&apos;	oCell = ThisComponent.CurrentSelection
+&apos;	 lrow = oCell.CellAddress.row
+&apos;	 lcol = oCell.CellAddress.column
+	lrow= Range2Cell
+	if lrow = -1 then
+			 
+			exit sub
+	end if
+	Tabella1 = oSheet.GetCellByPosition( 208 , lrow).string	
+	Config1 = oSheet.GetCellByPosition( 207 , lrow).string	
+	oSheet = ThisComponent.Sheets.getByName(Tabella1)
+	ThisComponent.CurrentController.Select(oSheet)
+	pippo = Carica_vista_da_schema(Tabella1, Config1)
+end sub
+
+sub Apri_tutto_CONTABILITA
+	dim Tabella1 as string
+	dim Config1 as string
+	Tabella1 = &quot;CONTABILITA&quot;
+	Config1 = &quot;Tutte&quot;
+	Carica_vista_da_schema(Tabella1, Config1)
+end sub
+
+sub Apri_CONTABILITA_C
+	dim Tabella1 as string
+	dim Config1 as string
+	Tabella1 = &quot;CONTABILITA&quot;
+	Config1 = &quot;CONTABILITA_C&quot;
+	Carica_vista_da_schema(Tabella1, Config1)
+end sub
+
+sub manodopera_on_off
+	dim Tabella1 as string
+	dim Config1 as string
+	&apos;_____________________
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
+	&apos;_____________________
+	Tabella1 = &quot;CONTABILITA&quot;
+	Config1 = &quot;Reg_sal&quot;
+&apos;	Carica_vista_da_schema(Tabella1, Config1)
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) 
+	If oSheet.getColumns().getByName(&quot;AD&quot;).isVisible = false or _
+		oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = false	 then
+			oSheet.getColumns().getByName(&quot;AD&quot;).isVisible = TRUE 
+			oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = TRUE 
+	 else	 
+			oSheet.getColumns().getByName(&quot;AD&quot;).isVisible = false 
+			oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = false 			
+	end if
+end sub
+
+
+
+sub sicurezza_on_off
+	dim Tabella1 as string
+	dim Config1 as string
+	&apos;_____________________
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
+	&apos;_____________________
+
+	oSheet = ThisComponent.Sheets.getByName(&quot;CONTABILITA&quot;) 
+	
+
+	If oSheet.getColumns().getByName(&quot;R&quot;).isVisible = false then&apos;or _
+	&apos;	oSheet.getColumns().getByName(&quot;AE&quot;).isVisible = false	 then
+			oSheet.getColumns().getByName(&quot;R&quot;).isVisible = TRUE 
+	 else	 
+			oSheet.getColumns().getByName(&quot;R&quot;).isVisible = false 
+	end if
+end sub
+
+
+
+Function Carica_vista_da_schema (Tabella as string, Config as string)
+&apos;lo schema sta in S1 celle FA151:HA151 (e righe successive)
+dim iNumCol as integer
+dim iString as integer
+dim bValue as boolean
+dim sValue as string
+dim sString as string
+	&apos;_____________________
+&apos;	chiudi_dialoghi &apos; chiude tutti i dialoghi
+	&apos;_____________________
+oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
+iRow = 150
+Do while oSheet.GetCellByPosition(207 , iRow ).string &lt;&gt; Config or _
+	oSheet.GetCellByPosition(208 , iRow ).string &lt;&gt; Tabella
+	iRow = iRow + 1
+	if oSheet.GetCellByPosition(207 , iRow ).string = &quot;&quot; then
+		exit do
+	end if
+loop
+&apos;print ThisComponent.CurrentController.Select( oSheet.GetCellByPosition(207 , iRow ) &apos;debug
+&apos;adesso abbiamo la riga della conf richiesta per una data sheet
+&apos;oSheetD = ThisComponent.Sheets.getByName(Tabella)???
+&apos; e possiamo lavorare anche su un&apos;altra tabella
+oSheetD = ThisComponent.currentController.activeSheet
+ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(1 , 1 ))
+For i = 0 to 99
+&apos;ThisComponent.CurrentController.Select(oSheetD.GetCellByPosition(i , 3 ))
+&apos;print oSheet.GetCellByPosition(i+156 , iRow ).string
+		Select Case oSheet.GetCellByPosition(i+156 , iRow ).string
+	 			case = &quot;T&quot;
+	 				oSheetD.GetCellByPosition(i, 2 ).Columns.IsVisible = true
+	 			case = &quot;F&quot;	
+	 				oSheetD.GetCellByPosition(i, 2 ).Columns.IsVisible = False
+	 			case = &quot;&quot;
+		end select
+&apos;	if oSheet.GetCellByPosition(i+156 , iRow ).string = &quot;T&quot; then
+&apos;			oSheetD.GetCellByPosition(i, 2 ).Columns.IsVisible = true
+&apos;		else
+&apos;			oSheetD.GetCellByPosition(i, 2 ).Columns.IsVisible = False
+&apos;	end if
+
+next
+END FUNCTION
+
+
+
+
+Sub Registra_conf_colonne_2 &apos;scrive la configurazione con una stringa su una sheet 
+&apos; la configurazione nascondi/mostra di 30 colonne
+dim iNumCol as integer
+dim bValue as boolean
+dim sValue as string
+&apos;dim sList as string
+&apos;sList = &quot;&quot;
+oSheet = ThisComponent.currentController.activeSheet
+&apos;iNumCol = -1
+
+&apos;For i = 0 to 39
+&apos;	iNumCol = iNumCol +1
+
+&apos;	oCell = oSheet.GetCellByPosition(iNumCol, 2 )
+&apos;	ThisComponent.CurrentController.Select(oCell) 
+&apos;	bValue = oCell.Columns.IsVisible
+&apos;	sValue = bValue
+&apos;	sList = sList + left(sValue, 1)
+&apos;next
+&apos;print sList
+&apos;sNomeConf = inputbox (&quot;scrivi il nome della configurazione&quot;,,&quot;Temp&quot;)
+
+oSheetDest = ThisComponent.Sheets.getByName(&quot;S4&quot;)
+iRow = 150
+
+&apos;oCell = oSheet.GetCellByPosition(1 , iRow )
+Do while oSheetDest.GetCellByPosition(157 , iRow ).string &lt;&gt; &quot;&quot;
+ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(157 , iRow ))
+	iRow = iRow + 1
+loop
+&apos;iRow = iRow + 1
+
+&apos;iNumCol = 156
+
+For i = 0 to 50
+	if oSheet.GetCellByPosition(i, 2 ).Columns.IsVisible = true then
+			oSheetDest.GetCellByPosition(i+156 , iRow ).string = &quot;T&quot;
+			oSheetDest.GetCellByPosition(i+156 , iRow ).cellstyle = &quot;ROSSA&quot;
+		else
+			oSheetDest.GetCellByPosition(i+156 , iRow ).string = &quot;F&quot;
+			oSheetDest.GetCellByPosition(i+156 , iRow ).cellstyle=&quot;Bordo_fine&quot;
+	end if
+&apos;	print oSheetDest.GetCellByPosition(i , iRow ).string	
+&apos;	oCell = oSheet.GetCellByPosition(iNumCol, 2 )
+&apos;	ThisComponent.CurrentController.Select(oCell) 
+&apos;	bValue = oCell.Columns.IsVisible
+&apos;	sValue = bValue
+&apos;	sList = sList + left(sValue, 1)
+next
+&apos;print sList
+sNomeConf = inputbox (&quot;scrivi il nome della configurazione&quot;,,&quot;Temp&quot;)
+
+oSheetDest.GetCellByPosition(i+156 , iRow ).string = sNomeConf 
+oSheetDest.GetCellByPosition(i+156 , iRow ).cellstyle=&quot;Bordo_fine&quot;
+oSheetDest.GetCellByPosition(i+156+1 , iRow ).string = oSheet.name 
+oSheetDest.GetCellByPosition(i+156+1 , iRow ).cellstyle=&quot;Bordo_fine&quot;
+&apos;oCell = oSheet.GetCellByPosition(1 , iRow )	
+&apos;oCell.string = sList
+&apos;oCell = oSheet.GetCellByPosition(i , iRow )
+&apos;oCell.string = sNomeConf
+oCell = oSheetDest.GetCellByPosition(i+156 , iRow )
+&apos;xray oSheetDest
+If oSheetDest.isVisible = false then
+		oSheetDest.isVisible = TRUE
+ 	else
+ 		oSheetDest.isVisible = false
+end if
+ThisComponent.CurrentController.Select(oCell) 
+&apos;msgbox &quot;La configurazione On/Off delle colonne è stata &quot;&quot;sintetizzata&quot;&quot; in questa stringa&quot;&amp; CHR$(10)_
+&apos;	&amp;&quot; Usandola come parametro della funzione Viste_nuove puoi creare una nuova Configurazione o modificarne una esistente...&quot;&amp; CHR$(10)_
+&apos;	&amp; &quot;Vedi il modulo &quot;&quot;Viste&quot;&quot; della libreiria UltimusFree2...&quot;
+
+END SUB
 </script:module>

@@ -1,4 +1,314 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Agg_Templ" script:language="StarBasic">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Agg_Templ" script:language="StarBasic">rem ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO - Computo Metrico
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+&apos; modulo specifico SOLO per aggiornare un vecchio template
+
+Global GsTemp_major
+Global GsTemp_minor
+Global GsVer_templ 
+
+sub AGGIORNA_TEMPLATE &apos;main
+&apos;	on error goto errore
+	&apos; versione oxt installata
+&apos;	versioneUF_major = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value
+&apos;	versioneUF_minor = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value 
+ 
+	Select case msgbox (&quot;Sto per aggiornare questo documento rendendolo &apos;simile&apos; ad un template più aggiornato (e che dovrai scegliere e caricare) &quot; &amp; CHR$(10)_
+		&amp; &quot; Prima di proseguire consiglio di CONSULTARE IL MANUALE AL Cap. AGGIORNAMENTO DI UN COMPUTO &apos;VECCHIO&apos; per maggiori dettagli&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Per avere una qualche ragionevole certezza di concludere con successo questa procedura sono necessari alcuni prerequisiti:&quot; &amp; CHR$(10)_
+		&amp; &quot; - OOo apenna resettato &quot; &amp; CHR$(10)_
+		&amp; &quot; - possibilmente il browser chiuso, e nessun task non strettamente necessario aperto&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot;Nel caso si intenda procedere adesso questo doc può essere salvato con un nuovo nome per evitare qualsiasi rischio per i tuoi dati!&quot; &amp; CHR$(10) &amp; CHR$(10)_
+		&amp; &quot; Salvo il doc prima di proseguire?&quot; &amp; CHR$(10)_
+				&amp; &quot;&quot; ,35, &quot;Aggiornamento del template&quot;) 
+		case 6
+			sSave = 1
+			salva_temp
+		
+		case 7 
+			&apos;exit sub
+		case 2
+			exit sub
+	end select
+
+	Scrivi_Globale &apos;registra il doc come DCC
+	
+
+
+		&apos; 	&apos;Versione del template
+	Select case msgbox (&quot;Ora verrà richiesta la selezione (caricamento) un Template da usare come &apos;modello&apos;&quot;&amp; CHR$(10)_
+			&amp; &quot; (NB, Anche se è già aperto, lo devi comunque ri-aprire dalla finestra di selezione)&quot;&amp; CHR$(10)_
+			&amp; &quot;Il Template-modello deve essere ovviamente &apos;recente&apos; e &apos;sincronizzato&apos; con la libreria installata &quot;_
+			&amp; &quot;(&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.xx)&quot; &amp; CHR$(10)_
+			&amp; &quot;Quindi, se ancora non l&apos;hai fatto, puoi farlo ora: scarica da &quot;&amp; CHR$(10)_
+			&amp; &quot; http://aimar.mrjive.it/?q=node/44 la versione più aggiornata del Template&quot; &amp; CHR$(10)_
+			&amp; &quot; (magari badando che anche la libreria installata sul tuo PC sia aggiornata!)&quot;&amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;NB Le operazioni che seguono sono tendenzialmente gravose per la macchina, &quot;_
+			&amp; &quot;per essere certi che vada a buon fine in tempi brevi sarebbe preferibile resettare prima OOo... &quot; &amp; CHR$(10)_
+			&amp; &quot;O almeno chiudere le altre istanze di OOo eventualmente aperte.&quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Ma se pensi di proseguire chiudi tutte le applicazioni superflue (Browser, gestori di clipboard tipo klipper, etc...)&quot;&amp; CHR$(10)_
+			&amp; &quot;SERVE anche ATTENZIONE per rispondere alle domande del wizards&quot;&amp; CHR$(10)_
+			&amp; &quot; (dovrebbero bastare pochi minuti... ma non è detto!)&quot; &amp; CHR$(10) &amp; CHR$(10)_
+			&amp; &quot;Pertanto non usare il pc per altre operazioni sopportando pazientemente le probabili &apos;esitazioni&apos; della macchina!&quot;&amp; CHR$(10)_
+			&amp; &quot;Proseguo?&quot; &amp; CHR$(10)_
+			&amp; &quot;&quot; ,35, &quot;Aggiornamento del template&quot;) 
+		case 2
+			exit sub
+		case 7
+			exit sub
+	end Select
+
+	&apos; accoda alcune sheets e fa delle cose 
+	sTuttoOK = Aggiorna_Template_2 
+
+	&apos;azzera la variabile che altrimenti inibisce il controllo in apertura
+ SGenericoMemo = &quot;&quot;	
+	Sel_Elenco_Prezzi
+	
+ wait 1000
+ &apos; copia i valori Utente dalla vecchia tab (S1_VEC) e li incolla su quella importata	
+
+
+ 
+ &apos; aggiorna le info nelle proprietà del file e qualcosa nelle var gen
+
+ 
+ 	&apos; colora le tabs
+ 	Colora_Tabs
+ 
+ 	&apos; converte le voci di computo a &quot;descrizione allargata&quot;
+ 	Salva_spazio_A_A 
+ 	
+ 	if GetGuiType() &lt;&gt; 3 then
+ 			&apos;	if msgbox ( &quot;Se stai usando NeoOfffice &quot; &amp; sStile_Pag &amp; &quot; esiste gà&quot; &amp; CHR$(10)_
+			 &apos; 		&amp;&quot; cosa faccio: lo sosvrascrivo?&quot; &amp; CHR$(10)_
+			 &apos; 		 	&amp; &quot;&quot; &amp; CHR$(10)_
+			&apos;				&amp; &quot;&quot; ,36, &quot;&quot;) = 7 then &apos; se la risposta è NO
+			&apos;	 	exit sub
+			&apos;	 else
+	
+ 		&apos; rimuove il file di conf degli accelerator a livello del doc
+		rimuovi_SC_Doc 
+	end if
+	&apos;Registra_Tasti_Global
+	&apos;Registra_Tasti_inDoc
+	
+	
+ 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos;	Chiudi_o_elimina_tabelle_inutili
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ 	 
+ &apos; riscrive i nomi di area 
+ Rifa_nomi_area
+ 	
+	goto disattivato &apos; NB disattivata solo questa finestra di dialogo...
+ 	&apos; tenta di sistemare le intestazioni di colonna (ma con i pulsantti è un disastro)
+ 	beep
+ 	iCaso = msgbox (&quot;Sto per sovrascrivere le righe di intestazione di COLONNA per Elenco Prezzi, Analisi, COMPUTO e CONTABILITA.&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;Se hai personalizzato alcune scritte queste andranno perse le dovrai eventualmente rifare&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;Se il tuo Documento è abbastanza recente puoi evitare questo passaggio dai risulati incerti!&quot; &amp; CHR$(10)_
+				&amp; &quot;(La puoi fare anche dopo in un secondo momento)&quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot; Proseguo sovrascrivendo ? &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;&quot; ,35, &quot;&quot;) 
+			select case iCaso
+				case 7
+					&apos;exit sub
+				case 2
+					&apos;exit sub
+				case 6
+				
+			end select	
+	disattivato:	
+ copia_teste 
+ 	modifiche_risibili
+ 	
+ 	sSave = 0 &apos; impostato per prova... evitare gli sutomatismi?
+ 	&apos;(altrimenti su libò non funzionava...)
+ 	
+ if sTuttoOK &lt;&gt; &quot;Annullato&quot; then
+ 	 beep
+ if sSave =1 then &apos;and GetGuiType() &lt;&gt; 3 then &apos;se Non è un MAC
+ 			&apos; salviamo il doc corrente
+				oDocFrame = ThisComponent.getCurrentController().getFrame()	
+				oDispatchHelper = createUnoService( &quot;com.sun.star.frame.DispatchHelper&quot; )
+				oDispatchHelper.executeDispatch( oDocFrame, &quot;.uno:Save&quot;, &quot;&quot;, 0, Array() )
+				sMessaggio = &quot;Il tuo documento è stato aggiornato e salvato come: &quot; &amp; ConvertFromUrl(sTuttoOK) &amp; CHR$(10)
+			else
+				sMessaggio = &quot;Il tuo documento: &quot; &amp; ConvertFromUrl(sTuttoOK) &amp; &quot; è stato aggiornato!&quot; &amp; CHR$(10)	
+		 end if
+		 if GetGuiType() = 3 then
+		&apos;	 msgbox &quot;Adesso dovresti salvare il documento!&quot; &amp; CHR$(10)_
+		 &apos; 			&amp; &quot;(Mi spiace, ma siccome hai un MacHintosh non lo posso fare io...&quot;
+		 end if
+		 msgbox sMessaggio &amp; CHR$(10)_
+				&amp; &quot;Tutto sembra a posto, ma ricorda che ho importato delle nuove tabelle rinominando le tue vecchie &quot; _
+				&amp; &quot;con il suffisso &apos;_VEC&apos; per consentire controlli comparativi.&quot; &amp; CHR$(10)_
+				&amp; &quot; Le puoi eliminare a mano in qualsiasi momento! &quot; &amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;Anche la tua &apos;Anagrafica&apos; (tab. &apos;S2&apos; ) è stata rinominata come &apos;S2_vec&apos; e, nella maggior parte dei casi puoi rispristinarla, rinominando o cancellando quella nuova appena importata.&quot;
+ 	 msgbox sMessaggio &amp; CHR$(10)_
+				&amp; &quot;Purtroppo e quasi certamente ti troverai con dei pulsantoni spostati o da ridimensionare.)&quot;&amp; CHR$(10)_
+				&amp; &quot;Vai sulle varie tab El.Prezzi, Analisi, Computo e rimettili a posto trascinando con il mouse (sei già in modalità bozza...) e alla fine BLOCCALI!&quot;&amp; CHR$(10)_
+				&amp; &quot; (Se incontri difficoltà sul MANUALE, al Cap. AGGIORNAMENTO DI UN COMPUTO &apos;VECCHIO&apos;, ci sono dei suggerimenti in merito...)&quot;&amp; CHR$(10) &amp; CHR$(10)_
+				&amp; &quot;In ogni caso, per vedere il tuoi conteggi a posto, devi:&quot;&amp; CHR$(10)_
+				&amp; &quot; - SALVARE il documento e poi chiuderlo&quot;&amp; CHR$(10)_
+				&amp; &quot; - Resettare Libò e/o OOo&quot;&amp; CHR$(10)_
+				&amp; &quot; Riaprire il documento ed ESEGUIRE la Procedura di Controllo&quot;
+	 else
+			 Print &quot;Qualcosa. nell&apos;adattamento, è andato storto... !&quot; &apos;&amp; CHR$(10)_
+			 msgbox &quot;Resetta OOo/Libò, chiudi tutte le altre applicazioni e poi riprova!&quot;&amp; CHR$(10)_
+			 &amp; &quot;Ma questa volta Non cliccare o digitare al di fuori di quanto ti è richiesto dal wizard!&quot;
+	 end if
+	exit Sub
+	errore:
+	Barra_chiudi_sempre_4 &apos;&apos;
+end sub
+
+sub Colora_Tabs &apos;sistena i colori delle tabs e riordina
+	&apos; le apre tutte
+&apos;	Visualizza_sheet_TUTTE
+	&apos; prima tutte circa come defaults
+	SetTabColorAll
+	&apos;poi procede a colorarle una per una in base a nomi e/o criteri
+	oSheets = ThisComponent.getSheets()
+	bSheetNames = oSheets.getElementNames()
+	For i = LBound( bSheetNames ) To UBound( bSheetNames )
+		sSheetName = bSheetNames( i ) &apos;255,233,
+	    oSheet = ThisComponent.Sheets.getByName(sSheetName)
+		If sSheetName = &quot;Elenco Prezzi&quot; then 
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
+			SetTabColorN(RGB(255,240,178))	
+		end if
+		If sSheetName = &quot;Analisi di Prezzo&quot; or _
+			sSheetName = &quot;Lista Analisi&quot; Then
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
+			SetTabColorN(RGB(185,255,168))
+		end if
+		If sSheetName = &quot;COMPUTO&quot; Then
+			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;COMPUTO&quot;
+			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
+			SetTabColorN(RGB(255,199,231))&apos;(255,199,231))
+		end If
+		If sSheetName = &quot;VARIANTE&quot; Then
+			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;VARIANTE&quot;
+			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
+
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
+			SetTabColorN(RGB(255,255,102))
+		end if
+		If sSheetName = &quot;CONTABILITA&quot; then 
+			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).String  = &quot;CONTABILITA&quot;
+			thisComponent.Sheets.GetByName(sSheetName).getCellByPosition(2,0).CELLSTYLE = &quot;comp Int_colonna&quot;
+			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,0,42,0).Cellbackcolor = (RGB(255,180,175))
+			thisComponent.Sheets.GetByName(sSheetName).getCellRangeByPosition(0,2,42,2).Cellbackcolor = (RGB(255,180,175))
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
+			SetTabColorN(RGB(255,180,175))
+		end if
+
+		If left(sSheetName,3) = &quot;cT_&quot; or left(sSheetName,3) = &quot;cP_&quot; Then
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
+			SetTabColorN(RGB(204,255,255))	
+		end if 
+		If left(sSheetName,6) = &quot;QUADRO&quot; or left(sSheetName,6) = &quot;Quadro&quot; or left(sSheetName,6) = &quot;quadro&quot; Then
+			ThisComponent.CurrentController.setActiveSheet(oSheet)
+			SetTabColorN(RGB(76,76,76))			
+		end if 
+	Next 
+	Sel_Altre_Opz
+end sub
+
+
+sub SetTabColorN(colore) &apos; agisce sulla sheet attiva
+&apos;print colore
+	dim document as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	If ThisComponent.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) Then
+		document = ThisComponent.CurrentController.Frame
+		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)		
+		rem ----------------------------------------------------------------------
+		dim args1(0) as new com.sun.star.beans.PropertyValue
+		args1(0).Name = &quot;TabBgColor&quot;
+		args1(0).Value = colore &apos; RGB(255,128,0)
+		dispatcher.executeDispatch(document, &quot;.uno:SetTabBgColor&quot;, &quot;&quot;, 0, args1())		
+	End If
+End Sub
+
+
+
+Sub SetTabColorAll &apos;lavora su tutte
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	If ThisComponent.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot; ) Then
+		document = ThisComponent.CurrentController.Frame
+		dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+		
+		rem ----------------------------------------------------------------------
+		dispatcher.executeDispatch(document, &quot;.uno:TableSelectAll&quot;, &quot;&quot;, 0, Array())
+		
+		rem ----------------------------------------------------------------------
+		dim args2(0) as new com.sun.star.beans.PropertyValue
+		args2(0).Name = &quot;TabBgColor&quot;
+		args2(0).Value = RGB(195,192,192)
+	&apos;	args2(0).Value = &quot;33023&quot; &apos;&quot;Default&quot; &apos;RGB(0,128,255)
+				
+		dispatcher.executeDispatch(document, &quot;.uno:SetTabBgColor&quot;, &quot;&quot;, 0, args2())
+	End If
+End Sub
+
+
+
+Sub Rinom_stile_cella (sNom_V as string, sNom_N as string)
+
+Dim Doc As Object
+Dim Sheet As Object
+Dim StyleFamilies As Object 
+Dim CellStyles As Object
+Dim CellStyle As Object
+Dim I As Integer
+ 
+Doc = StarDesktop.CurrentComponent
+StyleFamilies = Doc.StyleFamilies
+CellStyles = StyleFamilies.getByName(&quot;CellStyles&quot;)
+ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
+For I = 0 To CellStyles.Count - 1
+ CellStyle = CellStyles(I)
+ if CellStyle.name = sNom_V then
+ 		&apos;MsgBox CellStyle.Name 
+ 		CellStyle.setName( sNom_N)
+ end if
+Next I
+
+end sub
+
+
+sub Svuota_Stil_pag_Template
+	&apos; elimino tutte le pagine di stile con nome diverso da New_qualcosa
+	Doc = StarDesktop.CurrentComponent
+	oStyleFamilies = Doc.StyleFamilies
+	oStilePag = oStyleFamilies.getByName(&quot;PageStyles&quot;)
+		For i = oStilePag.count-1 to 0 step -1
+			if left(oStilePag.getByIndex(i).Name , 3) &lt;&gt; &quot;New&quot; and _
+				oStilePag.getByIndex(i).Name &lt;&gt; &quot;Default&quot; then
+				oStilePag.removebyname(oStilePag.getByIndex(i).Name)
+			end if
+		Next i 	
+End sub	
+
+
 </script:module>

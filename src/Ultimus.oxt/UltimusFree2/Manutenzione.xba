@@ -1,4 +1,604 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Manutenzione" script:language="StarBasic">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Manutenzione" script:language="StarBasic">rem ***** BASIC *****
+&apos;_______________________________________________________________________________________ 		
+&apos; LeenO - Computo Metrico
+&apos; Template assistito per la compilazione di Computi Metrici Estimativi 				
+&apos;..._ Copyright (C) Bartolomeo Aimar - Giuseppe Vizziello - supporto@leeno.org
+&apos; Licenza LGPL  2.1 https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html					
+&apos; Il codice contenuto in questo modulo è parte integrante dell&apos;estensione LeenO 
+&apos; Vi sarò grato se vorrete segnalarmi i malfunzionamenti (veri o presunti)
+&apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
+&apos; per l&apos;ottimizzazione del codice.
+&apos;_______________________________________________________________________________________
+
+&apos;Global sNome_stile as string
+
+Public Const sList as string = &quot;lista&quot; &apos;as string
+Public Const sPerduta as string = &quot;#NOME?&quot; &apos;as string
+Public Const sMessaggioErr as string = &quot;Attento!!!&quot;&apos; as string
+&apos;Public Const sMessaggioErr = &quot;Questo codice sembra non esistere in Elenco Prezzi!!!&quot; &apos; as string
+Public Const bValue as boolean = True &apos;False 
+
+
+
+Sub normale
+	Controlla_Validita_Lista(1)
+end sub
+
+
+Sub Controlla_Validita_Lista(optional flag) &apos; controllo richiamato in apertura del doc
+
+
+if not isMissing(flag) then &apos; se arriva con flag a 1 non da la prompt
+		sMs = 1
+end if
+
+oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;)
+for i =5 to 100 &apos;col &amp; rows - rows/col righe/colonne
+	for iC = 1 to 5 &apos;cerco nelle due direzioni
+		if oSheet.GetCellbyPosition( iC, i ).cellStyle= &quot;comp Art-EP&quot; and oSheet.GetCellbyPosition( iC, i ).validation.Type = 0 then
+						Ripristina_Validita_Lista 
+						sEsco = 1
+						Barra_chiudi_sempre_4
+						exit for
+		end if						
+		if oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#NAME?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#name?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#nome?&quot; then
+			 &apos; 	Select case MsgBox ( &quot;Ho rilevato errori sulle finestrelle a discesa &quot;&amp; CHR$(10)_
+			&apos; 						&amp; &quot;Correggo? &quot;&amp; CHListaR$(10)_
+ 			&apos;						&amp; &quot;&quot; , 35, &quot;Fimestrelle a discesa&quot; )
+			&apos;		Case 6
+						Ripristina_Validita_Lista
+						sEsco = 1
+						exit for
+			&apos;	end select				
+			&apos;	sEsco = 1
+				exit for
+		end if
+	next
+next
+if sEsco = 1 then
+	exit sub
+end if
+
+oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+lLastUrow = getLastUsedRow(oSheet)
+for i =2 to lLastUrow &apos;col &amp; rows - rows/col righe/colonne
+	for iC = 1 to 1 &apos;cerco nelle due direzioni
+		if oSheet.GetCellbyPosition( iC, i ).cellStyle= &quot;comp Art-EP&quot; and oSheet.GetCellbyPosition( iC, i ).validation.Type = 0 then
+			if sMs &lt;&gt; 1 then
+					Barra_chiudi_sempre_4
+					Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+					Ripristina_Validita_Lista
+					sEsco = 1
+					Barra_chiudi_sempre_4
+					exit for
+				else
+					Select case MsgBox ( &quot;1 Ho trovato finestrelle a discesa disattivate nel Computo...&quot;&amp; CHR$(10)_
+			 						&amp; &quot;Ripristino? &quot;&amp; CHR$(10)_
+ 									&amp; &quot;&quot; , 35, &quot;Finestrelle a discesa&quot; )
+						Case 6
+							Barra_chiudi_sempre_4
+							Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+							Ripristina_Validita_Lista
+							sEsco = 1
+							Barra_chiudi_sempre_4
+							exit for
+					end select	
+			end if
+		end if						
+
+		if oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#NAME?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#name?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#nome?&quot; then
+				&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( iC, i )) &apos;debug
+			if sMs &lt;&gt; 1 then
+					Barra_chiudi_sempre_4
+					Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+					Ripristina_Validita_Lista
+					sEsco = 1
+					Barra_chiudi_sempre_4
+					exit for
+			 else
+			 	 Select case MsgBox ( &quot;2 Ho rilevato errori sulle finestrelle a discesa &quot;&amp; CHR$(10)_
+			 						&amp; &quot;Correggo? &quot;&amp; CHR$(10)_
+ 									&amp; &quot;&quot; , 35, &quot;Fimestrelle a discesa&quot; )
+					Case 6
+						Barra_chiudi_sempre_4
+						Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+						Ripristina_Validita_Lista 
+						sEsco = 1
+						Barra_chiudi_sempre_4
+						exit for
+			 	 end select				
+				 sEsco = 1
+				 exit for
+			end if
+		end if
+	next
+next
+if sEsco = 1 then
+	Barra_chiudi_sempre_4
+	exit sub
+end if
+
+oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
+lLastUrow = getLastUsedRow(oSheet)
+for i =2 to lLastUrow &apos;col &amp; rows - rows/col righe/colonne
+	for iC = 1 to 4 &apos;cerco nelle due direzioni
+		if (oSheet.GetCellbyPosition( iC, i ).cellStyle= &quot;An-lavoraz-Utili desc&quot; and oSheet.GetCellbyPosition( iC, i ).validation.Type = 0) or _
+			(oSheet.GetCellbyPosition( iC, i ).cellStyle= &quot;An-1um&quot; and oSheet.GetCellbyPosition( iC, i ).validation.Type = 0) or _
+			(oSheet.GetCellbyPosition( iC, i ).cellStyle= &quot;An-lavoraz-Cod&quot; and oSheet.GetCellbyPosition( iC, i ).validation.Type = 0) then
+			if sMs &lt;&gt; 1 then
+					Barra_chiudi_sempre_4
+					Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+					Ripristina_Validita_Lista
+					sEsco = 1
+					Barra_chiudi_sempre_4
+					exit for
+				else
+				 Select case MsgBox ( &quot;Ho trovato finestrelle a discesa disattivate nelle Analisi...&quot;&amp; CHR$(10)_
+			 						&amp; &quot;Ripristino? &quot;&amp; CHR$(10)_
+ 									&amp; &quot;&quot; , 35, &quot;Fimestrelle a discesa&quot; )
+					Case 6
+						Barra_chiudi_sempre_4
+						Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+						Ripristina_Validita_Lista
+						sEsco = 1
+						Barra_chiudi_sempre_4
+						exit for
+				end select	
+			end if
+		end if						
+		if oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#NAME?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#name?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#NOME?&quot; or _
+			 	oSheet.GetCellbyPosition( iC, i ).Validation.Formula1 = &quot;#nome?&quot; then
+			if sMs &lt;&gt; 1 then
+					Barra_chiudi_sempre_4
+					Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+					Ripristina_Validita_Lista
+					sEsco = 1
+					Barra_chiudi_sempre_4
+					exit for
+				else
+			 	 Select case MsgBox ( &quot;Ho rilevato errori sulle finestrelle a discesa &quot;&amp; CHR$(10)_
+			 						&amp; &quot;Correggo? &quot;&amp; CHR$(10)_
+ 									&amp; &quot;&quot; , 35, &quot;Fimestrelle a discesa&quot; )
+				 	 Case 6
+						Barra_chiudi_sempre_4
+						Barra_Apri_Chiudi_5(&quot;0 Sistemo le finestrelle a discesa!&quot;, 80)
+						Ripristina_Validita_Lista
+						sEsco = 1
+						Barra_chiudi_sempre_4
+						exit for
+				 end select				
+				 sEsco = 1
+				 exit for
+			end if
+		end if
+	next
+next
+if sEsco = 1 then
+	Barra_chiudi_sempre_4
+	exit sub
+end if
+&apos;print &quot;fatto&quot;
+Barra_chiudi_sempre_4
+end sub
+
+
+&apos;Sub Forza_Shortcut &apos; serve per la manutenzione del doc
+&apos; 	&apos; rimuove il file di conf degli accelerator a livello del doc&apos;
+&apos;	rimuovi_SC_Doc 
+&apos;	Registra_Tasti_inDoc
+&apos;	Registra_Tasti_Global
+&apos;end sub
+
+
+Sub Ripristina_Validita_Lista_U &apos; da dentro ultimus (usando questa c&apos;è la prompt)
+	&apos; risistema le finestrelle con scelta a discesa
+	&apos; quando perde il namedRange nella maschera
+	Ripristina_Validita_Lista
+	msgbox &quot;Finito! Le finestrelle a discesa dovrebbero adesso funzionare correttamente!&quot;
+end sub
+
+
+Sub Ripristina_Validita_Lista &apos; risistema le finestrelle con scelta a discesa
+&apos; quando perde il namedRange nella maschera
+
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;1 Sto ripristinando le finestre a discesa... pazienta........&quot;, 30)
+	oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;) &apos;(ThisComponent.currentcontroller.activesheet.name)
+
+	oCell=oSheet.GetCellbyPosition( 1, 9 ) &apos; Codice voce in computo
+	Cambia_d1 (oCell)	
+	oCell.string = &quot;Cod. Art.?&quot;
+	
+
+	oCell=oSheet.GetCellbyPosition( 1, 23 ) &apos; Codice voce in contabilità
+	Cambia_d1 (oCell)	
+	oCell.string = &quot;Cod. Art.?&quot;
+
+	oCell=oSheet.GetCellbyPosition( 3, 108) &apos;um (in analisi avcp
+	Cambia_d2 (oCell)
+	oCell.string = &quot;U.M. ?&quot;
+	
+	oCell=oSheet.GetCellbyPosition( 1, 110) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 111) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 112) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 115) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 118) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 121) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	oCell=oSheet.GetCellbyPosition( 1, 124) &apos;articoli in analisi avcp
+	Cambia_d1 (oCell)
+	oCell.string = &quot;Cod. Art.?&quot;
+	
+	oCell=oSheet.GetCellbyPosition( 4, 127 ) &apos;maggiorazioni in analisi AVCP
+	Cambia_d3 (oCell)
+
+	oCell=oSheet.GetCellbyPosition( 4, 128 ) &apos;maggiorazioni in analisi AVCP
+	Cambia_d3 (oCell)
+
+
+	&apos; passo a lavorare sul foglio Analisi
+	If Not ThisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then Exit Sub
+	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;) &apos;(ThisComponent.currentcontroller.activesheet.name)
+	lLastUrow = getLastUsedRow(oSheet)
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;2 Sto ripristinando le finestre a discesa delle maggiorazioni...&quot;, 40)
+	if oSheet.GetCellbyPosition(0,0).string = &quot;inizio analisi AVCP&quot; then &apos;CONTROLLO SULLE ANALISI AVCP maggiorazioni utili
+			col =3 &apos;analisi AVCP
+		else		 
+		col =1 &apos;analisi BART
+	end if
+ For lrow=3 To lLastUrow
+ &apos;	Barra_Apri_Chiudi_5(&quot;2 Sto ripristinando le finestre a discesa... pazienta...&quot;, 40)
+	 oCell=oSheet.GetCellbyPosition(col, lrow)
+	&apos;if oCell.validation.operator=1 And _
+	if	oCell.cellStyle= &quot;An-lavoraz-Utili desc&quot; then
+	ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
+ 			Cambia_d3 (oCell)
+	end if
+ next	
+ 
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;3 Sto ripristinando le finestre a discesa delle unità di misura...&quot;, 50)
+	
+ For lrow=3 To lLastUrow
+	 oCell=oSheet.GetCellbyPosition( 2, lrow )
+	 sAttributo_N = Trova_Attr_N (oCell, oSheet)
+			if sAttributo_N = &quot;UM_scelta&quot; or _
+				oCell.cellStyle = &quot;An-1um&quot; then
+					ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
+					Cambia_d2 (oCell)
+			end if
+ next
+if oSheet.GetCellbyPosition(0,0).string = &quot;inizio analisi AVCP&quot; then &apos;CONTROLLO SULLE ANALISI AVCP codice articolo
+			col =0 &apos;analisi AVCP
+		else
+		col =4 &apos;analisi BART
+	end if
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;4 Sto ripristinando le finestre a discesa del codice articolo...&quot;, 60)
+
+
+ For lrow=3 To lLastUrow &apos; ciclo in colonna E
+	 oCell=oSheet.GetCellbyPosition( col, lrow )
+	 sAttributo_N = Trova_Attr_N (oCell, oSheet)
+	if sAttributo_N = &quot;Cod_Prezzo_scelta&quot; then
+		ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
+			Cambia_d1 (oCell)
+	end if
+
+ next
+	ThisComponent.CurrentController.setFirstVisibleRow(0) &apos;focus
+
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot;5 Sto ripristinando le finestre a discesa... pazienta........&quot;, 70)	
+		
+ oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) &apos;(ThisComponent.currentcontroller.activesheet.name)
+&apos; oCell=thisComponent.getCurrentSelection()
+	lLastUrow = getLastUsedRow(oSheet)
+&apos;	lrow = 3
+ &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+&apos; RiDefinisci_Area_Elenco_prezzi &apos; proviamo solo a riordinarlo... se non è ok ci pensa quella a rifare
+ Riordina_ElencoPrezzi(1)
+ &apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ For lrow=3 To lLastUrow
+	 oCell=oSheet.GetCellbyPosition( 1, lrow )
+	 sAttributo_N = Trova_Attr_N (oCell, oSheet)
+ 	&apos;if oCell.validation.operator=1 And 
+ 	if sAttributo_N = &quot;Cod_Prezzo_scelta&quot; then
+ 			ThisComponent.CurrentController.setFirstVisibleRow(lrow) &apos;focus
+			Cambia_d1 (oCell)
+	end if
+ next
+	ThisComponent.CurrentController.setFirstVisibleRow(0)
+End sub
+
+
+Function Cambia_d1 (oCell as object) &apos; finestra validation per cod. prezzo
+ oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
+ oTabVal.setPropertyValue(&quot;Type&quot;, com.sun.star.sheet.ValidationType.LIST) &apos;CUSTOM)
+ oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, False)
+ 
+ oTabVal.setPropertyValue(&quot;ShowInputMessage&quot;, true) 
+ oTabVal.setPropertyValue(&quot;InputTitle&quot;,&quot;Codice Prezzo Componente&quot;)
+ &apos; oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;Usa &gt; Pesca Codice va e vieni &amp; CHR(10) &amp; (Ctrl Ins, Ctrl 8, Ctrl Alt K)&quot;)
+ oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;Usa &gt; Pesca Codice va e vieni&quot; &amp; CHR(10)_
+ &amp; &quot;(Ctrl Ins, Ctrl 8, Ctrl Alt K)&quot;) 
+ oTabVal.setPropertyValue(&quot;ErrorMessage&quot;, sMessaggioErr)
+ oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;, com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
+ oTabVal.setFormula1(sList)&apos;(&quot;Lista&quot;)
+ &apos;// apply on cell 
+ ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)
+end Function
+ 
+Function Cambia_d2 (oCell as object) &apos;
+	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
+	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
+	oTabVal.setPropertyValue(&quot;InputTitle&quot;,&quot;U. M.&quot;)
+	oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;Click sulla freccetta e &quot; &amp; CHR(10)_
+											&amp;&quot;seleziona l&apos;unità di misura&quot;)
+ oTabVal.setPropertyValue(&quot;ErrorMessage&quot;, &quot;Finestrella_Percentuali&quot;)
+ oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;, com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
+ oTabVal.setPropertyValue(&quot;Type&quot;, com.sun.star.sheet.ValidationType.LIST)
+rem SU ANALISI AVCP
+ sListUM = &quot; &quot;&quot;m²&quot;&quot;;&quot;&quot;m³&quot;&quot;;&quot;&quot;corpo&quot;&quot;;&quot;&quot;cad&quot;&quot;;&quot;&quot;m&quot;&quot;;&quot;&quot;kg&quot;&quot;;&quot;&quot;t&quot;&quot;;&quot;&quot;lt&quot;&quot;;&quot;&quot;dm&quot;&quot;;&quot;&quot;dm²&quot;&quot;;&quot;&quot;dm³&quot;&quot; &quot;
+ 	oTabVal.setFormula1(sListUM)
+ 	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)&apos;
+end Function
+
+Function Cambia_d3 (oCell as object) &apos;
+	&apos;ThisComponent.CurrentController.Select(oCell)
+	&apos;print &quot;si&quot;
+	oTabVal = ocell.getPropertyValue(&quot;Validation&quot;)
+ &apos;oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, False)
+	oTabVal.setPropertyValue(&quot;ShowList&quot;,2)
+	oTabVal.setPropertyValue(&quot;ErrorTitle&quot;, &quot;Finestrella_Percentuali&quot;) 
+	&apos;oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, bValue)
+	oTabVal.setPropertyValue(&quot;ShowErrorMessage&quot;, false)
+ oTabVal.setPropertyValue(&quot;ShowInputMessage&quot;, false)&apos;true) 
+ oTabVal.setPropertyValue(&quot;InputMessage&quot;, &quot;(o scrivi quel che ti pare, impostando poi il % a mano)&quot; ) 
+ oTabVal.setPropertyValue(&quot;InputTitle&quot;, &quot;Scegli una percentuale % predefinita&quot;)
+ oTabVal.setPropertyValue(&quot;ErrorMessage&quot;, &quot;Finestrella_Percentuali&quot;)
+ oTabVal.setPropertyValue(&quot;ErrorAlertStyle&quot;, com.sun.star.sheet.ValidationAlertStyle.INFO) &apos;INFORMATION)
+ &apos; oTabVal.setPropertyValue(&quot;Type&quot;, 6 enum: com.sun.star.sheet.ValidationType.LIST)
+ oTabVal.setPropertyValue(&quot;Type&quot;, com.sun.star.sheet.ValidationType.LIST)
+rem	sListUM = &quot; &quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;&quot;&quot;Spese Generali&quot;&quot;;&quot;&quot;Utili d&apos;Impresa&quot;&quot;;&quot;&quot;Oneri di Sicurezza&quot;&quot;;&quot;&quot;Maggiorazione&quot;&quot;;&quot;&quot;Sconto&quot;&quot; &quot;
+rem SU ANALISI AVCP
+	sListUM = &quot; &quot;&quot;Spese Generali (calcolate su F)&quot;&quot;;&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot;;&quot;&quot;Di cui sicurezza afferenti l&apos;impresa&quot;&quot; &quot;
+ 	oTabVal.setFormula1(sListUM)
+ 	ocell.setPropertyValue(&quot;Validation&quot;, oTabVal)&apos;
+end Function
+
+sub Ripristina_controlli_con_nuovaFinestra
+&apos;assegnata al menu UltimusFree &gt; Ripristina Controlli
+
+&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+Verifica_chiudi_preview
+&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+
+oDoc = ThisComponent
+&apos;XRAY ThisComponent.CurrentController.Frame
+ThisComponent.CurrentController.Frame.setName(_
+	&quot;vecchia_window&quot;)
+
+	oContr = ThisComponent.CurrentController
+	iCol = oContr.getFirstVisibleColumn
+	iRow = oContr.getFirstVisibleRow
+	oSheet = ThisComponent.currentController.activeSheet
+	oCell=thisComponent.getCurrentSelection()
+rem ---------------------------------------------
+dim document as object
+dim dispatcher as object
+document = ThisComponent.CurrentController.Frame
+&apos;xray document
+dispatcher = createUnoService(_
+		&quot;com.sun.star.frame.DispatchHelper&quot;)
+dispatcher.executeDispatch(_
+document, &quot;.uno:NewWindow&quot;, &quot;&quot;, 0, Array())
+&apos; in Linux apre la nuova finestra NON massimizzata
+
+rem -----------------------------------------------
+ThisComponent.CurrentController.Frame.setName(_
+	&quot;Nuova_window&quot;)
+dim lnumF as long
+lnumF = stardesktop.frames.getCount
+
+	For i = 0 To lnumF-1 
+ 		sNome = stardesktop.frames.getByIndex(i).name
+		if snome = &quot;vecchia_window&quot; then
+			stardesktop.frames.getByIndex(i).dispose()
+		exit for
+		end if
+ 	Next
+&apos;oEnum = StarDesktop.Components.createEnumeration
+&apos;While oEnum.hasMoreElements
+&apos; oDoc = oEnum.NextElement
+&apos;xray odoc
+ &apos; If IsDocumentDiUnCertoTipo(oDoc) Then
+&apos; &apos; fai qualcosa con il documento
+ &apos; print oDoc.URL
+ &apos; xray odoc
+&apos; End If 
+&apos;Wend
+
+	
+ 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+ 	Clessid_lock_End
+ 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+ 	&apos;--------------------------------------------
+ 	on error resume next
+ 	oSheetComputo = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
+&apos;-------------------------------------------------------------------------
+&apos;	oDpage = oSheetComputo.DrawPage
+&apos;	oform = oDpage.Forms.getbyname (&quot;WW-Standard&quot;)&apos;&apos;(&quot;WW-Standard&quot;)
+&apos;	oCtrlModel = oform.getbyname(&quot;PushButton_pippo&quot;)&apos;(&quot;PushButton2&quot;)
+&apos;	oCtrlModel.Enabled = true
+&apos;--------------------------------------------
+	
+	ThisComponent.CurrentController.Select(oSheet)
+	oContr.setFirstVisibleColumn (iCol)
+&apos;	oContr.setFirstVisibleColumn (0)
+	oContr.setFirstVisibleRow(iRow )
+	ThisComponent.CurrentController.Select(oCell)
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(6,291).valur &lt;&gt; 4 then
+		ThisComponent.CurrentController.ZoomValue = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,293).value
+	end if
+	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
+	SetDesignModeON
+	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
+	sPG1=0
+end sub
+
+
+SUB cerca_stile_cella &apos; per trovare se e dove è applicato un certo nome di stile
+&apos; bisogna impostare a mano il nome dello stile da cercare
+oSheet = ThisComponent.currentController.activeSheet
+&apos;sNome_stile = &quot;comp 1-a bianco&quot;
+sTrovato = 0
+sNome_stile = InputBox (&quot; Scrivi/incolla il nome dello stile da cercare&quot;&amp; CHR$(10)_
+ 							&amp; sNome_stile ,&quot; Cerca uno stile cella&quot;, sNome_stile)&apos; &amp; CHR$(10) 
+If sNome_stile = &quot;&quot; then &apos; si preme annulla Inputbox restituisce una stringa vuota
+ 			exit sub		
+end if	
+	Barra_chiudi_sempre_4
+	Barra_Apri_Chiudi_5(&quot; cerca... cerca ..&quot;, i)
+	lLastUrow = getLastUsedRow(oSheet)
+	lLastUcol = getLastUsedCol(oSheet)
+	sTrovato = 0
+
+	continua:
+	lrowStart = range2cell
+	lColstart = Range2Cell_COL
+for i =lColstart to lLastUcol &apos;col &amp; rows - rows/col righe/colonne
+&apos;	print 	lrowStart
+	for iC = lrowStart to lLastUrow &apos;cerco nelle due direzioni
+			Barra_chiudi_sempre_4
+			Barra_Apri_Chiudi_5(&quot; cerca... cerca ..&quot;, i)
+		if oSheet.GetCellbyPosition( iC, i ).cellStyle= sNome_stile then
+			ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( iC, i )) &apos;debug
+			sDove = Indirizzo_in_forma_leggibile
+			beep		
+			Select case msgbox (&quot;lo stile &apos;&quot; &amp; sNome_stile &amp; &quot;&apos; è applicato in &quot; &amp; sDove &amp; CHR$(10) &amp; CHR$(10)_
+					&amp; &quot; Continuo a cercare ?&quot; &amp; CHR$(10)_
+ 					&amp; CHR$(10) &amp; &quot;&quot;,35, &quot; Cerca uno stile cella ?&quot;)
+				case 6
+					sTrovato = 1
+					exit for
+				case 7
+					sTrovato = 2					
+	 				exit sub
+ 	 			case 2
+					sTrovato = 2
+ 					exit sub
+ 			end select
+
+			sTrovato = 0
+			Barra_chiudi_sempre_4
+			exit for
+		end if
+	next
+	if sTrovato = 2 or sTrovato = 1 then
+			Barra_chiudi_sempre_4
+			exit for
+&apos;		else
+&apos;			sTrovato = 0
+&apos;			Barra_chiudi_sempre_4
+&apos;			exit for
+	end if
+next
+if sTrovato = 1 then
+			Barra_chiudi_sempre_4
+			lrowStart = lrowStart + 1
+			goto continua
+end if
+if sTrovato = 2 then
+			Barra_chiudi_sempre_4
+			exit sub
+end if
+if sTrovato = 0 then
+		Barra_chiudi_sempre_4
+		beep
+		print &quot;lo stile di cella &apos; &quot; &amp; sNome_stile &amp; &quot; &apos; non è usato in questa sheet&quot;
+end if
+end sub
+rem ######################################################################
+
+Sub Controlla_Somme_Componenti &apos; serve per conversione Da_Vecchio_Template
+fissa (0,idxrow+1)
+	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
+	ThisComponent.CurrentController.Select(oSheet)
+	oEnd=uFindString(&quot;TOTALI COMPUTO&quot;, oSheet) 
+	lrowE=oEnd.RangeAddress.EndRow 
+	for i =0 to lrowE
+rem ----------------------------------------------------------------------
+		if oSheet.GetCellByPosition( 0 , i).cellstyle = &quot;Comp Start Attributo&quot; and _
+			Trova_Attr_N(oSheet.GetCellByPosition( 0 , i), oSheet) =&quot;Start_voce_COMPUTO&quot; Then
+			lRow = i
+			do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp End Attributo&quot;
+				lRow = lRow+1
+			Loop
+			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , i+1))
+rem ----------------------------------------------------------------------
+rem intrattenimento
+			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0 , lRow))
+rem ----------------------------------------------------------------------
+rem controllo riga dei totali
+			oSheet.GetCellByPosition( 9 , i+1).string = &quot;&quot;
+			oSheet.GetCellByPosition( 9 , i+1).cellstyle = &quot;vuote2&quot;
+			oSheet.GetCellByPosition( 8 , lRow).formula = &quot;=CONCATENATE(&quot;&quot;SOMMANO [&quot;&quot;;VLOOKUP(B&quot; &amp; i+2 &amp;&quot;;elenco_prezzi;3;FALSE());&quot;&quot;]&quot;&quot;)&quot;
+			oSheet.GetCellByPosition( 9 , lRow).setformula(&quot;=SUBTOTAL(9;J&quot; &amp; i+2 &amp; &quot;:J&quot; &amp; lrow+1 &amp; &quot;)&quot;)
+			oSheet.GetCellByPosition( 9 , lRow).cellstyle = &quot;Comp-Variante num sotto&quot;
+			oSheet.GetCellByPosition( 13 , lRow).formula = &quot;=J&quot; &amp; lrow+1
+			oSheet.GetCellByPosition( 11 , lRow).formula = &quot;=VLOOKUP(B&quot; &amp; i+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;
+			oSheet.GetCellByPosition( 11 , lRow).cellstyle = &quot;comp sotto Unitario&quot;
+			sformula=&quot;=IF(&quot;&quot;SOMMANO [%]&quot;&quot;=I&quot; &amp; lrow+1 &amp; &quot;;J&quot; &amp; lrow+1 &amp; &quot;*L&quot; &amp; lrow+1 &amp; &quot;/100;J&quot;&amp; lrow+1 &amp; &quot;*L&quot;&amp; lrow+1 &amp; &quot;)&quot;
+			oSheet.GetCellByPosition( 18 , lRow).formula = sformula
+rem ----------------------------------------------------------------------
+rem controllo TAG su riga dei totali
+			oSheet.getCellByPosition(33, lRow).setstring(&quot;R&quot;)			&apos;tag A
+			oSheet.getCellByPosition(34, lRow).setstring(&quot;Cx&quot;)			&apos;tag B
+			oSheet.getCellByPosition(35, lRow).setformula(&quot;=B&quot; &amp; i+2)	&apos;tag C
+rem di queste se ne occupa Rinumera_TUTTI_Capitoli2
+	&apos;		oSheet.getCellByPosition(31, lRow).setformula(&quot;=AF$&quot; &amp; sotto+1)
+	&apos;		oSheet.getCellByPosition(32, lRow).setformula(&quot;=AG$&quot; &amp; sotto+1)
+rem ----------------------------------------------------------------------
+			itag = i
+			etag = lRow
+			For ii = i+2 To lRow-1
+				oSheet.GetCellRangeByPosition(3, ii, 4, ii).cellstyle = &quot;Comp-Bianche in mezzo bordate&quot;
+				If oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a&quot; Then
+					oSheet.GetCellByPosition(8 , ii).cellstyle = &quot;comp 1-a peso&quot;
+				EndIf
+				oSheet.GetCellByPosition( 9 , ii).formula = &quot;=IF(PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;)=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; ii+1 &amp; &quot;:I&quot; &amp; ii+1 &amp; &quot;))&quot;
+oSheet.GetCellByPosition( 10 , ii).formula = &quot;&quot;
+				If InStr (oSheet.GetCellByPosition(8, ii).string, &quot;Parziale [&quot;) &lt;&gt; 0 Then ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_core&quot;, ii)
+				i = lRow &apos;+ 1
+			Next
+			For ii = itag To etag-1
+
+			Next
+		EndIf
+	Next
+fissa (0,idxrow+1)
+	ThisComponent.calculateAll()
+End Sub
+
 </script:module>

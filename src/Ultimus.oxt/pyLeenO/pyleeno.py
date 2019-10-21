@@ -1076,8 +1076,11 @@ def Vai_a_S1(arg=None):
     _gotoSheet('S1')
     _primaCella(0,190)
 ########################################################################
-def vai_a_ElencoPrezzi(arg=None):
+def vai_a_ElencoPrezzi(event=None):
     _gotoSheet('Elenco Prezzi')
+    if event:
+        mri(event.Source.Context)
+        event.Source.Context.endExecute()
 ########################################################################
 def vai_a_Computo(arg=None):
     _gotoSheet('COMPUTO')
@@ -1198,6 +1201,7 @@ def setPreview(arg=0):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet #se questa dà errore, il preview è già attivo
+    adatta_altezza_riga(oSheet.Name)
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1340,16 +1344,16 @@ def adatta_altezza_riga(nSheet=None):
             except:
                 pass
         #~ #if nSheet in('VARIANTE', 'COMPUTO', 'CONTABILITA', 'Richiesta offerta'):
-        # ~test = getLastUsedCell(oSheet).EndRow+1
-        # ~for y in range(0, test):
-            # ~if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
-                # ~oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
-    # ~if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
-        # ~oSheet.getCellByPosition(0, 2).Rows.Height = 800
-    # ~if nSheet == 'Elenco Prezzi':
-        # ~test = getLastUsedCell(oSheet).EndRow+1
-        # ~for y in range(0, test):
-            # ~oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+        test = getLastUsedCell(oSheet).EndRow+1
+        for y in range(0, test):
+            if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
+                oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
+    if oSheet.Name in('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    if nSheet == 'Elenco Prezzi':
+        test = getLastUsedCell(oSheet).EndRow+1
+        for y in range(0, test):
+            oSheet.getCellRangeByPosition(0, y, getLastUsedCell(oSheet).EndColumn, y).Rows.OptimalHeight = True
     return
 ########################################################################
 def voce_breve(arg=None):
@@ -1800,6 +1804,7 @@ def scelta_viste(arg=None):
 ########################################################################
 def genera_variante(arg=None):
     '''Genera il foglio di VARIANTE a partire dal COMPUTO'''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('VARIANTE') == False:
         if oDoc.NamedRanges.hasByName("AA") == True:
@@ -2531,7 +2536,8 @@ def XPWE_out(elaborato, out_file):
         MsgBox('Esportazione non eseguita!\n\nVerifica che il file di destinazione non sia già in uso!','E R R O R E !')
     refresh(1)
 ########################################################################
-def firme_in_calce_run(arg=None):
+#~ def firme_in_calce_run(arg=None):
+def firme_in_calce(arg=None):
     oDialogo_attesa = dlg_attesa()# avvia il diaolgo di attesa che viene chiuso alla fine con 
     '''
     Inserisce(in COMPUTO o VARIANTE) un riepilogo delle categorie
@@ -8366,6 +8372,18 @@ def scegli_elaborato(titolo):
             elaborato ='Elenco'
     return elaborato
 ########################################################################
+def chiudi_dialoghi(arg=None):
+    #~ if event:
+        #~ event.Source.Context.endExecute()
+        #~ mri(event.Source.Context)
+    #~ return
+    dialoghi = ('DialogViste_A','DialogViste_AN','DialogViste_EP','Dialogviste_N')
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    for el in dialoghi:
+        oDialog = dp.createDialog('vnd.sun.star.script:UltimusFree2.'+ el + '?language=Basic&location=application')
+        oDialog.endExecute()
+########################################################################
 def DlgMain(arg=None):
     '''
     Visualizza il menù principaledialog_fil
@@ -8748,13 +8766,13 @@ class attesa(threading.Thread):
         oDialogo_attesa.execute()
         return
 ########################################################################
-class firme_in_calce_th(threading.Thread):
-    def __init__(self):
-        threading.Thread.__init__(self)
-    def run(self):
-        firme_in_calce_run()
-def firme_in_calce(arg=None):
-    firme_in_calce_th().start()
+#~ class firme_in_calce_th(threading.Thread):
+    #~ def __init__(self):
+        #~ threading.Thread.__init__(self)
+    #~ def run(self):
+        #~ firme_in_calce_run()
+#~ def firme_in_calce(arg=None):
+    #~ firme_in_calce_th().start()
 ########################################################################
 class XPWE_export_th(threading.Thread):
     def __init__(self):
@@ -9040,8 +9058,10 @@ def sistema_pagine (arg=None):
     #~ committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String 
     committente = oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String #committente
     luogo = oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
-    oSheet = oDoc.CurrentController.ActiveSheet
-    adatta_altezza_riga(oSheet.Name)
+    try:
+        oSheet = oDoc.CurrentController.ActiveSheet
+    except:
+        pass
     #~ su_dx = oDoc.NamedRanges.Bozza_8.ReferredCells.String
     
     ### cancella stili di pagina #######################################
@@ -9112,12 +9132,12 @@ def sistema_pagine (arg=None):
             bordo.LineWidth = 0
             bordo.OuterLineWidth = 0
             oAktPage.LeftBorder = bordo
-            #bordo lato destro ativo in attesa di LibreOffice 6.2
-            bordo = oAktPage.RightBorder
-            bordo.Color = 0
-            bordo.LineWidth = 2
-            bordo.OuterLineWidth = 2
-            oAktPage.RightBorder = bordo
+            #bordo lato destro attivo in attesa di LibreOffice 6.2
+            #~ bordo = oAktPage.RightBorder
+            #~ bordo.Color = 0
+            #~ bordo.LineWidth = 2
+            #~ bordo.OuterLineWidth = 2
+            #~ oAktPage.RightBorder = bordo
             # Adatto lo zoom alla larghezza pagina
             oAktPage.PageScale = 0
             oAktPage.ScaleToPagesX = 1
@@ -9413,7 +9433,7 @@ def errore(arg=None):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = trova_np,
+#~ g_exportedScripts = rigenera_tutte,
 ########################################################################
 ########################################################################
 # ... here is the python script code

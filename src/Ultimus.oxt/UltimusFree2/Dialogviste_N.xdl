@@ -30,7 +30,7 @@
   <dlg:button dlg:style-id="3" dlg:id="CommandButton16" dlg:tab-index="5" dlg:left="-150" dlg:top="-60" dlg:width="86" dlg:height="16" dlg:help-text="&amp;177.Dialogviste_N.CommandButton16.HelpText" dlg:value="&amp;178.Dialogviste_N.CommandButton16.Label" dlg:multiline="true">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.Apri_libretto_misure?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton17" dlg:tab-index="6" dlg:left="130" dlg:top="84" dlg:width="76" dlg:height="15" dlg:help-text="&amp;179.Dialogviste_N.CommandButton17.HelpText" dlg:value="&amp;180.Dialogviste_N.CommandButton17.Label" dlg:multiline="true">
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton17" dlg:tab-index="6" dlg:left="128" dlg:top="90" dlg:width="80" dlg:height="15" dlg:help-text="&amp;179.Dialogviste_N.CommandButton17.HelpText" dlg:value="&amp;180.Dialogviste_N.CommandButton17.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$set_larghezza_colonne?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton18" dlg:tab-index="7" dlg:left="-150" dlg:top="-89" dlg:width="87" dlg:height="15" dlg:printable="false" dlg:help-text="&amp;181.Dialogviste_N.CommandButton18.HelpText" dlg:value="&amp;182.Dialogviste_N.CommandButton18.Label" dlg:multiline="true">
@@ -42,7 +42,7 @@
   <dlg:button dlg:style-id="5" dlg:id="CommandButton24" dlg:tab-index="9" dlg:left="9" dlg:top="14" dlg:width="95" dlg:height="15" dlg:help-text="&amp;195.Dialogviste_N.CommandButton24.HelpText" dlg:value="&amp;196.Dialogviste_N.CommandButton24.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.annulla_tutti_gli_atti?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton2" dlg:tab-index="10" dlg:left="130" dlg:top="46" dlg:width="76" dlg:height="15" dlg:help-text="&amp;197.Dialogviste_N.CommandButton2.HelpText" dlg:value="&amp;198.Dialogviste_N.CommandButton2.Label">
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton2" dlg:tab-index="10" dlg:left="130" dlg:top="47" dlg:width="76" dlg:height="15" dlg:help-text="&amp;197.Dialogviste_N.CommandButton2.HelpText" dlg:value="&amp;198.Dialogviste_N.CommandButton2.Label">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton25" dlg:tab-index="11" dlg:left="9" dlg:top="84" dlg:width="95" dlg:height="15" dlg:help-text="&amp;201.Dialogviste_N.CommandButton25.HelpText" dlg:value="&amp;202.Dialogviste_N.CommandButton25.Label" dlg:multiline="true">
@@ -58,15 +58,15 @@
   <dlg:button dlg:style-id="7" dlg:id="CommandButton28" dlg:tab-index="14" dlg:left="9" dlg:top="155" dlg:width="95" dlg:height="15" dlg:help-text="&amp;517.Dialogviste_N.CommandButton28.HelpText" dlg:value="Trova ricorrenze voci di E.P.">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$trova_ricorrenze?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:button>
-  <dlg:checkbox dlg:style-id="8" dlg:id="Dettaglio" dlg:tab-index="15" dlg:left="141" dlg:top="70" dlg:width="51" dlg:height="10" dlg:help-text="&amp;610.Dialogviste_N.Dettaglio.HelpText" dlg:value="&amp;611.Dialogviste_N.Dettaglio.Label" dlg:valign="center" dlg:checked="false"/>
-  <dlg:text dlg:style-id="7" dlg:id="Label2" dlg:tab-index="16" dlg:left="120" dlg:top="109" dlg:width="40" dlg:height="12" dlg:help-text="&amp;689.Dialogviste_N.Label2.HelpText" dlg:value="&amp;690.Dialogviste_N.Label2.Label" dlg:valign="center"/>
-  <dlg:text dlg:style-id="7" dlg:id="Label1" dlg:tab-index="18" dlg:left="120" dlg:top="128" dlg:width="40" dlg:height="12" dlg:help-text="&amp;693.Dialogviste_N.Label1.HelpText" dlg:value="&amp;694.Dialogviste_N.Label1.Label" dlg:valign="center"/>
+  <dlg:checkbox dlg:style-id="8" dlg:id="Dettaglio" dlg:tab-index="15" dlg:left="134" dlg:top="72" dlg:width="64" dlg:height="10" dlg:help-text="&amp;610.Dialogviste_N.Dettaglio.HelpText" dlg:value="&amp;611.Dialogviste_N.Dettaglio.Label" dlg:valign="center" dlg:checked="false"/>
+  <dlg:text dlg:style-id="7" dlg:id="Label2" dlg:tab-index="16" dlg:left="120" dlg:top="119" dlg:width="40" dlg:height="12" dlg:help-text="&amp;689.Dialogviste_N.Label2.HelpText" dlg:value="&amp;690.Dialogviste_N.Label2.Label" dlg:valign="center"/>
+  <dlg:text dlg:style-id="7" dlg:id="Label1" dlg:tab-index="18" dlg:left="120" dlg:top="138" dlg:width="40" dlg:height="12" dlg:help-text="&amp;693.Dialogviste_N.Label1.HelpText" dlg:value="&amp;694.Dialogviste_N.Label1.Label" dlg:valign="center"/>
   <dlg:text dlg:style-id="7" dlg:id="Label3" dlg:tab-index="19" dlg:left="134" dlg:top="31" dlg:width="34" dlg:height="12" dlg:help-text="&amp;699.Dialogviste_N.Label3.HelpText" dlg:value="&amp;700.Dialogviste_N.Label3.Label" dlg:valign="center"/>
   <dlg:textfield dlg:style-id="9" dlg:id="TextField2" dlg:tab-index="20" dlg:left="170" dlg:top="30" dlg:width="30" dlg:height="11" dlg:help-text="&amp;701.Dialogviste_N.TextField2.HelpText" dlg:align="center" dlg:value="&amp;702.Dialogviste_N.TextField2.Text"/>
   <dlg:textfield dlg:style-id="9" dlg:id="TextField3" dlg:tab-index="21" dlg:left="170" dlg:top="14" dlg:width="30" dlg:height="11" dlg:help-text="&amp;703.Dialogviste_N.TextField3.HelpText" dlg:align="center" dlg:value="&amp;704.Dialogviste_N.TextField3.Text"/>
   <dlg:text dlg:style-id="7" dlg:id="Label4" dlg:tab-index="22" dlg:left="134" dlg:top="14" dlg:width="34" dlg:height="12" dlg:help-text="&amp;699.Dialogviste_N.Label3.HelpText" dlg:value="Inizio voce:" dlg:valign="center"/>
-  <dlg:textfield dlg:style-id="9" dlg:id="TextField13" dlg:tab-index="17" dlg:left="162" dlg:top="107" dlg:width="50" dlg:height="12" dlg:help-text="&amp;705.Dialogviste_N.TextField13.HelpText" dlg:align="center" dlg:value="&amp;706.Dialogviste_N.TextField13.Text"/>
-  <dlg:combobox dlg:id="ComboBox3" dlg:tab-index="23" dlg:left="162" dlg:top="126" dlg:width="50" dlg:height="12" dlg:help-text="&amp;717.Dialogviste_N.ComboBox3.HelpText" dlg:value="&amp;718.Dialogviste_N.ComboBox3.Text" dlg:spin="true"/>
+  <dlg:textfield dlg:style-id="9" dlg:id="TextField13" dlg:tab-index="17" dlg:left="162" dlg:top="117" dlg:width="50" dlg:height="12" dlg:help-text="&amp;705.Dialogviste_N.TextField13.HelpText" dlg:align="center" dlg:value="&amp;706.Dialogviste_N.TextField13.Text"/>
+  <dlg:combobox dlg:id="ComboBox3" dlg:tab-index="23" dlg:left="162" dlg:top="136" dlg:width="50" dlg:height="12" dlg:help-text="&amp;717.Dialogviste_N.ComboBox3.HelpText" dlg:value="&amp;718.Dialogviste_N.ComboBox3.Text" dlg:spin="true"/>
   <dlg:titledbox dlg:style-id="10" dlg:id="FrameControl2" dlg:tab-index="24" dlg:left="128" dlg:top="5" dlg:width="80" dlg:height="60" dlg:help-text="&amp;753.Dialogviste_N.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;754.Dialogviste_N.FrameControl2.Label"/>
   </dlg:titledbox>
@@ -83,5 +83,8 @@
    <dlg:title dlg:value="&amp;760.Dialogviste_N.FrameControl4.Label"/>
   </dlg:titledbox>
   <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="29" dlg:left="112" dlg:top="8" dlg:width="8" dlg:height="168" dlg:help-text="&amp;761.Dialogviste_N.FixedLine1.HelpText" dlg:value="&amp;762.Dialogviste_N.FixedLine1.Label" dlg:align="vertical"/>
+  <dlg:titledbox dlg:id="FrameControl5" dlg:tab-index="30" dlg:left="128" dlg:top="70" dlg:width="80" dlg:height="15" dlg:help-text="&amp;763.Dialogviste_N.FrameControl5.HelpText">
+   <dlg:title dlg:value="&amp;764.Dialogviste_N.FrameControl5.Label"/>
+  </dlg:titledbox>
  </dlg:bulletinboard>
 </dlg:window>

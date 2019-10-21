@@ -1065,31 +1065,35 @@ def Filtra_Computo_C(arg=None): #filtra in base al codice di prezzo
     Filtra_computo(nSheet, 1, sString)
 ########################################################################
 def vai_a_M1(arg=None):
+    chiudi_dialoghi()
     _gotoSheet('M1', 85)
     _primaCella(0,0)
 ########################################################################
 def vai_a_S2(arg=None):
+    chiudi_dialoghi()
     _gotoSheet('S2')
     _primaCella(0,0)
 ########################################################################
 def Vai_a_S1(arg=None):
+    chiudi_dialoghi()
     _gotoSheet('S1')
     _primaCella(0,190)
 ########################################################################
 def vai_a_ElencoPrezzi(event=None):
+    chiudi_dialoghi()
     _gotoSheet('Elenco Prezzi')
-    if event:
-        mri(event.Source.Context)
-        event.Source.Context.endExecute()
 ########################################################################
 def vai_a_Computo(arg=None):
+    chiudi_dialoghi()
     _gotoSheet('COMPUTO')
 ########################################################################
 def vai_a_variabili(arg=None):
+    chiudi_dialoghi()
     _gotoSheet('S1', 85)
     _primaCella(6,289)
 ########################################################################
 def vai_a_Scorciatoie(arg=None):
+    chiudi_dialoghi()
     _gotoSheet('Scorciatoie')
     _primaCella(0,0)
 ########################################################################
@@ -1361,6 +1365,7 @@ def voce_breve(arg=None):
     Cambia il numero di caratteri visualizzati per la descrizione voce in COMPUTO,
     CONTABILITA E VARIANTE.
     '''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
@@ -1401,6 +1406,7 @@ def cancella_voci_non_usate(arg=None):
     '''
     Cancella le voci di prezzo non utilizzate.
     '''
+    chiudi_dialoghi()
     oDialogo_attesa = dlg_attesa()
     attesa().start() #mostra il dialogo
 
@@ -1917,6 +1923,7 @@ def genera_sommario(arg=None):
 ########################################################################
 def riordina_ElencoPrezzi(arg=None):
     '''Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo'''
+    chiudi_dialoghi()
     refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     zoom = oDoc.CurrentController.ZoomValue
@@ -2835,6 +2842,10 @@ def analisi_in_ElencoPrezzi(arg=None):
         oDoc.enableAutomaticCalculation(True)
 ########################################################################
 def tante_analisi_in_ep(arg=None):
+    '''
+    Trsferisce le analisi all'Elenco Prezzi.
+    '''
+    chiudi_dialoghi()
     refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     lista_analisi = list()
@@ -4042,6 +4053,7 @@ def richiesta_offerta(arg=None):
 #~ def debug(arg=None):
     '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi,
 per la formulazione dell'offerta'''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     _gotoSheet('Elenco Prezzi')
     genera_sommario()
@@ -4295,6 +4307,7 @@ def rigenera_tutte(arg=None,):
     '''
     Ripristina le formule in tutto il foglio
     '''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     refresh(0)
@@ -4680,6 +4693,7 @@ def ins_voce_contab(lrow=0, arg=1):
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #
 def attiva_contabilita(arg=None):
     '''Se presenti, attiva e visualizza le tabelle di contabilità'''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.Sheets.hasByName('S1'):
         oDoc.Sheets.getByName('S1').getCellByPosition(7,327).Value = 1
@@ -5108,6 +5122,7 @@ def inizializza_elenco(arg=None):
     '''
     Riscrive le intestazioni di colonna e le formule dei totali in Elenco Prezzi.
     '''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
     oDoc.CurrentController.freezeAtPosition(0, 3)
@@ -5289,6 +5304,7 @@ def inizializza_analisi(arg=None):
     '''
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
     '''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     rifa_nomearea('S5', '$B$108:$P$133', 'blocco_analisi')
     if oDoc.getSheets().hasByName('Analisi di Prezzo') == False:
@@ -5433,6 +5449,7 @@ def struttura_Elenco(arg=None):
     Dà una tonalità di colore, diverso dal colore dello stile cella, alle righe
     che non hanno il prezzo, come i titoli di capitolo e sottocapitolo.
     '''
+    chiudi_dialoghi()
     if DlgSiNo('''Adesso puoi dare ai titoli di capitolo e sottocapitolo
 una tonalità di colore che ne facilita la leggibilità, ma
 il risultato finale dipende dalla struttura dei codici di voce.
@@ -8372,17 +8389,10 @@ def scegli_elaborato(titolo):
             elaborato ='Elenco'
     return elaborato
 ########################################################################
-def chiudi_dialoghi(arg=None):
-    #~ if event:
-        #~ event.Source.Context.endExecute()
-        #~ mri(event.Source.Context)
-    #~ return
-    dialoghi = ('DialogViste_A','DialogViste_AN','DialogViste_EP','Dialogviste_N')
-    psm = uno.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    for el in dialoghi:
-        oDialog = dp.createDialog('vnd.sun.star.script:UltimusFree2.'+ el + '?language=Basic&location=application')
-        oDialog.endExecute()
+def chiudi_dialoghi(event=None):
+    if event:
+        event.Source.Context.endExecute()
+    return
 ########################################################################
 def DlgMain(arg=None):
     '''
@@ -9239,6 +9249,7 @@ def trova_ricorrenze(arg=None):
     Consente la visualizzazione selettiva delle voci di COMPUTO che fanno
     capo alla stezza voce di Elenco Prezzi.
     '''
+    chiudi_dialoghi()
     def ricorrenze(arg=None):
         '''Trova i codici di prezzo ricorrenti nel COMPUTO'''
         oDoc = XSCRIPTCONTEXT.getDocument()
@@ -9336,6 +9347,7 @@ def trova_np(arg=None ):
     '''
     Raggruppa le righe in modo da rendere evidenti i nuovi prezzi
     '''
+    chiudi_dialoghi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     refresh(0)

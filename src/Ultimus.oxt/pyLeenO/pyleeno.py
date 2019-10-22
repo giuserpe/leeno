@@ -1545,7 +1545,7 @@ def scelta_viste(arg=None):
             oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(8).Columns.IsVisible = False
-            adatta_altezza_riga(oSheet)
+            #~ adatta_altezza_riga(oSheet)
             oSheet.clearOutline()
             struct(3)
         else:
@@ -1611,7 +1611,7 @@ def scelta_viste(arg=None):
                 oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
                 oSheet.getCellByPosition(1, 3).Rows.OptimalHeight
                 voce_breve_ep()
-            elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
+            #~ elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
 
             if oDialog1.getControl("CBOrig").State == 0: #origine
                 oSheet.getColumns().getByIndex(7).Columns.IsVisible = False
@@ -1743,13 +1743,15 @@ def scelta_viste(arg=None):
             oCellRangeAddr.EndColumn = 11
             oSheet.group(oCellRangeAddr, 0)
             oSheet.getCellRangeByPosition(5, 0, 11, 0).Columns.IsVisible = False
-            if oDoc.getSheets().hasByName('VARIANTE') == True or \
-            oDoc.getSheets().hasByName('CONTABILITA') == True:
+            if oDialog1.getControl("ComVar").State == True or \
+            oDialog1.getControl("ComCon").State == True or \
+            oDialog1.getControl("VarCon").State == True:
                 if DlgSiNo("Nascondo eventuali righe con scostamento nullo?") == 2:
                     errori =('#DIV/0!', '--')
                     hide_error(errori, 26)
                     oSheet.group(oRangeAddress, 0)
                     oSheet.getCellRangeByPosition(oRangeAddress.StartColumn, 0, oRangeAddress.EndColumn, 1).Columns.IsVisible = False
+            _primaCella()
         else:
             return
     elif oSheet.Name in('Analisi di Prezzo'):
@@ -1776,7 +1778,7 @@ def scelta_viste(arg=None):
         
         if  oSheet.getCellByPosition(1, 2).Rows.OptimalHeight == True and oDialog1.getControl("CBDesc").State == 1: #descrizione breve
             basic_LeenO('Strutture.Tronca_Altezza_Analisi')
-        elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
+        #~ elif oDialog1.getControl("CBDesc").State == 0: adatta_altezza_riga(oSheet.Name)
 
         #~ sString.Text =oSheet.getCellRangeByName('S1.H321').Value * 100 #utile_impresa
         oS1.getCellRangeByName('S1.H319').Value = float(oDialog1.getControl('TextField5').getText().replace(',','.')) / 100  ##sicurezza
@@ -1805,6 +1807,7 @@ def scelta_viste(arg=None):
             conf.write(path_conf, 'Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
+    adatta_altezza_riga(oSheet.Name)
     refresh(1)
     #~ MsgBox('Operazione eseguita con successo!','')
 ########################################################################
@@ -5123,8 +5126,22 @@ def inizializza_elenco(arg=None):
     Riscrive le intestazioni di colonna e le formule dei totali in Elenco Prezzi.
     '''
     chiudi_dialoghi()
+    refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
+    
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+    #~ oDialogo_attesa = dlg_attesa()
+    #~ attesa().start() #mostra il dialogo
+    
+    oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    SR = oCellRangeAddr.StartRow
+    ER = oCellRangeAddr.EndRow
+    SC = oCellRangeAddr.StartColumn
+    EC = oCellRangeAddr.EndColumn
+    oSheet.getCellRangeByPosition(11, 3, EC, ER - 1).clearContents(STRING + VALUE + FORMULA)
+
     oDoc.CurrentController.freezeAtPosition(0, 3)
     oSheet.getCellRangeByPosition(0, 0, 100 , 0).CellStyle = "Default"
 #~ riscrivo le intestazioni di colonna
@@ -5184,6 +5201,7 @@ def inizializza_elenco(arg=None):
     oSheet.getCellByPosition(24, y).Formula='=SUBTOTAL(9;Y3:Y' + str(y) +')'
     oSheet.getCellByPosition(25, y).Formula='=SUBTOTAL(9;Z3:Z' + str(y) +')'
     oSheet.getCellRangeByPosition(10, y, 26 , y).CellStyle = 'EP statistiche_Contab'
+
     y +=1
     #~ oSheet.getCellRangeByName('C2').String = 'prezzi'
     #~ oSheet.getCellRangeByName('E2').Formula = '=COUNT(E3:E' + str(y) +')'
@@ -5192,7 +5210,10 @@ def inizializza_elenco(arg=None):
     oSheet.getCellRangeByName('S2:S' + str(y)).CellStyle = 'Default'
     oSheet.getCellRangeByName('W2:W' + str(y)).CellStyle = 'Default'
     oSheet.getCellRangeByPosition(3, 3, 250, y +10).clearContents(HARDATTR)
-    riga_rossa()
+    #~ riga_rossa()
+    #~ oDialogo_attesa.endExecute()
+    oDoc.CurrentController.ZoomValue = zoom
+    refresh(1)
     #~ MsgBox('Rigenerazione del foglio eseguita!','')
 ########################################################################
 def inizializza_computo(arg=None):
@@ -9445,7 +9466,7 @@ def errore(arg=None):
 ########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-#~ g_exportedScripts = rigenera_tutte,
+#~ g_exportedScripts = analisi_in_ElencoPrezzi,
 ########################################################################
 ########################################################################
 # ... here is the python script code

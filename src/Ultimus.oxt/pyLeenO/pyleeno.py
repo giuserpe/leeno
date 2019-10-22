@@ -8082,7 +8082,6 @@ def elimina_stili_cella(arg=None):
             oDoc.StyleFamilies.getByName('CellStyles').removeByName(el)
 ########################################################################
 def adegua_tmpl(arg=None):
-#~ def debug(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:
     - dal 200 parte di autoexec è in python
@@ -9467,14 +9466,14 @@ def debug_elimina_voci_doppie (arg=None):
             _gotoCella(30, i)
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
+    
+
 ########################################################################
 def debug (arg=None):
-    rigenera_tutte()
-    return
-    
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    mri(oSheet)
+    mri(oDoc.getSheets().getByName('S5').getCellRangeByName('B30'))
+
     return
     oSheet0 = oDoc.getSheets().getByName('Table 1_2')
     # ~oSheet1 = oDoc.getSheets().getByName('Table 1_2_2')

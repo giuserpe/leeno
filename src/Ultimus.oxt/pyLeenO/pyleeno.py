@@ -1526,7 +1526,6 @@ def scelta_viste(arg=None):
             oDialog1.getControl('CBFig').State = 0
             oDialog1.getControl('CBMis').State = 1
 
-            
         if oDialog1.getControl("CBMis").State == 0: #misure
             oSheet.getColumns().getByIndex(5).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(6).Columns.IsVisible = False
@@ -1551,7 +1550,6 @@ def scelta_viste(arg=None):
         else:
             oSheet.getColumns().getByIndex(29).Columns.IsVisible = False
             oSheet.getColumns().getByIndex(30).Columns.IsVisible = False
-
 
         if oDialog1.getControl('CBMat').State == 0: #materiali
             oSheet.getColumns().getByIndex(28).Columns.IsVisible = False
@@ -1585,7 +1583,6 @@ def scelta_viste(arg=None):
             conf.write(path_conf, 'Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
-            
     elif oSheet.Name in('Elenco Prezzi'):
         oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application")
@@ -1627,7 +1624,7 @@ def scelta_viste(arg=None):
 
             oSheet.getCellRangeByPosition(11, 0, 26, 0).Columns.IsVisible = True
             oSheet.getCellRangeByPosition(23 , SR, 25, ER).CellStyle = 'EP statistiche'
-            oSheet.getCellRangeByPosition(26, SR, 26, ER+1).CellStyle = 'EP-mezzo %'
+            oSheet.getCellRangeByPosition(26, SR, 26, ER).CellStyle = 'EP-mezzo %'
             oSheet.getCellRangeByName('AA2').CellStyle = 'EP-mezzo %'
             formule = list()
             oSheet.getCellByPosition(11, 0).String = 'COMPUTO'
@@ -1635,7 +1632,6 @@ def scelta_viste(arg=None):
             oSheet.getCellByPosition(19, 0).String = "CONTABILITA"
             if oDialog1.getControl("ComVar").State == True: #Computo - Variante
                 genera_sommario()
-                
                 oRangeAddress.StartColumn = 19
                 oRangeAddress.EndColumn = 22
 
@@ -1647,8 +1643,7 @@ def scelta_viste(arg=None):
     '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'])
 
                 n += 1
-                for el in(1, ER+1):
-                    oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'
+                oSheet.getCellByPosition(26, ER).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
@@ -1677,8 +1672,8 @@ def scelta_viste(arg=None):
                                     '=IF(V' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-V' + str(n) + ';"")',
     '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'])
                 n += 1
-                for el in(1, ER+1):
-                    oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'
+                #~ for el in(1, ER+1):
+                oSheet.getCellByPosition(26, ER).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
@@ -1721,13 +1716,11 @@ def scelta_viste(arg=None):
                                     '=IF(V' + str(n) + '-R' + str(n) + '<0;R' + str(n) + '-V' + str(n) + ';"")',
     '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);1;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'])
                 n += 1
-                for el in(1, ER+1):
-                    oSheet.getCellByPosition(26, el).Formula = '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-100;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);100;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'
+                #~ for el in(1, ER+1):
+                oSheet.getCellByPosition(26, ER).Formula = '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);1;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
                 oRange.setFormulaArray(formule)
-
-
             # operazioni comuni
             for el in(11, 15, 19, 26):
                 oSheet.getCellRangeByPosition(el, 3, el, ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
@@ -1743,6 +1736,13 @@ def scelta_viste(arg=None):
             oCellRangeAddr.EndColumn = 11
             oSheet.group(oCellRangeAddr, 0)
             oSheet.getCellRangeByPosition(5, 0, 11, 0).Columns.IsVisible = False
+            
+            oDoc.CurrentController.select(oSheet.getCellRangeByName('AA2'))
+            #~ oDoc.CurrentController.select(oDoc.getSheets().getByName('S5').getCellRangeByName('B30'))
+            copy_clip()
+            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(26, 3, 26, ER))
+            paste_format()
+            
             if oDialog1.getControl("ComVar").State == True or \
             oDialog1.getControl("ComCon").State == True or \
             oDialog1.getControl("VarCon").State == True:
@@ -1807,7 +1807,7 @@ def scelta_viste(arg=None):
             conf.write(path_conf, 'Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
-    adatta_altezza_riga(oSheet.Name)
+    #~ adatta_altezza_riga(oSheet.Name)
     refresh(1)
     #~ MsgBox('Operazione eseguita con successo!','')
 ########################################################################
@@ -3871,11 +3871,6 @@ def paste_clip(arg=None, insCells = 0):
     ctx = XSCRIPTCONTEXT.getComponentContext()
     desktop = XSCRIPTCONTEXT.getDesktop()
     oFrame = desktop.getCurrentFrame()
-
-    #~ dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
-    #~ dispatchHelper.executeDispatch(oFrame, ".uno:Paste", "", 0, list())
-    #~ oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    #~ return
     oProp = []
     oProp0 = PropertyValue()
     oProp0.Name = 'Flags'
@@ -3904,13 +3899,44 @@ def paste_clip(arg=None, insCells = 0):
         oProp5.Value = 0
         oProp.append(oProp5)
     properties = tuple(oProp)
-    #~ _gotoCella(6,1)
 
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
     dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-
-
+########################################################################
+def paste_format(arg=None):
+    '''
+    Incolla solo il formato cella
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    ctx = XSCRIPTCONTEXT.getComponentContext()
+    desktop = XSCRIPTCONTEXT.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    oProp = []
+    oProp0 = PropertyValue()
+    oProp0.Name = 'Flags'
+    oProp0.Value = 'T'
+    oProp1 = PropertyValue()
+    oProp1.Name = 'FormulaCommand'
+    oProp1.Value = 0
+    oProp2 = PropertyValue()
+    oProp2.Name = 'SkipEmptyCells'
+    oProp2.Value = False
+    oProp3 = PropertyValue()
+    oProp3.Name = 'Transpose'
+    oProp3.Value = False
+    oProp4 = PropertyValue()
+    oProp4.Name = 'AsLink'
+    oProp4.Value = False
+    oProp.append(oProp0)
+    oProp.append(oProp1)
+    oProp.append(oProp2)
+    oProp.append(oProp3)
+    oProp.append(oProp4)
+    properties = tuple(oProp)
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
 ########################################################################
 def copia_celle_visibili(arg=None):
     '''
@@ -5135,6 +5161,7 @@ def inizializza_elenco(arg=None):
     #~ oDialogo_attesa = dlg_attesa()
     #~ attesa().start() #mostra il dialogo
     
+    struttura_off()
     oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oCellRangeAddr.StartRow
     ER = oCellRangeAddr.EndRow

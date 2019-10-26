@@ -1,6 +1,6 @@
 LeenO - Computo metrico assistito
 Software Libero per computi metrici estimativi.
-Copyright (C) 2014-2018 Giuseppe Vizziello.
+Copyright (C) 2014-2019 Giuseppe Vizziello.
 
 LeenO si basa su UltimusFree di Bartolomeo Aimar
 ed è distribuita con licenza LGPL.

@@ -42,6 +42,10 @@ Sub vai_a_M1
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_M1&quot;)
 End Sub
 rem ######################################################################
+Sub vai_a_S1
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S1&quot;)
+End Sub
+rem ######################################################################
 Sub vai_a_S2
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S2&quot;)
 End Sub

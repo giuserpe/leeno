@@ -76,7 +76,7 @@ rem l&apos;estensione va installata solo per l&apos;utente corrente
 sub make_LOportable
 	Dim appLocation As string, nomeZip As String 
 	appLocation = ConvertToUrl (&quot;W:\programmi\LibreOfficePortablePrevious&quot;)
-	nomeZip = ConvertToUrl (&quot;x:\LibreOfficePortablePrevious_4.2.6-secfix_LeenO-&quot; &amp; versioneUF_major &amp; &quot;.&quot; &amp; versioneUF_minor &amp; &quot;.&quot; &amp; versioneUF_subversion &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;)
+	nomeZip = ConvertToUrl (&quot;x:\LibreOfficePortablePrevious_4.2.6-secfix_LeenO-&quot; &amp; Lmajor &amp; &quot;.&quot; &amp; Lminor &amp; &quot;.&quot; &amp; Lsubv &amp; &quot;-&quot;&amp; gina_furbetta_2 &amp;&quot;.zip&quot;)
 	zipfolder(appLocation,nomeZip)
 end Sub
 

@@ -482,10 +482,10 @@ def avvia_IDE(arg=None):
     oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     if sys.platform == 'linux' or sys.platform == 'darwin':
         subprocess.Popen('nemo ' + LeenO_path(), shell=True, stdout=subprocess.PIPE)
-        subprocess.Popen('geany ' + LeenO_path() + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen('geany ' + LeenO_path() + '/python/pythonpath/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         subprocess.Popen('explorer.exe ' + uno.fileUrlToSystemPath(LeenO_path()), shell=True, stdout=subprocess.PIPE)
-        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/pyLeenO/pyleeno.py', shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' + uno.fileUrlToSystemPath(LeenO_path()) + '/python/pythonpath/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     return
 ########################################################################
 def Inser_SottoCapitolo(arg=None):

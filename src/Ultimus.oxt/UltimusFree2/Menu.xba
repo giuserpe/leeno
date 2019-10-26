@@ -161,6 +161,7 @@ Sub analisi_OnUnFocus
 End Sub
 
 Sub eventi_assegna
+sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
 &apos;Array : T( 0 To 6 ) As string  
 &apos;(0)       | string : &quot;OnFocus&quot;
 &apos;(1)       | string : &quot;OnUnfocus&quot;
@@ -181,26 +182,27 @@ Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star
 If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
 	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnFocus?language=Basic&amp;location=application&quot;)
 	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnUnfocus?language=Basic&amp;location=application&quot;)
-&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 EndIf
 
-Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 
 If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
-	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
-	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;S1&quot;,	&quot;OnFocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$bak_timestamp?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 &apos;OnStartApp
 &apos;OnCloseApp
 &apos;Macro_Doc (&quot;OnCreate&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
@@ -230,7 +232,6 @@ Macro_Doc (&quot;OnSaveAsFailed&quot;,	&quot;vnd.sun.star.script:UltimusFree2._v
 &apos;OnModeChanged
 &apos;OnStorageChanged
 End Sub
-rem ######################################################################
 
 Sub Macro_SHEET(nome As String, nomeEvento As string, miamacro As String)
 rem http://bit.ly/1EgROQt

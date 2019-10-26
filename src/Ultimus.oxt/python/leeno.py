@@ -54,7 +54,7 @@ class LeenO(unohelper.Base, XInitialization, XDispatch, XDispatchProvider):
     # XDispatchProvider
     def queryDispatch(self, url, framename, searchflags):
         # print("\n\nqueryDispatch: url = {}".format(url))
-        if url.Protocol == "giuserpe:":
+        if url.Protocol == "bartaimar:":
             return self
         return None
     def queryDispatches(self, requests):

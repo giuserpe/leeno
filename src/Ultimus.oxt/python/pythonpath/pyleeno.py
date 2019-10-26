@@ -4297,12 +4297,12 @@ def ins_voce_computo(arg=None): #TROPPO LENTA
     if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
         pesca_cod()
 ########################################################################
-def rigenera_voce(lrow = Range2Cell()[1]):
-# ~def debug(arg=None):
+def rigenera_voce(lrow=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
     in CPMPUTO e VARIANTE
     '''
+    lrow = Range2Cell()[1]
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     sStRange = Circoscrive_Voce_Computo_Att(lrow)
@@ -7501,7 +7501,12 @@ stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
 stili_analisi =('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc',
 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco =('EP-Cs', 'EP-aS')
-createUnoService =(XSCRIPTCONTEXT.getComponentContext().getServiceManager().createInstance)
+createUnoService =(
+            uno # protocol heandler
+            #~ XSCRIPTCONTEXT
+            .getComponentContext()
+            .getServiceManager()
+            .createInstance)
 GetmyToolBarNames =('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI',

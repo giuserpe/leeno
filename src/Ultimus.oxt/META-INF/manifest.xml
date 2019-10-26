@@ -4,7 +4,13 @@
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Paths.xcu" />
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Accelerators.xcu" />
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.basic-library" manifest:full-path="UltimusFree2/" />
+<!--
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script" manifest:full-path="python/pythonpath" />
+-->
+  
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="ProtocolHandler.xcu" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script" manifest:full-path="python" />
+  <manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Python" manifest:full-path="python/leeno.py" />
   <!--
        <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/DrawWindowState.xcu" />
        <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="Office/UI/CalcWindowState.xcu" />

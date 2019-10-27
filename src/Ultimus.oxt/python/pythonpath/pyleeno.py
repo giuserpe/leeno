@@ -9471,26 +9471,6 @@ def debug_elimina_voci_doppie (arg=None):
             _gotoCella(30, i)
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
-    
-
-########################################################################
-def debug (arg=None):
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    mri(oDoc.getSheets().getByName('S5').getCellRangeByName('B30'))
-
-    return
-    oSheet0 = oDoc.getSheets().getByName('Table 1_2')
-    # ~oSheet1 = oDoc.getSheets().getByName('Table 1_2_2')
-    for y in range (4, 135):
-        for x in range (3, 17):
-            if oSheet0.getCellByPosition (y, x).Type.value == 'FORMULA':
-                oSheet0.getCellByPosition (y, x).String = oSheet0.getCellByPosition (y, x).String
-                
-            # ~if oSheet1.getCellByPosition (y, x).String == '':
-                # ~oSheet0.getCellByPosition (y, x).CellBackColor = 15757935
-                # ~oSheet0.getCellByPosition (y, x).String = oSheet1.getCellByPosition (y, x).String
-    
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())
@@ -9509,10 +9489,4 @@ def errore(arg=None):
 # questo mi consente di inserire i comandi python in Accelerators.xcu
 # vedi pag.264 di "Manuel du programmeur oBasic"
 # <<< vedi in description.xml
-########################################################################
-# https://forum.openoffice.org/it/forum/viewtopic.php?f=27&t=9470
-# ~g_ImplementationHelper = unohelper.ImplementationHelper()
-# ~g_ImplementationHelper.addImplementation(None,                          # UNO object class
-                                        # ~"org.giuseppe-vizziello.leeno", # implemenation name
-                                        # ~("org.giuseppe-vizziello.leeno",),)         # list of implemented services
 ########################################################################

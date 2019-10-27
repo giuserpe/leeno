@@ -10,7 +10,10 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:DlgMain</value>
+            <!--
+                 <value>service:org.giuseppe-vizziello.leeno?DlgMain</value>
+            -->
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -22,7 +25,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma19" oor:op="replace">
+        <node oor:name="Ma10" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />
           </prop>
@@ -30,12 +33,12 @@
             <value>private:separator</value>
           </prop>
         </node>
-        <node oor:name="Ma20" oor:op="replace">
+        <node oor:name="Ma15" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$scelta_viste?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:scelta_viste</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image18</value>
@@ -47,12 +50,12 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma30" oor:op="replace">
+        <node oor:name="Ma20" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$adatta_altezza_riga?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:adatta_altezza_riga</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/adattaH</value>
@@ -64,7 +67,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma40" oor:op="replace">
+        <node oor:name="Ma25" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
@@ -81,12 +84,12 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma56" oor:op="replace">
+        <node oor:name="Ma30" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$cerca_in_elenco?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:cerca_in_elenco</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/findcode</value>
@@ -98,12 +101,29 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma57" oor:op="replace">
+        <node oor:name="Ma35" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$firme_in_calce?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:filtra_codice</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/image444</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Filtra Codice della voce corrente</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+        <node oor:name="Ma40" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>bartaimar:firme_in_calce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/riepilogo</value>
@@ -115,7 +135,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma59" oor:op="replace">
+        <node oor:name="Ma45" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />
           </prop>
@@ -123,12 +143,12 @@
             <value>private:separator</value>
           </prop>
         </node>
-        <node oor:name="Ma60" oor:op="replace">
+        <node oor:name="Ma50" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuova_voce_scelta?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:nuova_voce_scelta</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image93</value>
@@ -140,12 +160,12 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma70" oor:op="replace">
+        <node oor:name="Ma55" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$pesca_cod?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:pesca_cod</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/pesca</value>
@@ -157,12 +177,12 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma85" oor:op="replace">
+        <node oor:name="Ma60" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Copia_riga_Ent?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:Copia_riga_Ent</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/compo</value>
@@ -174,7 +194,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma89" oor:op="replace">
+        <node oor:name="Ma65" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />
           </prop>
@@ -182,7 +202,7 @@
             <value>private:separator</value>
           </prop>
         </node>
-        <node oor:name="Ma90" oor:op="replace">
+        <node oor:name="Ma70" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
@@ -199,7 +219,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma100" oor:op="replace">
+        <node oor:name="Ma75" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
@@ -216,12 +236,12 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma110" oor:op="replace">
+        <node oor:name="Ma80" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$elimina_voce?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:elimina_voce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/cestino</value>
@@ -233,7 +253,7 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma115" oor:op="replace">
+        <node oor:name="Ma85" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />
           </prop>
@@ -241,7 +261,7 @@
             <value>private:separator</value>
           </prop>
         </node>
-        <node oor:name="Ma120" oor:op="replace">
+        <node oor:name="Ma90" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
@@ -258,12 +278,12 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma130" oor:op="replace">
+        <node oor:name="Ma95" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$struttura_off?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:struttura_off</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image9</value>
@@ -275,12 +295,12 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ma140" oor:op="replace">
+        <node oor:name="Ma100" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$sistema_pagine?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:sistema_pagine</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/print_ok</value>
@@ -319,7 +339,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$riordina_ElencoPrezzi?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:riordina_ElencoPrezzi</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/riordina</value>
@@ -336,7 +356,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$invia_voce?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:invia_voce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/invia_voce_ep</value>
@@ -392,7 +412,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$analisi_in_ElencoPrezzi?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:analisi_in_ElencoPrezzi</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/2ep</value>
@@ -414,7 +434,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ricicla_misure?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:ricicla_misure</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/ricicla</value>
@@ -426,12 +446,29 @@
             <value>_self</value>
           </prop>
         </node>
+        <node oor:name="Ca02" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>bartaimar:inverti_segno</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/invert</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Quantità positiva/negativa</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
         <node oor:name="Ca05" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$vedi_voce?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:vedi_voce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/vedivoce</value>
@@ -448,7 +485,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$parziale?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:parziale</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/parz</value>
@@ -465,7 +502,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$azzera_voce?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:azzera_voce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/azzera</value>
@@ -482,7 +519,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$elimina_voci_azzerate?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:elimina_voci_azzerate</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/elimina_azzerate</value>
@@ -499,30 +536,13 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nasconde_voci_azzerate?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:nasconde_voci_azzerate</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/strutt_voci_zero</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
             <value>Nascondi le voci azzerate</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
-        <node oor:name="Ca30" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inverti_segno?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/invert</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Quantità positiva/negativa</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -545,23 +565,6 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ca40" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$filtra_codice?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image444</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Filtra Codice della voce corrente</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
         <node oor:name="Ca45" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />
@@ -575,7 +578,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SuperCapitolo?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:Inser_SuperCapitolo</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/supcat</value>
@@ -592,7 +595,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_Capitolo?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:Inser_Capitolo</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/cat</value>
@@ -609,7 +612,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SottoCapitolo?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:Inser_SottoCapitolo</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/subcat</value>
@@ -626,7 +629,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$invia_voce?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:invia_voce</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/invia_voce_ep</value>
@@ -643,63 +646,65 @@
     <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
     <node oor:name="OfficeToolBar">
       <node oor:name="ULTIMUS_3.OfficeToolBar_CONTABILITA" oor:op="replace">
-        <node oor:name="COa00" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$ricicla_misure?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/ricicla</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Ricicla una voce dal Computo</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
-        <node oor:name="COa10" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$vedi_voce?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/vedivoce</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Vedi voce precedente</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
-        <node oor:name="COa20" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$parziale?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/parz</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Inserisci parziale</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
+        <!--
+             <node oor:name="COa00" oor:op="replace">
+             <prop oor:name="Context" oor:type="xs:string">
+             <value>com.sun.star.sheet.SpreadsheetDocument</value>
+             </prop>
+             <prop oor:name="URL" oor:type="xs:string">
+             <value>bartaimar:ricicla_misure</value>
+             </prop>
+             <prop oor:name="ImageIdentifier" oor:type="xs:string">
+             <value>%origin%/icons/ricicla</value>
+             </prop>
+             <prop oor:name="Title" oor:type="xs:string">
+             <value>Ricicla una voce dal Computo</value>
+             </prop>
+             <prop oor:name="Target" oor:type="xs:string">
+             <value>_self</value>
+             </prop>
+             </node>
+             <node oor:name="COa10" oor:op="replace">
+             <prop oor:name="Context" oor:type="xs:string">
+             <value>com.sun.star.sheet.SpreadsheetDocument</value>
+             </prop>
+             <prop oor:name="URL" oor:type="xs:string">
+             <value>bartaimar:vedi_voce</value>
+             </prop>
+             <prop oor:name="ImageIdentifier" oor:type="xs:string">
+             <value>%origin%/icons/vedivoce</value>
+             </prop>
+             <prop oor:name="Title" oor:type="xs:string">
+             <value>Vedi voce precedente</value>
+             </prop>
+             <prop oor:name="Target" oor:type="xs:string">
+             <value>_self</value>
+             </prop>
+             </node>
+             <node oor:name="COa20" oor:op="replace">
+             <prop oor:name="Context" oor:type="xs:string">
+             <value>com.sun.star.sheet.SpreadsheetDocument</value>
+             </prop>
+             <prop oor:name="URL" oor:type="xs:string">
+             <value>bartaimar:parziale</value>
+             </prop>
+             <prop oor:name="ImageIdentifier" oor:type="xs:string">
+             <value>%origin%/icons/parz</value>
+             </prop>
+             <prop oor:name="Title" oor:type="xs:string">
+             <value>Inserisci parziale</value>
+             </prop>
+             <prop oor:name="Target" oor:type="xs:string">
+             <value>_self</value>
+             </prop>
+             </node>
+        -->
         <node oor:name="COa30" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Contab.partita_provvisoria?language=Basic&amp;location=application</value>
+            <value>bartaimar:partita_aggiungi</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/part_agg</value>
@@ -716,7 +721,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Contab.detrai_partita_provvisoria?language=Basic&amp;location=application</value>
+            <value>bartaimar:partita_detrai</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/part_det</value>
@@ -739,7 +744,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$make_pack?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:make_pack</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/zip</value>
@@ -757,7 +762,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$debug?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:debug</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/py</value>
@@ -782,7 +787,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$fuf?language=Python&amp;location=user:uno_packages</value>
+            <value>bartaimar:fuf</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/falegname</value>
@@ -796,11 +801,11 @@
         </node>
       </node>
     </node>
-    <!--                                           -->
+    <!--        -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
-          <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
         </prop>
         <prop oor:name="Title" oor:type="xs:string">
           <value>LeenO</value>
@@ -808,7 +813,7 @@
         <node oor:name="Submenu">
           <node oor:name="m00" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+              <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
             </prop>
             <!-- sottomenu Nuovo -->
             <prop oor:name="Title" oor:type="xs:string">
@@ -817,10 +822,10 @@
             <node oor:name="Submenu">
               <node oor:name="N010" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                  <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_computo?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:nuovo_computo</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image15</value>
@@ -834,10 +839,10 @@
               </node>
               <node oor:name="N020" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                  <value>com.sun.star.sheet.SpreadsheetDocument,com.sun.star.text.TextDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$nuovo_usobollo?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:nuovo_usobollo</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Documento UsoBollo</value>
@@ -845,7 +850,6 @@
               </node>
             </node>
           </node>
-          #########################################################################
           <node oor:name="m01" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -859,7 +863,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$importa_listino_leeno?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:importa_listino_leeno</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Converti Listino in Elenco Prezzi (-leeno)</value>
@@ -881,7 +885,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_import?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:XPWE_import</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa/Accoda dati da archivio XPWE</value>
@@ -895,7 +899,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_ep?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:XML_import_ep</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario XML-SIX</value>
@@ -909,7 +913,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_import_multi?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:XML_import_multi</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario bilingue XML-SIX</value>
@@ -923,7 +927,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XML_toscana_import?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:XML_toscana_import</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario Regione Toscana XML</value>
@@ -945,7 +949,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$XPWE_export?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:XPWE_export</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Esporta dati in archivio XPWE</value>
@@ -992,25 +996,6 @@
                   <value>private:separator</value>
                 </prop>
               </node>
-              <!--
-                   <node oor:name="m2U05" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Taxi.Main_Importa_Altro_Computo?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/image35</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>Esporta/Accoda i Dati di questo Doc > in DCC (Doc Contab. Corrente)</value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m2U06" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value />
@@ -1038,22 +1023,12 @@
                    </prop>
                    </node>
               -->
-              <!--
-                   <node oor:name="m2U07.1" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value />
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>private:separator</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m2U07.2" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$importa_stili?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:importa_stili</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/sfera_gialla</value>
@@ -1070,7 +1045,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$join_sheets?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:join_sheets</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Unisci tutti i fogli del documento</value>
@@ -1084,7 +1059,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$copia_celle_visibili?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:copia_celle_visibili</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Copia solo le celle visibili</value>
@@ -1098,7 +1073,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inserisci_nuova_riga_con_descrizione?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:inserisci_nuova_riga_con_descrizione</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Inserisci titolo all'inizio delle misure</value>
@@ -1107,12 +1082,12 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m2U08" oor:op="replace">
+              <node oor:name="m2U08a" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$converti_stringhe?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:converti_stringhe</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image16</value>
@@ -1124,12 +1099,20 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <node oor:name="m2U09" oor:op="replace">
+              <node oor:name="m2U08b" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
+              <node oor:name="m2U09a" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$sproteggi_sheet_TUTTE?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:sproteggi_sheet_TUTTE</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image17</value>
@@ -1141,12 +1124,20 @@
                   <value>_self</value>
                 </prop>
               </node>
+              <node oor:name="m2U09z" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value />
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>private:separator</value>
+                </prop>
+              </node>
               <node oor:name="m2U11" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$numera_voci?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:numera_voci</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image161</value>
@@ -1163,7 +1154,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Rinumera_TUTTI_Capitoli2?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:Rinumera_TUTTI_Capitoli2</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/rinum_cap</value>
@@ -1180,7 +1171,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inserisci_Riga_rossa?language=Python&amp;location=user:uno_packages</value>
+                  <value>bartaimar:inserisci_Riga_rossa</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/image100</value>
@@ -1197,7 +1188,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Accessori.ToggleGrid?language=Basic&amp;location=application</value>
+                  <value>bartaimar:grid_switch</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/griglia3</value>
@@ -1277,25 +1268,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <!--
-                   <node oor:name="m2U19" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Finale_2.Modulo_Lista_categorie_appalto?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/sf_Ver</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>APP- Crea Lista Lavorazioni e Forniture</value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m2U20" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1390,13 +1362,13 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_COMPUTO?language=Basic&amp;location=application</value>
+                  <value>bartaimar:mostra_tabs_computo</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/vintage</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Mostra le Copertine e i documenti del COMPUTO</value>
+                  <value>Mostra le Copertine del COMPUTO</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1407,13 +1379,41 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>vnd.sun.star.script:UltimusFree2.Gest_contab.Mostra_tabs_contabilita_soltanto?language=Basic&amp;location=application</value>
+                  <value>bartaimar:mostra_tabs_contab</value>
                 </prop>
                 <prop oor:name="ImageIdentifier" oor:type="xs:string">
                   <value>%origin%/icons/vintage</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Mostra le Copertine e i documenti di Contabilita'</value>
+                  <value>Mostra le Copertine di Contabilita'</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U03" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>bartaimar:mostra_fogli_principali</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Mostra solo i fogli principali</value>
+                </prop>
+                <prop oor:name="Target" oor:type="xs:string">
+                  <value>_self</value>
+                </prop>
+              </node>
+              <node oor:name="m3U04" oor:op="replace">
+                <prop oor:name="Context" oor:type="xs:string">
+                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
+                </prop>
+                <prop oor:name="URL" oor:type="xs:string">
+                  <value>bartaimar:mostra_fogli</value>
+                </prop>
+                <prop oor:name="Title" oor:type="xs:string">
+                  <value>Mostra tutti i fogli</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1426,7 +1426,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SuperCapitolo?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:Inser_SuperCapitolo</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/supcat</value>
@@ -1443,7 +1443,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_Capitolo?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:Inser_Capitolo</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/cat</value>
@@ -1460,7 +1460,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Inser_SottoCapitolo?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:Inser_SottoCapitolo</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/subcat</value>
@@ -1502,7 +1502,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$struttura_off?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:struttura_off</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image9</value>
@@ -1544,7 +1544,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$elimina_voce?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:elimina_voce</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/cestino</value>
@@ -1603,7 +1603,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$pesca_cod?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:pesca_cod</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/pesca</value>
@@ -1628,7 +1628,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$cerca_in_elenco?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:cerca_in_elenco</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/findcode</value>
@@ -1645,7 +1645,24 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_filtro?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:filtra_codice</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/image444</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Filtra Codice della voce corrente</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m24" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>bartaimar:Vai_a_filtro</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image555</value>
@@ -1657,7 +1674,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m24" oor:op="replace">
+          <node oor:name="m25" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
             </prop>
@@ -1665,12 +1682,12 @@
               <value>private:separator</value>
             </prop>
           </node>
-          <node oor:name="m25" oor:op="replace">
+          <node oor:name="m26" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$doppioni?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:doppioni</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image21B</value>
@@ -1682,7 +1699,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m26" oor:op="replace">
+          <node oor:name="m27" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1699,7 +1716,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m27" oor:op="replace">
+          <node oor:name="m28" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value />
             </prop>
@@ -1707,7 +1724,7 @@
               <value>private:separator</value>
             </prop>
           </node>
-          <node oor:name="m28" oor:op="replace">
+          <node oor:name="m29" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1721,7 +1738,7 @@
               <value>_self</value>
             </prop>
           </node>
-          <node oor:name="m29" oor:op="replace">
+          <node oor:name="m30" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
@@ -1892,7 +1909,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$leeno_conf?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:leeno_conf</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/config</value>
@@ -1917,7 +1934,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$apri_manuale?language=Python&amp;location=user:uno_packages</value>
+              <value>bartaimar:apri_manuale</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/manuale</value>
@@ -1933,13 +1950,13 @@
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
-                 <prop oor:name="URL" oor:type="xs:string">
-                   <value>.uno:OpenHyperlink?URL:string=https://leeno.org/donazioni/</value>
-                 </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>.uno:OpenHyperlink?URL:string=https://leeno.org/donazioni/</value>
+            </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-<!--
-              <value>%origin%/icons/leeno</value>
--->
+              <!--
+                   <value>%origin%/icons/leeno</value>
+              -->
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Sostieni LeenO...</value>
@@ -1952,13 +1969,13 @@
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
-                 <prop oor:name="URL" oor:type="xs:string">
-                   <value>.uno:OpenHyperlink?URL:string=https://leeno.org/licenza-2/</value>
-                 </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>.uno:OpenHyperlink?URL:string=https://leeno.org/licenza-2/</value>
+            </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-<!--
-              <value>%origin%/icons/leeno</value>
--->
+              <!--
+                   <value>%origin%/icons/leeno</value>
+              -->
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Licenza...</value>
@@ -1971,9 +1988,9 @@
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
-                 <prop oor:name="URL" oor:type="xs:string">
-                   <value>.uno:OpenHyperlink?URL:string=https://leeno.org/about-leeno/</value>
-                 </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>.uno:OpenHyperlink?URL:string=https://leeno.org/about-leeno/</value>
+            </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/leeno</value>
             </prop>

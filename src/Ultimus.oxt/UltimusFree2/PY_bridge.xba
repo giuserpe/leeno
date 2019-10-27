@@ -15,7 +15,6 @@
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant 
 rem questa serve ad avviare le funzioni/script di python
 rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
-&apos;Print &quot;pyleeno&quot;
 	args() = Array()
 	If not ismissing (arg1) Then Appenditem(args(), arg1)
 	If not ismissing (arg2) Then Appenditem(args(), arg2)
@@ -28,8 +27,8 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 	Dim Url as String
 	sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
 
-	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|pyLeenO|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
-&apos;Print Url
+	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
+
 	MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
 	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
 	Script = MasterScriptProvider.getScript(Url)
@@ -39,4 +38,47 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 ScriptPy = PythonResult
 End Sub
 rem ######################################################################
+Sub vai_a_M1
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_M1&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_S1
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S1&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_S2
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S2&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_variabili
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_variabili&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_ElencoPrezzi
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_ElencoPrezzi&quot;)
+End Sub
+rem ######################################################################
+Sub inizializza_analisi
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_analisi&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_Computo
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_Computo&quot;)
+End Sub
+rem ######################################################################
+Sub genera_variante
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;genera_variante&quot;)
+End Sub
+rem ######################################################################
+Sub attiva_contabilita
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;attiva_contabilita&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_Scorciatoie
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_Scorciatoie&quot;)
+End Sub
+rem ######################################################################
+Sub ssUltimus
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;ssUltimus&quot;)
+End Sub
 </script:module>

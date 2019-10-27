@@ -145,6 +145,7 @@ Sub computo_OnSelect
 End Sub
 
 Sub elenco_OnFocus
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
 Sub elenco_OnUnFocus
@@ -152,6 +153,7 @@ Sub elenco_OnUnFocus
 End Sub
 Sub analisi_OnFocus
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
 	&apos;ThisComponent.CurrentController().freezeAtPosition(0,2)
 End Sub
 Sub analisi_OnUnFocus
@@ -159,6 +161,7 @@ Sub analisi_OnUnFocus
 End Sub
 
 Sub eventi_assegna
+sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
 &apos;Array : T( 0 To 6 ) As string  
 &apos;(0)       | string : &quot;OnFocus&quot;
 &apos;(1)       | string : &quot;OnUnfocus&quot;
@@ -179,27 +182,27 @@ Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star
 If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
 	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnFocus?language=Basic&amp;location=application&quot;)
 	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnUnfocus?language=Basic&amp;location=application&quot;)
-&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+&apos;	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 EndIf
 
-Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 
 If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
-	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
-	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
-	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;S1&quot;,	&quot;OnFocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$bak_timestamp?language=Python&amp;location=user:uno_packages&quot;)
-Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;S1&quot;,	&quot;OnFocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$bak_timestamp?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
 &apos;OnStartApp
 &apos;OnCloseApp
 &apos;Macro_Doc (&quot;OnCreate&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
@@ -229,7 +232,6 @@ Macro_Doc (&quot;OnSaveAsFailed&quot;,	&quot;vnd.sun.star.script:UltimusFree2._v
 &apos;OnModeChanged
 &apos;OnStorageChanged
 End Sub
-rem ######################################################################
 
 Sub Macro_SHEET(nome As String, nomeEvento As string, miamacro As String)
 rem http://bit.ly/1EgROQt
@@ -309,20 +311,18 @@ rem https://forum.openoffice.org/it/forum/viewtopic.php?f=26&amp;t=7144&amp;p=37
 Sub ApriDialogo_tabelle()
 	oSheet = ThisComponent.currentController.activeSheet &apos; presumo sia il foglio CONTABILITA
 &apos;	lrow = range2cell
-	
-	
+
 	Select Case ThisComponent.currentselection.cellstyle
 	Case &quot;comp 1-a&quot;, &quot;comp 1-a PU&quot;, &quot;comp 1-a LUNG&quot;, &quot;comp 1-a LARG&quot;, &quot;comp 1-a peso&quot;,&quot;Default&quot;, &quot;An-lavoraz-input&quot;
 		tabelle() = Array(&quot;Tondo per c.a.&quot;, &quot;Reti elettrosaldate&quot;, &quot;Orsogril&quot;, &quot;Travi IPE&quot;, &quot;Travi UPN&quot;, &quot;Travi HEA&quot;, &quot;Travi HEB&quot;, &quot;Travi HEM&quot;, _
 		&quot;Tubi quadrati&quot;, &quot;Tubi rettangolari&quot;, &quot;Tubi circolari&quot;, &quot;L lati Uguali sp tondi&quot;, &quot;L lati Disuguali sp tondi&quot;) &apos;
 		d = CreateUnoDialog(DialogLibraries.UltimusFree2.Dialog_tabellaferri)
-	
 		ComboBox=d.getControl(&quot;ComboBox1&quot;)
 		ComboBox.addItems(tabelle(), 0)
-		
 		ListBox=d.getControl(&quot;ListBox1&quot;)
 &apos;		d.execute()
-		
+	FerroTondo() = Array(&quot;ø4  - 0,099&quot;, &quot;ø5  - 0,154&quot;, &quot;ø6  - 0,222&quot;, &quot;ø7  - 0,302&quot;, &quot;ø8  - 0,395&quot;, &quot;ø9  - 0,499&quot;, &quot;ø10 - 0,617&quot;, &quot;ø11 - 0,746&quot;, &quot;ø12 - 0,888&quot;, &quot;ø13 - 1,042&quot;, &quot;ø14 - 1,208&quot;, &quot;ø15 - 1,387&quot;, &quot;ø16 - 1,578&quot;, &quot;ø17 - 1,782&quot;, &quot;ø18 - 1,998&quot;, &quot;ø19 - 2,226&quot;, &quot;ø20 - 2,466&quot;, &quot;ø21 - 2,719&quot;, &quot;ø22 - 2,984&quot;, &quot;ø23 - 3,261&quot;, &quot;ø24 - 3,551&quot;, &quot;ø25 - 3,853&quot;, &quot;ø26 - 4,168&quot;, &quot;ø27 - 4,495&quot;, &quot;ø28 - 4,834&quot;, &quot;ø29 - 5,185&quot;, &quot;ø30 - 5,549&quot;, &quot;ø31 - 5,925&quot;, &quot;ø32 - 6,313&quot;)
+		ListBox.addItems(FerroTondo(), 0)
 		Select Case d.Execute()
 		Case 1
 &apos;			MsgBox &quot;Premuto Ok&quot;

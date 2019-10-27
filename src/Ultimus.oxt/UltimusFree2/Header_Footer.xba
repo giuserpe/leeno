@@ -347,7 +347,7 @@ Errore:
 &apos;SubErrHandler(sModulSubName)
 DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 END SUB
-&apos; ========================================================================
+
 
 Sub SubErrHandler(sModulSubName as string)
 MsgBox _
@@ -357,7 +357,7 @@ MsgBox _
 	 &amp; Err &amp; &quot;: &quot; &amp; Error$ 
 	 &apos; &quot; Fehler in &quot; &amp; sModulName &amp; sModulVersion
 END SUB
-&apos; ========================================================================
+
 
 
 Sub Duplica_PageStyle &apos; duplica lo stile di pagina attivo (nella sheet attiva)

@@ -11,52 +11,10 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
-Sub partita (testo as string)
-	Dim test As String
-	Dim riga_selezione As Integer
-	Dim focus as integer
-	
-	osheet = thisComponent.CurrentController.ActiveSheet &apos;.getCurrentSelection
- 	if oSheet.name = &quot;CONTABILITA&quot; then
- 	 goto procedi
- 	 else
- 	 	msgbox (&quot;Non sei sulla tabella giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi trovarti in CONTABILITA&quot;, 0,&quot;ERRORE!&quot;)
-		goto fine
- 	end if
- 	procedi:
-
-	riga_corrente = range2cell &apos; thisComponent.getCurrentSelection.celladdress.row
-	if oSheet.GetCellByPosition(2,riga_corrente).cellstyle &lt;&gt; &quot;comp 1-a&quot; then
-		EXIT SUB	
-		msgbox (&quot;Non sei sulla riga giusta!&quot; &amp; CHR$(10)_
-		&amp; &quot;Devi selezionare un rigo di misurazione.&quot;, 0,&quot;ERRORE!&quot;)
-		EXIT SUB
-	end if
-		oSheet.GetCellByPosition(2 , riga_corrente).setstring(testo)
-		oRange = oSheet.getCellRangeByPosition (2,riga_corrente,8,riga_corrente)
-		oRange.CellBackColor = RGB(255, 255, 153)
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(5,riga_corrente))
- 	fine:
-end Sub
-rem ######################################################################
-
-sub partita_provvisoria
-	dim testo as string
-	testo = &quot;PARTITA PROVVISORIA&quot;
-	partita (testo)
-end Sub
-
-sub detrai_partita_provvisoria
-	dim testo as string
-	testo = &quot;SI DETRAE PARTITA PROVVISORIA&quot;
-	partita (testo)
-end Sub
-rem ######################################################################
-
 sub GENERA_Atti_Contabili &apos;(C) Giuseppe Vizziello 2014
 &apos;	ThisComponent.enableAutomaticCalculation(False)
 chiudi_dialoghi
+	ThisComponent.CurrentController.ZoomValue = 400
 	testa = msgbox (&quot;Prima di procedere è consigliabile salvare il lavoro.&quot; &amp; CHR$(10) _
 	&amp; &quot;Puoi continuare, ma a tuo rischio!&quot; &amp; CHR$(10) &amp; CHR$(10) _
 	&amp; &quot;Se decidi di continuare, devi attendere il messaggio di procedura completata senza interferire con mouse e/o tastiera.&quot; &amp; CHR$(10) &amp; CHR$(10) _
@@ -86,6 +44,7 @@ salta:
 	msgbox (&quot;La generazione degli allegati contabili è stata completata.&quot; &amp; CHR$(10) _
 			&amp; &quot;Grazie per l&apos;attesa.&quot;, 64, &quot;Voci registrate!&quot;)
 	fine:
+	ThisComponent.CurrentController.ZoomValue = 100
 &apos;Barra_Chiudi
 end Sub
 rem ######################################################################
@@ -102,7 +61,7 @@ sub Genera_REGISTRO &apos;(C) Giuseppe Vizziello 2014
 rem ----------------------------------------------------------------------
 rem idxCol e idxRow sono costanti settate nel modulo &quot;_variabili&quot;
 rem ----------------------------------------------------------------------
-	ThisComponent.CurrentController.ZoomValue = 100
+&apos;	ThisComponent.CurrentController.ZoomValue = 100
 fRow = idxRow rem prima riga tabella
 fcol = idxCol rem prima colonna
 	&apos;goto main:
@@ -204,15 +163,7 @@ rem Recupero i dati dal libretto
 		end if
 		i=f
 		&apos;voce = array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo)
-rem ----------------------------------------------------------------------
-rem approssimazione dei valori a idxdec dopo la virgola
-rem con ThisComponent.CalcAsShown = true &apos; Precisione come mostrato = on
-&apos;GoTo provo_ed_evitare:
-&apos;		quant=myround(quant,idxdec)
-&apos;		importo=myround(importo,idxdec)
-&apos;		sicurezza=myround(sicurezza,idxdec)
-&apos;		mdo=myround(mdo,idxdec)
-&apos;provo_ed_evitare:
+
 rem ----------------------------------------------------------------------
 		AppendItem(elVoci(), array (num, art, data, desc, um, Nlib, Plib, quant, prezzo, importo, sicurezza, mdo))
 &apos;		Barra_Apri_Chiudi_5(&quot;                                Restano &quot;&amp; aRiga-i &amp;&quot; righe...&quot;, 0)
@@ -383,7 +334,9 @@ initRegistro: rem INIZIO COMPILAZIONE REGISTRO
 
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
 	ThisComponent.CurrentController.Select(oSheetReg)
-	SetTabColorN(RGB(255,225,225))
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;setTabColor&quot;, 16769505)
+	
+	
 	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(0,0,0,0))
 	&apos;fcol = 0 &apos;prima colonna inserimento in Registro
 rem RIGA RIPORTO
@@ -510,7 +463,7 @@ i=1
 &apos;	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, daqui))
 &apos;copy_clip
 &apos;	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(fcol+1, daqui, fcol+1, fineFirme-2))
-&apos;paste_clip
+&apos;ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$J$&quot;&amp;getLastUsedRow(oSheetReg)&apos;-1
 ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Registro&quot;, area , nomearea)
 
@@ -601,7 +554,8 @@ rem ######################################################################
 			oSheetSAL= thisComponent.Sheets.getByName(&quot;SAL&quot;) &apos; setta come corrente
 			oSheetSAL.PageStyle = &quot;PageStyle_REGISTRO_A4&quot; &apos; imposta stile pagina
 			ThisComponent.CurrentController.Select(oSheetSAL) &apos; seleziona la tag
-			SetTabColorN(RGB(255,225,225))	&apos; colora la tag
+
+			ScriptPy(&quot;pyleeno.py&quot;,&quot;setTabColor&quot;, 16769505)
 			ThisComponent.CurrentController.Select(oSheetSAL.getCellRangeByPosition(0,0,0,0)) &apos; focus sulla prima cella SAL
 &apos;Annulla_atto_contabile(&quot;SAL&quot;)
 rem ----------------------------------------------------------------------
@@ -642,7 +596,7 @@ rem chiudo il vecchio SAL
 			oCell = oSheetSAL.getCellRangeByPosition(0,fRow,6,lRow)
 			oCell.Rows.IsVisible=false &apos; chiudi gruppo
 	End Select
-	ThisComponent.CurrentController.ZoomValue = 100
+&apos;	ThisComponent.CurrentController.ZoomValue = 100
 
 &apos;fissa (0,fRow+1)
 fissa (0,idxrow+1)
@@ -847,7 +801,7 @@ firme (InsRow+17)
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, InsRow+27))
 copy_clip
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellRangeByPosition(fcol+1, InsRow+27, fcol+1, getLastUsedRow(oSheetSal)-1))
-paste_clip
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	oSheetSal.rows.removeByIndex (InsRow+27,1)
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 Ripristina_statusLine &apos;Barra_chiudi_sempre_4
@@ -1171,7 +1125,7 @@ rem risistemo intestazioni
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,daVoce-1))
 copy_clip
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,ins-1))
-paste_clip
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 						oCell = oSheet.getCellRangeByPosition(0,daVoce,11,aVoce)
 						oCell.Rows.IsVisible=true
 						ThisComponent.CurrentController.Select(oCell)
@@ -1255,7 +1209,7 @@ sub Genera_LIBRETTO&apos; (C) Giuseppe Vizziello 2014
 	oSheetCont.Unprotect &quot;&quot;
 
 	ThisComponent.CurrentController.Select(oSheetCont)
-	ThisComponent.CurrentController.ZoomValue = 100
+&apos;	ThisComponent.CurrentController.ZoomValue = 400
 	oSheetCont.PageStyle = &quot;Page_Style_Libretto_Misure2&quot; 
 Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Libetto delle Misure...&quot;, 25)
 rem MI SPOSTO SUL FOGLIO GIUSTO
@@ -1395,27 +1349,26 @@ rem ----------------------------------------------------------------------
 i=1
 	Do While oSheetCont.GetCellByPosition(1,fineFirme).rows.IsStartOfNewPage = False
 	&apos;	oSheetCont.GetCellByPosition(2 ,fineFirme).setstring(&quot;Sto sistemando il Libretto...&quot;)
-		insRows (fineFirme,1) &apos;insertByIndex non funziona
+	&apos;	insRows (fineFirme,1) &apos;insertByIndex non funziona
+        oSheetCont.getRows().insertByIndex(fineFirme, 1)
+
 		If i=3 Then
-			oSheetCont.GetCellByPosition(2, fineFirme).setstring(&quot;====================&quot;)
+			oSheetCont.GetCellByPosition(2, fineFirme).String = &quot;====================&quot;
 			daqui=fineFirme
 		End If 
 		fineFirme = fineFirme+1
 		i=i+1
 	Loop
 	oSheetCont.rows.removeByIndex (fineFirme-1, 1)
-
 rem ----------------------------------------------------------------------
 rem cancella l&apos;ultima riga
 fineFirme = fineFirme-1
 	If daqui&lt;&gt;0 then
 		ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(2, daqui))
-copy_clip
+ScriptPy(&quot;pyleeno.py&quot;,&quot;copy_clip&quot;)
 		ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(2, daqui, 2, finefirme-1))
-&apos;Print finefirme-1
-paste_clip
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	End If
-
 rem ----------------------------------------------------------------------
 rem definisci il range del #Lib#
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
@@ -1427,7 +1380,8 @@ rem raggruppo
 	oCell = oSheetCont.getCellRangeByPosition (0,finefirme,35,finefirme)
 	oSheetCont.GetCellByPosition(2 , inizioFirme+1).CellStyle = &quot;ULTIMUS&quot; &apos;stile data
 rem recupero la data
-	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).value, 10)
+&apos;	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).Value, 10)
+	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).String, 10)
 	ThisComponent.CurrentController.Select(oCell)
 bordo_sotto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
@@ -1453,8 +1407,7 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	yS2=oEnd.RangeAddress.EndColumn	&apos;colonna
 	
 	oS2.GetCellByPosition(yS2+nSal,xS2+1).value = nSal &apos;numero sal
-&apos;	Print &quot;datafirma &quot; &amp; datafirma
-	oS2.GetCellByPosition(yS2+nSal,xS2+2).value = datafirma &apos;data
+	oS2.GetCellByPosition(yS2+nSal,xS2+2).Formula = &quot;=VALUE(&quot;&quot;&quot; &amp; datafirma &amp; &quot;&quot;&quot;)&quot;&apos;data
 	oS2.GetCellByPosition(yS2+nSal,xS2+24).value = aVoce &apos; ultima voce libretto
 	oS2.GetCellByPosition(yS2+nSal,xS2+25).value = inumPag &apos; ultima pagina libretto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
@@ -1521,7 +1474,8 @@ rem ----------------------------------------------------------------------
 rem inserisco la prima riga GIALLA del LIBRETTO
 	oNamedRange=oRanges.getByName(nomearea).referredCells
 	ins = oNamedRange.RangeAddress.StartRow
-	insRows (ins, 1) &apos;insertByIndex non funziona
+	&apos;insRows (ins, 1) &apos;insertByIndex non funziona
+    oSheetCont.getRows().insertByIndex(ins, 1)
 	oSheetCont.getCellRangeByPosition (0,ins,25,ins).CellStyle = &quot;uuuuu&quot; &apos;&quot;Ultimus_Bordo_sotto&quot;
 fissa (0, ins + 1)
 rem ----------------------------------------------------------------------

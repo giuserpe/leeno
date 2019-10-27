@@ -56,25 +56,6 @@ FUNCTION Controllo_riga_rossa_EP () &apos; sperimentale... visto che ho contaop 
 	end if 
 End FUNCTION
 
-
-SUB Detentore_On_Off()
-	Select Case ErroreDet 
-		case = &quot;&quot;
-				ErroreDet = 1
-				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1
-		case = 1
-				ErroreDet = 0
-				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=0
-				msgbox &quot;Detentore Errori : Disattivato!&quot;
-		case = 0 
-				ErroreDet = 1
-				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1
-			msgbox &quot;Detentore Errori : Attivato!&quot;
-		
-	end select 
-END SUB
-
-
 Sub DETENTORE_GENERALE_ERRORI(sModulSubName as string, Erl as string, Err as string, Error$ as string )
 
 print &quot;sModulSubName&quot; &amp; &quot; - &quot; &amp; Erl &amp; &quot; - &quot; &amp; Err &amp; &quot; - &quot; &amp; Error$

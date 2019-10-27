@@ -218,60 +218,6 @@ Function Copia_Formato_2 (SourceSheetNum, TargetSheetNum, TargetCell, SrcRange a
 	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:InsertContents&quot; ,&quot;&quot; ,0 ,Args6())
 end Function
 
-Sub Controlla_Somme_Su_Tutto_Computo &apos;(msg As Boolean) 
-&apos; inserire una richiesta se cominciare sul posto o dall&apos;inizio...
-Dim lrow as long
-Dim lrowE as long
-dim lastUrow as long
-	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
-	ThisComponent.CurrentController.Select(oSheet)
-	lrow = 3
-	oCell = oSheet.GetCellByPosition( 3 , lrow)
-	ThisComponent.CurrentController.Select(oCell)
-	lastUrow = getLastUsedRow(oSheet)
-	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then 
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox &quot; Manca la riga rossa di chiusura della tabella! PROVVEDI8! &quot;
-		exit sub
-	end if 
-	lRowE=oEnd.RangeAddress.EndRow 
-	lrow = 3
-	oCell = oSheet.GetCellByPosition( 2 , lrow)
-	xA = oCell.string
-
-	Do while lrow &lt; lastUrow And lrow &lt; lRowE
-				Do while xA &lt;&gt; &quot;SOMMANO &quot; &apos;and lrow &lt; lastUrow
-						If lrowE &lt;= lrow then
-						sTag = &quot;esci&quot;
-							exit do
-						end if		
-						lrow = lrow+1
- 						oCell = oSheet.GetCellByPosition( 2 , lrow)
- 						xA = oCell.string
-						ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
-					&apos;	print
-		 		Loop
- 		 if sTag = &quot;esci&quot; then
- 		 		exit do
- 		 end if
- 	&apos;	 print 
- 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
- 		 Controlla_Somma_Computo_Sing_Voce
- 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&apos;
-		
-		lrow = lrow+1
- 		oCell = oSheet.GetCellByPosition( 3 , lrow)
- 		xA = oCell.string
- 		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
- 	loop
- 	if msg = 1 then
-	 	msgbox &quot;La macchina ha rifatto tutte le somme delle quantità parziali del Computo! Sembra tutto a posto, ma non è detto...&quot;
-	end if
-END SUB
-
-
 Sub Controlla_Somma_Computo_Sing_Voce &apos; agisce su una voce soltanto
  &apos;
 dim nome_sheet as string

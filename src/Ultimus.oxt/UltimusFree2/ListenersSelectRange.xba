@@ -46,7 +46,7 @@ function getRange(sTitolo as string) as string
 	&apos;annulla bene solo su Esc e su Enter
 	&apos;se si clicca sulla crocetta di annullo non c&apos;è modo di intercettare sA
 	&apos;ovvero non si riesce ad interrompere il loop
-		if iConta &gt; 30000 then
+		if iConta &gt; 10000000 then
 			exit do
 		end if
 	loop

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="Dlg_input" dlg:left="202" dlg:top="136" dlg:width="145" dlg:height="50" dlg:help-text="&amp;616.Dlg_input.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;617.Dlg_input.Title">
+ <dlg:bulletinboard>
+  <dlg:textfield dlg:id="TextField1" dlg:tab-index="0" dlg:left="60" dlg:top="10" dlg:width="80" dlg:height="12" dlg:help-text="&amp;618.Dlg_input.TextField1.HelpText" dlg:valign="center" dlg:value="&amp;619.Dlg_input.TextField1.Text"/>
+  <dlg:text dlg:id="Label1" dlg:tab-index="1" dlg:left="5" dlg:top="10" dlg:width="50" dlg:height="12" dlg:help-text="&amp;620.Dlg_input.Label1.HelpText" dlg:value="&amp;621.Dlg_input.Label1.Label" dlg:align="right" dlg:valign="center"/>
+  <dlg:button dlg:id="CommandButton1" dlg:tab-index="2" dlg:left="85" dlg:top="30" dlg:width="25" dlg:height="15" dlg:help-text="&amp;626.Dlg_input.CommandButton1.HelpText" dlg:value="&amp;627.Dlg_input.CommandButton1.Label" dlg:button-type="cancel">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.UNO:endExecute()" script:language="UNO"/>
+  </dlg:button>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="3" dlg:left="115" dlg:top="30" dlg:width="25" dlg:height="15" dlg:help-text="&amp;628.Dlg_input.CommandButton2.HelpText" dlg:value="&amp;629.Dlg_input.CommandButton2.Label" dlg:button-type="ok"/>
+ </dlg:bulletinboard>
+</dlg:window>

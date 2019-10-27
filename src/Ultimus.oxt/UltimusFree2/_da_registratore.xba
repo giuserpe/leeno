@@ -439,34 +439,6 @@ sub _menu_pop
 	
 end Sub
 rem ######################################################################
-&apos;salva_doc_come (LeenO_Path &amp; &quot;/template/leeno/Listino_LeenO.ots&quot;
-
-sub salva_doc_come (Optional nomeurl As string)
-	rem ----------------------------------------------------------------------
-	rem define variables
-	dim document   as object
-	dim dispatcher as Object
-	rem ----------------------------------------------------------------------
-	rem get access to the document
-	document   = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	rem ----------------------------------------------------------------------
-	dim args1(1) as new com.sun.star.beans.PropertyValue
-	args1(0).Name = &quot;URL&quot;
-	
-	If Not IsMissing(nomeurl) Then
-&apos;		Print convertToUrl (nomeurl)
-		args1(0).Value = convertToUrl (nomeurl)
-	EndIf 
-&apos;args1(0).Value = &quot;file:///W:/_dwg/ULTIMUSFREE/_tmp/Senza.ods&quot;
-	args1(1).Name = &quot;FilterName&quot;
-	args1(1).Value = &quot;calc8&quot;
-	dispatcher.executeDispatch(document, &quot;.uno:SaveAs&quot;, &quot;&quot;, 0, args1())
-	
-end Sub
-	rem ######################################################################
-	
 sub apri_file
 	rem ----------------------------------------------------------------------
 	rem define variables
@@ -655,17 +627,51 @@ sub paste_noOBJ
 end sub
 rem ######################################################################
 
-sub paste_clip
-	rem ----------------------------------------------------------------------
-	rem define variables
-	dim document   as object
-	dim dispatcher as object
-	rem ----------------------------------------------------------------------
-	rem get access to the document
-	document   = ThisComponent.CurrentController.Frame
-	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	rem ----------------------------------------------------------------------
-	dispatcher.executeDispatch(document, &quot;.uno:Paste&quot;, &quot;&quot;, 0, Array())
-end Sub
+
+sub paste_format
+rem ----------------------------------------------------------------------
+rem define variables
+dim document   as object
+dim dispatcher as object
+rem ----------------------------------------------------------------------
+rem get access to the document
+document   = ThisComponent.CurrentController.Frame
+dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+rem ----------------------------------------------------------------------
+dim args1(0) as new com.sun.star.beans.PropertyValue
+args1(0).Name = &quot;ToPoint&quot;
+args1(0).Value = &quot;$AA$2&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args1())
+
+rem ----------------------------------------------------------------------
+dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
+
+rem ----------------------------------------------------------------------
+dim args3(0) as new com.sun.star.beans.PropertyValue
+args3(0).Name = &quot;ToPoint&quot;
+args3(0).Value = &quot;$AA$4:$AA$6&quot;
+
+dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args3())
+
+rem ----------------------------------------------------------------------
+dim args4(5) as new com.sun.star.beans.PropertyValue
+args4(0).Name = &quot;Flags&quot;
+args4(0).Value = &quot;T&quot;
+args4(1).Name = &quot;FormulaCommand&quot;
+args4(1).Value = 0
+args4(2).Name = &quot;SkipEmptyCells&quot;
+args4(2).Value = false
+args4(3).Name = &quot;Transpose&quot;
+args4(3).Value = false
+args4(4).Name = &quot;AsLink&quot;
+args4(4).Value = false
+args4(5).Name = &quot;MoveMode&quot;
+args4(5).Value = 4
+
+dispatcher.executeDispatch(document, &quot;.uno:InsertContents&quot;, &quot;&quot;, 0, args4())
+
+
+end sub
 </script:module>

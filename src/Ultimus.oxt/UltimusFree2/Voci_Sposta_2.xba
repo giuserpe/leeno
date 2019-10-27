@@ -106,7 +106,7 @@ dim lcol5 as long
  Circoscrive_Voce_Computo_B= oRangeVoceC
 
 end Function
-&apos;================================================================================= 
+
  
 
 function Sposta_range_buono (lnuovaPosRow As Long) &apos;, o1RangeSelection as object) &apos;preleva il range selezionato..
@@ -197,9 +197,6 @@ end if
 ThisComponent.CurrentController.Select(oRange)
 end function
  
-&apos;=================================================================
-
-
 Function Mettiti_esattamente_tra_due_VociC (ByVal lrow As Long)&apos;as string&apos;As Long &apos;as string &apos; trova il punto di inserimanto
 &apos; nel caso l&apos;utente non si sia posizionato bene... &apos; specifico per voci Computo
 &apos; (mai fidarsi dell&apos;utente...)

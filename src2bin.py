@@ -3,9 +3,12 @@
 
 import argparse, os, zipfile
 
+with open('src/Ultimus.oxt/leeno_version_code', 'r') as file:
+    last_version = file.read()
+
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('-e', '--ext', default='oxt')
-parser.add_argument('-V', '--version', default='')
+parser.add_argument('-V', '--version', default=last_version)
 args = parser.parse_args()
 
 def compress():
@@ -16,7 +19,7 @@ def compress():
         archname = 'LeenO.oxt'
         fileName, fileExtension = os.path.splitext(archname)
         if args.version:
-            fileName += '-%s' % args.version
+            fileName += '_%s' % args.version
         if args.ext:
             fileExtension = args.ext
         archname = '%s.%s' % (fileName, fileExtension)
@@ -34,7 +37,7 @@ def compress():
                     relpath = os.path.relpath(filepath, os.path.join('src', rootname))
                     archive.write(filepath, relpath)
     print ('''\n\nLeenO - Computo metrico assistito
-Copyright (C) 2014-2018 Giuseppe Vizziello
+Copyright (C) 2014-2019 Giuseppe Vizziello
 
 Software Libero per computi metrici estimativi
 
@@ -45,4 +48,3 @@ File di installazione generato correttamente: ''' + archpath +'\n')
 
 if __name__=="__main__":
     compress()
-    

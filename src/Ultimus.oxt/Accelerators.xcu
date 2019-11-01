@@ -177,6 +177,12 @@
             <value xml:lang="en-US">bartaimar:pesca_cod</value>
           </prop>
         </node>
+        <!--CTRL-SHIFT-I-->
+        <node oor:name="I_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">bartaimar:inverti_segno</value>
+          </prop>
+        </node>
         <!--CTRL-SHIFT-L-->
         <node oor:name="L_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -219,14 +225,6 @@
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Da_prezzario.Ritorna_al_prezziario?language=Basic&amp;location=application</value>
           </prop>
         </node>
-        <!--CTRL-SHIFT-(-)-->
-<!--
-        <node oor:name="SUBTRACT_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">bartaimar:inverti_segno</value>
-          </prop>
-        </node>
--->
         <!--CTRL-SHIFT-9-->
         <node oor:name="9_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">

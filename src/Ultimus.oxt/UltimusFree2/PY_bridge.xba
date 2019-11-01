@@ -11,6 +11,7 @@
 &apos; Sono inoltre graditi suggerimenti in merito alle gestione della Contabilità Lavori e 
 &apos; per l&apos;ottimizzazione del codice.
 &apos;_______________________________________________________________________________________
+&apos;Elenco delle macro che vengono avviate tramite pulsanti nei riquadri di dialogo.
 
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant 
 rem questa serve ad avviare le funzioni/script di python
@@ -36,6 +37,14 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 	PythonResult = Script.invoke(args,Array(),Array())
 
 ScriptPy = PythonResult
+End Sub
+rem ######################################################################
+Sub attiva_contabilita
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;attiva_contabilita&quot;)
+End Sub
+rem ######################################################################
+Sub genera_variante
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;genera_variante&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_M1
@@ -66,19 +75,63 @@ Sub vai_a_Computo
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_Computo&quot;)
 End Sub
 rem ######################################################################
-Sub genera_variante
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;genera_variante&quot;)
-End Sub
-rem ######################################################################
-Sub attiva_contabilita
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;attiva_contabilita&quot;)
-End Sub
-rem ######################################################################
 Sub vai_a_Scorciatoie
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_Scorciatoie&quot;)
 End Sub
 rem ######################################################################
 Sub ssUltimus
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;ssUltimus&quot;)
+End Sub
+rem ######################################################################
+Sub voce_breve
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;voce_breve&quot;)
+End Sub
+rem ######################################################################
+Sub tante_analisi_in_ep
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;tante_analisi_in_ep&quot;)
+End Sub
+rem ######################################################################
+Sub analisi_in_ElencoPrezzi
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;analisi_in_ElencoPrezzi&quot;)
+End Sub
+rem ######################################################################
+Sub inizializza_elenco
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_elenco&quot;)
+End Sub
+rem ######################################################################
+Sub riordina_ElencoPrezzi
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;riordina_ElencoPrezzi&quot;)
+End Sub
+rem ######################################################################
+Sub struttura_Elenco
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Elenco&quot;)
+End Sub
+rem ######################################################################
+Sub cancella_voci_non_usate
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;cancella_voci_non_usate&quot;)
+End Sub
+rem ######################################################################
+Sub richiesta_offerta
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;richiesta_offerta&quot;)
+End Sub
+rem ######################################################################
+Sub trova_np
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;trova_np&quot;)
+End Sub
+rem ######################################################################
+Sub rigenera_tutte
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;rigenera_tutte&quot;)
+End Sub
+rem ######################################################################
+Sub trova_ricorrenze
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;trova_ricorrenze&quot;)
+End Sub
+rem ######################################################################
+Sub set_larghezza_colonne
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
+End Sub
+rem ######################################################################
+Sub config_default
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;config_default&quot;)
 End Sub
 </script:module>

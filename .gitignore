@@ -1,5 +1,6 @@
 *~
 *.*#
+bin/
 /modelli/leeno-bk/
 documentazione/*.pdf
 Esempio_LeenO.ods
@@ -11,5 +12,3 @@ Esempio_LeenO.ods
 *_sync_4c4c250c938d.db
 *_sync_4c4c250c938d.db-shm
 *_sync_4c4c250c938d.db-wal
-
-

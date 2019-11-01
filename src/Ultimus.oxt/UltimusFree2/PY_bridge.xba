@@ -13,6 +13,28 @@
 &apos;_______________________________________________________________________________________
 &apos;Elenco delle macro che vengono avviate tramite pulsanti nei riquadri di dialogo.
 
+Dim oDialogViste_A as Object
+SUB chiudi_dialoghi &apos; chiude tutte le dialog
+Exit Sub 
+			&apos; modificare qui se si aggiungono delle dialog
+	if Not isNull (oDialogViste_A) then
+		oDialogViste_A.endExecute()
+		else
+		print &quot;prova&quot;
+    endif
+&apos;	if Not isNull (oDialogViste_EP) then oDialogViste_EP.endExecute() 
+&apos;	if Not isNull (oDialogViste_AN) then oDialogViste_AN.endExecute() 
+&apos;	if Not isNull (oDialogViste_N) then oDialogViste_N.endExecute() 
+	
+&apos;	if Not isNull (oDialogScenari_A) then oDialogScenari_A.endExecute()
+&apos;	if Not isNull (oDialogScenari_EP) then oDialogScenari_EP.endExecute() 
+&apos;	if Not isNull (oDialogScenari_AN) then oDialogScenari_AN.endExecute() 
+&apos;	if Not isNull (oDialogScenari_2) then oDialogScenari_2.endExecute()
+&apos;	if Not isNull (oDlgMain) then CreateUnoDialog( DialogLibraries.UltimusFree2.DlgMain).endExecute()
+END SUB
+
+
+
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant 
 rem questa serve ad avviare le funzioni/script di python
 rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
@@ -40,10 +62,12 @@ ScriptPy = PythonResult
 End Sub
 rem ######################################################################
 Sub attiva_contabilita
+	chiudi_dialoghi
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;attiva_contabilita&quot;)
 End Sub
 rem ######################################################################
 Sub genera_variante
+	chiudi_dialoghi
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;genera_variante&quot;)
 End Sub
 rem ######################################################################

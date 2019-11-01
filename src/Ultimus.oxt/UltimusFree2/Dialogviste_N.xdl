@@ -31,7 +31,7 @@
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.Apri_libretto_misure?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton17" dlg:tab-index="6" dlg:left="128" dlg:top="90" dlg:width="80" dlg:height="15" dlg:help-text="&amp;179.Dialogviste_N.CommandButton17.HelpText" dlg:value="&amp;180.Dialogviste_N.CommandButton17.Label" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$set_larghezza_colonne?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.set_larghezza_colonne?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton18" dlg:tab-index="7" dlg:left="-150" dlg:top="-89" dlg:width="87" dlg:height="15" dlg:printable="false" dlg:help-text="&amp;181.Dialogviste_N.CommandButton18.HelpText" dlg:value="&amp;182.Dialogviste_N.CommandButton18.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_2.Imposta_libretto_Cart?language=Basic&amp;location=application" script:language="Script"/>
@@ -43,20 +43,20 @@
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.annulla_tutti_gli_atti?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton2" dlg:tab-index="10" dlg:left="130" dlg:top="47" dlg:width="76" dlg:height="15" dlg:help-text="&amp;197.Dialogviste_N.CommandButton2.HelpText" dlg:value="&amp;198.Dialogviste_N.CommandButton2.Label">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton25" dlg:tab-index="11" dlg:left="9" dlg:top="84" dlg:width="95" dlg:height="15" dlg:help-text="&amp;201.Dialogviste_N.CommandButton25.HelpText" dlg:value="&amp;202.Dialogviste_N.CommandButton25.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Focus.vedi_situazione_contabile?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="6" dlg:id="CommandButton27" dlg:tab-index="12" dlg:left="9" dlg:top="34" dlg:width="95" dlg:height="15" dlg:help-text="&amp;203.Dialogviste_N.CommandButton27.HelpText" dlg:value="&amp;204.Dialogviste_N.CommandButton27.Label">
-   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.azzera_atti?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.azzera_atti?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton22" dlg:tab-index="0" dlg:left="186" dlg:top="160" dlg:width="25" dlg:height="15" dlg:help-text="&amp;205.Dialogviste_N.CommandButton22.HelpText" dlg:default="true" dlg:value="&amp;206.Dialogviste_N.CommandButton22.Label" dlg:button-type="ok" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Viste_0.chiudi_dialoghi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton26" dlg:tab-index="13" dlg:left="154" dlg:top="160" dlg:width="25" dlg:height="15" dlg:help-text="&amp;207.Dialogviste_N.CommandButton26.HelpText" dlg:default="true" dlg:value="&amp;208.Dialogviste_N.CommandButton26.Label" dlg:button-type="cancel" dlg:multiline="true"/>
   <dlg:button dlg:style-id="7" dlg:id="CommandButton28" dlg:tab-index="14" dlg:left="9" dlg:top="155" dlg:width="95" dlg:height="15" dlg:help-text="&amp;517.Dialogviste_N.CommandButton28.HelpText" dlg:value="Trova ricorrenze voci di E.P.">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$trova_ricorrenze?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trova_ricorrenze?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:checkbox dlg:style-id="8" dlg:id="Dettaglio" dlg:tab-index="15" dlg:left="134" dlg:top="72" dlg:width="64" dlg:height="10" dlg:help-text="&amp;610.Dialogviste_N.Dettaglio.HelpText" dlg:value="&amp;611.Dialogviste_N.Dettaglio.Label" dlg:valign="center" dlg:checked="false"/>
   <dlg:text dlg:style-id="7" dlg:id="Label2" dlg:tab-index="16" dlg:left="120" dlg:top="119" dlg:width="40" dlg:height="12" dlg:help-text="&amp;689.Dialogviste_N.Label2.HelpText" dlg:value="&amp;690.Dialogviste_N.Label2.Label" dlg:valign="center"/>
@@ -71,7 +71,7 @@
    <dlg:title dlg:value="&amp;754.Dialogviste_N.FrameControl2.Label"/>
   </dlg:titledbox>
   <dlg:button dlg:style-id="7" dlg:id="CommandButton1" dlg:tab-index="25" dlg:disabled="true" dlg:left="9" dlg:top="133" dlg:width="95" dlg:height="15" dlg:help-text="Pulsante non attivo" dlg:value="Rigenera Formule">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$rigenera_tutte?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.rigenera_tutte?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:titledbox dlg:style-id="10" dlg:id="FrameControl1" dlg:tab-index="26" dlg:left="5" dlg:top="5" dlg:width="104" dlg:height="70" dlg:help-text="&amp;755.Dialogviste_N.FrameControl1.HelpText">
    <dlg:title dlg:value="&amp;756.Dialogviste_N.FrameControl1.Label"/>

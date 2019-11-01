@@ -11,7 +11,7 @@
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton26" dlg:tab-index="1" dlg:left="109" dlg:top="29" dlg:width="90" dlg:height="15" dlg:help-text="&amp;113.DialogViste_EP.CommandButton26.HelpText" dlg:value="&amp;114.DialogViste_EP.CommandButton26.Label" dlg:multiline="true">
-   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$riordina_ElencoPrezzi?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.riordina_ElencoPrezzi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:titledbox dlg:style-id="1" dlg:id="FC_parallelo" dlg:tab-index="5" dlg:left="7" dlg:top="85" dlg:width="86" dlg:height="50" dlg:help-text="&amp;115.DialogViste_EP.FC_parallelo.HelpText">
    <dlg:title dlg:value="&amp;116.DialogViste_EP.FC_parallelo.Label"/>
@@ -34,19 +34,19 @@
   </dlg:button>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton3" dlg:tab-index="12" dlg:left="141" dlg:top="129" dlg:width="25" dlg:height="15" dlg:help-text="&amp;141.DialogViste_EP.CommandButton3.HelpText" dlg:default="true" dlg:value="&amp;142.DialogViste_EP.CommandButton3.Label" dlg:button-type="cancel" dlg:multiline="true"/>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton4" dlg:tab-index="13" dlg:left="109" dlg:top="49" dlg:width="90" dlg:height="15" dlg:help-text="&amp;143.DialogViste_EP.CommandButton4.HelpText" dlg:value="&amp;144.DialogViste_EP.CommandButton4.Label" dlg:multiline="true">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$struttura_Elenco?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.struttura_Elenco?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="3" dlg:id="CommandButton5" dlg:tab-index="14" dlg:left="109" dlg:top="69" dlg:width="90" dlg:height="15" dlg:help-text="&amp;145.DialogViste_EP.CommandButton5.HelpText" dlg:value="&amp;146.DialogViste_EP.CommandButton5.Label">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$cancella_voci_non_usate?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.cancella_voci_non_usate?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="15" dlg:left="109" dlg:top="9" dlg:width="90" dlg:height="15" dlg:help-text="&amp;147.DialogViste_EP.CommandButton2.HelpText" dlg:help-url="Elimina tutte le voci non utilizzate nel documento," dlg:value="&amp;148.DialogViste_EP.CommandButton2.Label">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$inizializza_elenco?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.inizializza_elenco?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton6" dlg:tab-index="16" dlg:left="109" dlg:top="89" dlg:width="90" dlg:height="15" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="&amp;489.DialogViste_EP.CommandButton6.Label">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$richiesta_offerta?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.richiesta_offerta?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="17" dlg:left="109" dlg:top="107" dlg:width="90" dlg:height="15" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="Trova i Nuovi Prezzi">
-   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$trova_np?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trova_np?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>
 </dlg:window>

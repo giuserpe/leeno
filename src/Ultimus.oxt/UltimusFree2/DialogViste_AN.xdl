@@ -11,16 +11,16 @@
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton5" dlg:tab-index="1" dlg:left="105" dlg:top="25" dlg:width="75" dlg:height="15" dlg:help-text="&amp;95.DialogViste_AN.CommandButton5.HelpText" dlg:value="&amp;96.DialogViste_AN.CommandButton5.Label" dlg:multiline="true">
-   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$analisi_in_ElencoPrezzi?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.analisi_in_ElencoPrezzi?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="105" dlg:top="45" dlg:width="75" dlg:height="15" dlg:help-text="&amp;97.DialogViste_AN.CommandButton2.HelpText" dlg:tabstop="true" dlg:value="&amp;98.DialogViste_AN.CommandButton2.Label" dlg:multiline="true">
-   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Main_Riordina_Analisi_Alfabetico?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Main_Riordina_Analisi_Alfabetico?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="3" dlg:left="105" dlg:top="65" dlg:width="75" dlg:height="15" dlg:help-text="&amp;99.DialogViste_AN.CommandButton3.HelpText" dlg:value="&amp;100.DialogViste_AN.CommandButton3.Label" dlg:multiline="true">
-   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Analisi.Genera_LISTA_ANALISI?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="1" dlg:id="CommandButton4" dlg:tab-index="4" dlg:left="105" dlg:top="5" dlg:width="75" dlg:height="15" dlg:help-text="&amp;101.DialogViste_AN.CommandButton4.HelpText" dlg:value="&amp;102.DialogViste_AN.CommandButton4.Label">
-   <script:event script:event-name="on-mousedown" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$tante_analisi_in_ep?language=Python&amp;location=user:uno_packages" script:language="Script"/>
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.tante_analisi_in_ep?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:titledbox dlg:style-id="2" dlg:id="FrameControl2" dlg:tab-index="6" dlg:left="6" dlg:top="115" dlg:width="90" dlg:height="25" dlg:help-text="&amp;103.DialogViste_AN.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;104.DialogViste_AN.FrameControl2.Label"/>

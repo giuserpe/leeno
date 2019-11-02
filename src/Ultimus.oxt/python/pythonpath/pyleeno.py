@@ -8760,19 +8760,17 @@ def make_pack(arg=None, bar=0):
             try:
                 dest = os.getenv("HOME") +'/'+ src_oxt +'/leeno/src/Ultimus.oxt/'
                 os.makedirs(dest)
-                os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/bin/')
+                #~ os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/bin/')
                 os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT')
             except FileExistsError:
                 pass
             nomeZip2= os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO.oxt'
-            binZip = os.getenv("HOME") +'/'+ src_oxt +'/leeno/bin/LeenO.oxt'
             subprocess.Popen('nemo '+ os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT', shell=True, stdout=subprocess.PIPE)
 
         else: 
             nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-            binZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/bin/LeenO.oxt'
             subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
@@ -8786,12 +8784,10 @@ def make_pack(arg=None, bar=0):
         else:
             nomeZip2= 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-            binZip = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/bin/LeenO.oxt'
             subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\', shell=True, stdout=subprocess.PIPE)
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile(nomeZip2, nomeZip)
-    shutil.copyfile(nomeZip2, binZip)
 #######################################################################
 def dlg_attesa(msg=''):
     '''

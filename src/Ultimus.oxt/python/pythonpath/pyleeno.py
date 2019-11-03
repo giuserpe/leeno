@@ -1407,8 +1407,8 @@ def cancella_voci_non_usate(arg=None):
     Cancella le voci di prezzo non utilizzate.
     '''
     chiudi_dialoghi()
-    oDialogo_attesa = dlg_attesa()
-    attesa().start() #mostra il dialogo
+    #~ oDialogo_attesa = dlg_attesa()
+    #~ attesa().start() #mostra il dialogo
 
     if DlgSiNo('''Questo comando ripulisce l'Elenco Prezzi
 dalle voci non utilizzate in nessuno degli altri elaborati.
@@ -1416,7 +1416,7 @@ dalle voci non utilizzate in nessuno degli altri elaborati.
 LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 
 Vuoi procedere comunque?''', 'AVVISO!') == 3:
-        oDialogo_attesa.endExecute() #chiude il dialogo
+        #~ oDialogo_attesa.endExecute() #chiude il dialogo
         return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oDoc.enableAutomaticCalculation(False)
@@ -1456,7 +1456,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oDoc.enableAutomaticCalculation(True)
     oDoc.CurrentController.ZoomValue = zoom
     _gotoCella(0, 3)
-    oDialogo_attesa.endExecute() #chiude il dialogo
+    #~ oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
     
 def voce_breve_ep(arg=None):
@@ -7243,6 +7243,7 @@ Si tenga conto che:
         inizializza_analisi()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in lista_analisi:
+            prezzo_finale = el[-1]
             sStRange = Circoscrive_Analisi(Range2Cell()[1])
             lrow = sStRange.RangeAddress.StartRow + 2
             oSheet.getCellByPosition(0, lrow).String = el[0]
@@ -7253,10 +7254,20 @@ Si tenga conto che:
             for x in el[3]:
                 if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
                     copia_riga_analisi(n)
-                try:
+                #~ try:
+                #~ chi(dict_articoli.get(el[3][y][0]))
+                if dict_articoli.get(el[3][y][0]) != None:
                     oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
-                except:
-                    n = uFindStringCol(el[3][y][1], 1, oSheet, lrow)
+                else:
+                    oSheet.getCellByPosition(0, n).String = ''
+                    oSheet.getCellByPosition(1, n).String = x[1]
+                    oSheet.getCellByPosition(2, n).String = x[2]
+                    oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
+                    oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
+                #~ chi(float(x[4].replace(',','.')))
+                    #~ chi(x)
+                #~ except:
+                    #~ n = uFindStringCol(el[3][y][1], 1, oSheet, lrow)
 
                 if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
                     try:
@@ -7267,6 +7278,8 @@ Si tenga conto che:
                         oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
+            if oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value != prezzo_finale:
+                oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value = prezzo_finale
             inizializza_analisi()
         elimina_voce (ultima_voce(oSheet), 0)
         tante_analisi_in_ep()

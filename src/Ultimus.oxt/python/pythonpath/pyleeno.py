@@ -7254,8 +7254,6 @@ Si tenga conto che:
             for x in el[3]:
                 if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
                     copia_riga_analisi(n)
-                #~ try:
-                #~ chi(dict_articoli.get(el[3][y][0]))
                 if dict_articoli.get(el[3][y][0]) != None:
                     oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
                 else:
@@ -7264,11 +7262,6 @@ Si tenga conto che:
                     oSheet.getCellByPosition(2, n).String = x[2]
                     oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
                     oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
-                #~ chi(float(x[4].replace(',','.')))
-                    #~ chi(x)
-                #~ except:
-                    #~ n = uFindStringCol(el[3][y][1], 1, oSheet, lrow)
-
                 if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
                     try:
                         float (el[3][y][3])
@@ -7515,8 +7508,8 @@ stili_analisi =('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-d
 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco =('EP-Cs', 'EP-aS')
 createUnoService =(
-            #~ uno # protocol heandler
-            XSCRIPTCONTEXT
+            uno # protocol heandler
+            #~ XSCRIPTCONTEXT
             .getComponentContext()
             .getServiceManager()
             .createInstance)
@@ -9455,8 +9448,8 @@ def debug_progressbar (arg=None):
         MsgBox(oDisp)
         oSI.end()
 ########################################################################
-def debug_elimina_voci_doppie (arg=None):
-# ~def debug (arg=None):
+#~ def debug_elimina_voci_doppie (arg=None):
+def debug (arg=None):
     'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
     _gotoSheet('Elenco Prezzi')
@@ -9480,6 +9473,9 @@ def debug_elimina_voci_doppie (arg=None):
             _gotoCella(30, i)
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
+########################################################################
+def debug (arg=None):
+    XPWE_import()
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

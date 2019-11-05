@@ -13,8 +13,10 @@
 &apos;_______________________________________________________________________________________
 &apos;Elenco delle macro che vengono avviate tramite pulsanti nei riquadri di dialogo.
 
-Dim oDialogViste_A as Object
+Dim oDialogViste_N as Object
+
 SUB chiudi_dialoghi &apos; chiude tutte le dialog
+	if Not isNull (oDialogViste_N) then oDialogViste_N.endExecute() 
 Exit Sub 
 			&apos; modificare qui se si aggiungono delle dialog
 	if Not isNull (oDialogViste_A) then

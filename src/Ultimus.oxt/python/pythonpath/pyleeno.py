@@ -1641,8 +1641,8 @@ def scelta_viste(arg=None):
                                     '=IF(R' + str(n) + '-N' + str(n) + '>0;R' + str(n) + '-N' + str(n) + ';"")',
                                     '=IF(R' + str(n) + '-N' + str(n) + '<0;N' + str(n) + '-R' + str(n) + ';"")',
     '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'])
-
                 n += 1
+                oSheet.getCellByPosition(26, 1).Formula ='=IFERROR(IFS(AND(N2>R2;R2=0);-1;AND(N2<R2;N2=0);1;N2=R2;"--";N2>R2;-(N2-R2)/N2;N2<R2;-(N2-R2)/N2);"--")'
                 oSheet.getCellByPosition(26, ER).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>R' + str(n) + ';R' + str(n) + '=0);-1;AND(N' + str(n) + '<R' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=R' + str(n) + ';"--";N' + str(n) + '>R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<R' + str(n) + ';-(N' + str(n) + '-R' + str(n) + ')/N' + str(n) + ');"--")'
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
@@ -1673,6 +1673,7 @@ def scelta_viste(arg=None):
     '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'])
                 n += 1
                 #~ for el in(1, ER+1):
+                oSheet.getCellByPosition(26, 1).Formula ='=IFERROR(IFS(AND(N2>V2;V2=0);-1;AND(N2<V2;N2=0);1;N2=V2;"--";N2>V2;-(N2-V2)/N2;N2<V2;-(N2-V2)/N2);"--")'
                 oSheet.getCellByPosition(26, ER).Formula = '=IFERROR(IFS(AND(N' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(N' + str(n) + '<V' + str(n) + ';N' + str(n) + '=0);1;N' + str(n) + '=V' + str(n) + ';"--";N' + str(n) + '>V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ';N' + str(n) + '<V' + str(n) + ';-(N' + str(n) + '-V' + str(n) + ')/N' + str(n) + ');"--")'
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
@@ -1717,6 +1718,7 @@ def scelta_viste(arg=None):
     '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);1;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'])
                 n += 1
                 #~ for el in(1, ER+1):
+                oSheet.getCellByPosition(26, 1).Formula ='=IFERROR(IFS(AND(R2>V2;V2=0);-1;AND(R2<V2;R2=0);1;R2=V2;"--";R2>V2;-(R2-V2)/R2;R2<V2;-(R2-V2)/R2);"--")'
                 oSheet.getCellByPosition(26, ER).Formula = '=IFERROR(IFS(AND(R' + str(n) + '>V' + str(n) + ';V' + str(n) + '=0);-1;AND(R' + str(n) + '<V' + str(n) + ';R' + str(n) + '=0);1;R' + str(n) + '=V' + str(n) + ';"--";R' + str(n) + '>V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ';R' + str(n) + '<V' + str(n) + ';-(R' + str(n) + '-V' + str(n) + ')/R' + str(n) + ');"--")'
                 oRange = oSheet.getCellRangeByPosition(23, 3, 26, ultima_voce(oSheet))
                 formule = tuple(formule)
@@ -4639,7 +4641,7 @@ def ins_voce_contab(lrow=0, arg=1):
     except:
         pass
     stile = oSheet.getCellByPosition( 0, lrow).CellStyle
-    nSal = 1
+    nSal = 0
     if stile == 'comp Int_colonna_R_prima':
         lrow += 1
     elif stile =='Ultimus_centro_bordi_lati':

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import argparse, os, zipfile
@@ -15,7 +15,7 @@ def compress():
     """
     Compress all directory under src in LeenO.oxt extension for LibreOffice
     """
-    for rootname in os.walk('src').next()[1]:
+    for rootname in os.walk('src').__next__()[1]:
         archname = 'LeenO.oxt'
         fileName, fileExtension = os.path.splitext(archname)
         if args.version:

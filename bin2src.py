@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 import os, zipfile
@@ -7,7 +7,7 @@ def extract():
     """
     Extract all archives in bin directory under src.
     """
-    for dirname, dirnames, filenames in os.walk('bin'):            
+    for dirname, dirnames, filenames in os.walk('bin'):
         for filename in filenames:
             directory = filename
             path = os.path.join('src', directory)

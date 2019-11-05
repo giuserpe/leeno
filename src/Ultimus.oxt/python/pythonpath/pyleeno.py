@@ -1484,7 +1484,7 @@ def scelta_viste(arg=None):
     Elenco Prezzi, COMPUTO, VARIANTE, CONTABILITA'
     Genera i raffronti tra COMPUTO e VARIANTE e CONTABILITA'
     '''
-    refresh(0)
+    #~ refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     psm = uno.getComponentContext().ServiceManager
@@ -4732,7 +4732,7 @@ def attiva_contabilita(arg=None):
             for el in('Registro', 'SAL','CONTABILITA'):
                 if oDoc.Sheets.hasByName(el):_gotoSheet(el)
         else:
-            oDoc.Sheets.insertNewByName('CONTABILITA',3)
+            oDoc.Sheets.insertNewByName('CONTABILITA',4)
             _gotoSheet('CONTABILITA')
             svuota_contabilita()
             ins_voce_contab()

@@ -7510,8 +7510,8 @@ stili_analisi =('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-d
 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco =('EP-Cs', 'EP-aS')
 createUnoService =(
-            #~ uno # protocol heandler
-            XSCRIPTCONTEXT
+            uno # protocol heandler
+            #~ XSCRIPTCONTEXT
             .getComponentContext()
             .getServiceManager()
             .createInstance)

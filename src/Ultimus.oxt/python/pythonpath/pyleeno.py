@@ -9476,9 +9476,6 @@ def debug (arg=None):
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
 ########################################################################
-def debug (arg=None):
-    XPWE_import()
-########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())
 ########################################################################

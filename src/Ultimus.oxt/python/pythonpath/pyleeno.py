@@ -7540,7 +7540,10 @@ def ssUltimus(arg=None):
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
         salva_come()
         autoexec()
-    sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
+    try:
+        sUltimus = uno.fileUrlToSystemPath(oDoc.getURL())
+    except:
+        pass
     DlgMain()
     return
 ########################################################################

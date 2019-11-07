@@ -7502,7 +7502,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 20 #'NUOVE FUNZIONALITA'
-Lsubv= "0" #'CORREZIONE BUGS
+Lsubv= "0.dev" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
@@ -9452,6 +9452,7 @@ def debug_progressbar (arg=None):
 ########################################################################
 #~ def debug_elimina_voci_doppie (arg=None):
 def debug (arg=None):
+    chi('prova')
     'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
     _gotoSheet('Elenco Prezzi')

@@ -7525,12 +7525,14 @@ codice_da_cercare = ''
 sUltimus = ''
 ########################################################################
 def ssUltimus(arg=None):
-    oDlgMain.endExecute()
+    try:
+        oDlgMain.endExecute()
+    except NameError:
+        pass
     '''
     Scrive la variabile globale che individua il Documento Principale (DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
     '''
-    
     global sUltimus
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('M1') == False:

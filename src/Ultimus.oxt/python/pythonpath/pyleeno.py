@@ -8466,8 +8466,8 @@ def DlgMain(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
-    x = Range2Cell()[0]
-    y = Range2Cell()[1]
+    #~ x = Range2Cell()[0]
+    #~ y = Range2Cell()[1]
     if oDoc.getURL() != '':
         for el in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
             try:
@@ -8553,7 +8553,7 @@ def DlgMain(arg=None):
     #~ sString = oDlgMain.getControl("ComboBox1")
     #~ sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
     oDlgMain.getControl('CheckBox1').State = int(conf.read(path_conf, 'Generale', 'dialogo'))
-    _gotoCella(x, y)
+    #~ _gotoCella(x, y)
     oDlgMain.execute()
     if oDlgMain.getControl('CheckBox1').State == 1:
         conf.write(path_conf, 'Generale', 'dialogo', '1')
@@ -8699,7 +8699,7 @@ def toolbar_vedi(arg=None):
         elif nSheet in('COMPUTO','VARIANTE','CONTABILITA'):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
-        fissa()
+        #~ fissa()
     except:
         pass
 ########################################################################
@@ -9123,6 +9123,8 @@ def sistema_pagine (arg=None):
     Configura intestazioni e pie' di pagina degli stili di stampa
     e propone un'anteprima
     '''
+    basic_LeenO('Finale.Set_Area_Stampa_N')
+    basic_LeenO('Finale.Pulisci_Tabella_Tutta')
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('M1') == False:
         return

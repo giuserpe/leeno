@@ -7502,7 +7502,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 20 #'NUOVE FUNZIONALITA'
-Lsubv= "0.dev" #'CORREZIONE BUGS
+Lsubv= "1" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
@@ -7525,10 +7525,6 @@ codice_da_cercare = ''
 sUltimus = ''
 ########################################################################
 def ssUltimus(arg=None):
-    try:
-        oDlgMain.endExecute()
-    except NameError:
-        pass
     '''
     Scrive la variabile globale che individua il Documento Principale (DCC)
     che è il file a cui giungono le voci di prezzo inviate da altri file
@@ -7537,6 +7533,10 @@ def ssUltimus(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('M1') == False:
         return
+    try:
+        oDlgMain.endExecute()
+    except NameError:
+        pass
     if len(oDoc.getURL()) == 0:
         MsgBox('''Prima di procedere, devi salvare il lavoro!
 Provvedi subito a dare un nome al file di computo...''', 'Dai un nome al file...')
@@ -9506,7 +9506,6 @@ def hl (arg=None):
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())
-########################################################################
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
 #~ g_exportedScripts = analisi_in_ElencoPrezzi,

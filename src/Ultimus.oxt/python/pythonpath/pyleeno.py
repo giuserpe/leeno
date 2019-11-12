@@ -9484,6 +9484,26 @@ def debug (arg=None):
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
 ########################################################################
+def hl (arg=None):
+#~ def debug (arg=None):
+    '''
+    Sostituisce hiperlink alla stringa nella colonna B, se questa è un
+    indirizzo di file o cartella
+    '''
+    #~ chi("W:\_dwg\207\M01-iacovone\CANTIERE\ELLEVI\LAVORI\FOTO\20191030\photo_2019-10-30_19-05-02.jpg"[1])
+    #~ return
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for el in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
+        try:
+            if oSheet.getCellByPosition(1, el).String[1] == ':':
+                stringa='=HYPERLINK("' + oSheet.getCellByPosition(1, el).String + '";"FOTO")'
+                #~ oDoc.CurrentController.select(oSheet.getCellByPosition(1, el))
+                #~ chi(stringa)
+                oSheet.getCellByPosition(1, el).Formula = stringa
+        except:
+            pass
+########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())
 ########################################################################

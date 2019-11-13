@@ -3509,13 +3509,11 @@ def ricicla_misure(arg=None):
             ###
         except:
             pass
-
         lrow = Range2Cell()[1]
         if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_contab + ('comp Int_colonna_R_prima',): return
         ins_voce_contab(arg = 0)
         cerca_partenza()
         _gotoSheet(conf.read(path_conf, 'Contabilità', 'ricicla_da'))
-
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = Range2Cell()[1]
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
@@ -3524,6 +3522,7 @@ def ricicla_misure(arg=None):
 
         oSrc = oSheet.getCellRangeByPosition(2, sopra, 8, sotto).getRangeAddress()
         try:
+            partenza
             oDest = oDoc.getSheets().getByName('CONTABILITA')
         except:
             return
@@ -7505,7 +7504,7 @@ Lminor= 20 #'NUOVE FUNZIONALITA'
 Lsubv= "1.dev" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
-stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R')
+stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R','Comp TOTALI')
 stili_analisi =('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc',
 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco =('EP-Cs', 'EP-aS')

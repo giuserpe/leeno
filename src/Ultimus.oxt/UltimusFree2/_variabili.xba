@@ -23,7 +23,7 @@ rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
 Public Const Lmajor= 3			&apos;INCOMPATIBILITA&apos;
 Public Const Lminor= 20			&apos;NUOVE FUNZIONALITA&apos;
-Public Const Lsubv= &quot;1&quot;		&apos;CORREZIONE BUGS
+Public Const Lsubv= &quot;1.dev&quot;		&apos;CORREZIONE BUGS
 Sub setta_versione
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = Lmajor
 &apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = Lminor

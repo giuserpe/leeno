@@ -4,7 +4,7 @@
 import argparse, os, zipfile
 
 with open('src/Ultimus.oxt/leeno_version_code', 'r') as file:
-    last_version = file.read()
+    last_version = file.read().rstrip()
 
 parser = argparse.ArgumentParser(description='Process some integers.')
 parser.add_argument('-e', '--ext', default='oxt')

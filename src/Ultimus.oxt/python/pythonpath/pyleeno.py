@@ -111,7 +111,6 @@ def nuovo_usobollo(arg=None):
     New_file.usobollo()
 ########################################################################
 def invia_voce(arg=None):
-# ~def debug(arg=None):
     '''
     Invia le voci di computo, elenco prezzi e analisi, con costi elementari,
     dal documento corrente al Documento Principale.
@@ -122,10 +121,10 @@ def invia_voce(arg=None):
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     if fpartenza == sUltimus:
-        MsgBox("Questo file coincide con il Documento Principale (DCC).", "Attenzione!")
+        MsgBox("Questo file coincide con il Documento Principale (DP).", "Attenzione!")
         return
     elif sUltimus == '':
-        MsgBox("E' necessario impostare il Documento Principale (DCC).", "Attenzione!")
+        MsgBox("E' necessario impostare il Documento Principale (DP).", "Attenzione!")
         return
     nSheetDCC = getDCCSheet()
     lrow = Range2Cell()[1]
@@ -225,14 +224,14 @@ def invia_voce(arg=None):
         if nome in ('Elenco Prezzi'):
             ddcDoc.CurrentController.setActiveSheet(dccSheet)
             _gotoCella(0, 3)
-            paste_clip(1)
+            paste_clip(insCells=1)
             #~ doppioni()
         if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             dccSheet.IsVisible = True
             ddcDoc.CurrentController.setActiveSheet(dccSheet)
             _gotoCella(0, 3)
-            paste_clip(1)
+            paste_clip(insCells=1)
             #~ doppioni()
             _gotoDoc(sUltimus)
             ddcDoc = XSCRIPTCONTEXT.getDocument()
@@ -296,7 +295,7 @@ def invia_voce(arg=None):
             else:
                 lrow = next_voice(Range2Cell()[1], 1)
             _gotoCella(0, lrow)
-            paste_clip(1)
+            paste_clip(insCells=1)
             numera_voci(1)
             last = lrow+ER-SR+1
             while lrow < last:
@@ -323,9 +322,7 @@ def invia_voce(arg=None):
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             _gotoSheet('Elenco Prezzi')
             _gotoCella(0, 4)
-            #~ chi(('stop', ddcDoc.getURL()) )
-
-            paste_clip(1)
+            paste_clip(insCells=1)
             #~ doppioni()
         if nSheetDCC in ('Elenco Prezzi'):
             MsgBox("Non è possibile inviare voci da un COMPUTO all'Elenco Prezzi.")
@@ -349,7 +346,7 @@ def invia_voce(arg=None):
         ddcDoc = XSCRIPTCONTEXT.getDocument()
         inizializza_analisi()
         _gotoCella(0, 0)
-        paste_clip(1)
+        paste_clip(insCells=1)
         tante_analisi_in_ep()
     except:
         pass
@@ -1980,6 +1977,8 @@ def doppioni(arg=None):
     oRangeAddress=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRangeAddress.StartRow+1
     ER = oRangeAddress.EndRow-1
+    if ER < SR:
+        return
     oRange = oSheet.getCellRangeByPosition(0, SR, 7, ER)
     lista_come_array = tuple(set(oRange.getDataArray()))
     # ~chi ([len(lista_come_array),(lista_come_array)])
@@ -8473,7 +8472,7 @@ def DlgMain(arg=None):
                 oSheet = oDoc.Sheets.getByName(el)
                 if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
                     oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777
-                    oSheet.getCellRangeByName("A1").String = 'DCC'
+                    oSheet.getCellRangeByName("A1").String = 'DP'
                 else:
                     oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
                     oSheet.getCellRangeByName("A1").String = '' 
@@ -9470,7 +9469,7 @@ def debug (arg=None):
     oDoc.CurrentController.select(oSheet.getCellByPosition(30, 3))
     copy_clip()
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(30, 3, 30, fine))
-    paste_clip(1)
+    paste_clip(insCells=1)
     # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     # ~for i in range (3, fine):
         # ~oSheet.getCellByPosition(30, i).Formula = '=IF(A' + str(i+1) + '=A' + str(i) + ';1;0)'

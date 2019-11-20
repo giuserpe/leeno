@@ -71,7 +71,7 @@
   <dlg:titledbox dlg:style-id="10" dlg:id="FrameControl2" dlg:tab-index="24" dlg:left="128" dlg:top="16" dlg:width="80" dlg:height="60" dlg:help-text="&amp;753.Dialogviste_N.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;754.Dialogviste_N.FrameControl2.Label"/>
   </dlg:titledbox>
-  <dlg:button dlg:style-id="7" dlg:id="CommandButton1" dlg:tab-index="25" dlg:disabled="true" dlg:left="9" dlg:top="144" dlg:width="95" dlg:height="15" dlg:help-text="Pulsante non attivo" dlg:value="Rigenera Formule">
+  <dlg:button dlg:style-id="7" dlg:id="CommandButton1" dlg:tab-index="25" dlg:left="9" dlg:top="144" dlg:width="95" dlg:height="15" dlg:help-text="Pulsante non attivo" dlg:value="Rigenera Formule">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.rigenera_tutte?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:titledbox dlg:style-id="10" dlg:id="FrameControl1" dlg:tab-index="26" dlg:left="5" dlg:top="16" dlg:width="104" dlg:height="70" dlg:help-text="&amp;755.Dialogviste_N.FrameControl1.HelpText">

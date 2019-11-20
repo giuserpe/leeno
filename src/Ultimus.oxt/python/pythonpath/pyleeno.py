@@ -4330,20 +4330,6 @@ def rigenera_voce(lrow=None):
             oSheet.getCellByPosition(36, sotto).Formula = '=IF(ISERROR(S'+ str(sotto+1) +');"";IF(S'+ str(sotto+1) +'<>"";S'+ str(sotto+1) +';""))'
             if 'comp 1-a' in (oSheet.getCellByPosition(2, n).CellStyle): # and oSheet.getCellByPosition(9, n).Type.value != 'FORMULA':
                 oSheet.getCellByPosition(9, n).Formula = '=IF(PRODUCT(E' + str(n+1) + ':I' + str(n+1) + ')=0;"";PRODUCT(E' + str(n+1) + ':I' + str(n+1) + '))'
-
-            for x in range(sopra+1, sotto-1):
-                if 'comp 1-a' in oSheet.getCellByPosition(2, x).CellStyle:
-                    if oSheet.getCellByPosition(9, x).Value < 0:
-                        oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a ROSSO'
-                        oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU ROSSO'
-                        oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG ROSSO'
-                        oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG ROSSO'
-                        oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso ROSSO'
-                    else:
-                        oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU'
-                        oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG'
-                        oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG'
-                        oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso'
  
         if oSheet.Name in('CONTABILITA'):
             oSheet.getCellByPosition(2,sopra+1).Formula = '=IF(LEN(VLOOKUP(B'+ str(sopra+2) +';elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B'+ str(sopra+2) +';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B'+ str(sopra+2) +';elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B'+ str(sopra+2) +';elenco_prezzi;2;FALSE());$S1.$H$336)))'
@@ -4361,43 +4347,7 @@ def rigenera_voce(lrow=None):
             oSheet.getCellByPosition(30, sotto).Formula = '=IF(AD' + str(sotto+1) + '<>""; PRODUCT(AD' + str(sotto+1) + '*P' + str(sotto+1) + '))'
             oSheet.getCellRangeByName('A2').Formula = '=P2'
             oSheet.getCellByPosition(9, sotto-1).CellStyle = 'Comp-Variante num sotto'
-            for x in range (sopra+1, sotto-1):
-                if 'comp 1-a' in oSheet.getCellByPosition(2, x).CellStyle:
-                    oSheet.getCellByPosition(9, x).CellStyle = 'Blu'
-                    oSheet.getCellByPosition(11, x).CellStyle = 'Blu ROSSO'
-                    oSheet.getCellByPosition(13, sotto).CellStyle = 'comp sotto Unitario'
-                    oSheet.getCellByPosition(15, sotto).CellStyle = 'comp sotto Euro Originale'
-                    oSheet.getCellByPosition(17, sotto).CellStyle = 'comp sotto Euro Originale'
-                    oSheet.getCellByPosition(11, sotto-1).CellStyle = 'Comp-Variante num sotto ROSSO'
-            oSheet.getCellByPosition(28,sotto).CellStyle = 'Comp-sotto euri'
 
-            for x in range (sopra+2, sotto-1):
-                test = 0
-                for y in range (2, 8):
-                    if oSheet.getCellByPosition(y, x).String != '':
-                        test = 1
-                        break
-                rosso = 0
-                for y in range (2, 8):
-                    if 'ROSSO' in oSheet.getCellByPosition(y, x).CellStyle:
-                        rosso = 1
-                        break
-                if str(test)+str(rosso) == '10':
-                    oSheet.getCellByPosition(9, x).Formula ='=IF(PRODUCT(E' + str(x+1) + ':I' + str(x+1) + ')=0;"";PRODUCT(E' + str(x+1) + ':I' + str(x+1) + '))'
-                    oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a'
-                    oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU'
-                    oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG'
-                    oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG'
-                    oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso'
-                    oSheet.getCellByPosition(11, x).String = ''
-                if str(test)+str(rosso) == '11':
-                    oSheet.getCellByPosition(11, x).Formula ='=IF(PRODUCT(E' + str(x+1) + ':I' + str(x+1) + ')=0;"";PRODUCT(E' + str(x+1) + ':I' + str(x+1) + '))'
-                    oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a ROSSO'
-                    oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU ROSSO'
-                    oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG ROSSO'
-                    oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG ROSSO'
-                    oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso ROSSO'
-                    oSheet.getCellByPosition(9, x).String = ''
 ########################################################################
 def sistema_stili(lrow=None):
     '''
@@ -4416,6 +4366,7 @@ def sistema_stili(lrow=None):
     if oSheet.Name in('COMPUTO', 'VARIANTE'):
         for x in range(sopra+1, sotto-1):
             if 'comp 1-a' in oSheet.getCellByPosition(2, x).CellStyle:
+                oSheet.getCellByPosition(9, x).CellStyle = 'Blu'
                 if oSheet.getCellByPosition(9, x).Value < 0:
                     oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a ROSSO'
                     oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU ROSSO'
@@ -4423,6 +4374,7 @@ def sistema_stili(lrow=None):
                     oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG ROSSO'
                     oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso ROSSO'
                 else:
+                    oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a'
                     oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU'
                     oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG'
                     oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG'
@@ -4445,9 +4397,7 @@ def sistema_stili(lrow=None):
                 oSheet.getCellByPosition(9, x).CellStyle = 'Blu'
             elif oSheet.getCellByPosition(2, x).CellStyle == 'comp sotto centro': #parziale
                 oSheet.getCellByPosition(9, x).CellStyle = 'Comp-Variante num sotto'
-            # ~ elif oSheet.getCellByPosition(2, x).CellStyle == 'comp sotto centro_R':
-                # ~ oSheet.getCellByPosition(9, x).CellStyle = 'Comp-Variante num sotto'
-                
+ 
         for x in range (sopra+2, sotto-1):
             test = 0
             for y in range (2, 8):

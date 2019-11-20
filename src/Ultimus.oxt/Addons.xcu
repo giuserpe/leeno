@@ -1429,7 +1429,7 @@
               <value>%origin%/icons/supcat</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
-              <value>Inserisci Categoria</value>
+              <value>Inserisci SuperCategoria</value>
             </prop>
             <prop oor:name="Target" oor:type="xs:string">
               <value>_self</value>

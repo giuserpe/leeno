@@ -66,7 +66,7 @@
   </dlg:combobox>
   <dlg:text dlg:style-id="0" dlg:id="Label11" dlg:tab-index="25" dlg:left="140" dlg:top="-26" dlg:width="80" dlg:height="10" dlg:help-text="&amp;391.DlgMain.Label11.HelpText" dlg:value="&amp;392.DlgMain.Label11.Label" dlg:valign="center"/>
   <dlg:text dlg:style-id="0" dlg:id="Label13" dlg:tab-index="26" dlg:left="6" dlg:top="9" dlg:width="25" dlg:height="10" dlg:help-text="&amp;393.DlgMain.Label13.HelpText" dlg:value="&amp;394.DlgMain.Label13.Label" dlg:valign="center"/>
-  <dlg:text dlg:style-id="2" dlg:id="Label12" dlg:tab-index="9" dlg:left="211" dlg:top="38" dlg:width="60" dlg:height="10" dlg:help-text="&amp;417.DlgMain.Label12.HelpText" dlg:value="&amp;418.DlgMain.Label12.Label" dlg:valign="center"/>
+  <dlg:text dlg:style-id="2" dlg:id="Label12" dlg:tab-index="9" dlg:left="211" dlg:top="38" dlg:width="60" dlg:height="10" dlg:help-text="&amp;417.DlgMain.Label12.HelpText" dlg:value="&amp;418.DlgMain.Label12.Label" dlg:valign="center" dlg:tabstop="false"/>
   <dlg:text dlg:style-id="6" dlg:id="Label1" dlg:tab-index="20" dlg:left="209" dlg:top="217" dlg:width="61" dlg:height="8" dlg:help-text="&amp;419.DlgMain.Label1.HelpText" dlg:value="&amp;420.DlgMain.Label1.Label" dlg:align="right" dlg:valign="center">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:LeenO.oxt|pyLeenO|pyleeno.py$Vai_a_S1?language=Python&amp;location=user:uno_packages" script:language="Script"/>
   </dlg:text>

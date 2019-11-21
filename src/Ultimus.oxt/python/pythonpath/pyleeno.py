@@ -8492,10 +8492,32 @@ def scegli_elaborato(titolo):
     return elaborato
 ########################################################################
 def chiudi_dialoghi(event=None):
+    return
     if event:
         event.Source.Context.endExecute()
     return
 ########################################################################
+def dp (arg=None):
+    '''
+    Indica qual'è il Documento Principale
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    try:
+        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+            return
+    except:
+        return
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
+        try:
+            oSheet = oDoc.Sheets.getByName(el)
+            oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
+            if oSheet.Name == 'Elenco Prezzi':
+                oSheet.getCellRangeByName("A1").String = 'DP: ' + sUltimus
+            oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
+        except:
+            pass
+####
 def DlgMain(arg=None):
     '''
     Visualizza il menù principaledialog_fil
@@ -8506,15 +8528,14 @@ def DlgMain(arg=None):
     #~ x = Range2Cell()[0]
     #~ y = Range2Cell()[1]
     if oDoc.getURL() != '':
-        for el in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
+        for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
             try:
                 oSheet = oDoc.Sheets.getByName(el)
                 if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
                     oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777
-                    oSheet.getCellRangeByName("A1").String = 'DP'
-                else:
-                    oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
-                    oSheet.getCellRangeByName("A1").String = '' 
+                    if oSheet.Name == 'Elenco Prezzi':
+                        oSheet.getCellRangeByName("A1").String = 'DP'
+                    oSheet.getCellRangeByName("F1").String = 'DP'
             except:
                 pass
     if oDoc.getSheets().hasByName('S2') == False:
@@ -8592,6 +8613,8 @@ def DlgMain(arg=None):
     oDlgMain.getControl('CheckBox1').State = int(conf.read(path_conf, 'Generale', 'dialogo'))
     #~ _gotoCella(x, y)
     oDlgMain.execute()
+    sString = oDlgMain.getControl("Label_DDC").Text
+
     if oDlgMain.getControl('CheckBox1').State == 1:
         conf.write(path_conf, 'Generale', 'dialogo', '1')
         #~ sString = oDlgMain.getControl("ComboBox1")
@@ -8712,6 +8735,7 @@ def w_version_code(arg=None):
     return str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv +'-'+ tempo[:-2]
 ########################################################################
 def toolbar_vedi(arg=None):
+    dp()
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -9544,7 +9568,8 @@ def hl (arg=None):
 def debug (arg=None):
     # ~ adegua_tmpl()
     # ~ rigenera_tutte()
-    sistema_stili()
+    # ~ sistema_stili()
+    hl()
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

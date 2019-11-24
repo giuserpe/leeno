@@ -3179,12 +3179,11 @@ def seleziona(lrow=None):
             ER = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
     return oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 50, ER))
 ########################################################################
-def elimina_voce(lrow=None, msg=1):
+def seleziona_voce(lrow=None):
     '''
-    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+    Restutisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
+    CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
-    msg  { bit }   : 1 chiedi conferma con messaggio
-                     0 egegui senza conferma
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -3213,20 +3212,35 @@ def elimina_voce(lrow=None, msg=1):
     sStRange.RangeAddress
     SR = sStRange.RangeAddress.StartRow
     ER = sStRange.RangeAddress.EndRow
+    # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    return (SR, ER)
+########################################################################
+def elimina_voce(lrow=None, msg=1):
+    '''
+    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+    lrow { long }  : numero riga
+    msg  { bit }   : 1 chiedi conferma con messaggio
+                     0 egegui senza conferma
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    SR = seleziona_voce()[0]
+    ER = seleziona_voce()[1]
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
-    #~ return
     if msg==1:
         if DlgSiNo("""OPERAZIONE NON ANNULLABILE!
         
 Stai per eliminare la voce selezionata.
 Vuoi Procedere?
  """,'AVVISO!') ==2:
-            oSheet.getRows().removeByIndex(SR, ER-SR+1)
+            delete ('R')
+            # ~ oSheet.getRows().removeByIndex(SR, ER-SR+1)
             numera_voci(0)
         else:
             return
     elif msg==0:
-        oSheet.getRows().removeByIndex(SR, ER-SR+1)
+        delete ('R')
+        # ~ oSheet.getRows().removeByIndex(SR, ER-SR+1)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 ########################################################################
 def copia_riga_computo(lrow):
@@ -9564,12 +9578,68 @@ def hl (arg=None):
                 oSheet.getCellByPosition(1, el).Formula = stringa
         except:
             pass
+def filtro_descrizione (arg=None):
+    '''
+    Raggruppa e nasconde tutte le voci di misura in cui non compare
+    la stringa cercata.
+    '''
+    struttura_off()
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    fine = getLastUsedCell(oSheet).EndRow+1
+    el_y = list()
+    descrizione = InputBox(t='Inserisci la descrizione da cercare.')
+    y = 4
+    while y < fine:
+        if uFindStringCol(descrizione, 2, oSheet, y):
+            y = uFindStringCol(descrizione, 2, oSheet, y)
+            el_y.append(seleziona_voce(y))
+            y = next_voice(seleziona_voce(y)[1])
+            y += 1
+        y += 1
+        
+    lista_y = list()
+    lista_y.append (3)
+    for el in el_y:
+        y = el[0]
+        lista_y.append(y)
+        y = el[1]
+        lista_y.append(y)
+    lista_y.append(fine-3)
+    i = 0
+    while len(lista_y[i:])>1:
+        SR = lista_y[i:][0]+1
+        ER = lista_y[i:][1]
+        if ER > SR:
+            oCellRangeAddr.StartRow = SR
+            oCellRangeAddr.EndRow = ER-1
+            oSheet.group(oCellRangeAddr,1)
+            oSheet.getCellRangeByPosition(0, SR, 0, ER-1).Rows.IsVisible=False
+            # ~ chi(lista_y[i:])
+        i += 2
+        
+    # ~ chi(lista_y)
+    # ~ chi(lista_y[100:])
+    
+    # ~ for el in el_y:
+
+
 ########################################################################
 def debug (arg=None):
+    filtro_descrizione()
+    return
     # ~ adegua_tmpl()
     # ~ rigenera_tutte()
     # ~ sistema_stili()
-    hl()
+    # ~ hl()
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = getLastUsedCell(oSheet).EndRow+1
+    for i in range (0, fine):
+        chi(oSheet.getCellByPosition(0, i).String)
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

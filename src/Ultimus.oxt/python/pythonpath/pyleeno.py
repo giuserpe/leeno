@@ -9578,6 +9578,7 @@ def hl (arg=None):
                 oSheet.getCellByPosition(1, el).Formula = stringa
         except:
             pass
+########################################################################
 def filtro_descrizione (arg=None):
     '''
     Raggruppa e nasconde tutte le voci di misura in cui non compare
@@ -9596,13 +9597,14 @@ def filtro_descrizione (arg=None):
     while y < fine:
         if uFindStringCol(descrizione, 2, oSheet, y):
             y = uFindStringCol(descrizione, 2, oSheet, y)
+            oSheet.getCellByPosition (2, y).CellBackColor = 15757935
             el_y.append(seleziona_voce(y))
             y = next_voice(seleziona_voce(y)[1])
             y += 1
         y += 1
         
     lista_y = list()
-    lista_y.append (3)
+    lista_y.append (2)
     for el in el_y:
         y = el[0]
         lista_y.append(y)
@@ -9618,23 +9620,15 @@ def filtro_descrizione (arg=None):
             oCellRangeAddr.EndRow = ER-1
             oSheet.group(oCellRangeAddr,1)
             oSheet.getCellRangeByPosition(0, SR, 0, ER-1).Rows.IsVisible=False
-            # ~ chi(lista_y[i:])
         i += 2
-        
-    # ~ chi(lista_y)
-    # ~ chi(lista_y[100:])
-    
-    # ~ for el in el_y:
-
-
 ########################################################################
 def debug (arg=None):
     filtro_descrizione()
-    return
     # ~ adegua_tmpl()
     # ~ rigenera_tutte()
     # ~ sistema_stili()
     # ~ hl()
+    return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = getLastUsedCell(oSheet).EndRow+1

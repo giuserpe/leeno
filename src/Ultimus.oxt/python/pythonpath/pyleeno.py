@@ -7360,16 +7360,28 @@ Si tenga conto che:
             y = 0
             n = lrow + 2
             for x in el[3]:
-                if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
+                # ~if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
+                    # ~copia_riga_analisi(n)
+                if el[3][y][1] in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
+                    SR=seleziona_voce(n)[0]
+                    n = uFindStringCol(el[3][y][1], 1, oSheet, start=SR)
+
+                else:
                     copia_riga_analisi(n)
+                
                 if dict_articoli.get(el[3][y][0]) != None:
                     oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
                 else:
+                    
                     oSheet.getCellByPosition(0, n).String = ''
                     oSheet.getCellByPosition(1, n).String = x[1]
                     oSheet.getCellByPosition(2, n).String = x[2]
-                    oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
-                    oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
+                    if x[3] !='':
+                        oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
+                    if x[4] !='':
+                        oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
+
+
                 if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
                     try:
                         float (el[3][y][3])

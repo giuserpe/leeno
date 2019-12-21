@@ -62,9 +62,9 @@
         <!--CTRL-6-->
         <node oor:name="6_MOD1" oor:op="replace">
           <prop oor:name="Command">
-<!--
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
--->
+            <!--
+                 <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
+            -->
             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Vai_a_S2?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
@@ -81,20 +81,19 @@
           </prop>
         </node>
         <!--CTRL-D-->
-<!--
-        <node oor:name="D_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$ctrl_d?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="D_MOD1" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$ctrl_d?language=Python&amp;location=user:uno_packages</value>
+             </prop>
+             </node>
+        -->
         <!--CTRL-X-->
         <node oor:name="X_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$taglia_x?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
-        
         <!--CTRL-INS-->
         <node oor:name="INSERT_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -102,13 +101,13 @@
           </prop>
         </node>
         <!--CTRL-TAB-->
-<!--
-        <node oor:name="TAB_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Pulizia_0.SegnaManinaVociUsat?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="TAB_MOD1" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Pulizia_0.SegnaManinaVociUsat?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--SHIFT-F1-->
         <node oor:name="F1_SHIFT" oor:op="replace">
           <prop oor:name="Command">
@@ -151,6 +150,12 @@
         <node oor:name="C_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$numera_colonna?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+        </node>
+        <!--CTRL-SHIFT-D-->
+        <node oor:name="D_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command">
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$filtro_descrizione?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-E *** VOCE AZZERATA *** -->
@@ -243,63 +248,68 @@
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
           </prop>
         </node>
-
+        <!--SHIFT-ALT-F-->
+        <node oor:name="F_SHIFT_MOD2" oor:op="replace">
+          <prop oor:name="Command" oor:op="fuse">
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$hl?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+        </node>
         <!--ALT-0-->
-<!--
-        <node oor:name="0_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="0_MOD2" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Altre_Opz?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--ALT-1-->
-<!--
-        <node oor:name="1_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Elenco_Prezzi?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="1_MOD2" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Elenco_Prezzi?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--ALT-2-->
-<!--
-        <node oor:name="2_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="2_MOD2" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_analisi?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--ALT-3-->
-<!--
-        <node oor:name="3_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Computo?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="3_MOD2" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_Computo?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--ALT-4-->
-<!--
-        <node oor:name="4_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Vai_Dati_Computo?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="4_MOD2" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Vai_Dati_Computo?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--ALT-5-->
-<!--
-        <node oor:name="5_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="5_MOD2" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_CONTABILITA?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--ALT-6-->
-<!--
-        <node oor:name="6_MOD2" oor:op="replace">
-          <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
-          </prop>
-        </node>
--->
+        <!--
+             <node oor:name="6_MOD2" oor:op="replace">
+             <prop oor:name="Command">
+             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
+             </prop>
+             </node>
+        -->
         <!--ALT-P-->
         <node oor:name="P_MOD2" oor:op="replace">
           <prop oor:name="Command">
@@ -333,14 +343,16 @@
     <!--
          Modules
     -->
-    <node oor:name="Modules">
-      <node oor:name="com.sun.star.text.TextDocument" oor:op="replace">
-        <node oor:name="F8_SHIFT_MOD1" oor:op="replace">
-          <prop oor:name="Command">
-            <value>.uno:SelectionModeBlock</value>
-          </prop>
-        </node>
-      </node>
-    </node>
+    <!--
+         <node oor:name="Modules">
+         <node oor:name="com.sun.star.text.TextDocument" oor:op="replace">
+         <node oor:name="F8_SHIFT_MOD1" oor:op="replace">
+         <prop oor:name="Command">
+         <value>.uno:SelectionModeBlock</value>
+         </prop>
+         </node>
+         </node>
+         </node>
+    -->
   </node>
 </oor:component-data>

@@ -354,7 +354,8 @@ def invia_voce(arg=None):
     _gotoDoc(fpartenza)
     _gotoSheet(nSheet)
     _gotoDoc(sUltimus)
-    doppioni()
+    if DlgSiNo("Ricerco ed elimino le voci di prezzo duplicate?") == 2:
+        doppioni()
     adatta_altezza_riga('Elenco Prezzi')
     _gotoSheet(nSheetDCC)
     # ~refresh(1)
@@ -7360,28 +7361,16 @@ Si tenga conto che:
             y = 0
             n = lrow + 2
             for x in el[3]:
-                # ~if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
-                    # ~copia_riga_analisi(n)
-                if el[3][y][1] in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
-                    SR=seleziona_voce(n)[0]
-                    n = uFindStringCol(el[3][y][1], 1, oSheet, start=SR)
-
-                else:
+                if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
                     copia_riga_analisi(n)
-                
                 if dict_articoli.get(el[3][y][0]) != None:
                     oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
                 else:
-                    
                     oSheet.getCellByPosition(0, n).String = ''
                     oSheet.getCellByPosition(1, n).String = x[1]
                     oSheet.getCellByPosition(2, n).String = x[2]
-                    if x[3] !='':
-                        oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
-                    if x[4] !='':
-                        oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
-
-
+                    oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
+                    oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
                 if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
                     try:
                         float (el[3][y][3])
@@ -9545,8 +9534,8 @@ def debug_progressbar (arg=None):
         MsgBox(oDisp)
         oSI.end()
 ########################################################################
-#~ def debug_elimina_voci_doppie (arg=None):
-def debug (arg=None):
+def debug_elimina_voci_doppie (arg=None):
+# ~ def debug (arg=None):
     chi('prova')
     'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -9599,19 +9588,28 @@ def filtro_descrizione (arg=None):
     struttura_off()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet.getCellRangeByPosition(2, 0, 2, 1048575).clearContents(HARDATTR)
+
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
     fine = getLastUsedCell(oSheet).EndRow+1
     el_y = list()
     descrizione = InputBox(t='Inserisci la descrizione da cercare.')
+    if descrizione in (None, ''):
+        return
     y = 4
     while y < fine:
         if uFindStringCol(descrizione, 2, oSheet, y):
             y = uFindStringCol(descrizione, 2, oSheet, y)
             oSheet.getCellByPosition (2, y).CellBackColor = 15757935
             el_y.append(seleziona_voce(y))
-            y = next_voice(seleziona_voce(y)[1])
+            try:
+                y = next_voice(seleziona_voce(y)[1])
+            except TypeError:
+                MsgBox('''Questo comando non produce risultato se il cursore
+è oltre la riga rossa di Fine Comuputo.''','ATTENZIONE!')
+                return
             y += 1
         y += 1
         
@@ -9622,7 +9620,10 @@ def filtro_descrizione (arg=None):
         lista_y.append(y)
         y = el[1]
         lista_y.append(y)
-    lista_y.append(fine-3)
+    if oSheet.Name == 'CONTABILITA':
+        lista_y.append(fine-2)
+    else:
+        lista_y.append(fine-3)
     i = 0
     while len(lista_y[i:])>1:
         SR = lista_y[i:][0]+1
@@ -9635,11 +9636,14 @@ def filtro_descrizione (arg=None):
         i += 2
 ########################################################################
 def debug (arg=None):
-    filtro_descrizione()
+    # ~ filtro_descrizione()
+    # ~ numera_voci()
+    # ~ debug_elimina_voci_doppie()
     # ~ adegua_tmpl()
     # ~ rigenera_tutte()
     # ~ sistema_stili()
-    # ~ hl()
+    # ~ sistema_cose()
+    hl()
     return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -9651,7 +9655,7 @@ def errore(arg=None):
     MsgBox (traceback.format_exc())
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-#~ g_exportedScripts = analisi_in_ElencoPrezzi,
+g_exportedScripts = hl,
 ########################################################################
 ########################################################################
 # ... here is the python script code

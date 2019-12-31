@@ -24,66 +24,6 @@ end if
 END FUNCTION
 &apos;______________________________________________________________________________________________
 
-Function Copia_Costanti (oSheetSRC, oSheetDest, sDestCell, SrcRange as variant) 
-print SrcRange
-dim SrcRange as string
- &apos;oSheetSRC = ThisComponent.Sheets.getByName(&quot;Sheet11&quot;)
- &apos; oSheetDest = ThisComponent.Sheets.getByName(&quot;Tabelle10_2&quot;)
- &apos; oSrc = oSheetSRC.getCellRangeByPosition(SrcRange).RangeAddress
- &apos; oSrc = oSheetSRC.getCellRangeByName(&quot;A1&quot;).RangeAddress
- oDest = oSheetDest.getCellRangeByPosition(sDestCell).CellAddress
- &apos; oDest = oSheetDest.getCellRangeByName(&quot;B1&quot;).CellAddress
- oSheetDest.copyRange(oDest, oSrc)
-
-exit function
-print &quot;fermala&quot;
-
-	&apos; get access to the document
-	DocumentModel = ThisComponent
-	DocumentView = DocumentModel.getCurrentController()
-	DocumentFrame = DocumentView.Frame
-	Dispatcher = CreateUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
-	
-	Dim Args2(0) As New com.sun.star.beans.PropertyValue
-	Args2(0).Name = &quot;Nr&quot;
-	Args2(0).Value = SourceSheetNum &apos;source sheet
-	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:JumpToTable&quot; ,&quot;&quot; ,0 ,Args2())
-
-	Dim Args3(0) As New com.sun.star.beans.PropertyValue
-	Args3(0).Name = &quot;ToPoint&quot;
-	Args3(0).Value = SrcRange&apos;
-	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:GoToCell&quot; ,&quot;&quot; ,0 ,Args3())
-
-	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:Copy&quot; ,&quot;&quot; ,0 ,Array())
-
-	Dim Args4(0) As New com.sun.star.beans.PropertyValue
-	Args4(0).Name = &quot;Nr&quot;
-	Args4(0).Value = TargetSheetNum &apos;Target sheet
-	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:JumpToTable&quot; ,&quot;&quot; ,0 ,Args4())
-
-	Dim Args5(0) As New com.sun.star.beans.PropertyValue
-	Args5(0).Name = &quot;ToPoint&quot;
-	Args5(0).Value = TargetCell &apos;cella destinazione
-	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:GoToCell&quot; ,&quot;&quot; ,0 ,Args5())
-
-	Dim Args6(5) As New com.sun.star.beans.PropertyValue
-	Args6(0).Name = &quot;Flags&quot;
-	Args6(0).Value = &quot;T&quot;
-	Args6(1).Name = &quot;FormulaCommand&quot;
-	Args6(1).Value = 0
-	Args6(2).Name = &quot;SkipEmptyCells&quot;
-	Args6(2).Value = False
-	Args6(3).Name = &quot;Transpose&quot;
-	Args6(3).Value = False
-	Args6(4).Name = &quot;AsLink&quot;
-	Args6(4).Value = False
-	Args6(5).Name = &quot;MoveMode&quot;
-	Args6(5).Value = 4
-	Dispatcher.executeDispatch(DocumentFrame, &quot;.uno:InsertContents&quot; ,&quot;&quot; ,0 ,Args6())
-end Function
-
-
-
 Function Trova_sommano$ (ByVal lrow As Long)&apos;As Long&apos; restituisce il num d riga dove c&apos;è &quot;sommano&quot; 
 &apos;(ByVal lrow As Long) &apos; 11111111111111111111111111111111111
 	 oSheet = ThisComponent.currentController.activeSheet 

@@ -98,27 +98,8 @@ rem se il flag è 0 (zero) la toolbarURL viene nascosta
 		oLayout.showElement(toolbarURL)
 	EndIf
 End Sub
-rem ######################################################################
-Function getPropOds (id As String) &apos;Giuseppe Vizziello 2015 - accesso alle proprietà personalizzate del file ods
-REM QUESTA NON VA
-rem controlla che il file sia un template LeenO
-	Dim oDoc	:	oDoc = thiscomponent
-	Dim test() As Object
-	Dim getPropOds As variant
-	test() =oDoc.DocumentProperties.UserDefinedProperties.PropertyValues()
-	xray test()
-	If ubound(test()) &gt;= 2 Then 
-		If id = &quot;0&quot; Then getPropOds = oDoc.DocumentProperties.UserDefinedProperties.PropertyValues(0).value &apos;Nome file
-		If id = &quot;1&quot; Then getPropOds = oDoc.DocumentProperties.UserDefinedProperties.PropertyValues(1).value &apos;Versione (template)
-		If id = &quot;2&quot; Then getPropOds = oDoc.DocumentProperties.UserDefinedProperties.PropertyValues(2).value &apos;Versione Leeno
-	Else
-		getPropOds = &quot;&quot;
-	EndIf
-End Function
 
 rem ######################################################################
-
-
 Sub eventi_pulisci &apos;Giuseppe Vizziello 2014
 rem elimina tutte le macro legate agli eventi in ogni foglio e per l&apos;intero documento
 rem da mettere in uscita

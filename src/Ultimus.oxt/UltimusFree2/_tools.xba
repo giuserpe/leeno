@@ -189,29 +189,6 @@ rem	+ com.sun.star.sheet.CellFlags.EDITATTR)
 &apos;	oSheet1.Protect &quot;&quot;
 End Sub
 
-rem ----------------------------------------------------------------------
-Sub AddNamedRange(sName$ as string, s$ as String)
-Dim oRange &apos; The created range.
-Dim oRanges &apos; All named ranges.
-Dim sName$ &apos; Name of the named range to create.
-Dim oCell &apos; Cell object.
-Dim s$
-
-for i = 1 to 5
- sName$ = i
- oRanges = ThisComponent.NamedRanges
-&apos; xray oRanges
- If NOT oRanges.hasByName(sName$) Then
- Dim oCellAddress As new com.sun.star.table.CellAddress
- oCellAddress.Sheet = 2 &apos;id Sheet
-		oCellAddress.Column = i &apos;Column i.
- oCellAddress.Row = i + 1 &apos;Row i + 1..
- s$ = &quot;$Foglio3.$B$3:$e$10&quot;
- oRanges.addNewByName(sName$, s$, oCellAddress, 0)
- End If
-next
-print &quot;fatto!&quot;
-End Sub
 
 sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con relativo esempio
 	dim sty()

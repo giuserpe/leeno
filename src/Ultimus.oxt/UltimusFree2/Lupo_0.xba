@@ -21,22 +21,6 @@ global oProgressBar as object
 Global sTemp as string
 &apos;global sVer2 as string &apos;versione della libreria installata
 
-Function IsDocumentDiUnCertoTipo(oDoc) As Boolean
-Dim bResult As Boolean
- bResult = False
- On Error GoTo ErrH
-
- &apos;controlla se è un documento calc
- if oDoc.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;) Then
-		 bresult = True
- End If
-
-ErrH:
- IsDocumentDiUnCertoTipo = bresult
-End Function
-
-rem ######################################################################
-
 Sub Attiva_Sheets_di_Servizio
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
  	oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
@@ -114,30 +98,6 @@ Dim oComponent as Object
 	End If
 	OpenDocument() = StarDesktop.LoadComponentFromURL(DocPath,&quot;_default&quot;,0,Args())
 End Function
-
-sub CutPathView &apos;(sDocUrl as String, Optional PathLen as Integer)
-&apos;Function CutPathView(sDocUrl as String, Optional PathLen as Integer)
-Dim sViewPath as String
-Dim FileName as String
-Dim iFileLen as Integer
-sDocUrl= &quot;file:///C:/UltimusFree/UltimusFreeUltimusFree/UltimusFreeUltimusFree/vuoto-OO_0&quot;
-	sViewPath = ConvertfromURL(sDocURL)
-print	sViewPath
-	iViewPathLen = Len(sViewPath)
-print	iViewPathLen
-	If iViewPathLen &gt; 60 Then
-		FileName = FileNameoutofPath(sViewPath, &quot;/&quot;)
-		iFileLen = Len(FileName)
-		If iFileLen &lt; 44 Then
-			sViewPath = Left(sViewPath,57-iFileLen-10) &amp; &quot;...&quot; &amp; Right(sViewPath,iFileLen + 10)
-		Else
-			sViewPath = Left(sViewPath,27) &amp; &quot; ... &quot; &amp; Right(sViewPath,28)
-		End If
-	End If
-	print sViewPath
-	CutPathView = sViewPath
-	print CutPathView
-END SUB
 
 &apos;***************************************************************+
 Sub crea_stile_cella_1

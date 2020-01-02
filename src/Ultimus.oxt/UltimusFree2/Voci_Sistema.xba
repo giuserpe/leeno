@@ -24,33 +24,6 @@ end if
 END FUNCTION
 &apos;______________________________________________________________________________________________
 
-Function Trova_sommano$ (ByVal lrow As Long)&apos;As Long&apos; restituisce il num d riga dove c&apos;è &quot;sommano&quot; 
-&apos;(ByVal lrow As Long) &apos; 11111111111111111111111111111111111
-	 oSheet = ThisComponent.currentController.activeSheet 
-	lcol = 3
-	lcolS = lcol
-	 oCell = oSheet.GetCellByPosition(3 , lrow )
-	xA =oCell.String
-	If xA = &quot;SOMMANO &quot; then 
- 	 goto sommano_trovato 
-	end if 
- Do while xA &lt;&gt; &quot;SOMMANO &quot;
- 		lrow= lrow + 1
- 	 oCell = oSheet.GetCellByPosition( 3 , lrow)
- 	 xA =oCell.String
- 	 ThisComponent.CurrentController.Select(oCell)
- &apos;	 print
-
- 	 Loop
- sommano_trovato:
- Trova_sommano = lrow
- &apos;	 ThisComponent.CurrentController.Select(oCell)
-
-End function
-
-
-
-
 Function Copia_Formato (SourceSheetNum as long, TargetSheetNum as long, TargetCell, SrcRange as variant) 
 
 	&apos; get access to the document

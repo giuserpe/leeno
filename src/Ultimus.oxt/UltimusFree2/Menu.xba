@@ -98,7 +98,6 @@ rem se il flag è 0 (zero) la toolbarURL viene nascosta
 		oLayout.showElement(toolbarURL)
 	EndIf
 End Sub
-
 rem ######################################################################
 Sub eventi_pulisci &apos;Giuseppe Vizziello 2014
 rem elimina tutte le macro legate agli eventi in ogni foglio e per l&apos;intero documento
@@ -195,7 +194,7 @@ Macro_Doc (&quot;OnNew&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Contr
 Macro_Doc (&quot;OnLoad&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 Macro_Doc (&quot;OnPrepareUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&amp;location=application&quot;)
 Macro_Doc (&quot;OnUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
-&apos;OnSave
+Macro_Doc (&quot;OnSave&quot;,	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$bak0?language=Python&amp;location=user:uno_packages&quot;)
 &apos;OnSaveDone
 &apos;OnSaveFailed
 Macro_Doc (&quot;OnSaveAs&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)

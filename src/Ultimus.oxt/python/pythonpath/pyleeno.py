@@ -8703,6 +8703,8 @@ def bak0(arg=None):
         os.makedirs(uno.fileUrlToSystemPath(dir_bak))
     orig = uno.fileUrlToSystemPath(orig)
     dest = uno.fileUrlToSystemPath(dest)
+    if os.path.exists (uno.fileUrlToSystemPath(dir_bak) + dest):
+        shutil.copyfile(uno.fileUrlToSystemPath(dir_bak) + dest, uno.fileUrlToSystemPath(dir_bak) + dest + '.old')
     shutil.copyfile(orig, uno.fileUrlToSystemPath(dir_bak) + dest)
 ########################################################################
 def bak(arg=None):

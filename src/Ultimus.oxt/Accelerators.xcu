@@ -248,8 +248,8 @@
             <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Strutture.Togli_Struttura?language=Basic&amp;location=application</value>
           </prop>
         </node>
-        <!--SHIFT-ALT-F-->
-        <node oor:name="F_SHIFT_MOD2" oor:op="replace">
+        <!--SHIFT-ALT-H-->
+        <node oor:name="H_SHIFT_MOD2" oor:op="replace">
           <prop oor:name="Command" oor:op="fuse">
             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$hl?language=Python&amp;location=user:uno_packages</value>
           </prop>

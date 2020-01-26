@@ -182,6 +182,13 @@
             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$pesca_cod?language=Python&amp;location=user:uno_packages</value>
           </prop>
         </node>
+        
+        <!--CTRL-SHIFT-H-->
+        <node oor:name="H_SHIFT_MOD1" oor:op="replace">
+          <prop oor:name="Command" oor:op="fuse">
+            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$hl?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+        </node>
         <!--CTRL-SHIFT-I-->
         <node oor:name="I_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
@@ -249,11 +256,7 @@
           </prop>
         </node>
         <!--SHIFT-ALT-H-->
-        <node oor:name="H_SHIFT_MOD2" oor:op="replace">
-          <prop oor:name="Command" oor:op="fuse">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$hl?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-        </node>
+
         <!--ALT-0-->
         <!--
              <node oor:name="0_MOD2" oor:op="replace">

@@ -7826,7 +7826,6 @@ def SubSum(lrow, sub=False):
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################
 ########################################################################
 def filtra_codice(voce=None):
-# ~def debug(voce=None):
     refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     # ~zoom = oDoc.CurrentController.ZoomValue
@@ -7834,12 +7833,13 @@ def filtra_codice(voce=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name == "Elenco Prezzi":
         voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(0, Range2Cell()[1]).String
-    # ~oSheet = oDoc.CurrentController.ActiveSheet
-        try:
-            elaborato = scegli_elaborato('Ricerca di ' + voce)
-            _gotoSheet(elaborato)
-        except:
-            return
+        elaborato = oSheet.getCellByPosition(2,1).String
+        _gotoSheet(elaborato)
+        # ~ try:
+            # ~ elaborato = scegli_elaborato('Ricerca di ' + voce)
+            # ~ _gotoSheet(elaborato)
+        # ~ except:
+            # ~ return
         oSheet = oDoc.Sheets.getByName(elaborato)
         _gotoCella(0,6)
         next_voice(Range2Cell()[1],1)

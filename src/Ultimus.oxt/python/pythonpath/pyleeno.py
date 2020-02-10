@@ -1585,11 +1585,13 @@ def scelta_viste(arg=None):
         oCellRangeAddr=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
         oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DialogViste_EP?language=Basic&location=application")
         oDialog1Model = oDialog1.Model
+        
         if oSheet.getColumns().getByIndex(3).Columns.IsVisible  == True: oDialog1.getControl('CBSic').State = 1
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible  == True: oDialog1.getControl('CBMdo').State = 1
         if oSheet.getCellByPosition(1, 3).Rows.OptimalHeight == False: oDialog1.getControl('CBDesc').State = 1
         if oSheet.getColumns().getByIndex(7).Columns.IsVisible  == True: oDialog1.getControl('CBOrig').State = 1
         if oDialog1.execute() == 1:
+            default = oDialog1.getControl('ComboBox1').Text
             if oDialog1.getControl("CBSic").State == 0: #sicurezza
                 oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
             else:
@@ -9646,12 +9648,17 @@ def debug (arg=None):
     # ~ sistema_stili()
     # ~ sistema_cose()
     hl()
+    # ~ bak0()
     return
+def debug (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    # ~ chi(oDoc.getCurrentSelection().Value)
+    # ~ return
     fine = getLastUsedCell(oSheet).EndRow+1
     for i in range (0, fine):
-        chi(oSheet.getCellByPosition(0, i).String)
+        if oSheet.getCellByPosition(1, i).CellStyle == 'Data_bianca':
+            oSheet.getCellByPosition(1, i).Value = 43861.0
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

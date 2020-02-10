@@ -19,7 +19,7 @@ rem ######################################################################
 Sub _nuove_icone
 &apos;https://icons8.com/icon/set/tools/all
 &apos;https://openclipart.org/search/?query=dannya&amp;page=1
-	sURL = LeenO_path +&quot;/icons/py.png&quot;
+	sURL = LeenO_path +&quot;/icons/leeno.png&quot;
 	sName = Replace_G(sURL, &quot;.png&quot;, &quot;&quot;)
 	sNewURL= sName + &quot;_26h.bmp&quot;
 	Filecopy sURL, sNewURL &apos;agisce direttamente su disco in modo &quot;invisibile&quot;

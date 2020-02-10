@@ -1953,9 +1953,7 @@
               <value>.uno:OpenHyperlink?URL:string=https://leeno.org/donazioni/</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <!--
-                   <value>%origin%/icons/leeno</value>
-              -->
+                <value>%origin%/icons/leeno</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>LeenO ❤</value>
@@ -1972,9 +1970,7 @@
               <value>.uno:OpenHyperlink?URL:string=https://leeno.org/licenza-2/</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <!--
-                   <value>%origin%/icons/leeno</value>
-              -->
+                <value>%origin%/icons/leeno</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Licenza...</value>
@@ -1984,6 +1980,23 @@
             </prop>
           </node>
           <node oor:name="m82" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>.uno:OpenHyperlink?URL:string=https://t.me/leeno_computometrico</value>
+            </prop>
+            <prop oor:name="ImageIdentifier" oor:type="xs:string">
+              <value>%origin%/icons/teleg</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Unisciti al gruppo LeenO su Telegram...</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+          <node oor:name="m83" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>

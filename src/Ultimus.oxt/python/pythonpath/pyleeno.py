@@ -8023,8 +8023,10 @@ def autoexec(arg=None):
         path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
     else:
         path = os.getenv("HOME")
-    if os.path.exists(path_conf) == False:
+    try:
         os.makedirs(path_conf[:-11])
+    except FileExistsError:
+        config_default()
     config_default()
     if conf.read(path_conf, 'Generale', 'movedirection') == '0':
         oGSheetSettings.MoveDirection = 0

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- Mode: Python; coding: utf-8; indent-tabs-mode: nil; tab-width: 4 -*-
 ########################################################################
 # LeenO - Computo Metrico
@@ -8531,9 +8531,11 @@ def dp (arg=None):
         try:
             oSheet = oDoc.Sheets.getByName(el)
             oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
-            if oSheet.Name == 'Elenco Prezzi':
-                oSheet.getCellRangeByName("A1").String = 'DP: ' + sUltimus
-            oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
+
+            if oSheet.getCellRangeByName('COMPUTO.A10').getCellStyle != 'Default':
+                if oSheet.Name == 'Elenco Prezzi':
+                    oSheet.getCellRangeByName("A1").String = 'DP: ' + sUltimus
+                oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
         except:
             pass
 ####
@@ -9077,7 +9079,7 @@ def sistema_cose(arg=None):
             lista_y.append(el)
     for y in lista_y:
         oDoc.CurrentController.select(oSheet.getCellByPosition(lcol, y))
-        testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à')
+        testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à')#.replace('.\r','.')
         # ~testo = oDoc.getCurrentSelection().String.replace('\r','fbfxvcbsc')
         # ~testo = testo.replace(' \n','\n')
         while '  ' in testo:
@@ -9640,6 +9642,48 @@ def filtro_descrizione (arg=None):
             oSheet.group(oCellRangeAddr,1)
             oSheet.getCellRangeByPosition(0, SR, 0, ER-1).Rows.IsVisible=False
         i += 2
+def basilicata_2020 (arg=None):
+    '''
+    Adatta la struttura del prezzario rilasciato dalla regione Basilicata
+    partendo dalle colonne: CODICE	DESCRIZIONE	U. MISURA	PREZZO	MANODOPERA
+    Il risultato ottenuto va inserito in Elenco Prezzi.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    for el in ('CAPITOLI', 'CATEGORIE', 'VOCI'):
+        oSheet = oDoc.getSheets().getByName(el)
+        oSheet.getRows().removeByIndex(0, 1)
+    oSheet = oDoc.getSheets().getByName('CATEGORIE')
+    _gotoSheet('CATEGORIE')
+    fine = getLastUsedCell(oSheet).EndRow+1
+    for i in range (0, fine):
+        oSheet.getCellByPosition(1, i).String = oSheet.getCellByPosition(0, i).String + "." + oSheet.getCellByPosition(1, i).String
+    oSheet.getColumns().removeByIndex(0,1)
+    oSheet = oDoc.getSheets().getByName('VOCI')
+    _gotoSheet('VOCI')
+    oSheet.getColumns().removeByIndex(0,3)
+    oSheet = oDoc.getSheets().getByName('SOTTOVOCI')
+    _gotoSheet('SOTTOVOCI')
+    oSheet.getColumns().removeByIndex(0,4)
+    join_sheets()
+    oSheet = oDoc.getSheets().getByName('unione_fogli')
+    _gotoSheet('unione_fogli')
+    oSheet.getRows().removeByIndex(0,1)
+    ordina_col(1)
+    fine = getLastUsedCell(oSheet).EndRow+1
+    for i in range (0, fine):
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
+            madre = oSheet.getCellByPosition(1, i).String
+        elif len(oSheet.getCellByPosition(0, i).String.split('.')) == 4:
+            if oSheet.getCellByPosition(1, i).String != '':
+                oSheet.getCellByPosition(1, i).String = madre + "\n- " + oSheet.getCellByPosition(1, i).String
+            else:
+                oSheet.getCellByPosition(1, i).String = madre
+            oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(4, i).Value / 100
+    for i in reversed(range (0, fine)):
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
+            oSheet.getRows().removeByIndex(i, 1)
+    oSheet.getRows().removeByIndex(0,1)
+    oSheet.getColumns().insertByIndex(3,1)
 ########################################################################
 def debug (arg=None):
     # ~ filtro_descrizione()
@@ -9649,18 +9693,20 @@ def debug (arg=None):
     # ~ rigenera_tutte()
     # ~ sistema_stili()
     # ~ sistema_cose()
-    hl()
+    struttura_Elenco()
+    # ~ hl()
     # ~ bak0()
     return
-def debug (arg=None):
+def debug_ (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~ chi(oDoc.getCurrentSelection().Value)
     # ~ return
     fine = getLastUsedCell(oSheet).EndRow+1
     for i in range (0, fine):
-        if oSheet.getCellByPosition(1, i).CellStyle == 'Data_bianca':
+        if oSheet.getCellByPosition(1, i).String == 'Data_bianca':
             oSheet.getCellByPosition(1, i).Value = 43861.0
+
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

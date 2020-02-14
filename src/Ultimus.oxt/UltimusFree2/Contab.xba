@@ -1014,11 +1014,11 @@ chiudi_dialoghi
 	Annulla_atto_contabile(&quot;SAL&quot;, 1)
 	Annulla_atto_contabile(&quot;Registro&quot;, 1)
 	Annulla_atto_contabile(&quot;CONTABILITA&quot;, 1)
-	If nsal = 1 Then
-		oSheetCont.Unprotect &quot;&quot;
-	Else 
-		oSheetCont.protect &quot;&quot;
-	EndIf
+&apos;	If nsal = 1 Then
+&apos;		oSheetCont.Unprotect &quot;&quot;
+&apos;	Else 
+&apos;		oSheetCont.protect &quot;&quot;
+&apos;	EndIf
 	
 rem sistemo LA SITUAZIONE CONTABILE IN &quot;S2&quot;
 	oSheet = ThisComponent.Sheets.getByName(&quot;S2&quot;)

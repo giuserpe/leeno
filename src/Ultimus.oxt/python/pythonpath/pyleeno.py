@@ -6742,7 +6742,6 @@ def XPWE_in(arg):
     committente = DatiGenerali[4].text
     impresa = DatiGenerali[5].text
     parteopera = DatiGenerali[6].text
-
 ### PweDGCapitoliCategorie
     try:
         CapCat = dati.find('PweDGCapitoliCategorie')
@@ -6939,8 +6938,7 @@ def XPWE_in(arg):
             unmisura = elem.find('UnMisura').text
         else:
             unmisura = ''
-        # ~prezzo1 = elem.find('Prezzo1').text
-        if elem.find('Prezzo1').text == '0' :
+        if elem.find('Prezzo1').text == '0' or elem.find('Prezzo1').text == None :
             prezzo1 = ''
         else:
             prezzo1 = float(elem.find('Prezzo1').text)
@@ -6948,7 +6946,6 @@ def XPWE_in(arg):
         prezzo3 = elem.find('Prezzo3').text
         prezzo4 = elem.find('Prezzo4').text
         prezzo5 = elem.find('Prezzo5').text
-        
         try:
             idspcap = elem.find('IDSpCap').text
         except AttributeError:
@@ -6969,12 +6966,10 @@ def XPWE_in(arg):
             data = elem.find('Data').text
         except AttributeError:
             data = ''
-            
         IncSIC = ''
         IncMDO = ''
         IncMAT = ''
         IncATTR= ''
-
         try:
             if float(elem.find('IncSIC').text) != 0 : IncSIC = float(elem.find('IncSIC').text) / 100
         except: # AttributeError TypeError:
@@ -7835,13 +7830,13 @@ def filtra_codice(voce=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name == "Elenco Prezzi":
         voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(0, Range2Cell()[1]).String
-        elaborato = oSheet.getCellByPosition(2,1).String
-        _gotoSheet(elaborato)
-        # ~ try:
-            # ~ elaborato = scegli_elaborato('Ricerca di ' + voce)
-            # ~ _gotoSheet(elaborato)
-        # ~ except:
-            # ~ return
+        # ~elaborato = oSheet.getCellByPosition(2,1).String
+        # ~_gotoSheet(elaborato)
+        try:
+            elaborato = scegli_elaborato('Ricerca di ' + voce)
+            _gotoSheet(elaborato)
+        except:
+            return
         oSheet = oDoc.Sheets.getByName(elaborato)
         _gotoCella(0,6)
         next_voice(Range2Cell()[1],1)
@@ -9642,6 +9637,70 @@ def filtro_descrizione (arg=None):
             oSheet.group(oCellRangeAddr,1)
             oSheet.getCellRangeByPosition(0, SR, 0, ER-1).Rows.IsVisible=False
         i += 2
+########################################################################
+def sardegna_2019 (arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    try:
+        oDoc.getSheets().insertNewByName('nuova_tabella', 2)
+    except:
+        pass
+    oSheet0 = oDoc.getSheets().getByName('Worksheet')
+    oSheet1 = oDoc.getSheets().getByName('nuova_tabella')
+    fine = getLastUsedCell(oSheet0).EndRow+1
+    n = 1
+    test1 = test2 = test3 = test4 =1
+    for i in range (2, 50):
+        cod = oSheet0.getCellByPosition(0, i).String
+        cods = cod.split('.')
+        # ~ chi(cod)
+        cod0 = cods[0]
+        if test1 == 1:
+            cod1 = cods[1]
+            # ~ test1 =1
+        if test2 == 1:
+            cod2 = cods[2]
+            # ~ test2 =1
+        if test3 == 1:
+            cod3 = cods[3]
+            # ~ test3 =1
+        
+        cap1 = oSheet0.getCellByPosition(1, i).String
+        cap2 = oSheet0.getCellByPosition(2, i).String
+        cap3 = oSheet0.getCellByPosition(3, i).String
+        des = oSheet0.getCellByPosition(4, i).String
+        um = oSheet0.getCellByPosition(5, i).String
+        sic = oSheet0.getCellByPosition(10, i).Value
+        prz = oSheet0.getCellByPosition(7, i).Value
+        mdo = oSheet0.getCellByPosition(13, i).Value
+        
+        if test1 == 1:
+            oSheet1.getCellByPosition(0, n).String = cod0
+            oSheet1.getCellByPosition(1, n).String = cap1
+            test1 = 0
+        elif test2 == 1:
+            n += 1
+            oSheet1.getCellByPosition(0, n).String = cod0 + '.' + cod1
+            oSheet1.getCellByPosition(1, n).String = cap2
+            test2 = 0
+        elif test3 == 1:
+            n += 1
+            oSheet1.getCellByPosition(0, n).String = cod0 + '.' + cod1 + '.' + cod2
+            oSheet1.getCellByPosition(1, n).String = cap3
+            test3 = 0
+        elif test4 == 1:
+            n += 1
+            oSheet1.getCellByPosition(0, n).String = cod
+            oSheet1.getCellByPosition(1, n).String = des
+            oSheet1.getCellByPosition(2, n).String = um
+            oSheet1.getCellByPosition(3, n).String = sic
+            oSheet1.getCellByPosition(4, n).String = prz
+            oSheet1.getCellByPosition(5, n).String = mdo
+            # ~ n += 1
+        
+        
+    
+    
+########################################################################
 def basilicata_2020 (arg=None):
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Basilicata
@@ -9693,7 +9752,8 @@ def debug (arg=None):
     # ~ rigenera_tutte()
     # ~ sistema_stili()
     # ~ sistema_cose()
-    struttura_Elenco()
+    # ~ struttura_Elenco()
+    sardegna_2019()
     # ~ hl()
     # ~ bak0()
     return

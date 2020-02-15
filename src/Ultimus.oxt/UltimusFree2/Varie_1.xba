@@ -289,6 +289,7 @@ FUNCTION gina_furbetta_2&apos; funzione che prende la data, minuti secondi di si
 	sp2 = right(sp1,9)
 	sp2 =trim(sp2,1)
 	sp2 = Replace_G(sp2, &quot;.&quot;, &quot;&quot;)
+	sp2 = Replace_G(sp2, &quot;:&quot;, &quot;&quot;)
 	sp1 = left(sp1,6)
 	Sp1a = left(sp1,2)
 	Sp1c = right(sp1,2)

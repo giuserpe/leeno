@@ -779,7 +779,6 @@ annullato:
  	end if
  
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-	Chiudi_o_elimina_tabelle_inutili
 	&apos;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
  	
  	Barra_chiudi_sempre_4
@@ -788,7 +787,6 @@ annullato:
 		&amp; &quot;in questo documento (&quot; &amp; sNameDest &amp; &quot;)&quot; &amp; CHR$(10)&amp; CHR$(10) _
 		&amp; &quot;Vuoi nascondere le tabelle secondarie ?&quot;&amp; CHR$(10) _
 		&amp; &quot; (se ti sparisce qualcosa lo potrai trovare in Formato&gt;Foglio&gt;Mostra)&quot; , 4,&quot;&quot;&amp; CHR$(10)) = 6 then
-		Chiudi_o_elimina_tabelle_inutili &apos; cioè le secondarie)	 
 		Nascondi_tutte_secondarie
 		&apos; riattiva visibilità di quelle comunque in gioco al momento
 		if thisComponent.Sheets.hasByName(sSheetRinom) Then

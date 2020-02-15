@@ -7,7 +7,6 @@ SUB esporta_tanti_Fogli_PDF &apos; nasconde i fogli da non stampare
 	If NOT GlobalScope.BasicLibraries.isLibraryLoaded( &quot;Tools&quot; ) Then 
 			 GlobalScope.BasicLibraries.LoadLibrary( &quot;Tools&quot; ) 
 	End If 
-	Chiudi_o_elimina_tabelle_inutili
 	rem ----------------------------------------------------------------------
 	rem nome e percorso file
 	oDoc = ThisComponent
@@ -115,7 +114,6 @@ rem rimuovo le aree di stampa che non interessano
 	unSelect &apos;unselect ranges
 	
 &apos;	Rimetti_in_ordine_tab
-	Chiudi_o_elimina_tabelle_inutili
 	oSheet = ThisComponent.Sheets.getByName(oActiveSheet)
 	oSheet.IsVisible = True
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0,2))

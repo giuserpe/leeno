@@ -5627,6 +5627,21 @@ Vuoi procedere con la creazione della struttura dei capitoli?''', 'Avviso') == 3
     struct_colore(2)
     return
 ########################################################################
+def ns_ins(filename=None):
+    '''
+    Se assente, inserisce il namespace nel file XML.
+    '''
+    f = codecs.open(filename,'r','utf-8')
+    out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
+    of = codecs.open(out_file,'w','utf-8')
+
+    for row in f:
+        nrow = row.replace('<PRT:Prezzario>','<PRT:Prezzario xmlns="http://www.regione.toscana.it/Prezzario" xmlns:PRT="http://www.regione.toscana.it/Prezzario/Prezzario.xsd">')
+        of.write(nrow)
+    f.close()
+    of.close()
+    shutil.move(out_file, filename)
+
 def XML_toscana_import(arg=None):
     '''
     Importazione di un prezzario XML della regione Toscana 
@@ -5642,14 +5657,16 @@ def XML_toscana_import(arg=None):
     New_file.computo(0)
     # effettua il parsing del file XML
     tree = ElementTree()
-    # ~tree.parse(filename)
     try:
         tree.parse(filename)
-    except Exception as e:
-        MsgBox ("Eccezione " + str(type(e)) +
-                "\nMessaggio: " + str(e.args) + '\n' +
-                traceback.format_exc());
-        return
+    except:
+        ns_ins(filename)
+        tree.parse(filename)
+    # ~except Exception as e:
+        # ~MsgBox ("Eccezione " + str(type(e)) +
+                # ~"\nMessaggio: " + str(e.args) + '\n' +
+                # ~traceback.format_exc());
+        # ~return
     root = tree.getroot()
     iter = tree.getiterator()
 
@@ -5717,7 +5734,7 @@ def XML_toscana_import(arg=None):
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 
-Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
++N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
     oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
     n = 0
 
@@ -5763,7 +5780,7 @@ ATTENZIONE:
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 
-N.B.: Si consiglia una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
 
     ''','ATTENZIONE!')
 #~ ########################################################################
@@ -5879,21 +5896,18 @@ def XML_import_ep(arg=None):
     tree = ElementTree()
     if filename == None:
         return
-    #~ f = open(filename, 'r')
-    f = codecs.open(filename,'r','utf-8')
-    out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
-    of = codecs.open(out_file,'w','utf-8')
-    
-    #~ rows = list()
-    for row in f:
-        nrow = row.replace('&#x13;','').replace('&#xD;&#xA;',' ').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
-        #~ re.search('[a-zA-Z]', oCell.Formula):
-        of.write(nrow)
 
-    from yattag import indent
-    
-    #~ tree.parse(filename)
-    tree.parse(out_file)
+    f = codecs.open(filename,'r','utf-8')
+    try:
+        tree.parse(filename)
+    except:
+        out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
+        of = codecs.open(out_file,'w','utf-8')
+        for row in f:
+            nrow = row.replace('&#x13;','').replace('&#xD;&#xA;',' ').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
+            #~ re.search('[a-zA-Z]', oCell.Formula):
+            of.write(nrow)
+            tree.parse(out_file)
     # ottieni l'item root
     root = tree.getroot()
     logging.debug(list(root))

@@ -5641,20 +5641,29 @@ def ns_ins(filename=None):
     f.close()
     of.close()
     shutil.move(out_file, filename)
-
+###
 def XML_toscana_import(arg=None):
     '''
     Importazione di un prezzario XML della regione Toscana 
     in tabella Elenco Prezzi del template COMPUTO.
     '''
-    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
+    oDoc = XSCRIPTCONTEXT.getDocument()
 
+    MsgBox('Questa operazione potrebbe richiedere del tempo.','Avviso')
+    New_file.computo(0)
     try:
         filename = filedia('Scegli il file XML Toscana da importare', '*.xml')
+        oDialogo_attesa = dlg_attesa()
+        attesa().start() #mostra il dialogo
         if filename == None: return
     except:
         return
-    New_file.computo(0)
+    if oDoc.getSheets().hasByName('COMPUTO') == False:
+        if len(oDoc.getURL())==0 and \
+        getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndColumn ==0 and \
+        getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndRow ==0:
+            oDoc.close(True)
+     
     # effettua il parsing del file XML
     tree = ElementTree()
     try:
@@ -5675,7 +5684,7 @@ def XML_toscana_import(arg=None):
     intestazione = root.find(PRT+'intestazione')
     titolo = 'Prezzario '+ intestazione.get('autore') + ' - ' + intestazione[0].get('area') +' '+ intestazione[0].get('anno')
     licenza = intestazione[1].get('descrizione').split(':')[0] +' '+ intestazione[1].get('tipo')
-    titolo = titolo + '\nCopyright: ' + licenza  + '\nhttp://prezzariollpp.regione.toscana.it'
+    titolo = titolo + '\nCopyright: ' + licenza  + '\n\nhttp://prezzariollpp.regione.toscana.it'
 
     Contenuto = root.find(PRT+'Contenuto')
 
@@ -5728,13 +5737,16 @@ def XML_toscana_import(arg=None):
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = titolo
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR
+    oSheet.getCellRangeByName('D1:V1').clearContents(flags)
+    oDoc.getSheets().getByName('COMPUTO').IsVisible = False
     oSheet.getCellByPosition(1, 0).String = titolo
     oSheet.getCellByPosition(2, 0).String = '''ATTENZIONE!
 1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
 2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
 3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 
-+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
     oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
     n = 0
 
@@ -5766,10 +5778,12 @@ def XML_toscana_import(arg=None):
         n += 1
     #~ set_larghezza_colonne()
     toolbar_vedi()
-    adatta_altezza_riga('Elenco Prezzi')
-    riordina_ElencoPrezzi()
-    #~ struttura_Elenco()
-    
+    # ~ adatta_altezza_riga('Elenco Prezzi')
+    # ~ riordina_ElencoPrezzi()
+    oDialogo_attesa.endExecute()
+    struttura_Elenco()
+    oSheet.getCellRangeByName('F2').String = 'prezzi'
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E3:E' + str(getLastUsedCell(oSheet).EndRow+1) +')'
     dest = filename[0:-4]+ '.ods'
     salva_come(dest)
     MsgBox('''
@@ -5884,7 +5898,6 @@ def XML_import_ep(arg=None):
         attesa().start() #mostra il dialogo
     except:
         return
-
     datarif = datetime.now()
     # inizializzazioe delle variabili
     lista_articoli = list() # lista in cui memorizzare gli articoli da importare

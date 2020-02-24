@@ -6304,7 +6304,18 @@ def XML_import_multi(arg=None):
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = nome
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oSheet.getCellByPosition(1, 1).String = nome
+    oSheet.getCellByPosition(1, 0).String = nome
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR
+    oSheet.getCellRangeByName('D1:V1').clearContents(flags)
+    oDoc.getSheets().getByName('COMPUTO').IsVisible = False
+    oSheet.getCellByPosition(2, 0).String = '''ATTENZIONE!
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+    oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
     oSheet.getRows().insertByIndex(4, len(lista_articoli))
 
     lista_come_array = tuple(lista_articoli)
@@ -6319,6 +6330,8 @@ def XML_import_multi(arg=None):
                                             righe_lista + scarto_righe - 1)
     oRange.setDataArray(lista_come_array)
     oSheet.getRows().removeByIndex(3, 1)
+    oSheet.getCellRangeByName('F2').String = 'prezzi'
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E3:E' + str(getLastUsedCell(oSheet).EndRow+1) +')'
     oDoc.CurrentController.setActiveSheet(oSheet)
     #~ struttura_Elenco()
     oDialogo_attesa.endExecute()

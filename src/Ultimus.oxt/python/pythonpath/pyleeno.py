@@ -7398,23 +7398,30 @@ Si tenga conto che:
             y = 0
             n = lrow + 2
             for x in el[3]:
-                if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
-                    copia_riga_analisi(n)
-                if dict_articoli.get(el[3][y][0]) != None:
-                    oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
+                if el[3][y][1] in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
+                    if el[3][y][1] != 'overflow':
+                        n = uFindStringCol(el[3][y][1], 1, oSheet, lrow)
                 else:
-                    oSheet.getCellByPosition(0, n).String = ''
-                    oSheet.getCellByPosition(1, n).String = x[1]
-                    oSheet.getCellByPosition(2, n).String = x[2]
-                    oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
-                    oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
-                if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI'):
-                    try:
-                        float (el[3][y][3])
-                        oSheet.getCellByPosition(3, n).Value = el[3][y][3]
-                    except:
-                        #~ pass
-                        oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
+                    copia_riga_analisi(n)
+                    if dict_articoli.get(el[3][y][0]) != None:
+                        oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
+                    else:
+                        oSheet.getCellByPosition(0, n).String = ''
+                        oSheet.getCellByPosition(1, n).String = x[1]
+                        oSheet.getCellByPosition(2, n).String = x[2]
+                        try:
+                            float(x[3].replace(',','.'))
+                            oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',','.'))
+                        except:
+                            oSheet.getCellByPosition(3, n).Value = 0
+                        oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
+                    if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
+                        try:
+                            float (el[3][y][3])
+                            oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                        except:
+                            #~ pass
+                            oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
             if oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value != prezzo_finale:
@@ -9114,7 +9121,7 @@ def sistema_cose(arg=None):
             lista_y.append(el)
     for y in lista_y:
         oDoc.CurrentController.select(oSheet.getCellByPosition(lcol, y))
-        testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à')#.replace('.\r','.')
+        testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à').replace(' $','')
         # ~testo = oDoc.getCurrentSelection().String.replace('\r','fbfxvcbsc')
         # ~testo = testo.replace(' \n','\n')
         while '  ' in testo:
@@ -9806,7 +9813,69 @@ def debug_ (arg=None):
     for i in range (0, fine):
         if oSheet.getCellByPosition(1, i).String == 'Data_bianca':
             oSheet.getCellByPosition(1, i).Value = 43861.0
+def Piemonte_2019 (arg=None):
+    '''
+    Adatta la struttura del prezzario rilasciato dalla regione Piemonte
+    partendo dalle colonne: Sez.	Codice	Descrizione	U.M.	Euro	Manod. lorda	% Manod.	Note
+    Il risultato ottenuto va inserito in Elenco Prezzi.
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    fine = getLastUsedCell(oSheet).EndRow+1
+    # ~lrow = Range2Cell()[1] + 1
+    elenco = list()
+    for i in range (0, fine):
+        if len(oSheet.getCellByPosition(1, i).String.split('.')) <= 2:
+            cod = oSheet.getCellByPosition(1, i).String
+            des = oSheet.getCellByPosition(2, i).String.replace('\n\n','\n')
+            um  = ''
+            eur = ''
+            mdol= ''
+            mdo = ''
+            if oSheet.getCellByPosition(7, i).String != '':
+                des = des + '\n(' + oSheet.getCellByPosition(7, i).String + ')'
+            elenco.append ((cod, des, um, '', eur, mdo, mdol))
 
+        if len(oSheet.getCellByPosition(1, i).String.split('.')) == 3:
+            cod = oSheet.getCellByPosition(1, i).String
+            des = oSheet.getCellByPosition(2, i).String.replace(' \n\n','')
+            madre = des
+            um  = ''
+            eur = ''
+            mdol= ''
+            mdo = ''
+            if oSheet.getCellByPosition(7, i).String != '':
+                des = des + '\n(' + oSheet.getCellByPosition(7, i).String + ')'
+            # ~elenco.append ((cod, des, um, '', eur, mdo, mdol))
+        if len(oSheet.getCellByPosition(1, i).String.split('.')) == 4:
+            cod = oSheet.getCellByPosition(1, i).String
+            des = madre
+            if oSheet.getCellByPosition(2, i).String != '...':
+                des = madre + '\n- ' + oSheet.getCellByPosition(2, i).String.replace('\n\n','')
+            um  = oSheet.getCellByPosition(3, i).String
+            eur = ''
+            if oSheet.getCellByPosition(4, i).Value != 0:
+                eur = oSheet.getCellByPosition(4, i).Value
+            mdol = ''
+            if oSheet.getCellByPosition(5, i).Value !=0:
+                mdol= oSheet.getCellByPosition(5, i).Value
+            mdo = ''
+            if oSheet.getCellByPosition(6, i).Value != 0:
+                mdo = oSheet.getCellByPosition(6, i).Value
+            # ~note= oSheet.getCellByPosition(7, i).String
+            elenco.append ((cod, des, um, '', eur, mdo, mdol))
+    try:
+        oDoc.getSheets().insertNewByName('nuova_tabella', 2)
+    except:
+        pass
+    _gotoSheet('nuova_tabella')
+    oSheet = oDoc.getSheets().getByName('nuova_tabella')
+    elenco = tuple(elenco)
+    oRange = oSheet.getCellRangeByPosition( 0,
+                                            0,
+                                            len(elenco[0]) -1, # l'indice parte da 0
+                                            len(elenco) -1)
+    oRange.setDataArray(elenco)
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

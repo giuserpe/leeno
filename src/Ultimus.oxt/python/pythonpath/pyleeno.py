@@ -2832,14 +2832,14 @@ def analisi_in_ElencoPrezzi(arg=None):
 
         oSheet.getCellByPosition(0,3).String = codice
 
-        oSheet.getCellByPosition(1,3).Formula = "=$'Analisi di Prezzo'.B" + str(riga+1)
-        oSheet.getCellByPosition(2,3).Formula = "=$'Analisi di Prezzo'.C" + str(riga+1)
-        oSheet.getCellByPosition(3,3).Formula = "=$'Analisi di Prezzo'.K" + str(riga+1)
-        oSheet.getCellByPosition(4,3).Formula = "=$'Analisi di Prezzo'.G" + str(riga+1)
-        oSheet.getCellByPosition(5,3).Formula = "=$'Analisi di Prezzo'.I" + str(riga+1)
-        oSheet.getCellByPosition(6,3).Formula = "=$'Analisi di Prezzo'.J" + str(riga+1)
-        oSheet.getCellByPosition(7,3).Formula = "=$'Analisi di Prezzo'.A" + str(riga+1)
-        oSheet.getCellByPosition(8,3).String = "(AP)"
+        oSheet.getCellByPosition(1,3).Formula =  "=$'Analisi di Prezzo'.B" + str(riga+1)
+        oSheet.getCellByPosition(2,3).Formula =  "=$'Analisi di Prezzo'.C" + str(riga+1)
+        oSheet.getCellByPosition(3,3).Formula =  "=$'Analisi di Prezzo'.K" + str(riga+1)
+        oSheet.getCellByPosition(4,3).Formula =  "=$'Analisi di Prezzo'.G" + str(riga+1)
+        oSheet.getCellByPosition(5,3).Formula =  "=$'Analisi di Prezzo'.I" + str(riga+1)
+        oSheet.getCellByPosition(6,3).Formula =  "=$'Analisi di Prezzo'.J" + str(riga+1)
+        oSheet.getCellByPosition(7,3).Formula =  "=$'Analisi di Prezzo'.A" + str(riga+1)
+        oSheet.getCellByPosition(8,3).String =   "(AP)"
         oSheet.getCellByPosition(11,3).Formula = "=N4/$N$2"
         oSheet.getCellByPosition(12,3).Formula = "=SUMIF(AA;A4;BB)"
         oSheet.getCellByPosition(13,3).Formula = "=SUMIF(AA;A4;cEuro)"
@@ -2863,12 +2863,19 @@ def tante_analisi_in_ep(arg=None):
     for n in range(0, ultima_voce(oSheet)+1):
         if oSheet.getCellByPosition(0, n).CellStyle == 'An-1_sigla' and oSheet.getCellByPosition(1, n).String != '<<<Scrivi la descrizione della nuova voce da analizzare   ':
             voce =(oSheet.getCellByPosition(0, n).String,
-                '=VLOOKUP(A' + str(idx) + ';analisi;2;FALSE())',
-                '=VLOOKUP(A' + str(idx) + ';analisi;3;FALSE())',
-                '=VLOOKUP(A' + str(idx) + ';analisi;11;FALSE())',
-                '=VLOOKUP(A' + str(idx) + ';analisi;7;FALSE())',
-                '=VLOOKUP(A' + str(idx) + ';analisi;9;FALSE())',
-                '=VLOOKUP(A' + str(idx) + ';analisi;10;FALSE())',
+                "=$'Analisi di Prezzo'.B" + str(n+1),
+                "=$'Analisi di Prezzo'.C" + str(n+1),
+                "=$'Analisi di Prezzo'.K" + str(n+1),
+                "=$'Analisi di Prezzo'.G" + str(n+1),
+                "=$'Analisi di Prezzo'.I" + str(n+1),
+                "=$'Analisi di Prezzo'.J" + str(n+1),
+                "=$'Analisi di Prezzo'.A" + str(n+1),
+                "(AP)",
+                '',
+                '',
+                "=N" + str(idx) +"/$N$2",
+                "=SUMIF(AA;A" + str(idx) +";BB)",
+                "=SUMIF(AA;A" + str(idx) +";cEuro)",
             )
             lista_analisi.append(voce)
             idx += 1
@@ -2877,21 +2884,22 @@ def tante_analisi_in_ep(arg=None):
         oSheet.getRows().insertByIndex(3,len(lista_analisi))
     else:
         return
-    oRange = oSheet.getCellRangeByPosition(0, 3, 6, 3+len(lista_analisi)-1)
+    oRange = oSheet.getCellRangeByPosition(0, 3, 13, 3+len(lista_analisi)-1)
     lista_come_array = tuple(lista_analisi)
-    
+    oRange.setDataArray(lista_come_array) #setFormulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
+    for y in range(3, 3+len(lista_analisi)):
+        for x in range(1, len(lista_analisi[0])): #evito il codice articolo, altrimenti me lo converte in numero
+            oSheet.getCellByPosition(x, y).Formula = oSheet.getCellByPosition(x, y).String
+    oSheet.getCellRangeByPosition(0,  3,  0, 3+len(lista_analisi)-1).CellStyle = 'EP-aS'
+    oSheet.getCellRangeByPosition(1,  3,  1, 3+len(lista_analisi)-1).CellStyle = 'EP-a'
+    oSheet.getCellRangeByPosition(2,  3,  8, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo'
+    oSheet.getCellRangeByPosition(5,  3,  5, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(9,  3,  9, 3+len(lista_analisi)-1).CellStyle = 'EP-sfondo'
+    oSheet.getCellRangeByPosition(10, 3, 10, 3+len(lista_analisi)-1).CellStyle = 'Default'
     oSheet.getCellRangeByPosition(11, 3, 11, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo %'
     oSheet.getCellRangeByPosition(12, 3, 12, 3+len(lista_analisi)-1).CellStyle = 'EP statistiche_q'
     oSheet.getCellRangeByPosition(13, 3, 13, 3+len(lista_analisi)-1).CellStyle = 'EP statistiche_Contab_q'
-    # ~chi(lista_come_array)
-    oRange.setDataArray(lista_come_array) #setFrmulaArray() sarebbe meglio, ma mi fa storie sul codice articolo
-    for y in range(3, 3+len(lista_analisi)):
-        for x in range(1, 8): #evito il codice articolo, altrimenti me lo converte in numero
-            oSheet.getCellByPosition(x, y).Formula = oSheet.getCellByPosition(x, y).String
-    oSheet.getCellRangeByPosition(0, 3, 7, 3+len(lista_analisi)-1).CellStyle = 'EP-C mezzo'
-    oSheet.getCellRangeByPosition(0, 3, 0, 3+len(lista_analisi)-1).CellStyle = 'EP-aS'
-    oSheet.getCellRangeByPosition(1, 3, 1, 3+len(lista_analisi)-1).CellStyle = 'EP-a'
-    oSheet.getCellRangeByPosition(5, 3, 5, 3+len(lista_analisi)-1).CellStyle = 'EP-mezzo %'
+
     refresh(1)
     _gotoSheet('Elenco Prezzi')
     #~ MsgBox('Trasferite ' + str(len(lista_analisi)) + ' analisi di prezzo in Elenco Prezzi.', 'Avviso')

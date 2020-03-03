@@ -7405,6 +7405,7 @@ Si tenga conto che:
                     copia_riga_analisi(n)
                     if dict_articoli.get(el[3][y][0]) != None:
                         oSheet.getCellByPosition(0, n).String = dict_articoli.get(el[3][y][0]).get('tariffa')
+                    # per gli inserimenti liberi (L)
                     else:
                         oSheet.getCellByPosition(0, n).String = ''
                         oSheet.getCellByPosition(1, n).String = x[1]
@@ -7416,25 +7417,29 @@ Si tenga conto che:
                             oSheet.getCellByPosition(3, n).Value = 0
                         oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',','.'))
                     if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI', 'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
-                        try:
-                            float (el[3][y][3])
-                            oSheet.getCellByPosition(3, n).Value = el[3][y][3]
-                        except:
-                            #~ pass
-                            oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
+                        if el[3][y][3] =='':
+                            oSheet.getCellByPosition(3, n).Value = 0
+                        else:
+                            try:
+                                float (el[3][y][3])
+                                oSheet.getCellByPosition(3, n).Value = el[3][y][3]
+                            except:
+                                oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
+            sStRange = Circoscrive_Analisi(lrow)
+            SR = sStRange.RangeAddress.StartRow
+            ER = sStRange.RangeAddress.EndRow
+            for m in reversed(range(SR, ER)):
+                if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?' and oSheet.getCellByPosition(0, m-1).CellStyle == 'An-lavoraz-Cod-sx':
+                    oSheet.getRows().removeByIndex(m, 1)
+                if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
+                    oSheet.getCellByPosition(0, m).String = ''
             if oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value != prezzo_finale:
                 oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value = prezzo_finale
             inizializza_analisi()
         elimina_voce (ultima_voce(oSheet), 0)
         tante_analisi_in_ep()
-        fine = getLastUsedCell(oSheet).EndRow
-        for n in reversed(range(0, fine)):
-            if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?' and oSheet.getCellByPosition(0, n-1).CellStyle == 'An-lavoraz-Cod-sx':
-                oSheet.getRows().removeByIndex(n, 1)
-            if oSheet.getCellByPosition(0, n).String == 'Cod. Art.?':
-                oSheet.getCellByPosition(0, n).String = ''
     if len(lista_misure) == 0:
         #~ MsgBox('Importazione eseguita con successo in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!        \n\nImporto € ' + oSheet.getCellByPosition(0, 1).String ,'')
         MsgBox("Importate n."+ str(len(lista_articoli)) +" voci dall'elenco prezzi\ndel file: " + filename, 'Avviso')

@@ -177,6 +177,6 @@ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 			end if
 		next
 	Next
-	exit sub
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;doppioni&quot;)
 end Sub
 </script:module>

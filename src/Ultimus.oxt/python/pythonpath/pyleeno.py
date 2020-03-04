@@ -9134,12 +9134,13 @@ def sistema_cose(arg=None):
             lista_y.append(el)
     for y in lista_y:
         oDoc.CurrentController.select(oSheet.getCellByPosition(lcol, y))
-        testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à').replace(' $','')
-        # ~testo = oDoc.getCurrentSelection().String.replace('\r','fbfxvcbsc')
-        # ~testo = testo.replace(' \n','\n')
-        while '  ' in testo:
-            testo = testo.replace('  ',' ')
-        oDoc.getCurrentSelection().String = testo
+        if oDoc.getCurrentSelection().Type.value == 'TEXT':
+            testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à').replace(' $','')
+            # ~testo = oDoc.getCurrentSelection().String.replace('\r','fbfxvcbsc')
+            # ~testo = testo.replace(' \n','\n')
+            while '  ' in testo:
+                testo = testo.replace('  ',' ')
+            oDoc.getCurrentSelection().String = testo
     return
 ########
 def debug_link(arg=None):

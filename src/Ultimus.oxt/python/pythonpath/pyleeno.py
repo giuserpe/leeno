@@ -496,12 +496,12 @@ def Inser_SottoCapitolo_arg(lrow, sTesto): #
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
 
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default': lrow -= 2#se oltre la riga rossa
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi': lrow -= 1#se riga rossa
-    insRows(lrow, 1)
+    oSheet.getRows().insertByIndex(lrow, 1)
     oSheet.getCellByPosition(2, lrow).String = sTesto
 # inserisco i valori e le formule
     oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'livello2 valuta'
@@ -542,11 +542,10 @@ def Ins_Categorie(n):
     2 = SubCategoria
     '''
     #~ datarif = datetime.now()
-
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     row = Range2Cell()[1]
-    if oSheet.getCellByPosition(0, row).CellStyle in stili_computo:
+    if oSheet.getCellByPosition(0, row).CellStyle in stili_computo + stili_contab:
         lrow = next_voice(row, 1)
     elif oSheet.getCellByPosition(0, row).CellStyle in noVoce:
         lrow = row+1
@@ -589,12 +588,12 @@ def Inser_SuperCapitolo_arg(lrow, sTesto='Super Categoria'): #
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     #~ lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default': lrow -= 2#se oltre la riga rossa
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi': lrow -= 1#se riga rossa
-    insRows(lrow, 1)
+    oSheet.getRows().insertByIndex(lrow, 1)
     oSheet.getCellByPosition(2, lrow).String = sTesto
     # inserisco i valori e le formule
     oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-0-scritta'
@@ -625,12 +624,12 @@ def Inser_Capitolo_arg(lrow, sTesto='Categoria'): #
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     #~ lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default': lrow -= 2#se oltre la riga rossa
     if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi': lrow -= 1#se riga rossa
-    insRows(lrow, 1)
+    oSheet.getRows().insertByIndex(lrow, 1)
     oSheet.getCellByPosition(2, lrow).String = sTesto
     # inserisco i valori e le formule
     oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-1-scritta'
@@ -659,7 +658,7 @@ def Tutti_Subtotali(arg=None):
     '''ricalcola i subtotali di categorie e subcategorie'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     for n in range(0, ultima_voce(oSheet)+1):
         if oSheet.getCellByPosition(0, n).CellStyle == 'Livello-0-scritta':
@@ -669,12 +668,12 @@ def Tutti_Subtotali(arg=None):
         if oSheet.getCellByPosition(0, n).CellStyle == 'livello2 valuta':
             SubSum_SottoCap(n)
 # TOTALI GENERALI
-    lrow = ultima_voce(oSheet)+1
-    for x in (1, lrow):
-        oSheet.getCellByPosition(17, x).Formula = '=SUBTOTAL(9;R4:R' + str(lrow+1) + ')'
-        oSheet.getCellByPosition(18, x).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
-        oSheet.getCellByPosition(30, x).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow+1) + ')'
-        oSheet.getCellByPosition(36, x).Formula = '=SUBTOTAL(9;AK4:AK' + str(lrow+1) + ')'
+    # ~lrow = ultima_voce(oSheet)+1
+    # ~for x in (4, lrow):
+        # ~oSheet.getCellByPosition(17, x).Formula = '=SUBTOTAL(9;R4:R' + str(lrow+1) + ')'
+        # ~oSheet.getCellByPosition(18, x).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
+        # ~oSheet.getCellByPosition(30, x).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow+1) + ')'
+        # ~oSheet.getCellByPosition(36, x).Formula = '=SUBTOTAL(9;AK4:AK' + str(lrow+1) + ')'
 ########################################################################
 def SubSum_SuperCap(lrow):
     '''
@@ -683,7 +682,7 @@ def SubSum_SuperCap(lrow):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     #~ lrow = Range2Cell()[1]
     lrowE = ultima_voce(oSheet)+2
@@ -694,15 +693,27 @@ def SubSum_SuperCap(lrow):
             nextCap = n + 1
             break
     #~ oDoc.enableAutomaticCalculation(False)
-    oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
-    oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-0-scritta mini val'
-    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
-    oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-0-scritta mini %'
-    oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow + 1)
-    oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-0-scritta mini %'
-    oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
-    oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-0-scritta mini val'
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
+        oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
+        oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
+        oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow + 1)
+        oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
+        oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-0-scritta mini val'
+        oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-0-scritta mini %'
+        oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-0-scritta mini %'
+        oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-0-scritta mini val'
+    if oSheet.Name in('CONTABILITA'):
+        oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P' + str(lrow + 1) + ':P' + str(nextCap) + ')' #IMPORTO
+        oSheet.getCellByPosition(16, lrow).Formula = '=P' + str(lrow + 1) + '/P' + str(lrowE) #incidenza sul totale
+        oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
+        oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/P' + str(lrow + 1)
+        oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
+        oSheet.getCellByPosition(15, lrow).CellStyle = 'Livello-0-scritta mini val'
+        oSheet.getCellByPosition(16, lrow).CellStyle = 'Livello-0-scritta mini %'
+        oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-0-scritta mini %'
+        oSheet.getCellByPosition(28, lrow).CellStyle = 'Livello-0-scritta mini val'
+        oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-0-scritta mini val'
     #~ oDoc.enableAutomaticCalculation(True)
 ########################################################################
 def SubSum_SottoCap(lrow):
@@ -712,7 +723,7 @@ def SubSum_SottoCap(lrow):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     #lrow = 0#Range2Cell()[1]
     lrowE = ultima_voce(oSheet)+2
@@ -721,16 +732,28 @@ def SubSum_SottoCap(lrow):
         if oSheet.getCellByPosition(18, n).CellStyle in('livello2 scritta mini', 'Livello-0-scritta mini val', 'Livello-1-scritta mini val', 'Comp TOTALI'):
             nextCap = n + 1
             break
-    oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
-    oSheet.getCellByPosition(18, lrow).CellStyle = 'livello2 scritta mini'
-    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
-    oSheet.getCellByPosition(24, lrow).CellStyle = 'livello2 valuta mini %'
-    oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
-    oSheet.getCellByPosition(28, lrow).CellStyle = 'livello2 scritta mini'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow +1)
-    oSheet.getCellByPosition(29, lrow).CellStyle = 'livello2 valuta mini %'
-    oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
-    oSheet.getCellByPosition(30, lrow).CellStyle = 'livello2 valuta mini'
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
+        oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
+        oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
+        oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow +1)
+        oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
+        oSheet.getCellByPosition(18, lrow).CellStyle = 'livello2 scritta mini'
+        oSheet.getCellByPosition(24, lrow).CellStyle = 'livello2 valuta mini %'
+        oSheet.getCellByPosition(28, lrow).CellStyle = 'livello2 scritta mini'
+        oSheet.getCellByPosition(29, lrow).CellStyle = 'livello2 valuta mini %'
+        oSheet.getCellByPosition(30, lrow).CellStyle = 'livello2 valuta mini'
+    if oSheet.Name in('CONTABILITA'):
+        oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P' + str(lrow + 1) + ':P' + str(nextCap) + ')' #IMPORTO
+        oSheet.getCellByPosition(16, lrow).Formula = '=P' + str(lrow + 1) + '/P' + str(lrowE) #incidenza sul totale
+        oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
+        oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/P' + str(lrow + 1)
+        oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
+        oSheet.getCellByPosition(15, lrow).CellStyle = 'livello2 scritta mini'
+        oSheet.getCellByPosition(16, lrow).CellStyle = 'livello2 valuta mini %'
+        oSheet.getCellByPosition(29, lrow).CellStyle = 'livello2 valuta mini %'
+        oSheet.getCellByPosition(28, lrow).CellStyle = 'livello2 scritta mini'
+        oSheet.getCellByPosition(30, lrow).CellStyle = 'livello2 scritta mini'
 ########################################################################
 def SubSum_Cap(lrow):
     '''
@@ -739,7 +762,7 @@ def SubSum_Cap(lrow):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     #~ lrow = Range2Cell()[1]
     lrowE = ultima_voce(oSheet)+2
@@ -749,18 +772,27 @@ def SubSum_Cap(lrow):
             #~ MsgBox(oSheet.getCellByPosition(18, n).CellStyle,'')
             nextCap = n + 1
             break
-    #~ oDoc.enableAutomaticCalculation(False)
-    oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')'
-    oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-1-scritta mini val'
-    oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
-    oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-1-scritta mini %'
-    oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
-    oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow + 1)
-    oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-1-scritta mini %'
-    oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
-    oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
-    #~ oDoc.enableAutomaticCalculation(True)
-
+    if oSheet.Name in('COMPUTO', 'VARIANTE'):
+        oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S' + str(lrow + 1) + ':S' + str(nextCap) + ')' #IMPORTO
+        oSheet.getCellByPosition(24, lrow).Formula = '=S' + str(lrow + 1) + '/S' + str(lrowE)
+        oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
+        oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/S' + str(lrow + 1)
+        oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
+        oSheet.getCellByPosition(18, lrow).CellStyle = 'Livello-1-scritta mini val'
+        oSheet.getCellByPosition(24, lrow).CellStyle = 'Livello-1-scritta mini %'
+        oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-1-scritta mini %'
+        oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
+    if oSheet.Name in('CONTABILITA'):
+        oSheet.getCellByPosition(15, lrow).Formula = '=SUBTOTAL(9;P' + str(lrow + 1) + ':P' + str(nextCap) + ')' #IMPORTO
+        oSheet.getCellByPosition(16, lrow).Formula = '=P' + str(lrow + 1) + '/P' + str(lrowE) #incidenza sul totale
+        oSheet.getCellByPosition(28, lrow).Formula = '=SUBTOTAL(9;AC' + str(lrow + 1) + ':AC' + str(nextCap) + ')'
+        oSheet.getCellByPosition(29, lrow).Formula = '=AE' + str(lrow + 1) + '/P' + str(lrow + 1)
+        oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE' + str(lrow + 1) + ':AE' + str(nextCap) + ')'
+        oSheet.getCellByPosition(15, lrow).CellStyle = 'Livello-1-scritta mini val'
+        oSheet.getCellByPosition(16, lrow).CellStyle = 'Livello-1-scritta mini %'
+        oSheet.getCellByPosition(29, lrow).CellStyle = 'Livello-1-scritta mini %'
+        oSheet.getCellByPosition(28, lrow).CellStyle = 'Livello-1-scritta mini val'
+        oSheet.getCellByPosition(30, lrow).CellStyle = 'Livello-1-scritta mini val'
 ########################################################################
 def Sincronizza_SottoCap_Tag_Capitolo_Cor(arg=None):
     '''
@@ -770,7 +802,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor(arg=None):
     datarif = datetime.now()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name not in('COMPUTO', 'VARIANTE'):
+    if oSheet.Name not in('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
 #    lrow = Range2Cell()[1]
     lastRow = ultima_voce(oSheet)+1
@@ -831,30 +863,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor(arg=None):
                 oSheet.getCellByPosition(31, lrow).Value = idspcat
             except:
                 oSheet.getCellByPosition(31, lrow).Value = 0
-
     #~ MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-    
-########################################################################
-def insRows(lrow, nrighe): #forse inutile
-    '''
-    lrow    { double }  : id della riga di inerimento
-    lrow    { integer } : numero di nuove righe da inserire
-
-    Inserisce nrighe nella posizione lrow - alternativo a
-    oSheet.getRows().insertByIndex(lrow, 1)
-    '''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    iSheet = oSheet.RangeAddress.Sheet
-    #~ oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    #~ lrow = Range2Cell()[1]
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    oCellRangeAddr.StartColumn = 0
-    oCellRangeAddr.EndColumn = 0
-    oCellRangeAddr.StartRow = lrow
-    oCellRangeAddr.EndRow = lrow + nrighe - 1
-    oSheet.insertCells(oCellRangeAddr, 3)   # com.sun.star.sheet.CellInsertMode.ROW
 ########################################################################
 def ultima_voce(oSheet):
     #~ oDoc = XSCRIPTCONTEXT.getDocument()
@@ -4887,8 +4896,9 @@ def svuota_contabilita(arg=None):
     oSheet.getCellByPosition(11,2).String = 'Quantità\nNegative'
     oSheet.getCellByPosition(13,2).String = 'Prezzo\nunitario'
     oSheet.getCellByPosition(15,2).String = 'Importi'
+    oSheet.getCellByPosition(16,2).String = 'Incidenza\nsul totale'
     oSheet.getCellByPosition(17,2).String = 'Sicurezza\ninclusa'
-    oSheet.getCellByPosition(18,2).String = 'Serve per avere le quantità\nrealizzate "pulite" e sommabili'
+    oSheet.getCellByPosition(18,2).String = 'importo totale\nsenza errori'
     oSheet.getCellByPosition(19,2).String = 'Lib.\nN.'
     oSheet.getCellByPosition(20,2).String = 'Lib.\nP.'
     oSheet.getCellByPosition(22,2).String = 'flag'
@@ -5435,7 +5445,7 @@ def inizializza_computo(arg=None):
     oSheet.getCellByPosition(33,2).String = 'Sub Cat'
     oSheet.getCellByPosition(34,2).String = 'tag B'
     oSheet.getCellByPosition(35,2).String = 'tag C'
-    oSheet.getCellByPosition(36,2).String = 'importo totale computo\nsole voci senza errori'
+    oSheet.getCellByPosition(36,2).String = 'importo totale\nsenza errori'
     oSheet.getCellByPosition(38,2).String = 'Figure e\nannotazioni'
     oSheet.getCellByPosition(43,2).String = 'riservato per annotare\nil numero della voce'
     oSheet.getCellRangeByPosition(0, 2, 43 , 2).CellStyle = 'comp Int_colonna'
@@ -6738,7 +6748,6 @@ def XPWE_import(arg=None):
     # ~'''
     # ~Viasualizza il menù export/import XPWE
     # ~'''
-    # ~chi(888)
     # ~XPWE_menu()
     # ~XPWE_in(elaborato)
 ########################################################################
@@ -7667,7 +7676,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 20 #'NUOVE FUNZIONALITA'
 Lsubv= "1.dev" #'CORREZIONE BUGS
-noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati')
+noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati', 'comp Int_colonna_R_prima')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R','Comp TOTALI')
 stili_analisi =('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc',

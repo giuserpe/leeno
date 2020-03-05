@@ -70,7 +70,7 @@ rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONT
 					CellRangeAddress.EndRow = lrow
 					
 					oSheet.copyRange(CellAddress, CellRangeAddress)
-					GoTo vai:
+&apos;					GoTo vai:
 				EndIf
 			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
 				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; Then

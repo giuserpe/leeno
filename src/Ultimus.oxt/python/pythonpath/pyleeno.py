@@ -5636,7 +5636,7 @@ LibreOffice POTREBBE SEMBRARE BLOCCATO!
 
 Vuoi procedere con la creazione della struttura dei capitoli?''', 'Avviso') == 3:
             return
-    riordina_ElencoPrezzi()
+    # ~ riordina_ElencoPrezzi()
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
@@ -6387,7 +6387,10 @@ Considera anche la possibilità di recuperare il formato XML(SIX)
 di questo prezzario dal sito ufficiale dell'ente che lo rilascia.        
 
 Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
-
+    oDialogo_attesa = dlg_attesa()
+    attesa().start() #mostra il dialogo
+    
+    if assembla ==2: colora_vecchio_elenco()
     orig = oDoc.getURL()
     dest0 = orig[0:-4]+ '_new.ods'
 
@@ -6395,8 +6398,6 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
     dest = uno.fileUrlToSystemPath(dest0)
 
     shutil.copyfile(orig, dest)
-    oDialogo_attesa = dlg_attesa()
-    attesa().start() #mostra il dialogo
     madre = ''
     for el in range(test, getLastUsedCell(oSheet).EndRow+1):
         tariffa = oSheet.getCellByPosition(2, el).String
@@ -6473,7 +6474,30 @@ Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
         oDialogo_attesa.endExecute()
     MsgBox('Conversione eseguita con successo!','')
     autoexec()
-   
+
+def colora_vecchio_elenco(arg=None):
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+    #~ giallo(16777072,16777120,16777168)
+    #~ verde(9502608,13696976,15794160)
+    #~ viola(12632319,13684991,15790335)
+    col1 = 16777072
+    col2 = 16777120
+    col3 = 16777168
+    inizio = uFindStringCol('COMPLETO', 4, oSheet) + 1
+    fine = getLastUsedCell(oSheet).EndRow + 1
+    for el in range(inizio, fine):
+        if len(oSheet.getCellByPosition(2, el).String.split('.')) == 1:
+            oSheet.getCellByPosition(2, el).CellBackColor = col1
+        if len(oSheet.getCellByPosition(2, el).String.split('.')) == 2:
+            oSheet.getCellByPosition(2, el).CellBackColor = col2
+        if len(oSheet.getCellByPosition(2, el).String.split('.')) == 3:
+            oSheet.getCellByPosition(2, el).CellBackColor = col3
+    oDoc.CurrentController.ZoomValue = zoom
+
+
 ########################################################################
 def importa_stili(filename=None):
     '''

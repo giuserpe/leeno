@@ -669,11 +669,14 @@ def Tutti_Subtotali(arg=None):
             SubSum_SottoCap(n)
 # TOTALI GENERALI
     lrow = ultima_voce(oSheet)+1
+    oSheet.getCellByPosition(17, 1).Formula = '=SUBTOTAL(9;R4:R' + str(lrow+1) + ')'
     oSheet.getCellByPosition(17, lrow).Formula = '=SUBTOTAL(9;R4:R' + str(lrow+1) + ')'
     oSheet.getCellByPosition(18, 1).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
     oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
     oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow+1) + ')'
+    oSheet.getCellByPosition(30, 1).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow+1) + ')'
     oSheet.getCellByPosition(36, lrow).Formula = '=SUBTOTAL(9;AK4:AK' + str(lrow+1) + ')'
+    oSheet.getCellByPosition(36, 1).Formula = '=SUBTOTAL(9;AK4:AK' + str(lrow+1) + ')'
 ########################################################################
 def SubSum_SuperCap(lrow):
     '''
@@ -7694,6 +7697,7 @@ Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.ge
     _gotoSheet(arg)
     #~ if uFindStringCol('Riepilogo strutturale delle Categorie', 2, oSheet) !='None':
         #~ firme_in_calce()
+    adatta_altezza_riga()
     MsgBox('Importazione di\n\n' + arg + '\n\neseguita con successo!', '')
 # XPWE_in ##########################################################
 ########################################################################

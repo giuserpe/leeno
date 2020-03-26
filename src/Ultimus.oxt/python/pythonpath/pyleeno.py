@@ -668,12 +668,12 @@ def Tutti_Subtotali(arg=None):
         if oSheet.getCellByPosition(0, n).CellStyle == 'livello2 valuta':
             SubSum_SottoCap(n)
 # TOTALI GENERALI
-    # ~lrow = ultima_voce(oSheet)+1
-    # ~for x in (4, lrow):
-        # ~oSheet.getCellByPosition(17, x).Formula = '=SUBTOTAL(9;R4:R' + str(lrow+1) + ')'
-        # ~oSheet.getCellByPosition(18, x).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
-        # ~oSheet.getCellByPosition(30, x).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow+1) + ')'
-        # ~oSheet.getCellByPosition(36, x).Formula = '=SUBTOTAL(9;AK4:AK' + str(lrow+1) + ')'
+    lrow = ultima_voce(oSheet)+1
+    oSheet.getCellByPosition(17, lrow).Formula = '=SUBTOTAL(9;R4:R' + str(lrow+1) + ')'
+    oSheet.getCellByPosition(18, 1).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
+    oSheet.getCellByPosition(18, lrow).Formula = '=SUBTOTAL(9;S4:S' + str(lrow+1) + ')'
+    oSheet.getCellByPosition(30, lrow).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow+1) + ')'
+    oSheet.getCellByPosition(36, lrow).Formula = '=SUBTOTAL(9;AK4:AK' + str(lrow+1) + ')'
 ########################################################################
 def SubSum_SuperCap(lrow):
     '''
@@ -1340,14 +1340,14 @@ def adatta_altezza_riga(nSheet=None):
     nSheet   { string } : nSheet della sheet
     imposta l'altezza ottimale delle celle
     '''
-    if float(loVersion()[:5].replace('.','')) >= 642: #DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
-        return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oDoc.getSheets().hasByName('S1') == False: return
     nSheet = oSheet.Name
     oDoc.getSheets().hasByName(nSheet)
     oSheet.getCellRangeByPosition(0, 0, getLastUsedCell(oSheet).EndColumn, getLastUsedCell(oSheet).EndRow).Rows.OptimalHeight = True
+    if float(loVersion()[:5].replace('.','')) >= 642: #DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
+        return
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr', 'EP-a', 'Ultimus_centro_bordi_lati')
     if float(loVersion()[:3]) > 5.2 and float(loVersion()[:3]) < 6.4: #NELLA VERSIONE 6.2 IL PROBLEMA NON è ANCORA RISOLTO
@@ -9698,9 +9698,12 @@ def filtro_descrizione (arg=None):
     if descrizione in (None, ''):
         return
     y = 4
+    chi(y)
+    return
     while y < fine:
-        if uFindStringCol(descrizione, 2, oSheet, y):
-            y = uFindStringCol(descrizione, 2, oSheet, y)
+        test = uFindStringCol(descrizione, 2, oSheet, y)
+        if test != None:
+            y = test
             oSheet.getCellByPosition (2, y).CellBackColor = 15757935
             el_y.append(seleziona_voce(y))
             try:
@@ -9711,7 +9714,9 @@ def filtro_descrizione (arg=None):
                 return
             y += 1
         y += 1
-        
+    if len(el_y) == 0:
+        MsgBox('''Testo non trovato.''','ATTENZIONE!')
+        return
     lista_y = list()
     lista_y.append (2)
     for el in el_y:

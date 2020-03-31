@@ -256,54 +256,6 @@ DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 end Sub
 
 
-Sub Validation_2_default
-	oSheet = ThisComponent.Sheets.getByName(_
-	ThisComponent.currentcontroller.activesheet.name)
- 	ocell = thiscomponent.currentselection()
-	sCellStyle = ocell.CellStyle
-&apos;	msgbox &quot;Il colore di sfondo dello Stile &lt;&quot; &amp; sCellStyle &amp; &quot;&gt; applicato alla cella selezionata&quot; &amp; CHR$(10)_
-	&apos; &amp; &quot; è stato resettato a &quot;&quot;Default&quot;&quot; &quot; 
-&apos;	dim oMyStyleCell as object
-	oMyStyleCell = Thiscomponent._
-		StyleFamilies.CellStyles.getByName(sCellStyle)
-		
-&apos;	xray 	oMyStyleCell&apos;.getPropertyDefaults(&quot;b&quot;)
-&apos;	getParentStyle ( ) AS string 
-&apos;getPropertyDefault
-	&apos;________________________________
-
-xray oMyStyleCell
-oMyStyleCell.setPropertyToDefault(&quot;ValidationLocal&quot;)
-
-&apos;oMyStyleCell.setPropertyToDefault(&quot;topborder.OuterLineWidth&quot;)
-
-&apos;oMyStyleCell.setPropertyToDefault(&quot;OuterLineWidth&quot;)
-&apos;
-&apos;___questa funzia__________________________________________________
-end sub
-
-
-
-
-Sub Border_2_default
-	oSheet = ThisComponent.Sheets.getByName(_
-	ThisComponent.currentcontroller.activesheet.name)
- 	ocell = thiscomponent.currentselection()
-	sCellStyle = ocell.CellStyle
-	msgbox &quot;I bordi dello Stile &lt;&quot; &amp; sCellStyle &amp; &quot;&gt; applicati alla cella selezionata&quot; &amp; CHR$(10)_
-	 &amp; &quot; sono stati resettati a &quot;&quot;Default&quot;&quot; &quot; 
-&apos;	dim oMyStyleCell as object
-	oMyStyleCell = Thiscomponent._
-		StyleFamilies.CellStyles.getByName(sCellStyle)
-&apos;	xray 	oMyStyleCell
-&apos;________________________________
-oMyStyleCell.setPropertyToDefault(&quot;ShadowFormat&quot;)&apos;?????????????
-
-
-&apos;___questa funzia__________________________________________________
-
-End Sub
-
 Function Verifica_chiudi_preview &apos;(optional sPrima as string)
 	dim document as object
 	dim dispatcher as object

@@ -1481,7 +1481,7 @@ def voce_breve_ep(arg=None):
 
     oRange=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow+1
-    ER = oRange.EndRow-1
+    ER = oRange.EndRow
 
     if oSheet.getCellByPosition(1, 3).Rows.OptimalHeight == False:
         adatta_altezza_riga()
@@ -7927,15 +7927,22 @@ def filtra_codice(voce=None):
     # ~zoom = oDoc.CurrentController.ZoomValue
     # ~oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
+    
     if oSheet.Name == "Elenco Prezzi":
+        oCell= oSheet.getCellRangeByName('C2')
         voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(0, Range2Cell()[1]).String
-        # ~elaborato = oSheet.getCellByPosition(2,1).String
-        # ~_gotoSheet(elaborato)
-        try:
-            elaborato = scegli_elaborato('Ricerca di ' + voce)
-            _gotoSheet(elaborato)
-        except:
-            return
+        if oCell.String == '_DIALOGO_' or oCell.String == '':
+            try:
+                elaborato = scegli_elaborato('Ricerca di ' + voce)
+                _gotoSheet(elaborato)
+            except:
+                return
+        else:
+            elaborato = oSheet.getCellByPosition(2,1).String
+            try:
+                _gotoSheet(elaborato)
+            except:
+                return
         oSheet = oDoc.Sheets.getByName(elaborato)
         _gotoCella(0,6)
         next_voice(Range2Cell()[1],1)
@@ -8130,6 +8137,13 @@ def autoexec(arg=None):
     oDoc.getSheets().getByName('copyright_LeenO').getCellRangeByName('A3').String = '# © 2001-2013 Bartolomeo Aimar - © 2014-'+str(datetime.now().year)+' Giuseppe Vizziello'
     oDoc.getSheets().getByName('S1').getCellRangeByName('G219').String = 'Copyright 2014-'+str(datetime.now().year)
     
+    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C2')
+    valida_cella(oCell, '"<DIALOGO>";"COMPUTO";"VARIANTE";"CONTABILITA"',titoloInput='Scegli...', msgInput='Applica Filtra Codice a...', err=True)
+    oCell.String = "<DIALOGO>"
+    oCell.CellStyle = 'EP-aS'
+    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C1')
+    oCell.String = "Applica Filtro a:"
+    oCell.CellStyle = 'EP-aS'
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if 'Esempio_' not in oDoc.getURL():
         oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
@@ -9702,8 +9716,6 @@ def filtro_descrizione (arg=None):
     if descrizione in (None, ''):
         return
     y = 4
-    chi(y)
-    return
     while y < fine:
         test = uFindStringCol(descrizione, 2, oSheet, y)
         if test != None:

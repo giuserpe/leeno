@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:id="DlgDonazioni" dlg:left="200" dlg:top="115" dlg:width="150" dlg:height="206" dlg:help-text="&amp;785.DlgDonazioni.HelpText" dlg:closeable="true" dlg:moveable="true" dlg:title="&amp;786.DlgDonazioni.Title">
+ <dlg:bulletinboard>
+  <dlg:img dlg:id="ImageControl1" dlg:tab-index="0" dlg:left="5" dlg:top="5" dlg:width="140" dlg:height="96" dlg:help-text="&amp;787.DlgDonazioni.ImageControl1.HelpText">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.donazioni?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:img>
+  <dlg:text dlg:id="Label1" dlg:tab-index="1" dlg:left="5" dlg:top="108" dlg:width="140" dlg:height="74" dlg:help-text="&amp;788.DlgDonazioni.Label1.HelpText" dlg:value="&amp;789.DlgDonazioni.Label1.Label" dlg:align="center" dlg:valign="center">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.donazioni?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:text>
+  <dlg:button dlg:id="CommandButton2" dlg:tab-index="2" dlg:left="50" dlg:top="187" dlg:width="50" dlg:height="13" dlg:help-text="&amp;792.DlgDonazioni.CommandButton2.HelpText" dlg:value="&amp;793.DlgDonazioni.CommandButton2.Label">
+   <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.donazioni?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+ </dlg:bulletinboard>
+</dlg:window>

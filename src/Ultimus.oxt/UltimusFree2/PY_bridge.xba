@@ -160,4 +160,8 @@ rem ######################################################################
 Sub config_default
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;config_default&quot;)
 End Sub
+rem ######################################################################
+Sub donazioni
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;donazioni&quot;)
+End Sub
 </script:module>

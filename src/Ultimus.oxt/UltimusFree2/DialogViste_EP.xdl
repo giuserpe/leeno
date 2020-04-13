@@ -48,7 +48,5 @@
   <dlg:button dlg:style-id="0" dlg:id="CommandButton7" dlg:tab-index="17" dlg:left="109" dlg:top="104" dlg:width="90" dlg:height="12" dlg:help-text="&amp;488.DialogViste_EP.CommandButton6.HelpText" dlg:value="Trova i Nuovi Prezzi">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.trova_np?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:text dlg:id="Label1" dlg:tab-index="18" dlg:left="124" dlg:top="-50" dlg:width="22" dlg:height="12" dlg:help-text="&amp;779.DialogViste_EP.Label1.HelpText" dlg:value="&amp;780.DialogViste_EP.Label1.Label" dlg:valign="center"/>
-  <dlg:combobox dlg:id="ComboBox1" dlg:tab-index="19" dlg:left="156" dlg:top="-50" dlg:width="59" dlg:height="12" dlg:help-text="&amp;781.DialogViste_EP.ComboBox1.HelpText" dlg:value="&amp;782.DialogViste_EP.ComboBox1.Text" dlg:spin="true"/>
  </dlg:bulletinboard>
 </dlg:window>

@@ -7722,6 +7722,7 @@ GetmyToolBarNames =('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO',
+    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',)
 #
 codice_da_cercare = ''
@@ -7922,6 +7923,10 @@ def SubSum(lrow, sub=False):
 # GESTIONE DELLE VISTE IN STRUTTURA ####################################
 ########################################################################
 def filtra_codice(voce=None):
+    '''
+    Applica un filtro di visualizzazione sulla base del codice di voce selezionata.
+    Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
+    '''
     refresh(0)
     oDoc = XSCRIPTCONTEXT.getDocument()
     # ~zoom = oDoc.CurrentController.ZoomValue
@@ -7931,7 +7936,7 @@ def filtra_codice(voce=None):
     if oSheet.Name == "Elenco Prezzi":
         oCell= oSheet.getCellRangeByName('C2')
         voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(0, Range2Cell()[1]).String
-        if oCell.String == '_DIALOGO_' or oCell.String == '':
+        if oCell.String == '<DIALOGO>' or oCell.String == '':
             try:
                 elaborato = scegli_elaborato('Ricerca di ' + voce)
                 _gotoSheet(elaborato)
@@ -8886,10 +8891,12 @@ def toolbar_vedi(arg=None):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO')
         elif nSheet == 'Analisi di Prezzo':
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI')
-        #~ elif nSheet == 'CONTABILITA':
-            #~ toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
-        elif nSheet in('COMPUTO','VARIANTE','CONTABILITA'):
+        elif nSheet in('COMPUTO','VARIANTE'):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
+            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG')
+        elif nSheet == 'CONTABILITA':
+            toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
+            # ~ toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG')
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
         #~ fissa()
     except:

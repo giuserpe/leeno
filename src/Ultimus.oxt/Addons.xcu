@@ -570,6 +570,28 @@
             <value>private:separator</value>
           </prop>
         </node>
+        <node oor:name="Ca70" oor:op="replace">
+          <prop oor:name="Context" oor:type="xs:string">
+            <value>com.sun.star.sheet.SpreadsheetDocument</value>
+          </prop>
+          <prop oor:name="URL" oor:type="xs:string">
+            <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$invia_voce?language=Python&amp;location=user:uno_packages</value>
+          </prop>
+          <prop oor:name="ImageIdentifier" oor:type="xs:string">
+            <value>%origin%/icons/invia_voce_ep</value>
+          </prop>
+          <prop oor:name="Title" oor:type="xs:string">
+            <value>Invia le voci di Elenco Prezzi selezionate al DCC</value>
+          </prop>
+          <prop oor:name="Target" oor:type="xs:string">
+            <value>_self</value>
+          </prop>
+        </node>
+      </node>
+    </node>
+<!--CATEGORIE-->
+    <node oor:name="OfficeToolBar">
+      <node oor:name="ULTIMUS_3.OfficeToolBar_CATEG" oor:op="replace">
         <node oor:name="Ca50" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -621,25 +643,9 @@
             <value>_self</value>
           </prop>
         </node>
-        <node oor:name="Ca70" oor:op="replace">
-          <prop oor:name="Context" oor:type="xs:string">
-            <value>com.sun.star.sheet.SpreadsheetDocument</value>
-          </prop>
-          <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$invia_voce?language=Python&amp;location=user:uno_packages</value>
-          </prop>
-          <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/invia_voce_ep</value>
-          </prop>
-          <prop oor:name="Title" oor:type="xs:string">
-            <value>Invia le voci di Elenco Prezzi selezionate al DCC</value>
-          </prop>
-          <prop oor:name="Target" oor:type="xs:string">
-            <value>_self</value>
-          </prop>
-        </node>
       </node>
     </node>
+    
     <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
     <node oor:name="OfficeToolBar">
       <node oor:name="ULTIMUS_3.OfficeToolBar_CONTABILITA" oor:op="replace">

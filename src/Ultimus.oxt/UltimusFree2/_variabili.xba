@@ -51,6 +51,7 @@ Function GetmyToolBarNames()
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, _
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO&quot;, _
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA&quot;, _
+		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG&quot;, _
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI&quot;, _
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO&quot;, _
 	)

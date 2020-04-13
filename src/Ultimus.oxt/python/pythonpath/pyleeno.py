@@ -1084,7 +1084,7 @@ def vai_a_S2(arg=None):
     _gotoSheet('S2')
     _primaCella(0,0)
 ########################################################################
-def Vai_a_S1(arg=None):
+def vai_a_S1(arg=None):
     chiudi_dialoghi()
     _gotoSheet('S1')
     _primaCella(0,190)
@@ -4716,6 +4716,7 @@ def config_default(arg=None):
     ('Generale', 'torna_a_ep', '1'),
     ('Generale', 'copie_backup', '5'),
     ('Generale', 'pausa_backup', '15'),
+    ('Generale', 'conta_usi', '0'),
     
     #~ ('Computo', 'riga_bianca_categorie', '1'),
     #~ ('Computo', 'voci_senza_numerazione', '0'),
@@ -8134,6 +8135,10 @@ def autoexec(arg=None):
     except FileExistsError:
         config_default()
     config_default()
+    uso = int(conf.read(path_conf, 'Generale', 'conta_usi')) +1 
+    if uso == 10 or (uso % 50) == 0:
+        dlg_donazioni()
+    conf.write(path_conf, 'Generale', 'conta_usi', str(uso))
     if conf.read(path_conf, 'Generale', 'movedirection') == '0':
         oGSheetSettings.MoveDirection = 0
     else:
@@ -9000,6 +9005,21 @@ def make_pack(arg=None, bar=0):
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
     shutil.copyfile(nomeZip2, nomeZip)
+#######################################################################
+def dlg_donazioni(arg=None):
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgDonazioni?language=Basic&location=application")
+    oDialog1Model = oDialog1.Model
+    # ~ oDialog1.Title = 'Fai una donazione...'
+    sUrl = LeenO_path()+'/icons/pizza.png'
+    oDialog1.getModel().ImageControl1.ImageURL=sUrl
+    oDialog1.execute()
+    return
+########################################################################
+def donazioni(arg=None):
+    apri = createUnoService("com.sun.star.system.SystemShellExecute")
+    apri.execute("https://leeno.org/donazioni/","", 0)
 #######################################################################
 def dlg_attesa(msg=''):
     '''
@@ -9876,12 +9896,22 @@ def debug (arg=None):
     # ~ rigenera_tutte()
     # ~ sistema_stili()
     # ~ sistema_cose()
+    # ~ chi(path_conf)
+    # ~ colora_vecchio_elenco()
+    # ~ trova_np()
+    # ~ debug_link()
+    # ~ Tutti_Subtotali()
+    # ~ adatta_altezza_riga()
     # ~ struttura_Elenco()
-    sardegna_2019()
+    # ~sardegna_2019()
     # ~ hl()
     # ~ bak0()
+    # ~ ns_ins()
+    # ~ dlg_donazioni()
+    chi(100 % 50)
     return
 def debug_ (arg=None):
+    '''cambio data cotabilità'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~ chi(oDoc.getCurrentSelection().Value)
@@ -9958,7 +9988,7 @@ def errore(arg=None):
     MsgBox (traceback.format_exc())
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = hl,
+g_exportedScripts = donazioni,
 ########################################################################
 ########################################################################
 # ... here is the python script code

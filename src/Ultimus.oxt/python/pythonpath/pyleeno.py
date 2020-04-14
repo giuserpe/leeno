@@ -51,7 +51,7 @@ from com.sun.star.script.provider import XScriptProviderFactory
     
 from com.sun.star.script.provider import XScriptProvider
 def barra_di_stato(testo='', valore=0):
-    '''Informa l'utente sullo stato progressivo dell'eleborazione.'''
+    '''Informa l'utente sullo stato progressivo dell'elaborazione.'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oProgressBar = oDoc.CurrentController.Frame.createStatusIndicator()
     oProgressBar.start('', 100)
@@ -491,7 +491,7 @@ def Inser_SottoCapitolo(arg=None):
 
 def Inser_SottoCapitolo_arg(lrow, sTesto): #
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     sTesto  { string } : titolo della sottocategoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -583,7 +583,7 @@ def Inser_SuperCapitolo(arg=None):
 
 def Inser_SuperCapitolo_arg(lrow, sTesto='Super Categoria'): #
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     sTesto  { string } : titolo della categoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -619,7 +619,7 @@ def Inser_Capitolo(arg=None):
 
 def Inser_Capitolo_arg(lrow, sTesto='Categoria'): #
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     sTesto  { string } : titolo della categoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -680,7 +680,7 @@ def Tutti_Subtotali(arg=None):
 ########################################################################
 def SubSum_SuperCap(lrow):
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     inserisce i dati nella riga di SuperCategoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -721,7 +721,7 @@ def SubSum_SuperCap(lrow):
 ########################################################################
 def SubSum_SottoCap(lrow):
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     inserisce i dati nella riga di subcategoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -760,7 +760,7 @@ def SubSum_SottoCap(lrow):
 ########################################################################
 def SubSum_Cap(lrow):
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     inserisce i dati nella riga di categoria
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -799,7 +799,7 @@ def SubSum_Cap(lrow):
 ########################################################################
 def Sincronizza_SottoCap_Tag_Capitolo_Cor(arg=None):
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     sincronizza il categoria e sottocategorie
     '''
     datarif = datetime.now()
@@ -1261,7 +1261,7 @@ def show_sheets(x=True):
     '''
     x   { boolean } : True = ON, False = OFF
     
-    Mastra/nasconde tutte le tabelle ad escluzione di COMPUTO ed Elenco Prezzi
+    Mastra/nasconde tutte le tabelle ad esclusione di COMPUTO ed Elenco Prezzi
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
@@ -1338,7 +1338,7 @@ def loVersion(arg=None):
 #~ ########################################################################
 def adatta_altezza_riga(nSheet=None):
     '''
-    Adattal'altezza delle righe al contenuto delle celle.
+    Adatta l'altezza delle righe al contenuto delle celle.
     
     nSheet   { string } : nSheet della sheet
     imposta l'altezza ottimale delle celle
@@ -2749,7 +2749,7 @@ def next_voice(lrow, n=1):
     lrow { double }   : riga di riferimento
     n    { integer }  : se 0 sposta prima della voce corrente
                         se 1 sposta dopo della voce corrente
-    sposta il cursore prima o dopo la voce corrente restituento un idrow
+    sposta il cursore prima o dopo la voce corrente restituendo un idrow
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -2864,7 +2864,7 @@ def analisi_in_ElencoPrezzi(arg=None):
 ########################################################################
 def tante_analisi_in_ep(arg=None):
     '''
-    Trsferisce le analisi all'Elenco Prezzi.
+    Trasferisce le analisi all'Elenco Prezzi.
     '''
     chiudi_dialoghi()
     refresh(0)
@@ -3206,7 +3206,7 @@ def seleziona(lrow=None):
 ########################################################################
 def seleziona_voce(lrow=None):
     '''
-    Restutisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
+    Restituisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
     CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     '''
@@ -3245,7 +3245,7 @@ def elimina_voce(lrow=None, msg=1):
     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     msg  { bit }   : 1 chiedi conferma con messaggio
-                     0 egegui senza conferma
+                     0 esegui senza conferma
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -3388,7 +3388,7 @@ def Copia_riga_Ent(arg=None): #Aggiungi Componente - capisce su quale tipologia 
 def cerca_partenza(arg=None):
     '''
     Conserva, nella variabile globale 'partenza', il nome del foglio [0] e l'id
-    della riga di codice prezzo componente [1], il flag '#reg' solo per la contbailità.
+    della riga di codice prezzo componente [1], il flag '#reg' solo per la contabilità.
     partenza = (nome_foglio, id_rcodice, flag_contabilità)
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -3670,7 +3670,7 @@ def inverti_segno(arg=None):
 ########################################################################
 def valuta_cella(oCell):
     '''
-    Estrae qualsiasi valore da una cella, restituendo una strigna, indipendentemente dal tipo originario.
+    Estrae qualsiasi valore da una cella, restituendo una stringa, indipendentemente dal tipo originario.
     oCell       { object }  : cella da validare
     '''
     if oCell.Type.value == 'FORMULA':
@@ -4056,7 +4056,7 @@ def Range2Cell(arg=None):
 # restituisce l'ID dell'ultima riga usata
 def getLastUsedCell(oSheet):
     '''
-    Restitusce l'indirizzo dell'ultima cella usata
+    Restituisce l'indirizzo dell'ultima cella usata
     in forma di oggetto
     '''
     oCell = oSheet.getCellByPosition(0, 0)
@@ -4959,7 +4959,7 @@ def svuota_contabilita(arg=None):
 ########################################################################
 def partita (testo):
     '''
-    Aggiunge/dedrae rigo di PARTITA PROVVISORIA
+    Aggiunge/detrae rigo di PARTITA PROVVISORIA
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6508,7 +6508,7 @@ def colora_vecchio_elenco(arg=None):
 def importa_stili(filename=None):
     '''
     Importa tutti gli stili da un documento di riferimento. Se non è
-    selezionato, il file di rifetimento è il template di leenO.
+    selezionato, il file di riferimento è il template di leenO.
     '''
     if DlgSiNo('''Questa operazione sovrascriverà gli stili
 del documento attivo, se già presenti!
@@ -6546,7 +6546,7 @@ def parziale(arg=None):
 ###
 def parziale_core(lrow):
     '''
-    lrow    { double } : id della riga di inerimento
+    lrow    { double } : id della riga di inserimento
     '''
 
     if lrow == 0: return
@@ -6717,7 +6717,7 @@ def converti_stringhe(arg=None):
 def getNumFormat (FormatString):
     '''
     Restituisce il numero identificativo del formato sulla base di una
-    stringa di rifetrimento.
+    stringa di riferimento.
     FormatString { string } : codifica letterale del numero; es.: "#.##0,00"
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -6767,7 +6767,7 @@ def dec_pl (nome_stile, n):
         # ~XPWE_import_run()
 def XPWE_import(arg=None):
     '''
-    Viasualizza il menù Esporta XPWE
+    Visualizza il menù Esporta XPWE
     '''
     try:
         XPWE_in(scegli_elaborato('Importa dal formato XPWE'))
@@ -7246,7 +7246,7 @@ Si tenga conto che:
   sicurezza e di manodopera!""",'ATTENZIONE!')
         pass
     if len(lista_misure) != 0 and arg not in ('Elenco', 'CONTABILITA'):
-        if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la stuttura delle Categorie?
+        if DlgSiNo("""Vuoi tentare un riordino delle voci secondo la struttura delle Categorie?
 
     Scegliendo Sì, nel caso in cui il file di origine risulti particolarmente disordinato, riceverai un messaggio che ti indica come intervenire.
 
@@ -7642,8 +7642,8 @@ Si tenga conto che:
                         MsgBox("""Il file di origine è particolarmente disordinato.
 Riordinando il computo trovo riferimenti a voci non ancora inserite.
 
-Al termine dell'impotazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
-"""\nalla riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
+Al termine dell'importazione controlla la voce con tariffa """ + dict_articoli.get(ID).get('tariffa') +
+"""\nella riga n.""" + str(lrow+2) + """ del foglio, evidenziata qui a sinistra.""", 'Attenzione!')
                         oSheet.getCellByPosition(44, SR).String = dict_articoli.get(ID).get('tariffa')
                 try:
                     mis[7]
@@ -8203,7 +8203,7 @@ def autoexec(arg=None):
 ########################################################################
 def computo_terra_terra(arg=None):
     '''
-    Settaggio base di configuazione colonne in COMPUTO e VARIANTE
+    Settaggio base di configurazione colonne in COMPUTO e VARIANTE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -8212,7 +8212,7 @@ def computo_terra_terra(arg=None):
 ########################################################################
 def viste_nuove(sValori):
     '''
-    sValori { string } : una tringa di configurazione della visibilità colonne
+    sValori { string } : una stringa di configurazione della visibilità colonne
     permette di visualizzare/nascondere un set di colonne
     T = visualizza
     F = nasconde
@@ -8335,7 +8335,7 @@ def adegua_tmpl(arg=None):
     - dal 203(LeenO 3.14.0 ha templ 202) introdotta la Super Categoria con nuovi stili di cella;
         sostituita la colonna "Tag A" con "Tag Super Cat"
     - dal 207 introdotta la colonna dei materiali in computo e contabilità
-    - dal 209 cambia il nome di propietà del file in "Versione_LeenO"
+    - dal 209 cambia il nome di proprietà del file in "Versione_LeenO"
     - dal 211 cambiano le formule del prezzo unitario e dell'importo in Computo e Contabilità
     - dal 212 vengono cancellate le celle che indicano il DCC nel foglio M1
     - dal 213 sposta il VediVoce nella colonna E
@@ -8553,7 +8553,7 @@ def r_version_code(arg=None):
 ########################################################################
 def XPWE_export_run(arg=None):
     '''
-    Viasualizza il menù export/import XPWE
+    Visualizza il menù export/import XPWE
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     if oDoc.getSheets().hasByName('S2') == False: return
@@ -8659,7 +8659,7 @@ def dp (arg=None):
 ####
 def DlgMain(arg=None):
     '''
-    Visualizza il menù principaledialog_fil
+    Visualizza il menù principale dialog_fil
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
@@ -8768,7 +8768,7 @@ def InputBox(sCella='', t=''):
     '''
     sCella  { string } : stringa di default nella casella di testo
     t       { string } : titolo del dialogo
-    Viasualizza un dialogo di richiesta testo
+    Visualizza un dialogo di richiesta testo
     '''
 
     psm = uno.getComponentContext().ServiceManager
@@ -8790,7 +8790,7 @@ def hide_error(lErrori, icol):
     '''
     lErrori  { tuple } : nome dell'errore es.: '#DIV/0!'
     icol { integer } : indice di colonna della riga da nascondere
-    Viasualizza o nascondi una toolbar
+    Visualizza o nascondi una toolbar
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     zoom = oDoc.CurrentController.ZoomValue
@@ -8813,7 +8813,7 @@ def hide_error(lErrori, icol):
 ########################################################################
 def bak0(arg=None):
     '''
-    Fa il backup del file di lavoro all'aperura. 
+    Fa il backup del file di lavoro all'apertura. 
     '''
     tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))[:12]
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -8929,7 +8929,7 @@ def toolbar_on(toolbarURL, flag=1):
     '''
     toolbarURL  { string } : indirizzo toolbar
     flag { integer } : 1 = acceso; 0 = spento
-    Viasualizza o nascondi una toolbar
+    Visualizza o nascondi una toolbar
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -9250,7 +9250,7 @@ def debug_link(arg=None):
 def descrizione_in_una_colonna (flag=False):
 #~ def debug(arg=None):
     '''
-    Consente di estedere su più colonne o ridurre ad una colonna lo spazio
+    Consente di estendere su più colonne o ridurre ad una colonna lo spazio
     occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -9531,7 +9531,7 @@ def debug_errore(arg=None):
 def trova_ricorrenze(arg=None):
     '''
     Consente la visualizzazione selettiva delle voci di COMPUTO che fanno
-    capo alla stezza voce di Elenco Prezzi.
+    capo alla stessa voce di Elenco Prezzi.
     '''
     chiudi_dialoghi()
     def ricorrenze(arg=None):
@@ -9753,7 +9753,7 @@ def filtro_descrizione (arg=None):
                 y = next_voice(seleziona_voce(y)[1])
             except TypeError:
                 MsgBox('''Questo comando non produce risultato se il cursore
-è oltre la riga rossa di Fine Comuputo.''','ATTENZIONE!')
+è oltre la riga rossa di Fine Computo.''','ATTENZIONE!')
                 return
             y += 1
         y += 1
@@ -9911,7 +9911,7 @@ def debug (arg=None):
     chi(100 % 50)
     return
 def debug_ (arg=None):
-    '''cambio data cotabilità'''
+    '''cambio data contabilità'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~ chi(oDoc.getCurrentSelection().Value)

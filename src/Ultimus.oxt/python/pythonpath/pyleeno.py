@@ -1605,7 +1605,6 @@ def scelta_viste(arg=None):
         if oSheet.getCellByPosition(1, 3).Rows.OptimalHeight == False: oDialog1.getControl('CBDesc').State = 1
         if oSheet.getColumns().getByIndex(7).Columns.IsVisible  == True: oDialog1.getControl('CBOrig').State = 1
         if oDialog1.execute() == 1:
-            default = oDialog1.getControl('ComboBox1').Text
             if oDialog1.getControl("CBSic").State == 0: #sicurezza
                 oSheet.getColumns().getByIndex(3).Columns.IsVisible = False
             else:
@@ -7648,7 +7647,7 @@ Al termine dell'importazione controlla la voce con tariffa """ + dict_articoli.g
                 try:
                     mis[7]
                     if '-' in mis[7]:
-                        for x in range(5, 8):
+                        for x in range(5, 9):
                             try:
                                 if oSheet.getCellByPosition(x, SR).Value != 0:
                                     oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)

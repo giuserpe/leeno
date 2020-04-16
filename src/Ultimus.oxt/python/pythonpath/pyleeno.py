@@ -1353,7 +1353,9 @@ def adatta_altezza_riga(nSheet=None):
         return
     #~ se la versione di LibreOffice è maggiore della 5.2, esegue il comando agendo direttamente sullo stile
     lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr', 'EP-a', 'Ultimus_centro_bordi_lati')
-    if float(loVersion()[:3]) > 5.2 and float(loVersion()[:3]) < 6.4: #NELLA VERSIONE 6.2 IL PROBLEMA NON è ANCORA RISOLTO
+    #NELLE VERSIONI DA 5.4.2 A 6.4.1
+    if float(loVersion()[:5].replace('.','')) > 520 or float(loVersion()[:5].replace('.','')) < 642:
+        chi(float(loVersion()[:5].replace('.','')))
         for stile_cella in lista_stili:
             try:
                 oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True

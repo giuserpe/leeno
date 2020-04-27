@@ -8304,6 +8304,73 @@ def elimina_stili_cella(arg=None):
         if oDoc.StyleFamilies.getByName('CellStyles').getByName(el).isInUse() == False:
             oDoc.StyleFamilies.getByName('CellStyles').removeByName(el)
 ########################################################################
+def inizializza(arg=None):
+    '''
+    Inserisce tutti i dati e gli stili per preparare il lavoro.
+    lanciata in autoexec()
+    '''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    
+    #~ oDoc.IsUndoEnabled = False
+    oDoc.getSheets().getByName('copyright_LeenO').getCellRangeByName('A3').String = '# © 2001-2013 Bartolomeo Aimar - © 2014-'+str(datetime.now().year)+' Giuseppe Vizziello'
+    
+    oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
+    oSheet = oDoc.getSheets().getByName('S1')
+    
+    oSheet.getCellRangeByName('G219').String = 'Copyright 2014-'+str(datetime.now().year)
+    oSheet.getCellRangeByName('H194').Value = r_version_code()
+    oSheet.getCellRangeByName('I194').Value = Lmajor
+    oSheet.getCellRangeByName('J194').Value = Lminor
+    
+    oSheet.getCellRangeByName('H291').Value = oUDP.Versione
+    oSheet.getCellRangeByName('I291').String = oUDP.Versione_LeenO.split('.')[0]
+    oSheet.getCellRangeByName('J291').String = oUDP.Versione_LeenO.split('.')[1]
+
+    oSheet.getCellRangeByName('H295').String = oUDP.Versione_LeenO.split('.')[0]
+    oSheet.getCellRangeByName('I295').String = oUDP.Versione_LeenO.split('.')[1]
+    oSheet.getCellRangeByName('J295').String = oUDP.Versione_LeenO.split('.')[2]
+    
+    oSheet.getCellRangeByName('K194').String = Lsubv
+    oSheet.getCellRangeByName('H296').Value = Lmajor
+    oSheet.getCellRangeByName('I296').Value = Lminor
+    oSheet.getCellRangeByName('J296').String = Lsubv
+    
+    if oDoc.getSheets().hasByName('CONTABILITA') == True:
+        oSheet.getCellRangeByName('H328').Value = 1
+    else:
+        oSheet.getCellRangeByName('H328').Value = 0
+
+# inizializza la lista di scelta per in elenco Prezzi
+    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C2')
+    valida_cella(oCell, '"<DIALOGO>";"COMPUTO";"VARIANTE";"CONTABILITA"',titoloInput='Scegli...', msgInput='Applica Filtra Codice a...', err=True)
+    oCell.String = "<DIALOGO>"
+    oCell.CellStyle = 'EP-aS'
+    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C1')
+    oCell.String = "Applica Filtro a:"
+    oCell.CellStyle = 'EP-aS'
+    
+# Indica qual è il Documento Principale
+    try:
+        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+            return
+    except:
+        return
+    oSheet = oDoc.CurrentController.ActiveSheet
+    for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
+        try:
+            oSheet = oDoc.Sheets.getByName(el)
+            #~oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
+            oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
+
+            if oSheet.getCellRangeByName('COMPUTO.A10').CellStyle != 'Default':
+                if oSheet.Name == 'Elenco Prezzi':
+                    oSheet.getCellRangeByName("A1").String = 'DP: ' + sUltimus
+                oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
+        except:
+            pass
+    #~ oDoc.IsUndoEnabled = True
+    nascondi_sheets()
+########################################################################
 def adegua_tmpl(arg=None):
     '''
     Mantengo la compatibilità con le vecchie versioni del template:

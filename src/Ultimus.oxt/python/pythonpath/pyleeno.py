@@ -1265,20 +1265,21 @@ def show_sheets(x=True):
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
-    # ~for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
-    for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+    #~ for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+    for nome in ('Elenco Prezzi', 'COMPUTO'):
         oSheets.remove(nome)
     #~ oSheets.remove('Elenco Prezzi')
     #~ oSheets.remove('COMPUTO')
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
         oSheet.IsVisible = x
-    for nome in ('COMPUTO', 'Elenco Prezzi'):
-        oSheet = oDoc.getSheets().getByName(nome)
-        oSheet.IsVisible = True
-    #~ if x == True:
-        #~ for nome in ('M1', 'S1', 'S2', 'S4', 'S5'):
-            #~ oSheet = oDoc.getSheets().getByName(nome).IsVisible = False
+    for nome in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
+        try:
+            oSheet = oDoc.getSheets().getByName(nome)
+            oSheet.IsVisible = True
+        except:
+            pass
+
 def nascondi_sheets(arg=None):
     show_sheets(False)
 ########################################################################

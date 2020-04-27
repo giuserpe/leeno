@@ -1356,7 +1356,7 @@ def adatta_altezza_riga(nSheet=None):
     lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R', 'Comp-Bianche in mezzo Descr', 'EP-a', 'Ultimus_centro_bordi_lati')
     #NELLE VERSIONI DA 5.4.2 A 6.4.1
     if float(loVersion()[:5].replace('.','')) > 520 or float(loVersion()[:5].replace('.','')) < 642:
-        chi(float(loVersion()[:5].replace('.','')))
+        #~chi(float(loVersion()[:5].replace('.','')))
         for stile_cella in lista_stili:
             try:
                 oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
@@ -1863,6 +1863,8 @@ Cancello le voci di misurazione?
             adatta_altezza_riga('VARIANTE')
     else:
         _gotoSheet('VARIANTE')
+    dp()
+    basic_LeenO("Menu.eventi_assegna")
 ########################################################################
 def genera_sommario(arg=None):
     '''

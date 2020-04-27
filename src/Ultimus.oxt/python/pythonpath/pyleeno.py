@@ -8093,10 +8093,10 @@ def autoexec_off(arg=None):
     #~ private:resource/toolbar/standardbar
     sUltimus = ''
     oDoc = XSCRIPTCONTEXT.getDocument()
-    for el in ('Analisi di Prezzo', 'COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
+    for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
         try:
             oSheet = oDoc.Sheets.getByName(el)
-            oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
+            oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
             oSheet.getCellRangeByName("A1").String = '' 
         except:
             pass

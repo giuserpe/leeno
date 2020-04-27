@@ -24,11 +24,6 @@ rem le seguenti identificano la versione del pacchetto
 Public Const Lmajor= 3			&apos;INCOMPATIBILITA&apos;
 Public Const Lminor= 20			&apos;NUOVE FUNZIONALITA&apos;
 Public Const Lsubv= &quot;1.dev&quot;		&apos;CORREZIONE BUGS
-Sub setta_versione
-&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,295).value = Lmajor
-&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(8,295).value = Lminor
-&apos;	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(9,295).string = Lsubv
-End Sub
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;
@@ -45,7 +40,6 @@ rem solo un appunto: clearContents()
 &apos;				com.sun.star.sheet.CellFlags.OBJECTS OR _		128
 &apos;				com.sun.star.sheet.CellFlags.EDITATTR)			256
 rem ######################################################################
-
 Function GetmyToolBarNames()
 		GetmyToolBarNames = Array ( _
 		&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar&quot;, _
@@ -59,10 +53,7 @@ Function GetmyToolBarNames()
 End Function
 rem ######################################################################
 Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenza_LibUltimus nel template
-&apos;	Print &quot;basic&quot;
-	ThisComponent.enableAutomaticCalculation(true)
 	eventi_assegna
-	
 	Dim oLibCont As object
 	oLibCont = createUnoService(&quot;com.sun.star.script.ApplicationScriptLibraryContainer&quot;)
 	If oLibCont.hasByName(&quot;XrayTool&quot;) Then	GlobalScope.Basiclibraries.LoadLibrary(&quot;XrayTool&quot;)
@@ -73,18 +64,7 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 		Dim oSheet As Object
 		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	EndIf
-	eventi_assegna
-&apos;	Elimina_Nomi_Area_errati
-&apos;assegna le macro agli eventi di ogni foglio e del documento:
 rem ----------------------------------------------------------------------
-rem visualizza le toolbar leeno
-
-&apos; imposto la VarG della contabilità S1.H328
-	If ThisComponent.Sheets.HasByName(&quot;CONTABILITA&quot;) Then
-		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1
-	Else
-		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0
-	EndIf
 	if cInt(oSheet.getCellByPosition(7,194).String) &lt; 200 Then	ScriptPy(&quot;pyleeno.py&quot;,&quot;autoexec&quot;)
 End Sub
 rem ######################################################################
@@ -92,23 +72,14 @@ Sub autoexec_off
 rem chiudo le toolbars
 	Dim oSheet, oContr as Object
 	Visualizza_normale
-	
-&apos;	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-&apos;	oSheet.isVisible = TRUE
-&apos;	oContr = ThisComponent.CurrentController
-&apos;	oContr.ZoomValue = 100
-&apos;	oContr.setactivesheet(oSheet)
-&apos;	oContr.setFirstVisibleColumn (0)
-&apos;	oContr.setFirstVisibleRow(190)
-	
+
 	eventi_pulisci
-	
+
 	Dim sName As String
 	For Each sName In GetmyToolBarNames()
 		toolbar_on (sName, 0)
 	Next
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;autoexec_off&quot;)
-&apos;	sUltimus = &quot;&quot;
 End Sub
 
 </script:module>

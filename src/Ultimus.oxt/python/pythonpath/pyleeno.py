@@ -8917,7 +8917,6 @@ def w_version_code(arg=None):
     return str(Lmajor) +'.'+ str(Lminor) +'.'+ Lsubv +'-'+ tempo[:-2]
 ########################################################################
 def toolbar_vedi(arg=None):
-    dp()
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
@@ -8944,7 +8943,6 @@ def toolbar_vedi(arg=None):
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO')
             # ~ toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG')
             toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA')
-        #~ fissa()
     except:
         pass
 ########################################################################

@@ -8386,12 +8386,8 @@ def adegua_tmpl(arg=None):
     - dal 215 adegua del formule degli importi ai prezzi in %
     - dal 216 aggiorna le formule in CONTABILITA
     '''
-    oDoc = XSCRIPTCONTEXT.getDocument()
     refresh(0)
-#qui le cose da cambiare comunque
-    
-    flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR # FORMATTED + HARDATTR 
-
+    oDoc = XSCRIPTCONTEXT.getDocument()
 # LE VARIABILI NUOVE VANNO AGGIUNTE IN config_default()
     # cambiare stile http://bit.ly/2cDcCJI
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione

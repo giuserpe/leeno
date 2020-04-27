@@ -4874,6 +4874,8 @@ def attiva_contabilita(arg=None):
             ins_voce_contab()
             #~ set_larghezza_colonne()
         _gotoSheet('CONTABILITA')
+    dp()
+    basic_LeenO("Menu.eventi_assegna")
 ########################################################################
 def svuota_contabilita(arg=None):
     '''Ricrea il foglio di contabilità partendo da zero.'''
@@ -5524,6 +5526,8 @@ def inizializza_analisi(arg=None):
         oDoc.CurrentController.select(oSheet.getCellByPosition(0,n+2+1))
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     oSheet.copyRange(oCellAddress, oRangeAddress)
+    dp()
+    basic_LeenO("Menu.eventi_assegna")
     inserisci_Riga_rossa()
     return
 ########################################################################

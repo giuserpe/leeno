@@ -8123,6 +8123,8 @@ def autoexec(arg=None):
     '''
     questa è richiamata da New_File()
     '''
+    inizializza()
+    basic_LeenO('_variabili.autoexec') #rinvia a autoexec in basic
     bak0()
     autorun()
     ctx = XSCRIPTCONTEXT.getComponentContext()

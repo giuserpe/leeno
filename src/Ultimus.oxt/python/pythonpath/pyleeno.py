@@ -8153,19 +8153,9 @@ def autoexec(arg=None):
     else:
         oGSheetSettings.MoveDirection = 1
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDoc.getSheets().getByName('copyright_LeenO').getCellRangeByName('A3').String = '# © 2001-2013 Bartolomeo Aimar - © 2014-'+str(datetime.now().year)+' Giuseppe Vizziello'
-    oDoc.getSheets().getByName('S1').getCellRangeByName('G219').String = 'Copyright 2014-'+str(datetime.now().year)
-    
-    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C2')
-    valida_cella(oCell, '"<DIALOGO>";"COMPUTO";"VARIANTE";"CONTABILITA"',titoloInput='Scegli...', msgInput='Applica Filtra Codice a...', err=True)
-    oCell.String = "<DIALOGO>"
-    oCell.CellStyle = 'EP-aS'
-    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C1')
-    oCell.String = "Applica Filtro a:"
-    oCell.CellStyle = 'EP-aS'
+    oDoc.enableAutomaticCalculation(True)
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    if 'Esempio_' not in oDoc.getURL():
-        oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+    oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
 #~ RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
 #~ If both are set to TRUE via API calls then the last one set takes precedence.
     try:
@@ -8174,31 +8164,8 @@ def autoexec(arg=None):
         pass
     oDoc.RegularExpressions = False
     oDoc.CalcAsShown = True #precisione come mostrato
-    oSheet = oDoc.getSheets().getByName('S1')
     adegua_tmpl() #esegue degli aggiustamenti del template
     toolbar_vedi()
-    try:
-        oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
-
-        oSheet.getCellRangeByName('H194').Value = r_version_code()
-        oSheet.getCellRangeByName('I194').Value = Lmajor
-        oSheet.getCellRangeByName('J194').Value = Lminor
-        
-        oSheet.getCellRangeByName('H291').Value = oUDP.Versione
-        oSheet.getCellRangeByName('I291').String = oUDP.Versione_LeenO.split('.')[0]
-        oSheet.getCellRangeByName('J291').String = oUDP.Versione_LeenO.split('.')[1]
-
-        oSheet.getCellRangeByName('H295').String = oUDP.Versione_LeenO.split('.')[0]
-        oSheet.getCellRangeByName('I295').String = oUDP.Versione_LeenO.split('.')[1]
-        oSheet.getCellRangeByName('J295').String = oUDP.Versione_LeenO.split('.')[2]
-        
-        oSheet.getCellRangeByName('K194').String = Lsubv
-        oSheet.getCellRangeByName('H296').Value = Lmajor
-        oSheet.getCellRangeByName('I296').Value = Lminor
-        oSheet.getCellRangeByName('J296').String = Lsubv
-    except:
-        #~ chi("autoexec py")
-        return
     #~ if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
         #~ vedi = conf.read(path_conf, 'Generale', 'visualizza')

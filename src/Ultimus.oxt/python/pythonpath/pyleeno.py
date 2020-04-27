@@ -8708,14 +8708,14 @@ def DlgMain(arg=None):
     #~ x = Range2Cell()[0]
     #~ y = Range2Cell()[1]
     if oDoc.getURL() != '':
-        for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
+        for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
             try:
                 oSheet = oDoc.Sheets.getByName(el)
                 if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
                     oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777
                     if oSheet.Name == 'Elenco Prezzi':
-                        oSheet.getCellRangeByName("A1").String = 'DP'
-                    oSheet.getCellRangeByName("F1").String = 'DP'
+                        oSheet.getCellRangeByName("A1").String = 'DP: Questo documento'
+                    oSheet.getCellRangeByName("F1").String = 'DP: Questo documento'
             except:
                 pass
     if oDoc.getSheets().hasByName('S2') == False:

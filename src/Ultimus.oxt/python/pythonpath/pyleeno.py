@@ -8675,21 +8675,23 @@ def chiudi_dialoghi(event=None):
 ########################################################################
 def dp (arg=None):
     '''
-    Indica qual'è il Documento Principale
+    Indica qual è il Documento Principale
     '''
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
             return
     except:
-        return
+        return # file senza nome
     oSheet = oDoc.CurrentController.ActiveSheet
-    for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA'):
+    for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
         try:
             oSheet = oDoc.Sheets.getByName(el)
-            oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
-
-            if oSheet.getCellRangeByName('COMPUTO.A10').getCellStyle != 'Default':
+            oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
+            #~ oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1 #questa dà fastidio al sistema undo
+            oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
+            if oSheet.getCellRangeByName('COMPUTO.A5').CellStyle != 'Default':
+                oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
                 if oSheet.Name == 'Elenco Prezzi':
                     oSheet.getCellRangeByName("A1").String = 'DP: ' + sUltimus
                 oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus

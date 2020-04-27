@@ -8113,7 +8113,6 @@ class trun(threading.Thread):
             bak()
             # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
 def autorun(arg=None):
-    return
     #~ global utsave
     utsave = trun()
     utsave._stop()

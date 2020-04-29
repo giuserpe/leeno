@@ -6007,8 +6007,11 @@ def XML_import_ep(arg=None):
             soaId = elem.get('soaId')
             soaCategoria = elem.get('soaCategoria')
             soaDescrizione = elem.find('{six.xsd}soaDescrizione')
-            if soaDescrizione != None:
+            #~if soaDescrizione != None:
+            try:
                 breveSOA = soaDescrizione.get('breve')
+            except:
+                breveSOA = ''
             voceSOA =(soaCategoria, soaId, breveSOA)
             listaSOA.append(voceSOA)
         elif elem.tag == '{six.xsd}prezzario':

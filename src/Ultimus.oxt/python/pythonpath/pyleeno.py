@@ -8701,7 +8701,6 @@ def dp (arg=None):
         try:
             oSheet = oDoc.Sheets.getByName(el)
             oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
-            #~ oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1 #questa dà fastidio al sistema undo
             oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
             if oSheet.getCellRangeByName('COMPUTO.A5').CellStyle != 'Default':
                 oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
@@ -9730,8 +9729,7 @@ def debug_progressbar (arg=None):
         MsgBox(oDisp)
         oSI.end()
 ########################################################################
-def debug_elimina_voci_doppie (arg=None):
-# ~ def debug (arg=None):
+def elimina_voci_doppie (arg=None):
     chi('prova')
     'elimina voci doppie hard - grezza e lenta, ma efficace'
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -9859,7 +9857,6 @@ def sardegna_2019 (arg=None):
         if test3 == 1:
             cod3 = cods[3]
             # ~ test3 =1
-        
         cap1 = oSheet0.getCellByPosition(1, i).String
         cap2 = oSheet0.getCellByPosition(2, i).String
         cap3 = oSheet0.getCellByPosition(3, i).String
@@ -9892,10 +9889,6 @@ def sardegna_2019 (arg=None):
             oSheet1.getCellByPosition(4, n).String = prz
             oSheet1.getCellByPosition(5, n).String = mdo
             # ~ n += 1
-        
-        
-    
-    
 ########################################################################
 def basilicata_2020 (arg=None):
     '''

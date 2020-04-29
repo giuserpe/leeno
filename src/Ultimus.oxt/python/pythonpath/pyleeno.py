@@ -3572,10 +3572,20 @@ def ricicla_misure(arg=None):
         _gotoSheet('CONTABILITA')
         for n in range (sopra, sotto):
             copia_riga_contab(partenza[1])
+            #~ if oDest.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO':
+                #~ chi(n -3 + partenza[1])
+                #~ chi(partenza)
+                #~ inverti_un_segno(n - 2 + partenza[1])
         oDest.copyRange(oCellAddress, oSrc)
-        
         oDest.getCellByPosition(1, partenza[1]).String = oSheet.getCellByPosition(1, sopra-1).String
         parziale_verifica()
+        start = Range2Cell()[1]
+        end = sotto - sopra + start + 1
+        for n in range (start, end):
+            #~ chi(n)
+            if oDest.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO':
+                
+                inverti_un_segno(n)
         _gotoCella(2, partenza[1]+1)
 ########################################################################
 def inverti_un_segno(lrow):

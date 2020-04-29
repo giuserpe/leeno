@@ -5959,7 +5959,7 @@ def XML_import_ep(arg=None):
         out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
         of = codecs.open(out_file,'w','utf-8')
         for row in f:
-            nrow = row.replace('&#x13;','').replace('&#xD;&#xA;',' ').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
+            nrow = row.replace('&#x13;','').replace('&#xD;','').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
             #~ re.search('[a-zA-Z]', oCell.Formula):
             of.write(nrow)
             tree.parse(out_file)
@@ -6071,8 +6071,8 @@ def XML_import_ep(arg=None):
             #~ return
             try:
                 if len(elem.findall('{six.xsd}prdDescrizione')) == 1:
-                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
-                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
+                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve').replace('&#x13;','').replace('&#xD;','').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
+                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa').replace('&#x13;','').replace('&#xD;','').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
                 else:
                 #descrizione voce
                     if elem.findall('{six.xsd}prdDescrizione')[0].get('lingua') == lingua_scelta:
@@ -6080,8 +6080,8 @@ def XML_import_ep(arg=None):
                     else:
                         idx = 1 #TEDESCO
                         idx = 0 #ITALIANO
-                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[idx].get('breve')
-                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[idx].get('estesa')
+                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[idx].get('breve').replace('&#x13;','').replace('&#xD;','').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
+                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[idx].get('estesa').replace('&#x13;','').replace('&#xD;','').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
             except:
                 pass
             if desc_breve == None: desc_breve = ''

@@ -8153,6 +8153,7 @@ def autoexec(arg=None):
         os.makedirs(path_conf[:-11])
     except FileExistsError:
         config_default()
+    config_default()
     uso = int(conf.read(path_conf, 'Generale', 'conta_usi')) +1 
     if uso == 10 or (uso % 50) == 0:
         dlg_donazioni()

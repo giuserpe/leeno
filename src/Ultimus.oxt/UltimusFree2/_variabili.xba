@@ -21,9 +21,9 @@ Public Const idxSAL = 30 	&apos;numero massimo possibile di SAL
 Public Const idxdec = 2		&apos;numero cifre decimali per le approssimazioni
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la versione del pacchetto
-Public Const Lmajor= 3			&apos;INCOMPATIBILITA&apos;
-Public Const Lminor= 20			&apos;NUOVE FUNZIONALITA&apos;
-Public Const Lsubv= &quot;1.dev&quot;		&apos;CORREZIONE BUGS
+Public Const Lmajor = 3			&apos;INCOMPATIBILITA&apos;
+Public Const Lminor = 20			&apos;NUOVE FUNZIONALITA&apos;
+Public Const Lsubv  = &quot;2&quot;		&apos;CORREZIONE BUGS
 rem ----------------------------------------------------------------------
 rem le seguenti identificano la posizione sul disco del pacchetto
 Public Const extensionIdentifier = &quot;org.giuseppe-vizziello.leeno&quot;

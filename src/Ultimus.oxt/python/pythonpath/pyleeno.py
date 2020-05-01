@@ -4994,11 +4994,10 @@ def partita_detrai(arg=None):
     partita('SI DETRAE PARTITA PROVVISORIA')
 
 ########################################################################
-#~ def genera_libretto():
-def debug (arg=None):
+def genera_libretto(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-    mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
-    return
+    #~ mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
+    #~ return
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != 'CONTABILITA': return
     numera_voci()
@@ -9059,7 +9058,6 @@ def dlg_donazioni(arg=None):
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDialog1 = dp.createDialog("vnd.sun.star.script:UltimusFree2.DlgDonazioni?language=Basic&location=application")
     oDialog1Model = oDialog1.Model
-    # ~ oDialog1.Title = 'Fai una donazione...'
     sUrl = LeenO_path()+'/icons/pizza.png'
     oDialog1.getModel().ImageControl1.ImageURL=sUrl
     oDialog1.execute()
@@ -9264,8 +9262,6 @@ def sistema_cose(arg=None):
         oDoc.CurrentController.select(oSheet.getCellByPosition(lcol, y))
         if oDoc.getCurrentSelection().Type.value == 'TEXT':
             testo = oDoc.getCurrentSelection().String.replace('\t',' ').replace('\n',' ').replace('Ã¨','è').replace('Â°','°').replace('Ã','à').replace(' $','')
-            # ~testo = oDoc.getCurrentSelection().String.replace('\r','fbfxvcbsc')
-            # ~testo = testo.replace(' \n','\n')
             while '  ' in testo:
                 testo = testo.replace('  ',' ')
             oDoc.getCurrentSelection().String = testo
@@ -9273,15 +9269,12 @@ def sistema_cose(arg=None):
 ########
 def debug_link(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
-
     window = oDoc.getCurrentController().getFrame().getContainerWindow()
     ctx = XSCRIPTCONTEXT.getComponentContext()
     def create(name):
         return ctx.getServiceManager().createInstanceWithContext(name, ctx)
-    
     toolkit = create("com.sun.star.awt.Toolkit")
     msgbox = toolkit.createMessageBox(window, 0, 1, "Message", 'foo')
-    
     link = create("com.sun.star.awt.UnoControlFixedHyperlink")
     link_model = create("com.sun.star.awt.UnoControlFixedHyperlinkModel")
     link.setModel(link_model)
@@ -9290,13 +9283,11 @@ def debug_link(arg=None):
     link.setText("Canale Telegram")
     link.setURL("https://t.me/leeno_computometrico")
     link.setVisible(True)
-    
     msgbox.execute()
     msgbox.dispose()
     return
 ########################################################################
 def descrizione_in_una_colonna (flag=False):
-#~ def debug(arg=None):
     '''
     Consente di estendere su più colonne o ridurre ad una colonna lo spazio
     occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
@@ -9304,13 +9295,8 @@ def descrizione_in_una_colonna (flag=False):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('S5')
-    #~ if oSheet.getCellRangeByName('C9').IsMerged == True:
-        #~ flag = False
-    #~ else:
-        #~ flag = True
     oSheet.getCellRangeByName('C9:I9').merge(flag)
     oSheet.getCellRangeByName('C10:I10').merge(flag)
-
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     for y in range(3, getLastUsedCell(oSheet).EndRow):
         if oSheet.getCellByPosition(2, y).CellStyle in ('Comp-Bianche sopraS', 'Comp-Bianche in mezzo Descr'):
@@ -9343,9 +9329,6 @@ Associato a Atrl+Shift+C'''
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
-    #~ for x in range(0, 50):
-        #~ oSheet.getCellByPosition(x, lrow).String = oSheet.getCellByPosition(x, lrow).CellStyle
-    #~ return
     for x in range(0, 50):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
             oSheet.getCellByPosition(x, lrow).Formula = '=CELL("col")-1'
@@ -9634,8 +9617,6 @@ def trova_ricorrenze(arg=None):
         #~ oDlg.getControl('ListBox1').addItems(lista_ricorrenze, 0)
         #~ oDlg.getControl('CheckBox1').State = 0
         #~ oDlg.execute()
-
-
 ########################################################################
 def debug_(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -9644,7 +9625,6 @@ def debug_(arg=None):
         try:
             sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
             eRow = oDoc.getCurrentSelection().getRangeAddresses()[0].EndRow
-
         except:
             sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
             eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
@@ -9668,12 +9648,10 @@ def debug_(arg=None):
     for y in el_y:
         for el in range (y[0], y[1]+1):
             lista.append(el)
-    # ~chi(lista)
     for el in lista:
         oSheet.getCellByPosition(7, el).Formula = '=' + oSheet.getCellByPosition(6, el).Formula + '*' + oSheet.getCellByPosition(7, el).Formula
         oSheet.getCellByPosition(6, el).String = ''
     refresh(1)
-
 ########################################################################
 def trova_np(arg=None ):
     '''
@@ -9744,8 +9722,6 @@ def elimina_voci_doppie (arg=None):
     # ~for i in range (3, fine):
         # ~oSheet.getCellByPosition(30, i).Formula = '=IF(A' + str(i+1) + '=A' + str(i) + ';1;0)'
     # ~return
-    
-        
     for i in reversed (range (0, fine)):
         if oSheet.getCellByPosition(30, i).Value == 1:
             _gotoCella(30, i)
@@ -9757,16 +9733,12 @@ def hl (arg=None):
     Sostituisce hiperlink alla stringa nella colonna B, se questa è un
     indirizzo di file o cartella
     '''
-    #~ chi("W:\_dwg\207\M01-iacovone\CANTIERE\ELLEVI\LAVORI\FOTO\20191030\photo_2019-10-30_19-05-02.jpg"[1])
-    #~ return
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     for el in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
         try:
             if oSheet.getCellByPosition(1, el).String[1] == ':':
                 stringa='=HYPERLINK("' + oSheet.getCellByPosition(1, el).String + '";"LINK")'
-                #~ oDoc.CurrentController.select(oSheet.getCellByPosition(1, el))
-                #~ chi(stringa)
                 oSheet.getCellByPosition(1, el).Formula = stringa
         except:
             pass
@@ -9934,38 +9906,6 @@ def basilicata_2020 (arg=None):
     oSheet.getRows().removeByIndex(0,1)
     oSheet.getColumns().insertByIndex(3,1)
 ########################################################################
-def debug (arg=None):
-    # ~ filtro_descrizione()
-    # ~ numera_voci()
-    # ~ debug_elimina_voci_doppie()
-    # ~ adegua_tmpl()
-    # ~ rigenera_tutte()
-    # ~ sistema_stili()
-    # ~ sistema_cose()
-    # ~ chi(path_conf)
-    # ~ colora_vecchio_elenco()
-    # ~ trova_np()
-    # ~ debug_link()
-    # ~ Tutti_Subtotali()
-    # ~ adatta_altezza_riga()
-    # ~ struttura_Elenco()
-    # ~sardegna_2019()
-    # ~ hl()
-    # ~ bak0()
-    # ~ ns_ins()
-    # ~ dlg_donazioni()
-    chi(100 % 50)
-    return
-def debug_ (arg=None):
-    '''cambio data contabilità'''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    # ~ chi(oDoc.getCurrentSelection().Value)
-    # ~ return
-    fine = getLastUsedCell(oSheet).EndRow+1
-    for i in range (0, fine):
-        if oSheet.getCellByPosition(1, i).String == 'Data_bianca':
-            oSheet.getCellByPosition(1, i).Value = 43861.0
 def Piemonte_2019 (arg=None):
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Piemonte
@@ -9975,7 +9915,6 @@ def Piemonte_2019 (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = getLastUsedCell(oSheet).EndRow+1
-    # ~lrow = Range2Cell()[1] + 1
     elenco = list()
     for i in range (0, fine):
         if len(oSheet.getCellByPosition(1, i).String.split('.')) <= 2:
@@ -10029,6 +9968,18 @@ def Piemonte_2019 (arg=None):
                                             len(elenco[0]) -1, # l'indice parte da 0
                                             len(elenco) -1)
     oRange.setDataArray(elenco)
+########################################################################
+def debug_ (arg=None):
+    '''cambio data contabilità'''
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    #~ mri(oDoc)
+    oSheet = oDoc.CurrentController.ActiveSheet
+    chi(oDoc.getCurrentSelection().CellBackColor)
+    # ~ return
+    fine = getLastUsedCell(oSheet).EndRow+1
+    for i in range (0, fine):
+        if oSheet.getCellByPosition(1, i).String == 'Data_bianca':
+            oSheet.getCellByPosition(1, i).Value = 43861.0
 ########################################################################
 def errore(arg=None):
     MsgBox (traceback.format_exc())

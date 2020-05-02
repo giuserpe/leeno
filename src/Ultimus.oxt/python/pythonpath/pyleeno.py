@@ -8721,8 +8721,8 @@ def DlgMain(arg=None):
                 oSheet = oDoc.Sheets.getByName(el)
                 if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
                     oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777
-                    if oSheet.Name == 'Elenco Prezzi':
-                        oSheet.getCellRangeByName("A1").String = 'DP: Questo documento'
+                    #~ if oSheet.Name == 'Elenco Prezzi':
+                        #~ oSheet.getCellRangeByName("A1").String = 'DP: Questo documento'
                     oSheet.getCellRangeByName("F1").String = 'DP: Questo documento'
             except:
                 pass

@@ -1861,8 +1861,8 @@ Cancello le voci di misurazione?
             _gotoCella(0,2)
             ins_voce_computo()
             adatta_altezza_riga('VARIANTE')
-    else:
-        _gotoSheet('VARIANTE')
+    #~ else:
+    _gotoSheet('VARIANTE')
     dp()
     basic_LeenO("Menu.eventi_assegna")
 ########################################################################

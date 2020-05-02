@@ -128,7 +128,7 @@ ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
 
 Sub computo_OnSelect
-&apos;ScriptPy(&quot;pyleeno.py&quot;, &quot;dp&quot;)
+ScriptPy(&quot;pyleeno.py&quot;, &quot;dp&quot;)
 End Sub
 
 Sub elenco_OnFocus
@@ -166,20 +166,24 @@ sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
 &apos;	xray eventi_doc()
 &apos;	If flag = 0 Then	Exit Sub
 Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.elenco_OnFocus?language=Basic&amp;location=application&quot;)
+Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 
 If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
 	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnFocus?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 
 	Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 
 If thisComponent.Sheets.hasByName(&quot;VARIANTE&quot;) Then
 	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;VARIANTE&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
+
 If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
 	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&amp;location=application&quot;)
-
-
+	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
 Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
@@ -200,7 +204,7 @@ Macro_Doc (&quot;OnSaveAsFailed&quot;,	&quot;vnd.sun.star.script:UltimusFree2._v
 &apos;Macro_doc (&quot;OnCopyTo&quot;, &quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
 &apos;OnCopyToDone
 &apos;OnCopyToFailed
-&apos;Macro_Doc (&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.PY_bridge.dp?language=Basic&amp;location=application&quot;)
+Macro_Doc (&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&amp;location=application&quot;)
 &apos;Macro_Doc (&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.PY_bridge.dp?language=Basic&amp;location=application&quot;)
 &apos;OnPrint
 &apos;OnViewCreated

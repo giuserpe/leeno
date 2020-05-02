@@ -8152,7 +8152,8 @@ def autoexec(arg=None):
     try:
         os.makedirs(path_conf[:-11])
     except FileExistsError:
-        config_default()
+        pass
+    config_default()
     uso = int(conf.read(path_conf, 'Generale', 'conta_usi')) +1 
     if uso == 10 or (uso % 50) == 0:
         dlg_donazioni()
@@ -8692,7 +8693,10 @@ def dp (arg=None):
             return
     except:
         return # file senza nome
-    oSheet = oDoc.CurrentController.ActiveSheet
+    try:
+        oSheet = oDoc.CurrentController.ActiveSheet
+    except AttributeError:
+        return
     d = {'COMPUTO' : 'F1', 'VARIANTE' : 'F1', 'Elenco Prezzi' : 'D1', 'CONTABILITA' : 'F1', 'Analisi di Prezzo' : 'C1'}
     for el in d.keys():
         try:

@@ -4878,7 +4878,7 @@ def attiva_contabilita(arg=None):
             for el in('Registro', 'SAL','CONTABILITA'):
                 if oDoc.Sheets.hasByName(el):_gotoSheet(el)
         else:
-            oDoc.Sheets.insertNewByName('CONTABILITA',4)
+            oDoc.Sheets.insertNewByName('CONTABILITA',5)
             _gotoSheet('CONTABILITA')
             svuota_contabilita()
             ins_voce_contab()
@@ -8693,16 +8693,12 @@ def dp (arg=None):
     except:
         return # file senza nome
     oSheet = oDoc.CurrentController.ActiveSheet
-    for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
+    d = {'COMPUTO' : 'F1', 'VARIANTE' : 'F1', 'Elenco Prezzi' : 'D1', 'CONTABILITA' : 'F1', 'Analisi di Prezzo' : 'C1'}
+    for el in d.keys():
         try:
             oSheet = oDoc.Sheets.getByName(el)
-            oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
+            oSheet.getCellRangeByName(d[el]).String = 'DP: ' + sUltimus
             oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
-            if oSheet.getCellRangeByName('COMPUTO.A5').CellStyle != 'Default':
-                oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
-                if oSheet.Name == 'Elenco Prezzi':
-                    oSheet.getCellRangeByName("A1").String = 'DP: ' + sUltimus
-                oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
         except:
             pass
 ####

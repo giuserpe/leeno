@@ -7723,7 +7723,7 @@ Al termine dell'importazione controlla la voce con tariffa """ + dict_articoli.g
 ########################################################################
 Lmajor= 3 #'INCOMPATIBILITA'
 Lminor= 20 #'NUOVE FUNZIONALITA'
-Lsubv= "1.dev" #'CORREZIONE BUGS
+Lsubv= "2.1" #'CORREZIONE BUGS
 noVoce = ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta', 'comp Int_colonna', 'Ultimus_centro_bordi_lati', 'comp Int_colonna_R_prima')
 stili_computo =('Comp Start Attributo', 'comp progress', 'comp 10 s','Comp End Attributo')
 stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R','Comp TOTALI')

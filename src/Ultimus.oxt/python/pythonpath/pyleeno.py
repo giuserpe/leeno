@@ -5535,9 +5535,9 @@ def inizializza_analisi(arg=None):
         oDoc.CurrentController.select(oSheet.getCellByPosition(0,n+2+1))
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     oSheet.copyRange(oCellAddress, oRangeAddress)
-    dp()
     basic_LeenO("Menu.eventi_assegna")
     inserisci_Riga_rossa()
+    dp()
     return
 ########################################################################
 def inserisci_Riga_rossa(arg=None):
@@ -8176,6 +8176,7 @@ def autoexec(arg=None):
     oDoc.CalcAsShown = True #precisione come mostrato
     adegua_tmpl() #esegue degli aggiustamenti del template
     toolbar_vedi()
+    dp()
     #~ if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
         #~ vedi = conf.read(path_conf, 'Generale', 'visualizza')
@@ -8358,27 +8359,8 @@ def inizializza(arg=None):
     oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C1')
     oCell.String = "Applica Filtro a:"
     oCell.CellStyle = 'EP-aS'
-    
 # Indica qual è il Documento Principale
-    try:
-        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-            return
-    except:
-        return
-    oSheet = oDoc.CurrentController.ActiveSheet
-    for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
-        try:
-            oSheet = oDoc.Sheets.getByName(el)
-            #~oSheet.getCellRangeByName("A1:AT1").CellBackColor = -1
-            oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
-
-            if oSheet.getCellRangeByName('COMPUTO.A10').CellStyle != 'Default':
-                if oSheet.Name == 'Elenco Prezzi':
-                    oSheet.getCellRangeByName("A1").String = 'DP: ' + sUltimus
-                oSheet.getCellRangeByName("F1").String = 'DP: ' + sUltimus
-        except:
-            pass
-    #~ oDoc.IsUndoEnabled = True
+    dp()
     nascondi_sheets()
 ########################################################################
 def adegua_tmpl(arg=None):
@@ -8697,12 +8679,15 @@ def dp (arg=None):
         oSheet = oDoc.CurrentController.ActiveSheet
     except AttributeError:
         return
-    d = {'COMPUTO' : 'F1', 'VARIANTE' : 'F1', 'Elenco Prezzi' : 'D1', 'CONTABILITA' : 'F1', 'Analisi di Prezzo' : 'C1'}
+    d = {'COMPUTO' : 'F1', 'VARIANTE' : 'F1', 'Elenco Prezzi' : 'A1', 'CONTABILITA' : 'F1', 'Analisi di Prezzo' : 'A1'}
     for el in d.keys():
         try:
             oSheet = oDoc.Sheets.getByName(el)
             oSheet.getCellRangeByName(d[el]).String = 'DP: ' + sUltimus
             oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
+            if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+                oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777 giallo
+                oSheet.getCellRangeByName(d[el]).String = 'DP: Questo documento'
         except:
             pass
 ####
@@ -8713,19 +8698,6 @@ def DlgMain(arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
-    #~ x = Range2Cell()[0]
-    #~ y = Range2Cell()[1]
-    if oDoc.getURL() != '':
-        for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA', 'Analisi di Prezzo'):
-            try:
-                oSheet = oDoc.Sheets.getByName(el)
-                if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-                    oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777
-                    #~ if oSheet.Name == 'Elenco Prezzi':
-                        #~ oSheet.getCellRangeByName("A1").String = 'DP: Questo documento'
-                    oSheet.getCellRangeByName("F1").String = 'DP: Questo documento'
-            except:
-                pass
     if oDoc.getSheets().hasByName('S2') == False:
         for bar in GetmyToolBarNames:
             toolbar_on(bar, 0)
@@ -8802,7 +8774,6 @@ def DlgMain(arg=None):
     #~ _gotoCella(x, y)
     oDlgMain.execute()
     sString = oDlgMain.getControl("Label_DDC").Text
-
     if oDlgMain.getControl('CheckBox1').State == 1:
         conf.write(path_conf, 'Generale', 'dialogo', '1')
         #~ sString = oDlgMain.getControl("ComboBox1")
@@ -8811,6 +8782,16 @@ def DlgMain(arg=None):
         conf.write(path_conf, 'Generale', 'dialogo', '0')
         #~ conf.write(path_conf, 'Generale', 'visualizza', 'Senza Menù')
     oDoc.Sheets.getByName('S2').getCellRangeByName('C3').String = oDlgMain.getControl("TextField1").Text
+    
+    d = {'COMPUTO' : 'F1', 'VARIANTE' : 'F1', 'Elenco Prezzi' : 'A1', 'CONTABILITA' : 'F1', 'Analisi di Prezzo' : 'A1'}
+    for el in d.keys():
+        try:
+            oSheet = oDoc.Sheets.getByName(el)
+            if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+                oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632 #13434777 giallo
+                oSheet.getCellRangeByName(d[el]).String = 'DP: Questo documento'
+        except:
+            pass
     return
 ########################################################################
 def InputBox(sCella='', t=''):

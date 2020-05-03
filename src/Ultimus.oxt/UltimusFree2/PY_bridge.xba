@@ -63,6 +63,14 @@ rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non
 ScriptPy = PythonResult
 End Sub
 rem ######################################################################
+Sub debug
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;debug&quot;)
+End Sub
+rem ######################################################################
+Sub DlgMain
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;DlgMain&quot;)
+End Sub
+rem ######################################################################
 Sub attiva_contabilita
 	chiudi_dialoghi
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;attiva_contabilita&quot;)

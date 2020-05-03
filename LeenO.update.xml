@@ -1,9 +1,16 @@
 <description xmlns="http://openoffice.org/extensions/description/2006" xmlns:dep="http://openoffice.org/extensions/description/2006" xmlns:xlink="http://www.w3.org/1999/xlink">
   <update-download>
+<<<<<<< HEAD
     <src xlink:href="https://leeno.org/download/LeenO/LeenO/LeenO-3.20.2.oxt" />
   </update-download>
   <identifier value="org.giuseppe-vizziello.leeno" />
   <version value="3.20.2" />
+=======
+    <src xlink:href="https://leeno.org/download/LeenO/LeenO/LeenO-3.20.2.1.oxt" />
+  </update-download>
+  <identifier value="org.giuseppe-vizziello.leeno" />
+  <version value="3.20.2.1" />
+>>>>>>> dev1
   <publisher>
     <name xlink:href="https://leeno.org/staff/" lang="it">Giuseppe Vizziello</name>
   </publisher>

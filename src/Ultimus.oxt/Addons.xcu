@@ -10,7 +10,14 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
+<<<<<<< HEAD
             <value>bartaimar:DlgMain</value>
+=======
+<!--
+            <value>bartaimar:DlgMain</value>
+-->
+            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
+>>>>>>> dev1
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -765,7 +772,14 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
+<<<<<<< HEAD
             <value>bartaimar:debug</value>
+=======
+<!--
+            <value>bartaimar:debug</value>
+-->
+            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.debug?language=Basic&amp;location=application</value>
+>>>>>>> dev1
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/py</value>

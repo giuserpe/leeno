@@ -123,7 +123,6 @@ Macro_Doc (&quot;OnLoad&quot;,&quot;vnd.sun.star.script:Standard.Controllo.Contr
 End Sub
 rem ######################################################################
 Sub computo_OnFocus
-ScriptPy(&quot;pyleeno.py&quot;, &quot;dp&quot;)
 ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
 
@@ -133,14 +132,12 @@ End Sub
 
 Sub elenco_OnFocus
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;dp&quot;)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
 Sub elenco_OnUnFocus
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 End Sub
 Sub analisi_OnFocus
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;dp&quot;)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
 	&apos;ThisComponent.CurrentController().freezeAtPosition(0,2)
@@ -170,7 +167,7 @@ Macro_SHEET (&quot;Elenco Prezzi&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.sta
 
 If thisComponent.Sheets.hasByName(&quot;Analisi di Prezzo&quot;) Then
 	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnFocus&quot;, 	&quot;vnd.sun.star.script:UltimusFree2.Menu.analisi_OnFocus?language=Basic&amp;location=application&quot;)
-	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
+	Macro_SHEET (&quot;Analisi di Prezzo&quot;,	&quot;OnSelect&quot; ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 
 	Macro_SHEET (&quot;COMPUTO&quot;,	&quot;OnFocus&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&amp;location=application&quot;)

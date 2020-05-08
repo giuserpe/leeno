@@ -172,4 +172,8 @@ rem ######################################################################
 Sub donazioni
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;donazioni&quot;)
 End Sub
+rem ######################################################################
+Sub invia_voce
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;invia_voce&quot;)
+End Sub
 </script:module>

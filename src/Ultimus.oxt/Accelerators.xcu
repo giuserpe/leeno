@@ -26,7 +26,7 @@
         <!--CTRL-0-->
         <node oor:name="0_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">bartaimar:DlgMain</value>
+            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
           </prop>
         </node>
         <!--CTRL-1-->

@@ -1422,23 +1422,24 @@ def cancella_voci_non_usate(arg=None):
     Cancella le voci di prezzo non utilizzate.
     '''
     chiudi_dialoghi()
-    #~ oDialogo_attesa = dlg_attesa()
-    #~ attesa().start() #mostra il dialogo
-
-    if DlgSiNo('''Questo comando ripulisce l'Elenco Prezzi
+    # sì = 2, no = 3
+    ans = DlgSiNo('''Questo comando ripulisce l'Elenco Prezzi
 dalle voci non utilizzate in nessuno degli altri elaborati.
+
+Sì per eliminare.
+No per nascondere.
+X  per annullare.
 
 LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 
-Vuoi procedere comunque?''', 'AVVISO!') == 3:
-        #~ oDialogo_attesa.endExecute() #chiude il dialogo
+Vuoi procedere comunque?''', 'AVVISO!')
+    if ans == 0:
         return
     oDoc = XSCRIPTCONTEXT.getDocument()
-    oDoc.enableAutomaticCalculation(False)
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.CurrentController.ActiveSheet
-
     oRange=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow+1
     ER = oRange.EndRow+1
@@ -1461,9 +1462,26 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     da_cancellare = set(lista_prezzi).difference(set(lista))
+
+    iSheet = oSheet.RangeAddress.Sheet
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 0, ER))
+    struttura_off('R')
+    struttura_off('R')
+    struttura_off('R')
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+
     for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:
-            oSheet.Rows.removeByIndex(n, 1)
+            if ans == 2:
+                oSheet.Rows.removeByIndex(n, 1) #elimina righe
+            else:
+                oCellRangeAddr.StartRow = n
+                oCellRangeAddr.EndRow = n
+                oSheet.group(oCellRangeAddr,1)
+                oSheet.getCellByPosition(0, n).Rows.IsVisible = False #nasconde righe
         if oSheet.getCellByPosition(0, n).String == '' and \
         oSheet.getCellByPosition(1, n).String == '' and \
         oSheet.getCellByPosition(4, n).String == '':
@@ -1471,7 +1489,6 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oDoc.enableAutomaticCalculation(True)
     oDoc.CurrentController.ZoomValue = zoom
     _gotoCella(0, 3)
-    #~ oDialogo_attesa.endExecute() #chiude il dialogo
 ########################################################################
     
 def voce_breve_ep(arg=None):
@@ -8020,13 +8037,28 @@ def struttura_Analisi(arg=None):
     struct(4)
 
 def struttura_off(arg=None):
-    '''Cancella la vista in struttura'''
-    oDoc = XSCRIPTCONTEXT.getDocument()
-    lrow = Range2Cell()[1]
-    oSheet = oDoc.CurrentController.ActiveSheet
-    oSheet.clearOutline()
-    oDoc.CurrentController.setFirstVisibleColumn(0)
-    oDoc.CurrentController.setFirstVisibleRow(lrow-4)
+    '''
+    Cancella la vista in struttura
+    arg { string } : R per riga, C per colonna, None per tutto.
+    '''
+
+    if arg == None:
+        oDoc = XSCRIPTCONTEXT.getDocument()
+        lrow = Range2Cell()[1]
+        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet.clearOutline()
+        oDoc.CurrentController.setFirstVisibleColumn(0)
+        oDoc.CurrentController.setFirstVisibleRow(lrow-4)
+    else:
+        ctx = XSCRIPTCONTEXT.getComponentContext()
+        desktop = XSCRIPTCONTEXT.getDesktop()
+        oFrame = desktop.getCurrentFrame()
+        dispatchHelper = ctx.ServiceManager.createInstanceWithContext( 'com.sun.star.frame.DispatchHelper', ctx )
+        oProp = PropertyValue()
+        oProp.Name = 'RowOrCol'
+        oProp.Value = arg
+        properties =(oProp,)
+        dispatchHelper.executeDispatch(oFrame, '.uno:Ungroup', '', 0, properties)
 
 def struct(l):
     ''' mette in vista struttura secondo categorie

@@ -5974,8 +5974,10 @@ def XML_import_ep(arg=None):
     except:
         out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
         of = codecs.open(out_file,'w','utf-8')
+        
         for row in f:
-            nrow = row.replace('&#x13;','').replace('&#xD;&#xA;',' ').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
+            #~ nrow = row.replace('&#x13;','').replace('&#xD;&#xA;',' ').replace('&#xA;','').replace('   <','<').replace('  <','<').replace(' <','<').replace('\r','').replace('\n','')
+            nrow = row
             #~ re.search('[a-zA-Z]', oCell.Formula):
             of.write(nrow)
             tree.parse(out_file)
@@ -9818,7 +9820,7 @@ def filtro_descrizione (arg=None):
             oSheet.getCellRangeByPosition(0, SR, 0, ER-1).Rows.IsVisible=False
         i += 2
 ########################################################################
-def sardegna_2019 (arg=None):
+def regione_sardegna_2019 (arg=None):
     oDoc = XSCRIPTCONTEXT.getDocument()
     try:
         oDoc.getSheets().insertNewByName('nuova_tabella', 2)
@@ -9876,7 +9878,7 @@ def sardegna_2019 (arg=None):
             oSheet1.getCellByPosition(5, n).String = mdo
             # ~ n += 1
 ########################################################################
-def basilicata_2020 (arg=None):
+def regione_basilicata_2020 (arg=None):
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Basilicata
     partendo dalle colonne: CODICE	DESCRIZIONE	U. MISURA	PREZZO	MANODOPERA
@@ -9919,7 +9921,7 @@ def basilicata_2020 (arg=None):
     oSheet.getRows().removeByIndex(0,1)
     oSheet.getColumns().insertByIndex(3,1)
 ########################################################################
-def Piemonte_2019 (arg=None):
+def regione_piemonte_2019 (arg=None):
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Piemonte
     partendo dalle colonne: Sez.	Codice	Descrizione	U.M.	Euro	Manod. lorda	% Manod.	Note

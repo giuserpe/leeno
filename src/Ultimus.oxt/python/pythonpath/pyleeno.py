@@ -882,12 +882,13 @@ def ultima_voce(oSheet):
             break
     return n
 ########################################################################
-def uFindStringCol(sString, nCol, oSheet, start=2):
+def uFindStringCol(sString, nCol, oSheet, start=2, equal=0):
     '''
     sString { string }  : stringa da cercare
     nCol    { integer } : indice di colonna
     oSheet  { object }  :
     start   { integer } : riga di partenza
+    equal   { integer } : se equal = 1 fa una ricerca per cella intera
 
     Trova la prima ricorrenza di una stringa(sString) nella
     colonna nCol di un foglio di calcolo(oSheet) e restituisce
@@ -898,8 +899,12 @@ def uFindStringCol(sString, nCol, oSheet, start=2):
     oCursor.gotoEndOfUsedArea(True)
     aAddress = oCursor.RangeAddress
     for nRow in range(start, aAddress.EndRow+1):
-        if sString in oSheet.getCellByPosition(nCol,nRow).String:
-            return nRow
+        if equal == 0:
+            if sString in oSheet.getCellByPosition(nCol,nRow).String:
+                return nRow
+        else:
+            if sString == oSheet.getCellByPosition(nCol,nRow).String:
+                return nRow
 ########################################################################
 def uFindString(sString, oSheet):
     '''
@@ -1424,15 +1429,21 @@ def cancella_voci_non_usate(arg=None):
     chiudi_dialoghi()
     # sì = 2, no = 3
     ans = DlgSiNo('''Questo comando ripulisce l'Elenco Prezzi
-dalle voci non utilizzate in nessuno degli altri elaborati.
+dalle voci non utilizzate in nessuno
+degli altri elaborati, oppure consente
+di nasconderle in una struttura.
 
-Sì per eliminare.
-No per nascondere.
-X  per annullare.
+Scegli:
+- Sì per eliminare.
+- No per nascondere.
+- X  per annullare.
 
-LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
+LA PROCEDURA POTREBBE RICHIEDERE
+DEL TEMPO IN RELAZIONE ALLA QUANTITA'
+DI DATI DA TRATTARE.
 
-Vuoi procedere comunque?''', 'AVVISO!')
+Cosa scegli?
+ ''', 'AVVISO!')
     if ans == 0:
         return
     oDoc = XSCRIPTCONTEXT.getDocument()
@@ -1442,7 +1453,10 @@ Vuoi procedere comunque?''', 'AVVISO!')
     oSheet = oDoc.CurrentController.ActiveSheet
     oRange=oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow+1
-    ER = oRange.EndRow+1
+    ER = oRange.EndRow
+    if ans == 3:
+        ER += 1
+
     lista_prezzi = list()
     for n in range(SR, ER):
         lista_prezzi.append (oSheet.getCellByPosition(0, n).String)
@@ -1455,14 +1469,14 @@ Vuoi procedere comunque?''', 'AVVISO!')
             else:
                 col = 1
             for el in lista_prezzi:
-                if uFindStringCol (el, col, oSheet):
+                if uFindStringCol (el, col, oSheet, equal=1):
                     lista.append(el)
         except:
             pass
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    da_cancellare = set(lista_prezzi).difference(set(lista))
 
+    da_cancellare = set(lista_prezzi).difference(set(lista))
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
@@ -1472,16 +1486,15 @@ Vuoi procedere comunque?''', 'AVVISO!')
     struttura_off('R')
     struttura_off('R')
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-
     for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:
             if ans == 2:
                 oSheet.Rows.removeByIndex(n, 1) #elimina righe
             else:
-                oCellRangeAddr.StartRow = n
-                oCellRangeAddr.EndRow = n
-                oSheet.group(oCellRangeAddr,1)
-                oSheet.getCellByPosition(0, n).Rows.IsVisible = False #nasconde righe
+                    oCellRangeAddr.StartRow = n
+                    oCellRangeAddr.EndRow = n
+                    oSheet.group(oCellRangeAddr,1)
+                    oSheet.getCellByPosition(0, n).Rows.IsVisible = False #nasconde righe
         if oSheet.getCellByPosition(0, n).String == '' and \
         oSheet.getCellByPosition(1, n).String == '' and \
         oSheet.getCellByPosition(4, n).String == '':

@@ -10,9 +10,9 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-<!--
-            <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
--->
+            <!--
+                 <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
+            -->
             <value>vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
@@ -289,7 +289,7 @@
             <value>%origin%/icons/image9</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Struttura OFF</value>
+            <value>Elimina Strutture</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>
@@ -592,7 +592,7 @@
         </node>
       </node>
     </node>
-<!--CATEGORIE-->
+    <!--CATEGORIE-->
     <node oor:name="OfficeToolBar">
       <node oor:name="ULTIMUS_3.OfficeToolBar_CATEG" oor:op="replace">
         <node oor:name="Ca50" oor:op="replace">
@@ -648,7 +648,6 @@
         </node>
       </node>
     </node>
-    
     <!--CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA-->
     <node oor:name="OfficeToolBar">
       <node oor:name="ULTIMUS_3.OfficeToolBar_CONTABILITA" oor:op="replace">
@@ -768,9 +767,9 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-<!--
-            <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$debug?language=Python&amp;location=user:uno_packages</value>
--->
+            <!--
+                 <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$debug?language=Python&amp;location=user:uno_packages</value>
+            -->
             <value>vnd.sun.star.script:UltimusFree2.PY_bridge.debug?language=Basic&amp;location=application</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
@@ -810,7 +809,7 @@
         </node>
       </node>
     </node>
-    <!--        -->
+    <!--   -->
     <node oor:name="OfficeMenuBar">
       <node oor:name="ULTIMUS_3.OfficeMenuBar" oor:op="replace">
         <prop oor:name="Context" oor:type="xs:string">
@@ -969,25 +968,25 @@
               </node>
             </node>
           </node>
-<!--
-          <node oor:name="m02" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Manutenzione.Ripristina_controlli_con_nuovaFinestra?language=Basic&amp;location=application</value>
-            </prop>
-            <prop oor:name="ImageIdentifier" oor:type="xs:string">
-              <value>%origin%/icons/image13</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Ripristina Controlli (REFRESH)</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
--->
+          <!--
+               <node oor:name="m02" oor:op="replace">
+               <prop oor:name="Context" oor:type="xs:string">
+               <value>com.sun.star.sheet.SpreadsheetDocument</value>
+               </prop>
+               <prop oor:name="URL" oor:type="xs:string">
+               <value>vnd.sun.star.script:UltimusFree2.Manutenzione.Ripristina_controlli_con_nuovaFinestra?language=Basic&amp;location=application</value>
+               </prop>
+               <prop oor:name="ImageIdentifier" oor:type="xs:string">
+               <value>%origin%/icons/image13</value>
+               </prop>
+               <prop oor:name="Title" oor:type="xs:string">
+               <value>Ripristina Controlli (REFRESH)</value>
+               </prop>
+               <prop oor:name="Target" oor:type="xs:string">
+               <value>_self</value>
+               </prop>
+               </node>
+          -->
           <node oor:name="m03" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1965,7 +1964,7 @@
               <value>.uno:OpenHyperlink?URL:string=https://leeno.org/donazioni/</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                <value>%origin%/icons/leeno</value>
+              <value>%origin%/icons/leeno</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>LeenO ❤</value>
@@ -1982,7 +1981,7 @@
               <value>.uno:OpenHyperlink?URL:string=https://leeno.org/licenza-2/</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                <value>%origin%/icons/leeno</value>
+              <value>%origin%/icons/leeno</value>
             </prop>
             <prop oor:name="Title" oor:type="xs:string">
               <value>Licenza...</value>

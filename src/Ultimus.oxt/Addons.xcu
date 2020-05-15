@@ -10,10 +10,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <!--
-                 <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$DlgMain?language=Python&amp;location=user:uno_packages</value>
-            -->
-            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
+             <value>vnd.sun.star.script:UltimusFree2.PY_bridge.DlgMain?language=Basic&amp;location=application</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image92</value>
@@ -283,7 +280,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$struttura_off?language=Python&amp;location=user:uno_packages</value>
+            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.struttura_off?language=Basic&amp;location=application</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image9</value>
@@ -1512,7 +1509,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$struttura_off?language=Python&amp;location=user:uno_packages</value>
+              <value>vnd.sun.star.script:UltimusFree2.PY_bridge.struttura_off?language=Basic&amp;location=application</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image9</value>

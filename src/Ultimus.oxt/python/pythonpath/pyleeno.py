@@ -2262,8 +2262,8 @@ def XPWE_out(elaborato, out_file):
         if oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and \
         oSheet.getCellByPosition(2, n).Type.value == 'FORMULA':
             lista_AP.append(oSheet.getCellByPosition(0, n).String)
-        elif oSheet.getCellByPosition(1, n).Type.value == 'TEXT' and \
-        oSheet.getCellByPosition(2, n).Type.value == 'TEXT':
+        elif oSheet.getCellByPosition(0, n).Type.value == 'TEXT' and \
+        oSheet.getCellByPosition(1, n).Type.value == 'TEXT':
             EPItem = SubElement(PweElencoPrezzi,'EPItem')
             EPItem.set('ID', str(n))
             TipoEP = SubElement(EPItem,'TipoEP')

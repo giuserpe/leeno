@@ -81,25 +81,6 @@ Sub genera_variante
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;genera_variante&quot;)
 End Sub
 rem ######################################################################
-Sub vai_a_M1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_M1&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_S1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S1&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_S2
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S2&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_variabili
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_variabili&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_ElencoPrezzi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_ElencoPrezzi&quot;)
-End Sub
 rem ######################################################################
 Sub inizializza_analisi
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_analisi&quot;)
@@ -175,5 +156,28 @@ End Sub
 rem ######################################################################
 Sub invia_voce
 	ScriptPy(&quot;pyleeno.py&quot;,&quot;invia_voce&quot;)
+End Sub
+Sub vai_a_M1
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_M1&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_S1
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S1&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_S2
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S2&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_variabili
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_variabili&quot;)
+End Sub
+rem ######################################################################
+Sub vai_a_ElencoPrezzi
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_ElencoPrezzi&quot;)
+End Sub
+rem ######################################################################
+Sub struttura_off
+	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_off&quot;)
 End Sub
 </script:module>

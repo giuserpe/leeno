@@ -9997,6 +9997,39 @@ def regione_piemonte_2019 (arg=None):
                                             len(elenco) -1)
     oRange.setDataArray(elenco)
 ########################################################################
+def emilia_romagna_2019 (arg=None):
+    '''
+    Adatta la struttura del prezzario rilasciato dalla regione Piemonte
+    partendo dalle colonne: Codice articolo	Descrizione breve	Descrizione estesa	Um	Prezzo	Sicurezza	Percentuale incidenza	Tipo
+    Il risultato ottenuto va inserito in Elenco Prezzi.
+    '''
+    refresh(0)
+    oDoc = XSCRIPTCONTEXT.getDocument()
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+    oSheet = oDoc.CurrentController.ActiveSheet
+    ER = getLastUsedCell(oSheet).EndRow+1
+    for n in range(2, ER):
+        if oSheet.getCellByPosition(6, n).Value != 0:
+            oSheet.getCellByPosition(6, n).Value = oSheet.getCellByPosition(6, n).Value / 100
+        if oSheet.getCellByPosition(7, n).String == 'Titolo':
+            oSheet.getCellByPosition(0, n).String = oSheet.getCellByPosition(1, n).String.split(' -')[0]
+    madre = ''
+    n = 2 
+    while n < ER:
+        if oSheet.getCellByPosition(7, n).String in ('Titolo', 'Articolo'):
+            madre = oSheet.getCellByPosition(2, n).String
+            oSheet.getCellByPosition(1, n).String = oSheet.getCellByPosition(2, n).String
+        if oSheet.getCellByPosition(7, n).String == 'Sottoarticolo':
+            oSheet.getCellByPosition(1, n).String = madre + ' \n- ' + oSheet.getCellByPosition(2, n).String
+        n += 1
+        
+    for n in reversed (range(5, ER)):
+        if oSheet.getCellByPosition(7, n).String == 'Commento':
+            oSheet.getRows().removeByIndex(n, 1)
+    oDoc.CurrentController.ZoomValue = zoom
+    refresh(1)
+########################################################################
 def debug_ (arg=None):
     '''cambio data contabilità'''
     oDoc = XSCRIPTCONTEXT.getDocument()

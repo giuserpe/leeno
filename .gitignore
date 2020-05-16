@@ -1,9 +1,12 @@
 *~
 *.*#
 bin/
-/modelli/leeno-bk/
+*/leeno-bk/
 documentazione/*.pdf
 Esempio_LeenO.ods
+
+__pycache__/
+*.py[cod]
 
 #/.~*
 

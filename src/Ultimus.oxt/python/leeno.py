@@ -1,13 +1,25 @@
 # -*- coding: utf-8 -*-
 
-import uno
-import unohelper
+import uno, unohelper, sys, types, importlib
 
 #~ from com.sun.star.awt import Point
 from com.sun.star.frame import XDispatchProvider, XDispatch
 from com.sun.star.lang import XInitialization
 import traceback
 import pyleeno
+
+
+# QUESTI sono i moduli che vanno ricaricati se modificati
+# elencarli in questa import e aggiungere nella funzione ModuleReload
+# una importlib per ogni modulo
+import LeenO.Dispatcher, LeenO.Importer
+
+# disabilitare QUESTA funzione per evitare di ricaricare la cache
+# de-commentando la return
+def ModuleReload():
+#	return
+	importlib.reload(LeenO.Dispatcher)
+	importlib.reload(LeenO.Importer)
 
 class ScriptContext(unohelper.Base):
     def __init__( self, ctx, doc, inv ):
@@ -79,8 +91,10 @@ class LeenO(unohelper.Base, XInitialization, XDispatch, XDispatchProvider):
         pass
     def removeStatusListener(self, control, url):
         pass
+
 # https://forum.openoffice.org/it/forum/viewtopic.php?f=27&t=9470
 g_ImplementationHelper = unohelper.ImplementationHelper()
 g_ImplementationHelper.addImplementation(LeenO,                           # UNO object class
                                          "org.giuseppe-vizziello.leeno.impl", # implemenation name
                                          ("org.giuseppe-vizziello.leeno.impl",),) # list of implemented services
+

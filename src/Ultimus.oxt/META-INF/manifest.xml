@@ -6,6 +6,8 @@
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.basic-library" manifest:full-path="UltimusFree2/" />
   
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.framework-script" manifest:full-path="python/pythonpath" />
+
+	<manifest:file-entry manifest:media-type="application/vnd.sun.star.uno-component;type=Python"  manifest:full-path="python/LeenoDispatcher.py"/>
   
 <!--
   <manifest:file-entry manifest:media-type="application/vnd.sun.star.configuration-data" manifest:full-path="ProtocolHandler.xcu" />

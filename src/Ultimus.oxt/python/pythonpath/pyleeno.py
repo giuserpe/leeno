@@ -6786,10 +6786,10 @@ def XPWE_import(arg=None):
     '''
     Visualizza il menù Esporta XPWE
     '''
-    try:
-        XPWE_in(scegli_elaborato('Importa dal formato XPWE'))
-    except:
-        return
+#    try:
+    XPWE_in(scegli_elaborato('Importa dal formato XPWE'))
+#    except:
+#        return
 ########################################################################
 # ~def XPWE_import_run(elaborato):
     # ~'''
@@ -7730,16 +7730,20 @@ stili_contab = ('Comp Start Attributo_R', 'comp 10 s_R','Comp End Attributo_R','
 stili_analisi =('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla', 'An-lavoraz-desc',
 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN', 'An-sfondo-basso Att End')
 stili_elenco =('EP-Cs', 'EP-aS')
-createUnoService =(
+try:
+	createUnoService =(
             #~ uno # protocol heandler
             XSCRIPTCONTEXT
             .getComponentContext()
             .getServiceManager()
             .createInstance)
+except :
+	print("createUnoService ERROR")
+
 GetmyToolBarNames =('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI',
-    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO',
+    'private:resource/tolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG',
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',)
 #

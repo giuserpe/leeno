@@ -36,144 +36,141 @@ Exit Sub
 END SUB
 
 
-
 Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant 
-rem questa serve ad avviare le funzioni/script di python
-rem tocca appiccicarle ad &quot;eventi&quot;: pulsanti o toolbar, altrimenti non vanno
-	args() = Array()
-	If not ismissing (arg1) Then Appenditem(args(), arg1)
-	If not ismissing (arg2) Then Appenditem(args(), arg2)
-	If not ismissing (arg3) Then Appenditem(args(), arg3)
-	rem RIF: http://bit.ly/1b4d3dF
 
-	Dim MasterScriptProviderFactory as Object
-	Dim MasterScriptProvider as Object
-	Dim Script as Object
-	Dim Url as String
-	sName = FileNameoutofPath(LeenO_Path) &apos;nome oxt
+	&apos; questa funzione sfrutta il servizio dispatcher di LeenO per eseguire da basic
+	&apos; dele funzioni in Python, senza i problemi legati ai percorsi fissi
 
-	Url = &quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|&quot; &amp; sModulo &amp; &quot;$&quot; &amp; sFunzione &amp;&quot;?language=Python&amp;location=user:uno_packages&quot;
+	&apos; se il nome del modulo finisce in .py, elimina la parte finale
+	if Right(sModulo, 3) = &quot;.py&quot; then
+		sModulo = Left(sModulo, Len(sModulo)- 3)
+	end if
 
-	MasterScriptProviderFactory = createUnoService(&quot;com.sun.star.script.provider.MasterScriptProviderFactory&quot;)
-	MasterScriptProvider = MasterScriptProviderFactory.createScriptProvider(&quot;&quot;)
-	Script = MasterScriptProvider.getScript(Url)
+	args = Array()
+	If not ismissing (arg1) Then Appenditem(args, arg1)
+	If not ismissing (arg2) Then Appenditem(args, arg2)
+	If not ismissing (arg3) Then Appenditem(args, arg3)
 
-	PythonResult = Script.invoke(args,Array(),Array())
+	Dim bridge as Object
+	bridge = GetProcessServiceManager().createInstanceWithArguments(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;, args )
+&apos;	bridge = GetProcessServiceManager().createInstance(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;)
 
-ScriptPy = PythonResult
+	bridge.trigger(sModulo + &quot;.&quot; + sFunzione)
+
 End Sub
+
 rem ######################################################################
 Sub debug
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;debug&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;debug&quot;)
 End Sub
 rem ######################################################################
 Sub DlgMain
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;DlgMain&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;DlgMain&quot;)
 End Sub
 rem ######################################################################
 Sub attiva_contabilita
 	chiudi_dialoghi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;attiva_contabilita&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;attiva_contabilita&quot;)
 End Sub
 rem ######################################################################
 Sub genera_variante
 	chiudi_dialoghi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;genera_variante&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;genera_variante&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_M1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_M1&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_M1&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_S1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S1&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_S1&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_S2
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S2&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_S2&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_variabili
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_variabili&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_variabili&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_ElencoPrezzi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_ElencoPrezzi&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_ElencoPrezzi&quot;)
 End Sub
 rem ######################################################################
 Sub inizializza_analisi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_analisi&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;inizializza_analisi&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_Computo
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_Computo&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_Computo&quot;)
 End Sub
 rem ######################################################################
 Sub vai_a_Scorciatoie
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_Scorciatoie&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;vai_a_Scorciatoie&quot;)
 End Sub
 rem ######################################################################
 Sub ssUltimus
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;ssUltimus&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;ssUltimus&quot;)
 End Sub
 rem ######################################################################
 Sub voce_breve
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;voce_breve&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;voce_breve&quot;)
 End Sub
 rem ######################################################################
 Sub tante_analisi_in_ep
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;tante_analisi_in_ep&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;tante_analisi_in_ep&quot;)
 End Sub
 rem ######################################################################
 Sub analisi_in_ElencoPrezzi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;analisi_in_ElencoPrezzi&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;analisi_in_ElencoPrezzi&quot;)
 End Sub
 rem ######################################################################
 Sub inizializza_elenco
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;inizializza_elenco&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;inizializza_elenco&quot;)
 End Sub
 rem ######################################################################
 Sub riordina_ElencoPrezzi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;riordina_ElencoPrezzi&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;riordina_ElencoPrezzi&quot;)
 End Sub
 rem ######################################################################
 Sub struttura_Elenco
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Elenco&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;struttura_Elenco&quot;)
 End Sub
 rem ######################################################################
 Sub cancella_voci_non_usate
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;cancella_voci_non_usate&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;cancella_voci_non_usate&quot;)
 End Sub
 rem ######################################################################
 Sub richiesta_offerta
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;richiesta_offerta&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;richiesta_offerta&quot;)
 End Sub
 rem ######################################################################
 Sub trova_np
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;trova_np&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;trova_np&quot;)
 End Sub
 rem ######################################################################
 Sub rigenera_tutte
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rigenera_tutte&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;rigenera_tutte&quot;)
 End Sub
 rem ######################################################################
 Sub trova_ricorrenze
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;trova_ricorrenze&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;trova_ricorrenze&quot;)
 End Sub
 rem ######################################################################
 Sub set_larghezza_colonne
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;set_larghezza_colonne&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;set_larghezza_colonne&quot;)
 End Sub
 rem ######################################################################
 Sub config_default
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;config_default&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;config_default&quot;)
 End Sub
 rem ######################################################################
 Sub donazioni
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;donazioni&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;donazioni&quot;)
 End Sub
 rem ######################################################################
 Sub invia_voce
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;invia_voce&quot;)
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;invia_voce&quot;)
 End Sub
 </script:module>

@@ -1,77 +1,100 @@
-import uno, unohelper, sys, types, importlib, builtins
+'''
+    LeenO menu and basic function dispatcher
+'''
+
+import sys
+import os
+import inspect
+import importlib
+
+import unohelper
 from com.sun.star.task import XJobExecutor
 
 
-#set this one to 0 for deploy mode
-#leave to 1 if you want to disable python cache
-#to be able to modify and run installed extension
+# set this one to 0 for deploy mode
+# leave to 1 if you want to disable python cache
+# to be able to modify and run installed extension
 DISABLE_CACHE = 1
 
-#this class fakes XSCRIPTCONTEXT variable, as the services
-#don't get it and we need it in old code
-class MyScriptContext :
-	
-	def __init__(self, ctx):
-		#CTX is XComponentContext - we store it
-		self.ComponentContext = ctx
-		
-	def getComponentContext(self):
-		return self.ComponentContext
 
-	def getDesktop(self):
-		return self.ComponentContext.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", self.ComponentContext )
-		
-	def getDocument(self):
-		return self.getDesktop().getCurrentComponent()
+def fixPythonPath():
+    '''
+    This function should fix python path adding it to current sys path
+    if not already there
+    Useless here, just kept for reference
+    '''
 
-#menu dispatcher
-class Dispatcher( unohelper.Base, XJobExecutor ):
-	def __init__( self, ctx ):
-		
-		#CTX is XComponentContext - we store it
-		self.ComponentContext = ctx
-		
-		#create a fake XSCRIPTCONTEXT
-		self.ScriptContext = MyScriptContext(ctx)
-		
-		print("-----------------------------------------------")
-		print("CREATED")
-		print("-----------------------------------------------")
+    print('''
+    ########################################################################
+    ######################## TRY THE TRICK ########################
+    ########################################################################
+    ''')
 
-	def trigger( self, args ):
+    # dirty trick to have pythonpath added if missing
+    myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    myPath = os.path.join(myPath, "/pythonpath")
+    if myPath not in sys.path:
+        sys.path.append(myPath)
 
-		#menu items are passed as module.function
-		#so split them in 2 strings
-		argv = args.split('.')
-		
-		#store XSCRIPTCONTEXT variable in global space
-		#to be used by imported scripts
-		if 'XSCRIPTCONTEXT' not in __builtins__:
-			__builtins__ ['XSCRIPTCONTEXT'] = self.ScriptContext
-			
-		#locate the module from its name and check it
-		module = importlib.import_module(argv[0])
-		if module is None:
-			print("Module '", argv[0], "' not found")
-			return
-		
-		#reload the module if we don't want the cache
-		if DISABLE_CACHE != 0:
-			importlib.reload(module)
-			
-		module.XSCRIPTCONTEXT = self.ScriptContext
+    print("sys.path:", sys.path)
+    print('''
+    ########################################################################
+    ######################## pyleenp loading ########################
+    ########################################################################
+    ''')
 
-		#locate the function from its name and check it
-		func = getattr(module, argv[1]);
-		if(func is None):
-			print("Function '", argv[1], "' not found in Module '", argv[0], "'")
-			return
 
-		#call the handler
-		func(self.ComponentContext)
+class Dispatcher(unohelper.Base, XJobExecutor):
+    '''
+    LeenO menu and basic function dispatcher
+    '''
+
+    def __init__(self, ctx, *args):
+
+        # CTX is XComponentContext - we store it
+        self.ComponentContext = ctx
+
+        # store any passed arg
+        self.args = args
+        
+        # just in case...
+        fixPythonPath()
+
+    def trigger(self, arg):
+        '''
+        This function gets called when a menu item is selected
+        or when a basic function calls PyScript()
+        '''
+
+        # menu items are passed as module.function
+        # so split them in 2 strings
+        ModFunc = arg.split('.')
+
+        # locate the module from its name and check it
+        module = importlib.import_module(ModFunc[0])
+        if module is None:
+            print("Module '", ModFunc[0], "' not found")
+            return
+
+        # reload the module if we don't want the cache
+        if DISABLE_CACHE != 0:
+            importlib.reload(module)
+
+        # locate the function from its name and check it
+        func = getattr(module, ModFunc[1])
+        if func is None:
+            print("Function '", ModFunc[1], "' not found in Module '", ModFunc[0], "'")
+            return
+
+        # call the handler, depending of number of arguments
+        if len(self.args) == 0:
+            func()
+        else:
+            func(self.args)
+
 
 g_ImplementationHelper = unohelper.ImplementationHelper()
 g_ImplementationHelper.addImplementation(
-	Dispatcher,
-	"org.giuseppe-vizziello.leeno.dispatcher",
-	("com.sun.star.task.Job",),)
+    Dispatcher,
+    "org.giuseppe-vizziello.leeno.dispatcher",
+    ("com.sun.star.task.Job",),)

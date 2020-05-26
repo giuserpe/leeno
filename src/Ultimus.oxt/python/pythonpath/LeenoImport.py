@@ -28,7 +28,7 @@ def ImportErrorDlg(msg):
 
 
 ########################################################################
-def MENU_importa_listino_leeno(ctx):
+def MENU_importa_listino_leeno():
     '''
     @@ DA DOCUMENTARE
     '''
@@ -183,7 +183,7 @@ Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
 # ~threading.Thread.__init__(self)
 # ~def run(self):
 # ~XPWE_import_run()
-def MENU_XPWE_import(ctx):
+def MENU_XPWE_import():
     '''
     Visualizza il menù Esporta XPWE
     '''
@@ -1187,7 +1187,7 @@ Al termine dell'importazione controlla la voce con tariffa """ +
 ########################################################################
 
 
-def MENU_XML_toscana_import(ctx):
+def MENU_XML_toscana_import():
     '''
     Importazione di un prezzario XML della regione Toscana
     in tabella Elenco Prezzi del template COMPUTO.
@@ -1380,7 +1380,7 @@ N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul s
 ########################################################################
 
 
-def XML_import_ep(ctx):
+def MENU_XML_import_ep():
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
@@ -1528,7 +1528,7 @@ def XML_import_ep(ctx):
             ############################################################
             # verifica e ricava le sottosezioni
             sub_mdo = elem.find('{six.xsd}incidenzaManodopera')
-            if sub_mdo is not None:
+            if sub_mdo is not None and sub_mdo.text is not None:
                 mdo = float(sub_mdo.text)
             else:
                 mdo = ''
@@ -1621,7 +1621,7 @@ def XML_import_ep(ctx):
 ########################################################################
 
 
-def MENU_XML_import_multi(ctx):
+def MENU_XML_import_multi():
     '''
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
@@ -1877,7 +1877,7 @@ ufficiale di riferimento prima di accedere al prezzario.'''
     PL.autoexec()
 
 
-def MENU_sardegna_2019(ctx):
+def MENU_sardegna_2019():
     '''
     @@@ DA DOCUMENTARE
     '''
@@ -1943,7 +1943,7 @@ def MENU_sardegna_2019(ctx):
 ########################################################################
 
 
-def MENU_basilicata_2020(ctx):
+def MENU_basilicata_2020():
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Basilicata
     partendo dalle colonne: CODICE	DESCRIZIONE	U. MISURA	PREZZO	MANODOPERA
@@ -1996,7 +1996,7 @@ def MENU_basilicata_2020(ctx):
 ########################################################################
 
 
-def MENU_Piemonte_2019(ctx):
+def MENU_Piemonte_2019():
     '''
     Adatta la struttura del prezzario rilasciato dalla regione Piemonte
     partendo dalle colonne: Sez.	Codice	Descrizione	U.M.	Euro	Manod. lorda	% Manod.	Note

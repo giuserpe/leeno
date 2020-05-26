@@ -23,25 +23,11 @@ def fixPythonPath():
     if not already there
     Useless here, just kept for reference
     '''
-
-    print('''
-    ########################################################################
-    ######################## TRY THE TRICK ########################
-    ########################################################################
-    ''')
-
     # dirty trick to have pythonpath added if missing
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
     myPath = os.path.join(myPath, "/pythonpath")
     if myPath not in sys.path:
         sys.path.append(myPath)
-
-    print("sys.path:", sys.path)
-    print('''
-    ########################################################################
-    ######################## pyleenp loading ########################
-    ########################################################################
-    ''')
 
 
 class Dispatcher(unohelper.Base, XJobExecutor):

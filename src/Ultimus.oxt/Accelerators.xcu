@@ -32,7 +32,7 @@
         <!--CTRL-1-->
         <node oor:name="1_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Vai_a_ElencoPrezzi?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_ElencoPrezzi</value>
           </prop>
         </node>
         <!--CTRL-2-->
@@ -44,13 +44,13 @@
         <!--CTRL-3-->
         <node oor:name="3_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Vai_a_Computo?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_Computo</value>
           </prop>
         </node>
         <!--CTRL-4-->
         <node oor:name="4_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Vai_a_M1?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_M1</value>
           </prop>
         </node>
         <!--CTRL-5-->
@@ -65,13 +65,13 @@
             <!--
                  <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.Focus.Sel_print_Opz?language=Basic&amp;location=application</value>
             -->
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Vai_a_S2?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_S2</value>
           </prop>
         </node>
         <!--CTRL-8-->
         <node oor:name="8_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$pesca_cod?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
           </prop>
         </node>
         <!--CTRL-9-->
@@ -84,20 +84,20 @@
         <!--
              <node oor:name="D_MOD1" oor:op="replace">
              <prop oor:name="Command">
-             <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$ctrl_d?language=Python&amp;location=user:uno_packages</value>
+             <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_ctrl_d</value>
              </prop>
              </node>
         -->
         <!--CTRL-X-->
         <node oor:name="X_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$taglia_x?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_taglia_x</value>
           </prop>
         </node>
         <!--CTRL-INS-->
         <node oor:name="INSERT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$pesca_cod?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
           </prop>
         </node>
         <!--CTRL-TAB-->
@@ -111,20 +111,20 @@
         <!--SHIFT-F1-->
         <node oor:name="F1_SHIFT" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Vai_a_Scorciatoie?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Vai_a_Scorciatoie</value>
           </prop>
         </node>
         <!--SHIFT-F10-->
         <node oor:name="F10_SHIFT" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$scelta_viste?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_scelta_viste</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-F3-->
         <!--CTRL-SHIFT-F8-->
         <node oor:name="F8_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Rinumera_TUTTI_Capitoli2?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Rinumera_TUTTI_Capitoli2</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-F10-->
@@ -137,7 +137,7 @@
         <!--CTRL-SHIFT-A-->
         <node oor:name="A_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$Copia_riga_Ent?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_Copia_riga_Ent</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-B-->
@@ -149,50 +149,50 @@
         <!--CTRL-SHIFT-C-->
         <node oor:name="C_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$numera_colonna?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_numera_colonna</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-D-->
         <node oor:name="D_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$filtro_descrizione?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_filtro_descrizione</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-E *** VOCE AZZERATA *** -->
         <node oor:name="E_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$azzera_voce?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_azzera_voce</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-F-->
         <node oor:name="F_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$filtra_codice?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_filtra_codice</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-G-->
         <node oor:name="G_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$copia_sorgente_per_git?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_copia_sorgente_per_git</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-K-->
         <node oor:name="K_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$pesca_cod?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_pesca_cod</value>
           </prop>
         </node>
         
         <!--CTRL-SHIFT-H-->
         <node oor:name="H_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command" oor:op="fuse">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$hl?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_hl</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-I-->
         <node oor:name="I_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$inverti_segno?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_inverti_segno</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-L-->
@@ -204,7 +204,7 @@
         <!--CTRL-SHIFT-N-->
         <node oor:name="N_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$nuova_voce_scelta?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_nuova_voce_scelta</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-P-->
@@ -222,7 +222,7 @@
         <!--CTRL-SHIFT-R-->
         <node oor:name="R_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$avvia_IDE?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_avvia_IDE</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-U-->

@@ -569,6 +569,13 @@ def copia_sorgente_per_git():
 ########################################################################
 
 
+def MENU_avvia_IDE():
+    '''
+    Avvia la modifica di pyleeno.py con geany
+    '''
+    avvia_IDE()
+
+
 def avvia_IDE():
     '''Avvia la modifica di pyleeno.py con geany'''
     basic_LeenO('file_gest.avvia_IDE')

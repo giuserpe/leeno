@@ -908,7 +908,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_XML_import_ep</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_Import_Ep_XML_SIX</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario XML-SIX</value>
@@ -922,7 +922,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_XML_import_multi</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_Import_Ep_XML_SIX_Multi</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa voci da prezzario bilingue XML-SIX</value>

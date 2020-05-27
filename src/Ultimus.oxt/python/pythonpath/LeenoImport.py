@@ -1407,7 +1407,7 @@ def Fill_Ep(nome, lista_articoli):
         colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
         righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
 
-        progress = Dialogs.ProgressBar("Importazione prezzario XML-SIX", "Compilazione prezziario in corso", None, 0, righe_lista)
+        progress = Dialogs.ProgressBar("Importazione prezzario XML-SIX", "Compilazione prezzario in corso", None, 0, righe_lista)
         progress.showDialog()
 
         riga = 0
@@ -1436,7 +1436,7 @@ def Fill_Ep(nome, lista_articoli):
     except Exception:
         if progress is not None:
             progress.hideDialog()
-        Dialogs.Exclamation("Errore", "Errore nella compilazione dell'elenco prezzi\nSegnalare il problema sul sito")
+        Dialogs.Exclamation("Errore", "Errore nella compilazione del prezzario\nSegnalare il problema sul sito")
         return False
 
 

@@ -1388,57 +1388,56 @@ def Fill_Ep(nome, lista_articoli):
     Ritorna True se OK, False altrimenti
     '''
     progress = None
+    try:
+        # creo nuovo file di computo
+        PL.New_file.computo(0)
 
-    # try:
-    # creo nuovo file di computo
-    PL.New_file.computo(0)
+        # e lo compilo
+        oDoc = getDocument()
+        oSheet = oDoc.getSheets().getByName('S2')
+        oSheet.getCellByPosition(2, 2).String = nome
+        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+        oSheet.getCellByPosition(1, 1).String = nome
+        oSheet.getRows().insertByIndex(4, len(lista_articoli))
 
-    # e lo compilo
-    oDoc = getDocument()
-    oSheet = oDoc.getSheets().getByName('S2')
-    oSheet.getCellByPosition(2, 2).String = nome
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oSheet.getCellByPosition(1, 1).String = nome
-    oSheet.getRows().insertByIndex(4, len(lista_articoli))
+        lista_come_array = tuple(lista_articoli)
+        # Parametrizzo il range di celle a seconda della dimensione della lista
+        scarto_colonne = 0  # numero colonne da saltare a partire da sinistra
+        scarto_righe = 4  # numero righe da saltare a partire dall'alto
+        colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
+        righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
 
-    lista_come_array = tuple(lista_articoli)
-    # Parametrizzo il range di celle a seconda della dimensione della lista
-    scarto_colonne = 0  # numero colonne da saltare a partire da sinistra
-    scarto_righe = 4  # numero righe da saltare a partire dall'alto
-    colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
-    righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
+        progress = Dialogs.ProgressBar("Importazione prezzario XML-SIX", "Compilazione prezziario in corso", None, 0, righe_lista)
+        progress.showDialog()
 
-    progress = Dialogs.ProgressBar("Importazione prezzario XML-SIX", "Compilazione prezziario in corso", None, 0, righe_lista)
-    progress.showDialog()
+        riga = 0
+        while riga < righe_lista:
+            progress.setProgress(riga)
+            sliced = lista_come_array[riga:riga + 100]
+            num = len(sliced)
+            oRange = oSheet.getCellRangeByPosition(scarto_colonne,
+                                                   scarto_righe + riga,
+                                                   # l'indice parte da 0
+                                                   colonne_lista + scarto_colonne - 1,
+                                                   scarto_righe + riga + num - 1)
+            oRange.setDataArray(sliced)
+            riga = riga + 100
 
-    riga = 0
-    while riga < righe_lista:
-        progress.setProgress(riga)
-        sliced = lista_come_array[riga:riga + 100]
-        num = len(sliced)
-        oRange = oSheet.getCellRangeByPosition(scarto_colonne,
-                                               scarto_righe + riga,
-                                               # l'indice parte da 0
-                                               colonne_lista + scarto_colonne - 1,
-                                               scarto_righe + riga + num - 1)
-        oRange.setDataArray(sliced)
-        riga = riga + 100
-
-    oSheet.getRows().removeByIndex(3, 1)
+        oSheet.getRows().removeByIndex(3, 1)
 
 
-    oDoc.CurrentController.setActiveSheet(oSheet)
-    # ~ struttura_Elenco()
+        oDoc.CurrentController.setActiveSheet(oSheet)
+        # ~ struttura_Elenco()
 
-    progress.hideDialog()
-    Dialogs.Ok("Operazione completata", "Importazione eseguita con successo")
-    return True
+        progress.hideDialog()
+        Dialogs.Ok("Operazione completata", "Importazione eseguita con successo")
+        return True
 
-    # except Exception:
-    #     if progress is not None:
-    #         progress.hideDialog()
-    #     Dialogs.Exclamation("Errore", "Errore nella compilazione dell'elenco prezzi\nSegnalare il problema sul sito")
-    #     return False
+    except Exception:
+        if progress is not None:
+            progress.hideDialog()
+        Dialogs.Exclamation("Errore", "Errore nella compilazione dell'elenco prezzi\nSegnalare il problema sul sito")
+        return False
 
 
 def MENU_Import_Ep_XML_SIX():
@@ -1446,7 +1445,6 @@ def MENU_Import_Ep_XML_SIX():
     Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
     del template COMPUTO.
     '''
-    progress = None
     try:
 
         filename = DLG.filedia('Scegli il file XML-SIX da importare', '*.xml')
@@ -1654,6 +1652,7 @@ def MENU_Import_Ep_XML_SIX():
         Dialogs.Exclamation("Errore", "C'è stato un problema nell'importazione\nCorreggere il file XML e riprovare")
         return
 
+    # compila la tabella
     Fill_Ep(nome, lista_articoli)
     PL.autoexec()
 
@@ -1669,253 +1668,216 @@ def MENU_Import_Ep_XML_SIX_Multi():
     di <Davide Vescovini> <davide.vescovini@gmail.com>
     *Versione bilingue*
     '''
-    DLG.MsgBox("L'importazione dati dal formato XML-SIX potrebbe richiedere del tempo.", 'Avviso')
-    PL.New_file.computo(0)
     try:
+
         filename = DLG.filedia('Scegli il file XML-SIX da importare', '*.xml')
         if filename is None:
             return
-        oDialogo_attesa = DLG.dlg_attesa()
 
-        # mostra il dialogo
-        DLG.attesa().start()
-    except Exception:
-        return
-
-    # datarif = datetime.now()
-    # inizializzazioe delle variabili
-    lista_articoli = list()  # lista in cui memorizzare gli articoli da importare
-    diz_um = dict()  # array per le unità di misura
-    # stringhe per descrizioni articoli
-    desc_breve = str()
-    desc_estesa = str()
-    # effettua il parsing del file XML
-    tree = ElementTree()
-    if filename is None:
-        return
-    tree.parse(filename)
-    # ottieni l'item root
-    root = tree.getroot()
-    logging.debug(list(root))
-    # effettua il parsing di tutti gli elemnti dell'albero XML
-    iterator = tree.getiterator()
-    listaSOA = []
-    # articolo = []
-    lingua_scelta = 'it'
-    ####################################################################
-    # nome del prezzario
-    prezzario = root.find('{six.xsd}prezzario')
-    if len(prezzario.findall('{six.xsd}przDescrizione')) == 2:
-        if prezzario.findall('{six.xsd}przDescrizione')[0].get('lingua') == lingua_scelta:
-            nome1 = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
-            nome2 = prezzario.findall('{six.xsd}przDescrizione')[1].get('breve')
+        # datarif = datetime.now()
+        # inizializzazioe delle variabili
+        lista_articoli = list()  # lista in cui memorizzare gli articoli da importare
+        diz_um = dict()  # array per le unità di misura
+        # stringhe per descrizioni articoli
+        desc_breve = str()
+        desc_estesa = str()
+        # effettua il parsing del file XML
+        tree = ElementTree()
+        if filename is None:
+            return
+        tree.parse(filename)
+        # ottieni l'item root
+        root = tree.getroot()
+        logging.debug(list(root))
+        # effettua il parsing di tutti gli elemnti dell'albero XML
+        iterator = tree.getiterator()
+        listaSOA = []
+        # articolo = []
+        lingua_scelta = 'it'
+        ####################################################################
+        # nome del prezzario
+        prezzario = root.find('{six.xsd}prezzario')
+        if len(prezzario.findall('{six.xsd}przDescrizione')) == 2:
+            if prezzario.findall('{six.xsd}przDescrizione')[0].get('lingua') == lingua_scelta:
+                nome1 = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
+                nome2 = prezzario.findall('{six.xsd}przDescrizione')[1].get('breve')
+            else:
+                nome1 = prezzario.findall('{six.xsd}przDescrizione')[1].get('breve')
+                nome2 = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
+            nome = nome1 + '\n§\n' + nome2
         else:
-            nome1 = prezzario.findall('{six.xsd}przDescrizione')[1].get('breve')
-            nome2 = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
-        nome = nome1 + '\n§\n' + nome2
-    else:
-        nome = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
-    ####################################################################
-    suffB_IT, suffE_IT, suffB_DE, suffE_DE = '', '', '', ''
-    test = True
-    # madre = ''
-    for elem in iterator:
-        # esegui le verifiche sulla root dell'XML
-        # if elem.tag == '{six.xsd}intestazione':
-        #    intestazioneId = elem.get('intestazioneId')
-        #    lingua = elem.get('lingua')
-        #    separatore = elem.get('separatore')
-        #    separatoreParametri = elem.get('separatoreParametri')
-        #    valuta = elem.get('valuta')
-        #    autore = elem.get('autore')
-        #    versione = elem.get('versione')
-        # elif elem.tag == '{six.xsd}categoriaSOA':
-        if elem.tag == '{six.xsd}categoriaSOA':
-            soaId = elem.get('soaId')
-            soaCategoria = elem.get('soaCategoria')
-            soaDescrizione = elem.find('{six.xsd}soaDescrizione')
-            if soaDescrizione is None:
-                breveSOA = soaDescrizione.get('breve')
-            voceSOA = (soaCategoria, soaId, breveSOA)
-            listaSOA.append(voceSOA)
-        # elif elem.tag == '{six.xsd}prezzario':
-        #    prezzarioId = elem.get('prezzarioId')
-        #    przId = elem.get('przId')
-        #    try:
-        #        livelli_struttura = len(elem.get('prdStruttura').split('.'))
-        #    except Exception:
-        #        pass
-        #    categoriaPrezzario = elem.get('categoriaPrezzario')
-        ################################################################
-        elif elem.tag == '{six.xsd}unitaDiMisura':
-            um_id = elem.get('unitaDiMisuraId')
-            # um_sim = elem.get('simbolo')
-            # um_dec = elem.get('decimali')
-            # crea il dizionario dell'unita di misura
-            ############################################################
-            # ~ unità di misura
-            unita_misura = ''
-            try:
-                if len(elem.findall('{six.xsd}udmDescrizione')) == 1:
-                    unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
-                else:
-                    if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
-                        unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
-                        unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
-                    else:
-                        unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
-                        unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
-                if unita_misura is not None:
-                    unita_misura = unita_misura1 + ' § ' + unita_misura2
-            except IndexError:
-                pass
-            diz_um[um_id] = unita_misura
-        ################################################################
-        # se il tag è un prodotto fa parte degli articoli da analizzare
-        elif elem.tag == '{six.xsd}prodotto':
-
-            prod_id = elem.get('prodottoId')
-            if prod_id is not None:
-                prod_id = int(prod_id)
-            tariffa = elem.get('prdId')
-            # sic = elem.get('onereSicurezza')
-            # if sic is not None:
-            #    sicurezza = float(sic)
-            # else:
-            #    sicurezza = ''
-            ############################################################
-            if diz_um.get(elem.get('unitaDiMisuraId')) is not None:
-                unita_misura = diz_um.get(elem.get('unitaDiMisuraId'))
-            else:
+            nome = prezzario.findall('{six.xsd}przDescrizione')[0].get('breve')
+        ####################################################################
+        suffB_IT, suffE_IT, suffB_DE, suffE_DE = '', '', '', ''
+        test = True
+        # madre = ''
+        for elem in iterator:
+            # esegui le verifiche sulla root dell'XML
+            # if elem.tag == '{six.xsd}intestazione':
+            #    intestazioneId = elem.get('intestazioneId')
+            #    lingua = elem.get('lingua')
+            #    separatore = elem.get('separatore')
+            #    separatoreParametri = elem.get('separatoreParametri')
+            #    valuta = elem.get('valuta')
+            #    autore = elem.get('autore')
+            #    versione = elem.get('versione')
+            # elif elem.tag == '{six.xsd}categoriaSOA':
+            if elem.tag == '{six.xsd}categoriaSOA':
+                soaId = elem.get('soaId')
+                soaCategoria = elem.get('soaCategoria')
+                soaDescrizione = elem.find('{six.xsd}soaDescrizione')
+                if soaDescrizione is None:
+                    breveSOA = soaDescrizione.get('breve')
+                voceSOA = (soaCategoria, soaId, breveSOA)
+                listaSOA.append(voceSOA)
+            # elif elem.tag == '{six.xsd}prezzario':
+            #    prezzarioId = elem.get('prezzarioId')
+            #    przId = elem.get('przId')
+            #    try:
+            #        livelli_struttura = len(elem.get('prdStruttura').split('.'))
+            #    except Exception:
+            #        pass
+            #    categoriaPrezzario = elem.get('categoriaPrezzario')
+            ################################################################
+            elif elem.tag == '{six.xsd}unitaDiMisura':
+                um_id = elem.get('unitaDiMisuraId')
+                # um_sim = elem.get('simbolo')
+                # um_dec = elem.get('decimali')
+                # crea il dizionario dell'unita di misura
+                ############################################################
+                # ~ unità di misura
                 unita_misura = ''
-            ############################################################
-            # verifica e ricava le sottosezioni
-            # sub_mdo = elem.find('{six.xsd}incidenzaManodopera')
-            # if sub_mdo is not None:
-            #    mdo = float(sub_mdo.text)
-            # else:
-            #    mdo = ''
-            ############################################################
-            # descrizione voci
-            desc_estesa1, desc_estesa2 = '', ''
-            if test == 0:
-                test = 1
-                suffB_IT = suffB_IT + ' '
-                suffE_IT = suffE_IT + ' '
-                suffB_DE = suffB_DE + ' '
-                suffE_DE = suffE_DE + ' '
-            # ~ try:
-            if len(elem.findall('{six.xsd}prdDescrizione')) == 1:
-                desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
-                desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
-            else:
-                # descrizione voce
-                if elem.findall('{six.xsd}prdDescrizione')[0].get('lingua') == lingua_scelta:
-                    desc_breve1 = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
-                    desc_breve2 = elem.findall('{six.xsd}prdDescrizione')[1].get('breve')
-                    desc_estesa1 = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
-                    desc_estesa2 = elem.findall('{six.xsd}prdDescrizione')[1].get('estesa')
+                unita_misura1 = ''
+                unita_misura2 = ''
+                try:
+                    if len(elem.findall('{six.xsd}udmDescrizione')) == 1:
+                        unita_misura = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
+                    else:
+                        if elem.findall('{six.xsd}udmDescrizione')[1].get('lingua') == lingua_scelta:
+                            unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
+                            unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
+                        else:
+                            unita_misura1 = elem.findall('{six.xsd}udmDescrizione')[0].get('breve')
+                            unita_misura2 = elem.findall('{six.xsd}udmDescrizione')[1].get('breve')
+                    if unita_misura is not None:
+                        unita_misura = unita_misura1 + ' § ' + unita_misura2
+                except IndexError:
+                    pass
+                diz_um[um_id] = unita_misura
+            ################################################################
+            # se il tag è un prodotto fa parte degli articoli da analizzare
+            elif elem.tag == '{six.xsd}prodotto':
+
+                prod_id = elem.get('prodottoId')
+                if prod_id is not None:
+                    prod_id = int(prod_id)
+                tariffa = elem.get('prdId')
+                # sic = elem.get('onereSicurezza')
+                # if sic is not None:
+                #    sicurezza = float(sic)
+                # else:
+                #    sicurezza = ''
+                ############################################################
+                if diz_um.get(elem.get('unitaDiMisuraId')) is not None:
+                    unita_misura = diz_um.get(elem.get('unitaDiMisuraId'))
                 else:
-                    desc_breve1 = elem.findall('{six.xsd}prdDescrizione')[1].get('breve')
-                    desc_breve2 = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
-                    desc_estesa1 = elem.findall('{six.xsd}prdDescrizione')[1].get('estesa')
-                    desc_estesa2 = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
-                if desc_breve1 is None:
-                    desc_breve1 = ''
-                if desc_breve2 is None:
-                    desc_breve2 = ''
-                if desc_estesa1 is None:
-                    desc_estesa1 = ''
-                if desc_estesa2 is None:
-                    desc_estesa2 = ''
-                desc_breve = (suffB_IT +
-                              desc_breve1.strip() +
-                              '\n§\n' +
-                              suffB_DE +
-                              desc_breve2.strip())
-                desc_estesa = (suffE_IT +
-                               desc_estesa1.strip() +
-                               '\n§\n' +
-                               suffE_DE +
-                               desc_estesa2.strip())
-            if len(desc_breve) > len(desc_estesa):
-                desc_voce = desc_breve
-            else:
-                desc_voce = desc_estesa
-            # ~ except IndexError:
-                # ~ pass
-            ############################################################
-            sub_quot = elem.find('{six.xsd}prdQuotazione')
-            if sub_quot is not None:
-                # list_nr = sub_quot.get('listaQuotazioneId')
-                if sub_quot.get('valore') is not None:
-                    valore = float(sub_quot.get('valore'))
-                if valore == 0:
+                    unita_misura = ''
+                ############################################################
+                # verifica e ricava le sottosezioni
+                # sub_mdo = elem.find('{six.xsd}incidenzaManodopera')
+                # if sub_mdo is not None:
+                #    mdo = float(sub_mdo.text)
+                # else:
+                #    mdo = ''
+                ############################################################
+                # descrizione voci
+                desc_estesa1, desc_estesa2 = '', ''
+                desc_breve1, desc_breve2 = '', ''
+                if test == 0:
+                    test = 1
+                    suffB_IT = suffB_IT + ' '
+                    suffE_IT = suffE_IT + ' '
+                    suffB_DE = suffB_DE + ' '
+                    suffE_DE = suffE_DE + ' '
+                # ~ try:
+                if len(elem.findall('{six.xsd}prdDescrizione')) == 1:
+                    desc_breve = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
+                    desc_estesa = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
+                else:
+                    # descrizione voce
+                    if elem.findall('{six.xsd}prdDescrizione')[0].get('lingua') == lingua_scelta:
+                        desc_breve1 = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
+                        desc_breve2 = elem.findall('{six.xsd}prdDescrizione')[1].get('breve')
+                        desc_estesa1 = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
+                        desc_estesa2 = elem.findall('{six.xsd}prdDescrizione')[1].get('estesa')
+                    else:
+                        desc_breve1 = elem.findall('{six.xsd}prdDescrizione')[1].get('breve')
+                        desc_breve2 = elem.findall('{six.xsd}prdDescrizione')[0].get('breve')
+                        desc_estesa1 = elem.findall('{six.xsd}prdDescrizione')[1].get('estesa')
+                        desc_estesa2 = elem.findall('{six.xsd}prdDescrizione')[0].get('estesa')
+                    if desc_breve1 is None:
+                        desc_breve1 = ''
+                    if desc_breve2 is None:
+                        desc_breve2 = ''
+                    if desc_estesa1 is None:
+                        desc_estesa1 = ''
+                    if desc_estesa2 is None:
+                        desc_estesa2 = ''
+                    desc_breve = (suffB_IT +
+                                  desc_breve1.strip() +
+                                  '\n§\n' +
+                                  suffB_DE +
+                                  desc_breve2.strip())
+                    desc_estesa = (suffE_IT +
+                                   desc_estesa1.strip() +
+                                   '\n§\n' +
+                                   suffE_DE +
+                                   desc_estesa2.strip())
+                if len(desc_breve) > len(desc_estesa):
+                    desc_voce = desc_breve
+                else:
+                    desc_voce = desc_estesa
+                # ~ except IndexError:
+                    # ~ pass
+                ############################################################
+                sub_quot = elem.find('{six.xsd}prdQuotazione')
+                if sub_quot is not None:
+                    # list_nr = sub_quot.get('listaQuotazioneId')
+                    if sub_quot.get('valore') is not None:
+                        valore = float(sub_quot.get('valore'))
+                    if valore == 0:
+                        valore = ''
+                    # if sub_quot.get('quantita') is not None:  # SERVE DAVVERO???
+                    #    quantita = float(sub_quot.get('quantita'))
+                else:
+                    test = 0
+                    suffB_IT = desc_breve1
+                    suffB_DE = desc_breve2
+                    suffE_IT = desc_estesa1
+                    suffE_DE = desc_estesa2
                     valore = ''
-                # if sub_quot.get('quantita') is not None:  # SERVE DAVVERO???
-                #    quantita = float(sub_quot.get('quantita'))
-            else:
-                test = 0
-                suffB_IT = desc_breve1
-                suffB_DE = desc_breve2
-                suffE_IT = desc_estesa1
-                suffE_DE = desc_estesa2
-                valore = ''
-                # quantita = ''
-            vuoto = ''
-            elem_7 = ''
-            elem_11 = ''
-            articolo_modificato = (tariffa,           # 2  colonna
-                                   desc_voce,        # 4  colonna
-                                   unita_misura,     # 6  colonna
-                                   vuoto,
-                                   valore,           # 7  prezzo
-                                   elem_7,           # 8  mdo %
-                                   elem_11)          # 11 sicurezza %
-            lista_articoli.append(articolo_modificato)
+                    # quantita = ''
+                vuoto = ''
+                elem_7 = ''
+                elem_11 = ''
+                articolo_modificato = (tariffa,           # 2  colonna
+                                       desc_voce,        # 4  colonna
+                                       unita_misura,     # 6  colonna
+                                       vuoto,
+                                       valore,           # 7  prezzo
+                                       elem_7,           # 8  mdo %
+                                       elem_11)          # 11 sicurezza %
+                lista_articoli.append(articolo_modificato)
 
-    # compilo la tabella ###################################################
-    oDoc = getDocument()
-    oSheet = oDoc.getSheets().getByName('S2')
-    oSheet.getCellByPosition(2, 2).String = nome
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oSheet.getCellByPosition(1, 0).String = nome
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    flags = (VALUE + DATETIME + STRING + ANNOTATION + FORMULA +
-             OBJECTS + EDITATTR)  # FORMATTED + HARDATTR
-    oSheet.getCellRangeByName('D1:V1').clearContents(flags)
-    oDoc.getSheets().getByName('COMPUTO').IsVisible = False
-    oSheet.getCellByPosition(2, 0).String = '''ATTENZIONE!
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+    except Exception:
+        # segnala l'errore e termina
+        Dialogs.Exclamation("Errore", "C'è stato un problema nell'importazione\nCorreggere il file XML e riprovare")
+        return
 
-N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale \
-ufficiale di riferimento prima di accedere al prezzario.'''
-    oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
-    oSheet.getRows().insertByIndex(4, len(lista_articoli))
-
-    lista_come_array = tuple(lista_articoli)
-    # Parametrizzo il range di celle a seconda della dimensione della lista
-    scarto_colonne = 0  # numero colonne da saltare a partire da sinistra
-    scarto_righe = 4  # numero righe da saltare a partire dall'alto
-    colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
-    righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
-    oRange = oSheet.getCellRangeByPosition(scarto_colonne,
-                                           scarto_righe,
-                                           colonne_lista + scarto_colonne - 1,
-                                           # l'indice parte da 0
-                                           righe_lista + scarto_righe - 1)
-    oRange.setDataArray(lista_come_array)
-    oSheet.getRows().removeByIndex(3, 1)
-    oSheet.getCellRangeByName('F2').String = 'prezzi'
-    oSheet.getCellRangeByName('E2').Formula = ('=COUNT(E3:E' + str(PL.getLastUsedCell(oSheet).EndRow + 1) + ')')
-    oDoc.CurrentController.setActiveSheet(oSheet)
-    # ~ struttura_Elenco()
-    oDialogo_attesa.endExecute()
-    DLG.MsgBox('Importazione eseguita con successo!', '')
+    # compila la tabella
+    Fill_Ep(nome, lista_articoli)
     PL.autoexec()
-
+ 
 
 def MENU_sardegna_2019():
     '''

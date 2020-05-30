@@ -13,6 +13,7 @@ from com.sun.star.awt import Size
 from com.sun.star.awt import XActionListener
 from com.sun.star.task import XJobExecutor
 
+from LeenoConfig import Config
 from LeenoUtils import getDocument, createUnoService
 
 
@@ -540,6 +541,7 @@ class Info(MultiButton):
 
 #####################################################################################
 
+
 def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
     """
     titolo  { string }  : titolo del FilePicker
@@ -567,10 +569,22 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
     oFilePicker = createUnoService("com.sun.star.ui.dialogs.FilePicker")
     oFilePicker.initialize((mode, ))
     oDoc = getDocument()
-    oFilePicker.setDisplayDirectory(os.path.dirname(oDoc.getURL()))
+
+    # try to get path from current document, if any
+    # if not, look into config to fetch last used one
+    oPath = oDoc.getURL()
+    if oPath == '':
+        oPath = uno.systemPathToFileUrl(Config().read('Generale', 'ultimo_percorso'))
+    else:
+        oPath = os.path.dirname(oPath)
+    print("\n\n\n\nURL: XX'" +  oPath + "'XX\n\n\n\n")
+    oFilePicker.setDisplayDirectory(oPath)
+
     oFilePicker.Title = titolo
     app = estensioni.get(est)
     oFilePicker.appendFilter(app, est)
     if oFilePicker.execute():
-        return uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
+        oPath = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
+        Config().write('Generale', 'ultimo_percorso', os.path.dirname(oPath))
+        return oPath
     return None

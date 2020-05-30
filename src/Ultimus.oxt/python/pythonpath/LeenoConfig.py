@@ -5,6 +5,7 @@ import sys
 import os
 import configparser
 
+from os.path import expanduser
 
 class Borg:
     '''
@@ -71,6 +72,7 @@ class Config(Borg):
             ('Generale', 'copie_backup', '5'),
             ('Generale', 'pausa_backup', '15'),
             ('Generale', 'conta_usi', '0'),
+            ('Generale', 'ultimo_percorso', expanduser("~")),
 
             #  ('Computo', 'riga_bianca_categorie', '1'),
             #  ('Computo', 'voci_senza_numerazione', '0'),

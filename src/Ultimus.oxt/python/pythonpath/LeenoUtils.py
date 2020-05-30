@@ -24,3 +24,17 @@ def getDocument():
     Get active document
     '''
     return getDesktop().getCurrentComponent()
+
+
+def getServiceManager():
+    '''
+    Gets the service manager
+    '''
+    return uno.getComponentContext().ServiceManager
+
+
+def createUnoService(serv):
+    '''
+    create an UNO service
+    '''
+    return getComponentContext().getServiceManager().createInstance(serv)

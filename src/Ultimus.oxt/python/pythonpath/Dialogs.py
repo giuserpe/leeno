@@ -1,20 +1,19 @@
 '''
     Module to build dialogs in python
 '''
-
 import os
 import inspect
-import time
 from collections import namedtuple
 
 import uno
 import unohelper
 
-from com.sun.star.awt import Point
 from com.sun.star.awt import Rectangle
 from com.sun.star.awt import Size
 from com.sun.star.awt import XActionListener
 from com.sun.star.task import XJobExecutor
+
+from LeenoUtils import getDocument, createUnoService
 
 
 def getCurrentPath():
@@ -29,7 +28,8 @@ def getParentWindowInfo():
     Get point at desktop's center -- to be able to center dialogs around it
     '''
     ctx = uno.getComponentContext()
-    oDesktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
+    oDesktop = ctx.ServiceManager.createInstanceWithContext(
+        "com.sun.star.frame.Desktop", ctx)
     oDoc = oDesktop.getCurrentComponent()
 
     oView = oDoc.getCurrentController()
@@ -52,7 +52,8 @@ def getScreenInfo():
     '''
     ctx = uno.getComponentContext()
     # oDesktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
-    oToolkit = ctx.ServiceManager.createInstanceWithContext("com.sun.star.awt.Toolkit", ctx)
+    oToolkit = ctx.ServiceManager.createInstanceWithContext(
+        "com.sun.star.awt.Toolkit", ctx)
     aWorkArea = oToolkit.WorkArea
     nWidht = aWorkArea.Width
     nHeight = aWorkArea.Height
@@ -85,14 +86,19 @@ def getBigIconSize():
 
 
 def getTextBox(txt):
+    '''
+    Get the size needed to display a multiline text box
+    '''
     ctx = uno.getComponentContext()
     serviceManager = ctx.ServiceManager
-    #toolkit = serviceManager.createInstanceWithContext("com.sun.star.awt.ExtToolkit", ctx)
-    #dialogModel = serviceManager.createInstance("com.sun.star.awt.UnoControlDialogModel")
-    #textModel = dialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
+    # toolkit = serviceManager.createInstanceWithContext("com.sun.star.awt.ExtToolkit", ctx)
+    # dialogModel = serviceManager.createInstance("com.sun.star.awt.UnoControlDialogModel")
+    # textModel = dialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
-    textModel = serviceManager.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
-    text = serviceManager.createInstance("com.sun.star.awt.UnoControlFixedText")
+    textModel = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlFixedTextModel")
+    text = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlFixedText")
     text.setModel(textModel)
     text.setText(txt)
     size = text.getMinimumSize()
@@ -116,12 +122,16 @@ class BasicDialog(unohelper.Base, XActionListener, XJobExecutor):
 
     def __init__(self, nPositionX=None, nPositionY=None, nWidth=None, nHeight=None, sTitle=None):
 
+        unohelper.Base.__init__(self)
+
         self._LocalContext = uno.getComponentContext()
         self._ServiceManager = self._LocalContext.ServiceManager
-        self._Toolkit = self._ServiceManager.createInstanceWithContext("com.sun.star.awt.ExtToolkit", self._LocalContext)
+        self._Toolkit = self._ServiceManager.createInstanceWithContext(
+            "com.sun.star.awt.ExtToolkit", self._LocalContext)
 
         # create dialog model and set its properties properties
-        self._DialogModel = self._ServiceManager.createInstance("com.sun.star.awt.UnoControlDialogModel")
+        self._DialogModel = self._ServiceManager.createInstance(
+            "com.sun.star.awt.UnoControlDialogModel")
 
         scales = getScaleFactors()
         self._DialogModel.PositionX = int(nPositionX * scales.XScale)
@@ -136,7 +146,8 @@ class BasicDialog(unohelper.Base, XActionListener, XJobExecutor):
         self._DialogModel.DesktopAsParent = False
 
         # create the dialog container and set our dialog model into it
-        self._DialogContainer = self._ServiceManager.createInstanceWithContext("com.sun.star.awt.UnoControlDialog", self._LocalContext)
+        self._DialogContainer = self._ServiceManager.createInstanceWithContext(
+            "com.sun.star.awt.UnoControlDialog", self._LocalContext)
         self._DialogContainer.setModel(self._DialogModel)
 
         self._showing = False
@@ -147,7 +158,8 @@ class BasicDialog(unohelper.Base, XActionListener, XJobExecutor):
         dProps are element's properties in a list, see classes below for examples
         '''
         # create the control
-        oControlModel = self._DialogModel.createInstance("com.sun.star.awt.UnoControl" + sAwtName + "Model")
+        oControlModel = self._DialogModel.createInstance(
+            "com.sun.star.awt.UnoControl" + sAwtName + "Model")
 
         # still dont' know why, but we've got to scale items coordinates
         # so get the factors
@@ -289,15 +301,15 @@ class ProgressBar(BasicDialog):
             Width = int(screenInfo.Width / 8)
         elif Width > screenInfo.Width / 4:
             Width = int(screenInfo.Width / 4)
-            
+
         margin = 15
-        
+
         messageSize = getTextBox(message + " (100.0%)")
         if Width < messageSize.Width + 2 * margin:
             Width = messageSize.Width + 2 * margin
-            
+
         Height = messageSize.Height + 2 * margin
-            
+
         # get some elements sizes
         if self._closeable:
             cancelSize = getButtonSize("Annulla")
@@ -309,17 +321,17 @@ class ProgressBar(BasicDialog):
 
         progressSize = Size(Width - 2 * margin, 20)
         Height = Height + progressSize.Height + margin
-        
+
         # we try to place the progress bar at center of parent window
         X = int(wi.X - Width / 2)
         Y = int(wi.Y - Height / 2)
-        
+
         progressX = margin
         progressY = margin
-        
+
         messageX = margin
         messageY = progressY + progressSize.Height + margin
-        
+
         if self._closeable:
             cancelX = int((Width - cancelSize.Width) / 2)
             cancelY = messageY + messageSize.Height + margin
@@ -331,19 +343,36 @@ class ProgressBar(BasicDialog):
         self._minVal = minVal
         self._maxVal = maxVal
 
-        dProgress = {"PositionX": progressX, "PositionY": progressY, "Width": progressSize.Width, "Height": progressSize.Height, "ProgressValueMin": minVal, "ProgressValueMax": maxVal, }
+        dProgress = {
+            "PositionX": progressX,
+            "PositionY": progressY,
+            "Width": progressSize.Width,
+            "Height": progressSize.Height,
+            "ProgressValueMin": minVal,
+            "ProgressValueMax": maxVal, }
         self._progressBar = self.addControl("ProgressBar", "progressBar", dProgress)
 
-        dMessage = {"PositionX": messageX, "PositionY": messageY, "Width": messageSize.Width, "Height": messageSize.Height, "Label": message, "Align": 0, }
+        dMessage = {
+            "PositionX": messageX,
+            "PositionY": messageY,
+            "Width": messageSize.Width,
+            "Height": messageSize.Height,
+            "Label": message,
+            "Align": 0, }
         self._lbMessage = self.addControl("FixedText", "lbMessage", dMessage)
 
         if self._closeable:
-            dCancel = {"PositionX": cancelX, "PositionY": cancelY, "Width": cancelSize.Width, "Height": cancelSize.Height, "Label": cancelTitle, }
+            dCancel = {
+                "PositionX": cancelX,
+                "PositionY": cancelY,
+                "Width": cancelSize.Width,
+                "Height": cancelSize.Height,
+                "Label": cancelTitle, }
             self._btnCancel = self.addControl("Button", "btnCancel", dCancel)
 
         self.moveable(False)
         self.sizeable(False)
-        
+
         self._pos = minVal
 
     def actionPerformed(self, oActionEvent):
@@ -372,38 +401,55 @@ class ProgressBar(BasicDialog):
 
         # just to be sure that the progress bar stays on top
         self.setOnTop()
-        
+
         # store current position - we need it to change message or other stuffs
         self._pos = pos
 
     def setMessage(self, msg):
+        '''
+        sets/changes the message displayed along progress percent value
+        '''
         self._message = msg
         self.setProgress(self._pos)
 
     def setLimits(self, minV, maxV, pos):
+        '''
+        sets/changes the min and max progressbar values
+        and resets its position
+        '''
         self._minVal = minV
         self._maxVal = maxV
         self._pos = pos
         self.setProgress(self._pos)
 
-class BaseNotify(BasicDialog):
+
+class MultiButton(BasicDialog):
     '''
-    Generic notification dialog with image, button and some text lines
+    base class for multi-button dialogs
+    'buttons' is a dictionary in the form of "name":retval
     '''
-    def __init__(self, image, btntext, title, message):
+    def __init__(self, image, title, message, buttons):
+
+        print("\n\nINIT\n\n\n")
 
         # compose the dialog by an image, a button and a text area
+        margins = 15
+
         iconSize = getBigIconSize()
-        buttonSize = getButtonSize(btntext)
+
+        buttonSize = Size(0, 0)
+        for key, val in buttons.items():
+            curButtonSize = getButtonSize(key)
+            buttonSize = Size(max(buttonSize.Width, curButtonSize.Width), max(buttonSize.Height, curButtonSize.Height))
+
+        allButtonsSize = Size((buttonSize.Width + margins) * len(buttons) - margins, buttonSize.Height)
 
         infoSize = getTextBox(message)
 
-        margins = 15
-
-        Width = iconSize.Width + max(infoSize.Width, buttonSize.Width) + 3 * margins
+        Width = max(iconSize.Width + infoSize.Width + 3 * margins, allButtonsSize.Width + 2 * margins)
         Height = max(iconSize.Height, infoSize.Height) + buttonSize.Height + 3 * margins
 
-        # we try to place the progress bar at center of parent window
+        # we try to place the dialog bar at center of parent window
         wi = getParentWindowInfo()
         X = wi.X - int(Width / 2)
         Y = wi.Y - int(Height / 2)
@@ -414,21 +460,46 @@ class BaseNotify(BasicDialog):
         xInfo = xIcon + iconSize.Width + margins
         yInfo = margins
 
-        xButton = int((Width - buttonSize.Width) / 2)
+        if allButtonsSize.Width + 2 * margins == Width:
+            xButton = margins
+        else:
+            xButton = int((Width - allButtonsSize.Width) / 2)
         yButton = Height - margins - buttonSize.Height
-        
+
         BasicDialog.__init__(self, nPositionX=X, nPositionY=Y, nWidth=Width, nHeight=Height, sTitle=title)
 
         imgUrl = uno.systemPathToFileUrl(os.path.join(getCurrentPath(), image))
-        dImage = {"PositionX": xIcon, "PositionY": yIcon, "Width": iconSize.Width, "Height": iconSize.Height, "ScaleImage": True, "ScaleMode": 1, "Border": 0, "ImageURL": imgUrl}
+        dImage = {
+            "PositionX": xIcon,
+            "PositionY": yIcon,
+            "Width": iconSize.Width,
+            "Height": iconSize.Height,
+            "ScaleImage": True,
+            "ScaleMode": 1,
+            "Border": 0,
+            "ImageURL": imgUrl}
         self._lbImage = self.addControl("ImageControl", "_lbImage", dImage)
 
-        dMessage = {"PositionX": xInfo, "PositionY": yInfo, "Width": infoSize.Width, "Height": infoSize.Height, "Label": message, "Align": 0, }
+        dMessage = {
+            "PositionX": xInfo,
+            "PositionY": yInfo,
+            "Width": infoSize.Width,
+            "Height": infoSize.Height,
+            "Label": message,
+            "Align": 0, }
         self._lbMessage = self.addControl("FixedText", "lbMessage", dMessage)
 
-        dBtn = {"PositionX": xButton, "PositionY": yButton, "Width": buttonSize.Width, "Height": buttonSize.Height, "Label": btntext, }
-        self._btn = self.addControl("Button", "btn", dBtn)
-        
+        self._btns = []
+        for key, val in buttons.items():
+            dBtn = {
+                "PositionX": xButton,
+                "PositionY": yButton,
+                "Width": buttonSize.Width,
+                "Height": buttonSize.Height,
+                "Label": key, }
+            self._btns.append({'btn': self.addControl("Button", key, dBtn), 'value': val, 'name': key})
+            xButton += buttonSize.Width + margins
+
         self.returnValue = None
         self.runDialog()
 
@@ -436,60 +507,70 @@ class BaseNotify(BasicDialog):
         '''
         Close dialog when button pressed
         '''
-        if oActionEvent.ActionCommand == 'btn_OnClick':
-            self._showing = False
-            self._DialogContainer.endExecute()
+        for btn in self._btns:
+            if oActionEvent.ActionCommand == btn['name'] + '_OnClick':
+                self._showing = False
+                self.returnValue = btn['value']
+                self._DialogContainer.endExecute()
+                break
 
 
-class Exclamation(BaseNotify):
+class Exclamation(MultiButton):
     '''
     Exclamation alert dialog with OK button
     '''
     def __init__(self, title, message):
-        BaseNotify.__init__(self, "exclamation.png", "Ok", title, message)
+        MultiButton.__init__(self, "exclamation.png", title, message, {'Ok': 0})
 
 
-class Ok(BaseNotify):
+class Ok(MultiButton):
     '''
     Ok alert dialog with OK button
     '''
     def __init__(self, title, message):
-        BaseNotify.__init__(self, "ok.png", "Ok", title, message)
+        MultiButton.__init__(self, "ok.png", title, message, {'Ok': 0})
 
 
-class SimpleDialog(BasicDialog):
+class Info(MultiButton):
     '''
-    Just a sample dialog
+    Ok alert dialog with OK button
     '''
+    def __init__(self, title, message):
+        MultiButton.__init__(self, "info.png", title, message, {'Ok': 0})
 
-    def __init__(self, message, title, text):
-        BasicDialog.__init__(self, nPositionX=50, nPositionY=50, nWidth=200, nHeight=150, sTitle=title)
+#####################################################################################
 
-        dMessage = {"PositionY": 25, "PositionX": 25, "Height": 10, "Width": 150, "Label": message, "Align": 1, }
-        self._lbMessage = self.addControl("FixedText", "lbMessage", dMessage)
+def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
+    """
+    titolo  { string }  : titolo del FilePicker
+    est     { string }  : filtro di visualizzazione file
+    mode    { integer } : modalità di gestione del file
 
-        dRefresh = {"PositionY": 60, "PositionX": 75, "Height": 20, "Width": 50, "Label": "Execute Process", }
-        self._btnRefresh = self.addControl("Button", "btnRefresh", dRefresh)
-
-        dCancel = {"PositionY": 110, "PositionX": 75, "Height": 20, "Width": 50, "Label": "Close Dialog", }
-        self._btnCancel = self.addControl("Button", "btnCancel", dCancel)
-
-        self.returnValue = None
-
-    def actionPerformed(self, oActionEvent):
-        '''
-        @@ TO DOCUMENT
-        '''
-        if oActionEvent.ActionCommand == 'btnRefresh_OnClick':
-            myControl = self._DialogContainer.getControl("lbMessage")
-            myControl.setText("First message in process.")
-            time.sleep(1)
-            myControl.setText("Second message in process.")
-            time.sleep(1)
-            myControl.setText("Third message in process.")
-            time.sleep(1)
-            myControl.setText("Closing message in process.")
-
-        if oActionEvent.ActionCommand == 'btnCancel_OnClick':
-            self._showing = False
-            self._DialogContainer.endExecute()
+    Apri file:  `mode in(0, 6, 7, 8, 9)`
+    Salva file: `mode in(1, 2, 3, 4, 5, 10)`
+    see:('''http://api.libreoffice.org/docs/idl/ref/
+            namespacecom_1_1sun_1_1star_1_1ui_1_1
+            dialogs_1_1TemplateDescription.html''' )
+    see:('''http://stackoverflow.com/questions/30840736/
+        libreoffice-how-to-create-a-file-dialog-via-python-macro''')
+    """
+    estensioni = {'*.*': 'Tutti i file(*.*)',
+                  '*.odt': 'Writer(*.odt)',
+                  '*.ods': 'Calc(*.ods)',
+                  '*.odb': 'Base(*.odb)',
+                  '*.odg': 'Draw(*.odg)',
+                  '*.odp': 'Impress(*.odp)',
+                  '*.odf': 'Math(*.odf)',
+                  '*.xpwe': 'Primus(*.xpwe)',
+                  '*.xml': 'XML(*.xml)',
+                  '*.dat': 'dat(*.dat)', }
+    oFilePicker = createUnoService("com.sun.star.ui.dialogs.FilePicker")
+    oFilePicker.initialize((mode, ))
+    oDoc = getDocument()
+    oFilePicker.setDisplayDirectory(os.path.dirname(oDoc.getURL()))
+    oFilePicker.Title = titolo
+    app = estensioni.get(est)
+    oFilePicker.appendFilter(app, est)
+    if oFilePicker.execute():
+        return uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
+    return None

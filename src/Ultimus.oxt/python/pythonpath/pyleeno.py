@@ -19,12 +19,11 @@
 # import pydevd
 
 from datetime import datetime, date
-from xml.etree.ElementTree import ElementTree, Element, SubElement, tostring
+from xml.etree.ElementTree import Element, SubElement, tostring
 
 import distutils.dir_util
 
 import codecs
-import configparser
 import subprocess
 # import psutil
 import re
@@ -38,11 +37,12 @@ import sys
 import uno
 
 from LeenoUtils import getComponentContext, getDesktop, getDocument
+import LeenoToolbars as Toolbars
+from LeenoConfig import Config
 
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
 
-from com.sun.star.awt import Point
 # from com.sun.star.lang import Locale
 from com.sun.star.beans import PropertyValue
 # from com.sun.star.table.CellContentType import TEXT, EMPTY, VALUE, FORMULA
@@ -77,6 +77,166 @@ def basic_LeenO(funcname, *args):
     Result = Xscript.invoke(args, None, None)
     return Result[0]
 
+
+
+# leeno.conf
+def MENU_leeno_conf():
+    '''
+    Visualizza il menù di configurazione
+    '''
+    oDoc = getDocument()
+    if not oDoc.getSheets().hasByName('S1'):
+        Toolbars.AllOff()
+        return
+    psm = getServiceManager()
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDlg_config = dp.createDialog(
+        "vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application"
+    )
+    # oDialog1Model = oDlg_config.Model
+
+    oSheets = list(oDoc.getSheets().getElementNames())
+    # ~for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+    for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
+        oSheets.remove(nome)
+    for nome in oSheets:
+        oSheet = oDoc.getSheets().getByName(nome)
+        if not oSheet.IsVisible:
+            oDlg_config.getControl('CheckBox2').State = 0
+            test = 0
+            break
+        oDlg_config.getControl('CheckBox2').State = 1
+        test = 1
+    if oDoc.getSheets().getByName("copyright_LeenO").IsVisible:
+        oDlg_config.getControl('CheckBox2').State = 1
+    if Config().read('Generale', 'pesca_auto') == '1':
+        oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
+    if Config().read('Generale', 'toolbar_contestuali') == '1':
+        oDlg_config.getControl('CheckBox6').State = 1
+
+    oSheet = oDoc.getSheets().getByName('S5')
+    # descrizione_in_una_colonna
+    if not oSheet.getCellRangeByName('C9').IsMerged:
+        oDlg_config.getControl('CheckBox5').State = 1
+    else:
+        oDlg_config.getControl('CheckBox5').State = 0
+
+    #  if conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna') == '1': oDlg_config.getControl('CheckBox5').State = 1
+
+    sString = oDlg_config.getControl('TextField1')
+    sString.Text = Config().read('Generale', 'altezza_celle')
+
+    #  sString = oDlg_config.getControl("ComboBox1")
+    #  sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
+
+    sString = oDlg_config.getControl("ComboBox2")  # spostamento ad INVIO
+    if Config().read('Generale', 'movedirection') == '1':
+        sString.Text = 'A DESTRA'
+    elif Config().read('Generale', 'movedirection') == '0':
+        sString.Text = 'IN BASSO'
+    oSheet = oDoc.getSheets().getByName('S1')
+
+    # fullscreen
+    oLayout = oDoc.CurrentController.getFrame().LayoutManager
+    if not oLayout.isElementVisible('private:resource/toolbar/standardbar'):
+        oDlg_config.getControl('CheckBox3').State = 1
+
+    sString = oDlg_config.getControl('TextField14')
+    sString.Text = oSheet.getCellRangeByName(
+        'S1.H334').String  # vedi_voce_breve
+    sString = oDlg_config.getControl('TextField4')
+    sString.Text = oSheet.getCellRangeByName(
+        'S1.H335').String  # cont_inizio_voci_abbreviate
+    if oDoc.NamedRanges.hasByName("#Lib#1"):
+        sString.setEnable(False)
+    sString = oDlg_config.getControl('TextField12')
+    sString.Text = oSheet.getCellRangeByName(
+        'S1.H336').String  # cont_fine_voci_abbreviate
+    if oDoc.NamedRanges.hasByName("#Lib#1"):
+        sString.setEnable(False)
+
+    if Config().read('Generale', 'torna_a_ep') == '1':
+        oDlg_config.getControl('CheckBox8').State = 1
+
+    # Contabilità abilita
+    if oSheet.getCellRangeByName('S1.H328').Value == 1:
+        oDlg_config.getControl('CheckBox7').State = 1
+    sString = oDlg_config.getControl('TextField13')
+    if Config().read('Contabilità', 'idxsal') == '&273.Dlg_config.TextField13.Text':
+        sString.Text = '20'
+    else:
+        sString.Text = Config().read('Contabilità', 'idxsal')
+        if sString.Text == '':
+            sString.Text = '20'
+    sString = oDlg_config.getControl('ComboBox3')
+    sString.Text = Config().read('Contabilità', 'ricicla_da')
+
+    sString = oDlg_config.getControl('ComboBox4')
+    sString.Text = Config().read('Generale', 'copie_backup')
+    sString = oDlg_config.getControl('TextField5')
+    sString.Text = Config().read('Generale', 'pausa_backup')
+
+    # MOSTRA IL DIALOGO
+    oDlg_config.execute()
+
+    if oDlg_config.getControl('CheckBox2').State != test:
+        if oDlg_config.getControl('CheckBox2').State == 1:
+            show_sheets(True)
+        else:
+            show_sheets(False)
+
+    if oDlg_config.getControl('CheckBox3').State == 1:
+        Toolbars.Switch(False)
+    else:
+        Toolbars.Switch(True)
+
+    #  conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
+
+    ctx = getComponentContext()
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
+        Config().write('Generale', 'movedirection', '0')
+        oGSheetSettings.MoveDirection = 0
+    else:
+        Config().write('Generale', 'movedirection', '1')
+        oGSheetSettings.MoveDirection = 1
+    Config().write('Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
+
+    Config().write('Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
+    Config().write('Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
+    Config().write('Generale', 'toolbar_contestuali', str(oDlg_config.getControl('CheckBox6').State))
+    Toolbars.Vedi()
+    if oDlg_config.getControl('CheckBox5').State == 1:
+        descrizione_in_una_colonna(False)
+    else:
+        descrizione_in_una_colonna(True)
+    # torna su prezzario
+    Config().write('Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State))
+
+    # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+
+    if oDlg_config.getControl('TextField14').getText() != '10000':
+        Config().write('Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
+    oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
+
+    if oDlg_config.getControl('TextField4').getText() != '10000':
+        Config().write('Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
+    oSheet.getCellRangeByName('S1.H335').Value = float(oDlg_config.getControl('TextField4').getText())
+
+    if oDlg_config.getControl('TextField12').getText() != '10000':
+        Config().write('Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
+    oSheet.getCellRangeByName('S1.H336').Value = float(oDlg_config.getControl('TextField12').getText())
+    adatta_altezza_riga()
+
+    Config().write('Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
+    Config().write('Contabilità', 'idxsal', oDlg_config.getControl('TextField13').getText())
+    if oDlg_config.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
+        Config().write('Contabilità', 'ricicla_da', 'COMPUTO')
+    else:
+        Config().write('Contabilità', 'ricicla_da', 'VARIANTE')
+    Config().write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
+    Config().write('Generale', 'pausa_backup', oDlg_config.getControl('TextField5').getText())
+    autorun()
 
 ########################################################################
 
@@ -1886,19 +2046,16 @@ def voce_breve():
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         oSheet = oDoc.getSheets().getByName('S1')
         if oSheet.getCellRangeByName('S1.H337').Value < 10000:
-            conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate',
-                       oSheet.getCellRangeByName('S1.H337').String)
+            Config().write('Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
             oSheet.getCellRangeByName('S1.H337').Value = 10000
         else:
             oSheet.getCellRangeByName('S1.H337').Value = int(
-                conf.read(path_conf, 'Computo', 'inizio_voci_abbreviate'))
+                Config().read('Computo', 'inizio_voci_abbreviate'))
         if oSheet.getCellRangeByName('S1.H338').Value < 10000:
-            conf.write(path_conf, 'Computo', 'fine_voci_abbreviate',
-                       oSheet.getCellRangeByName('S1.H338').String)
+            Config().write('Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
             oSheet.getCellRangeByName('S1.H338').Value = 10000
         else:
-            oSheet.getCellRangeByName('S1.H338').Value = int(
-                conf.read(path_conf, 'Computo', 'fine_voci_abbreviate'))
+            oSheet.getCellRangeByName('S1.H338').Value = int(Config().read('Computo', 'fine_voci_abbreviate'))
         adatta_altezza_riga()
 
     elif oSheet.Name == 'CONTABILITA':
@@ -1910,23 +2067,15 @@ def voce_breve():
             return
         else:
             if oSheet.getCellRangeByName('S1.H335').Value < 10000:
-                conf.write(path_conf, 'Contabilità',
-                           'cont_inizio_voci_abbreviate',
-                           oSheet.getCellRangeByName('S1.H335').String)
+                Config().write('Contabilità', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
                 oSheet.getCellRangeByName('S1.H335').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H335').Value = int(
-                    conf.read(path_conf, 'Contabilità',
-                              'cont_inizio_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H335').Value = int(Config().read('Contabilità', 'cont_inizio_voci_abbreviate'))
             if oSheet.getCellRangeByName('S1.H336').Value < 10000:
-                conf.write(path_conf, 'Contabilità',
-                           'cont_fine_voci_abbreviate',
-                           oSheet.getCellRangeByName('S1.H336').String)
+                Config().write('Contabilità', 'cont_fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H336').String)
                 oSheet.getCellRangeByName('S1.H336').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H336').Value = int(
-                    conf.read(path_conf, 'Contabilità',
-                              'cont_fine_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H336').Value = int(Config().read('Contabilità', 'cont_fine_voci_abbreviate'))
             adatta_altezza_riga()
 
 
@@ -2033,8 +2182,7 @@ def scelta_viste():
             'vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application'
         )
         # oDialog1Model = oDialog1.Model
-        oDialog1.getControl('Dettaglio').State = conf.read(
-            path_conf, 'Generale', 'dettaglio')
+        oDialog1.getControl('Dettaglio').State = Config().read('Generale', 'dettaglio')
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible:
             oDialog1.getControl('CBMis').State = 1
         if oSheet.getColumns().getByIndex(17).Columns.IsVisible:
@@ -2059,18 +2207,12 @@ def scelta_viste():
 
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField10').getText() != '10000':
-            conf.write(path_conf, 'Computo', 'inizio_voci_abbreviate',
-                       oDialog1.getControl('TextField10').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H337').Value = float(
-                oDialog1.getControl('TextField10').getText())
+            Config().write('Computo', 'inizio_voci_abbreviate', oDialog1.getControl('TextField10').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H337').Value = float(oDialog1.getControl('TextField10').getText())
 
         if oDialog1.getControl('TextField11').getText() != '10000':
-            conf.write(path_conf, 'Computo', 'fine_voci_abbreviate',
-                       oDialog1.getControl('TextField11').getText())
-        oDoc.getSheets().getByName('S1').getCellRangeByName(
-            'H338').Value = float(
-                oDialog1.getControl('TextField11').getText())
+            Config().write('Computo', 'fine_voci_abbreviate', oDialog1.getControl('TextField11').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H338').Value = float(oDialog1.getControl('TextField11').getText())
         #  oDialog1.getControl('CBMdo').State = False
         #  if oSheet.getColumns().getByIndex(29).Columns.IsVisible:
         #  oDialog1.getControl('CBMdo').State = True
@@ -2135,10 +2277,10 @@ def scelta_viste():
             oSheet.getColumns().getByIndex(38).Columns.IsVisible = True
 
         if oDialog1.getControl('Dettaglio').State == 0:  #
-            conf.write(path_conf, 'Generale', 'dettaglio', '0')
+            Config().write('Generale', 'dettaglio', '0')
             dettaglio_misure(0)
         else:
-            conf.write(path_conf, 'Generale', 'dettaglio', '1')
+            Config().write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
     elif oSheet.Name in ('Elenco Prezzi'):
@@ -2481,14 +2623,13 @@ def scelta_viste():
             "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
         )
         # oDialog1Model = oDialog1.Model
-        oDialog1.getControl('Dettaglio').State = conf.read(
-            path_conf, 'Generale', 'dettaglio')
+        oDialog1.getControl('Dettaglio').State = Config().read('Generale', 'dettaglio')
         oDialog1.execute()
         if oDialog1.getControl('Dettaglio').State == 0:
-            conf.write(path_conf, 'Generale', 'dettaglio', '0')
+            Config().write('Generale', 'dettaglio', '0')
             dettaglio_misure(0)
         else:
-            conf.write(path_conf, 'Generale', 'dettaglio', '1')
+            Config().write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
     # adatta_altezza_riga(oSheet.Name)
@@ -2757,7 +2898,7 @@ def XPWE_out(elaborato, out_file):
     oDoc = getDocument()
     oDialogo_attesa = DLG.dlg_attesa('Esportazione di ' + elaborato + ' in corso...')
     DLG.attesa().start()  # mostra il dialogo
-    if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+    if Config().read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
     numera_voci(1)
     top = Element('PweDocumento')
@@ -3298,7 +3439,7 @@ def XPWE_out(elaborato, out_file):
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
     # ~mri (uno.fileUrlToSystemPath(oDoc.getURL()))
     # ~chi(out_file)
-    if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+    if Config().read('Generale', 'dettaglio') == '1':
         dettaglio_misure(1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
@@ -4368,11 +4509,11 @@ def Copia_riga_Ent(arg=None):
     lrow = Range2Cell()[1]
     nome_sheet = oSheet.Name
     if nome_sheet in ('COMPUTO', 'VARIANTE'):
-        if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+        if Config().read('Generale', 'dettaglio') == '1':
             dettaglio_misura_rigo()
         copia_riga_computo(lrow)
     elif nome_sheet == 'CONTABILITA':
-        if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+        if Config().read('Generale', 'dettaglio') == '1':
             dettaglio_misura_rigo()
         copia_riga_contab(lrow)
     elif nome_sheet == 'Analisi di Prezzo':
@@ -4593,7 +4734,7 @@ def MENU_ricicla_misure():
             return
         ins_voce_contab(arg=0)
         cerca_partenza()
-        _gotoSheet(conf.read(path_conf, 'Contabilità', 'ricicla_da'))
+        _gotoSheet(Config().read('Contabilità', 'ricicla_da'))
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = Range2Cell()[1]
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
@@ -5051,7 +5192,7 @@ def visualizza_PageBreak():
 
 
 ########################################################################
-def delete():
+def delete(arg):
     '''
     Elimina righe o colonne.
     arg       { string }  : 'R' per righe
@@ -5069,8 +5210,7 @@ def delete():
 
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, ".uno:DeleteCell", "", 0,
-                                   properties)
+    dispatchHelper.executeDispatch(oFrame, ".uno:DeleteCell", "", 0, properties)
 
 
 ########################################################################
@@ -5604,7 +5744,7 @@ def ins_voce_computo():  # TROPPO LENTA
         return
     ins_voce_computo_grezza(lrow)
     numera_voci(0)
-    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
+    if Config().read('Generale', 'pesca_auto') == '1':
         pesca_cod()
 
 
@@ -5870,285 +6010,6 @@ def rigenera_tutte(arg=None, ):
 
 
 ########################################################################
-# leeno.conf  ##########################################################
-def MENU_leeno_conf():
-    '''
-    Visualizza il menù di configurazione
-    '''
-    oDoc = getDocument()
-    if not oDoc.getSheets().hasByName('S1'):
-        for bar in GetmyToolBarNames:
-            toolbar_on(bar, 0)
-        return
-    psm = uno.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDlg_config = dp.createDialog(
-        "vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application"
-    )
-    # oDialog1Model = oDlg_config.Model
-
-    oSheets = list(oDoc.getSheets().getElementNames())
-    # ~for nome in ('M1', 'S1', 'S2', 'S4', 'S5', 'Elenco Prezzi', 'COMPUTO'):
-    for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
-        oSheets.remove(nome)
-    for nome in oSheets:
-        oSheet = oDoc.getSheets().getByName(nome)
-        if not oSheet.IsVisible:
-            oDlg_config.getControl('CheckBox2').State = 0
-            test = 0
-            break
-        else:
-            oDlg_config.getControl('CheckBox2').State = 1
-            test = 1
-    if oDoc.getSheets().getByName("copyright_LeenO").IsVisible:
-        oDlg_config.getControl('CheckBox2').State = 1
-    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
-        oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
-    if conf.read(path_conf, 'Generale', 'toolbar_contestuali') == '1':
-        oDlg_config.getControl('CheckBox6').State = 1
-
-    oSheet = oDoc.getSheets().getByName('S5')
-    # descrizione_in_una_colonna
-    if not oSheet.getCellRangeByName('C9').IsMerged:
-        oDlg_config.getControl('CheckBox5').State = 1
-    else:
-        oDlg_config.getControl('CheckBox5').State = 0
-
-    #  if conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna') == '1': oDlg_config.getControl('CheckBox5').State = 1
-
-    sString = oDlg_config.getControl('TextField1')
-    sString.Text = conf.read(path_conf, 'Generale', 'altezza_celle')
-
-    #  sString = oDlg_config.getControl("ComboBox1")
-    #  sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
-
-    sString = oDlg_config.getControl("ComboBox2")  # spostamento ad INVIO
-    if conf.read(path_conf, 'Generale', 'movedirection') == '1':
-        sString.Text = 'A DESTRA'
-    elif conf.read(path_conf, 'Generale', 'movedirection') == '0':
-        sString.Text = 'IN BASSO'
-    oSheet = oDoc.getSheets().getByName('S1')
-
-    # fullscreen
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    if not oLayout.isElementVisible('private:resource/toolbar/standardbar'):
-        oDlg_config.getControl('CheckBox3').State = 1
-
-    sString = oDlg_config.getControl('TextField14')
-    sString.Text = oSheet.getCellRangeByName(
-        'S1.H334').String  # vedi_voce_breve
-    sString = oDlg_config.getControl('TextField4')
-    sString.Text = oSheet.getCellRangeByName(
-        'S1.H335').String  # cont_inizio_voci_abbreviate
-    if oDoc.NamedRanges.hasByName("#Lib#1"):
-        sString.setEnable(False)
-    sString = oDlg_config.getControl('TextField12')
-    sString.Text = oSheet.getCellRangeByName(
-        'S1.H336').String  # cont_fine_voci_abbreviate
-    if oDoc.NamedRanges.hasByName("#Lib#1"):
-        sString.setEnable(False)
-
-    if conf.read(path_conf, 'Generale', 'torna_a_ep') == '1':
-        oDlg_config.getControl('CheckBox8').State = 1
-
-    # Contabilità abilita
-    if oSheet.getCellRangeByName('S1.H328').Value == 1:
-        oDlg_config.getControl('CheckBox7').State = 1
-    sString = oDlg_config.getControl('TextField13')
-    if conf.read(path_conf, 'Contabilità',
-                 'idxsal') == '&273.Dlg_config.TextField13.Text':
-        sString.Text = '20'
-    else:
-        sString.Text = conf.read(path_conf, 'Contabilità', 'idxsal')
-        if sString.Text == '':
-            sString.Text = '20'
-    sString = oDlg_config.getControl('ComboBox3')
-    sString.Text = conf.read(path_conf, 'Contabilità', 'ricicla_da')
-
-    sString = oDlg_config.getControl('ComboBox4')
-    sString.Text = conf.read(path_conf, 'Generale', 'copie_backup')
-    sString = oDlg_config.getControl('TextField5')
-    sString.Text = conf.read(path_conf, 'Generale', 'pausa_backup')
-
-    # MOSTRA IL DIALOGO
-    oDlg_config.execute()
-
-    if oDlg_config.getControl('CheckBox2').State != test:
-        if oDlg_config.getControl('CheckBox2').State == 1:
-            show_sheets(True)
-        else:
-            show_sheets(False)
-
-    if oDlg_config.getControl('CheckBox3').State == 1:
-        toolbar_switch(0)
-    else:
-        toolbar_switch(1)
-
-    #  conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
-
-    ctx = getComponentContext()
-    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext(
-        "com.sun.star.sheet.GlobalSheetSettings", ctx)
-    if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
-        conf.write(path_conf, 'Generale', 'movedirection', '0')
-        oGSheetSettings.MoveDirection = 0
-    else:
-        conf.write(path_conf, 'Generale', 'movedirection', '1')
-        oGSheetSettings.MoveDirection = 1
-    conf.write(path_conf, 'Generale', 'altezza_celle',
-               oDlg_config.getControl('TextField1').getText())
-
-    conf.write(path_conf, 'Generale', 'pesca_auto',
-               str(oDlg_config.getControl('CheckBox1').State))
-    conf.write(path_conf, 'Generale', 'descrizione_in_una_colonna',
-               str(oDlg_config.getControl('CheckBox5').State))
-    conf.write(path_conf, 'Generale', 'toolbar_contestuali',
-               str(oDlg_config.getControl('CheckBox6').State))
-    toolbar_vedi()
-    if oDlg_config.getControl('CheckBox5').State == 1:
-        descrizione_in_una_colonna(False)
-    else:
-        descrizione_in_una_colonna(True)
-    conf.write(
-        path_conf, 'Generale', 'torna_a_ep',
-        str(oDlg_config.getControl('CheckBox8').State))  # torna su prezzario
-
-    # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
-
-    if oDlg_config.getControl('TextField14').getText() != '10000':
-        conf.write(path_conf, 'Generale', 'vedi_voce_breve',
-                   oDlg_config.getControl('TextField14').getText())
-    oSheet.getCellRangeByName('S1.H334').Value = float(
-        oDlg_config.getControl('TextField14').getText())
-
-    if oDlg_config.getControl('TextField4').getText() != '10000':
-        conf.write(path_conf, 'Contabilità', 'cont_inizio_voci_abbreviate',
-                   oDlg_config.getControl('TextField4').getText())
-    oSheet.getCellRangeByName('S1.H335').Value = float(
-        oDlg_config.getControl('TextField4').getText())
-
-    if oDlg_config.getControl('TextField12').getText() != '10000':
-        conf.write(path_conf, 'Contabilità', 'cont_fine_voci_abbreviate',
-                   oDlg_config.getControl('TextField12').getText())
-    oSheet.getCellRangeByName('S1.H336').Value = float(
-        oDlg_config.getControl('TextField12').getText())
-    adatta_altezza_riga()
-
-    conf.write(path_conf, 'Contabilità', 'abilita',
-               str(oDlg_config.getControl('CheckBox7').State))
-    conf.write(path_conf, 'Contabilità', 'idxsal',
-               oDlg_config.getControl('TextField13').getText())
-    if oDlg_config.getControl('ComboBox3').getText() in (
-            'COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
-        conf.write(path_conf, 'Contabilità', 'ricicla_da', 'COMPUTO')
-    else:
-        conf.write(path_conf, 'Contabilità', 'ricicla_da', 'VARIANTE')
-    conf.write(path_conf, 'Generale', 'copie_backup',
-               oDlg_config.getControl('ComboBox4').getText())
-    conf.write(path_conf, 'Generale', 'pausa_backup',
-               oDlg_config.getControl('TextField5').getText())
-    autorun()
-
-
-########################################################################
-# percorso di ricerca di leeno.conf
-if sys.platform == 'win32':
-    path_conf = os.getenv("APPDATA") + '/.config/leeno/leeno.conf'
-else:
-    path_conf = os.getenv("HOME") + '/.config/leeno/leeno.conf'
-
-
-class conf:
-    '''
-    path    { string }: indirizzo del file di configurazione
-    section { string }: sezione
-    option  { string }: opzione
-    value   { string }: valore
-    '''
-    def __init__(self, path=path_conf):
-        #  config = configparser.SafeConfigParser()
-        #  config.read(path)
-        #  self.path = path
-        pass
-
-    def write(path, section, option, value):
-        """
-        Scrive i dati nel file di configurazione.
-        http://www.programcreek.com/python/example/1033/ConfigParser.SafeConfigParser
-        Write the specified Section.Option to the config file specified by path.
-        Replace any previous value.  If the path doesn't exist, create it.
-        Also add the option the the in-memory config.
-        """
-        config = configparser.SafeConfigParser()
-        config.read(path)
-
-        if not config.has_section(section):
-            config.add_section(section)
-        config.set(section, option, value)
-
-        fp = open(path, 'w')
-        config.write(fp)
-        fp.close()
-
-    def read(path, section, option):
-        '''
-        https://pymotw.com/2/ConfigParser/
-        Legge i dati dal file di configurazione.
-        '''
-        config = configparser.SafeConfigParser()
-        config.read(path)
-        return config.get(section, option)
-
-    def diz(path):
-        '''
-        Legge tutto il file di configurazione e restituisce un dizionario.
-        '''
-        my_config_parser_dict = {
-            s: dict(config.items(s))
-            for s in config.sections()
-        }
-        return my_config_parser_dict
-
-
-def config_default():
-    '''
-    Imposta i parametri di default in leeno.conf
-    '''
-    parametri = (
-        ('Zoom', 'fattore', '100'),
-        ('Zoom', 'fattore_ottimale', '81'),
-        ('Zoom', 'fullscreen', '0'),
-        ('Generale', 'dialogo', '1'),
-        #  ('Generale', 'visualizza', 'Menù Principale'),
-        ('Generale', 'altezza_celle', '1.25'),
-        ('Generale', 'pesca_auto', '1'),
-        ('Generale', 'movedirection', '1'),
-        ('Generale', 'descrizione_in_una_colonna', '0'),
-        ('Generale', 'toolbar_contestuali', '1'),
-        ('Generale', 'vedi_voce_breve', '50'),
-        ('Generale', 'dettaglio', '1'),
-        ('Generale', 'torna_a_ep', '1'),
-        ('Generale', 'copie_backup', '5'),
-        ('Generale', 'pausa_backup', '15'),
-        ('Generale', 'conta_usi', '0'),
-
-        #  ('Computo', 'riga_bianca_categorie', '1'),
-        #  ('Computo', 'voci_senza_numerazione', '0'),
-        ('Computo', 'inizio_voci_abbreviate', '100'),
-        ('Computo', 'fine_voci_abbreviate', '120'),
-        ('Contabilità', 'cont_inizio_voci_abbreviate', '100'),
-        ('Contabilità', 'cont_fine_voci_abbreviate', '120'),
-        ('Contabilità', 'abilita', '0'),
-        ('Contabilità', 'idxsal', '20'),
-        ('Contabilità', 'ricicla_da', 'COMPUTO'))
-    for el in parametri:
-        try:
-            conf.read(path_conf, el[0], el[1])
-        except Exception:
-            conf.write(path_conf, el[0], el[1], el[2])
-
-
-########################################################################
 def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     '''
     Contestualizza in ogni tabella l'inserimento delle voci.
@@ -6278,7 +6139,7 @@ def ins_voce_contab(lrow=0, arg=1):
             sopra + 5) + '<>"";P' + str(sopra + 5) + ';""))'
     oSheet.getCellByPosition(36, sopra + 4).CellStyle = "comp -controolo"
     numera_voci(0)
-    if conf.read(path_conf, 'Generale', 'pesca_auto') == '1':
+    if Config().read('Generale', 'pesca_auto') == '1':
         if arg == 0:
             return
         pesca_cod()
@@ -6455,7 +6316,7 @@ def genera_libretto():
         nSal = 20
     else:
         try:
-            nSal = int(conf.read(path_conf, 'Contabilità', 'idxsal'))
+            nSal = int(Config().read('Contabilità', 'idxsal'))
         except ValueError:
             nSal = 20
     while nSal > 0:
@@ -7696,14 +7557,6 @@ try:
 except Exception:
     print("createUnoService ERROR")
 
-GetmyToolBarNames = (
-    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar',
-    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO',
-    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI',
-    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO',
-    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG',
-    'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',
-)
 #
 codice_da_cercare = ''
 sUltimus = ''
@@ -7837,7 +7690,7 @@ def SubSum(lrow, sub=False):
         ),
     ):
         oSheet.getCellByPosition(n, lrow).Formula = get_Formula(n, a, b)
-        Sheet.getCellByPosition(18, lrow).CellStyle = getCellStyle(level, n)
+        oSheet.getCellByPosition(18, lrow).CellStyle = getCellStyle(level, n)
 
 
 ########################################################################
@@ -8065,7 +7918,7 @@ def autoexec_off():
     '''
     @@ DA DOCUMENTARE
     '''
-    toolbar_switch(1)
+    Toolbars.Switch(True)
     #  private:resource/toolbar/standardbar
     # sUltimus = ''
     oDoc = getDocument()
@@ -8090,7 +7943,7 @@ class trun(threading.Thread):
     def run(self):
         while True:
             # ~datarif = datetime.now()
-            minuti = 60 * int(conf.read(path_conf, 'Generale', 'pausa_backup'))
+            minuti = 60 * int(Config().read('Generale', 'pausa_backup'))
             time.sleep(minuti)
             bak()
             # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
@@ -8112,36 +7965,26 @@ def autoexec():
     questa è richiamata da New_File()
     '''
     inizializza()
-    basic_LeenO('_variabili.autoexec')  # rinvia a autoexec in basic
+
+    # rinvia a autoexec in basic
+    basic_LeenO('_variabili.autoexec')
     bak0()
     autorun()
     ctx = getComponentContext()
-    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext(
-        "com.sun.star.sheet.GlobalSheetSettings", ctx)
-    oGSheetSettings.UsePrinterMetrics = True  # Usa i parametri della stampante per la formattazione del testo
+    oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
+    # Usa i parametri della stampante per la formattazione del testo
+    oGSheetSettings.UsePrinterMetrics = True
 
     # attiva 'copia di backup', ma dall'apertura successiva di LibreOffice
-    node = GetRegistryKeyContent("/org.openoffice.Office.Common/Save/Document",
-                                 True)
+    node = GetRegistryKeyContent("/org.openoffice.Office.Common/Save/Document", True)
     node.CreateBackup = True
     node.commitChanges()
 
-    # Crea ed imposta leeno.conf SOLO SE NON PRESENTE.
-    # if sys.platform == 'win32':
-    #    path = os.getenv("HOMEDRIVE") + os.getenv("HOMEPATH")
-    # else:
-    #    path = os.getenv("HOME")
-
-    try:
-        os.makedirs(path_conf[:-11])
-    except FileExistsError:
-        pass
-    config_default()
-    uso = int(conf.read(path_conf, 'Generale', 'conta_usi')) + 1
+    uso = int(Config().read('Generale', 'conta_usi')) + 1
     if uso == 10 or (uso % 50) == 0:
         dlg_donazioni()
-    conf.write(path_conf, 'Generale', 'conta_usi', str(uso))
-    if conf.read(path_conf, 'Generale', 'movedirection') == '0':
+    Config().write('Generale', 'conta_usi', str(uso))
+    if Config().read('Generale', 'movedirection') == '0':
         oGSheetSettings.MoveDirection = 0
     else:
         oGSheetSettings.MoveDirection = 1
@@ -8159,7 +8002,7 @@ def autoexec():
     oDoc.RegularExpressions = False
     oDoc.CalcAsShown = True  # precisione come mostrato
     adegua_tmpl()  # esegue degli aggiustamenti del template
-    toolbar_vedi()
+    Toolbars.Vedi()
     dp()
     #  if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
@@ -8839,14 +8682,13 @@ def DlgMain():
     psm = uno.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
     if not oDoc.getSheets().hasByName('S2'):
-        for bar in GetmyToolBarNames:
-            toolbar_on(bar, 0)
+        Toolbars.AllOff()
         if(len(oDoc.getURL()) == 0 and
            getLastUsedCell(oSheet).EndColumn == 0 and
            getLastUsedCell(oSheet).EndRow == 0):
             oDoc.close(True)
         New_file.computo()
-    toolbar_vedi()
+    Toolbars.Vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     global oDlgMain
     oDlgMain = dp.createDialog(
@@ -8919,16 +8761,16 @@ def DlgMain():
     #  sString = oDlgMain.getControl("ComboBox1")
     #  sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
     oDlgMain.getControl('CheckBox1').State = int(
-        conf.read(path_conf, 'Generale', 'dialogo'))
+        Config().read('Generale', 'dialogo'))
     #  _gotoCella(x, y)
     oDlgMain.execute()
     sString = oDlgMain.getControl("Label_DDC").Text
     if oDlgMain.getControl('CheckBox1').State == 1:
-        conf.write(path_conf, 'Generale', 'dialogo', '1')
+        Config().write('Generale', 'dialogo', '1')
         #  sString = oDlgMain.getControl("ComboBox1")
         #  conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
     else:
-        conf.write(path_conf, 'Generale', 'dialogo', '0')
+        Config().write('Generale', 'dialogo', '0')
         #  conf.write(path_conf, 'Generale', 'visualizza', 'Senza Menù')
     oDoc.Sheets.getByName('S2').getCellRangeByName(
         'C3').String = oDlgMain.getControl("TextField1").Text
@@ -9052,7 +8894,7 @@ def bak():
     oDoc.storeToURL(dir_bak + dest, list())
     lista = os.listdir(uno.fileUrlToSystemPath(dir_bak))
     n = 0
-    nb = int(conf.read(path_conf, 'Generale', 'copie_backup'))  # numero di copie)
+    nb = int(Config().read('Generale', 'copie_backup'))  # numero di copie)
     for el in reversed(lista):
         if filename in el:
             if n > nb - 1:
@@ -9084,50 +8926,6 @@ def w_version_code():
 
 
 ########################################################################
-def toolbar_vedi():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    oDoc = getDocument()
-    try:
-        oLayout = oDoc.CurrentController.getFrame().LayoutManager
-
-        if conf.read(path_conf, 'Generale', 'toolbar_contestuali') == '0':
-            for bar in GetmyToolBarNames:  # toolbar sempre visibili
-                toolbar_on(bar)
-        else:
-            for bar in GetmyToolBarNames:  # toolbar contestualizzate
-                toolbar_on(bar, 0)
-        #  oLayout.hideElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
-        toolbar_ordina()
-        oLayout.showElement(
-            "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar")
-        nSheet = oDoc.CurrentController.ActiveSheet.Name
-
-        if nSheet == 'Elenco Prezzi':
-            toolbar_on(
-                'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ELENCO'
-            )
-        elif nSheet == 'Analisi di Prezzo':
-            toolbar_on(
-                'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_ANALISI'
-            )
-        elif nSheet in ('COMPUTO', 'VARIANTE'):
-            toolbar_on(
-                'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO'
-            )
-            toolbar_on(
-                'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG')
-        elif nSheet == 'CONTABILITA':
-            toolbar_on(
-                'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_COMPUTO'
-            )
-            # ~ toolbar_on('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CATEG')
-            toolbar_on(
-                'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA'
-            )
-    except Exception:
-        pass
 
 
 ########################################################################
@@ -9135,63 +8933,6 @@ def MENU_grid_switch():
     '''Mostra / nasconde griglia'''
     oDoc = getDocument()
     oDoc.CurrentController.ShowGrid = not oDoc.CurrentController.ShowGrid
-
-
-#######################################################################
-def toolbar_switch(arg=1):
-    '''
-    Nasconde o mostra le toolbar di Libreoffice.
-    '''
-    oDoc = getDocument()
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    for el in oLayout.Elements:
-        if el.ResourceURL not in GetmyToolBarNames + (
-                'private:resource/menubar/menubar',
-                'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV',
-                'private:resource/toolbar/findbar',
-                'private:resource/statusbar/statusbar',
-        ):
-            #  if oLayout.isElementVisible(el.ResourceURL):
-            if arg == 0:
-                oLayout.hideElement(el.ResourceURL)
-            else:
-                oLayout.showElement(el.ResourceURL)
-
-
-def toolbar_on(toolbarURL, flag=1):
-    '''
-    toolbarURL  { string } : indirizzo toolbar
-    flag { integer } : 1 = acceso; 0 = spento
-    Visualizza o nascondi una toolbar
-    '''
-    oDoc = getDocument()
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    if flag == 0:
-        oLayout.hideElement(toolbarURL)
-    else:
-        oLayout.showElement(toolbarURL)
-
-
-#######################################################################
-
-
-def toolbar_ordina():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    #  https://www.openoffice.org/api/docs/common/ref/com/sun/star/ui/DockingArea.html
-    oDoc = getDocument()
-    oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    i = 0
-    for bar in GetmyToolBarNames:
-        oLayout.dockWindow(bar, 'DOCKINGAREA_TOP', Point(i, 4))
-        i += 1
-    oLayout.dockWindow(
-        'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV',
-        'DOCKINGAREA_RIGHT', Point(0, 0))
-
-
-#######################################################################
 
 
 def MENU_make_pack():
@@ -9220,8 +8961,7 @@ def make_pack(bar=0):
     tempo = w_version_code()
     if bar == 0:
         oDoc = getDocument()
-        for bar in GetmyToolBarNames:  # toolbar sempre visibili
-            toolbar_on(bar, 0)
+        Toolbars.AllOff()
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
         oLayout.hideElement(
             "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
@@ -9681,7 +9421,7 @@ def MENU_sistema_pagine():
     #  mri(oAktPage)
     #  return
     ###
-    if conf.read(path_conf, 'Generale', 'dettaglio') == '1':
+    if Config().read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
         dettaglio_misure(1)
     else:

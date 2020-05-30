@@ -6,7 +6,7 @@ import os
 import threading
 import uno
 
-from LeenoUtils import getComponentContext, getDesktop, getDocument
+from LeenoUtils import getComponentContext, getDesktop, getDocument, createUnoService
 import pyleeno as PL
 
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK
@@ -32,13 +32,6 @@ from com.sun.star.awt.MessageBoxType import QUERYBOX
 
 # MAH...
 oDialogo_attesa = None
-
-
-def createUnoService(serv):
-    '''
-    QUESTA BISOGNA VEDERE DOVE METTERLA E SE LASCIARLA
-    '''
-    return getComponentContext().getServiceManager().createInstance(serv)
 
 
 # rif.: https://wiki.openoffice.org/wiki/PythonDialogBox

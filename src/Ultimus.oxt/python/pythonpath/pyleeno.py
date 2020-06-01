@@ -36,9 +36,10 @@ import shutil
 import sys
 import uno
 
-from LeenoUtils import getComponentContext, getDesktop, getDocument
+from LeenoUtils import getComponentContext, getDesktop, getDocument, getServiceManager
 import LeenoToolbars as Toolbars
 from LeenoConfig import Config
+import Dialogs
 
 # cos'e' il namespace:
 # http://www.html.it/articoli/il-misterioso-mondo-dei-namespaces-1/
@@ -76,7 +77,6 @@ def basic_LeenO(funcname, *args):
                                   "?language=Basic&location=application")
     Result = Xscript.invoke(args, None, None)
     return Result[0]
-
 
 
 # leeno.conf
@@ -3435,7 +3435,7 @@ def XPWE_out(elaborato, out_file):
             n = sotto + 1
     # #########################
     oDialogo_attesa.endExecute()
-    # ~out_file = filedia('Salva con nome...', '*.xpwe', 1)
+    # ~out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
     # ~mri (uno.fileUrlToSystemPath(oDoc.getURL()))
     # ~chi(out_file)
@@ -7080,104 +7080,9 @@ def ns_ins(filename=None):
 # XML_toscana_import moved to LeenoImport.py
 ########################################################################
 
-
-def MENU_fuf():
-    '''
-    Traduce un particolare formato DAT usato in falegnameria - non c'entra un tubo con LeenO.
-    E' solo una cortesia per un amico.
-    '''
-    filename = DLG.filedia('Scegli il file XML-SIX da importare', '*.dat')
-    riga = list()
-    try:
-        f = open(filename, 'r')
-    except TypeError:
-        return
-    ordini = list()
-    riga = ('Codice', 'Descrizione articolo', 'Quantità', 'Data consegna',
-            'Conto lavoro', 'Prezzo(€)')
-    ordini.append(riga)
-
-    for row in f:
-        art = row[:15]
-        if art[0:4] not in ('HEAD', 'FEET'):
-            art = art[4:]
-            des = row[22:62]
-            num = 1  # row[72:78].replace(' ','')
-            # car = row[78:87]
-            dataC = row[96:104]
-            dataC = '=DATE(' + dataC[:4] + ';' + dataC[4:6] + ';' + dataC[
-                6:] + ')'
-            clav = row[120:130]
-            prz = row[142:-1]
-            riga = (art, des, num, dataC, clav, float(prz.strip()))
-            ordini.append(riga)
-
-    oDoc = getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    lista_come_array = tuple(ordini)
-    colonne_lista = len(lista_come_array[0]
-                        )  # numero di colonne necessarie per ospitare i dati
-    righe_lista = len(
-        lista_come_array)  # numero di righe necessarie per ospitare i dati
-
-    oRange = oSheet.getCellRangeByPosition(
-        0,
-        0,
-        colonne_lista - 1,  # l'indice parte da 0
-        righe_lista - 1)
-    oRange.setFormulaArray(lista_come_array)
-
-    oSheet.getCellRangeByPosition(
-        0, 0,
-        getLastUsedCell(oSheet).EndColumn,
-        getLastUsedCell(oSheet).EndRow).Columns.OptimalWidth = True
-
-    return
-    copy_clip()
-
-    ctx = getComponentContext()
-    desktop = getDesktop()
-    oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
-        'com.sun.star.frame.DispatchHelper', ctx)
-    oProp = []
-    oProp0 = PropertyValue()
-    oProp0.Name = 'Flags'
-    oProp0.Value = 'D'
-    oProp1 = PropertyValue()
-    oProp1.Name = 'FormulaCommand'
-    oProp1.Value = 0
-    oProp2 = PropertyValue()
-    oProp2.Name = 'SkipEmptyCells'
-    oProp2.Value = False
-    oProp3 = PropertyValue()
-    oProp3.Name = 'Transpose'
-    oProp3.Value = False
-    oProp4 = PropertyValue()
-    oProp4.Name = 'AsLink'
-    oProp4.Value = False
-    oProp5 = PropertyValue()
-    oProp5.Name = 'MoveMode'
-    oProp5.Value = 4
-    oProp.append(oProp0)
-    oProp.append(oProp1)
-    oProp.append(oProp2)
-    oProp.append(oProp3)
-    oProp.append(oProp4)
-    oProp.append(oProp5)
-    properties = tuple(oProp)
-    #  _gotoCella(6,1)
-
-    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0,
-                                   properties)
-    oDoc.CurrentController.select(
-        oSheet.getCellRangeByPosition(0, 1, 5,
-                                      getLastUsedCell(oSheet).EndRow + 1))
-
-    ordina_col(3)
-    oDoc.CurrentController.select(
-        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-
+########################################################################
+# MENU_fuf moved to LeenoImport.py
+########################################################################
 
 ########################################################################
 # XML_import_ep moved to LeenoImport.py
@@ -7233,7 +7138,7 @@ importati gli stili di default di LeenO.
 
 Vuoi continuare?''', 'Importa Stili in blocco?') == 3:
         return
-    filename = DLG.filedia('Scegli il file di riferimento...', '*.ods')
+    filename = Dialogs.FileSelect('Scegli il file di riferimento...', '*.ods')
     if filename is None:
         #  desktop = getDesktop()
         filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
@@ -7724,7 +7629,7 @@ def filtra_codice(voce=None):
             Range2Cell()[1]).String
         if oCell.String == '<DIALOGO>' or oCell.String == '':
             try:
-                elaborato = scegli_elaborato('Ricerca di ' + voce)
+                elaborato = DLG.ScegliElaborato('Ricerca di ' + voce)
                 _gotoSheet(elaborato)
             except Exception:
                 return
@@ -8174,24 +8079,24 @@ def inizializza():
     oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
     oSheet = oDoc.getSheets().getByName('S1')
 
-    oSheet.getCellRangeByName('G219').String = 'Copyright 2014-' + str(
-        datetime.now().year)
-    oSheet.getCellRangeByName('H194').Value = r_version_code()
+    oSheet.getCellRangeByName('G219').String = 'Copyright 2014-' + str(datetime.now().year)
+
+    # allow non-numeric version codes (example: testing)
+    rvc = r_version_code()
+    if isinstance(rvc, str):
+        oSheet.getCellRangeByName('H194').String = r_version_code()
+    else:
+        oSheet.getCellRangeByName('H194').Value = r_version_code()
+
     oSheet.getCellRangeByName('I194').Value = Lmajor
     oSheet.getCellRangeByName('J194').Value = Lminor
-
     oSheet.getCellRangeByName('H291').Value = oUDP.Versione
-    oSheet.getCellRangeByName('I291').String = oUDP.Versione_LeenO.split(
-        '.')[0]
-    oSheet.getCellRangeByName('J291').String = oUDP.Versione_LeenO.split(
-        '.')[1]
+    oSheet.getCellRangeByName('I291').String = oUDP.Versione_LeenO.split('.')[0]
+    oSheet.getCellRangeByName('J291').String = oUDP.Versione_LeenO.split('.')[1]
 
-    oSheet.getCellRangeByName('H295').String = oUDP.Versione_LeenO.split(
-        '.')[0]
-    oSheet.getCellRangeByName('I295').String = oUDP.Versione_LeenO.split(
-        '.')[1]
-    oSheet.getCellRangeByName('J295').String = oUDP.Versione_LeenO.split(
-        '.')[2]
+    oSheet.getCellRangeByName('H295').String = oUDP.Versione_LeenO.split('.')[0]
+    oSheet.getCellRangeByName('I295').String = oUDP.Versione_LeenO.split('.')[1]
+    oSheet.getCellRangeByName('J295').String = oUDP.Versione_LeenO.split('.')[2]
 
     oSheet.getCellRangeByName('K194').String = Lsubv
     oSheet.getCellRangeByName('H296').Value = Lmajor
@@ -8204,8 +8109,7 @@ def inizializza():
         oSheet.getCellRangeByName('H328').Value = 0
 
 # inizializza la lista di scelta per in elenco Prezzi
-    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName(
-        'C2')
+    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C2')
     valida_cella(oCell,
                  '"<DIALOGO>";"COMPUTO";"VARIANTE";"CONTABILITA"',
                  titoloInput='Scegli...',
@@ -8213,8 +8117,7 @@ def inizializza():
                  err=True)
     oCell.String = "<DIALOGO>"
     oCell.CellStyle = 'EP-aS'
-    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName(
-        'C1')
+    oCell = oDoc.getSheets().getByName('Elenco Prezzi').getCellRangeByName('C1')
     oCell.String = "Applica Filtro a:"
     oCell.CellStyle = 'EP-aS'
     # Indica qual è il Documento Principale
@@ -8572,55 +8475,12 @@ def XPWE_export_run():
         for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
             if Dialog_XPWE.getControl(el).State == 1:
                 lista.append(el)
-    out_file = DLG.filedia('Salva con nome...', '*.xpwe', 1)
+    out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
     testo = '\n'
     for el in lista:
         XPWE_out(el, out_file)
         testo = testo + '● ' + out_file + '-' + el + '.xpwe\n\n'
     DLG.MsgBox('Esportazione in formato XPWE eseguita con successo su:\n' + testo, 'Avviso.')
-
-
-def scegli_elaborato(titolo):
-    '''
-    Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
-    '''
-    oDoc = getDocument()
-    psm = uno.getComponentContext().ServiceManager
-    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    oDlgXLO = dp.createDialog(
-        "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"
-    )
-    # oDialog1Model = oDlgXLO.Model
-    oDlgXLO.Title = titolo  # Menù import XPWE'
-
-    for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
-        try:
-            importo = oDoc.getSheets().getByName(el).getCellRangeByName(
-                'A2').String
-            if el == 'COMPUTO':
-                oDlgXLO.getControl(
-                    "CME_XLO").Label = '~Computo:     € ' + importo
-            if el == 'VARIANTE':
-                oDlgXLO.getControl(
-                    "VAR_XLO").Label = '~Variante:    € ' + importo
-            if el == 'CONTABILITA':
-                oDlgXLO.getControl(
-                    "CON_XLO").Label = 'C~ontabilità: € ' + importo
-            #  else:
-            #  oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: €: 0,0'
-        except Exception:
-            pass
-
-    if oDlgXLO.execute() == 1:
-        if oDlgXLO.getControl("CME_XLO").State:
-            elaborato = 'COMPUTO'
-        elif oDlgXLO.getControl("VAR_XLO").State:
-            elaborato = 'VARIANTE'
-        elif oDlgXLO.getControl("CON_XLO").State:
-            elaborato = 'CONTABILITA'
-        elif oDlgXLO.getControl("EP_XLO").State:
-            elaborato = 'Elenco'
-    return elaborato
 
 
 ########################################################################

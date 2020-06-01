@@ -13,8 +13,11 @@ from com.sun.star.awt import Size
 from com.sun.star.awt import XActionListener
 from com.sun.star.task import XJobExecutor
 
+from com.sun.star.awt import XUnitConversion
+from com.sun.star.util import MeasureUnit
+
 from LeenoConfig import Config
-from LeenoUtils import getDocument, createUnoService
+from LeenoUtils import getComponentContext, getDocument, createUnoService
 
 
 def getCurrentPath():
@@ -71,8 +74,15 @@ def getScaleFactors():
     '''
     Dialog positions are scaled by weird factors (2.625 and 2.25 on my machine)
     so we need to figure them out before proceeding
+    
     '''
-    return Scalef(1.0 / 2.625, 1.0 / 2.25)
+    doc = getDocument()
+    docframe = doc.getCurrentController().getFrame()
+    docwindow = docframe.getContainerWindow()
+
+    sc = docwindow.convertSizeToPixel(Size(1000, 1000), MeasureUnit.APPFONT)
+
+    return Scalef(1000.0 / float(sc.Width), 1000.0 / float(sc.Height))
 
 
 def getBigIconSize():
@@ -577,7 +587,6 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
         oPath = uno.systemPathToFileUrl(Config().read('Generale', 'ultimo_percorso'))
     else:
         oPath = os.path.dirname(oPath)
-    print("\n\n\n\nURL: XX'" +  oPath + "'XX\n\n\n\n")
     oFilePicker.setDisplayDirectory(oPath)
 
     oFilePicker.Title = titolo

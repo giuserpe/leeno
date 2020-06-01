@@ -15,57 +15,57 @@ def _Fill_Ep(nome, lista_articoli):
     Ritorna True se OK, False altrimenti
     '''
     progress = None
-    try:
-        # creo nuovo file di computo
-        PL.New_file.computo(0)
+    #try:
+    # creo nuovo file di computo
+    PL.New_file.computo(0)
 
-        # e lo compilo
-        oDoc = getDocument()
-        oSheet = oDoc.getSheets().getByName('S2')
-        oSheet.getCellByPosition(2, 2).String = nome
-        oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-        oSheet.getCellByPosition(1, 1).String = nome
-        oSheet.getRows().insertByIndex(4, len(lista_articoli))
+    # e lo compilo
+    oDoc = getDocument()
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellByPosition(2, 2).String = nome
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getCellByPosition(1, 1).String = nome
+    oSheet.getRows().insertByIndex(4, len(lista_articoli))
 
-        lista_come_array = tuple(lista_articoli)
-        # Parametrizzo il range di celle a seconda della dimensione della lista
-        scarto_colonne = 0  # numero colonne da saltare a partire da sinistra
-        scarto_righe = 4  # numero righe da saltare a partire dall'alto
-        colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
-        righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
+    lista_come_array = tuple(lista_articoli)
+    # Parametrizzo il range di celle a seconda della dimensione della lista
+    scarto_colonne = 0  # numero colonne da saltare a partire da sinistra
+    scarto_righe = 4  # numero righe da saltare a partire dall'alto
+    colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
+    righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
 
-        progress = Dialogs.ProgressBar("Importazione prezzario XML-SIX", "Compilazione prezzario in corso", None, 0, righe_lista)
-        progress.showDialog()
+    progress = Dialogs.ProgressBar("Importazione prezzario XML-SIX", "Compilazione prezzario in corso", None, 0, righe_lista)
+    progress.showDialog()
 
-        riga = 0
-        step = 100
-        while riga < righe_lista:
-            progress.setProgress(riga)
-            sliced = lista_come_array[riga:riga + step]
-            num = len(sliced)
-            oRange = oSheet.getCellRangeByPosition(
-                scarto_colonne,
-                scarto_righe + riga,
-                # l'indice parte da 0
-                colonne_lista + scarto_colonne - 1,
-                scarto_righe + riga + num - 1)
-            oRange.setDataArray(sliced)
+    riga = 0
+    step = 100
+    while riga < righe_lista:
+        progress.setProgress(riga)
+        sliced = lista_come_array[riga:riga + step]
+        num = len(sliced)
+        oRange = oSheet.getCellRangeByPosition(
+            scarto_colonne,
+            scarto_righe + riga,
+            # l'indice parte da 0
+            colonne_lista + scarto_colonne - 1,
+            scarto_righe + riga + num - 1)
+        oRange.setDataArray(sliced)
 
-            riga = riga + step
+        riga = riga + step
 
-        oSheet.getRows().removeByIndex(3, 1)
-        oDoc.CurrentController.setActiveSheet(oSheet)
-        # ~ struttura_Elenco()
+    oSheet.getRows().removeByIndex(3, 1)
+    oDoc.CurrentController.setActiveSheet(oSheet)
+    # ~ struttura_Elenco()
 
-        progress.hideDialog()
-        Dialogs.Ok("Operazione completata", "Importazione eseguita con successo")
-        return True
+    progress.hideDialog()
+    Dialogs.Ok("Operazione completata", "Importazione eseguita con successo")
+    return True
 
-    except Exception:
-        if progress is not None:
-            progress.hideDialog()
-        Dialogs.Exclamation("Errore", "Errore nella compilazione del prezzario\nSegnalare il problema sul sito")
-        return False
+    #except Exception:
+    #    if progress is not None:
+    #        progress.hideDialog()
+    #    Dialogs.Exclamation("Errore", "Errore nella compilazione del prezzario\nSegnalare il problema sul sito")
+    #    return False
 
 
 def MENU_Import_Ep_XML_SIX():

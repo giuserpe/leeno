@@ -48,50 +48,6 @@ def barra_di_stato(testo='', valore=0):
     oProgressBar.end()
 
 
-########################################################################
-def filedia(titolo='Scegli il file...', est='*.*', mode=0):
-    """
-    titolo  { string }  : titolo del FilePicker
-    est     { string }  : filtro di visualizzazione file
-    mode    { integer } : modalità di gestione del file
-
-    Apri file:  `mode in(0, 6, 7, 8, 9)`
-    Salva file: `mode in(1, 2, 3, 4, 5, 10)`
-    see:('''http://api.libreoffice.org/docs/idl/ref/
-            namespacecom_1_1sun_1_1star_1_1ui_1_1
-            dialogs_1_1TemplateDescription.html''' )
-    see:('''http://stackoverflow.com/questions/30840736/
-        libreoffice-how-to-create-a-file-dialog-via-python-macro''')
-    """
-    estensioni = {'*.*': 'Tutti i file(*.*)',
-                  '*.odt': 'Writer(*.odt)',
-                  '*.ods': 'Calc(*.ods)',
-                  '*.odb': 'Base(*.odb)',
-                  '*.odg': 'Draw(*.odg)',
-                  '*.odp': 'Impress(*.odp)',
-                  '*.odf': 'Math(*.odf)',
-                  '*.xpwe': 'Primus(*.xpwe)',
-                  '*.xml': 'XML(*.xml)',
-                  '*.dat': 'dat(*.dat)', }
-    try:
-        oFilePicker = createUnoService("com.sun.star.ui.dialogs.OfficeFilePicker")
-        oFilePicker.initialize((mode, ))
-        oDoc = getDocument()
-        oFilePicker.setDisplayDirectory(os.path.dirname(oDoc.getURL()))
-        oFilePicker.Title = titolo
-        app = estensioni.get(est)
-        oFilePicker.appendFilter(app, est)
-        if oFilePicker.execute():
-            oDisp = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
-        return oDisp
-
-    except Exception:
-        MsgBox('Il file non è stato selezionato', 'ATTENZIONE!')
-        return None
-
-########################################################################
-
-
 def chi(s):  # s = oggetto
     '''
     s    { object }  : oggetto da interrogare
@@ -196,3 +152,48 @@ class attesa(threading.Thread):
         global oDialogo_attesa
         oDialogo_attesa.endExecute()  # chiude il dialogo
         oDialogo_attesa.execute()
+
+
+def ScegliElaborato(titolo):
+    '''
+    Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
+    '''
+    oDoc = getDocument()
+    psm = uno.getComponentContext().ServiceManager
+    dp = psm.createInstance("com.sun.star.awt.DialogProvider")
+    oDlgXLO = dp.createDialog(
+        "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"
+    )
+    # oDialog1Model = oDlgXLO.Model
+    oDlgXLO.Title = titolo  # Menù import XPWE'
+
+    for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+        try:
+            importo = oDoc.getSheets().getByName(el).getCellRangeByName(
+                'A2').String
+            if el == 'COMPUTO':
+                oDlgXLO.getControl(
+                    "CME_XLO").Label = '~Computo:     € ' + importo
+            if el == 'VARIANTE':
+                oDlgXLO.getControl(
+                    "VAR_XLO").Label = '~Variante:    € ' + importo
+            if el == 'CONTABILITA':
+                oDlgXLO.getControl(
+                    "CON_XLO").Label = 'C~ontabilità: € ' + importo
+            #  else:
+            #  oDlgXLO.getControl("CON_XLO").Label  = 'Contabilità: €: 0,0'
+        except Exception:
+            pass
+
+    if oDlgXLO.execute() == 1:
+        if oDlgXLO.getControl("CME_XLO").State:
+            elaborato = 'COMPUTO'
+        elif oDlgXLO.getControl("VAR_XLO").State:
+            elaborato = 'VARIANTE'
+        elif oDlgXLO.getControl("CON_XLO").State:
+            elaborato = 'CONTABILITA'
+        elif oDlgXLO.getControl("EP_XLO").State:
+            elaborato = 'Elenco'
+    return elaborato
+
+

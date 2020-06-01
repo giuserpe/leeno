@@ -894,7 +894,7 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_XPWE_import</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport_XPWE.MENU_XPWE_import</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
                   <value>Importa/Accoda dati da archivio XPWE</value>

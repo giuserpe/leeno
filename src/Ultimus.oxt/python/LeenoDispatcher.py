@@ -7,6 +7,9 @@ import os
 import inspect
 import importlib
 
+from os import listdir
+from os.path import isfile, join
+
 import unohelper
 from com.sun.star.task import XJobExecutor
 
@@ -25,9 +28,28 @@ def fixPythonPath():
     '''
     # dirty trick to have pythonpath added if missing
     myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    myPath = os.path.join(myPath, "/pythonpath")
+    myPath = os.path.join(myPath, "pythonpath")
     if myPath not in sys.path:
         sys.path.append(myPath)
+
+
+def reloadLeenoModules():
+    '''
+    This function reload all Leeno modules found in pythonpath
+    '''
+    # get our pythonpath
+    myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    myPath = os.path.join(myPath, "pythonpath")
+
+    # we need a listing of modules. We look at pythonpath ones
+    pythonFiles = [f[: -3] for f in listdir(myPath) if isfile(join(myPath, f)) and f.endswith(".py")]
+
+    for f in pythonFiles:
+        print("Loading module:", f)
+        module = importlib.import_module(f)
+
+        # reload the module
+        importlib.reload(module)
 
 
 class Dispatcher(unohelper.Base, XJobExecutor):
@@ -42,7 +64,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
 
         # store any passed arg
         self.args = args
-        
+
         # just in case...
         fixPythonPath()
 
@@ -51,6 +73,9 @@ class Dispatcher(unohelper.Base, XJobExecutor):
         This function gets called when a menu item is selected
         or when a basic function calls PyScript()
         '''
+        # reload all Leeno Modules
+        if DISABLE_CACHE != 0:
+            reloadLeenoModules()
 
         # menu items are passed as module.function
         # so split them in 2 strings
@@ -63,8 +88,8 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             return
 
         # reload the module if we don't want the cache
-        if DISABLE_CACHE != 0:
-            importlib.reload(module)
+        # if DISABLE_CACHE != 0:
+        #     importlib.reload(module)
 
         # locate the function from its name and check it
         func = getattr(module, ModFunc[1])

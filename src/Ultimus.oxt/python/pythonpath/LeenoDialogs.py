@@ -94,7 +94,7 @@ def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTT
     '''
     Show a message box with the UNO based toolkit
     '''
-    ctx = uno.getComponentContext()
+    ctx = getComponentContext()
     sm = ctx.ServiceManager
     sv = sm.createInstanceWithContext('com.sun.star.awt.Toolkit', ctx)
     myBox = sv.createMessageBox(ParentWin, MsgType, MsgButtons, MsgTitle, MsgText)
@@ -124,7 +124,7 @@ def dlg_attesa(msg=''):
     ...
     oDialogo_attesa.endExecute() #chiude il dialogo
     '''
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     global oDialogo_attesa
     oDialogo_attesa = dp.createDialog(
@@ -159,7 +159,7 @@ def ScegliElaborato(titolo):
     Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
     '''
     oDoc = getDocument()
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgXLO = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"

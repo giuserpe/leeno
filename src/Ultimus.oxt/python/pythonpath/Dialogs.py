@@ -31,7 +31,7 @@ def getParentWindowInfo():
     '''
     Get point at desktop's center -- to be able to center dialogs around it
     '''
-    ctx = uno.getComponentContext()
+    ctx = getComponentContext()
     oDesktop = ctx.ServiceManager.createInstanceWithContext(
         "com.sun.star.frame.Desktop", ctx)
     oDoc = oDesktop.getCurrentComponent()
@@ -54,7 +54,7 @@ def getScreenInfo():
     '''
     Get screen size
     '''
-    ctx = uno.getComponentContext()
+    ctx = getComponentContext()
     # oDesktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
     oToolkit = ctx.ServiceManager.createInstanceWithContext(
         "com.sun.star.awt.Toolkit", ctx)
@@ -100,7 +100,7 @@ def getTextBox(txt):
     '''
     Get the size needed to display a multiline text box
     '''
-    ctx = uno.getComponentContext()
+    ctx = getComponentContext()
     serviceManager = ctx.ServiceManager
     # toolkit = serviceManager.createInstanceWithContext("com.sun.star.awt.ExtToolkit", ctx)
     # dialogModel = serviceManager.createInstance("com.sun.star.awt.UnoControlDialogModel")
@@ -135,7 +135,7 @@ class BasicDialog(unohelper.Base, XActionListener, XJobExecutor):
 
         unohelper.Base.__init__(self)
 
-        self._LocalContext = uno.getComponentContext()
+        self._LocalContext = getComponentContext()
         self._ServiceManager = self._LocalContext.ServiceManager
         self._Toolkit = self._ServiceManager.createInstanceWithContext(
             "com.sun.star.awt.ExtToolkit", self._LocalContext)

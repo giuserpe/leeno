@@ -2187,7 +2187,7 @@ def scelta_viste():
     #  refresh(0)
     oDoc = getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
     if oSheet.Name in ('VARIANTE', 'COMPUTO'):
         oDialog1 = dp.createDialog(
@@ -8447,7 +8447,7 @@ def XPWE_export_run():
     oDoc = getDocument()
     if not oDoc.getSheets().hasByName('S2'):
         return
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     Dialog_XPWE = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dialog_XPWE?language=Basic&location=application"
@@ -8550,7 +8550,7 @@ def DlgMain():
     '''
 
     oDoc = getDocument()
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
     if not oDoc.getSheets().hasByName('S2'):
         Toolbars.AllOff()
@@ -8674,7 +8674,7 @@ def InputBox(sCella='', t=''):
     Visualizza un dialogo di richiesta testo
     '''
 
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDialog1 = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgTesto?language=Basic&location=application"
@@ -8892,7 +8892,7 @@ def dlg_donazioni():
     '''
     @@ DA DOCUMENTARE
     '''
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDialog1 = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgDonazioni?language=Basic&location=application"
@@ -9494,7 +9494,7 @@ def trova_ricorrenze():
     if len(lista_ricorrenze) == 0:
         DLG.MsgBox('Non ci sono voci di prezzo ricorrenti.', 'Informazione')
         return
-    psm = uno.getComponentContext().ServiceManager
+    psm = getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgLista?language=Basic&location=application"

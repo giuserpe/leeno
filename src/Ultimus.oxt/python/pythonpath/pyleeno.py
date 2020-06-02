@@ -8427,21 +8427,6 @@ dell'operazione che terminerà con un avviso.
     refresh(1)
 
 
-#  ########################################################################
-def r_version_code():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    if os.altsep:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                            'leeno_version_code')
-    else:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                            'leeno_version_code')
-    f = open(code_file, 'r')
-    return f.readline().split('-')[-1]
-
-
 ########################################################################
 def XPWE_export_run():
     '''
@@ -8778,7 +8763,6 @@ def bak():
 
 
 ########################################################################
-# Scrive un file.
 def w_version_code():
     '''
     scrive versione e timestamp nel file leeno_version_code
@@ -8792,7 +8776,6 @@ def w_version_code():
     else:
         out_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
                                            'leeno_version_code')
-
     of = open(out_file, 'w')
     of.write(str(Lmajor) + '.' + str(Lminor) + '.' + Lsubv + '-' + tempo[:-2])
     of.close()
@@ -8800,7 +8783,18 @@ def w_version_code():
 
 
 ########################################################################
-
+def r_version_code():
+    '''
+    @@ DA DOCUMENTARE
+    '''
+    if os.altsep:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
+                                            'leeno_version_code')
+    else:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
+                                            'leeno_version_code')
+    f = open(code_file, 'r')
+    return f.readline().split('-')[-1]
 
 ########################################################################
 def MENU_grid_switch():
@@ -9774,6 +9768,12 @@ def errore():
     @@ DA DOCUMENTARE
     '''
     DLG.MsgBox(traceback.format_exc())
+    
+def MENU_debug():
+    '''
+    Utile per testare comandi dalla toolbar DEV
+    '''
+    w_version_code()
 
 
 ########################################################################

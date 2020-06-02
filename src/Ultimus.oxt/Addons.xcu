@@ -767,10 +767,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-<!--
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.debug</value>
--->
-            <value>vnd.sun.star.script:UltimusFree2.PY_bridge.debug?language=Basic&amp;location=application</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_debug</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/py</value>

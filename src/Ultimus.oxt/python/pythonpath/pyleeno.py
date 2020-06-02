@@ -38,7 +38,10 @@ import uno
 
 from LeenoUtils import getComponentContext, getDesktop, getDocument, getServiceManager
 import LeenoToolbars as Toolbars
-from LeenoConfig import Config
+
+import LeenoConfig
+cfg = LeenoConfig.Config()
+
 import Dialogs
 
 # cos'e' il namespace:
@@ -109,9 +112,9 @@ def MENU_leeno_conf():
         test = 1
     if oDoc.getSheets().getByName("copyright_LeenO").IsVisible:
         oDlg_config.getControl('CheckBox2').State = 1
-    if Config().read('Generale', 'pesca_auto') == '1':
+    if cfg.read('Generale', 'pesca_auto') == '1':
         oDlg_config.getControl('CheckBox1').State = 1  # pesca codice automatico
-    if Config().read('Generale', 'toolbar_contestuali') == '1':
+    if cfg.read('Generale', 'toolbar_contestuali') == '1':
         oDlg_config.getControl('CheckBox6').State = 1
 
     oSheet = oDoc.getSheets().getByName('S5')
@@ -124,15 +127,15 @@ def MENU_leeno_conf():
     #  if conf.read(path_conf, 'Generale', 'descrizione_in_una_colonna') == '1': oDlg_config.getControl('CheckBox5').State = 1
 
     sString = oDlg_config.getControl('TextField1')
-    sString.Text = Config().read('Generale', 'altezza_celle')
+    sString.Text = cfg.read('Generale', 'altezza_celle')
 
     #  sString = oDlg_config.getControl("ComboBox1")
     #  sString.Text = conf.read(path_conf, 'Generale', 'visualizza') #visualizza all'avvio
 
     sString = oDlg_config.getControl("ComboBox2")  # spostamento ad INVIO
-    if Config().read('Generale', 'movedirection') == '1':
+    if cfg.read('Generale', 'movedirection') == '1':
         sString.Text = 'A DESTRA'
-    elif Config().read('Generale', 'movedirection') == '0':
+    elif cfg.read('Generale', 'movedirection') == '0':
         sString.Text = 'IN BASSO'
     oSheet = oDoc.getSheets().getByName('S1')
 
@@ -155,26 +158,26 @@ def MENU_leeno_conf():
     if oDoc.NamedRanges.hasByName("#Lib#1"):
         sString.setEnable(False)
 
-    if Config().read('Generale', 'torna_a_ep') == '1':
+    if cfg.read('Generale', 'torna_a_ep') == '1':
         oDlg_config.getControl('CheckBox8').State = 1
 
     # Contabilità abilita
     if oSheet.getCellRangeByName('S1.H328').Value == 1:
         oDlg_config.getControl('CheckBox7').State = 1
     sString = oDlg_config.getControl('TextField13')
-    if Config().read('Contabilità', 'idxsal') == '&273.Dlg_config.TextField13.Text':
+    if cfg.read('Contabilità', 'idxsal') == '&273.Dlg_config.TextField13.Text':
         sString.Text = '20'
     else:
-        sString.Text = Config().read('Contabilità', 'idxsal')
+        sString.Text = cfg.read('Contabilità', 'idxsal')
         if sString.Text == '':
             sString.Text = '20'
     sString = oDlg_config.getControl('ComboBox3')
-    sString.Text = Config().read('Contabilità', 'ricicla_da')
+    sString.Text = cfg.read('Contabilità', 'ricicla_da')
 
     sString = oDlg_config.getControl('ComboBox4')
-    sString.Text = Config().read('Generale', 'copie_backup')
+    sString.Text = cfg.read('Generale', 'copie_backup')
     sString = oDlg_config.getControl('TextField5')
-    sString.Text = Config().read('Generale', 'pausa_backup')
+    sString.Text = cfg.read('Generale', 'pausa_backup')
 
     # MOSTRA IL DIALOGO
     oDlg_config.execute()
@@ -195,47 +198,47 @@ def MENU_leeno_conf():
     ctx = getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
-        Config().write('Generale', 'movedirection', '0')
+        cfg.write('Generale', 'movedirection', '0')
         oGSheetSettings.MoveDirection = 0
     else:
-        Config().write('Generale', 'movedirection', '1')
+        cfg.write('Generale', 'movedirection', '1')
         oGSheetSettings.MoveDirection = 1
-    Config().write('Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
+    cfg.write('Generale', 'altezza_celle', oDlg_config.getControl('TextField1').getText())
 
-    Config().write('Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
-    Config().write('Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
-    Config().write('Generale', 'toolbar_contestuali', str(oDlg_config.getControl('CheckBox6').State))
+    cfg.write('Generale', 'pesca_auto', str(oDlg_config.getControl('CheckBox1').State))
+    cfg.write('Generale', 'descrizione_in_una_colonna', str(oDlg_config.getControl('CheckBox5').State))
+    cfg.write('Generale', 'toolbar_contestuali', str(oDlg_config.getControl('CheckBox6').State))
     Toolbars.Vedi()
     if oDlg_config.getControl('CheckBox5').State == 1:
         descrizione_in_una_colonna(False)
     else:
         descrizione_in_una_colonna(True)
     # torna su prezzario
-    Config().write('Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State))
+    cfg.write('Generale', 'torna_a_ep', str(oDlg_config.getControl('CheckBox8').State))
 
     # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
 
     if oDlg_config.getControl('TextField14').getText() != '10000':
-        Config().write('Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
+        cfg.write('Generale', 'vedi_voce_breve', oDlg_config.getControl('TextField14').getText())
     oSheet.getCellRangeByName('S1.H334').Value = float(oDlg_config.getControl('TextField14').getText())
 
     if oDlg_config.getControl('TextField4').getText() != '10000':
-        Config().write('Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
+        cfg.write('Contabilità', 'cont_inizio_voci_abbreviate', oDlg_config.getControl('TextField4').getText())
     oSheet.getCellRangeByName('S1.H335').Value = float(oDlg_config.getControl('TextField4').getText())
 
     if oDlg_config.getControl('TextField12').getText() != '10000':
-        Config().write('Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
+        cfg.write('Contabilità', 'cont_fine_voci_abbreviate', oDlg_config.getControl('TextField12').getText())
     oSheet.getCellRangeByName('S1.H336').Value = float(oDlg_config.getControl('TextField12').getText())
     adatta_altezza_riga()
 
-    Config().write('Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
-    Config().write('Contabilità', 'idxsal', oDlg_config.getControl('TextField13').getText())
+    cfg.write('Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
+    cfg.write('Contabilità', 'idxsal', oDlg_config.getControl('TextField13').getText())
     if oDlg_config.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
-        Config().write('Contabilità', 'ricicla_da', 'COMPUTO')
+        cfg.write('Contabilità', 'ricicla_da', 'COMPUTO')
     else:
-        Config().write('Contabilità', 'ricicla_da', 'VARIANTE')
-    Config().write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
-    Config().write('Generale', 'pausa_backup', oDlg_config.getControl('TextField5').getText())
+        cfg.write('Contabilità', 'ricicla_da', 'VARIANTE')
+    cfg.write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
+    cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('TextField5').getText())
     autorun()
 
 ########################################################################
@@ -671,7 +674,7 @@ def oggi():
 ########################################################################
 
 
-def copia_sorgente_per_git():
+def MENU_copia_sorgente_per_git():
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
@@ -2047,16 +2050,16 @@ def voce_breve():
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         oSheet = oDoc.getSheets().getByName('S1')
         if oSheet.getCellRangeByName('S1.H337').Value < 10000:
-            Config().write('Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
+            cfg.write('Computo', 'inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H337').String)
             oSheet.getCellRangeByName('S1.H337').Value = 10000
         else:
             oSheet.getCellRangeByName('S1.H337').Value = int(
-                Config().read('Computo', 'inizio_voci_abbreviate'))
+                cfg.read('Computo', 'inizio_voci_abbreviate'))
         if oSheet.getCellRangeByName('S1.H338').Value < 10000:
-            Config().write('Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
+            cfg.write('Computo', 'fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H338').String)
             oSheet.getCellRangeByName('S1.H338').Value = 10000
         else:
-            oSheet.getCellRangeByName('S1.H338').Value = int(Config().read('Computo', 'fine_voci_abbreviate'))
+            oSheet.getCellRangeByName('S1.H338').Value = int(cfg.read('Computo', 'fine_voci_abbreviate'))
         adatta_altezza_riga()
 
     elif oSheet.Name == 'CONTABILITA':
@@ -2068,15 +2071,15 @@ def voce_breve():
             return
         else:
             if oSheet.getCellRangeByName('S1.H335').Value < 10000:
-                Config().write('Contabilità', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
+                cfg.write('Contabilità', 'cont_inizio_voci_abbreviate', oSheet.getCellRangeByName('S1.H335').String)
                 oSheet.getCellRangeByName('S1.H335').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H335').Value = int(Config().read('Contabilità', 'cont_inizio_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H335').Value = int(cfg.read('Contabilità', 'cont_inizio_voci_abbreviate'))
             if oSheet.getCellRangeByName('S1.H336').Value < 10000:
-                Config().write('Contabilità', 'cont_fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H336').String)
+                cfg.write('Contabilità', 'cont_fine_voci_abbreviate', oSheet.getCellRangeByName('S1.H336').String)
                 oSheet.getCellRangeByName('S1.H336').Value = 10000
             else:
-                oSheet.getCellRangeByName('S1.H336').Value = int(Config().read('Contabilità', 'cont_fine_voci_abbreviate'))
+                oSheet.getCellRangeByName('S1.H336').Value = int(cfg.read('Contabilità', 'cont_fine_voci_abbreviate'))
             adatta_altezza_riga()
 
 
@@ -2194,7 +2197,7 @@ def scelta_viste():
             'vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application'
         )
         # oDialog1Model = oDialog1.Model
-        oDialog1.getControl('Dettaglio').State = Config().read('Generale', 'dettaglio')
+        oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
         if oSheet.getColumns().getByIndex(5).Columns.IsVisible:
             oDialog1.getControl('CBMis').State = 1
         if oSheet.getColumns().getByIndex(17).Columns.IsVisible:
@@ -2219,11 +2222,11 @@ def scelta_viste():
 
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField10').getText() != '10000':
-            Config().write('Computo', 'inizio_voci_abbreviate', oDialog1.getControl('TextField10').getText())
+            cfg.write('Computo', 'inizio_voci_abbreviate', oDialog1.getControl('TextField10').getText())
         oDoc.getSheets().getByName('S1').getCellRangeByName('H337').Value = float(oDialog1.getControl('TextField10').getText())
 
         if oDialog1.getControl('TextField11').getText() != '10000':
-            Config().write('Computo', 'fine_voci_abbreviate', oDialog1.getControl('TextField11').getText())
+            cfg.write('Computo', 'fine_voci_abbreviate', oDialog1.getControl('TextField11').getText())
         oDoc.getSheets().getByName('S1').getCellRangeByName('H338').Value = float(oDialog1.getControl('TextField11').getText())
         #  oDialog1.getControl('CBMdo').State = False
         #  if oSheet.getColumns().getByIndex(29).Columns.IsVisible:
@@ -2289,10 +2292,10 @@ def scelta_viste():
             oSheet.getColumns().getByIndex(38).Columns.IsVisible = True
 
         if oDialog1.getControl('Dettaglio').State == 0:  #
-            Config().write('Generale', 'dettaglio', '0')
+            cfg.write('Generale', 'dettaglio', '0')
             dettaglio_misure(0)
         else:
-            Config().write('Generale', 'dettaglio', '1')
+            cfg.write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
     elif oSheet.Name in ('Elenco Prezzi'):
@@ -2635,13 +2638,13 @@ def scelta_viste():
             "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
         )
         # oDialog1Model = oDialog1.Model
-        oDialog1.getControl('Dettaglio').State = Config().read('Generale', 'dettaglio')
+        oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
         oDialog1.execute()
         if oDialog1.getControl('Dettaglio').State == 0:
-            Config().write('Generale', 'dettaglio', '0')
+            cfg.write('Generale', 'dettaglio', '0')
             dettaglio_misure(0)
         else:
-            Config().write('Generale', 'dettaglio', '1')
+            cfg.write('Generale', 'dettaglio', '1')
             dettaglio_misure(0)
             dettaglio_misure(1)
     # adatta_altezza_riga(oSheet.Name)
@@ -2910,7 +2913,7 @@ def XPWE_out(elaborato, out_file):
     oDoc = getDocument()
     oDialogo_attesa = DLG.dlg_attesa('Esportazione di ' + elaborato + ' in corso...')
     DLG.attesa().start()  # mostra il dialogo
-    if Config().read('Generale', 'dettaglio') == '1':
+    if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
     numera_voci(1)
     top = Element('PweDocumento')
@@ -3451,7 +3454,7 @@ def XPWE_out(elaborato, out_file):
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
     # ~mri (uno.fileUrlToSystemPath(oDoc.getURL()))
     # ~chi(out_file)
-    if Config().read('Generale', 'dettaglio') == '1':
+    if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(1)
     try:
         if out_file.split('.')[-1].upper() != 'XPWE':
@@ -4521,11 +4524,11 @@ def Copia_riga_Ent(arg=None):
     lrow = Range2Cell()[1]
     nome_sheet = oSheet.Name
     if nome_sheet in ('COMPUTO', 'VARIANTE'):
-        if Config().read('Generale', 'dettaglio') == '1':
+        if cfg.read('Generale', 'dettaglio') == '1':
             dettaglio_misura_rigo()
         copia_riga_computo(lrow)
     elif nome_sheet == 'CONTABILITA':
-        if Config().read('Generale', 'dettaglio') == '1':
+        if cfg.read('Generale', 'dettaglio') == '1':
             dettaglio_misura_rigo()
         copia_riga_contab(lrow)
     elif nome_sheet == 'Analisi di Prezzo':
@@ -4746,7 +4749,7 @@ def MENU_ricicla_misure():
             return
         ins_voce_contab(arg=0)
         cerca_partenza()
-        _gotoSheet(Config().read('Contabilità', 'ricicla_da'))
+        _gotoSheet(cfg.read('Contabilità', 'ricicla_da'))
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = Range2Cell()[1]
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
@@ -5756,7 +5759,7 @@ def ins_voce_computo():  # TROPPO LENTA
         return
     ins_voce_computo_grezza(lrow)
     numera_voci(0)
-    if Config().read('Generale', 'pesca_auto') == '1':
+    if cfg.read('Generale', 'pesca_auto') == '1':
         pesca_cod()
 
 
@@ -6151,7 +6154,7 @@ def ins_voce_contab(lrow=0, arg=1):
             sopra + 5) + '<>"";P' + str(sopra + 5) + ';""))'
     oSheet.getCellByPosition(36, sopra + 4).CellStyle = "comp -controolo"
     numera_voci(0)
-    if Config().read('Generale', 'pesca_auto') == '1':
+    if cfg.read('Generale', 'pesca_auto') == '1':
         if arg == 0:
             return
         pesca_cod()
@@ -6328,7 +6331,7 @@ def genera_libretto():
         nSal = 20
     else:
         try:
-            nSal = int(Config().read('Contabilità', 'idxsal'))
+            nSal = int(cfg.read('Contabilità', 'idxsal'))
         except ValueError:
             nSal = 20
     while nSal > 0:
@@ -7859,7 +7862,7 @@ class trun(threading.Thread):
     def run(self):
         while True:
             # ~datarif = datetime.now()
-            minuti = 60 * int(Config().read('Generale', 'pausa_backup'))
+            minuti = 60 * int(cfg.read('Generale', 'pausa_backup'))
             time.sleep(minuti)
             bak()
             # ~MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
@@ -7895,12 +7898,12 @@ def autoexec():
     node = GetRegistryKeyContent("/org.openoffice.Office.Common/Save/Document", True)
     node.CreateBackup = True
     node.commitChanges()
+    uso = int(cfg.read('Generale', 'conta_usi')) + 1
 
-    uso = int(Config().read('Generale', 'conta_usi')) + 1
     if uso == 10 or (uso % 50) == 0:
         dlg_donazioni()
-    Config().write('Generale', 'conta_usi', str(uso))
-    if Config().read('Generale', 'movedirection') == '0':
+    cfg.write('Generale', 'conta_usi', str(uso))
+    if cfg.read('Generale', 'movedirection') == '0':
         oGSheetSettings.MoveDirection = 0
     else:
         oGSheetSettings.MoveDirection = 1
@@ -8632,16 +8635,16 @@ def DlgMain():
     #  sString = oDlgMain.getControl("ComboBox1")
     #  sString.Text = conf.read(path_conf, 'Generale', 'visualizza')
     oDlgMain.getControl('CheckBox1').State = int(
-        Config().read('Generale', 'dialogo'))
+        cfg.read('Generale', 'dialogo'))
     #  _gotoCella(x, y)
     oDlgMain.execute()
     sString = oDlgMain.getControl("Label_DDC").Text
     if oDlgMain.getControl('CheckBox1').State == 1:
-        Config().write('Generale', 'dialogo', '1')
+        cfg.write('Generale', 'dialogo', '1')
         #  sString = oDlgMain.getControl("ComboBox1")
         #  conf.write(path_conf, 'Generale', 'visualizza', sString.getText())
     else:
-        Config().write('Generale', 'dialogo', '0')
+        cfg.write('Generale', 'dialogo', '0')
         #  conf.write(path_conf, 'Generale', 'visualizza', 'Senza Menù')
     oDoc.Sheets.getByName('S2').getCellRangeByName(
         'C3').String = oDlgMain.getControl("TextField1").Text
@@ -8765,7 +8768,7 @@ def bak():
     oDoc.storeToURL(dir_bak + dest, list())
     lista = os.listdir(uno.fileUrlToSystemPath(dir_bak))
     n = 0
-    nb = int(Config().read('Generale', 'copie_backup'))  # numero di copie)
+    nb = int(cfg.read('Generale', 'copie_backup'))  # numero di copie)
     for el in reversed(lista):
         if filename in el:
             if n > nb - 1:
@@ -9292,7 +9295,7 @@ def MENU_sistema_pagine():
     #  mri(oAktPage)
     #  return
     ###
-    if Config().read('Generale', 'dettaglio') == '1':
+    if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
         dettaglio_misure(1)
     else:

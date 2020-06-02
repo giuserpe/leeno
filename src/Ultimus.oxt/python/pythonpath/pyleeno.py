@@ -8853,7 +8853,7 @@ def make_pack(bar=0):
                 pass
             nomeZip2 = os.getenv(
                 "HOME") + '/' + src_oxt + '/_SRC/OXT/LeenO-' + tempo + '.oxt'
-            nomeZip = os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT/LeenO.oxt'
+            #~ nomeZip = os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT/LeenO.oxt'
             subprocess.Popen('nemo ' + os.getenv("HOME") + '/' + src_oxt +
                              '/_SRC/OXT',
                              shell=True,
@@ -8861,7 +8861,7 @@ def make_pack(bar=0):
 
         else:
             nomeZip2 = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-            nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+            #~ nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
             subprocess.Popen(
                 'nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/',
                 shell=True,
@@ -8874,20 +8874,20 @@ def make_pack(bar=0):
                 pass
             nomeZip2 = os.getenv(
                 "HOMEPATH") + '/' + src_oxt + '/OXT/LeenO-' + tempo + '.oxt'
-            nomeZip = os.getenv("HOMEPATH") + '/' + src_oxt + '/OXT/LeenO.oxt'
+            #~ nomeZip = os.getenv("HOMEPATH") + '/' + src_oxt + '/OXT/LeenO.oxt'
             subprocess.Popen('explorer.exe ' + os.getenv("HOMEPATH") + '\\' +
                              src_oxt + '\\OXT\\',
                              shell=True,
                              stdout=subprocess.PIPE)
         else:
             nomeZip2 = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-            nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
+            #~ nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
             subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\',
                              shell=True,
                              stdout=subprocess.PIPE)
     shutil.make_archive(nomeZip2, 'zip', oxt_path)
     shutil.move(nomeZip2 + '.zip', nomeZip2)
-    shutil.copyfile(nomeZip2, nomeZip)
+    #~ shutil.copyfile(nomeZip2, nomeZip)
 
 
 #######################################################################

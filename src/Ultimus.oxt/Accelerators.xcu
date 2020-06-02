@@ -173,7 +173,7 @@
         <!--CTRL-SHIFT-G-->
         <node oor:name="G_SHIFT_MOD1" oor:op="replace">
           <prop oor:name="Command">
-            <value xml:lang="en-US">vnd.sun.star.script:LeenO.oxt|python|pythonpath|pyleeno.py$copia_sorgente_per_git?language=Python&amp;location=user:uno_packages</value>
+            <value xml:lang="en-US">vnd.sun.star.script:UltimusFree2.PY_bridge.copia_sorgente_per_git?language=Basic&amp;location=application</value>
           </prop>
         </node>
         <!--CTRL-SHIFT-K-->

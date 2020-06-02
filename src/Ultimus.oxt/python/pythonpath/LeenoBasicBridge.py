@@ -94,7 +94,7 @@ def inizializza_analisi():
     PL.inizializza_analisi()
 
 
-def vai_a_Computo(ctx):
+def vai_a_Computo():
     '''
     vai_a_Computo
     '''

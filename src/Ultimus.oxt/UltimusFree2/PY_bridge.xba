@@ -173,31 +173,4 @@ rem ######################################################################
 Sub invia_voce
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;invia_voce&quot;)
 End Sub
-Sub vai_a_M1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_M1&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_S1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S1&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_S2
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_S2&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_variabili
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_variabili&quot;)
-End Sub
-rem ######################################################################
-Sub vai_a_ElencoPrezzi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;vai_a_ElencoPrezzi&quot;)
-End Sub
-rem ######################################################################
-Sub struttura_off
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_off&quot;)
-End Sub
-rem ######################################################################
-Sub copia_sorgente_per_git
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;copia_sorgente_per_git&quot;)
-End Sub
 </script:module>

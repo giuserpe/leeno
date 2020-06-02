@@ -454,9 +454,9 @@ def copia_sorgente_per_git(arg=None):
                 os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT')
             except FileExistsError:
                 pass
-            comandi = 'cd ' + dest +' && gnome-terminal && gitk &'
+            comandi = 'cd ' + dest +' && mate-terminal && gitk &'
         else:
-            comandi = 'cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &'
+            comandi = 'cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && mate-terminal && gitk &'
         if processo('wish') == False:
             subprocess.Popen(comandi, shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
@@ -479,7 +479,7 @@ def avvia_IDE(arg=None):
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     oLayout.showElement("private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        subprocess.Popen('nemo ' + LeenO_path(), shell=True, stdout=subprocess.PIPE)
+        subprocess.Popen('caja ' + LeenO_path(), shell=True, stdout=subprocess.PIPE)
         subprocess.Popen('geany ' + LeenO_path() + '/python/pythonpath/pyleeno.py', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         subprocess.Popen('explorer.exe ' + uno.fileUrlToSystemPath(LeenO_path()), shell=True, stdout=subprocess.PIPE)
@@ -9058,12 +9058,12 @@ def make_pack(arg=None, bar=0):
                 pass
             nomeZip2= os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT/LeenO.oxt'
-            subprocess.Popen('nemo '+ os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT', shell=True, stdout=subprocess.PIPE)
+            subprocess.Popen('caja '+ os.getenv("HOME") +'/'+ src_oxt +'/_SRC/OXT', shell=True, stdout=subprocess.PIPE)
 
         else: 
             nomeZip2= '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
             nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
-            subprocess.Popen('nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
+            subprocess.Popen('caja /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/', shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/OXT/'):
             try:

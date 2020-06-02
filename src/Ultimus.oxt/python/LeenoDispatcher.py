@@ -43,9 +43,8 @@ def reloadLeenoModules():
 
     # we need a listing of modules. We look at pythonpath ones
     pythonFiles = [f[: -3] for f in listdir(myPath) if isfile(join(myPath, f)) and f.endswith(".py")]
-
     for f in pythonFiles:
-        print("Loading module:", f)
+        #~ print("Loading module:", f)
         module = importlib.import_module(f)
 
         # reload the module

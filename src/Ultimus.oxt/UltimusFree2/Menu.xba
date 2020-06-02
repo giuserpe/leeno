@@ -123,7 +123,7 @@ Macro_Doc (&quot;OnLoad&quot;,&quot;vnd.sun.star.script:Standard.Controllo.Contr
 End Sub
 rem ######################################################################
 Sub computo_OnFocus
-ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 End Sub
 
 Sub computo_OnSelect
@@ -132,18 +132,26 @@ End Sub
 
 Sub elenco_OnFocus
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 End Sub
 Sub elenco_OnUnFocus
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 End Sub
 Sub analisi_OnFocus
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
 	&apos;ThisComponent.CurrentController().freezeAtPosition(0,2)
 End Sub
 Sub analisi_OnUnFocus
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;toolbar_vedi&quot;)
+	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
+End Sub
+
+Sub pyleeno_bak0
+	ScriptPy(&quot;pyleeno.py&quot;, &quot;bak0&quot;)
+End Sub
+
+Sub LeenoToolbars_Vedi
+	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 End Sub
 
 Sub eventi_assegna
@@ -183,7 +191,8 @@ If thisComponent.Sheets.hasByName(&quot;CONTABILITA&quot;) Then
 	Macro_SHEET (&quot;CONTABILITA&quot;,	&quot;OnSelect&quot;  ,&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&amp;location=application&quot;)
 EndIf
 Macro_SHEET (&quot;S2&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&amp;location=application&quot;)
-Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$toolbar_vedi?language=Python&amp;location=user:uno_packages&quot;)
+Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;vnd.sun.star.script:UltimusFree2.Menu.LeenoToolbars_Vedi?language=Basic&amp;location=application&quot;)
+&apos;Macro_SHEET (&quot;S1&quot;,	&quot;OnUnfocus&quot;,&quot;service:org.giuseppe-vizziello.leeno.dispatcher?LeenoToolbars.Vedi&quot;)
 &apos;OnStartApp
 &apos;OnCloseApp
 &apos;Macro_Doc (&quot;OnCreate&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
@@ -192,7 +201,8 @@ Macro_Doc (&quot;OnNew&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Contr
 Macro_Doc (&quot;OnLoad&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&amp;location=document&quot;)
 Macro_Doc (&quot;OnPrepareUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&amp;location=application&quot;)
 Macro_Doc (&quot;OnUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
-Macro_Doc (&quot;OnSave&quot;,	&quot;vnd.sun.star.script:&quot; &amp; sName &amp; &quot;|python|pythonpath|pyleeno.py$bak0?language=Python&amp;location=user:uno_packages&quot;)
+Macro_Doc (&quot;OnSave&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.pyleeno_bak0?language=Basic&amp;location=application&quot;)
+&apos;Macro_Doc (&quot;OnSave&quot;,	&quot;service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.bak0&quot;)
 &apos;OnSaveDone
 &apos;OnSaveFailed
 Macro_Doc (&quot;OnSaveAs&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)

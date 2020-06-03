@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-import argparse, os, zipfile
+import argparse, os, shutil
 
 with open('src/Ultimus.oxt/leeno_version_code', 'r') as file:
     last_version = file.read().rstrip()
@@ -26,16 +26,9 @@ def compress():
         archpath = os.path.join('bin', archname)
         if not os.path.isdir('bin'):
             os.mkdir('bin')
-        with zipfile.ZipFile(archpath, "w") as archive:
-            n = 0
-            for dirname, dirnames, filenames in os.walk(os.path.join('src', rootname)):
-                dirpath = os.path.relpath(dirname, os.path.join('src', rootname))
-                if dirpath != '.':
-                    archive.write(dirname, dirpath)
-                for filename in filenames:
-                    filepath = os.path.join(dirname, filename)
-                    relpath = os.path.relpath(filepath, os.path.join('src', rootname))
-                    archive.write(filepath, relpath)
+    shutil.make_archive(archpath, 'zip', os.path.join('src', rootname))
+    shutil.move(archpath + '.zip', archpath)
+
     print ('''\n\nLeenO - Computo metrico assistito
 Copyright (C) 2014-2019 Giuseppe Vizziello
 

@@ -54,15 +54,15 @@ Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) A
 	Dim bridge as Object
 	bridge = GetProcessServiceManager().createInstanceWithArguments(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;, args )
 &apos;	bridge = GetProcessServiceManager().createInstance(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;)
-
+&apos;	print sModulo + &quot;.&quot; + sFunzione
 	bridge.trigger(sModulo + &quot;.&quot; + sFunzione)
 
 End Sub
 
 rem ######################################################################
-Sub debug
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;debug&quot;)
-End Sub
+&apos;Sub MENU_debug
+&apos;	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;MENU_debug&quot;)
+&apos;End Sub
 rem ######################################################################
 Sub DlgMain
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;DlgMain&quot;)
@@ -173,4 +173,5 @@ rem ######################################################################
 Sub invia_voce
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;invia_voce&quot;)
 End Sub
+rem ######################################################################
 </script:module>

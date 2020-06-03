@@ -704,9 +704,9 @@ def MENU_copia_sorgente_per_git():
             except FileExistsError:
                 pass
 
-            comandi = 'cd ' + dest + ' && gnome-terminal && gitk &'
+            comandi = 'cd ' + dest + ' && mate-terminal && gitk &'
         else:
-            comandi = 'cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && gnome-terminal && gitk &'
+            comandi = 'cd /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && mate-terminal && gitk &'
         if not processo('wish'):
             subprocess.Popen(comandi, shell=True, stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
@@ -747,7 +747,7 @@ def avvia_IDE():
     oLayout.showElement(
         "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        subprocess.Popen('nemo ' + LeenO_path(),
+        subprocess.Popen('caja ' + LeenO_path(),
                          shell=True,
                          stdout=subprocess.PIPE)
         subprocess.Popen('geany ' + LeenO_path() +
@@ -8841,23 +8841,20 @@ def make_pack(bar=0):
                 dest = os.getenv(
                     "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
                 os.makedirs(dest)
-                #  os.makedirs(os.getenv("HOME") +'/'+ src_oxt +'/bin/')
                 os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
             except FileExistsError:
                 pass
             nomeZip2 = os.getenv(
                 "HOME") + '/' + src_oxt + '/_SRC/OXT/LeenO-' + tempo + '.oxt'
-            #~ nomeZip = os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT/LeenO.oxt'
-            subprocess.Popen('nemo ' + os.getenv("HOME") + '/' + src_oxt +
+            subprocess.Popen('caja ' + os.getenv("HOME") + '/' + src_oxt +
                              '/_SRC/OXT',
                              shell=True,
                              stdout=subprocess.PIPE)
 
         else:
             nomeZip2 = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-            #~ nomeZip = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
             subprocess.Popen(
-                'nemo /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/',
+                'caja /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/',
                 shell=True,
                 stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
@@ -8868,14 +8865,12 @@ def make_pack(bar=0):
                 pass
             nomeZip2 = os.getenv(
                 "HOMEPATH") + '/' + src_oxt + '/OXT/LeenO-' + tempo + '.oxt'
-            #~ nomeZip = os.getenv("HOMEPATH") + '/' + src_oxt + '/OXT/LeenO.oxt'
             subprocess.Popen('explorer.exe ' + os.getenv("HOMEPATH") + '\\' +
                              src_oxt + '\\OXT\\',
                              shell=True,
                              stdout=subprocess.PIPE)
         else:
             nomeZip2 = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
-            #~ nomeZip = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO.oxt'
             subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\',
                              shell=True,
                              stdout=subprocess.PIPE)

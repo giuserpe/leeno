@@ -24,10 +24,11 @@ print('''
 #######################################################################''')
 
 
-def debug():
+def MENU_debug():
     '''
-    debug
+    MENU_debug
     '''
+    PL.MENU_debug()
     # MAH...CHE DEVE FARE ???
 
 

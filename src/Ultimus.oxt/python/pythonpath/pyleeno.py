@@ -8096,11 +8096,11 @@ def inizializza():
     oSheet.getCellRangeByName('G219').String = 'Copyright 2014-' + str(datetime.now().year)
 
     # allow non-numeric version codes (example: testing)
-    rvc = r_version_code()
+    rvc = version_code.read().split('-')[0]
     if isinstance(rvc, str):
-        oSheet.getCellRangeByName('H194').String = r_version_code()
+        oSheet.getCellRangeByName('H194').String = rvc
     else:
-        oSheet.getCellRangeByName('H194').Value = r_version_code()
+        oSheet.getCellRangeByName('H194').Value = rvc
 
     oSheet.getCellRangeByName('I194').Value = Lmajor
     oSheet.getCellRangeByName('J194').Value = Lminor
@@ -8559,14 +8559,6 @@ def DlgMain():
     sUrl = LeenO_path() + '/icons/Immagine.png'
     oDlgMain.getModel().ImageControl1.ImageURL = sUrl
 
-    if os.altsep:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                            'leeno_version_code')
-    else:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                            'leeno_version_code')
-    f = open(code_file, 'r')
-
     sString = oDlgMain.getControl("CommandButton13")
     try:
         if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
@@ -8577,7 +8569,7 @@ def DlgMain():
         pass
 
     sString = oDlgMain.getControl("Label12")
-    sString.Text = f.readline()
+    sString.Text = version_code.read()[:-9]
 
     sString = oDlgMain.getControl("Label_DDC")
     sString.Text = sUltimus
@@ -8763,38 +8755,42 @@ def bak():
 
 
 ########################################################################
-def w_version_code():
-    '''
-    scrive versione e timestamp nel file leeno_version_code
-    '''
-    tempo = ''.join(''.join(''.join(
-        str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
+class version_code:
+    """ Gestisce il nome del file OXT in leeno_version_code"""
 
-    if os.altsep:
-        out_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                           'leeno_version_code')
-    else:
-        out_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                           'leeno_version_code')
-    of = open(out_file, 'w')
-    of.write(str(Lmajor) + '.' + str(Lminor) + '.' + Lsubv + '-' + tempo[:-2])
-    of.close()
-    return str(Lmajor) + '.' + str(Lminor) + '.' + Lsubv + '-' + tempo[:-2]
+    def __init__ (self):
+        """ Class initialiser """
+        pass
 
+    def read ():
+        
+        if os.altsep:
+            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
+                                                'leeno_version_code')
+        else:
+            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
+                                                'leeno_version_code')
+        f = open(code_file, 'r')
+        return f.readline()
 
-########################################################################
-def r_version_code():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    if os.altsep:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                            'leeno_version_code')
-    else:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                            'leeno_version_code')
-    f = open(code_file, 'r')
-    return f.readline().split('-')[-1]
+    def write ():
+        
+        if os.altsep:
+            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
+                                                'leeno_version_code')
+        else:
+            code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
+                                                'leeno_version_code')
+        f = open(code_file, 'r')
+        Ldev = str (int(f.readline().split('-')[0].split('.')[-1]) + 1)
+        tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
+        of = open(code_file, 'w')
+
+        new = str(Lmajor) + '.' + str(Lminor) + '.' + Lsubv.split('.')[0] + '.' + Ldev + '-TESTING-' + tempo[:-6]
+        of.write(new)
+        of.close()
+        return new
+
 
 ########################################################################
 def MENU_grid_switch():
@@ -8826,7 +8822,7 @@ def make_pack(bar=0):
                 7, 338).String
     except Exception:
         pass
-    tempo = w_version_code()
+    oxt_name = version_code.write()
     if bar == 0:
         oDoc = getDocument()
         Toolbars.AllOff()
@@ -8845,14 +8841,14 @@ def make_pack(bar=0):
             except FileExistsError:
                 pass
             nomeZip2 = os.getenv(
-                "HOME") + '/' + src_oxt + '/_SRC/OXT/LeenO-' + tempo + '.oxt'
+                "HOME") + '/' + src_oxt + '/_SRC/OXT/' + oxt_name + '.oxt'
             subprocess.Popen('caja ' + os.getenv("HOME") + '/' + src_oxt +
                              '/_SRC/OXT',
                              shell=True,
                              stdout=subprocess.PIPE)
 
         else:
-            nomeZip2 = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+            nomeZip2 = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/' + oxt_name + '.oxt'
             subprocess.Popen(
                 'caja /media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/OXT/',
                 shell=True,
@@ -8864,13 +8860,13 @@ def make_pack(bar=0):
             except FileExistsError:
                 pass
             nomeZip2 = os.getenv(
-                "HOMEPATH") + '/' + src_oxt + '/OXT/LeenO-' + tempo + '.oxt'
+                "HOMEPATH") + '/' + src_oxt + '/OXT/' + oxt_name + '.oxt'
             subprocess.Popen('explorer.exe ' + os.getenv("HOMEPATH") + '\\' +
                              src_oxt + '\\OXT\\',
                              shell=True,
                              stdout=subprocess.PIPE)
         else:
-            nomeZip2 = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/LeenO-' + tempo + '.oxt'
+            nomeZip2 = 'w:/_dwg/ULTIMUSFREE/_SRC/OXT/' + oxt_name + '.oxt'
             subprocess.Popen('explorer.exe w:\\_dwg\\ULTIMUSFREE\\_SRC\\OXT\\',
                              shell=True,
                              stdout=subprocess.PIPE)

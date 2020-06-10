@@ -4,7 +4,8 @@ from xml.etree.ElementTree import ElementTree
 
 import uno
 
-from LeenoUtils import getDocument
+from LeenoUtils import getDocument, isLeenoDocument
+
 import pyleeno as PL
 import LeenoDialogs as DLG
 import LeenoToolbars as Toolbars
@@ -17,23 +18,44 @@ def MENU_XPWE_import():
     '''
     Importazione dati dal formato XPWE
     '''
+    isLeenoDoc = isLeenoDocument()
+    if isLeenoDoc:
+        oDoc = getDocument()
+        vals = []
+        for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
+            try:
+                vals.append(oDoc.getSheets().getByName(el).getCellRangeByName('A2').Value)
+            except Exception:
+                vals.append(None)
+    else:
+        vals = [None, None, None]
+    
     # sceglie il tipo di dati da importare
-    elaborato = DLG.ScegliElaborato('Importa dal formato XPWE')
-
-    oDoc = getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    PL.refresh(0)
-    oDialogo_attesa = DLG.dlg_attesa('Caricamento dei dati...')
-    if not oDoc.getSheets().hasByName('S2'):
-        DLG.MsgBox(
-            'Puoi usare questo comando da un file di computo nuovo o già esistente.',
-            'ATTENZIONE!')
+    elabdest = DLG.ScegliElabDest(
+        Title="Importa dal formato XPWE",
+        AskTarget=isLeenoDoc,
+        ValComputo=vals[0],
+        ValVariante=vals[1],
+        ValContabilita=vals[2]
+    )
+    # controlla se si è annullato il comando
+    if elabdest is None:
         return
-    DLG.MsgBox("Il contenuto dell'archivio XPWE sarà aggiunto a questo file come " + elaborato + ".", 'Avviso!')
-    PL._gotoSheet('COMPUTO')
-    oDoc.CurrentController.select(oDoc.getSheets().hasByName(
-        'COMPUTO'))  # per evitare che lo script parta da un altro documento
+
+    elaborato = elabdest['elaborato']
+    destinazione = elabdest['destinazione']
+    
+    # se la destinazione è un nuovo documento, crealo
+    if destinazione == 'NUOVO':
+        PL.New_file.computo(0)
+        oDoc = getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+
+    #PL._gotoSheet('COMPUTO')
+    #oDoc.CurrentController.select(oDoc.getSheets().hasByName(
+    #    'COMPUTO'))  # per evitare che lo script parta da un altro documento
     filename = Dialogs.FileSelect('Scegli il file XPWE da importare...', '*.xpwe')  # *.xpwe')
+
     # xml auto indent: http://www.freeformatter.com/xml-formatter.html
     # inizializzazione delle variabili
     # datarif = datetime.now()

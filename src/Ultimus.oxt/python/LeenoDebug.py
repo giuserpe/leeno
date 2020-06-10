@@ -272,9 +272,9 @@ for i in range(1, 100):
 prg.hide()
 '''
 
-
+'''
 a = True
-radioH = Dialogs.getRadioButtonSize("X")[1]
+radioH = Dialogs.getRadioButtonHeight()
 imgW = Dialogs.getBigIconSize()[0] * 2
 dlg = Dialogs.Dialog(Title="Importa dal formato XPWE", Items=[
     Dialogs.HSizer(Items=[
@@ -328,30 +328,9 @@ dlg._layout()
 x = dlg.dump()
 
 dlg.run()
-
-
-
-
-'''
-dlg = Dialogs.Dialog(Title="Test", Items= [
-    Dialogs.HSizer(Items=[
-        Dialogs.VSizer(Items=[
-            Dialogs.Spacer(),
-            Dialogs.FixedText(Text="---"),
-            Dialogs.ImageControl(Image="Icons-Big/question.png"),
-            Dialogs.FixedText(Text="---"),
-            Dialogs.Spacer()
-        ]),
-        Dialogs.GroupBox(Label="uff...", Items=[
-            Dialogs.FixedText(Text="Supergiu\nSembra\nFunzionare...")
-        ])
-    ])
-])
-dlg.run()
 '''
 
-
-#from LeenoImport_XmlSix import MENU_Import_Ep_XML_SIX as X
-#X()
+from LeenoImport_XPWE import MENU_XPWE_import as X
+X()
 
 print("\nDONE\n")

@@ -47,3 +47,13 @@ def createUnoService(serv):
     create an UNO service
     '''
     return getComponentContext().getServiceManager().createInstance(serv)
+
+
+def isLeenoDocument():
+    '''
+    check if current document is a LeenO document
+    '''
+    try:
+        return getDocument().getSheets().hasByName('S2')
+    except Exception:
+        return False

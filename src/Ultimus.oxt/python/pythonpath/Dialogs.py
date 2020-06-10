@@ -145,6 +145,14 @@ def getRadioButtonSize(label):
     return size.Width,  size.Height
 
 
+def getRadioButtonHeight():
+    '''
+    Get the height needed to display a radio button
+    BEWARE : SIZE IN PIXEL !
+    '''
+    return getRadioButtonSize("X")[1]
+
+
 def getButtonSize(txt):
     '''
     Get 'best' button size in a dialog
@@ -1056,7 +1064,6 @@ class RadioGroup(DialogItem):
         # we can't setup the buttons ids, which are composed
         # by box id + '_' + button index.
         # We'll do it later when constructing the UNO dialog
-        print("\n\n---------------- ITEMS------------------\n\n",  self._sizer._items,  "\n\n")
         for item in self._items:
             self._sizer.add(RadioButton(Label=item))
         self._sizer._x,  self._sizer._y = 0,  0
@@ -1440,6 +1447,8 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
             cmdStr = cmdList[1]
             # we pass the group to handler, not the single buttons
             widget = self.getWidget(widgetId)
+            #update current item in group
+            widget._current = int(cmdStr)
 
         # if we've got an handler, we process the command inside it
         # and if returning True we close the dialog

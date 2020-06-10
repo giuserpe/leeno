@@ -8,6 +8,7 @@ import uno
 
 from LeenoUtils import getComponentContext, getDesktop, getDocument, createUnoService
 import pyleeno as PL
+import Dialogs
 
 from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK
 # from com.sun.star.awt.MessageBoxButtons import BUTTONS_OK_CANCEL
@@ -196,4 +197,74 @@ def ScegliElaborato(titolo):
             elaborato = 'Elenco'
     return elaborato
 
+def ScegliElabDest(*, Title='', AskTarget=False, ValComputo=None, ValVariante=None, ValContabilita=None):
 
+    # altezza radiobutton, per fare il testo con il valore uguale
+    # ed averli quindi allineati
+    radioH = Dialogs.getRadioButtonHeight()
+    
+    # dimensione dell'icona col punto di domanda
+    imgW = Dialogs.getBigIconSize()[0] * 2
+    
+    # i 3 valori totali
+    vCmp = '' if ValComputo is None else '{:9.2f} €'.format(ValComputo)
+    vVar = '' if ValVariante is None else '{:9.2f} €'.format(ValVariante)
+    vCon = '' if ValContabilita is None else '{:9.2f} €'.format(ValContabilita)
+
+    # prima parte fissa del dialogo
+    dlg = Dialogs.Dialog(Title=Title, Items=[
+        Dialogs.HSizer(Items=[
+            Dialogs.VSizer(Items=[
+                Dialogs.Spacer(),
+                Dialogs.ImageControl(Id="img", Image="Icons-Big/question.png", MinWidth=imgW),
+                Dialogs.Spacer()
+            ]),
+            Dialogs.VSizer(Id="vsizer", Items=[
+                Dialogs.GroupBox(Label="Scegli elaborato", Items=[
+                    Dialogs.HSizer(Items=[
+                        Dialogs.RadioGroup(Id="elab", Items=[
+                            "Computo",
+                            "Variante",
+                            "Contabilità",
+                            "Elenco Prezzi"
+                        ]),
+                        Dialogs.Spacer(),
+                        Dialogs.VSizer(Items=[
+                            Dialogs.FixedText(Id="TotComputo", Text=vCmp, MinHeight=radioH),
+                            Dialogs.FixedText(Id="TotVariante", Text=vVar, MinHeight=radioH),
+                            Dialogs.FixedText(Id="TotContabilità", Text=vCon, MinHeight=radioH),
+                            Dialogs.Spacer()
+                        ])
+                    ])
+                ])
+            ])
+        ])
+    ])
+    if AskTarget:
+        dlg["vsizer"].add(
+            Dialogs.Spacer(),
+            Dialogs.GroupBox(Label="Scegli destinazione", Items=[
+                Dialogs.RadioGroup(Id="dest", Items=[
+                    "Documento corrente",
+                    "Nuovo documento"
+                ])
+            ])
+        )
+
+    dlg["vsizer"].add(
+        Dialogs.Spacer(),
+        Dialogs.HSizer(Items=[
+            Dialogs.Button(Label="Ok", RetVal=1, Icon="Icons-24x24/ok.png"),
+            Dialogs.Spacer(),
+            Dialogs.Button(Label="Annulla", RetVal=-1, Icon="Icons-24x24/cancel.png"),
+        ])
+    )
+    
+    # check if we canceled the job
+    if dlg.run() == -1:
+        return None
+
+    elab = ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'Elenco')[dlg['elab'].getCurrent()]
+    dest = ('CORRENTE', 'NUOVO')[dlg['dest'].getCurrent() if AskTarget else 1]
+    
+    return {'elaborato':elab, 'destinazione':dest}

@@ -77,6 +77,23 @@ def getScaleFactors():
 
     return 1000.0 / float(sc.Width), 1000.0 / float(sc.Height)
 
+def getImageSize(Image):
+    '''
+    gets the size of a given image
+    BEWARE : SIZE IN PIXEL !
+    '''
+    ctx = getComponentContext()
+    serviceManager = ctx.ServiceManager
+
+    imageModel = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlImageControlModel")
+    image = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlImageControl")
+    image.setModel(imageModel)
+    imageModel.ImageURL = uno.systemPathToFileUrl(os.path.join(getCurrentPath(), Image))
+    size = imageModel.Graphic.SizePixel
+    imageModel.dispose()
+    return size.Width,  size.Height
 
 def getBigIconSize():
     '''
@@ -86,8 +103,8 @@ def getBigIconSize():
     scWidth,  scHeight = getScreenInfo()
     siz = min(scWidth, scHeight)
     siz = int(siz / 20)
-
-    return siz,   siz
+    
+    return siz, siz
 
 
 def getTextBox(txt):
@@ -395,9 +412,9 @@ class Sizer(DialogItem):
     Base class for horizontal and vertical sizers
     Every dialog MUST contain exactly one sizer
     '''
-    def __init__(self,  Items):
+    def __init__(self, *, Id=None, Items):
         ''' constructor '''
-        super().__init__()
+        super().__init__(Id=Id)
         if Items is None:
             Items = []
         self._items = Items
@@ -406,7 +423,7 @@ class Sizer(DialogItem):
         self._width = 0
         self._height = 0
 
-    def dump(self,  indent):
+    def dump(self, indent):
         '''
         bring a string representation of object
         '''
@@ -416,13 +433,14 @@ class Sizer(DialogItem):
         res += 4 * indent * ' ' + '}'
         return res
 
-    def add(self,  item):
+    def add(self, *items):
         '''
-        Add a widget to sizer
+        Add widgets to sizer
         '''
-        self._items.append(item)
+        for item in items:
+            self._items.append(item)
 
-    def _addUnoItems(self,  owner):
+    def _addUnoItems(self, owner):
         '''
         fill UNO dialog with items
         '''
@@ -437,8 +455,10 @@ class Sizer(DialogItem):
         for item in self._items:
             item._destruct()
 
-    def getWidget(self,  wId):
+    def getWidget(self, wId):
         ''' get widget by ID'''
+        if self._id == wId:
+            return self
         for item in self._items:
             if hasattr(item,  'getWidget'):
                 widget = item.getWidget(wId)
@@ -449,15 +469,18 @@ class Sizer(DialogItem):
                     return item
         return None
 
+    def __getitem__(self, key):
+        return self.getWidget(key)
+
 
 class HSizer(Sizer):
     '''
     Horizontal sizer
     Used to arrange controls horizontally
     '''
-    def __init__(self,  Items=None):
+    def __init__(self, *, Id=None, Items=None):
         ''' constructor '''
-        super().__init__(Items)
+        super().__init__(Id=Id, Items=Items)
 
     def calcMinSize(self):
         '''
@@ -484,9 +507,10 @@ class HSizer(Sizer):
         '''
         maxH = 0
         for item in self._items:
-            maxH = max(maxH,  item._height)
+            maxH = max(maxH, item._height)
         for item in self._items:
-            item.height = maxH
+            item._height = maxH
+            item._equalizeElements()
         self.height = maxH
 
     def _adjustLayout(self):
@@ -587,9 +611,9 @@ class VSizer(Sizer):
     Vertical sizer
     Used to arrange controls vertically
     '''
-    def __init__(self,  Items=None):
+    def __init__(self, *, Id=None, Items=None):
         ''' constructor '''
-        super().__init__(Items)
+        super().__init__(Id=Id, Items=Items)
 
     def calcMinSize(self):
         '''
@@ -619,6 +643,7 @@ class VSizer(Sizer):
             maxW = max(maxW,  item._width)
         for item in self._items:
             item._width = maxW
+            item._equalizeElements()
         self._width = maxW
 
     def _adjustLayout(self):
@@ -652,7 +677,7 @@ class VSizer(Sizer):
             # it we've got spacers, divide tspaces among them
             if nSpacers > 0:
                 # the size must contain spacer's minimum size
-                # so se add it BEFORE dividing
+                # so we add it BEFORE dividing
                 dH += nSpacers * MIN_SPACER_SIZE
 
                 space = int(dH / nSpacers)
@@ -688,7 +713,7 @@ class VSizer(Sizer):
                 spaceRemainder = 0
                 iItem = 0
                 for item in self._items:
-                    itemSpace = int(space * ratios[iItem])
+                    itemSpace = int(dH * ratios[iItem])
                     if iItem < len(self._items) - 1:
                         item._height += itemSpace
                         spaceRemainder -= itemSpace
@@ -717,7 +742,7 @@ class FixedText(DialogItem):
     Fixed text box
     Display a box of text
     '''
-    def __init__(self,  Id=None,  Text='',
+    def __init__(self, *, Id=None,  Text='',
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None):
@@ -763,16 +788,38 @@ class ImageControl(DialogItem):
     Fixed image
     Display an image
     '''
-    def __init__(self,  *,  Id=None,  Image,
+    def __init__(self, *, Id=None,  Image,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None):
         ''' constructor '''
+
+        # for images we do some smart sizing here...
+        iW, iH = getImageSize(Image)
+        ratio = iH / iW
+        
+        # take minimum sizes as the "true" minimum
+        if MinWidth is not None:
+            minH = int(MinWidth * ratio)
+            if MinHeight is None or MinHeight < minH:
+                MinHeight = minH
+        elif MinHeight is not None:
+            MinWidth = int(MinHeight / ratio)
+            
+        # take maximum sizes as the "true" maximum
+        if MaxWidth is not None:
+            maxH = int(MaxWidth * ratio)
+            if MaxHeight is None or MaxHeight > maxH:
+                MaxHeight = maxH
+        elif MaxHeight is not None:
+            MaxWidth = int(MaxHeight / ratio)
+            
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
                          FixedWidth=FixedWidth, FixedHeight=FixedHeight)
         self._image = Image
+        
 
     def calcMinSize(self):
         '''
@@ -805,7 +852,7 @@ class ProgressBar(DialogItem):
     ProgressBar
     Display a ProgressBar
     '''
-    def __init__(self, Id=None, MinVal=0, MaxVal=100, Value=0, 
+    def __init__(self, *, Id=None, MinVal=0, MaxVal=100, Value=0, 
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None):
@@ -879,7 +926,7 @@ class Button(DialogItem):
     If 'RetVal' is given, button closes the dialog and returns this value
     If 'RetVal' is None, button DOESN'T close the dialog, but external handler is called
     '''
-    def __init__(self,  Id=None,  Label='aLabel',  RetVal=None,  Icon=None,
+    def __init__(self, *, Id=None, Label='aLabel', RetVal=None, Icon=None,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None):
@@ -930,13 +977,12 @@ class Button(DialogItem):
         return res
 
 
-
 class RadioButton(DialogItem):
     '''
     Radio button
     Display a radio button connected with others
     '''
-    def __init__(self,  Id=None,  Label='aLabel',
+    def __init__(self, *, Id=None, Label='aLabel',
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None):
@@ -971,7 +1017,7 @@ class RadioButton(DialogItem):
         '''
         return "OnSelect"
 
-    def dump(self,  indent):
+    def dump(self, indent):
         '''
         convert object to string
         '''
@@ -987,9 +1033,11 @@ class RadioGroup(DialogItem):
     It has no label not border, if those are required
     you shall insert it into a GroupBox item
     '''
-    def __init__(self,  Id=None,  Horz=False,  Items=['One',  'Two',  'Three',  'Four'],  Default=0):
+    def __init__(self, *, Id=None, Horz=False, Items=None, Default=0):
         ''' constructor '''
         super().__init__(Id=Id)
+        if Items is None:
+            Items = []
         self._items = Items
         if Default is None:
             Default = 0
@@ -1031,9 +1079,14 @@ class RadioGroup(DialogItem):
         '''
         Adjust layout of contained Sizer
         '''
-        self._sizer._adjustLayout()
         self._sizer._x = self._x
         self._sizer._y = self._y
+        self._sizer._adjustLayout()
+        
+    def add(self, *items):
+        ''' add elements to group '''
+        for item in items:
+            self._items.append(item)
 
     def _addUnoItems(self,  owner):
         '''
@@ -1071,6 +1124,9 @@ class RadioGroup(DialogItem):
         if self._id == wId:
             return self
         return self._sizer.getWidget(wId)
+
+    def __getitem__(self, key):
+        return self.getWidget(key)
 
     def getProps(self):
         '''
@@ -1129,14 +1185,14 @@ class GroupBox(DialogItem):
     Used mostly to group items
     In behaviour is similar to Dialog
     '''
-    def __init__(self,  Id=None,  Label='aLabel', Horz=False,  Items=None):
+    def __init__(self, *, Id=None, Label='aLabel', Horz=False, Items=None):
         ''' constructor '''
         super().__init__(Id=Id)
         self._label = Label
         if Horz:
-            self._sizer = HSizer(Items)
+            self._sizer = HSizer(Items=Items)
         else:
-            self._sizer = VSizer(Items)
+            self._sizer = VSizer(Items=Items)
         self._sizer._x,  self._sizer._y = GROUPBOX_LEFT_BORDER,  GROUPBOX_TOP_BORDER
         self._x,  self._y = 0,  0
         self._width,  self._height = 0,  0
@@ -1161,9 +1217,14 @@ class GroupBox(DialogItem):
         '''
         Adjust layout of contained Sizer
         '''
-        self._sizer._adjustLayout()
         self._sizer._x = self._x + GROUPBOX_LEFT_BORDER
         self._sizer._y = self._y + GROUPBOX_TOP_BORDER
+        self._sizer._adjustLayout()
+        
+    def add(self, *items):
+        ''' add elements to group '''
+        for item in items:
+            self._sizer._items.append(item)
 
     def _addUnoItems(self,  owner):
         '''
@@ -1182,7 +1243,12 @@ class GroupBox(DialogItem):
 
     def getWidget(self,  wId):
         ''' gets widget by Id '''
+        if self._id == wId:
+            return self
         return self._sizer.getWidget(wId)
+
+    def __getitem__(self, key):
+        return self.getWidget(key)
 
     def getProps(self):
         '''
@@ -1217,14 +1283,14 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
     '''
     Main dialog class
     '''
-    def __init__(self, Title='', Horz=False,  Handler=None, CanClose=True,   Items=None):
+    def __init__(self, *, Title='', Horz=False, Handler=None, CanClose=True, Items=None):
         ''' constructor '''
         unohelper.Base.__init__(self)
         self._title = Title
         if Horz:
-            self._sizer = HSizer(Items)
+            self._sizer = HSizer(Items=Items)
         else:
-            self._sizer = VSizer(Items)
+            self._sizer = VSizer(Items=Items)
         self._sizer._x,  self._sizer._y = DIALOG_BORDERS,  DIALOG_BORDERS
         self._x,  self._y = 0,  0
         self._width,  self._height = 0,  0
@@ -1251,12 +1317,10 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         self._width = self._sizer._width + 2 * DIALOG_BORDERS
         self._height = self._sizer._height + 2 * DIALOG_BORDERS
 
-    def add(self,  item):
-        '''
-        Add an item to the dialog
-        (usually is better to use constructor)
-        '''
-        self._sizer.add(item)
+    def add(self, *items):
+        ''' add elements to dialog '''
+        for item in items:
+            self._sizer._items.append(item)
 
     def dump(self):
         '''
@@ -1443,6 +1507,9 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
     def getWidget(self,  wId):
         ''' get widget by ID'''
         return self._sizer.getWidget(wId)
+
+    def __getitem__(self, key):
+        return self.getWidget(key)
 
     def showing(self):
         return self._showing

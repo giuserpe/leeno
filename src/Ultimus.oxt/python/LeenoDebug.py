@@ -259,6 +259,7 @@ res = dlg.run()
 
 '''
 
+'''
 prg = Dialogs.Progress(Title="Progress test", Text="Sto lavorando", Closeable=True)
 
 prg.show()
@@ -269,6 +270,86 @@ for i in range(1, 100):
         break
     time.sleep(0.05)
 prg.hide()
+'''
+
+
+a = True
+radioH = Dialogs.getRadioButtonSize("X")[1]
+imgW = Dialogs.getBigIconSize()[0] * 2
+dlg = Dialogs.Dialog(Title="Importa dal formato XPWE", Items=[
+    Dialogs.HSizer(Items=[
+        Dialogs.VSizer(Items=[
+            Dialogs.Spacer(),
+           Dialogs.ImageControl(Id="img", Image="Icons-Big/question.png", MinWidth=imgW),
+            Dialogs.Spacer()
+        ]),
+        Dialogs.VSizer(Id="vsizer", Items=[
+            Dialogs.GroupBox(Label="Scegli elaborato", Items=[
+                Dialogs.HSizer(Items=[
+                    Dialogs.RadioGroup(Id="elab", Items=[
+                        "Computo",
+                        "Variante",
+                        "Contabilità",
+                        "Elenco Prezzi"
+                    ]),
+                    Dialogs.Spacer(),
+                    Dialogs.VSizer(Items=[
+                        Dialogs.FixedText(Id="TotComputo", Text="€ 999999.00", MinHeight=radioH),
+                        Dialogs.FixedText(Id="TotVariante", Text="€ 999999.00", MinHeight=radioH),
+                        Dialogs.FixedText(Id="TotContabilità", Text="€ 999999.00", MinHeight=radioH),
+                        Dialogs.Spacer()
+                    ])
+                ])
+            ])
+        ])
+    ])
+])
+if a:
+    dlg["vsizer"].add(
+        Dialogs.Spacer(),
+        Dialogs.GroupBox(Label="Scegli destinazione", Items=[
+            Dialogs.RadioGroup(Id="dest", Items=[
+                "Documento corrente",
+                "Nuovo documento"
+            ])
+        ])
+    )
+
+dlg["vsizer"].add(
+    Dialogs.Spacer(),
+    Dialogs.HSizer(Items=[
+        Dialogs.Button(Label="Ok", RetVal=1, Icon="Icons-24x24/ok.png"),
+        Dialogs.Spacer(),
+        Dialogs.Button(Label="Annulla", RetVal=-1, Icon="Icons-24x24/cancel.png"),
+    ])
+)
+
+dlg._layout()
+x = dlg.dump()
+
+dlg.run()
+
+
+
+
+'''
+dlg = Dialogs.Dialog(Title="Test", Items= [
+    Dialogs.HSizer(Items=[
+        Dialogs.VSizer(Items=[
+            Dialogs.Spacer(),
+            Dialogs.FixedText(Text="---"),
+            Dialogs.ImageControl(Image="Icons-Big/question.png"),
+            Dialogs.FixedText(Text="---"),
+            Dialogs.Spacer()
+        ]),
+        Dialogs.GroupBox(Label="uff...", Items=[
+            Dialogs.FixedText(Text="Supergiu\nSembra\nFunzionare...")
+        ])
+    ])
+])
+dlg.run()
+'''
+
 
 #from LeenoImport_XmlSix import MENU_Import_Ep_XML_SIX as X
 #X()

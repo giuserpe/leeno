@@ -8,14 +8,19 @@ def getComponentContext():
     '''
     Get current application's component context
     '''
-    return uno.getComponentContext()
+    try:
+        if __global_context__ is not None:
+            return __global_context__
+        return uno.getComponentContext()
+    except Exception:
+        return uno.getComponentContext()
 
 
 def getDesktop():
     '''
     Get current application's LibreOffice desktop
     '''
-    ctx = uno.getComponentContext()
+    ctx = getComponentContext()
     return ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
 
 
@@ -23,14 +28,18 @@ def getDocument():
     '''
     Get active document
     '''
-    return getDesktop().getCurrentComponent()
+    desktop = getDesktop()
+    
+    desktop.getCurrentFrame().activate()
+
+    return desktop.getCurrentComponent()
 
 
 def getServiceManager():
     '''
     Gets the service manager
     '''
-    return uno.getComponentContext().ServiceManager
+    return getComponentContext().ServiceManager
 
 
 def createUnoService(serv):

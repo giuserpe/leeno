@@ -13,11 +13,19 @@ from os.path import isfile, join
 import unohelper
 from com.sun.star.task import XJobExecutor
 
+# set this to 1 to enable debugging
+# set to 0 before deploying
+ENABLE_DEBUG = 1
 
 # set this one to 0 for deploy mode
 # leave to 1 if you want to disable python cache
 # to be able to modify and run installed extension
 DISABLE_CACHE = 1
+
+if ENABLE_DEBUG == 1:
+    pass 
+
+
 
 
 def fixPythonPath():

@@ -34,13 +34,16 @@ def _Fill_Ep(nome, lista_articoli):
     colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
     righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
 
-    progress = Dialogs.ProgressBar("Importazione prezzario XML-SIX", "Compilazione prezzario in corso", None, 0, righe_lista)
-    progress.showDialog()
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario XML-SIX",
+        Text="Compilazione prezzario in corso",
+        MaxVal=righe_lista)
+    progress.show()
 
     riga = 0
     step = 100
     while riga < righe_lista:
-        progress.setProgress(riga)
+        progress.setValue(riga)
         sliced = lista_come_array[riga:riga + step]
         num = len(sliced)
         oRange = oSheet.getCellRangeByPosition(
@@ -57,7 +60,7 @@ def _Fill_Ep(nome, lista_articoli):
     oDoc.CurrentController.setActiveSheet(oSheet)
     # ~ struttura_Elenco()
 
-    progress.hideDialog()
+    progress.hide()
     Dialogs.Ok("Operazione completata", "Importazione eseguita con successo")
     return True
 
@@ -103,12 +106,15 @@ def MENU_Import_Ep_XML_SIX():
     if len(lingue) > 1:
         lingue['Tutte'] = 'tutte'
         lingue['Annulla'] = 'annulla'
-        app = Dialogs.MultiButton(
-            "question.png",
-            "Scelta lingue",
-            "Il file fornito è un prezzario multilinguale\n\nSelezionare la lingua da importare\noppure 'Tutte' per ottenere un prezzario multilinguale",
-            lingue)
-        lingua = app.returnValue
+        lingua = Dialogs.MultiButton(
+            Icon="Icons-Big/question.png",
+            Title="Scelta lingue",
+            Text="Il file fornito è un prezzario multilinguale\n\nSelezionare la lingua da importare\noppure 'Tutte' per ottenere un prezzario multilinguale",
+            Buttons=lingue)
+        # se si chiude la finestra il dialogo ritorna 'None'
+        # lo consideriamo come un 'Annulla'
+        if lingua is None:
+            lingua = 'annulla'
         if lingua == 'tutte':
             lingua = None
     else:

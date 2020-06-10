@@ -1,10 +1,12 @@
-'''
-    Module to build dialogs in python
-'''
+"""
+Module for generating dynamic dialogs
+i.e. dialogs that auto-adjust their layout based on contents and
+external constraints
+
+Copyright 2020 by Massimo Del Fedele
+"""
 import os
 import inspect
-from collections import namedtuple
-
 import uno
 import unohelper
 
@@ -12,6 +14,8 @@ from com.sun.star.awt import Rectangle
 from com.sun.star.awt import Size
 from com.sun.star.awt import XActionListener
 from com.sun.star.task import XJobExecutor
+
+from com.sun.star.awt import XTopWindowListener
 
 from com.sun.star.awt import XUnitConversion
 from com.sun.star.util import MeasureUnit
@@ -21,16 +25,12 @@ from LeenoUtils import getComponentContext, getDocument, createUnoService
 
 
 def getCurrentPath():
-    '''
-    get current script's path
-    '''
+    ''' get current script's path '''
     return os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 
 def getParentWindowInfo():
-    '''
-    Get point at desktop's center -- to be able to center dialogs around it
-    '''
+    ''' Get point at desktop's center -- to be able to center dialogs around it'''
     ctx = getComponentContext()
     oDesktop = ctx.ServiceManager.createInstanceWithContext(
         "com.sun.star.frame.Desktop", ctx)
@@ -47,34 +47,27 @@ def getParentWindowInfo():
     return Rectangle(Xc, Yc, W, H)
 
 
-ScreenInfo = namedtuple('ScreenInfo', ['Width', 'Height', 'Display'])
-
-
 def getScreenInfo():
     '''
     Get screen size
     '''
     ctx = getComponentContext()
-    # oDesktop = ctx.ServiceManager.createInstanceWithContext("com.sun.star.frame.Desktop", ctx)
     oToolkit = ctx.ServiceManager.createInstanceWithContext(
         "com.sun.star.awt.Toolkit", ctx)
     aWorkArea = oToolkit.WorkArea
     nWidht = aWorkArea.Width
     nHeight = aWorkArea.Height
-    # oWindow = oToolkit.getActiveTopWindow()
-    # oDisplay = oWindow.Display
-    # return ScreenInfo(nWidht, nHeight, oDisplay)
-    return ScreenInfo(nWidht, nHeight, 0)
 
-
-Scalef = namedtuple('Scalef', ['XScale', 'YScale'])
+    return nWidht, nHeight
 
 
 def getScaleFactors():
     '''
-    Dialog positions are scaled by weird factors (2.625 and 2.25 on my machine)
+    Dialog positions are scaled by weird factors
     so we need to figure them out before proceeding
-    
+    pix = appfont / scale
+    appfont = pix * scale
+
     '''
     doc = getDocument()
     docframe = doc.getCurrentController().getFrame()
@@ -82,7 +75,7 @@ def getScaleFactors():
 
     sc = docwindow.convertSizeToPixel(Size(1000, 1000), MeasureUnit.APPFONT)
 
-    return Scalef(1000.0 / float(sc.Width), 1000.0 / float(sc.Height))
+    return 1000.0 / float(sc.Width), 1000.0 / float(sc.Height)
 
 
 def getBigIconSize():
@@ -90,21 +83,20 @@ def getBigIconSize():
     Get 'best' size for a big dialog icon
     (like the one of alert and ok dialogs)
     '''
-    scInfo = getScreenInfo()
-    siz = min(scInfo.Width, scInfo.Width)
+    scWidth,  scHeight = getScreenInfo()
+    siz = min(scWidth, scHeight)
     siz = int(siz / 20)
-    return Size(siz, siz)
+
+    return siz,   siz
 
 
 def getTextBox(txt):
     '''
     Get the size needed to display a multiline text box
+    BEWARE : SIZE IN PIXEL !
     '''
     ctx = getComponentContext()
     serviceManager = ctx.ServiceManager
-    # toolkit = serviceManager.createInstanceWithContext("com.sun.star.awt.ExtToolkit", ctx)
-    # dialogModel = serviceManager.createInstance("com.sun.star.awt.UnoControlDialogModel")
-    # textModel = dialogModel.createInstance("com.sun.star.awt.UnoControlFixedTextModel")
 
     textModel = serviceManager.createInstance(
         "com.sun.star.awt.UnoControlFixedTextModel")
@@ -114,7 +106,26 @@ def getTextBox(txt):
     text.setText(txt)
     size = text.getMinimumSize()
     textModel.dispose()
-    return size
+    return size.Width,  size.Height
+
+
+def getRadioButtonSize(label):
+    '''
+    Get the size needed to display a radio button
+    BEWARE : SIZE IN PIXEL !
+    '''
+    ctx = getComponentContext()
+    serviceManager = ctx.ServiceManager
+
+    rbModel = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlRadioButtonModel")
+    rb = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlRadioButton")
+    rb.setModel(rbModel)
+    rb.setLabel(label)
+    size = rb.getMinimumSize()
+    rbModel.dispose()
+    return size.Width,  size.Height
 
 
 def getButtonSize(txt):
@@ -122,435 +133,1327 @@ def getButtonSize(txt):
     Get 'best' button size in a dialog
     based on text
     '''
-    size = getTextBox(txt)
-    return Size(max(size.Width + 15, 100), size.Height + 15)
+    width,  height = getTextBox(txt)
+    return max(width + 15, 100),   height + 15
 
 
-class BasicDialog(unohelper.Base, XActionListener, XJobExecutor):
-    """
-    Dialog Base Framework
-    """
+class DialogException(Exception):
 
-    def __init__(self, nPositionX=None, nPositionY=None, nWidth=None, nHeight=None, sTitle=None):
+    '''
+    Base class for all dialog exceptions
+    '''
+    pass
 
-        unohelper.Base.__init__(self)
 
-        self._LocalContext = getComponentContext()
-        self._ServiceManager = self._LocalContext.ServiceManager
-        self._Toolkit = self._ServiceManager.createInstanceWithContext(
-            "com.sun.star.awt.ExtToolkit", self._LocalContext)
+class AbstractError(DialogException):
+    '''
+    Try to instantiate base class DialogItem
+    '''
+    def __init__(self):
+        ''' constructor '''
+        self.message = "Can't instantiate abstract class"
 
-        # create dialog model and set its properties properties
-        self._DialogModel = self._ServiceManager.createInstance(
-            "com.sun.star.awt.UnoControlDialogModel")
 
-        scales = getScaleFactors()
-        self._DialogModel.PositionX = int(nPositionX * scales.XScale)
-        self._DialogModel.PositionY = int(nPositionY * scales.YScale)
-        self._DialogModel.Width = int(nWidth * scales.XScale)
-        self._DialogModel.Height = int(nHeight * scales.YScale)
+class LayoutError(DialogException):
+    ''' Error during layout calculation in dialogs '''
 
-        self._DialogModel.Name = "Default"
-        self._DialogModel.Closeable = True
-        self._DialogModel.Moveable = True
-        self._DialogModel.Title = sTitle
-        self._DialogModel.DesktopAsParent = False
+    def __init__(self):
+        ''' constructor '''
+        self.message = 'Layout error'
 
-        # create the dialog container and set our dialog model into it
-        self._DialogContainer = self._ServiceManager.createInstanceWithContext(
-            "com.sun.star.awt.UnoControlDialog", self._LocalContext)
-        self._DialogContainer.setModel(self._DialogModel)
 
-        self._showing = False
+'''
+Dialog items alignment when size is bigger than mininum one
+'''
+HORZ_ALIGN_LEFT = 1
+HORZ_ALIGN_CENTER = 2
+HORZ_ALIGN_RIGHT = 4
 
-    def addControl(self, sAwtName, sControlName, dProps):
+VERT_ALIGN_TOP = 8
+VERT_ALIGN_CENTER = 16
+VERT_ALIGN_BOTTOM = 32
+
+MIN_SPACER_SIZE = 10
+
+DIALOG_BORDERS = 10
+
+GROUPBOX_TOP_BORDER = 25
+GROUPBOX_BOTTOM_BORDER = 10
+GROUPBOX_LEFT_BORDER = 10
+GROUPBOX_RIGHT_BORDER = 10
+
+
+class DialogItem:
+    '''
+    Base class for every dialog item
+    '''
+    def __init__(
+        self,  Id=None,
+        MinWidth=None, MinHeight=None,
+        MaxWidth=None, MaxHeight=None,
+        FixedWidth=None, FixedHeight=None
+    ):
+        ''' constructor '''
+
+        self._minWidth = MinWidth
+        self._minHeight = MinHeight
+
+        self._maxWidth = MaxWidth
+        self._maxHeight = MaxHeight
+
+        self._fixedWidth = FixedWidth
+        self._fixedHeight = FixedHeight
+
+        self._x = 0
+        self._y = 0
+
+        self._width = 0
+        self._height = 0
+
+        self.align = HORZ_ALIGN_LEFT | VERT_ALIGN_TOP
+        self._id = Id
+
+        # we need both owning dialog and UNO widget pointers
+        # so we can act on running dialogs
+        self._owner = None
+        self._UNOWidget = None
+
+    def _adjustSize(self):
+        ''' calculate min size and adjust considering minimum, maximum and fixed ones '''
+
+        # calculate minimum size (depending on object)
+        self._width,  self._height = self.calcMinSize()
+
+        # adjust it
+
+        # fixed size takes precedence
+        if self._fixedWidth is not None:
+            self._width = self._fixedWidth
+        else:
+            if self._minWidth is not None:
+                self._width = max(self._width,   self._minWidth)
+            if self._maxWidth is not None:
+                self._width = min(self._width,   self._maxWidth)
+
+        if self._fixedHeight is not None:
+            self._height = self._fixedHeight
+        else:
+            if self._minHeight is not None:
+                self._height = max(self._height,   self._minHeight)
+            if self._maxHeight is not None:
+                self._height = min(self._height,   self._maxHeight)
+
+        return self._width,  self._height
+
+    def calcMinSize(self):
         '''
-        Add a control element to a dialog
-        dProps are element's properties in a list, see classes below for examples
+        gets minimum control size (from content / type)
+        MUST be defined in derived classes
         '''
+        raise AbstractError
+
+    def _equalizeElements(self):
+        '''
+        This one is meant for grouping controls
+        like Sizers or GroupBox
+        '''
+        pass
+
+    def _adjustLayout(self):
+        '''
+        This one is meant for grouping controls
+        like Sizers or GroupBox
+        '''
+        pass
+
+    def dump(self,   indent):
+        '''
+        bring a string representation of object
+        '''
+        res = 4 * indent * ' ' + type(self).__name__ + ': {'
+        res += f'Id:{self._id}'
+        res += f', X:{self._x}, Y:{self._y}'
+        res += f',  Width:{self._width}, Height:{self._height}'
+        if self._fixedWidth is not None:
+            res += f', fixedWidth:{self._fixedWidth}'
+        else:
+            if self._minWidth is not None:
+                res += f', minWidth:{self._minWidth}'
+            if self._maxWidth is not None:
+                res += f', maxWidth:{self._maxWidth}'
+
+        if self._fixedHeight is not None:
+            res += f', fixedHeight:{self._fixedHeight}'
+        else:
+            if self._minHeight is not None:
+                res += f', minHeight:{self._minHeight}'
+            if self._maxHeight is not None:
+                res += f', maxHeight:{self._maxHeight}'
+
+        return res
+
+    def __repr__(self):
+        '''
+        convert object to string
+        '''
+        return self.dump(0)
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {}
+
+    def getAction(self):
+        '''
+        Gets a string representing the action on the control
+        This string will be sent to event handler along with control name
+        If the value returned is None or an empty string, no action will be performed
+        '''
+        return None
+
+    def _addUnoItems(self,  owner):
+        '''
+        Add uno item(s) to owning UNO dialog
+        '''
+        dialogModel = owner._dialogModel
+        dialogContainer = owner._dialogContainer
+        clsName = type(self).__name__
+
         # create the control
-        oControlModel = self._DialogModel.createInstance(
-            "com.sun.star.awt.UnoControl" + sAwtName + "Model")
+        oControlModel = dialogModel.createInstance(
+            "com.sun.star.awt.UnoControl" + clsName + "Model")
 
         # still dont' know why, but we've got to scale items coordinates
         # so get the factors
-        scales = getScaleFactors()
+        xScale,  yScale = getScaleFactors()
 
-        # set control properties
-        while dProps:
-            prp = dProps.popitem()
+        # set base properties (position, size)
+        uno.invoke(oControlModel, "setPropertyValue",  ("PositionX",  int(self._x * xScale)))
+        uno.invoke(oControlModel, "setPropertyValue",  ("PositionY",  int(self._y * yScale)))
+        uno.invoke(oControlModel, "setPropertyValue",  ("Width",  int(self._width * xScale)))
+        uno.invoke(oControlModel, "setPropertyValue",  ("Height",  int(self._height * yScale)))
 
-            # scale positions / sizes if needed
-            if prp[0] in ("PositionX", "Width"):
-                uno.invoke(oControlModel, "setPropertyValue", (prp[0], int(prp[1] * scales.XScale)))
-            elif prp[0] in ("PositionY", "Height"):
-                uno.invoke(oControlModel, "setPropertyValue", (prp[0], int(prp[1] * scales.YScale)))
-            else:
-                uno.invoke(oControlModel, "setPropertyValue", (prp[0], prp[1]))
-            oControlModel.Name = sControlName
+        # set control's specific properties
+        props = self.getProps()
+        for key,  val in props.items():
+            if val is not None:
+                uno.invoke(oControlModel, "setPropertyValue", (key,  val))
+
+        if self._id is None:
+            self._id = owner._getNextId()
+        oControlModel.Name = self._id
 
         # insert the control into dialog
-        self._DialogModel.insertByName(sControlName, oControlModel)
+        dialogModel.insertByName(self._id, oControlModel)
+
+        # store the control for running usage
+        self._UNOWidget = oControlModel
+
+        # store owner pointer too
+        self._owner = owner
 
         # if the control is a Button, setup an event handler
-        if sAwtName == "Button":
-            self._DialogContainer.getControl(sControlName).addActionListener(self)
-            self._DialogContainer.getControl(sControlName).setActionCommand(sControlName + '_OnClick')
-        return oControlModel
+        action = self.getAction()
+        if action is not None and action != '':
+            dialogContainer.getControl(self._id).addActionListener(owner)
+            dialogContainer.getControl(self._id).setActionCommand(self._id + '_' + action)
 
-    def runDialog(self):
+    def _destruct(self):
         '''
-        execute (runs) the dialog waiting for actions
-        dialog must be closed by a control event
+        removes all reference to owner and UNO widget
+        so we know that dialog is not in running state
         '''
-        # signal that we showed the dialog
-        self._showing = True
-
-        self._DialogContainer.setVisible(True)
-        self._DialogContainer.createPeer(self._Toolkit, None)
-        self._DialogContainer.execute()
-
-    def showDialog(self):
-        '''
-        Display the dialog without waiting for action
-        BEWARE, the dialog is NOT displayed instantly, but only
-        after some time / operations on it
-        '''
-
-        # signal that we showed the dialog
-        self._showing = True
-
-        # self.DialogContainer.createPeer(self.Toolkit, None)
-        self._DialogContainer.setVisible(True)
-
-    def hideDialog(self):
-        '''
-        Hide the dialog displayed with showDialog()
-        '''
-        if not self._showing:
-            return
-        # signal that we showed the dialog
-        self._showing = False
-
-        self._DialogContainer.setVisible(False)
-
-    def setOnTop(self):
-        '''
-        set dialog on top of others
-        needed mostly for non-modal dialogs
-        '''
-        if not self._showing:
-            return
-        self._DialogContainer.toFront()
-        self._DialogContainer.setFocus()
-
-    def showing(self):
-        '''
-        check if dialog is showing
-        '''
-        return self._showing
-
-    def closeable(self, c=True):
-        '''
-        make dialog (not) closeable
-        '''
-        self._DialogModel.Closeable = c
-
-    def noCloseable(self):
-        '''
-        make dialog not closeable
-        '''
-        self.closeable(False)
-
-    def moveable(self, c=True):
-        '''
-        make dialog (not) moveeable
-        '''
-        self._DialogModel.Moveable = c
-
-    def noMoveable(self):
-        '''
-        make dialog not moveeable
-        '''
-        self.moveable(False)
-
-    def sizeable(self, c=True):
-        '''
-        make dialog (not) sizeable
-        '''
-        self._DialogModel.Sizeable = c
-
-    def noSizeable(self):
-        '''
-        make dialog not sizeable
-        '''
-        self.sizeable(False)
-
-    def backgroundcolor(self, c):
-        '''
-        set dialog background color
-        '''
-        self._DialogModel.BackgroundColor = c
+        self._UNOWidget = None
+        self._owner = None
 
 
-class ProgressBar(BasicDialog):
+class Spacer(DialogItem):
+    ''' A virtual widget used to leave space among other widgets'''
+
+    def __init__(self,  MinSize=None):
+        ''' constructor '''
+        if MinSize is None:
+            MinSize = MIN_SPACER_SIZE
+        super().__init__(MinWidth=MinSize,  MinHeight=MinSize)
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return self._minWidth, self._minHeight
+
+    def _addUnoItems(self,  owner):
+        ''' DO NOTHING'''
+        pass
+
+
+class Sizer(DialogItem):
     '''
-    A progress bar
+    Base class for horizontal and vertical sizers
+    Every dialog MUST contain exactly one sizer
     '''
-    def __init__(self, title, message, cancelTitle=None, minVal=0, maxVal=100):
+    def __init__(self,  Items):
+        ''' constructor '''
+        super().__init__()
+        if Items is None:
+            Items = []
+        self._items = Items
+        self._x = 0
+        self._y = 0
+        self._width = 0
+        self._height = 0
 
-        # store the 'closeable' state
-        self._closeable = (cancelTitle is not None)
+    def dump(self,  indent):
+        '''
+        bring a string representation of object
+        '''
+        res = super().dump(indent) + '\n'
+        for item in self._items:
+            res += item.dump(indent + 1) + '\n'
+        res += 4 * indent * ' ' + '}'
+        return res
 
+    def add(self,  item):
+        '''
+        Add a widget to sizer
+        '''
+        self._items.append(item)
+
+    def _addUnoItems(self,  owner):
+        '''
+        fill UNO dialog with items
+        '''
+        for item in self._items:
+            item._addUnoItems(owner)
+
+    def _destruct(self):
+        '''
+        removes all reference to owner and UNO widget
+        so we know that dialog is not in running state
+        '''
+        for item in self._items:
+            item._destruct()
+
+    def getWidget(self,  wId):
+        ''' get widget by ID'''
+        for item in self._items:
+            if hasattr(item,  'getWidget'):
+                widget = item.getWidget(wId)
+                if widget is not None:
+                    return widget
+            else:
+                if wId == item._id:
+                    return item
+        return None
+
+
+class HSizer(Sizer):
+    '''
+    Horizontal sizer
+    Used to arrange controls horizontally
+    '''
+    def __init__(self,  Items=None):
+        ''' constructor '''
+        super().__init__(Items)
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        w = 0
+        h = 0
+        for item in self._items:
+            # calculate min size for item
+            itemMinWidth,  itemMinHeight = item._adjustSize()
+
+            # store it to item, we'll need later on
+            item._width,  item._height = itemMinWidth,  itemMinHeight
+
+            # update our size
+            w += itemMinWidth
+            h = max(h, itemMinHeight)
+        return w,  h
+
+    def _equalizeElements(self):
+        '''
+        equalize elements inside container
+        for hSizer, that means to put all of them at max height
+        '''
+        maxH = 0
+        for item in self._items:
+            maxH = max(maxH,  item._height)
+        for item in self._items:
+            item.height = maxH
+        self.height = maxH
+
+    def _adjustLayout(self):
+        u"""
+        based on requested size and (previously calculated) minimum size
+        layout contained items
+        WARNING : we need a PREVIOUS call to calcMinSize and  _equalizeElements ¯on widget three
+        """
+        xOrg,  yOrg = self._x,  self._y
+
+        # store previous origin, we need it later
+        curXOrg,  curYOrg = xOrg,  yOrg
+
+        # get total of contained elements size
+        totW = 0
+        for item in self._items:
+            totW += item._width
+
+        # this is an hSizer, so we shall divide horizontal spare space
+        # between items somehow. if there's some Spacer inside, divide
+        # the space among them. Oterwise divide the space among contained
+        # items based on their sizes. Not an easy task...
+        dW = self._width - totW
+        if dW > 0:
+            # count spacer items
+            nSpacers = 0
+            for item in self._items:
+                if isinstance(item, Spacer):
+                    nSpacers += 1
+
+            # it we've got spacers, divide tspaces among them
+            if nSpacers > 0:
+                # the size must contain spacer's minimum size
+                # so se add it BEFORE dividing
+                dW += nSpacers * MIN_SPACER_SIZE
+
+                space = int(dW / nSpacers)
+                lastSpace = dW - space * (nSpacers - 1)
+                n = 0
+                for item in self._items:
+                    if isinstance(item, Spacer):
+                        n += 1
+                        if n == nSpacers:
+                            sp = lastSpace
+                        else:
+                            sp = space
+                        item._width = sp
+                        # set item position
+                        item._x,  item._y = curXOrg,  curYOrg
+                        # move to next item
+                        curXOrg += sp
+                    else:
+                        # set item position
+                        item._x,  item._y = curXOrg,  curYOrg
+                        # move to next item
+                        curXOrg += item._width
+            else:
+                # no spacers inside, we shall divide space between items
+
+                # calculate at first the ratio of items space / total space
+                ratios = []
+                for item in self._items:
+                    ratios.append(item._width / self._width)
+
+                # now divide the space between items
+                # last space gets the remainder
+                spaceRemainder = 0
+                iItem = 0
+                for item in self._items:
+                    itemSpace = int(dW * ratios[iItem])
+                    if iItem < len(self._items) - 1:
+                        item._width += itemSpace
+                        spaceRemainder -= itemSpace
+                    else:
+                        item._width += spaceRemainder
+
+                    # set item position
+                    item._x,  item._y = curXOrg,  curYOrg
+                    # move to next item
+                    curXOrg += item._width
+
+                    iItem += 1
+        else:
+            # no space to divide, requested size identical to minimum
+            for item in self._items:
+                # set item position
+                item._x,  item._y = curXOrg,  curYOrg
+                # move to next item
+                curXOrg += item._width
+
+        # run _adjustLayout on all contained containers
+        for item in self._items:
+            item._adjustLayout()
+
+
+class VSizer(Sizer):
+    '''
+    Vertical sizer
+    Used to arrange controls vertically
+    '''
+    def __init__(self,  Items=None):
+        ''' constructor '''
+        super().__init__(Items)
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        w = 0
+        h = 0
+        for item in self._items:
+            # calculate min size for item
+            itemMinWidth,  itemMinHeight = item._adjustSize()
+
+            # store it to item, we'll need later on
+            item._width,  item._height = itemMinWidth,  itemMinHeight
+
+            # update our size
+            w = max(w, itemMinWidth)
+            h += itemMinHeight
+        return w,  h
+
+    def _equalizeElements(self):
+        '''
+        equalize elements inside container
+        for hSizer, that means to put all of them at max height
+        '''
+        maxW = 0
+        for item in self._items:
+            maxW = max(maxW,  item._width)
+        for item in self._items:
+            item._width = maxW
+        self._width = maxW
+
+    def _adjustLayout(self):
+        u"""
+        based on requested size and (previously calculated) minimum size
+        layout contained items
+        WARNING : we need a PREVIOUS call to calcMinSize and  _equalizeElements ¯on widget three
+        """
+        xOrg,  yOrg = self._x,  self._y
+
+        # store previous origin, we need it later
+        curXOrg,  curYOrg = xOrg,  yOrg
+
+        # get total of contained elements size
+        totH = 0
+        for item in self._items:
+            totH += item._height
+
+        # this is an hSizer, so we shall divide horizontal spare space
+        # between items somehow. if there's some Spacer inside, divide
+        # the space among them. Oterwise divide the space among contained
+        # items based on their sizes. Not an easy task...
+        dH = self._height - totH
+        if dH > 0:
+            # count spacer items
+            nSpacers = 0
+            for item in self._items:
+                if isinstance(item, Spacer):
+                    nSpacers += 1
+
+            # it we've got spacers, divide tspaces among them
+            if nSpacers > 0:
+                # the size must contain spacer's minimum size
+                # so se add it BEFORE dividing
+                dH += nSpacers * MIN_SPACER_SIZE
+
+                space = int(dH / nSpacers)
+                lastSpace = dH - space * (nSpacers - 1)
+                n = 0
+                for item in self._items:
+                    if isinstance(item, Spacer):
+                        n += 1
+                        if n == nSpacers:
+                            sp = lastSpace
+                        else:
+                            sp = space
+                        item._height = sp
+                        # set item position
+                        item._x,  item._y = curXOrg,  curYOrg
+                        # move to next item
+                        curYOrg += sp
+                    else:
+                        # set item position
+                        item._x,  item._y = curXOrg,  curYOrg
+                        # move to next item
+                        curYOrg += item._height
+            else:
+                # no spacers inside, we shall divide space between items
+
+                # calculate at first the ratio of items space / total space
+                ratios = []
+                for item in self._items:
+                    ratios.append(item._height / self._height)
+
+                # now divide the space between items
+                # last space gets the remainder
+                spaceRemainder = 0
+                iItem = 0
+                for item in self._items:
+                    itemSpace = int(space * ratios[iItem])
+                    if iItem < len(self._items) - 1:
+                        item._height += itemSpace
+                        spaceRemainder -= itemSpace
+                    else:
+                        item._height += spaceRemainder
+
+                    # set item position
+                    item._x,  item._y = curXOrg,  curYOrg
+                    # move to next item
+                    curYOrg += item._height
+        else:
+            # no space to divide, requested size identical to minimum
+            for item in self._items:
+                # set item position
+                item._x,  item._y = curXOrg,  curYOrg
+                # move to next item
+                curYOrg += item._height
+
+        # run _adjustLayout on all contained containers
+        for item in self._items:
+            item._adjustLayout()
+
+
+class FixedText(DialogItem):
+    '''
+    Fixed text box
+    Display a box of text
+    '''
+    def __init__(self,  Id=None,  Text='',
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self._text = Text
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return getTextBox(self._text)
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {'Label': self._text,  'Align': 0}
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        txt = self._text.replace("\n", "\\n")
+        return super().dump(indent) + f", Text: '{txt}'" + '}'
+        
+    def setText(self, txt):
+        self._text = txt
+        if self._UNOWidget is not None:
+            self._UNOWidget.Label = txt
+            
+    def getText(self):
+        return self._text
+
+
+class ImageControl(DialogItem):
+    '''
+    Fixed image
+    Display an image
+    '''
+    def __init__(self,  *,  Id=None,  Image,
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self._image = Image
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return getBigIconSize()
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {
+            "Border": 0,
+            "ImageURL": uno.systemPathToFileUrl(os.path.join(getCurrentPath(), self._image)),
+            "ScaleImage": True,
+            "ScaleMode": 1
+        }
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        return super().dump(indent) + f", Image: '{self._image}'" + '}'
+
+
+class ProgressBar(DialogItem):
+    '''
+    ProgressBar
+    Display a ProgressBar
+    '''
+    def __init__(self, Id=None, MinVal=0, MaxVal=100, Value=0, 
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self._minVal = MinVal
+        self._maxVal = MaxVal
+        self._value = Value
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
         # try to get an "optimal" size from current window
         wi = getParentWindowInfo()
         Width = int(2 * wi.Width / 3)
 
         # correct the width just to be not too small nor too big
-        screenInfo = getScreenInfo()
-        if Width < screenInfo.Width / 8:
-            Width = int(screenInfo.Width / 8)
-        elif Width > screenInfo.Width / 4:
-            Width = int(screenInfo.Width / 4)
+        ws,  hs = getScreenInfo()
+        if Width < ws / 8:
+            Width = int(ws / 8)
+        elif Width > ws / 4:
+            Width = int(ws / 4)
 
-        margin = 15
+        return Width,  20
 
-        messageSize = getTextBox(message + " (100.0%)")
-        if Width < messageSize.Width + 2 * margin:
-            Width = messageSize.Width + 2 * margin
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        res = {
+               "ProgressValueMin": self._minVal,
+               "ProgressValueMax": self._maxVal,
+               "ProgressValue": self._value}
+        return res
 
-        Height = messageSize.Height + 2 * margin
-
-        # get some elements sizes
-        if self._closeable:
-            cancelSize = getButtonSize("Annulla")
-            Height = Height + cancelSize.Height + margin
-            if Width < cancelSize.Width + 2 * margin:
-                Width = cancelSize.Width + 2 * margin
-        else:
-            cancelSize = Size(0, 0)
-
-        progressSize = Size(Width - 2 * margin, 20)
-        Height = Height + progressSize.Height + margin
-
-        # we try to place the progress bar at center of parent window
-        X = int(wi.X - Width / 2)
-        Y = int(wi.Y - Height / 2)
-
-        progressX = margin
-        progressY = margin
-
-        messageX = margin
-        messageY = progressY + progressSize.Height + margin
-
-        if self._closeable:
-            cancelX = int((Width - cancelSize.Width) / 2)
-            cancelY = messageY + messageSize.Height + margin
-
-        BasicDialog.__init__(self, nPositionX=X, nPositionY=Y, nWidth=Width, nHeight=Height, sTitle=title)
-
-        # store the message, we append the progress to it
-        self._message = message
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        return super().dump(indent) + '}'
+        
+    def setLimits(self,  minVal, maxVal):
         self._minVal = minVal
         self._maxVal = maxVal
-
-        dProgress = {
-            "PositionX": progressX,
-            "PositionY": progressY,
-            "Width": progressSize.Width,
-            "Height": progressSize.Height,
-            "ProgressValueMin": minVal,
-            "ProgressValueMax": maxVal, }
-        self._progressBar = self.addControl("ProgressBar", "progressBar", dProgress)
-
-        dMessage = {
-            "PositionX": messageX,
-            "PositionY": messageY,
-            "Width": messageSize.Width,
-            "Height": messageSize.Height,
-            "Label": message,
-            "Align": 0, }
-        self._lbMessage = self.addControl("FixedText", "lbMessage", dMessage)
-
-        if self._closeable:
-            dCancel = {
-                "PositionX": cancelX,
-                "PositionY": cancelY,
-                "Width": cancelSize.Width,
-                "Height": cancelSize.Height,
-                "Label": cancelTitle, }
-            self._btnCancel = self.addControl("Button", "btnCancel", dCancel)
-
-        self.moveable(False)
-        self.sizeable(False)
-
-        self._pos = minVal
-
-    def actionPerformed(self, oActionEvent):
-        '''
-        event handler
-        '''
-        # if control is not closeable, just do nothing
-        if not self._closeable:
-            return
-
-        # check if we pressed 'cancel' button
-        if oActionEvent.ActionCommand == 'btnCancel_OnClick':
-            # just hode the dialog
-            self.hideDialog()
-
-    def setProgress(self, pos):
-        '''
-        set progress bar value and update it on screen
-        '''
-        if not self._showing:
-            return
-        percent = '{:.0f}%'.format(100 * (pos - self._minVal) / (self._maxVal - self._minVal))
-        txt = self._message + ' (' + percent + ')'
-        self._lbMessage.Label = txt
-        self._progressBar.ProgressValue = pos
-
-        # just to be sure that the progress bar stays on top
-        self.setOnTop()
-
-        # store current position - we need it to change message or other stuffs
-        self._pos = pos
-
-    def setMessage(self, msg):
-        '''
-        sets/changes the message displayed along progress percent value
-        '''
-        self._message = msg
-        self.setProgress(self._pos)
-
-    def setLimits(self, minV, maxV, pos):
-        '''
-        sets/changes the min and max progressbar values
-        and resets its position
-        '''
-        self._minVal = minV
-        self._maxVal = maxV
-        self._pos = pos
-        self.setProgress(self._pos)
+        if self._UNOWidget is not None:
+            self._UNOWidget.ProgressValueMin = minVal
+            self._UNOWidget.ProgressValueMax = maxVal
+            
+    def getLimits(self):
+        return self._minVal, self._maxVal
+       
+    def setValue(self, val):
+        self._value = val
+        if self._UNOWidget is not None:
+            self._UNOWidget.ProgressValue = val
+            
+    def getValue(self):
+        return self._value
 
 
-class MultiButton(BasicDialog):
+class Button(DialogItem):
     '''
-    base class for multi-button dialogs
-    'buttons' is a dictionary in the form of "name":retval
+    Push button
+    Display a push button which reacts to presses
+    If 'RetVal' is given, button closes the dialog and returns this value
+    If 'RetVal' is None, button DOESN'T close the dialog, but external handler is called
     '''
-    def __init__(self, image, title, message, buttons):
+    def __init__(self,  Id=None,  Label='aLabel',  RetVal=None,  Icon=None,
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        if Id is None:
+            Id = Label
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self._label = Label
+        self._retVal = RetVal
+        self._icon = Icon
 
-        print("\n\nINIT\n\n\n")
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return getButtonSize(self._label)
 
-        # compose the dialog by an image, a button and a text area
-        margins = 15
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        res = {'Label': self._label}
+        if self._icon is not None:
+            res['ImageAlign'] = 0
+            res['ImageURL'] = uno.systemPathToFileUrl(os.path.join(getCurrentPath(), self._icon))
+        return res
 
-        iconSize = getBigIconSize()
+    def getAction(self):
+        '''
+        Gets a string representing the action on the control
+        This string will be sent to event handler along with control name
+        If the value returned is None or an empty string, no action will be performed
+        '''
+        return "OnClick"
 
-        buttonSize = Size(0, 0)
-        for key, val in buttons.items():
-            curButtonSize = getButtonSize(key)
-            buttonSize = Size(max(buttonSize.Width, curButtonSize.Width), max(buttonSize.Height, curButtonSize.Height))
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        res = super().dump(indent)
+        res += f", Label: '{self._label}'"
+        res += f", Icon: '{self._icon}'" + '}'
+        return res
 
-        allButtonsSize = Size((buttonSize.Width + margins) * len(buttons) - margins, buttonSize.Height)
 
-        infoSize = getTextBox(message)
 
-        Width = max(iconSize.Width + infoSize.Width + 3 * margins, allButtonsSize.Width + 2 * margins)
-        Height = max(iconSize.Height, infoSize.Height) + buttonSize.Height + 3 * margins
+class RadioButton(DialogItem):
+    '''
+    Radio button
+    Display a radio button connected with others
+    '''
+    def __init__(self,  Id=None,  Label='aLabel',
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self._label = Label
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return getRadioButtonSize(self._label)
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {
+            'Label': self._label
+        }
+
+    def getAction(self):
+        '''
+        Gets a string representing the action on the control
+        This string will be sent to event handler along with control name
+        If the value returned is None or an empty string, no action will be performed
+        '''
+        return "OnSelect"
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        res = super().dump(indent)
+        res += f", Label: '{self._label}'"
+        return res
+
+
+class RadioGroup(DialogItem):
+    '''
+    Radio group
+    Groups a sequence of radio buttons
+    It has no label not border, if those are required
+    you shall insert it into a GroupBox item
+    '''
+    def __init__(self,  Id=None,  Horz=False,  Items=['One',  'Two',  'Three',  'Four'],  Default=0):
+        ''' constructor '''
+        super().__init__(Id=Id)
+        self._items = Items
+        if Default is None:
+            Default = 0
+        elif Default >= len(Items):
+            Default = len(Items) - 1
+        if Default < 0:
+            Default = 0
+        self._default = Default
+        self._current = Default
+        if Horz:
+            self._sizer = HSizer()
+        else:
+            self._sizer = VSizer()
+
+        # as Id can be None now, and we dont' have a reference to Dialog object
+        # we can't setup the buttons ids, which are composed
+        # by box id + '_' + button index.
+        # We'll do it later when constructing the UNO dialog
+        print("\n\n---------------- ITEMS------------------\n\n",  self._sizer._items,  "\n\n")
+        for item in self._items:
+            self._sizer.add(RadioButton(Label=item))
+        self._sizer._x,  self._sizer._y = 0,  0
+        self._x,  self._y = 0,  0
+        self._width,  self._height = 0,  0
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return self._sizer.calcMinSize()
+
+    def _equalizeElements(self):
+        '''
+        Equalize all elements sizes in Sizer
+        '''
+        self._sizer._equalizeElements()
+
+    def _adjustLayout(self):
+        '''
+        Adjust layout of contained Sizer
+        '''
+        self._sizer._adjustLayout()
+        self._sizer._x = self._x
+        self._sizer._y = self._y
+
+    def _addUnoItems(self,  owner):
+        '''
+        fill UNO dialog with items
+        '''
+        self._owner = owner
+
+        # fix Id, if it's None
+        # we need it to handle buttons
+        if self._id is None:
+            self._id = owner._getNextId()
+        # adjust buttons ids - they must follow
+        # the schema "RadioGroup_rgID_buttonIdx
+        # so we can handle the events
+        curId = 0
+        for item in self._sizer._items:
+            item._id = 'RadioGroup_' + self._id + '_' + str(curId)
+            curId += 1
+
+        # now add the radio buttons
+        self._sizer._addUnoItems(owner)
+
+        # select current item
+        self.setCurrent(self._current)
+
+    def _destruct(self):
+        '''
+        removes all reference to owner and UNO widget
+        so we know that dialog is not in running state
+        '''
+        self._sizer._destruct()
+
+    def getWidget(self,  wId):
+        ''' gets widget by Id '''
+        if self._id == wId:
+            return self
+        return self._sizer.getWidget(wId)
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return None
+
+    def getAction(self):
+        '''
+        Gets a string representing the action on the control
+        This string will be sent to event handler along with control name
+        If the value returned is None or an empty string, no action will be performed
+        '''
+        return None
+
+    def getCount(self):
+        ''' get number of radio buttons '''
+        return len(self._sizer._items)
+
+    def getCurrent(self):
+        '''
+        gets the currently active radio button index
+        starting from 0
+        '''
+        return self._current
+
+    def setCurrent(self,  current):
+        '''
+        sets the currently active radio button index
+        if dialog is displaying, set also the widget on it
+        '''
+        self._current = current
+        if self._owner is not None:
+            idx = 0
+            for item in self._sizer._items:
+                item._UNOWidget.State = idx == current
+                idx += 1
+
+    def dump(self,  indent):
+        '''
+        bring a string representation of object
+        '''
+        res = super().dump(indent) + '\n'
+        for item in self._sizer._items:
+            res += item.dump(indent + 1) + '\n'
+        res += 4 * indent * ' ' + '}'
+        return res
+
+
+class GroupBox(DialogItem):
+    '''
+    Group box
+    Display a box with optional border and label
+    Used mostly to group items
+    In behaviour is similar to Dialog
+    '''
+    def __init__(self,  Id=None,  Label='aLabel', Horz=False,  Items=None):
+        ''' constructor '''
+        super().__init__(Id=Id)
+        self._label = Label
+        if Horz:
+            self._sizer = HSizer(Items)
+        else:
+            self._sizer = VSizer(Items)
+        self._sizer._x,  self._sizer._y = GROUPBOX_LEFT_BORDER,  GROUPBOX_TOP_BORDER
+        self._x,  self._y = 0,  0
+        self._width,  self._height = 0,  0
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        wl,  hl = getTextBox(self._label)
+        ws,  hs = self._sizer.calcMinSize()
+        return (
+                max(wl, ws + GROUPBOX_LEFT_BORDER + GROUPBOX_RIGHT_BORDER),
+                max(hl, hs + GROUPBOX_TOP_BORDER + GROUPBOX_BOTTOM_BORDER))
+
+    def _equalizeElements(self):
+        '''
+        Equalize all elements sizes in Sizer
+        '''
+        self._sizer._equalizeElements()
+
+    def _adjustLayout(self):
+        '''
+        Adjust layout of contained Sizer
+        '''
+        self._sizer._adjustLayout()
+        self._sizer._x = self._x + GROUPBOX_LEFT_BORDER
+        self._sizer._y = self._y + GROUPBOX_TOP_BORDER
+
+    def _addUnoItems(self,  owner):
+        '''
+        fill UNO dialog with items
+        '''
+        super()._addUnoItems(owner)
+        self._sizer._addUnoItems(owner)
+
+    def _destruct(self):
+        '''
+        removes all reference to owner and UNO widget
+        so we know that dialog is not in running state
+        '''
+        super()._destruct()
+        self._sizer._destruct()
+
+    def getWidget(self,  wId):
+        ''' gets widget by Id '''
+        return self._sizer.getWidget(wId)
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {
+            'Label': self._label
+        }
+
+    def getAction(self):
+        '''
+        Gets a string representing the action on the control
+        This string will be sent to event handler along with control name
+        If the value returned is None or an empty string, no action will be performed
+        '''
+        return None
+
+    def dump(self,  indent):
+        '''
+        bring a string representation of object
+        '''
+        res = super().dump(indent) + '\n'
+        for item in self._sizer._items:
+            res += item.dump(indent + 1) + '\n'
+        res += 4 * indent * ' ' + '}'
+        return res
+
+
+class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener):
+    '''
+    Main dialog class
+    '''
+    def __init__(self, Title='', Horz=False,  Handler=None, CanClose=True,   Items=None):
+        ''' constructor '''
+        unohelper.Base.__init__(self)
+        self._title = Title
+        if Horz:
+            self._sizer = HSizer(Items)
+        else:
+            self._sizer = VSizer(Items)
+        self._sizer._x,  self._sizer._y = DIALOG_BORDERS,  DIALOG_BORDERS
+        self._x,  self._y = 0,  0
+        self._width,  self._height = 0,  0
+        self._handler = Handler
+        self._canClose = CanClose
+        self._showing = False
+        self._retVal = None
+
+        self._nextId = 0
+
+    def _layout(self):
+        '''
+        Optimize widget's placement inside dialog based on
+        constraints, sizers and spacers
+        '''
+        # first, calculate minimum size for ALL widgets on widget tree
+        # and adjust it on constraints
+        self._sizer._adjustSize()
+
+        # equalize all container's elements
+        self._sizer._equalizeElements()
+
+        self._sizer._adjustLayout()
+        self._width = self._sizer._width + 2 * DIALOG_BORDERS
+        self._height = self._sizer._height + 2 * DIALOG_BORDERS
+
+    def add(self,  item):
+        '''
+        Add an item to the dialog
+        (usually is better to use constructor)
+        '''
+        self._sizer.add(item)
+
+    def dump(self):
+        '''
+        convert object to string
+        '''
+        res = f'Dialog: {{X:{self._x}, Y:{self._y}'
+        res += f' , Width:{self._width}, Height:{self._height}\n'
+        res += self._sizer.dump(1) + "\n"
+        res += "}"
+        return res
+
+    def __repr__(self):
+        '''
+        convert object to string
+        '''
+        return self.dump()
+
+    def _getNextId(self):
+        ''' gets next free Id '''
+        self._nextId += 1
+        return str(self._nextId)
+
+    def _construct(self):
+        '''
+        build internal dialog's UNO structures
+        '''
+        self._nextId = 0
+
+        # Optimize widget's placement inside dialog based on
+        # constraints, sizers and spacers
+        self._layout()
 
         # we try to place the dialog bar at center of parent window
         wi = getParentWindowInfo()
-        X = wi.X - int(Width / 2)
-        Y = wi.Y - int(Height / 2)
+        self._x = wi.X - int(self._width / 2)
+        self._y = wi.Y - int(self._height / 2)
 
-        xIcon = margins
-        yIcon = margins
+        # create UNO dialog
+        self._localContext = getComponentContext()
+        self._serviceManager = self._localContext.ServiceManager
+        self._toolkit = self._serviceManager.createInstanceWithContext(
+            "com.sun.star.awt.ExtToolkit", self._localContext)
 
-        xInfo = xIcon + iconSize.Width + margins
-        yInfo = margins
+        # create dialog model and set its properties properties
+        self._dialogModel = self._serviceManager.createInstance(
+            "com.sun.star.awt.UnoControlDialogModel")
 
-        if allButtonsSize.Width + 2 * margins == Width:
-            xButton = margins
-        else:
-            xButton = int((Width - allButtonsSize.Width) / 2)
-        yButton = Height - margins - buttonSize.Height
+        xScale,  yScale = getScaleFactors()
+        self._dialogModel.PositionX = int(self._x * xScale)
+        self._dialogModel.PositionY = int(self._y * yScale)
+        self._dialogModel.Width = int(self._width * xScale)
+        self._dialogModel.Height = int(self._height * yScale)
 
-        BasicDialog.__init__(self, nPositionX=X, nPositionY=Y, nWidth=Width, nHeight=Height, sTitle=title)
+        self._dialogModel.Name = "Default"
+        self._dialogModel.Closeable = True
+        self._dialogModel.Moveable = True
+        self._dialogModel.Title = self._title
+        self._dialogModel.DesktopAsParent = False
 
-        imgUrl = uno.systemPathToFileUrl(os.path.join(getCurrentPath(), image))
-        dImage = {
-            "PositionX": xIcon,
-            "PositionY": yIcon,
-            "Width": iconSize.Width,
-            "Height": iconSize.Height,
-            "ScaleImage": True,
-            "ScaleMode": 1,
-            "Border": 0,
-            "ImageURL": imgUrl}
-        self._lbImage = self.addControl("ImageControl", "_lbImage", dImage)
+        # setup the Closeable flag to False
+        # this makes the dialog impossible to close clicking on X
+        # on top bar or pressing escape; this MUST be done in
+        # windowClosing handler
+        self._dialogModel.Closeable = False
 
-        dMessage = {
-            "PositionX": xInfo,
-            "PositionY": yInfo,
-            "Width": infoSize.Width,
-            "Height": infoSize.Height,
-            "Label": message,
-            "Align": 0, }
-        self._lbMessage = self.addControl("FixedText", "lbMessage", dMessage)
+        # create the dialog container and set our dialog model into it
+        self._dialogContainer = self._serviceManager.createInstanceWithContext(
+            "com.sun.star.awt.UnoControlDialog", self._localContext)
+        self._dialogContainer.setModel(self._dialogModel)
 
-        self._btns = []
-        for key, val in buttons.items():
-            dBtn = {
-                "PositionX": xButton,
-                "PositionY": yButton,
-                "Width": buttonSize.Width,
-                "Height": buttonSize.Height,
-                "Label": key, }
-            self._btns.append({'btn': self.addControl("Button", key, dBtn), 'value': val, 'name': key})
-            xButton += buttonSize.Width + margins
+        self._showing = False
 
-        self.returnValue = None
-        self.runDialog()
+        # fill UNO dialog with items
+        self._sizer._addUnoItems(self)
+
+        # add close listener
+        self._dialogContainer.addTopWindowListener(self)
+
+    def _destruct(self):
+        '''
+        Resets internal pointers to UNO objects
+        so we'll be able to know if dialog is running or not
+        '''
+        self._sizer._destruct()
+
+    def windowClosing(self,  evt):
+        '''
+        We didn't find a way to stop closing here, so we use the
+        Closeable property of DialogModel to disallow closing
+        Here we just catch the closing op to set return value
+        Even if Closeable is set to False, this hook gets called
+        '''
+        if self._canClose:
+            self._dialogContainer.endDialog(-1)
+            self._retVal = -1
+            self._showing = False
 
     def actionPerformed(self, oActionEvent):
         '''
-        Close dialog when button pressed
+        internal event handler
+        will call a provided external event handler
         '''
-        for btn in self._btns:
-            if oActionEvent.ActionCommand == btn['name'] + '_OnClick':
-                self._showing = False
-                self.returnValue = btn['value']
-                self._DialogContainer.endExecute()
-                break
+        # get the id of triggering widget
+        cmdList = oActionEvent.ActionCommand.split('_')
+        widgetId = cmdList[0]
+        cmdStr = '_'.join(cmdList[1:])
+        widget = self.getWidget(widgetId)
+
+        # radio group events are handled differently
+        # so it will be easy to use them
+        if widgetId == 'RadioGroup':
+            # this is NOT the true widget id, so get it
+            cmdList = cmdStr.split('_')
+            # this is the Id of group
+            widgetId = cmdList[0]
+            # and this is the index of radio button in group
+            cmdStr = cmdList[1]
+            # we pass the group to handler, not the single buttons
+            widget = self.getWidget(widgetId)
+
+        # if we've got an handler, we process the command inside it
+        # and if returning True we close the dialog
+        # if no handler or returning false, we process the event from here
+        if self._handler is not None:
+            if self._handler(self,  widgetId,  widget,  cmdStr):
+                return
+
+        if widget is None:
+            return
+
+        if hasattr(widget,  '_retVal'):
+            self.stop(widget._retVal)
+
+    def run(self):
+        '''
+        Runs the dialog and wait for completion
+        '''
+        # constructs the dialog
+        self._construct()
+
+        # execute it
+        # signal that we showed the dialog
+        self._showing = True
+
+        self._dialogContainer.setVisible(True)
+        self._dialogContainer.createPeer(self._toolkit, None)
+        self._dialogContainer.execute()
+
+        self._showing = False
+
+        self._destruct()
+
+        return self._retVal
+
+    def stop(self,  RetVal=None):
+        '''
+        Stops the dialog
+        Shall be called from inside an handler
+        '''
+        if RetVal is not None:
+            self._retVal = RetVal
+        self._showing = False
+        self._dialogContainer.endExecute()
+
+    def show(self):
+        '''
+        Shows the dialog without waiting for completion
+        '''
+        # constructs the dialog
+        self._construct()
+
+        self._showing = True
+        self._dialogContainer.setVisible(True)
+        
+    def hide(self):
+        '''
+        Hide the dialog
+        '''
+        self._dialogContainer.setVisible(False)
+        self._showing = False
+
+        self._destruct()
+
+    def getWidget(self,  wId):
+        ''' get widget by ID'''
+        return self._sizer.getWidget(wId)
+
+    def showing(self):
+        return self._showing
+
+    def getValue(self):
+        return self._retVal
 
 
-class Exclamation(MultiButton):
-    '''
-    Exclamation alert dialog with OK button
-    '''
-    def __init__(self, title, message):
-        MultiButton.__init__(self, "exclamation.png", title, message, {'Ok': 0})
-
-
-class Ok(MultiButton):
-    '''
-    Ok alert dialog with OK button
-    '''
-    def __init__(self, title, message):
-        MultiButton.__init__(self, "ok.png", title, message, {'Ok': 0})
-
-
-class Info(MultiButton):
-    '''
-    Ok alert dialog with OK button
-    '''
-    def __init__(self, title, message):
-        MultiButton.__init__(self, "info.png", title, message, {'Ok': 0})
-
-#####################################################################################
-
+######################################################################
+## SOME COMMON DIALOGS
+######################################################################
 
 def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
     """
@@ -597,3 +1500,107 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
         Config().write('Generale', 'ultimo_percorso', os.path.dirname(oPath))
         return oPath
     return None
+
+def NotifyDialog(image,  title,  message):
+    dlg = Dialog(Title=title,  Horz=False, CanClose=True,  Items=[
+        HSizer(Items=[
+            ImageControl(Image=image), 
+            Spacer(), 
+            FixedText(Text=message)
+        ]), 
+        Spacer(), 
+        HSizer(Items=[
+            Spacer(), 
+            Button(Label='Ok', Icon='Icons-24x24/ok.png',  RetVal=1),
+            Spacer()
+        ])
+    ])
+    return dlg.run()
+
+def Exclamation(title,  message):
+    return NotifyDialog('Icons-Big/exclamation.png',  title,  message)
+
+def Info(title,  message):
+    return NotifyDialog('Icons-Big/info.png',  title,  message)
+
+def Ok(title,  message):
+    return NotifyDialog('Icons-Big/ok.png',  title,  message)
+
+class Progress:
+    '''
+    Display a progress bar with some options
+    '''
+    def __init__(self,  Title='',  Closeable=False,  MinVal=0,  MaxVal=100,  Value=0,  Text=''):
+        ''' constructor '''
+        self._dlg = Dialog(
+            Title=Title, Horz=False, CanClose=Closeable,
+            Handler=lambda dialog, widgetId, widget, cmdStr :
+            self._dlgHandler(dialog, widgetId,  widget, cmdStr)
+        )
+        self._progress = ProgressBar(MinVal=MinVal, MaxVal=MaxVal, Value=Value)
+        self._dlg.add(self._progress)
+        self._text = Text
+        if Text is not None:
+            self._textWidget = FixedText(Text=Text)
+            self._dlg.add(self._textWidget)
+        
+        if Closeable:
+            self._dlg.add(Spacer())
+            self._dlg.add(
+                HSizer(Items=[
+                    Spacer(),
+                    Button(Label='Annulla', RetVal=-1),
+                    Spacer()
+                ])
+            )
+            
+    def _dlgHandler(self,  dialog,  widgetId,  widget,  cmdStr):
+        print("HANDLER CALLED")
+        self._dlg.hide()
+
+    def show(self):
+        self._dlg.show()
+        
+    def hide(self):
+        self._dlg.hide()
+        
+    def showing(self):
+        return self._dlg.showing()
+        
+    def setLimits(self,  pMin,  pMax):
+        self._progress.setLimits(pMin, pMax)
+        
+    def getLimits(self):
+        return self._progress.getLimits()
+        
+    def setValue(self,  val):
+        self._progress.setValue(val)
+        if self._text is not None:
+            minVal, maxVal = self.getLimits()
+            percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
+            txt = self._text + ' (' + percent + ')'
+            self._textWidget.setText(txt)
+        
+    def getValue(self):
+        return self._progress.getValue()
+        
+    def setText(self,  txt):
+        pass
+
+def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):
+    if Buttons is None:
+        return None
+    top = HSizer()
+    if Icon is not None:
+        top.add(ImageControl(Image=Icon))
+        top.add(Spacer())
+    top.add(FixedText(Text=Text))
+    bottom = HSizer()
+    idx = 0
+    for label, value in Buttons.items():
+        bottom.add(Button(Label=label, RetVal=value))
+        if idx < len(Buttons) - 1:
+            bottom.add(Spacer())
+        idx += 1
+    dlg = Dialog(Title=Title, Items=[top, Spacer(), bottom])
+    return dlg.run()

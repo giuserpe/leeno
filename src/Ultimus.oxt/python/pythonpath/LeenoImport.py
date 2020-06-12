@@ -12,7 +12,7 @@ from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
                                           ANNOTATION, FORMULA,
                                           OBJECTS, EDITATTR)
 
-from LeenoUtils import getDocument
+import LeenoUtils
 import pyleeno as PL
 import LeenoDialogs as DLG
 import LeenoToolbars as Toolbars
@@ -52,7 +52,7 @@ def importa_listino_leeno_run():
     '''
     Esegue la conversione di un listino (formato LeenO) in template Computo
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #  giallo(16777072,16777120,16777168)
     #  verde(9502608,13696976,15794160)
@@ -138,7 +138,7 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
     oDialogo_attesa.endExecute()
     PL._gotoDoc(dest)  # vado sul nuovo file
     # compilo la tabella ###################################################
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oDialogo_attesa = DLG.dlg_attesa()
     DLG.attesa().start()  # mostra il dialogo
 
@@ -183,7 +183,7 @@ def MENU_XML_toscana_import():
     Importazione di un prezzario XML della regione Toscana
     in tabella Elenco Prezzi del template COMPUTO.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
 
     DLG.MsgBox('Questa operazione potrebbe richiedere del tempo.', 'Avviso')
     PL.New_file.computo(0)
@@ -300,7 +300,7 @@ def MENU_XML_toscana_import():
         lista_articoli.append(voceel)
 
     # compilo ##########################################################
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = titolo
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -375,7 +375,7 @@ def MENU_sardegna_2019():
     '''
     @@@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
 
     try:
         oDoc.getSheets().insertNewByName('nuova_tabella', 2)
@@ -443,7 +443,7 @@ def MENU_basilicata_2020():
     partendo dalle colonne: CODICE	DESCRIZIONE	U. MISURA	PREZZO	MANODOPERA
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     for el in ('CAPITOLI', 'CATEGORIE', 'VOCI'):
         oSheet = oDoc.getSheets().getByName(el)
         oSheet.getRows().removeByIndex(0, 1)
@@ -496,7 +496,7 @@ def MENU_Piemonte_2019():
     partendo dalle colonne: Sez.	Codice	Descrizione	U.M.	Euro	Manod. lorda	% Manod.	Note
     Il risultato ottenuto va inserito in Elenco Prezzi.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     fine = PL.getLastUsedCell(oSheet).EndRow + 1
     elenco = list()
@@ -588,7 +588,7 @@ def MENU_fuf():
             riga = (art, des, num, dataC, clav, float(prz.strip()))
             ordini.append(riga)
 
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lista_come_array = tuple(ordini)
     colonne_lista = len(lista_come_array[0]
@@ -611,8 +611,8 @@ def MENU_fuf():
     return
     copy_clip()
 
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)

@@ -4,7 +4,7 @@ Gestione delle toolbars di LeenO
 '''
 from com.sun.star.awt import Point
 
-from LeenoUtils import getDocument
+import LeenoUtils
 from LeenoConfig import Config
 
 # i nome delle toolbars di LeenO
@@ -23,7 +23,7 @@ def Vedi():
     accende tutte le toolbars (se non sono richieste quelle contestuali)
     oppure solo quelle relative alla pagina visualizzata, se richieste le contestuali
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     try:
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
 
@@ -59,7 +59,7 @@ def On(toolbarURL, flag):
     flag { integer } : 1 = acceso; 0 = spento
     Visualizza o nascondi una toolbar
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     if flag:
         oLayout.showElement(toolbarURL)
@@ -72,7 +72,7 @@ def Ordina():
     @@ DA DOCUMENTARE
     '''
     #  https://www.openoffice.org/api/docs/common/ref/com/sun/star/ui/DockingArea.html
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     i = 0
     for aBar in _TOOLBAR_NAMES:
@@ -102,7 +102,7 @@ def Switch(arg):
     '''
     Nasconde o mostra le toolbar di Libreoffice.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     for el in oLayout.Elements:
         if el.ResourceURL not in _TOOLBAR_NAMES + (

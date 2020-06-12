@@ -21,7 +21,7 @@ from com.sun.star.awt import XUnitConversion
 from com.sun.star.util import MeasureUnit
 
 from LeenoConfig import Config
-from LeenoUtils import getComponentContext, getDocument, createUnoService
+import LeenoUtils
 
 
 def getCurrentPath():
@@ -34,17 +34,32 @@ def getParentWindowSize():
         Get Size of parent window in order to
         be able to create a dialog on center of it
     '''
-    ctx = getComponentContext()
+
+    '''
+    ctx = LeenoUtils.getComponentContext()
     serviceManager = ctx.ServiceManager
     toolkit = serviceManager.createInstanceWithContext(
         "com.sun.star.awt.Toolkit", ctx)
 
-    oWindow = toolkit.getActiveTopWindow ()
-    rect = oWindow.getPosSize()
-    return rect.Width, rect.Height
+    oWindow = toolkit.getActiveTopWindow()
 
-'''
-    ctx = getComponentContext()
+    # sometimes we ask for ActiveTopWindow too early
+    # or there are no ACTIVE top windows... in that case
+    # we resort fetching the first available top window in list
+    if oWindow is None:
+        print("\n\nNO ACTIVE TOP WINDOW, GETTING DESKTOP ONE\n\n")
+        try:
+            oWindow = toolkit.getTopWindow(toolkit.getTopWindowCount() - 1)
+        except Exception:
+            # fake size, in case we can't fetch it
+            print("\n\nFAILED TO GET TOP WINDOW SIZE\n\n")
+            return 400, 300
+    rect = oWindow.getPosSize()
+    print("\n\nTOP WINDOW SIZE IS:", (rect.Width, rect.Height), "\n\n")
+    return rect.Width, rect.Height
+    '''
+
+    ctx = LeenoUtils.getComponentContext()
     oDesktop = ctx.ServiceManager.createInstanceWithContext(
         "com.sun.star.frame.Desktop", ctx)
     oDoc = oDesktop.getCurrentComponent()
@@ -52,19 +67,13 @@ def getParentWindowSize():
     oView = oDoc.getCurrentController()
     oWindow = oView.getFrame().getComponentWindow()
     rect = oWindow.getPosSize()
-    Xc = int(rect.X + rect.Width / 2)
-    Yc = int(rect.Y + rect.Height / 2)
-    W = rect.Width
-    H = rect.Height
-
-    return Rectangle(Xc, Yc, W, H)
-'''
+    return rect.Width, rect.Height
 
 def getScreenInfo():
     '''
     Get screen size
     '''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     oToolkit = ctx.ServiceManager.createInstanceWithContext(
         "com.sun.star.awt.Toolkit", ctx)
     aWorkArea = oToolkit.WorkArea
@@ -82,7 +91,7 @@ def getScaleFactors():
     appfont = pix * scale
 
     '''
-    doc = getDocument()
+    doc = LeenoUtils.getDocument()
     docframe = doc.getCurrentController().getFrame()
     docwindow = docframe.getContainerWindow()
 
@@ -95,7 +104,7 @@ def getImageSize(Image):
     gets the size of a given image
     BEWARE : SIZE IN PIXEL !
     '''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     serviceManager = ctx.ServiceManager
 
     imageModel = serviceManager.createInstance(
@@ -125,7 +134,7 @@ def getTextBox(txt):
     Get the size needed to display a multiline text box
     BEWARE : SIZE IN PIXEL !
     '''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     serviceManager = ctx.ServiceManager
 
     textModel = serviceManager.createInstance(
@@ -144,7 +153,7 @@ def getRadioButtonSize(label):
     Get the size needed to display a radio button
     BEWARE : SIZE IN PIXEL !
     '''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     serviceManager = ctx.ServiceManager
 
     rbModel = serviceManager.createInstance(
@@ -171,7 +180,7 @@ def getCheckBoxSize(label):
     Get the size needed to display a checkbox
     BEWARE : SIZE IN PIXEL !
     '''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     serviceManager = ctx.ServiceManager
 
     cbModel = serviceManager.createInstance(
@@ -1477,10 +1486,10 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         self._y = int((pH - self._height) / 2)
 
         # create UNO dialog
-        self._localContext = getComponentContext()
+        self._localContext = LeenoUtils.getComponentContext()
         self._serviceManager = self._localContext.ServiceManager
         self._toolkit = self._serviceManager.createInstanceWithContext(
-            "com.sun.star.awt.ExtToolkit", self._localContext)
+            "com.sun.star.awt.Toolkit", self._localContext)
 
         # create dialog model and set its properties properties
         self._dialogModel = self._serviceManager.createInstance(
@@ -1506,6 +1515,12 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         # create the dialog container and set our dialog model into it
         self._dialogContainer = self._serviceManager.createInstanceWithContext(
             "com.sun.star.awt.UnoControlDialog", self._localContext)
+
+        xxxv = self._dialogContainer.View
+        xxxsz = xxxv.getSize()
+        print("\n\nSIZZZEEEEEEEE:", xxxsz, "\n\n")
+
+
         self._dialogContainer.setModel(self._dialogModel)
 
         self._showing = False
@@ -1668,9 +1683,9 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
                   '*.xpwe': 'Primus(*.xpwe)',
                   '*.xml': 'XML(*.xml)',
                   '*.dat': 'dat(*.dat)', }
-    oFilePicker = createUnoService("com.sun.star.ui.dialogs.FilePicker")
+    oFilePicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FilePicker")
     oFilePicker.initialize((mode, ))
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
 
     # try to get path from current document, if any
     # if not, look into config to fetch last used one

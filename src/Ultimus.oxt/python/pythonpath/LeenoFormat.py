@@ -1,5 +1,5 @@
 import uno
-from LeenoUtils import getDocument
+import LeenoUtils
 
 
 def getNumFormat(FormatString):
@@ -8,7 +8,7 @@ def getNumFormat(FormatString):
     stringa di riferimento.
     FormatString { string } : codifica letterale del numero; es.: "#.##0,00"
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
 
     LocalSettings = uno.createUnoStruct("com.sun.star.lang.Locale")
@@ -28,7 +28,7 @@ def getFormatString(stile_cella):
     Recupera la stringa di riferimento dal nome dello stile di cella.
     stile_cella { string } : nome dello stile di cella
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
     num = oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).NumberFormat
     return oDoc.getNumberFormats().getByKey(num).FormatString
@@ -40,7 +40,7 @@ def setCellStyleDecimalPlaces(nome_stile, n):
     stile_cella { string } : nome stile di cella
     n { int } : nuovo numero decimali
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
     stringa = getFormatString(nome_stile).split(';')
     new = list()

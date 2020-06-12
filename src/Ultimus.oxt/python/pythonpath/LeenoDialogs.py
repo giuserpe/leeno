@@ -6,7 +6,7 @@ import os
 import threading
 import uno
 
-from LeenoUtils import getComponentContext, getDesktop, getDocument, createUnoService
+import LeenoUtils
 import pyleeno as PL
 import Dialogs
 
@@ -40,7 +40,7 @@ oDialogo_attesa = None
 
 def barra_di_stato(testo='', valore=0):
     '''Informa l'utente sullo stato progressivo dell'elaborazione.'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oProgressBar = oDoc.CurrentController.Frame.createStatusIndicator()
     oProgressBar.start('', 100)
     oProgressBar.Value = valore
@@ -54,7 +54,7 @@ def chi(s):  # s = oggetto
     s    { object }  : oggetto da interrogare
     mostra un dialog che indica il tipo di oggetto ed i metodi ad esso applicabili
     '''
-    doc = getDocument()
+    doc = LeenoUtils.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow
     s1 = str(s) + '\n\n' + str(dir(s).__str__())
     MessageBox(parentwin, str(s1), str(type(s)), 'infobox')
@@ -65,7 +65,7 @@ def DlgSiNo(s, t='Titolo'):  # s = messaggio | t = titolo
     Visualizza il menù di scelta sì/no
     restituisce 2 per sì e 3 per no
     '''
-    doc = getDocument()
+    doc = LeenoUtils.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow
     # s = 'This a message'
     # t = 'Title of the box'
@@ -77,7 +77,7 @@ def MsgBox(s, t=''):  # s = messaggio | t = titolo
     '''
     Visualizza una message box
     '''
-    doc = getDocument()
+    doc = LeenoUtils.getDocument()
     parentwin = doc.CurrentController.Frame.ContainerWindow
     # s = 'This a message'
     # t = 'Title of the box'
@@ -95,7 +95,7 @@ def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTT
     '''
     Show a message box with the UNO based toolkit
     '''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     sm = ctx.ServiceManager
     sv = sm.createInstanceWithContext('com.sun.star.awt.Toolkit', ctx)
     myBox = sv.createMessageBox(ParentWin, MsgType, MsgButtons, MsgTitle, MsgText)
@@ -108,7 +108,7 @@ def mri(target):
     '''
     @@ DA DOCUMENTARE... MA A CHE SERVE ???
     '''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     mrii = ctx.ServiceManager.createInstanceWithContext('mytools.Mri', ctx)
     mrii.inspect(target)
     MsgBox('MRI in corso...', 'avviso')
@@ -125,7 +125,7 @@ def dlg_attesa(msg=''):
     ...
     oDialogo_attesa.endExecute() #chiude il dialogo
     '''
-    psm = getComponentContext().ServiceManager
+    psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     global oDialogo_attesa
     oDialogo_attesa = dp.createDialog(
@@ -159,8 +159,8 @@ def ScegliElaborato(titolo):
     '''
     Permetta la scelta dell'elaborato da trattare e restituisce il suo nome
     '''
-    oDoc = getDocument()
-    psm = getComponentContext().ServiceManager
+    oDoc = LeenoUtils.getDocument()
+    psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgXLO = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dialog_XLO?language=Basic&location=application"

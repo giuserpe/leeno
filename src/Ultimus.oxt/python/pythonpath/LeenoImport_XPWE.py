@@ -8,7 +8,7 @@ from xml.etree.ElementTree import ElementTree
 
 import uno
 
-from LeenoUtils import getDocument, isLeenoDocument
+import LeenoUtils
 import LeenoFormat
 
 import pyleeno as PL
@@ -315,11 +315,11 @@ def MENU_XPWE_import():
     '''
     Importazione dati dal formato XPWE
     '''
-    isLeenoDoc = isLeenoDocument()
+    isLeenoDoc = LeenoUtils.isLeenoDocument()
 
     # legge i totali dal documento
     if isLeenoDoc:
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
         vals = []
         for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
             try:
@@ -391,7 +391,7 @@ def MENU_XPWE_import():
     # se la destinazione è un nuovo documento, crealo
     if destinazione == 'NUOVO':
         PL.New_file.computo(0)
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
 
     # compila i dati generali per l'analisi
     compilaDatiGeneraliAnalisi(oDoc, datiGeneraliAnalisi)

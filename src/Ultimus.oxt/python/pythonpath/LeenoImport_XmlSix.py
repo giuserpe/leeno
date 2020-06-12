@@ -3,7 +3,7 @@
 """
 from xml.etree.ElementTree import ElementTree
 
-from LeenoUtils import getDocument
+import LeenoUtils
 import pyleeno as PL
 
 import Dialogs
@@ -20,7 +20,7 @@ def _Fill_Ep(nome, lista_articoli):
     PL.New_file.computo(0)
 
     # e lo compilo
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('S2')
     oSheet.getCellByPosition(2, 2).String = nome
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -61,13 +61,13 @@ def _Fill_Ep(nome, lista_articoli):
     # ~ struttura_Elenco()
 
     progress.hide()
-    Dialogs.Ok("Operazione completata", "Importazione eseguita con successo")
+    Dialogs.Ok(Title="Operazione completata", Text="Importazione eseguita con successo")
     return True
 
     #except Exception:
     #    if progress is not None:
     #        progress.hideDialog()
-    #    Dialogs.Exclamation("Errore", "Errore nella compilazione del prezzario\nSegnalare il problema sul sito")
+    #    Dialogs.Exclamation(Title="Errore", Text="Errore nella compilazione del prezzario\nSegnalare il problema sul sito")
     #    return False
 
 
@@ -86,7 +86,7 @@ def MENU_Import_Ep_XML_SIX():
     try:
         tree.parse(filename)
     except Exception:
-        Dialogs.Exclamation("Errore", "Errore nel file XML\nControllarlo e ritentare l'importazione")
+        Dialogs.Exclamation(Title="Errore", Text="Errore nel file XML\nControllarlo e ritentare l'importazione")
         return
 
     root = tree.getroot()

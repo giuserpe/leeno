@@ -36,7 +36,7 @@ import shutil
 import sys
 import uno
 
-from LeenoUtils import getComponentContext, getDesktop, getDocument, getServiceManager
+import LeenoUtils
 import LeenoToolbars as Toolbars
 import LeenoFormat
 
@@ -71,7 +71,7 @@ import LeenoDialogs as DLG
 def basic_LeenO(funcname, *args):
     '''Richiama funzioni definite in Basic'''
 
-    xCompCont = getComponentContext()
+    xCompCont = LeenoUtils.getComponentContext()
     sm = xCompCont.ServiceManager
     mspf = sm.createInstance(
         "com.sun.star.script.provider.MasterScriptProviderFactory")
@@ -88,11 +88,11 @@ def MENU_leeno_conf():
     '''
     Visualizza il menù di configurazione
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('S1'):
         Toolbars.AllOff()
         return
-    psm = getServiceManager()
+    psm = LeenoUtils.getServiceManager()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg_config = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dlg_config?language=Basic&location=application"
@@ -196,7 +196,7 @@ def MENU_leeno_conf():
 
     #  conf.write(path_conf, 'Generale', 'visualizza', oDlg_config.getControl('ComboBox1').getText())
 
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     if oDlg_config.getControl('ComboBox2').getText() == 'IN BASSO':
         cfg.write('Generale', 'movedirection', '0')
@@ -247,7 +247,7 @@ def MENU_leeno_conf():
 
 def LeenO_path():
     '''Restituisce il percorso di installazione di LeenO.oxt'''
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     pir = ctx.getValueByName(
         '/singletons/com.sun.star.deployment.PackageInformationProvider')
     expath = pir.getPackageLocation('org.giuseppe-vizziello.leeno')
@@ -263,7 +263,7 @@ class New_file:
 
     def computo(arg=1):
         '''arg  { integer } : 1 mostra il dialogo di salvataggio file'''
-        desktop = getDesktop()
+        desktop = LeenoUtils.getDesktop()
         opz = PropertyValue()
         opz.Name = 'AsTemplate'
         opz.Value = True
@@ -281,7 +281,7 @@ Provvedi subito a dare un nome al file di computo...''',
         return document
 
     def usobollo():
-        desktop = getDesktop()
+        desktop = LeenoUtils.getDesktop()
         opz = PropertyValue()
         opz.Name = 'AsTemplate'
         opz.Value = True
@@ -316,7 +316,7 @@ def MENU_invia_voce():
     dal documento corrente al Documento Principale.
     '''
     # ~refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
@@ -353,7 +353,7 @@ def MENU_invia_voce():
         return (analisi, lista)
 
     def Circoscrive_Analisi(lrow):
-        # oDoc = getDocument()
+        # oDoc = LeenoUtils.getDocument()
         # oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
             for el in reversed(range(0, lrow)):
@@ -426,7 +426,7 @@ def MENU_invia_voce():
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
         _gotoDoc(sUltimus)
-        ddcDoc = getDocument()
+        ddcDoc = LeenoUtils.getDocument()
         dccSheet = ddcDoc.CurrentController.ActiveSheet
         nome = dccSheet.Name
 
@@ -443,7 +443,7 @@ def MENU_invia_voce():
             paste_clip(insCells=1)
             # doppioni()
             _gotoDoc(sUltimus)
-            ddcDoc = getDocument()
+            ddcDoc = LeenoUtils.getDocument()
             _gotoSheet(nome)
             dccSheet = ddcDoc.getSheets().getByName(nome)
             lrow = Range2Cell()[1]
@@ -499,7 +499,7 @@ def MENU_invia_voce():
         if nSheetDCC in ('COMPUTO', 'VARIANTE'):
             copy_clip()
             _gotoDoc(sUltimus)
-            ddcDoc = getDocument()
+            ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName(nSheet)
             lrow = Range2Cell()[1]
             if dccSheet.getCellByPosition(
@@ -523,7 +523,7 @@ def MENU_invia_voce():
                 lrow = next_voice(lrow, 1)
             # torno su partenza per prendere i prezzi
             _gotoDoc(fpartenza)
-            oDoc = getDocument()
+            oDoc = LeenoUtils.getDocument()
             _gotoSheet('Elenco Prezzi')
             oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
             selezione = list()
@@ -539,7 +539,7 @@ def MENU_invia_voce():
             copy_clip()
             #
             _gotoDoc(sUltimus)
-            ddcDoc = getDocument()
+            ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName('Elenco Prezzi')
             _gotoSheet('Elenco Prezzi')
             _gotoCella(0, 4)
@@ -558,7 +558,7 @@ def MENU_invia_voce():
         selezione = list()
         lista = list()
         _gotoDoc(fpartenza)
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
         _gotoSheet('Analisi di Prezzo')
         ranges = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
         ranges.addRangeAddresses(selezione_analisi, True)
@@ -567,7 +567,7 @@ def MENU_invia_voce():
         copy_clip()
 
         _gotoDoc(sUltimus)
-        ddcDoc = getDocument()
+        ddcDoc = LeenoUtils.getDocument()
         inizializza_analisi()
         _gotoCella(0, 0)
         paste_clip(insCells=1)
@@ -597,7 +597,7 @@ def codice_voce(lrow, cod=None):
     Se cod è assente, restituisce il codice della voce,
     altrimenti glielo assegna.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #  lrow = Range2Cell()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -611,13 +611,13 @@ def codice_voce(lrow, cod=None):
 
 
 # def getVoce(cod=None):
-# oDoc = getDocument()
+# oDoc = LeenoUtils.getDocument()
 # oSheet = oDoc.CurrentController.ActiveSheet
 # lrow = Range2Cell()[1]
 # sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
 # return oSheet.getCellByPosition(1, sopra+1).String
 # def setVoce(cod):
-# oDoc = getDocument()
+# oDoc = LeenoUtils.getDocument()
 # oSheet = oDoc.CurrentController.ActiveSheet
 # lrow = Range2Cell()[1]
 # sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
@@ -632,12 +632,12 @@ def _gotoDoc(sUrl):
     '''
     sUrl = uno.systemPathToFileUrl(sUrl)
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        target = getDesktop().loadComponentFromURL(
+        target = LeenoUtils.getDesktop().loadComponentFromURL(
             sUrl, "_default", 0, list())
         target.getCurrentController().Frame.ContainerWindow.toFront()
         target.getCurrentController().Frame.activate()
     elif sys.platform == 'win32':
-        desktop = getDesktop()
+        desktop = LeenoUtils.getDesktop()
         oFocus = uno.createUnoStruct('com.sun.star.awt.FocusEvent')
         target = desktop.loadComponentFromURL(sUrl, "_default", 0, list())
         target.getCurrentController().getFrame().focusGained(oFocus)
@@ -652,11 +652,11 @@ def getDCCSheet():
     sUrl  { string } : nome del file
     porta il focus su di un determinato documento
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     _gotoDoc(sUltimus)
     # global sUltimus_sheet
-    sUltimus_sheet = getDocument(
+    sUltimus_sheet = LeenoUtils.getDocument(
     ).CurrentController.ActiveSheet.Name
     _gotoDoc(fpartenza)
     return sUltimus_sheet
@@ -679,7 +679,7 @@ def MENU_copia_sorgente_per_git():
     '''
     fa una copia della directory del codice nel repository locale ed apre una shell per la commit
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
 
     try:
         if oDoc.getSheets().getByName('S1').getCellByPosition(
@@ -743,7 +743,7 @@ def MENU_avvia_IDE():
 def avvia_IDE():
     '''Avvia la modifica di pyleeno.py con geany'''
     basic_LeenO('file_gest.avvia_IDE')
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     oLayout.showElement(
         "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
@@ -790,7 +790,7 @@ def Inser_SottoCapitolo_arg(lrow, sTesto):
     lrow    { double } : id della riga di inserimento
     sTesto  { string } : titolo della sottocategoria
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -853,7 +853,7 @@ def Ins_Categorie(n):
     2 = SubCategoria
     '''
     # datarif = datetime.now()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     row = Range2Cell()[1]
     if oSheet.getCellByPosition(0,
@@ -912,7 +912,7 @@ def Inser_SuperCapitolo_arg(lrow, sTesto='Super Categoria'):
     lrow    { double } : id della riga di inserimento
     sTesto  { string } : titolo della categoria
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -972,7 +972,7 @@ def Inser_Capitolo_arg(lrow, sTesto='Categoria'):
     lrow    { double } : id della riga di inserimento
     sTesto  { string } : titolo della categoria
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -1025,7 +1025,7 @@ def Rinumera_TUTTI_Capitoli2():
 
 def Tutti_Subtotali():
     '''ricalcola i subtotali di categorie e subcategorie'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -1064,7 +1064,7 @@ def SubSum_SuperCap(lrow):
     lrow    { double } : id della riga di inserimento
     inserisce i dati nella riga di SuperCategoria
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -1132,7 +1132,7 @@ def SubSum_SottoCap(lrow):
     lrow    { double } : id della riga di inserimento
     inserisce i dati nella riga di subcategoria
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -1191,7 +1191,7 @@ def SubSum_Cap(lrow):
     lrow    { double } : id della riga di inserimento
     inserisce i dati nella riga di categoria
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -1258,7 +1258,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor():
     sincronizza il categoria e sottocategorie
     '''
     # datarif = datetime.now()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
@@ -1340,7 +1340,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor():
 
 
 def ultima_voce(oSheet):
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
     nRow = getLastUsedCell(oSheet).EndRow
     if nRow == 0:
@@ -1412,7 +1412,7 @@ def MENU_join_sheets():
     unisci fogli
     serve per unire tanti fogli in un unico foglio
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
     if not oDoc.getSheets().hasByName('unione_fogli'):
         sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
@@ -1439,7 +1439,7 @@ def MENU_join_sheets():
 
 def MENU_mostra_fogli():
     '''Mostra tutti i foglio fogli'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
     for el in lista_fogli:
         oDoc.getSheets().getByName(el).IsVisible = True
@@ -1457,7 +1457,7 @@ def MENU_mostra_fogli_principali():
 
 def mostra_fogli_principali():
     '''Mostra tutti i foglio fogli'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
     for el in lista_fogli:
         oDoc.getSheets().getByName(el).IsVisible = True
@@ -1472,7 +1472,7 @@ def mostra_fogli_principali():
 
 def MENU_mostra_tabs_contab():
     '''Mostra tutti i foglio fogli'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
     sproteggi_sheet_TUTTE()
     for el in lista_fogli:
@@ -1488,7 +1488,7 @@ def MENU_mostra_tabs_contab():
 
 def MENU_mostra_tabs_computo():
     '''Mostra tutti i foglio fogli'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
     sproteggi_sheet_TUTTE()
     for el in lista_fogli:
@@ -1508,7 +1508,7 @@ def copia_sheet(nSheet, tag):
     tag      { string } : stringa di tag
     duplica copia sheet corrente di fianco a destra
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     # nSheet = 'COMPUTO'
     oSheet = oDoc.getSheets().getByName(nSheet)
     idSheet = oSheet.RangeAddress.Sheet + 1
@@ -1532,7 +1532,7 @@ def Filtra_computo(nSheet, nCol, sString):
     sString  { string } : stringa di tag
     crea una nuova sheet contenente le sole voci filtrate
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     copia_sheet(nSheet, sString)
     oSheet = oDoc.CurrentController.ActiveSheet
     for lrow in reversed(range(0, ultima_voce(oSheet))):
@@ -1570,7 +1570,7 @@ def Filtra_computo(nSheet, nCol, sString):
 
 
 def Filtra_Computo_Cap():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 10).String
@@ -1581,7 +1581,7 @@ def Filtra_Computo_Cap():
 
 
 def Filtra_Computo_SottCap():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 12).String
@@ -1592,7 +1592,7 @@ def Filtra_Computo_SottCap():
 
 
 def Filtra_Computo_A():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 14).String
@@ -1603,7 +1603,7 @@ def Filtra_Computo_A():
 
 
 def Filtra_Computo_B():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 16).String
@@ -1614,7 +1614,7 @@ def Filtra_Computo_B():
 
 
 def Filtra_Computo_C():  # filtra in base al codice di prezzo
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 20).String
@@ -1690,7 +1690,7 @@ def _gotoSheet(nSheet, fattore=100):
     nSheet   { string } : nome Sheet
     attiva e seleziona una sheet
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName(nSheet)
     # oDoc.getCurrentSelection().getCellAddress().Sheet
 
@@ -1709,7 +1709,7 @@ def _primaCella(IDcol=0, IDrow=0):
     IDrow   { integer } : id riga
     settaggio prima cella visibile(IDcol, IDrow)
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
     oDoc.CurrentController.setFirstVisibleColumn(IDcol)
     oDoc.CurrentController.setFirstVisibleRow(IDrow)
@@ -1724,10 +1724,10 @@ def ordina_col(ncol):
     ncol   { integer } : id colonna
     ordina i dati secondo la colonna con id ncol
     '''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
@@ -1781,7 +1781,7 @@ def sproteggi_sheet_TUTTE():
     '''
     Sprotegge e riordina tutti fogli del documento.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheets = oDoc.Sheets.ElementNames
     for nome in oSheets:
         oSheet = oDoc.getSheets().getByName(nome)
@@ -1814,11 +1814,11 @@ def setPreview(arg=0):
     colore   { integer } : id colore
     attribuisce al foglio corrente un colore a scelta
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet  # se questa dà errore, il preview è già attivo
     adatta_altezza_riga(oSheet.Name)
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
@@ -1836,10 +1836,10 @@ def setTabColor(colore):
     colore   { integer } : id colore
     attribuisce al foglio corrente un colore a scelta
     '''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
@@ -1858,10 +1858,10 @@ def txt_Format(stile):
     '''
     Forza la formattazione della cella
     '''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
@@ -1881,7 +1881,7 @@ def show_sheets(x=True):
 
     Mastra/nasconde tutte le tabelle ad esclusione di COMPUTO ed Elenco Prezzi
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheets = list(oDoc.getSheets().getElementNames())
     # for nome in ('M1', 'S1', 'S2', 'S5', 'Elenco Prezzi', 'COMPUTO'):
     for nome in ('Elenco Prezzi', 'COMPUTO'):
@@ -1912,10 +1912,10 @@ def salva_come(nomefile=None):
     nomefile   { string } : nome del file di destinazione
     Se presente l'argomento nomefile, salva il file corrente in nomefile.
     '''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
 
@@ -1947,7 +1947,7 @@ def _gotoCella(IDcol=0, IDrow=0):
 
     muove il cursore nelle cella(IDcol, IDrow)
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
     oDoc.CurrentController.select(oSheet.getCellByPosition(IDcol, IDrow))
@@ -1963,9 +1963,9 @@ def loVersion():
     '''
     Legge il numero di versione di LibreOffice.
     '''
-    # sAccess = createUnoService(
+    # sAccess = LeenoUtils.createUnoService(
     #    "com.sun.star.configuration.ConfigurationAccess")
-    aConfigProvider = createUnoService(
+    aConfigProvider = LeenoUtils.createUnoService(
         "com.sun.star.configuration.ConfigurationProvider")
     arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
     arg.Name = "nodepath"
@@ -1985,7 +1985,7 @@ def adatta_altezza_riga(nSheet=None):
     nSheet   { string } : nSheet della sheet
     imposta l'altezza ottimale delle celle
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if not oDoc.getSheets().hasByName('S1'):
         return
@@ -2040,7 +2040,7 @@ def voce_breve():
     CONTABILITA E VARIANTE.
     '''
     chiudi_dialoghi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.getCellRangeByPosition(
         0, 0,
@@ -2104,7 +2104,7 @@ LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 Vuoi procedere comunque?''', 'AVVISO!') == 3:
         #  oDialogo_attesa.endExecute() #chiude il dialogo
         return
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
@@ -2164,7 +2164,7 @@ def voce_breve_ep():
     Ottimizza l'altezza delle celle di Elenco Prezzi o visualizza solo
     tre righe della descrizione.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
@@ -2189,9 +2189,9 @@ def scelta_viste():
     Genera i raffronti tra COMPUTO e VARIANTE e CONTABILITA'
     '''
     #  refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    psm = getComponentContext().ServiceManager
+    psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
     if oSheet.Name in ('VARIANTE', 'COMPUTO'):
         oDialog1 = dp.createDialog(
@@ -2659,7 +2659,7 @@ def scelta_viste():
 def genera_variante():
     '''Genera il foglio di VARIANTE a partire dal COMPUTO'''
     chiudi_dialoghi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('VARIANTE'):
         if oDoc.NamedRanges.hasByName("AA"):
             oDoc.NamedRanges.removeByName("AA")
@@ -2707,7 +2707,7 @@ def genera_sommario():
     refresh(0)
     struttura_off()
 
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     lrow = getLastUsedCell(oSheet).EndRow
     rifa_nomearea('COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
@@ -2786,7 +2786,7 @@ def riordina_ElencoPrezzi():
     '''
     chiudi_dialoghi()
     refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -2819,7 +2819,7 @@ def MENU_doppioni():
 
 
 def doppioni():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
@@ -2911,7 +2911,7 @@ def XPWE_out(elaborato, out_file):
     il nome file risulterà out_file-elaborato.xpwe
     '''
     refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oDialogo_attesa = DLG.dlg_attesa('Esportazione di ' + elaborato + ' in corso...')
     DLG.attesa().start()  # mostra il dialogo
     if cfg.read('Generale', 'dettaglio') == '1':
@@ -3486,7 +3486,7 @@ def MENU_firme_in_calce():
     Inserisce(in COMPUTO o VARIANTE) un riepilogo delle categorie
     ed i dati necessari alle firme
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
 
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
@@ -3718,8 +3718,8 @@ def MENU_firme_in_calce():
 
         # inserisco il salto pagina in cima al riepilogo
         oDoc.CurrentController.select(oSheet.getCellByPosition(0, lrowF))
-        ctx = getComponentContext()
-        desktop = getDesktop()
+        ctx = LeenoUtils.getComponentContext()
+        desktop = LeenoUtils.getDesktop()
         oFrame = desktop.getCurrentFrame()
         dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
             'com.sun.star.frame.DispatchHelper', ctx)
@@ -3742,7 +3742,7 @@ def next_voice(lrow, n=1):
                         se 1 sposta dopo della voce corrente
     sposta il cursore prima o dopo la voce corrente restituendo un idrow
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~lrow = Range2Cell()[1]
     if lrow == 0:
@@ -3801,7 +3801,7 @@ def cancella_analisi_da_ep():
     '''
     cancella le voci in Elenco Prezzi che derivano da analisi
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
     lista_an = list()
@@ -3819,7 +3819,7 @@ def MENU_analisi_in_ElencoPrezzi():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.Name != 'Analisi di Prezzo':
@@ -3878,7 +3878,7 @@ def tante_analisi_in_ep():
     '''
     chiudi_dialoghi()
     refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
     rifa_nomearea('Analisi di Prezzo',
@@ -3958,7 +3958,7 @@ def Circoscrive_Analisi(lrow):
     Circoscrive una voce di analisi
     partendo dalla posizione corrente del cursore
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
         for el in reversed(range(0, lrow)):
@@ -3983,7 +3983,7 @@ def Circoscrive_Voce_Computo_Att(lrow):
     Circoscrive una voce di COMPUTO, VARIANTE o CONTABILITÀ
     partendo dalla posizione corrente del cursore
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #  lrow = Range2Cell()[1]
     #  if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
@@ -4013,7 +4013,7 @@ def Circoscrive_Voce_Computo_Att(lrow):
 ########################################################################
 def ColumnNumberToName(oSheet, cColumnNumb):
     '''Trasforma IDcolonna in Nome'''
-    #  oDoc = getDocument()
+    #  oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
     oColumns = oSheet.getColumns()
     oColumn = oColumns.getByIndex(cColumnNumb).Name
@@ -4023,7 +4023,7 @@ def ColumnNumberToName(oSheet, cColumnNumb):
 ########################################################################
 def ColumnNameToNumber(oSheet, cColumnName):
     '''Trasforma il nome colonna in IDcolonna'''
-    #  oDoc = getDocument()
+    #  oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
     oColumns = oSheet.getColumns()
     oColumn = oColumns.getByName(cColumnName)
@@ -4039,7 +4039,7 @@ def MENU_azzera_voce():
     '''
     refresh(0)
     try:
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             try:
@@ -4115,8 +4115,8 @@ def MENU_azzera_voce():
                     # cambio il colore di sfondo
                     oDoc.CurrentController.select(sStRange)
                     raggruppa_righe_voce(lrow, 1)
-                    ctx = getComponentContext()
-                    desktop = getDesktop()
+                    ctx = LeenoUtils.getComponentContext()
+                    desktop = LeenoUtils.getDesktop()
                     oFrame = desktop.getCurrentFrame()
                     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
                         'com.sun.star.frame.DispatchHelper', ctx)
@@ -4146,7 +4146,7 @@ def MENU_elimina_voci_azzerate():
     Elimina le voci in cui compare la dicitura '*** VOCE AZZERATA ***'
     in COMPUTO o in VARIANTE, senza chiedere conferma
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -4165,7 +4165,7 @@ def raggruppa_righe_voce(lrow, flag=1):
     '''
     Raggruppa le righe che compongono una singola voce.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #  lrow = Range2Cell()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -4192,7 +4192,7 @@ def MENU_nasconde_voci_azzerate():
     Nasconde le voci in cui compare la dicitura '*** VOCE AZZERATA ***'
     in COMPUTO o in VARIANTE.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -4212,7 +4212,7 @@ def seleziona(lrow=None):
     '''
     Seleziona voci intere
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in ('Elenco Prezzi'):
         return
@@ -4292,7 +4292,7 @@ def seleziona_voce(lrow=None):
     CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if lrow is None or lrow == 0:
         lrow = Range2Cell()[1]
@@ -4338,7 +4338,7 @@ def elimina_voce(lrow=None, msg=1):
     msg  { bit }   : 1 chiedi conferma con messaggio
                      0 esegui senza conferma
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     SR = seleziona_voce()[0]
     ER = seleziona_voce()[1]
@@ -4369,7 +4369,7 @@ def copia_riga_computo(lrow):
     '''
     Inserisce una nuova riga di misurazione nel computo
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~lrow = Range2Cell()[1]
     stile = oSheet.getCellByPosition(1, lrow).CellStyle
@@ -4410,7 +4410,7 @@ def copia_riga_contab(lrow):
     '''
     Inserisce una nuova riga di misurazione in contabilità
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #  lrow = Range2Cell()[1]
     stile = oSheet.getCellByPosition(1, lrow).CellStyle
@@ -4456,7 +4456,7 @@ def copia_riga_analisi(lrow):
     '''
     Inserisce una nuova riga di misurazione in analisi di prezzo
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
@@ -4520,7 +4520,7 @@ def Copia_riga_Ent(arg=None):
     # A ggiungi Componente - capisce su quale tipologia di tabelle è
     # ~datarif = datetime.now()
     #  refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome_sheet = oSheet.Name
@@ -4545,7 +4545,7 @@ def cerca_partenza():
     della riga di codice prezzo componente [1], il flag '#reg' solo per la contabilità.
     partenza = (nome_foglio, id_rcodice, flag_contabilità)
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     global partenza
@@ -4576,7 +4576,7 @@ def sblocca_cont():
     Controlla che non ci siano atti contabili registrati e dà il consenso a procedere.
     '''
     global sblocca_computo
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in ('CONTABILITA'):
         cerca_partenza()
@@ -4615,7 +4615,7 @@ def cerca_in_elenco():
     '''
     Evidenzia il codice di elenco prezzi della voce corrente.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if oSheet.Name in ('COMPUTO', 'CONTABILITA', 'VARIANTE',
@@ -4667,7 +4667,7 @@ def pesca_cod():
     Capisce quando la voce nel libretto delle misure è già registrata o nel documento ci sono già atti contabili emessi.
     '''
     global sblocca_computo
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(
@@ -4728,7 +4728,7 @@ def MENU_ricicla_misure():
     In CONTABILITA consente l'inserimento di nuove voci di misurazione
     partendo da voci già inserite in COMPUTO o VARIANTE.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name == 'CONTABILITA':
         try:
@@ -4795,7 +4795,7 @@ def inverti_un_segno(lrow):
     lrow    { int }  : riga di riferimento
     usata con XPWE_it
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # ~lrow = Range2Cell()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -4865,7 +4865,7 @@ def inverti_segno():
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lista = list()
     try:
@@ -4973,7 +4973,7 @@ def dettaglio_misura_rigo():
     bit { integer }  : 1 inserisce i dettagli
                        0 cancella i dettagli
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if ' >(' in oSheet.getCellByPosition(2, lrow).String:
@@ -5031,7 +5031,7 @@ def dettaglio_misure(bit):
     bit { integer }  : 1 inserisce i dettagli
                        0 cancella i dettagli
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
     except Exception:
@@ -5095,7 +5095,7 @@ def dettaglio_misure(bit):
 
 ########################################################################
 def debug_validation():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     #  mri(oDoc.CurrentSelection.Validation)
 
@@ -5122,7 +5122,7 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err=False):
     msgInput    { string }  : suggerimento che compare passando il cursore sulla cella
     err         { boolean } : permette di abilitare il messaggio di errore per input non validi
     '''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     # oSheet = oDoc.CurrentController.ActiveSheet
 
     oTabVal = oCell.getPropertyValue("Validation")
@@ -5144,7 +5144,7 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err=False):
 
 
 def debug_ConditionalFormat():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oCell = oDoc.CurrentSelection
     oSheet = oDoc.CurrentController.ActiveSheet
 
@@ -5155,10 +5155,10 @@ def debug_ConditionalFormat():
 
 ########################################################################
 def debugclip():
-    #  mri(getComponentContext())
+    #  mri(LeenoUtils.getComponentContext())
     # sText = 'sticazzi'
     # create SystemClipboard instance
-    oClip = createUnoService(
+    oClip = LeenoUtils.createUnoService(
         "com.sun.star.datatransfer.clipboard.SystemClipboard")
     # oClipContents = oClip.getContents()
     # flavors = oClipContents.getTransferDataFlavors()
@@ -5168,7 +5168,7 @@ def debugclip():
     #  chi(aDataFlavor)
 
     return
-    #  createUnoService =(getComponentContext().getServiceManager().createInstance)
+    #  createUnoService =(LeenoUtils.getComponentContext().getServiceManager().createInstance)
     #  oTR = createUnoListener("Tr_", "com.sun.star.datatransfer.XTransferable")
     oClip.setContents(oTR, None)
     # sTxtCString = sText
@@ -5177,8 +5177,8 @@ def debugclip():
 
 ########################################################################
 def rimuovi_area_di_stampa():
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
@@ -5191,10 +5191,10 @@ def visualizza_PageBreak():
     '''
     @@ DA DOCUMENTARE
     '''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     oProp = PropertyValue()
     oProp.Name = 'PagebreakMode'
@@ -5214,10 +5214,10 @@ def delete(arg):
     arg       { string }  : 'R' per righe
                             'C' per colonne
     '''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     oProp = PropertyValue()
     oProp.Name = 'Flags'
@@ -5231,10 +5231,10 @@ def delete(arg):
 
 ########################################################################
 def copy_clip():
-    #  oDoc = getDocument()
+    #  oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
 
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
@@ -5244,10 +5244,10 @@ def copy_clip():
 
 ########################################################################
 def paste_clip(arg=None, insCells=0):
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     #  oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     oProp = []
     oProp0 = PropertyValue()
@@ -5291,9 +5291,9 @@ def paste_format():
     '''
     Incolla solo il formato cella
     '''
-    oDoc = getDocument()
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    oDoc = LeenoUtils.getDocument()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     oProp = []
     oProp0 = PropertyValue()
@@ -5333,7 +5333,7 @@ def MENU_copia_celle_visibili():
     visibili.
     Liberamente ispirato a "Copy only visible cells" http://bit.ly/2j3bfq2
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -5378,8 +5378,8 @@ def MENU_copia_celle_visibili():
                                         ER - SR - len(righe))
     oDoc.CurrentController.select(oRange)
 
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
@@ -5395,7 +5395,7 @@ def Range2Cell():
     '''
     Restituisce la tupla (IDcolonna, IDriga, NameSheet) della posizione corrente
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
         if oDoc.getCurrentSelection().getRangeAddresses()[0]:
@@ -5437,7 +5437,7 @@ def numera_voci(bit=1):  #
     bit { integer }  : 1 rinumera tutto
                        0 rinumera dalla voce corrente in giù
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lastRow = getLastUsedCell(oSheet).EndRow + 1
     lrow = Range2Cell()[1]
@@ -5478,7 +5478,7 @@ def refresh(arg=1):
     '''
     Abilita / disabilita il refresh per accelerare le procedure
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     if arg == 0:
         #  oDoc.CurrentController.ZoomValue = 400
         oDoc.enableAutomaticCalculation(False)  # blocco il calcolo automatico
@@ -5498,7 +5498,7 @@ def richiesta_offerta():
     '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi,
 per la formulazione dell'offerta'''
     chiudi_dialoghi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     _gotoSheet('Elenco Prezzi')
     genera_sommario()
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -5638,7 +5638,7 @@ def ins_voce_elenco():
     '''
     Inserisce una nuova riga voce in Elenco Prezzi
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     refresh(0)
     oSheet = oDoc.CurrentController.ActiveSheet
     _gotoCella(0, 3)
@@ -5681,7 +5681,7 @@ def ins_voce_elenco():
 ########################################################################
 # nuova_voce ###########################################################
 def ins_voce_computo_grezza(lrow):
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     # lrow = Range2Cell()[1]
     ########################################################################
@@ -5751,7 +5751,7 @@ def ins_voce_computo_grezza(lrow):
 ########################################################################
 # ins_voce_computo #####################################################
 def ins_voce_computo():  # TROPPO LENTA
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo):
@@ -5771,7 +5771,7 @@ def rigenera_voce(lrow=None):
     in COMPUTO, VARIANTE e CONTABILITA
     '''
     lrow = Range2Cell()[1]
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
@@ -5897,7 +5897,7 @@ def sistema_stili(lrow=None):
     in COMPUTO, VARIANTE e CONTABILITA
     '''
     lrow = Range2Cell()[1]
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
         sStRange = Circoscrive_Voce_Computo_Att(lrow)
@@ -5995,7 +5995,7 @@ def rigenera_tutte(arg=None, ):
     Ripristina le formule in tutto il foglio
     '''
     chiudi_dialoghi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     refresh(0)
     zoom = oDoc.CurrentController.ZoomValue
@@ -6030,7 +6030,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     '''
     Contestualizza in ogni tabella l'inserimento delle voci.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         ins_voce_computo()
@@ -6047,7 +6047,7 @@ def ins_voce_contab(lrow=0, arg=1):
     '''
     Inserisce una nuova voce in CONTABILITA.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if lrow == 0:
         lrow = Range2Cell()[1]
@@ -6166,7 +6166,7 @@ def ins_voce_contab(lrow=0, arg=1):
 def attiva_contabilita():
     '''Se presenti, attiva e visualizza le tabelle di contabilità'''
     chiudi_dialoghi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     if oDoc.Sheets.hasByName('S1'):
         oDoc.Sheets.getByName('S1').getCellByPosition(7, 327).Value = 1
         if oDoc.Sheets.hasByName('CONTABILITA'):
@@ -6187,7 +6187,7 @@ def attiva_contabilita():
 ########################################################################
 def svuota_contabilita():
     '''Ricrea il foglio di contabilità partendo da zero.'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     for n in range(1, 20):
         if oDoc.NamedRanges.hasByName('#Lib#' + str(n)):
             oDoc.NamedRanges.removeByName('#Lib#' + str(n))
@@ -6286,7 +6286,7 @@ def partita(testo):
     '''
     Aggiunge/detrae rigo di PARTITA PROVVISORIA
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA":
         return
@@ -6319,7 +6319,7 @@ def genera_libretto():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     #  mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
     #  return
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -6615,7 +6615,7 @@ def genera_atti_contabili():
     @@ DA DOCUMENTARE
     '''
     # ~def debug():
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name != "CONTABILITA":
         return
@@ -6639,7 +6639,7 @@ def inizializza_elenco():
     '''
     chiudi_dialoghi()
     refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName('Elenco Prezzi')
 
     zoom = oDoc.CurrentController.ZoomValue
@@ -6739,7 +6739,7 @@ def inizializza_computo():
     '''
     Riscrive le intestazioni di colonna e le formule dei totali in COMPUTO.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.Sheets.getByName('COMPUTO')
     oDoc.CurrentController.setActiveSheet(oSheet)
     oDoc.CurrentController.freezeAtPosition(0, 3)
@@ -6873,7 +6873,7 @@ def inizializza_analisi():
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
     '''
     chiudi_dialoghi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     rifa_nomearea('S5', '$B$108:$P$133', 'blocco_analisi')
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
         oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
@@ -6933,7 +6933,7 @@ def inserisci_Riga_rossa():
     Inserisce la riga rossa di chiusura degli elaborati
     Questa riga è un riferimento per varie operazioni
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     nome = oSheet.Name
@@ -6970,7 +6970,7 @@ def rifa_nomearea(sSheet, sRange, sName):
     sName = nome da attribuire all'area scelta, es.: "manodopera"
     '''
     sPath = "$'" + sSheet + "'." + sRange
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oRanges = oDoc.NamedRanges
     oCellAddress = oDoc.Sheets.getByName(sSheet).getCellRangeByName(
         'A1').getCellAddress()
@@ -6985,7 +6985,7 @@ def struct_colore(level):
     Mette in vista struttura secondo il colore
     level { integer } : specifica il livello di categoria
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -7063,7 +7063,7 @@ Vuoi procedere con la creazione della struttura dei capitoli?''',
             'Avviso') == 3:
         return
     # ~ riordina_ElencoPrezzi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
     struct_colore(0)  # attribuisce i colori
@@ -7116,7 +7116,7 @@ def colora_vecchio_elenco():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
@@ -7155,11 +7155,11 @@ Vuoi continuare?''', 'Importa Stili in blocco?') == 3:
         return
     filename = Dialogs.FileSelect('Scegli il file di riferimento...', '*.ods')
     if filename is None:
-        #  desktop = getDesktop()
+        #  desktop = LeenoUtils.getDesktop()
         filename = LeenO_path() + '/template/leeno/Computo_LeenO.ots'
     else:
         filename = uno.systemPathToFileUrl(filename)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oDoc.getStyleFamilies().loadStylesFromURL(filename, list())
     for el in oDoc.Sheets.ElementNames:
         oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
@@ -7175,7 +7175,7 @@ def MENU_parziale():
     '''
     Inserisce una riga con l'indicazione della somma parziale.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
@@ -7191,7 +7191,7 @@ def parziale_core(lrow):
 
     if lrow == 0:
         return
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     sStRange = Circoscrive_Voce_Computo_Att(lrow)
     sopra = sStRange.RangeAddress.StartRow
@@ -7258,7 +7258,7 @@ def parziale_verifica():
     Controlla l'esattezza del calcolo del parziale quanto le righe di
     misura vengono aggiunte o cancellate.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     #  if oSheet.Name in('COMPUTO','VARIANTE', 'CONTABILITA'):
@@ -7273,7 +7273,7 @@ def parziale_verifica():
 ########################################################################
 def vedi_voce_xpwe(lrow, vRif, flags=''):
     """(riga d'inserimento, riga di riferimento)"""
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     sStRange = Circoscrive_Voce_Computo_Att(vRif)
     # sStRange.RangeAddress
@@ -7313,7 +7313,7 @@ def MENU_vedi_voce():
     '''
     Inserisce un riferimento a voce precedente sulla riga corrente.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
@@ -7362,10 +7362,10 @@ def MENU_converti_stringhe():
     '''
     Converte in numeri le stinghe o viceversa.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    # ctx = getComponentContext()
-    # desktop = getDesktop()
+    # ctx = LeenoUtils.getComponentContext()
+    # desktop = LeenoUtils.getDesktop()
     try:
         sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
         sCol = oDoc.getCurrentSelection().getRangeAddresses()[0].StartColumn
@@ -7411,13 +7411,13 @@ stili_analisi = ('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla',
                  'An-lavoraz-desc', 'An-lavoraz-Cod-sx', 'An-lavoraz-desc-CEN',
                  'An-sfondo-basso Att End')
 stili_elenco = ('EP-Cs', 'EP-aS')
-try:
-    createUnoService = (
-        #  uno # protocol heandler
-        getComponentContext().getServiceManager().createInstance
-    )
-except Exception:
-    print("createUnoService ERROR")
+# try:
+#    createUnoService = (
+#        #  uno # protocol heandler
+#        LeenoUtils.getComponentContext().getServiceManager().createInstance
+#    )
+# except Exception:
+#    print("createUnoService ERROR")
 
 #
 codice_da_cercare = ''
@@ -7431,7 +7431,7 @@ def ssUltimus():
     che è il file a cui giungono le voci di prezzo inviate da altri file
     '''
     global sUltimus
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('M1'):
         return
     try:
@@ -7519,7 +7519,7 @@ def SubSum(lrow, sub=False):
         )
         level = 1
 
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
         return
@@ -7574,7 +7574,7 @@ def filtra_codice(voce=None):
     Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
     '''
     refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     # ~zoom = oDoc.CurrentController.ZoomValue
     # ~oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -7643,7 +7643,7 @@ def struttura_ComputoM():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
     Rinumera_TUTTI_Capitoli2()
@@ -7657,7 +7657,7 @@ def struttura_Analisi():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
     struct(4)
@@ -7674,7 +7674,7 @@ def struttura_off():
     '''
     Cancella la vista in struttura
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     lrow = Range2Cell()[1]
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
@@ -7693,7 +7693,7 @@ def struct(level):
     ### ANALISI ###
     4 = simile all'elenco prezzi
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -7771,7 +7771,7 @@ def MENU_apri_manuale():
     '''
     @@ DA DOCUMENTARE
     '''
-    apri = createUnoService("com.sun.star.system.SystemShellExecute")
+    apri = LeenoUtils.createUnoService("com.sun.star.system.SystemShellExecute")
     apri.execute(LeenO_path() + '/MANUALE_LeenO.pdf', "", 0)
 
 
@@ -7783,7 +7783,7 @@ def autoexec_off():
     Toolbars.Switch(True)
     #  private:resource/toolbar/standardbar
     # sUltimus = ''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA',
                'Analisi di Prezzo'):
         try:
@@ -7832,7 +7832,7 @@ def autoexec():
     basic_LeenO('_variabili.autoexec')
     bak0()
     autorun()
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
     oGSheetSettings = ctx.ServiceManager.createInstanceWithContext("com.sun.star.sheet.GlobalSheetSettings", ctx)
     # Usa i parametri della stampante per la formattazione del testo
     oGSheetSettings.UsePrinterMetrics = True
@@ -7850,7 +7850,7 @@ def autoexec():
         oGSheetSettings.MoveDirection = 0
     else:
         oGSheetSettings.MoveDirection = 1
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(True)
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     oLayout.hideElement(
@@ -7883,7 +7883,7 @@ def computo_terra_terra():
     '''
     Settaggio base di configurazione colonne in COMPUTO e VARIANTE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.getCellRangeByPosition(33, 0, 1023, 0).Columns.IsVisible = False
     set_larghezza_colonne()
@@ -7897,7 +7897,7 @@ def viste_nuove(sValori):
     T = visualizza
     F = nasconde
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     n = 0
     for el in sValori:
@@ -7913,7 +7913,7 @@ def set_larghezza_colonne():
     '''
     regola la larghezza delle colonne a seconda della sheet
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name == 'Analisi di Prezzo':
         oSheet.getColumns().getByName('A').Columns.Width = 2100
@@ -8013,7 +8013,7 @@ def elimina_stili_cella():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
     for el in stili:
         if not oDoc.StyleFamilies.getByName('CellStyles').getByName(el).isInUse():
@@ -8026,7 +8026,7 @@ def inizializza():
     Inserisce tutti i dati e gli stili per preparare il lavoro.
     lanciata in autoexec()
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
 
     #  oDoc.IsUndoEnabled = False
     oDoc.getSheets().getByName('copyright_LeenO').getCellRangeByName(
@@ -8099,7 +8099,7 @@ def adegua_tmpl():
     - dal 216 aggiorna le formule in CONTABILITA
     '''
     refresh(0)
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     # LE VARIABILI NUOVE VANNO AGGIUNTE IN config_default()
     # cambiare stile http://bit.ly/2cDcCJI
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
@@ -8375,10 +8375,10 @@ def XPWE_export_run():
     '''
     Visualizza il menù export/import XPWE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('S2'):
         return
-    psm = getComponentContext().ServiceManager
+    psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     Dialog_XPWE = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dialog_XPWE?language=Basic&location=application"
@@ -8441,7 +8441,7 @@ def dp():
     '''
     Indica qual è il Documento Principale
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     try:
         if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
             return
@@ -8480,8 +8480,8 @@ def DlgMain():
     Visualizza il menù principale dialog_fil
     '''
 
-    oDoc = getDocument()
-    psm = getComponentContext().ServiceManager
+    oDoc = LeenoUtils.getDocument()
+    psm = LeenoUtils.getComponentContext().ServiceManager
     oSheet = oDoc.CurrentController.ActiveSheet
     if not oDoc.getSheets().hasByName('S2'):
         Toolbars.AllOff()
@@ -8597,7 +8597,7 @@ def InputBox(sCella='', t=''):
     Visualizza un dialogo di richiesta testo
     '''
 
-    psm = getComponentContext().ServiceManager
+    psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDialog1 = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgTesto?language=Basic&location=application"
@@ -8621,7 +8621,7 @@ def hide_error(lErrori, icol):
     icol { integer } : indice di colonna della riga da nascondere
     Visualizza o nascondi una toolbar
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.CurrentController.ActiveSheet
@@ -8647,7 +8647,7 @@ def bak0():
     Fa il backup del file di lavoro all'apertura.
     '''
     # tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))[:12]
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     orig = oDoc.getURL()
     dest = '.'.join(os.path.basename(orig).split('.')[0:-1]) + '.bak.ods'
     dir_bak = os.path.dirname(oDoc.getURL()) + '/leeno-bk/'
@@ -8673,7 +8673,7 @@ def bak():
     tempo = ''.join(''.join(''.join(
         str(datetime.now()).split('.')[0].split(' ')).split('-')).split(
             ':'))[:12]
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     orig = oDoc.getURL()
     dest = '.'.join(
         os.path.basename(orig).split('.')[0:-1]) + '-' + tempo + '.ods'
@@ -8706,7 +8706,7 @@ class version_code:
         pass
 
     def read ():
-        
+
         if os.altsep:
             code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
                                                 'leeno_version_code')
@@ -8717,7 +8717,7 @@ class version_code:
         return f.readline()
 
     def write ():
-        
+
         if os.altsep:
             code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
                                                 'leeno_version_code')
@@ -8738,7 +8738,7 @@ class version_code:
 ########################################################################
 def MENU_grid_switch():
     '''Mostra / nasconde griglia'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oDoc.CurrentController.ShowGrid = not oDoc.CurrentController.ShowGrid
 
 
@@ -8755,7 +8755,7 @@ def make_pack(bar=0):
     Pacchettizza l'estensione in duplice copia: LeenO.oxt e LeenO-yyyymmddhhmm.oxt
     in una directory precisa(per ora - da parametrizzare)
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     try:
         if oDoc.getSheets().getByName('S1').getCellByPosition(
                 7, 338).String == '':
@@ -8767,7 +8767,7 @@ def make_pack(bar=0):
         pass
     oxt_name = version_code.write()
     if bar == 0:
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
         oLayout = oDoc.CurrentController.getFrame().LayoutManager
         oLayout.hideElement(
@@ -8823,7 +8823,7 @@ def dlg_donazioni():
     '''
     @@ DA DOCUMENTARE
     '''
-    psm = getComponentContext().ServiceManager
+    psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDialog1 = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgDonazioni?language=Basic&location=application"
@@ -8839,7 +8839,7 @@ def donazioni():
     '''
     @@ DA DOCUMENTARE
     '''
-    apri = createUnoService("com.sun.star.system.SystemShellExecute")
+    apri = LeenoUtils.createUnoService("com.sun.star.system.SystemShellExecute")
     apri.execute("https://leeno.org/donazioni/", "", 0)
 
 
@@ -8880,7 +8880,7 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
 
     def run(self):
         oDialogo_attesa = DLG.dlg_attesa()
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
         if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
             return
@@ -8920,7 +8920,7 @@ def ctrl_d():
     '''
     Copia il valore della prima cella superiore utile.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oCell = oDoc.CurrentSelection
     oSheet = oDoc.CurrentController.ActiveSheet
     x = Range2Cell()[0]
@@ -8945,10 +8945,10 @@ def taglia_x():
     taglia il contenuto della selezione
     senza cancellare la formattazione delle celle
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    ctx = getComponentContext()
-    desktop = getDesktop()
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
 
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
@@ -8977,7 +8977,7 @@ def calendario_mensile():
     nel file ../PRIVATO/LeenO/extra/calendario.ods che potrei implementare
     in LeenO per la gestione delle ore in economia o del diagramma di Gantt.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('elenco festività')
     oRangeAddress = oDoc.NamedRanges.feste.ReferredCells.RangeAddress
     SR = oRangeAddress.StartRow
@@ -9011,7 +9011,7 @@ def sistema_cose():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = Range2Cell()[0]
     try:
@@ -9046,9 +9046,9 @@ def debug_link():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     window = oDoc.getCurrentController().getFrame().getContainerWindow()
-    ctx = getComponentContext()
+    ctx = LeenoUtils.getComponentContext()
 
     def create(name):
         return ctx.getServiceManager().createInstanceWithContext(name, ctx)
@@ -9073,7 +9073,7 @@ def descrizione_in_una_colonna(flag=False):
     Consente di estendere su più colonne o ridurre ad una colonna lo spazio
     occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet = oDoc.getSheets().getByName('S5')
     oSheet.getCellRangeByName('C9:I9').merge(flag)
@@ -9117,7 +9117,7 @@ def descrizione_in_una_colonna(flag=False):
 def numera_colonna():
     '''Inserisce l'indice di colonna nelle prime 100 colonne del rigo selezionato
 Associato a Atrl+Shift+C'''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]
     for x in range(0, 50):
@@ -9134,7 +9134,7 @@ def subst_str():
     '''
     Sostituisce stringhe di testi nel foglio corrente
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     ReplaceDescriptor = oSheet.createReplaceDescriptor()
     ReplaceDescriptor.SearchString = "str1"
@@ -9155,7 +9155,7 @@ def processo(arg):
 ########################################################################
 def GetRegistryKeyContent(sKeyName, bForUpdate):
     '''Dà accesso alla configurazione utente di LibreOffice'''
-    oConfigProvider = createUnoService(
+    oConfigProvider = LeenoUtils.createUnoService(
         "com.sun.star.configuration.ConfigurationProvider")
     arg = uno.createUnoStruct('com.sun.star.beans.PropertyValue')
     arg.Name = "nodepath"
@@ -9177,7 +9177,7 @@ def MENU_sistema_pagine():
     '''
     basic_LeenO('Finale.Set_Area_Stampa_N')
     basic_LeenO('Finale.Pulisci_Tabella_Tutta')
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('M1'):
         return
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
@@ -9343,7 +9343,7 @@ def fissa():
     '''
     @@ DA DOCUMENTARE
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lcol = Range2Cell()[0]
     lrow = Range2Cell()[1]
@@ -9390,7 +9390,7 @@ def trova_ricorrenze():
 
     def ricorrenze():
         '''Trova i codici di prezzo ricorrenti nel COMPUTO'''
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.CurrentController.ActiveSheet
         struttura_off()
         last = getLastUsedCell(oSheet).EndRow
@@ -9425,7 +9425,7 @@ def trova_ricorrenze():
     if len(lista_ricorrenze) == 0:
         DLG.MsgBox('Non ci sono voci di prezzo ricorrenti.', 'Informazione')
         return
-    psm = getComponentContext().ServiceManager
+    psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlg = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgLista?language=Basic&location=application"
@@ -9450,7 +9450,7 @@ def trova_ricorrenze():
 #     '''
 #     @@ DA DOCUMENTARE
 #     '''
-#     oDoc = getDocument()
+#     oDoc = LeenoUtils.getDocument()
 #     oSheet = oDoc.CurrentController.ActiveSheet
 #     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
 #         try:
@@ -9464,7 +9464,7 @@ def trova_ricorrenze():
 
 # def debug_():
 #     refresh(0)
-#     oDoc = getDocument()
+#     oDoc = LeenoUtils.getDocument()
 #     oSheet = oDoc.CurrentController.ActiveSheet
 #     try:
 #         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -9495,7 +9495,7 @@ def trova_np():
     Raggruppa le righe in modo da rendere evidenti i nuovi prezzi
     '''
     chiudi_dialoghi()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     refresh(0)
     struttura_off()
@@ -9530,7 +9530,7 @@ def debug_progressbar():
     @@ DA DOCUMENTARE
     '''
     try:
-        oDoc = getDocument()
+        oDoc = LeenoUtils.getDocument()
         # set up Status Indicator
         oCntl = oDoc.getCurrentController()
         oFrame = oCntl.getFrame()
@@ -9561,7 +9561,7 @@ def elimina_voci_doppie():
     '''
     DLG.chi('prova')
     # elimina voci doppie hard - grezza e lenta, ma efficace
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     _gotoSheet('Elenco Prezzi')
     oSheet = oDoc.CurrentController.ActiveSheet
     riordina_ElencoPrezzi()
@@ -9590,7 +9590,7 @@ def hl():
     Sostituisce hiperlink alla stringa nella colonna B, se questa è un
     indirizzo di file o cartella
     '''
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     for el in reversed(range(0, getLastUsedCell(oSheet).EndRow)):
         try:
@@ -9609,7 +9609,7 @@ def filtro_descrizione():
     la stringa cercata.
     '''
     struttura_off()
-    oDoc = getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.getCellRangeByPosition(2, 0, 2, 1048575).clearContents(HARDATTR)
 
@@ -9685,7 +9685,7 @@ def filtro_descrizione():
 ########################################################################
 # def debug_():
     # '''cambio data contabilità'''
-    # oDoc = getDocument()
+    # oDoc = LeenoUtils.getDocument()
     # #  mri(oDoc)
     # oSheet = oDoc.CurrentController.ActiveSheet
     # DLG.chi(oDoc.getCurrentSelection().CellBackColor)
@@ -9702,7 +9702,7 @@ def errore():
     @@ DA DOCUMENTARE
     '''
     DLG.MsgBox(traceback.format_exc())
-    
+
 def MENU_debug():
     '''
     Utile per testare comandi dalla toolbar DEV

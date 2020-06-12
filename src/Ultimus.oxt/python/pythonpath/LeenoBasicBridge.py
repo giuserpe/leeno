@@ -10,7 +10,7 @@ myPath = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())
 if(myPath not in sys.path):
     sys.path.append(myPath)
 
-from LeenoUtils import getComponentContext, getDesktop, getDocument
+import LeenoUtils
 
 print('''
 #######################################################################

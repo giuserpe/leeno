@@ -8705,6 +8705,9 @@ class version_code:
         """ Class initialiser """
         pass
 
+    def git_short_hash():
+        return subprocess.check_output(['git', 'rev-parse', '--short', 'HEAD']).decode('ascii').strip()
+
     def read ():
 
         if os.altsep:
@@ -8729,7 +8732,7 @@ class version_code:
         tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
         of = open(code_file, 'w')
 
-        new = str(Lmajor) + '.' + str(Lminor) + '.' + Lsubv.split('.')[0] + '.' + Ldev + '-TESTING-' + tempo[:-6]
+        new = str(Lmajor) + '.' + str(Lminor) + '.' + Lsubv.split('.')[0] + '.' + Ldev + '.' + str(git_short_hash) + '.' + tempo[:-6]
         of.write(new)
         of.close()
         return new

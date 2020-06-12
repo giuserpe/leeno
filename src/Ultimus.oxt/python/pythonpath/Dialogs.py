@@ -34,40 +34,22 @@ def getParentWindowSize():
         Get Size of parent window in order to
         be able to create a dialog on center of it
     '''
-
-    '''
     ctx = LeenoUtils.getComponentContext()
     serviceManager = ctx.ServiceManager
     toolkit = serviceManager.createInstanceWithContext(
         "com.sun.star.awt.Toolkit", ctx)
 
     oWindow = toolkit.getActiveTopWindow()
-
-    # sometimes we ask for ActiveTopWindow too early
-    # or there are no ACTIVE top windows... in that case
-    # we resort fetching the first available top window in list
     if oWindow is None:
-        print("\n\nNO ACTIVE TOP WINDOW, GETTING DESKTOP ONE\n\n")
-        try:
-            oWindow = toolkit.getTopWindow(toolkit.getTopWindowCount() - 1)
-        except Exception:
-            # fake size, in case we can't fetch it
-            print("\n\nFAILED TO GET TOP WINDOW SIZE\n\n")
-            return 400, 300
-    rect = oWindow.getPosSize()
-    print("\n\nTOP WINDOW SIZE IS:", (rect.Width, rect.Height), "\n\n")
-    return rect.Width, rect.Height
-    '''
+        oDesktop = ctx.ServiceManager.createInstanceWithContext(
+            "com.sun.star.frame.Desktop", ctx)
+        oDoc = oDesktop.getCurrentComponent()
 
-    ctx = LeenoUtils.getComponentContext()
-    oDesktop = ctx.ServiceManager.createInstanceWithContext(
-        "com.sun.star.frame.Desktop", ctx)
-    oDoc = oDesktop.getCurrentComponent()
-
-    oView = oDoc.getCurrentController()
-    oWindow = oView.getFrame().getComponentWindow()
+        oView = oDoc.getCurrentController()
+        oWindow = oView.getFrame().getComponentWindow()
     rect = oWindow.getPosSize()
     return rect.Width, rect.Height
+
 
 def getScreenInfo():
     '''
@@ -1516,11 +1498,6 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         self._dialogContainer = self._serviceManager.createInstanceWithContext(
             "com.sun.star.awt.UnoControlDialog", self._localContext)
 
-        xxxv = self._dialogContainer.View
-        xxxsz = xxxv.getSize()
-        print("\n\nSIZZZEEEEEEEE:", xxxsz, "\n\n")
-
-
         self._dialogContainer.setModel(self._dialogModel)
 
         self._showing = False
@@ -1759,7 +1736,6 @@ class Progress:
             )
 
     def _dlgHandler(self,  dialog,  widgetId,  widget,  cmdStr):
-        print("HANDLER CALLED")
         self._dlg.hide()
 
     def show(self):

@@ -31,7 +31,6 @@ def leggiAnagraficaGenerale(dati):
     datiAnagrafici['impresa'] = DatiGenerali[5].text or ''
     # datiAnagrafici['parteopera'] = DatiGenerali[6].text or ''
 
-    print("DATI:", datiAnagrafici)
     return datiAnagrafici
 
 def leggiSuperCapitoli(CapCat):

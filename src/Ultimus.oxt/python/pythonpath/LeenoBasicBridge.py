@@ -11,18 +11,7 @@ if(myPath not in sys.path):
     sys.path.append(myPath)
 
 import LeenoUtils
-
-print('''
-#######################################################################
-# IMPORTING PYLEENO FROM LEENBASICBRIDGE
-#######################################################################''')
-
 import pyleeno as PL
-print('''
-#######################################################################
-# DONE IMPORTING PYLEENO FROM LEENBASICBRIDGE
-#######################################################################''')
-
 
 def MENU_debug():
     '''

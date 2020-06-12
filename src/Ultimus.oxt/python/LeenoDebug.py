@@ -109,7 +109,7 @@ class OORunner:
         #if pid <= 0:
         if child is None:
             raise Exception("Failed to start OpenOffice on port %d" % self.port)
-       
+
 
 
     def shutdown(self):
@@ -159,7 +159,7 @@ def reloadLeenoModules():
     for f in pythonFiles:
         print("Loading module:", f)
         module = importlib.import_module(f)
-        
+
         # add to global dictionary, so it's available everywhere
         bDict[f] = module
 
@@ -189,7 +189,7 @@ if len(frames) > 0:
 Poi sembra strano quando dico che il python è stato studiato con i piedi...
 
 By default, when in the __main__ module, __builtins__ is the built-in module __builtin__ (note: no 's'); when in any other module,
-__builtins__ is an alias for the dictionary of the __builtin__ module itself. 
+__builtins__ is an alias for the dictionary of the __builtin__ module itself.
 Note that in Python3, the module __builtin__ has been renamed to builtins to avoid some of this confusion.
 '''
 
@@ -223,34 +223,34 @@ wr,  hr = Dialogs.getRadioButtonSize("X")
 
 dlg = Dialogs.Dialog(Title='Ciao pepp',  Horz=False, CanClose=True,  Handler=testHandler,   Items=[
     Dialogs.HSizer(Items=[
-        Dialogs.ImageControl(Image='info.png'), 
+        Dialogs.ImageControl(Image='info.png'),
         Dialogs.FixedText(Text="This is a nice, really really nice wanderful\nText Box\nwith some lines in it")
-    ]), 
+    ]),
     Dialogs.Spacer(),
     Dialogs.HSizer(Items=[
         Dialogs.RadioGroup(Id="MyRadioGroup", Default = 2,  Items=[
-            "First radio button", 
-            "Second radio button", 
-            "Third radio button", 
-            "Another radio button" 
+            "First radio button",
+            "Second radio button",
+            "Third radio button",
+            "Another radio button"
         ]),
         Dialogs.Spacer(),
         Dialogs.VSizer(Items=[
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr), 
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr), 
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr), 
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr), 
+            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
+            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
+            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
+            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
         ]) ,
         Dialogs.Spacer(),
-        Dialogs.RadioGroup(Id="MySecondRadioGroup", Items=['Some',  'More',  'Radio',  'Buttons']), 
-    ]), 
+        Dialogs.RadioGroup(Id="MySecondRadioGroup", Items=['Some',  'More',  'Radio',  'Buttons']),
+    ]),
     Dialogs.Spacer(),
     Dialogs.Spacer(),
     Dialogs.HSizer(Items=[
-        Dialogs.Button(Label='Ok',  RetVal=1,  Icon='ok_24x24.png'), 
-        Dialogs.Spacer(), 
-        Dialogs.Button(Label='Cancel',  RetVal=0,  Icon='cancel_24x24.png'), 
-    ]), 
+        Dialogs.Button(Label='Ok',  RetVal=1,  Icon='ok_24x24.png'),
+        Dialogs.Spacer(),
+        Dialogs.Button(Label='Cancel',  RetVal=0,  Icon='cancel_24x24.png'),
+    ]),
 ])
 
 dlg._layout()

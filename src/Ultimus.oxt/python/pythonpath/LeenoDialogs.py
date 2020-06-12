@@ -197,22 +197,37 @@ def ScegliElaborato(titolo):
             elaborato = 'Elenco'
     return elaborato
 
-def ScegliElabDest(*, Title='', AskTarget=False, ValComputo=None, ValVariante=None, ValContabilita=None):
+
+def ScegliElabDest(*, Title='', AskTarget=False, AskSort=False, Sort=False, ValComputo=None, ValVariante=None, ValContabilita=None):
 
     # altezza radiobutton, per fare il testo con il valore uguale
     # ed averli quindi allineati
     radioH = Dialogs.getRadioButtonHeight()
-    
+
     # dimensione dell'icona col punto di domanda
     imgW = Dialogs.getBigIconSize()[0] * 2
-    
+
     # i 3 valori totali
     vCmp = '' if ValComputo is None else '{:9.2f} €'.format(ValComputo)
     vVar = '' if ValVariante is None else '{:9.2f} €'.format(ValVariante)
     vCon = '' if ValContabilita is None else '{:9.2f} €'.format(ValContabilita)
 
+    # handler per il button di info
+    def infoHandler(owner,  widgetId,  widget,  cmdStr):
+        if widgetId == 'sortInfo':
+            Dialogs.Info(Title="Note sull'ordinamento", Text=
+                "È possibile effettuare l'ordinamento delle voci di\n"
+                "computo in  base  alla  struttura delle categorie.\n"
+                "Se il file in origine è particolarmente disordinato,\n"
+                "riceverai un messaggio che ti indica come intervenire.\n"
+                "Se il risultato finale non dovesse andar bene, puoi\n"
+                "ripetere l'importazione senza il riordino delle voci\n"
+                "de-selezionando la casella relativa"
+            )
+        return False
+
     # prima parte fissa del dialogo
-    dlg = Dialogs.Dialog(Title=Title, Items=[
+    dlg = Dialogs.Dialog(Title=Title, Handler=infoHandler, Items=[
         Dialogs.HSizer(Items=[
             Dialogs.VSizer(Items=[
                 Dialogs.Spacer(),
@@ -251,6 +266,16 @@ def ScegliElabDest(*, Title='', AskTarget=False, ValComputo=None, ValVariante=No
             ])
         )
 
+    if AskSort:
+        dlg["vsizer"].add(
+            Dialogs.Spacer(),
+            Dialogs.GroupBox(Label="Ordinamento computo", Items=[
+                Dialogs.CheckBox(Id="sort", Label="Ordina computo", State=Sort),
+                Dialogs.Spacer(),
+                Dialogs.Button(Id="sortInfo", Label="Info su ordinamento", Icon="Icons-24x24/info.png")
+            ])
+        )
+
     dlg["vsizer"].add(
         Dialogs.Spacer(),
         Dialogs.HSizer(Items=[
@@ -259,12 +284,13 @@ def ScegliElabDest(*, Title='', AskTarget=False, ValComputo=None, ValVariante=No
             Dialogs.Button(Label="Annulla", RetVal=-1, Icon="Icons-24x24/cancel.png"),
         ])
     )
-    
+
     # check if we canceled the job
     if dlg.run() == -1:
         return None
 
     elab = ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'Elenco')[dlg['elab'].getCurrent()]
     dest = ('CORRENTE', 'NUOVO')[dlg['dest'].getCurrent() if AskTarget else 1]
-    
-    return {'elaborato':elab, 'destinazione':dest}
+    sort = dlg['sort'].getState()
+
+    return {'elaborato':elab, 'destinazione':dest, 'ordina':sort}

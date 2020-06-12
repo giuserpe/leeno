@@ -29,8 +29,21 @@ def getCurrentPath():
     return os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
 
-def getParentWindowInfo():
-    ''' Get point at desktop's center -- to be able to center dialogs around it'''
+def getParentWindowSize():
+    '''
+        Get Size of parent window in order to
+        be able to create a dialog on center of it
+    '''
+    ctx = getComponentContext()
+    serviceManager = ctx.ServiceManager
+    toolkit = serviceManager.createInstanceWithContext(
+        "com.sun.star.awt.Toolkit", ctx)
+
+    oWindow = toolkit.getActiveTopWindow ()
+    rect = oWindow.getPosSize()
+    return rect.Width, rect.Height
+
+'''
     ctx = getComponentContext()
     oDesktop = ctx.ServiceManager.createInstanceWithContext(
         "com.sun.star.frame.Desktop", ctx)
@@ -45,7 +58,7 @@ def getParentWindowInfo():
     H = rect.Height
 
     return Rectangle(Xc, Yc, W, H)
-
+'''
 
 def getScreenInfo():
     '''
@@ -103,7 +116,7 @@ def getBigIconSize():
     scWidth,  scHeight = getScreenInfo()
     siz = min(scWidth, scHeight)
     siz = int(siz / 20)
-    
+
     return siz, siz
 
 
@@ -153,12 +166,42 @@ def getRadioButtonHeight():
     return getRadioButtonSize("X")[1]
 
 
-def getButtonSize(txt):
+def getCheckBoxSize(label):
+    '''
+    Get the size needed to display a checkbox
+    BEWARE : SIZE IN PIXEL !
+    '''
+    ctx = getComponentContext()
+    serviceManager = ctx.ServiceManager
+
+    cbModel = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlCheckBoxModel")
+    cb = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlCheckBox")
+    cb.setModel(cbModel)
+    cb.setLabel(label)
+    size = cb.getMinimumSize()
+    cbModel.dispose()
+    return size.Width,  size.Height
+
+
+def getCheckBoxHeight():
+    '''
+    Get the height needed to display a checkbox
+    BEWARE : SIZE IN PIXEL !
+    '''
+    return getCheckBoxSize("X")[1]
+
+
+def getButtonSize(txt, Icon=None):
     '''
     Get 'best' button size in a dialog
     based on text
     '''
     width,  height = getTextBox(txt)
+    if Icon is not None:
+        width += 32
+        height = max(height, 24)
     return max(width + 15, 100),   height + 15
 
 
@@ -380,7 +423,7 @@ class DialogItem:
         # store owner pointer too
         self._owner = owner
 
-        # if the control is a Button, setup an event handler
+        # if the control shall handle actions, setup an event handler
         action = self.getAction()
         if action is not None and action != '':
             dialogContainer.getControl(self._id).addActionListener(owner)
@@ -393,6 +436,10 @@ class DialogItem:
         '''
         self._UNOWidget = None
         self._owner = None
+
+    def _actionPerformed(self):
+        ''' an action on underlying widget happened '''
+        pass
 
 
 class Spacer(DialogItem):
@@ -781,12 +828,12 @@ class FixedText(DialogItem):
         '''
         txt = self._text.replace("\n", "\\n")
         return super().dump(indent) + f", Text: '{txt}'" + '}'
-        
+
     def setText(self, txt):
         self._text = txt
         if self._UNOWidget is not None:
             self._UNOWidget.Label = txt
-            
+
     def getText(self):
         return self._text
 
@@ -805,7 +852,7 @@ class ImageControl(DialogItem):
         # for images we do some smart sizing here...
         iW, iH = getImageSize(Image)
         ratio = iH / iW
-        
+
         # take minimum sizes as the "true" minimum
         if MinWidth is not None:
             minH = int(MinWidth * ratio)
@@ -813,7 +860,7 @@ class ImageControl(DialogItem):
                 MinHeight = minH
         elif MinHeight is not None:
             MinWidth = int(MinHeight / ratio)
-            
+
         # take maximum sizes as the "true" maximum
         if MaxWidth is not None:
             maxH = int(MaxWidth * ratio)
@@ -821,13 +868,13 @@ class ImageControl(DialogItem):
                 MaxHeight = maxH
         elif MaxHeight is not None:
             MaxWidth = int(MaxHeight / ratio)
-            
+
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
                          FixedWidth=FixedWidth, FixedHeight=FixedHeight)
         self._image = Image
-        
+
 
     def calcMinSize(self):
         '''
@@ -860,7 +907,7 @@ class ProgressBar(DialogItem):
     ProgressBar
     Display a ProgressBar
     '''
-    def __init__(self, *, Id=None, MinVal=0, MaxVal=100, Value=0, 
+    def __init__(self, *, Id=None, MinVal=0, MaxVal=100, Value=0,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None):
@@ -878,8 +925,8 @@ class ProgressBar(DialogItem):
         Calculate widget's minimum size
         '''
         # try to get an "optimal" size from current window
-        wi = getParentWindowInfo()
-        Width = int(2 * wi.Width / 3)
+        pW, pH = getParentWindowSize()
+        Width = int(2 * pW / 3)
 
         # correct the width just to be not too small nor too big
         ws,  hs = getScreenInfo()
@@ -907,22 +954,22 @@ class ProgressBar(DialogItem):
         convert object to string
         '''
         return super().dump(indent) + '}'
-        
+
     def setLimits(self,  minVal, maxVal):
         self._minVal = minVal
         self._maxVal = maxVal
         if self._UNOWidget is not None:
             self._UNOWidget.ProgressValueMin = minVal
             self._UNOWidget.ProgressValueMax = maxVal
-            
+
     def getLimits(self):
         return self._minVal, self._maxVal
-       
+
     def setValue(self, val):
         self._value = val
         if self._UNOWidget is not None:
             self._UNOWidget.ProgressValue = val
-            
+
     def getValue(self):
         return self._value
 
@@ -953,7 +1000,7 @@ class Button(DialogItem):
         '''
         Calculate widget's minimum size
         '''
-        return getButtonSize(self._label)
+        return getButtonSize(self._label, self._icon)
 
     def getProps(self):
         '''
@@ -982,6 +1029,70 @@ class Button(DialogItem):
         res = super().dump(indent)
         res += f", Label: '{self._label}'"
         res += f", Icon: '{self._icon}'" + '}'
+        return res
+
+
+class CheckBox(DialogItem):
+    '''
+    Checkbox
+    Display a check box (aka option)
+    '''
+    def __init__(self, *, Id=None, Label='aLabel', State=False,
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self._label = Label
+        self._state = State
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return getCheckBoxSize(self._label)
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {
+            'Label': self._label,
+            'State': int(self._state)
+        }
+
+    def getAction(self):
+        '''
+        Gets a string representing the action on the control
+        This string will be sent to event handler along with control name
+        If the value returned is None or an empty string, no action will be performed
+        '''
+        return "OnChange"
+
+    def setState(self, state):
+        self._state = state
+        if self._UNOWidget:
+            self._UNOWidget.State = self._state
+
+    def getState(self):
+        return self._state
+
+    def _actionPerformed(self):
+        ''' an action on underlying widget happened '''
+        self._state = True if self._UNOWidget.State else False
+
+    def dump(self, indent):
+        '''
+        convert object to string
+        '''
+        res = super().dump(indent)
+        res += f", Label: '{self._label}'"
+        res += f", State: '{self._state}'"
         return res
 
 
@@ -1089,7 +1200,7 @@ class RadioGroup(DialogItem):
         self._sizer._x = self._x
         self._sizer._y = self._y
         self._sizer._adjustLayout()
-        
+
     def add(self, *items):
         ''' add elements to group '''
         for item in items:
@@ -1227,7 +1338,7 @@ class GroupBox(DialogItem):
         self._sizer._x = self._x + GROUPBOX_LEFT_BORDER
         self._sizer._y = self._y + GROUPBOX_TOP_BORDER
         self._sizer._adjustLayout()
-        
+
     def add(self, *items):
         ''' add elements to group '''
         for item in items:
@@ -1361,9 +1472,9 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         self._layout()
 
         # we try to place the dialog bar at center of parent window
-        wi = getParentWindowInfo()
-        self._x = wi.X - int(self._width / 2)
-        self._y = wi.Y - int(self._height / 2)
+        pW, pH = getParentWindowSize()
+        self._x = int((pW - self._width) / 2)
+        self._y = int((pH - self._height) / 2)
 
         # create UNO dialog
         self._localContext = getComponentContext()
@@ -1382,7 +1493,6 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         self._dialogModel.Height = int(self._height * yScale)
 
         self._dialogModel.Name = "Default"
-        self._dialogModel.Closeable = True
         self._dialogModel.Moveable = True
         self._dialogModel.Title = self._title
         self._dialogModel.DesktopAsParent = False
@@ -1449,18 +1559,21 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
             widget = self.getWidget(widgetId)
             #update current item in group
             widget._current = int(cmdStr)
+        # otherwise we signal the widget that some action was performed on it
+        else:
+            widget._actionPerformed()
 
         # if we've got an handler, we process the command inside it
         # and if returning True we close the dialog
         # if no handler or returning false, we process the event from here
         if self._handler is not None:
-            if self._handler(self,  widgetId,  widget,  cmdStr):
+            if self._handler(self, widgetId, widget, cmdStr):
                 return
 
         if widget is None:
-            return
+           return
 
-        if hasattr(widget,  '_retVal'):
+        if hasattr(widget,  '_retVal') and widget._retVal is not None:
             self.stop(widget._retVal)
 
     def run(self):
@@ -1503,7 +1616,7 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
 
         self._showing = True
         self._dialogContainer.setVisible(True)
-        
+
     def hide(self):
         '''
         Hide the dialog
@@ -1577,36 +1690,36 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
         return oPath
     return None
 
-def NotifyDialog(image,  title,  message):
-    dlg = Dialog(Title=title,  Horz=False, CanClose=True,  Items=[
+def NotifyDialog(*, Image, Title, Text):
+    dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
         HSizer(Items=[
-            ImageControl(Image=image), 
-            Spacer(), 
-            FixedText(Text=message)
-        ]), 
-        Spacer(), 
+            ImageControl(Image=Image),
+            Spacer(),
+            FixedText(Text=Text)
+        ]),
+        Spacer(),
         HSizer(Items=[
-            Spacer(), 
+            Spacer(),
             Button(Label='Ok', Icon='Icons-24x24/ok.png',  RetVal=1),
             Spacer()
         ])
     ])
     return dlg.run()
 
-def Exclamation(title,  message):
-    return NotifyDialog('Icons-Big/exclamation.png',  title,  message)
+def Exclamation(*, Title='', Text=''):
+    return NotifyDialog(Image='Icons-Big/exclamation.png', Title=Title, Text=Text)
 
-def Info(title,  message):
-    return NotifyDialog('Icons-Big/info.png',  title,  message)
+def Info(*, Title='', Text=''):
+    return NotifyDialog(Image='Icons-Big/info.png', Title=Title, Text=Text)
 
-def Ok(title,  message):
-    return NotifyDialog('Icons-Big/ok.png',  title,  message)
+def Ok(*, Title='', Text=''):
+    return NotifyDialog(Image='Icons-Big/ok.png', Title=Title, Text=Text)
 
 class Progress:
     '''
     Display a progress bar with some options
     '''
-    def __init__(self,  Title='',  Closeable=False,  MinVal=0,  MaxVal=100,  Value=0,  Text=''):
+    def __init__(self, *, Title='', Closeable=False, MinVal=0, MaxVal=100, Value=0, Text=''):
         ''' constructor '''
         self._dlg = Dialog(
             Title=Title, Horz=False, CanClose=Closeable,
@@ -1619,7 +1732,7 @@ class Progress:
         if Text is not None:
             self._textWidget = FixedText(Text=Text)
             self._dlg.add(self._textWidget)
-        
+
         if Closeable:
             self._dlg.add(Spacer())
             self._dlg.add(
@@ -1629,26 +1742,26 @@ class Progress:
                     Spacer()
                 ])
             )
-            
+
     def _dlgHandler(self,  dialog,  widgetId,  widget,  cmdStr):
         print("HANDLER CALLED")
         self._dlg.hide()
 
     def show(self):
         self._dlg.show()
-        
+
     def hide(self):
         self._dlg.hide()
-        
+
     def showing(self):
         return self._dlg.showing()
-        
+
     def setLimits(self,  pMin,  pMax):
         self._progress.setLimits(pMin, pMax)
-        
+
     def getLimits(self):
         return self._progress.getLimits()
-        
+
     def setValue(self,  val):
         self._progress.setValue(val)
         if self._text is not None:
@@ -1656,10 +1769,10 @@ class Progress:
             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
             txt = self._text + ' (' + percent + ')'
             self._textWidget.setText(txt)
-        
+
     def getValue(self):
         return self._progress.getValue()
-        
+
     def setText(self,  txt):
         pass
 
@@ -1680,3 +1793,35 @@ def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):
         idx += 1
     dlg = Dialog(Title=Title, Items=[top, Spacer(), bottom])
     return dlg.run()
+
+
+def YesNo(*, Title='', Text='', CanClose=True):
+    '''
+    Yes/No dialog
+    by default (CanClose=True) dialog may be dismissed
+    closing it on topbar or pressing escape, with result 'No'
+    '''
+    res = MultiButton(
+        Icon="Icons-Big/question.png",
+        Title=Title, Text=Text, CanClose=CanClose,
+        Buttons={'Si':'si', 'No':'no'}
+    )
+    if res == -1:
+        res = 'no'
+    return res
+
+def YesNoCancel(*, Title='', Text=''):
+    '''
+    Yes/No/Cancel dialog
+    by default (CanClose=True) dialog may be dismissed
+    closing it on topbar or pressing escape, with result 'No'
+    '''
+    res = MultiButton(
+        Icon="Icons-Big/question.png",
+        Title=Title, Text=Text, CanClose=True,
+        Buttons={'Si':'si', 'No':'no', 'Annulla':-1}
+    )
+    if res == -1:
+        res = 'annulla'
+    return res
+

@@ -30,7 +30,13 @@ def getDocument():
     '''
     desktop = getDesktop()
     
-    desktop.getCurrentFrame().activate()
+    # try to activate current frame
+    # needed sometimes because UNO doesnt' find the correct window
+    # when debugging.
+    try:
+        desktop.getCurrentFrame().activate()
+    except Exception:
+        pass
 
     return desktop.getCurrentComponent()
 

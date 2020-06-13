@@ -28,8 +28,8 @@ oowriter_bin=/usr/lib/libreoffice/program/swriter
 # echo "sì" | $unopkg_bin add $addon_bin_path/$oxt_file
 
 #enable debug log
-#export PYUNO_LOGLEVEL=CALL
-export PYUNO_LOGLEVEL=ARGS
+export PYUNO_LOGLEVEL=CALL
+#export PYUNO_LOGLEVEL=ARGS
 export PYUNO_LOGTARGET=stdout
 
 #launch LO CALC

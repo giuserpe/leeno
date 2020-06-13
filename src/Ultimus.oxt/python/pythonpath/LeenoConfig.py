@@ -59,6 +59,7 @@ class Config(Borg):
             ('Zoom', 'fattore', '100'),
             ('Zoom', 'fattore_ottimale', '81'),
             ('Zoom', 'fullscreen', '0'),
+
             ('Generale', 'dialogo', '1'),
             #  ('Generale', 'visualizza', 'Menù Principale'),
             ('Generale', 'altezza_celle', '1.25'),
@@ -82,7 +83,10 @@ class Config(Borg):
             ('Contabilità', 'cont_fine_voci_abbreviate', '120'),
             ('Contabilità', 'abilitaconfigparser', '0'),
             ('Contabilità', 'idxsal', '20'),
-            ('Contabilità', 'ricicla_da', 'COMPUTO'))
+            ('Contabilità', 'ricicla_da', 'COMPUTO'),
+
+            ('Importazione', 'ordina_computo', '1'),
+        )
 
         for param in parametri:
             try:

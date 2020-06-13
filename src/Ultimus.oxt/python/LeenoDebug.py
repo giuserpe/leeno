@@ -199,138 +199,61 @@ bDict['__global_context__'] = lo['context']
 # load LeenO modules
 reloadLeenoModules()
 
-import Dialogs
+def sortRange(oRange, oColumn, oCriterio):
+    '''
+    ordinamento di un range di celle
+    secondo una colonna prescelta
+    ed un criterio definito
+    '''
+    pass
 
-'''
-Test dialog handler
-'''
-def testHandler(dialog,  widgetId,  widget,  cmdStr):
-    print(f"Handler called with {cmdStr} sent by {widgetId}\n")
-    w = dialog.getWidget("MyRadioGroup")
-    n = w.getCount()
-    i = w.getCurrent() + 1
-    if i >= n:
-        i = 0
-    w.setCurrent(i)
-    return False
+import uno
+from com.sun.star.beans import PropertyValue
+from com.sun.star.util import SortField
 
+def create_sort_field(column, sort_ascending):
+    oSortField = SortField()
+    oSortField.Field = column
+    oSortField.SortAscending = sort_ascending
+    return oSortField
 
-'''
-Test dialog
-'''
-'''
-wr,  hr = Dialogs.getRadioButtonSize("X")
+def sort_cols(oRange, sortFields):
+    '''
+    sort a range of cells based on given sortFields
+    sortfields are given by a tuple
+    so you can order by more criterions
+    '''
+    oSortDesc = [PropertyValue()]
+    oSortDesc[0].Name = "SortFields"
+    oSortDesc[0].Value = uno.Any("[]com.sun.star.util.SortField", sortFields)
+    oRange.sort(oSortDesc)
 
-dlg = Dialogs.Dialog(Title='Ciao pepp',  Horz=False, CanClose=True,  Handler=testHandler,   Items=[
-    Dialogs.HSizer(Items=[
-        Dialogs.ImageControl(Image='info.png'),
-        Dialogs.FixedText(Text="This is a nice, really really nice wanderful\nText Box\nwith some lines in it")
-    ]),
-    Dialogs.Spacer(),
-    Dialogs.HSizer(Items=[
-        Dialogs.RadioGroup(Id="MyRadioGroup", Default = 2,  Items=[
-            "First radio button",
-            "Second radio button",
-            "Third radio button",
-            "Another radio button"
-        ]),
-        Dialogs.Spacer(),
-        Dialogs.VSizer(Items=[
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
-            Dialogs.FixedText(Text="9999.99",  MinHeight=hr),
-        ]) ,
-        Dialogs.Spacer(),
-        Dialogs.RadioGroup(Id="MySecondRadioGroup", Items=['Some',  'More',  'Radio',  'Buttons']),
-    ]),
-    Dialogs.Spacer(),
-    Dialogs.Spacer(),
-    Dialogs.HSizer(Items=[
-        Dialogs.Button(Label='Ok',  RetVal=1,  Icon='ok_24x24.png'),
-        Dialogs.Spacer(),
-        Dialogs.Button(Label='Cancel',  RetVal=0,  Icon='cancel_24x24.png'),
-    ]),
-])
+desktop = lo['desktop']
 
-dlg._layout()
+docPath = "/home/massimo/SortTest.ods"
+docUrl = uno.systemPathToFileUrl(docPath)
+oDoc = desktop.loadComponentFromURL(docUrl, "_blank", 0, ())
 
-res = dlg.run()
+#oDoc = desktop.getCurrentComponent()
+oSheet = oDoc.Sheets[0]
 
-'''
+# crea un range di prova
+startCol = 0
+startRow = 0
+endCol = 3
+endRow = 9
+oRange = oSheet.getCellRangeByPosition(startCol, startRow, endCol, endRow)
 
-'''
-prg = Dialogs.Progress(Title="Progress test", Text="Sto lavorando", Closeable=True)
+# colonna per cui ordinare
+sortCol = 1
 
-prg.show()
-for i in range(1, 100):
-    prg.setValue(i)
-    if not prg.showing():
-        print("CANCELLED")
-        break
-    time.sleep(0.05)
-prg.hide()
-'''
-
-'''
-a = True
-radioH = Dialogs.getRadioButtonHeight()
-imgW = Dialogs.getBigIconSize()[0] * 2
-dlg = Dialogs.Dialog(Title="Importa dal formato XPWE", Items=[
-    Dialogs.HSizer(Items=[
-        Dialogs.VSizer(Items=[
-            Dialogs.Spacer(),
-           Dialogs.ImageControl(Id="img", Image="Icons-Big/question.png", MinWidth=imgW),
-            Dialogs.Spacer()
-        ]),
-        Dialogs.VSizer(Id="vsizer", Items=[
-            Dialogs.GroupBox(Label="Scegli elaborato", Items=[
-                Dialogs.HSizer(Items=[
-                    Dialogs.RadioGroup(Id="elab", Items=[
-                        "Computo",
-                        "Variante",
-                        "Contabilità",
-                        "Elenco Prezzi"
-                    ]),
-                    Dialogs.Spacer(),
-                    Dialogs.VSizer(Items=[
-                        Dialogs.FixedText(Id="TotComputo", Text="€ 999999.00", MinHeight=radioH),
-                        Dialogs.FixedText(Id="TotVariante", Text="€ 999999.00", MinHeight=radioH),
-                        Dialogs.FixedText(Id="TotContabilità", Text="€ 999999.00", MinHeight=radioH),
-                        Dialogs.Spacer()
-                    ])
-                ])
-            ])
-        ])
-    ])
-])
-if a:
-    dlg["vsizer"].add(
-        Dialogs.Spacer(),
-        Dialogs.GroupBox(Label="Scegli destinazione", Items=[
-            Dialogs.RadioGroup(Id="dest", Items=[
-                "Documento corrente",
-                "Nuovo documento"
-            ])
-        ])
-    )
-
-dlg["vsizer"].add(
-    Dialogs.Spacer(),
-    Dialogs.HSizer(Items=[
-        Dialogs.Button(Label="Ok", RetVal=1, Icon="Icons-24x24/ok.png"),
-        Dialogs.Spacer(),
-        Dialogs.Button(Label="Annulla", RetVal=-1, Icon="Icons-24x24/cancel.png"),
-    ])
-)
-
-dlg._layout()
-x = dlg.dump()
-
-dlg.run()
-'''
-
-from LeenoImport_XPWE import MENU_XPWE_import as X
-X()
+sortField = create_sort_field(0, True)
+sort_cols(oRange, (sortField,))
 
 print("\nDONE\n")
+
+
+
+
+
+

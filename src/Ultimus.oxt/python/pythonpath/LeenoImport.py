@@ -448,7 +448,7 @@ def MENU_basilicata_2020():
         oSheet = oDoc.getSheets().getByName(el)
         oSheet.getRows().removeByIndex(0, 1)
     oSheet = oDoc.getSheets().getByName('CATEGORIE')
-    PL._gotoSheet('CATEGORIE')
+    PL.GotoSheet('CATEGORIE')
     fine = PL.getLastUsedCell(oSheet).EndRow + 1
     for i in range(0, fine):
         oSheet.getCellByPosition(1, i).String = (
@@ -458,14 +458,14 @@ def MENU_basilicata_2020():
 
     oSheet.getColumns().removeByIndex(0, 1)
     oSheet = oDoc.getSheets().getByName('VOCI')
-    PL._gotoSheet('VOCI')
+    PL.GotoSheet('VOCI')
     oSheet.getColumns().removeByIndex(0, 3)
     oSheet = oDoc.getSheets().getByName('SOTTOVOCI')
-    PL._gotoSheet('SOTTOVOCI')
+    PL.GotoSheet('SOTTOVOCI')
     oSheet.getColumns().removeByIndex(0, 4)
     PL.join_sheets()
     oSheet = oDoc.getSheets().getByName('unione_fogli')
-    PL._gotoSheet('unione_fogli')
+    PL.GotoSheet('unione_fogli')
     oSheet.getRows().removeByIndex(0, 1)
     PL.ordina_col(1)
     fine = PL.getLastUsedCell(oSheet).EndRow + 1
@@ -546,7 +546,7 @@ def MENU_Piemonte_2019():
     except Exception:
         pass
 
-    PL._gotoSheet('nuova_tabella')
+    PL.GotoSheet('nuova_tabella')
     oSheet = oDoc.getSheets().getByName('nuova_tabella')
     elenco = tuple(elenco)
     oRange = oSheet.getCellRangeByPosition(0,

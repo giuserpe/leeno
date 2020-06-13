@@ -95,3 +95,26 @@ def isLeenoDocument():
         return getDocument().getSheets().hasByName('S2')
     except Exception:
         return False
+
+def DisableDocumentRefresh(oDoc):
+    '''
+    Disabilita il refresh per accelerare le procedure
+    '''
+    #oDoc.enableAutomaticCalculation(False)
+    #oDoc.lockControllers()
+    #oDoc.addActionLock()
+    #oDoc.getCurrentController().getFrame().getContainerWindow().Visible= False
+
+    oCtrl = oDoc.CurrentController;
+    #oDoc.disconnectController(oCtrl)
+    return oCtrl
+
+def EnableDocumentRefresh(oDoc, oCtrl):
+    '''
+    Riabilita il refresh
+    '''
+    #oDoc.getCurrentController().getFrame().getContainerWindow().Visible= True
+    #oDoc.removeActionLock()
+    #oDoc.unlockControllers()
+    #oDoc.enableAutomaticCalculation(True)
+    #oDoc.connectController(oCtrl)

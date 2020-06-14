@@ -9,7 +9,6 @@ def getNumFormat(FormatString):
     FormatString { string } : codifica letterale del numero; es.: "#.##0,00"
     '''
     oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
 
     LocalSettings = uno.createUnoStruct("com.sun.star.lang.Locale")
     LocalSettings.Language = "it"
@@ -29,7 +28,6 @@ def getFormatString(stile_cella):
     stile_cella { string } : nome dello stile di cella
     '''
     oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
     num = oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).NumberFormat
     return oDoc.getNumberFormats().getByKey(num).FormatString
 
@@ -41,7 +39,6 @@ def setCellStyleDecimalPlaces(nome_stile, n):
     n { int } : nuovo numero decimali
     '''
     oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
     stringa = getFormatString(nome_stile).split(';')
     new = list()
     for el in stringa:

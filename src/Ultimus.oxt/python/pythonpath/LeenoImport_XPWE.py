@@ -1085,6 +1085,10 @@ def MENU_XPWE_import():
     root = tree.getroot()
     logging.debug(list(root))
 
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Lettura dati")
+    progress.show()
+
     # ########################################################################################
     # LETTURA DATI
 
@@ -1123,9 +1127,15 @@ def MENU_XPWE_import():
         PL.New_file.computo(0)
         oDoc = LeenoUtils.getDocument()
 
+    # occorre ricreare di nuovo la progressbar, in modo che sia
+    # agganciata al nuovo documento
+    progress.hide();
+    progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Scrittura computo")
+    progress.show()
+
     print("GOT NEW DOC")
     # disattiva l'output a video
-    oCtrl = LeenoUtils.DisableDocumentRefresh(oDoc)
+    LeenoUtils.DisableDocumentRefresh(oDoc)
 
     print("DISABLED REFRESH")
 
@@ -1155,6 +1165,8 @@ def MENU_XPWE_import():
     print("EliminaVociDoppieElencoPrezzi DONE")
     # se non ci sono misurazioni di computo, finisce qui
     if len(listaMisure) == 0:
+        progress.hide()
+
         Dialogs.Info(Title="Importazione completata",
                      Text="Importate n." +
                            str(len(elencoPrezzi['ListaArticoli'])) +
@@ -1163,7 +1175,7 @@ def MENU_XPWE_import():
         oDoc.CurrentController.setActiveSheet(oSheet)
 
         # riattiva l'output a video
-        LeenoUtils.EnableDocumentRefresh(oDoc, oCtrl)
+        LeenoUtils.EnableDocumentRefresh(oDoc)
         print("ENABLED REFRESH - 1")
         return
 
@@ -1172,9 +1184,11 @@ def MENU_XPWE_import():
     print("compilaComputo DONE")
 
     # riattiva l'output a video
-    LeenoUtils.EnableDocumentRefresh(oDoc, oCtrl)
+    LeenoUtils.EnableDocumentRefresh(oDoc)
     print("ENABLED REFRESH - 2")
 
     PL.GotoSheet(elaborato)
     PL.adatta_altezza_riga()
+
+    progress.hide()
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

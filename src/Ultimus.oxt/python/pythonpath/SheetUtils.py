@@ -1,5 +1,7 @@
 '''
 Utilities to handle worksheets
+
+Copyright 2020 by Massimo Del Fedele
 '''
 import uno
 from com.sun.star.beans import PropertyValue

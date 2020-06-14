@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project LeenoDebug -->
-<!-- Saved: 2020-06-11, 12:54:48 -->
+<!-- Saved: 2020-06-14, 02:02:14 -->
 <!-- Copyright (C) 2020 Massimo Del Fedele, max@veneto.com -->
 <Project version="5.1">
   <Language></Language>
@@ -28,6 +28,7 @@ Probably works only on Linux</Description>
     <Source>pythonpath/LeenoImport_XmlSix.py</Source>
     <Source>pythonpath/LeenoToolbars.py</Source>
     <Source>pythonpath/LeenoUtils.py</Source>
+    <Source>pythonpath/SheetUtils.py</Source>
     <Source>pythonpath/pyleeno.py</Source>
   </Sources>
   <MainScript>LeenoDebug.py</MainScript>

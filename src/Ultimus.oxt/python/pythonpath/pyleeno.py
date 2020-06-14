@@ -2806,10 +2806,16 @@ def riordina_ElencoPrezzi():
         return
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
 
+    '''
+    REPLACED WITH DIRECT SORT WITHOUT USING CurrentController
+    So it can be done headless without screen flickering
+
     oDoc.CurrentController.select(oRange)
     ordina_col(1)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+    '''
+    SheetUtils.simpleSortColumn(oRange, 0, True)
 
     EnableAutoCalc()
 

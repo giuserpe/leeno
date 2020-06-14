@@ -199,56 +199,20 @@ bDict['__global_context__'] = lo['context']
 # load LeenO modules
 reloadLeenoModules()
 
-def sortRange(oRange, oColumn, oCriterio):
-    '''
-    ordinamento di un range di celle
-    secondo una colonna prescelta
-    ed un criterio definito
-    '''
-    pass
+from xml.etree.ElementTree import ElementTree, ParseError
 
-import uno
-from com.sun.star.beans import PropertyValue
-from com.sun.star.util import SortField
+filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/EsempioComputoDaGiuseppe.xpwe"
+tree = ElementTree()
+tree.parse(filename)
 
-def create_sort_field(column, sort_ascending):
-    oSortField = SortField()
-    oSortField.Field = column
-    oSortField.SortAscending = sort_ascending
-    return oSortField
+root = tree.getroot()
+misurazioni = root.find('PweMisurazioni')
 
-def sort_cols(oRange, sortFields):
-    '''
-    sort a range of cells based on given sortFields
-    sortfields are given by a tuple
-    so you can order by more criterions
-    '''
-    oSortDesc = [PropertyValue()]
-    oSortDesc[0].Name = "SortFields"
-    oSortDesc[0].Value = uno.Any("[]com.sun.star.util.SortField", sortFields)
-    oRange.sort(oSortDesc)
+PweElencoPrezzi = misurazioni.getchildren()[0]
 
-desktop = lo['desktop']
+# leggo l'elenco prezzi
+epitems = PweElencoPrezzi.findall('EPItem')
 
-docPath = "/home/massimo/SortTest.ods"
-docUrl = uno.systemPathToFileUrl(docPath)
-oDoc = desktop.loadComponentFromURL(docUrl, "_blank", 0, ())
-
-#oDoc = desktop.getCurrentComponent()
-oSheet = oDoc.Sheets[0]
-
-# crea un range di prova
-startCol = 0
-startRow = 0
-endCol = 3
-endRow = 9
-oRange = oSheet.getCellRangeByPosition(startCol, startRow, endCol, endRow)
-
-# colonna per cui ordinare
-sortCol = 1
-
-sortField = create_sort_field(0, True)
-sort_cols(oRange, (sortField,))
 
 print("\nDONE\n")
 

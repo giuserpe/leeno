@@ -57,10 +57,10 @@ def _Fill_Ep(nome, lista_articoli):
         riga = riga + step
 
     oSheet.getRows().removeByIndex(3, 1)
-    oDoc.CurrentController.setActiveSheet(oSheet)
     # ~ struttura_Elenco()
 
     progress.hide()
+    oDoc.CurrentController.setActiveSheet(oSheet)
     Dialogs.Ok(Title="Operazione completata", Text="Importazione eseguita con successo")
     return True
 

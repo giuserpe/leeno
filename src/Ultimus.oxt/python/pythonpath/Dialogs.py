@@ -1755,7 +1755,7 @@ class Progress:
 
     def setValue(self,  val):
         self._progress.setValue(val)
-        if self._text is not None:
+        if self._text is not None and self._textWidget is not None:
             minVal, maxVal = self.getLimits()
             percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
             txt = self._text + ' (' + percent + ')'
@@ -1765,7 +1765,13 @@ class Progress:
         return self._progress.getValue()
 
     def setText(self,  txt):
-        pass
+        self._text = txt
+        if self._text is not None and self._textWidget is not None:
+            minVal, maxVal = self.getLimits()
+            val = self.getValue()
+            percent = '{:.0f}%'.format(100 * (val - minVal) / (maxVal - minVal))
+            txt = self._text + ' (' + percent + ')'
+            self._textWidget.setText(txt)
 
 def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):
     if Buttons is None:

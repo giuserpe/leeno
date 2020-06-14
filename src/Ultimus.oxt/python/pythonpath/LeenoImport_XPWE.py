@@ -450,19 +450,14 @@ def leggiElencoPrezzi(misurazioni):
         '''
         dizionarioArticolo['pweepanalisi'] = pweepanalisi
         '''
+        # il dizionario articolo lo tengo completo di voci
+        # con analisi di prezzi; la lista articoli, per contro,
+        # visto che è usata SOLO per riempire il foglio EP,
+        # viene direttamente purgata dalle voci con analisi
         dizionarioArticoli[id_ep] = dizionarioArticolo
-        articolo_modificato = (
-            tariffa,
-            destestesa,
-            unmisura,
-            IncSIC,
-            prezzo1,
-            IncMDO,
-            IncMAT,
-            IncATTR)
-        listaArticoli.append(articolo_modificato)
 
         # leggo analisi di prezzo
+
         pweepanalisi = elem.find('PweEPAnalisi')
         PweEPAR = pweepanalisi.find('PweEPAR')
         if PweEPAR is not None:
@@ -493,7 +488,18 @@ def leggiElencoPrezzi(misurazioni):
                 analisi.append(an_rigo)
             listaAnalisi.append([tariffa, destestesa, unmisura, analisi, prezzo1])
             listaTariffeAnalisi.append(tariffa)
-
+        else:
+            # analisi non presente, includo il prezzo nell'elenco
+            articolo_modificato = (
+                tariffa,
+                destestesa,
+                unmisura,
+                IncSIC,
+                prezzo1,
+                IncMDO,
+                IncMAT,
+                IncATTR)
+            listaArticoli.append(articolo_modificato)
     return {
         'DizionarioArticoli': dizionarioArticoli,
         'ListaArticoli': listaArticoli,
@@ -623,34 +629,97 @@ def leggiMisurazioni(misurazioni, ordina):
     return listaMisure
 
 
-def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi):
+def stileCelleElencoPrezzi(oSheet, startRow, endRow, color=None):
+    oSheet.getCellRangeByPosition(0, startRow, 0, endRow).CellStyle = "EP-aS"
+    oSheet.getCellRangeByPosition(1, startRow, 1, endRow).CellStyle = "EP-a"
+    oSheet.getCellRangeByPosition(2, startRow, 4, endRow).CellStyle = "EP-mezzo"
+    oSheet.getCellRangeByPosition(5, startRow, 5, endRow).CellStyle = "EP-mezzo %"
+    oSheet.getCellRangeByPosition(6, startRow, 7, endRow).CellStyle = "EP-mezzo"
+    oSheet.getCellRangeByPosition(8, startRow, 9, endRow).CellStyle = "EP-sfondo"
+    oSheet.getCellRangeByPosition(11, startRow, 11, endRow).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(15, startRow, 15, endRow).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(19, startRow, 19, endRow).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(26, startRow, 26, endRow).CellStyle = 'EP-mezzo %'
+    oSheet.getCellRangeByPosition(12, startRow, 12, endRow).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(16, startRow, 16, endRow).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(20, startRow, 20, endRow).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(23, startRow, 23, endRow).CellStyle = 'EP statistiche_q'
+    oSheet.getCellRangeByPosition(13, startRow, 13, endRow).CellStyle = 'EP statistiche'
+    oSheet.getCellRangeByPosition(17, startRow, 17, endRow).CellStyle = 'EP statistiche'
+    oSheet.getCellRangeByPosition(21, startRow, 21, endRow).CellStyle = 'EP statistiche'
+    oSheet.getCellRangeByPosition(24, startRow, 25, endRow).CellStyle = 'EP statistiche'
+    if color is not None:
+        oSheet.getCellRangeByPosition(0, startRow, 0, endRow).CellBackColor = color
+
+def estraiDatiCapitoliCategorie(capitoliCategorie, catName):
+    resList = []
+    for el in capitoliCategorie[catName]:
+        tariffa = el.get('codice')
+        if tariffa is not None:
+            destestesa = el.get('dessintetica')
+            titolo = (tariffa, destestesa, '', '', '', '', '')
+            resList.append(titolo)
+    return tuple(resList)
+
+def riempiBloccoElencoPrezzi(oSheet, dati, col, progress):
+
+    progStart = progress.getValue()
+    righe = len(dati)
+    colonne = len(dati[0])
+
+    # i dati partono dalla riga 3 (quarta, in effetti)
+    oSheet.getRows().insertByIndex(3, righe)
+
+    riga = 0
+    step = 100
+    while riga < righe:
+        sliced = dati[riga:riga + step]
+        num = len(sliced)
+        oRange = oSheet.getCellRangeByPosition(
+            0,
+            3 + riga,
+            colonne - 1,
+            3 + riga + num - 1)
+        oRange.setDataArray(sliced)
+
+        # modifica lo stile del gruppo di celle
+        stileCelleElencoPrezzi(oSheet, 3 + riga, 3 + riga + num - 1, col)
+
+        riga = riga + num
+        progress.setValue(riga + progStart)
+
+
+def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
     ''' compila l'elenco prezzi '''
+
+    # per prima cosa estrae le liste di EP, capitoli, eccetera
+    # e le converte in array
+
+    # articoli
+    arrayArticoli = tuple(elencoPrezzi['ListaArticoli'])
+    righeArticoli = len(arrayArticoli)
+    # SuperCapitoli
+    arraySuperCapitoli = estraiDatiCapitoliCategorie(capitoliCategorie, 'SuperCapitoli')
+    righeSuperCapitoli = len(arraySuperCapitoli)
+    # capitoli
+    arrayCapitoli = estraiDatiCapitoliCategorie(capitoliCategorie, 'Capitoli')
+    righeCapitoli = len(arrayCapitoli)
+    # SottoCapitoli
+    arraySottoCapitoli = estraiDatiCapitoliCategorie(capitoliCategorie, 'SottoCapitoli')
+    righeSottoCapitoli = len(arraySottoCapitoli)
+
+    # numero totale di righe da inserire
+    righeTotali = righeArticoli + righeSuperCapitoli + righeCapitoli + righeSottoCapitoli
+
+    # inizializza la progressbar
+    progress.setLimits(0, righeTotali)
+    progress.setText("Scrittura elenco prezzi")
+    progress.setValue(0)
 
     # compilo Elenco Prezzi
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    # Siccome setDataArray pretende una tupla(array 1D) o una tupla di tuple(array 2D)
-    # trasformo la listaArticoli da una lista di tuple a una tupla di tuple
-    lista_come_array = tuple(elencoPrezzi['ListaArticoli'])
-    # Parametrizzo il range di celle a seconda della dimensione della lista
 
-    # numero di colonne necessarie per ospitare i dati
-    colonne_lista = len(lista_come_array[0])
-    # numero di righe necessarie per ospitare i dati
-    righe_lista = len(lista_come_array)
-
-    oSheet.getRows().insertByIndex(3, righe_lista)
-    oRange = oSheet.getCellRangeByPosition(0, 3, colonne_lista - 1, righe_lista + 3 - 1)
-    oRange.setDataArray(lista_come_array)
-    lrow = PL.getLastUsedCell(oSheet).EndRow - 1
-    oSheet.getCellRangeByPosition(0, 3, 0, lrow).CellStyle = "EP-aS"
-    oSheet.getCellRangeByPosition(1, 3, 1, lrow).CellStyle = "EP-a"
-    oSheet.getCellRangeByPosition(2, 3, 7, lrow).CellStyle = "EP-mezzo"
-    oSheet.getCellRangeByPosition(5, 3, 5, lrow).CellStyle = "EP-mezzo %"
-    oSheet.getCellRangeByPosition(8, 3, 9, lrow).CellStyle = "EP-sfondo"
-
-    oSheet.getCellRangeByPosition(11, 3, 11, lrow).CellStyle = 'EP-mezzo %'
-    oSheet.getCellRangeByPosition(12, 3, 12, lrow).CellStyle = 'EP statistiche_q'
-    oSheet.getCellRangeByPosition(13, 3, 13, lrow).CellStyle = 'EP statistiche_Contab_q'
+    riempiBloccoElencoPrezzi(oSheet, arrayArticoli, None, progress)
     '''
     aggiungo i capitoli alla lista delle voci
      giallo(16777072,16777120,16777168)
@@ -658,120 +727,37 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi):
      viola(12632319,13684991,15790335)
     SUPERCAPITOLI
     '''
-    col1 = 16777072
-    col2 = 16777120
-    col3 = 16777168
-    capitoli = []
-    try:
-        capitoli = []
-        for el in capitoliCategorie['SuperCapitoli']:
-            tariffa = el.get('codice')
-            if tariffa is not None:
-                destestesa = el.get('dessintetica')
-                titolo = (tariffa, destestesa, '', '', '', '', '')
-                capitoli.append(titolo)
-        lista_come_array = tuple(capitoli)
+    # SuperCapitoli
+    progress.setText("Scrittura supercapitoli")
+    if righeSuperCapitoli:
+        riempiBloccoElencoPrezzi(oSheet, arraySuperCapitoli, 16777072, progress)
 
-        # numero di colonne necessarie per ospitare i dati
-        colonne_lista = len(lista_come_array[0])
-        # numero di righe necessarie per ospitare i dati
-        righe_lista = len(lista_come_array)
+    # Capitoli
+    progress.setText("Scrittura capitoli")
+    if righeCapitoli:
+        riempiBloccoElencoPrezzi(oSheet, arrayCapitoli, 16777120, progress)
 
-        oSheet.getRows().insertByIndex(3, righe_lista)
-        oRange = oSheet.getCellRangeByPosition(0, 3, colonne_lista - 1, righe_lista + 3 - 1)
-        oRange.setDataArray(lista_come_array)
-        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
-        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
-        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
-        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
-        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
+    # SottoCapitoli
+    progress.setText("Scrittura sottocapitoli")
+    if righeSottoCapitoli:
+        riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, progress)
 
-        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
-        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
-        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
-        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col1
-
-    except Exception:
-        pass
-
-    # CAPITOLI
-    capitoli = []
-    try:
-        for el in capitoliCategorie['Capitoli']:
-            tariffa = el.get('codice')
-            if tariffa is not None:
-                destestesa = el.get('dessintetica')
-                titolo = (tariffa, destestesa, '', '', '', '', '')
-                capitoli.append(titolo)
-        lista_come_array = tuple(capitoli)
-
-        # numero di colonne necessarie per ospitare i dati
-        colonne_lista = len(lista_come_array[0])
-        # numero di righe necessarie per ospitare i dati
-        righe_lista = len(lista_come_array)
-
-        oSheet.getRows().insertByIndex(3, righe_lista)
-        oRange = oSheet.getCellRangeByPosition(0, 3, colonne_lista - 1, righe_lista + 3 - 1)
-        oRange.setDataArray(lista_come_array)
-        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
-        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
-        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
-        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
-        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
-
-        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
-        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
-        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
-        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col2
-    except Exception:
-        pass
-
-    # SUBCAPITOLI
-    capitoli = []
-    try:
-        for el in capitoliCategorie['SottoCapitoli']:
-            tariffa = el.get('codice')
-            if tariffa is not None:
-                destestesa = el.get('dessintetica')
-                titolo = (tariffa, destestesa, '', '', '', '', '')
-                capitoli.append(titolo)
-        lista_come_array = tuple(capitoli)
-
-        # numero di colonne necessarie per ospitare i dati
-        colonne_lista = len(lista_come_array[0])
-
-        # numero di righe necessarie per ospitare i dati
-        righe_lista = len(lista_come_array)
-
-        oSheet.getRows().insertByIndex(4, righe_lista)
-        oRange = oSheet.getCellRangeByPosition(0, 3, colonne_lista - 1, righe_lista + 3 - 1)
-        oRange.setDataArray(lista_come_array)
-        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
-        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
-        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
-        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
-        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
-
-        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
-        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
-        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche_Contab_q'
-        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = col3
-    except Exception:
-        pass
-    for el in (11, 15, 19, 26):
-        oSheet.getCellRangeByPosition(el, 3, el, PL.ultima_voce(oSheet)).CellStyle = 'EP-mezzo %'
-    for el in (12, 16, 20, 23):
-        oSheet.getCellRangeByPosition(el, 3, el, PL.ultima_voce(oSheet)).CellStyle = 'EP statistiche_q'
-    for el in (13, 17, 21, 24, 25):
-        oSheet.getCellRangeByPosition(el, 3, el, PL.ultima_voce(oSheet)).CellStyle = 'EP statistiche'
-    '''  adatta_altezza_riga('Elenco Prezzi') '''
+    progress.setText("Ordinamento elenco prezzi")
     PL.riordina_ElencoPrezzi()
-    ''' struttura_Elenco() '''
 
     # elimino le voci che hanno analisi
+    '''
+    ELIMINAZIONE SPOSTATA A MONTE, NELL'ARRAY
+    PRIMA DELL'INSERIMENTO NEL FOGLIO
+
+    print("Eliminazione voci doppie elenco prezzi")
+    progress.setText("Eliminazione voci doppie elenco prezzi")
     for i in reversed(range(3, PL.getLastUsedCell(oSheet).EndRow)):
         if oSheet.getCellByPosition(0, i).String in elencoPrezzi['ListaTariffeAnalisi']:
             oSheet.getRows().removeByIndex(i, 1)
+    '''
+    print("Fine scrittura elenco prezzi")
+    progress.setText("Fine scrittura elenco prezzi")
 
 
 def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
@@ -1121,7 +1107,6 @@ def MENU_XPWE_import():
     # ########################################################################################
     # SCRITTURA COMPUTO
 
-    print("START")
     # se la destinazione è un nuovo documento, crealo
     if destinazione == 'NUOVO':
         PL.New_file.computo(0)
@@ -1133,36 +1118,38 @@ def MENU_XPWE_import():
     progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Scrittura computo")
     progress.show()
 
-    print("GOT NEW DOC")
-    # disattiva l'output a video
+   # disattiva l'output a video
     LeenoUtils.DisableDocumentRefresh(oDoc)
 
-    print("DISABLED REFRESH")
-
     # compila i dati generali per l'analisi
+    print("compilaDatiGeneraliAnalisi")
+    progress.setText("Compilazione dati generali di analisi")
     compilaDatiGeneraliAnalisi(oDoc, datiGeneraliAnalisi)
 
-    print("compilaDatiGeneraliAnalisi DONE")
     # compila le approssimazioni
+    print("compilaApprossimazioni")
+    progress.setText("Compilazione approssimazioni")
     compilaApprossimazioni(oDoc, approssimazioni)
 
-    print("compilaApprossimazioni DONE")
     # compilo Anagrafica generale
+    print("compilaAnagraficaGenerale")
+    progress.setText("Compilazione anagrafica generale")
     compilaAnagraficaGenerale(oDoc, datiAnagrafici)
 
-    print("compilaAnagraficaGenerale DONE")
     # compilo Elenco Prezzi
-    compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi)
+    print("compilaElencoPrezzi")
+    compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress)
 
-    print("compilaElencoPrezzi DONE")
     # Compilo Analisi di prezzo
+    print("compilaAnalisiPrezzi")
+    progress.setText("Compilazione analisi prezzi")
     compilaAnalisiPrezzi(oDoc, elencoPrezzi)
 
-    print("compilaAnalisiPrezzi DONE")
     # elimina doppioni nell'elenco prezzi
+    print("EliminaVociDoppieElencoPrezzi")
+    progress.setText("Eliminazione voci doppie elenco prezzi")
     PL.EliminaVociDoppieElencoPrezzi()
 
-    print("EliminaVociDoppieElencoPrezzi DONE")
     # se non ci sono misurazioni di computo, finisce qui
     if len(listaMisure) == 0:
         progress.hide()
@@ -1176,19 +1163,20 @@ def MENU_XPWE_import():
 
         # riattiva l'output a video
         LeenoUtils.EnableDocumentRefresh(oDoc)
-        print("ENABLED REFRESH - 1")
         return
 
     # compila il computo
-    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
     print("compilaComputo DONE")
+    progress.setText(f'Compilazione {elaborato}')
+    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
 
     # riattiva l'output a video
     LeenoUtils.EnableDocumentRefresh(oDoc)
-    print("ENABLED REFRESH - 2")
 
     PL.GotoSheet(elaborato)
+    progress.setText("Adattamento altezze righe")
     PL.adatta_altezza_riga()
 
+    progress.setText("Fine")
     progress.hide()
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

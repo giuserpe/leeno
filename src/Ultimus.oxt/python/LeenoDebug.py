@@ -199,8 +199,15 @@ bDict['__global_context__'] = lo['context']
 # load LeenO modules
 reloadLeenoModules()
 
-from xml.etree.ElementTree import ElementTree, ParseError
+desktop = lo['desktop']
 
+import uno
+def loadDocument(filename):
+    url = uno.systemPathToFileUrl(filename)
+    oDoc = desktop.loadComponentFromURL(url, "_blank", 0, tuple())
+    return oDoc
+
+'''
 filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/EsempioComputoDaGiuseppe.xpwe"
 tree = ElementTree()
 tree.parse(filename)
@@ -209,10 +216,12 @@ root = tree.getroot()
 misurazioni = root.find('PweMisurazioni')
 
 PweElencoPrezzi = misurazioni.getchildren()[0]
-
 # leggo l'elenco prezzi
 epitems = PweElencoPrezzi.findall('EPItem')
+'''
 
+oDoc = loadDocument("/storage/Scaricati/COMPUTI_METRICI/LEENO/PREZZARI/PrezzarioEmiliaRomagna2019.ods")
+oSheet = oDoc.Sheets[0]
 
 print("\nDONE\n")
 

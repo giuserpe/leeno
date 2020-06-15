@@ -138,7 +138,7 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             exceptionClass = sysinfo[0].__name__
             message = str(sysinfo[1])
             tb = sysinfo[2]
-            tbInfo = traceback.extract_tb(tb, 1)[0]
+            tbInfo = traceback.extract_tb(tb)[-1]
             function = tbInfo.name
             line = tbInfo.lineno
             file = os.path.split(tbInfo.filename)[1]

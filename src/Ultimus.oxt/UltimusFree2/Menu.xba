@@ -127,7 +127,7 @@ ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 End Sub
 
 Sub computo_OnSelect
-ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;dp&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;ScriviNomeDocumentoPrincipale&quot;)
 End Sub
 
 Sub elenco_OnFocus
@@ -212,7 +212,7 @@ Macro_Doc (&quot;OnSaveAsFailed&quot;,	&quot;vnd.sun.star.script:UltimusFree2._v
 &apos;OnCopyToDone
 &apos;OnCopyToFailed
 Macro_Doc (&quot;OnFocus&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&amp;location=application&quot;)
-&apos;Macro_Doc (&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.PY_bridge.dp?language=Basic&amp;location=application&quot;)
+&apos;Macro_Doc (&quot;OnUnfocus&quot;, &quot;vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&amp;location=application&quot;)
 &apos;OnPrint
 &apos;OnViewCreated
 &apos;OnPrepareViewClosing

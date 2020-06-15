@@ -162,7 +162,7 @@ SpostaCursore_su_Prezzario &apos; questo accrocchio fa si che quando l&apos;uten
 &apos;	oTargetDoc.CurrentController.Select(oCell) &apos;vediamo se serve
 	oSheet.unprotect(&quot;&quot;)
 &apos;	insRows (lrowI, 1) &apos;	oSheet.getRows.insertByIndex (2, lrowI-1)
-		ScriptPy(&quot;pyleeno.py&quot;,&quot;ins_voce_elenco&quot;)
+		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;ins_voce_elenco&quot;)
 
 	oSheet.getCellByPosition(lcolbase+6,lrowI).formula = _
 	&quot;=IF(&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;=0;&quot;&quot;&quot;&quot; ;&quot; &amp; ColumnNameOf(lcolbase+4) &amp; lrowI+1 &amp; &quot;*&quot; &amp; ColumnNameOf(lcolbase+5) &amp; lrowI+1 &amp; &quot;)&quot; 

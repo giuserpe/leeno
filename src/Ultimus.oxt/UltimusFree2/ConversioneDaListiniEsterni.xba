@@ -151,7 +151,7 @@ rem ----------------------------------------------------------------------
 Barra_chiudi_sempre_4
 &apos;Exit Sub &apos;
 rem ----------------------------------------------------------------------
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;adatta_altezza_riga&quot;)
 rem ----------------------------------------------------------------------
 	test = UBound(elCap())&apos; -1
 	For i = 1 To test
@@ -194,8 +194,8 @@ copy_clip
 Focus_su_altro_Doc (newCap)
 uriga=getLastUsedRow(oSheetDest)+1
 	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0,uriga))
-&apos;ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
+&apos;ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	unSelect &apos;unselect ranges
 rem ----------------------------------------------------------------------
 rem inserisce il numero di prezzi
@@ -210,8 +210,8 @@ copy_clip
 Focus_su_altro_Doc (newCap)
 	oSheetNote = ThisComponent.Sheets.getByName(&quot;Note&quot;)
 	ThisComponent.CurrentController.Select(oSheetNote.GetCellByPosition(0,0))
-&apos;ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
+&apos;ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	unSelect &apos;unselect ranges
 	nomeCap =thisComponent.currentController.title
 rem ----------------------------------------------------------------------		

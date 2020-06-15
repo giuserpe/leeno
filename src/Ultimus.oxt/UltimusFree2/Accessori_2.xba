@@ -154,7 +154,7 @@ Sub sproteggi_sheet_corrente
 	oSheet = ThisComponent.currentController.activeSheet
 &apos; oSheet.protect(&quot;&quot;)
 &apos; oSheet.unprotect(&quot;&quot;)
- ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
+ ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 &apos;Dim myProtection As New com.sun.star.util.CellProtection
 &apos;ocell = mysheet.getCellByPosition(0,0)
 &apos;myProtection.IsLocked=false
@@ -233,9 +233,9 @@ rem Recupero il nome dell&apos;ultimo SAL registrato e ricalcolo lLastUrow
 		lLastUrow = oNamedRange.RangeAddress.EndRow
 	End If 
 
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;CONTABILITA&quot;,&quot;$AJ$&quot; &amp; rIntest &amp; &quot;:$AJ$&quot; &amp; lLastUrow,&quot;GG&quot;) &apos;tagC - articolo
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;CONTABILITA&quot;,&quot;$S$&quot; &amp; rIntest &amp; &quot;:$S$&quot; &amp; lLastUrow,&quot;G1G1&quot;) &apos;quantità
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;CONTABILITA&quot;,&quot;$AK$&quot; &amp; rIntest &amp; &quot;:$AK$&quot; &amp; lLastUrow,&quot;conEuro&quot;) &apos;importi
 	
 &apos;sistemo la colonna &quot;Importi senza errori&quot;
 	nEndRow = ultima_voce

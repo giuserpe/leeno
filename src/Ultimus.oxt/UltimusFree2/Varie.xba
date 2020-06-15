@@ -126,14 +126,14 @@ vai:
 rem ----------------------------------------------------------------------
 	Select Case nome_sheet
 		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
-			ScriptPy(&quot;pyleeno.py&quot;,&quot;parziale_verifica&quot;)
+			ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;parziale_verifica&quot;)
 			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
-			If test = &quot;è Computo&quot; Then ScriptPy(&quot;pyleeno.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
+			If test = &quot;è Computo&quot; Then ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
 	End Select
 END SUB
 rem ######################################################################
 Sub copia_TANTE_righe_Ent
-&apos;	ScriptPy(&quot;pyleeno.py&quot;, &quot;copia_riga_computo&quot;)
+&apos;	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;copia_riga_computo&quot;)
 	For n = 0 To 30
 		copia_riga_Ent
 	Next n

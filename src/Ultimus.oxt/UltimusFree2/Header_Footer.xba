@@ -561,7 +561,7 @@ rem ----------------------------------------------------------------------
 
 &apos;		Errore:
 &apos;		Msgbox &quot;Questo file non ha ancora un nome.&quot;
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;salva_come&quot;) &apos;visualizza
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;salva_come&quot;) &apos;visualizza
 &apos;		DETENTORE_GENERALE_ERRORI(sModulSubName, Erl, Err, Error$ )
 	END SUB
 

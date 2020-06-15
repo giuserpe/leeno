@@ -127,11 +127,11 @@ ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 End Sub
 
 Sub computo_OnSelect
-ScriptPy(&quot;pyleeno.py&quot;, &quot;dp&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;dp&quot;)
 End Sub
 
 Sub elenco_OnFocus
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;fissa&quot;)
 	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
 End Sub
 Sub elenco_OnUnFocus
@@ -139,7 +139,7 @@ Sub elenco_OnUnFocus
 End Sub
 Sub analisi_OnFocus
 	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;fissa&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;fissa&quot;)
 	&apos;ThisComponent.CurrentController().freezeAtPosition(0,2)
 End Sub
 Sub analisi_OnUnFocus
@@ -147,7 +147,7 @@ Sub analisi_OnUnFocus
 End Sub
 
 Sub pyleeno_bak0
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;bak0&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;bak0&quot;)
 End Sub
 
 Sub LeenoToolbars_Vedi
@@ -202,7 +202,7 @@ Macro_Doc (&quot;OnLoad&quot;,	&quot;vnd.sun.star.script:Standard.Controllo.Cont
 Macro_Doc (&quot;OnPrepareUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&amp;location=application&quot;)
 Macro_Doc (&quot;OnUnload&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)
 Macro_Doc (&quot;OnSave&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Menu.pyleeno_bak0?language=Basic&amp;location=application&quot;)
-&apos;Macro_Doc (&quot;OnSave&quot;,	&quot;service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.bak0&quot;)
+&apos;Macro_Doc (&quot;OnSave&quot;,	&quot;service:org.giuseppe-vizziello.leeno.dispatcher?LeenoBasicBridge.bak0&quot;)
 &apos;OnSaveDone
 &apos;OnSaveFailed
 Macro_Doc (&quot;OnSaveAs&quot;,	&quot;vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&amp;location=application&quot;)

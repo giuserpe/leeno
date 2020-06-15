@@ -405,7 +405,7 @@ procedi:
  	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 0
  	
  	&apos; rifaccio u subtotali con var a 0
- 	ScriptPy(&quot;pyleeno.py&quot;,&quot;Tutti_Subtotali&quot;)
+ 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;Tutti_Subtotali&quot;)
 
  	&apos;ripristino la Var generale che c&apos;era prima
 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = iVar_332

@@ -334,7 +334,7 @@ initRegistro: rem INIZIO COMPILAZIONE REGISTRO
 
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
 	ThisComponent.CurrentController.Select(oSheetReg)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;setTabColor&quot;, 16769505)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;setTabColor&quot;, 16769505)
 	
 	
 	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(0,0,0,0))
@@ -395,7 +395,7 @@ rem set area del REGISTRO
 ncol=ColumnNameOf(fcol+9)
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$&quot;&amp; ncol &amp;&quot;$&quot;&amp;fineFirme+1
 	nomearea = &quot;#Reg#&quot; &amp; nSal
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Registro&quot;, area , nomearea)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Registro&quot;, area , nomearea)
 rem set area di stampa
 		oNamedRange=oRanges.getByName(nomearea).referredCells
 		With oNamedRange.RangeAddress
@@ -446,7 +446,7 @@ rem il settaggio degli stili, messo qui e ripetuto qualche riga sotto, serve a r
 adatta_altezza: 
 	oCell=oSheetReg.getCellRangeByPosition(fcol+0, daRiga, fcol+9, fineFirme)
 	ThisComponent.CurrentController.Select(oCell)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;adatta_altezza_riga&quot;)
 
 i=1
 	Do While oSheetReg.GetCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
@@ -463,9 +463,9 @@ i=1
 &apos;	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, daqui))
 &apos;copy_clip
 &apos;	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(fcol+1, daqui, fcol+1, fineFirme-2))
-&apos;ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;)
+&apos;ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;)
 	area=&quot;$A$&quot; &amp; precRowReg+2 &amp; &quot;:$J$&quot;&amp;getLastUsedRow(oSheetReg)&apos;-1
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Registro&quot;, area , nomearea)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Registro&quot;, area , nomearea)
 
 &apos;	oCell=oSheetReg.getCellRangeByPosition(0,precRowReg+1,11,getLastUsedRow(oSheetReg))
 &apos;	ThisComponent.CurrentController.Select(oCell)
@@ -555,7 +555,7 @@ rem ######################################################################
 			oSheetSAL.PageStyle = &quot;PageStyle_REGISTRO_A4&quot; &apos; imposta stile pagina
 			ThisComponent.CurrentController.Select(oSheetSAL) &apos; seleziona la tag
 
-			ScriptPy(&quot;pyleeno.py&quot;,&quot;setTabColor&quot;, 16769505)
+			ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;setTabColor&quot;, 16769505)
 			ThisComponent.CurrentController.Select(oSheetSAL.getCellRangeByPosition(0,0,0,0)) &apos; focus sulla prima cella SAL
 &apos;Annulla_atto_contabile(&quot;SAL&quot;)
 rem ----------------------------------------------------------------------
@@ -652,7 +652,7 @@ rem ----------------------------------------------------------------------
 rem set area del SAL
 ncol=ColumnNameOf(fcol+5)
 	area=&quot;$A$&quot; &amp; precRowSAL+2 &amp; &quot;:$&quot;&amp; ncol &amp;&quot;$&quot;&amp;fineFirme+1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;SAL&quot;, area , &quot;#SAL#&quot; &amp; nSal)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;SAL&quot;, area , &quot;#SAL#&quot; &amp; nSal)
 rem set area di stampa SAL
 		oNamedRange=oRanges.getByName(&quot;#SAL#&quot; &amp; nSal).referredCells
 		With oNamedRange.RangeAddress
@@ -801,7 +801,7 @@ firme (InsRow+17)
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, InsRow+27))
 copy_clip
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellRangeByPosition(fcol+1, InsRow+27, fcol+1, getLastUsedRow(oSheetSal)-1))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	oSheetSal.rows.removeByIndex (InsRow+27,1)
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 Ripristina_statusLine &apos;Barra_chiudi_sempre_4
@@ -1125,7 +1125,7 @@ rem risistemo intestazioni
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,daVoce-1))
 copy_clip
 				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,ins-1))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 						oCell = oSheet.getCellRangeByPosition(0,daVoce,11,aVoce)
 						oCell.Rows.IsVisible=true
 						ThisComponent.CurrentController.Select(oCell)
@@ -1309,7 +1309,7 @@ firme (ultimariga+1)&apos; riga di inserimento
 rem definisci il range del #Lib#
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
 &apos;Print area 
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;, area , nomearea)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;CONTABILITA&quot;, area , nomearea)
 	
 	oSheetCont.getCellRangeByPosition (0,inizioFirme,32,finefirme).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
 	oNamedRange=oRanges.getByName(&quot;#Lib#&quot; &amp; nSal).referredCells
@@ -1339,7 +1339,7 @@ rem set intestazione area di stampa
 rem ----------------------------------------------------------------------
 rem sbianco i dati e l&apos;intestazione
 	ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, daRiga, 11, fineFirme))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;adatta_altezza_riga&quot;)
 Sbianca_celle
 	ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, 2, 11, 2))
 Sbianca_celle
@@ -1365,14 +1365,14 @@ rem cancella l&apos;ultima riga
 fineFirme = fineFirme-1
 	If daqui&lt;&gt;0 then
 		ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(2, daqui))
-ScriptPy(&quot;pyleeno.py&quot;,&quot;copy_clip&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;copy_clip&quot;)
 		ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(2, daqui, 2, finefirme-1))
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	End If
 rem ----------------------------------------------------------------------
 rem definisci il range del #Lib#
 	area=&quot;$A$&quot; &amp; primariga+1 &amp; &quot;:$AJ$&quot;&amp;fineFirme+1
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;CONTABILITA&quot;, area , nomearea)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;CONTABILITA&quot;, area , nomearea)
 	
 rem raggruppo
 	oCell = oSheetCont.getCellRangeByPosition(0,primariga,25,finefirme)

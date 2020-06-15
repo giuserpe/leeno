@@ -36,7 +36,7 @@ Exit Sub
 END SUB
 
 
-Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) As Variant 
+Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3, Optional arg4, Optional arg5) As Variant 
 
 	&apos; questa funzione sfrutta il servizio dispatcher di LeenO per eseguire da basic
 	&apos; dele funzioni in Python, senza i problemi legati ai percorsi fissi
@@ -50,6 +50,8 @@ Sub ScriptPy (sModulo, sFunzione, Optional arg1, Optional arg2, Optional arg3) A
 	If not ismissing (arg1) Then Appenditem(args, arg1)
 	If not ismissing (arg2) Then Appenditem(args, arg2)
 	If not ismissing (arg3) Then Appenditem(args, arg3)
+	If not ismissing (arg4) Then Appenditem(args, arg4)
+	If not ismissing (arg5) Then Appenditem(args, arg5)
 
 	Dim bridge as Object
 	bridge = GetProcessServiceManager().createInstanceWithArguments(&quot;org.giuseppe-vizziello.leeno.dispatcher&quot;, args )

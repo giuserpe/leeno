@@ -2669,9 +2669,9 @@ def genera_variante():
         oDoc.Sheets.copyByName('COMPUTO', 'VARIANTE', 4)
         oSheet = oDoc.getSheets().getByName('COMPUTO')
         lrow = getLastUsedCell(oSheet).EndRow
-        rifa_nomearea('COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
-        rifa_nomearea('COMPUTO', '$N$3:$N$' + str(lrow), "BB")
-        rifa_nomearea('COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
+        rifa_nomearea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
+        rifa_nomearea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
+        rifa_nomearea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
         oSheet = oDoc.getSheets().getByName('VARIANTE')
         GotoSheet('VARIANTE')
         setTabColor(16777062)
@@ -2712,25 +2712,25 @@ def genera_sommario():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     lrow = getLastUsedCell(oSheet).EndRow
-    rifa_nomearea('COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
-    rifa_nomearea('COMPUTO', '$N$3:$N$' + str(lrow), "BB")
-    rifa_nomearea('COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
+    rifa_nomearea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
+    rifa_nomearea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
+    rifa_nomearea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
 
     if oDoc.getSheets().hasByName('VARIANTE'):
         oSheet = oDoc.getSheets().getByName('VARIANTE')
         lrow = getLastUsedCell(oSheet).EndRow
-        rifa_nomearea('VARIANTE', '$AJ$3:$AJ$' + str(lrow), 'varAA')
-        rifa_nomearea('VARIANTE', '$N$3:$N$' + str(lrow), "varBB")
-        rifa_nomearea('VARIANTE', '$AK$3:$AK$' + str(lrow), "varEuro")
+        rifa_nomearea(oDoc, 'VARIANTE', '$AJ$3:$AJ$' + str(lrow), 'varAA')
+        rifa_nomearea(oDoc, 'VARIANTE', '$N$3:$N$' + str(lrow), "varBB")
+        rifa_nomearea(oDoc, 'VARIANTE', '$AK$3:$AK$' + str(lrow), "varEuro")
 
     if oDoc.getSheets().hasByName('CONTABILITA'):
         oSheet = oDoc.getSheets().getByName('CONTABILITA')
         lrow = getLastUsedCell(oSheet).EndRow
         lrow = getLastUsedCell(
             oDoc.getSheets().getByName('CONTABILITA')).EndRow
-        rifa_nomearea('CONTABILITA', '$AJ$3:$AJ$' + str(lrow), 'GG')
-        rifa_nomearea('CONTABILITA', '$S$3:$S$' + str(lrow), "G1G1")
-        rifa_nomearea('CONTABILITA', '$AK$3:$AK$' + str(lrow), "conEuro")
+        rifa_nomearea(oDoc, 'CONTABILITA', '$AJ$3:$AJ$' + str(lrow), 'GG')
+        rifa_nomearea(oDoc, 'CONTABILITA', '$S$3:$S$' + str(lrow), "G1G1")
+        rifa_nomearea(oDoc, 'CONTABILITA', '$AK$3:$AK$' + str(lrow), "conEuro")
 
     formule = list()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -2795,8 +2795,8 @@ def riordina_ElencoPrezzi():
     if uFindStringCol('Fine elenco', 0, oSheet) is None:
         inserisci_Riga_rossa()
     test = str(uFindStringCol('Fine elenco', 0, oSheet))
-    rifa_nomearea('Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-    rifa_nomearea('Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+    rifa_nomearea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+    rifa_nomearea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SC = oRangeAddress.StartColumn
     EC = oRangeAddress.EndColumn
@@ -3894,7 +3894,7 @@ def tante_analisi_in_ep():
     oDoc = LeenoUtils.getDocument()
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
-    rifa_nomearea('Analisi di Prezzo',
+    rifa_nomearea(oDoc, 'Analisi di Prezzo',
                   '$A$3:$K$' + str(getLastUsedCell(oSheet).EndRow), 'analisi')
     voce = list()
     idx = 4
@@ -6891,7 +6891,7 @@ def inizializza_analisi():
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    rifa_nomearea('S5', '$B$108:$P$133', 'blocco_analisi')
+    rifa_nomearea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
         oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
@@ -6979,7 +6979,7 @@ def inserisci_Riga_rossa():
 
 
 ########################################################################
-def rifa_nomearea(sSheet, sRange, sName):
+def rifa_nomearea(oDoc, sSheet, sRange, sName):
     '''
     Definisce o ridefinisce un'area di dati a cui far riferimento
     sSheet = nome del foglio, es.: 'S5'
@@ -6987,7 +6987,6 @@ def rifa_nomearea(sSheet, sRange, sName):
     sName = nome da attribuire all'area scelta, es.: "manodopera"
     '''
     sPath = "$'" + sSheet + "'." + sRange
-    oDoc = LeenoUtils.getDocument()
     oRanges = oDoc.NamedRanges
     oCellAddress = oDoc.Sheets.getByName(sSheet).getCellRangeByName(
         'A1').getCellAddress()

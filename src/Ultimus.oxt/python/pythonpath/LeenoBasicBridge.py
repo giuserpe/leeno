@@ -168,6 +168,10 @@ def trova_np():
     PL.trova_np()
 
 
+def sproteggi_sheet_TUTTE():
+    PL.sproteggi_sheet_TUTTE()
+
+
 def rigenera_tutte():
     '''
     rigenera_tutte
@@ -208,5 +212,146 @@ def invia_voce():
     invia_voce
     '''
     PL.invia_voce()
+
+
+def rifa_nomearea(oDoc, sSheet, sRange, sName):
+    '''
+    rifa_nomearea
+    '''
+    PL.rifa_nomearea(oDoc, sSheet, sRange, sName)
+
+
+def autoexec():
+    PL.autoexec()
+
+
+def autoexec_off():
+    PL.autoexec_off()
+
+
+def struttura_off():
+    PL.struttura_off()
+
+
+def setTabColor(color):
+    PL.setTabColor(color)
+
+
+def adatta_altezza_riga(nSheet=None):
+    PL.adatta_altezza_riga(nSheet)
+
+
+def paste_clip(arg=None, insCells=0):
+    PL.paste_clip(arg, insCells)
+
+
+def copy_clip():
+    PL.copy_clip()
+
+
+def ins_voce_elenco():
+    PL.ins_voce_elenco()
+
+
+def Filtra_Computo_Cap():
+    PL.Filtra_Computo_Cap()
+
+
+def Filtra_Computo_SottCap():
+    PL.Filtra_Computo_SottCap()
+
+
+def Filtra_Computo_A():
+    PL.Filtra_Computo_A()
+
+
+def Filtra_Computo_B():
+    PL.Filtra_Computo_B()
+
+
+def Filtra_Computo_C():
+    PL.Filtra_Computo_C()
+
+
+def EliminaVociDoppieElencoPrezzi():
+    PL.EliminaVociDoppieElencoPrezzi()
+
+
+def Tutti_Subtotali():
+    PL.Tutti_Subtotali()
+
+
+def salva_come(nomefile=None):
+    PL.salva_come(nomefile)
+
+
+def dp():
+    '''
+    Indica qual è il Documento Principale
+    '''
+    PL.dp()
+
+
+def fissa():
+    PL.fissa()
+
+
+def bak0():
+    '''
+    Fa il backup del file di lavoro all'apertura.
+    '''
+    PL.bak0()
+
+
+def numera_voci(bit=1):
+    '''
+    bit { integer }  : 1 rinumera tutto
+                       0 rinumera dalla voce corrente in giù
+    '''
+    PL.numera_voci(bit)
+
+
+def parziale_verifica():
+    '''
+    Controlla l'esattezza del calcolo del parziale quanto le righe di
+    misura vengono aggiunte o cancellate.
+    '''
+    PL.parziale_verifica()
+
+
+def struttura_ComputoM():
+    PL.struttura_ComputoM()
+
+
+def struttura_Analisi():
+    PL.struttura_Analisi()
+
+
+def voce_breve_ep():
+    PL.voce_breve_ep()
+
+
+def inserisci_Riga_rossa():
+    PL.inserisci_Riga_rossa()
+
+
+def Rinumera_TUTTI_Capitoli2():
+    PL.Rinumera_TUTTI_Capitoli2()
+
+
+def copia_riga_computo(lrow):
+    PL.copia_riga_computo(lrow)
+
+
+def ins_voce_computo():
+    PL.ins_voce_computo()
+
+
+def ins_voce_contab(lrow=0, arg=1):
+    '''
+    Inserisce una nuova voce in CONTABILITA.
+    '''
+    PL.ins_voce_contab(lrow, arg)
+
 
 

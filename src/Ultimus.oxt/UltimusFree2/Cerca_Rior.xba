@@ -180,8 +180,8 @@ rem ----------------------------------------------------------------------
 rem nome ultima colonna
 
 	lCol = ColumnNameOf(getLastUsedCol(oSheet)+2) &apos; aggiungo 3 colonne in più... non si sa mai
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$&quot;&amp; lCol &amp;&quot;$&quot;&amp; lRowE, &quot;elenco_prezzi&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Elenco Prezzi&quot;, &quot;$A$&quot;&amp; fRow &amp;&quot;:$A$&quot;&amp; lRowE, &quot;Lista&quot;) &apos;codici
 END SUB 
 
 
@@ -243,7 +243,7 @@ End Function
 
 Sub nuova_struttura
 	chiudi_dialoghi
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_off&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;struttura_off&quot;)
 &apos;ThisComponent.enableAutomaticCalculation(False)
 	Dim oCRA As New com.sun.star.table.CellRangeAddress
 	osheet = ThisComponent.currentController.activeSheet

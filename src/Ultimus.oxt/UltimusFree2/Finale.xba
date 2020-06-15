@@ -1028,7 +1028,7 @@ rimuovi_area_di_stampa
 &apos;	Print sAttributo
 	oSheet = ThisComponent.currentController.activeSheet
 ThisComponent.CurrentController.Select(oSheet)
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;adatta_altezza_riga&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;adatta_altezza_riga&quot;)
 unSelect &apos;deseleziona
 	Select Case oSheet.Name &apos;sAttributo
 	 Case &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;COMPUTO_print&quot;

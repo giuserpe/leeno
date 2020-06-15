@@ -177,6 +177,6 @@ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 			end if
 		next
 	Next
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;doppioni&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;EliminaVociDoppieElencoPrezzi&quot;)
 end Sub
 </script:module>

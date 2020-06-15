@@ -65,7 +65,7 @@ Sub autoexec &apos; questa la faccio partire sempre dalla Sub Controlla_Esistenz
 		oSheet = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	EndIf
 rem ----------------------------------------------------------------------
-	if cInt(oSheet.getCellByPosition(7,194).String) &lt; 200 Then	ScriptPy(&quot;pyleeno.py&quot;,&quot;autoexec&quot;)
+	if cInt(oSheet.getCellByPosition(7,194).String) &lt; 200 Then	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;autoexec&quot;)
 End Sub
 rem ######################################################################
 Sub autoexec_off
@@ -79,7 +79,7 @@ rem chiudo le toolbars
 	For Each sName In GetmyToolBarNames()
 		toolbar_on (sName, 0)
 	Next
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;autoexec_off&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;autoexec_off&quot;)
 End Sub
 
 </script:module>

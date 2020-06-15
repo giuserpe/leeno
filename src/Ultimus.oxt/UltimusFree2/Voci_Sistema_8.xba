@@ -16,7 +16,7 @@ Sub Tempo &apos; &apos; mette formule di Vlookup per le desc... serve per pet 05
 						Case 7
 								exit sub
 					end select	
-			ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
+			ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 			oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;) 
 			oSheetSRC = ThisComponent.Sheets.getByName(&quot;S5&quot;)
 			lLastUrow = getLastUsedRow(oSheet)

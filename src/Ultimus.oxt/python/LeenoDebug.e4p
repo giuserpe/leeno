@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project LeenoDebug -->
-<!-- Saved: 2020-06-14, 02:02:14 -->
+<!-- Saved: 2020-06-15, 00:50:32 -->
 <!-- Copyright (C) 2020 Massimo Del Fedele, max@veneto.com -->
 <Project version="5.1">
   <Language></Language>
@@ -19,6 +19,7 @@ Probably works only on Linux</Description>
     <Source>LeenoDispatcher.py</Source>
     <Source>leeno.py</Source>
     <Source>pythonpath/Dialogs.py</Source>
+    <Source>pythonpath/LeenoAnalysis.py</Source>
     <Source>pythonpath/LeenoBasicBridge.py</Source>
     <Source>pythonpath/LeenoConfig.py</Source>
     <Source>pythonpath/LeenoDialogs.py</Source>
@@ -26,6 +27,7 @@ Probably works only on Linux</Description>
     <Source>pythonpath/LeenoImport.py</Source>
     <Source>pythonpath/LeenoImport_XPWE.py</Source>
     <Source>pythonpath/LeenoImport_XmlSix.py</Source>
+    <Source>pythonpath/LeenoSheetUtils.py</Source>
     <Source>pythonpath/LeenoToolbars.py</Source>
     <Source>pythonpath/LeenoUtils.py</Source>
     <Source>pythonpath/SheetUtils.py</Source>

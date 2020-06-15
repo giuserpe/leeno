@@ -762,7 +762,6 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
 
 def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
     ''' Compilo Analisi di prezzo '''
-
     if len(elencoPrezzi['ListaAnalisi']) != 0:
         PL.inizializza_analisi()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')

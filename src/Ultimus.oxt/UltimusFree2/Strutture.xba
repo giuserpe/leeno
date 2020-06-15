@@ -145,7 +145,7 @@ rem ----------------------------------------------------------------------
 Sub Struttura
 	Select case ThisComponent.currentController.activeSheet.Name
 		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_ComputoM&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;struttura_ComputoM&quot;)
 			exit sub
 		Case &quot;CONTABILITA&quot;
 			Struttura_Contab (&quot;#Lib#&quot;)
@@ -157,10 +157,10 @@ Sub Struttura
 			Struttura_Contab (&quot;#Sal#&quot;)
 			exit Sub
 		Case &quot;Analisi di Prezzo&quot;
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Analisi&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;struttura_Analisi&quot;)
 			exit Sub
 		Case &quot;Elenco Prezzi&quot;
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_Elenco&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;struttura_Elenco&quot;)
 			exit Sub
 	End Select
 &apos;ThisComponent.enableAutomaticCalculation(True)
@@ -171,7 +171,7 @@ Sub Struttura_Contab (tag As string) &apos; (c) Giuseppe Vizziello 2014
 	Dim LSaln As Integer
 	Dim oSheet As Object
 	Dim oRanges As Object
-	ScriptPy(&quot;pyleeno.py&quot;,&quot;struttura_off&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;struttura_off&quot;)
 	ThisComponent.CurrentController.ZoomValue = 100
 	oSheet = ThisComponent.currentController.activeSheet
 	oRanges = ThisComponent.NamedRanges
@@ -210,11 +210,11 @@ Sub Tronca_Altezza_Voci &apos; sceglie in base alla tab di contesto) descrizione
 	
 	Select case ThisComponent.currentController.activeSheet.Name
 	Case &quot;Elenco Prezzi&quot;
-		ScriptPy(&quot;pyleeno.py&quot;,&quot;voce_breve_ep&quot;)
+		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;voce_breve_ep&quot;)
 	Case &quot;Analisi di Prezzo&quot;
 		Tronca_Altezza_Analisi
 	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
-		ScriptPy(&quot;pyleeno.py&quot;,&quot;voce_breve&quot;)
+		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;voce_breve&quot;)
 	End Select
 	If ThisComponent.currentController.activeSheet.name = &quot;Listino&quot; Then	 		
 		Tronca_Altezza_Voci_Listino

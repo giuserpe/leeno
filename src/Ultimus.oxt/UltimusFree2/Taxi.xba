@@ -558,7 +558,7 @@ annullato:
 	
 	Barra_chiudi_sempre_4
 	Barra_Apri_Chiudi_5(&quot;4 Pazienta... &quot;, 40)
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 &apos;	Visualizza_sheet_TUTTE
 	
 	&apos;metto la tab da trasferire in pool position
@@ -666,7 +666,7 @@ annullato:
 	&apos; fine registrazione... prima o poi usando aSheetNames si ripristina la situazione com&apos;era
 
 
-	ScriptPy(&quot;pyleeno.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
+	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;sproteggi_sheet_TUTTE&quot;)
 &apos;	Visualizza_sheet_TUTTE
 	
 	&apos; controlla se sul Target esiste la tab

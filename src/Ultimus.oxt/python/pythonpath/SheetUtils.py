@@ -7,6 +7,47 @@ import uno
 from com.sun.star.beans import PropertyValue
 from com.sun.star.util import SortField
 
+def setTabColor(oSheet, color):
+    '''
+    colore   { integer } : id colore
+    attribuisce al tab del foglio oSheet un colore a scelta
+    '''
+    oSheet.TabColor = color
+
+# ###############################################################
+
+
+def getUsedArea(oSheet):
+    '''
+    Restituisce l'indirizzo dell' area usata nello spreadsheet
+    in forma di oggetto CellRangeAddress
+    I membri sono:
+        Sheet 	numero intero indice dello Sheet contenente l'area
+                occhio che è un indice, NON un oggetto spreadsheet
+        StartColumn
+        StartRow
+        EndColumn
+        EndRow
+    '''
+    oCell = oSheet.getCellByPosition(0, 0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    return aAddress  # .EndColumn, aAddress.EndRow)
+
+
+def getLastUsedRow(oSheet):
+    ''' l'ultima riga usata nello spreadsheet '''
+    return getUsedArea(oSheet).EndRow
+
+
+def getLastUsedColumn(oSheet):
+    ''' l'ultima colonna usata nello spreadsheet '''
+    return getUsedArea(oSheet).EndColumn
+
+
+# ###############################################################
+
 def createSortField(column, sortAscending):
     '''
     create a sort field to be used in sortColumns()
@@ -38,5 +79,4 @@ def simpleSortColumn(oRange, column, sortAscending):
     '''
     sortField = createSortField(column, sortAscending)
     sortColumns(oRange, (sortField,))
-
 

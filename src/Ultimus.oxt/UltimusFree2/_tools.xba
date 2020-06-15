@@ -255,27 +255,27 @@ END SUB
 
 SUB DOLO rem SOLO MANUTENZIONE
 	&apos;if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$88:$L$88&quot; , &quot;manodopera&quot;)
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$89:$L$89&quot; , &quot;materiali&quot;)
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$90:$L$90&quot; , &quot;noli&quot;)
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$91:$L$91&quot; , &quot;trasporti&quot;)
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$92:$L$92&quot; , &quot;altre_forniture&quot;)
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$88:$L$88&quot; , &quot;manodopera&quot;)
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$89:$L$89&quot; , &quot;materiali&quot;)
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$90:$L$90&quot; , &quot;noli&quot;)
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$91:$L$91&quot; , &quot;trasporti&quot;)
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$92:$L$92&quot; , &quot;altre_forniture&quot;)
 		rem VECCHIO BLOCCO ANALISI_BART
 		rem BLOCCO ANALISI AVCP
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
-&apos;		ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
+&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
 Exit Sub
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;Temp&quot;, &quot;$C$1:$C$18&quot; , &quot;nome_CC2&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot; , &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;M1&quot; , &quot;$D$4&quot; , &quot;Bozza_8&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;M1&quot; , &quot;$C$19&quot; , &quot;data_prog_8&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;M1&quot; , &quot;$E$4&quot; , &quot;oData_8&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;M1&quot; , &quot;$C$4&quot; , &quot;progetto_8&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot; , &quot;$B$116:$O$116&quot; , &quot;riga_analisi&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot; , &quot;$A$9:$AP12&quot; , &quot;Serv_gen1_8&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot; , &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;M1&quot; , &quot;$B$4&quot; , &quot;Super_ego_8&quot;)
-ScriptPy(&quot;pyleeno.py&quot;,&quot;rifa_nomearea&quot;, &quot;S5&quot; , &quot;$B$128:$O$128&quot; , &quot;utili&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Temp&quot;, &quot;$C$1:$C$18&quot; , &quot;nome_CC2&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$D$4&quot; , &quot;Bozza_8&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$C$19&quot; , &quot;data_prog_8&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$E$4&quot; , &quot;oData_8&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$C$4&quot; , &quot;progetto_8&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$B$116:$O$116&quot; , &quot;riga_analisi&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$A$9:$AP12&quot; , &quot;Serv_gen1_8&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$B$4&quot; , &quot;Super_ego_8&quot;)
+ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$B$128:$O$128&quot; , &quot;utili&quot;)
  oDoc = ThisComponent
  oAree=oDoc.NamedRanges&apos;
 END Sub

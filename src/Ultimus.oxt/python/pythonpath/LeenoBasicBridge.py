@@ -353,7 +353,7 @@ def salva_come(nomefile=None):
     PL.salva_come(nomefile)
 
 
-def dp():
+def ScriviNomeDocumentoPrincipale():
     '''
     Indica qual è il Documento Principale
     '''

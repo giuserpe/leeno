@@ -15,6 +15,8 @@ import pyleeno as PL
 import LeenoDialogs as DLG
 
 import LeenoConfig
+import LeenoSheetUtils
+import LeenoAnalysis
 
 import Dialogs
 
@@ -752,7 +754,7 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
 
     print("Eliminazione voci doppie elenco prezzi")
     progress.setText("Eliminazione voci doppie elenco prezzi")
-    for i in reversed(range(3, PL.getLastUsedCell(oSheet).EndRow)):
+    for i in reversed(range(3, SheetUtils.getLastUsedRow(oSheet))):
         if oSheet.getCellByPosition(0, i).String in elencoPrezzi['ListaTariffeAnalisi']:
             oSheet.getRows().removeByIndex(i, 1)
     '''
@@ -763,11 +765,11 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
 def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
     ''' Compilo Analisi di prezzo '''
     if len(elencoPrezzi['ListaAnalisi']) != 0:
-        PL.inizializza_analisi()
+        LeenoAnalysis.inizializzaAnalisi(oDoc)
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         for el in elencoPrezzi['ListaAnalisi']:
             prezzo_finale = el[-1]
-            sStRange = PL.Circoscrive_Analisi(PL.Range2Cell()[1])
+            sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, PL.LeggiPosizioneCorrente()[1])
             lrow = sStRange.RangeAddress.StartRow + 2
             oSheet.getCellByPosition(0, lrow).String = el[0]
             oSheet.getCellByPosition(1, lrow).String = el[1]
@@ -780,9 +782,9 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
                                    'ALTRE FORNITURE E PRESTAZIONI',
                                    'overflow'):
                     if el[3][y][1] != 'overflow':
-                        n = PL.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
+                        n = SheetUtils.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
                 else:
-                    PL.copia_riga_analisi(n)
+                    LeenoAnalysis.copiaRigaAnalisi(oSheet, n)
                     if elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]) is not None:
                         oSheet.getCellByPosition(
                             0, n).String = elencoPrezzi['DizionarioArticoli'].get(
@@ -812,7 +814,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
                                 oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
-            sStRange = PL.Circoscrive_Analisi(lrow)
+            sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
             SR = sStRange.RangeAddress.StartRow
             ER = sStRange.RangeAddress.EndRow
             for m in reversed(range(SR, ER)):
@@ -824,7 +826,7 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
             if oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value != prezzo_finale:
                 oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value = prezzo_finale
             PL.inizializza_analisi()
-        PL.elimina_voce(PL.ultima_voce(oSheet), 0)
+        PL.elimina_voce(LeenoSheetUtils.cercaUltimaVoce(oSheet), 0)
         PL.tante_analisi_in_ep()
 
 
@@ -857,7 +859,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         idcat = el.get('idcat')
         idsbcat = el.get('idsbcat')
 
-        lrow = PL.ultima_voce(oSheet) + 1
+        lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
         #  inserisco le categorie
         try:
             if idspcat != testspcat:
@@ -881,9 +883,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 PL.Inser_SottoCapitolo_arg(lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
         except UnboundLocalError:
             pass
-        lrow = PL.ultima_voce(oSheet) + 1
+        lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
         if elaborato == 'CONTABILITA':
-            PL.ins_voce_contab(lrow=PL.ultima_voce(oSheet) + 1, elaborato=0)
+            PL.ins_voce_contab(lrow=LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1, elaborato=0)
         else:
             PL.ins_voce_computo_grezza(lrow)
         ID = el.get('id_ep')

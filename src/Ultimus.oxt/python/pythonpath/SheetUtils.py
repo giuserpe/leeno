@@ -45,6 +45,47 @@ def getLastUsedColumn(oSheet):
     ''' l'ultima colonna usata nello spreadsheet '''
     return getUsedArea(oSheet).EndColumn
 
+# ###############################################################
+
+def uFindStringCol(sString, nCol, oSheet, start=2, equal=0):
+    '''
+    sString { string }  : stringa da cercare
+    nCol    { integer } : indice di colonna
+    oSheet  { object }  :
+    start   { integer } : riga di partenza
+    equal   { integer } : se equal = 1 fa una ricerca per cella intera
+
+    Trova la prima ricorrenza di una stringa(sString) nella
+    colonna nCol di un foglio di calcolo(oSheet) e restituisce
+    in numero di riga
+    '''
+    oCell = oSheet.getCellByPosition(0, 0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    for nRow in range(start, aAddress.EndRow + 1):
+        if sString in oSheet.getCellByPosition(nCol, nRow).String:
+            return nRow
+
+
+def uFindString(sString, oSheet):
+    '''
+    sString { string }  : stringa da cercare
+    oSheet  { object }  :
+
+    Trova la prima ricorrenza di una stringa(sString) riga
+    per riga in un foglio di calcolo(oSheet) e restituisce
+    una tupla(IDcolonna, IDriga)
+    '''
+    oCell = oSheet.getCellByPosition(0, 0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    for nRow in range(0, aAddress.EndRow + 1):
+        for nCol in range(0, aAddress.EndColumn + 1):
+            # ritocco di +Daniele Zambelli:
+            if sString in oSheet.getCellByPosition(nCol, nRow).String:
+                return (nCol, nRow)
 
 # ###############################################################
 

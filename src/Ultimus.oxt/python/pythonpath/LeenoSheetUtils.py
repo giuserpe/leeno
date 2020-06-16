@@ -3,6 +3,9 @@ Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
 import uno
+import pyleeno as PL
+import LeenoUtils
+import SheetUtils
 
 # ###############################################################
 
@@ -53,7 +56,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('AD').Columns.Width = 1700
         oSheet.getColumns().getByName('AE').Columns.Width = 1700
         oDoc.CurrentController.freezeAtPosition(0, 3)
-        viste_nuove('TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
+        PL.viste_nuove('TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
     if oSheet.Name == 'Elenco Prezzi':
         oSheet.getColumns().getByName('A').Columns.Width = 1600
         oSheet.getColumns().getByName('B').Columns.Width = 10000
@@ -83,7 +86,26 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('Z').Columns.Width = 1600
         oSheet.getColumns().getByName('AA').Columns.Width = 1600
         oDoc.CurrentController.freezeAtPosition(0, 3)
-    adatta_altezza_riga(oSheet.Name)
+    PL.adatta_altezza_riga(oSheet.Name)
+
+# ###############################################################
+
+def cercaUltimaVoce(oSheet):
+    nRow = SheetUtils.getLastUsedRow(oSheet)
+    if nRow == 0:
+        return 0
+    for n in reversed(range(0, nRow)):
+        # if oSheet.getCellByPosition(0, n).CellStyle in('Comp TOTALI'):
+        if oSheet.getCellByPosition(
+                0,
+                n).CellStyle in ('EP-aS', 'EP-Cs', 'An-sfondo-basso Att End',
+                                 'Comp End Attributo', 'Comp End Attributo_R',
+                                 'comp Int_colonna',
+                                 'comp Int_colonna_R_prima',
+                                 'Livello-0-scritta', 'Livello-1-scritta',
+                                 'livello2 valuta'):
+            break
+    return n
 
 # ###############################################################
 
@@ -93,28 +115,24 @@ def inserisciRigaRossa(oSheet):
     Questa riga è un riferimento per varie operazioni
     Errore se il foglio non è un foglio di LeenO
     '''
-    lrow = Range2Cell()[1]
+    lrow = 0
     nome = oSheet.Name
     if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        lrow = ultima_voce(oSheet) + 2
-        for n in range(lrow, getLastUsedCell(oSheet).EndRow + 2):
+        lrow = cercaUltimaVoce(oSheet) + 2
+        for n in range(lrow, SheetUtils.getLastUsedRow(oSheet) + 2):
             if oSheet.getCellByPosition(0, n).CellStyle == 'Riga_rossa_Chiudi':
                 return
         oSheet.getRows().insertByIndex(lrow, 1)
         oSheet.getCellByPosition(0, lrow).String = 'Fine Computo'
-        oSheet.getCellRangeByPosition(0, lrow, 34,
-                                      lrow).CellStyle = 'Riga_rossa_Chiudi'
+        oSheet.getCellRangeByPosition(0, lrow, 34, lrow).CellStyle = 'Riga_rossa_Chiudi'
     elif nome == 'Analisi di Prezzo':
-        lrow = ultima_voce(oSheet) + 2
+        lrow = cercaUltimaVoce(oSheet) + 2
         oSheet.getCellByPosition(0, lrow).String = 'Fine ANALISI'
-        oSheet.getCellRangeByPosition(0, lrow, 10,
-                                      lrow).CellStyle = 'Riga_rossa_Chiudi'
+        oSheet.getCellRangeByPosition(0, lrow, 10, lrow).CellStyle = 'Riga_rossa_Chiudi'
     elif nome == 'Elenco Prezzi':
-        lrow = ultima_voce(oSheet) + 1
+        lrow = cercaUltimaVoce(oSheet) + 1
         oSheet.getCellByPosition(0, lrow).String = 'Fine elenco'
-        oSheet.getCellRangeByPosition(0, lrow, 7,
-                                      lrow).CellStyle = 'Riga_rossa_Chiudi'
-    oSheet.getCellByPosition(
-        2, lrow
+        oSheet.getCellRangeByPosition(0, lrow, 7, lrow).CellStyle = 'Riga_rossa_Chiudi'
+    oSheet.getCellByPosition(2, lrow
     ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 

@@ -6,7 +6,7 @@
 
 # set this to 1 if you want a dialog on every call from basic to python
 # set to 0 to avoid it
-ALERT_BASIC_CALLS = 1
+ALERT_BASIC_CALLS = 0
 
 # dirty trick to have pythonpath added if missing
 import sys, os, inspect
@@ -15,6 +15,7 @@ if(myPath not in sys.path):
     sys.path.append(myPath)
 
 import Dialogs
+import LeenoUtils
 
 # builtins dictionary in portable way... sigh
 if type(__builtins__) == type(sys):
@@ -409,7 +410,9 @@ def voce_breve_ep():
 
 def inserisci_Riga_rossa():
     callAlert()
-    PL.inserisci_Riga_rossa()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
 
 def Rinumera_TUTTI_Capitoli2():

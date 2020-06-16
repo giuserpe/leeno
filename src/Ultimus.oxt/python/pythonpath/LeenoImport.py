@@ -17,6 +17,7 @@ import pyleeno as PL
 import LeenoDialogs as DLG
 import LeenoToolbars as Toolbars
 from LeenoConfig import Config
+import SheetUtils
 
 import Dialogs
 
@@ -59,7 +60,7 @@ def importa_listino_leeno_run():
     #  viola(12632319,13684991,15790335)
     lista_articoli = list()
     nome = oSheet.getCellByPosition(2, 0).String
-    test = PL.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
+    test = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
     assembla = DLG.DlgSiNo(
         '''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.
@@ -84,7 +85,7 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
 
     PL.shutil.copyfile(orig, dest)
     madre = ''
-    for el in range(test, PL.getLastUsedCell(oSheet).EndRow + 1):
+    for el in range(test, SheetUtils.getLastUsedRow(oSheet) + 1):
         tariffa = oSheet.getCellByPosition(2, el).String
         descrizione = oSheet.getCellByPosition(4, el).String
         um = oSheet.getCellByPosition(6, el).String
@@ -202,8 +203,8 @@ def MENU_XML_toscana_import():
 
     if not oDoc.getSheets().hasByName('COMPUTO'):
         if (len(oDoc.getURL()) == 0 and
-                PL.getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndColumn == 0 and
-                PL.getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndRow == 0):
+                SheetUtils.getLastUsedColumn(oDoc.CurrentController.ActiveSheet) == 0 and
+                SheetUtils.getLastUsedRow(oDoc.CurrentController.ActiveSheet) == 0):
             oDoc.close(True)
 
     # effettua il parsing del file XML
@@ -353,7 +354,7 @@ sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'
     oDialogo_attesa.endExecute()
     PL.struttura_Elenco()
     oSheet.getCellRangeByName('F2').String = 'prezzi'
-    oSheet.getCellRangeByName('E2').Formula = ('=COUNT(E3:E' + str(PL.getLastUsedCell(oSheet).EndRow + 1) +
+    oSheet.getCellRangeByName('E2').Formula = ('=COUNT(E3:E' + str(SheetUtils.getLastUsedRow(oSheet) + 1) +
                                                ')')
     dest = filename[0:-4] + '.ods'
     PL.salva_come(dest)
@@ -384,7 +385,7 @@ def MENU_sardegna_2019():
 
     oSheet0 = oDoc.getSheets().getByName('Worksheet')
     oSheet1 = oDoc.getSheets().getByName('nuova_tabella')
-    # fine = PL.getLastUsedCell(oSheet0).EndRow + 1
+    # fine = SheetUtils.getLastUsedRow(oSheet0) + 1
     n = 1
     test1 = test2 = test3 = test4 = 1
     for i in range(2, 50):
@@ -449,7 +450,7 @@ def MENU_basilicata_2020():
         oSheet.getRows().removeByIndex(0, 1)
     oSheet = oDoc.getSheets().getByName('CATEGORIE')
     PL.GotoSheet('CATEGORIE')
-    fine = PL.getLastUsedCell(oSheet).EndRow + 1
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(0, fine):
         oSheet.getCellByPosition(1, i).String = (
             oSheet.getCellByPosition(0, i).String +
@@ -468,7 +469,7 @@ def MENU_basilicata_2020():
     PL.GotoSheet('unione_fogli')
     oSheet.getRows().removeByIndex(0, 1)
     PL.ordina_col(1)
-    fine = PL.getLastUsedCell(oSheet).EndRow + 1
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(0, fine):
         if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
             madre = oSheet.getCellByPosition(1, i).String
@@ -498,7 +499,7 @@ def MENU_Piemonte_2019():
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    fine = PL.getLastUsedCell(oSheet).EndRow + 1
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
     elenco = list()
     for i in range(0, fine):
         if len(oSheet.getCellByPosition(1, i).String.split('.')) <= 2:
@@ -605,8 +606,8 @@ def MENU_fuf():
 
     oSheet.getCellRangeByPosition(
         0, 0,
-        getLastUsedCell(oSheet).EndColumn,
-        getLastUsedCell(oSheet).EndRow).Columns.OptimalWidth = True
+        SheetUtils.getLastUsedColumn(oSheet),
+        SheetUtils.getLastUsedRow(oSheet)).Columns.OptimalWidth = True
 
     return
     copy_clip()
@@ -643,13 +644,9 @@ def MENU_fuf():
     oProp.append(oProp5)
     properties = tuple(oProp)
     #  _gotoCella(6,1)
+    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
 
-    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0,
-                                   properties)
-    oDoc.CurrentController.select(
-        oSheet.getCellRangeByPosition(0, 1, 5,
-                                      getLastUsedCell(oSheet).EndRow + 1))
-
+    oDoc.CurrentController.select( oSheet.getCellRangeByPosition(0, 1, 5, SheetUtils.getLastUsedRow(oSheet) + 1))
     ordina_col(3)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect

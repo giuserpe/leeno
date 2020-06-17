@@ -8960,7 +8960,7 @@ def ctrl_d():
 
 
 ########################################################################
-def taglia_x():
+def MENU_taglia_x():
     '''
     taglia il contenuto della selezione
     senza cancellare la formattazione delle celle
@@ -9058,7 +9058,7 @@ def sistema_cose():
                     'Â°', '°').replace('Ã', 'à').replace(' $', '')
             while '  ' in testo:
                 testo = testo.replace('  ', ' ')
-            oDoc.getCurrentSelection().String = testo
+            oDoc.getCurrentSelection().String = testo.strip().strip().strip()
 
 
 ########
@@ -9136,7 +9136,7 @@ def descrizione_in_una_colonna(flag=False):
 ########################################################################
 def numera_colonna():
     '''Inserisce l'indice di colonna nelle prime 100 colonne del rigo selezionato
-Associato a Atrl+Shift+C'''
+Associato a Ctrl+Shift+C'''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = Range2Cell()[1]

@@ -2693,7 +2693,7 @@ Cancello le voci di misurazione?
             adatta_altezza_riga('VARIANTE')
     #  else:
     GotoSheet('VARIANTE')
-    dp()
+    ScriviNomeDocumentoPrincipale()
     basic_LeenO("Menu.eventi_assegna")
 
 
@@ -6195,7 +6195,7 @@ def attiva_contabilita():
             ins_voce_contab()
             #  set_larghezza_colonne()
         GotoSheet('CONTABILITA')
-    dp()
+    ScriviNomeDocumentoPrincipale()
     basic_LeenO("Menu.eventi_assegna")
 
 
@@ -6931,7 +6931,7 @@ def inizializza_analisi():
     oSheet.copyRange(oCellAddress, oRangeAddress)
     basic_LeenO("Menu.eventi_assegna")
     inserisci_Riga_rossa()
-    dp()
+    ScriviNomeDocumentoPrincipale()
 
 
 ########################################################################
@@ -7883,7 +7883,7 @@ def autoexec():
     oDoc.CalcAsShown = True  # precisione come mostrato
     adegua_tmpl()  # esegue degli aggiustamenti del template
     Toolbars.Vedi()
-    dp()
+    ScriviNomeDocumentoPrincipale()
     #  if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
     #  vedi = conf.read(path_conf, 'Generale', 'visualizza')
@@ -8096,7 +8096,7 @@ def inizializza():
     oCell.String = "Applica Filtro a:"
     oCell.CellStyle = 'EP-aS'
     # Indica qual è il Documento Principale
-    dp()
+    ScriviNomeDocumentoPrincipale()
     nascondi_sheets()
 
 
@@ -8457,7 +8457,7 @@ def chiudi_dialoghi(event=None):
 
 
 ########################################################################
-def dp():
+def ScriviNomeDocumentoPrincipale():
     '''
     Indica qual è il Documento Principale
     '''
@@ -8482,14 +8482,12 @@ def dp():
         try:
             oSheet = oDoc.Sheets.getByName(el)
             oSheet.getCellRangeByName(d[el]).String = 'DP: ' + sUltimus
-            oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR +
-                                                              FORMATTED +
-                                                              HARDATTR)
+            oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
             if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
-                oSheet.getCellRangeByName(
-                    "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
-                oSheet.getCellRangeByName(
-                    d[el]).String = 'DP: Questo documento'
+                Dialogs.Exclamation(Title="BAH", Text="Inatteso!!!!")
+                # 13434777 giallo
+                oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632
+                oSheet.getCellRangeByName(d[el]).String = 'DP: Questo documento'
         except Exception:
             pass
 

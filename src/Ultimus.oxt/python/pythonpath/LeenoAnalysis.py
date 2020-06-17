@@ -44,4 +44,4 @@ def inizializzaAnalisi(oDoc):
     oSheet.copyRange(oCellAddress, oRangeAddress)
     basic_LeenO("Menu.eventi_assegna")
     inserisci_Riga_rossa()
-    dp()
+    ScriviNomeDocumentoPrincipale()

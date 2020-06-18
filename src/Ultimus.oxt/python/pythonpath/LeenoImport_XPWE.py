@@ -3,6 +3,7 @@ Importazione computo/variante/contabilità/prezzario
 dal formato XPWE
 """
 import logging
+import time
 
 from xml.etree.ElementTree import ElementTree, ParseError
 
@@ -765,11 +766,10 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
 def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
     ''' Compilo Analisi di prezzo '''
     if len(elencoPrezzi['ListaAnalisi']) != 0:
-        LeenoAnalysis.inizializzaAnalisi(oDoc)
-        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+        oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
         for el in elencoPrezzi['ListaAnalisi']:
             prezzo_finale = el[-1]
-            sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, PL.LeggiPosizioneCorrente()[1])
+            sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, startRow)
             lrow = sStRange.RangeAddress.StartRow + 2
             oSheet.getCellByPosition(0, lrow).String = el[0]
             oSheet.getCellByPosition(1, lrow).String = el[1]
@@ -825,9 +825,10 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
                     oSheet.getCellByPosition(0, m).String = ''
             if oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value != prezzo_finale:
                 oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value = prezzo_finale
-            PL.inizializza_analisi()
-        PL.elimina_voce(LeenoSheetUtils.cercaUltimaVoce(oSheet), 0)
-        PL.tante_analisi_in_ep()
+            oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+
+        LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+        print("Tante analisi")
 
 
 def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure):
@@ -1119,7 +1120,7 @@ def MENU_XPWE_import():
     progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Scrittura computo")
     progress.show()
 
-   # disattiva l'output a video
+    # disattiva l'output a video
     LeenoUtils.DisableDocumentRefresh(oDoc)
 
     # compila i dati generali per l'analisi
@@ -1167,7 +1168,7 @@ def MENU_XPWE_import():
         return
 
     # compila il computo
-    print("compilaComputo DONE")
+    print("compilaComputo")
     progress.setText(f'Compilazione {elaborato}')
     compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
 

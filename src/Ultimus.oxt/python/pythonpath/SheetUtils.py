@@ -3,9 +3,141 @@ Utilities to handle worksheets
 
 Copyright 2020 by Massimo Del Fedele
 '''
+import random
 import uno
+from com.sun.star.xml import AttributeData
 from com.sun.star.beans import PropertyValue
 from com.sun.star.util import SortField
+import LeenoUtils
+
+'''
+User defined attributes handlint in worksheets
+Not supporting (by now) namespaces, it allows to
+insert strings attributes into spreadsheets
+'''
+
+def setUserDefinedAttribute(oSheet, name, value):
+    userAttributes = oSheet.UserDefinedAttributes
+    attr = AttributeData()
+    attr.Type = "CDATA"
+    attr.Value = value
+    if userAttributes.hasByName(name):
+        userAttributes.replaceByName(name, attr)
+    else:
+        userAttributes.insertByName(name, attr)
+    oSheet.UserDefinedAttributes = userAttributes
+
+def getUserDefinedAttribute(oSheet, name):
+    userAttributes = oSheet.UserDefinedAttributes
+    if userAttributes.hasByName(name):
+        return userAttributes.getByName(name).Value
+    return None
+
+def hasUserDefinedAttribute(oSheet, name):
+    userAttributes = oSheet.UserDefinedAttributes
+    return userAttributes.hasByName(name)
+
+def removeUserDefinedAttribute(oSheet, name):
+    userAttributes = oSheet.UserDefinedAttributes
+    if userAttributes.hasByName(name):
+        userAttributes.removeByName(name)
+        oSheet.UserDefinedAttributes = userAttributes
+
+
+# ###############################################################
+
+
+def getDocumentFromSheet(oSheet):
+    '''
+    given a sheet object returns containing document
+    sadly there's no built-in interface for it
+    and there's no simple way to do it...
+    '''
+    #  get all documents from desktop
+    attrName = str(random.random())
+    setUserDefinedAttribute(oSheet, attrName, "JUSTSOMETHING")
+
+    oEnum = LeenoUtils.getDesktop().Components.createEnumeration()
+    while oEnum.hasMoreElements():
+        oDoc = oEnum.nextElement()
+        try:
+            sheets = oDoc.Sheets
+            idx = 0
+            while idx < sheets.Count:
+                sheet = sheets[idx]
+                if getUserDefinedAttribute(sheet, attrName) == "JUSTSOMETHING":
+                    # found, return it
+                    removeUserDefinedAttribute(oSheet, attrName)
+                    return oDoc
+                idx += 1
+        except Exception:
+            pass
+    # not found
+    removeUserDefinedAttribute(oSheet, attrName)
+    return None
+
+
+# ###############################################################
+
+def isCurrentSheet(oSheet):
+    '''
+    check if sheet is the current one in its document
+    '''
+    oDoc = getDocumentFromSheet(oSheet)
+    contr = oDoc.CurrentController
+    return contr.ActiveSheet.Name == oSheet.Name
+
+
+def setCurrentSheet(oSheet):
+    '''
+    set the active sheet
+    '''
+    oDoc = getDocumentFromSheet(oSheet)
+    contr = oDoc.CurrentController
+    contr.ActiveSheet = oSheet
+
+
+def getCurrentSheet(oDoc):
+    '''
+    set the active sheet in given document
+    '''
+    contr = oDoc.CurrentController
+    return contr.ActiveSheet
+
+
+# ###############################################################
+
+def freezeRowCol(oSheet, row, col):
+    '''
+    freeze row and column up to row and col
+    on sheet oSheet
+    Sadly it must use the controller, so it can't be
+    done headless... but we try to preserve all we can
+    '''
+    # get document from sheet
+    oDoc = getDocumentFromSheet(oSheet)
+
+    # get controller from document
+    controller = oDoc.CurrentController
+
+    # if current sheet is not the one we want to setup, we
+    # must change it
+    if isCurrentSheet(oSheet):
+        curSheet = None
+    else:
+        curSheet = getCurrentSheet(oDoc)
+        setCurrentSheet(oSheet)
+
+    # now change freeze point
+    controller.freezeAtPosition(row, col)
+
+    # if current sheet was another one, restore it
+    if curSheet is not None:
+        setCurrentSheet(curSheet)
+
+
+# ###############################################################
+
 
 def setTabColor(oSheet, color):
     '''

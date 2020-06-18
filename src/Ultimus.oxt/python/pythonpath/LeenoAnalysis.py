@@ -10,6 +10,7 @@ def inizializzaAnalisi(oDoc):
     '''
     Se non presente, crea il foglio 'Analisi di Prezzo' ed inserisce la prima scheda
     Ritorna l'oggetto oSheet del foglio contenente le analisi
+    e la riga da cui iniziare la compilazione dell'analisi corrente
     '''
     PL.rifa_nomearea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
@@ -23,22 +24,23 @@ def inizializzaAnalisi(oDoc):
 
         # queste due righe dovrebbero servire per posizionare il cursore sulla cella richiesta
         # cerchiamo di eliminarle, volendo lavorare senza controller
-        oDoc.CurrentController.select(oSheet.getCellByPosition(0, 2))
+        print("\nPOSIZIONE:", 2)
+
+        #@@oDoc.CurrentController.select(oSheet.getCellByPosition(0, 2))
         # unselect
-        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+        #@@oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
         LeenoSheetUtils.setLarghezzaColonne(oSheet)
+
+        # la riga dalla quale iniziare a scrivere
+        startRow = 2
+
     else:
         PL.GotoSheet('Analisi di Prezzo')
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
         oDoc.CurrentController.setActiveSheet(oSheet)
-
-        #@@lrow = PL.LeggiPosizioneCorrente()[1]
         lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
-
         urow = SheetUtils.getLastUsedRow(oSheet)
-        #@@if lrow >= urow:
-        #@@    lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
         for n in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
             if oSheet.getCellByPosition(0, n).CellStyle == 'An-sfondo-basso Att End':
                 break
@@ -46,17 +48,24 @@ def inizializzaAnalisi(oDoc):
         oSheet.getRows().insertByIndex(n + 2, 26)
         oCellAddress = oSheet.getCellByPosition(0, n + 2).getCellAddress()
 
+        print("\nPOSIZIONE:", n + 2 + 1)
+
         # queste due righe dovrebbero servire per posizionare il cursore sulla cella richiesta
         # cerchiamo di eliminarle, volendo lavorare senza controller
-        oDoc.CurrentController.select(oSheet.getCellByPosition(0, n + 2 + 1))
+        #@@oDoc.CurrentController.select(oSheet.getCellByPosition(0, n + 2 + 1))
         # unselect
-        oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+        #@@oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+
+        # la riga dalla quale iniziare a scrivere
+        startRow = n + 2 + 1
 
     oSheet.copyRange(oCellAddress, oRangeAddress)
 
     PL.basic_LeenO("Menu.eventi_assegna")
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
     PL.ScriviNomeDocumentoPrincipale()
+
+    return oSheet, startRow
 
 
 def circoscriveAnalisi(oSheet, lrow):

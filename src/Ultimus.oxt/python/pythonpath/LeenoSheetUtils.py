@@ -6,6 +6,7 @@ import uno
 import pyleeno as PL
 import LeenoUtils
 import SheetUtils
+import LeenoAnalysis
 
 # ###############################################################
 
@@ -13,13 +14,11 @@ def setLarghezzaColonne(oSheet):
     '''
     regola la larghezza delle colonne a seconda della sheet
     '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name == 'Analisi di Prezzo':
         for col, width in {'A':2100, 'B':12000, 'C':1600, 'D':2000, 'E':3400, 'F':3400,
                            'G':2700, 'H':2700, 'I':2000, 'J':2000, 'K':2000}.items():
             oSheet.Columns[col].Width = width
-        oDoc.CurrentController.freezeAtPosition(0, 2)
+        SheetUtils.freezeRowCol(oSheet, 0, 2)
 
     elif oSheet.Name == 'CONTABILITA':
         viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
@@ -36,7 +35,7 @@ def setLarghezzaColonne(oSheet):
                            'Z':1900, 'AC':1700, 'AD':1700, 'AE':1700,
                            'AX':1900, 'AY':1900}.items():
             oSheet.Columns[col].Width = width
-        oDoc.CurrentController.freezeAtPosition(0, 3)
+        SheetUtils.freezeRowCol(oSheet, 0, 3)
 
     elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
         # mostra colonne
@@ -55,7 +54,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('AC').Columns.Width = 1700
         oSheet.getColumns().getByName('AD').Columns.Width = 1700
         oSheet.getColumns().getByName('AE').Columns.Width = 1700
-        oDoc.CurrentController.freezeAtPosition(0, 3)
+        SheetUtils.freezeRowCol(oSheet, 0, 3)
         PL.viste_nuove('TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
     if oSheet.Name == 'Elenco Prezzi':
         oSheet.getColumns().getByName('A').Columns.Width = 1600
@@ -85,7 +84,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('Y').Columns.Width = 1600
         oSheet.getColumns().getByName('Z').Columns.Width = 1600
         oSheet.getColumns().getByName('AA').Columns.Width = 1600
-        oDoc.CurrentController.freezeAtPosition(0, 3)
+        SheetUtils.freezeRowCol(oSheet, 0, 3)
     PL.adatta_altezza_riga(oSheet.Name)
 
 # ###############################################################
@@ -106,6 +105,60 @@ def cercaUltimaVoce(oSheet):
                                  'livello2 valuta'):
             break
     return n
+
+# ###############################################################
+
+
+def selezionaVoce(oSheet, lrow):
+    '''
+    Restituisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
+    CONTABILITA o Analisi di Prezzo
+    lrow { long }  : numero riga all'interno della voce
+    '''
+    if oSheet.Name in ('Elenco Prezzi'):
+        return lrow, lrow
+
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    elif oSheet.Name == 'Analisi di Prezzo':
+        sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
+    ###
+    elif oSheet.Name == 'CONTABILITA':
+        cerca_partenza()
+        if partenza[2] == '#reg':
+            sblocca_cont()
+            if sblocca_computo == 0:
+                return
+            pass
+        else:
+            pass
+        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    else:
+        raise
+
+    SR = sStRange.RangeAddress.StartRow
+    ER = sStRange.RangeAddress.EndRow
+    # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    return SR, ER
+
+
+def eliminaVoce(oSheet, lrow):
+    '''
+    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+    lrow { long }  : numero riga
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    voce = selezionaVoce(oSheet, lrow)
+    SR = voce[0]
+    ER = voce[1]
+
+    #oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    #delete('R')
+    oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+
+    #oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+
 
 # ###############################################################
 

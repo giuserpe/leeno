@@ -4236,6 +4236,7 @@ def seleziona(lrow=None):
 ########################################################################
 def seleziona_voce(lrow=None):
     '''
+    @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.selezionaVoce'
     Restituisce inizio e fine riga di una voce in COMPUTO, VARIANTE,
     CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
@@ -4281,6 +4282,7 @@ def MENU_elimina_voce():
 
 def elimina_voce(lrow=None, msg=1):
     '''
+    @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.eliminaVoce'
     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     msg  { bit }   : 1 chiedi conferma con messaggio

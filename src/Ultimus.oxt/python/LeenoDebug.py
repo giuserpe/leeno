@@ -219,9 +219,18 @@ PweElencoPrezzi = misurazioni.getchildren()[0]
 # leggo l'elenco prezzi
 epitems = PweElencoPrezzi.findall('EPItem')
 '''
-
-oDoc = loadDocument("/storage/Scaricati/COMPUTI_METRICI/LEENO/PREZZARI/PrezzarioEmiliaRomagna2019.ods")
+#oDoc = loadDocument("/storage/Scaricati/COMPUTI_METRICI/LEENO/PREZZARI/PrezzarioEmiliaRomagna2019.ods")
+oDoc = LeenoUtils.getDocument()
 oSheet = oDoc.Sheets[0]
+
+contr = oDoc.CurrentController
+
+# get doc from sheet
+enumeration = desktop.Components.createEnumeration()
+d = enumeration.nextElement()
+sheets = d.Sheets
+sheet = sheets[0]
+
 
 print("\nDONE\n")
 

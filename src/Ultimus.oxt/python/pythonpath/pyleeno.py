@@ -8839,7 +8839,7 @@ def ctrl_d():
 
 
 ########################################################################
-def taglia_x():
+def MENU_taglia_x():
     '''
     taglia il contenuto della selezione
     senza cancellare la formattazione delle celle
@@ -8936,7 +8936,7 @@ def sistema_cose():
                     'Â°', '°').replace('Ã', 'à').replace(' $', '')
             while '  ' in testo:
                 testo = testo.replace('  ', ' ')
-            oDoc.getCurrentSelection().String = testo
+            oDoc.getCurrentSelection().String = testo.strip().strip().strip()
 
 
 ########
@@ -9014,7 +9014,7 @@ def descrizione_in_una_colonna(flag=False):
 ########################################################################
 def numera_colonna():
     '''Inserisce l'indice di colonna nelle prime 100 colonne del rigo selezionato
-Associato a Atrl+Shift+C'''
+Associato a Ctrl+Shift+C'''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
@@ -9603,12 +9603,60 @@ def errore():
     '''
     DLG.MsgBox(traceback.format_exc())
 
+#~from collections import OrderedDict
+
 def MENU_debug():
     '''
     Utile per testare comandi dalla toolbar DEV
     '''
-    w_version_code()
-
+    #~DLG.chi('poipo')
+    #~return
+    sistema_cose()
+    return
+#~ def split_chunks(l, n):
+    """ 
+       Splits list l into n chunks with approximately equals sum of values
+       see  http://stackoverflow.com/questions/6855394/splitting-list-in-chunks-of-balanced-weight
+    """
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lr = getLastUsedCell(oSheet).EndRow + 1
+    l = list()
+    d = list()
+    for i in range(1, lr):
+        l.append (oSheet.getCellByPosition(1, i).Value)
+        
+        a = oSheet.getCellByPosition(1, i).Value
+        b = oSheet.getCellByPosition(0, i).AbsoluteName
+        d.append ([a, b])
+        
+    n = 6
+    result = [[] for i in range(n)]
+    sums   = {i:0 for i in range(n)}
+    c = 0
+    for e in l:
+        for i in sums:
+            if c == sums[i]:
+                result[i].append(e)
+                break
+        sums[i] += e
+        c = min(sums.values())
+    c = 5
+    for el in result:
+        n = 1
+        for i in el:
+            oSheet.getCellByPosition(c, n).Value = i
+            m = 0
+            for x in d:
+                if x[0] == i:
+                    formula = x[1]
+                    d.pop(m)
+                    break
+                m +=1
+            oSheet.getCellByPosition(c+1, n).Formula = '=' + formula
+            n +=1
+        c +=2
+    return result
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #

@@ -2,11 +2,11 @@
 Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
-import uno
 import pyleeno as PL
 import LeenoUtils
 import SheetUtils
 import LeenoAnalysis
+import LeenoComputo
 
 # ###############################################################
 
@@ -21,7 +21,7 @@ def setLarghezzaColonne(oSheet):
         SheetUtils.freezeRowCol(oSheet, 0, 2)
 
     elif oSheet.Name == 'CONTABILITA':
-        viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
+        PL.viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
         # larghezza colonne importi
         oSheet.getCellRangeByPosition(13, 0, 1023, 0).Columns.Width = 1900
         # larghezza colonne importi
@@ -106,6 +106,37 @@ def cercaUltimaVoce(oSheet):
             break
     return n
 
+
+# ###############################################################
+
+
+def cercaPartenza(oSheet, lrow):
+    '''
+    oSheet      foglio corrente
+    lrow        riga corrente nel foglio
+    Ritorna il nome del foglio [0] e l'id della riga di codice prezzo componente [1]
+    il flag '#reg' solo per la contabilità.
+    partenza = (nome_foglio, id_rcodice, flag_contabilità)
+    '''
+    # COMPUTO, VARIANTE
+    if oSheet.getCellByPosition(0, lrow).CellStyle in PL.stili_computo:
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1)
+
+    # CONTABILITA
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in PL.stili_contab:
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1,
+                    oSheet.getCellByPosition(22,
+                    sStRange.RangeAddress.StartRow + 1).String)
+
+    # ANALISI o riga totale
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in ('An-lavoraz-Cod-sx', 'Comp TOTALI'):
+        partenza = (oSheet.Name, lrow)
+
+    return partenza
+
+
 # ###############################################################
 
 
@@ -119,20 +150,20 @@ def selezionaVoce(oSheet, lrow):
         return lrow, lrow
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     elif oSheet.Name == 'Analisi di Prezzo':
         sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
     ###
     elif oSheet.Name == 'CONTABILITA':
-        cerca_partenza()
+        partenza = cercaPartenza(oSheet, lrow)
         if partenza[2] == '#reg':
-            sblocca_cont()
-            if sblocca_computo == 0:
+            PL.sblocca_cont()
+            if PL.sblocca_computo == 0:
                 return
             pass
         else:
             pass
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     else:
         raise
 

@@ -3,7 +3,6 @@ Importazione computo/variante/contabilità/prezzario
 dal formato XPWE
 """
 import logging
-import time
 
 from xml.etree.ElementTree import ElementTree, ParseError
 
@@ -15,6 +14,7 @@ import LeenoFormat
 import pyleeno as PL
 import LeenoDialogs as DLG
 
+import SheetUtils
 import LeenoConfig
 import LeenoSheetUtils
 import LeenoAnalysis

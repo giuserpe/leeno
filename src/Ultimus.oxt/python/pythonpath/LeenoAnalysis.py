@@ -1,7 +1,7 @@
 '''
 Funzioni relative alla gestione delle analisi di prezzi
 '''
-import uno
+
 import pyleeno as PL
 import SheetUtils
 import LeenoSheetUtils
@@ -12,7 +12,7 @@ def inizializzaAnalisi(oDoc):
     Ritorna l'oggetto oSheet del foglio contenente le analisi
     e la riga da cui iniziare la compilazione dell'analisi corrente
     '''
-    PL.rifa_nomearea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
+    SheetUtils.NominaArea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
         oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
@@ -41,7 +41,7 @@ def inizializzaAnalisi(oDoc):
         oDoc.CurrentController.setActiveSheet(oSheet)
         lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) - 5
         urow = SheetUtils.getLastUsedRow(oSheet)
-        for n in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
+        for n in range(lrow, urow):
             if oSheet.getCellByPosition(0, n).CellStyle == 'An-sfondo-basso Att End':
                 break
         oRangeAddress = oDoc.NamedRanges.blocco_analisi.ReferredCells.RangeAddress

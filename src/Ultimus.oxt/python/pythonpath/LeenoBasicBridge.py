@@ -271,7 +271,7 @@ def rifa_nomearea(oDoc, sSheet, sRange, sName):
     rifa_nomearea
     '''
     callAlert()
-    PL.rifa_nomearea(oDoc, sSheet, sRange, sName)
+    SheetUtils.NominaArea(oDoc, sSheet, sRange, sName)
 
 
 def autoexec():

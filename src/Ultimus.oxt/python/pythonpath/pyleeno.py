@@ -41,6 +41,7 @@ import LeenoUtils
 import LeenoSheetUtils
 import LeenoToolbars as Toolbars
 import LeenoFormat
+import LeenoComputo
 
 import LeenoConfig
 cfg = LeenoConfig.Config()
@@ -468,7 +469,7 @@ def MENU_invia_voce():
                 return
     # partenza
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        # sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+        # sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         cod = codice_voce(lrow)
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -476,14 +477,14 @@ def MENU_invia_voce():
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
         try:
             SR = oRangeAddress.StartRow
-            SR = Circoscrive_Voce_Computo_Att(SR).RangeAddress.StartRow
+            SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
         except AttributeError:
             DLG.MsgBox(
                 'La selezione delle voci dal COMPUTO di partenza\ndeve essere contigua.',
                 'ATTENZIONE!')
             return
         ER = oRangeAddress.EndRow
-        ER = Circoscrive_Voce_Computo_Att(ER).RangeAddress.EndRow
+        ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         oDoc.CurrentController.select(
             oSheet.getCellRangeByPosition(0, SR, 100, ER))
         lista = list()
@@ -603,7 +604,7 @@ def codice_voce(lrow, cod=None):
     oSheet = oDoc.CurrentController.ActiveSheet
     #  lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+        sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
     elif oSheet.Name in ('Analisi di Prezzo'):
         sopra = Circoscrive_Analisi(lrow).RangeAddress.StartRow + 1
     if cod is None:
@@ -616,13 +617,13 @@ def codice_voce(lrow, cod=None):
 # oDoc = LeenoUtils.getDocument()
 # oSheet = oDoc.CurrentController.ActiveSheet
 # lrow = LeggiPosizioneCorrente()[1]
-# sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+# sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
 # return oSheet.getCellByPosition(1, sopra+1).String
 # def setVoce(cod):
 # oDoc = LeenoUtils.getDocument()
 # oSheet = oDoc.CurrentController.ActiveSheet
 # lrow = LeggiPosizioneCorrente()[1]
-# sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+# sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
 # oSheet.getCellByPosition(1, sopra+1).String = cod
 ########################################################################
 
@@ -1341,12 +1342,6 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor():
 ########################################################################
 
 
-########################################################################
-
-
-########################################################################
-
-
 def MENU_join_sheets():
     '''
     unisci fogli
@@ -1477,7 +1472,7 @@ def Filtra_computo(nSheet, nCol, sString):
     oSheet = oDoc.CurrentController.ActiveSheet
     for lrow in reversed(range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))):
         try:
-            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
             if nCol == 1:
@@ -2596,7 +2591,10 @@ def scelta_viste():
 
 
 def genera_variante():
-    '''Genera il foglio di VARIANTE a partire dal COMPUTO'''
+    '''
+    Genera il foglio di VARIANTE a partire dal COMPUTO
+    @@@ MODIFICA IN CORSO CON 'LeenoVariante.generaVariante'
+    '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('VARIANTE'):
@@ -2606,9 +2604,9 @@ def genera_variante():
         oDoc.Sheets.copyByName('COMPUTO', 'VARIANTE', 4)
         oSheet = oDoc.getSheets().getByName('COMPUTO')
         lrow = SheetUtils.getUsedArea(oSheet).EndRow
-        rifa_nomearea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
-        rifa_nomearea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
-        rifa_nomearea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
+        SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
+        SheetUtils.NominaArea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
+        SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
         oSheet = oDoc.getSheets().getByName('VARIANTE')
         GotoSheet('VARIANTE')
         setTabColor(16777062)
@@ -2649,25 +2647,25 @@ def genera_sommario():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('COMPUTO')
     lrow = SheetUtils.getUsedArea(oSheet).EndRow
-    rifa_nomearea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
-    rifa_nomearea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
-    rifa_nomearea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
+    SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AJ$3:$AJ$' + str(lrow), 'AA')
+    SheetUtils.NominaArea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
+    SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
 
     if oDoc.getSheets().hasByName('VARIANTE'):
         oSheet = oDoc.getSheets().getByName('VARIANTE')
         lrow = SheetUtils.getUsedArea(oSheet).EndRow
-        rifa_nomearea(oDoc, 'VARIANTE', '$AJ$3:$AJ$' + str(lrow), 'varAA')
-        rifa_nomearea(oDoc, 'VARIANTE', '$N$3:$N$' + str(lrow), "varBB")
-        rifa_nomearea(oDoc, 'VARIANTE', '$AK$3:$AK$' + str(lrow), "varEuro")
+        SheetUtils.NominaArea(oDoc, 'VARIANTE', '$AJ$3:$AJ$' + str(lrow), 'varAA')
+        SheetUtils.NominaArea(oDoc, 'VARIANTE', '$N$3:$N$' + str(lrow), "varBB")
+        SheetUtils.NominaArea(oDoc, 'VARIANTE', '$AK$3:$AK$' + str(lrow), "varEuro")
 
     if oDoc.getSheets().hasByName('CONTABILITA'):
         oSheet = oDoc.getSheets().getByName('CONTABILITA')
         lrow = SheetUtils.getUsedArea(oSheet).EndRow
         lrow = SheetUtils.getUsedArea(
             oDoc.getSheets().getByName('CONTABILITA')).EndRow
-        rifa_nomearea(oDoc, 'CONTABILITA', '$AJ$3:$AJ$' + str(lrow), 'GG')
-        rifa_nomearea(oDoc, 'CONTABILITA', '$S$3:$S$' + str(lrow), "G1G1")
-        rifa_nomearea(oDoc, 'CONTABILITA', '$AK$3:$AK$' + str(lrow), "conEuro")
+        SheetUtils.NominaArea(oDoc, 'CONTABILITA', '$AJ$3:$AJ$' + str(lrow), 'GG')
+        SheetUtils.NominaArea(oDoc, 'CONTABILITA', '$S$3:$S$' + str(lrow), "G1G1")
+        SheetUtils.NominaArea(oDoc, 'CONTABILITA', '$AK$3:$AK$' + str(lrow), "conEuro")
 
     formule = list()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -2732,8 +2730,8 @@ def riordina_ElencoPrezzi():
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
     test = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet))
-    rifa_nomearea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-    rifa_nomearea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SC = oRangeAddress.StartColumn
     EC = oRangeAddress.EndColumn
@@ -3295,7 +3293,7 @@ def XPWE_out(elaborato, out_file):
         if oSheet.getCellByPosition(0,
                                     n).CellStyle in ('Comp Start Attributo',
                                                      'Comp Start Attributo_R'):
-            sStRange = Circoscrive_Voce_Computo_Att(n)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
             sStRange.RangeAddress
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
@@ -3704,10 +3702,10 @@ def next_voice(lrow, n=1):
     if oSheet.getCellByPosition(
             0, lrow).CellStyle in stili_computo + stili_contab:
         if n == 0:
-            sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+            sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
             lrow = sopra
         elif n == 1:
-            sotto = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
+            sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
     elif oSheet.getCellByPosition(
             0, lrow).CellStyle in ('Ultimus_centro_bordi_lati', ):
@@ -3728,10 +3726,10 @@ def next_voice(lrow, n=1):
     # ~if lrow >= fine or oSheet.getCellByPosition(0, lrow).CellStyle in('Comp TOTALI'): return lrow
     # ~if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
     # ~if n==0:
-    # ~sopra = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+    # ~sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
     # ~lrow = sopra
     # ~elif n==1:
-    # ~sotto = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
+    # ~sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
     # ~lrow = sotto+1
     # ~elif oSheet.getCellByPosition(0, lrow).CellStyle in ('Ultimus_centro_bordi_lati',):
     # ~for y in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow+1):
@@ -3829,7 +3827,7 @@ def tante_analisi_in_ep():
     oDoc = LeenoUtils.getDocument()
     lista_analisi = list()
     oSheet = oDoc.getSheets().getByName('Analisi di prezzo')
-    rifa_nomearea(oDoc, 'Analisi di Prezzo',
+    SheetUtils.NominaArea(oDoc, 'Analisi di Prezzo',
                   '$A$3:$K$' + str(SheetUtils.getUsedArea(oSheet).EndRow), 'analisi')
     voce = list()
     idx = 4
@@ -3924,40 +3922,6 @@ def Circoscrive_Analisi(lrow):
     return celle
 
 
-def Circoscrive_Voce_Computo_Att(lrow):
-    '''
-    lrow    { int }  : riga di riferimento per
-                        la selezione dell'intera voce
-
-    Circoscrive una voce di COMPUTO, VARIANTE o CONTABILITÀ
-    partendo dalla posizione corrente del cursore
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    #  lrow = LeggiPosizioneCorrente()[1]
-    #  if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
-    if oSheet.getCellByPosition(
-            0,
-            lrow).CellStyle in ('comp progress', 'comp 10 s',
-                                'Comp Start Attributo', 'Comp End Attributo',
-                                'Comp Start Attributo_R', 'comp 10 s_R',
-                                'Comp End Attributo_R', 'Livello-0-scritta',
-                                'Livello-1-scritta', 'livello2 valuta'):
-        y = lrow
-        while oSheet.getCellByPosition(
-                0, y).CellStyle not in ('Comp End Attributo',
-                                        'Comp End Attributo_R'):
-            y += 1
-        lrowE = y
-        y = lrow
-        while oSheet.getCellByPosition(
-                0, y).CellStyle not in ('Comp Start Attributo',
-                                        'Comp Start Attributo_R'):
-            y -= 1
-        lrowS = y
-    celle = oSheet.getCellRangeByPosition(0, lrowS, 250, lrowE)
-    return celle
-
 
 ########################################################################
 def ColumnNumberToName(oSheet, cColumnNumb):
@@ -4000,10 +3964,10 @@ def MENU_azzera_voce():
             except Exception:
                 sRow = oDoc.getCurrentSelection().getRangeAddress().StartRow
                 eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
-            sStRange = Circoscrive_Voce_Computo_Att(sRow)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, sRow)
             sStRange.RangeAddress
             sRow = sStRange.RangeAddress.StartRow
-            sStRange = Circoscrive_Voce_Computo_Att(eRow)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, eRow)
             try:
                 sStRange.RangeAddress
             except Exception:
@@ -4024,7 +3988,7 @@ def MENU_azzera_voce():
         for lrow in fini:
             lrow += idx
             try:
-                sStRange = Circoscrive_Voce_Computo_Att(lrow)
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
                 sStRange.RangeAddress
                 inizio = sStRange.RangeAddress.StartRow
                 fine = sStRange.RangeAddress.EndRow
@@ -4117,7 +4081,7 @@ def raggruppa_righe_voce(lrow, flag=1):
     oSheet = oDoc.CurrentController.ActiveSheet
     #  lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         sStRange.RangeAddress
 
         iSheet = oSheet.RangeAddress.Sheet
@@ -4172,17 +4136,17 @@ def seleziona(lrow=None):
         try:
             if lrow is not None:
                 SR = oRangeAddress.StartRow
-                SR = Circoscrive_Voce_Computo_Att(SR).RangeAddress.StartRow
+                SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
             else:
-                SR = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+                SR = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         except AttributeError:
             DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
             return 0
         if lrow is not None:
             ER = oRangeAddress.EndRow
-            ER = Circoscrive_Voce_Computo_Att(ER).RangeAddress.EndRow
+            ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         else:
-            ER = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
+            ER = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
     if oSheet.Name == 'Analisi di Prezzo':
         try:
             oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -4191,17 +4155,17 @@ def seleziona(lrow=None):
         try:
             if lrow is not None:
                 SR = oRangeAddress.StartRow
-                SR = Circoscrive_Voce_Computo_Att(SR).RangeAddress.StartRow
+                SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
             else:
-                SR = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+                SR = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         except AttributeError:
             DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
             return 0
         if lrow is not None:
             ER = oRangeAddress.EndRow
-            ER = Circoscrive_Voce_Computo_Att(ER).RangeAddress.EndRow
+            ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         else:
-            ER = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
+            ER = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
     if oSheet.Name == 'CONTABILITA':
         cerca_partenza()
         if partenza[2] == '#reg':
@@ -4218,17 +4182,17 @@ def seleziona(lrow=None):
         try:
             if lrow is not None:
                 SR = oRangeAddress.StartRow
-                SR = Circoscrive_Voce_Computo_Att(SR).RangeAddress.StartRow
+                SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
             else:
-                SR = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.StartRow
+                SR = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         except AttributeError:
             DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
             return 0
         if lrow is not None:
             ER = oRangeAddress.EndRow
-            ER = Circoscrive_Voce_Computo_Att(ER).RangeAddress.EndRow
+            ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         else:
-            ER = Circoscrive_Voce_Computo_Att(lrow).RangeAddress.EndRow
+            ER = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
     return oDoc.CurrentController.select(
         oSheet.getCellRangeByPosition(0, SR, 50, ER))
 
@@ -4249,7 +4213,7 @@ def seleziona_voce(lrow=None):
         return
     try:
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         elif oSheet.Name == 'Analisi di Prezzo':
             sStRange = Circoscrive_Analisi(lrow)
         ###
@@ -4262,7 +4226,7 @@ def seleziona_voce(lrow=None):
                 pass
             else:
                 pass
-            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         ###
     except Exception:
         return
@@ -4501,20 +4465,7 @@ def cerca_partenza():
     lrow = LeggiPosizioneCorrente()[1]
     global partenza
 
-    if oSheet.getCellByPosition(
-            0, lrow).CellStyle in stili_computo:  # COMPUTO, VARIANTE
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
-        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1)
-    elif oSheet.getCellByPosition(
-            0, lrow).CellStyle in stili_contab:  # CONTABILITA
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
-        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1,
-                    oSheet.getCellByPosition(
-                        22, sStRange.RangeAddress.StartRow + 1).String)
-    elif oSheet.getCellByPosition(
-            0, lrow).CellStyle in ('An-lavoraz-Cod-sx',
-                                   'Comp TOTALI'):  # ANALISI o riga totale
-        partenza = (oSheet.Name, lrow)
+    partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
     return partenza
 
 
@@ -4578,7 +4529,7 @@ def cerca_in_elenco():
             else:
                 return
         else:
-            sStRange = Circoscrive_Voce_Computo_Att(lrow)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
             sopra = sStRange.RangeAddress.StartRow
             codice_da_cercare = oSheet.getCellByPosition(1, sopra + 1).String
         oSheet = oDoc.getSheets().getByName("Elenco Prezzi")
@@ -4621,9 +4572,7 @@ def pesca_cod():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(
-            0, lrow
-    ).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
+    if oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab + stili_analisi + stili_elenco:
         return
     if oSheet.Name in ('Analisi di Prezzo'):
         cerca_partenza()
@@ -4704,7 +4653,7 @@ def MENU_ricicla_misure():
         GotoSheet(cfg.read('Contabilità', 'ricicla_da'))
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         sopra = sStRange.RangeAddress.StartRow + 2
         sotto = sStRange.RangeAddress.EndRow - 1
 
@@ -5699,7 +5648,7 @@ def rigenera_voce(lrow=None):
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     except Exception:
         return
     sopra = sStRange.RangeAddress.StartRow
@@ -5825,7 +5774,7 @@ def sistema_stili(lrow=None):
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     try:
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     except Exception:
         return
     sopra = sStRange.RangeAddress.StartRow
@@ -6010,7 +5959,7 @@ def ins_voce_contab(lrow=0, arg=1):
     elif stile == 'Comp TOTALI':
         pass
     elif stile in stili_contab:
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         nSal = int(
             oSheet.getCellByPosition(23,
                                      sStRange.RangeAddress.StartRow + 1).Value)
@@ -6033,7 +5982,7 @@ def ins_voce_contab(lrow=0, arg=1):
     #  chi('nooooo')
     #  return
 
-    sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow
     for n in reversed(range(0, sopra)):
         if oSheet.getCellByPosition(
@@ -6292,7 +6241,7 @@ def genera_libretto():
         lrow = int(SheetUtils.uFindStringCol(daVoce, 0, oSheet))
     except TypeError:
         return
-    sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     primariga = sStRange.RangeAddress.StartRow
     #############
     #  ULTIMA RIGA
@@ -6305,7 +6254,7 @@ def genera_libretto():
         lrow = int(SheetUtils.uFindStringCol(aVoce, 0, oSheet))
     except TypeError:
         return
-    sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     # ultimariga = sStRange.RangeAddress.EndRow
 
     lrowDown = SheetUtils.uFindStringCol("T O T A L E", 2, oSheetCont)
@@ -6333,7 +6282,7 @@ def genera_libretto():
 #  rem definisci il range del #Lib#
 #  area="$A$" & primariga+1 & ":$AJ$"&fineFirme+1
 #  'Print area
-#  ScriptPy("pyleeno.py","rifa_nomearea", "CONTABILITA", area , nomearea)
+#  ScriptPy("pyleeno.py","NominaArea", "CONTABILITA", area , nomearea)
 
 #  oSheetCont.getCellRangeByPosition (0,inizioFirme,32,finefirme).CellStyle = "Ultimus_centro_bordi_lati"
 #  oNamedRange=oRanges.getByName("#Lib#" & nSal).referredCells
@@ -6397,7 +6346,7 @@ def genera_libretto():
 #  rem ----------------------------------------------------------------------
 #  rem definisci il range del #Lib#
 #  area="$A$" & primariga+1 & ":$AJ$"&fineFirme+1
-#  ScriptPy("pyleeno.py","rifa_nomearea", "CONTABILITA", area , nomearea)
+#  ScriptPy("pyleeno.py","NominaArea", "CONTABILITA", area , nomearea)
 
 #  rem raggruppo
 #  oCell = oSheetCont.getCellRangeByPosition(0,primariga,25,finefirme)
@@ -6449,7 +6398,7 @@ def genera_libretto():
 #  For i = primariga to fineFirme
 #  IF     oSheetCont.getCellByPosition( 1 , i).cellstyle = "comp Art-EP_R" then
 #  if primariga=0 then
-#  sStRange = Circoscrive_Voce_Computo_Att (i)
+#  sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
 #  With sStRange.RangeAddress
 #  primariga =.StartRow
 #  End With
@@ -6803,7 +6752,7 @@ def inizializza_analisi():
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    rifa_nomearea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
+    SheetUtils.NominaArea(oDoc, 'S5', '$B$108:$P$133', 'blocco_analisi')
     if not oDoc.getSheets().hasByName('Analisi di Prezzo'):
         oDoc.getSheets().insertNewByName('Analisi di Prezzo', 1)
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
@@ -6860,20 +6809,6 @@ def MENU_inserisci_Riga_rossa():
 
 
 ########################################################################
-def rifa_nomearea(oDoc, sSheet, sRange, sName):
-    '''
-    Definisce o ridefinisce un'area di dati a cui far riferimento
-    sSheet = nome del foglio, es.: 'S5'
-    sRange = individuazione del range di celle, es.:'$B$89:$L$89'
-    sName = nome da attribuire all'area scelta, es.: "manodopera"
-    '''
-    sPath = "$'" + sSheet + "'." + sRange
-    oRanges = oDoc.NamedRanges
-    oCellAddress = oDoc.Sheets.getByName(sSheet).getCellRangeByName('A1').getCellAddress()
-    if oRanges.hasByName(sName):
-        oRanges.removeByName(sName)
-    oRanges.addNewByName(sName, sPath, oCellAddress, 0)
-
 
 ########################################################################
 def struct_colore(level):
@@ -7089,7 +7024,7 @@ def parziale_core(lrow):
         return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow
     # sotto = sStRange.RangeAddress.EndRow
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -7158,7 +7093,7 @@ def parziale_verifica():
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
     #  if oSheet.Name in('COMPUTO','VARIANTE', 'CONTABILITA'):
-    sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow + 2
     sotto = sStRange.RangeAddress.EndRow
     for n in range(sopra, sotto):
@@ -7171,7 +7106,7 @@ def vedi_voce_xpwe(lrow, vRif, flags=''):
     """(riga d'inserimento, riga di riferimento)"""
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    sStRange = Circoscrive_Voce_Computo_Att(vRif)
+    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, vRif)
     # sStRange.RangeAddress
     idv = sStRange.RangeAddress.StartRow + 1
     sotto = sStRange.RangeAddress.EndRow
@@ -7504,7 +7439,7 @@ def filtra_codice(voce=None):
         oCellRangeAddr = uno.createUnoStruct(
             'com.sun.star.table.CellRangeAddress')
         oCellRangeAddr.Sheet = iSheet
-        sStRange = Circoscrive_Voce_Computo_Att(lrow)
+        sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         sopra = sStRange.RangeAddress.StartRow
         if not voce:
             voce = oSheet.getCellByPosition(1, sopra + 1).String
@@ -7518,7 +7453,7 @@ def filtra_codice(voce=None):
         if oSheet.getCellByPosition(0,
                                     n).CellStyle in ('Comp Start Attributo',
                                                      'Comp Start Attributo_R'):
-            sStRange = Circoscrive_Voce_Computo_Att(n)
+            sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, n)
             sopra = sStRange.RangeAddress.StartRow
             sotto = sStRange.RangeAddress.EndRow
             if oSheet.getCellByPosition(1, sopra + 1).String != voce:
@@ -8114,7 +8049,7 @@ dell'operazione che terminerà con un avviso.
         oSheet.getCellRangeByName('H311').CellStyle = 'Setvar C_3'
         oSheet.getCellRangeByName('H323').CellStyle = 'Setvar C'
         oDoc.StyleFamilies.getByName("CellStyles").getByName(
-            'Setvar C_3').NumberFormat = getNumFormat('0,00%')  # percentuale
+            'Setvar C_3').NumberFormat = LeenoFormat.getNumFormat('0,00%')  # percentuale
         # < adegua le formule delle descrizioni di voci
         # dal 209 cambia nome di custom propierty
         oUDP = oDoc.getDocumentProperties().getUserDefinedProperties()
@@ -8791,7 +8726,7 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
         while (i < SheetUtils.getUsedArea(oSheet).EndRow):
 
             if oSheet.getCellByPosition(2, i).CellStyle == 'comp 1-a':
-                sStRange = Circoscrive_Voce_Computo_Att(i)
+                sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
                 qui = sStRange.RangeAddress.StartRow + 1
 
                 i = sotto = sStRange.RangeAddress.EndRow + 3
@@ -9264,12 +9199,12 @@ def debug_errore():
     '''
     @@ DA DOCUMENTARE
     '''
-    #  sStRange = Circoscrive_Voce_Computo_Att(lrow)
+    #  sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     #  return
 
     try:
-        # sStRange = Circoscrive_Voce_Computo_Att(lrow)
-        Circoscrive_Voce_Computo_Att(lrow)
+        # sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+        LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
 
     except Exception as e:
         #  MsgBox ("CSV Import failure exception " + str(type(e)) +
@@ -9307,7 +9242,7 @@ def trova_ricorrenze():
         for n in range(0, last):
             if oSheet.getCellByPosition(1, n).CellStyle == 'comp Art-EP_R':
                 if oSheet.getCellByPosition(1, n).String not in lista:
-                    oRange = Circoscrive_Voce_Computo_Att(n).RangeAddress
+                    oRange = LeenoComputo.circoscriveVoceComputo(oSheet, n).RangeAddress
                     oCellRangeAddr.StartRow = oRange.StartRow
                     oCellRangeAddr.EndRow = oRange.EndRow
                     oSheet.group(oCellRangeAddr, 1)
@@ -9614,22 +9549,22 @@ def MENU_debug():
     sistema_cose()
     return
 #~ def split_chunks(l, n):
-    """ 
+    """
        Splits list l into n chunks with approximately equals sum of values
        see  http://stackoverflow.com/questions/6855394/splitting-list-in-chunks-of-balanced-weight
     """
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    lr = getLastUsedCell(oSheet).EndRow + 1
+    lr = SheetUtils.getLastUsedRow() + 1
     l = list()
     d = list()
     for i in range(1, lr):
         l.append (oSheet.getCellByPosition(1, i).Value)
-        
+
         a = oSheet.getCellByPosition(1, i).Value
         b = oSheet.getCellByPosition(0, i).AbsoluteName
         d.append ([a, b])
-        
+
     n = 6
     result = [[] for i in range(n)]
     sums   = {i:0 for i in range(n)}

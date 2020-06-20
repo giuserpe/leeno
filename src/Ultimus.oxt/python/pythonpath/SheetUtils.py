@@ -253,3 +253,22 @@ def simpleSortColumn(oRange, column, sortAscending):
     sortField = createSortField(column, sortAscending)
     sortColumns(oRange, (sortField,))
 
+
+# ###############################################################
+
+
+def NominaArea(oDoc, sSheet, sRange, sName):
+    '''
+    Definisce o ridefinisce un'area di dati a cui far riferimento
+    sSheet = nome del foglio, es.: 'S5'
+    sRange = individuazione del range di celle, es.:'$B$89:$L$89'
+    sName = nome da attribuire all'area scelta, es.: "manodopera"
+    '''
+    sPath = "$'" + sSheet + "'." + sRange
+    oRanges = oDoc.NamedRanges
+    oCellAddress = oDoc.Sheets.getByName(sSheet).getCellRangeByName('A1').getCellAddress()
+    if oRanges.hasByName(sName):
+        oRanges.removeByName(sName)
+    oRanges.addNewByName(sName, sPath, oCellAddress, 0)
+
+# ###############################################################

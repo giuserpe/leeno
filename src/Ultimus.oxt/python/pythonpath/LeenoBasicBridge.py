@@ -15,7 +15,10 @@ if(myPath not in sys.path):
     sys.path.append(myPath)
 
 import Dialogs
+import SheetUtils
 import LeenoUtils
+import LeenoSheetUtils
+import LeenoComputo
 
 # builtins dictionary in portable way... sigh
 if type(__builtins__) == type(sys):
@@ -33,7 +36,6 @@ def callAlert():
             Dialogs.Exclamation(Title="LeenoBasicBridge", Text=f"Chiamata da basic a\n'{funcName}'")
             CALL_SET.add(funcName)
 
-import LeenoUtils
 import pyleeno as PL
 
 def MENU_debug():
@@ -381,7 +383,13 @@ def numera_voci(bit=1):
                        0 rinumera dalla voce corrente in giù
     '''
     callAlert()
-    PL.numera_voci(bit)
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getCurrentSheet()
+    if bit == 0:
+        lrow = PL.LeggiPosizioneCorrente()[1]
+    else:
+        lrow = 0
+    LeenoSheetUtils.numeraVoci(oSheet, lrow, True if bit == 1 else False)
 
 
 def parziale_verifica():
@@ -427,7 +435,7 @@ def copia_riga_computo(lrow):
 
 def ins_voce_computo():
     callAlert()
-    PL.ins_voce_computo()
+    LeenoComputo.ins_voce_computo()
 
 
 def ins_voce_contab(lrow=0, arg=1):

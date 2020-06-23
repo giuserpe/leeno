@@ -118,13 +118,16 @@ def cercaPartenza(oSheet, lrow):
     il flag '#reg' solo per la contabilità.
     partenza = (nome_foglio, id_rcodice, flag_contabilità)
     '''
+    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
+    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+
     # COMPUTO, VARIANTE
-    if oSheet.getCellByPosition(0, lrow).CellStyle in PL.stili_computo:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo:
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1)
 
     # CONTABILITA
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in PL.stili_contab:
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab:
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1,
                     oSheet.getCellByPosition(22,
@@ -158,7 +161,7 @@ def selezionaVoce(oSheet, lrow):
         partenza = cercaPartenza(oSheet, lrow)
         if partenza[2] == '#reg':
             PL.sblocca_cont()
-            if PL.sblocca_computo == 0:
+            if LeenoUtils.getGlobalVar('sblocca_computo') == 0:
                 return
             pass
         else:
@@ -220,3 +223,278 @@ def inserisciRigaRossa(oSheet):
     oSheet.getCellByPosition(2, lrow
     ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 
+
+# ###############################################################
+
+
+def adattaAltezzaRiga(oSheet):
+    '''
+    Adatta l'altezza delle righe al contenuto delle celle.
+    imposta l'altezza ottimale delle celle
+    '''
+    oDoc = SheetUtils.getDocumentFromSheet(oSheet)
+    if not oDoc.getSheets().hasByName('S1'):
+        return
+
+    usedArea = SheetUtils.getUsedArea(oSheet)
+    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+
+    # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
+    if float(PL.loVersion()[:5].replace('.', '')) >= 642:
+        return
+    # se la versione di LibreOffice è maggiore della 5.2
+    # esegue il comando agendo direttamente sullo stile
+    lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R',
+                   'Comp-Bianche in mezzo Descr', 'EP-a',
+                   'Ultimus_centro_bordi_lati')
+    # NELLE VERSIONI DA 5.4.2 A 6.4.1
+    if(
+       float(PL.loVersion()[:5].replace('.', '')) > 520 or
+       float(PL.loVersion()[:5].replace('.', '')) < 642):
+        for stile_cella in lista_stili:
+            try:
+                oDoc.StyleFamilies.getByName("CellStyles").getByName(stile_cella).IsTextWrapped = True
+            except Exception:
+                pass
+
+        test = usedArea.EndRow + 1
+        for y in range(0, test):
+            if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
+                oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+    if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
+        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    if oSheet.Name == 'Elenco Prezzi':
+        test = usedArea.EndRow + 1
+        for y in range(0, test):
+            oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+    return
+
+
+# ###############################################################
+
+
+def inserSuperCapitolo(oSheet, lrow, sTesto='Super Categoria'):
+    '''
+    lrow    { double } : id della riga di inserimento
+    sTesto  { string } : titolo della categoria
+    '''
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
+        # se oltre la riga rossa
+        lrow -= 2
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi':
+        # se riga rossa
+        lrow -= 1
+
+    oSheet.getRows().insertByIndex(lrow, 1)
+    oSheet.getCellByPosition(2, lrow).String = sTesto
+
+    # inserisco i valori e le formule
+    oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-0-scritta'
+    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-0-scritta mini'
+    oSheet.getCellRangeByPosition( 18, lrow, 18, lrow).CellStyle = 'Livello-0-scritta mini val'
+    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-0-scritta mini %'
+    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-0-scritta mini %'
+    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-0-scritta mini val'
+    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
+
+    # rinumero e ricalcolo
+    # ocellBaseA = oSheet.getCellByPosition(1, lrow)
+    # ocellBaseR = oSheet.getCellByPosition(31, lrow)
+    lrowProvv = lrow - 1
+    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-0-scritta':
+        if lrowProvv > 4:
+            lrowProvv -= 1
+        else:
+            break
+    oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1, lrowProvv).Value + 1
+
+
+# ###############################################################
+
+
+def inserCapitolo(oSheet, lrow, sTesto='Categoria'):
+    '''
+    lrow    { double } : id della riga di inserimento
+    sTesto  { string } : titolo della categoria
+    '''
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
+        # se oltre la riga rossa
+        lrow -= 2
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi':
+        # se riga rossa
+        lrow -= 1
+    oSheet.getRows().insertByIndex(lrow, 1)
+    oSheet.getCellByPosition(2, lrow).String = sTesto
+
+    # inserisco i valori e le formule
+    oSheet.getCellRangeByPosition(0, lrow, 41, lrow).CellStyle = 'Livello-1-scritta'
+    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'Livello-1-scritta mini'
+    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'Livello-1-scritta mini val'
+    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'Livello-1-scritta mini %'
+    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'Livello-1-scritta mini %'
+    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'Livello-1-scritta mini val'
+    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
+
+    # rinumero e ricalcolo
+    # ocellBaseA = oSheet.getCellByPosition(1, lrow)
+    # ocellBaseR = oSheet.getCellByPosition(31, lrow)
+    lrowProvv = lrow - 1
+    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
+        if lrowProvv > 4:
+            lrowProvv -= 1
+        else:
+            break
+    oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1, lrowProvv).Value + 1
+
+
+# ###############################################################
+
+
+def inserSottoCapitolo(oSheet, lrow, sTesto):
+    '''
+    lrow    { double } : id della riga di inserimento
+    sTesto  { string } : titolo della sottocategoria
+    '''
+    if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        return
+
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Default':
+        # se oltre la riga rossa
+        lrow -= 2
+    if oSheet.getCellByPosition(1, lrow).CellStyle == 'Riga_rossa_Chiudi':
+        # se riga rossa
+        lrow -= 1
+
+    oSheet.getRows().insertByIndex(lrow, 1)
+    oSheet.getCellByPosition(2, lrow).String = sTesto
+
+    # inserisco i valori e le formule
+    oSheet.getCellRangeByPosition(0, lrow, 41,lrow).CellStyle = 'livello2 valuta'
+    oSheet.getCellRangeByPosition(2, lrow, 17, lrow).CellStyle = 'livello2_'
+    oSheet.getCellRangeByPosition(18, lrow, 18, lrow).CellStyle = 'livello2 scritta mini'
+    oSheet.getCellRangeByPosition(24, lrow, 24, lrow).CellStyle = 'livello2 valuta mini %'
+    oSheet.getCellRangeByPosition(29, lrow, 29, lrow).CellStyle = 'livello2 valuta mini %'
+    oSheet.getCellRangeByPosition(30, lrow, 30, lrow).CellStyle = 'livello2 valuta mini'
+    oSheet.getCellRangeByPosition(31, lrow, 33, lrow).CellStyle = 'livello2_'
+    oSheet.getCellRangeByPosition(2, lrow, 11, lrow).merge(True)
+
+    # oSheet.getCellByPosition(1, lrow).Formula = '=AF' + str(lrow+1) + '''&"."&''' + 'AG' + str(lrow+1)
+    # rinumero e ricalcolo
+    # ocellBaseA = oSheet.getCellByPosition(1, lrow)
+    # ocellBaseR = oSheet.getCellByPosition(31, lrow)
+
+    lrowProvv = lrow - 1
+    while oSheet.getCellByPosition(32, lrowProvv).CellStyle != 'livello2 valuta':
+        if lrowProvv > 4:
+            lrowProvv -= 1
+        else:
+            break
+    oSheet.getCellByPosition(
+        32, lrow).Value = oSheet.getCellByPosition(1, lrowProvv).Value + 1
+    lrowProvv = lrow - 1
+    while oSheet.getCellByPosition(31, lrowProvv).CellStyle != 'Livello-1-scritta':
+        if lrowProvv > 4:
+            lrowProvv -= 1
+        else:
+            break
+    oSheet.getCellByPosition(31, lrow).Value = oSheet.getCellByPosition(1, lrowProvv).Value
+    # SubSum_Cap(lrow)
+
+
+# ###############################################################
+
+
+def invertiUnSegno(oSheet, lrow):
+    '''
+    Inverte il segno delle formule di quantità nel rigo di misurazione lrow.
+    lrow    { int }  : riga di riferimento
+    usata con XPWE_it
+    '''
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+            if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
+                oSheet.getCellByPosition(
+                    9, lrow
+                ).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
+                    lrow + 1) + ')=0;"";PRODUCT(E' + str(
+                        lrow + 1) + ':I' + str(lrow + 1) + '))'  # se VediVoce
+                # ~ if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
+                # ~ oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' +
+                # str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' +
+                # str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
+                # ~ else:
+                # ~ oSheet.getCellByPosition(9, lrow).Formula=
+                # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) +
+                # ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                for x in range(2, 9):
+                    oSheet.getCellByPosition(
+                        x, lrow).CellStyle = oSheet.getCellByPosition(
+                            x, lrow).CellStyle.split(' ROSSO')[0]
+            else:
+                oSheet.getCellByPosition(
+                    9, lrow
+                ).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
+                    lrow + 1) + ')=0;"";-PRODUCT(E' + str(
+                        lrow + 1) + ':I' + str(lrow + 1) + '))'  # se VediVoce
+                # ~ if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
+                # ~ oSheet.getCellByPosition(9, lrow).Formula =
+                # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;
+                # "";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
+                # ~ else:
+                # ~ oSheet.getCellByPosition(9, lrow).Formula =
+                # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;
+                # "";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                for x in range(2, 9):
+                    oSheet.getCellByPosition(
+                        x, lrow).CellStyle = oSheet.getCellByPosition(
+                            x, lrow).CellStyle + ' ROSSO'
+    if oSheet.Name in ('CONTABILITA'):
+        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+            formula1 = oSheet.getCellByPosition(9, lrow).Formula
+            formula2 = oSheet.getCellByPosition(11, lrow).Formula
+            oSheet.getCellByPosition(11, lrow).Formula = formula1
+            oSheet.getCellByPosition(9, lrow).Formula = formula2
+            if oSheet.getCellByPosition(11, lrow).Value > 0:
+                for x in range(2, 12):
+                    oSheet.getCellByPosition(
+                        x, lrow).CellStyle = oSheet.getCellByPosition(
+                            x, lrow).CellStyle + ' ROSSO'
+            else:
+                for x in range(2, 12):
+                    oSheet.getCellByPosition(
+                        x, lrow).CellStyle = oSheet.getCellByPosition(
+                            x, lrow).CellStyle.split(' ROSSO')[0]
+
+
+# ###############################################################
+
+def numeraVoci(oSheet, lrow, all):  #
+    '''
+    bit { integer }  : 1 rinumera tutto
+                       0 rinumera dalla voce corrente in giù
+    '''
+    lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
+    n = 1
+
+    if not all:
+        for x in reversed(range(0, lrow)):
+            if(
+               oSheet.getCellByPosition(1, x).CellStyle in ('comp Art-EP', 'comp Art-EP_R') and
+               oSheet.getCellByPosition(1, x).CellBackColor != 15066597):
+                n = oSheet.getCellByPosition(0, x).Value + 1
+                break
+        for row in range(lrow, lastRow):
+            if oSheet.getCellByPosition(1, row).CellBackColor == 15066597:
+                oSheet.getCellByPosition(0, row).String = ''
+            elif oSheet.getCellByPosition(1,row).CellStyle in ('comp Art-EP', 'comp Art-EP_R'):
+                oSheet.getCellByPosition(0, row).Value = n
+                n += 1
+    else:
+        for row in range(0, lastRow):
+            if oSheet.getCellByPosition(1, row).CellStyle in ('comp Art-EP','comp Art-EP_R'):
+                oSheet.getCellByPosition(0, row).Value = n
+                n = n + 1

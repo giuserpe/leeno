@@ -3,6 +3,7 @@ Often used utility functions
 
 Copyright 2020 by Massimo Del Fedele
 '''
+import sys
 import uno
 
 '''
@@ -112,3 +113,28 @@ def EnableDocumentRefresh(oDoc):
     '''
     oDoc.removeActionLock()
     oDoc.unlockControllers()
+
+
+def getGlobalVar(name):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    return bDict.get('LEENO_GLOBAL_' + name)
+
+
+def setGlobalVar(name, value):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    bDict['LEENO_GLOBAL_' + name] = value
+
+
+def initGlobalVars(dict):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    for key, value in dict.items():
+        bDict['LEENO_GLOBAL_' + key] = value

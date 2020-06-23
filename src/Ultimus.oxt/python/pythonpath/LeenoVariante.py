@@ -1,5 +1,7 @@
 
 import SheetUtils
+import LeenoSheetUtils
+import LeenoComputo
 
 
 def generaVariante(oDoc, clear):
@@ -21,25 +23,15 @@ def generaVariante(oDoc, clear):
         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$N$3:$N$' + str(lrow), "BB")
         SheetUtils.NominaArea(oDoc, 'COMPUTO', '$AK$3:$AK$' + str(lrow), "cEuro")
         oSheet = oDoc.getSheets().getByName('VARIANTE')
-        GotoSheet('VARIANTE')
-        setTabColor(16777062)
+        SheetUtils.setTabColor(oSheet, 16777062)
         oSheet.getCellByPosition(2, 0).String = "VARIANTE"
         oSheet.getCellByPosition(2, 0).CellStyle = "comp Int_colonna"
         oSheet.getCellRangeByName("C1").CellBackColor = 16777062
         oSheet.getCellRangeByPosition(0, 2, 42, 2).CellBackColor = 16777062
-        if DLG.DlgSiNo(
-                """Vuoi svuotare la VARIANTE appena generata?
 
-Se decidi di continuare, cancellerai tutte le voci di
-misurazione già presenti in questo elaborato.
-Cancello le voci di misurazione?
- """, 'ATTENZIONE!') == 2:
+        # se richiesto, svuota la variante appena generata
+        if clear:
             lrow = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet) - 3
             oSheet.Rows.removeByIndex(3, lrow)
-            _gotoCella(0, 2)
-            ins_voce_computo()
-            adatta_altezza_riga('VARIANTE')
-    #  else:
-    GotoSheet('VARIANTE')
-    ScriviNomeDocumentoPrincipale()
-    basic_LeenO("Menu.eventi_assegna")
+            LeenoComputo.insertVoceComputoGrezza(oSheet, 2)
+            LeenoSheetUtils.adattaAltezzaRiga(oSheet)

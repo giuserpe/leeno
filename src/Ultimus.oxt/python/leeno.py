@@ -42,11 +42,6 @@ class ScriptContext(unohelper.Base):
     def getInvocationContext(self):
         return self.inv
 
-
-#~ Lmajor= 3 #'INCOMPATIBILITA'
-#~ Lminor= 19 #'NUOVE FUNZIONALITA'
-#~ Lsubv= "1" #'CORREZIONE BUGS
-
 class LeenO(unohelper.Base, XInitialization, XDispatch, XDispatchProvider):
     def __init__(self, ctx):
         self.ctx = ctx

@@ -5,8 +5,7 @@ dal formato XPWE
 import logging
 
 from xml.etree.ElementTree import ElementTree, ParseError
-
-import uno
+from com.sun.star.table import CellRangeAddress
 
 import LeenoUtils
 import LeenoFormat
@@ -18,6 +17,9 @@ import SheetUtils
 import LeenoConfig
 import LeenoSheetUtils
 import LeenoAnalysis
+import LeenoComputo
+import LeenoVariante
+
 
 import Dialogs
 
@@ -835,19 +837,24 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     ''' compila il computo '''
 
     if elaborato == 'VARIANTE':
-        PL.genera_variante()
+        oSheet = LeenoVariante.generaVariante(oDoc, False)
     elif elaborato == 'CONTABILITA':
         PL.attiva_contabilita()
-    oSheet = oDoc.getSheets().getByName(elaborato)
+        oSheet = oDoc.getSheets().getByName(elaborato)
+    else:
+        oSheet = oDoc.getSheets().getByName(elaborato)
+
     if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
         if elaborato == 'CONTABILITA':
             oSheet.getRows().removeByIndex(3, 5)
         else:
             oSheet.getRows().removeByIndex(3, 4)
+
     oDoc.CurrentController.select(oSheet)
 
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet  # recupero l'index del foglio
+    oCellRangeAddr = CellRangeAddress()
+    # recupero l'index del foglio
+    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
     diz_vv = {}
 
     testspcat = '0'
@@ -861,12 +868,13 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         idsbcat = el.get('idsbcat')
 
         lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+        print("LROW:", lrow)
         #  inserisco le categorie
         try:
             if idspcat != testspcat:
                 testspcat = idspcat
                 testcat = '0'
-                PL.Inser_SuperCapitolo_arg(lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
+                LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
                 lrow += 1
         except UnboundLocalError:
             pass
@@ -874,27 +882,26 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             if idcat != testcat:
                 testcat = idcat
                 testsbcat = '0'
-                PL.Inser_Capitolo_arg(lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
+                LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
                 lrow += 1
         except UnboundLocalError:
             pass
         try:
             if idsbcat != testsbcat:
                 testsbcat = idsbcat
-                PL.Inser_SottoCapitolo_arg(lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
+                LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
         except UnboundLocalError:
             pass
         lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
         if elaborato == 'CONTABILITA':
             PL.ins_voce_contab(lrow=LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1, elaborato=0)
         else:
-            PL.ins_voce_computo_grezza(lrow)
+            LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
         ID = el.get('id_ep')
         id_vc = el.get('id_vc')
 
         try:
-            oSheet.getCellByPosition(
-                1, lrow + 1).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
+            oSheet.getCellByPosition(1, lrow + 1).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
         except Exception:
             pass
         diz_vv[id_vc] = lrow + 1
@@ -997,12 +1004,13 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                                     oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
                             except Exception:
                                 pass
-                        PL.inverti_un_segno(SR)
+                        LeenoSheetUtils.invertiUnSegno(oSheet, SR)
                 except Exception:
                     pass
                 SR = SR + 1
 
-    PL.numera_voci()
+    #PL.numera_voci()
+    LeenoSheetUtils.numeraVoci(oSheet, 0, True)
 
     try:
         PL.Rinumera_TUTTI_Capitoli2()

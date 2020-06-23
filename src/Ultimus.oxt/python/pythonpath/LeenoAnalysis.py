@@ -3,6 +3,7 @@ Funzioni relative alla gestione delle analisi di prezzi
 '''
 
 import pyleeno as PL
+import LeenoUtils
 import SheetUtils
 import LeenoSheetUtils
 
@@ -75,7 +76,8 @@ def circoscriveAnalisi(oSheet, lrow):
     Circoscrive una voce di analisi
     partendo dalla posizione corrente del cursore
     '''
-    if oSheet.getCellByPosition(0, lrow).CellStyle in PL.stili_analisi:
+    stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
         for el in reversed(range(0, lrow)):
             #  chi(oSheet.getCellByPosition(0, el).CellStyle)
             if oSheet.getCellByPosition(0, el).CellStyle == 'Analisi_Sfondo':

@@ -384,7 +384,7 @@ def numera_voci(bit=1):
     '''
     callAlert()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getCurrentSheet()
+    oSheet = oDoc.CurrentController.ActiveSheet
     if bit == 0:
         lrow = PL.LeggiPosizioneCorrente()[1]
     else:

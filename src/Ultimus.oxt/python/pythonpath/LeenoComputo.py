@@ -1,4 +1,5 @@
 import uno
+from com.sun.star.table import CellRangeAddress
 import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
@@ -71,7 +72,7 @@ def insertVoceComputoGrezza(oSheet, lrow):
 
     # raggruppo i righi di misura
     iSheet = oSheet.RangeAddress.Sheet
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr = CellRangeAddress()
     oCellRangeAddr.Sheet = iSheet
     oCellRangeAddr.StartColumn = 0
     oCellRangeAddr.EndColumn = 0

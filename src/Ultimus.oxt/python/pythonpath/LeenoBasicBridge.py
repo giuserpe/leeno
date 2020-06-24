@@ -265,7 +265,7 @@ def invia_voce():
     invia_voce
     '''
     callAlert()
-    PL.invia_voce()
+    PL.MENU_invia_voce()
 
 
 def rifa_nomearea(oDoc, sSheet, sRange, sName):

@@ -718,7 +718,6 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
 
     # inizializza la progressbar
     progress.setLimits(0, righeTotali)
-    progress.setText("Scrittura elenco prezzi")
     progress.setValue(0)
 
     # compilo Elenco Prezzi
@@ -733,21 +732,17 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
     SUPERCAPITOLI
     '''
     # SuperCapitoli
-    progress.setText("Scrittura supercapitoli")
     if righeSuperCapitoli:
         riempiBloccoElencoPrezzi(oSheet, arraySuperCapitoli, 16777072, progress)
 
     # Capitoli
-    progress.setText("Scrittura capitoli")
     if righeCapitoli:
         riempiBloccoElencoPrezzi(oSheet, arrayCapitoli, 16777120, progress)
 
     # SottoCapitoli
-    progress.setText("Scrittura sottocapitoli")
     if righeSottoCapitoli:
         riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, progress)
 
-    progress.setText("Ordinamento elenco prezzi")
     PL.riordina_ElencoPrezzi()
 
     # elimino le voci che hanno analisi
@@ -761,13 +756,15 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
         if oSheet.getCellByPosition(0, i).String in elencoPrezzi['ListaTariffeAnalisi']:
             oSheet.getRows().removeByIndex(i, 1)
     '''
-    print("Fine scrittura elenco prezzi")
-    progress.setText("Fine scrittura elenco prezzi")
 
 
-def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
+def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
     ''' Compilo Analisi di prezzo '''
-    if len(elencoPrezzi['ListaAnalisi']) != 0:
+    numAnalisi = len(elencoPrezzi['ListaAnalisi'])
+    if numAnalisi != 0:
+        progress.setLimits(0, numAnalisi)
+        val = 0
+        progress.setValue(val)
         oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
         for el in elencoPrezzi['ListaAnalisi']:
             prezzo_finale = el[-1]
@@ -829,11 +826,14 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
                 oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value = prezzo_finale
             oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
 
+            val += 1
+            progress.setValue(val)
+
         LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
         print("Tante analisi")
 
 
-def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure):
+def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress):
     ''' compila il computo '''
 
     if elaborato == 'VARIANTE':
@@ -861,6 +861,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     testcat = '0'
     testsbcat = '0'
     x = 1
+    progress.setLimits(0, len(listaMisure))
+    val = 0
+    progress.setValue(val)
     for el in listaMisure:
         datamis = el.get('datamis')
         idspcat = el.get('idspcat')
@@ -1008,6 +1011,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 except Exception:
                     pass
                 SR = SR + 1
+        val += 1
+        progress.setValue(val)
 
     #PL.numera_voci()
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
@@ -1083,6 +1088,8 @@ def MENU_XPWE_import():
 
     # attiva la progressbar
     progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Lettura dati")
+    progress.setLimits(0, 6)
+    progress.setValue(0)
     progress.show()
 
     # ########################################################################################
@@ -1093,26 +1100,32 @@ def MENU_XPWE_import():
 
     # legge i dati anagrafici generali
     datiAnagrafici = leggiAnagraficaGenerale(dati)
+    progress.setValue(1)
 
     # legge capitoli e categorie
     capitoliCategorie = leggiCapitoliCategorie(dati)
+    progress.setValue(2)
 
     # legge i dati generali per l'analisi
     datiGeneraliAnalisi = leggiDatiGeneraliAnalisi(dati)
+    progress.setValue(3)
 
     # legge le approssimazioni
     approssimazioni = leggiApprossimazioni(dati)
+    progress.setValue(4)
 
     misurazioni = root.find('PweMisurazioni')
 
     # legge l'elenco prezzi
     elencoPrezzi = leggiElencoPrezzi(misurazioni)
+    progress.setValue(5)
 
     # legge le misurazioni
     if elaborato != 'Elenco':
         listaMisure = leggiMisurazioni(misurazioni, ordina)
     else:
         listaMisure = []
+    progress.setValue(6)
 
     # ########################################################################################
     # SCRITTURA COMPUTO
@@ -1132,31 +1145,26 @@ def MENU_XPWE_import():
     LeenoUtils.DisableDocumentRefresh(oDoc)
 
     # compila i dati generali per l'analisi
-    print("compilaDatiGeneraliAnalisi")
     progress.setText("Compilazione dati generali di analisi")
     compilaDatiGeneraliAnalisi(oDoc, datiGeneraliAnalisi)
 
     # compila le approssimazioni
-    print("compilaApprossimazioni")
     progress.setText("Compilazione approssimazioni")
     compilaApprossimazioni(oDoc, approssimazioni)
 
     # compilo Anagrafica generale
-    print("compilaAnagraficaGenerale")
     progress.setText("Compilazione anagrafica generale")
     compilaAnagraficaGenerale(oDoc, datiAnagrafici)
 
     # compilo Elenco Prezzi
-    print("compilaElencoPrezzi")
+    progress.setText("Compilazione elenco prezzi")
     compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress)
 
     # Compilo Analisi di prezzo
-    print("compilaAnalisiPrezzi")
     progress.setText("Compilazione analisi prezzi")
-    compilaAnalisiPrezzi(oDoc, elencoPrezzi)
+    compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress)
 
     # elimina doppioni nell'elenco prezzi
-    print("EliminaVociDoppieElencoPrezzi")
     progress.setText("Eliminazione voci doppie elenco prezzi")
     PL.EliminaVociDoppieElencoPrezzi()
 
@@ -1176,9 +1184,8 @@ def MENU_XPWE_import():
         return
 
     # compila il computo
-    print("compilaComputo")
     progress.setText(f'Compilazione {elaborato}')
-    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
+    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
     # riattiva l'output a video
     LeenoUtils.EnableDocumentRefresh(oDoc)

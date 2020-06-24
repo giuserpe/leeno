@@ -183,7 +183,7 @@ def riordina_ElencoPrezzi():
     PL.riordina_ElencoPrezzi()
 
 
-def struttura_Elenco(ctx):
+def struttura_Elenco():
     '''
     struttura_Elenco
     '''

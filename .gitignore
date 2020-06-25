@@ -16,5 +16,7 @@ __pycache__/
 *_sync_4c4c250c938d.db-shm
 *_sync_4c4c250c938d.db-wal
 src/Ultimus.oxt/python/pythonpath/__pycache__/
-src/Ultimus.oxt/python/.eric6project/**
-src/Ultimus.oxt/python/.ropeproject/**
+.eric6project/**
+.ropeproject/**
+Leeno.e4p
+__init__.py

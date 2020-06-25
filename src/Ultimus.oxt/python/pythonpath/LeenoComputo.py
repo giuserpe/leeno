@@ -1,4 +1,3 @@
-import uno
 from com.sun.star.table import CellRangeAddress
 import SheetUtils
 import LeenoUtils
@@ -84,20 +83,14 @@ def insertVoceComputoGrezza(oSheet, lrow):
     oSheet.getCellByPosition(13, lrow + 3).Formula = '=J' + str(lrow + 4)
     oSheet.getCellByPosition(35, lrow + 3).Formula = '=B' + str(lrow + 2)
 
-    if oSheet.getCellByPosition(31,
-                                lrow - 1).CellStyle in ('livello2 valuta',
-                                                        'Livello-0-scritta',
-                                                        'Livello-1-scritta',
-                                                        'compTagRiservato'):
-        oSheet.getCellByPosition(31,
-                                 lrow + 3).Value = oSheet.getCellByPosition(
-                                     31, lrow - 1).Value
-        oSheet.getCellByPosition(32,
-                                 lrow + 3).Value = oSheet.getCellByPosition(
-                                     32, lrow - 1).Value
-        oSheet.getCellByPosition(33,
-                                 lrow + 3).Value = oSheet.getCellByPosition(
-                                     33, lrow - 1).Value
+    if oSheet.getCellByPosition(31,lrow - 1).CellStyle in (
+       'livello2 valuta',
+       'Livello-0-scritta',
+       'Livello-1-scritta',
+       'compTagRiservato'):
+        oSheet.getCellByPosition(31, lrow + 3).Value = oSheet.getCellByPosition(31, lrow - 1).Value
+        oSheet.getCellByPosition(32, lrow + 3).Value = oSheet.getCellByPosition(32, lrow - 1).Value
+        oSheet.getCellByPosition(33,lrow + 3).Value = oSheet.getCellByPosition(33, lrow - 1).Value
     PL._gotoCella(1, lrow + 1)
 
 

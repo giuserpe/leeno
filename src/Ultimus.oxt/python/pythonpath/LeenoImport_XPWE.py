@@ -983,7 +983,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                         # tolgo evenutali '=' in eccesso
                         oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6]).split('=')[-1]
                 if mis[8] == '2':
-                    PL.parziale_core(SR)
+                    PL.parziale_core(oSheet, SR)
                     oSheet.getRows().removeByIndex(SR + 1, 1)
                     descrizione = ''
                 if mis[9] != '-2':

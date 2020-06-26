@@ -6730,20 +6730,18 @@ def MENU_parziale():
     oSheet = oDoc.CurrentController.ActiveSheet
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        parziale_core(lrow)
+        parziale_core(oSheet, lrow)
         parziale_verifica()
 
 
 ###
-def parziale_core(lrow):
+def parziale_core(oSheet, lrow):
     '''
     lrow    { double } : id della riga di inserimento
     '''
 
     if lrow == 0:
         return
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow
     # sotto = sStRange.RangeAddress.EndRow
@@ -6818,7 +6816,7 @@ def parziale_verifica():
     sotto = sStRange.RangeAddress.EndRow
     for n in range(sopra, sotto):
         if 'Parziale [' in (oSheet.getCellByPosition(8, n).String):
-            parziale_core(n)
+            parziale_core(oSheet, n)
 
 
 ########################################################################

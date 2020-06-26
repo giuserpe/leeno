@@ -989,7 +989,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 if mis[9] != '-2':
                     vedi = diz_vv.get(mis[9])
                     try:
-                        PL.vedi_voce_xpwe(SR, vedi, mis[8])
+                        PL.vedi_voce_xpwe(oSheet, SR, vedi, mis[8])
                     except Exception:
                         Dialogs.Exclamation(Title="Attenzione",
                                             Text="Il file di origine è particolarmente disordinato.\n"

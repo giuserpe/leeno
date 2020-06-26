@@ -6820,10 +6820,8 @@ def parziale_verifica():
 
 
 ########################################################################
-def vedi_voce_xpwe(lrow, vRif, flags=''):
+def vedi_voce_xpwe(oSheet, lrow, vRif, flags=''):
     """(riga d'inserimento, riga di riferimento)"""
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, vRif)
     # sStRange.RangeAddress
     idv = sStRange.RangeAddress.StartRow + 1
@@ -6884,10 +6882,7 @@ def MENU_vedi_voce():
         _gotoCella(2, lrow)
         # focus = oDoc.CurrentController.getFirstVisibleRow
         if to < lrow:
-            vedi_voce_xpwe(
-                lrow,
-                to,
-            )
+            vedi_voce_xpwe(oSheet, lrow, to)
 
 
 def strall(el, n=3, pos=0):
@@ -7793,7 +7788,7 @@ dell'operazione che terminerà con un avviso.
                             _gotoCella(2, y)
                             inverti = 1
                         oSheet.getCellByPosition(5, y).String = ''
-                        vedi_voce_xpwe(y, vRif)
+                        vedi_voce_xpwe(oSheet, y, vRif)
                         try:
                             inverti
                             inverti_segno()

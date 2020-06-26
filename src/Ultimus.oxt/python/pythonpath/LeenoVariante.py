@@ -34,4 +34,7 @@ def generaVariante(oDoc, clear):
             lrow = SheetUtils.uFindStringCol('TOTALI COMPUTO', 2, oSheet) - 3
             oSheet.Rows.removeByIndex(3, lrow)
             LeenoComputo.insertVoceComputoGrezza(oSheet, 2)
+            # @@ PROVVISORIO !!!
+            PL._gotoCella(1, 2 + 1)
+
             LeenoSheetUtils.adattaAltezzaRiga(oSheet)

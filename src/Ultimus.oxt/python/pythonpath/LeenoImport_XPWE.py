@@ -900,6 +900,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             PL.ins_voce_contab(lrow=LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1, elaborato=0)
         else:
             LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
+            # @@ PROVVISORIO !!!
+            PL._gotoCella(1, lrow + 1)
+
         ID = el.get('id_ep')
         id_vc = el.get('id_vc')
 

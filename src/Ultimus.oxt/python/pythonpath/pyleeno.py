@@ -454,6 +454,9 @@ def MENU_invia_voce():
             lrow = LeggiPosizioneCorrente()[1]
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna'):
                 LeenoComputo.insertVoceComputoGrezza(dccSheet, lrow + 1)
+                # @@ PROVVISORIO !!!
+                _gotoCella(1, lrow + 1 + 1)
+
                 numera_voci(1)
                 lrow = LeggiPosizioneCorrente()[1]
             if dccSheet.getCellByPosition(

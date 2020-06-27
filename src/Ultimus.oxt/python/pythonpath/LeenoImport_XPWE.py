@@ -743,7 +743,7 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
     if righeSottoCapitoli:
         riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, progress)
 
-    PL.riordina_ElencoPrezzi()
+    PL.riordina_ElencoPrezzi(oDoc)
 
 
 def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
@@ -1065,7 +1065,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         val += 1
         progress.setValue(val)
 
-    #PL.numera_voci()
     LeenoSheetUtils.numeraVoci(oSheet, 0, True)
 
     try:
@@ -1215,8 +1214,8 @@ def MENU_XPWE_import():
     progress.setText("Compilazione analisi prezzi")
     compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress)
 
-    progress.hide()
-    return
+    #progress.hide()
+    #return
 
     # elimina doppioni nell'elenco prezzi
     progress.setText("Eliminazione voci doppie elenco prezzi")

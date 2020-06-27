@@ -347,8 +347,7 @@ sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'
         n += 1
 
     Toolbars.Vedi()
-    # ~ adatta_altezza_riga('Elenco Prezzi')
-    # ~ riordina_ElencoPrezzi()
+
     oDialogo_attesa.endExecute()
     PL.struttura_Elenco()
     oSheet.getCellRangeByName('F2').String = 'prezzi'

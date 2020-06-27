@@ -2578,17 +2578,17 @@ def MENU_riordina_ElencoPrezzi():
     '''
     Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo
     '''
-    riordina_ElencoPrezzi()
+    oDoc = LeenoUtils.getDocument()
+    riordina_ElencoPrezzi(oDoc)
 
 
-def riordina_ElencoPrezzi():
+def riordina_ElencoPrezzi(oDoc):
     '''
     Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo
     '''
-    chiudi_dialoghi()
-    DisableAutoCalc()
+    #chiudi_dialoghi()
+    #DisableAutoCalc()
 
-    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
@@ -2602,20 +2602,11 @@ def riordina_ElencoPrezzi():
     ER = oRangeAddress.EndRow
     if SR == ER:
         return
+
     oRange = oSheet.getCellRangeByPosition(SC, SR, EC, ER)
-
-    '''
-    REPLACED WITH DIRECT SORT WITHOUT USING CurrentController
-    So it can be done headless without screen flickering
-
-    oDoc.CurrentController.select(oRange)
-    ordina_col(1)
-    oDoc.CurrentController.select(
-        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-    '''
     SheetUtils.simpleSortColumn(oRange, 0, True)
 
-    EnableAutoCalc()
+    #EnableAutoCalc()
 
 
 ########################################################################
@@ -2701,7 +2692,7 @@ def EliminaVociDoppieElencoPrezzi():
     EnableAutoCalc()
     oDoc.CurrentController.ZoomValue = zoom
     adatta_altezza_riga(oSheet.Name)
-    riordina_ElencoPrezzi()
+    riordina_ElencoPrezzi(oDoc)
     if len(set(lista_tar)) != len(set(lista_come_array)):
         DLG.MsgBox(
             'Ci sono ancora 2 o più voci che hanno lo stesso Codice Articolo pur essendo diverse.',
@@ -6651,7 +6642,7 @@ LibreOffice POTREBBE SEMBRARE BLOCCATO!
 Vuoi procedere con la creazione della struttura dei capitoli?''',
             'Avviso') == 3:
         return
-    # ~ riordina_ElencoPrezzi()
+
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
@@ -9002,7 +8993,7 @@ def elimina_voci_doppie():
     oDoc = LeenoUtils.getDocument()
     GotoSheet('Elenco Prezzi')
     oSheet = oDoc.CurrentController.ActiveSheet
-    riordina_ElencoPrezzi()
+    riordina_ElencoPrezzi(oDoc)
     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
 
     oSheet.getCellByPosition(30, 3).Formula = '=IF(A4=A3;1;0)'

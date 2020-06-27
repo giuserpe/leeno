@@ -177,10 +177,11 @@ def inizializza_elenco():
 
 def riordina_ElencoPrezzi():
     '''
-    riordina_ElencoPrezzi
+    riordina l' elenco prezzi
     '''
     callAlert()
-    PL.riordina_ElencoPrezzi()
+    oDoc = LeenoUtils.getDocument()
+    PL.riordina_ElencoPrezzi(oDoc)
 
 
 def struttura_Elenco():

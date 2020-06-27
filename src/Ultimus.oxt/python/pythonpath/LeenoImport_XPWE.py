@@ -957,36 +957,35 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         oSheet.getCellByPosition(0, lrow + 1).String = str(numeroVoce)
         numeroVoce += 1
 
+        # si posiziona ad inizio area misure
         startCol = 2
-        startRow = lrow + 2 + 1
+        startRow = lrow + 2
+
         lista_righe = el.get('lista_rig')
         nrighe = len(lista_righe)
 
+        # compila le righe di misurazione
         if nrighe > 0:
             endCol = startCol + len(lista_righe[0])
-            endRow = startRow + nrighe - 1
+            endRow = startRow + nrighe
 
             # se la voce ha più di una riga di misurazione,
             # inserisce le righe aggiuntive
             if nrighe > 1:
-                oSheet.getRows().insertByIndex(startRow, nrighe - 1)
+                oSheet.getRows().insertByIndex(startRow + 1, nrighe - 1)
 
-            oRangeAddress = oSheet.getCellRangeByPosition(0, startRow - 1, 250, startRow - 1).getRangeAddress()
+            # seleziona la prima riga di misurazioni...
+            oRangeAddress = oSheet.getCellRangeByPosition(0, startRow, 250, startRow).getRangeAddress()
 
-            for n in range(startRow, endRow):
+            # ... e la copia sulle rimanenti
+            for n in range(startRow + 1, endRow):
                 oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
                 oSheet.copyRange(oCellAddress, oRangeAddress)
                 if elaborato == 'CONTABILITA':
                     oSheet.getCellByPosition(1, n).String = ''
                     oSheet.getCellByPosition(1, n).CellStyle = 'Comp-Bianche in mezzo_R'
 
-            oCellRangeAddr.StartColumn = startCol
-            oCellRangeAddr.StartRow = startRow
-            oCellRangeAddr.EndColumn = endCol
-            oCellRangeAddr.EndRow = endRow
-
-            # INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
-            startRow = startRow - 1
+            # inserisco prima solo le righe se no mi fa casino
             if elaborato == 'CONTABILITA':
                 oSheet.getCellByPosition(1, startRow).Formula = (
                     '=DATE(' + datamis.split('/')[2] +
@@ -1062,6 +1061,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                         LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
                 except Exception:
                     pass
+
+                # prossima riga di misurazione
                 startRow = startRow + 1
 
         # aggiorna la progressbar

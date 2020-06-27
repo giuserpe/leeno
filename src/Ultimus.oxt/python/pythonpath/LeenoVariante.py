@@ -2,6 +2,7 @@
 import SheetUtils
 import LeenoSheetUtils
 import LeenoComputo
+import pyleeno as PL
 
 
 def generaVariante(oDoc, clear):
@@ -38,3 +39,7 @@ def generaVariante(oDoc, clear):
             PL._gotoCella(1, 2 + 1)
 
             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    else:
+        oSheet = oDoc.getSheets().getByName('VARIANTE')
+
+    return oSheet

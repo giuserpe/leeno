@@ -4564,17 +4564,67 @@ def MENU_inverti_segno():
     inverti_segno()
 
 
+def invertiSegnoRow(oSheet, lrow):
+    '''
+    Inverte il segno delle formule di quantità nel rigo di misurazione specificato da lrow.
+    '''
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+            if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
+                # se VediVoce
+                oSheet.getCellByPosition(9, lrow).Formula = (
+                   '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
+                   str(lrow + 1) + ')=0;"";PRODUCT(E' +
+                   str(lrow + 1) + ':I' +
+                   str(lrow + 1) + '))')
+
+                for x in range(2, 9):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = (
+                    oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
+            else:
+                # se VediVoce
+                oSheet.getCellByPosition(9, lrow).Formula = (
+                   '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
+                   str(lrow + 1) + ')=0;"";-PRODUCT(E' +
+                   str(lrow + 1) + ':I' + str(lrow + 1) + '))')
+
+                for x in range(2, 9):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = (
+                    oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
+
+    elif oSheet.Name in ('CONTABILITA'):
+        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+            formula1 = oSheet.getCellByPosition(9, lrow).Formula
+            formula2 = oSheet.getCellByPosition(11, lrow).Formula
+            oSheet.getCellByPosition(11, lrow).Formula = formula1
+            oSheet.getCellByPosition(9, lrow).Formula = formula2
+            if oSheet.getCellByPosition(11, lrow).Value > 0:
+                for x in range(2, 12):
+                    oSheet.getCellByPosition(x, lrow).CellStyle = (
+                    oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
+            else:
+                for x in range(2, 12):
+                    oSheet.getCellByPosition(
+                        x, lrow).CellStyle = (
+                        oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
+
+
 def inverti_segno():
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    lista = list()
+
+    # estrae il range o i ranges selezionati
+    # (possono essere più di uno)
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
     except AttributeError:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+
+    # inserisce in una lista le righe di inizio e fine
+    # di ogni range come touples ((inizio, fine), (inizio, fine)...)
     el_y = list()
     try:
         len(oRangeAddress)
@@ -4582,51 +4632,47 @@ def inverti_segno():
             el_y.append((el.StartRow, el.EndRow))
     except TypeError:
         el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
+
+    # estrate tutte le righe incluse nel o nei range(s)
+    # e le inserisce in una lista di righe
+    lista = list()
     for y in el_y:
         for el in range(y[0], y[1] + 1):
             lista.append(el)
+
+    print("\n\nINVERTI SEGNO :", lista, "\n\n")
+
+    # va ad eseguire il lavoro su ogni riga della lista
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        print("COMPUTO")
         for lrow in lista:
             if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
+                print("comp 1-a")
                 if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
-                    oSheet.getCellByPosition(
-                        9, lrow
-                    ).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
-                        lrow + 1) + ')=0;"";PRODUCT(E' + str(
-                            lrow + 1) + ':I' + str(lrow +
-                                                   1) + '))'  # se VediVoce
-                    # ~ if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
-                    # ~ oSheet.getCellByPosition(9, lrow).Formula=
-                    # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;
-                    # "";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
-                    # ~ else:
-                    # ~ oSheet.getCellByPosition(9, lrow).Formula=
-                    # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) +
-                    # ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                    print("ROSSO")
+                    # se VediVoce
+                    oSheet.getCellByPosition(9, lrow).Formula = (
+                       '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
+                       str(lrow + 1) + ')=0;"";PRODUCT(E' +
+                       str(lrow + 1) + ':I' +
+                       str(lrow + 1) + '))')
+
                     for x in range(2, 9):
-                        oSheet.getCellByPosition(
-                            x, lrow).CellStyle = oSheet.getCellByPosition(
-                                x, lrow).CellStyle.split(' ROSSO')[0]
+                        oSheet.getCellByPosition(x, lrow).CellStyle = (
+                        oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
                 else:
-                    oSheet.getCellByPosition(
-                        9, lrow
-                    ).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
-                        lrow + 1) + ')=0;"";-PRODUCT(E' + str(
-                            lrow + 1) + ':I' + str(lrow +
-                                                   1) + '))'  # se VediVoce
-                    # ~ if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
-                    # ~ oSheet.getCellByPosition(9, lrow).Formula =
-                    # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) +
-                    # ')=0;"";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))' # se VediVoce
-                    # ~ else:
-                    # ~ oSheet.getCellByPosition(9, lrow).Formula =
-                    # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) +
-                    # ')=0;"";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
+                    print("NON ROSSO")
+                    # se VediVoce
+                    oSheet.getCellByPosition(9, lrow).Formula = (
+                       '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
+                       str(lrow + 1) + ')=0;"";-PRODUCT(E' +
+                       str(lrow + 1) + ':I' + str(lrow + 1) + '))')
+
                     for x in range(2, 9):
-                        oSheet.getCellByPosition(
-                            x, lrow).CellStyle = oSheet.getCellByPosition(
-                                x, lrow).CellStyle + ' ROSSO'
-    if oSheet.Name in ('CONTABILITA'):
+                        oSheet.getCellByPosition(x, lrow).CellStyle = (
+                        oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
+
+    elif oSheet.Name in ('CONTABILITA'):
         for lrow in lista:
             if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
                 formula1 = oSheet.getCellByPosition(9, lrow).Formula
@@ -4635,14 +4681,13 @@ def inverti_segno():
                 oSheet.getCellByPosition(9, lrow).Formula = formula2
                 if oSheet.getCellByPosition(11, lrow).Value > 0:
                     for x in range(2, 12):
-                        oSheet.getCellByPosition(
-                            x, lrow).CellStyle = oSheet.getCellByPosition(
-                                x, lrow).CellStyle + ' ROSSO'
+                        oSheet.getCellByPosition(x, lrow).CellStyle = (
+                        oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
                 else:
                     for x in range(2, 12):
                         oSheet.getCellByPosition(
-                            x, lrow).CellStyle = oSheet.getCellByPosition(
-                                x, lrow).CellStyle.split(' ROSSO')[0]
+                            x, lrow).CellStyle = (
+                            oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
 
 
 ########################################################################
@@ -6845,13 +6890,16 @@ def vedi_voce_xpwe(oSheet, lrow, vRif, flags=''):
                 quantity + ';"0,00");"]";)')
     oSheet.getCellByPosition(2, lrow).Formula = sformula
     oSheet.getCellByPosition(4, lrow).Formula = '=' + quantity
-    oSheet.getCellByPosition(
-        9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
-            lrow + 1) + ')=0;"";PRODUCT(E' + str(lrow +
-                                                 1) + ':I' + str(lrow +
-                                                                 1) + '))'
+    oSheet.getCellByPosition(9, lrow).Formula = (
+       '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
+       str(lrow + 1) + ')=0;"";PRODUCT(E' +
+       str(lrow + 1) + ':I' +
+       str(lrow + 1) + '))')
+
     if flags in ('32769', '32801'):  # 32768
+        print("invertiSegnoRow(", lrow, ")")
         inverti_segno()
+        #invertiSegnoRow(oSheet, lrow)
         oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = 16724787
 
 
@@ -6873,8 +6921,7 @@ def MENU_vedi_voce():
         to = basic_LeenO('ListenersSelectRange.getRange',
                          "Seleziona voce di riferimento o indica n. d'ordine")
         if oSheet.Name not in to:
-            to = '$' + oSheet.Name + '.$C$' + str(SheetUtils.uFindStringCol(
-                to, 0, oSheet))
+            to = '$' + oSheet.Name + '.$C$' + str(SheetUtils.uFindStringCol(to, 0, oSheet))
         try:
             to = int(to.split('$')[-1]) - 1
         except ValueError:

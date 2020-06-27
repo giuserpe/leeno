@@ -864,6 +864,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     # numero di sequenza delle voci del computo
     numeroVoce = 1
 
+    # variabili utilizzate per evitare le ripetizioni di
+    # supercategoria, categoria e sottocategoria ad ogni voce
     testspcat = '0'
     testcat = '0'
     testsbcat = '0'
@@ -950,25 +952,28 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         id_vc = el.get('id_vc')
         diz_vv[id_vc] = lrow + 1
 
-        # @@@ mah
+        # scrive il numero sequenziale della voce corrente
+        # nella prima colonna, seconda riga della voce
         oSheet.getCellByPosition(0, lrow + 1).String = str(numeroVoce)
         numeroVoce += 1
 
         startCol = 2
         startRow = lrow + 2 + 1
         lista_righe = el.get('lista_rig')
-        nrighe = len(lista_righe) - 1
+        nrighe = len(lista_righe)
 
-        if nrighe > -1:
+        if nrighe > 0:
             endCol = startCol + len(lista_righe[0])
-            endRow = startRow + nrighe
+            endRow = startRow + nrighe - 1
 
-            if nrighe > 0:
-                oSheet.getRows().insertByIndex(startRow, nrighe)
+            # se la voce ha più di una riga di misurazione,
+            # inserisce le righe aggiuntive
+            if nrighe > 1:
+                oSheet.getRows().insertByIndex(startRow, nrighe - 1)
 
             oRangeAddress = oSheet.getCellRangeByPosition(0, startRow - 1, 250, startRow - 1).getRangeAddress()
 
-            for n in range(startRow, startRow + nrighe):
+            for n in range(startRow, endRow):
                 oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
                 oSheet.copyRange(oCellAddress, oRangeAddress)
                 if elaborato == 'CONTABILITA':
@@ -1058,6 +1063,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 except Exception:
                     pass
                 startRow = startRow + 1
+
+        # aggiorna la progressbar
         val += 1
         progress.setValue(val)
 

@@ -19,6 +19,7 @@ import LeenoSheetUtils
 import LeenoAnalysis
 import LeenoComputo
 import LeenoVariante
+import LeenoContab
 
 
 import Dialogs
@@ -923,7 +924,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             pass
 
         if elaborato == 'CONTABILITA':
-            PL.ins_voce_contab(lrow=lrow, elaborato=0)
+            LeenoContab.insertVoceContabilita(oSheet, lrow)
         else:
             # inserisce la nuova voce (vuota) nel computo
             LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)

@@ -15,25 +15,24 @@ def circoscriveVoceComputo(oSheet, lrow):
     Circoscrive una voce di COMPUTO, VARIANTE o CONTABILITÀ
     partendo dalla posizione corrente del cursore
     '''
+    # li predefinisco... @@@
+    lrowS = lrow
+    lrowE = lrow
+
     #  lrow = LeggiPosizioneCorrente()[1]
     #  if oSheet.Name in('VARIANTE', 'COMPUTO','CONTABILITA'):
-    if oSheet.getCellByPosition(
-            0,
-            lrow).CellStyle in ('comp progress', 'comp 10 s',
-                                'Comp Start Attributo', 'Comp End Attributo',
-                                'Comp Start Attributo_R', 'comp 10 s_R',
-                                'Comp End Attributo_R', 'Livello-0-scritta',
-                                'Livello-1-scritta', 'livello2 valuta'):
+    if oSheet.getCellByPosition(0, lrow).CellStyle in (
+       'comp progress', 'comp 10 s',
+       'Comp Start Attributo', 'Comp End Attributo',
+       'Comp Start Attributo_R', 'comp 10 s_R',
+       'Comp End Attributo_R', 'Livello-0-scritta',
+       'Livello-1-scritta', 'livello2 valuta'):
         y = lrow
-        while oSheet.getCellByPosition(
-                0, y).CellStyle not in ('Comp End Attributo',
-                                        'Comp End Attributo_R'):
+        while oSheet.getCellByPosition(0, y).CellStyle not in ('Comp End Attributo', 'Comp End Attributo_R'):
             y += 1
         lrowE = y
         y = lrow
-        while oSheet.getCellByPosition(
-                0, y).CellStyle not in ('Comp Start Attributo',
-                                        'Comp Start Attributo_R'):
+        while oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
             y -= 1
         lrowS = y
     celle = oSheet.getCellRangeByPosition(0, lrowS, 250, lrowE)
@@ -101,7 +100,7 @@ def ins_voce_computo():
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     lrow = PL.LeggiPosizioneCorrente()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo):
-        lrow = PL.next_voice(lrow, 1)
+        lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
     else:
         return
     insertVoceComputoGrezza(oSheet, lrow)

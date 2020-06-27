@@ -225,6 +225,48 @@ def selezionaVoce(oSheet, lrow):
     # ~ oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
     return SR, ER
 
+# ###############################################################
+
+def prossimaVoce(oSheet, lrow, n=1):
+    '''
+    lrow { double }   : riga di riferimento
+    n    { integer }  : se 0 sposta prima della voce corrente
+                        se 1 sposta dopo della voce corrente
+    sposta il cursore prima o dopo la voce corrente restituendo un idrow
+    '''
+    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
+    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    noVoce = LeenoUtils.getGlobalVar('noVoce')
+
+    # ~lrow = LeggiPosizioneCorrente()[1]
+    if lrow == 0:
+        while oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab:
+            lrow += 1
+        return lrow
+    fine = cercaUltimaVoce(oSheet) + 1
+    # la parte che segue sposta il focus dopo della voce corrente (ad esempio sul titolo di categoria)
+    if lrow >= fine:
+        return lrow
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
+        if n == 0:
+            sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+            lrow = sopra
+        elif n == 1:
+            sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
+            lrow = sotto + 1
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in ('Ultimus_centro_bordi_lati', ):
+        for y in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow + 1):
+            if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
+                lrow = y
+                break
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+        # ~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+        lrow += 1
+    else:
+        return
+    return lrow
+
+# ###############################################################
 
 def eliminaVoce(oSheet, lrow):
     '''
@@ -515,10 +557,10 @@ def invertiUnSegno(oSheet, lrow):
 
 # ###############################################################
 
-def numeraVoci(oSheet, lrow, all):  #
+def numeraVoci(oSheet, lrow, all):
     '''
-    bit { integer }  : 1 rinumera tutto
-                       0 rinumera dalla voce corrente in giù
+    all { boolean }  : True  rinumera tutto
+                       False rinumera dalla voce corrente in giù
     '''
     lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     n = 1

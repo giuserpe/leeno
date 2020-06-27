@@ -490,12 +490,10 @@ def MENU_invia_voce():
             return
         ER = oRangeAddress.EndRow
         ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
-        oDoc.CurrentController.select(
-            oSheet.getCellRangeByPosition(0, SR, 100, ER))
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 100, ER))
         lista = list()
         for el in range(SR, ER + 1):
-            if oSheet.getCellByPosition(
-                    0, el).CellStyle in ('Comp Start Attributo'):
+            if oSheet.getCellByPosition(0, el).CellStyle in ('Comp Start Attributo'):
                 lista.append(codice_voce(el))
         # seleziona()
         if nSheetDCC in ('Analisi di Prezzo'):
@@ -510,25 +508,22 @@ def MENU_invia_voce():
             ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName(nSheet)
             lrow = LeggiPosizioneCorrente()[1]
-            if dccSheet.getCellByPosition(
-                    0, lrow).CellStyle in ('comp Int_colonna', ):
+            if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna', ):
                 lrow = LeggiPosizioneCorrente()[1] + 1
-            elif dccSheet.getCellByPosition(
-                    0, lrow).CellStyle not in stili_computo:
+            elif dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo:
                 DLG.MsgBox('La posizione di destinazione non è corretta.', 'ATTENZIONE!')
-                oDoc.CurrentController.select(
-                    oDoc.createInstance(
-                        "com.sun.star.sheet.SheetCellRanges"))  # unselect
+                # unselect
+                oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
                 return
             else:
-                lrow = next_voice(LeggiPosizioneCorrente()[1], 1)
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
             _gotoCella(0, lrow)
             paste_clip(insCells=1)
             numera_voci(1)
             last = lrow + ER - SR + 1
             while lrow < last:
                 rigenera_voce(lrow)
-                lrow = next_voice(lrow, 1)
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
             # torno su partenza per prendere i prezzi
             _gotoDoc(fpartenza)
             oDoc = LeenoUtils.getDocument()
@@ -812,7 +807,7 @@ def Ins_Categorie(n):
 
     row = LeggiPosizioneCorrente()[1]
     if oSheet.getCellByPosition(0,row).CellStyle in stili_computo + stili_contab:
-        lrow = next_voice(row, 1)
+        lrow = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
     elif oSheet.getCellByPosition(0, row).CellStyle in noVoce:
         lrow = row + 1
     else:
@@ -1343,9 +1338,9 @@ def Filtra_computo(nSheet, nCol, sString):
                 test = sotto
             if sString != oSheet.getCellByPosition(nCol, test).String:
                 oSheet.getRows().removeByIndex(sopra, sotto - sopra + 1)
-                lrow = next_voice(lrow, 0)
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 0)
         except Exception:
-            lrow = next_voice(lrow, 0)
+            lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 0)
     for lrow in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
         if(oSheet.getCellByPosition(18, lrow).CellStyle == 'Livello-1-scritta mini val' and
            oSheet.getCellByPosition(18, lrow).Value == 0 or
@@ -3537,72 +3532,8 @@ def MENU_firme_in_calce():
     oDialogo_attesa.endExecute()
     oDoc.CurrentController.ZoomValue = zoom
 
-
 ########################################################################
-def next_voice(lrow, n=1):
-    # ~def debug (arg=None, n=1):
-    '''
-    lrow { double }   : riga di riferimento
-    n    { integer }  : se 0 sposta prima della voce corrente
-                        se 1 sposta dopo della voce corrente
-    sposta il cursore prima o dopo la voce corrente restituendo un idrow
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    stili_computo = LeenoUtils.getGlobalVar('stili_computo')
-    stili_contab = LeenoUtils.getGlobalVar('stili_contab')
-    noVoce = LeenoUtils.getGlobalVar('noVoce')
 
-    # ~lrow = LeggiPosizioneCorrente()[1]
-    if lrow == 0:
-        while oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab:
-            lrow += 1
-        return lrow
-    fine = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
-    # la parte che segue sposta il focus dopo della voce corrente (ad esempio sul titolo di categoria)
-    if lrow >= fine:
-        return lrow
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
-        if n == 0:
-            sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-            lrow = sopra
-        elif n == 1:
-            sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-            lrow = sotto + 1
-    elif oSheet.getCellByPosition(
-            0, lrow).CellStyle in ('Ultimus_centro_bordi_lati', ):
-        for y in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow + 1):
-            if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
-                lrow = y
-                break
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-        # ~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-        lrow += 1
-    else:
-        return
-    return lrow
-    # la parte che segue sposta il focus all'effettivo inizio della voce successiva
-    # ~fine = LeenoSheetUtils.cercaUltimaVoce(oSheet)+1
-    # ~if lrow <= 1: lrow = 2
-    # ~if lrow >= fine or oSheet.getCellByPosition(0, lrow).CellStyle in('Comp TOTALI'): return lrow
-    # ~if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
-    # ~if n==0:
-    # ~sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-    # ~lrow = sopra
-    # ~elif n==1:
-    # ~sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-    # ~lrow = sotto+1
-    # ~elif oSheet.getCellByPosition(0, lrow).CellStyle in ('Ultimus_centro_bordi_lati',):
-    # ~for y in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow+1):
-    # ~if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
-    # ~lrow = y
-    # ~break
-    # ~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-    # ~lrow +=1
-    # ~return lrow
-
-
-########################################################################
 def cancella_analisi_da_ep():
     '''
     cancella le voci in Elenco Prezzi che derivano da analisi
@@ -3873,8 +3804,7 @@ def MENU_azzera_voce():
                     idx -= 1
                 else:
                     Copia_riga_Ent()
-                    oSheet.getCellByPosition(
-                        2, fine).String = '*** VOCE AZZERATA ***'
+                    oSheet.getCellByPosition(2, fine).String = '*** VOCE AZZERATA ***'
                     if oSheet.Name == 'CONTABILITA':
                         oSheet.getCellByPosition(
                             5, fine).Formula = '=SUBTOTAL(9;J' + str(
@@ -3904,7 +3834,7 @@ def MENU_azzera_voce():
                     _gotoCella(2, fine)
                     ###
                 lrow = LeggiPosizioneCorrente()[1]
-                lrow = next_voice(lrow, 1)
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
             except Exception:
                 pass
         # ~numera_voci(1)
@@ -4333,6 +4263,7 @@ def cerca_partenza():
 
 def sblocca_cont():
     '''
+    @@@ MODIFICA IN CORSO CON 'LeenoContab.sbloccaContabilita'
     Controlla che non ci siano atti contabili registrati e dà il consenso a procedere.
     '''
     partenza = LeenoUtils.getGlobalVar('partenza')
@@ -5630,13 +5561,13 @@ def rigenera_tutte(arg=None, ):
     if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         try:
             oSheet = oDoc.Sheets.getByName(nome)
-            row = next_voice(0, 1)
+            row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1)
             last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             while row < last:
                 oDoc.CurrentController.select(
                     oSheet.getCellRangeByPosition(0, row, 30, row))
                 rigenera_voce(row)
-                row = next_voice(row, 1)
+                row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
             Rinumera_TUTTI_Capitoli2(oSheet)
         except Exception:
             pass
@@ -5668,6 +5599,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
 # nuova_voce_contab  ##################################################
 def ins_voce_contab(lrow=0, arg=1):
     '''
+    @@@ MODIFICA IN CORSO CON 'LeenoContab.insertVoceContabilita
     Inserisce una nuova voce in CONTABILITA.
     '''
     oDoc = LeenoUtils.getDocument()
@@ -5709,20 +5641,16 @@ def ins_voce_contab(lrow=0, arg=1):
         pass
     elif stile in stili_contab:
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-        nSal = int(
-            oSheet.getCellByPosition(23,
-                                     sStRange.RangeAddress.StartRow + 1).Value)
-        lrow = next_voice(lrow)
+        nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
+        lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)
     else:
         return
     oSheetto = oDoc.getSheets().getByName('S5')
-    oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48,
-                                                    26).getRangeAddress()
+    oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
     oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
     oSheet.getRows().insertByIndex(lrow, 5)  # inserisco le righe
     oSheet.copyRange(oCellAddress, oRangeAddress)
-    oSheet.getCellRangeByPosition(0, lrow, 48,
-                                  lrow + 5).Rows.OptimalHeight = True
+    oSheet.getCellRangeByPosition(0, lrow, 48, lrow + 5).Rows.OptimalHeight = True
     _gotoCella(1, lrow + 1)
 
     #  if(oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress())):
@@ -7134,7 +7062,7 @@ def filtra_codice(voce=None):
                 return
         oSheet = oDoc.Sheets.getByName(elaborato)
         _gotoCella(0, 6)
-        next_voice(LeggiPosizioneCorrente()[1], 1)
+        LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
     oSheet.clearOutline()
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle in (stili_computo + stili_contab):
@@ -7673,7 +7601,7 @@ dell'operazione che terminerà con un avviso.
                     oDoc.CurrentController.select(
                         oSheet.getCellByPosition(0, lrow))
                     sistema_stili()
-                    lrow = next_voice(lrow, 1)
+                    lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
                     lrow += 1
                 # ~ rigenera_tutte() affido la rigenerazione delle formule al menu Viste
                 # 214 aggiorna stili di cella per ogni colonna
@@ -7770,10 +7698,9 @@ dell'operazione che terminerà con un avviso.
             # ~ rigenera_tutte() affido la rigenerazione delle formule al menu Viste
             lrow = 4
             while lrow < n:
-                oDoc.CurrentController.select(oSheet.getCellByPosition(
-                    0, lrow))
+                oDoc.CurrentController.select(oSheet.getCellByPosition(0, lrow))
                 sistema_stili()
-                lrow = next_voice(lrow, 1)
+                lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
                 lrow += 1
         for el in oDoc.Sheets.ElementNames:
             oDoc.CurrentController.setActiveSheet(
@@ -8327,7 +8254,7 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
                 oDoc.CurrentController.select(oSheet.getCellByPosition(2, qui))
                 Copia_riga_Ent()
                 oSheet.getCellByPosition(2, qui + 1).String = descrizione
-                next_voice(sotto)
+                LeenoSheetUtils.prossimaVoce(oSheet, sotto)
 
                 oDoc.CurrentController.select(oSheet.getCellByPosition(2, i))
             i += 1
@@ -9063,7 +8990,7 @@ def filtro_descrizione():
             oSheet.getCellByPosition(2, y).CellBackColor = 15757935
             el_y.append(seleziona_voce(y))
             try:
-                y = next_voice(seleziona_voce(y)[1])
+                y = LeenoSheetUtils.prossimaVoce(oSheet, seleziona_voce(y)[1])
             except TypeError:
                 DLG.MsgBox(
                     '''Questo comando non produce risultato se il cursore

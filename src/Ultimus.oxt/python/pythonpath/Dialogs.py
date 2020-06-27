@@ -10,14 +10,13 @@ import inspect
 import uno
 import unohelper
 
-from com.sun.star.awt import Rectangle
+
 from com.sun.star.awt import Size
 from com.sun.star.awt import XActionListener
 from com.sun.star.task import XJobExecutor
 
 from com.sun.star.awt import XTopWindowListener
 
-from com.sun.star.awt import XUnitConversion
 from com.sun.star.util import MeasureUnit
 
 from LeenoConfig import Config
@@ -1706,6 +1705,44 @@ def Info(*, Title='', Text=''):
 
 def Ok(*, Title='', Text=''):
     return NotifyDialog(Image='Icons-Big/ok.png', Title=Title, Text=Text)
+
+def YesNoDialog(*, Title, Text):
+    dlg = Dialog(Title=Title,  Horz=False, CanClose=False,  Items=[
+        HSizer(Items=[
+            ImageControl(Image='Icons-Big/question.png'),
+            Spacer(),
+            FixedText(Text=Text)
+        ]),
+        Spacer(),
+        HSizer(Items=[
+            Spacer(),
+            Button(Label='Si', Icon='Icons-24x24/ok.png',  RetVal=1),
+            Spacer(),
+            Button(Label='No', RetVal=0),
+            Spacer()
+        ])
+    ])
+    return dlg.run()
+
+def YesNoCancelDialog(*, Title, Text):
+    dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
+        HSizer(Items=[
+            ImageControl(Image='Icons-Big/question.png'),
+            Spacer(),
+            FixedText(Text=Text)
+        ]),
+        Spacer(),
+        HSizer(Items=[
+            Spacer(),
+            Button(Label='Si', Icon='Icons-24x24/ok.png',  RetVal=1),
+            Spacer(),
+            Button(Label='No', RetVal=0),
+            Spacer(),
+            Button(Label='Annulla', Icon='Icons-24x24/cancel.png',  RetVal=-1),
+            Spacer()
+        ])
+    ])
+    return dlg.run()
 
 class Progress:
     '''

@@ -1,12 +1,10 @@
 """
     LeenO - modulo di importazione prezzari
 """
-import logging
 import threading
-
 from xml.etree.ElementTree import ElementTree
-
 import uno
+from com.sun.star.beans import PropertyValue
 
 from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
                                           ANNOTATION, FORMULA,
@@ -16,7 +14,7 @@ import LeenoUtils
 import pyleeno as PL
 import LeenoDialogs as DLG
 import LeenoToolbars as Toolbars
-from LeenoConfig import Config
+
 import SheetUtils
 
 import Dialogs
@@ -347,7 +345,7 @@ sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'
         elif n == 2:
             oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = 16777168
         n += 1
-    # ~ set_larghezza_colonne()
+
     Toolbars.Vedi()
     # ~ adatta_altezza_riga('Elenco Prezzi')
     # ~ riordina_ElencoPrezzi()
@@ -610,13 +608,12 @@ def MENU_fuf():
         SheetUtils.getLastUsedRow(oSheet)).Columns.OptimalWidth = True
 
     return
-    copy_clip()
+    PL.copy_clip()
 
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
-        'com.sun.star.frame.DispatchHelper', ctx)
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
     oProp = []
     oProp0 = PropertyValue()
     oProp0.Name = 'Flags'
@@ -647,7 +644,7 @@ def MENU_fuf():
     dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
 
     oDoc.CurrentController.select( oSheet.getCellRangeByPosition(0, 1, 5, SheetUtils.getLastUsedRow(oSheet) + 1))
-    ordina_col(3)
+    PL.ordina_col(3)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
 

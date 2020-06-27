@@ -238,10 +238,13 @@ def trova_ricorrenze():
 
 def set_larghezza_colonne():
     '''
-    set_larghezza_colonne
+    imposta la larghezza delle colonne
+    a seconda del tipo di documento
     '''
     callAlert()
-    PL.set_larghezza_colonne()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
 
 def config_default():
@@ -425,7 +428,9 @@ def inserisci_Riga_rossa():
 
 def Rinumera_TUTTI_Capitoli2():
     callAlert()
-    PL.Rinumera_TUTTI_Capitoli2()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    PL.Rinumera_TUTTI_Capitoli2(oSheet)
 
 
 def copia_riga_computo(lrow):

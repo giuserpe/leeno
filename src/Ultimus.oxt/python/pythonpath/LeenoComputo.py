@@ -91,7 +91,6 @@ def insertVoceComputoGrezza(oSheet, lrow):
         oSheet.getCellByPosition(31, lrow + 3).Value = oSheet.getCellByPosition(31, lrow - 1).Value
         oSheet.getCellByPosition(32, lrow + 3).Value = oSheet.getCellByPosition(32, lrow - 1).Value
         oSheet.getCellByPosition(33,lrow + 3).Value = oSheet.getCellByPosition(33, lrow - 1).Value
-    #PL._gotoCella(1, lrow + 1)
 
 
 # TROPPO LENTA

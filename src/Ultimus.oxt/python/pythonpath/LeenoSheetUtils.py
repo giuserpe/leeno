@@ -2,11 +2,61 @@
 Funzioni di utilità per la manipolazione dei fogli
 relativamente alle funzionalità specifiche di LeenO
 '''
+import uno
+from com.sun.star.sheet.CellFlags import HARDATTR, EDITATTR, FORMATTED
+
 import pyleeno as PL
 import LeenoUtils
 import SheetUtils
 import LeenoAnalysis
 import LeenoComputo
+
+
+def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
+    '''
+    Indica qual è il Documento Principale
+    nell'apposita area del foglio corrente
+    '''
+    # legge il percorso del documento principale
+    sUltimus = LeenoUtils.getGlobalVar('sUltimus')
+
+    # dal foglio risale al documento proprietario
+    oDoc = SheetUtils.getDocumentFromSheet(oSheet)
+
+    # se si sta lavorando sul Documento Principale, non fa nulla
+    try:
+        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
+            return
+    except Exception:
+        # file senza nome
+        return
+
+    d = {
+        'COMPUTO': 'F1',
+        'VARIANTE': 'F1',
+        'Elenco Prezzi': 'A1',
+        'CONTABILITA': 'F1',
+        'Analisi di Prezzo': 'A1'
+    }
+    cell = d.get(oSheet.Name)
+    if cell is None:
+        return
+
+    oSheet.getCellRangeByName(cell).String = 'DP: ' + sUltimus
+    oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
+
+
+def setVisibilitaColonne(oSheet, sValori):
+    '''
+    sValori { string } : una stringa di configurazione della visibilità colonne
+    permette di visualizzare/nascondere un set di colonne
+    T = visualizza
+    F = nasconde
+    '''
+    n = 0
+    for el in sValori:
+        oSheet.getCellByPosition(n, 2).Columns.IsVisible = True if el == 'T' else False
+        n += 1
 
 # ###############################################################
 
@@ -21,7 +71,7 @@ def setLarghezzaColonne(oSheet):
         SheetUtils.freezeRowCol(oSheet, 0, 2)
 
     elif oSheet.Name == 'CONTABILITA':
-        PL.viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
+        setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
         # larghezza colonne importi
         oSheet.getCellRangeByPosition(13, 0, 1023, 0).Columns.Width = 1900
         # larghezza colonne importi
@@ -55,7 +105,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('AD').Columns.Width = 1700
         oSheet.getColumns().getByName('AE').Columns.Width = 1700
         SheetUtils.freezeRowCol(oSheet, 0, 3)
-        PL.viste_nuove('TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
+        setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
     if oSheet.Name == 'Elenco Prezzi':
         oSheet.getColumns().getByName('A').Columns.Width = 1600
         oSheet.getColumns().getByName('B').Columns.Width = 10000
@@ -181,18 +231,11 @@ def eliminaVoce(oSheet, lrow):
     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     voce = selezionaVoce(oSheet, lrow)
     SR = voce[0]
     ER = voce[1]
 
-    #oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
-    #delete('R')
     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
-
-    #oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-
 
 # ###############################################################
 

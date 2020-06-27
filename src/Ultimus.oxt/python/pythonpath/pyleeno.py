@@ -837,7 +837,7 @@ def Ins_Categorie(n):
         LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, sString)
 
     _gotoCella(2, lrow)
-    Rinumera_TUTTI_Capitoli2()
+    Rinumera_TUTTI_Capitoli2(oSheet)
     oDoc.CurrentController.ZoomValue = zoom
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
@@ -879,18 +879,22 @@ def Inser_Capitolo():
 
 
 def MENU_Rinumera_TUTTI_Capitoli2():
-    Rinumera_TUTTI_Capitoli2()
-
-
-def Rinumera_TUTTI_Capitoli2():
-    Sincronizza_SottoCap_Tag_Capitolo_Cor()  # sistemo gli idcat voce per voce
-    Tutti_Subtotali()  # ricalcola i totali di categorie e subcategorie
-
-
-def Tutti_Subtotali():
-    '''ricalcola i subtotali di categorie e subcategorie'''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
+    Rinumera_TUTTI_Capitoli2(oSheet)
+
+
+def Rinumera_TUTTI_Capitoli2(oSheet):
+    # sistemo gli idcat voce per voce
+    Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet)
+
+    # ricalcola i totali di categorie e subcategorie
+    Tutti_Subtotali(oSheet)
+
+
+def Tutti_Subtotali(oSheet):
+    '''ricalcola i subtotali di categorie e subcategorie'''
+
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     for n in range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1):
@@ -900,7 +904,8 @@ def Tutti_Subtotali():
             SubSum_Cap(n)
         if oSheet.getCellByPosition(0, n).CellStyle == 'livello2 valuta':
             SubSum_SottoCap(n)
-# TOTALI GENERALI
+
+    # TOTALI GENERALI
     lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
     oSheet.getCellByPosition(
         17, 1).Formula = '=SUBTOTAL(9;R4:R' + str(lrow + 1) + ')'
@@ -1116,14 +1121,11 @@ def SubSum_Cap(lrow):
 ########################################################################
 
 
-def Sincronizza_SottoCap_Tag_Capitolo_Cor():
+def Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet):
     '''
     lrow    { double } : id della riga di inserimento
     sincronizza il categoria e sottocategorie
     '''
-    # datarif = datetime.now()
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
 #    lrow = LeggiPosizioneCorrente()[1]
@@ -1198,9 +1200,6 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor():
                 oSheet.getCellByPosition(31, lrow).Value = idspcat
             except Exception:
                 oSheet.getCellByPosition(31, lrow).Value = 0
-
-    # MsgBox('Importazione eseguita con successo\n in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
-
 
 ########################################################################
 
@@ -4640,16 +4639,11 @@ def inverti_segno():
         for el in range(y[0], y[1] + 1):
             lista.append(el)
 
-    print("\n\nINVERTI SEGNO :", lista, "\n\n")
-
     # va ad eseguire il lavoro su ogni riga della lista
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        print("COMPUTO")
         for lrow in lista:
             if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
-                print("comp 1-a")
                 if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
-                    print("ROSSO")
                     # se VediVoce
                     oSheet.getCellByPosition(9, lrow).Formula = (
                        '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
@@ -4661,7 +4655,6 @@ def inverti_segno():
                         oSheet.getCellByPosition(x, lrow).CellStyle = (
                         oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
                 else:
-                    print("NON ROSSO")
                     # se VediVoce
                     oSheet.getCellByPosition(9, lrow).Formula = (
                        '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
@@ -5653,7 +5646,7 @@ def rigenera_tutte(arg=None, ):
                     oSheet.getCellRangeByPosition(0, row, 30, row))
                 rigenera_voce(row)
                 row = next_voice(row, 1)
-            Rinumera_TUTTI_Capitoli2()
+            Rinumera_TUTTI_Capitoli2(oSheet)
         except Exception:
             pass
     oDoc.CurrentController.ZoomValue = zoom
@@ -5818,7 +5811,7 @@ def attiva_contabilita():
             GotoSheet('CONTABILITA')
             svuota_contabilita()
             ins_voce_contab()
-            #  set_larghezza_colonne()
+
         GotoSheet('CONTABILITA')
     ScriviNomeDocumentoPrincipale()
     basic_LeenO("Menu.eventi_assegna")
@@ -5918,7 +5911,7 @@ def svuota_contabilita():
     oSheet.getCellByPosition(0, 4).String = 'Fine Computo'
     oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
     _gotoCella(0, 2)
-    set_larghezza_colonne()
+    LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
 
 ########################################################################
@@ -6300,7 +6293,7 @@ def inizializza_elenco():
     oDoc.CurrentController.freezeAtPosition(0, 3)
     oSheet.getCellRangeByPosition(0, 0, 100, 0).CellStyle = "Default"
     #  riscrivo le intestazioni di colonna
-    set_larghezza_colonne()
+    LeenoSheetUtils.setLarghezzaColonne(oSheet)
     oSheet.getCellRangeByName('L1').String = 'COMPUTO'
     oSheet.getCellRangeByName('P1').String = 'VARIANTE'
     oSheet.getCellRangeByName('T1').String = 'CONTABILITA'
@@ -6505,7 +6498,7 @@ def inizializza_computo():
     oSheet.getCellByPosition(3, 0).Formula = "=$COMPUTO.$S$2"
     oSheet = oDoc.Sheets.getByName('S2')
     oSheet.getCellByPosition(4, 0).Formula = "=$COMPUTO.$S$2"
-    set_larghezza_colonne()
+    LeenoSheetUtils.setLarghezzaColonne(oSheet)
     setTabColor(16762855)
 
 
@@ -6534,7 +6527,7 @@ def inizializza_analisi():
         oDoc.CurrentController.select(
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
-        set_larghezza_colonne()
+        LeenoSheetUtils.setLarghezzaColonne(oSheet)
     else:
         GotoSheet('Analisi di Prezzo')
         oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
@@ -7198,7 +7191,7 @@ def struttura_ComputoM():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.clearOutline()
-    Rinumera_TUTTI_Capitoli2()
+    Rinumera_TUTTI_Capitoli2(oSheet)
     struct(0)
     struct(1)
     struct(2)
@@ -7436,127 +7429,7 @@ def computo_terra_terra():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     oSheet.getCellRangeByPosition(33, 0, 1023, 0).Columns.IsVisible = False
-    set_larghezza_colonne()
-
-
-########################################################################
-def viste_nuove(sValori):
-    '''
-    sValori { string } : una stringa di configurazione della visibilità colonne
-    permette di visualizzare/nascondere un set di colonne
-    T = visualizza
-    F = nasconde
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    n = 0
-    for el in sValori:
-        if el == 'T':
-            oSheet.getCellByPosition(n, 2).Columns.IsVisible = True
-        elif el == 'F':
-            oSheet.getCellByPosition(n, 2).Columns.IsVisible = False
-        n += 1
-
-
-########################################################################
-def set_larghezza_colonne():
-    '''
-    @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.setLarghezzaColonne'
-    regola la larghezza delle colonne a seconda della sheet
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    if oSheet.Name == 'Analisi di Prezzo':
-        oSheet.getColumns().getByName('A').Columns.Width = 2100
-        oSheet.getColumns().getByName('B').Columns.Width = 12000
-        oSheet.getColumns().getByName('C').Columns.Width = 1600
-        oSheet.getColumns().getByName('D').Columns.Width = 2000
-        oSheet.getColumns().getByName('E').Columns.Width = 3400
-        oSheet.getColumns().getByName('F').Columns.Width = 3400
-        oSheet.getColumns().getByName('G').Columns.Width = 2700
-        oSheet.getColumns().getByName('H').Columns.Width = 2700
-        oSheet.getColumns().getByName('I').Columns.Width = 2000
-        oSheet.getColumns().getByName('J').Columns.Width = 2000
-        oSheet.getColumns().getByName('K').Columns.Width = 2000
-        oDoc.CurrentController.freezeAtPosition(0, 2)
-    if oSheet.Name == 'CONTABILITA':
-        viste_nuove('TTTFFTTTTTFTFTFTFTFTTFTTFTFTTTTFFFFFF')
-        oSheet.getCellRangeByPosition(
-            13, 0, 1023, 0).Columns.Width = 1900  # larghezza colonne importi
-        oSheet.getCellRangeByPosition(
-            19, 0, 23, 0).Columns.Width = 1000  # larghezza colonne importi
-        oSheet.getCellRangeByPosition(
-            51, 0, 1023, 0).Columns.IsVisible = False  # nascondi colonne
-        oSheet.getColumns().getByName('A').Columns.Width = 600
-        oSheet.getColumns().getByName('B').Columns.Width = 1500
-        oSheet.getColumns().getByName('C').Columns.Width = 6300  # 7800
-        oSheet.getColumns().getByName('F').Columns.Width = 1300
-        oSheet.getColumns().getByName('G').Columns.Width = 1300
-        oSheet.getColumns().getByName('H').Columns.Width = 1300
-        oSheet.getColumns().getByName('I').Columns.Width = 1300
-        oSheet.getColumns().getByName('J').Columns.Width = 1700
-        oSheet.getColumns().getByName('L').Columns.Width = 1700
-        oSheet.getColumns().getByName('N').Columns.Width = 1900
-        oSheet.getColumns().getByName('P').Columns.Width = 1900
-        oSheet.getColumns().getByName('T').Columns.Width = 1000
-        oSheet.getColumns().getByName('U').Columns.Width = 1000
-        oSheet.getColumns().getByName('W').Columns.Width = 1000
-        oSheet.getColumns().getByName('X').Columns.Width = 1000
-        oSheet.getColumns().getByName('Z').Columns.Width = 1900
-        oSheet.getColumns().getByName('AC').Columns.Width = 1700
-        oSheet.getColumns().getByName('AD').Columns.Width = 1700
-        oSheet.getColumns().getByName('AE').Columns.Width = 1700
-        oSheet.getColumns().getByName('AX').Columns.Width = 1900
-        oSheet.getColumns().getByName('AY').Columns.Width = 1900
-        oDoc.CurrentController.freezeAtPosition(0, 3)
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        oSheet.getCellRangeByPosition(
-            5, 0, 8, 0).Columns.IsVisible = True  # mostra colonne
-        oSheet.getColumns().getByName('A').Columns.Width = 600
-        oSheet.getColumns().getByName('B').Columns.Width = 1500
-        oSheet.getColumns().getByName('C').Columns.Width = 6300  # 7800
-        oSheet.getColumns().getByName('F').Columns.Width = 1500
-        oSheet.getColumns().getByName('G').Columns.Width = 1300
-        oSheet.getColumns().getByName('H').Columns.Width = 1300
-        oSheet.getColumns().getByName('I').Columns.Width = 1300
-        oSheet.getColumns().getByName('J').Columns.Width = 1700
-        oSheet.getColumns().getByName('L').Columns.Width = 1700
-        oSheet.getColumns().getByName('S').Columns.Width = 1700
-        oSheet.getColumns().getByName('AC').Columns.Width = 1700
-        oSheet.getColumns().getByName('AD').Columns.Width = 1700
-        oSheet.getColumns().getByName('AE').Columns.Width = 1700
-        oDoc.CurrentController.freezeAtPosition(0, 3)
-        viste_nuove('TTTFFTTTTTFTFFFFFFTFFFFFFFFFFFFFFFFFFFFFFFFFTT')
-    if oSheet.Name == 'Elenco Prezzi':
-        oSheet.getColumns().getByName('A').Columns.Width = 1600
-        oSheet.getColumns().getByName('B').Columns.Width = 10000
-        oSheet.getColumns().getByName('C').Columns.Width = 1500
-        oSheet.getColumns().getByName('D').Columns.Width = 1500
-        oSheet.getColumns().getByName('E').Columns.Width = 1600
-        oSheet.getColumns().getByName('F').Columns.Width = 1500
-        oSheet.getColumns().getByName('G').Columns.Width = 1500
-        oSheet.getColumns().getByName('H').Columns.Width = 1600
-        oSheet.getColumns().getByName('I').Columns.Width = 1200
-        oSheet.getColumns().getByName('J').Columns.Width = 1200
-        oSheet.getColumns().getByName('K').Columns.Width = 100
-        oSheet.getColumns().getByName('L').Columns.Width = 1600
-        oSheet.getColumns().getByName('M').Columns.Width = 1600
-        oSheet.getColumns().getByName('N').Columns.Width = 1600
-        oSheet.getColumns().getByName('O').Columns.Width = 100
-        oSheet.getColumns().getByName('P').Columns.Width = 1600
-        oSheet.getColumns().getByName('Q').Columns.Width = 1600
-        oSheet.getColumns().getByName('R').Columns.Width = 1600
-        oSheet.getColumns().getByName('S').Columns.Width = 100
-        oSheet.getColumns().getByName('T').Columns.Width = 1600
-        oSheet.getColumns().getByName('U').Columns.Width = 1600
-        oSheet.getColumns().getByName('V').Columns.Width = 1600
-        oSheet.getColumns().getByName('W').Columns.Width = 100
-        oSheet.getColumns().getByName('X').Columns.Width = 1600
-        oSheet.getColumns().getByName('Y').Columns.Width = 1600
-        oSheet.getColumns().getByName('Z').Columns.Width = 1600
-        oSheet.getColumns().getByName('AA').Columns.Width = 1600
-        oDoc.CurrentController.freezeAtPosition(0, 3)
-    adatta_altezza_riga(oSheet.Name)
+    LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
 
 ########################################################################
@@ -7995,16 +7868,26 @@ def ScriviNomeDocumentoPrincipale():
     '''
     Indica qual è il Documento Principale
     '''
+    # legge il percorso del documento principale
+    sUltimus = LeenoUtils.getGlobalVar('sUltimus')
+
     oDoc = LeenoUtils.getDocument()
+
+    # se si sta lavorando sul Documento Principale, non fa nulla
     try:
-        if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
+        if sUltimus == uno.fileUrlToSystemPath(oDoc.getURL()):
             return
     except Exception:
-        return  # file senza nome
+        # file senza nome
+        return
+
+    # mah... non vedo come potrebbe esserco questo errore
+    # a meno di non aver eliminato il controller
     try:
         oSheet = oDoc.CurrentController.ActiveSheet
     except AttributeError:
         return
+
     d = {
         'COMPUTO': 'F1',
         'VARIANTE': 'F1',
@@ -8017,16 +7900,10 @@ def ScriviNomeDocumentoPrincipale():
             oSheet = oDoc.Sheets.getByName(el)
             oSheet.getCellRangeByName(d[el]).String = 'DP: ' + LeenoUtils.getGlobalVar('sUltimus')
             oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
-            if LeenoUtils.getGlobalVar('sUltimus') == uno.fileUrlToSystemPath(oDoc.getURL()):
-                Dialogs.Exclamation(Title="BAH", Text="Inatteso!!!!")
-                # 13434777 giallo
-                oSheet.getCellRangeByName("A1:AT1").CellBackColor = 16773632
-                oSheet.getCellRangeByName(d[el]).String = 'DP: Questo documento'
+
         except Exception:
             pass
 
-
-####
 def DlgMain():
     '''
     Visualizza il menù principale dialog_fil

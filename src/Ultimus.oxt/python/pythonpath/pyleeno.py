@@ -759,11 +759,11 @@ def avvia_IDE():
                          stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
         subprocess.Popen('explorer.exe ' +
-                         uno.fileUrlToSystemPath(LeenO_path()),
+                         'W:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt',
                          shell=True,
                          stdout=subprocess.PIPE)
         subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
-                         uno.fileUrlToSystemPath(LeenO_path()) +
+                         'W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt' +
                          '/python/pythonpath/pyleeno.py',
                          shell=True,
                          stdout=subprocess.PIPE)

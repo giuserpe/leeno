@@ -852,14 +852,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             oSheet.getRows().removeByIndex(3, 4)
 
     # @@@ DA ELIMINARE !!!!
-    oDoc.CurrentController.select(oSheet)
+    oDoc.CurrentController.ActiveSheet = oSheet
 
     oCellRangeAddr = CellRangeAddress()
     # recupero l'index del foglio
     oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
 
-    # @@ mah!!!
-    diz_vv = {}
+    # mappa le voci computo con le righe del foglio
+    # (ad esempio per riferimenti tipo vedi_voce)
+    mappaVociRighe = {}
 
     # numero di sequenza delle voci del computo
     numeroVoce = 1
@@ -929,9 +930,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         else:
             # inserisce la nuova voce (vuota) nel computo
             LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
-            # @@ PROVVISORIO !!! UTILIZZA IL CONTROLLER, DA ELIMINARE
-            # ROMPE LE SCATOLE SOLO SUL "CAMBIASEGNO" AL MOMENTO
-            PL._gotoCella(1, lrow + 1)
 
         # id dell'elenco prezzi
         ID = el.get('id_ep')
@@ -943,9 +941,12 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         except Exception:
             pass
 
-        # @@@ mah....
-        id_vc = el.get('id_vc')
-        diz_vv[id_vc] = lrow + 1
+        # id della voce computo corrente nell' XPWE
+        idVoceComputo = el.get('id_vc')
+
+        # mappa l'id della voce con la riga del computo
+        # in modo da poter gestire i VEDI_VOCE successivamente
+        mappaVociRighe[idVoceComputo] = lrow + 1
 
         # scrive il numero sequenziale della voce corrente
         # nella prima colonna, seconda riga della voce
@@ -987,12 +988,14 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 )
                 oSheet.getCellByPosition(1, startRow).Value = oSheet.getCellByPosition(1, startRow).Value
             for mis in lista_righe:
+
                 # descrizione
                 if mis[0] is not None:
                     descrizione = mis[0].strip()
                     oSheet.getCellByPosition(2, startRow).String = descrizione
                 else:
                     descrizione = ''
+
                 # parti uguali
                 if mis[3] is not None:
                     try:
@@ -1000,6 +1003,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     except ValueError:
                         # tolgo evenutali '=' in eccesso
                         oSheet.getCellByPosition(5, startRow).Formula = '=' + str(mis[3]).split('=')[-1]
+
                 # lunghezza
                 if mis[4] is not None:
                     try:
@@ -1007,6 +1011,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     except ValueError:
                         # tolgo evenutali '=' in eccesso
                         oSheet.getCellByPosition(6, startRow).Formula = '=' + str(mis[4]).split('=')[-1]
+
                 # larghezza
                 if mis[5] is not None:
                     try:
@@ -1014,6 +1019,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     except ValueError:
                         # tolgo evenutali '=' in eccesso
                         oSheet.getCellByPosition(7, startRow).Formula = '=' + str(mis[5]).split('=')[-1]
+
                 # HPESO
                 if mis[6] is not None:
                     try:
@@ -1021,16 +1027,17 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                     except Exception:
                         # tolgo evenutali '=' in eccesso
                         oSheet.getCellByPosition(8, startRow).Formula = '=' + str(mis[6]).split('=')[-1]
+
                 if mis[8] == '2':
                     print("\n\nparziale_core: startRow=", startRow)
                     PL.parziale_core(oSheet, startRow)
                     oSheet.getRows().removeByIndex(startRow + 1, 1)
                     descrizione = ''
+
                 if mis[9] != '-2':
-                    vedi = diz_vv.get(mis[9])
+                    vedi = mappaVociRighe.get(mis[9])
                     try:
-                        print("\n\nVedi voce: startRow=", startRow, "  vedi=", vedi)
-                        PL.vedi_voce_xpwe(oSheet, startRow, vedi, mis[8])
+                        PL.vedi_voce_xpwe(oSheet, startRow, vedi)
                     except Exception:
                         Dialogs.Exclamation(Title="Attenzione",
                                             Text="Il file di origine è particolarmente disordinato.\n"
@@ -1051,6 +1058,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                                     oSheet.getCellByPosition(x, startRow).Value = abs(oSheet.getCellByPosition(x, startRow).Value)
                             except Exception:
                                 pass
+                        print("invertiUnSegno(", startRow, ")")
                         LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
                 except Exception:
                     pass

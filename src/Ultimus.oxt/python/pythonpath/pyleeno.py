@@ -6865,8 +6865,10 @@ def parziale_verifica():
 
 
 ########################################################################
-def vedi_voce_xpwe(oSheet, lrow, vRif, flags=''):
-    """(riga d'inserimento, riga di riferimento)"""
+def vedi_voce_xpwe(oSheet, lrow, vRif):
+    """
+    (riga d'inserimento, riga di riferimento)
+    """
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, vRif)
     # sStRange.RangeAddress
     idv = sStRange.RangeAddress.StartRow + 1
@@ -6895,12 +6897,6 @@ def vedi_voce_xpwe(oSheet, lrow, vRif, flags=''):
        str(lrow + 1) + ')=0;"";PRODUCT(E' +
        str(lrow + 1) + ':I' +
        str(lrow + 1) + '))')
-
-    if flags in ('32769', '32801'):  # 32768
-        print("invertiSegnoRow(", lrow, ")")
-        inverti_segno()
-        #invertiSegnoRow(oSheet, lrow)
-        oSheet.getCellRangeByPosition(2, lrow, 10, lrow).CharColor = 16724787
 
 
 ########################################################################

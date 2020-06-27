@@ -924,11 +924,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         except UnboundLocalError:
             pass
 
-        # si riposiziona dopo l'ultima voce
-        # @@@ IN TEORIA NON SERVE, VISTO CHE SI OPERA IN SEQUENZA...
-        #lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
-
-
         if elaborato == 'CONTABILITA':
             PL.ins_voce_contab(lrow=lrow, elaborato=0)
         else:
@@ -958,7 +953,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         numeroVoce += 1
 
         # si posiziona ad inizio area misure
-        startCol = 2
         startRow = lrow + 2
 
         lista_righe = el.get('lista_rig')
@@ -966,7 +960,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
         # compila le righe di misurazione
         if nrighe > 0:
-            endCol = startCol + len(lista_righe[0])
             endRow = startRow + nrighe
 
             # se la voce ha più di una riga di misurazione,

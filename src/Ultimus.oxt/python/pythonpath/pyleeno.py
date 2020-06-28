@@ -694,7 +694,6 @@ def MENU_copia_sorgente_per_git():
         pass
 
     make_pack(bar=1)
-    oxt_path = uno.fileUrlToSystemPath(LeenO_path())
     if sys.platform == 'linux' or sys.platform == 'darwin':
         dest = '/media/giuserpe/PRIVATO/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         if not os.path.exists(dest):
@@ -728,7 +727,6 @@ def MENU_copia_sorgente_per_git():
             'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"',
             shell=True,
             stdout=subprocess.PIPE)
-    # ~ distutils.dir_util.copy_tree(oxt_path, dest)
     return
 
 
@@ -743,27 +741,59 @@ def MENU_avvia_IDE():
 
 
 def avvia_IDE():
-    '''Avvia la modifica di pyleeno.py con geany'''
+    '''Avvia la modifica di pyleeno.py con geany o eric6'''
     basic_LeenO('file_gest.avvia_IDE')
     oDoc = LeenoUtils.getDocument()
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
     oLayout.showElement(
         "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+    try:
+        if oDoc.getSheets().getByName('S1').getCellByPosition(
+                7, 338).String == '':
+            src_oxt = '_LeenO'
+        else:
+            src_oxt = oDoc.getSheets().getByName('S1').getCellByPosition(
+                7, 338).String
+    except Exception:
+        pass
+    
     if sys.platform == 'linux' or sys.platform == 'darwin':
-        subprocess.Popen('caja ' + LeenO_path(),
+
+        dest = '/media/giuserpe/PRIVATO/LeenO/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
+        if not os.path.exists(dest):
+            try:
+                dest = os.getenv(
+                    "HOME") + '/' + src_oxt + '/leeno/src/Ultimus.oxt/'
+                os.makedirs(dest)
+                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/leeno/bin/')
+                os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
+            except FileExistsError:
+                pass
+       
+        subprocess.Popen('caja '+ dest,
                          shell=True,
                          stdout=subprocess.PIPE)
-        subprocess.Popen('geany ' + LeenO_path() +
-                         '/python/pythonpath/pyleeno.py',
+        subprocess.Popen('eric6 ' + dest + '/pyleeno.py',
                          shell=True,
                          stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
+        if not os.path.exists('w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/'):
+            try:
+                os.makedirs(
+                    os.getenv("HOMEPATH") + '\\' + src_oxt +
+                    '\\leeno\\src\\Ultimus.oxt\\')
+            except FileExistsError:
+                pass
+            dest = os.getenv("HOMEDRIVE") + os.getenv(
+                "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
+        else:
+            dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         subprocess.Popen('explorer.exe ' +
-                         'W:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt',
+                         dest, 
                          shell=True,
                          stdout=subprocess.PIPE)
         subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
-                         'W:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt' +
+                         dest +
                          '/python/pythonpath/pyleeno.py',
                          shell=True,
                          stdout=subprocess.PIPE)

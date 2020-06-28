@@ -728,7 +728,7 @@ def MENU_copia_sorgente_per_git():
             'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"',
             shell=True,
             stdout=subprocess.PIPE)
-    distutils.dir_util.copy_tree(oxt_path, dest)
+    # ~ distutils.dir_util.copy_tree(oxt_path, dest)
     return
 
 

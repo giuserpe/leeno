@@ -9,19 +9,12 @@ import subprocess
 import time
 import atexit
 
-import inspect
 import importlib
 
-#
 from os import listdir
 from os.path import isfile, join
 
-import unohelper
-from com.sun.star.task import XJobExecutor
-#
-
 import uno
-from com.sun.star.beans import PropertyValue
 from com.sun.star.connection import NoConnectException
 
 # openoffice path
@@ -201,41 +194,122 @@ reloadLeenoModules()
 
 desktop = lo['desktop']
 
-import uno
+
 def loadDocument(filename):
     url = uno.systemPathToFileUrl(filename)
     oDoc = desktop.loadComponentFromURL(url, "_blank", 0, tuple())
     return oDoc
 
-'''
-filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/EsempioComputoDaGiuseppe.xpwe"
+from xml.etree.ElementTree import ElementTree
+
+filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/Livorno_2020.xml"
 tree = ElementTree()
 tree.parse(filename)
 
-root = tree.getroot()
-misurazioni = root.find('PweMisurazioni')
+from io import StringIO  # for Python 2 import from StringIO instead
+import xml.etree.ElementTree as ET
 
-PweElencoPrezzi = misurazioni.getchildren()[0]
+# legge il file XML in una stringa
+with open(filename, 'r') as file:
+  data = file.read()
+
+# lo analizza eliminando i namespaces
+# (che qui rompono solo le scatole...)
+it = ET.iterparse(StringIO(data))
+for _, el in it:
+    # strip namespaces
+    _, _, el.tag = el.tag.rpartition('}')
+root = it.root
+
+intestazione = root.find('intestazione')
+autore = intestazione.attrib['autore']
+versione = intestazione.attrib['versione']
+
+dettaglio = intestazione.find('dettaglio')
+anno = dettaglio.attrib['anno']
+area = dettaglio.attrib['area']
+
+copyright = intestazione.find('copyright')
+ccType = copyright.attrib['tipo']
+ccDesc = copyright.attrib['descrizione']
+
+contenuto = root.find('Contenuto')
+articoli = contenuto.findall('Articolo')
+
+artList = {}
+superCatList = {}
+catList = {}
+
+for articolo in articoli:
+    # rimuovo il 'TOS20_' dal codice
+    codice = articolo.attrib['codice'].split('_')[1]
+
+    # divide il codice per ottenere i codici di supercategoria e categoria
+    codiceSplit = codice.split('.')
+    codiceSuperCat = codiceSplit[0]
+    codiceCat = codiceSuperCat + '.' + codiceSplit[1]
+
+    # estrae supercategoria e categoria
+    superCat = articolo.find('tipo').text
+    cat = articolo.find('capitolo').text
+
+    # li inserisce se necessario nelle liste
+    if not codiceSuperCat in superCatList:
+        superCatList[codiceSuperCat] = superCat
+    if not codiceCat in catList:
+        catList[codiceCat] = cat
+
+    voce = articolo.find('voce').text
+    if voce is None:
+        voce = ''
+    art = articolo.find('articolo').text
+    if art is None:
+        art = ''
+    desc = voce + '\n' + art
+    um = articolo.find('um').text
+    prezzo = articolo.find('prezzo').text
+
+    # in 'sto benedetto prezzario ci sono numeri (grandi) con un punto
+    # per separare le migliaia OLTRE al punto per separare i decimali
+    # quindi... se trovo più di un punto decimale, devo eliminare i primi
+    if prezzo is not None:
+        prSplit = prezzo.split('.')
+        prezzo = ''
+        for p in prSplit[0:-1]:
+            prezzo += p
+        prezzo += '.' + prSplit[-1]
+        prezzo = float(prezzo)
+
+    analisi = articolo.find('Analisi')
+    if analisi is not None:
+        # se c'è l'analisi, estrae incidenza MDO e costi sicurezza da quella
+        try:
+            oneriSic = float(analisi.find('onerisicurezza').attrib['valore'])
+        except Exception:
+            oneriSic = None
+
+        try:
+            mdo = float(analisi.find('incidenzamanodopera').attrib['percentuale'])
+        except Exception:
+            mdo = None
+    else:
+        # niente analisi, la voce non dispone di incidenza MDO e costi sicurezza
+        oneriSic = None
+        mdo = None
+
+    # compone l'articolo e lo mette in lista
+    artList[codice] = {
+        'codice': codice,
+        'desc': desc,
+        'um': um,
+        'prezzo': prezzo,
+        'mdo': mdo,
+        'sicurezza': oneriSic
+    }
+
+
+#pweElencoPrezzi = misurazioni.getchildren()[0]
 # leggo l'elenco prezzi
-epitems = PweElencoPrezzi.findall('EPItem')
-'''
-#oDoc = loadDocument("/storage/Scaricati/COMPUTI_METRICI/LEENO/PREZZARI/PrezzarioEmiliaRomagna2019.ods")
-oDoc = LeenoUtils.getDocument()
-oSheet = oDoc.Sheets[0]
-
-contr = oDoc.CurrentController
-
-# get doc from sheet
-enumeration = desktop.Components.createEnumeration()
-d = enumeration.nextElement()
-sheets = d.Sheets
-sheet = sheets[0]
-
+#epitems = PweElencoPrezzi.findall('EPItem')
 
 print("\nDONE\n")
-
-
-
-
-
-

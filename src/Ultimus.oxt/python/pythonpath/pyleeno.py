@@ -5716,7 +5716,10 @@ def ins_voce_contab(lrow=0, arg=1):
 ########################################################################
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #
 def attiva_contabilita():
-    '''Se presenti, attiva e visualizza le tabelle di contabilità'''
+    '''
+    Se presenti, attiva e visualizza le tabelle di contabilità
+    @@@ MODIFICA IN CORSO CON 'LeenoContab.generaContabilita'
+    '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     if oDoc.Sheets.hasByName('S1'):
@@ -5738,7 +5741,10 @@ def attiva_contabilita():
 
 ########################################################################
 def svuota_contabilita():
-    '''Ricrea il foglio di contabilità partendo da zero.'''
+    '''
+    Ricrea il foglio di contabilità partendo da zero.
+    @@@ MODIFICA IN CORSO CON 'LeenoContab.svuotaContabilita'
+    '''
     oDoc = LeenoUtils.getDocument()
     for n in range(1, 20):
         if oDoc.NamedRanges.hasByName('#Lib#' + str(n)):

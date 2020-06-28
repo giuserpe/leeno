@@ -837,8 +837,9 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     if elaborato == 'VARIANTE':
         oSheet = LeenoVariante.generaVariante(oDoc, False)
     elif elaborato == 'CONTABILITA':
-        PL.attiva_contabilita()
-        oSheet = oDoc.getSheets().getByName(elaborato)
+        #PL.attiva_contabilita()
+        #oSheet = oDoc.getSheets().getByName(elaborato)
+        oSheet = LeenoContab.generaContabilita(oDoc)
     else:
         oSheet = oDoc.getSheets().getByName(elaborato)
 

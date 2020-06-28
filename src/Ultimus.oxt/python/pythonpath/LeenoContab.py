@@ -6,6 +6,8 @@ import SheetUtils
 import LeenoSheetUtils
 import LeenoComputo
 import Dialogs
+import pyleeno as PL
+
 
 def sbloccaContabilita(oSheet, lrow):
     '''
@@ -31,6 +33,10 @@ def sbloccaContabilita(oSheet, lrow):
             return True
         return False
     return True
+
+
+# ###############################################################
+
 
 def insertVoceContabilita(oSheet, lrow):
     '''
@@ -127,3 +133,129 @@ def insertVoceContabilita(oSheet, lrow):
             return
         pesca_cod()
     '''
+
+# ###############################################################
+
+
+def svuotaContabilita(oDoc):
+    '''
+    Ricrea il foglio di contabilità partendo da zero.
+    '''
+    for n in range(1, 20):
+        if oDoc.NamedRanges.hasByName('#Lib#' + str(n)):
+            oDoc.NamedRanges.removeByName('#Lib#' + str(n))
+            oDoc.NamedRanges.removeByName('#SAL#' + str(n))
+            oDoc.NamedRanges.removeByName('#Reg#' + str(n))
+    for el in ('Registro', 'SAL', 'CONTABILITA'):
+        if oDoc.Sheets.hasByName(el):
+            oDoc.Sheets.removeByName(el)
+
+    oDoc.Sheets.insertNewByName('CONTABILITA', 3)
+    oSheet = oDoc.Sheets.getByName('CONTABILITA')
+
+    SheetUtils.setTabColor(oSheet, 16757935)
+    oSheet.getCellRangeByName('C1').String = 'CONTABILITA'
+    oSheet.getCellRangeByName('C1').CellStyle = 'comp Int_colonna'
+    oSheet.getCellRangeByName('C1').CellBackColor = 16757935
+    oSheet.getCellByPosition(0, 2).String = 'N.'
+    oSheet.getCellByPosition(1, 2).String = 'Articolo\nData'
+    oSheet.getCellByPosition(2, 2).String = 'LAVORAZIONI\nO PROVVISTE'
+    oSheet.getCellByPosition(5, 2).String = 'P.U.\nCoeff.'
+    oSheet.getCellByPosition(6, 2).String = 'Lung.'
+    oSheet.getCellByPosition(7, 2).String = 'Larg.'
+    oSheet.getCellByPosition(8, 2).String = 'Alt.\nPeso'
+    oSheet.getCellByPosition(9, 2).String = 'Quantità\nPositive'
+    oSheet.getCellByPosition(11, 2).String = 'Quantità\nNegative'
+    oSheet.getCellByPosition(13, 2).String = 'Prezzo\nunitario'
+    oSheet.getCellByPosition(15, 2).String = 'Importi'
+    oSheet.getCellByPosition(16, 2).String = 'Incidenza\nsul totale'
+    oSheet.getCellByPosition(17, 2).String = 'Sicurezza\ninclusa'
+    oSheet.getCellByPosition(18, 2).String = 'importo totale\nsenza errori'
+    oSheet.getCellByPosition(19, 2).String = 'Lib.\nN.'
+    oSheet.getCellByPosition(20, 2).String = 'Lib.\nP.'
+    oSheet.getCellByPosition(22, 2).String = 'flag'
+    oSheet.getCellByPosition(23, 2).String = 'SAL\nN.'
+    oSheet.getCellByPosition(25, 2).String = 'Importi\nSAL parziali'
+    oSheet.getCellByPosition(27, 2).String = 'Sicurezza\nunitaria'
+    oSheet.getCellByPosition(28, 2).String = 'Materiali\ne Noli €'
+    oSheet.getCellByPosition(29, 2).String = 'Incidenza\nMdO %'
+    oSheet.getCellByPosition(30, 2).String = 'Importo\nMdO'
+    oSheet.getCellByPosition(31, 2).String = 'Super Cat'
+    oSheet.getCellByPosition(32, 2).String = 'Cat'
+    oSheet.getCellByPosition(33, 2).String = 'Sub Cat'
+    #  oSheet.getCellByPosition(34,2).String = 'tag B'sub Scrivi_header_moduli
+    #  oSheet.getCellByPosition(35,2).String = 'tag C'
+    oSheet.getCellByPosition(36, 2).String = 'Importi\nsenza errori'
+    oSheet.getCellByPosition(0, 2).Rows.Height = 800
+    #  colore colonne riga di intestazione
+    oSheet.getCellRangeByPosition(0, 2, 36, 2).CellStyle = 'comp Int_colonna_R'
+    oSheet.getCellByPosition(0, 2).CellStyle = 'comp Int_colonna_R_prima'
+    oSheet.getCellByPosition(18, 2).CellStyle = 'COnt_noP'
+    oSheet.getCellRangeByPosition(0, 0, 0, 3).Rows.OptimalHeight = True
+    #  riga di controllo importo
+    oSheet.getCellRangeByPosition(0, 1, 36, 1).CellStyle = 'comp In testa'
+    oSheet.getCellByPosition(2, 1).String = 'QUESTA RIGA NON VIENE STAMPATA'
+    oSheet.getCellRangeByPosition(0, 1, 1, 1).merge(True)
+    oSheet.getCellByPosition(13, 1).String = 'TOTALE:'
+    oSheet.getCellByPosition(20, 1).String = 'SAL SUCCESSIVO:'
+
+    oSheet.getCellByPosition(25, 1).Formula = '=$P$2-SUBTOTAL(9;$P$2:$P$2)'
+
+    oSheet.getCellByPosition(15,
+                             1).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori
+    oSheet.getCellByPosition(0, 1).Formula = '=AK2'  # importo lavori
+    oSheet.getCellByPosition(
+        17, 1).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
+
+    oSheet.getCellByPosition(
+        28, 1).Formula = '=SUBTOTAL(9;AC3:AC4)'  # importo materiali
+    oSheet.getCellByPosition(29,
+                             1).Formula = '=AE2/Z2'  # Incidenza manodopera %
+    oSheet.getCellByPosition(29, 1).CellStyle = 'Comp TOTALI %'
+    oSheet.getCellByPosition(
+        30, 1).Formula = '=SUBTOTAL(9;AE3:AE4)'  # importo manodopera
+    oSheet.getCellByPosition(
+        36, 1).Formula = '=SUBTOTAL(9;AK3:AK4)'  # importo certo
+
+    #  rem riga del totale
+    oSheet.getCellByPosition(2, 3).String = 'T O T A L E'
+    oSheet.getCellByPosition(15,
+                             3).Formula = '=SUBTOTAL(9;P3:P4)'  # importo lavori
+    oSheet.getCellByPosition(
+        17, 3).Formula = '=SUBTOTAL(9;R3:R4)'  # importo sicurezza
+    oSheet.getCellByPosition(
+        30, 3).Formula = '=SUBTOTAL(9;AE3:AE4)'  # importo manodopera
+    oSheet.getCellRangeByPosition(0, 3, 36, 3).CellStyle = 'Comp TOTALI'
+    #  rem riga rossa
+    oSheet.getCellByPosition(0, 4).String = 'Fine Computo'
+    oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
+
+    # @@_gotoCella(0, 2)
+
+    LeenoSheetUtils.setLarghezzaColonne(oSheet)
+
+    return oSheet
+
+
+# ###############################################################
+
+
+def generaContabilita(oDoc):
+    '''
+    Ritorna il foglio di contabilità, se presente
+    Altrimenti lo genera
+    '''
+    if oDoc.Sheets.hasByName('S1'):
+        oDoc.Sheets.getByName('S1').getCellByPosition(7, 327).Value = 1
+        if oDoc.Sheets.hasByName('CONTABILITA'):
+            oSheet = oDoc.Sheets.getByName('CONTABILITA')
+        else:
+            #oSheet = oDoc.Sheets.insertNewByName('CONTABILITA', 5)
+            oSheet = svuotaContabilita(oDoc)
+            insertVoceContabilita(oSheet, 0)
+
+            PL.basic_LeenO("Menu.eventi_assegna")
+            LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
+
+    return oSheet
+

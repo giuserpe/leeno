@@ -187,6 +187,10 @@ def cercaPartenza(oSheet, lrow):
     elif oSheet.getCellByPosition(0, lrow).CellStyle in ('An-lavoraz-Cod-sx', 'Comp TOTALI'):
         partenza = (oSheet.Name, lrow)
 
+    # nulla di quanto sopra
+    else:
+        partenza = (oSheet.Name, lrow, '')
+
     return partenza
 
 

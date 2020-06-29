@@ -259,39 +259,35 @@ def LeenO_path():
 
 ########################################################################
 
+def creaComputo(arg=1):
+    '''arg  { integer } : 1 mostra il dialogo di salvataggio file'''
+    desktop = LeenoUtils.getDesktop()
+    opz = PropertyValue()
+    opz.Name = 'AsTemplate'
+    opz.Value = True
+    document = desktop.loadComponentFromURL(
+        LeenO_path() + '/template/leeno/Computo_LeenO.ots', "_blank", 0,
+        (opz, ))
+    autoexec()
+    if arg == 1:
+        DLG.MsgBox(
+            "Prima di procedere è consigliabile salvare il lavoro.\n"
+            "Provvedi subito a dare un nome al file di computo...",
+            "Dai un nome al file...")
+        salva_come()
+        DlgMain()
+    return document
 
-class New_file:
-    def __init__(self):  # , computo):
-        pass
 
-    def computo(arg=1):
-        '''arg  { integer } : 1 mostra il dialogo di salvataggio file'''
-        desktop = LeenoUtils.getDesktop()
-        opz = PropertyValue()
-        opz.Name = 'AsTemplate'
-        opz.Value = True
-        document = desktop.loadComponentFromURL(
-            LeenO_path() + '/template/leeno/Computo_LeenO.ots', "_blank", 0,
-            (opz, ))
-        autoexec()
-        if arg == 1:
-            DLG.MsgBox(
-                '''Prima di procedere è consigliabile salvare il lavoro.
-Provvedi subito a dare un nome al file di computo...''',
-                'Dai un nome al file...')
-            salva_come()
-            DlgMain()
-        return document
-
-    def usobollo():
-        desktop = LeenoUtils.getDesktop()
-        opz = PropertyValue()
-        opz.Name = 'AsTemplate'
-        opz.Value = True
-        document = desktop.loadComponentFromURL(
-            LeenO_path() + '/template/offmisc/UsoBollo.ott', "_blank", 0,
-            (opz, ))
-        return document
+def creaUsobollo():
+    desktop = LeenoUtils.getDesktop()
+    opz = PropertyValue()
+    opz.Name = 'AsTemplate'
+    opz.Value = True
+    document = desktop.loadComponentFromURL(
+        LeenO_path() + '/template/offmisc/UsoBollo.ott', "_blank", 0,
+        (opz, ))
+    return document
 
 
 ########################################################################
@@ -299,7 +295,7 @@ Provvedi subito a dare un nome al file di computo...''',
 
 def MENU_nuovo_computo():
     '''Crea un nuovo computo vuoto.'''
-    New_file.computo()
+    creaComputo()
 
 
 ########################################################################
@@ -307,7 +303,7 @@ def MENU_nuovo_computo():
 
 def MENU_nuovo_usobollo():
     '''Crea un nuovo documento in formato uso bollo.'''
-    New_file.usobollo()
+    creaUsobollo()
 
 
 ########################################################################
@@ -756,7 +752,7 @@ def avvia_IDE():
                 7, 338).String
     except Exception:
         pass
-    
+
     if sys.platform == 'linux' or sys.platform == 'darwin':
 
         dest = '/media/giuserpe/PRIVATO/LeenO/_SRC/leeno/src/Ultimus.oxt/python/pythonpath'
@@ -769,7 +765,7 @@ def avvia_IDE():
                 os.makedirs(os.getenv("HOME") + '/' + src_oxt + '/_SRC/OXT')
             except FileExistsError:
                 pass
-       
+
         subprocess.Popen('caja '+ dest,
                          shell=True,
                          stdout=subprocess.PIPE)
@@ -789,7 +785,7 @@ def avvia_IDE():
         else:
             dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
         subprocess.Popen('explorer.exe ' +
-                         dest, 
+                         dest,
                          shell=True,
                          stdout=subprocess.PIPE)
         subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
@@ -7322,7 +7318,7 @@ def autorun():
 ########################################################################
 def autoexec():
     '''
-    questa è richiamata da New_File()
+    questa è richiamata da creaComputo()
     '''
     inizializza()
 
@@ -7872,7 +7868,7 @@ def DlgMain():
            SheetUtils.getUsedArea(oSheet).EndColumn == 0 and
            SheetUtils.getUsedArea(oSheet).EndRow == 0):
             oDoc.close(True)
-        New_file.computo()
+        creaComputo()
     Toolbars.Vedi()
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
     oDlgMain = dp.createDialog(

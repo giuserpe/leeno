@@ -904,24 +904,10 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport_XmlSix.MENU_Import_Ep_XML_SIX</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_ImportElencoPrezziXML</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzario XML-SIX</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="IE025" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_XML_toscana_import</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzario Regione Toscana XML</value>
+                  <value>Importa voci da prezzari in formato XML</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>

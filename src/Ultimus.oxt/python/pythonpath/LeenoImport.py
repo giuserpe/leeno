@@ -1,30 +1,279 @@
 """
     LeenO - modulo di importazione prezzari
 """
+import os
 import threading
-from xml.etree.ElementTree import ElementTree
 import uno
 from com.sun.star.beans import PropertyValue
 
-from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
-                                          ANNOTATION, FORMULA,
-                                          OBJECTS, EDITATTR)
+from io import StringIO
+import xml.etree.ElementTree as ET
 
 import LeenoUtils
 import pyleeno as PL
 import LeenoDialogs as DLG
-import LeenoToolbars as Toolbars
 
 import SheetUtils
 
 import Dialogs
 
+import LeenoImport_XmlSix
+import LeenoImport_XmlToscana
 
-def ImportErrorDlg(msg):
-    """ Generico dialogo di errore di importazione con messaggio
-        DA FARE
-    """
-    print("Import error:", msg)
+
+def fixParagraphSize(txt):
+    '''
+    corregge il paragrafo della descrizione negli elenchi prezzi
+    in modo che LibreOffice calcoli correttamente l'altezza della cella
+    '''
+    minLen = 130
+    splitted = txt.split('\n')
+    if len(splitted) > 1:
+        spl0 = splitted[0]
+        spl1 = splitted[1]
+        if len(spl0) + len(spl1) < minLen:
+            dl = minLen - len(spl0) - len(spl1)
+            spl0 = spl0 + dl * " "
+            txt = spl0 + '\n' + spl1
+            for t in splitted[2:]:
+                txt += '\n' + t
+    return txt
+
+def findXmlParser(xmlText):
+    '''
+    fa un pre-esame del contenuto xml della stringa fornita
+    per determinare se si tratta di un tipo noto
+    (nel qual caso fornisce un parser adatto) oppure no
+    (nel qual caso avvisa di inviare il file allo staff)
+    '''
+
+    parsers = {
+        'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
+        'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
+    }
+
+    # controlla se il file è di tipo conosciuto...
+    for pattern, xmlParser in parsers.items():
+        if pattern in xmlText:
+            # si, ritorna il parser corrispondente
+            return xmlParser
+
+    # non trovato... ritorna None
+    return None
+
+def compilaElencoPrezzi(oDoc, dati, progress):
+    '''
+    Scrive la pagina dell' Elenco Prezzi di un documento LeenO
+    Il documento deve essere vuoto (appena creato)
+    I dati DEVONO essere nel formato seguente :
+
+        articolo = {
+            'codice': codice,
+            'desc': desc,
+            'um': um,
+            'prezzo': prezzo,
+            'mdo': mdo,
+            'sicurezza': oneriSic
+        }
+        artList = { codice : articolo, ... }
+
+        superCatList = { codice : descrizione, ... }
+        catList = { codice : descrizione, ... }
+
+        dati = {
+            'titolo': titolo,
+            'superCategorie': superCatList,
+            'categorie': catList,
+            'articoli' : artList
+        }
+
+        progress è una progressbar già visualizzata
+
+    '''
+
+    # inserisce supercategorie e categorie nella lista
+    # articoli, creando quindi un blocco unico
+    artList = dati['articoli']
+    superCatList = dati['superCategorie']
+    catList = dati['categorie']
+    for codice, desc in superCatList.items():
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': '',
+            'prezzo': '',
+            'mdo': '',
+            'sicurezza': ''
+        }
+    for codice, desc in catList.items():
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': '',
+            'prezzo': '',
+            'mdo': '',
+            'sicurezza': ''
+        }
+
+    # ordina l'elenco per codice articolo
+    sortedArtList = sorted(artList.items())
+
+    # ora, per velocità di compilazione, deve creare un array
+    # contenente tante tuples quanti articoli
+    # ognuna con la sequenza corretta per l'inserimento nel foglio
+    # (codice, desc, um, sicurezza, prezzo, mdo)
+    artArray = []
+    for item in sortedArtList:
+        itemData = item[1]
+        prezzo = itemData['prezzo']
+        mdo = itemData['mdo']
+        if isinstance(prezzo, str) or isinstance(mdo, str):
+            mdoVal = ''
+        else:
+            mdoVal = prezzo * mdo
+        artArray.append((
+            itemData['codice'],
+            itemData['desc'],
+            itemData['um'],
+            itemData['sicurezza'],
+            prezzo,
+            mdo,
+            mdoVal
+        ))
+
+    numItems = len(artArray)
+    numColumns = len(artArray[0])
+
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellByPosition(2, 2).String = dati['titolo']
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getCellByPosition(1, 1).String = dati['titolo']
+    oSheet.getRows().insertByIndex(4, numItems)
+
+    # riga e colonna di partenza del blocco da riempire
+    startRow = 4
+    startCol = 0
+
+    # fissa i limiti della progress
+    progress.setLimits(0, numItems)
+    progress.setValue(0)
+
+    item = 0
+    step = 100
+    while item < numItems:
+        progress.setValue(item)
+        sliced = artArray[item:item + step]
+        num = len(sliced)
+        oRange = oSheet.getCellRangeByPosition(
+            startCol,
+            startRow + item,
+            # l'indice parte da 0
+            startCol + numColumns - 1,
+            startRow + item + num - 1)
+        oRange.setDataArray(sliced)
+
+        item += step
+
+    oSheet.getRows().removeByIndex(3, 1)
+
+    return True
+
+
+def MENU_ImportElencoPrezziXML():
+    '''
+    Routine di importazione di un prezzario XML in tabella Elenco Prezzi
+    '''
+    filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
+    if filename is None:
+        return
+
+    # se il file non contiene un titolo, utilizziamo il nome del file
+    # come titolo di default
+    defaultTitle = os.path.split(filename)[1]
+
+    # legge il file XML in una stringa
+    with open(filename, 'r', errors='ignore') as file:
+      data = file.read()
+
+    # cerca un parser adatto
+    xmlParser = findXmlParser(data)
+
+    # se non trovato, il file è di tipo sconosciuto
+    if xmlParser is None:
+        Dialogs.Exclamation(
+            Title = "File sconosciuto",
+            Text = "Il file fornito è di tipo sconosciuto\n"
+                   "Potete inviarne una copia allo staff di LeenO\n"
+                   "affinchè possa venire incluso nella prossima versione"
+        )
+        return
+
+    # lo analizza eliminando i namespaces
+    # (che qui rompono solo le scatole...)
+    it = ET.iterparse(StringIO(data))
+    for _, el in it:
+        # strip namespaces
+        _, _, el.tag = el.tag.rpartition('}')
+    root = it.root
+
+    try:
+        dati = xmlParser(root, defaultTitle)
+
+    except Exception:
+        Dialogs.Exclamation(
+           Title="Errore nel file XML",
+           Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
+        return
+
+    # il parser può gestirsi l'errore direttamente, nel qual caso
+    # ritorna None ed occorre uscire
+    if dati is None:
+        return
+
+    # creo nuovo file di computo
+    oDoc = PL.creaComputo(0)
+
+    # visualizza la progressbar
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario",
+        Text="Compilazione prezzario in corso")
+    progress.show()
+
+    # compila l'elenco prezzi
+    compilaElencoPrezzi(oDoc, dati, progress)
+
+    # si posiziona sul foglio di computo appena caricato
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+
+    # messaggio di ok
+    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+
+    # nasconde la progressbar
+    progress.hide()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ########################################################################
@@ -456,4 +705,3 @@ def MENU_fuf():
     PL.ordina_col(3)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-

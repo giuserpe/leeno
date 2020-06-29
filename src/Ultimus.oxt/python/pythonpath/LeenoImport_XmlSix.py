@@ -1,97 +1,42 @@
 """
-    LeenO - modulo di importazione prezzari formato XML/SIX
+    LeenO - modulo parser XML per il formato XML-SIX
 """
-from xml.etree.ElementTree import ElementTree
+from io import StringIO
+import xml.etree.ElementTree as ET
 
-import LeenoUtils
 import pyleeno as PL
 
 import Dialogs
+import LeenoImport
 
-
-def _Fill_Ep(nome, lista_articoli):
+def parseXML(root, defaultTitle):
     '''
-    Crea un nuovo file di computo e lo riempie con la lista articoli
-    Ritorna True se OK, False altrimenti
+    estrae dal file XML i dati dell'elenco prezzi
+    I dati estratti avranno il formato seguente:
+
+        articolo = {
+            'codice': codice,
+            'desc': desc,
+            'um': um,
+            'prezzo': prezzo,
+            'mdo': mdo,
+            'sicurezza': oneriSic
+        }
+        artList = { codice : articolo, ... }
+
+        superCatList = { codice : descrizione, ... }
+        catList = { codice : descrizione, ... }
+
+        dati = {
+            'titolo': titolo,
+            'superCategorie': superCatList,
+            'categorie': catList,
+            'articoli' : artList
+        }
     '''
-    progress = None
-    #try:
-    # creo nuovo file di computo
-    PL.New_file.computo(0)
 
-    # e lo compilo
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName('S2')
-    oSheet.getCellByPosition(2, 2).String = nome
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    oSheet.getCellByPosition(1, 1).String = nome
-    oSheet.getRows().insertByIndex(4, len(lista_articoli))
-
-    lista_come_array = tuple(lista_articoli)
-    # Parametrizzo il range di celle a seconda della dimensione della lista
-    scarto_colonne = 0  # numero colonne da saltare a partire da sinistra
-    scarto_righe = 4  # numero righe da saltare a partire dall'alto
-    colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
-    righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
-
-    progress = Dialogs.Progress(
-        Title="Importazione prezzario XML-SIX",
-        Text="Compilazione prezzario in corso",
-        MaxVal=righe_lista)
-    progress.show()
-
-    riga = 0
-    step = 100
-    while riga < righe_lista:
-        progress.setValue(riga)
-        sliced = lista_come_array[riga:riga + step]
-        num = len(sliced)
-        oRange = oSheet.getCellRangeByPosition(
-            scarto_colonne,
-            scarto_righe + riga,
-            # l'indice parte da 0
-            colonne_lista + scarto_colonne - 1,
-            scarto_righe + riga + num - 1)
-        oRange.setDataArray(sliced)
-
-        riga = riga + step
-
-    oSheet.getRows().removeByIndex(3, 1)
-    # ~ struttura_Elenco()
-
-    progress.hide()
-    oDoc.CurrentController.setActiveSheet(oSheet)
-    Dialogs.Ok(Title="Operazione completata", Text="Importazione eseguita con successo")
-    return True
-
-    #except Exception:
-    #    if progress is not None:
-    #        progress.hideDialog()
-    #    Dialogs.Exclamation(Title="Errore", Text="Errore nella compilazione del prezzario\nSegnalare il problema sul sito")
-    #    return False
-
-
-def MENU_Import_Ep_XML_SIX():
-    '''
-    Routine di importazione di un prezzario XML-SIX in tabella Elenco Prezzi
-    del template COMPUTO.
-    '''
-    newParagraph = "\n"
-
-    filename = Dialogs.FileSelect('Scegli il file XML-SIX da importare', '*.xml')
-    if filename is None:
-        return
-
-    tree = ElementTree()
-    try:
-        tree.parse(filename)
-    except Exception:
-        Dialogs.Exclamation(Title="Errore", Text="Errore nel file XML\nControllarlo e ritentare l'importazione")
-        return
-
-    root = tree.getroot()
-    prezzario = root.find('{six.xsd}prezzario')
-    descrizioni = prezzario.findall('{six.xsd}przDescrizione')
+    prezzario = root.find('prezzario')
+    descrizioni = prezzario.findall('przDescrizione')
     lingue = {}
     lingua = None
     lingueEstese = {'it': 'Italiano', 'de': 'Deutsch', 'en': 'English', 'fr': 'Français', 'es': 'Español'}
@@ -121,7 +66,7 @@ def MENU_Import_Ep_XML_SIX():
         lingua = None
 
     if lingua == 'annulla':
-        return
+        return None
 
     # da qui, se lingua == None importa tutte le lingue presenti
     # altrimenti solo quella specificata
@@ -133,7 +78,7 @@ def MENU_Import_Ep_XML_SIX():
     if lingua is None:
         nome = descrizioni[0].attrib['breve']
         for desc in range(1, len(descrizioni)):
-            nome = nome + newParagraph + descrizioni[desc].attrib['breve']
+            nome = nome + '\n' + descrizioni[desc].attrib['breve']
     else:
         for desc in descrizioni:
             if desc.attrib['lingua'] == lingua:
@@ -144,7 +89,7 @@ def MENU_Import_Ep_XML_SIX():
     # siccome ci interessano soli i simboli e non il resto
     # non serve il processing per le lingue
     units = {}
-    umList = prezzario.findall('{six.xsd}unitaDiMisura')
+    umList = prezzario.findall('unitaDiMisura')
     for um in umList:
         attr = um.attrib
         try:
@@ -162,13 +107,13 @@ def MENU_Import_Ep_XML_SIX():
     # e di come viene richiesta la cosa
     # attualmente non servono, ma non si sa mai...
     categorieSOA = {}
-    catList = root.findall('{six.xsd}categoriaSOA')
+    catList = root.findall('categoriaSOA')
     for cat in catList:
         attr = cat.attrib
         try:
             soaId = attr['soaId']
             soaCategoria = attr['soaCategoria']
-            descs = cat.findall('{six.xsd}soaDescrizione')
+            descs = cat.findall('soaDescrizione')
             text = ""
             for desc in descs:
                 descAttr = desc.attrib
@@ -177,9 +122,9 @@ def MENU_Import_Ep_XML_SIX():
                 except KeyError:
                     descLingua = None
                 if lingua is None or descLingua is None or lingua == descLingua:
-                    text = text + descAttr['breve'] + newParagraph
+                    text = text + descAttr['breve'] + '\n'
             if text != "":
-                text = text[: -len(newParagraph)]
+                text = text[: -len('\n')]
 
             categorieSOA[soaCategoria] = {'soaId': soaId, 'descrizione': text}
         except KeyError:
@@ -188,16 +133,17 @@ def MENU_Import_Ep_XML_SIX():
     # infine tiriamo fuori il prezzario
     # utilizziamo le voci 'true' come base per le descrizioni
     # aggiungendo quelle delle voci specializzate '.a, .b...'
-    basePrdId = ''
+    baseCodice = ''
     baseTextBreve = ''
     baseTextEstesa = ''
-    products = []
-    productList = prezzario.findall('{six.xsd}prodotto')
+    artList = {}
+
+    productList = prezzario.findall('prodotto')
     for product in productList:
         attr = product.attrib
         try:
             # il codice del prodotto
-            prdId = attr['prdId']
+            codice = attr['prdId']
 
             # se c'è, estrae l'unità di misura
             if 'unitaDiMisuraId' in attr:
@@ -212,48 +158,33 @@ def MENU_Import_Ep_XML_SIX():
             # alcune voci non hanno il campo del prezzo essendo
             # voci principali composte da sottovoci
             # le importo comunque, lasciando il valore nullo
-            valore = ""
             try:
-                valAttr = product.find('{six.xsd}prdQuotazione').attrib
-                if 'valore' in valAttr:
-                    valore = valAttr['valore']
-                if valore != "":
-                    valore = float(valore)
+                prezzo = float(product.find('prdQuotazione').attrib['valore'])
             except Exception:
-                valore = ""
-
-            if valore == 0:
-                valore = ""
+                prezzo = ""
+            if prezzo == 0:
+                prezzo = ""
 
             # percentuale manodopera
             mdo = ""
-            mdoVal = ""
             try:
-                mdo = product.find('{six.xsd}incidenzaManodopera').text
-                if mdo != "":
-                    mdo = float(mdo) / 100
-                    if valore != "":
-                        mdoVal = valore * mdo
+                mdo = float(product.find('incidenzaManodopera').text) / 100
             except Exception:
                 mdo = ""
-                mdoVal = ""
             if mdo == 0:
                 mdo = ""
-            if mdoVal == 0:
-                mdoVal = ""
 
             # oneri sicurezza
-            sicurezza = ""
-            if 'onereSicurezza' in attr:
-                sicurezza = attr['onereSicurezza']
-            if sicurezza != "":
-                sicurezza = float(sicurezza)
-            if sicurezza == 0:
-                sicurezza = ""
+            try:
+                oneriSic = float(attr['onereSicurezza'])
+            except Exception:
+                oneriSic = ""
+            if oneriSic == 0:
+                oneriSic = ""
 
             # per le descrizioni, come sempre... processing a seconda
             # della lingua disponibile / richiesta
-            descs = product.findall('{six.xsd}prdDescrizione')
+            descs = product.findall('prdDescrizione')
             textBreve = ""
             textEstesa = ""
             for desc in descs:
@@ -264,20 +195,20 @@ def MENU_Import_Ep_XML_SIX():
                     descLingua = None
                 if lingua is None or descLingua is None or lingua == descLingua:
                     if 'breve' in descAttr:
-                        textBreve = textBreve + descAttr['breve'] + newParagraph
+                        textBreve = textBreve + descAttr['breve'] + '\n'
                     if 'estesa' in descAttr:
-                        textEstesa = textEstesa + descAttr['estesa'] + newParagraph
+                        textEstesa = textEstesa + descAttr['estesa'] + '\n'
             if textBreve != "":
-                textBreve = textBreve[: -len(newParagraph)]
+                textBreve = textBreve[: -len('\n')]
             if textEstesa != "":
-                textEstesa = textEstesa[: -len(newParagraph)]
+                textEstesa = textEstesa[: -len('\n')]
 
             # controlla se la voce è una voce 'base' o una specializzazione
             # della voce base. Il campo 'voce' è totalmente inaffidabile, quindi
             # consideriamo come 'base' delle voci a valore nullo e le azzeriamo
             # ad ogni nuova base e/o cambio di numerazione
-            base = (valore == "")
-            if not base and not prdId.startswith(basePrdId):
+            base = (prezzo == "")
+            if not base and not codice.startswith(baseCodice):
                 baseTextBreve = ""
                 baseTextEstesa = ""
 
@@ -287,41 +218,42 @@ def MENU_Import_Ep_XML_SIX():
             # siano correttamente etichettate come voce = 'true' se voci base
             # probabilmente si può fare di meglio...
             if base:
-                baseTextBreve = textBreve + newParagraph
-                baseTextEstesa = textEstesa + newParagraph
-                basePrdId = prdId
+                baseTextBreve = textBreve + '\n'
+                baseTextEstesa = textEstesa + '\n'
+                baseCodice = codice
 
-            if not base and prdId.startswith(basePrdId):
+            if not base and codice.startswith(baseCodice):
                 textBreve = baseTextBreve + textBreve
                 textEstesa = baseTextEstesa + textEstesa
 
             # utilizza solo la descrizione lunga per LeenO
             if len(textBreve) > len(textEstesa):
-                textDesc = textBreve
+                desc = textBreve
             else:
-                textDesc = textEstesa
+                desc = textEstesa
 
             # giochino per garantire che la prima stringa abbia una lunghezza minima
             # in modo che LO formatti correttamente la cella
-            minLen = 130
-            splitted = textDesc.split(newParagraph)
-            if len(splitted) > 1:
-                spl0 = splitted[0]
-                spl1 = splitted[1]
-                if len(spl0) + len(spl1) < minLen:
-                    dl = minLen - len(spl0) - len(spl1)
-                    spl0 = spl0 + dl * " "
-                    textDesc = spl0 + newParagraph + spl1
-                    for txt in splitted[2:]:
-                        textDesc = textDesc + newParagraph + txt
+            desc = LeenoImport.fixParagraphSize(desc)
 
-            # inserisce nella lista
-            # per risparmiare tempo la lista è creata direttamente come array
-            # corrispondente ai dati da inserire nel foglio dell' elenco prezzi
-            products.append([prdId, textDesc, um, sicurezza, valore, mdo, mdoVal])
+            # compone l'articolo e lo mette in lista
+            artList[codice] = {
+                'codice': codice,
+                'desc': desc,
+                'um': um,
+                'prezzo': prezzo,
+                'mdo': mdo,
+                'sicurezza': oneriSic
+            }
         except KeyError:
             pass
 
-    # compila la tabella
-    _Fill_Ep(nome, products)
-    PL.autoexec()
+    superCatList = {}
+    catList = {}
+
+    return {
+        'titolo': defaultTitle,
+        'superCategorie': superCatList,
+        'categorie': catList,
+        'articoli' : artList
+    }

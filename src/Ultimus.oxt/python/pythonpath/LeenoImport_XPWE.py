@@ -1184,8 +1184,7 @@ def MENU_XPWE_import():
 
     # se la destinazione è un nuovo documento, crealo
     if destinazione == 'NUOVO':
-        PL.New_file.computo(0)
-        oDoc = LeenoUtils.getDocument()
+        oDoc = PL.creaComputo(0)
 
     # occorre ricreare di nuovo la progressbar, in modo che sia
     # agganciata al nuovo documento

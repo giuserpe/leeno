@@ -718,7 +718,7 @@ def MENU_copia_sorgente_per_git():
             dest = os.getenv("HOMEDRIVE") + os.getenv(
                 "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
         else:
-            dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
+            dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
         subprocess.Popen(
             'w: && cd w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt && "C:/Program Files/Git/git-bash.exe"',
             shell=True,
@@ -783,7 +783,7 @@ def avvia_IDE():
             dest = os.getenv("HOMEDRIVE") + os.getenv(
                 "HOMEPATH") + '\\' + src_oxt + '\\leeno\\src\\Ultimus.oxt\\'
         else:
-            dest = 'w:/_dwg/ULTIMUSFREE/_SRC/leeno/src/Ultimus.oxt'
+            dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
         subprocess.Popen('explorer.exe ' +
                          dest,
                          shell=True,

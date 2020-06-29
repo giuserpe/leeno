@@ -216,14 +216,14 @@ def MENU_ImportElencoPrezziXML():
         _, _, el.tag = el.tag.rpartition('}')
     root = it.root
 
-    try:
-        dati = xmlParser(root, defaultTitle)
+    #try:
+    dati = xmlParser(root, defaultTitle)
 
-    except Exception:
-        Dialogs.Exclamation(
-           Title="Errore nel file XML",
-           Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
-        return
+    #except Exception:
+    #    Dialogs.Exclamation(
+    #       Title="Errore nel file XML",
+    #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
+    #    return
 
     # il parser può gestirsi l'errore direttamente, nel qual caso
     # ritorna None ed occorre uscire

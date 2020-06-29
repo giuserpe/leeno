@@ -1,11 +1,6 @@
 """
     LeenO - modulo parser XML per il formato XML-SIX
 """
-from io import StringIO
-import xml.etree.ElementTree as ET
-
-import pyleeno as PL
-
 import Dialogs
 import LeenoImport
 
@@ -141,115 +136,160 @@ def parseXML(root, defaultTitle):
     productList = prezzario.findall('prodotto')
     for product in productList:
         attr = product.attrib
+
+        # il codice del prodotto
+        if not 'prdId' in attr:
+            continue
+        codice = attr['prdId']
+
+        # se c'è, estrae l'unità di misura
+        if 'unitaDiMisuraId' in attr:
+            um = attr['unitaDiMisuraId']
+            # converte l'unità dal codice al simbolo
+            um = units.get(um, "*SCONOSCIUTA*")
+        else:
+            # unità non trovata - la lascia in bianco
+            um = ""
+
+        # il prezzo
+        # alcune voci non hanno il campo del prezzo essendo
+        # voci principali composte da sottovoci
+        # le importo comunque, lasciando il valore nullo
         try:
-            # il codice del prodotto
-            codice = attr['prdId']
+            prezzo = float(product.find('prdQuotazione').attrib['valore'])
+        except Exception:
+            prezzo = ""
+        if prezzo == 0:
+            prezzo = ""
 
-            # se c'è, estrae l'unità di misura
-            if 'unitaDiMisuraId' in attr:
-                um = attr['unitaDiMisuraId']
-                # converte l'unità dal codice al simbolo
-                um = units.get(um, "*SCONOSCIUTA*")
-            else:
-                # unità non trovata - la lascia in bianco
-                um = ""
-
-            # il prezzo
-            # alcune voci non hanno il campo del prezzo essendo
-            # voci principali composte da sottovoci
-            # le importo comunque, lasciando il valore nullo
-            try:
-                prezzo = float(product.find('prdQuotazione').attrib['valore'])
-            except Exception:
-                prezzo = ""
-            if prezzo == 0:
-                prezzo = ""
-
-            # percentuale manodopera
+        # percentuale manodopera
+        mdo = ""
+        try:
+            mdo = float(product.find('incidenzaManodopera').text) / 100
+        except Exception:
             mdo = ""
+        if mdo == 0:
+            mdo = ""
+
+        # oneri sicurezza
+        try:
+            oneriSic = float(attr['onereSicurezza'])
+        except Exception:
+            oneriSic = ""
+        if oneriSic == 0:
+            oneriSic = ""
+
+        # per le descrizioni, come sempre... processing a seconda
+        # della lingua disponibile / richiesta
+        descs = product.findall('prdDescrizione')
+        textBreve = ""
+        textEstesa = ""
+        for desc in descs:
+            descAttr = desc.attrib
             try:
-                mdo = float(product.find('incidenzaManodopera').text) / 100
-            except Exception:
-                mdo = ""
-            if mdo == 0:
-                mdo = ""
+                descLingua = descAttr['lingua']
+            except KeyError:
+                descLingua = None
+            if lingua is None or descLingua is None or lingua == descLingua:
+                if 'breve' in descAttr:
+                    textBreve = textBreve + descAttr['breve'] + '\n'
+                if 'estesa' in descAttr:
+                    textEstesa = textEstesa + descAttr['estesa'] + '\n'
+        if textBreve != "":
+            textBreve = textBreve[: -len('\n')]
+        if textEstesa != "":
+            textEstesa = textEstesa[: -len('\n')]
 
-            # oneri sicurezza
-            try:
-                oneriSic = float(attr['onereSicurezza'])
-            except Exception:
-                oneriSic = ""
-            if oneriSic == 0:
-                oneriSic = ""
+        # controlla se la voce è una voce 'base' o una specializzazione
+        # della voce base. Il campo 'voce' è totalmente inaffidabile, quindi
+        # consideriamo come 'base' delle voci a valore nullo e le azzeriamo
+        # ad ogni nuova base e/o cambio di numerazione
+        base = (prezzo == "")
+        if not base and not codice.startswith(baseCodice):
+            baseTextBreve = ""
+            baseTextEstesa = ""
 
-            # per le descrizioni, come sempre... processing a seconda
-            # della lingua disponibile / richiesta
-            descs = product.findall('prdDescrizione')
-            textBreve = ""
-            textEstesa = ""
-            for desc in descs:
-                descAttr = desc.attrib
-                try:
-                    descLingua = descAttr['lingua']
-                except KeyError:
-                    descLingua = None
-                if lingua is None or descLingua is None or lingua == descLingua:
-                    if 'breve' in descAttr:
-                        textBreve = textBreve + descAttr['breve'] + '\n'
-                    if 'estesa' in descAttr:
-                        textEstesa = textEstesa + descAttr['estesa'] + '\n'
-            if textBreve != "":
-                textBreve = textBreve[: -len('\n')]
-            if textEstesa != "":
-                textEstesa = textEstesa[: -len('\n')]
+        # se voce base, tiene buona la descrizione e la salva anche come base
+        # per le prossime voci (estese). Per funzionare, questo presuppone che
+        # nell' XML le voci estese seguano quella base in ordine, e che tutte le voci
+        # siano correttamente etichettate come voce = 'true' se voci base
+        # probabilmente si può fare di meglio...
+        if base:
+            baseTextBreve = textBreve + '\n'
+            baseTextEstesa = textEstesa + '\n'
+            baseCodice = codice
 
-            # controlla se la voce è una voce 'base' o una specializzazione
-            # della voce base. Il campo 'voce' è totalmente inaffidabile, quindi
-            # consideriamo come 'base' delle voci a valore nullo e le azzeriamo
-            # ad ogni nuova base e/o cambio di numerazione
-            base = (prezzo == "")
-            if not base and not codice.startswith(baseCodice):
-                baseTextBreve = ""
-                baseTextEstesa = ""
+        if not base and codice.startswith(baseCodice):
+            textBreve = baseTextBreve + textBreve
+            textEstesa = baseTextEstesa + textEstesa
 
-            # se voce base, tiene buona la descrizione e la salva anche come base
-            # per le prossime voci (estese). Per funzionare, questo presuppone che
-            # nell' XML le voci estese seguano quella base in ordine, e che tutte le voci
-            # siano correttamente etichettate come voce = 'true' se voci base
-            # probabilmente si può fare di meglio...
-            if base:
-                baseTextBreve = textBreve + '\n'
-                baseTextEstesa = textEstesa + '\n'
-                baseCodice = codice
+        # utilizza solo la descrizione lunga per LeenO
+        if len(textBreve) > len(textEstesa):
+            desc = textBreve
+        else:
+            desc = textEstesa
 
-            if not base and codice.startswith(baseCodice):
-                textBreve = baseTextBreve + textBreve
-                textEstesa = baseTextEstesa + textEstesa
+        # giochino per garantire che la prima stringa abbia una lunghezza minima
+        # in modo che LO formatti correttamente la cella
+        desc = LeenoImport.fixParagraphSize(desc)
 
-            # utilizza solo la descrizione lunga per LeenO
-            if len(textBreve) > len(textEstesa):
-                desc = textBreve
+        # gruppo, nel caso ci sia
+        try:
+            grpId = product.find('prdGrpValore').attrib['grpValoreId']
+        except Exception:
+            grpId = ""
+
+        # compone l'articolo e lo mette in lista
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': um,
+            'prezzo': prezzo,
+            'mdo': mdo,
+            'sicurezza': oneriSic,
+            'gruppo': grpId
+        }
+
+    # in alcuni casi sono presenti i gruppi, che poi sono le nostre
+    # supercategorie e categorie
+    # i gruppi hanno, ovviamente, una numerazione e degli ID che non c'entrano
+    # un tubo con gli articoli... ma gli articoli portano un riferimento al gruppo
+    # quindi una volta letti gli articoli bisogna fare uno scan a rovescio per
+    # ritrovare i codici corretti delle categorie
+    gruppi = {}
+    superGruppi = {}
+    try:
+        gruppo = root.find('gruppo')
+        grpValori = gruppo.findall('grpValore')
+        for grpValore in grpValori:
+            grpId = grpValore.attrib['grpValoreId']
+            vlrId = grpValore.attrib['vlrId']
+            vlrDesc = grpValore.find('vlrDescrizione').attrib['breve']
+            if '.' in vlrId:
+                sgId = vlrId.split('.')[0]
+                gruppi[grpId] = {'cat': vlrId, 'desc': vlrDesc, 'superGroup': sgId}
             else:
-                desc = textEstesa
+                superGruppi[vlrId] = vlrDesc
+    except Exception:
+        pass
 
-            # giochino per garantire che la prima stringa abbia una lunghezza minima
-            # in modo che LO formatti correttamente la cella
-            desc = LeenoImport.fixParagraphSize(desc)
-
-            # compone l'articolo e lo mette in lista
-            artList[codice] = {
-                'codice': codice,
-                'desc': desc,
-                'um': um,
-                'prezzo': prezzo,
-                'mdo': mdo,
-                'sicurezza': oneriSic
-            }
-        except KeyError:
-            pass
-
-    superCatList = {}
+    # crea le categorie e supercategoria
+    # è un po' un caos, ma è l'unico modo rapido per farlo
     catList = {}
+    superCatList = {}
+    if len(gruppi) > 0:
+        for codice, articolo in artList.items():
+            splitCodice = codice.split('.')
+            codiceCat = splitCodice[0] + '.' + splitCodice[1]
+            codiceSuperCat = splitCodice[0]
+            gruppo = articolo['gruppo']
+            if gruppo is None or gruppo == '':
+                continue
+            groupData = gruppi[gruppo]
+            if not codiceCat in catList:
+                catList[codiceCat] = groupData['desc']
+            if not codiceSuperCat in superCatList:
+                superCatList[codiceSuperCat] = superGruppi[groupData['superGroup']]
 
     return {
         'titolo': defaultTitle,

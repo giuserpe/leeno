@@ -208,7 +208,7 @@ def MENU_ImportElencoPrezziXML():
     defaultTitle = os.path.split(filename)[1]
 
     # legge il file XML in una stringa
-    with open(filename, 'r', errors='ignore') as file:
+    with open(filename, 'r', errors='ignore', encoding="utf8") as file:
       data = file.read()
 
     # cerca un parser adatto

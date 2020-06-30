@@ -19,6 +19,7 @@ import Dialogs
 
 import LeenoImport_XmlSix
 import LeenoImport_XmlToscana
+import LeenoImport_XmlSardegna
 
 
 def fixParagraphSize(txt):
@@ -39,6 +40,20 @@ def fixParagraphSize(txt):
                 txt += '\n' + t
     return txt
 
+
+def stripXMLNamespaces(data):
+    '''
+    prende una stringa contenente un file XML
+    elimina i namespaces dai dato
+    e ritorna il root dell' XML
+    '''
+    it = ET.iterparse(StringIO(data))
+    for _, el in it:
+        # strip namespaces
+        _, _, el.tag = el.tag.rpartition('}')
+    return it.root
+
+
 def findXmlParser(xmlText):
     '''
     fa un pre-esame del contenuto xml della stringa fornita
@@ -50,6 +65,7 @@ def findXmlParser(xmlText):
     parsers = {
         'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
         'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
     }
 
     # controlla se il file è di tipo conosciuto...
@@ -208,16 +224,8 @@ def MENU_ImportElencoPrezziXML():
         )
         return
 
-    # lo analizza eliminando i namespaces
-    # (che qui rompono solo le scatole...)
-    it = ET.iterparse(StringIO(data))
-    for _, el in it:
-        # strip namespaces
-        _, _, el.tag = el.tag.rpartition('}')
-    root = it.root
-
     #try:
-    dati = xmlParser(root, defaultTitle)
+    dati = xmlParser(data, defaultTitle)
 
     #except Exception:
     #    Dialogs.Exclamation(

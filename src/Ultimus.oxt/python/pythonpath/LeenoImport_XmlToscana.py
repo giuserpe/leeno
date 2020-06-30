@@ -7,7 +7,7 @@ import xml.etree.ElementTree as ET
 import LeenoImport
 
 
-def parseXML(root, defaultTitle):
+def parseXML(data, defaultTitle):
     '''
     estrae dal file XML i dati dell'elenco prezzi
     I dati estratti avranno il formato seguente:
@@ -32,6 +32,10 @@ def parseXML(root, defaultTitle):
             'articoli' : artList
         }
     '''
+    # elimina i namespaces dai dati ed ottiene
+    # elemento radice dell' albero XML
+    root = LeenoImport.stripXMLNamespaces(data)
+
     intestazione = root.find('intestazione')
     autore = intestazione.attrib['autore']
     # versione = intestazione.attrib['versione']

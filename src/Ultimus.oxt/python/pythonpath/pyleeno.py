@@ -7818,6 +7818,8 @@ def ScriviNomeDocumentoPrincipale():
     '''
     Indica qual è il Documento Principale
     '''
+    return
+
     # legge il percorso del documento principale
     sUltimus = LeenoUtils.getGlobalVar('sUltimus')
 

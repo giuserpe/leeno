@@ -766,7 +766,9 @@ def avvia_IDE():
             except FileExistsError:
                 pass
 
-        subprocess.Popen('caja '+ dest,
+        subprocess.Popen('caja '+
+                         # ~dest,
+                         uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
         subprocess.Popen('eric6 ' + dest + '/pyleeno.py',
@@ -785,7 +787,8 @@ def avvia_IDE():
         else:
             dest = 'w:\\_dwg\\ULTIMUSFREE\\_SRC\\leeno\\src\\Ultimus.oxt'
         subprocess.Popen('explorer.exe ' +
-                         dest,
+                         # ~dest,
+                         uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
         subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +

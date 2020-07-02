@@ -4251,9 +4251,8 @@ def MENU_Copia_riga_Ent():
 
 def Copia_riga_Ent(arg=None):
     '''
-    @@ DA DOCUMENTARE
+    Aggiunge riga di misurazione
     '''
-    # A ggiungi Componente - capisce su quale tipologia di tabelle è
     # ~datarif = datetime.now()
     #  refresh(0)
     oDoc = LeenoUtils.getDocument()

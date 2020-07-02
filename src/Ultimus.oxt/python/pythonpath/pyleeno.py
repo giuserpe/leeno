@@ -8505,6 +8505,12 @@ def descrizione_in_una_colonna(flag=False):
 
 
 ########################################################################
+def MENU_numera_colonna():
+    '''
+    Comando di menu per numera_colonna()
+    '''
+    numera_colonna()
+    
 def numera_colonna():
     '''Inserisce l'indice di colonna nelle prime 100 colonne del rigo selezionato
 Associato a Ctrl+Shift+C'''

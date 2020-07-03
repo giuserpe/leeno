@@ -4845,28 +4845,6 @@ def debug_ConditionalFormat():
 
 
 ########################################################################
-def debugclip():
-    #  mri(LeenoUtils.getComponentContext())
-    # sText = 'sticazzi'
-    # create SystemClipboard instance
-    oClip = LeenoUtils.createUnoService(
-        "com.sun.star.datatransfer.clipboard.SystemClipboard")
-    # oClipContents = oClip.getContents()
-    # flavors = oClipContents.getTransferDataFlavors()
-    DLG.mri(oClip)
-    #  for i in flavors:
-    #  aDataFlavor = flavors(i)
-    #  chi(aDataFlavor)
-
-    return
-    #  createUnoService =(LeenoUtils.getComponentContext().getServiceManager().createInstance)
-    #  oTR = createUnoListener("Tr_", "com.sun.star.datatransfer.XTransferable")
-    oClip.setContents(oTR, None)
-    # sTxtCString = sText
-    oClip.flushClipboard()
-
-
-########################################################################
 def rimuovi_area_di_stampa():
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()

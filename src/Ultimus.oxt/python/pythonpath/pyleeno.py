@@ -8619,7 +8619,7 @@ def MENU_sistema_pagine():
         if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo',
                                     'PageStyle_COMPUTO_A4',
                                     'PageStyle_Elenco Prezzi'):
-            # htxt = 8.0
+            htxt = 8.0
             # if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo'):
             #     htxt = 10.0
             bordo = oAktPage.TopBorder
@@ -8660,13 +8660,14 @@ def MENU_sistema_pagine():
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
             oFooter = oAktPage.RightPageFooterContent
-            # oHLText = oFooter.CenterText.Text.String = ''
-            # oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(oDoc.getURL())
-            # oHRText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            # oHRText = oFooter.LeftText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
-            # oHRText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            # oHRText = oFooter.RightText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
-            # oHRText = oFooter.RightText.Text.String = '#/##'
+            oHLText = oFooter.CenterText.Text.String = ''
+            nomefile = oDoc.getURL().replace('%20',' ')
+            oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(nomefile)
+            oHLText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
+            oHLText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHLText = oFooter.RightText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
+            # ~oHLText = oFooter.RightText.Text.String = '#/##'
             oAktPage.RightPageFooterContent = oFooter
 
         if oAktPage.DisplayName == 'Page_Style_Libretto_Misure2':

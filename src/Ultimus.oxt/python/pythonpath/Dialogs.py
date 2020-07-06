@@ -41,7 +41,6 @@ def getParentWindowSize():
 
     oWindow = toolkit.getActiveTopWindow()
     if oWindow is None:
-        print("oWindow is None")
         oDesktop = ctx.ServiceManager.createInstanceWithContext(
             "com.sun.star.frame.Desktop", ctx)
         oDoc = oDesktop.getCurrentComponent()
@@ -1466,7 +1465,6 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
 
         # we try to place the dialog bar at center of parent window
         pW, pH = getParentWindowSize()
-        print(f'Window size:{pW},{pH}')
         self._x = int((pW - self._width) / 2)
         self._y = int((pH - self._height) / 2)
 

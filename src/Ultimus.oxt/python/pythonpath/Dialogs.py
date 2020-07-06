@@ -10,6 +10,7 @@ import inspect
 import uno
 import unohelper
 
+from com.sun.star.style.VerticalAlignment import MIDDLE as VA_MIDDLE
 
 from com.sun.star.awt import Size
 from com.sun.star.awt import XActionListener
@@ -40,6 +41,7 @@ def getParentWindowSize():
 
     oWindow = toolkit.getActiveTopWindow()
     if oWindow is None:
+        print("oWindow is None")
         oDesktop = ctx.ServiceManager.createInstanceWithContext(
             "com.sun.star.frame.Desktop", ctx)
         oDoc = oDesktop.getCurrentComponent()
@@ -971,7 +973,7 @@ class Button(DialogItem):
     If 'RetVal' is given, button closes the dialog and returns this value
     If 'RetVal' is None, button DOESN'T close the dialog, but external handler is called
     '''
-    def __init__(self, *, Id=None, Label='aLabel', RetVal=None, Icon=None,
+    def __init__(self, *, Id=None, Label='', RetVal=None, Icon=None,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None):
@@ -1053,7 +1055,8 @@ class CheckBox(DialogItem):
         '''
         return {
             'Label': self._label,
-            'State': int(self._state)
+            'State': int(self._state),
+            'VerticalAlign': VA_MIDDLE,
         }
 
     def getAction(self):
@@ -1463,6 +1466,7 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
 
         # we try to place the dialog bar at center of parent window
         pW, pH = getParentWindowSize()
+        print(f'Window size:{pW},{pH}')
         self._x = int((pW - self._width) / 2)
         self._y = int((pH - self._height) / 2)
 
@@ -1513,6 +1517,10 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         so we'll be able to know if dialog is running or not
         '''
         self._sizer._destruct()
+
+        # fondamentale per poter recuperare correttamente
+        # il parent quando il dialogo viene chiuso...
+        self._dialogContainer.dispose()
 
     def windowClosing(self,  evt):
         '''

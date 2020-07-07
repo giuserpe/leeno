@@ -193,8 +193,58 @@ def getButtonSize(txt, Icon=None):
     if Icon is not None:
         width += 32
         height = max(height, 24)
-    return max(width + 15, 100),   height + 15
+    return width + 15, height + 15
 
+
+def getDefaultPath():
+    '''
+    returns stored last used path, if any
+    otherwise returns calling document base path
+    '''
+    oPath = Config().read('Generale', 'ultimo_percorso')
+    if oPath is None:
+        oDoc = LeenoUtils.getDocument()
+        oPath = oDoc.getURL()
+        if oPath is not None and oPath != '':
+            oPath = uno.fileUrlToSystemPath(oPath)
+
+    # be sure that we return a path
+    return os.path.join(oPath, '')
+
+
+def storeLastPath(oPath):
+    '''
+    store the folder of given path item to config
+    if a file path is given, we strip the file part
+    '''
+    oPath = os.path.dirname(oPath)
+    oPath = os.path.join(oPath, '')
+    Config().write('Generale', 'ultimo_percorso', oPath)
+
+
+def shortenPath(pth, width):
+    '''
+    short a path adding ... in front
+    baset on a maximum allowed field width
+    '''
+    if pth is None:
+        return pth
+
+    # check if no need to shorten
+    w, h = getTextBox(pth)
+    if w <= width:
+        return pth
+    n = len(pth) - 3
+    while n > 0:
+        s = '...' + pth[-n:]
+        w, h = getTextBox(s)
+        if w <= width:
+            return s
+        n -= 1
+    return '...'
+
+
+MINBTNWIDTH = 100
 
 class DialogException(Exception):
 
@@ -250,7 +300,8 @@ class DialogItem:
         self,  Id=None,
         MinWidth=None, MinHeight=None,
         MaxWidth=None, MaxHeight=None,
-        FixedWidth=None, FixedHeight=None
+        FixedWidth=None, FixedHeight=None,
+        InternalHandler=None
     ):
         ''' constructor '''
 
@@ -272,10 +323,26 @@ class DialogItem:
         self.align = HORZ_ALIGN_LEFT | VERT_ALIGN_TOP
         self._id = Id
 
+        # we support "internal" handlers for events
+        # if a control has an internal handler, it gets called when there's
+        # an interaction with the control. If the handler returns true the
+        # event is NOT propagated to main handler, otherwise it is
+        # This is done to allow to build combined widgets
+        # the handler prototype is:
+        # internalHandler(self, owner, cmdStr)
+        # where owner is the owning dialog and cmdStr is the command string
+        self._internalHandler = InternalHandler
+
         # we need both owning dialog and UNO widget pointers
         # so we can act on running dialogs
         self._owner = None
         self._UNOWidget = None
+
+    def _fixup(self):
+        '''
+        to be redefined if widget needs to adapt to size changes
+        '''
+        pass
 
     def _adjustSize(self):
         ''' calculate min size and adjust considering minimum, maximum and fixed ones '''
@@ -615,30 +682,37 @@ class HSizer(Sizer):
                         curXOrg += item._width
             else:
                 # no spacers inside, we shall divide space between items
+                # but NOT for items with fixed size
 
                 # calculate at first the ratio of items space / total space
-                ratios = []
+                widths = []
+                totw = 0
                 for item in self._items:
-                    ratios.append(item._width / self._width)
+                    if item._fixedWidth is None:
+                        totw += item._width
+                        widths.append(item._width)
+                ratios = []
+                for item in widths:
+                    ratios.append(item / totw)
 
                 # now divide the space between items
                 # last space gets the remainder
-                spaceRemainder = 0
+                spaceRemainder = dW
                 iItem = 0
                 for item in self._items:
-                    itemSpace = int(dW * ratios[iItem])
-                    if iItem < len(self._items) - 1:
-                        item._width += itemSpace
-                        spaceRemainder -= itemSpace
-                    else:
-                        item._width += spaceRemainder
+                    if item._fixedWidth is None:
+                        itemSpace = int(dW * ratios[iItem])
+                        if iItem < len(ratios) - 1:
+                            item._width += itemSpace
+                            spaceRemainder -= itemSpace
+                        else:
+                            item._width += spaceRemainder
+                        iItem += 1
 
                     # set item position
                     item._x,  item._y = curXOrg,  curYOrg
                     # move to next item
                     curXOrg += item._width
-
-                    iItem += 1
         else:
             # no space to divide, requested size identical to minimum
             for item in self._items:
@@ -648,8 +722,10 @@ class HSizer(Sizer):
                 curXOrg += item._width
 
         # run _adjustLayout on all contained containers
+        # and fixup contents, if needed
         for item in self._items:
             item._adjustLayout()
+            item._fixup()
 
 
 class VSizer(Sizer):
@@ -748,23 +824,32 @@ class VSizer(Sizer):
                         curYOrg += item._height
             else:
                 # no spacers inside, we shall divide space between items
+                # but NOT for items with fixed size
 
                 # calculate at first the ratio of items space / total space
-                ratios = []
+                heights = []
+                toth = 0
                 for item in self._items:
-                    ratios.append(item._height / self._height)
+                    if item._fixedHeight is None:
+                        toth += item._height
+                        heights.append(item._height)
+                ratios = []
+                for item in heights:
+                    ratios.append(item / toth)
 
                 # now divide the space between items
                 # last space gets the remainder
-                spaceRemainder = 0
+                spaceRemainder = dH
                 iItem = 0
                 for item in self._items:
-                    itemSpace = int(dH * ratios[iItem])
-                    if iItem < len(self._items) - 1:
-                        item._height += itemSpace
-                        spaceRemainder -= itemSpace
-                    else:
-                        item._height += spaceRemainder
+                    if item._fixedHeight is None:
+                        itemSpace = int(dH * ratios[iItem])
+                        if iItem < len(ratios) - 1:
+                            item._height += itemSpace
+                            spaceRemainder -= itemSpace
+                        else:
+                            item._height += spaceRemainder
+                        iItem += 1
 
                     # set item position
                     item._x,  item._y = curXOrg,  curYOrg
@@ -781,6 +866,7 @@ class VSizer(Sizer):
         # run _adjustLayout on all contained containers
         for item in self._items:
             item._adjustLayout()
+            item._fixup()
 
 
 class FixedText(DialogItem):
@@ -811,7 +897,11 @@ class FixedText(DialogItem):
         to be set in UNO
         MUST be redefined on each visible control
         '''
-        return {'Label': self._text,  'Align': 0}
+        return {
+            'Label': self._text,
+            'Align': 0,
+            'VerticalAlign': VA_MIDDLE,
+        }
 
     def dump(self,  indent):
         '''
@@ -829,6 +919,115 @@ class FixedText(DialogItem):
         return self._text
 
 
+class FileControl(DialogItem):
+    '''
+    a text field with file dialog
+    '''
+    def __init__(self, *, Id=None,  Path='',
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
+                         InternalHandler = InternalHandler)
+        self._path = Path
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        w, h = getTextBox("/some/dummy/path/here")
+        dummy, h = getButtonSize("Sfoglia...")
+        return w, h
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {'Text': self._path}
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        pth = self._path
+        return super().dump(indent) + f", Path: '{pth}'" + '}'
+
+    def setPath(self, pth):
+        self._path = pth
+        if self._UNOWidget is not None:
+            self._UNOWidget.Text = pth
+
+    def getPath(self):
+        return self._path
+
+
+class PathControl(HSizer):
+    '''
+    A text field with a button
+    used to select a path
+    '''
+    def __init__(self, *, Id=None,  Path=None,
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
+        ''' constructor '''
+        super().__init__(Id=Id)
+        btnIcon = 'Icons-24x24/folder.png'
+        btnWidth, btnHeight = getButtonSize('', Icon=btnIcon)
+        if Path is None or Path == '':
+            Path = getDefaultPath()
+        self.add(FixedText(Text=''))
+        # self.add(Spacer())
+        self.add(Button(Id='select', Icon=btnIcon, FixedWidth=btnWidth, InternalHandler=self.pathHandler))
+        self._path = Path
+
+    def _fixup(self):
+        txtBox = self._items[0]
+        w = txtBox._width
+        txtBox.setText(shortenPath(self._path, w))
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {'Text': self._path}
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        pth = self._path
+        return super().dump(indent) + f", Path: '{pth}'" + '}'
+
+    # handler per il button di selezione path
+    def pathHandler(self, owner, cmdStr):
+        folder = FolderSelect()
+        if folder is not None:
+            folder = os.path.join(folder, '')
+            self._path = folder
+            self._fixup()
+        # stop event processing
+        return True
+
+    def setPath(self, pth):
+        self._path = pth
+        if self._UNOWidget is not None:
+            self._UNOWidget.Text = pth
+
+    def getPath(self):
+        return self._path
+
+
 class ImageControl(DialogItem):
     '''
     Fixed image
@@ -837,7 +1036,8 @@ class ImageControl(DialogItem):
     def __init__(self, *, Id=None,  Image,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
-                 FixedWidth=None, FixedHeight=None):
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
         ''' constructor '''
 
         # for images we do some smart sizing here...
@@ -863,7 +1063,8 @@ class ImageControl(DialogItem):
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
-                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
+                         InternalHandler = InternalHandler)
         self._image = Image
 
 
@@ -901,12 +1102,14 @@ class ProgressBar(DialogItem):
     def __init__(self, *, Id=None, MinVal=0, MaxVal=100, Value=0,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
-                 FixedWidth=None, FixedHeight=None):
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
         ''' constructor '''
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
-                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
+                         InternalHandler = InternalHandler)
         self._minVal = MinVal
         self._maxVal = MaxVal
         self._value = Value
@@ -975,14 +1178,16 @@ class Button(DialogItem):
     def __init__(self, *, Id=None, Label='', RetVal=None, Icon=None,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
-                 FixedWidth=None, FixedHeight=None):
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
         ''' constructor '''
         if Id is None:
             Id = Label
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
-                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
+                         InternalHandler = InternalHandler)
         self._label = Label
         self._retVal = RetVal
         self._icon = Icon
@@ -1031,12 +1236,14 @@ class CheckBox(DialogItem):
     def __init__(self, *, Id=None, Label='aLabel', State=False,
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
-                 FixedWidth=None, FixedHeight=None):
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
         ''' constructor '''
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
-                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
+                         InternalHandler = InternalHandler)
         self._label = Label
         self._state = State
 
@@ -1096,12 +1303,14 @@ class RadioButton(DialogItem):
     def __init__(self, *, Id=None, Label='aLabel',
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
-                 FixedWidth=None, FixedHeight=None):
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
         ''' constructor '''
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
-                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
+                         InternalHandler = InternalHandler)
         self._label = Label
 
     def calcMinSize(self):
@@ -1560,6 +1769,13 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
         else:
             widget._actionPerformed()
 
+        # check if widget has an internal handler attached
+        # if it does, call the handler and stop processing if
+        # it returns True
+        if widget._internalHandler is not None:
+            if widget._internalHandler(self, cmdStr):
+                return
+
         # if we've got an handler, we process the command inside it
         # and if returning True we close the dialog
         # if no handler or returning false, we process the event from here
@@ -1641,7 +1857,7 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
 ## SOME COMMON DIALOGS
 ######################################################################
 
-def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
+def FileSelect(titolo='Scegli il file...', est='*.*', mode=0, startPath=None):
     """
     titolo  { string }  : titolo del FilePicker
     est     { string }  : filtro di visualizzazione file
@@ -1667,15 +1883,15 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
                   '*.dat': 'dat(*.dat)', }
     oFilePicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FilePicker")
     oFilePicker.initialize((mode, ))
-    oDoc = LeenoUtils.getDocument()
 
     # try to get path from current document, if any
     # if not, look into config to fetch last used one
-    oPath = oDoc.getURL()
-    if oPath == '':
-        oPath = uno.systemPathToFileUrl(Config().read('Generale', 'ultimo_percorso'))
+    if startPath is None:
+        oPath = getDefaultPath()
     else:
-        oPath = os.path.dirname(oPath)
+        oPath = startPath
+    oPath = os.path.join(oPath, '')
+    oPath = uno.systemPathToFileUrl(oPath)
     oFilePicker.setDisplayDirectory(oPath)
 
     oFilePicker.Title = titolo
@@ -1683,9 +1899,35 @@ def FileSelect(titolo='Scegli il file...', est='*.*', mode=0):
     oFilePicker.appendFilter(app, est)
     if oFilePicker.execute():
         oPath = uno.fileUrlToSystemPath(oFilePicker.getFiles()[0])
-        Config().write('Generale', 'ultimo_percorso', os.path.dirname(oPath))
+        storeLastPath(oPath)
         return oPath
     return None
+
+
+def FolderSelect(titolo='Scegli la cartella...', startPath=None):
+    """
+    titolo  { string }  : titolo del FolderPicker
+    """
+    oFolderPicker = LeenoUtils.createUnoService("com.sun.star.ui.dialogs.FolderPicker")
+
+    # try to get path from current document, if any
+    # if not, look into config to fetch last used one
+    if startPath is None:
+        oPath = getDefaultPath()
+    else:
+        oPath = startPath
+    oPath = os.path.join(oPath, '')
+    oPath = uno.systemPathToFileUrl(oPath)
+    oFolderPicker.setDisplayDirectory(oPath)
+
+    oFolderPicker.Title = titolo
+    if oFolderPicker.execute():
+        oPath = uno.fileUrlToSystemPath(oFolderPicker.getDirectory())
+        oPath = os.path.join(oPath, '')
+        storeLastPath(oPath)
+        return oPath
+    return None
+
 
 def NotifyDialog(*, Image, Title, Text):
     dlg = Dialog(Title=Title,  Horz=False, CanClose=True,  Items=[
@@ -1697,7 +1939,7 @@ def NotifyDialog(*, Image, Title, Text):
         Spacer(),
         HSizer(Items=[
             Spacer(),
-            Button(Label='Ok', Icon='Icons-24x24/ok.png',  RetVal=1),
+            Button(Label='Ok', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH, RetVal=1),
             Spacer()
         ])
     ])
@@ -1722,9 +1964,9 @@ def YesNoDialog(*, Title, Text):
         Spacer(),
         HSizer(Items=[
             Spacer(),
-            Button(Label='Si', Icon='Icons-24x24/ok.png',  RetVal=1),
+            Button(Label='Si', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH,  RetVal=1),
             Spacer(),
-            Button(Label='No', RetVal=0),
+            Button(Label='No', MinWidth=MINBTNWIDTH, RetVal=0),
             Spacer()
         ])
     ])
@@ -1740,11 +1982,11 @@ def YesNoCancelDialog(*, Title, Text):
         Spacer(),
         HSizer(Items=[
             Spacer(),
-            Button(Label='Si', Icon='Icons-24x24/ok.png',  RetVal=1),
+            Button(Label='Si', Icon='Icons-24x24/ok.png', MinWidth=MINBTNWIDTH,  RetVal=1),
             Spacer(),
-            Button(Label='No', RetVal=0),
+            Button(Label='No', MinWidth=MINBTNWIDTH, RetVal=0),
             Spacer(),
-            Button(Label='Annulla', Icon='Icons-24x24/cancel.png',  RetVal=-1),
+            Button(Label='Annulla', Icon='Icons-24x24/cancel.png', MinWidth=MINBTNWIDTH,  RetVal=-1),
             Spacer()
         ])
     ])
@@ -1773,7 +2015,7 @@ class Progress:
             self._dlg.add(
                 HSizer(Items=[
                     Spacer(),
-                    Button(Label='Annulla', RetVal=-1),
+                    Button(Label='Annulla', MinWidth=MINBTNWIDTH, RetVal=-1),
                     Spacer()
                 ])
             )
@@ -1827,7 +2069,7 @@ def MultiButton(*, Icon=None, Title='', Text='', Buttons=None):
     bottom = HSizer()
     idx = 0
     for label, value in Buttons.items():
-        bottom.add(Button(Label=label, RetVal=value))
+        bottom.add(Button(Label=label, MinWidth=MINBTNWIDTH, RetVal=value))
         if idx < len(Buttons) - 1:
             bottom.add(Spacer())
         idx += 1

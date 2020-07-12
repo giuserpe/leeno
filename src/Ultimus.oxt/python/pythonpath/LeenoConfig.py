@@ -6,6 +6,9 @@ import os
 import configparser
 
 from os.path import expanduser
+from datetime import date
+
+import LeenoUtils
 
 class Borg:
     '''
@@ -86,6 +89,14 @@ class Config(Borg):
             ('Contabilità', 'ricicla_da', 'COMPUTO'),
 
             ('Importazione', 'ordina_computo', '1'),
+
+            ('Lavoro', 'committente', ''),
+            ('Lavoro', 'stazioneAppaltante', ''),
+            ('Lavoro', 'rup', ''),
+            ('Lavoro', 'progettista', ''),
+            ('Lavoro', 'data', LeenoUtils.date2String(date.today(), 1)),
+            ('Lavoro', 'revisione', ''),
+            ('Lavoro', 'dataRevisione', LeenoUtils.date2String(date.today(), 1)),
         )
 
         for param in parametri:

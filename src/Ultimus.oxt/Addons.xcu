@@ -1717,6 +1717,67 @@
               <value>_self</value>
             </prop>
           </node>
+          
+          <node oor:name="mUserSettings" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSettings.MENU_UserSettings</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Impostazioni utente</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="mJobSettings" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSettings.MENU_JobSettings</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Impostazioni dati lavoro</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="mPrintSettings" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSettings.MENU_PrintSettings</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Impostazioni di stampa e export PDF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="mExport" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoPdf.MENU_Pdf</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Esporta documenti in PDF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
           <node oor:name="m30" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1828,25 +1889,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <!--
-                   <node oor:name="m13S8" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Finale_2.esporta_PDF_Foglio_Attivo?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/pdf-icon</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>3) ESPORTA in PDF il foglio attivo  </value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m13S9" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

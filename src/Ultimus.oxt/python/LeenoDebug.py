@@ -206,28 +206,11 @@ from io import StringIO
 import xml.etree.ElementTree as ET
 import LeenoImport
 
-filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/prezzario2019standardsix.xml"
+#filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/prezzario2019standardsix.xml"
 
-# se il file non contiene un titolo, utilizziamo il nome del file
-# come titolo di default
-defaultTitle = os.path.split(filename)[1]
+filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/TestPdfExport.ods"
+oDoc = loadDocument(filename)
 
-# legge il file XML in una stringa
-with open(filename, 'r', errors='ignore') as file:
-  data = file.read()
-
-# cerca un parser adatto
-xmlParser = LeenoImport.findXmlParser(data)
-
-# lo analizza eliminando i namespaces
-# (che qui rompono solo le scatole...)
-it = ET.iterparse(StringIO(data))
-for _, el in it:
-    # strip namespaces
-    _, _, el.tag = el.tag.rpartition('}')
-root = it.root
-
-dati = xmlParser(root, defaultTitle)
 
 
 print("\nDONE\n")

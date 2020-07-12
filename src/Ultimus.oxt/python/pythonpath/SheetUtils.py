@@ -11,12 +11,12 @@ from com.sun.star.util import SortField
 import LeenoUtils
 
 '''
-User defined attributes handlint in worksheets
+User defined attributes handling in worksheets
 Not supporting (by now) namespaces, it allows to
 insert strings attributes into spreadsheets
 '''
 
-def setUserDefinedAttribute(oSheet, name, value):
+def setSheetUserDefinedAttribute(oSheet, name, value):
     userAttributes = oSheet.UserDefinedAttributes
     attr = AttributeData()
     attr.Type = "CDATA"
@@ -27,17 +27,17 @@ def setUserDefinedAttribute(oSheet, name, value):
         userAttributes.insertByName(name, attr)
     oSheet.UserDefinedAttributes = userAttributes
 
-def getUserDefinedAttribute(oSheet, name):
+def getSheetUserDefinedAttribute(oSheet, name):
     userAttributes = oSheet.UserDefinedAttributes
     if userAttributes.hasByName(name):
         return userAttributes.getByName(name).Value
     return None
 
-def hasUserDefinedAttribute(oSheet, name):
+def hasSheetUserDefinedAttribute(oSheet, name):
     userAttributes = oSheet.UserDefinedAttributes
     return userAttributes.hasByName(name)
 
-def removeUserDefinedAttribute(oSheet, name):
+def removeSheetUserDefinedAttribute(oSheet, name):
     userAttributes = oSheet.UserDefinedAttributes
     if userAttributes.hasByName(name):
         userAttributes.removeByName(name)
@@ -55,7 +55,7 @@ def getDocumentFromSheet(oSheet):
     '''
     #  get all documents from desktop
     attrName = str(random.random())
-    setUserDefinedAttribute(oSheet, attrName, "JUSTSOMETHING")
+    setSheetUserDefinedAttribute(oSheet, attrName, "JUSTSOMETHING")
 
     oEnum = LeenoUtils.getDesktop().Components.createEnumeration()
     while oEnum.hasMoreElements():
@@ -65,15 +65,15 @@ def getDocumentFromSheet(oSheet):
             idx = 0
             while idx < sheets.Count:
                 sheet = sheets[idx]
-                if getUserDefinedAttribute(sheet, attrName) == "JUSTSOMETHING":
+                if getSheetUserDefinedAttribute(sheet, attrName) == "JUSTSOMETHING":
                     # found, return it
-                    removeUserDefinedAttribute(oSheet, attrName)
+                    removeSheetUserDefinedAttribute(oSheet, attrName)
                     return oDoc
                 idx += 1
         except Exception:
             pass
     # not found
-    removeUserDefinedAttribute(oSheet, attrName)
+    removeSheetUserDefinedAttribute(oSheet, attrName)
     return None
 
 
@@ -103,6 +103,152 @@ def getCurrentSheet(oDoc):
     '''
     contr = oDoc.CurrentController
     return contr.ActiveSheet
+
+
+# ###############################################################
+
+
+def tempCopySheet(oDoc, sourceName):
+    '''
+    crea una copia dello spreadsheet avente nome 'sourceName'
+    del documento 'oDoc' e lo mette in coda
+    '''
+    sheets = oDoc.Sheets
+    nSheets = sheets.Count
+    if not sheets.hasByName(sourceName):
+        return None
+
+    while True:
+        newName = sourceName + '_' + str(int(random.random() * 10000))
+        if not sheets.hasByName(newName):
+            break
+    sheets.copyByName(sourceName, newName, nSheets)
+    newSheet = sheets.getByName(newName)
+
+    # copiamo anche le aree di stampa e le intestazioni...
+    oldSheet = sheets.getByName(sourceName)
+    newSheet.TitleRows = oldSheet.TitleRows
+    newSheet.PrintTitleRows = oldSheet.PrintTitleRows
+    newSheet.PrintAreas = oldSheet.PrintAreas
+
+    return newSheet
+
+
+# ###############################################################
+
+
+def pdfExport0(oDoc, sheets, destPath):
+    '''
+    export a sequence of spreadsheets to a PDF file
+    '''
+    # due giorni per trovare 'sta caxxxxxxata....
+
+    # questo crea un oggetto UNO dello stesso tipo di oDoc.CurrentSelection
+    # che FUNZIONA per stampare correttamente sheets multipli
+    # ora bisogna solo guardare cosa ci sta dentro...
+    rgs = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
+
+    #for sheet in sheets:
+    #    areas = sheet.PrintAreas
+    #    if len(areas) > 0:
+    #        rgs.addRangeAddresses(areas, False)
+        #print(sheet.getCellRangeByName('Q55'))
+        #rgs.addRangeAddress(sheet.getCellRangeByName('A1').RangeAddress, False)
+        #rgs.addRangeAddress(sheet.RangeAddress, False)
+
+    #print("rgs-STR:", rgs.RangeAddressesAsString)
+    #print("rgs:", rgs)
+    #print("curr-STR:", oDoc.CurrentSelection.RangeAddressesAsString)
+    #print("curr:", oDoc.CurrentSelection)
+
+    curr = oDoc.CurrentSelection
+    #for i in range(0, curr.Count):
+    #    rgs.addRangeAddress(curr[i].RangeAddress, False)
+    #rgs.addRangeAddresses(curr, False)
+
+    filterProps = {
+        'Selection': rgs,
+        #'Selection': oDoc.CurrentSelection
+    }
+
+    storeArgs = {
+        'FilterName': 'calc_pdf_Export',
+        'FilterData': LeenoUtils.dictToProperties(filterProps, True),
+    }
+
+    destUrl = uno.systemPathToFileUrl(destPath)
+    print(destUrl)
+    oDoc.storeToURL(destUrl, LeenoUtils.dictToProperties(storeArgs))
+
+
+def copyPageStyle(nDoc, style):
+    '''
+    copy a page style to a given document
+    (or make properties identical if name already present)
+    '''
+    styleName = style.Name
+    nPageStyles = nDoc.StyleFamilies.getByName('PageStyles')
+
+    if nPageStyles.hasByName(styleName):
+        # geyt page style
+        nPageStyle = nPageStyles.getByName(styleName)
+    else:
+        # create the style inside new document
+        nPageStyle = nDoc.createInstance('com.sun.star.style.PageStyle')
+
+        # append to nDoc page styles
+        nPageStyles.insertByName(styleName, nPageStyle)
+
+    # copy all properties
+    propSetInfo = style.PropertySetInfo
+    props = propSetInfo.Properties
+    for prop in props:
+        name = prop.Name
+        nPageStyle.setPropertyValue(name, style.getPropertyValue(name))
+
+    # page scale is NOT correctly copied above... so do it again
+    nPageStyle.setPropertyValue('PageScale', style.getPropertyValue('PageScale'))
+
+
+def pdfExport(oDoc, sheets, destPath):
+    '''
+    export a sequence of spreadsheets to a PDF file
+    '''
+    # create an empty document
+    desktop = LeenoUtils.getDesktop()
+    pth = 'private:factory/scalc'
+    nDoc = desktop.loadComponentFromURL(pth, '_default', 0, ())
+
+    # we need to copy the page styles too... they don't get copied
+    # along with sheet
+    styleSet = set()
+    for sheet in sheets:
+        styleSet.add(sheet.PageStyle)
+
+    pageStyles = oDoc.StyleFamilies.getByName('PageStyles')
+    for styleName in styleSet:
+        style = pageStyles.getByName(styleName)
+        copyPageStyle(nDoc, style)
+
+    # copy required sheets on new document it
+    # setting also the correct pagestyles...
+    # and, if present, copy print area too
+    for sheet in sheets:
+        pos = nDoc.Sheets.Count
+        nDoc.Sheets.importSheet(oDoc, sheet.Name, pos)
+        nDoc.Sheets[pos].PageStyle = sheet.PageStyle
+        if len(sheet.PrintAreas) > 0:
+            nDoc.Sheets[pos].PrintAreas = sheet.PrintAreas
+    nDoc.Sheets.removeByName(nDoc.Sheets[0].Name)
+
+    storeArgs = {
+        'FilterName': 'calc_pdf_Export',
+    }
+
+    destUrl = uno.systemPathToFileUrl(destPath)
+    nDoc.storeToURL(destUrl, LeenoUtils.dictToProperties(storeArgs))
+    #nDoc.close(False)
+    #del nDoc
 
 
 # ###############################################################

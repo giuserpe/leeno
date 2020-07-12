@@ -5,6 +5,12 @@ Copyright 2020 by Massimo Del Fedele
 '''
 import sys
 import uno
+from com.sun.star.beans import PropertyValue
+from datetime import date
+import calendar
+from com.sun.star.util import Date
+
+import Dialogs
 
 '''
 ALCUNE COSE UTILI
@@ -90,6 +96,11 @@ def createUnoService(serv):
     return getComponentContext().getServiceManager().createInstance(serv)
 
 
+def MRI(target):
+    ctx = getComponentContext()
+    mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
+    mri.inspect(target)
+
 def isLeenoDocument():
     '''
     check if current document is a LeenO document
@@ -138,3 +149,98 @@ def initGlobalVars(dict):
         bDict = __builtins__
     for key, value in dict.items():
         bDict['LEENO_GLOBAL_' + key] = value
+
+
+def dictToProperties(values, unoAny=False):
+    '''
+    convert a dictionary in a tuple of UNO properties
+    if unoAny is True, return the result in an UNO Any variable
+    otherwise use a python tuple
+    '''
+    ps = tuple([PropertyValue(Name=n, Value=v) for n, v in values.items()])
+    if unoAny:
+        ps = uno.Any('[]com.sun.star.beans.PropertyValue', ps)
+    return ps
+
+def unoDate2Date(uDate):
+    d = date()
+    d.year = uDate.Year
+    d.month = uDate.Month
+    d.day = uDate.Day
+    return d
+
+def date2UnoDate(d):
+    uDate = Date()
+    uDate.Year = d.year
+    uDate.Month = d.month
+    uDate.Day = d.day
+    return uDate
+
+def daysInMonth(dat):
+    '''
+    returns days in month of date dat
+    '''
+    month = dat.month + 1
+    year = dat.year
+    if month > 12:
+        month = 1
+        year += 1
+    dat2 = date(year=year, month=month, day=dat.day)
+    t = dat2 - dat
+    return t.days
+
+
+def firstWeekDay(dat):
+    '''
+    returns first week day in month from dat
+    monday is 0
+    '''
+    return calendar.weekday(dat.year, dat.month, 1)
+
+
+DAYNAMES = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom']
+MONTHNAMES = [
+    'Gennaio', 'Febbraio', 'Marzo', 'Aprile',
+    'Maggio', 'Giugno', 'Luglio', 'Agosto',
+    'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+]
+
+def date2String(dat, fmt = 0):
+    '''
+    conversione data in stringa
+    fmt = 0     25 Febbraio 2020
+    fmt = 1     25/2/2020
+    fmt = 2     25-02-2020
+    fmt = 3     25.02.2020
+    '''
+    d = dat.day
+    m = dat.month
+    if m < 10:
+        ms = '0' + str(m)
+    else:
+        ms = str(m)
+    y = dat.year
+    if fmt == 1:
+        return str(d) + '/' + ms + '/' + str(y)
+    elif fmt == 2:
+        return str(d) + '-' + ms + '-' + str(y)
+    elif fmt == 3:
+        return str(d) + '.' + ms + '.' + str(y)
+    else:
+        return str(d) + ' ' + MONTHNAMES[m - 1] + ' ' + str(y)
+
+def string2Date(s):
+    if '.' in s:
+        sp = s.split('.')
+    elif '/' in s:
+        sp = s.split('/')
+    elif '-' in s:
+        sp = s.split('-')
+    else:
+        return date.today()
+    if len(sp) != 3:
+        raise Exception
+    day = int(sp[0])
+    month = int(sp[1])
+    year = int(sp[2])
+    return date(day=day, month=month, year=year)

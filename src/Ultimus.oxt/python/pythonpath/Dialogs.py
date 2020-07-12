@@ -7,13 +7,15 @@ Copyright 2020 by Massimo Del Fedele
 """
 import os
 import inspect
+from datetime import date, timedelta
+import calendar
 import uno
 import unohelper
 
 from com.sun.star.style.VerticalAlignment import MIDDLE as VA_MIDDLE
 
 from com.sun.star.awt import Size
-from com.sun.star.awt import XActionListener
+from com.sun.star.awt import XActionListener, XTextListener
 from com.sun.star.task import XJobExecutor
 
 from com.sun.star.awt import XTopWindowListener
@@ -440,17 +442,31 @@ class DialogItem:
         '''
         return None
 
+    def isTextControl(self):
+        '''
+        returns true if we need a text listener on control
+        (the control is a text editor)
+        '''
+        return False
+
+    def _getModelName(self):
+        '''
+        this MUST be redefined for classes that don't use
+        the standard model naming
+        '''
+        clsName = type(self).__name__
+        return "com.sun.star.awt.UnoControl" + clsName + "Model"
+
     def _addUnoItems(self,  owner):
         '''
         Add uno item(s) to owning UNO dialog
         '''
         dialogModel = owner._dialogModel
         dialogContainer = owner._dialogContainer
-        clsName = type(self).__name__
 
         # create the control
-        oControlModel = dialogModel.createInstance(
-            "com.sun.star.awt.UnoControl" + clsName + "Model")
+        modelName = self._getModelName()
+        oControlModel = dialogModel.createInstance(modelName)
 
         # still dont' know why, but we've got to scale items coordinates
         # so get the factors
@@ -486,6 +502,12 @@ class DialogItem:
         if action is not None and action != '':
             dialogContainer.getControl(self._id).addActionListener(owner)
             dialogContainer.getControl(self._id).setActionCommand(self._id + '_' + action)
+
+        # if the control is a text control, setup a text listener on it
+        # we handle the event from inside the control as it would be impossible
+        # to reach it from fired event...
+        if self.isTextControl():
+            dialogContainer.getControl(self._id).addTextListener(self)
 
     def _destruct(self):
         '''
@@ -877,13 +899,21 @@ class FixedText(DialogItem):
     def __init__(self, *, Id=None,  Text='',
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
-                 FixedWidth=None, FixedHeight=None):
+                 FixedWidth=None, FixedHeight=None,
+                 Align=0,
+                 TextColor=None, BackgroundColor=None,
+                 Border=0, BorderColor=None):
         ''' constructor '''
         super().__init__(Id=Id,
                          MinWidth=MinWidth, MinHeight=MinHeight,
                          MaxWidth=MaxWidth, MaxHeight=MaxHeight,
                          FixedWidth=FixedWidth, FixedHeight=FixedHeight)
         self._text = Text
+        self._align = Align
+        self._textColor = TextColor
+        self._backgroundColor = BackgroundColor
+        self._border = Border
+        self._borderColor = BorderColor
 
     def calcMinSize(self):
         '''
@@ -899,8 +929,12 @@ class FixedText(DialogItem):
         '''
         return {
             'Label': self._text,
-            'Align': 0,
+            'Align': self._align,
             'VerticalAlign': VA_MIDDLE,
+            'TextColor': self._textColor,
+            'BackgroundColor': self._backgroundColor,
+            'Border': self._border,
+            'BorderColor': self._borderColor,
         }
 
     def dump(self,  indent):
@@ -918,6 +952,128 @@ class FixedText(DialogItem):
     def getText(self):
         return self._text
 
+    def setAlign(self, align):
+        self._align = align
+        if self._UNOWidget is not None:
+            self._UNOWidget.Align = align
+
+    def getAlign(self):
+        return self._align
+
+
+class Edit(DialogItem, unohelper.Base, XTextListener):
+    '''
+    Editable text field
+    '''
+    def __init__(self, *, Id=None,  Text='',
+                 ReadOnly=False,
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self._text = Text
+        self._readOnly = ReadOnly
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        if self._text != '':
+            return getTextBox(self._text)
+        else:
+            return getTextBox('MMMMMMMMMM')
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {
+            'Text': self._text,
+            'Align': 0,
+            'VerticalAlign': VA_MIDDLE,
+            'ReadOnly': self._readOnly,
+        }
+
+    def isTextControl(self):
+        '''
+        returns true if we need a text listener on control
+        (the control is a text editor)
+        '''
+        return True
+
+    def textChanged(self, textEvent):
+        if self._UNOWidget is not None:
+            self._text = self._UNOWidget.Text
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        txt = self._text.replace("\n", "\\n")
+        return super().dump(indent) + f", Text: '{txt}'" + '}'
+
+    def setText(self, txt):
+        self._text = txt
+        if self._UNOWidget is not None:
+            self._UNOWidget.Text = txt
+
+    def getText(self):
+        return self._text
+
+
+class DateField(DialogItem):
+    '''
+    Editable date field
+    '''
+    def __init__(self, *, Id=None,  Date=date(2000, 1, 1),
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight)
+        self.setDate(Date)
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return getTextBox('99/99/9999')
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {
+            'Date': LeenoUtils.date2UnoDate(self._date),
+            'Align': 0,
+            'VerticalAlign': VA_MIDDLE,
+        }
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        return super().dump(indent) + f", Date: '{self._date}'" + '}'
+
+    def setDate(self, dat):
+        self._date = dat
+        if self._UNOWidget is not None:
+            d = LeenoUtils.date2UnoDate(self._date)
+            self._UNOWidget.Date = d
+
+    def getDate(self):
+        return self._date
 
 class FileControl(DialogItem):
     '''
@@ -1026,6 +1182,65 @@ class PathControl(HSizer):
 
     def getPath(self):
         return self._path
+
+
+class DateControl(HSizer):
+    '''
+    A text field with a button
+    used to select a date
+    '''
+    def __init__(self, *, Id=None,  Date=None,
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
+        ''' constructor '''
+        super().__init__(Id=Id)
+        btnIcon = 'Icons-24x24/calendar.png'
+        btnWidth, btnHeight = getButtonSize('', Icon=btnIcon)
+        dateWidth, dummy = getTextBox('88 SETTEMBRE 9999XX')
+        if Date is None:
+            Date = date.today()
+        self.add(Edit(Text='', ReadOnly=True, FixedWidth=dateWidth))
+        # self.add(Spacer())
+        self.add(Button(Id=self._id +'.select', Icon=btnIcon, FixedWidth=btnWidth, InternalHandler=self.dateHandler))
+        self._date = Date
+
+    def _fixup(self):
+        txtBox = self._items[0]
+        txtBox.setText(LeenoUtils.date2String(self._date))
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {'Text': LeenoUtils.date2String(self._date)}
+
+    def dump(self,  indent):
+        '''
+        convert object to string
+        '''
+        dat = self._date
+        return super().dump(indent) + f", Date: '{LeenoUtils.date2String(dat)}'" + '}'
+
+    # handler per il button di selezione data
+    def dateHandler(self, owner, cmdStr):
+        nDate = pickDate(self._date)
+        if nDate is not None:
+            self._date = nDate
+        self._fixup()
+        # stop event processing
+        return True
+
+    def setDate(self, dat):
+        self._date = dat
+        if self._UNOWidget is not None:
+            self._UNOWidget.Text = LeenoUtils.date2String(self._date)
+
+    def getDate(self):
+        return self._date
 
 
 class ImageControl(DialogItem):
@@ -1179,6 +1394,8 @@ class Button(DialogItem):
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None,
+                 Align=0,
+                 TextColor=None, BackgroundColor=None,
                  InternalHandler=None):
         ''' constructor '''
         if Id is None:
@@ -1191,6 +1408,8 @@ class Button(DialogItem):
         self._label = Label
         self._retVal = RetVal
         self._icon = Icon
+        self._textColor = TextColor
+        self._backgroundColor = BackgroundColor
 
     def calcMinSize(self):
         '''
@@ -1208,6 +1427,11 @@ class Button(DialogItem):
         if self._icon is not None:
             res['ImageAlign'] = 0
             res['ImageURL'] = uno.systemPathToFileUrl(os.path.join(getCurrentPath(), self._icon))
+
+        if self._textColor is not None:
+           res['TextColor'] = self._textColor
+        if self._backgroundColor is not None:
+           res['BackgroundColor'] = self._backgroundColor
         return res
 
     def getAction(self):
@@ -1226,6 +1450,15 @@ class Button(DialogItem):
         res += f", Label: '{self._label}'"
         res += f", Icon: '{self._icon}'" + '}'
         return res
+
+    def setLabel(self, lbl):
+        self._label = lbl
+        if self._UNOWidget is not None:
+            self._UNOWidget.Label = lbl
+
+    def getLabel(self):
+        return self._label
+
 
 
 class CheckBox(DialogItem):
@@ -2107,3 +2340,147 @@ def YesNoCancel(*, Title='', Text=''):
         res = 'annulla'
     return res
 
+
+def pickDate(curDate):
+    '''
+    Allow to pick a date from a calendar
+    '''
+    if curDate is None:
+        curDate = date.today()
+
+    def rgb(r, g, b):
+        return 256*256*r + 256*g + b
+
+
+    btnWidth, btnHeight = getButtonSize('<<')
+    dateWidth, dummy = getTextBox('88 SETTEMBRE 8888XX')
+
+    workdaysBkColor = rgb(38, 153, 153)
+    workdaysFgColor = rgb(255, 255, 255)
+    holydaysBkColor = rgb(27, 248, 250)
+    holydaysFgColor = rgb(0, 0, 0)
+
+    # create daynames list with spacers
+    dayNamesLabels = [FixedText(
+        Text=LeenoUtils.DAYNAMES[0], Align=1,
+        BackgroundColor=rgb(38, 153, 153),
+        TextColor=rgb(255, 255, 255),
+        FixedWidth=btnWidth, FixedHeight=btnHeight
+    )]
+    for day in LeenoUtils.DAYNAMES[1:]:
+        dayNamesLabels.append(Spacer())
+        dayNamesLabels.append(
+            FixedText(Text=day, Align=1,
+                BackgroundColor=workdaysBkColor if day not in ('Sab', 'Dom') else holydaysBkColor,
+                TextColor=workdaysFgColor if day not in ('Sab', 'Dom') else holydaysFgColor,
+                FixedWidth=btnWidth, FixedHeight=btnHeight
+            )
+        )
+
+    def mkDayLabels():
+        monthDay = 1
+        weeks = []
+        for week in range(0, 5):
+            items = []
+            id = str(week) + '.0'
+            items.append(Button(
+                Id=id, Label=str(monthDay),
+                BackgroundColor=workdaysBkColor,
+                TextColor=workdaysFgColor,
+                FixedWidth=btnWidth, FixedHeight=btnHeight
+            ))
+            monthDay += 1
+            for day in range(1, 7):
+                items.append(Spacer())
+                id = str(week) + '.' + str(day)
+                items.append(Button(
+                    Id=id, Label=str(monthDay),
+                    BackgroundColor=workdaysBkColor if day not in (5, 6) else holydaysBkColor,
+                    TextColor=workdaysFgColor if day not in (5, 6) else holydaysFgColor,
+                    FixedWidth=btnWidth, FixedHeight=btnHeight
+                ))
+                monthDay += 1
+            weeks.append(HSizer(Items=items))
+            weeks.append(Spacer())
+        return weeks
+
+    def loadDate(dlg, dat):
+        day = - LeenoUtils.firstWeekDay(dat) + 1
+        days = LeenoUtils.daysInMonth(dat)
+        for week in range(0, 5):
+            for wDay in range(0, 7):
+                id = str(week) + '.' + str(wDay)
+                if day <= 0 or day > days:
+                    dlg[id].setLabel('')
+                else:
+                    dlg[id].setLabel(str(day))
+                day += 1
+
+        dlg['date'].setText(LeenoUtils.date2String(dat))
+
+    def handler(dlg, widgetId, widget, cmdStr):
+        nonlocal curDate
+        if widgetId == 'prevYear':
+            curDate = date(year=curDate.year-1, month=curDate.month, day=curDate.day)
+        elif widgetId == 'prevMonth':
+            month = curDate.month - 1
+            if month < 1:
+                month = 12
+                year = curDate.year - 1
+            else:
+                year = curDate.year
+            curDate = date(year=year, month=month, day=curDate.day)
+        elif widgetId == 'nextMonth':
+            month = curDate.month + 1
+            if month > 12:
+                month = 1
+                year = curDate.year + 1
+            else:
+                year = curDate.year
+            curDate = date(year=year, month=month, day=curDate.day)
+        elif widgetId == 'nextYear':
+            curDate = date(year=curDate.year+1, month=curDate.month, day=curDate.day)
+        elif widgetId == 'today':
+            curDate = date.today()
+        elif '.' in widgetId:
+            txt = widget.getLabel()
+            if txt == '':
+                return
+            day = int(txt)
+            curDate = date(year=curDate.year, month=curDate.month, day=day)
+        else:
+            return
+        loadDate(dlg, curDate)
+
+    dlg = Dialog(Title='Selezionare la data', Horz=False, CanClose=True, Handler=handler, Items=[
+        HSizer(Items=[
+            Button(Id='prevYear', Icon='Icons-24x24/leftdbl.png'),
+            Spacer(),
+            Button(Id='prevMonth', Icon='Icons-24x24/leftsng.png'),
+            Spacer(),
+            FixedText(Id='date', Text='99 Settembre 9999', Align=1, FixedWidth=dateWidth),
+            Spacer(),
+            Button(Id='nextMonth', Icon='Icons-24x24/rightsng.png'),
+            Spacer(),
+            Button(Id='nextYear', Icon='Icons-24x24/rightdbl.png'),
+        ]),
+        Spacer(),
+        HSizer(Items=dayNamesLabels),
+        Spacer()
+    ] + mkDayLabels() + [
+        Spacer(),
+        HSizer(Items=[
+            Spacer(),
+            Button(Label='Ok', MinWidth=MINBTNWIDTH, Icon='Icons-24x24/ok.png',  RetVal=1),
+            Spacer(),
+            Button(Id='today', Label='Oggi', MinWidth=MINBTNWIDTH),
+            Spacer(),
+            Button(Label='Annulla', MinWidth=MINBTNWIDTH, Icon='Icons-24x24/cancel.png',  RetVal=-1),
+            Spacer()
+        ])
+    ])
+
+    loadDate(dlg, curDate)
+    if dlg.run() < 0:
+        return None
+    return curDate

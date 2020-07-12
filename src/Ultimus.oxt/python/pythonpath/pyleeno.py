@@ -6659,7 +6659,7 @@ def colora_vecchio_elenco():
 
 
 ########################################################################
-def importa_stili(ctx):
+def MENU_importa_stili():
     '''
     Importa tutti gli stili da un documento di riferimento. Se non è
     selezionato, il file di riferimento è il template di leenO.

@@ -317,7 +317,7 @@ GROUPBOX_LEFT_BORDER = 10
 GROUPBOX_RIGHT_BORDER = 10
 
 
-class DialogItem:
+class DialogItem(unohelper.Base, XTextListener, XActionListener):
     '''
     Base class for every dialog item
     '''
@@ -361,7 +361,7 @@ class DialogItem:
         # we need both owning dialog and UNO widget pointers
         # so we can act on running dialogs
         self._owner = None
-        self._UNOWidget = None
+        self._UNOControlModel = None
 
     def _fixup(self):
         '''
@@ -528,11 +528,12 @@ class DialogItem:
         # insert the control into dialog
         dialogModel.insertByName(self._id, oControlModel)
 
-        # store the control for running usage
-        self._UNOWidget = oControlModel
+        # store the control model and the control for running usage
+        self._UNOControlModel = oControlModel
+        self._UNOControl = dialogContainer.getControl(self._id)
 
         # if needed, do some special initialization
-        self._initControl(dialogContainer.getControl(self._id))
+        self._initControl(self._UNOControl)
 
         # store owner pointer too
         self._owner = owner
@@ -540,27 +541,28 @@ class DialogItem:
         # if the control shall handle actions, setup an event handler
         action = self.getAction()
         if action is not None and action != '':
-            dialogContainer.getControl(self._id).addActionListener(owner)
-            dialogContainer.getControl(self._id).setActionCommand(self._id + '_' + action)
+            self._UNOControl.addActionListener(owner)
+            self._UNOControl.setActionCommand(self._id + '_' + action)
 
         # if the control is a text control, setup a text listener on it
         # we handle the event from inside the control as it would be impossible
         # to reach it from fired event...
         if self.isTextControl():
-            dialogContainer.getControl(self._id).addTextListener(self)
+            self._UNOControl.addTextListener(self)
 
         # if the control is a ListBox control, setup a listener on it
         # we handle the event from inside the control as it would be impossible
         # to reach it from fired event...
         if self.isListBox():
-            dialogContainer.getControl(self._id).addActionListener(self)
+            self._UNOControl.addActionListener(self)
 
     def _destruct(self):
         '''
         removes all reference to owner and UNO widget
         so we know that dialog is not in running state
         '''
-        self._UNOWidget = None
+        self._UNOControlModel = None
+        self._UNOControl = None
         self._owner = None
 
     def _actionPerformed(self):
@@ -1000,16 +1002,16 @@ class FixedText(DialogItem):
 
     def setText(self, txt):
         self._text = txt
-        if self._UNOWidget is not None:
-            self._UNOWidget.Label = txt
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.Label = txt
 
     def getText(self):
         return self._text
 
     def setAlign(self, align):
         self._align = align
-        if self._UNOWidget is not None:
-            self._UNOWidget.Align = align
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.Align = align
 
     def getAlign(self):
         return self._align
@@ -1021,7 +1023,7 @@ class FixedText(DialogItem):
         self.setText(d)
 
 
-class Edit(DialogItem, unohelper.Base, XTextListener):
+class Edit(DialogItem):
     '''
     Editable text field
     '''
@@ -1068,8 +1070,8 @@ class Edit(DialogItem, unohelper.Base, XTextListener):
         return True
 
     def textChanged(self, textEvent):
-        if self._UNOWidget is not None:
-            self._text = self._UNOWidget.Text
+        if self._UNOControlModel is not None:
+            self._text = self._UNOControlModel.Text
 
     def dump(self,  indent):
         '''
@@ -1080,8 +1082,8 @@ class Edit(DialogItem, unohelper.Base, XTextListener):
 
     def setText(self, txt):
         self._text = txt
-        if self._UNOWidget is not None:
-            self._UNOWidget.Text = txt
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.Text = txt
 
     def getText(self):
         return self._text
@@ -1133,9 +1135,9 @@ class DateField(DialogItem):
 
     def setDate(self, dat):
         self._date = dat
-        if self._UNOWidget is not None:
+        if self._UNOControlModel is not None:
             d = LeenoUtils.date2UnoDate(self._date)
-            self._UNOWidget.Date = d
+            self._UNOControlModel.Date = d
 
     def getDate(self):
         return self._date
@@ -1202,8 +1204,8 @@ class FileControl(HSizer):
 
     def setPath(self, pth):
         self._path = pth
-        if self._UNOWidget is not None:
-            self._UNOWidget.Text = pth
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.Text = pth
 
     def getPath(self):
         return self._path
@@ -1268,8 +1270,8 @@ class PathControl(HSizer):
 
     def setPath(self, pth):
         self._path = pth
-        if self._UNOWidget is not None:
-            self._UNOWidget.Text = pth
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.Text = pth
 
     def getPath(self):
         return self._path
@@ -1333,8 +1335,8 @@ class DateControl(HSizer):
 
     def setDate(self, dat):
         self._date = dat
-        if self._UNOWidget is not None:
-            self._UNOWidget.Text = LeenoUtils.date2String(self._date)
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.Text = LeenoUtils.date2String(self._date)
 
     def getDate(self):
         return self._date
@@ -1470,17 +1472,17 @@ class ProgressBar(DialogItem):
     def setLimits(self,  minVal, maxVal):
         self._minVal = minVal
         self._maxVal = maxVal
-        if self._UNOWidget is not None:
-            self._UNOWidget.ProgressValueMin = minVal
-            self._UNOWidget.ProgressValueMax = maxVal
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.ProgressValueMin = minVal
+            self._UNOControlModel.ProgressValueMax = maxVal
 
     def getLimits(self):
         return self._minVal, self._maxVal
 
     def setValue(self, val):
         self._value = val
-        if self._UNOWidget is not None:
-            self._UNOWidget.ProgressValue = val
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.ProgressValue = val
 
     def getValue(self):
         return self._value
@@ -1556,8 +1558,8 @@ class Button(DialogItem):
 
     def setLabel(self, lbl):
         self._label = lbl
-        if self._UNOWidget is not None:
-            self._UNOWidget.Label = lbl
+        if self._UNOControlModel is not None:
+            self._UNOControlModel.Label = lbl
 
     def getLabel(self):
         return self._label
@@ -1616,15 +1618,15 @@ class CheckBox(DialogItem):
 
     def setState(self, state):
         self._state = state
-        if self._UNOWidget:
-            self._UNOWidget.State = self._state
+        if self._UNOControlModel:
+            self._UNOControlModel.State = self._state
 
     def getState(self):
         return self._state
 
     def _actionPerformed(self):
         ''' an action on underlying widget happened '''
-        self._state = True if self._UNOWidget.State else False
+        self._state = True if self._UNOControlModel.State else False
 
     def dump(self, indent):
         '''
@@ -1642,7 +1644,7 @@ class CheckBox(DialogItem):
         self.setState(d)
 
 
-class ListBox(DialogItem, unohelper.Base, XActionListener):
+class ListBox(DialogItem):
     '''
     ListBox
     Display a list of strings
@@ -1713,8 +1715,8 @@ class ListBox(DialogItem, unohelper.Base, XActionListener):
 
     def setCurrent(self, curr):
         self._current= curr
-        if self._UNOWidget:
-            self._UNOWidget.selectItemPos(self._current, True)
+        if self._UNOControlModel:
+            self._UNOControlModel.selectItemPos(self._current, True)
 
     def getCurrent(self):
         return self._current
@@ -1923,7 +1925,7 @@ class RadioGroup(DialogItem):
         if self._owner is not None:
             idx = 0
             for item in self._sizer._items:
-                item._UNOWidget.State = idx == current
+                item._UNOControlModel.State = idx == current
                 idx += 1
 
     def dump(self,  indent):

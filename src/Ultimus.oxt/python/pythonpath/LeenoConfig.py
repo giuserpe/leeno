@@ -9,6 +9,7 @@ from os.path import expanduser
 from datetime import date
 
 import LeenoUtils
+import PersistUtils
 
 class Borg:
     '''
@@ -121,14 +122,39 @@ class Config(Borg):
         self._parser.write(fp)
         fp.close()
 
-    def read(self, section, option):
+    def read(self, section, option, convert=False):
         '''
         read an option from config
+        if convert is True, do the string->value conversion
+        (for latter, the string must have the correct format)
         '''
         try:
             return self._parser.get(section, option)
         except Exception:
             return None
+
+    def readBlock(self, section, convert=False):
+        '''
+        read a block of options from config given the section name
+        if convert is True, do the string->value conversion
+        (for latter, the strings must have the correct format)
+        '''
+        options = self._parser.options(section)
+        res = {}
+        for option in options:
+            val = self._parser.get(section, option)
+            if val is None:
+                continue
+            if convert:
+                try:
+                    val = PersistUtils.string2var(val)
+                    if val is not None:
+                        res[option] = val
+                except Exception:
+                    pass
+            else:
+                res[option] = val
+        return res
 
     def write(self, section, option, val):
         '''
@@ -140,4 +166,19 @@ class Config(Borg):
 
         # we must store on each write, because we can't know
         # when LeenoConfig gets destroyed with python
+        self._store()
+
+    def writeBlock(self, section, valDict, convert=False):
+        '''
+        write a block of options to config given the section name
+        if convert is True, do the value->string conversion
+        '''
+        if not self._parser.has_section(section):
+            self._parser.add_section(section)
+        for key, val in valDict.items():
+            if convert:
+                val = PersistUtils.var2string(val)
+                if val is None:
+                    continue
+            self._parser.set(section, key, val)
         self._store()

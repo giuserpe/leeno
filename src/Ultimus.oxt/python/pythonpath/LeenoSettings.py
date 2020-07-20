@@ -6,47 +6,48 @@ import LeenoConfig
 import LeenoUtils
 import DocUtils
 
-def _load2(oDoc, cfg, name):
+_JOBSETTINGSITEMS = (
+    'committente',
+    'stazioneAppaltante',
+    'rup',
+    'progettista',
+    'data',
+    'revisione',
+    'dataRevisione',
+)
+
+_PRINTSETTINGSITEMS = (
+)
+
+def _load2(oDoc, cfg, root, name):
     # per prima cosa tenta il caricamento dal documento
     # se nullo carica dal config generale
-    v = DocUtils.getDocUserDefinedAttribute(oDoc, 'Lavoro.' + name)
+    v = DocUtils.getDocUserDefinedAttribute(oDoc, root + '.' + name)
     if v:
         return v
-    v = cfg.read('Lavoro', name)
+    v = cfg.read(root, name)
     if v:
         return v
     return ''
 
 
-def _store2(oDoc, cfg, name, val):
-    DocUtils.setDocUserDefinedAttribute(oDoc, 'Lavoro.' + name, val)
-    cfg.write('Lavoro', name, val)
+def _store2(oDoc, cfg, root, name, val):
+    DocUtils.setDocUserDefinedAttribute(oDoc, root + '.' + name, val)
+    cfg.write(root, name, val)
 
 
 def loadJobSettings(oDoc):
     cfg = LeenoConfig.Config()
-    res = {}
-
-    res['committente'] = _load2(oDoc, cfg, 'committente')
-    res['stazioneAppaltante'] = _load2(oDoc, cfg, 'stazioneAppaltante')
-    res['rup'] = _load2(oDoc, cfg, 'rup')
-    res['progettista'] = _load2(oDoc, cfg, 'progettista')
-    res['data'] = LeenoUtils.string2Date(_load2(oDoc, cfg, 'data'))
-    res['revisione'] = _load2(oDoc, cfg, 'revisione')
-    res['dataRevisione'] = LeenoUtils.string2Date(_load2(oDoc, cfg, 'dataRevisione'))
-
-    return res
+    data = DocUtils.loadDataBlock(oDoc, 'Lavoro')
+    if data is None or len(data) == 0:
+        data = cfg.readBlock('Lavoro', True)
+    return data
 
 def storeJobSettings(oDoc, js):
     cfg = LeenoConfig.Config()
 
-    _store2(oDoc, cfg, 'committente', js['committente'])
-    _store2(oDoc, cfg, 'stazioneAppaltante', js['stazioneAppaltante'])
-    _store2(oDoc, cfg, 'rup', js['rup'])
-    _store2(oDoc, cfg, 'progettista', js['progettista'])
-    _store2(oDoc, cfg, 'data', LeenoUtils.date2String(js['data'], 1))
-    _store2(oDoc, cfg, 'revisione', js['revisione'])
-    _store2(oDoc, cfg, 'dataRevisione', LeenoUtils.date2String(js['dataRevisione'], 1))
+    DocUtils.storeDataBlock(oDoc, 'Lavoro', js)
+    cfg.writeBlock('Lavoro', js, True)
 
 def JobSettingsDialog():
     # dimensione dell'icona col punto di domanda
@@ -119,25 +120,86 @@ def MENU_JobSettings():
     js = loadJobSettings(oDoc)
 
     dlg = JobSettingsDialog()
-
-    dlg['committente'].setText(js['committente'])
-    dlg['stazioneAppaltante'].setText(js['stazioneAppaltante'])
-    dlg['rup'].setText(js['rup'])
-    dlg['progettista'].setText(js['progettista'])
-    dlg['data'].setDate(js['data'])
-    dlg['revisione'].setText(js['revisione'])
-    dlg['dataRevisione'].setDate(js['dataRevisione'])
+    dlg.setData(js)
 
     if dlg.run() >= 0:
-        js = {}
-        js['committente'] = dlg['committente'].getText()
-        js['stazioneAppaltante'] = dlg['stazioneAppaltante'].getText()
-        js['rup'] = dlg['rup'].getText()
-        js['progettista'] = dlg['progettista'].getText()
-        js['data'] = dlg['data'].getDate()
-        js['revisione'] = dlg['revisione'].getText()
-        js['dataRevisione'] = dlg['dataRevisione'].getDate()
+        js = dlg.getData(_JOBSETTINGSITEMS)
         storeJobSettings(oDoc, js)
 
+
+def PrintSettingsDialog():
+    # dimensione dell'icona grande
+    imgW = Dialogs.getBigIconSize()[0] * 3
+    fieldW, dummy = Dialogs.getTextBox("W" * 30)
+    posW, dummy = Dialogs.getTextBox("SinistraXX")
+
+    return Dialogs.Dialog(Title='Impostazioni stampa / PDF',  Horz=False, CanClose=True,  Items=[
+        Dialogs.HSizer(Items=[
+            Dialogs.VSizer(Items=[
+                Dialogs.Spacer(),
+                Dialogs.ImageControl(Image='Icons-Big/printersettings.png', MinWidth=imgW),
+                Dialogs.Spacer(),
+            ]),
+            Dialogs.Spacer(),
+            Dialogs.VSizer(Items=[
+                Dialogs.FixedText(Text='Documento con le copertine', FixedWidth=fieldW),
+                Dialogs.Spacer(),
+                Dialogs.FileControl(Id="fileCopertine", Types='*.ods'),
+                Dialogs.Spacer(),
+                Dialogs.FixedText(Text='Selezionare copertina in uso'),
+                Dialogs.Spacer(),
+                Dialogs.ListBox(List={'trulla', 'llero', 'ullalla', 'oilliiiiiiiiii'}),
+                Dialogs.Spacer(),
+                Dialogs.FixedText(Text='Intestazione'),
+                Dialogs.Spacer(),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
+                    Dialogs.Edit(Id="intSx", Text='TEMPORANEO'),
+                ]),
+                Dialogs.Spacer(),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Centro', FixedWidth=posW),
+                    Dialogs.Edit(Id="intCenter", Text='TEMPORANEO'),
+                ]),
+                Dialogs.Spacer(),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Destra', FixedWidth=posW),
+                    Dialogs.Edit(Id="intDx", Text='TEMPORANEO'),
+                ]),
+                Dialogs.Spacer(),
+                Dialogs.FixedText(Text='Piè di pagina'),
+                Dialogs.Spacer(),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Sinistra', FixedWidth=posW),
+                    Dialogs.Edit(Id="ppSx", Text='TEMPORANEO'),
+                ]),
+                Dialogs.Spacer(),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Centro', FixedWidth=posW),
+                    Dialogs.Edit(Id="ppCenter", Text='TEMPORANEO'),
+                ]),
+                Dialogs.Spacer(),
+                Dialogs.HSizer(Items=[
+                    Dialogs.FixedText(Text='Destra', FixedWidth=posW),
+                    Dialogs.Edit(Id="ppDx", Text='TEMPORANEO'),
+                ]),
+            ]),
+        ]),
+        Dialogs.Spacer(),
+        Dialogs.Spacer(),
+        Dialogs.HSizer(Items=[
+            Dialogs.Spacer(),
+            Dialogs.Button(Label='Ok', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/ok.png',  RetVal=1),
+            Dialogs.Spacer(),
+            Dialogs.Button(Label='Annulla', MinWidth=Dialogs.MINBTNWIDTH, Icon='Icons-24x24/cancel.png',  RetVal=-1),
+            Dialogs.Spacer(),
+        ]),
+    ])
+
+
 def MENU_PrintSettings():
-    pass
+
+    dlg = PrintSettingsDialog()
+
+    dlg.run()
+

@@ -2,9 +2,7 @@
     LeenO - modulo di gestione dialoghi
 """
 
-import os
 import threading
-import uno
 
 import LeenoUtils
 import pyleeno as PL

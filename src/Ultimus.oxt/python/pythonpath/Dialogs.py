@@ -7,8 +7,7 @@ Copyright 2020 by Massimo Del Fedele
 """
 import os
 import inspect
-from datetime import date, timedelta
-import calendar
+from datetime import date
 import uno
 import unohelper
 
@@ -130,6 +129,30 @@ def getTextBox(txt):
     size = text.getMinimumSize()
     textModel.dispose()
     return size.Width,  size.Height
+
+
+def getListBoxSize(items):
+    '''
+    Get the size needed to display a list box
+    BEWARE : SIZE IN PIXEL !
+    '''
+    ctx = LeenoUtils.getComponentContext()
+    serviceManager = ctx.ServiceManager
+
+    textModel = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlFixedTextModel")
+    text = serviceManager.createInstance(
+        "com.sun.star.awt.UnoControlFixedText")
+    text.setModel(textModel)
+    maxW = 0
+    maxH = 0
+    for item in items:
+        text.setText(item)
+        size = text.getMinimumSize()
+        maxW = max(maxW, size.Width)
+        maxH = max(maxH, size.Height)
+    textModel.dispose()
+    return maxW, maxH
 
 
 def getRadioButtonSize(label):
@@ -434,6 +457,13 @@ class DialogItem:
         '''
         return {}
 
+    def _initControl(self, oControl):
+        '''
+        do some special initialization
+        (needed, for example, for droplists...)
+        '''
+        pass
+
     def getAction(self):
         '''
         Gets a string representing the action on the control
@@ -446,6 +476,13 @@ class DialogItem:
         '''
         returns true if we need a text listener on control
         (the control is a text editor)
+        '''
+        return False
+
+    def isListBox(self):
+        '''
+        returns true if we need an action listener on control
+        (the control is a listbox)
         '''
         return False
 
@@ -494,6 +531,9 @@ class DialogItem:
         # store the control for running usage
         self._UNOWidget = oControlModel
 
+        # if needed, do some special initialization
+        self._initControl(dialogContainer.getControl(self._id))
+
         # store owner pointer too
         self._owner = owner
 
@@ -509,6 +549,12 @@ class DialogItem:
         if self.isTextControl():
             dialogContainer.getControl(self._id).addTextListener(self)
 
+        # if the control is a ListBox control, setup a listener on it
+        # we handle the event from inside the control as it would be impossible
+        # to reach it from fired event...
+        if self.isListBox():
+            dialogContainer.getControl(self._id).addActionListener(self)
+
     def _destruct(self):
         '''
         removes all reference to owner and UNO widget
@@ -519,6 +565,14 @@ class DialogItem:
 
     def _actionPerformed(self):
         ''' an action on underlying widget happened '''
+        pass
+
+    def getData(self):
+        ''' be redefined '''
+        return None
+
+    def setData(self, d):
+        ''' be redefined '''
         pass
 
 
@@ -960,6 +1014,12 @@ class FixedText(DialogItem):
     def getAlign(self):
         return self._align
 
+    def getData(self):
+        return self.getText()
+
+    def setData(self, d):
+        self.setText(d)
+
 
 class Edit(DialogItem, unohelper.Base, XTextListener):
     '''
@@ -1026,6 +1086,11 @@ class Edit(DialogItem, unohelper.Base, XTextListener):
     def getText(self):
         return self._text
 
+    def getData(self):
+        return self.getText()
+
+    def setData(self, d):
+        self.setText(d)
 
 class DateField(DialogItem):
     '''
@@ -1075,30 +1140,38 @@ class DateField(DialogItem):
     def getDate(self):
         return self._date
 
-class FileControl(DialogItem):
+    def getData(self):
+        return self.getDate()
+
+    def setData(self, d):
+        self.setDate(d)
+
+
+class FileControl(HSizer):
     '''
-    a text field with file dialog
+    A text field with a button
+    used to select a file
     '''
-    def __init__(self, *, Id=None,  Path='',
+    def __init__(self, *, Id=None,  Path=None, Types="*.*",
                  MinWidth=None, MinHeight=None,
                  MaxWidth=None, MaxHeight=None,
                  FixedWidth=None, FixedHeight=None,
                  InternalHandler=None):
         ''' constructor '''
-        super().__init__(Id=Id,
-                         MinWidth=MinWidth, MinHeight=MinHeight,
-                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
-                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
-                         InternalHandler = InternalHandler)
+        super().__init__(Id=Id)
+        btnIcon = 'Icons-24x24/file.png'
+        btnWidth, btnHeight = getButtonSize('', Icon=btnIcon)
+        if Path is None or Path == '':
+            Path = getDefaultPath()
+        self.add(FixedText(Text=Path))
+        self.add(Button(Id='select', Icon=btnIcon, FixedWidth=btnWidth, InternalHandler=self.pathHandler))
         self._path = Path
+        self._types = Types
 
-    def calcMinSize(self):
-        '''
-        Calculate widget's minimum size
-        '''
-        w, h = getTextBox("/some/dummy/path/here")
-        dummy, h = getButtonSize("Sfoglia...")
-        return w, h
+    def _fixup(self):
+        txtBox = self._items[0]
+        w = txtBox._width
+        txtBox.setText(shortenPath(self._path, w))
 
     def getProps(self):
         '''
@@ -1115,6 +1188,18 @@ class FileControl(DialogItem):
         pth = self._path
         return super().dump(indent) + f", Path: '{pth}'" + '}'
 
+    # handler per il button di selezione path
+    def pathHandler(self, owner, cmdStr):
+        file = FileSelect(est = self._types)
+        if file is not None:
+            self._path = file
+            self._fixup()
+        # stop event processing
+        return True
+
+    def setFileTypes(self, fTypes):
+        self._types = fTypes
+
     def setPath(self, pth):
         self._path = pth
         if self._UNOWidget is not None:
@@ -1122,6 +1207,12 @@ class FileControl(DialogItem):
 
     def getPath(self):
         return self._path
+
+    def getData(self):
+        return self.getPath()
+
+    def setData(self, d):
+        self.setPath(d)
 
 
 class PathControl(HSizer):
@@ -1183,6 +1274,12 @@ class PathControl(HSizer):
     def getPath(self):
         return self._path
 
+    def getData(self):
+        return self.getPath()
+
+    def setData(self, d):
+        self.setPath(d)
+
 
 class DateControl(HSizer):
     '''
@@ -1241,6 +1338,12 @@ class DateControl(HSizer):
 
     def getDate(self):
         return self._date
+
+    def getData(self):
+        return self.getDate()
+
+    def setData(self, d):
+        self.setDate(d)
 
 
 class ImageControl(DialogItem):
@@ -1459,6 +1562,11 @@ class Button(DialogItem):
     def getLabel(self):
         return self._label
 
+    def getData(self):
+        return self.getLabel()
+
+    def setData(self, d):
+        self.setLabel(d)
 
 
 class CheckBox(DialogItem):
@@ -1526,6 +1634,105 @@ class CheckBox(DialogItem):
         res += f", Label: '{self._label}'"
         res += f", State: '{self._state}'"
         return res
+
+    def getData(self):
+        return self.getState()
+
+    def setData(self, d):
+        self.setState(d)
+
+
+class ListBox(DialogItem, unohelper.Base, XActionListener):
+    '''
+    ListBox
+    Display a list of strings
+    '''
+    def __init__(self, *, Id=None, List=None, Current=None,
+                 MinWidth=None, MinHeight=None,
+                 MaxWidth=None, MaxHeight=None,
+                 FixedWidth=None, FixedHeight=None,
+                 InternalHandler=None):
+        ''' constructor '''
+        super().__init__(Id=Id,
+                         MinWidth=MinWidth, MinHeight=MinHeight,
+                         MaxWidth=MaxWidth, MaxHeight=MaxHeight,
+                         FixedWidth=FixedWidth, FixedHeight=FixedHeight,
+                         InternalHandler = InternalHandler)
+        if type(List) == set:
+            self._list = tuple(List)
+        else:
+            self._list = List
+        if Current is not None:
+            self._current = Current
+        elif len(List) > 0:
+            self._current = self._list[0]
+        else:
+            self._current = ''
+
+    def calcMinSize(self):
+        '''
+        Calculate widget's minimum size
+        '''
+        return getListBoxSize(self._list)
+
+    def getProps(self):
+        '''
+        Get control's properties (name+value)
+        to be set in UNO
+        MUST be redefined on each visible control
+        '''
+        return {
+            'Dropdown': True,
+        }
+
+    def _initControl(self, oControl):
+        '''
+        do some special initialization
+        (needed, for example, for droplists...)
+        '''
+        count = oControl.getItemCount()
+        if count > 0:
+            oControl.removeItems(0, count)
+        pos = 0
+        for item in self._list:
+            oControl.addItem(item, pos)
+            pos += 1
+        oControl.setDropDownLineCount(10)
+        oControl.setMultipleMode(False)
+
+    def actionPerformed(self, oActionEvent):
+        ''' an action on underlying widget happened '''
+        self._current = oActionEvent.ActionCommand
+
+    def isListBox(self):
+        '''
+        returns true if we need an action listener on control
+        (the control is a listbox)
+        '''
+        return True
+
+    def setCurrent(self, curr):
+        self._current= curr
+        if self._UNOWidget:
+            self._UNOWidget.selectItemPos(self._current, True)
+
+    def getCurrent(self):
+        return self._current
+
+    def dump(self, indent):
+        '''
+        convert object to string
+        '''
+        res = super().dump(indent)
+        res += f", Items: '{self._list}'"
+        res += f", Current: '{self._current}'"
+        return res
+
+    def getData(self):
+        return self.getCurrent()
+
+    def setData(self, d):
+        self.setCurrent(d)
 
 
 class RadioButton(DialogItem):
@@ -1728,6 +1935,12 @@ class RadioGroup(DialogItem):
             res += item.dump(indent + 1) + '\n'
         res += 4 * indent * ' ' + '}'
         return res
+
+    def getData(self):
+        return self.getCurrent()
+
+    def setData(self, d):
+        self.setCurrent(d)
 
 
 class GroupBox(DialogItem):
@@ -2084,6 +2297,24 @@ class Dialog(unohelper.Base, XActionListener, XJobExecutor,  XTopWindowListener)
 
     def getValue(self):
         return self._retVal
+
+    def setData(self, data):
+        ''' use a dictionary to fillup dialog data '''
+        for key, val in data.items():
+            widget = self.getWidget(key)
+            widget.setData(val)
+
+    def getData(self, fields):
+        '''
+        retrieve all data fields with names in 'fields'
+        return a dictionary
+        '''
+        res = {}
+        for key in fields:
+            widget = self.getWidget(key)
+            val = widget.getData()
+            res[key] = val
+        return res
 
 
 ######################################################################

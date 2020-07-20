@@ -12,6 +12,7 @@ from os.path import isfile, join
 
 import unohelper
 from com.sun.star.task import XJobExecutor
+import Dialogs
 
 import uno
 import traceback
@@ -136,18 +137,31 @@ class Dispatcher(unohelper.Base, XJobExecutor):
             print("sys.exc_info:", sys.exc_info())
             sysinfo = sys.exc_info()
             exceptionClass = sysinfo[0].__name__
-            message = str(sysinfo[1])
+            msg = str(sysinfo[1])
+            if msg == '-1' or msg == '':
+                msg = str(sysinfo[0])
+            if msg != '':
+                msg += '\n\n'
             tb = sysinfo[2]
             tbInfo = traceback.extract_tb(tb)[-1]
             function = tbInfo.name
             line = tbInfo.lineno
             file = os.path.split(tbInfo.filename)[1]
             msg = (
-                message + "\n\n" +
+                msg +
                 "File:     '" + file + "'\n" +
-                "Line:     '" + str(line) + "'\n\n" +
-                "Function: '" + function + "'\n\n")
-            msgbox(Title="Errore interno", Message=msg)
+                "Line:     '" + str(line) + "'\n" +
+                "Function: '" + function + "'\n")
+            msg += "-" * 30 + "\n"
+            msg += "BACKTRACE:\n"
+            for bkInfo in traceback.extract_tb(tb):
+                function = bkInfo.name
+                line = str(bkInfo.lineno)
+                file = os.path.split(bkInfo.filename)[1]
+                msg += f"File:{file}, Line:{line}, Function:{function}\n"
+            msg += "\n\n"
+
+            Dialogs.Exclamation(Title="Errore interno", Text=msg)
 
 
 g_ImplementationHelper = unohelper.ImplementationHelper()

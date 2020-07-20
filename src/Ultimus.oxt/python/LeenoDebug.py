@@ -211,6 +211,7 @@ import LeenoImport
 filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/TestPdfExport.ods"
 oDoc = loadDocument(filename)
 
-
+#import LeenoSettings
+#LeenoSettings.MENU_PrintSettings()
 
 print("\nDONE\n")

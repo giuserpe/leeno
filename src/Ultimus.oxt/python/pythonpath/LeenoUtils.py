@@ -8,9 +8,6 @@ import uno
 from com.sun.star.beans import PropertyValue
 from datetime import date
 import calendar
-from com.sun.star.util import Date
-
-import Dialogs
 
 '''
 ALCUNE COSE UTILI
@@ -162,19 +159,6 @@ def dictToProperties(values, unoAny=False):
         ps = uno.Any('[]com.sun.star.beans.PropertyValue', ps)
     return ps
 
-def unoDate2Date(uDate):
-    d = date()
-    d.year = uDate.Year
-    d.month = uDate.Month
-    d.day = uDate.Day
-    return d
-
-def date2UnoDate(d):
-    uDate = Date()
-    uDate.Year = d.year
-    uDate.Month = d.month
-    uDate.Day = d.day
-    return uDate
 
 def daysInMonth(dat):
     '''

@@ -8487,7 +8487,7 @@ def MENU_numera_colonna():
     Comando di menu per numera_colonna()
     '''
     numera_colonna()
-    
+
 def numera_colonna():
     '''Inserisce l'indice di colonna nelle prime 100 colonne del rigo selezionato
 Associato a Ctrl+Shift+C'''
@@ -9081,13 +9081,61 @@ def errore():
     DLG.MsgBox(traceback.format_exc())
 
 #~from collections import OrderedDict
+def somma():
+    '''
+    Mostra la somme dei valori di una selezione su singola colonna. Utile quando la
+    finestra di Calc non mostra la statusbar.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.CurrentController.ActiveSheet
+    lcol = LeggiPosizioneCorrente()[0]
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    el_y = list()
+    lista_y = list()
+    try:
+        len(oRangeAddress)
+        for el in oRangeAddress:
+            el_y.append((el.StartRow, el.EndRow))
+    except TypeError:
+        el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
+    for y in el_y:
+        for el in range(y[0], y[1] + 1):
+            lista_y.append(el)
+    somma = list()
+    for y in lista_y:
+        somma.append(oSheet.getCellByPosition(lcol, y).Value)
+    DLG.chi(sum(somma))
 
 def MENU_debug():
     '''
     Utile per testare comandi dalla toolbar DEV
     '''
-    #~DLG.chi('poipo')
-    #~return
+    somma()
+    return
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+    for i in range(1, 15):
+        DLG.chi(oSheet.getCellByPosition(0, i).String.split('.'))
+        _gotoCella(0, i)
+
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3 and \
+        oSheet.getCellByPosition(4, i).Type.value == 'EMPTY':
+            madre = oSheet.getCellByPosition(1, i).String
+        if len(oSheet.getCellByPosition(0, i).String.split('.')) == 4:
+            _gotoCella(0, i)
+            figlia = oSheet.getCellByPosition(1, i).String
+            DLG.chi(oSheet.getCellByPosition(0, i).String.split('.'))
+            oSheet.getCellByPosition(1, i).String = madre + '\n- ' + figlia
+
+
+    for i in reversed (range(1, lr)):
+        if oSheet.getCellByPosition(0, i).String.split('.')[-1] == '0' and \
+        oSheet.getCellByPosition(4, i).Type.value == 'EMPTY':
+            oSheet.getRows().removeByIndex(i, 1)
+
+    return
     sistema_cose()
     return
 #~ def split_chunks(l, n):

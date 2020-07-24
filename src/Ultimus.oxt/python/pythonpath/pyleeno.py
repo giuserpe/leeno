@@ -4129,6 +4129,7 @@ def MENU_elimina_righe():
         if oSheet.getCellByPosition(2, y).CellStyle not in ('An-lavoraz-generica',
                                                             'comp 1-a',
                                                             'comp sotto centro',
+                                                            'EP-mezzo',
                                                             'Livello-0-scritta mini',
                                                             'Livello-1-scritta mini',
                                                             'livello2_') or \
@@ -9167,23 +9168,25 @@ def MENU_debug():
     '''
     Utile per testare comandi dalla toolbar DEV
     '''
-    elimina_righe()
-    return
+    #~parziale_verifica()
+    #~return
     ###
     '''
     Ricalcola i parziali di una voce
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName('VARIANTE')
+    #~oSheet = oDoc.getSheets().getByName('VARIANTE')
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
     lrow = LeggiPosizioneCorrente()[1]
     sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
     sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
     for i in range(sopra, sotto):
         #~DLG.chi(oSheet.getCellByPosition(8, i).String)
         if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
-            
-            oDoc.CurrentController.select(oSheet.getCellByPosition(8, i))
-            MENU_parziale()
+            parziale_core(oSheet, i)
+            #~oDoc.CurrentController.select(oSheet.getCellByPosition(8, i))
+            #~MENU_parziale()
     #~somma()
     return
     ###

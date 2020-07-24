@@ -4125,28 +4125,28 @@ def MENU_elimina_righe():
         for el in range(y[0], y[1] + 1):
             lista_y.append(el)
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    noVoce = LeenoUtils.getGlobalVar('noVoce')
     for y in reversed(lista_y):
-        lrow = LeggiPosizioneCorrente()[1]
-        lrow = y
-        if oSheet.Name == 'CONTABILITA':
-            if oSheet.getCellByPosition(1, lrow).CellStyle == 'Data_bianca':
-                oCellAddress = oSheet.getCellByPosition(1, lrow+1).getCellAddress()
+        if oSheet.getCellByPosition(2, y).CellStyle not in ('An-lavoraz-generica',
+                                                            'comp 1-a',
+                                                            'comp sotto centro',
+                                                            'Livello-0-scritta mini',
+                                                            'Livello-1-scritta mini',
+                                                            'livello2_') or \
+        'Somma positivi e negativi [' in oSheet.getCellByPosition(8, y).String or \
+        'SOMMANO' in oSheet.getCellByPosition(8, y).String:
+            pass
+        else:
+            if oSheet.getCellByPosition(1, y).CellStyle == 'Data_bianca':
+                oCellAddress = oSheet.getCellByPosition(1, y+1).getCellAddress()
                 oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
                 oCellRangeAddr.StartColumn = 1
-                oCellRangeAddr.StartRow = lrow
+                oCellRangeAddr.StartRow = y
                 oCellRangeAddr.EndColumn = 1
-                oCellRangeAddr.EndRow = lrow
+                oCellRangeAddr.EndRow = y
                 oSheet.copyRange(oCellAddress, oCellRangeAddr)
-            if oSheet.getCellByPosition(0, lrow).CellStyle == 'comp 10 s_R' and \
-                oSheet.getCellByPosition(1, lrow).CellStyle == 'Comp-Bianche in mezzo_R':
-                if 'Somma positivi e negativi [' in oSheet.getCellByPosition(8, lrow).String or \
-                oSheet.getCellByPosition(0, lrow).CellStyle:
-                    return
-        stile = oSheet.getCellByPosition(0, lrow).CellStyle
-        oSheet.getRows().removeByIndex(y, 1)
-        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            if stile in noVoce:
+            stile = oSheet.getCellByPosition(2, y).CellStyle
+            oSheet.getRows().removeByIndex(y, 1)
+            if stile in ('Livello-0-scritta mini', 'Livello-1-scritta mini', 'livello2_'):
                 Rinumera_TUTTI_Capitoli2(oSheet)
     parziale_verifica()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))

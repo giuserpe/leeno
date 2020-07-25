@@ -1717,36 +1717,6 @@
               <value>_self</value>
             </prop>
           </node>
-          
-          <node oor:name="mUserSettings" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSettings.MENU_UserSettings</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Impostazioni utente</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
-
-          <node oor:name="mJobSettings" oor:op="replace">
-            <prop oor:name="Context" oor:type="xs:string">
-              <value>com.sun.star.sheet.SpreadsheetDocument</value>
-            </prop>
-            <prop oor:name="URL" oor:type="xs:string">
-              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSettings.MENU_JobSettings</value>
-            </prop>
-            <prop oor:name="Title" oor:type="xs:string">
-              <value>Impostazioni dati lavoro</value>
-            </prop>
-            <prop oor:name="Target" oor:type="xs:string">
-              <value>_self</value>
-            </prop>
-          </node>
 
           <node oor:name="mPrintSettings" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">

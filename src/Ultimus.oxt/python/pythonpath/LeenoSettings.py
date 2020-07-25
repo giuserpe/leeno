@@ -145,10 +145,6 @@ def JobSettingsDialog():
     ])
 
 
-def MENU_UserSettings():
-    pass
-
-
 def MENU_JobSettings():
 
     oDoc = LeenoUtils.getDocument()

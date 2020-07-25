@@ -1960,9 +1960,9 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oCellRangeAddr.Sheet = iSheet
 
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 0, ER))
-    struttura_off('R')
-    struttura_off('R')
-    struttura_off('R')
+    struttura_off()
+    struttura_off()
+    struttura_off()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:

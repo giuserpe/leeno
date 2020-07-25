@@ -1116,7 +1116,7 @@ def MENU_XPWE_import():
         ordina = False
 
     filename = Dialogs.FileSelect('Scegli il file XPWE da importare...', '*.xpwe')  # *.xpwe')
-    if filename == 'Cancel' or filename == '':
+    if filename in ('Cancel', '', None):
         return
 
     # effettua il parsing del file XML

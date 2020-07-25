@@ -211,7 +211,40 @@ import LeenoImport
 filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/TestPdfExport.ods"
 oDoc = loadDocument(filename)
 
-#import LeenoSettings
-#LeenoSettings.MENU_PrintSettings()
+sheet = oDoc.Sheets[0]
+pageStyleName = sheet.PageStyle
+pageStyles = oDoc.StyleFamilies.getByName('PageStyles')
+pageStyle = pageStyles.getByName(pageStyleName)
+footer = pageStyle.RightPageFooterContent
+rightText = footer.RightText
+
+pattern = '[PAGINA]'
+pos = rightText.String.find(pattern)
+cursor = rightText.createTextCursor()
+cursor.collapseToStart()
+cursor.goRight(pos, False)
+cursor.goRight(len(pattern), True)
+cursor.String = ''
+oField = oDoc.createInstance("com.sun.star.text.TextField.PageCount")
+cursor.collapseToStart()
+rightText.insertTextContent(cursor, oField, False)
+
+#fields = rightText.TextFields
+#field0 = fields[0]
+#anchor = field0.Anchor
+
+#oField = oDoc.createInstance("com.sun.star.text.TextField.DateTime")
+#oField.IsFixed = True
+#oField.NumberFormat = FindCreateNumberFormatStyle("DD. MMMM YYYY", oDoc)
+#rightText.insertTextContent(rightText.getEnd(), oField, False)
+
+pageStyle.RightPageFooterContent = footer
+
+
+
+
+
+import LeenoSettings
+LeenoSettings.MENU_PrintSettings()
 
 print("\nDONE\n")

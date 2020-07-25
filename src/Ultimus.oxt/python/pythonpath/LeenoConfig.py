@@ -47,7 +47,10 @@ class Config(Borg):
             except FileExistsError:
                 pass
 
-            self._parser = configparser.ConfigParser()
+            #self._parser = configparser.ConfigParser()
+
+            self._parser = configparser.RawConfigParser()
+            self._parser.optionxform = lambda option: option
 
             # load values from file, if exist
             self._load()
@@ -91,13 +94,33 @@ class Config(Borg):
 
             ('Importazione', 'ordina_computo', '1'),
 
-            ('Lavoro', 'committente', ''),
-            ('Lavoro', 'stazioneAppaltante', ''),
-            ('Lavoro', 'rup', ''),
-            ('Lavoro', 'progettista', ''),
-            ('Lavoro', 'data', LeenoUtils.date2String(date.today(), 1)),
-            ('Lavoro', 'revisione', ''),
-            ('Lavoro', 'dataRevisione', LeenoUtils.date2String(date.today(), 1)),
+            ('Lavoro', 'committente', '(str)'),
+            ('Lavoro', 'stazioneAppaltante', '(str)'),
+            ('Lavoro', 'progetto', '(str)'),
+            ('Lavoro', 'rup', '(str)'),
+            ('Lavoro', 'progettista', '(str)'),
+            ('Lavoro', 'data', '(date)' + LeenoUtils.date2String(date.today(), 1)),
+            ('Lavoro', 'revisione', '(str)'),
+            ('Lavoro', 'dataRevisione', '(date)' + LeenoUtils.date2String(date.today(), 1)),
+
+            ('ImpostazioniStampa', 'fileCopertine', '(str)'),
+            ('ImpostazioniStampa', 'copertina', '(str)'),
+            ('ImpostazioniStampa', 'intSx', '(str)[COMMITTENTE]'),
+            ('ImpostazioniStampa', 'intCenter', '(str)'),
+            ('ImpostazioniStampa', 'intDx', '(str)[PROGETTO]'),
+            ('ImpostazioniStampa', 'ppSx', '(str)[OGGETTO]'),
+            ('ImpostazioniStampa', 'ppCenter', '(str)'),
+            ('ImpostazioniStampa', 'ppDx', '(str)Pagina [PAGINA] di [PAGINE]'),
+
+            ('ImpostazioniExport', 'npElencoPrezzi', '(str)1'),
+            ('ImpostazioniExport', 'npComputoMetrico', '(str)2'),
+            ('ImpostazioniExport', 'npCostiManodopera', '(str)3'),
+            ('ImpostazioniExport', 'npQuadroEconomico', '(str)4'),
+            ('ImpostazioniExport', 'cbElencoPrezzi', '(bool)True'),
+            ('ImpostazioniExport', 'cbComputoMetrico', '(bool)True'),
+            ('ImpostazioniExport', 'cbCostiManodopera', '(bool)True'),
+            ('ImpostazioniExport', 'cbQuadroEconomico', '(bool)True'),
+
         )
 
         for param in parametri:

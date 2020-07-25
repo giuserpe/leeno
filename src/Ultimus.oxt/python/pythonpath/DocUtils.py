@@ -2,8 +2,11 @@
 try to overcome limits on document user defined attributes
 '''
 from com.sun.star.beans import PropertyAttribute
+from com.sun.star.beans import PropertyValue
 from com.sun.star.beans import PropertyExistException, UnknownPropertyException
 from com.sun.star.lang import IllegalArgumentException
+import uno
+import LeenoUtils
 import PersistUtils
 
 def setDocUserDefinedAttribute(oDoc, name, value):
@@ -75,3 +78,40 @@ def loadDataBlock(oDoc, baseName):
             if val is not None:
                 res[name] = val
     return res
+
+def loadDocument(filePath, Hidden=True):
+
+    url = uno.systemPathToFileUrl(filePath)
+
+    if Hidden:
+        # start hidden
+        p = PropertyValue()
+        p.Name = "Hidden"
+        p.Value = True
+        parms = (p, )
+    else:
+        parms = ()
+
+    try:
+        return LeenoUtils.getDesktop().loadComponentFromURL(url, "_blank", 0, parms)
+    except Exception:
+        return None
+
+def createSheetDocument(Hidden=True):
+
+    if Hidden:
+        # start hidden
+        p = PropertyValue()
+        p.Name = "Hidden"
+        p.Value = True
+        parms = (p, )
+    else:
+        parms = ()
+
+    # create an empty document
+    desktop = LeenoUtils.getDesktop()
+    pth = 'private:factory/scalc'
+    try:
+        return desktop.loadComponentFromURL(pth, '_default', 0, parms)
+    except Exception:
+        return None

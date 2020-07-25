@@ -9,7 +9,7 @@ _TYPEMAP = {
     int: lambda x : '(int)' + str(x),
     float: lambda x : '(float)' + str(x),
     date: lambda x : '(date)' + LeenoUtils.date2String(x, 1),
-    bool: lambda x : '(boolean)' + str(x)
+    bool: lambda x : '(bool)' + str(x)
 }
 
 _TYPENAMEMAP = {

@@ -9,6 +9,9 @@ from com.sun.star.xml import AttributeData
 from com.sun.star.beans import PropertyValue
 from com.sun.star.util import SortField
 import LeenoUtils
+import LeenoSettings
+import DocUtils
+from datetime import date
 
 '''
 User defined attributes handling in worksheets
@@ -42,6 +45,27 @@ def removeSheetUserDefinedAttribute(oSheet, name):
     if userAttributes.hasByName(name):
         userAttributes.removeByName(name)
         oSheet.UserDefinedAttributes = userAttributes
+
+
+# ###############################################################
+
+
+def replaceText(sheet, replaceDict):
+    '''
+    in un foglio cerca tutte le occorrenze delle chiavi
+    contenute in 'replaceDict' e le sostituisce con i rispettivi valori
+    '''
+    replace = sheet.createReplaceDescriptor()
+    for key, val in replaceDict.items():
+        replace.SearchString = key
+        if type(val) == date:
+            # for date use a nice format....
+            val = LeenoUtils.date2String(val, 0)
+        else:
+            # be sure 'val' is a string...
+            val = str(val)
+        replace.ReplaceString = val
+        sheet.replaceAll(replace)
 
 
 # ###############################################################
@@ -108,6 +132,25 @@ def getCurrentSheet(oDoc):
 # ###############################################################
 
 
+def getSheetNames(filePath):
+    '''
+    dato il file legge i nomi dei fogli contenuti
+    '''
+    oDoc = DocUtils.loadDocument(filePath)
+    if oDoc is None:
+        return tuple()
+    sheets = oDoc.Sheets
+    res = []
+    for sheet in sheets:
+        res.append(sheet.Name)
+    oDoc.dispose()
+
+    return tuple(res)
+
+
+# ###############################################################
+
+
 def tempCopySheet(oDoc, sourceName):
     '''
     crea una copia dello spreadsheet avente nome 'sourceName'
@@ -135,50 +178,6 @@ def tempCopySheet(oDoc, sourceName):
 
 
 # ###############################################################
-
-
-def pdfExport0(oDoc, sheets, destPath):
-    '''
-    export a sequence of spreadsheets to a PDF file
-    '''
-    # due giorni per trovare 'sta caxxxxxxata....
-
-    # questo crea un oggetto UNO dello stesso tipo di oDoc.CurrentSelection
-    # che FUNZIONA per stampare correttamente sheets multipli
-    # ora bisogna solo guardare cosa ci sta dentro...
-    rgs = oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")
-
-    #for sheet in sheets:
-    #    areas = sheet.PrintAreas
-    #    if len(areas) > 0:
-    #        rgs.addRangeAddresses(areas, False)
-        #print(sheet.getCellRangeByName('Q55'))
-        #rgs.addRangeAddress(sheet.getCellRangeByName('A1').RangeAddress, False)
-        #rgs.addRangeAddress(sheet.RangeAddress, False)
-
-    #print("rgs-STR:", rgs.RangeAddressesAsString)
-    #print("rgs:", rgs)
-    #print("curr-STR:", oDoc.CurrentSelection.RangeAddressesAsString)
-    #print("curr:", oDoc.CurrentSelection)
-
-    curr = oDoc.CurrentSelection
-    #for i in range(0, curr.Count):
-    #    rgs.addRangeAddress(curr[i].RangeAddress, False)
-    #rgs.addRangeAddresses(curr, False)
-
-    filterProps = {
-        'Selection': rgs,
-        #'Selection': oDoc.CurrentSelection
-    }
-
-    storeArgs = {
-        'FilterName': 'calc_pdf_Export',
-        'FilterData': LeenoUtils.dictToProperties(filterProps, True),
-    }
-
-    destUrl = uno.systemPathToFileUrl(destPath)
-    print(destUrl)
-    oDoc.storeToURL(destUrl, LeenoUtils.dictToProperties(storeArgs))
 
 
 def copyPageStyle(nDoc, style):
@@ -210,14 +209,32 @@ def copyPageStyle(nDoc, style):
     nPageStyle.setPropertyValue('PageScale', style.getPropertyValue('PageScale'))
 
 
-def pdfExport(oDoc, sheets, destPath):
+def paginationFields(oDoc, oTxt):
+    if oTxt.String.find('[PAGINA]') >= 0:
+        oField = oDoc.createInstance("com.sun.star.text.TextField.PageNumber")
+        LeenoUtils.replacePatternWithField(oTxt, '[PAGINA]', oField)
+
+    if oTxt.String.find('[PAGINE]') >= 0:
+        oField = oDoc.createInstance("com.sun.star.text.TextField.PageCount")
+        LeenoUtils.replacePatternWithField(oTxt, '[PAGINE]', oField)
+
+
+def pdfExport(oDoc, sheets, destPath, HeaderFooter=None, coverBuilder = None):
     '''
     export a sequence of spreadsheets to a PDF file
+    coverBuilder(oDoc, nDoc) takes current document as parameter, the
+    print document and adds a cover to the latter at end
+    if coverBuilder is None, no cover will be added
     '''
     # create an empty document
-    desktop = LeenoUtils.getDesktop()
-    pth = 'private:factory/scalc'
-    nDoc = desktop.loadComponentFromURL(pth, '_default', 0, ())
+    nDoc = DocUtils.createSheetDocument(Hidden=False)
+
+    # if there's a cover, copy it inside the new document
+    # and fill it
+    if coverBuilder is not None:
+        hasCover = coverBuilder(oDoc, nDoc)
+    else:
+        hasCover = False
 
     # we need to copy the page styles too... they don't get copied
     # along with sheet
@@ -241,14 +258,70 @@ def pdfExport(oDoc, sheets, destPath):
             nDoc.Sheets[pos].PrintAreas = sheet.PrintAreas
     nDoc.Sheets.removeByName(nDoc.Sheets[0].Name)
 
+    # finally we must apply header/footers to page styles
+    # we do it ONLY on page styles which already have
+    # header or footer enabled. Other page styles (like cover ones)
+    # are left alone
+    if HeaderFooter:
+        pageStyles = nDoc.StyleFamilies.getByName('PageStyles')
+        styleSet = set()
+        for sheet in nDoc.Sheets:
+            styleSet.add(sheet.PageStyle)
+        for styleName in styleSet:
+            pageStyle = pageStyles.getByName(styleName)
+
+            # do NOT specity first page number
+            # otherwise numbering in header/footer will be wrong
+            pageStyle.FirstPageNumber = 0
+
+            if pageStyle.HeaderIsOn:
+                print("HEADER")
+                left = HeaderFooter.get('intSx', '')
+                center = HeaderFooter.get('intCenter', '')
+                right = HeaderFooter.get('intDx', '')
+                print("  Left  :", left)
+                print("  Center:", center)
+                print("  Right :", right)
+                content = pageStyle.LeftPageHeaderContent
+                content.LeftText.String = left
+                content.CenterText.String = center
+                content.RightText.String = right
+
+                # do PAGINA and PAGINE fields management
+                paginationFields(nDoc, content.LeftText)
+                paginationFields(nDoc, content.CenterText)
+                paginationFields(nDoc, content.RightText)
+
+                pageStyle.RightPageHeaderContent = content
+
+            if pageStyle.FooterIsOn:
+                print("FOOTER")
+                left = HeaderFooter.get('ppSx', '')
+                center = HeaderFooter.get('ppCenter', '')
+                right = HeaderFooter.get('ppDx', '')
+                print("  Left  :", left)
+                print("  Center:", center)
+                print("  Right :", right)
+                content = pageStyle.LeftPageFooterContent
+                content.LeftText.String = left
+                content.CenterText.String = center
+                content.RightText.String = right
+
+                # do PAGINA and PAGINE fields management
+                paginationFields(nDoc, content.LeftText)
+                paginationFields(nDoc, content.CenterText)
+                paginationFields(nDoc, content.RightText)
+
+                pageStyle.RightPageFooterContent = content
+
     storeArgs = {
         'FilterName': 'calc_pdf_Export',
     }
 
     destUrl = uno.systemPathToFileUrl(destPath)
     nDoc.storeToURL(destUrl, LeenoUtils.dictToProperties(storeArgs))
-    #nDoc.close(False)
-    #del nDoc
+    nDoc.close(False)
+    del nDoc
 
 
 # ###############################################################
@@ -418,3 +491,4 @@ def NominaArea(oDoc, sSheet, sRange, sName):
     oRanges.addNewByName(sName, sPath, oCellAddress, 0)
 
 # ###############################################################
+

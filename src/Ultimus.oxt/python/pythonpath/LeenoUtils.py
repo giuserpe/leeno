@@ -9,6 +9,8 @@ from com.sun.star.beans import PropertyValue
 from datetime import date
 import calendar
 
+import PyPDF2
+
 '''
 ALCUNE COSE UTILI
 
@@ -228,3 +230,44 @@ def string2Date(s):
     month = int(sp[1])
     year = int(sp[2])
     return date(day=day, month=month, year=year)
+
+def countPdfPages(path):
+    '''
+    Returns the number of pages in a PDF document
+    using external PyPDF2 module
+    '''
+    with open(path, 'rb') as f:
+        pdf = PyPDF2.PdfFileReader(f)
+        return pdf.getNumPages()
+
+
+def replacePatternWithField(oTxt, pattern, oField):
+    '''
+    Replaces a string pattern in a Text object
+    (for example '[PATTERN]') with the given field
+    '''
+    # pattern may be there many times...
+    repl = False
+    pos = oTxt.String.find(pattern)
+    while pos >= 0:
+        #create a cursor
+        cursor = oTxt.createTextCursor()
+
+        # use it to select the pattern
+        cursor.collapseToStart()
+        cursor.goRight(pos, False)
+        cursor.goRight(len(pattern), True)
+
+        # remove the pattern from text
+        cursor.String = ''
+
+        # insert the field at cursor's position
+        cursor.collapseToStart()
+        oTxt.insertTextContent(cursor, oField, False)
+
+        # next occurrence of pattern
+        pos = oTxt.String.find(pattern)
+
+        repl = True
+    return repl
+

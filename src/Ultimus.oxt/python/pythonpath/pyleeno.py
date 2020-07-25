@@ -1960,9 +1960,9 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oCellRangeAddr.Sheet = iSheet
 
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 0, ER))
-    struttura_off('R')
-    struttura_off('R')
-    struttura_off('R')
+    struttura_off()
+    struttura_off()
+    struttura_off()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:
@@ -4098,6 +4098,61 @@ Vuoi Procedere?
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
 
+########################################################################
+
+
+def MENU_elimina_righe():
+    '''
+    Elimina le righe selezionate anche se non contigue.
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    lcol = LeggiPosizioneCorrente()[0]
+    try:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+    except AttributeError:
+        oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+    el_y = list()
+    lista_y = list()
+    try:
+        len(oRangeAddress)
+        for el in oRangeAddress:
+            el_y.append((el.StartRow, el.EndRow))
+    except TypeError:
+        el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
+    for y in el_y:
+        for el in range(y[0], y[1] + 1):
+            lista_y.append(el)
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    for y in reversed(lista_y):
+        if oSheet.getCellByPosition(2, y).CellStyle not in ('An-lavoraz-generica',
+                                                            'comp 1-a',
+                                                            'comp sotto centro',
+                                                            'EP-mezzo',
+                                                            'Livello-0-scritta mini',
+                                                            'Livello-1-scritta mini',
+                                                            'livello2_') or \
+        'Somma positivi e negativi [' in oSheet.getCellByPosition(8, y).String or \
+        'SOMMANO' in oSheet.getCellByPosition(8, y).String:
+            pass
+        else:
+            if oSheet.getCellByPosition(1, y).CellStyle == 'Data_bianca':
+                oCellAddress = oSheet.getCellByPosition(1, y+1).getCellAddress()
+                oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
+                oCellRangeAddr.StartColumn = 1
+                oCellRangeAddr.StartRow = y
+                oCellRangeAddr.EndColumn = 1
+                oCellRangeAddr.EndRow = y
+                oSheet.copyRange(oCellAddress, oCellRangeAddr)
+            stile = oSheet.getCellByPosition(2, y).CellStyle
+            oSheet.getRows().removeByIndex(y, 1)
+            if stile in ('Livello-0-scritta mini', 'Livello-1-scritta mini', 'livello2_'):
+                Rinumera_TUTTI_Capitoli2(oSheet)
+    parziale_verifica()
+    oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
+    
+    
 ########################################################################
 def copia_riga_computo(lrow):
     # ~def debug(lrow):
@@ -9113,8 +9168,28 @@ def MENU_debug():
     '''
     Utile per testare comandi dalla toolbar DEV
     '''
-    somma()
+    #~parziale_verifica()
+    #~return
+    ###
+    '''
+    Ricalcola i parziali di una voce
+    '''
+    oDoc = LeenoUtils.getDocument()
+    #~oSheet = oDoc.getSheets().getByName('VARIANTE')
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    lrow = LeggiPosizioneCorrente()[1]
+    sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+    sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
+    for i in range(sopra, sotto):
+        #~DLG.chi(oSheet.getCellByPosition(8, i).String)
+        if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
+            parziale_core(oSheet, i)
+            #~oDoc.CurrentController.select(oSheet.getCellByPosition(8, i))
+            #~MENU_parziale()
+    #~somma()
     return
+    ###
     lr = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(1, 15):
         DLG.chi(oSheet.getCellByPosition(0, i).String.split('.'))

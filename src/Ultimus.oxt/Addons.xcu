@@ -207,7 +207,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elimina_righe</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/cross</value>

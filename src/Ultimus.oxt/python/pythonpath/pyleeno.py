@@ -316,7 +316,7 @@ def MENU_invia_voce():
     '''
     # ~refresh(0)
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
 
     nSheet = oSheet.Name
@@ -354,7 +354,7 @@ def MENU_invia_voce():
 
     def Circoscrive_Analisi(lrow):
         # oDoc = LeenoUtils.getDocument()
-        # oSheet = oDoc.CurrentController.ActiveSheet
+        # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
         stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
         if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
             for el in reversed(range(0, lrow)):
@@ -597,7 +597,7 @@ def codice_voce(lrow, cod=None):
     altrimenti glielo assegna.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     #  lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
@@ -611,13 +611,13 @@ def codice_voce(lrow, cod=None):
 
 # def getVoce(cod=None):
 # oDoc = LeenoUtils.getDocument()
-# oSheet = oDoc.CurrentController.ActiveSheet
+# oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 # lrow = LeggiPosizioneCorrente()[1]
 # sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
 # return oSheet.getCellByPosition(1, sopra+1).String
 # def setVoce(cod):
 # oDoc = LeenoUtils.getDocument()
-# oSheet = oDoc.CurrentController.ActiveSheet
+# oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 # lrow = LeggiPosizioneCorrente()[1]
 # sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
 # oSheet.getCellByPosition(1, sopra+1).String = cod
@@ -828,7 +828,7 @@ def Ins_Categorie(n):
     '''
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
@@ -904,7 +904,7 @@ def Inser_Capitolo():
 
 def MENU_Rinumera_TUTTI_Capitoli2():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     Rinumera_TUTTI_Capitoli2(oSheet)
 
 
@@ -958,7 +958,7 @@ def SubSum_SuperCap(lrow):
     inserisce i dati nella riga di SuperCategoria
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     # lrow = LeggiPosizioneCorrente()[1]
@@ -1026,7 +1026,7 @@ def SubSum_SottoCap(lrow):
     inserisce i dati nella riga di subcategoria
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     # lrow = 0#LeggiPosizioneCorrente()[1]
@@ -1085,7 +1085,7 @@ def SubSum_Cap(lrow):
     inserisce i dati nella riga di categoria
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name not in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         return
     # lrow = LeggiPosizioneCorrente()[1]
@@ -1355,7 +1355,7 @@ def Filtra_computo(nSheet, nCol, sString):
     '''
     oDoc = LeenoUtils.getDocument()
     copia_sheet(nSheet, sString)
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     for lrow in reversed(range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))):
         try:
             sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
@@ -1392,7 +1392,7 @@ def Filtra_computo(nSheet, nCol, sString):
 
 def Filtra_Computo_Cap():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 10).String
     Filtra_computo(nSheet, 31, sString)
@@ -1403,7 +1403,7 @@ def Filtra_Computo_Cap():
 
 def Filtra_Computo_SottCap():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 12).String
     Filtra_computo(nSheet, 32, sString)
@@ -1414,7 +1414,7 @@ def Filtra_Computo_SottCap():
 
 def Filtra_Computo_A():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 14).String
     Filtra_computo(nSheet, 33, sString)
@@ -1425,7 +1425,7 @@ def Filtra_Computo_A():
 
 def Filtra_Computo_B():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 16).String
     Filtra_computo(nSheet, 34, sString)
@@ -1436,7 +1436,7 @@ def Filtra_Computo_B():
 
 def Filtra_Computo_C():  # filtra in base al codice di prezzo
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     nSheet = oSheet.getCellByPosition(7, 8).String
     sString = oSheet.getCellByPosition(7, 20).String
     Filtra_computo(nSheet, 1, sString)
@@ -1531,7 +1531,7 @@ def _primaCella(IDcol=0, IDrow=0):
     settaggio prima cella visibile(IDcol, IDrow)
     '''
     oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oDoc.CurrentController.setFirstVisibleColumn(IDcol)
     oDoc.CurrentController.setFirstVisibleRow(IDrow)
     return
@@ -1546,7 +1546,7 @@ def ordina_col(ncol):
     ordina i dati secondo la colonna con id ncol
     '''
     # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1636,7 +1636,7 @@ def setPreview(arg=0):
     attribuisce al foglio corrente un colore a scelta
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet  # se questa dà errore, il preview è già attivo
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)  # se questa dà errore, il preview è già attivo
     adatta_altezza_riga(oSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
@@ -1657,7 +1657,7 @@ def setTabColor(colore):
     attribuisce al foglio corrente un colore a scelta
     '''
     # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1679,7 +1679,7 @@ def txt_Format(stile):
     Forza la formattazione della cella
     '''
     # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1733,7 +1733,7 @@ def salva_come(nomefile=None):
     Se presente l'argomento nomefile, salva il file corrente in nomefile.
     '''
     # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -1768,7 +1768,7 @@ def _gotoCella(IDcol=0, IDrow=0):
     muove il cursore nelle cella(IDcol, IDrow)
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     oDoc.CurrentController.select(oSheet.getCellByPosition(IDcol, IDrow))
     oDoc.CurrentController.select(
@@ -1807,7 +1807,7 @@ def adatta_altezza_riga(nSheet=None):
     imposta l'altezza ottimale delle celle
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if not oDoc.getSheets().hasByName('S1'):
         return
     nSheet = oSheet.Name
@@ -1862,7 +1862,7 @@ def voce_breve():
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.getCellRangeByPosition(
         0, 0,
         SheetUtils.getUsedArea(oSheet).EndColumn,
@@ -1930,7 +1930,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     oDoc.enableAutomaticCalculation(False)
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow + 1
@@ -1951,7 +1951,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
                     lista.append(el)
         except Exception:
             pass
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
     da_cancellare = set(lista_prezzi).difference(set(lista))
@@ -1986,7 +1986,7 @@ def voce_breve_ep():
     tre righe della descrizione.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow + 1
@@ -2011,7 +2011,7 @@ def scelta_viste():
     '''
     #  refresh(0)
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
     if oSheet.Name in ('VARIANTE', 'COMPUTO'):
@@ -3319,7 +3319,7 @@ def MENU_firme_in_calce():
     '''
     oDoc = LeenoUtils.getDocument()
 
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
         lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
         oDoc.CurrentController.setFirstVisibleRow(lrowF - 1)
@@ -3568,7 +3568,7 @@ def cancella_analisi_da_ep():
     cancella le voci in Elenco Prezzi che derivano da analisi
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet = oDoc.Sheets.getByName('Analisi di Prezzo')
     lista_an = list()
     for i in range(0, SheetUtils.getUsedArea(oSheet).EndRow):
@@ -3587,7 +3587,7 @@ def MENU_analisi_in_ElencoPrezzi():
     '''
     oDoc = LeenoUtils.getDocument()
     try:
-        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
         if oSheet.Name != 'Analisi di Prezzo':
             return
         oDoc.enableAutomaticCalculation(False)  # blocco il calcolo automatico
@@ -3727,7 +3727,7 @@ def Circoscrive_Analisi(lrow):
     partendo dalla posizione corrente del cursore
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     stili_analisi = LeenoUtils.getGlobalVar('stili_analisi')
     if oSheet.getCellByPosition(0, lrow).CellStyle in stili_analisi:
         for el in reversed(range(0, lrow)):
@@ -3749,7 +3749,7 @@ def Circoscrive_Analisi(lrow):
 def ColumnNumberToName(oSheet, cColumnNumb):
     '''Trasforma IDcolonna in Nome'''
     #  oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
+    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oColumns = oSheet.getColumns()
     oColumn = oColumns.getByIndex(cColumnNumb).Name
     return oColumn
@@ -3759,7 +3759,7 @@ def ColumnNumberToName(oSheet, cColumnNumb):
 def ColumnNameToNumber(oSheet, cColumnName):
     '''Trasforma il nome colonna in IDcolonna'''
     #  oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
+    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oColumns = oSheet.getColumns()
     oColumn = oColumns.getByName(cColumnName)
     oRangeAddress = oColumn.getRangeAddress()
@@ -3776,7 +3776,7 @@ def MENU_azzera_voce():
 
     try:
         oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             try:
                 sRow = oDoc.getCurrentSelection().getRangeAddresses(
@@ -3880,7 +3880,7 @@ def MENU_elimina_voci_azzerate():
     in COMPUTO o in VARIANTE, senza chiedere conferma
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             ER = SheetUtils.getUsedArea(oSheet).EndRow
@@ -3899,7 +3899,7 @@ def raggruppa_righe_voce(lrow, flag=1):
     Raggruppa le righe che compongono una singola voce.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     #  lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
@@ -3926,7 +3926,7 @@ def MENU_nasconde_voci_azzerate():
     in COMPUTO o in VARIANTE.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
             oSheet.clearOutline()
@@ -3946,7 +3946,7 @@ def seleziona(lrow=None):
     Seleziona voci intere
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name in ('Elenco Prezzi'):
         return
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -4027,7 +4027,7 @@ def seleziona_voce(lrow=None):
     lrow { long }  : numero riga
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if lrow is None or lrow == 0:
         lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('Elenco Prezzi'):
@@ -4074,7 +4074,7 @@ def elimina_voce(lrow=None, msg=1):
                      0 esegui senza conferma
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     SR = seleziona_voce()[0]
     ER = seleziona_voce()[1]
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
@@ -4160,7 +4160,7 @@ def copia_riga_computo(lrow):
     Inserisce una nuova riga di misurazione nel computo
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # ~lrow = LeggiPosizioneCorrente()[1]
     stile = oSheet.getCellByPosition(1, lrow).CellStyle
     if stile in (
@@ -4201,7 +4201,7 @@ def copia_riga_contab(lrow):
     Inserisce una nuova riga di misurazione in contabilità
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     #  lrow = LeggiPosizioneCorrente()[1]
     stile = oSheet.getCellByPosition(1, lrow).CellStyle
     if oSheet.getCellByPosition(1,
@@ -4248,7 +4248,7 @@ def copia_riga_analisi(lrow):
     Inserisce una nuova riga di misurazione in analisi di prezzo
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     if stile in ('An-lavoraz-desc', 'An-lavoraz-Cod-sx'):
         lrow = lrow + 1
@@ -4311,7 +4311,7 @@ def Copia_riga_Ent(arg=None):
     # ~datarif = datetime.now()
     #  refresh(0)
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     nome_sheet = oSheet.Name
     if nome_sheet in ('COMPUTO', 'VARIANTE'):
@@ -4336,7 +4336,7 @@ def cerca_partenza():
     partenza = (nome_foglio, id_rcodice, flag_contabilità)
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
 
     partenza = LeenoSheetUtils.cercaPartenza(oSheet, lrow)
@@ -4351,7 +4351,7 @@ def sblocca_cont():
     '''
     partenza = LeenoUtils.getGlobalVar('partenza')
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name in ('CONTABILITA'):
         partenza = cerca_partenza()
         DLG.chi(partenza[2])
@@ -4390,7 +4390,7 @@ def cerca_in_elenco():
     Evidenzia il codice di elenco prezzi della voce corrente.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'CONTABILITA', 'VARIANTE',
                        'Analisi di Prezzo'):
@@ -4442,7 +4442,7 @@ def pesca_cod():
     '''
     partenza = LeenoUtils.getGlobalVar('partenza')
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -4489,7 +4489,7 @@ def pesca_cod():
             lrow = LeggiPosizioneCorrente()[1]
             codice = oSheet.getCellByPosition(0, lrow).String
             GotoSheet(partenza[0])
-            oSheet = oDoc.CurrentController.ActiveSheet
+            oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
             if partenza[0] == 'Analisi di Prezzo':
                 oSheet.getCellByPosition(0, partenza[1]).String = codice
                 _gotoCella(3, partenza[1])
@@ -4507,7 +4507,7 @@ def MENU_ricicla_misure():
     partendo da voci già inserite in COMPUTO o VARIANTE.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name == 'CONTABILITA':
         try:
             # controllo che non ci siano atti registrati
@@ -4618,7 +4618,7 @@ def inverti_segno():
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     # estrae il range o i ranges selezionati
     # (possono essere più di uno)
@@ -4720,7 +4720,7 @@ def dettaglio_misura_rigo():
                        0 cancella i dettagli
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     if ' >(' in oSheet.getCellByPosition(2, lrow).String:
         oSheet.getCellByPosition(2, lrow).String = oSheet.getCellByPosition(
@@ -4779,7 +4779,7 @@ def dettaglio_misure(bit):
     '''
     oDoc = LeenoUtils.getDocument()
     try:
-        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     except Exception:
         return
     ER = SheetUtils.getUsedArea(oSheet).EndRow
@@ -4842,7 +4842,7 @@ def dettaglio_misure(bit):
 ########################################################################
 def debug_validation():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     #  mri(oDoc.CurrentSelection.Validation)
 
     oSheet.getCellRangeByName('L1').String = 'Ricicla da:'
@@ -4869,7 +4869,7 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err=False):
     err         { boolean } : permette di abilitare il messaggio di errore per input non validi
     '''
     # oDoc = LeenoUtils.getDocument()
-    # oSheet = oDoc.CurrentController.ActiveSheet
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     oTabVal = oCell.getPropertyValue("Validation")
     oTabVal.setPropertyValue('ConditionOperator', 1)
@@ -4892,7 +4892,7 @@ def valida_cella(oCell, lista_val, titoloInput='', msgInput='', err=False):
 def debug_ConditionalFormat():
     oDoc = LeenoUtils.getDocument()
     oCell = oDoc.CurrentSelection
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     i = oCell.RangeAddress.StartRow
     n = oCell.Rows.Count
@@ -4916,7 +4916,7 @@ def visualizza_PageBreak():
     @@ DA DOCUMENTARE
     '''
     # oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
+    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -4937,7 +4937,7 @@ def delete(arg):
                             'C' per colonne
     '''
     # oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
+    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -4954,7 +4954,7 @@ def delete(arg):
 ########################################################################
 def copy_clip():
     #  oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
+    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -4966,7 +4966,7 @@ def copy_clip():
 ########################################################################
 def paste_clip(arg=None, insCells=0):
     oDoc = LeenoUtils.getDocument()
-    #  oSheet = oDoc.CurrentController.ActiveSheet
+    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -5049,7 +5049,7 @@ def MENU_copia_celle_visibili():
     Liberamente ispirato a "Copy only visible cells" http://bit.ly/2j3bfq2
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
     except AttributeError:
@@ -5109,7 +5109,7 @@ def LeggiPosizioneCorrente():
     Restituisce la tupla (IDcolonna, IDriga, NameSheet) della posizione corrente
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         if oDoc.getCurrentSelection().getRangeAddresses()[0]:
             nRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
@@ -5138,7 +5138,7 @@ def numera_voci(bit=1):  #
                        0 rinumera dalla voce corrente in giù
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lastRow = SheetUtils.getUsedArea(oSheet).EndRow + 1
     lrow = LeggiPosizioneCorrente()[1]
     n = 1
@@ -5196,17 +5196,17 @@ per la formulazione dell'offerta'''
     oDoc = LeenoUtils.getDocument()
     GotoSheet('Elenco Prezzi')
     genera_sommario()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         oDoc.Sheets.copyByName(oSheet.Name, 'Elenco Prezzi', 5)
     except Exception:
         pass
     nSheet = oDoc.getSheets().getByIndex(5).Name
     GotoSheet(nSheet)
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.Name = 'Richiesta offerta'
     setTabColor(10079487)
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
     oRange = oSheet.getCellRangeByPosition(12, 3, 12, fine)
     aSaveData = oRange.getDataArray()
@@ -5336,7 +5336,7 @@ def ins_voce_elenco():
     oDoc = LeenoUtils.getDocument()
     DisableAutoCalc()
 
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     _gotoCella(0, 3)
     oSheet.getRows().insertByIndex(3, 1)
 
@@ -5386,7 +5386,7 @@ def rigenera_voce(lrow=None):
     '''
     lrow = LeggiPosizioneCorrente()[1]
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     except Exception:
@@ -5512,7 +5512,7 @@ def sistema_stili(lrow=None):
     '''
     lrow = LeggiPosizioneCorrente()[1]
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     except Exception:
@@ -5604,13 +5604,33 @@ def sistema_stili(lrow=None):
 
 
 ########################################################################
+def rigenera_parziali():
+    '''
+    Rigenera i parziali di tutte le voci
+    '''
+    oDoc = LeenoUtils.getDocument()
+    #~oSheet = oDoc.getSheets().getByName('VARIANTE')
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    lrow = LeggiPosizioneCorrente()[1]
+    sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+    sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+
+    for i in range(4, lr):
+        # ~if oSheet.getCellByPosition(8, i).String == '0,000':
+            # ~oSheet.getCellByPosition(8, i).String = ''
+        if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
+            parziale_core(oSheet, i)
+    return
+########################################################################
 def rigenera_tutte(arg=None, ):
     '''
     Ripristina le formule in tutto il foglio
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     DisableAutoCalc()
 
     zoom = oDoc.CurrentController.ZoomValue
@@ -5646,7 +5666,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     Contestualizza in ogni tabella l'inserimento delle voci.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         LeenoComputo.ins_voce_computo()
     elif oSheet.Name == 'Analisi di Prezzo':
@@ -5664,7 +5684,7 @@ def ins_voce_contab(lrow=0, arg=1):
     Inserisce una nuova voce in CONTABILITA.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
     if lrow == 0:
         lrow = LeggiPosizioneCorrente()[1]
@@ -5906,7 +5926,7 @@ def partita(testo):
     Aggiunge/detrae rigo di PARTITA PROVVISORIA
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name != "CONTABILITA":
         return
     x = LeggiPosizioneCorrente()[1]
@@ -5941,7 +5961,7 @@ def genera_libretto():
     oDoc = LeenoUtils.getDocument()
     #  mri(oDoc.StyleFamilies.getByName("CellStyles").getByName('comp 1-a PU'))
     #  return
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name != 'CONTABILITA':
         return
     numera_voci()
@@ -6235,7 +6255,7 @@ def genera_atti_contabili():
     '''
     # ~def debug():
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name != "CONTABILITA":
         return
     if DLG.DlgSiNo(
@@ -6548,7 +6568,7 @@ def MENU_inserisci_Riga_rossa():
     Questa riga è un riferimento per varie operazioni
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
 
@@ -6563,7 +6583,7 @@ def struct_colore(level):
     oDoc = LeenoUtils.getDocument()
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
@@ -6639,7 +6659,7 @@ Vuoi procedere con la creazione della struttura dei capitoli?''',
         return
 
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.clearOutline()
     struct_colore(0)  # attribuisce i colori
     struct_colore(1)
@@ -6692,7 +6712,7 @@ def colora_vecchio_elenco():
     @@ DA DOCUMENTARE
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
     #  giallo(16777072,16777120,16777168)
@@ -6751,7 +6771,7 @@ def MENU_parziale():
     Inserisce una riga con l'indicazione della somma parziale.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         parziale_core(oSheet, lrow)
@@ -6832,7 +6852,7 @@ def parziale_verifica():
     misura vengono aggiunte o cancellate.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     #  if oSheet.Name in('COMPUTO','VARIANTE', 'CONTABILITA'):
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
@@ -6884,7 +6904,7 @@ def MENU_vedi_voce():
     Inserisce un riferimento a voce precedente sulla riga corrente.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -6929,7 +6949,7 @@ def MENU_converti_stringhe():
     Converte in numeri le stinghe o viceversa.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # ctx = LeenoUtils.getComponentContext()
     # desktop = LeenoUtils.getDesktop()
     try:
@@ -7047,7 +7067,7 @@ def SubSum(lrow, sub=False):
         level = 1
 
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
         return
     lrowE = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
@@ -7105,7 +7125,7 @@ def filtra_codice(voce=None):
     oDoc = LeenoUtils.getDocument()
     # ~zoom = oDoc.CurrentController.ZoomValue
     # ~oDoc.CurrentController.ZoomValue = 400
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
@@ -7175,7 +7195,7 @@ def struttura_ComputoM():
     @@ DA DOCUMENTARE
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.clearOutline()
     Rinumera_TUTTI_Capitoli2(oSheet)
     struct(0)
@@ -7189,7 +7209,7 @@ def struttura_Analisi():
     @@ DA DOCUMENTARE
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.clearOutline()
     struct(4)
 
@@ -7207,7 +7227,7 @@ def struttura_off():
     '''
     oDoc = LeenoUtils.getDocument()
     lrow = LeggiPosizioneCorrente()[1]
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.clearOutline()
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 4)
@@ -7225,7 +7245,7 @@ def struct(level):
     4 = simile all'elenco prezzi
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
@@ -7413,7 +7433,7 @@ def computo_terra_terra():
     Settaggio base di configurazione colonne in COMPUTO e VARIANTE
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.getCellRangeByPosition(33, 0, 1023, 0).Columns.IsVisible = False
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
@@ -7795,7 +7815,7 @@ def XPWE_export_run():
     Dialog_XPWE = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.Dialog_XPWE?language=Basic&location=application"
     )
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # oDialog1Model = Dialog_XPWE.Model
     for el in ("COMPUTO", "VARIANTE", "CONTABILITA"):
         try:
@@ -7871,7 +7891,7 @@ def ScriviNomeDocumentoPrincipale():
     # mah... non vedo come potrebbe esserco questo errore
     # a meno di non aver eliminato il controller
     try:
-        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     except AttributeError:
         return
 
@@ -7898,7 +7918,7 @@ def DlgMain():
 
     oDoc = LeenoUtils.getDocument()
     psm = LeenoUtils.getComponentContext().ServiceManager
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if not oDoc.getSheets().hasByName('S2'):
         Toolbars.AllOff()
         if(len(oDoc.getURL()) == 0 and
@@ -8043,7 +8063,7 @@ def hide_error(lErrori, icol):
     oDoc = LeenoUtils.getDocument()
     zoom = oDoc.CurrentController.ZoomValue
     oDoc.CurrentController.ZoomValue = 400
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     #  oSheet.clearOutline()
     n = 3
     test = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
@@ -8305,7 +8325,7 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
     def run(self):
         oDialogo_attesa = DLG.dlg_attesa()
         oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
         if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
             return
         descrizione = InputBox(t='inserisci una descrizione per la nuova riga')
@@ -8346,7 +8366,7 @@ def ctrl_d():
     '''
     oDoc = LeenoUtils.getDocument()
     oCell = oDoc.CurrentSelection
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     x = LeggiPosizioneCorrente()[0]
     lrow = LeggiPosizioneCorrente()[1]
     y = lrow - 1
@@ -8370,7 +8390,7 @@ def MENU_taglia_x():
     senza cancellare la formattazione delle celle
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
@@ -8435,7 +8455,7 @@ def sistema_cose():
     @@ DA DOCUMENTARE
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lcol = LeggiPosizioneCorrente()[0]
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -8497,7 +8517,7 @@ def descrizione_in_una_colonna(flag=False):
     occupato dalla descrizione di voce in COMPUTO, VARIANTE e CONTABILITA.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet = oDoc.getSheets().getByName('S5')
     oSheet.getCellRangeByName('C9:I9').merge(flag)
     oSheet.getCellRangeByName('C10:I10').merge(flag)
@@ -8547,7 +8567,7 @@ def numera_colonna():
     '''Inserisce l'indice di colonna nelle prime 100 colonne del rigo selezionato
 Associato a Ctrl+Shift+C'''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
     for x in range(0, 50):
         if oSheet.getCellByPosition(x, lrow).Type.value == 'EMPTY':
@@ -8564,7 +8584,7 @@ def subst_str():
     Sostituisce stringhe di testi nel foglio corrente
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     ReplaceDescriptor = oSheet.createReplaceDescriptor()
     ReplaceDescriptor.SearchString = "str1"
     ReplaceDescriptor.ReplaceString = "str2"
@@ -8614,7 +8634,7 @@ def MENU_sistema_pagine():
     # luogo = oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
 
     # try:
-    #    oSheet = oDoc.CurrentController.ActiveSheet
+    #    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # except Exception:
     #    pass
     #  su_dx = oDoc.NamedRanges.Bozza_8.ReferredCells.String
@@ -8774,7 +8794,7 @@ def fissa():
     @@ DA DOCUMENTARE
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lcol = LeggiPosizioneCorrente()[0]
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in (
@@ -8821,7 +8841,7 @@ def trova_ricorrenze():
     def ricorrenze():
         '''Trova i codici di prezzo ricorrenti nel COMPUTO'''
         oDoc = LeenoUtils.getDocument()
-        oSheet = oDoc.CurrentController.ActiveSheet
+        oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
         struttura_off()
         last = SheetUtils.getUsedArea(oSheet).EndRow
         lista = list()
@@ -8881,7 +8901,7 @@ def trova_ricorrenze():
 #     @@ DA DOCUMENTARE
 #     '''
 #     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
+#     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 #     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
 #         try:
 #             sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
@@ -8895,7 +8915,7 @@ def trova_ricorrenze():
 # def debug_():
 #     refresh(0)
 #     oDoc = LeenoUtils.getDocument()
-#     oSheet = oDoc.CurrentController.ActiveSheet
+#     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 #     try:
 #         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
 #     except AttributeError:
@@ -8926,7 +8946,7 @@ def trova_np():
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     DisableAutoCalc()
 
     struttura_off()
@@ -8995,7 +9015,7 @@ def elimina_voci_doppie():
     # elimina voci doppie hard - grezza e lenta, ma efficace
     oDoc = LeenoUtils.getDocument()
     GotoSheet('Elenco Prezzi')
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     riordina_ElencoPrezzi(oDoc)
     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
 
@@ -9023,7 +9043,7 @@ def hl():
     indirizzo di file o cartella
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     for el in reversed(range(0, SheetUtils.getUsedArea(oSheet).EndRow)):
         try:
             if oSheet.getCellByPosition(1, el).String[1] == ':':
@@ -9042,7 +9062,7 @@ def filtro_descrizione():
     '''
     struttura_off()
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.getCellRangeByPosition(2, 0, 2, 1048575).clearContents(HARDATTR)
 
     iSheet = oSheet.RangeAddress.Sheet
@@ -9119,7 +9139,7 @@ def filtro_descrizione():
     # '''cambio data contabilità'''
     # oDoc = LeenoUtils.getDocument()
     # #  mri(oDoc)
-    # oSheet = oDoc.CurrentController.ActiveSheet
+    # oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # DLG.chi(oDoc.getCurrentSelection().CellBackColor)
     # # ~ return
     # fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
@@ -9142,7 +9162,7 @@ def somma():
     finestra di Calc non mostra la statusbar.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lcol = LeggiPosizioneCorrente()[0]
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -9219,7 +9239,7 @@ def MENU_debug():
        see  http://stackoverflow.com/questions/6855394/splitting-list-in-chunks-of-balanced-weight
     """
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lr = SheetUtils.getLastUsedRow() + 1
     l = list()
     d = list()

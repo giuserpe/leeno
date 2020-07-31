@@ -851,8 +851,8 @@ def Ins_Categorie(n):
     sString = InputBox('', sTesto)
     if sString is None or sString == '':
         return
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
+    #~zoom = oDoc.CurrentController.ZoomValue
+    #~oDoc.CurrentController.ZoomValue = 400
     if n == 0:
         LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, sString)
     elif n == 1:
@@ -862,7 +862,7 @@ def Ins_Categorie(n):
 
     _gotoCella(2, lrow)
     Rinumera_TUTTI_Capitoli2(oSheet)
-    oDoc.CurrentController.ZoomValue = zoom
+    #~oDoc.CurrentController.ZoomValue = zoom
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
@@ -1377,7 +1377,7 @@ def Filtra_computo(nSheet, nCol, sString):
            oSheet.getCellByPosition(18, lrow).Value == 0):
 
             oSheet.getRows().removeByIndex(lrow, 1)
-
+    return
     # iCellAttr =(oDoc.createInstance("com.sun.star.sheet.CellFlags.OBJECTS"))
     flags = OBJECTS
     oSheet.getCellRangeByPosition(0, 0, 42, 0).clearContents(
@@ -9055,7 +9055,7 @@ def hl():
 
 
 ########################################################################
-def filtro_descrizione():
+def MENU_filtro_descrizione():
     '''
     Raggruppa e nasconde tutte le voci di misura in cui non compare
     la stringa cercata.

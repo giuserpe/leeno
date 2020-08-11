@@ -2516,7 +2516,7 @@ Cancello le voci di misurazione?
     #  else:
     GotoSheet('VARIANTE')
     ScriviNomeDocumentoPrincipale()
-    basic_LeenO("Menu.eventi_assegna")
+    eventi_assegna()
 
 
 ########################################################################
@@ -5817,8 +5817,7 @@ def attiva_contabilita():
 
         GotoSheet('CONTABILITA')
     ScriviNomeDocumentoPrincipale()
-    basic_LeenO("Menu.eventi_assegna")
-
+    eventi_assegna()
 
 ########################################################################
 def svuota_contabilita():
@@ -6554,7 +6553,7 @@ def inizializza_analisi():
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
     oSheet.copyRange(oCellAddress, oRangeAddress)
-    basic_LeenO("Menu.eventi_assegna")
+    eventi_assegna()
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
     ScriviNomeDocumentoPrincipale()
 
@@ -8755,7 +8754,7 @@ def MENU_sistema_pagine():
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
             oFooter = oAktPage.RightPageFooterContent
-            # oHLText = oFooter.CenterText.Text.String = "L'IMPRESA					IL DIRETTORE DEI LAVORI"
+            # oHLText = oFooter.CenterText.Text.String = "L'IMPRESA                    IL DIRETTORE DEI LAVORI"
             # oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(
             #    oDoc.getURL() + '\n\n\n')
             oAktPage.RightPageFooterContent = oFooter

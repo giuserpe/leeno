@@ -9200,7 +9200,6 @@ def macro_SHEET(nSheet, nEvento, miamacro):
  # ~"OnRightClick"  click destro
  # ~"OnChange"      modificando il contenuto
  # ~"OnCalculate"   mboh...
-    oDoc = LeenoUtils.getDocument()
     oProp = []
     oProp0 = PropertyValue()
     oProp0.Name = 'EventType'
@@ -9213,10 +9212,12 @@ def macro_SHEET(nSheet, nEvento, miamacro):
     oProp.append(oProp1)
 
     properties = tuple(oProp)
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(nSheet)
-    oEve = oSheet.Events
-    
-    oEve.replaceByName(nEvento, properties)
+    uno.invoke(
+        oSheet.Events, 'replaceByName',
+        (nEvento, uno.Any('[]com.sun.star.beans.PropertyValue', properties))
+    )
     return
 
 def macro_DOC(nEvento, miamacro):
@@ -9260,7 +9261,6 @@ def eventi_assegna():
     oDoc = LeenoUtils.getDocument()
 
     macro_SHEET ("Elenco Prezzi", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.elenco_OnFocus?language=Basic&location=application")
-    return
     macro_SHEET ("Elenco Prezzi", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
 
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
@@ -9277,7 +9277,7 @@ def eventi_assegna():
     if oDoc.getSheets().hasByName("CONTABILITA"):
         macro_SHEET ("CONTABILITA", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
         macro_SHEET ("CONTABILITA", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
-    return
+    
     macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
     macro_SHEET ("S1", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Menu.LeenoToolbars_Vedi?language=Basic&location=application")
     # ~macro_SHEET ("S1", "OnUnfocus","service:org.giuseppe-vizziello.leeno.dispatcher?LeenoToolbars.Vedi")

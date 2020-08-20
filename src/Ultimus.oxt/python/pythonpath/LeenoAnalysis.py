@@ -31,7 +31,7 @@ def inizializzaAnalisi(oDoc):
         # la riga dalla quale iniziare a scrivere
         startRow = 2
 
-        PL.basic_LeenO("Menu.eventi_assegna")
+        PL.eventi_assegna()
         LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
     else:

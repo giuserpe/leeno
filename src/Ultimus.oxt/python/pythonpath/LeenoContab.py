@@ -254,7 +254,7 @@ def generaContabilita(oDoc):
             oSheet = svuotaContabilita(oDoc)
             insertVoceContabilita(oSheet, 0)
 
-            PL.basic_LeenO("Menu.eventi_assegna")
+            PL.eventi_assegna()
             LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
     return oSheet

@@ -4105,6 +4105,7 @@ def MENU_elimina_righe():
     '''
     Elimina le righe selezionate anche se non contigue.
     '''
+    DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
@@ -4151,7 +4152,7 @@ def MENU_elimina_righe():
                 Rinumera_TUTTI_Capitoli2(oSheet)
     parziale_verifica()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-    
+    EnableAutoCalc()
     
 ########################################################################
 def copia_riga_computo(lrow):

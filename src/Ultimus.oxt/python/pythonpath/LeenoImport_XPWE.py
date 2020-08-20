@@ -1079,6 +1079,7 @@ def MENU_XPWE_import():
     '''
     Importazione dati dal formato XPWE
     '''
+    PL.DisableAutoCalc()
     isLeenoDoc = LeenoUtils.isLeenoDocument()
 
     # legge i totali dal documento
@@ -1251,3 +1252,4 @@ def MENU_XPWE_import():
     progress.setText("Fine")
     progress.hide()
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')
+    PL.EnableAutoCalc()

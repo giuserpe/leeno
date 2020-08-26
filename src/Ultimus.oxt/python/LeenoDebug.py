@@ -19,11 +19,16 @@ from com.sun.star.connection import NoConnectException
 
 # openoffice path
 # adapt to your system
-_sofficePath = '/usr/lib/libreoffice/program'
+if sys.platform == 'linux' or sys.platform == 'darwin':
+    _sofficePath = '/usr/lib/libreoffice/program'
+    calc = 'scalc'
+else:
+    _sofficePath = 'C:\\Program Files\\LibreOffice\\program'
+    calc = 'scalc.exe'
 
 OPENOFFICE_PORT = 8100
 OPENOFFICE_PATH    = _sofficePath
-OPENOFFICE_BIN     = os.path.join(OPENOFFICE_PATH, 'scalc')
+OPENOFFICE_BIN     = os.path.join(OPENOFFICE_PATH, calc)
 OPENOFFICE_LIBPATH = OPENOFFICE_PATH
 
 class OORunner:

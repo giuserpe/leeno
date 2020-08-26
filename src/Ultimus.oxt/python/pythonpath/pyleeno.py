@@ -42,6 +42,7 @@ import LeenoSheetUtils
 import LeenoToolbars as Toolbars
 import LeenoFormat
 import LeenoComputo
+import LeenoEvents
 
 import LeenoConfig
 cfg = LeenoConfig.Config()
@@ -2516,7 +2517,7 @@ Cancello le voci di misurazione?
     #  else:
     GotoSheet('VARIANTE')
     ScriviNomeDocumentoPrincipale()
-    eventi_assegna()
+    LeenoEvents.assegna()
 
 
 ########################################################################
@@ -4436,7 +4437,6 @@ def MENU_pesca_cod():
 
 
 def pesca_cod():
-    #  def debug():
     '''
     Permette di scegliere il codice per la voce di COMPUTO o VARIANTE o CONTABILITA dall'Elenco Prezzi.
     Capisce quando la voce nel libretto delle misure è già registrata o nel documento ci sono già atti contabili emessi.
@@ -4713,7 +4713,6 @@ def valuta_cella(oCell):
 
 ########################################################################
 def dettaglio_misura_rigo():
-    # ~def debug():
     '''
     Indica il dettaglio delle misure nel rigo di descrizione quando
     incontra delle formule nei valori immessi.
@@ -5190,7 +5189,6 @@ def EnableAutoCalc():
 
 ########################################################################
 def richiesta_offerta():
-    #  def debug():
     '''Crea la Lista Lavorazioni e Forniture dall'Elenco Prezzi,
 per la formulazione dell'offerta'''
     chiudi_dialoghi()
@@ -5818,8 +5816,7 @@ def attiva_contabilita():
 
         GotoSheet('CONTABILITA')
     ScriviNomeDocumentoPrincipale()
-    eventi_assegna()
-
+    LeenoEvents.assegna()
 ########################################################################
 def svuota_contabilita():
     '''
@@ -6253,7 +6250,6 @@ def genera_atti_contabili():
     '''
     @@ DA DOCUMENTARE
     '''
-    # ~def debug():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name != "CONTABILITA":
@@ -6554,7 +6550,7 @@ def inizializza_analisi():
             oDoc.createInstance(
                 "com.sun.star.sheet.SheetCellRanges"))  # unselect
     oSheet.copyRange(oCellAddress, oRangeAddress)
-    eventi_assegna()
+    LeenoEvents.assegna()
     LeenoSheetUtils.inserisciRigaRossa(oSheet)
     ScriviNomeDocumentoPrincipale()
 
@@ -7334,7 +7330,7 @@ def autoexec_off():
     Toolbars.Switch(True)
     oDoc = LeenoUtils.getDocument()
     Toolbars.AllOff()
-    eventi_pulisci()
+    LeenoEvents.pulisci()
     for el in ('COMPUTO', 'VARIANTE', 'Elenco Prezzi', 'CONTABILITA',
                'Analisi di Prezzo'):
         try:
@@ -7378,7 +7374,7 @@ def autoexec():
     questa è richiamata da creaComputo()
     '''
     inizializza()
-    eventi_assegna()
+    LeenoEvents.assegna()
     # rinvia a autoexec in basic
     basic_LeenO('_variabili.autoexec')
     bak0()
@@ -9189,151 +9185,63 @@ def somma():
 
 ########################################################################
 
-def macro_SHEET(nSheet, nEvento, miamacro):
-    '''
-    Attribuisce specifica macro ad evento di un foglio
-    '''
- # ~nEvento:
- # ~"OnFocus"       entrando nel foglio
- # ~"OnUnfocus"     uscendo dal foglio
- # ~"OnSelect"      selezionando
- # ~"OnDoubleClick" doppio click
- # ~"OnRightClick"  click destro
- # ~"OnChange"      modificando il contenuto
- # ~"OnCalculate"   mboh...
-    oProp = []
-    oProp0 = PropertyValue()
-    oProp0.Name = 'EventType'
-    oProp0.Value = 'Script'
-    oProp1 = PropertyValue()
-    oProp1.Name = 'Script'
-    oProp1.Value = miamacro
-    
-    oProp.append(oProp0)
-    oProp.append(oProp1)
-
-    properties = tuple(oProp)
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(nSheet)
-    uno.invoke(
-        oSheet.Events, 'replaceByName',
-        (nEvento, uno.Any('[]com.sun.star.beans.PropertyValue', properties))
-    )
-    return
-
-def macro_DOC(nEvento, miamacro):
-    '''
-    Attribuisce specifica macro ad evento del documento
-    '''
-# ~http://bit.ly/1EgROQt
-# ~esempio: macro_DOC("OnUnfocus", "vnd.sun.star.script:UltimusFree2.Menu.SeeComponentsElements?language=Basic&location=application")
-
-    oProp = []
-    oProp0 = PropertyValue()
-    oProp0.Name = 'EventType'
-    oProp0.Value = 'Script'
-    oProp1 = PropertyValue()
-    oProp1.Name = 'Script'
-    oProp1.Value = miamacro # persorso macro da assegnare
-    
-    oProp.append(oProp0)
-    oProp.append(oProp1)
-
-    properties = tuple(oProp)
-    oDoc = LeenoUtils.getDocument()
-   
-    uno.invoke(
-        oDoc.Events, 'replaceByName',
-        (nEvento, uno.Any('[]com.sun.star.beans.PropertyValue', properties))
-    )
-    return
-
-########################################################################
-
-def eventi_assegna():
-# ~sName = FileNameoutofPath(LeenO_Path) 'nome oxt
-    # ~OnFocus
-    # ~OnUnfocus
-    # ~OnSelect
-    # ~OnDoubleClick
-    # ~OnRightClick
-    # ~OnChange
-    # ~OnCalculate
-    oDoc = LeenoUtils.getDocument()
-
-    macro_SHEET ("Elenco Prezzi", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.elenco_OnFocus?language=Basic&location=application")
-    macro_SHEET ("Elenco Prezzi", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
-
-    if oDoc.getSheets().hasByName('Analisi di Prezzo'):
-        macro_SHEET ("Analisi di Prezzo", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.analisi_OnFocus?language=Basic&location=application")
-        macro_SHEET ("Analisi di Prezzo", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
-
-    macro_SHEET ("COMPUTO", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
-    macro_SHEET ("COMPUTO", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
-
-    if oDoc.getSheets().hasByName("VARIANTE"):
-        macro_SHEET ("VARIANTE", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
-        macro_SHEET ("VARIANTE", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
-
-    if oDoc.getSheets().hasByName("CONTABILITA"):
-        macro_SHEET ("CONTABILITA", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
-        macro_SHEET ("CONTABILITA", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
-    
-    macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
-    macro_SHEET ("S1", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Menu.LeenoToolbars_Vedi?language=Basic&location=application")
-    # ~macro_SHEET ("S1", "OnUnfocus","service:org.giuseppe-vizziello.leeno.dispatcher?LeenoToolbars.Vedi")
-    # ~OnStartApp
-    # ~OnCloseApp
-    # ~macro_DOC ("OnCreate", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    # ~OnLoadFinished
-    macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application")
-    macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-    macro_DOC ("OnSave", "vnd.sun.star.script:UltimusFree2.Menu.pyleeno_bak0?language=Basic&location=application")
-    # ~macro_DOC ("OnSave", "service:org.giuseppe-vizziello.leeno.dispatcher?LeenoBasicBridge.bak0")
-    # ~OnSaveDone
-    # ~OnSaveFailed
-    macro_DOC ("OnSaveAs", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-    # ~OnSaveAsDone
-    macro_DOC ("OnSaveAsFailed", "vnd.sun.star.script:UltimusFree2._variabili.autoexec?language=Basic&location=application")
-    # ~macro_DOC ("OnCopyTo", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-    # ~OnCopyToDone
-    # ~OnCopyToFailed
-    macro_DOC ("OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
-    # ~macro_DOC ("OnUnfocus", "vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&location=application")
-    # ~OnPrint
-    # ~OnViewCreated
-    # ~OnPrepareViewClosing
-    # ~OnViewClosed
-    # ~OnModifyChanged
-    # ~OnTitleChanged
-    # ~OnVisAreaChanged
-    # ~OnModeChanged
-    # ~OnStorageChanged
-
-########################################################################
-
-
-def eventi_pulisci():
-    oDoc = LeenoUtils.getDocument()
-    lista_fogli = oDoc.Sheets.ElementNames
-
-    eventi = oDoc.CurrentController.ActiveSheet.Events.ElementNames
-    eventi_doc = oDoc.Events.ElementNames
-    for nome in lista_fogli:
-        for ev in eventi:
-            macro_SHEET(nome, ev, '')
-    for ev in eventi_doc:
-        macro_DOC(ev, '')
-    macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-    macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-
-########################################################################
-
-
 def MENU_debug():
+    LeenoEvents.assegna()
+    return
     ###
+    '''
+    risposte dei test di psicoattitudinali.com
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName('Foglio1')
+    col = oSheet.getCellRangeByName('E1').String
+    col = SheetUtils.uFindString(col, oSheet)[0]
+    if col == 0:
+        tot = '70'
+    if col == 1:
+        tot = '80'
+    if col == 2:
+        tot = '50'
+    if col == 3:
+        tot = '10'
+    
+    SheetUtils.getLastUsedRow(oSheet)
+    # ~cat = ('LINGUISTICI', 'MATEMATICI', 'DEDUTTIVI', 'GENERICI')
+
+
+    for x in range (1, 100):
+        if oSheet.getCellByPosition(col, x).Type.value != 'EMPTY':
+            ans = oSheet.getCellByPosition(col, x).String
+            DLG.MsgBox('Test n.' + ans.split('.')[0] + ' di ' + tot + ' \n\n' +
+            'Risposta = ' + ans.split('.')[1], oSheet.getCellByPosition(col, 0).String)
+        else:
+            DLG.MsgBox('Test Concluso.', 'Avviso')
+            return
+    return
+    '''
+    Ripulisce l'elaborato dalle righe vuote
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeggiPosizioneCorrente()[1]
+    last = SheetUtils.getLastUsedRow(oSheet) +1
+    for i in range(lrow, last):
+    # ~while lrow < last:
+        if oSheet.getCellByPosition(2, i).CellStyle == 'comp 1-a' and \
+        oSheet.getCellByPosition(2, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(3, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(4, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(5, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(6, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(7, i).Type.value == 'EMPTY' and \
+        oSheet.getCellByPosition(8, i).Type.value == 'EMPTY':
+            # ~_gotoCella(2, i)
+            oDoc.CurrentController.select(oSheet.getCellByPosition(8, i))
+            MENU_elimina_righe()
+            # ~return
+    return
+    somma()
+    return
     '''
     Ricalcola i parziali di una voce
     '''

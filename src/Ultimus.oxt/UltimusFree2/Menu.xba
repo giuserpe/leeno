@@ -76,39 +76,6 @@ Sub myTestToolBarVisible
 End Sub
 
 rem ######################################################################
-Sub computo_OnFocus
-ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
-End Sub
-
-Sub computo_OnSelect
-ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;ScriviNomeDocumentoPrincipale&quot;)
-End Sub
-
-Sub elenco_OnFocus
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;fissa&quot;)
-	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
-End Sub
-Sub elenco_OnUnFocus
-	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
-End Sub
-Sub analisi_OnFocus
-	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;fissa&quot;)
-	&apos;ThisComponent.CurrentController().freezeAtPosition(0,2)
-End Sub
-Sub analisi_OnUnFocus
-	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
-End Sub
-
-Sub pyleeno_bak0
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;bak0&quot;)
-End Sub
-
-Sub LeenoToolbars_Vedi
-	ScriptPy(&quot;LeenoToolbars.py&quot;, &quot;Vedi&quot;)
-End Sub
-
-
 
 Sub staffa
 On Error GoTo fine:

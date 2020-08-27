@@ -17,6 +17,7 @@ _TOOLBAR_NAMES = (
     'private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA',
 )
 
+import pyleeno as PL
 
 def Vedi():
     '''
@@ -51,6 +52,7 @@ def Vedi():
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', 1)
     except Exception:
         pass
+    PL.fissa()
 
 
 def On(toolbarURL, flag):

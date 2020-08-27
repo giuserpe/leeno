@@ -2,8 +2,10 @@
     LeenO - modulo di gestione eventi del documento e dei fogli
 """
 import uno
+import sys
 from com.sun.star.beans import PropertyValue
 import LeenoUtils
+import LeenoBasicBridge
 
 def macro_SHEET(nSheet, nEvento, miamacro):
     '''
@@ -68,7 +70,22 @@ def macro_DOC(nEvento, miamacro):
 
 ########################################################################
 
+def macro_URL (modulo, miamacro):
+    '''
+    Ricostruisce la URL della macro
+    '''
+    if sys.platform == 'linux' or sys.platform == 'darwin':
+        pmacro = LeenoBasicBridge.myPath.split('/')
+    elif sys.platform == 'win32':
+        pmacro = LeenoBasicBridge.myPath.split('\\')
+    return 'vnd.sun.star.script:' + '|'.join((pmacro[-3:])) + '|' + modulo + '.py$' + miamacro + '?language=Python&location=user:uno_packages'
+
+########################################################################
+
 def assegna():
+    '''
+    Assegna le macro agli eventi del documento  dei fogli
+    '''
     # ~OnFocus
     # ~OnUnfocus
     # ~OnSelect
@@ -78,26 +95,20 @@ def assegna():
     # ~OnCalculate
     oDoc = LeenoUtils.getDocument()
 
-    macro_SHEET ("Elenco Prezzi", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.elenco_OnFocus?language=Basic&location=application")
-    macro_SHEET ("Elenco Prezzi", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
+    macro_SHEET ("Elenco Prezzi", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
 
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
-        macro_SHEET ("Analisi di Prezzo", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.analisi_OnFocus?language=Basic&location=application")
-        macro_SHEET ("Analisi di Prezzo", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
+        macro_SHEET ("Analisi di Prezzo", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
 
-    macro_SHEET ("COMPUTO", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
-    macro_SHEET ("COMPUTO", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
+    macro_SHEET ("COMPUTO", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
 
     if oDoc.getSheets().hasByName("VARIANTE"):
-        macro_SHEET ("VARIANTE", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
-        macro_SHEET ("VARIANTE", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
+        macro_SHEET ("VARIANTE", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
 
     if oDoc.getSheets().hasByName("CONTABILITA"):
-        macro_SHEET ("CONTABILITA", "OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
-        macro_SHEET ("CONTABILITA", "OnSelect", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnSelect?language=Basic&location=application")
+        macro_SHEET ("CONTABILITA", "OnFocus", macro_URL("LeenoToolbars", "Vedi"))
     macro_SHEET ("S2", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Header_Footer.set_header_auto?language=Basic&location=application")
-    macro_SHEET ("S1", "OnUnfocus", "vnd.sun.star.script:UltimusFree2.Menu.LeenoToolbars_Vedi?language=Basic&location=application")
-    # ~macro_SHEET ("S1", "OnUnfocus","service:org.giuseppe-vizziello.leeno.dispatcher?LeenoToolbars.Vedi")
+    macro_SHEET ("S1", "OnUnfocus", macro_URL("LeenoToolbars", "Vedi"))
     # ~OnStartApp
     # ~OnCloseApp
     # ~macro_DOC ("OnCreate", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
@@ -106,8 +117,7 @@ def assegna():
     macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
     macro_DOC ("OnPrepareUnload", "vnd.sun.star.script:UltimusFree2._variabili.autoexec_off?language=Basic&location=application")
     macro_DOC ("OnUnload", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
-    macro_DOC ("OnSave", "vnd.sun.star.script:UltimusFree2.Menu.pyleeno_bak0?language=Basic&location=application")
-    # ~macro_DOC ("OnSave", "service:org.giuseppe-vizziello.leeno.dispatcher?LeenoBasicBridge.bak0")
+    macro_DOC ("OnSave", macro_URL("LeenoBasicBridge", "bak0"))
     # ~OnSaveDone
     # ~OnSaveFailed
     macro_DOC ("OnSaveAs", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
@@ -116,7 +126,7 @@ def assegna():
     # ~macro_DOC ("OnCopyTo", "vnd.sun.star.script:UltimusFree2.Lupo_0.Svuota_Globale?language=Basic&location=application")
     # ~OnCopyToDone
     # ~OnCopyToFailed
-    macro_DOC ("OnFocus", "vnd.sun.star.script:UltimusFree2.Menu.computo_OnFocus?language=Basic&location=application")
+    macro_DOC ("OnFocus", macro_URL("LeenoToolbars", "Vedi"))
     # ~macro_DOC ("OnUnfocus", "vnd.sun.star.script:UltimusFree2.PY_bridge.ScriviNomeDocumentoPrincipale?language=Basic&location=application")
     # ~OnPrint
     # ~OnViewCreated
@@ -132,6 +142,10 @@ def assegna():
 
 
 def pulisci():
+    '''
+    Rimuove le macro dagli eventi del codumento e dei fogli.
+    Assegna al document le macro per il controllo dell'esistenza di LeenO
+    '''
     oDoc = LeenoUtils.getDocument()
     lista_fogli = oDoc.Sheets.ElementNames
 
@@ -145,5 +159,3 @@ def pulisci():
         macro_DOC(ev, '')
     macro_DOC ("OnNew", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
     macro_DOC ("OnLoad", "vnd.sun.star.script:Standard.Controllo.Controlla_Esistenza_LibUltimus?language=Basic&location=document")
-
-########################################################################

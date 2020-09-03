@@ -373,7 +373,7 @@ def fissa():
     PL.fissa()
 
 
-def bak0():
+def bak0(arg=None):
     '''
     Fa il backup del file di lavoro all'apertura.
     '''

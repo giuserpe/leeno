@@ -19,7 +19,7 @@ _TOOLBAR_NAMES = (
 
 import pyleeno as PL
 
-def Vedi():
+def Vedi(arg=None):
     '''
     accende tutte le toolbars (se non sono richieste quelle contestuali)
     oppure solo quelle relative alla pagina visualizzata, se richieste le contestuali

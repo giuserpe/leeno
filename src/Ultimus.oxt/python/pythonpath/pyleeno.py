@@ -21,7 +21,7 @@
 from datetime import datetime, date
 from xml.etree.ElementTree import Element, SubElement, tostring
 
-import distutils.dir_util
+# import distutils.dir_util
 
 import codecs
 import subprocess
@@ -4110,7 +4110,6 @@ def MENU_elimina_righe():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
-    lcol = LeggiPosizioneCorrente()[0]
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
     except AttributeError:
@@ -6888,11 +6887,8 @@ def vedi_voce_xpwe(oSheet, lrow, vRif):
     oSheet.getCellByPosition(2, lrow).Formula = sformula
     oSheet.getCellByPosition(4, lrow).Formula = '=' + quantity
     oSheet.getCellByPosition(9, lrow).Formula = (
-       '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
-       str(lrow + 1) + ')=0;"";PRODUCT(E' +
-       str(lrow + 1) + ':I' +
-       str(lrow + 1) + '))')
-
+        '=(PRODUCT(E' + str(lrow + 1) + ':I' +
+        str(lrow + 1) + '))')
 
 ########################################################################
 def MENU_vedi_voce():
@@ -8798,10 +8794,10 @@ def fissa():
     if oSheet.Name in (
             'COMPUTO',
             'VARIANTE',
-            'CONTABILITA',
+            'Elenco Prezzi'
     ):
         oDoc.CurrentController.freezeAtPosition(0, 3)
-    elif oSheet.Name in ('Elenco Prezzi'):
+    elif oSheet.Name in ('CONTABILITA'):
         #  _gotoCella(0, 3)
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):

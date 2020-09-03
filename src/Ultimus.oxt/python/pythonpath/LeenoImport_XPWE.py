@@ -988,6 +988,15 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 oSheet.getCellByPosition(1, startRow).Value = oSheet.getCellByPosition(1, startRow).Value
             for mis in lista_righe:
 
+
+                if elaborato == 'CONTABILITA':
+                    # inserisce la formula nella colonna delle quantità positive
+                    oSheet.getCellByPosition(
+                        9, startRow).Formula = '=IF(PRODUCT(E' + str(startRow + 1) + ':I' + str(
+                            startRow + 1) + ')<=0;"";PRODUCT(E' + str(startRow +
+                                                                  1) + ':I' + str(startRow +
+                                                                                  1) + '))'
+
                 # descrizione
                 if mis[0] is not None:
                     descrizione = mis[0].strip()
@@ -1074,6 +1083,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
     except Exception:
         pass
 
+    PL.fissa()
 
 def MENU_XPWE_import():
     '''

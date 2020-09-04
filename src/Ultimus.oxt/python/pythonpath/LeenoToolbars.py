@@ -52,7 +52,7 @@ def Vedi(arg=None):
             On('private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_CONTABILITA', 1)
     except Exception:
         pass
-    PL.fissa()
+    #~PL.fissa()
 
 
 def On(toolbarURL, flag):

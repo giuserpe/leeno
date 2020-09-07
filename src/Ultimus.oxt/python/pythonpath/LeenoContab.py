@@ -258,4 +258,3 @@ def generaContabilita(oDoc):
             LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
     return oSheet
-

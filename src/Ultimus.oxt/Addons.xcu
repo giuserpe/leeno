@@ -548,6 +548,7 @@
             <value>_self</value>
           </prop>
         </node>
+<!--
         <node oor:name="Ca35" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -565,6 +566,7 @@
             <value>_self</value>
           </prop>
         </node>
+-->
         <node oor:name="Ca45" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />

@@ -166,19 +166,6 @@ def MENU_leeno_conf():
     if cfg.read('Generale', 'torna_a_ep') == '1':
         oDlg_config.getControl('CheckBox8').State = 1
 
-    # Contabilità abilita
-    if oSheet.getCellRangeByName('S1.H328').Value == 1:
-        oDlg_config.getControl('CheckBox7').State = 1
-    sString = oDlg_config.getControl('TextField13')
-    if cfg.read('Contabilità', 'idxsal') == '&273.Dlg_config.TextField13.Text':
-        sString.Text = '20'
-    else:
-        sString.Text = cfg.read('Contabilità', 'idxsal')
-        if sString.Text == '':
-            sString.Text = '20'
-    sString = oDlg_config.getControl('ComboBox3')
-    sString.Text = cfg.read('Contabilità', 'ricicla_da')
-
     sString = oDlg_config.getControl('ComboBox4')
     sString.Text = cfg.read('Generale', 'copie_backup')
     sString = oDlg_config.getControl('TextField5')
@@ -236,12 +223,6 @@ def MENU_leeno_conf():
     oSheet.getCellRangeByName('S1.H336').Value = float(oDlg_config.getControl('TextField12').getText())
     adatta_altezza_riga()
 
-    cfg.write('Contabilità', 'abilita', str(oDlg_config.getControl('CheckBox7').State))
-    cfg.write('Contabilità', 'idxsal', oDlg_config.getControl('TextField13').getText())
-    if oDlg_config.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
-        cfg.write('Contabilità', 'ricicla_da', 'COMPUTO')
-    else:
-        cfg.write('Contabilità', 'ricicla_da', 'VARIANTE')
     cfg.write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
     cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('TextField5').getText())
     autorun()
@@ -2460,9 +2441,46 @@ def scelta_viste():
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
         )
+
+        sString = oDialog1.getControl('TextField3')
+        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
+            'H335').Value  # cont_inizio_voci_abbreviate
+        sString = oDialog1.getControl('TextField2')
+        sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
+            'H336').Value  # cont_fine_voci_abbreviate
+
+        # Contabilità abilita
+        #~if oSheet.getCellRangeByName('S1.H328').Value == 1:
+            #~oDialog1.getControl('CheckBox7').State = 1
+        sString = oDialog1.getControl('TextField13')
+        if cfg.read('Contabilità', 'idxsal') == '&273.Dlg_config.TextField13.Text':
+            sString.Text = '20'
+        else:
+            sString.Text = cfg.read('Contabilità', 'idxsal')
+            if sString.Text == '':
+                sString.Text = '20'
+        sString = oDialog1.getControl('ComboBox3')
+        sString.Text = cfg.read('Contabilità', 'ricicla_da')
+            
         # oDialog1Model = oDialog1.Model
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
         oDialog1.execute()
+
+        # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
+        if oDialog1.getControl('TextField3').getText() != '10000':
+            cfg.write('Contabilità', 'cont_inizio_voci_abbreviate', oDialog1.getControl('TextField3').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H335').Value = float(oDialog1.getControl('TextField3').getText())
+
+        if oDialog1.getControl('TextField2').getText() != '10000':
+            cfg.write('Contabilità', 'cont_fine_voci_abbreviate', oDialog1.getControl('TextField2').getText())
+        oDoc.getSheets().getByName('S1').getCellRangeByName('H336').Value = float(oDialog1.getControl('TextField2').getText())
+
+        cfg.write('Contabilità', 'idxsal', oDialog1.getControl('TextField13').getText())
+        if oDialog1.getControl('ComboBox3').getText() in ('COMPUTO', '&305.Dlg_config.ComboBox3.Text'):
+            cfg.write('Contabilità', 'ricicla_da', 'COMPUTO')
+        else:
+            cfg.write('Contabilità', 'ricicla_da', 'VARIANTE')
+            
         if oDialog1.getControl('Dettaglio').State == 0:
             cfg.write('Generale', 'dettaglio', '0')
             dettaglio_misure(0)
@@ -8802,7 +8820,7 @@ def fissa():
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
-    _gotoCella(lcol, lrow)
+    #~_gotoCella(lcol, lrow)
 
 
 ########################################################################

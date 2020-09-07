@@ -12,8 +12,9 @@
   <dlg:style dlg:style-id="7" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="8" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Standard" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="9" dlg:font-height="11"/>
-  <dlg:style dlg:style-id="10" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="11" dlg:background-color="0xffffa6" dlg:border="simple" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="10" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="11" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="12" dlg:background-color="0xffffa6" dlg:border="simple" dlg:font-weight="150"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="1" dlg:left="-150" dlg:top="-3" dlg:width="86" dlg:height="17" dlg:help-text="&amp;153.Dialogviste_N.CommandButton3.HelpText" dlg:value="&amp;154.Dialogviste_N.CommandButton3.Label" dlg:multiline="true">
@@ -43,7 +44,7 @@
   <dlg:button dlg:style-id="5" dlg:id="CommandButton24" dlg:tab-index="9" dlg:left="9" dlg:top="25" dlg:width="95" dlg:height="15" dlg:help-text="&amp;195.Dialogviste_N.CommandButton24.HelpText" dlg:value="&amp;196.Dialogviste_N.CommandButton24.Label" dlg:multiline="true">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Contab.annulla_tutti_gli_atti?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="4" dlg:id="CommandButton2" dlg:tab-index="10" dlg:left="130" dlg:top="58" dlg:width="76" dlg:height="15" dlg:help-text="&amp;197.Dialogviste_N.CommandButton2.HelpText" dlg:value="&amp;198.Dialogviste_N.CommandButton2.Label">
+  <dlg:button dlg:style-id="4" dlg:id="CommandButton2" dlg:tab-index="10" dlg:left="136" dlg:top="-40" dlg:width="76" dlg:height="15" dlg:help-text="&amp;197.Dialogviste_N.CommandButton2.HelpText" dlg:value="&amp;198.Dialogviste_N.CommandButton2.Label">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.Strutture.Tronca_Altezza_Voci?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
   <dlg:button dlg:style-id="4" dlg:id="CommandButton25" dlg:tab-index="11" dlg:left="9" dlg:top="95" dlg:width="95" dlg:height="15" dlg:help-text="&amp;201.Dialogviste_N.CommandButton25.HelpText" dlg:value="&amp;202.Dialogviste_N.CommandButton25.Label" dlg:multiline="true">
@@ -67,14 +68,19 @@
   <dlg:textfield dlg:style-id="9" dlg:id="TextField3" dlg:tab-index="21" dlg:left="170" dlg:top="25" dlg:width="30" dlg:height="11" dlg:help-text="&amp;703.Dialogviste_N.TextField3.HelpText" dlg:align="center" dlg:value="&amp;704.Dialogviste_N.TextField3.Text"/>
   <dlg:text dlg:style-id="7" dlg:id="Label4" dlg:tab-index="22" dlg:left="134" dlg:top="25" dlg:width="34" dlg:height="12" dlg:help-text="&amp;699.Dialogviste_N.Label3.HelpText" dlg:value="Inizio voce:" dlg:valign="center"/>
   <dlg:textfield dlg:style-id="9" dlg:id="TextField13" dlg:tab-index="17" dlg:left="162" dlg:top="128" dlg:width="50" dlg:height="12" dlg:help-text="&amp;705.Dialogviste_N.TextField13.HelpText" dlg:align="center" dlg:value="&amp;706.Dialogviste_N.TextField13.Text"/>
-  <dlg:combobox dlg:id="ComboBox3" dlg:tab-index="23" dlg:left="162" dlg:top="147" dlg:width="50" dlg:height="12" dlg:help-text="&amp;717.Dialogviste_N.ComboBox3.HelpText" dlg:value="&amp;718.Dialogviste_N.ComboBox3.Text" dlg:spin="true"/>
-  <dlg:titledbox dlg:style-id="10" dlg:id="FrameControl2" dlg:tab-index="24" dlg:left="128" dlg:top="16" dlg:width="80" dlg:height="60" dlg:help-text="&amp;753.Dialogviste_N.FrameControl2.HelpText">
+  <dlg:combobox dlg:style-id="10" dlg:id="ComboBox3" dlg:tab-index="23" dlg:left="162" dlg:top="147" dlg:width="50" dlg:height="12" dlg:help-text="&amp;717.Dialogviste_N.ComboBox3.HelpText" dlg:value="&amp;718.Dialogviste_N.ComboBox3.Text" dlg:spin="true">
+   <dlg:menupopup>
+    <dlg:menuitem dlg:value="&amp;795.ComboBox3.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;796.ComboBox3.StringItemList"/>
+   </dlg:menupopup>
+  </dlg:combobox>
+  <dlg:titledbox dlg:style-id="11" dlg:id="FrameControl2" dlg:tab-index="24" dlg:left="128" dlg:top="16" dlg:width="80" dlg:height="43" dlg:help-text="&amp;753.Dialogviste_N.FrameControl2.HelpText">
    <dlg:title dlg:value="&amp;754.Dialogviste_N.FrameControl2.Label"/>
   </dlg:titledbox>
   <dlg:button dlg:style-id="7" dlg:id="CommandButton1" dlg:tab-index="25" dlg:left="9" dlg:top="144" dlg:width="95" dlg:height="15" dlg:help-text="Pulsante non attivo" dlg:value="Rigenera Formule">
    <script:event script:event-name="on-mouseup" script:macro-name="vnd.sun.star.script:UltimusFree2.PY_bridge.rigenera_tutte?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:titledbox dlg:style-id="10" dlg:id="FrameControl1" dlg:tab-index="26" dlg:left="5" dlg:top="16" dlg:width="104" dlg:height="70" dlg:help-text="&amp;755.Dialogviste_N.FrameControl1.HelpText">
+  <dlg:titledbox dlg:style-id="11" dlg:id="FrameControl1" dlg:tab-index="26" dlg:left="5" dlg:top="16" dlg:width="104" dlg:height="70" dlg:help-text="&amp;755.Dialogviste_N.FrameControl1.HelpText">
    <dlg:title dlg:value="&amp;756.Dialogviste_N.FrameControl1.Label"/>
   </dlg:titledbox>
   <dlg:titledbox dlg:id="FrameControl3" dlg:tab-index="27" dlg:left="5" dlg:top="91" dlg:width="104" dlg:height="46" dlg:help-text="&amp;757.Dialogviste_N.FrameControl3.HelpText">
@@ -87,6 +93,6 @@
   <dlg:titledbox dlg:id="FrameControl5" dlg:tab-index="30" dlg:left="128" dlg:top="81" dlg:width="80" dlg:height="15" dlg:help-text="&amp;763.Dialogviste_N.FrameControl5.HelpText">
    <dlg:title dlg:value="&amp;764.Dialogviste_N.FrameControl5.Label"/>
   </dlg:titledbox>
-  <dlg:text dlg:style-id="11" dlg:id="Label5" dlg:tab-index="31" dlg:left="5" dlg:top="2" dlg:width="202" dlg:height="11" dlg:help-text="&amp;775.Dialogviste_N.Label5.HelpText" dlg:value="&amp;776.Dialogviste_N.Label5.Label" dlg:align="center" dlg:valign="center"/>
+  <dlg:text dlg:style-id="12" dlg:id="Label5" dlg:tab-index="31" dlg:left="5" dlg:top="2" dlg:width="202" dlg:height="11" dlg:help-text="&amp;775.Dialogviste_N.Label5.HelpText" dlg:value="&amp;776.Dialogviste_N.Label5.Label" dlg:align="center" dlg:valign="center"/>
  </dlg:bulletinboard>
 </dlg:window>

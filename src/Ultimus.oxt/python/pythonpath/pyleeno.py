@@ -4168,7 +4168,7 @@ def MENU_elimina_righe():
             oSheet.getRows().removeByIndex(y, 1)
             if stile in ('Livello-0-scritta mini', 'Livello-1-scritta mini', 'livello2_'):
                 Rinumera_TUTTI_Capitoli2(oSheet)
-    parziale_verifica()
+    rigenera_parziali()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     EnableAutoCalc()
     
@@ -4572,7 +4572,7 @@ def MENU_ricicla_misure():
             #  LeenoSheetUtils.invertiUnSegno(oDest, n - 2 + partenza[1])
         oDest.copyRange(oCellAddress, oSrc)
         oDest.getCellByPosition(1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
-        parziale_verifica()
+        rigenera_parziali()
         start = LeggiPosizioneCorrente()[1]
         end = sotto - sopra + start + 1
         for n in range(start, end):
@@ -5620,20 +5620,22 @@ def sistema_stili(lrow=None):
 
 
 ########################################################################
-def rigenera_parziali():
+def rigenera_parziali (arg=False):
     '''
+    arg { boolean }: Se False rigenera solo voce corrente
     Rigenera i parziali di tutte le voci
     '''
     oDoc = LeenoUtils.getDocument()
-    #~oSheet = oDoc.getSheets().getByName('VARIANTE')
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
-#    lrow = LeggiPosizioneCorrente()[1]
-#    sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-#    sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-    lr = SheetUtils.getLastUsedRow(oSheet) + 1
-
-    for i in range(4, lr):
+    sopra = 4
+    sotto = SheetUtils.getLastUsedRow(oSheet) + 1
+    if arg == False:
+        lrow = LeggiPosizioneCorrente()[1]
+        sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+        sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
+    
+    for i in range(sopra, sotto):
         # ~if oSheet.getCellByPosition(8, i).String == '0,000':
             # ~oSheet.getCellByPosition(8, i).String = ''
         if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
@@ -6788,7 +6790,7 @@ def MENU_parziale():
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         parziale_core(oSheet, lrow)
-        parziale_verifica()
+        rigenera_parziali()
 
 
 ###
@@ -6856,24 +6858,6 @@ def parziale_core(oSheet, lrow):
             9, lrow).Formula = '=SUBTOTAL(9;J' + str(da) + ':J' + str(
                 lrow + 1) + ')-SUBTOTAL(9;L' + str(da) + ':L' + str(lrow +
                                                                     1) + ')'
-
-
-###
-def parziale_verifica():
-    '''
-    Controlla l'esattezza del calcolo del parziale quanto le righe di
-    misura vengono aggiunte o cancellate.
-    '''
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    lrow = LeggiPosizioneCorrente()[1]
-    #  if oSheet.Name in('COMPUTO','VARIANTE', 'CONTABILITA'):
-    sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-    sopra = sStRange.RangeAddress.StartRow + 2
-    sotto = sStRange.RangeAddress.EndRow
-    for n in range(sopra, sotto):
-        if 'Parziale [' in (oSheet.getCellByPosition(8, n).String):
-            parziale_core(oSheet, n)
 
 
 ########################################################################

@@ -4147,6 +4147,7 @@ def MENU_elimina_righe():
     for y in reversed(lista_y):
         if oSheet.getCellByPosition(2, y).CellStyle not in ('An-lavoraz-generica',
                                                             'comp 1-a',
+                                                            'comp 1-a ROSSO',
                                                             'comp sotto centro',
                                                             'EP-mezzo',
                                                             'Livello-0-scritta mini',

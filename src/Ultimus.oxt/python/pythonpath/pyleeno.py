@@ -4098,13 +4098,17 @@ def elimina_voce(lrow=None, msg=1):
     ER = seleziona_voce()[1]
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
         0, SR, 250, ER))
+    #~DLG.chi(oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName)
     if msg == 1:
-        if DLG.DlgSiNo(
-                """OPERAZIONE NON ANNULLABILE!
-
+        if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
+            messaggio = """            *** A T T E N Z I O N E ! ***\n
+Da questa voce dipende almeno un Vedi Voce.
+         VUOI PROCEDERE UGUALMENTE?"""
+        else:
+            messaggio = """OPERAZIONE NON ANNULLABILE!\n
 Stai per eliminare la voce selezionata.
-Vuoi Procedere?
- """, 'AVVISO!') == 2:
+            Voi Procedere?\n"""
+        if DLG.DlgSiNo(messaggio, 'AVVISO!') == 2:
             delete('R')
             # ~ oSheet.getRows().removeByIndex(SR, ER-SR+1)
             numera_voci(0)

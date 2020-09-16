@@ -9033,7 +9033,7 @@ def elimina_voci_doppie():
 
 
 ########################################################################
-def hl():
+def MENU_hl():
     '''
     Sostituisce hiperlink alla stringa nella colonna B, se questa è un
     indirizzo di file o cartella

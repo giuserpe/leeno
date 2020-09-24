@@ -5416,15 +5416,11 @@ def ins_voce_elenco():
 
 
 ########################################################################
-
-
-########################################################################
 def rigenera_voce(lrow=None):
     '''
     Ripristina/ricalcola le formule di descrizione e somma di una voce.
     in COMPUTO, VARIANTE e CONTABILITA
     '''
-    lrow = LeggiPosizioneCorrente()[1]
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
@@ -5677,7 +5673,7 @@ def rigenera_tutte(arg=None, ):
     nome = oSheet.Name
 
     # attiva la progressbar
-    progress = Dialogs.Progress(Title='Esportazione di ' + nome + ' in corso...', Text="Lettura dati")
+    progress = Dialogs.Progress(Title='Rigenerazione di ' + nome + ' in corso...', Text="Lettura dati")
     progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
     progress.setValue(0)
     progress.show()
@@ -5689,17 +5685,12 @@ def rigenera_tutte(arg=None, ):
             last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             while row < last:
                 progress.setValue(row)
-                oDoc.CurrentController.select(
-                    oSheet.getCellRangeByPosition(0, row, 30, row))
                 rigenera_voce(row)
                 row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
             Rinumera_TUTTI_Capitoli2(oSheet)
         except Exception:
             pass
     progress.hide()
-    oDoc.CurrentController.select(
-        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-
     EnableAutoCalc()
 
 

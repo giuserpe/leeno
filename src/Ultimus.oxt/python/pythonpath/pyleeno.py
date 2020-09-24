@@ -2753,10 +2753,15 @@ def XPWE_out(elaborato, out_file):
 
     il nome file risulterà out_file-elaborato.xpwe
     '''
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title="Esportazione di ' + elaborato + ' in corso...", Text="Lettura dati")
+    progress.setLimits(0, 6)
+    progress.setValue(0)
+    progress.show()
+
     DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
-    oDialogo_attesa = DLG.dlg_attesa('Esportazione di ' + elaborato + ' in corso...')
-    DLG.attesa().start()  # mostra il dialogo
     if cfg.read('Generale', 'dettaglio') == '1':
         dettaglio_misure(0)
     numera_voci(1)
@@ -2814,6 +2819,7 @@ def XPWE_out(elaborato, out_file):
     listaspcat = list()
     PweDGSuperCategorie = SubElement(PweDGCapitoliCategorie,
                                      'PweDGSuperCategorie')
+    progress.setValue(1)
     for n in range(0, lastRow):
         if oSheet.getCellByPosition(1, n).CellStyle == 'Livello-0-scritta':
             desc = oSheet.getCellByPosition(2, n).String
@@ -2842,6 +2848,7 @@ def XPWE_out(elaborato, out_file):
 #  Categorie
     listaCat = list()
     PweDGCategorie = SubElement(PweDGCapitoliCategorie, 'PweDGCategorie')
+    progress.setValue(2)
     for n in range(0, lastRow):
         if oSheet.getCellByPosition(2,
                                     n).CellStyle == 'Livello-1-scritta mini':
@@ -2870,6 +2877,7 @@ def XPWE_out(elaborato, out_file):
 #  SubCategorie
     listasbCat = list()
     PweDGSubCategorie = SubElement(PweDGCapitoliCategorie, 'PweDGSubCategorie')
+    progress.setValue(3)
     for n in range(0, lastRow):
         if oSheet.getCellByPosition(2, n).CellStyle == 'livello2_':
             desc = oSheet.getCellByPosition(2, n).String
@@ -2966,6 +2974,7 @@ def XPWE_out(elaborato, out_file):
     PweElencoPrezzi = SubElement(PweMisurazioni, 'PweElencoPrezzi')
     diz_ep = dict()
     lista_AP = list()
+    progress.setValue(4)
     for n in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
         if(oSheet.getCellByPosition(1, n).Type.value == 'FORMULA' and
            oSheet.getCellByPosition(2, n).Type.value == 'FORMULA'):
@@ -3051,6 +3060,7 @@ def XPWE_out(elaborato, out_file):
                 IncATTR.text = str(oSheet.getCellByPosition(7, n).Value * 100)
 
     # Analisi di prezzo
+    progress.setValue(5)
     if len(lista_AP) != 0:
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
         k = n + 1
@@ -3192,6 +3202,7 @@ def XPWE_out(elaborato, out_file):
     PweVociComputo = SubElement(PweMisurazioni, 'PweVociComputo')
     oDoc.CurrentController.setActiveSheet(oSheet)
     nVCItem = 2
+    progress.setValue(6)
     for n in range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet)):
         if oSheet.getCellByPosition(0,
                                     n).CellStyle in ('Comp Start Attributo',
@@ -3299,7 +3310,6 @@ def XPWE_out(elaborato, out_file):
                         Flags.text = '32769'
             n = sotto + 1
     # #########################
-    oDialogo_attesa.endExecute()
     # ~out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
     # ~DLG.mri (uno.fileUrlToSystemPath(oDoc.getURL()))
@@ -3315,6 +3325,7 @@ def XPWE_out(elaborato, out_file):
     riga = str(tostring(top, encoding="unicode"))
     #  if len(lista_AP) != 0:
     #  riga = riga.replace('<PweDatiGenerali>','<Fgs>131072</Fgs><PweDatiGenerali>')
+    progress.hide()
     try:
         of = codecs.open(out_file, 'w', 'utf-8')
         of.write(riga)

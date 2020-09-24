@@ -3328,17 +3328,20 @@ def XPWE_out(elaborato, out_file):
 
 
 ########################################################################
-#  def firme_in_calce_run():
 def MENU_firme_in_calce():
-    oDialogo_attesa = DLG.dlg_attesa(
-    )  # avvia il diaolgo di attesa che viene chiuso alla fine con
     '''
     Inserisce(in COMPUTO o VARIANTE) un riepilogo delle categorie
     ed i dati necessari alle firme
     '''
     oDoc = LeenoUtils.getDocument()
-
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title="Analisi della struttura categorie...", Text="Lettura dati")
+    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    progress.setValue(0)
+    progress.show()
+    
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
         lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
         oDoc.CurrentController.setFirstVisibleRow(lrowF - 1)
@@ -3382,10 +3385,6 @@ def MENU_firme_in_calce():
         ).Formula = '=CONCATENATE($S2.$C$13)'  # senza concatenate, se la cella di origine è vuota il risultato è '0,00'
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
-        zoom = oDoc.CurrentController.ZoomValue
-        oDoc.CurrentController.ZoomValue = 400
-
-        DLG.attesa().start()
         lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
 
         oDoc.CurrentController.setFirstVisibleRow(lrowF - 2)
@@ -3436,6 +3435,9 @@ def MENU_firme_in_calce():
         inizio_gruppo = riga_corrente
         riga_corrente += 1
         for i in range(0, lrowF):
+            
+            progress.setValue(i)
+            
             if oSheet.getCellByPosition(1, i).CellStyle == 'Livello-0-scritta':
                 oSheet.getRows().insertByIndex(riga_corrente, 1)
                 oSheet.getCellRangeByPosition(
@@ -3576,9 +3578,9 @@ def MENU_firme_in_calce():
         dispatchHelper.executeDispatch(oFrame, ".uno:InsertRowBreak", "", 0, list())
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
         ###
+    progress.setText("Fine")
+    progress.hide()
         #  oSheet.getCellByPosition(lrowF,0).Rows.IsManualPageBreak = True
-    oDialogo_attesa.endExecute()
-    oDoc.CurrentController.ZoomValue = zoom
 
 ########################################################################
 
@@ -8287,15 +8289,6 @@ def donazioni():
     apri = LeenoUtils.createUnoService("com.sun.star.system.SystemShellExecute")
     apri.execute("https://leeno.org/donazioni/", "", 0)
 
-
-########################################################################
-#  class firme_in_calce_th(threading.Thread):
-#  def __init__(self):
-#  threading.Thread.__init__(self)
-#  def run(self):
-#  firme_in_calce_run()
-#  def firme_in_calce():
-#  firme_in_calce_th().start()
 ########################################################################
 class XPWE_export_th(threading.Thread):
     '''

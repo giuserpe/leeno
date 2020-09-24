@@ -921,6 +921,12 @@ def Tutti_Subtotali(oSheet):
         18, 1).Formula = '=SUBTOTAL(9;S4:S' + str(lrow + 1) + ')'
     oSheet.getCellByPosition(
         18, lrow).Formula = '=SUBTOTAL(9;S4:S' + str(lrow + 1) + ')'
+
+    oSheet.getCellByPosition(
+        28, lrow).Formula = '=SUBTOTAL(9;AC4:AC' + str(lrow + 1) + ')'
+    oSheet.getCellByPosition(
+        28, 1).Formula = '=SUBTOTAL(9;AC4:AC' + str(lrow + 1) + ')'
+
     oSheet.getCellByPosition(
         30, lrow).Formula = '=SUBTOTAL(9;AE4:AE' + str(lrow + 1) + ')'
     oSheet.getCellByPosition(
@@ -2755,7 +2761,7 @@ def XPWE_out(elaborato, out_file):
     '''
 
     # attiva la progressbar
-    progress = Dialogs.Progress(Title="Esportazione di ' + elaborato + ' in corso...", Text="Lettura dati")
+    progress = Dialogs.Progress(Title='Esportazione di ' + elaborato + ' in corso...', Text="Lettura dati")
     progress.setLimits(0, 6)
     progress.setValue(0)
     progress.show()
@@ -5668,19 +5674,21 @@ def rigenera_tutte(arg=None, ):
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     DisableAutoCalc()
-
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
     nome = oSheet.Name
-    oDialogo_attesa = DLG.dlg_attesa('Rigenerazione delle formule in ' + oSheet.Name + '...')
-    DLG.attesa().start()  # mostra il dialogo
-    # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 0, 30, 0))
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Esportazione di ' + nome + ' in corso...', Text="Lettura dati")
+    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    progress.setValue(0)
+    progress.show()
+
     if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         try:
             oSheet = oDoc.Sheets.getByName(nome)
             row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1)
             last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             while row < last:
+                progress.setValue(row)
                 oDoc.CurrentController.select(
                     oSheet.getCellRangeByPosition(0, row, 30, row))
                 rigenera_voce(row)
@@ -5688,10 +5696,9 @@ def rigenera_tutte(arg=None, ):
             Rinumera_TUTTI_Capitoli2(oSheet)
         except Exception:
             pass
-    oDoc.CurrentController.ZoomValue = zoom
+    progress.hide()
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-    oDialogo_attesa.endExecute()
 
     EnableAutoCalc()
 
@@ -8980,35 +8987,6 @@ def debug_syspath():
     for i in sys.path:
         somestring = somestring + i + "\n"
     DLG.chi(somestring)
-
-
-def debug_progressbar():
-    '''
-    @@ DA DOCUMENTARE
-    '''
-    try:
-        oDoc = LeenoUtils.getDocument()
-        # set up Status Indicator
-        oCntl = oDoc.getCurrentController()
-        oFrame = oCntl.getFrame()
-        oSI = oFrame.createStatusIndicator()
-        oEnd = 100
-        oSI.reset()  # Reset : NG
-        oSI.start('Excuting', oEnd)  # Start : NG
-
-        for i in range(1, 11):
-            oSI.setText('Processing: ' + str(i))
-            oSI.setValue(20 * i)
-            time.sleep(0.1)
-
-        oSI.setText('Finished')
-        oDisp = 'Success'
-    except Exception as er:
-        oDisp = ''
-        oDisp = str(traceback.format_exc()) + '\n' + str(er)
-    finally:
-        DLG.MsgBox(oDisp)
-        oSI.end()
 
 
 ########################################################################

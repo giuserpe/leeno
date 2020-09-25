@@ -1901,8 +1901,6 @@ def cancella_voci_non_usate():
     Cancella le voci di prezzo non utilizzate.
     '''
     chiudi_dialoghi()
-    #  oDialogo_attesa = dlg_attesa()
-    #  attesa().start() #mostra il dialogo
 
     if DLG.DlgSiNo(
             '''Questo comando ripulisce l'Elenco Prezzi
@@ -1911,19 +1909,22 @@ dalle voci non utilizzate in nessuno degli altri elaborati.
 LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 
 Vuoi procedere comunque?''', 'AVVISO!') == 3:
-        #  oDialogo_attesa.endExecute() #chiude il dialogo
         return
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
-    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Esportazione di ' + oSheet.Name + ' in corso...', Text="Lettura dati")
+    progress.setLimits(0, 4)
+    progress.setValue(0)
+    progress.show()
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow + 1
     ER = oRange.EndRow + 1
     lista_prezzi = list()
+    progress.setValue(1)
     for n in range(SR, ER):
         lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
     lista = list()
@@ -1939,6 +1940,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
                     lista.append(el)
         except Exception:
             pass
+    progress.setValue(2)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
 
@@ -1952,6 +1954,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     struttura_off()
     struttura_off()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
+    progress.setValue(3)
     for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:
             oSheet.Rows.removeByIndex(n, 1)
@@ -1959,10 +1962,10 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
            oSheet.getCellByPosition(1, n).String == '' and
            oSheet.getCellByPosition(4, n).String == ''):
             oSheet.Rows.removeByIndex(n, 1)
+        progress.setValue(4)
     oDoc.enableAutomaticCalculation(True)
-    oDoc.CurrentController.ZoomValue = zoom
+    progress.hide()
     _gotoCella(0, 3)
-    #  oDialogo_attesa.endExecute() #chiude il dialogo
 
 
 ########################################################################
@@ -2002,6 +2005,7 @@ def scelta_viste():
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance('com.sun.star.awt.DialogProvider')
+    global oDialog1
     if oSheet.Name in ('VARIANTE', 'COMPUTO'):
         oDialog1 = dp.createDialog(
             'vnd.sun.star.script:UltimusFree2.DialogViste_A?language=Basic&location=application'
@@ -2551,8 +2555,6 @@ def genera_sommario():
     '''
     Genera i sommari in Elenco Prezzi
     '''
-    #  oDialogo_attesa = dlg_attesa()
-    #  attesa().start() #mostra il dialogo
     DisableAutoCalc()
     struttura_off()
 
@@ -2581,7 +2583,15 @@ def genera_sommario():
 
     formule = list()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Generazione dei sommari in corso...', Text="Lettura dati")
+    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2)
+    progress.setValue(0)
+    progress.show()
+
     for n in range(4, LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2):
+        progress.setValue(n)
         stringa = ([
             '=N' + str(n) + '/$N$2', '=SUMIF(AA;A' + str(n) + ';BB)',
             '=SUMIF(AA;A' + str(n) + ';cEuro)', '', '', '', '', '', '', '', ''
@@ -2617,8 +2627,7 @@ def genera_sommario():
 
     EnableAutoCalc()
     adatta_altezza_riga(oSheet.Name)
-    #  oDialogo_attesa.endExecute() #chiude il dialogo
-
+    progress.hide()
 
 ########################################################################
 
@@ -2762,7 +2771,7 @@ def XPWE_out(elaborato, out_file):
 
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Esportazione di ' + elaborato + ' in corso...', Text="Lettura dati")
-    progress.setLimits(0, 6)
+    progress.setLimits(0, 7)
     progress.setValue(0)
     progress.show()
 
@@ -3315,6 +3324,7 @@ def XPWE_out(elaborato, out_file):
                             11, m).Value != 0:
                         Flags.text = '32769'
             n = sotto + 1
+    progress.setValue(7)
     # #########################
     # ~out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())
@@ -5477,9 +5487,14 @@ def rigenera_voce(lrow=None):
                 36, sotto
             ).Formula = '=IF(ISERROR(S' + str(sotto + 1) + ');"";IF(S' + str(
                 sotto + 1) + '<>"";S' + str(sotto + 1) + ';""))'
-            if 'comp 1-a' in (
-                    oSheet.getCellByPosition(2, n).CellStyle
-            ):  # and oSheet.getCellByPosition(9, n).Type.value != 'FORMULA':
+
+            if 'ROSSO' in (
+                    oSheet.getCellByPosition(2, n).CellStyle):
+                oSheet.getCellByPosition(9, n).Formula = '=IF(PRODUCT(E' + str(
+                    n + 1) + ':I' + str(n + 1) + ')=0;"";-PRODUCT(E' + str(
+                        n + 1) + ':I' + str(n + 1) + '))'
+            elif 'comp 1-a' in (
+                    oSheet.getCellByPosition(2, n).CellStyle):
                 oSheet.getCellByPosition(9, n).Formula = '=IF(PRODUCT(E' + str(
                     n + 1) + ':I' + str(n + 1) + ')=0;"";PRODUCT(E' + str(
                         n + 1) + ':I' + str(n + 1) + '))'
@@ -5668,6 +5683,10 @@ def rigenera_tutte(arg=None, ):
     '''
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
+
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     DisableAutoCalc()
     nome = oSheet.Name
@@ -5692,6 +5711,7 @@ def rigenera_tutte(arg=None, ):
             pass
     progress.hide()
     EnableAutoCalc()
+    oDoc.CurrentController.ZoomValue = zoom
 
 
 ########################################################################
@@ -7131,10 +7151,7 @@ def filtra_codice(voce=None):
     Lanciando il comando da Elenco Prezzi, il comportamento è regolato dal valore presente nella cella 'C2'
     '''
     DisableAutoCalc()
-
     oDoc = LeenoUtils.getDocument()
-    # ~zoom = oDoc.CurrentController.ZoomValue
-    # ~oDoc.CurrentController.ZoomValue = 400
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -7175,9 +7192,16 @@ def filtra_codice(voce=None):
         DLG.MsgBox('Devi prima selezionare una voce di misurazione.', 'Avviso!')
         return
     fine = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+    progress = Dialogs.Progress(Title='Applicazione filtro in corso...', Text="Lettura dati")
+    progress.setLimits(0, fine)
+    progress.setValue(0)
+    progress.show()
+
     lista_pt = list()
     _gotoCella(0, 0)
     for n in range(0, fine):
+        progress.setValue(n)
         if oSheet.getCellByPosition(0,
                                     n).CellStyle in ('Comp Start Attributo',
                                                      'Comp Start Attributo_R'):
@@ -7187,6 +7211,7 @@ def filtra_codice(voce=None):
             if oSheet.getCellByPosition(1, sopra + 1).String != voce:
                 lista_pt.append((sopra, sotto))
                 #  lista_pt.append((sopra+2, sotto-1))
+    progress.setValue(fine)
     for el in lista_pt:
         oCellRangeAddr.StartRow = el[0]
         oCellRangeAddr.EndRow = el[1]
@@ -7194,10 +7219,8 @@ def filtra_codice(voce=None):
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
     _gotoCella(0, lrow)
-
     EnableAutoCalc()
-    # ~oDoc.CurrentController.ZoomValue = zoom
-    # ~MsgBox('Filtro attivato in base al codice!','Codice voce: ' + voce)
+    progress.hide()
 
 
 def struttura_ComputoM():
@@ -7207,11 +7230,22 @@ def struttura_ComputoM():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.clearOutline()
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Creazione vista struttura in corso...', Text="Lettura dati")
+    progress.setLimits(0, 5)
+    progress.setValue(0)
+    progress.show()
     Rinumera_TUTTI_Capitoli2(oSheet)
+    progress.setValue(1)
     struct(0)
+    progress.setValue(2)
     struct(1)
+    progress.setValue(3)
     struct(2)
+    progress.setValue(4)
     struct(3)
+    progress.setValue(5)
+    progress.hide()
 
 
 def struttura_Analisi():
@@ -7874,9 +7908,13 @@ def chiudi_dialoghi(event=None):
     '''
     @@ DA DOCUMENTARE
     '''
-    return
-    if event:
-        event.Source.Context.endExecute()
+    try:
+        oDialog1.endExecute()
+    except:
+        pass
+    #~return
+    #~if event:
+        #~event.Source.Context.endExecute()
     return
 
 
@@ -8329,15 +8367,19 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
         oDialogo_attesa = DLG.dlg_attesa()
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+        # attiva la progressbar
+        progress = Dialogs.Progress(Title='Esportazione di ' + oSheet.Name + ' in corso...', Text="Lettura dati")
+        progress.setLimits(0, SheetUtils.getUsedArea(oSheet).EndRow)
+        progress.setValue(0)
+    
         if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
             return
         descrizione = InputBox(t='inserisci una descrizione per la nuova riga')
-        DLG.attesa().start()  # mostra il dialogo
-        zoom = oDoc.CurrentController.ZoomValue
-        oDoc.CurrentController.ZoomValue = 400
+        progress.show()
         i = 0
         while (i < SheetUtils.getUsedArea(oSheet).EndRow):
-
+            progress.setValue(i)
             if oSheet.getCellByPosition(2, i).CellStyle == 'comp 1-a':
                 sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, i)
                 qui = sStRange.RangeAddress.StartRow + 1
@@ -8347,11 +8389,8 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
                 Copia_riga_Ent()
                 oSheet.getCellByPosition(2, qui + 1).String = descrizione
                 LeenoSheetUtils.prossimaVoce(oSheet, sotto)
-
-                oDoc.CurrentController.select(oSheet.getCellByPosition(2, i))
             i += 1
-        oDialogo_attesa.endExecute()  # chiude il dialogo
-        oDoc.CurrentController.ZoomValue = zoom
+        progress.hide()
 
 
 def MENU_inserisci_nuova_riga_con_descrizione():

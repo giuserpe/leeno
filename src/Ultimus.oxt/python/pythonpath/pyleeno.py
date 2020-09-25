@@ -5489,7 +5489,8 @@ def rigenera_voce(lrow=None):
                 sotto + 1) + '<>"";S' + str(sotto + 1) + ';""))'
 
             if 'ROSSO' in (
-                    oSheet.getCellByPosition(2, n).CellStyle):
+                    oSheet.getCellByPosition(2, n).CellStyle) or \
+                    oSheet.getCellByPosition(9, n).Value < 0:
                 oSheet.getCellByPosition(9, n).Formula = '=IF(PRODUCT(E' + str(
                     n + 1) + ':I' + str(n + 1) + ')=0;"";-PRODUCT(E' + str(
                         n + 1) + ':I' + str(n + 1) + '))'

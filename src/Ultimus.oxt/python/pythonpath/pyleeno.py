@@ -2653,8 +2653,8 @@ def riordina_ElencoPrezzi(oDoc):
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
     test = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet))
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+    #~SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+    #~SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SC = oRangeAddress.StartColumn
     EC = oRangeAddress.EndColumn
@@ -2745,8 +2745,8 @@ def EliminaVociDoppieElencoPrezzi():
                                   1).CellStyle = 'EP statistiche_q'
     oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 -
                                   1).CellStyle = 'EP statistiche_Contab_q'
-    oDoc.CurrentController.select(
-        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
+    #~oDoc.CurrentController.select(
+        #~oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
         tante_analisi_in_ep()
 
@@ -9028,7 +9028,6 @@ def elimina_voci_doppie():
     '''
     @@ DA DOCUMENTARE
     '''
-    #~DLG.chi('prova')
     # elimina voci doppie hard - grezza e lenta, ma efficace
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
@@ -9047,10 +9046,7 @@ def elimina_voci_doppie():
     oDoc.CurrentController.select(
         oSheet.getCellRangeByPosition(30, 3, 30, fine))
     paste_clip(insCells=1)
-    # ~oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    # ~for i in range (3, fine):
-    # ~oSheet.getCellByPosition(30, i).Formula = '=IF(A' + str(i+1) + '=A' + str(i) + ';1;0)'
-    # ~return
+
     for i in reversed(range(0, fine)):
         progress.setValue(i)
         if oSheet.getCellByPosition(30, i).Value == 1:

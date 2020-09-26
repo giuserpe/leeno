@@ -433,8 +433,7 @@ def MENU_invia_voce():
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna'):
                 LeenoComputo.insertVoceComputoGrezza(dccSheet, lrow + 1)
                 # @@ PROVVISORIO !!!
-                _gotoCella(1, lrow + 1 + 1)
-
+                _gotoCella(1, lrow + 2)
                 numera_voci(1)
                 lrow = LeggiPosizioneCorrente()[1]
             if dccSheet.getCellByPosition(
@@ -561,11 +560,14 @@ def MENU_invia_voce():
     _gotoDoc(fpartenza)
     GotoSheet(nSheet)
     _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
-    if DLG.DlgSiNo("Ricerco ed elimino le voci di prezzo duplicate?") == 2:
-        EliminaVociDoppieElencoPrezzi()
+    #~if DLG.DlgSiNo("Ricerco ed elimino le voci di prezzo duplicate?") == 2:
+        #~EliminaVociDoppieElencoPrezzi()
     adatta_altezza_riga('Elenco Prezzi')
     GotoSheet(nSheetDCC)
-    # ~refresh(1)
+    adatta_altezza_riga(nSheetDCC)
+    if nSheetDCC in ('COMPUTO', 'VARIANTE'):
+        lrow = LeggiPosizioneCorrente()[1]
+        _gotoCella(2, lrow + 1)
 
 
 ########################################################################
@@ -2671,7 +2673,8 @@ def riordina_ElencoPrezzi(oDoc):
 
 
 def MENU_doppioni():
-    EliminaVociDoppieElencoPrezzi()
+    #~EliminaVociDoppieElencoPrezzi()
+    elimina_voci_doppie()
 
 
 def EliminaVociDoppieElencoPrezzi():
@@ -2679,9 +2682,9 @@ def EliminaVociDoppieElencoPrezzi():
     '''
     Cancella eventuali voci che si ripetono in Elenco Prezzi
     '''
-    zoom = oDoc.CurrentController.ZoomValue
     DisableAutoCalc()
-
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
     if oDoc.getSheets().hasByName('Analisi di Prezzo'):
         lista_tariffe_analisi = list()
         oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
@@ -3364,7 +3367,7 @@ def MENU_firme_in_calce():
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     # attiva la progressbar
-    progress = Dialogs.Progress(Title="Analisi della struttura categorie...", Text="Lettura dati")
+    progress = Dialogs.Progress(Title="Generazione del Riepilogo strutturale...", Text="Lettura dati")
     progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
     progress.setValue(0)
     progress.show()
@@ -9025,13 +9028,18 @@ def elimina_voci_doppie():
     '''
     @@ DA DOCUMENTARE
     '''
-    DLG.chi('prova')
+    #~DLG.chi('prova')
     # elimina voci doppie hard - grezza e lenta, ma efficace
     oDoc = LeenoUtils.getDocument()
-    GotoSheet('Elenco Prezzi')
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     riordina_ElencoPrezzi(oDoc)
     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Ricerca delle voci da eliminare in corso...', Text="Lettura dati")
+    progress.setLimits(0, fine)
+    progress.setValue(0)
+    progress.show()
 
     oSheet.getCellByPosition(30, 3).Formula = '=IF(A4=A3;1;0)'
     oDoc.CurrentController.select(oSheet.getCellByPosition(30, 3))
@@ -9044,10 +9052,12 @@ def elimina_voci_doppie():
     # ~oSheet.getCellByPosition(30, i).Formula = '=IF(A' + str(i+1) + '=A' + str(i) + ';1;0)'
     # ~return
     for i in reversed(range(0, fine)):
+        progress.setValue(i)
         if oSheet.getCellByPosition(30, i).Value == 1:
             _gotoCella(30, i)
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
+    progress.hide()
 
 
 ########################################################################

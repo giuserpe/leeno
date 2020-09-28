@@ -300,6 +300,7 @@ def MENU_invia_voce():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
@@ -487,13 +488,13 @@ def MENU_invia_voce():
             lrow = LeggiPosizioneCorrente()[1]
             if dccSheet.getCellByPosition(0, lrow).CellStyle in ('comp Int_colonna', ):
                 lrow = LeggiPosizioneCorrente()[1] + 1
-            elif dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo:
+            elif dccSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_cat:
                 DLG.MsgBox('La posizione di destinazione non è corretta.', 'ATTENZIONE!')
                 # unselect
                 oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
                 return
             else:
-                lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
+                lrow = LeenoSheetUtils.prossimaVoce(dccSheet, LeggiPosizioneCorrente()[1], 1)
             _gotoCella(0, lrow)
             paste_clip(insCells=1)
             numera_voci(1)
@@ -9053,6 +9054,7 @@ def elimina_voci_doppie():
             _gotoCella(30, i)
             oSheet.getRows().removeByIndex(i, 1)
     oSheet.getCellRangeByPosition(30, 3, 30, fine).clearContents(FORMULA)
+    _gotoCella(0, 3)
     progress.hide()
 
 

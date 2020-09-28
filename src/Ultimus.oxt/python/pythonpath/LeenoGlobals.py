@@ -10,8 +10,12 @@ if LeenoUtils.getGlobalVar('Lmajor') is None:
                    'comp Int_colonna', 'Ultimus_centro_bordi_lati',
                    'comp Int_colonna_R_prima'),
 
+        'stili_cat': ('Livello-0-scritta', 'Livello-1-scritta', 'livello2 valuta'),
+
         'stili_computo': ('Comp Start Attributo', 'comp progress', 'comp 10 s',
+        
                           'Comp End Attributo'),
+
         'stili_contab': ('Comp Start Attributo_R', 'comp 10 s_R',
                          'Comp End Attributo_R', 'Comp TOTALI'),
         'stili_analisi': ('Analisi_Sfondo', 'An.1v-Att Start', 'An-1_sigla',

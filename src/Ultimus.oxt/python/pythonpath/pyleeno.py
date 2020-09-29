@@ -5446,6 +5446,9 @@ def rigenera_voce(lrow=None):
     for n in range(sopra + 2, sotto):
         if oSheet.Name in ('COMPUTO', 'VARIANTE'):
             oSheet.getCellByPosition(
+                1, sopra + 1
+            ).CellStyle = 'comp Art-EP_R'
+            oSheet.getCellByPosition(
                 2, sopra + 1
             ).Formula = '=IF(LEN(VLOOKUP(B' + str(
                 sopra + 2
@@ -5714,6 +5717,8 @@ def rigenera_tutte(arg=None, ):
             Rinumera_TUTTI_Capitoli2(oSheet)
         except Exception:
             pass
+    numera_voci()
+    fissa()
     progress.hide()
     EnableAutoCalc()
     oDoc.CurrentController.ZoomValue = zoom

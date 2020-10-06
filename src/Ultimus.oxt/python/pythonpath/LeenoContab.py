@@ -7,6 +7,7 @@ import LeenoSheetUtils
 import LeenoComputo
 import Dialogs
 import pyleeno as PL
+import LeenoEvents
 
 
 def sbloccaContabilita(oSheet, lrow):
@@ -254,7 +255,7 @@ def generaContabilita(oDoc):
             oSheet = svuotaContabilita(oDoc)
             insertVoceContabilita(oSheet, 0)
 
-            PL.eventi_assegna()
+            LeenoEvents.assegna()
             LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
     return oSheet

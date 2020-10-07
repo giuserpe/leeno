@@ -838,7 +838,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         oSheet = LeenoVariante.generaVariante(oDoc, False)
     elif elaborato == 'CONTABILITA':
         #PL.attiva_contabilita()
-        #oSheet = oDoc.getSheets().getByName(elaborato)
         oSheet = LeenoContab.generaContabilita(oDoc)
     else:
         oSheet = oDoc.getSheets().getByName(elaborato)
@@ -849,9 +848,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
             oSheet.getRows().removeByIndex(3, 5)
         else:
             oSheet.getRows().removeByIndex(3, 4)
-
-    # @@@ DA ELIMINARE !!!!
-    #oDoc.CurrentController.ActiveSheet = oSheet
 
     oCellRangeAddr = CellRangeAddress()
     # recupero l'index del foglio
@@ -1149,6 +1145,9 @@ def MENU_XPWE_import():
     root = tree.getroot()
     logging.debug(list(root))
 
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+
     # attiva la progressbar
     progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Lettura dati")
     progress.setLimits(0, 6)
@@ -1263,3 +1262,4 @@ def MENU_XPWE_import():
     progress.hide()
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')
     PL.EnableAutoCalc()
+    oDoc.CurrentController.ZoomValue = zoom

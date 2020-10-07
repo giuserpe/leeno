@@ -6919,6 +6919,7 @@ def vedi_voce_xpwe(oSheet, lrow, vRif):
     idvoce = 'A$' + str(idv + 1)
     des = 'C$' + str(idv + 1)
     quantity = 'J$' + str(sotto + 1)
+    val = oSheet.getCellByPosition(9, sotto).String
     um = 'VLOOKUP(' + art + ';elenco_prezzi;3;FALSE())'
 
     #  if oSheet.Name == 'CONTABILITA':
@@ -6934,9 +6935,18 @@ def vedi_voce_xpwe(oSheet, lrow, vRif):
                 quantity + ';"0,00");"]";)')
     oSheet.getCellByPosition(2, lrow).Formula = sformula
     oSheet.getCellByPosition(4, lrow).Formula = '=' + quantity
-    oSheet.getCellByPosition(9, lrow).Formula = (
-        '=(PRODUCT(E' + str(lrow + 1) + ':I' +
-        str(lrow + 1) + '))')
+    if '-' in val:
+        if oSheet.Name == 'CONTABILITA':
+            oSheet.getCellByPosition(11, lrow).Formula = (
+                '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
+                ')>=0;"";PRODUCT(E' + str(lrow + 1) + ':I' +
+                str(lrow + 1) + ')*-1)')
+            oSheet.getCellByPosition(9, lrow).String = ''
+        for x in range(2, 12):
+            oSheet.getCellByPosition(x, lrow).CellStyle = (
+            oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
+        
+
 
 ########################################################################
 def MENU_vedi_voce():

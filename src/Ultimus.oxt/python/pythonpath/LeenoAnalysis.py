@@ -6,6 +6,7 @@ import pyleeno as PL
 import LeenoUtils
 import SheetUtils
 import LeenoSheetUtils
+import LeenoEvents
 
 def inizializzaAnalisi(oDoc):
     '''
@@ -31,7 +32,7 @@ def inizializzaAnalisi(oDoc):
         # la riga dalla quale iniziare a scrivere
         startRow = 2
 
-        PL.eventi_assegna()
+        LeenoEvents.assegna()
         LeenoSheetUtils.ScriviNomeDocumentoPrincipaleInFoglio(oSheet)
 
     else:

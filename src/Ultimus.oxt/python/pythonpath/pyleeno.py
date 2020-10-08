@@ -9080,6 +9080,10 @@ def MENU_filtro_descrizione():
     if descrizione in (None, ''):
         return
     y = 4
+    progress = Dialogs.Progress(Title='Applicazione filtro in corso...', Text="Lettura dati")
+    progress.setLimits(0, fine)
+    progress.setValue(0)
+    progress.show()
     while y < fine:
         test = SheetUtils.uFindStringCol(descrizione, 2, oSheet, y)
         if test is not None:
@@ -9095,6 +9099,7 @@ def MENU_filtro_descrizione():
                 return
             y += 1
         y += 1
+        progress.setValue(y)
     if len(el_y) == 0:
         DLG.MsgBox('''Testo non trovato.''', 'ATTENZIONE!')
         return
@@ -9120,7 +9125,7 @@ def MENU_filtro_descrizione():
             oSheet.getCellRangeByPosition(0, SR, 0,
                                           ER - 1).Rows.IsVisible = False
         i += 2
-
+    progress.hide()
 
 ########################################################################
 # sardegna_2019 moved to LeenoImport.py

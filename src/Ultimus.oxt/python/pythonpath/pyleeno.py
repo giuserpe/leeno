@@ -3294,6 +3294,9 @@ def XPWE_out(elaborato, out_file):
                 Quantita = SubElement(RGItem, 'Quantita')
                 Quantita.text = str(oSheet.getCellByPosition(9, m).Value)
                 # se negativa in CONTABILITA:
+                    # quando vedi_voce guarda ad un valore negativo
+                if oSheet.getCellByPosition(4, m).Value < 0:
+                    test = True
                 if oSheet.getCellByPosition(11, m).Value != 0:
                     Quantita.text = '-' + oSheet.getCellByPosition(11,
                                                                    m).String
@@ -3327,6 +3330,9 @@ def XPWE_out(elaborato, out_file):
                     if '-' in Quantita.text or oSheet.getCellByPosition(
                             11, m).Value != 0:
                         Flags.text = '32769'
+                        # quando vedi_voce guarda ad un valore negativo
+                        if test:
+                            Flags.text = '32768'
             n = sotto + 1
     progress.setValue(7)
     # #########################

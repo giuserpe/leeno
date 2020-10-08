@@ -984,15 +984,6 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 oSheet.getCellByPosition(1, startRow).Value = oSheet.getCellByPosition(1, startRow).Value
             for mis in lista_righe:
 
-
-                if elaborato == 'CONTABILITA':
-                    # inserisce la formula nella colonna delle quantità positive
-                    oSheet.getCellByPosition(
-                        9, startRow).Formula = '=IF(PRODUCT(E' + str(startRow + 1) + ':I' + str(
-                            startRow + 1) + ')<=0;"";PRODUCT(E' + str(startRow +
-                                                                  1) + ':I' + str(startRow +
-                                                                                  1) + '))'
-
                 # descrizione
                 if mis[0] is not None:
                     descrizione = mis[0].strip()
@@ -1040,7 +1031,7 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                 if mis[9] != '-2':
                     vedi = mappaVociRighe.get(mis[9])
                     try:
-                        PL.vedi_voce_xpwe(oSheet, startRow, vedi)
+                        test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
                     except Exception:
                         Dialogs.Exclamation(Title="Attenzione",
                                             Text="Il file di origine è particolarmente disordinato.\n"
@@ -1062,6 +1053,12 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                             except Exception:
                                 pass
                         LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+                        #~PL.invertiSegnoRow(oSheet, startRow)
+                        if elaborato == 'CONTABILITA':
+                            if test == '-':
+                                LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+                                #~PL.invertiSegnoRow(oSheet, startRow)
+                                test = ''
                 except Exception:
                     pass
 
@@ -1256,10 +1253,10 @@ def MENU_XPWE_import():
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")
-    PL.adatta_altezza_riga()
 
     progress.setText("Fine")
     progress.hide()
-    Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')
-    PL.EnableAutoCalc()
     oDoc.CurrentController.ZoomValue = zoom
+    PL.EnableAutoCalc()
+    PL.adatta_altezza_riga()
+    Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

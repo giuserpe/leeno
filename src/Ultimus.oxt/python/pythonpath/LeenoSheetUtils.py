@@ -10,6 +10,8 @@ import LeenoUtils
 import SheetUtils
 import LeenoAnalysis
 import LeenoComputo
+import LeenoDialogs as DLG
+
 
 
 def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
@@ -510,7 +512,8 @@ def invertiUnSegno(oSheet, lrow):
                     9, lrow
                 ).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
                     lrow + 1) + ')=0;"";PRODUCT(E' + str(
-                        lrow + 1) + ':I' + str(lrow + 1) + '))'  # se VediVoce
+                        lrow + 1) + ':I' + str(lrow + 1) + '))'
+                          # se VediVoce
                 # ~ if oSheet.getCellByPosition(4, lrow).Type.value != 'EMPTY':
                 # ~ oSheet.getCellByPosition(9, lrow).Formula='=IF(PRODUCT(E' +
                 # str(lrow+1) + ':I' + str(lrow+1) + ')=0;"";PRODUCT(E' +
@@ -519,7 +522,7 @@ def invertiUnSegno(oSheet, lrow):
                 # ~ oSheet.getCellByPosition(9, lrow).Formula=
                 # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) +
                 # ')=0;"";PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-                for x in range(2, 9):
+                for x in range(2, 10):
                     oSheet.getCellByPosition(
                         x, lrow).CellStyle = oSheet.getCellByPosition(
                             x, lrow).CellStyle.split(' ROSSO')[0]
@@ -537,26 +540,25 @@ def invertiUnSegno(oSheet, lrow):
                 # ~ oSheet.getCellByPosition(9, lrow).Formula =
                 # '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + ')=0;
                 # "";-PRODUCT(E' + str(lrow+1) + ':I' + str(lrow+1) + '))'
-                for x in range(2, 9):
+                for x in range(2, 10):
                     oSheet.getCellByPosition(
                         x, lrow).CellStyle = oSheet.getCellByPosition(
                             x, lrow).CellStyle + ' ROSSO'
     if oSheet.Name in ('CONTABILITA'):
-        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
-            formula1 = oSheet.getCellByPosition(9, lrow).Formula
-            formula2 = oSheet.getCellByPosition(11, lrow).Formula
-            oSheet.getCellByPosition(11, lrow).Formula = formula1
-            oSheet.getCellByPosition(9, lrow).Formula = formula2
-            if oSheet.getCellByPosition(11, lrow).Value > 0:
-                for x in range(2, 12):
-                    oSheet.getCellByPosition(
-                        x, lrow).CellStyle = oSheet.getCellByPosition(
-                            x, lrow).CellStyle + ' ROSSO'
-            else:
-                for x in range(2, 12):
-                    oSheet.getCellByPosition(
-                        x, lrow).CellStyle = oSheet.getCellByPosition(
-                            x, lrow).CellStyle.split(' ROSSO')[0]
+        formula1 = oSheet.getCellByPosition(9, lrow).Formula
+        formula2 = oSheet.getCellByPosition(11, lrow).Formula
+        oSheet.getCellByPosition(11, lrow).Formula = formula1
+        oSheet.getCellByPosition(9, lrow).Formula = formula2
+        if oSheet.getCellByPosition(11, lrow).String != '':
+            for x in range(2, 12):
+                oSheet.getCellByPosition(
+                    x, lrow).CellStyle = oSheet.getCellByPosition(
+                        x, lrow).CellStyle + ' ROSSO'
+        else:
+            for x in range(2, 12):
+                oSheet.getCellByPosition(
+                    x, lrow).CellStyle = oSheet.getCellByPosition(
+                        x, lrow).CellStyle.split(' ROSSO')[0]
 
 
 # ###############################################################

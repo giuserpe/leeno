@@ -3896,8 +3896,8 @@ def MENU_azzera_voce():
                         oSheet.getCellByPosition(
                             5, fine).Formula = '=SUBTOTAL(9;J' + str(
                                 inizio + 1) + ':J' + str(
-                                    fine + 1) + ')-SUBTOTAL(9;L' + str(
-                                        inizio) + ':L' + str(fine) + ')'
+                                    fine) + ')-SUBTOTAL(9;L' + str(
+                                        inizio + 1) + ':L' + str(fine) + ')'
                         inverti_segno()
                         # ~oSheet.getCellByPosition(9, fine).Formula = '=-SUM(J' + str(inizio+1) + ':J' + str(fine) + ')'
                         # ~oSheet.getCellByPosition(11, fine).Formula = '=-SUM(L' + str(inizio+1) + ':L' + str(fine) + ')'

@@ -2674,8 +2674,8 @@ def riordina_ElencoPrezzi(oDoc):
 
 
 def MENU_doppioni():
-    #~EliminaVociDoppieElencoPrezzi()
-    elimina_voci_doppie()
+    EliminaVociDoppieElencoPrezzi()
+    #~elimina_voci_doppie()
 
 
 def EliminaVociDoppieElencoPrezzi():
@@ -4284,9 +4284,10 @@ def copia_riga_contab(lrow):
                 lrow + 1) + ')<=0;"";PRODUCT(E' + str(lrow +
                                                       1) + ':I' + str(lrow +
                                                                       1) + '))'
-        # ~ oSheet.getCellByPosition(11, lrow).Formula = '=IF(PRODUCT(E' +
-        # str(lrow+1) + ':I' + str(lrow+1) + ')>=0;"";PRODUCT(E' +
-        # str(lrow+1) + ':I' + str(lrow+1) + ')*-1)'
+        oSheet.getCellByPosition(
+            11, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(
+                lrow+1) + ')>=0;"";PRODUCT(E' + str(lrow +
+                                                    1) + ':I' + str(lrow+1) + ')*-1)'
         # preserva la data di misura
         if oSheet.getCellByPosition(1, lrow + 1).CellStyle == 'Data_bianca':
             oRangeAddress = oSheet.getCellByPosition(1, lrow +
@@ -4623,52 +4624,6 @@ def MENU_ricicla_misure():
 def MENU_inverti_segno():
     inverti_segno()
 
-
-def invertiSegnoRow(oSheet, lrow):
-    '''
-    Inverte il segno delle formule di quantità nel rigo di misurazione specificato da lrow.
-    '''
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
-            if 'ROSSO' in oSheet.getCellByPosition(2, lrow).CellStyle:
-                # se VediVoce
-                oSheet.getCellByPosition(9, lrow).Formula = (
-                   '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
-                   str(lrow + 1) + ')=0;"";PRODUCT(E' +
-                   str(lrow + 1) + ':I' +
-                   str(lrow + 1) + '))')
-
-                for x in range(2, 9):
-                    oSheet.getCellByPosition(x, lrow).CellStyle = (
-                    oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
-            else:
-                # se VediVoce
-                oSheet.getCellByPosition(9, lrow).Formula = (
-                   '=IF(PRODUCT(E' + str(lrow + 1) + ':I' +
-                   str(lrow + 1) + ')=0;"";-PRODUCT(E' +
-                   str(lrow + 1) + ':I' + str(lrow + 1) + '))')
-
-                for x in range(2, 9):
-                    oSheet.getCellByPosition(x, lrow).CellStyle = (
-                    oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
-
-    elif oSheet.Name in ('CONTABILITA'):
-        if 'comp 1-a' in oSheet.getCellByPosition(2, lrow).CellStyle:
-            formula1 = oSheet.getCellByPosition(9, lrow).Formula
-            formula2 = oSheet.getCellByPosition(11, lrow).Formula
-            oSheet.getCellByPosition(11, lrow).Formula = formula1
-            oSheet.getCellByPosition(9, lrow).Formula = formula2
-            if oSheet.getCellByPosition(11, lrow).Value > 0:
-                for x in range(2, 12):
-                    oSheet.getCellByPosition(x, lrow).CellStyle = (
-                    oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
-            else:
-                for x in range(2, 12):
-                    oSheet.getCellByPosition(
-                        x, lrow).CellStyle = (
-                        oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
-
-
 def inverti_segno():
     '''
     Inverte il segno delle formule di quantità nei righi di misurazione selezionati.
@@ -4712,7 +4667,7 @@ def inverti_segno():
                        str(lrow + 1) + ':I' +
                        str(lrow + 1) + '))')
 
-                    for x in range(2, 9):
+                    for x in range(2, 10):
                         oSheet.getCellByPosition(x, lrow).CellStyle = (
                         oSheet.getCellByPosition(x, lrow).CellStyle.split(' ROSSO')[0])
                 else:
@@ -4722,7 +4677,7 @@ def inverti_segno():
                        str(lrow + 1) + ')=0;"";-PRODUCT(E' +
                        str(lrow + 1) + ':I' + str(lrow + 1) + '))')
 
-                    for x in range(2, 9):
+                    for x in range(2, 10):
                         oSheet.getCellByPosition(x, lrow).CellStyle = (
                         oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
 
@@ -5795,7 +5750,7 @@ def ins_voce_contab(lrow=0, arg=1):
     oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
     oSheet.getRows().insertByIndex(lrow, 5)  # inserisco le righe
     oSheet.copyRange(oCellAddress, oRangeAddress)
-    oSheet.getCellRangeByPosition(0, lrow, 48, lrow + 5).Rows.OptimalHeight = True
+    #~oSheet.getCellRangeByPosition(0, lrow, 48, lrow + 5).Rows.OptimalHeight = True
     _gotoCella(1, lrow + 1)
 
     #  if(oSheet.getCellByPosition(0,lrow).queryIntersection(oSheet.getCellRangeByName('#Lib#'+str(nSal)).getRangeAddress())):
@@ -6936,17 +6891,20 @@ def vedi_voce_xpwe(oSheet, lrow, vRif):
     oSheet.getCellByPosition(2, lrow).Formula = sformula
     oSheet.getCellByPosition(4, lrow).Formula = '=' + quantity
     if '-' in val:
-        if oSheet.Name == 'CONTABILITA':
-            oSheet.getCellByPosition(11, lrow).Formula = (
-                '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
-                ')>=0;"";PRODUCT(E' + str(lrow + 1) + ':I' +
-                str(lrow + 1) + ')*-1)')
-            oSheet.getCellByPosition(9, lrow).String = ''
+        #~if oSheet.Name == 'CONTABILITA':
+            #~oSheet.getCellByPosition(11, lrow).Formula = (
+                #~'=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
+                #~')>=0;"";PRODUCT(E' + str(lrow + 1) + ':I' +
+                #~str(lrow + 1) + ')*-1)')
+            #~oSheet.getCellByPosition(9, lrow).String = ''
+        #~if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+            #~oSheet.getCellByPosition(9, lrow).Formula = (
+                #~'=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) +
+                #~')=0;"";PRODUCT(E' + str(lrow + 1) + ':I' + str(lrow + 1) + '))')
         for x in range(2, 12):
             oSheet.getCellByPosition(x, lrow).CellStyle = (
             oSheet.getCellByPosition(x, lrow).CellStyle + ' ROSSO')
-        
-
+        return '-'
 
 ########################################################################
 def MENU_vedi_voce():

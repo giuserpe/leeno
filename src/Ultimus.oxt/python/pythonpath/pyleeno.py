@@ -4799,8 +4799,18 @@ def dettaglio_misure(bit):
     except Exception:
         return
     ER = SheetUtils.getUsedArea(oSheet).EndRow
+
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Lettura dati")
+    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    progress.setValue(0)
+    progress.show()
+    
     if bit == 1:
         for lrow in range(0, ER):
+            progress.setValue(lrow)
             if oSheet.getCellByPosition(2, lrow).CellStyle in (
                     'comp 1-a'
             ) and "*** VOCE AZZERATA ***" not in oSheet.getCellByPosition(
@@ -4848,10 +4858,14 @@ def dettaglio_misure(bit):
                                 2, lrow).String + stringa.replace('.', ',')
     else:
         for lrow in range(0, ER):
+            progress.setValue(lrow)
             if ' >(' in oSheet.getCellByPosition(2, lrow).String:
                 oSheet.getCellByPosition(
                     2, lrow).String = oSheet.getCellByPosition(
                         2, lrow).String.split(' >(')[0]
+
+    oDoc.CurrentController.ZoomValue = zoom
+    progress.hide()
     return
 
 
@@ -7539,7 +7553,7 @@ def inizializza():
     oCell.CellStyle = 'EP-aS'
     # Indica qual è il Documento Principale
     ScriviNomeDocumentoPrincipale()
-    nascondi_sheets()
+    #~nascondi_sheets()
 
 
 ########################################################################

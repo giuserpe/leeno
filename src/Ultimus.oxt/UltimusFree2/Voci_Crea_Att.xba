@@ -35,7 +35,7 @@ fine:
 End Sub
 
 Function SE_contabilita
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0 Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,327).value = 0 Then
 		se_contabilita = 0
 		Exit Function
 	Else
@@ -43,13 +43,13 @@ Function SE_contabilita
 	EndIf
 rem ----------------------------------------------------------------------
 &apos;L&apos;inibizione dell&apos;inserimento di voci in computo, in presenza di misure nel libretto, è legata all&apos;esistenza di #Lib#1
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 1 Then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,327).value = 1 Then
 		test = msgbox  (&quot;#1 Risulta presente il foglio CONTABILITA.&quot; &amp; CHR$(10)_
 			&amp; &quot;Se si sta lavorando sulla contabilità, il computo dovrebbe essere chiuso e completato!&quot;&amp; CHR$(10) &amp; CHR$(10)_
 			&amp; &quot;Se prosegui vai ad alterare il computo.&quot;&amp; CHR$(10)_
 			&amp; &quot;Vuoi procedere?&quot;, 32+4,&quot;&quot;&amp; CHR$(10))
 		If test = 6 Then
-			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,327).value = 0
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,327).value = 0
 			se_contabilita = 0
 		EndIf  
 	EndIf

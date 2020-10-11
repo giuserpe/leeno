@@ -16,7 +16,7 @@ FUNCTION templateTipo &apos; introdotta con nuovo template 5C
 &apos;If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
 &apos;If ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)._
 If ThisComponent.currentController.activeSheet._
-	GetCellByPosition( 2 , 0).string = &quot;Rif. al Capitolato&quot; then
+	getCellByPosition( 2 , 0).string = &quot;Rif. al Capitolato&quot; then
 		templateTipo =&quot;ATT&quot;
 	else
 		templateTipo =&quot;5C&quot;
@@ -150,7 +150,7 @@ dim ocell as object
 	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
 	&apos; errata selezione di un range
 	lrow= Range2Cell 
-	oCell = oSheet.GetCellByPosition( 0 , lrow) 
+	oCell = oSheet.getCellByPosition( 0 , lrow) 
  &apos;
  &apos; oCell = ThisComponent.CurrentSelection
  &apos; lrow = oCell.CellAddress.row
@@ -158,7 +158,7 @@ dim ocell as object
  &apos; oRangeVC = Circoscrive_Voce_Computo_B (lrow) &apos;061218
 	oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
  lrow = oRangeVC.RangeAddress.EndRow
- oCell = oSheet.GetCellByPosition( 9 , lrow)
+ oCell = oSheet.getCellByPosition( 9 , lrow)
  &apos; print &quot;e adesso &quot; &amp; lrow
  &apos; ThisComponent.CurrentController.Select(oCell)
 &apos;print lrow
@@ -176,7 +176,7 @@ print lrow
 &apos;print &quot;dopo la seriereisulta&quot;
 &apos; xray osheet
  &apos;print &quot;e ritorno&quot;
-&apos;	oCell = oSheet.GetCellByPosition( 3 , lrow+3)
+&apos;	oCell = oSheet.getCellByPosition( 3 , lrow+3)
 &apos;	ThisComponent.CurrentController.Select(oCell)
 &apos;	print
 END SUB
@@ -197,17 +197,17 @@ Dim osheet as object
 	 
 &apos;	oCellB = oCell
 &apos;	 xA = oCell.string
-&apos;	oCellB = oSheet.GetCellByPosition( lcol , lrowB)
+&apos;	oCellB = oSheet.getCellByPosition( lcol , lrowB)
 	 &apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug
 	&apos; print nome_sheet &amp; &quot; &quot; &amp; lrow
 	 sCol= ColumnNameOf(lcol)
 
-	do while oSheet.GetCellByPosition( lcol , lrow).string &lt;&gt; &quot;-&quot; &apos;or _
-			if oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo&quot; or _
-				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; or _
-				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra&quot; or _
-				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; or _
-				oSheet.GetCellByPosition( lcol , lrow).cellstyle = &quot;vuote2&quot; or _
+	do while oSheet.getCellByPosition( lcol , lrow).string &lt;&gt; &quot;-&quot; &apos;or _
+			if oSheet.getCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo&quot; or _
+				oSheet.getCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; or _
+				oSheet.getCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra&quot; or _
+				oSheet.getCellByPosition( lcol , lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; or _
+				oSheet.getCellByPosition( lcol , lrow).cellstyle = &quot;vuote2&quot; or _
 				lrow &lt; 4 then
 				exit do
 			 Else
@@ -218,10 +218,10 @@ Dim osheet as object
 	 lrow = lrow+2
 	 Select Case nome_sheet
 	 	Case &quot;COMPUTO&quot;
-	 	oCell = oSheet.GetCellByPosition( lcol , lrowb)
+	 	oCell = oSheet.getCellByPosition( lcol , lrowb)
 	 		 sFormula = &quot;=SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb+1 &amp; &quot;)&quot;
 	 	Case &quot;CONTABILITA&quot;
-	 	oCell = oSheet.GetCellByPosition( lcol , lrowb-1)
+	 	oCell = oSheet.getCellByPosition( lcol , lrowb-1)
 	 		 sFormula = &quot;=IF(SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;)&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;&quot;&amp; sCol &amp; lrow &amp; &quot;:&quot; &amp; sCol &amp; lrowb &amp; &quot;))&quot;
 	 End select
 

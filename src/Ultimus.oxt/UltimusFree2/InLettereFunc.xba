@@ -348,7 +348,7 @@ SUB In_Let
 		oBarra.setValue(g)
 		Cell = oFoglio.getCellByPosition(NumCol, g)
 		oMycell = oFoglio.getCellByPosition(NumCol+1, g )
-		num = oFoglio.GetCellByPosition(NumCol, g).value
+		num = oFoglio.getCellByPosition(NumCol, g).value
 		If num &lt; 0 then
 			sSegno = &quot;-&quot; 
 		end if
@@ -372,8 +372,8 @@ SUB In_Let
 		&apos;ora acccorpo la stringa
 		sTutto = sSegno &amp; &quot; &quot; &amp; snum_1 &amp; &quot;/&quot; &amp; num_5_dec
 		sTutto = Replace_G (sTutto , &quot; &quot; , &quot;&quot; )	&apos; tolgo eventuali spazi eccedenti
-		oFoglio.GetCellByPosition(NumCol+1, g).string = sTutto &apos;sSegno &amp; &quot; &quot; &amp; snum_1 &amp; &quot;/&quot; &amp; num_5_dec
-		oFoglio.GetCellByPosition(NumCol+1, g).cellstyle = &quot;EP statistiche_lettere&quot;
+		oFoglio.getCellByPosition(NumCol+1, g).string = sTutto &apos;sSegno &amp; &quot; &quot; &amp; snum_1 &amp; &quot;/&quot; &amp; num_5_dec
+		oFoglio.getCellByPosition(NumCol+1, g).cellstyle = &quot;EP statistiche_lettere&quot;
 
 	Next
 	oBarra.setValue(0)

@@ -195,7 +195,7 @@ Sub Sposta_Righe_Anche_in_tabelle_diverse
 	
 &apos; copia
 	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
-	oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+	oDest = oSheetDest.getCellByPosition(0,lrowDest ).CellAddress
 	oSheetDest.copyRange(oDest, oSrc)
 	
 &apos; rimuove il range sorgente ... commmentare se non serve
@@ -279,7 +279,7 @@ Sub Copia_Righe_Inserisci_Anche_in_tabelle_diverse
 	
 &apos; copia
 	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
-	oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+	oDest = oSheetDest.getCellByPosition(0,lrowDest ).CellAddress
 	oSheetDest.copyRange(oDest, oSrc)
 	
 &apos; rimuove il range sorgente ... commmentare se non serve
@@ -483,7 +483,7 @@ Dim oCursor As Object
 Dim aAddress As Variant
 Dim sFind As String
 
-oCell = oSheet.GetCellbyPosition( 0, 0 )
+oCell = oSheet.getCellByPosition( 0, 0 )
 oCursor = oSheet.createCursorByRange(oCell)
 oCursor.GotoEndOfUsedArea(True)
 aAddress = oCursor.RangeAddress
@@ -493,7 +493,7 @@ nEndCol = aAddress.EndColumn
 
 For nCurRow = lrow To nEndRow &apos;row by row.
 For nCurCol = lcol To nEndCol &apos;Go through the range column by column, col by col
-	oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+	oCell = oSheet.getCellByPosition( nCurCol, nCurRow )
 	lFind = oCell.Error 
 	If lFind &lt;&gt; 0 and _
 		 oSheet.getColumns().getByIndex(nCurCol).isVisible=true then
@@ -526,7 +526,7 @@ lCol= oSelezione.RangeAddress.startColumn
 print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
 end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
 &apos;selezione di un range anzichè di una cella
-oCell = oSheet.GetCellByPosition(lcol , lrow)
+oCell = oSheet.getCellByPosition(lcol , lrow)
 strTemp = oCell.string
 strTemp = LCase(strTemp)
 oCell.string = LCase(strTemp)
@@ -542,12 +542,12 @@ oDest = oSheet
 
 oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 
-oSRC = oSheetSRC.GetCellByPosition(9,54,9,54).RangeAddress
+oSRC = oSheetSRC.getCellByPosition(9,54,9,54).RangeAddress
 
 &apos;xray oSRC
 &apos;oCellSRC = oSrc
 &apos;oTargetDoc.CurrentController.Select(oCell)
-&apos;	oDest = oSheet.GetCellByPosition( 0, 3 ).CellAddress
+&apos;	oDest = oSheet.getCellByPosition( 0, 3 ).CellAddress
 
 &apos;		oSheet.copyRange(oCellDest,oSRC)
 
@@ -555,7 +555,7 @@ oSRC = oSheetSRC.GetCellByPosition(9,54,9,54).RangeAddress
 &apos; oSheet2.copyRange(oCell,oQuellRangeAddresse)
 
 &apos;	oSrc = oSheetSRC.getCellRangeByPosition(0,iStartRow,250,iEndRow).RangeAddress
-&apos; oDest = oSheetDest.GetCellByPosition(0,lrowDest ).CellAddress
+&apos; oDest = oSheetDest.getCellByPosition(0,lrowDest ).CellAddress
 &apos; oSheetDest.copyRange(oDest, oSrc)
 
 End Sub
@@ -574,7 +574,7 @@ Sub Sistema_diverse_cose &apos; tipo: toglie gli a capo, gli spazi ridondanti, i
 		print &quot;al momento lavora solo sulla prima cella selezionata...&quot;
 	end if &apos; questo ambaradan solo per compensare l&apos;eventuale errata
 &apos;selezione di un range anzichè di una cella
-	oCell = oSheet.GetCellByPosition(lcol , lrow)
+	oCell = oSheet.getCellByPosition(lcol , lrow)
 	strTemp = oCell.string
 	strTemp = LCase(strTemp)
 	oCell.string = Join(Split(oCell.String, &quot; &quot;, &quot;&quot;))&apos; = LCase(strTemp)
@@ -602,13 +602,13 @@ End Sub
 
 
 sub suona
-if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,312).value = 0 then
 beep
 end if
 end sub
 
 sub suona_medio
-if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,312).value = 0 then
 beep
 wait 100
 beep
@@ -624,7 +624,7 @@ end if
 end sub
 
 sub suona_lungo
-if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,312).value = 0 then
 beep
 wait 100
 beep
@@ -658,7 +658,7 @@ end if
 end sub
 
 sub suona_2
-if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,312).value = 0 then
 beep
 wait 300
 beep
@@ -666,7 +666,7 @@ end if
 end sub
 
 sub suona_2_1
-if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,312).value = 0 then
 beep
 wait 200
 beep
@@ -676,7 +676,7 @@ end if
 end sub
 
 sub suona_1_2
-if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,312).value = 0 then
+if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,312).value = 0 then
 beep
 wait 700
 beep

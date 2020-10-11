@@ -3,7 +3,7 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="X_TMP" script:language="StarBasic">rem ***** BASIC *****
 Sub createButton
  	oSheet=ThisComponent.currentController.activeSheet 
- oCell = oSheet.GetCellbyPosition( 0, 0 )
+ oCell = oSheet.getCellByPosition( 0, 0 )
  oCursor = oSheet.createCursorByRange(oCell)
 createButton(&quot;untesto&quot;, &quot;suonome&quot;, &quot;sTag1&quot;, oCursor, 4)
 end sub
@@ -193,7 +193,7 @@ Sub popi_serva &apos;accrocchio solo per giuserpe...
 	end if	
 	
 	
-	oCell = oSheet.GetCellByPosition( 0, lrow )
+	oCell = oSheet.getCellByPosition( 0, lrow )
  	lLastUrow = getLastUsedRow(oSheet)
 	lpasso = inputbox (&quot; Inserisci il passo di inserimento...&quot;) &apos;
 	if lpasso = &quot;&quot; then
@@ -208,7 +208,7 @@ Sub popi_serva &apos;accrocchio solo per giuserpe...
  	lLastUrow = getLastUsedRow(oSheet)
 	lrow = lrow+lpasso
 	lDove = lrow&apos;+lrows
-&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ))&apos;debug
+&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 0, lrow ))&apos;debug
 &apos;		print &quot;vediamo all&apos;inizio &quot; &amp; lDove
 
 	Do while lrow &lt; lLastUrow+lpasso
@@ -218,9 +218,9 @@ Sub popi_serva &apos;accrocchio solo per giuserpe...
 		lLastUrow = getLastUsedRow(oSheet)
 		lrow = lrow+lrows+lpasso
 		lDove = lrow &apos;+1 &apos;+lpasso&apos;+lrows
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ))&apos;debug
+	&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 0, lrow ))&apos;debug
 	&apos;	print &quot;dentro e fatto &quot; &amp; lrow
-	&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ))&apos;debug	
+	&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 0, lrow ))&apos;debug	
 	&apos;	print lLastUrow &amp; &quot; &quot; &amp; lrow
 	loop
 End Sub

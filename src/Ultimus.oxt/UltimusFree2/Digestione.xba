@@ -140,8 +140,8 @@ sub accorpa_stringhe &apos;da eseguire a manina or aggiungendo un pulsante
 	lLastUrow = getLastUsedRow(oSheet)
 	&apos;	lLastUrow = 10
  For i = 2 to lLastUrow
- 	 		Osheet.GetCellByPosition(2, i).string = _
- 	 		Osheet.GetCellByPosition(2, i).string &amp; &quot;.&quot; &amp; Osheet.GetCellByPosition(3, i).string
+ 	 		Osheet.getCellByPosition(2, i).string = _
+ 	 		Osheet.getCellByPosition(2, i).string &amp; &quot;.&quot; &amp; Osheet.getCellByPosition(3, i).string
  Next I 
  msgbox &quot;Ok! Fatto&quot;
 end sub
@@ -152,9 +152,9 @@ Sub fai_delle_cose &apos; per pasticciare sui listini
 	&apos;	lLastUrow = 30
 	For i = 2 to lLastUrow
 	
-		if oSheet.GetCellByPosition(6, i).string &lt;&gt; &quot;&quot; or _
-			oSheet.GetCellByPosition(6, i).value &lt;&gt; 0 then
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 6 , i)) &apos;debug	
+		if oSheet.getCellByPosition(6, i).string &lt;&gt; &quot;&quot; or _
+			oSheet.getCellByPosition(6, i).value &lt;&gt; 0 then
+			ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 6 , i)) &apos;debug	
 		&apos;	print &quot; &quot;
 			oSheet.getrows.removebyindex(i,	1)
 			i = i-1

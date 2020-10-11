@@ -22,7 +22,7 @@ Sub Sposta_Voce_Computo_Att &apos; &apos; sposta una Voce di Computo in nuova po
 	lSrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	If lSrow = -1 Then Exit Sub
 	oSheet = ThisComponent.currentController.activeSheet
-	oCell = oSheet.GetCellByPosition( 0 , oSrow)&apos; errata selezione di un range
+	oCell = oSheet.getCellByPosition( 0 , oSrow)&apos; errata selezione di un range
 
 	sStRange = Circoscrive_Voce_Computo_Att (lSrow)
 	ThisComponent.CurrentController.Select(sStRange) &apos;SELECT del range
@@ -38,9 +38,9 @@ Sub Sposta_Voce_Computo_Att &apos; &apos; sposta una Voce di Computo in nuova po
 
 	StartRow = getRigaIniziale(SelectedRange)
 	If StartRow &lt;2 Then StartRow = 2
-	If oSheet.GetCellbyPosition(0, StartRow).CellStyle = &quot;Livello-1-scritta&quot; Then StartRowM =StartRow +1
-	If oSheet.GetCellbyPosition(0, StartRow).CellStyle = &quot;livello2 valuta&quot; Then StartRowM =StartRow +1
-	If oSheet.GetCellbyPosition(0, StartRow).CellStyle = &quot;comp Int_colonna&quot; Then StartRowM =StartRow +1
+	If oSheet.getCellByPosition(0, StartRow).CellStyle = &quot;Livello-1-scritta&quot; Then StartRowM =StartRow +1
+	If oSheet.getCellByPosition(0, StartRow).CellStyle = &quot;livello2 valuta&quot; Then StartRowM =StartRow +1
+	If oSheet.getCellByPosition(0, StartRow).CellStyle = &quot;comp Int_colonna&quot; Then StartRowM =StartRow +1
 
 	On Error GoTo salto:
 		StartRowM = fine_voce(StartRow) +1
@@ -66,7 +66,7 @@ Dim oSheet as object
 Dim oCell as object
 &apos;print &quot;Mettiti_esattamente_tra_due_VociC_Att &quot;
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- oCell = oSheet.GetCellByPosition( 1, lrow )
+ oCell = oSheet.getCellByPosition( 1, lrow )
 &apos;	xA = oCell.string
 &apos; cocco
 
@@ -81,12 +81,12 @@ Dim oCell as object
 		exit FUNCTION
 	end if 
 	lrowF=oEnd.CellAddress.Row 
-&apos;	oCell=oSheet.GetCellbyPosition( 0, lrow)
-	if oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sopra&quot;_
-		 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;Livello-1-scritta&quot; then
+&apos;	oCell=oSheet.getCellByPosition( 0, lrow)
+	if oSheet.getCellByPosition( 1, lrow ).CellStyle = &quot;livello-1-sopra&quot;_
+		 or oSheet.getCellByPosition( 1, lrow ).CellStyle = &quot;Livello-1-scritta&quot; then
 
 &apos;	print &quot;1 : &quot; &amp; lrow
-		 do while Trova_Attr_N (oSheet.GetCellbyPosition( 0, lrow ), oSheet) &lt;&gt; &quot;End_voce_COMPUTO&quot; and _
+		 do while Trova_Attr_N (oSheet.getCellByPosition( 0, lrow ), oSheet) &lt;&gt; &quot;End_voce_COMPUTO&quot; and _
 		 			 lrow &gt;= 1 
 		 			lrow = lrow-1
 		 &apos;	print lrow &apos;pinzon
@@ -95,10 +95,10 @@ Dim oCell as object
 		 goto fine
 	end if
 	rem SU RIGHE DI CATEGORIA
-	if oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-2-sotto_&quot;_
-	 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello2 valuta&quot;_
-	 or oSheet.GetCellbyPosition( 1, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
-	 do while Trova_Attr_N (oSheet.GetCellbyPosition(0, lrow), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
+	if oSheet.getCellByPosition( 1, lrow ).CellStyle = &quot;livello-2-sotto_&quot;_
+	 or oSheet.getCellByPosition( 1, lrow ).CellStyle = &quot;livello2 valuta&quot;_
+	 or oSheet.getCellByPosition( 1, lrow ).CellStyle = &quot;livello-1-sotto_&quot; then
+	 do while Trova_Attr_N (oSheet.getCellByPosition(0, lrow), oSheet) &lt;&gt; &quot;Start_voce_COMPUTO&quot;
 	 	lrow = lrow+1
 	 	Mettiti_esattamente_tra_due_VociC_Att = lrow-1
 	 loop
@@ -113,29 +113,29 @@ Dim oCell as object
 	
 
 	For nCurRow = lrow To lrowF
-		 oCell=oSheet.GetCellbyPosition( 0, nCurRow)&apos; lrow )
+		 oCell=oSheet.getCellByPosition( 0, nCurRow)&apos; lrow )
 		 ThisComponent.CurrentController.Select(oCell) &apos;debug 
 		 &apos;sAttributo_N = Trova_Attr_N (oCell, oSheet)
-			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;Start_voce_COMPUTO&quot; then &apos;OR _
+			if (Trova_Attr_N (oSheet.getCellByPosition( 0, nCurRow), oSheet)) = &quot;Start_voce_COMPUTO&quot; then &apos;OR _
 				lrow = ocell.celladdress.row
 				Mettiti_esattamente_tra_due_VociC_Att = lrow
 				exit function &apos;for
 			end if
-			if (Trova_Attr_N (oSheet.GetCellbyPosition( 0, nCurRow), oSheet)) = &quot;End_voce_COMPUTO&quot; then
+			if (Trova_Attr_N (oSheet.getCellByPosition( 0, nCurRow), oSheet)) = &quot;End_voce_COMPUTO&quot; then
 				lrow = ocell.celladdress.row
 				Mettiti_esattamente_tra_due_VociC_Att = lrow +1
 				exit function &apos;for
 			end if
 			if nCurRow = lrowF then &apos; questa solo alla fine... allora torna su
-				Do while (Trova_Attr_N ((oSheet.GetCellbyPosition( 0, nCurRow)), oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot; OR _
-					 (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;Capitolo&quot; OR _
-					 (Trova_Attr_N ((oSheet.GetCellbyPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;SottoCapitolo&quot;
+				Do while (Trova_Attr_N ((oSheet.getCellByPosition( 0, nCurRow)), oSheet)) &lt;&gt; &quot;End_voce_COMPUTO&quot; OR _
+					 (Trova_Attr_N ((oSheet.getCellByPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;Capitolo&quot; OR _
+					 (Trova_Attr_N ((oSheet.getCellByPosition( 1, nCurRow)), oSheet)) &lt;&gt; &quot;SottoCapitolo&quot;
 					 if nCurRow &lt;=1 then
 					 	exit function
 					 end if
 					 
 						nCurRow = nCurRow-1
-						oCell=oSheet.GetCellbyPosition( 0, nCurRow)
+						oCell=oSheet.getCellByPosition( 0, nCurRow)
 						&apos;&apos;&apos;ThisComponent.CurrentController.Select(oCell) &apos;debug 
 				loop
 				lrow = ocell.celladdress.row+1
@@ -188,7 +188,7 @@ Dim CellAddress As New com.sun.star.table.CellAddress
 	iSheet = ThisComponent.currentController.activeSheet.RangeAddress.sheet &apos; index della sheet
 
 	iRowCount = L2RowE - L2RowS+1
-	ThisComponent.CurrentController.Select(oSheet.GetCellbyPosition( 1,L2RowS))
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 1,L2RowS))
 	insRows (L2RowS, iRowCount)
 
 	i3sheet = i1sheet &apos; per il momento è la medesima...

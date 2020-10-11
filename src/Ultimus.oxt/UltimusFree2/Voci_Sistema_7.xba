@@ -57,24 +57,24 @@ sub cella_cella_cella(oSheetSRC as object, oSheetDest as object, oRangeSRC as ob
  For nCurCol = nStartCol To nEndCol &apos;Go through the range column by column,
  For nCurRow = nStartRow To nEndRow &apos;row by row. 
  
- oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
+ oCellSRC = oSheetSRC.getCellByPosition( nCurCol, nCurRow )
  sCellStyle = oCellSRC.CellStyle
 	if mantieni_colori = 0	then
-				oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
-				oCellDest = oSheetDest.GetCellByPosition( nCurCol+difCol, nCurRow+difRow )
+				oCellSRC = oSheetSRC.getCellByPosition( nCurCol, nCurRow )
+				oCellDest = oSheetDest.getCellByPosition( nCurCol+difCol, nCurRow+difRow )
  			oValidation = oCellSRC.ValidationLocal
  			sCellStyle = oCellSRC.CellStyle
  			oCellDest.CellStyle = sCellStyle
  			oCellDest.ValidationLocal = oValidation
  		else
- 			 oCellSRC = oSheetSRC.GetCellByPosition( nCurCol, nCurRow )
- 			 	oCellDest = oSheetDest.GetCellByPosition( nCurCol+difCol, nCurRow+difRow )
+ 			 oCellSRC = oSheetSRC.getCellByPosition( nCurCol, nCurRow )
+ 			 	oCellDest = oSheetDest.getCellByPosition( nCurCol+difCol, nCurRow+difRow )
 				oValidation = oCellSRC.ValidationLocal
  			 sCellStyle = oCellSRC.CellStyle
 			 lcolorSRC =oCellDest.Cellbackcolor
  			lCharColorSRC =oCellDest.CharColor
  
- 			&apos;	oCellDest = oSheetDest.GetCellByPosition( nCurCol+difCol, nCurRow+difRow )
+ 			&apos;	oCellDest = oSheetDest.getCellByPosition( nCurCol+difCol, nCurRow+difRow )
  				oCellDest.CellStyle = sCellStyle
  				oCellDest.ValidationLocal = oValidation 
  			oCellDest.Cellbackcolor = lcolorSRC 

@@ -44,7 +44,7 @@ nomeListino = &quot;&gt; &quot; &amp; Replace_G(ThisComponent.title, &quot;.ods&
 	if IsNull(oSheetTemp) then
 			sFlag = &quot;&quot;
 		else	
-			sFlag =oSheetTemp.GetCellByPosition( 6, 22 ).string &apos;value
+			sFlag =oSheetTemp.getCellByPosition( 6, 22 ).string &apos;value
 	end if
 
 	oSheet = ThisComponent.currentController.activeSheet
@@ -76,7 +76,7 @@ nomeListino = &quot;&gt; &quot; &amp; Replace_G(ThisComponent.title, &quot;.ods&
 			lrow = UltimusFree2.Da_prezzario.oUltimo_indirizzo_conosciuto.RangeAddress.StartRow
 		&apos;	print &quot;la riga &quot; &amp; lrow
 			oSheetMbo = ThisComponent.Sheets.getByIndex(oUltimo_indirizzo_conosciuto.RangeAddress.Sheet) 
-			sCodOrigineNUDO = oSheetMbo.GetCellByPosition(2 , lrow ).string
+			sCodOrigineNUDO = oSheetMbo.getCellByPosition(2 , lrow ).string
 		&apos;		print &quot;indirizzo trovato &quot; &amp; sCodOrigineNUDO
 		else
 			&apos; nel caso abbia perso il puntamento al listino
@@ -158,7 +158,7 @@ SpostaCursore_su_Prezzario &apos; questo accrocchio fa si che quando l&apos;uten
 	
 	&apos;stabiliamo la riga di inserimento in EP
 	lrowI = idxrow+1
-	oCell = oSheet.GetCellByPosition( lcolbase,lrowI) &apos; 3 ) 
+	oCell = oSheet.getCellByPosition( lcolbase,lrowI) &apos; 3 ) 
 &apos;	oTargetDoc.CurrentController.Select(oCell) &apos;vediamo se serve
 	oSheet.unprotect(&quot;&quot;)
 &apos;	insRows (lrowI, 1) &apos;	oSheet.getRows.insertByIndex (2, lrowI-1)

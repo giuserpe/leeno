@@ -59,15 +59,15 @@ Sub Pesca_cod__per_reg_A_1 &apos; per CONTABILITA
 		goto FAI
 	end if
 rem se su firme
-	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then
-		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot;
+	if oSheet.getCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then
+		do while oSheet.getCellByPosition( 0 , lRow).cellstyle = &quot;Ultimus_centro_bordi_lati&quot;
 			lrow=lrow+1
 		loop
 		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow))
 	end if
 
 rem se in una voce esistente
-	Select Case oSheet.GetCellByPosition( 0 , lRow).cellstyle
+	Select Case oSheet.getCellByPosition( 0 , lRow).cellstyle
 		Case = &quot;Comp End Attributo_R&quot; , &quot;Comp Start Attributo_R&quot; , &quot;comp 10 s_R&quot;
 			sStRange = Circoscrive_Voce_Computo_Att (lRow)
 			With sStRange.RangeAddress
@@ -76,11 +76,11 @@ rem se in una voce esistente
 			End With
 rem controllo se in punto di inserimmento della nuova misura è compreso tra due misure già registrate
 			if 	oSheet.getCellByPosition(22, ivoce+1).string = &quot;#reg&quot; and _ 
-				oSheet.GetCellByPosition( 0 , fvoce+1).cellstyle &lt;&gt; &quot;Comp End Attributo_R&quot; then	
+				oSheet.getCellByPosition( 0 , fvoce+1).cellstyle &lt;&gt; &quot;Comp End Attributo_R&quot; then	
 					nSal = oSheet.getCellByPosition(23, ivoce+1).value
 					ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, fvoce+1))
 					if	oSheet.getCellByPosition(22, fVoce+2).string = &quot;#reg&quot; OR _
-						oSheet.GetCellByPosition(0, fVoce+1).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then &apos; misura successiva
+						oSheet.getCellByPosition(0, fVoce+1).cellstyle = &quot;Ultimus_centro_bordi_lati&quot; then &apos; misura successiva
 						&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition(22, fVoce+2))
 						ttt=msgbox (&quot;Inserendo qui una voce, comprometterai la validità di atti contabili già emessi.&quot; &amp; CHR$(10) _
 							&amp; &quot;Scegliendo OK sarai costretto a rigenerarli!&quot; &amp; CHR$(10) _
@@ -100,7 +100,7 @@ rem controllo se in punto di inserimmento della nuova misura è compreso tra due
 			GoTo FAI
 	End select
 goto salta_controllo:
-&apos;	select case oSheet.GetCellByPosition(0, lRow).cellstyle
+&apos;	select case oSheet.getCellByPosition(0, lRow).cellstyle
 &apos;		case &quot;Comp Start Attributo_R&quot;, &quot;comp 10 s_R&quot;, &quot;Comp End Attributo_R&quot;
 &apos;			sStRange = Circoscrive_Voce_Computo_Att (lRow)
 &apos;			With sStRange.RangeAddress
@@ -117,8 +117,8 @@ FAI:
 		ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;vai_a_Computo&quot;)
 &apos;3) fine macro: adesso tocca all&apos;utente cercare il suo codice...
 	&apos;(alla fine dovrà rieseguire la SC)
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value = 1 and _
- 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value = 0 then
+	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,307).value = 1 and _
+ 		ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,316).value = 0 then
 		msgbox &quot;Sei sulla tab COMPUTO! Cerca la voce che ti serve.... &quot; &amp; CHR$(10)_
 			&amp; &quot;(puoi usare Shit F3, oppure Ctrl-F, ...),&quot; &amp; CHR$(10)_
 			&amp; &quot;Un click sulla riga della voce e poi ri-aziona semplicemente la macro &apos;Pesca va e vieni&apos;!&quot; &amp; CHR$(10)_
@@ -153,14 +153,14 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 		exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet
-	oCell = oSheet.GetCellByPosition( 0 , oSrow)&apos; errata selezione di un range
+	oCell = oSheet.getCellByPosition( 0 , oSrow)&apos; errata selezione di un range
 &apos;&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
 	&apos;individia la voce del computo
 &apos;	print RigaVoceGlobal
 	if RigaVoceGlobal &lt;&gt; &quot;&quot; then
 		lSrow = RigaVoceGlobal
 	end If
-	Select Case oSheet.GetCellByPosition( 0, lSrow).cellstyle
+	Select Case oSheet.getCellByPosition( 0, lSrow).cellstyle
 	Case &quot;An.1v-Att Start&quot;, &quot;An-1_sigla&quot;, &quot;An-lavoraz-desc&quot;, &quot;An-lavoraz-Cod-sx&quot;, &quot;An-lavoraz-desc-CEN&quot;, &quot;An-sfondo-basso Att End&quot;, _
 		&quot;Comp Start Attributo&quot;, &quot;comp progress&quot;, &quot;comp 10 s&quot;, &quot;Comp End Attributo&quot;, _
 		&quot;Comp Start Attributo_R&quot;, &quot;comp 10 s_R&quot;, &quot;Comp End Attributo_R&quot;
@@ -169,7 +169,7 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 		ThisComponent.CurrentController.Select(oPartenza_A)
 		oSheet = ThisComponent.currentController.activeSheet
 		lrow = Range2Cell-1
-		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(2, lrow))
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow))
 		unSelect &apos;unselect ranges 	
 		Exit Sub
 	End Select
@@ -193,7 +193,7 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 			exit for
 		end if	
 		for n = 3 to 8
-			oCell = oSheet.GetCellByPosition( n , i) &apos;occhio Bart, tendi ad invertirli
+			oCell = oSheet.getCellByPosition( n , i) &apos;occhio Bart, tendi ad invertirli
 			if ocell.Type = com.sun.star.table.CellContentType.FORMULA then
 				&apos; se è formula verifico se contiene un link ad altre celle o se solo formula di calcolo
 				sTmp = Mid(oCell.formula, 2, 1)
@@ -203,7 +203,7 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 					consolido = &quot;sì&quot;
 					ThisComponent.CurrentController.Select(ocell)
 					dim sD as String
-					If InStr (oSheet.GetCellByPosition(8 , i).string, &quot;Parziale [&quot;) Then exit For
+					If InStr (oSheet.getCellByPosition(8 , i).string, &quot;Parziale [&quot;) Then exit For
 					msgbox (&quot;Ho trovato link ovvero COLLEGAMENTO ad un&apos;altra cella!&quot; &amp; CHR$(10)_
 						&amp; &quot;Come risultato finale di questa operazione otterrai la copia dei dati consolidati.&quot; &amp; CHR$(10)_
 						&amp; &quot;Dovrai, eventualmente, correggere la descrizione dei righi di misurazione interessati!&quot; &amp; CHR$(10)_
@@ -231,7 +231,7 @@ SUB Pesca_cod__per_reg_A_2 &apos;preleva da Computo e incolla su contabilità CO
 	lRowInsert = oPartenza_A.RangeAddress.endRow
 &apos;	ThisComponent.CurrentController.Select (oPartenza_A)
 
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0 , lRowInsert)) &apos;torna sulla contabilità
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0 , lRowInsert)) &apos;torna sulla contabilità
 &apos;	se la riga è nascosta devo visualizzarla, altrimenti anche le celle inserite sarenno nascoste
 	oSheet.getRows().getByindex(lRowInsert).isvisible = TRUE
 	&apos; iserisco il blocco
@@ -242,9 +242,9 @@ LROW = lRowInsert
 	oSheet.getCellRangeByPosition(0 , lrow, 35, sotto).cellstyle = &quot;Comp-Bianche in mezzo_R&quot; &apos;do una mano di fondo a tutta la voce
 	oSheet.getCellRangeByPosition(0 , sotto, 35, sotto).cellstyle = &quot;comp sotto centro_R&quot; &apos;do una mano di fondo a tutta la voce
 rem copia il cod.art. nella colonna 44
-	oDest1 = oSheet.GetCellByPosition( 1 , lRow).CellAddress &apos; punto di inserimento voce
-rem	oDest2 = oSheet.GetCellByPosition( 44 , lRow).CellAddress &apos; punto di inserimento n.ord.
-	destTAG = oSheet.GetCellByPosition( 27 , lRow).CellAddress &apos; punto di inserimento incidenze e TAGs
+	oDest1 = oSheet.getCellByPosition( 1 , lRow).CellAddress &apos; punto di inserimento voce
+rem	oDest2 = oSheet.getCellByPosition( 44 , lRow).CellAddress &apos; punto di inserimento n.ord.
+	destTAG = oSheet.getCellByPosition( 27 , lRow).CellAddress &apos; punto di inserimento incidenze e TAGs
 	oSheet.copyRange(oDest1, oSRC1) &apos;incolla la voce di computo
 CONSOLIDA_MISURE:
 	oRange = oSheet.getCellRangeByPosition (2,lRow+2,8,sotto-1)
@@ -252,53 +252,53 @@ CONSOLIDA_MISURE:
 &apos;	aSaveData = oRange.getDataArray()
 &apos;	oRange.setDataArray(aSaveData)
 	If consolido = &quot;sì&quot; Then
-		ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(2,lRow+2))
+		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2,lRow+2))
 		consolida_clip
 	EndIf
 rem	oSheet.copyRange(oDest2, oSRC2)&apos; incolla n.ord. sulla colonna 44
 	oSheet.copyRange(destTAG, srcTAG)&apos; incolla incidenze e TAGs colonna 27
-	if oSheet.GetCellByPosition( 1 , lRow-1).cellstyle = &quot;comp sotto Bianche_R&quot; then
+	if oSheet.getCellByPosition( 1 , lRow-1).cellstyle = &quot;comp sotto Bianche_R&quot; then
 		Range_prec = Circoscrive_Voce_Computo_Att (lRow-1) &apos;trova la voce precedente
 		iVoce = Range_prec.RangeAddress.StartRow &apos; il suo inizio
 
-		data_misura = oSheet.GetCellByPosition(1,iVoce+2).getvalue() &apos;prende la data dalla voce precedente
+		data_misura = oSheet.getCellByPosition(1,iVoce+2).getvalue() &apos;prende la data dalla voce precedente
 		If data_misura = 0 Then
-			oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
+			oSheet.getCellByPosition(1, lRow+2).setvalue(date)
 			Else 
-			oSheet.GetCellByPosition(1, lRow+2).setvalue(data_misura)
+			oSheet.getCellByPosition(1, lRow+2).setvalue(data_misura)
 		End If 
 		
 	end if
 	If isEmpty (data_misura) then
-		oSheet.GetCellByPosition(1, lRow+2).setvalue(date)
+		oSheet.getCellByPosition(1, lRow+2).setvalue(date)
 	End If
 
 
 STILI:	rem attribuisco gli stili alla voce proveniente dal computo
 	oSheet.getCellRangeByPosition(1 , lrow, 35, lrow).cellstyle = &quot;Comp-Bianche sopra_R&quot; 		&apos;prima riga
-	oSheet.GetCellByPosition(0 , lrow).cellstyle = &quot;Comp Start Attributo_R&quot; 					&apos;prima cella sx
-	oSheet.GetCellByPosition(0 , sotto).cellstyle = &quot;Comp End Attributo_R&quot;						&apos;ultima cella sx
+	oSheet.getCellByPosition(0 , lrow).cellstyle = &quot;Comp Start Attributo_R&quot; 					&apos;prima cella sx
+	oSheet.getCellByPosition(0 , sotto).cellstyle = &quot;Comp End Attributo_R&quot;						&apos;ultima cella sx
 	oSheet.getCellRangeByPosition(0 , lrow+1, 0, sotto-1).cellstyle = &quot;comp 10 s_R&quot;			&apos;prima colonna
-	oSheet.GetCellByPosition(1 , lrow+1).cellstyle = &quot;comp Art-EP_R&quot;							&apos;articolo
-	oSheet.GetCellByPosition(1 , lrow+2).cellstyle = &quot;Data_bianca&quot;								&apos;data
+	oSheet.getCellByPosition(1 , lrow+1).cellstyle = &quot;comp Art-EP_R&quot;							&apos;articolo
+	oSheet.getCellByPosition(1 , lrow+2).cellstyle = &quot;Data_bianca&quot;								&apos;data
 	If sotto-lrow&gt;=4 then
 		oSheet.getCellRangeByPosition(1 , lrow+3, 1, sotto-1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;&apos;sotto articolo
 		oSheet.getCellRangeByPosition(11 , lrow+2, 30, sotto-1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;	&apos;a destra della descrizione	
 	end if
-	oSheet.GetCellByPosition(1 , sotto).cellstyle = &quot;comp sotto Bianche_R&quot;						&apos;sotto sotto articolo
-	oSheet.GetCellByPosition(2 , lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;			&apos;descrizione
+	oSheet.getCellByPosition(1 , sotto).cellstyle = &quot;comp sotto Bianche_R&quot;						&apos;sotto sotto articolo
+	oSheet.getCellByPosition(2 , lrow+1).cellstyle = &quot;Comp-Bianche in mezzo Descr_R&quot;			&apos;descrizione
 	oSheet.getCellByPosition(9 , lrow+1).cellstyle = &quot;vuote2&quot;									&apos;unità di misura nascosta
 	oSheet.getCellRangeByPosition(10 , lrow+1, 30, lrow+1).cellstyle = &quot;Comp-Bianche in mezzo_R&quot;	&apos;a destra della descrizione
 	oSheet.getCellRangeByPosition(19, lRow+1, 23, lRow+1).cellstyle = &quot;num centro&quot;				&apos;Lib. N. e P.
-&apos;	oSheet.GetCellByPosition(13 , lRow+1).cellstyle = &quot;Sal&quot;										&apos;Sal
+&apos;	oSheet.getCellByPosition(13 , lRow+1).cellstyle = &quot;Sal&quot;										&apos;Sal
 	oSheet.getCellRangeByPosition(2 , lrow+2, 8, sotto-1).cellstyle = &quot;comp 1-a&quot;				&apos;misure
 	oSheet.getCellRangeByPosition(2 , sotto, 7, sotto).cellstyle = &quot;comp sotto centro_R&quot;		&apos;sotto misure
 	oSheet.getCellRangeByPosition(13 , sotto, 17, sotto).cellstyle = &quot;comp sotto centro_R&quot;		&apos;sotto
 	oSheet.getCellRangeByPosition(19 , sotto, 24, sotto).cellstyle = &quot;comp sotto centro_R&quot;		&apos;sotto
 	oSheet.getCellRangeByPosition(26 , sotto, 27, sotto).cellstyle = &quot;comp sotto centro_R&quot;		&apos;sotto
-	oSheet.GetCellByPosition(8 , sotto).cellstyle = &quot;comp sotto BiancheS_R&quot;
+	oSheet.getCellByPosition(8 , sotto).cellstyle = &quot;comp sotto BiancheS_R&quot;
 	oSheet.getCellRangeByPosition(9 , sotto-1, 9, sotto).cellstyle = &quot;Comp-Variante num sotto&quot;&apos;sommano positivi
-	oSheet.GetCellByPosition(27 , sotto).cellstyle = &quot;Comp-SAL n valuta_sotto&quot;					
+	oSheet.getCellByPosition(27 , sotto).cellstyle = &quot;Comp-SAL n valuta_sotto&quot;					
 	oSheet.getCellRangeByPosition(31 , lrow, 35, sotto-1).cellstyle = &quot;compTagG&quot;				&apos;tag
 AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
 	insRows (sotto, 1) &apos;insertByIndex non funziona
@@ -323,27 +323,27 @@ AGGIUSNGO_LA_RIGA_DI_SOMMA_POSITIVI_NEGATIVI:
 IMPOSTO_VALORI_E_FORMULE:
 	i=2
 	do while lrow+i &lt; sotto-1
-		oSheet.GetCellByPosition(9, lrow+i).setformula(&quot;=IF(PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;))&quot;) &apos;riga positivi
-		oSheet.GetCellByPosition(11, lrow+i).setformula(&quot;=IF(PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;)*-1)&quot;) &apos;riga negativi
+		oSheet.getCellByPosition(9, lrow+i).setformula(&quot;=IF(PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&lt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;))&quot;) &apos;riga positivi
+		oSheet.getCellByPosition(11, lrow+i).setformula(&quot;=IF(PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot; )&gt;=0;&quot;&quot;&quot;&quot;;PRODUCT(F&quot; &amp; lrow+i+1 &amp; &quot;:I&quot; &amp; lrow+i+1 &amp;&quot;)*-1)&quot;) &apos;riga negativi
 		i=i+1
 	loop
-	oSheet.GetCellByPosition(9, lrow+1).setformula(&quot;=VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE())&quot;) &apos;Unità di misura
-	oSheet.GetCellByPosition(28, sotto).string = &quot;&quot;
-	oSheet.GetCellByPosition(37, sotto).string = &quot;&quot;
-	oSheet.GetCellByPosition(9, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;J&quot; &amp; lrow+3 &amp; &quot;:J&quot; &amp; sotto &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;J&quot; &amp; lrow+3 &amp;&quot;:J&quot; &amp; sotto &amp;&quot;))&quot;) &apos;Somma positivi
-	oSheet.GetCellByPosition(9, sotto).setformula(&quot;=J&quot; &amp; sotto &amp; &quot;-L&quot; &amp; sotto) &apos;SOMMANO
-	oSheet.GetCellByPosition(18, sotto).setformula(&quot;=J&quot; &amp; sotto+1) &apos;SOMMANO
-	oSheet.GetCellByPosition(18 , sotto).cellstyle = &quot;Comp-Variante num sotto&quot;						&apos;importi
-	oSheet.GetCellByPosition(11, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;L&quot; &amp; lrow+3 &amp; &quot;:L&quot; &amp; sotto &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;L&quot; &amp; lrow+3 &amp;&quot;:L&quot; &amp; sotto &amp;&quot;))&quot;) &apos;Somma negativi
+	oSheet.getCellByPosition(9, lrow+1).setformula(&quot;=VLOOKUP(B&quot; &amp; lrow+2 &amp;&quot;;elenco_prezzi;3;FALSE())&quot;) &apos;Unità di misura
+	oSheet.getCellByPosition(28, sotto).string = &quot;&quot;
+	oSheet.getCellByPosition(37, sotto).string = &quot;&quot;
+	oSheet.getCellByPosition(9, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;J&quot; &amp; lrow+3 &amp; &quot;:J&quot; &amp; sotto &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;J&quot; &amp; lrow+3 &amp;&quot;:J&quot; &amp; sotto &amp;&quot;))&quot;) &apos;Somma positivi
+	oSheet.getCellByPosition(9, sotto).setformula(&quot;=J&quot; &amp; sotto &amp; &quot;-L&quot; &amp; sotto) &apos;SOMMANO
+	oSheet.getCellByPosition(18, sotto).setformula(&quot;=J&quot; &amp; sotto+1) &apos;SOMMANO
+	oSheet.getCellByPosition(18 , sotto).cellstyle = &quot;Comp-Variante num sotto&quot;						&apos;importi
+	oSheet.getCellByPosition(11, sotto-1).setformula(&quot;=IF(SUBTOTAL(9;L&quot; &amp; lrow+3 &amp; &quot;:L&quot; &amp; sotto &amp;&quot; )&lt;0;&quot;&quot;&quot;&quot;;SUBTOTAL(9;L&quot; &amp; lrow+3 &amp;&quot;:L&quot; &amp; sotto &amp;&quot;))&quot;) &apos;Somma negativi
 	oSheet.getCellByPosition(11, sotto-1).cellstyle = &quot;Comp-Variante num sotto&quot;
 	oSheet.getCellByPosition(13, sotto).setformula(&quot;=VLOOKUP(B&quot; &amp; LROW+2 &amp; &quot;;elenco_prezzi;5;FALSE())&quot;) &apos;SOMMANO
 	oSheet.getCellByPosition(13, sotto).cellstyle = &quot;comp sotto Unitario&quot;
-	oSheet.GetCellByPosition(15, sotto).setformula(&quot;=N&quot; &amp; sotto+1 &amp; &quot;*J&quot; &amp; sotto+1) &apos;IMPORTO
-	oSheet.GetCellByPosition(15 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
-	oSheet.GetCellByPosition(17, sotto).setformula(&quot;=J&quot; &amp; sotto+1 &amp; &quot;*AB&quot; &amp; sotto+1) &apos;IMPORTO
-	oSheet.GetCellByPosition(17 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
-	oSheet.GetCellByPosition(23, lrow+1).setvalue(nSal)								&apos;Numero SAL
-	oSheet.GetCellByPosition(23, lrow+1).cellstyle = &quot;Sal&quot;
+	oSheet.getCellByPosition(15, sotto).setformula(&quot;=N&quot; &amp; sotto+1 &amp; &quot;*J&quot; &amp; sotto+1) &apos;IMPORTO
+	oSheet.getCellByPosition(15 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
+	oSheet.getCellByPosition(17, sotto).setformula(&quot;=J&quot; &amp; sotto+1 &amp; &quot;*AB&quot; &amp; sotto+1) &apos;IMPORTO
+	oSheet.getCellByPosition(17 , sotto).cellstyle = &quot;comp sotto Euro 3_R&quot;			&apos;importi
+	oSheet.getCellByPosition(23, lrow+1).setvalue(nSal)								&apos;Numero SAL
+	oSheet.getCellByPosition(23, lrow+1).cellstyle = &quot;Sal&quot;
 &apos;	Numera_Voci_Computo (&quot;niente prompt&quot;)
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;numera_voci&quot;)
 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(2, lrow+2))
@@ -394,7 +394,7 @@ Sub Pesca_cod &apos; [pesca...]
 				 		sGorigine =	&quot;&quot;
 						lRowInsert = oPartenza_A.RangeAddress.endRow
 						oSheet = ThisComponent.Sheets.getbyname(&quot;CONTABILITA&quot;)
-						ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1, lRowInsert+1))	
+						ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1, lRowInsert+1))	
 			 	 		exit sub
 			 		end if
 					RigaVoceGlobal = getRigaIniziale(SelectedRange)
@@ -467,7 +467,7 @@ SUB Pesca_cod_2
  	
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow 
-	sCodice = oSheet.GetCellByPosition( lcolbase , lrow).string
+	sCodice = oSheet.getCellByPosition( lcolbase , lrow).string
 	&apos;	filtro
 	
 
@@ -476,8 +476,8 @@ SUB Pesca_cod_2
 
 	oSheet = ThisComponent.currentController.activeSheet
 	if oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;VARIANTE&quot; then &apos;
-&apos;		if oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP_R&quot; Or _
-&apos;			oSheet.GetCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP&quot; Then
+&apos;		if oSheet.getCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP_R&quot; Or _
+&apos;			oSheet.getCellByPosition( 1, lrow).cellstyle &lt;&gt; &quot;comp Art-EP&quot; Then
 &apos;			sTitolo = &quot;Seleziona la cella di destinazione (Codice) (ESC per Annullare, NO Click su X ) &quot; 
  &apos;			SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  &apos;			if SelectedRange = &quot;&quot; or _
@@ -486,15 +486,15 @@ SUB Pesca_cod_2
  &apos;			 	exit sub
 &apos;		 	end if
 &apos;			lrow = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
-&apos;			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow)
+&apos;			oPartenza = ThisComponent.currentController.activeSheet.getCellByPosition( 1, lrow)
 &apos;		end if
 		oPartenza.SetString(sCodice)
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+1))
+		ThisComponent.CurrentController.Select(osheet.getCellByPosition( 2, lrow+1))
 		unSelect &apos;unselect ranges 	
 	EndIf
 	if oSheet.name = &quot;Analisi di Prezzo&quot; then
 &apos;	print &quot;eccoci&quot;
-		if oSheet.GetCellByPosition( 0, lrow).cellstyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; then
+		if oSheet.getCellByPosition( 0, lrow).cellstyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; then
 			sTitolo = &quot;Click sulla cella di destinazione del Codice (ESC per Annullare, NO Click su X ) &quot; 
  	 		SelectedRange = getRange(sTitolo) &apos; richiama il listeners
  	 		if SelectedRange = &quot;&quot; or _
@@ -503,10 +503,10 @@ SUB Pesca_cod_2
  	 			exit sub
  			 end if
 			lrow = getRigaIniziale(SelectedRange) &apos;che restituisce la riga di destinazione
-			oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow)
+			oPartenza = ThisComponent.currentController.activeSheet.getCellByPosition( 0, lrow)
 		end if
 		oPartenza.SetString(sCodice)
-		ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 3, lrow))	
+		ThisComponent.CurrentController.Select(osheet.getCellByPosition( 3, lrow))	
 	end if
 	
 	sMemoPesca = empty
@@ -545,8 +545,8 @@ dim oCell as object
 &apos;0	&apos; controlla se è dentro una voce e centra la posizione 
 	nSheet = ThisComponent.currentcontroller.activesheet.name
 	if nSheet = &quot;COMPUTO&quot; or nSheet = &quot;VARIANTE&quot; then
-		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = &quot;Comp&quot; or _
-			left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),4) = &quot;comp&quot; then
+		if left((oSheet.getCellByPosition( 0 , lRow).cellstyle),4) = &quot;Comp&quot; or _
+			left((oSheet.getCellByPosition( 0 , lRow).cellstyle),4) = &quot;comp&quot; then
 				oRangeVC = Circoscrive_Voce_Computo_Att(lrow)
  			lrow = oRangeVC.RangeAddress.StartRow +1
  		else 
@@ -555,7 +555,7 @@ dim oCell as object
 		end if
 	end if
 	if nSheet  = &quot;Analisi di Prezzo&quot; then
-		if left((oSheet.GetCellByPosition( 3 , lRow).cellstyle),10) &lt;&gt; &quot;An-lavoraz&quot; then
+		if left((oSheet.getCellByPosition( 3 , lRow).cellstyle),10) &lt;&gt; &quot;An-lavoraz&quot; then
 			 msgbox &quot;Devi agire posizionato sul componente! ( Annullo! ) &quot; 
 				exit sub
 		end if
@@ -565,15 +565,15 @@ dim oCell as object
 &apos;1) registra la posizione
 	Select Case nSheet
 	Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
+		oPartenza = ThisComponent.currentController.activeSheet.getCellByPosition( 1, lrow ) 
 	Case &quot;Analisi di Prezzo&quot;
-		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
+		oPartenza = ThisComponent.currentController.activeSheet.getCellByPosition( 0, lrow ) 
 	End Select
 &apos;	if ThisComponent.currentcontroller.activesheet.name = &quot;COMPUTO&quot; or &quot;VARIANTE&quot; Then 
-&apos;		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 1, lrow ) 
+&apos;		oPartenza = ThisComponent.currentController.activeSheet.getCellByPosition( 1, lrow ) 
 &apos;	end if 
 &apos;	if ThisComponent.currentcontroller.activesheet.name = &quot;Analisi di Prezzo&quot; then
-&apos;		oPartenza = ThisComponent.currentController.activeSheet.GetCellByPosition( 0, lrow ) 
+&apos;		oPartenza = ThisComponent.currentController.activeSheet.getCellByPosition( 0, lrow ) 
 &apos;	end if 
 
 &apos;2) focus su EP
@@ -582,8 +582,8 @@ dim oCell as object
 &apos;	PRINT&quot;VAS1&quot;
 &apos;3) fine macro: adesso tocca all&apos;utente cercare il suo codice...
 	&apos;(alla fine dovrà rieseguire la SC)
-	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,307).value &gt; 0 or _
- 		ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &gt; 0 then
+	if 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,307).value &gt; 0 or _
+ 		ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,316).value &gt; 0 then
  		 &apos;non fa nulla
  		 else
 			msgbox &quot;Cerca la voce che ti serve.... &quot; &amp; CHR$(10)_
@@ -635,15 +635,15 @@ dim oSheet as object
  	
 	oCell=thisComponent.getCurrentSelection()
 	lrow=oCell.RangeAddress.StartRow 
-	sCodice = oSheet.GetCellByPosition(lcolbase , lrow).String
+	sCodice = oSheet.getCellByPosition(lcolbase , lrow).String
 	&apos;	filtro
 	ThisComponent.CurrentController.Select(oPartenza_A) 
 	lrow = oPartenza_A.RangeAddress.StartRow 
 	
 	oSheet = ThisComponent.currentController.activeSheet
-	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 1, lrow+1).SetString(sCodice)) &apos; inserisce il codice
+	ThisComponent.CurrentController.Select(osheet.getCellByPosition( 1, lrow+1).SetString(sCodice)) &apos; inserisce il codice
 &apos;	print
-	ThisComponent.CurrentController.Select(osheet.GetCellByPosition( 2, lrow+2)) &apos; va sul primo rigo di misurazione
+	ThisComponent.CurrentController.Select(osheet.getCellByPosition( 2, lrow+2)) &apos; va sul primo rigo di misurazione
 &apos;	print
 &apos;	end if
 

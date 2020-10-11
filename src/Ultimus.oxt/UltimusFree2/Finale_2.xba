@@ -30,7 +30,7 @@ rem rimuovo le aree di stampa che non interessano
 	For Each oSh In oSheets
 		If oSh.Name &lt;&gt; &quot;cP_Cop&quot; and oSh.Name &lt;&gt; oActiveSheet Then &apos; and oSh.Name &lt;&gt; &quot;copyright_LeenO&quot; Then
 
-			ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).GetCellByPosition(0,0))
+			ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).getCellByPosition(0,0))
 &apos;	Print  
 			rimuovi_area_di_stampa
 			oSh.IsVisible = False
@@ -399,20 +399,20 @@ procedi:
 	&apos; ora svuoto cancello anche i rinvii nella riga del subtotali cap e sottocap
  
 	 &apos;registro il valore della variabile
-	iVar_332 = ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value
+	iVar_332 = ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,332).value
  	
  	&apos; la metto a 0
- 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = 0
+ 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,332).value = 0
  	
  	&apos; rifaccio u subtotali con var a 0
  	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;Tutti_Subtotali&quot;)
 
  	&apos;ripristino la Var generale che c&apos;era prima
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,332).value = iVar_332
+	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,332).value = iVar_332
 
 	for i = 2 to lrowFine Step 1 &apos;buffone
-		if oSheet.GetCellByPosition(2 , i).cellstyle = &quot;Comp-Bianche in mezzo Descr&quot; AND _
-			oSheet.GetCellByPosition(1 , i).cellstyle = &quot;comp Art-EP&quot; then
+		if oSheet.getCellByPosition(2 , i).cellstyle = &quot;Comp-Bianche in mezzo Descr&quot; AND _
+			oSheet.getCellByPosition(1 , i).cellstyle = &quot;comp Art-EP&quot; then
 			oRange = oSheet.getCellRangeByposition(2,i,2,i)
 			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
@@ -426,10 +426,10 @@ procedi:
 			aSaveData = oRange.getDataArray()
  			oRange.clearContents(Flags)
  		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 
-			oSheet.GetCellByPosition(11 , i).string = oSheet.GetCellByPosition(18 , i).string 		 	
+			oSheet.getCellByPosition(11 , i).string = oSheet.getCellByPosition(18 , i).string 		 	
  		end if
  		&apos;cap e sottocap (i numeri...)
- 		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;Livello-1-scritta&quot; then
+ 		if oSheet.getCellByPosition(1 , i).cellstyle = &quot;Livello-1-scritta&quot; then
  		 	oRange = oSheet.getCellRangeByposition(1,i,1,i)
 			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
@@ -437,7 +437,7 @@ procedi:
  			oRange.clearContents(Flags)
  		 	oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle 		
 		end if
- 		if oSheet.GetCellByPosition(1 , i).cellstyle = &quot;livello2 valuta&quot; then
+ 		if oSheet.getCellByPosition(1 , i).cellstyle = &quot;livello2 valuta&quot; then
  		 	oRange = oSheet.getCellRangeByposition(1,i,1,i)
 			Flags = com.sun.star.sheet.CellFlags.FORMULA + _
 			com.sun.star.sheet.CellFlags.OBJECTS
@@ -448,10 +448,10 @@ procedi:
  		&apos;questo serve per aggiungere l&apos;if al prodotto ...
  		&apos; se viene implementato l&apos;if nel template questo modulino andrà poi rimosso
  		if sSegno = 1 then
-			if oSheet.GetCellByPosition(18 , i).cellstyle = &quot;comp sotto Euro Originale&quot; AND _
-				oSheet.GetCellByPosition(11 , i).cellstyle = &quot;comp sotto Unitario&quot; then
+			if oSheet.getCellByPosition(18 , i).cellstyle = &quot;comp sotto Euro Originale&quot; AND _
+				oSheet.getCellByPosition(11 , i).cellstyle = &quot;comp sotto Unitario&quot; then
 				sFormulaN = &quot;=IF(L&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;&quot; &amp; &quot;;J&quot; &amp; i+1 &amp; &quot;*L&quot; &amp; i+1 &amp; &quot;;&quot;&quot;&quot;&quot;)&quot;
-				oSheet.GetCellByPosition(18 , i).formula = SformulaN
+				oSheet.getCellByPosition(18 , i).formula = SformulaN
 			end if
 		end if
 	next
@@ -512,7 +512,7 @@ FUNCTION DuplicaSheetinDoc_Comp_NoP(Optional sSuffix as string, Optional lnumShe
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	&apos;Height 
-	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
+	Altezza_prima_riga=oSheet.getCellByPosition( 0, 0 ).getRows.Height
 
 	PrintRepeatRows = oSheet.PrintTitleRows
 	&apos; i parametri &quot;optional&quot; devono essere verificati nell&apos;ordine in cui vengono passati!!
@@ -591,8 +591,8 @@ wait 200
 
 	oSheet.setTitleRows(RepeatRows)
 	oSheet.setPrintTitleRows(PrintRepeatRows)
-	oSheet.GetCellbyPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
-	ocell = oSheet.GetCellbyPosition( 0, 3 )
+	oSheet.getCellByPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
+	ocell = oSheet.getCellByPosition( 0, 3 )
 	Thiscomponent.currentcontroller.select(ocell)
 
 	Clessid_lock_End
@@ -643,7 +643,7 @@ dim nEndCol as long
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
  Copy_PageStyle
- 	oCell = oSheet.GetCellbyPosition( 0, 0 )
+ 	oCell = oSheet.getCellByPosition( 0, 0 )
  	oCursor = oSheet.createCursorByRange(oCell)
  	
  	 oCursor.GotoEndOfUsedArea(True)
@@ -695,7 +695,7 @@ FUNCTION DuplicaSheetinDoc_EP_NoP(Optional sSuffix as string, Optional lnumSheet
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	&apos;Height 
-	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
+	Altezza_prima_riga=oSheet.getCellByPosition( 0, 0 ).getRows.Height
 
 	PrintRepeatRows = oSheet.PrintTitleRows
 	&apos; i parametri &quot;optional&quot; devono essere verificati nell&apos;ordine in cui vengono passati!!
@@ -769,8 +769,8 @@ wait 200
 
 	oSheet.setTitleRows(RepeatRows)
 	oSheet.setPrintTitleRows(PrintRepeatRows)
-	oSheet.GetCellbyPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
-	ocell = oSheet.GetCellbyPosition( 0, 3 )
+	oSheet.getCellByPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
+	ocell = oSheet.getCellByPosition( 0, 3 )
 	Thiscomponent.currentcontroller.select(ocell)
 
 	Clessid_lock_End

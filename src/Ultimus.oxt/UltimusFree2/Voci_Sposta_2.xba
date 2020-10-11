@@ -52,29 +52,29 @@ dim lcol5 as long
 	lcol = 0
 &apos;	lcol =oCelle.Column 
 	lcolS = lcol
-	oCellStart = oSheet.GetCellByPosition( lcol , lrow)
+	oCellStart = oSheet.getCellByPosition( lcol , lrow)
 	
 	if templateTipo = &quot;ATT&quot; then lcol5 = 3
 	if templateTipo = &quot;5C&quot; then lcol5 = 2
 
-	 oCell = oSheet.GetCellByPosition(lcol5 , lrow )
+	 oCell = oSheet.getCellByPosition(lcol5 , lrow )
 	 xA = oCell.string
  ThisComponent.CurrentController.Select(oCell)
 	If xA = &quot;SOMMANO &quot; then 
 		lrow = lrow + 1
 		lcol = lcol5
- 	 oCell = oSheet.GetCellByPosition( lcol , lrow)
+ 	 oCell = oSheet.getCellByPosition( lcol , lrow)
  		goto sommano_trovato 
 	end if 
 
  Do while xA &lt;&gt; &quot;SOMMANO &quot;
  	 lrow = lrow+1
- 	 oCell = oSheet.GetCellByPosition( lcol5 , lrow)
+ 	 oCell = oSheet.getCellByPosition( lcol5 , lrow)
  &apos;	 ThisComponent.CurrentController.Select(oCell)
 		xA = oCell.string
  	 Loop
  	 lrow = lrow+1
- 	 oCell = oSheet.GetCellByPosition( 1 , lrow)
+ 	 oCell = oSheet.getCellByPosition( 1 , lrow)
 	 xA = oCell.string	
 &apos;	 	ThisComponent.CurrentController.Select(oCell)&apos;debug 
  &apos; 	 		 print &quot;debugN&quot;	
@@ -84,14 +84,14 @@ dim lcol5 as long
  &apos;print &quot;debug1&quot;
  lrowE = lrow-1 
  lrow = lrow-1
- oCell = oSheet.GetCellByPosition( 1 , lrow)
+ oCell = oSheet.getCellByPosition( 1 , lrow)
  &apos;xA = ThisComponent.getcurrentselection.getstring
  	 xA = oCell.string	
  &apos;	 print xA
  	Do while xA = &quot;&quot;
  &apos; print &quot;dentro&quot;
  		lrow = lrow-1 
- 	 	oCell = oSheet.GetCellByPosition( 1 , lrow)
+ 	 	oCell = oSheet.getCellByPosition( 1 , lrow)
  	 	xA = oCell.string
  	 &apos; 		ThisComponent.CurrentController.Select(oCell)&apos;debug 
  	 &apos; 		 print &quot;debug2 &quot;	&amp; xa
@@ -213,7 +213,7 @@ dim xA as string
  &apos; lrow = lrow -1 &apos; per tararlo 
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
 
- oCell = oSheet.GetCellByPosition( 1, lrow )
+ oCell = oSheet.getCellByPosition( 1, lrow )
 	xA = oCell.string
  	sString$ = &quot;Fine Computo&quot;
 
@@ -227,11 +227,11 @@ dim xA as string
 	lrowF=oEnd.CellAddress.Row 
 	If (lrowF - lrow) &lt; 5 then &apos;se è vicino al fondo 
 		lrowF= lrowF-1
-		oCell = oSheet.GetCellByPosition( 3, lrowF)
+		oCell = oSheet.getCellByPosition( 3, lrowF)
 		xA = oCell.string
 		do while xA &lt;&gt; &quot;SOMMANO &quot;
 			lrowF= lrowF-1
-			oCell = oSheet.GetCellByPosition( 3, lrowF)
+			oCell = oSheet.getCellByPosition( 3, lrowF)
 			xA = oCell.string
 		loop
 		Mettiti_esattamente_tra_due_VociC = lrowF+1
@@ -244,18 +244,18 @@ dim xA as string
 		 else &apos;se è vuota...
 		 	lrowT = lrow
 				lrowT = lrowT+1
-				oCell = oSheet.GetCellByPosition( 1, lrowT )				
+				oCell = oSheet.getCellByPosition( 1, lrowT )				
  		 	 	xA = oCell.string
 				if xA &lt;&gt; &quot;&quot; then
 					lrowT = lrowT-1
-					oCell = oSheet.GetCellByPosition( 1, lrowT )				
+					oCell = oSheet.getCellByPosition( 1, lrowT )				
  		 	 		lrow = lrowT
  		 	 		&apos;xA = oCell.string
  		 	 		Mettiti_esattamente_tra_due_VociC = lrow
  		 	 		exit function
  		 	 	end if
  	end if 
- 	 oCell = oSheet.GetCellByPosition( 1, lrow )
+ 	 oCell = oSheet.getCellByPosition( 1, lrow )
  	 xA = oCell.string
  		 	 	if xA &lt;&gt; &quot;&quot; then &apos; è piena 
  		 	 		lrow = lrow-1
@@ -263,12 +263,12 @@ dim xA as string
  				 else
 					lrowT = lrow
 					Incremta = 0	
-					oCell = oSheet.GetCellByPosition( 1, lrowT )
+					oCell = oSheet.getCellByPosition( 1, lrowT )
 					xA = oCell.string 
 	 			 do while xA = &quot;&quot;
 						oIncremta=oIncremta+1
 						lrowT = lrowT+1
-						oCell = oSheet.GetCellByPosition( 1, lrowT )
+						oCell = oSheet.getCellByPosition( 1, lrowT )
  		 				 xA = oCell.string 
  					loop
  					oIncremta = abs (oIncremta)

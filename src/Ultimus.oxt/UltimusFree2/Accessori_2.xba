@@ -242,9 +242,9 @@ ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponen
 &apos;	Print lLastUrow
 	oSheet.getCellByPosition(36 ,1).formula = &quot;=SUBTOTAL(9;AK3:AK&quot; &amp; nEndRow+1 &amp; &quot;)&quot;
 	For i = 0 To nEndRow &apos;row by row.
-		If oSheet.GetCellByPosition( 0, i ).CellStyle = &quot;Comp End Attributo_R&quot; then &apos;
+		If oSheet.getCellByPosition( 0, i ).CellStyle = &quot;Comp End Attributo_R&quot; then &apos;
 			oSheet.getCellByPosition(36 , i).formula = &quot;=IF(ISERROR(P&quot; &amp; i+1 &amp; &quot;);&quot;&quot;&quot;&quot;;IF(P&quot; &amp; i+1 &amp; &quot;&lt;&gt;&quot;&quot;&quot;&quot;;P&quot; &amp; i+1 &amp; &quot;;&quot;&quot;))&quot;
-			oSheet.GetCellByPosition(36, i ).CellStyle = &quot;comp -controolo&quot;
+			oSheet.getCellByPosition(36, i ).CellStyle = &quot;comp -controolo&quot;
 		EndIf
 	Next i
 
@@ -273,17 +273,17 @@ ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponen
 	oSheet.getColumns.getByIndex(lcolbase+14+idxcol).isVisible = true
 			
 i=rIntest
-&apos;	oSheet.GetCellByPosition(16,i).STRING=&quot;TOTALE&quot; &apos;totale computo
-&apos;	oSheet.GetCellByPosition(16,i).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
+&apos;	oSheet.getCellByPosition(16,i).STRING=&quot;TOTALE&quot; &apos;totale computo
+&apos;	oSheet.getCellByPosition(16,i).cellstyle=&quot;EP statistiche_Contab_q&quot; &apos;totale computo
 
 &apos; FORMULE DELLA CONTABILITA&apos;
-	oSheet.GetCellByPosition(lcolbase + 19 , i).formula = &quot;=V4/$V$2&quot;
-	oSheet.GetCellByPosition(lcolbase + 19 , i).cellstyle = &quot;EP-mezzo %&quot;
-	oSheet.GetCellByPosition(lcolbase + 20 , i).formula = &quot;=SUMIF(GG;A4;G1G1)&quot;
-	oSheet.GetCellByPosition(lcolbase + 20 , i).cellstyle = &quot;EP statistiche_q&quot;
-	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=SUMIF(GG;A4;conEuro)&quot;
-&apos;	oSheet.GetCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
-	oSheet.GetCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
+	oSheet.getCellByPosition(lcolbase + 19 , i).formula = &quot;=V4/$V$2&quot;
+	oSheet.getCellByPosition(lcolbase + 19 , i).cellstyle = &quot;EP-mezzo %&quot;
+	oSheet.getCellByPosition(lcolbase + 20 , i).formula = &quot;=SUMIF(GG;A4;G1G1)&quot;
+	oSheet.getCellByPosition(lcolbase + 20 , i).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.getCellByPosition(lcolbase + 21 , i).formula = &quot;=SUMIF(GG;A4;conEuro)&quot;
+&apos;	oSheet.getCellByPosition(lcolbase + 21 , i).formula = &quot;=IF(C4=&quot;&quot;%&quot;&quot;;Q4*E4/100;Q4*E4)&quot;
+	oSheet.getCellByPosition(lcolbase + 21 , i).cellstyle = &quot;EP statistiche&quot;
 &apos;	ThisComponent.enableAutomaticCalculation(True)
 END Sub
 

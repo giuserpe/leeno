@@ -29,21 +29,21 @@ Dim oRangeAddress as object
 	if (ThisComponent.NamedRanges.hasByName(&quot;oneri_sicurezza&quot;))= false then &apos;se il range non esiste lo ricrea completamente
 		oRanges.addNewByName(&quot;oneri_sicurezza&quot;, &quot;$S5.$B$93:$P$93&quot; , oCellAddress, 0)&apos;definisce l&apos;area
 		oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;)&apos;scegli il foglio S5
-	 oSheet.GetCellByPosition(1 , 92).CellStyle=&quot;An-lavoraz-desc-CEN&quot;
-	 oSheet.GetCellByPosition(2 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
- 	 oSheet.GetCellByPosition(3 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
- 	 oSheet.GetCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
-		oSheet.GetCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
- 	 oSheet.GetCellByPosition(5 , 92).CellStyle=&quot;An-lavoraz-%&quot;
-		oSheet.GetCellByPosition(5 , 92).setstring(&quot;=SE(O(E93=&quot;&quot;Spese Generali&quot;&quot;;E93=&quot;&quot;Spese Generali (calcolate su F)&quot;&quot;); $S1.$H$320;SE(O(E93=&quot;&quot;utili d&apos;impresa&quot;&quot;;E93=&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot;);$S1.$H$321;SE(E93=&quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;$S1.$H$322;SE(O(E93=&quot;&quot;Di cui sicurezza afferenti l&apos;impresa&quot;&quot;;SINISTRA(E93;18)=&quot;&quot;Oneri di Sicurezza&quot;&quot;);$S1.$H$319;SE(E93=&quot;&quot;Sconto&quot;&quot;;$S1.$H$324;SE(E93=&quot;&quot;Maggiorazione&quot;&quot;;$S1.$H$326))))))&quot;)
- 	 oSheet.GetCellByPosition(6 , 92).CellStyle=&quot;An-lavoraz-Utili-num sin&quot;
- 	 oSheet.GetCellByPosition(6 , 92).setstring(&quot;=SOMMA(H77:H89)*F93&quot;)
- 	 oSheet.GetCellByPosition(7 , 92).CellStyle=&quot;An-senza&quot;
- 	 oSheet.GetCellByPosition(8 , 92).CellStyle=&quot;An-senza-DX&quot;
- 	 oSheet.GetCellByPosition(9 , 92).CellStyle=&quot;An-lavoraz-dx%&quot;
- 	 oSheet.GetCellByPosition(10 , 92).CellStyle=&quot;An-lavoraz-generica&quot;
- 	 oSheet.GetCellByPosition(11 , 92).CellStyle=&quot;An-lavoraz-dx&quot;
- 	 oSheet.GetCellByPosition(11 , 92).setstring(&quot;=SE (RICERCA(&quot;&quot;sicurezza&quot;&quot;;E93);G93;&quot;&quot;)&quot;)
+	 oSheet.getCellByPosition(1 , 92).CellStyle=&quot;An-lavoraz-desc-CEN&quot;
+	 oSheet.getCellByPosition(2 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
+ 	 oSheet.getCellByPosition(3 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
+ 	 oSheet.getCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
+		oSheet.getCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
+ 	 oSheet.getCellByPosition(5 , 92).CellStyle=&quot;An-lavoraz-%&quot;
+		oSheet.getCellByPosition(5 , 92).setstring(&quot;=SE(O(E93=&quot;&quot;Spese Generali&quot;&quot;;E93=&quot;&quot;Spese Generali (calcolate su F)&quot;&quot;); $S1.$H$320;SE(O(E93=&quot;&quot;utili d&apos;impresa&quot;&quot;;E93=&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot;);$S1.$H$321;SE(E93=&quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;$S1.$H$322;SE(O(E93=&quot;&quot;Di cui sicurezza afferenti l&apos;impresa&quot;&quot;;SINISTRA(E93;18)=&quot;&quot;Oneri di Sicurezza&quot;&quot;);$S1.$H$319;SE(E93=&quot;&quot;Sconto&quot;&quot;;$S1.$H$324;SE(E93=&quot;&quot;Maggiorazione&quot;&quot;;$S1.$H$326))))))&quot;)
+ 	 oSheet.getCellByPosition(6 , 92).CellStyle=&quot;An-lavoraz-Utili-num sin&quot;
+ 	 oSheet.getCellByPosition(6 , 92).setstring(&quot;=SOMMA(H77:H89)*F93&quot;)
+ 	 oSheet.getCellByPosition(7 , 92).CellStyle=&quot;An-senza&quot;
+ 	 oSheet.getCellByPosition(8 , 92).CellStyle=&quot;An-senza-DX&quot;
+ 	 oSheet.getCellByPosition(9 , 92).CellStyle=&quot;An-lavoraz-dx%&quot;
+ 	 oSheet.getCellByPosition(10 , 92).CellStyle=&quot;An-lavoraz-generica&quot;
+ 	 oSheet.getCellByPosition(11 , 92).CellStyle=&quot;An-lavoraz-dx&quot;
+ 	 oSheet.getCellByPosition(11 , 92).setstring(&quot;=SE (RICERCA(&quot;&quot;sicurezza&quot;&quot;;E93);G93;&quot;&quot;)&quot;)
  	 oSheet.getCellRangeByPosition(12 ,92,15,92).CellStyle=&quot;Analisi_Sfondo&quot;
 	end if
 	lrow= Range2Cell &apos;riga corrente
@@ -53,20 +53,20 @@ Dim oRangeAddress as object
 		lrow=lrowFine-5
 	end if
 	for i = lrow to lrow+50
-		if 	oSheet.GetCellbyPosition( 0, i ).string = &quot;L&quot; or _
-			InStr (oSheet.GetCellbyPosition( 3, i ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 or _
-			oSheet.GetCellbyPosition( 0, i ).string = &quot;----&quot; then
+		if 	oSheet.getCellByPosition( 0, i ).string = &quot;L&quot; or _
+			InStr (oSheet.getCellByPosition( 3, i ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 or _
+			oSheet.getCellByPosition( 0, i ).string = &quot;----&quot; then
 			msgbox &quot;Riprova partendo almeno dalla riga &quot;&quot;I&quot;&quot; o riga già inserita.&quot;
 			exit sub
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;H&quot; and _
-			oSheet.GetCellbyPosition( 0, i+1 ).string = &quot;&quot; and _
-			InStr (oSheet.GetCellbyPosition( 3, i+1 ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 then &apos; se gli oneri di sicurezza esistono già
+		if oSheet.getCellByPosition( 0, i ).string = &quot;H&quot; and _
+			oSheet.getCellByPosition( 0, i+1 ).string = &quot;&quot; and _
+			InStr (oSheet.getCellByPosition( 3, i+1 ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 then &apos; se gli oneri di sicurezza esistono già
 			msgbox &quot;La riga degli oneri per la sicurezza è già inserita!&quot;
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,i+1)) &apos;focus cella
+			ThisComponent.CurrentController.Select(oSheet.getCellByPosition(4,i+1)) &apos;focus cella
 			exit sub
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;I&quot; then &apos; se sei sul totale costi indiretti
+		if oSheet.getCellByPosition( 0, i ).string = &quot;I&quot; then &apos; se sei sul totale costi indiretti
 			lrow = i
 			exit for
 		end if
@@ -77,7 +77,7 @@ Dim oRangeAddress as object
 	oRangeAddress=ThisComponent.NamedRanges.oneri_sicurezza.ReferredCells.getRangeAddress &apos; utili è il nome del range
 	oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress() &apos; indirizzo dell&apos;inserimento
 	oSheet.copyRange(oCellAddress, oRangeAddress) &apos; inserimento
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,i)) &apos;focus cella
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(4,i)) &apos;focus cella
 end sub
 
 SUB Adatta_h_riga_intera_tabella(nSheet as string)
@@ -86,7 +86,7 @@ SUB Adatta_h_riga_intera_tabella(nSheet as string)
 	oSheet.getCellRANGEByPosition(0, 0, getLastUsedCol(oSheet),getLastUsedRow(oSheet)).Rows.OptimalHeight = True
 	Select Case nSheet
 	Case &quot;Elenco Prezzi&quot;, &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
-		oSheet.GetCellByPosition(0,2).Rows.Height = 800
+		oSheet.getCellByPosition(0,2).Rows.Height = 800
 	End select
 	
 END SUB

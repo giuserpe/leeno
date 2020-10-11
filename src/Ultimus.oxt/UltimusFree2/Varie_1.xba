@@ -70,7 +70,7 @@ Function ControlloConfermaDati() &apos; Funzione di controllo
 &apos; inserita per usare lo &quot;schermo intero&quot; Ciò se la variabile Schermo intero è attiva
 &apos; non esegue questa macro di controllo
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,296).value &lt;&gt; 0 then
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,296).value &lt;&gt; 0 then
 		exit function
 	end if
 end if	&apos; aggiunta il 080512
@@ -305,7 +305,7 @@ Function getLastUsedCol(oSheet as Object) as Integer
  Dim oCursor As Object
  Dim aAddress As Variant
  
- oCell = oSheet.GetCellbyPosition( 0, 0 )
+ oCell = oSheet.getCellByPosition( 0, 0 )
  &apos; print thisComponent.currentcontroller.activesheet.name
 &apos;			ThisComponent.CurrentController.Select(oSheet)&apos; debug
 	&apos;		ThisComponent.CurrentController.Select(oCell)
@@ -353,44 +353,44 @@ Dim oCellB as object
 	 &apos;LrowS è la riga di inizio somma
 	&apos; lRowF è la riga di fine somma
 
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
-	oCellB = oSheet.GetCellByPosition( lcol+1 , lrow)
+	 oCell = oSheet.getCellByPosition( lcol , lrow)
+	oCellB = oSheet.getCellByPosition( lcol+1 , lrow)
 	 xA = oCell.string
-&apos;	oCellB = oSheet.GetCellByPosition( lcol , lrow-1)
+&apos;	oCellB = oSheet.getCellByPosition( lcol , lrow-1)
 	 &apos;	ThisComponent.CurrentController.Select(oCell) &apos; debug
 &apos;	 print lrow
 	 sCol= ColumnNameOf(lcol)
 &apos;	 do while xA &lt;&gt; &quot;-&quot;
-&apos;xray oSheet.GetCellByPosition( lcol , lrow)
+&apos;xray oSheet.getCellByPosition( lcol , lrow)
 	
-&apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 6 , lrow)) &apos; debug
-&apos;	 print oSheet.GetCellByPosition( 6 , lrowF).CellStyle
-&apos;	do while oSheet.GetCellByPosition( 0 , lrowF).string &lt;&gt; &quot;----&quot; and _
+&apos;	 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 6 , lrow)) &apos; debug
+&apos;	 print oSheet.getCellByPosition( 6 , lrowF).CellStyle
+&apos;	do while oSheet.getCellByPosition( 0 , lrowF).string &lt;&gt; &quot;----&quot; and _
 &apos; qui si è già incasinato il 9/5/07
-	do while oSheet.GetCellByPosition( 6 , lrowF).CellStyle &lt;&gt; &quot;An-lavoraz-Utili-num sin&quot; and _
-			 oSheet.GetCellByPosition( 0 , lrowF).string &lt;&gt; &quot;----&quot; and _
-			 (Trova_Attr_N (oSheet.GetCellByPosition( 0, lrowF ), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot;
-&apos;	 	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 6 , lrowF)) &apos; debug
+	do while oSheet.getCellByPosition( 6 , lrowF).CellStyle &lt;&gt; &quot;An-lavoraz-Utili-num sin&quot; and _
+			 oSheet.getCellByPosition( 0 , lrowF).string &lt;&gt; &quot;----&quot; and _
+			 (Trova_Attr_N (oSheet.getCellByPosition( 0, lrowF ), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot;
+&apos;	 	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 6 , lrowF)) &apos; debug
 &apos;		 print &quot;AAAA&quot; &amp; lrowF
 	 	lrowF = lrowF+1
 	loop
 &apos;	lrowF = lrowF-1
-	do while oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^ Sommano ^&quot; and _
-			 oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^Sommano^&quot; and _
-			 oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;-&quot; and _
-			 oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;Sommano&quot; and _
-			 (Trova_Attr_N (oSheet.GetCellByPosition( 3, lrowS ), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;
+	do while oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^ Sommano ^&quot; and _
+			 oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^Sommano^&quot; and _
+			 oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;-&quot; and _
+			 oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;Sommano&quot; and _
+			 (Trova_Attr_N (oSheet.getCellByPosition( 3, lrowS ), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;
 	 	lrowS = lrowS-1
-	&apos; 	oCell = oSheet.GetCellByPosition( lcol , lrowF)
+	&apos; 	oCell = oSheet.getCellByPosition( lcol , lrowF)
 &apos;	 	xA = oCell.string
 	 	
-&apos;		ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( lcol , lrowS)) &apos; debug
+&apos;		ThisComponent.CurrentController.Select(oSheet.getCellByPosition( lcol , lrowS)) &apos; debug
 &apos;	 	 print &quot;&gt;&quot; &amp; lrowS
 	loop
-	If oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;-&quot; or _
-		oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^ Sommano ^&quot; or _
-		oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^Sommano^&quot; or _
-		oSheet.GetCellByPosition( lcol , lrowS).string &lt;&gt; &quot;Sommano&quot; then
+	If oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;-&quot; or _
+		oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^ Sommano ^&quot; or _
+		oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;^Sommano^&quot; or _
+		oSheet.getCellByPosition( lcol , lrowS).string &lt;&gt; &quot;Sommano&quot; then
 		lrowS = lrowS+2
 	 else
 		lrowS = lrowS+1
@@ -417,24 +417,24 @@ Dim oCellB as object
 	 lrow = oCell.CellAddress.row
 	 lrowE = lrow
 &apos;	 print lrowE
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
+	 oCell = oSheet.getCellByPosition( lcol , lrow)
 	oCellB = oCell
 	 xA = oCell.string
-&apos;	oCellB = oSheet.GetCellByPosition( lcol , lrow-1)
+&apos;	oCellB = oSheet.getCellByPosition( lcol , lrow-1)
 	 	ThisComponent.CurrentController.Select(oCell) &apos; debug
 	 lrowS = lrow
 	 sCol= ColumnNameOf(lcol)
 &apos;	 do while xA &lt;&gt; &quot;-&quot;
 
-	do while oSheet.GetCellByPosition( 6 , lrowS).string &lt;&gt; &quot;^ Sommano ^&quot; and _
-			 oSheet.GetCellByPosition( 6 , lrowS).string &lt;&gt; &quot;^Sommano^&quot; and _
-			 oSheet.GetCellByPosition( 6 , lrowS).string &lt;&gt; &quot;-&quot; and _
-			 oSheet.GetCellByPosition( 6 , lrowS).string &lt;&gt; &quot;Sommano&quot; and _
-			 (Trova_Attr_N (oSheet.GetCellByPosition( 3, lrowS ), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;
+	do while oSheet.getCellByPosition( 6 , lrowS).string &lt;&gt; &quot;^ Sommano ^&quot; and _
+			 oSheet.getCellByPosition( 6 , lrowS).string &lt;&gt; &quot;^Sommano^&quot; and _
+			 oSheet.getCellByPosition( 6 , lrowS).string &lt;&gt; &quot;-&quot; and _
+			 oSheet.getCellByPosition( 6 , lrowS).string &lt;&gt; &quot;Sommano&quot; and _
+			 (Trova_Attr_N (oSheet.getCellByPosition( 3, lrowS ), oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;
 	 	lrowS = lrowS-1
 	loop
 	
-	if (Trova_Attr_N (oSheet.GetCellByPosition( 3, lrowS ), oSheet)) = &quot;Start_voce_ANALISI&quot; then
+	if (Trova_Attr_N (oSheet.getCellByPosition( 3, lrowS ), oSheet)) = &quot;Start_voce_ANALISI&quot; then
 		lrowS = lrowS+2
 		else lrowS = lrowS+1
 	end if
@@ -502,7 +502,7 @@ Dim iflag
 &apos;	print lrow
 &apos;lrow = lrow+1
 	oSheets.insertCells(CellRangeAddress, com.sun.star.sheet.CellInsertMode.ROWS)&apos; inserisce delle righe vuote
-	ThisComponent.CurrentController.Select(oSheets.GetCellByPosition( lcol , lrow+1))
+	ThisComponent.CurrentController.Select(oSheets.getCellByPosition( lcol , lrow+1))
 
 	lrow2 = lrow &apos; +1
 	CellAddress.Sheet = oSheet_num 
@@ -517,7 +517,7 @@ Dim iflag
 		else
 			lcol = 3
 	end if
-	oCell = oSheets.GetCellByPosition( lcol , lrow+1)	
+	oCell = oSheets.getCellByPosition( lcol , lrow+1)	
 	ThisComponent.CurrentController.Select(oCell)
 	
 	
@@ -526,7 +526,7 @@ Dim iflag
 	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
  oCelle=thisComponent.getCurrentSelection().getCellAddress() 
  lrow=oCelle.Row 
- oCell = oSheet.GetCellByPosition(0,lrow ) 
+ oCell = oSheet.getCellByPosition(0,lrow ) 
  ThisComponent.CurrentController.Select(oCell)
 &apos; print &quot;vediamo!!!&quot;
  &apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos; copia gli utili %
@@ -538,7 +538,7 @@ Dim iflag
 	oQuellRangeAddresse = osheet1.getRangeAddress &apos;
  oSheet2.copyRange(oCelle,oQuellRangeAddresse)
 
- 	oCell = oSheet.GetCellByPosition( 1 , lrow)	
+ 	oCell = oSheet.getCellByPosition( 1 , lrow)	
 	ThisComponent.CurrentController.Select(oCell)
 
 	&apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
@@ -548,43 +548,43 @@ Dim iflag
 	&apos;	print lrow
 &apos;	sCosaPropongo
 &apos;	Select Case
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 324).value = 1 then
-		oSheet.GetCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7, 324).value = 1 then
+		oSheet.getCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
 		goto fatto
 	end if
-	IF oSheet.GetCellByPosition(2, lrow-1).string &lt;&gt; &quot;&quot; or _
-		 oSheet.GetCellByPosition(3, lrow-1).CellStyle = &quot;An-lavoraz-input&quot; then
-		 	oSheet.GetCellByPosition(1, lrow).STRING = &quot;Oneri di Sicurezza&quot;
+	IF oSheet.getCellByPosition(2, lrow-1).string &lt;&gt; &quot;&quot; or _
+		 oSheet.getCellByPosition(3, lrow-1).CellStyle = &quot;An-lavoraz-input&quot; then
+		 	oSheet.getCellByPosition(1, lrow).STRING = &quot;Oneri di Sicurezza&quot;
 		 ELSESconto
 
-		 	Select Case oSheet.GetCellByPosition(1, lrow-1).string
+		 	Select Case oSheet.getCellByPosition(1, lrow-1).string
 		 		Case &quot;Oneri di Sicurezza&quot;
-		 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 322).value = 1 then
-		 				oSheet.GetCellByPosition(1, lrow).string = &quot;spese generali&quot;
+		 		if ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7, 322).value = 1 then
+		 				oSheet.getCellByPosition(1, lrow).string = &quot;spese generali&quot;
 		 			else 
-		 				oSheet.GetCellByPosition(1, lrow).string = &quot;spese generali e utili (sulle voci precedenti)&quot;
+		 				oSheet.getCellByPosition(1, lrow).string = &quot;spese generali e utili (sulle voci precedenti)&quot;
 		 		end if
 		 		Case &quot;spese generali&quot;
-		 				oSheet.GetCellByPosition(1, lrow).string = &quot;utili d&apos;impresa&quot;
+		 				oSheet.getCellByPosition(1, lrow).string = &quot;utili d&apos;impresa&quot;
 		 		Case &quot;utili d&apos;impresa&quot;
-		 				If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 324).value = 1 then
-								oSheet.GetCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
+		 				If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7, 324).value = 1 then
+								oSheet.getCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
 							else
-								oSheet.GetCellByPosition(1, lrow).STRING = &quot;Maggiorazione&quot;
+								oSheet.getCellByPosition(1, lrow).STRING = &quot;Maggiorazione&quot;
 		 				end if
 		 		Case &quot;spese generali e utili (sulle voci precedenti)&quot;
-		 				If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 324).value = 1 then
-								oSheet.GetCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
+		 				If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7, 324).value = 1 then
+								oSheet.getCellByPosition(1, lrow).STRING = &quot;Sconto&quot;
 							else
-								oSheet.GetCellByPosition(1, lrow).STRING = &quot;Maggiorazione&quot;
+								oSheet.getCellByPosition(1, lrow).STRING = &quot;Maggiorazione&quot;
 		 				end if
 		 	End select
 	end if 
 	
 	fatto:
 	lrow = lrow-1	
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 1 , lrow+1))
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).value &lt;&gt; 2 then
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 1 , lrow+1))
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,316).value &lt;&gt; 2 then
 		msgbox &quot; Controlla qe quanto proposto è quello che ti serve, altrimenti seleziona un&apos;altra maggiorazione dalla finestrella... &quot;&amp; CHR$(10) _
 		&amp; &quot; (puoi comunque scriverela manina...)&quot;&amp; CHR$(10) &amp; CHR$(10) _
 		&amp; &quot;Occhio comunque alla SOMMA in colonna G... la default potrebbe non corrispondere alle tue esigenze!&quot;

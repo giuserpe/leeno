@@ -27,61 +27,61 @@ rem attivo le analisi
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
 	for i = 3 to lLastUrow
 rem recupero i dati dalle ANALISI DI PREZZO
-		if oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-1-descr_&quot; then
-			art = oSheet.GetCellByPosition( 0, i).getstring &apos;articolo
-			desc = oSheet.GetCellByPosition( 1, i).getstring &apos;descrizione
-			um = oSheet.GetCellByPosition( 2, i).getstring &apos;unità
+		if oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-1-descr_&quot; then
+			art = oSheet.getCellByPosition( 0, i).getstring &apos;articolo
+			desc = oSheet.getCellByPosition( 1, i).getstring &apos;descrizione
+			um = oSheet.getCellByPosition( 2, i).getstring &apos;unità
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;A&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			manodopera = oSheet.GetCellByPosition( 6, i).getvalue() &apos;manodopera
+		if oSheet.getCellByPosition( 0, i ).string = &quot;A&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			manodopera = oSheet.getCellByPosition( 6, i).getvalue() &apos;manodopera
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;B&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			materiali = oSheet.GetCellByPosition( 6, i).getvalue() &apos;materiali
+		if oSheet.getCellByPosition( 0, i ).string = &quot;B&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			materiali = oSheet.getCellByPosition( 6, i).getvalue() &apos;materiali
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;C&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			noli = oSheet.GetCellByPosition( 6, i).getvalue() &apos;noli
+		if oSheet.getCellByPosition( 0, i ).string = &quot;C&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			noli = oSheet.getCellByPosition( 6, i).getvalue() &apos;noli
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;D&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			trasporti = oSheet.GetCellByPosition( 6, i).getvalue() &apos;trasporti
+		if oSheet.getCellByPosition( 0, i ).string = &quot;D&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			trasporti = oSheet.getCellByPosition( 6, i).getvalue() &apos;trasporti
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;E&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			prestazioni = oSheet.GetCellByPosition( 6, i).getvalue() &apos;prestazioni
+		if oSheet.getCellByPosition( 0, i ).string = &quot;E&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			prestazioni = oSheet.getCellByPosition( 6, i).getvalue() &apos;prestazioni
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;F&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			totaleC = oSheet.GetCellByPosition( 6, i).getvalue() &apos;totaleC
+		if oSheet.getCellByPosition( 0, i ).string = &quot;F&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			totaleC = oSheet.getCellByPosition( 6, i).getvalue() &apos;totaleC
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;G&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-Utili&quot; then
-			utili = oSheet.GetCellByPosition( 5, i).getvalue &apos;utili
+		if oSheet.getCellByPosition( 0, i ).string = &quot;G&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-Utili&quot; then
+			utili = oSheet.getCellByPosition( 5, i).getvalue &apos;utili
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;H&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-Utili&quot; then
-			spese = oSheet.GetCellByPosition( 5, i).getvalue &apos;spese
+		if oSheet.getCellByPosition( 0, i ).string = &quot;H&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-Utili&quot; then
+			spese = oSheet.getCellByPosition( 5, i).getvalue &apos;spese
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;I&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			totaleCD = oSheet.GetCellByPosition(6,i).getvalue() &apos;totaleCD
+		if oSheet.getCellByPosition( 0, i ).string = &quot;I&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			totaleCD = oSheet.getCellByPosition(6,i).getvalue() &apos;totaleCD
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;L&quot; AND _
-			oSheet.GetCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
-			prezzoU = oSheet.GetCellByPosition(6,i).getvalue() &apos;prezzoU
+		if oSheet.getCellByPosition( 0, i ).string = &quot;L&quot; AND _
+			oSheet.getCellByPosition( 1, i).cellstyle = &quot;An-lavoraz-no righe dx&quot; then
+			prezzoU = oSheet.getCellByPosition(6,i).getvalue() &apos;prezzoU
 			voce = array (art, desc, um, manodopera, materiali, noli, trasporti, prestazioni, totaleC, utili, spese, totaleCD, prezzoU)
 			rem*****************************************************************************************
 			rem INIZIO INSERIMENTO
-			oSheetS.GetCellByPosition(0, RigSomm).setvalue(id)
-	 	 oSheet.GetCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
-			oSheet.GetCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
+			oSheetS.getCellByPosition(0, RigSomm).setvalue(id)
+	 	 oSheet.getCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
+			oSheet.getCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
 			for each el in voce		
 				if ColSomm &lt;4 then
-					oSheetS.GetCellByPosition(ColSomm, RigSomm).setstring(el)
+					oSheetS.getCellByPosition(ColSomm, RigSomm).setstring(el)
 				else
-					oSheetS.GetCellByPosition(ColSomm, RigSomm).setvalue(el)
+					oSheetS.getCellByPosition(ColSomm, RigSomm).setvalue(el)
 				end if
 				ColSomm=ColSomm+1
 			next
@@ -93,19 +93,19 @@ rem recupero i dati dalle ANALISI DI PREZZO
 	next
 rem riga di intestazione
 	oSheets.getCellRangeByPosition(0,0,13,0).CellStyle=&quot;An.1v-Att Start&quot;
-	oSheets.GetCellByPosition(0,0).setstring(&quot;N.&quot;)
-	oSheets.GetCellByPosition(2,0).setstring(&quot;DESCRIZIONE&quot;)
-	oSheets.GetCellByPosition(3,0).setstring(&quot;UNITA&apos; DI MISURA&quot;)
-	oSheets.GetCellByPosition(4,0).setstring(&quot;A&quot; + chr(13) + chr(13) + &quot;MANODOPERA&quot; + chr(13) + &quot;(con S.G e U.I.)&quot;)
-	oSheets.GetCellByPosition(5,0).setstring(&quot;B&quot; + chr(13) + chr(13) + &quot;MATERIALI&quot;+ chr(13))
-	oSheets.GetCellByPosition(6,0).setstring(&quot;C&quot; + chr(13) + chr(13) + &quot;NOLI&quot;+ chr(13))
-	oSheets.GetCellByPosition(7,0).setstring(&quot;D&quot; + chr(13) + chr(13) + &quot;TRASPORTI&quot;+ chr(13))
-	oSheets.GetCellByPosition(8,0).setstring(&quot;E&quot; + chr(13) + &quot;ALTRE FORNITURE E PRESTAZIONI&quot;+ chr(13))
-	oSheets.GetCellByPosition(9,0).setstring(&quot;F&quot; + chr(13) + &quot;TOTALE COSTI DIRETTI&quot; + chr(13) + &quot;(A+B+C+D+E)&quot;)
-	oSheets.GetCellByPosition(10,0).setstring(&quot;G&quot; + chr(13) + chr(13) + &quot;S.G.&quot; + chr(13))
-	oSheets.GetCellByPosition(11,0).setstring(&quot;H&quot; + chr(13) + chr(13) + &quot;U.I.&quot; + chr(13))
-	oSheets.GetCellByPosition(12,0).setstring(&quot;I&quot; + chr(13) + chr(13) + &quot;TOTALE COSTI INDIRETTI&quot;)
-	oSheets.GetCellByPosition(13,0).setstring(&quot;L&quot; + chr(13) + chr(13) + &quot;PREZZO UNITARIO OFFERTO&quot;)
+	oSheets.getCellByPosition(0,0).setstring(&quot;N.&quot;)
+	oSheets.getCellByPosition(2,0).setstring(&quot;DESCRIZIONE&quot;)
+	oSheets.getCellByPosition(3,0).setstring(&quot;UNITA&apos; DI MISURA&quot;)
+	oSheets.getCellByPosition(4,0).setstring(&quot;A&quot; + chr(13) + chr(13) + &quot;MANODOPERA&quot; + chr(13) + &quot;(con S.G e U.I.)&quot;)
+	oSheets.getCellByPosition(5,0).setstring(&quot;B&quot; + chr(13) + chr(13) + &quot;MATERIALI&quot;+ chr(13))
+	oSheets.getCellByPosition(6,0).setstring(&quot;C&quot; + chr(13) + chr(13) + &quot;NOLI&quot;+ chr(13))
+	oSheets.getCellByPosition(7,0).setstring(&quot;D&quot; + chr(13) + chr(13) + &quot;TRASPORTI&quot;+ chr(13))
+	oSheets.getCellByPosition(8,0).setstring(&quot;E&quot; + chr(13) + &quot;ALTRE FORNITURE E PRESTAZIONI&quot;+ chr(13))
+	oSheets.getCellByPosition(9,0).setstring(&quot;F&quot; + chr(13) + &quot;TOTALE COSTI DIRETTI&quot; + chr(13) + &quot;(A+B+C+D+E)&quot;)
+	oSheets.getCellByPosition(10,0).setstring(&quot;G&quot; + chr(13) + chr(13) + &quot;S.G.&quot; + chr(13))
+	oSheets.getCellByPosition(11,0).setstring(&quot;H&quot; + chr(13) + chr(13) + &quot;U.I.&quot; + chr(13))
+	oSheets.getCellByPosition(12,0).setstring(&quot;I&quot; + chr(13) + chr(13) + &quot;TOTALE COSTI INDIRETTI&quot;)
+	oSheets.getCellByPosition(13,0).setstring(&quot;L&quot; + chr(13) + chr(13) + &quot;PREZZO UNITARIO OFFERTO&quot;)
 rem gli do il colore REGISTRO
 	oSheetS.getCellRangeByPosition(0, 1, 0, RigSomm-1).cellstyle = &quot;comp progress&quot;
 	oSheetS.getCellRangeByPosition(1, 1, 1, RigSomm-1).cellstyle = &quot;An-1v&quot;
@@ -127,18 +127,18 @@ sub Main_Riordina_Analisi_Alfabetico &apos;(C) Giuseppe Vizziello 2014
 	Dim articoli()
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 	lLastUrow = getLastUsedRow(oSheet) &apos; ultima riga editata
-ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
+ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, 3))
 	lrowDest = 3
 	for i = 0 to 10
-		if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An.1v-Att Start&quot; and _
-			oSheet.GetCellByPosition( 0, i).string = &quot;COD./N.&quot; then
+		if oSheet.getCellByPosition( 0, i).cellstyle = &quot;An.1v-Att Start&quot; and _
+			oSheet.getCellByPosition( 0, i).string = &quot;COD./N.&quot; then
 			lrowDest = i-1 &apos;trovo il punto di inserimento subito prima della prima scheda di Analisi
 			exit for
 		end if
 	next
 	for i = 0 to lLastUrow &apos;recupero i codici presenti dalle ANALISI DI PREZZO
-		if oSheet.GetCellByPosition( 0, i).cellstyle = &quot;An-1_sigla&quot; then
-		art = oSheet.GetCellByPosition( 0, i).getstring &apos;articolo
+		if oSheet.getCellByPosition( 0, i).cellstyle = &quot;An-1_sigla&quot; then
+		art = oSheet.getCellByPosition( 0, i).getstring &apos;articolo
 		for each el in articoli() &apos;compilo la lista verificando i doppioni
 			if el = art then
 				msgbox &quot;Mi fermo! Il codice:&quot;+ Chr(13) _
@@ -155,10 +155,10 @@ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 	End If 
 	for each el in BubbleSortlist(BubbleSortlist(articoli())) &apos;riordino la lista
 		for i = 0 to lLastUrow
-			if oSheet.GetCellByPosition( 0, i).string = el then &apos;trovo l&apos;inizio della scheda
+			if oSheet.getCellByPosition( 0, i).string = el then &apos;trovo l&apos;inizio della scheda
 				inizio =i-1
 				for	x = i to i+100
-					if oSheet.GetCellByPosition( 0, x).string = &quot;----&quot; then &apos;trovo la fine della scheda
+					if oSheet.getCellByPosition( 0, x).string = &quot;----&quot; then &apos;trovo la fine della scheda
 						fine=x+1
 						i=x+1
 						nrighe = fine-inizio &apos; ampiezza in righe della scheda
@@ -166,7 +166,7 @@ ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 3))
 					&apos;	oSheet.getRows.insertByIndex(lrowDest, nrighe+1) &apos; crea spazio per inserire la scheda
 						selezione = oSheet.getCellRangeByPosition(0, inizio+nrighe, 250, fine+nrighe).RangeAddress
 						ThisComponent.CurrentController.Select(selezione) &apos;seleziona le righe da spostare
-						oDest = oSheet.GetCellByPosition(0,lrowDest).CellAddress
+						oDest = oSheet.getCellByPosition(0,lrowDest).CellAddress
 						oSheet.copyRange(oDest, selezione) &apos;copia le righe nella destinazione
 						oSheet.getrows.removebyindex(inizio+nrighe,nrighe+1) &apos;cancella la vecchia scheda
 						lrowDest=lrowDest+nrighe+1

@@ -38,14 +38,14 @@ Global oDocView As Object
 Function Clessid_lock_Start_() &apos;OOOO&apos; Completa e gravosa ( alternativa a Clessidra)
 &apos; disattiva tutto... ecccetto i pulsanti
 
-&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,299).value
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value= 1 then 
 		on error goto cleanExit
 	end if
 END IF
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 9 then &apos;
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,299).value &gt;= 9 then &apos;
 	&apos;	exit function
 		goto saltarello
 	end if
@@ -74,16 +74,16 @@ END FUNCTION
 
 
 Function Clessid_lock_Start() &apos;pppp &apos; nuova
-&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,299).value
 	on error goto cleanExit
 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value= 1 then 
 			on error goto cleanExit
 		end if
 	END IF
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 9 then &apos;
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,299).value &gt;= 9 then &apos;
 			&apos;	goto saltarello
 			on error goto cleanExit
 		end if
@@ -107,14 +107,14 @@ end Function
 
 Function Clessid_lock_Start_D_() &apos; solo barra (senza &apos;senza controllo di actionloched)alternativa a Clessidra
 
-&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value= 1 then 
 		on error goto cleanExit
 	end if
 END IF
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 5 then &apos;
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,299).value &gt;= 5 then &apos;
 		exit function
 	end if
 END IF
@@ -137,14 +137,14 @@ Clessid_lock_Start
 end Function
 
 Function Clessid_lock_Start_C_() &apos;senza controllo di actionloched
-&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value
+&apos;print ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value= 1 then 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value= 1 then 
 		on error goto cleanExit
 	end if
 END IF
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,299).value &gt;= 2 then &apos;
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,299).value &gt;= 2 then &apos;
 		&apos;exit function
 		goto saltarello
 	end if
@@ -168,7 +168,7 @@ END FUNCTION
 
 Sub Clessid_lock_End
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+			If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 				on error resume next	
 			end if
 		else
@@ -182,7 +182,7 @@ END SUB
 
 Sub	Clessid_lock_End_
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+			If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 				on error resume next	
 			end if
 		else

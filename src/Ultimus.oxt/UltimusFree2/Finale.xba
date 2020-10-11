@@ -39,7 +39,7 @@ rem cancelliamo i pulsantoni
 	iCellAttr =	com.sun.star.sheet.CellFlags.OBJECTS
 	osheet.getCellRangeByPosition (0,0,21,1).ClearContents(iCellAttr)
 rem RIDUCI ALTEZZA PRIMA RIGA
-	oPrimaCella = oSheet.GetCellByPosition( 0 , 0)
+	oPrimaCella = oSheet.getCellByPosition( 0 , 0)
 	oPrimaCella.Rows.Height = 1200
 	Set_Area_Stampa_N
 	Impagina_N
@@ -85,7 +85,7 @@ dim iNumInser as integer
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 	&apos;Height 
-	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
+	Altezza_prima_riga=oSheet.getCellByPosition( 0, 0 ).getRows.Height
 
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos; i parametri &quot;optional&quot; devono essere verificati nell&apos;ordine in cui vengono passati!!
@@ -154,12 +154,12 @@ dim iNumInser as integer
 
 	oSheet.setTitleRows(RepeatRows)
 	oSheet.setPrintTitleRows(PrintRepeatRows)
-	&apos;	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
+	&apos;	Altezza_prima_riga=oSheet.getCellByPosition( 0, 0 ).getRows.Height
 	&apos;xray Altezza_prima_riga
-	&apos;xray oSheet.GetCellbyPosition( 0, 0 )
-	oSheet.GetCellbyPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
+	&apos;xray oSheet.getCellByPosition( 0, 0 )
+	oSheet.getCellByPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
 
-	ocell = oSheet.GetCellbyPosition( 0, 3 )
+	ocell = oSheet.getCellByPosition( 0, 3 )
 	Thiscomponent.currentcontroller.select(ocell)
 
 &apos;	sNuovoNome = InputBox (&quot;HO DUPLICATO LA TABELLA... ADESSO DAGLI UN NOME! &quot;,_
@@ -187,7 +187,7 @@ dim nEndCol as long
 	 ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	 ThisComponent.unlockControllers 	
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 			on error goto Gestione_Errore
 		end if
 	END IF
@@ -240,7 +240,7 @@ dim nEndCol as long
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
  Copy_PageStyle
- 	oCell = oSheet.GetCellbyPosition( 0, 0 )
+ 	oCell = oSheet.getCellByPosition( 0, 0 )
  	oCursor = oSheet.createCursorByRange(oCell)
  	
  	 oCursor.GotoEndOfUsedArea(True)
@@ -358,7 +358,7 @@ procedi:
 	ThisComponent.CurrentController.Frame.ContainerWindow.Enable = True 
 	ThisComponent.unlockControllers 	
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 			on error goto Gestione_Errore
 		end if
 	END IF
@@ -395,28 +395,28 @@ procedi:
 	Select Case oSheet.Name
 	Case &quot;COMPUTO_copia&quot;, &quot;VARIANTE_copia&quot;, &quot;CONTABILITA_copia&quot;
 		For n = 1 To lLastUrow
-			oCell = oSheet.GetCellbyPosition(2, n)
+			oCell = oSheet.getCellByPosition(2, n)
 			stilecella = oCell.cellstyle
 			Select Case stilecella
 			Case &quot;Comp-Bianche in mezzo Descr&quot;, &quot;Comp-Bianche in mezzo Descr_R&quot;
-				descr = oSheet.GetCellbyPosition(2, n).String
-				oSheet.GetCellbyPosition(2, n).String = descr
+				descr = oSheet.getCellByPosition(2, n).String
+				oSheet.getCellByPosition(2, n).String = descr
 			Case &quot;comp 1-a&quot;
 &apos;				ThisComponent.CurrentController.Select(oCell)
-				descr = oSheet.GetCellbyPosition(2, n).String
-				oSheet.GetCellbyPosition(2, n).String = descr
-				num = oSheet.GetCellbyPosition(5, n).value
-				If num &lt;&gt; 0 Then oSheet.GetCellbyPosition(5, n).value = num
+				descr = oSheet.getCellByPosition(2, n).String
+				oSheet.getCellByPosition(2, n).String = descr
+				num = oSheet.getCellByPosition(5, n).value
+				If num &lt;&gt; 0 Then oSheet.getCellByPosition(5, n).value = num
 			Case &quot;comp sotto centro&quot;, &quot;comp sotto centro_R&quot;
-				descr = oSheet.GetCellbyPosition(8, n).String
-				oSheet.GetCellbyPosition(8, n).String = descr
-				num = oSheet.GetCellbyPosition(11, n).value
-				If num &lt;&gt; 0 Then oSheet.GetCellbyPosition(11, n).value = num
-				num = oSheet.GetCellbyPosition(13, n).value
-				If num &lt;&gt; 0 Then oSheet.GetCellbyPosition(13, n).value = num
+				descr = oSheet.getCellByPosition(8, n).String
+				oSheet.getCellByPosition(8, n).String = descr
+				num = oSheet.getCellByPosition(11, n).value
+				If num &lt;&gt; 0 Then oSheet.getCellByPosition(11, n).value = num
+				num = oSheet.getCellByPosition(13, n).value
+				If num &lt;&gt; 0 Then oSheet.getCellByPosition(13, n).value = num
 			Case &quot;Livello-1-scritta mini&quot;, &quot;livello2_&quot;
-				descr = oSheet.GetCellbyPosition(1, n).String
-				oSheet.GetCellbyPosition(1, n).String = descr
+				descr = oSheet.getCellByPosition(1, n).String
+				oSheet.getCellByPosition(1, n).String = descr
 			End Select
 		Next
 		Select Case oSheet.Name
@@ -470,7 +470,7 @@ procedi:
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
 	Copy_PageStyle
-		oCell = oSheet.GetCellbyPosition( 0, 0 )
+		oCell = oSheet.getCellByPosition( 0, 0 )
 		oCursor = oSheet.createCursorByRange(oCell)
 		
 		 oCursor.GotoEndOfUsedArea(True)
@@ -624,7 +624,7 @@ dim nEndCol as long
 	PrintRepeatRows = oSheet.PrintTitleRows
 &apos;	print RepeatRows
  Copy_PageStyle
- 	oCell = oSheet.GetCellbyPosition( 0, 0 )
+ 	oCell = oSheet.getCellByPosition( 0, 0 )
  	oCursor = oSheet.createCursorByRange(oCell)
  	
  	 oCursor.GotoEndOfUsedArea(True)
@@ -787,7 +787,7 @@ Verifica_chiudi_preview
 	&apos;Print sAttributo
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos;non consente l&apos;esec su tab originale
 	 sSheetName= ThisComponent.currentcontroller.activesheet.name
-	 If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,329).value = 1 then 
+	 If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,329).value = 1 then 
 		If sSheetName=&quot;COMPUTO&quot; or sSheetName=&quot;Elenco Prezzi&quot; or sSheetName=&quot;CronoP&quot; or _
 	 		 sSheetName=&quot;Analisi di Prezzo&quot; or _
 	 		 sSheetName=&quot;FiltroTMP&quot; then
@@ -897,8 +897,8 @@ dim I as long
 	oSheet.Rows.OptimalHeight= TRUE
 	&apos; ambaradan per togliere righe in eccesso in alto
  	lrowT =1 
- 	oCellT = oSheet.GetCellByPosition( 0 , lrowT)
- 	Do while oSheet.GetCellByPosition( 0, lrowT).string = &quot;&quot;
+ 	oCellT = oSheet.getCellByPosition( 0 , lrowT)
+ 	Do while oSheet.getCellByPosition( 0, lrowT).string = &quot;&quot;
 	 		lRowT = lrowT+1
 	 		conta = conta+1
 	loop
@@ -916,15 +916,15 @@ dim I as long
 	 
 	lLastUrow = getLastUsedRow(oSheet)
 	lrow = 5 &apos;
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	oCell = oSheet.getCellByPosition( 0 , lrow)
 &apos;	xray oCell
 &apos;	ThisComponent.CurrentController.Select(oCell)
 Set_Area_Stampa_N (&quot;&quot;)
 	for i = 1 to lLastUrow
-	oCell = oSheet.GetCellByPosition( 0 , i)
+	oCell = oSheet.getCellByPosition( 0 , i)
 	If oCell.string = &quot;----&quot; Then
 	 	i =i+2
-	 	oCell = oSheet.GetCellByPosition( 0 , i)
+	 	oCell = oSheet.getCellByPosition( 0 , i)
 		oCell.rows.IsStartOfNewPage = True
 	end If
 		Visualizza_PageBreak
@@ -1032,7 +1032,7 @@ ThisComponent.CurrentController.Select(oSheet)
 unSelect &apos;deseleziona
 	Select Case oSheet.Name &apos;sAttributo
 	 Case &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;COMPUTO_print&quot;
-	 		oSheet.GetCellByPosition(0,2).Rows.Height = 800
+	 		oSheet.getCellByPosition(0,2).Rows.Height = 800
 		&apos;print &quot;Tipo computo&quot;
 &apos;		sString$ = &quot;Fine Computo&quot;
 &apos;		oEnd=uFindString(sString$, oSheet)	
@@ -1042,7 +1042,7 @@ unSelect &apos;deseleziona
 &apos;		end if
 &apos;		lRowE=oEnd.CellAddress.Row-1
 		lRowE = ultima_voce
-		While oSheet.GetCellByPosition(0, lRowE).CellStyle &lt;&gt; &quot;Riga_rossa_Chiudi&quot;
+		While oSheet.getCellByPosition(0, lRowE).CellStyle &lt;&gt; &quot;Riga_rossa_Chiudi&quot;
 			lRowE = lRowE + 1
 		Wend
 &apos;		Print lRowE
@@ -1094,10 +1094,10 @@ unSelect &apos;deseleziona
 		end if
 		lLastUrow=oEnd.CellAddress.Row 	
 	&apos;	lLastUrow = getLastUsedRow(oSheet)
-		if right( (oSheet.GetCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
-				right( (oSheet.GetCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
-				right( (oSheet.GetCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
+		if right( (oSheet.getCellByPosition(0 ,5).CellStyle), 2) = &quot;_R&quot; or	_
+				right( (oSheet.getCellByPosition(0 ,6).CellStyle), 2) = &quot;_R&quot; or _
+				right( (oSheet.getCellByPosition(0 ,7).CellStyle), 2) = &quot;_R&quot; or _
+				right( (oSheet.getCellByPosition(0 ,8).CellStyle), 2) = &quot;_R&quot; then
 				selArea(0).EndColumn = 11&apos;getLastUsedCol(oSheet)
 		end if	
 		&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;
@@ -1147,7 +1147,7 @@ unSelect &apos;deseleziona
 		oSheet.setPrintareas(selArea())
 
 	rem RIDUCI ALTEZZA PRIMA RIGA
-	oPrimaCella = oSheet.GetCellByPosition( 0 , rIntest)
+	oPrimaCella = oSheet.getCellByPosition( 0 , rIntest)
 	oPrimaCella.Rows.Height = 1200
 fissa (0,idxrow+1)
 	 Case &quot;&quot;
@@ -1197,7 +1197,7 @@ Sub Pulisci_Tabella_Tutta &apos; TITOLO TRUFFALDINO... PERCHÉ NON PULISCE I COL
 
 
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
-	If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+	If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 		 on error goto errore
 	end if
 end if
@@ -1240,8 +1240,8 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
  dim nEndRow as long
  dim nEndCol as long
 	oSheet = ThisComponent.currentController.activeSheet
- 	oCell = oSheet.GetCellbyPosition( 0, 0 )
- 	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
+ 	oCell = oSheet.getCellByPosition( 0, 0 )
+ 	Altezza_prima_riga=oSheet.getCellByPosition( 0, 0 ).getRows.Height
  	oCursor = oSheet.createCursorByRange(oCell)
  	 oCursor.GotoEndOfUsedArea(True)
  	 aAddress = oCursor.RangeAddress
@@ -1262,7 +1262,7 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
  					oRange.CharColor = RGB(0,0,0)
  					oRange.setDataArray( aSaveData )&apos; rimette tutti i dati nelle rispettive celle
  					aSaveData = oRange.getDataArray()
- 					oSheet.GetCellbyPosition( 0, 0 ).rows.Height=Altezza_prima_riga
+ 					oSheet.getCellByPosition( 0, 0 ).rows.Height=Altezza_prima_riga
 
  			case = 100 &apos;trattasi di CronoP
 					Flags = com.sun.star.sheet.CellFlags.FORMULA + _
@@ -1278,7 +1278,7 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
  					oRange.CellBackColor = RGB(255, 255, 255)
  					oRange.CharColor = RGB(0,0,0) 	
  					If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
- 						IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,316).string &lt;= 2 then
+ 						IF ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,316).string &lt;= 2 then
 						&apos; se &quot;livello difficoltà&quot; è diverso niubbi
 	 						if sParla = &quot;Parla&quot; then
 		 						msgbox &quot;I colori sono stati solo nascosti daL colore bianco.&quot; &amp; CHR$(10)_
@@ -1286,7 +1286,7 @@ SUB Sbianca_e_o_consolida(optional sCosa as long, optional sParla as string)
  							end if		
  						end if
  					end if
- 					oSheet.GetCellbyPosition( 0, 0 ).rows.Height=Altezza_prima_riga
+ 					oSheet.getCellByPosition( 0, 0 ).rows.Height=Altezza_prima_riga
 		End Select 			
 
 exit sub
@@ -1329,7 +1329,7 @@ sub Visualizza_normale &apos; nel senso di Menu Visualizza &gt; normale
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione, ma non toglierla
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	(mi pare una stupidata)
  If thisComponent.Sheets.hasByName(&quot;S1&quot;) then
- 		Select Case ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value
+ 		Select Case ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,331).value
  			case 0
 				Visualizza_normale_esegui
 			case 1 
@@ -1342,7 +1342,7 @@ sub Visualizza_normale &apos; nel senso di Menu Visualizza &gt; normale
 END SUB
 
 sub Visualizza_normale_esegui &apos; nel senso di Menu Visualizza &gt; normale
- &apos;if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 0 then &apos;scelta da Variabile generale
+ &apos;if ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,331).value = 0 then &apos;scelta da Variabile generale
  	&apos; 0 il codice può attivare Visualizza Normale ad Anteprima Impaginazione
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	
@@ -1364,7 +1364,7 @@ SUB Visualizza_PageBreak
  	&apos; 0 il codice può attivare Visualizza Normale ad Anteprima Impaginazione
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione&quot;
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	(mi pare una stupidata)
- 	Select Case ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value
+ 	Select Case ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,331).value
  		case 0
 			Visualizza_PageBreak_esegui
 		case 1 
@@ -1402,12 +1402,12 @@ SUB Visualizza_PageBreak_originale_disattivata_in_test &apos; nel senso di Menu 
 &apos; il codice non è in grado di conoscerne lo stato
 
 If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then
- if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 1 or _
- 	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,331).value = 0 then &apos;vedi Sub Visualizza_normale
+ if ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,331).value = 1 or _
+ 	ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,331).value = 0 then &apos;vedi Sub Visualizza_normale
  	&apos; 0 il codice può attivare Visualizza Normale ad Anteprima Impaginazione
  	&apos; 1 Il codice può impostare solo Anteprima Impaginazione
  	&apos; 2 Il codice non può modificare l&apos;impostazione dell&apos;utente	
-	if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,328).value = 1 then 
+	if ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,328).value = 1 then 
 		if ThisComponent.CurrentController.ZoomValue &gt; 55 then
 			ThisComponent.CurrentController.ZoomValue = _
 			ThisComponent.CurrentController.ZoomValue*0.75
@@ -1438,11 +1438,11 @@ Sub Agg_Dati_Comp &apos; aggiorna i campi in &quot;dati del Documento&quot;
 	OsheetT = thisComponent.sheets.getbyname(&quot;M1&quot;) 
 	OsheetT.unprotect(&quot;&quot;)
 	OsheetS = thisComponent.sheets.getbyname(&quot;S2&quot;) 
-	oSheetT.GetCellByPosition( 2, 3).string = oSheetS.GetCellByPosition( 2, 2).string
-	oSheetT.GetCellByPosition( 2, 18).string = oSheetS.GetCellByPosition( 2, 4).string
-	oSheetT.GetCellByPosition( 2, 11).string = oSheetS.GetCellByPosition( 2, 5).string
-	oSheetT.GetCellByPosition( 2, 13).string = oSheetS.GetCellByPosition( 2, 11).string
-	oSheetT.GetCellByPosition( 2, 15).string = oSheetS.GetCellByPosition( 2, 12).string
+	oSheetT.getCellByPosition( 2, 3).string = oSheetS.getCellByPosition( 2, 2).string
+	oSheetT.getCellByPosition( 2, 18).string = oSheetS.getCellByPosition( 2, 4).string
+	oSheetT.getCellByPosition( 2, 11).string = oSheetS.getCellByPosition( 2, 5).string
+	oSheetT.getCellByPosition( 2, 13).string = oSheetS.getCellByPosition( 2, 11).string
+	oSheetT.getCellByPosition( 2, 15).string = oSheetS.getCellByPosition( 2, 12).string
 	OsheetT.protect(&quot;&quot;)
 
 end sub
@@ -1455,20 +1455,20 @@ sub num_pag_libretto_ &apos;annota pagina e libretto su CONTABILITA (solo libret
 	inumPag = 1
 	For i = 2 to lLastUrowNN
 		Barra_Apri_Chiudi_5(&quot; #&quot;&amp; i &amp; &quot; di &quot; &amp; lLastUrowNN, 0)
-		if oSheet.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
+		if oSheet.getCellByPosition(0,i).rows.IsStartOfNewPage = True then 
 			inumPag = inumPag+1
-			 	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 20 , i)) &apos;debug
+			 	&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 20 , i)) &apos;debug
 			 	&apos;print inumPag
 		end if
 &apos;goto salto:
-		IF oSheet.GetCellByPosition( 1 , i).cellstyle = &quot;comp Art-EP_R&quot; then
-			oSheet.GetCellByPosition( 20 , i).value = inumPag
-&apos;			oSheet.GetCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
-&apos;			oSheet.GetCellByPosition(19, i).string= &quot;1&quot; &apos; numero libretto
+		IF oSheet.getCellByPosition( 1 , i).cellstyle = &quot;comp Art-EP_R&quot; then
+			oSheet.getCellByPosition( 20 , i).value = inumPag
+&apos;			oSheet.getCellByPosition( 20 , i).CellStyle=&quot;num centro bianco&quot;
+&apos;			oSheet.getCellByPosition(19, i).string= &quot;1&quot; &apos; numero libretto
 				rem sistemo gli stili di cella
 &apos;			oSheet.getCellRangeByPosition(19, i, 20 , i).cellstyle = &quot;num centro bianco&quot;
-&apos;			oSheet.GetCellByPosition(21, i).string= &quot;20/04/11&quot;
-&apos; 			oSheet.GetCellByPosition(21 , i).cellstyle = &quot;Data_bianca&quot;
+&apos;			oSheet.getCellByPosition(21, i).string= &quot;20/04/11&quot;
+&apos; 			oSheet.getCellByPosition(21 , i).cellstyle = &quot;Data_bianca&quot;
 		end if
 
 	next

@@ -3365,22 +3365,74 @@ def XPWE_out(elaborato, out_file):
 
 
 ########################################################################
-def MENU_firme_in_calce():
+def MENU_firme_in_calce(lrowF=None):
     '''
     Inserisce(in COMPUTO o VARIANTE) un riepilogo delle categorie
     ed i dati necessari alle firme
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet_S2 = oDoc.getSheets().getByName('S2')
 
-    # attiva la progressbar
-    progress = Dialogs.Progress(Title="Generazione del Riepilogo strutturale...", Text="Lettura dati")
-    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-    progress.setValue(0)
-    progress.show()
+    datafirme = oSheet_S2.getCellRangeByName('$S2.C4').String
+
+    if datafirme == "":
+        datafirme="Data,"
+    else:
+        datafirme = datafirme + ", "
+
+    if oSheet.Name == "CONTABILITA":
+        if lrowF == None:
+            lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
+        oSheet.getRows().insertByIndex(lrowF, 10)
+        riga_corrente = lrowF + 1
+        
+    # INSERISCI LA DATA E IL PROGETTISTA
+        DLG.chi(datafirme)
+        oSheet.getCellByPosition(2 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
+        oSheet.getCellByPosition(2 , riga_corrente + 2).Formula = "L'Impresa esecutrice\n" "(" + oSheet_S2.getCellByPosition(2, 16).String + ")"
+        oSheet.getCellByPosition(2 , riga_corrente + 6).Formula = "Il Direttore dei Lavori\n" + oSheet_S2.getCellByPosition(2, 15).String + ")"
+#~rem CONSOLIDA LA DATA    
+        oRange = oSheet.getCellRangeByPosition (2, riga_corrente, 40, riga_corrente)
+        aSaveData = oRange.getDataArray()
+        oRange.setDataArray(aSaveData)
+    if oSheet.Name in ("Registro", "SAL"):
+        if lrowF == None:
+            lrowF = SheetUtils.getLastUsedRow(oSheet)
+        #~DLG.chi(lrowF)
+        oSheet.getRows().insertByIndex(lrowF, 20)
+        riga_corrente = lrowF + 1
+        oSheet.getCellByPosition(1 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
+        oRange = oSheet.getCellRangeByPosition (1, riga_corrente, 40, riga_corrente)
+        aSaveData = oRange.getDataArray()
+        oRange.setDataArray(aSaveData)
+
+        oSheet.getCellByPosition(1, riga_corrente + 2).Formula = (
+            "L'Impresa esecutrice\n(" + oSheet_S2.getCellRangeByName('$S2.C17').String + ")")
     
+        oSheet.getCellByPosition(1, riga_corrente + 6).Formula = (
+            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName('$S2.C16').String + ")")
+        oSheet.getCellRangeByPosition (0, riga_corrente + 2, 5,riga_corrente + 6).Rows.OptimalHeight = True
+        if oSheet.Name == "SAL":
+            return
+        nSal = 1
+        for i in reversed(range(2, 50)):
+            if oDoc.NamedRanges.hasByName("#Lib#" + str(i)):
+                nSal = i
+                break
+        oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
+        '=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
+        oRange = oSheet.getCellRangeByPosition (1, riga_corrente + 10, 40, riga_corrente + 10)
+        
+        aSaveData = oRange.getDataArray()
+        oRange.setDataArray(aSaveData)
+
+        oSheet.getCellByPosition(1 , riga_corrente + 12).Formula = (
+            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellByPosition(
+                2, 15).String + ")")
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
-        lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+        if lrowF == None:
+            lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
         oDoc.CurrentController.setFirstVisibleRow(lrowF - 1)
         lrowE = SheetUtils.getUsedArea(oSheet).EndRow
         for i in range(lrowF, SheetUtils.getUsedArea(oSheet).EndRow + 1):
@@ -3422,8 +3474,8 @@ def MENU_firme_in_calce():
         ).Formula = '=CONCATENATE($S2.$C$13)'  # senza concatenate, se la cella di origine è vuota il risultato è '0,00'
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
-        lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
-
+        if lrowF == None:
+            lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
         oDoc.CurrentController.setFirstVisibleRow(lrowF - 2)
         lrowE = SheetUtils.getUsedArea(oSheet).EndRow
         for i in range(lrowF, SheetUtils.getUsedArea(oSheet).EndRow + 1):
@@ -3472,9 +3524,7 @@ def MENU_firme_in_calce():
         inizio_gruppo = riga_corrente
         riga_corrente += 1
         for i in range(0, lrowF):
-            
-            progress.setValue(i)
-            
+
             if oSheet.getCellByPosition(1, i).CellStyle == 'Livello-0-scritta':
                 oSheet.getRows().insertByIndex(riga_corrente, 1)
                 oSheet.getCellRangeByPosition(
@@ -3614,9 +3664,7 @@ def MENU_firme_in_calce():
             'com.sun.star.frame.DispatchHelper', ctx)
         dispatchHelper.executeDispatch(oFrame, ".uno:InsertRowBreak", "", 0, list())
         oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-        ###
-    progress.setText("Fine")
-    progress.hide()
+
         #  oSheet.getCellByPosition(lrowF,0).Rows.IsManualPageBreak = True
 
 ########################################################################
@@ -5990,7 +6038,6 @@ def MENU_partita_detrai():
     partita('SI DETRAE PARTITA PROVVISORIA')
 
 
-########################################################################
 def genera_libretto():
     '''
     @@ DA DOCUMENTARE
@@ -6004,17 +6051,24 @@ def genera_libretto():
     numera_voci()
     oRanges = oDoc.NamedRanges
     nSal = 1
-    if oRanges.hasByName("#Lib#1"):
-        nSal = 20
-    else:
-        try:
-            nSal = int(cfg.read('Contabilità', 'idxsal'))
-        except ValueError:
-            nSal = 20
-    while nSal > 0:
-        if oRanges.hasByName("#Lib#" + str(nSal)):
+    for i in reversed(range(2, 50)):
+        if oRanges.hasByName("#Lib#" + str(i)):
+            nSal = i
             break
-        nSal = nSal - 1
+            
+    #~if oRanges.hasByName("#Lib#1"):
+        #~nSal = 20
+    #~else:
+        #~try:
+            #~nSal = int(cfg.read('Contabilità', 'idxsal'))
+        #~except ValueError:
+            #~nSal = 20
+    #~while nSal > 0:
+        #~if oRanges.hasByName("#Lib#" + str(nSal)):
+            #~break
+        #~nSal = nSal - 1
+    #~DLG.chi(nSal)
+    return
     #  Recupero la prima riga non registrata
     oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
     if nSal >= 1:
@@ -6023,15 +6077,15 @@ def genera_libretto():
         frow = oNamedRange.StartRow
         lrow = oNamedRange.EndRow
         daVoce = oNamedRange.EndRow + 2
-        #  recupero l'ultimo numero di pagina usato (serve in caso di libretto unico)
-        #  oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
-        # old_nPage = int(oSheetCont.getCellByPosition(20, lrow).Value)
+    #  recupero l'ultimo numero di pagina usato (serve in caso di libretto unico)
+    #  oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
+    #  old_nPage = int(oSheetCont.getCellByPosition(20, lrow).Value)
         daVoce = int(oSheetCont.getCellByPosition(0, daVoce).Value)
         if daVoce == 0:
             DLG.MsgBox('Non ci sono voci di misurazione da registrare.', 'ATTENZIONE!')
             return
         oCell = oSheetCont.getCellRangeByPosition(0, frow, 25, lrow)
-        #  'Raggruppa_righe
+    #  'Raggruppa_righe
         oCell.Rows.IsVisible = False
     else:
         daVoce = 1
@@ -6056,7 +6110,7 @@ def genera_libretto():
     except TypeError:
         return
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-    # ultimariga = sStRange.RangeAddress.EndRow
+    ultimariga = sStRange.RangeAddress.EndRow
 
     lrowDown = SheetUtils.uFindStringCol("T O T A L E", 2, oSheetCont)
     oCell = oSheetCont.getCellRangeByPosition(19, primariga, 25, lrowDown)
@@ -6067,41 +6121,42 @@ def genera_libretto():
     oSheetCont.removeAllManualPageBreaks()
     visualizza_PageBreak()
 
-    #  nomearea="#Lib#"+nsal
-    #  rem annota importo parziale SAL
+    nomearea="#Lib#" + str(nSal)
 
+    DLG.chi(str(ultimariga) + " - SAL n." + str(nSal))
+    oSheetCont.getCellByPosition(25, ultimariga - 1).String = "SAL n." + str(nSal)
+    oSheetCont.getCellByPosition(25, ultimariga).Formula = (
+        "=SUBTOTAL(9;P" + str(
+            primariga + 1) + ":P" + str(ultimariga+1) + ")" )
+    oSheetCont.getCellByPosition(25, ultimariga).CellStyle = "comp sotto Euro 3_R"
+    # immetti le firme
+    inizioFirme = ultimariga + 1
+#  MENU_firme_in_calce (ultimariga+1)' riga di inserimento
+    fineFirme = ultimariga + 10
 
-#  'Print ultimariga & " - " & "SAL n." & nSal
-#  oSheetCont.getCellByPosition(25, ultimariga-1).string = "SAL n." & nSal
-#  oSheetCont.getCellByPosition(25, ultimariga).formula = "=SUBTOTAL(9;P" & primariga+1 & ":P" & ultimariga+1 & ")"
-#  oSheetCont.getCellByPosition(25, ultimariga).cellstyle = "comp sotto Euro 3_R"
-#  rem immetti le firme
-#  inizioFirme = ultimariga+1
-#  firme (ultimariga+1)' riga di inserimento
-#  fineFirme = ultimariga+10 rem 10 è un numero deciso nella sub FIRME
 #  '    Print finefirme
-#  rem definisci il range del #Lib#
-#  area="$A$" & primariga+1 & ":$AJ$"&fineFirme+1
+#  definisci il range del #Lib#
+    area="$A$" + str(primariga + 1) + ":$AJ$" + str(fineFirme + 1)
 #  'Print area
-#  ScriptPy("pyleeno.py","NominaArea", "CONTABILITA", area , nomearea)
+    LeenoBasicBridge.rifa_nomearea(oDoc, "CONTABILITA", area , nomearea)
 
 #  oSheetCont.getCellRangeByPosition (0,inizioFirme,32,finefirme).CellStyle = "Ultimus_centro_bordi_lati"
 #  oNamedRange=oRanges.getByName("#Lib#" & nSal).referredCells
 #  '    ThisComponent.CurrentController.Select(oNamedRange)
-#  rem ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
 #  With oNamedRange.RangeAddress
 #  daRiga = .StartRow
 #  aRiga = .EndRow
 #  daColonna = .StartColumn
 #  aColonna = .EndColumn
 #  End With
-#  rem set area di stampa
+    # set area di stampa
 #  Dim selLib(0) as new com.sun.star.table.CellRangeAddress
 #  selLib(0).StartColumn = daColonna
 #  selLib(0).StartRow = daRiga
 #  selLib(0).EndColumn = 11
 #  selLib(0).EndRow = aRiga
-#  rem set intestazione area di stampa
+    # set intestazione area di stampa
 #  oTitles = createUnoStruct("com.sun.star.table.CellRangeAddress")
 #  oTitles.startRow = 2' headstart - 1
 #  oTitles.EndRow = 2 'headend - 1
@@ -6110,15 +6165,15 @@ def genera_libretto():
 #  oSheetCont.setTitleRows(oTitles)
 #  oSheetCont.setPrintareas(selLib())
 #  oSheetCont.setPrintTitleRows(true)
-#  rem ----------------------------------------------------------------------
-#  rem sbianco i dati e l'intestazione
+    # ----------------------------------------------------------------------
+    # sbianco i dati e l'intestazione
 #  ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, daRiga, 11, fineFirme))
 #  ScriptPy("pyleeno.py","adatta_altezza_riga")
 #  Sbianca_celle
 #  ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, 2, 11, 2))
 #  Sbianca_celle
 #  ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) 'deseleziona
-#  rem ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
 #  ThisComponent.CurrentController.setFirstVisibleRow (fineFirme-3) 'solo debug
 #  i=1
 #  Do While oSheetCont.getCellByPosition(1,fineFirme).rows.IsStartOfNewPage = False
@@ -6133,8 +6188,8 @@ def genera_libretto():
 #  Loop
 #  oSheetCont.rows.removeByIndex (fineFirme-1, 1)
 
-#  rem ----------------------------------------------------------------------
-#  rem cancella l'ultima riga
+    # ----------------------------------------------------------------------
+    # cancella l'ultima riga
 #  fineFirme = fineFirme-1
 #  If daqui<>0 then
 #  ThisComponent.CurrentController.Select(oSheetCont.getCellByPosition(2, daqui))
@@ -6144,38 +6199,38 @@ def genera_libretto():
 #  paste_clip
 #  End If
 
-#  rem ----------------------------------------------------------------------
-#  rem definisci il range del #Lib#
+    # ----------------------------------------------------------------------
+    # definisci il range del #Lib#
 #  area="$A$" & primariga+1 & ":$AJ$"&fineFirme+1
 #  ScriptPy("pyleeno.py","NominaArea", "CONTABILITA", area , nomearea)
 
-#  rem raggruppo
+    # raggruppo
 #  oCell = oSheetCont.getCellRangeByPosition(0,primariga,25,finefirme)
 #  oSheetCont.getCellRangeByPosition (0,inizioFirme,25,finefirme).CellStyle = "Ultimus_centro_bordi_lati"
 #  oCell = oSheetCont.getCellRangeByPosition (0,finefirme,35,finefirme)
 #  oSheetCont.getCellByPosition(2 , inizioFirme+1).CellStyle = "ULTIMUS" 'stile data
-#  rem recupero la data
+    # recupero la data
 #  datafirma = Right (oSheetCont.getCellByPosition(2 , inizioFirme+1).value, 10)
 #  ThisComponent.CurrentController.Select(oCell)
 #  bordo_sotto
 #  ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-#  rem ----------------------------------------------------------------------
-#  rem QUESTA DEVE DIVENTARE UN'OPZIONE A SCELTA DELL'UTENTE
-#  rem in caso di libretto unico questo If è da attivare
-#  rem in modo che la numerazione delle pagine non ricominci da capo
+    # ----------------------------------------------------------------------
+    # QUESTA DEVE DIVENTARE UN'OPZIONE A SCELTA DELL'UTENTE
+    # in caso di libretto unico questo If è da attivare
+    # in modo che la numerazione delle pagine non ricominci da capo
 #  '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 #  '        If nSal > 1 Then
 #  '            nLib = 1
 #  '            inumPag = 1 + old_nPage 'SE IL LIBRETTO è UNICO
 #  '        End If
 #  '+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-#  rem ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
 #  nLib = nSal
 #  'End If
 #  '#########################################################################
-#  rem COMPILO LA SITUAZIONE CONTABILE IN "S2" 1di2
+    # COMPILO LA SITUAZIONE CONTABILE IN "S2" 1di2
 #  oS2 = ThisComponent.Sheets.getByName("S2")
-#  rem TROVO LA POSIZIONE DEL TITOLO
+    # TROVO LA POSIZIONE DEL TITOLO
 #  oEnd=SheetUtils.uFindString("SITUAZIONE CONTABILE", oS2)
 #  xS2=oEnd.RangeAddress.EndRow        'riga
 #  yS2=oEnd.RangeAddress.EndColumn    'colonna
@@ -6194,8 +6249,8 @@ def genera_libretto():
 #  Dim IntPag()
 #  IntPag() = oSheetCont.RowPageBreaks
 #  'GoTo togo:
-#  rem ----------------------------------------------------------------------
-#  rem col seguente ciclo FOR inserisco i dati ma non il numero di pagina
+    # ----------------------------------------------------------------------
+    # col seguente ciclo FOR inserisco i dati ma non il numero di pagina
 #  For i = primariga to fineFirme
 #  IF     oSheetCont.getCellByPosition( 1 , i).cellstyle = "comp Art-EP_R" then
 #  if primariga=0 then
@@ -6213,15 +6268,15 @@ def genera_libretto():
 #  end if
 #  Next
 #  inumPag = 0'+ old_nPage 'SE IL LIBRETTO è UNICO
-#  rem ----------------------------------------------------------------------
-#  rem il ciclo For che segue è preso da https://forum.openoffice.org/it/forum/viewtopic.php?f=26&t=6014
+    # ----------------------------------------------------------------------
+    # il ciclo For che segue è preso da https://forum.openoffice.org/it/forum/viewtopic.php?f=26&t=6014
 #  '    Dim IntPag()
 #  '    IntPag() = oSheetCont.RowPageBreaks
-#  rem ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
 #  togo:
-#  rem ----------------------------------------------------------------------
-#  rem col seguente ciclo FOR inserisco solo il numero di pagina
-#  rem inserendo qui anche il resto dei dati ho numeri di pagina un po' ballerini
+    # ----------------------------------------------------------------------
+    # col seguente ciclo FOR inserisco solo il numero di pagina
+    # inserendo qui anche il resto dei dati ho numeri di pagina un po' ballerini
 #  For i = primariga to fineFirme
 #  For n = LBound(IntPag) To UBound(IntPag)
 #  if i < IntPag(n).Position Then
@@ -6237,38 +6292,38 @@ def genera_libretto():
 #  end if
 #  Next n
 #  Next i
-#  rem ----------------------------------------------------------------------
-#  rem annoto ultimo numero di pagina
+    # ----------------------------------------------------------------------
+    # annoto ultimo numero di pagina
 #  oSheetCont.getCellByPosition(20 , fineFirme).value = UBound(IntPag)'inumPag
 #  oSheetCont.getCellByPosition(20 , fineFirme).CellStyle = "num centro"
-#  rem ----------------------------------------------------------------------
+    # ----------------------------------------------------------------------
 #  'fissa (0,idxrow+1)
 
 #  ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
-#  rem ----------------------------------------------------------------------
-#  rem inserisco la prima riga GIALLA del LIBRETTO
+    # ----------------------------------------------------------------------
+    # inserisco la prima riga GIALLA del LIBRETTO
 #  oNamedRange=oRanges.getByName(nomearea).referredCells
 #  ins = oNamedRange.RangeAddress.StartRow
 #  insRows (ins, 1) 'insertByIndex non funziona
 #  oSheetCont.getCellRangeByPosition (0,ins,25,ins).CellStyle = "uuuuu" '"Ultimus_Bordo_sotto"
 #  fissa (0, ins + 1)
-#  rem ----------------------------------------------------------------------
-#  rem ci metto un po' di informazioni
+    # ----------------------------------------------------------------------
+    # ci metto un po' di informazioni
 #  oSheetCont.getCellByPosition(2,ins).string = "segue Libretto delle Misure n." & nSal & " - " & davoce & "÷" & avoce
 #  oSheetCont.getCellByPosition(20,ins).value =  UBound(IntPag) 'ultimo numero pagina
 #  oSheetCont.getCellByPosition(19, ins).value= nLib '1 ' numero libretto
 #  oSheetCont.getCellByPosition(23, ins).value= nSal ' numero SAL
 #  oSheetCont.getCellByPosition(25, ins).formula = "=SUBTOTAL(9;$P$" & primariga+1 & ":$P$" & ultimariga+2 & ")"
 #  oSheetCont.getCellByPosition(25, ins).cellstyle = "comp sotto Euro 3_R"
-#  rem ----------------------------------------------------------------------
-#  rem annoto il sal corrente sulla riga di intestazione
+    # ----------------------------------------------------------------------
+    # annoto il sal corrente sulla riga di intestazione
 #  ins =SheetUtils.uFindString("LAVORAZIONI"+ chr(10) + "O PROVVISTE", oSheetCont).RangeAddress.EndRow
 #  oSheetCont.getCellByPosition(25,ins).value = nSal
 #  oSheetCont.getCellByPosition(25, ins).cellstyle = "Menu_sfondo _input_grasBig"
 #  '    oSheetCont.getCellByPosition(25, ins-1).formula = "=SUBTOTAL(9;$P$" & primariga+1 & ":$P$" & ultimariga+2 & ")"
 #  oSheetCont.getCellByPosition(25, ins-1).formula = "=$P$2-SUBTOTAL(9;$P$" & IdxRow & ":$P$" & ultimariga+2 & ")"
-#  rem ----------------------------------------------------------------------
-#  rem fisso la riga alla prima voce
+    # ----------------------------------------------------------------------
+    # fisso la riga alla prima voce
 #  For i= 2 To 100
 #  If oSheetCont.getCellByPosition(1,i).CellStyle = "Comp-Bianche sopra_R" Then
 #  Exit For
@@ -7419,6 +7474,7 @@ def autoexec():
     '''
     questa è richiamata da creaComputo()
     '''
+    LeenoEvents.pulisci()
     inizializza()
     LeenoEvents.assegna()
     # rinvia a autoexec in basic

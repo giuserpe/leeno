@@ -5,8 +5,7 @@ dal formato XPWE
 import logging
 
 from xml.etree.ElementTree import ElementTree, ParseError
-
-import uno
+from com.sun.star.table import CellRangeAddress
 
 import LeenoUtils
 import LeenoFormat
@@ -14,7 +13,14 @@ import LeenoFormat
 import pyleeno as PL
 import LeenoDialogs as DLG
 
+import SheetUtils
 import LeenoConfig
+import LeenoSheetUtils
+import LeenoAnalysis
+import LeenoComputo
+import LeenoVariante
+import LeenoContab
+
 
 import Dialogs
 
@@ -713,7 +719,6 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
 
     # inizializza la progressbar
     progress.setLimits(0, righeTotali)
-    progress.setText("Scrittura elenco prezzi")
     progress.setValue(0)
 
     # compilo Elenco Prezzi
@@ -728,46 +733,40 @@ def compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress):
     SUPERCAPITOLI
     '''
     # SuperCapitoli
-    progress.setText("Scrittura supercapitoli")
     if righeSuperCapitoli:
         riempiBloccoElencoPrezzi(oSheet, arraySuperCapitoli, 16777072, progress)
 
     # Capitoli
-    progress.setText("Scrittura capitoli")
     if righeCapitoli:
         riempiBloccoElencoPrezzi(oSheet, arrayCapitoli, 16777120, progress)
 
     # SottoCapitoli
-    progress.setText("Scrittura sottocapitoli")
     if righeSottoCapitoli:
         riempiBloccoElencoPrezzi(oSheet, arraySottoCapitoli, 16777168, progress)
 
-    progress.setText("Ordinamento elenco prezzi")
-    PL.riordina_ElencoPrezzi()
-
-    # elimino le voci che hanno analisi
-    '''
-    ELIMINAZIONE SPOSTATA A MONTE, NELL'ARRAY
-    PRIMA DELL'INSERIMENTO NEL FOGLIO
-
-    print("Eliminazione voci doppie elenco prezzi")
-    progress.setText("Eliminazione voci doppie elenco prezzi")
-    for i in reversed(range(3, PL.getLastUsedCell(oSheet).EndRow)):
-        if oSheet.getCellByPosition(0, i).String in elencoPrezzi['ListaTariffeAnalisi']:
-            oSheet.getRows().removeByIndex(i, 1)
-    '''
-    print("Fine scrittura elenco prezzi")
-    progress.setText("Fine scrittura elenco prezzi")
+    PL.riordina_ElencoPrezzi(oDoc)
 
 
-def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
+def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
     ''' Compilo Analisi di prezzo '''
-    if len(elencoPrezzi['ListaAnalisi']) != 0:
-        PL.inizializza_analisi()
-        oSheet = oDoc.getSheets().getByName('Analisi di Prezzo')
+    numAnalisi = len(elencoPrezzi['ListaAnalisi'])
+    if numAnalisi != 0:
+
+        # inizializza la progressbar
+        progress.setLimits(0, numAnalisi)
+        val = 0
+        progress.setValue(val)
+
+        # inizializza l'analisi dei prezzi
+        oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+
+        # compila le voci dell'analisi
         for el in elencoPrezzi['ListaAnalisi']:
             prezzo_finale = el[-1]
-            sStRange = PL.Circoscrive_Analisi(PL.Range2Cell()[1])
+
+            # circoscrive la voce di analisi corrente
+            sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, startRow)
+
             lrow = sStRange.RangeAddress.StartRow + 2
             oSheet.getCellByPosition(0, lrow).String = el[0]
             oSheet.getCellByPosition(1, lrow).String = el[1]
@@ -775,18 +774,16 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
             y = 0
             n = lrow + 2
             for x in el[3]:
-                if el[3][y][1] in ('MANODOPERA', 'MATERIALI', 'NOLI',
-                                   'TRASPORTI',
-                                   'ALTRE FORNITURE E PRESTAZIONI',
-                                   'overflow'):
+                if el[3][y][1] in (
+                   'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
+                   'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
                     if el[3][y][1] != 'overflow':
-                        n = PL.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
+                        n = SheetUtils.uFindStringCol(el[3][y][1], 1, oSheet, lrow)
                 else:
-                    PL.copia_riga_analisi(n)
+                    LeenoAnalysis.copiaRigaAnalisi(oSheet, n)
                     if elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]) is not None:
-                        oSheet.getCellByPosition(
-                            0, n).String = elencoPrezzi['DizionarioArticoli'].get(
-                                el[3][y][0]).get('tariffa')
+                        oSheet.getCellByPosition(0, n).String = (
+                           elencoPrezzi['DizionarioArticoli'].get(el[3][y][0]).get('tariffa'))
                     # per gli inserimenti liberi (L)
                     else:
                         oSheet.getCellByPosition(0, n).String = ''
@@ -798,10 +795,9 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
                         except Exception:
                             oSheet.getCellByPosition(3, n).Value = 0
                         oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',', '.'))
-                    if el[3][y][1] not in ('MANODOPERA', 'MATERIALI', 'NOLI',
-                                           'TRASPORTI',
-                                           'ALTRE FORNITURE E PRESTAZIONI',
-                                           'overflow'):
+                    if el[3][y][1] not in (
+                       'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
+                       'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):
                         if el[3][y][3] == '':
                             oSheet.getCellByPosition(3, n).Value = 0
                         else:
@@ -812,168 +808,230 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi):
                                 oSheet.getCellByPosition(3, n).Formula = '=' + el[3][y][3]
                 y += 1
                 n += 1
-            sStRange = PL.Circoscrive_Analisi(lrow)
-            SR = sStRange.RangeAddress.StartRow
-            ER = sStRange.RangeAddress.EndRow
-            for m in reversed(range(SR, ER)):
+            sStRange = LeenoAnalysis.circoscriveAnalisi(oSheet, lrow)
+            startRow = sStRange.RangeAddress.StartRow
+            endRow = sStRange.RangeAddress.EndRow
+            for m in reversed(range(startRow, endRow)):
                 if(oSheet.getCellByPosition(0, m).String == 'Cod. Art.?' and
                    oSheet.getCellByPosition(0, m - 1).CellStyle == 'An-lavoraz-Cod-sx'):
                     oSheet.getRows().removeByIndex(m, 1)
                 if oSheet.getCellByPosition(0, m).String == 'Cod. Art.?':
                     oSheet.getCellByPosition(0, m).String = ''
-            if oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value != prezzo_finale:
-                oSheet.getCellByPosition(6, sStRange.RangeAddress.StartRow + 2).Value = prezzo_finale
-            PL.inizializza_analisi()
-        PL.elimina_voce(PL.ultima_voce(oSheet), 0)
-        PL.tante_analisi_in_ep()
+            if oSheet.getCellByPosition(6, startRow + 2).Value != prezzo_finale:
+                oSheet.getCellByPosition(6, startRow + 2).Value = prezzo_finale
+            oSheet, startRow = LeenoAnalysis.inizializzaAnalisi(oDoc)
+
+            # aggiorna la progressbar
+            val += 1
+            progress.setValue(val)
+
+        # siccome viene inserita una voce PRIMA di iniziare la compilazione
+        # occorre eliminare l'ultima voce che risulta vuota
+        LeenoSheetUtils.eliminaVoce(oSheet, LeenoSheetUtils.cercaUltimaVoce(oSheet))
 
 
-def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure):
+def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress):
     ''' compila il computo '''
 
+    # crea / attiva l'elaborato del tipo scelto
     if elaborato == 'VARIANTE':
-        PL.genera_variante()
+        oSheet = LeenoVariante.generaVariante(oDoc, False)
     elif elaborato == 'CONTABILITA':
-        PL.attiva_contabilita()
-    oSheet = oDoc.getSheets().getByName(elaborato)
+        #PL.attiva_contabilita()
+        oSheet = LeenoContab.generaContabilita(oDoc)
+    else:
+        oSheet = oDoc.getSheets().getByName(elaborato)
+
+    # elimina l'eventuale riga vuota iniziale
     if oSheet.getCellByPosition(1, 4).String == 'Cod. Art.?':
         if elaborato == 'CONTABILITA':
             oSheet.getRows().removeByIndex(3, 5)
         else:
             oSheet.getRows().removeByIndex(3, 4)
-    oDoc.CurrentController.select(oSheet)
 
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet  # recupero l'index del foglio
-    diz_vv = {}
+    oCellRangeAddr = CellRangeAddress()
+    # recupero l'index del foglio
+    oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
 
+    # mappa le voci computo con le righe del foglio
+    # (ad esempio per riferimenti tipo vedi_voce)
+    mappaVociRighe = {}
+
+    # numero di sequenza delle voci del computo
+    numeroVoce = 1
+
+    # variabili utilizzate per evitare le ripetizioni di
+    # supercategoria, categoria e sottocategoria ad ogni voce
     testspcat = '0'
     testcat = '0'
     testsbcat = '0'
-    x = 1
+
+    # inizializza la progressbar
+    progress.setLimits(0, len(listaMisure))
+    val = 0
+    progress.setValue(val)
+
     for el in listaMisure:
+        # dati della misura
         datamis = el.get('datamis')
+        # id supercategoria
         idspcat = el.get('idspcat')
+        # id categoria
         idcat = el.get('idcat')
+        # id subcategoria
         idsbcat = el.get('idsbcat')
 
-        lrow = PL.ultima_voce(oSheet) + 1
-        #  inserisco le categorie
+        # si posizione dopo l'ultima voce nel foglio
+        lrow = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
+
+        # inserisco le supercategorie, categorie e sottocategorie
+        # le varie 'testspcat', 'testcat' e 'testsbcat' servono per
+        # evitare la ripetizione per voci consecutive
+
+        # supercategoria
         try:
             if idspcat != testspcat:
                 testspcat = idspcat
                 testcat = '0'
-                PL.Inser_SuperCapitolo_arg(lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
+                # non capisco il perchè dell' EVAL ma mi adeguo, per ora
+                LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
                 lrow += 1
         except UnboundLocalError:
             pass
+
+        # categoria
         try:
             if idcat != testcat:
                 testcat = idcat
                 testsbcat = '0'
-                PL.Inser_Capitolo_arg(lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
+                # non capisco il perchè dell' EVAL ma mi adeguo, per ora
+                LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
                 lrow += 1
         except UnboundLocalError:
             pass
+
+        # sottocategoria
         try:
             if idsbcat != testsbcat:
                 testsbcat = idsbcat
-                PL.Inser_SottoCapitolo_arg(lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
+                # non capisco il perchè dell' EVAL ma mi adeguo, per ora
+                LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
+                lrow += 1
         except UnboundLocalError:
             pass
-        lrow = PL.ultima_voce(oSheet) + 1
-        if elaborato == 'CONTABILITA':
-            PL.ins_voce_contab(lrow=PL.ultima_voce(oSheet) + 1, elaborato=0)
-        else:
-            PL.ins_voce_computo_grezza(lrow)
-        ID = el.get('id_ep')
-        id_vc = el.get('id_vc')
 
+        if elaborato == 'CONTABILITA':
+            LeenoContab.insertVoceContabilita(oSheet, lrow)
+        else:
+            # inserisce la nuova voce (vuota) nel computo
+            LeenoComputo.insertVoceComputoGrezza(oSheet, lrow)
+
+        # id dell'elenco prezzi
+        ID = el.get('id_ep')
+
+        # inserisce la tariffa dall'elenco prezzi
+        # non capisco il perchè della try..except con la PASS senza segnalazione di errore...
         try:
-            oSheet.getCellByPosition(
-                1, lrow + 1).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
+            oSheet.getCellByPosition(1, lrow + 1).String = elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa')
         except Exception:
             pass
-        diz_vv[id_vc] = lrow + 1
-        oSheet.getCellByPosition(0, lrow + 1).String = str(x)
-        x = x + 1
-        SC = 2
-        SR = lrow + 2 + 1
-        nrighe = len(el.get('lista_rig')) - 1
 
-        if nrighe > -1:
-            EC = SC + len(el.get('lista_rig')[0])
-            ER = SR + nrighe
+        # id della voce computo corrente nell' XPWE
+        idVoceComputo = el.get('id_vc')
 
-            if nrighe > 0:
-                oSheet.getRows().insertByIndex(SR, nrighe)
+        # mappa l'id della voce con la riga del computo
+        # in modo da poter gestire i VEDI_VOCE successivamente
+        mappaVociRighe[idVoceComputo] = lrow + 1
 
-            oRangeAddress = oSheet.getCellRangeByPosition(0, SR - 1, 250, SR - 1).getRangeAddress()
+        # scrive il numero sequenziale della voce corrente
+        # nella prima colonna, seconda riga della voce
+        oSheet.getCellByPosition(0, lrow + 1).String = str(numeroVoce)
+        numeroVoce += 1
 
-            for n in range(SR, SR + nrighe):
+        # si posiziona ad inizio area misure
+        startRow = lrow + 2
+
+        lista_righe = el.get('lista_rig')
+        nrighe = len(lista_righe)
+
+        # compila le righe di misurazione
+        if nrighe > 0:
+            endRow = startRow + nrighe
+
+            # se la voce ha più di una riga di misurazione,
+            # inserisce le righe aggiuntive
+            if nrighe > 1:
+                oSheet.getRows().insertByIndex(startRow + 1, nrighe - 1)
+
+            # seleziona la prima riga di misurazioni...
+            oRangeAddress = oSheet.getCellRangeByPosition(0, startRow, 250, startRow).getRangeAddress()
+
+            # ... e la copia sulle rimanenti
+            for n in range(startRow + 1, endRow):
                 oCellAddress = oSheet.getCellByPosition(0, n).getCellAddress()
                 oSheet.copyRange(oCellAddress, oRangeAddress)
                 if elaborato == 'CONTABILITA':
                     oSheet.getCellByPosition(1, n).String = ''
                     oSheet.getCellByPosition(1, n).CellStyle = 'Comp-Bianche in mezzo_R'
 
-            oCellRangeAddr.StartColumn = SC
-            oCellRangeAddr.StartRow = SR
-            oCellRangeAddr.EndColumn = EC
-            oCellRangeAddr.EndRow = ER
-
-            # INSERISCO PRIMA SOLO LE RIGHE SE NO MI FA CASINO
-            SR = SR - 1
+            # inserisco prima solo le righe se no mi fa casino
             if elaborato == 'CONTABILITA':
-                oSheet.getCellByPosition(1, SR).Formula = (
+                oSheet.getCellByPosition(1, startRow).Formula = (
                     '=DATE(' + datamis.split('/')[2] +
                     ';' + datamis.split('/')[1] + ';' +
                     datamis.split('/')[0] + ')'
                 )
-                oSheet.getCellByPosition(1, SR).Value = oSheet.getCellByPosition(1, SR).Value
-            for mis in el.get('lista_rig'):
+                oSheet.getCellByPosition(1, startRow).Value = oSheet.getCellByPosition(1, startRow).Value
+            for mis in lista_righe:
+
                 # descrizione
                 if mis[0] is not None:
                     descrizione = mis[0].strip()
-                    oSheet.getCellByPosition(2, SR).String = descrizione
+                    oSheet.getCellByPosition(2, startRow).String = descrizione
                 else:
                     descrizione = ''
+
                 # parti uguali
                 if mis[3] is not None:
                     try:
-                        oSheet.getCellByPosition(5, SR).Value = float(mis[3].replace(',', '.'))
+                        oSheet.getCellByPosition(5, startRow).Value = float(mis[3].replace(',', '.'))
                     except ValueError:
                         # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(5, SR).Formula = '=' + str(mis[3]).split('=')[-1]
+                        oSheet.getCellByPosition(5, startRow).Formula = '=' + str(mis[3]).split('=')[-1]
+
                 # lunghezza
                 if mis[4] is not None:
                     try:
-                        oSheet.getCellByPosition(6, SR).Value = float(mis[4].replace(',', '.'))
+                        oSheet.getCellByPosition(6, startRow).Value = float(mis[4].replace(',', '.'))
                     except ValueError:
                         # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(6, SR).Formula = '=' + str(mis[4]).split('=')[-1]
+                        oSheet.getCellByPosition(6, startRow).Formula = '=' + str(mis[4]).split('=')[-1]
+
                 # larghezza
                 if mis[5] is not None:
                     try:
-                        oSheet.getCellByPosition(7, SR).Value = float(mis[5].replace(',', '.'))
+                        oSheet.getCellByPosition(7, startRow).Value = float(mis[5].replace(',', '.'))
                     except ValueError:
                         # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(7, SR).Formula = '=' + str(mis[5]).split('=')[-1]
+                        oSheet.getCellByPosition(7, startRow).Formula = '=' + str(mis[5]).split('=')[-1]
+
                 # HPESO
                 if mis[6] is not None:
                     try:
-                        oSheet.getCellByPosition(8, SR).Value = float(mis[6].replace(',', '.'))
+                        oSheet.getCellByPosition(8, startRow).Value = float(mis[6].replace(',', '.'))
                     except Exception:
                         # tolgo evenutali '=' in eccesso
-                        oSheet.getCellByPosition(8, SR).Formula = '=' + str(mis[6]).split('=')[-1]
+                        oSheet.getCellByPosition(8, startRow).Formula = '=' + str(mis[6]).split('=')[-1]
+
                 if mis[8] == '2':
-                    PL.parziale_core(SR)
-                    oSheet.getRows().removeByIndex(SR + 1, 1)
+                    PL.parziale_core(oSheet, startRow)
+                    oSheet.getRows().removeByIndex(startRow + 1, 1)
                     descrizione = ''
+
                 if mis[9] != '-2':
-                    vedi = diz_vv.get(mis[9])
+                    vedi = mappaVociRighe.get(mis[9])
                     try:
-                        PL.vedi_voce_xpwe(SR, vedi, mis[8])
+                        test = PL.vedi_voce_xpwe(oSheet, startRow, vedi)
                     except Exception:
                         Dialogs.Exclamation(Title="Attenzione",
                                             Text="Il file di origine è particolarmente disordinato.\n"
@@ -983,34 +1041,48 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
                                                  elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa') +
                                                  "\nella riga n." + str(lrow + 2) +
                                                  " del foglio, evidenziata qui a sinistra.")
-                        oSheet.getCellByPosition(44, SR).String = (
+                        oSheet.getCellByPosition(44, startRow).String = (
                             elencoPrezzi['DizionarioArticoli'].get(ID).get('tariffa'))
                 try:
                     mis[7]
                     if '-' in mis[7]:
                         for x in range(5, 9):
                             try:
-                                if oSheet.getCellByPosition(x, SR).Value != 0:
-                                    oSheet.getCellByPosition(x, SR).Value = abs(oSheet.getCellByPosition(x, SR).Value)
+                                if oSheet.getCellByPosition(x, startRow).Value != 0:
+                                    oSheet.getCellByPosition(x, startRow).Value = abs(oSheet.getCellByPosition(x, startRow).Value)
                             except Exception:
                                 pass
-                        PL.inverti_un_segno(SR)
+                        LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+                        #~PL.invertiSegnoRow(oSheet, startRow)
+                        if elaborato == 'CONTABILITA':
+                            if test == '-':
+                                LeenoSheetUtils.invertiUnSegno(oSheet, startRow)
+                                #~PL.invertiSegnoRow(oSheet, startRow)
+                                test = ''
                 except Exception:
                     pass
-                SR = SR + 1
 
-    PL.numera_voci()
+                # prossima riga di misurazione
+                startRow = startRow + 1
+
+        # aggiorna la progressbar
+        val += 1
+        progress.setValue(val)
+
+    LeenoSheetUtils.numeraVoci(oSheet, 0, True)
 
     try:
-        PL.Rinumera_TUTTI_Capitoli2()
+        PL.Rinumera_TUTTI_Capitoli2(oSheet)
     except Exception:
         pass
 
+    PL.fissa()
 
 def MENU_XPWE_import():
     '''
     Importazione dati dal formato XPWE
     '''
+    PL.DisableAutoCalc()
     isLeenoDoc = LeenoUtils.isLeenoDocument()
 
     # legge i totali dal documento
@@ -1048,7 +1120,7 @@ def MENU_XPWE_import():
         ordina = False
 
     filename = Dialogs.FileSelect('Scegli il file XPWE da importare...', '*.xpwe')  # *.xpwe')
-    if filename == 'Cancel' or filename == '':
+    if filename in ('Cancel', '', None):
         return
 
     # effettua il parsing del file XML
@@ -1070,8 +1142,13 @@ def MENU_XPWE_import():
     root = tree.getroot()
     logging.debug(list(root))
 
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+
     # attiva la progressbar
     progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Lettura dati")
+    progress.setLimits(0, 6)
+    progress.setValue(0)
     progress.show()
 
     # ########################################################################################
@@ -1082,70 +1159,73 @@ def MENU_XPWE_import():
 
     # legge i dati anagrafici generali
     datiAnagrafici = leggiAnagraficaGenerale(dati)
+    progress.setValue(1)
 
     # legge capitoli e categorie
     capitoliCategorie = leggiCapitoliCategorie(dati)
+    progress.setValue(2)
 
     # legge i dati generali per l'analisi
     datiGeneraliAnalisi = leggiDatiGeneraliAnalisi(dati)
+    progress.setValue(3)
 
     # legge le approssimazioni
     approssimazioni = leggiApprossimazioni(dati)
+    progress.setValue(4)
 
     misurazioni = root.find('PweMisurazioni')
 
     # legge l'elenco prezzi
     elencoPrezzi = leggiElencoPrezzi(misurazioni)
+    progress.setValue(5)
 
     # legge le misurazioni
     if elaborato != 'Elenco':
         listaMisure = leggiMisurazioni(misurazioni, ordina)
     else:
         listaMisure = []
+    progress.setValue(6)
 
     # ########################################################################################
     # SCRITTURA COMPUTO
 
     # se la destinazione è un nuovo documento, crealo
     if destinazione == 'NUOVO':
-        PL.New_file.computo(0)
-        oDoc = LeenoUtils.getDocument()
+        oDoc = PL.creaComputo(0)
 
     # occorre ricreare di nuovo la progressbar, in modo che sia
     # agganciata al nuovo documento
     progress.hide();
-    progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="Scrittura computo")
+    progress = Dialogs.Progress(Title="Importazione file XPWE in corso", Text="")
     progress.show()
 
-   # disattiva l'output a video
+    # disattiva l'output a video
     LeenoUtils.DisableDocumentRefresh(oDoc)
 
     # compila i dati generali per l'analisi
-    print("compilaDatiGeneraliAnalisi")
     progress.setText("Compilazione dati generali di analisi")
     compilaDatiGeneraliAnalisi(oDoc, datiGeneraliAnalisi)
 
     # compila le approssimazioni
-    print("compilaApprossimazioni")
     progress.setText("Compilazione approssimazioni")
     compilaApprossimazioni(oDoc, approssimazioni)
 
     # compilo Anagrafica generale
-    print("compilaAnagraficaGenerale")
     progress.setText("Compilazione anagrafica generale")
     compilaAnagraficaGenerale(oDoc, datiAnagrafici)
 
     # compilo Elenco Prezzi
-    print("compilaElencoPrezzi")
+    progress.setText("Compilazione elenco prezzi")
     compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress)
 
     # Compilo Analisi di prezzo
-    print("compilaAnalisiPrezzi")
     progress.setText("Compilazione analisi prezzi")
-    compilaAnalisiPrezzi(oDoc, elencoPrezzi)
+    compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress)
+
+    #progress.hide()
+    #return
 
     # elimina doppioni nell'elenco prezzi
-    print("EliminaVociDoppieElencoPrezzi")
     progress.setText("Eliminazione voci doppie elenco prezzi")
     PL.EliminaVociDoppieElencoPrezzi()
 
@@ -1165,17 +1245,18 @@ def MENU_XPWE_import():
         return
 
     # compila il computo
-    print("compilaComputo DONE")
     progress.setText(f'Compilazione {elaborato}')
-    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure)
+    compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure, progress)
 
     # riattiva l'output a video
     LeenoUtils.EnableDocumentRefresh(oDoc)
 
     PL.GotoSheet(elaborato)
     progress.setText("Adattamento altezze righe")
-    PL.adatta_altezza_riga()
 
     progress.setText("Fine")
     progress.hide()
+    oDoc.CurrentController.ZoomValue = zoom
+    PL.EnableAutoCalc()
+    PL.adatta_altezza_riga()
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

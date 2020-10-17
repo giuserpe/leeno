@@ -38,13 +38,13 @@ on error goto avviso
 		sUrl = DirectoryNameoutofPath(sDocURL, &quot;/&quot;) &apos;path
 		sFileName = GetFileNameWithoutExtension(sDocURL, &quot;/&quot;) &apos;file
 	End If
-	&apos;oSheet.GetCellbyPosition( 0, i ).string
+	&apos;oSheet.getCellByPosition( 0, i ).string
 	&apos;sName = oDoc.CurrentSelection.getString()
 	Dim oSelezione as Object
 	oSelezione = ThisComponent.getCurrentSelection()
 	oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 	lrow= oSelezione.CellAddress.Row
-	sName = oSheet.GetCellbyPosition( 4, lrow ).String
+	sName = oSheet.getCellByPosition( 4, lrow ).String
 	sFile = sUrl + &quot;/&quot; + sName + &quot;.ods&quot;
 	lFlags = com.sun.star.frame.FrameSearchFlag.CREATE + _
 	com.sun.star.frame.FrameSearchFlag.ALL
@@ -52,14 +52,14 @@ on error goto avviso
 &apos;	MsgBox sFile
 	oDocument = StarDesktop.loadComponentFromURL( sFile, &quot;_blank&quot;, lFlags, mArgs())
  	oSheet = ThisComponent.Sheets.getByName(&quot;listino&quot;)
- ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 4))
+ ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, 4))
 	oDoc.close(true)
 	goto fine
 	errore_apri:
 	msgbox &quot;Devi selezionare il nome file del Capitolo, oppure il file è inesistente!&quot;
 	exit sub
 	avviso:
- ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(0, 4))
+ ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, 4))
 	msgbox &quot;Seleziona il nome di un Capitolo&quot;,48,&quot;ATTENZIONE!&quot;
 	fine:
 	&apos;Close sDocURL
@@ -145,7 +145,7 @@ Sub SpostaCursore_su_Prezzario
 		exit sub
 	end if
  ThisComponent.CurrentController.Select(oUltimo_indirizzo_conosciuto) 
-	oCell = oSheet.GetCellByPosition(2 , lrow )
+	oCell = oSheet.getCellByPosition(2 , lrow )
 	ThisComponent.CurrentController.Select(oCell)
 END SUB
 

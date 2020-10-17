@@ -2,9 +2,7 @@
     LeenO - modulo di gestione dialoghi
 """
 
-import os
 import threading
-import uno
 
 import LeenoUtils
 import pyleeno as PL
@@ -30,13 +28,7 @@ from com.sun.star.awt.MessageBoxType import MESSAGEBOX
 # from com.sun.star.awt.MessageBoxType import ERRORBOX
 from com.sun.star.awt.MessageBoxType import QUERYBOX
 
-
-# MAH...
-oDialogo_attesa = None
-
-
 # rif.: https://wiki.openoffice.org/wiki/PythonDialogBox
-
 
 def barra_di_stato(testo='', valore=0):
     '''Informa l'utente sullo stato progressivo dell'elaborazione.'''
@@ -120,14 +112,13 @@ def dlg_attesa(msg=''):
     definisce la variabile globale oDialogo_attesa
     che va gestita così negli script:
 
-    oDialogo_attesa = dlg_attesa()
+    dlg_attesa()
     attesa().start() #mostra il dialogo
     ...
-    oDialogo_attesa.endExecute() #chiude il dialogo
+    LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute() #chiude il dialogo
     '''
     psm = LeenoUtils.getComponentContext().ServiceManager
     dp = psm.createInstance("com.sun.star.awt.DialogProvider")
-    global oDialogo_attesa
     oDialogo_attesa = dp.createDialog(
         "vnd.sun.star.script:UltimusFree2.DlgAttesa?language=Basic&location=application")
 
@@ -138,6 +129,7 @@ def dlg_attesa(msg=''):
     oDialogo_attesa.Title = 'Operazione in corso...'
     sUrl = PL.LeenO_path() + '/icons/attendi.png'
     oDialogo_attesa.getModel().ImageControl1.ImageURL = sUrl
+    LeenoUtils.setGlobalVar('oDialogo_attesa', oDialogo_attesa)
     return oDialogo_attesa
 
 
@@ -150,9 +142,8 @@ class attesa(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        global oDialogo_attesa
-        oDialogo_attesa.endExecute()  # chiude il dialogo
-        oDialogo_attesa.execute()
+        LeenoUtils.getGlobalVar('oDialogo_attesa').endExecute()  # chiude il dialogo
+        LeenoUtils.getGlobalVar('oDialogo_attesa').execute()
 
 
 def ScegliElaborato(titolo):

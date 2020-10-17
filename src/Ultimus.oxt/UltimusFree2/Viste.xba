@@ -66,7 +66,7 @@ dim iNumInser as integer
 	print_area= oSheet.getPrintAreas &apos; registro l&apos;area di stampa
 	RepeatRows = oSheet.getTitleRows &apos;registro le righe da ripetere (intestazione colonna)
 
-	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
+	Altezza_prima_riga=oSheet.getCellByPosition( 0, 0 ).getRows.Height
 
 	PrintRepeatRows = oSheet.PrintTitleRows
 	
@@ -103,10 +103,10 @@ dim iNumInser as integer
 
 	oSheet.setTitleRows(RepeatRows)
 	oSheet.setPrintTitleRows(PrintRepeatRows)
-	&apos;	Altezza_prima_riga=oSheet.GetCellbyPosition( 0, 0 ).getRows.Height
-	oSheet.GetCellbyPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
+	&apos;	Altezza_prima_riga=oSheet.getCellByPosition( 0, 0 ).getRows.Height
+	oSheet.getCellByPosition( 0, 0 ).rows.Height (Altezza_prima_riga)
 
-	ocell = oSheet.GetCellbyPosition( 0, 3 )
+	ocell = oSheet.getCellByPosition( 0, 3 )
 	Thiscomponent.currentcontroller.select(ocell)
 	DuplicaSheeTFILTROTMP=sNuovoNome
 	Clessid_lock_End
@@ -124,7 +124,7 @@ Sub Registra_conf_colonne &apos;scrive la configurazione con una stringa su una 
 	For i = 0 to 39
 		iNumCol = iNumCol +1
 		
-		oCell = oSheet.GetCellByPosition(iNumCol, 2 )
+		oCell = oSheet.getCellByPosition(iNumCol, 2 )
 &apos;	ThisComponent.CurrentController.Select(oCell) 
 		bValue = oCell.Columns.IsVisible
 		sValue = bValue
@@ -136,17 +136,17 @@ Sub Registra_conf_colonne &apos;scrive la configurazione con una stringa su una 
 	oSheet = ThisComponent.Sheets.getByName(&quot;S4&quot;)
 	iRow = 100
 &apos;print oCell.string
-	oCell = oSheet.GetCellByPosition(1 , iRow )
+	oCell = oSheet.getCellByPosition(1 , iRow )
 	Do while oCell.string &lt;&gt; &quot;&quot;
 		iRow = iRow + 1
-		oCell = oSheet.GetCellByPosition(1 , iRow )
+		oCell = oSheet.getCellByPosition(1 , iRow )
 	loop
 &apos;iRow = iRow + 1
-&apos;oCell = oSheet.GetCellByPosition(1 , iRow )	
+&apos;oCell = oSheet.getCellByPosition(1 , iRow )	
 	oCell.string = sList
-	oCell = oSheet.GetCellByPosition(0 , iRow )
+	oCell = oSheet.getCellByPosition(0 , iRow )
 	oCell.string = sNomeConf
-	oCell = oSheet.GetCellByPosition(1 , iRow )
+	oCell = oSheet.getCellByPosition(1 , iRow )
 	ThisComponent.CurrentController.Select(oCell) 
 	msgbox &quot;La configurazione On/Off delle colonne è stata &quot;&quot;sintetizzata&quot;&quot; in questa stringa&quot;&amp; CHR$(10)_
 	&amp;&quot; Usandola come parametro della funzione Viste_nuove puoi creare una nuova Configurazione o modificarne una esistente...&quot;&amp; CHR$(10)_
@@ -167,16 +167,16 @@ dim sList1 as string
 oSheet = ThisComponent.currentController.activeSheet
 oSheetConf = ThisComponent.Sheets.getByName(&quot;S4&quot;)
 iRow = 2
-oCell = oSheetConf.GetCellByPosition(1 , iRow )
+oCell = oSheetConf.getCellByPosition(1 , iRow )
  sList1 = oCell.string 
 &apos; print sList1
-&apos;oCell = oSheet.GetCellByPosition(0 , iRow )
+&apos;oCell = oSheet.getCellByPosition(0 , iRow )
 &apos;oCell.string = sNomeConf
 iNumCol = -1
 iString = 0
 For i = 0 to 30
 	iNumCol = iNumCol +1
-	oCell = oSheet.GetCellByPosition(iNumCol, 2 )
+	oCell = oSheet.getCellByPosition(iNumCol, 2 )
 	iString = iString +1
 	sString = mid(sList1, iString,1)
 	if sString = &quot;T&quot; then

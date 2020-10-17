@@ -3,7 +3,13 @@ Often used utility functions
 
 Copyright 2020 by Massimo Del Fedele
 '''
+import sys
 import uno
+from com.sun.star.beans import PropertyValue
+from datetime import date
+import calendar
+
+import PyPDF2
 
 '''
 ALCUNE COSE UTILI
@@ -89,6 +95,11 @@ def createUnoService(serv):
     return getComponentContext().getServiceManager().createInstance(serv)
 
 
+def MRI(target):
+    ctx = getComponentContext()
+    mri = ctx.ServiceManager.createInstanceWithContext("mytools.Mri", ctx)
+    mri.inspect(target)
+
 def isLeenoDocument():
     '''
     check if current document is a LeenO document
@@ -112,3 +123,151 @@ def EnableDocumentRefresh(oDoc):
     '''
     oDoc.removeActionLock()
     oDoc.unlockControllers()
+
+
+def getGlobalVar(name):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    return bDict.get('LEENO_GLOBAL_' + name)
+
+
+def setGlobalVar(name, value):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    bDict['LEENO_GLOBAL_' + name] = value
+
+
+def initGlobalVars(dict):
+    if type(__builtins__) == type(sys):
+        bDict = __builtins__.__dict__
+    else:
+        bDict = __builtins__
+    for key, value in dict.items():
+        bDict['LEENO_GLOBAL_' + key] = value
+
+
+def dictToProperties(values, unoAny=False):
+    '''
+    convert a dictionary in a tuple of UNO properties
+    if unoAny is True, return the result in an UNO Any variable
+    otherwise use a python tuple
+    '''
+    ps = tuple([PropertyValue(Name=n, Value=v) for n, v in values.items()])
+    if unoAny:
+        ps = uno.Any('[]com.sun.star.beans.PropertyValue', ps)
+    return ps
+
+
+def daysInMonth(dat):
+    '''
+    returns days in month of date dat
+    '''
+    month = dat.month + 1
+    year = dat.year
+    if month > 12:
+        month = 1
+        year += 1
+    dat2 = date(year=year, month=month, day=dat.day)
+    t = dat2 - dat
+    return t.days
+
+
+def firstWeekDay(dat):
+    '''
+    returns first week day in month from dat
+    monday is 0
+    '''
+    return calendar.weekday(dat.year, dat.month, 1)
+
+
+DAYNAMES = ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom']
+MONTHNAMES = [
+    'Gennaio', 'Febbraio', 'Marzo', 'Aprile',
+    'Maggio', 'Giugno', 'Luglio', 'Agosto',
+    'Settembre', 'Ottobre', 'Novembre', 'Dicembre'
+]
+
+def date2String(dat, fmt = 0):
+    '''
+    conversione data in stringa
+    fmt = 0     25 Febbraio 2020
+    fmt = 1     25/2/2020
+    fmt = 2     25-02-2020
+    fmt = 3     25.02.2020
+    '''
+    d = dat.day
+    m = dat.month
+    if m < 10:
+        ms = '0' + str(m)
+    else:
+        ms = str(m)
+    y = dat.year
+    if fmt == 1:
+        return str(d) + '/' + ms + '/' + str(y)
+    elif fmt == 2:
+        return str(d) + '-' + ms + '-' + str(y)
+    elif fmt == 3:
+        return str(d) + '.' + ms + '.' + str(y)
+    else:
+        return str(d) + ' ' + MONTHNAMES[m - 1] + ' ' + str(y)
+
+def string2Date(s):
+    if '.' in s:
+        sp = s.split('.')
+    elif '/' in s:
+        sp = s.split('/')
+    elif '-' in s:
+        sp = s.split('-')
+    else:
+        return date.today()
+    if len(sp) != 3:
+        raise Exception
+    day = int(sp[0])
+    month = int(sp[1])
+    year = int(sp[2])
+    return date(day=day, month=month, year=year)
+
+def countPdfPages(path):
+    '''
+    Returns the number of pages in a PDF document
+    using external PyPDF2 module
+    '''
+    with open(path, 'rb') as f:
+        pdf = PyPDF2.PdfFileReader(f)
+        return pdf.getNumPages()
+
+
+def replacePatternWithField(oTxt, pattern, oField):
+    '''
+    Replaces a string pattern in a Text object
+    (for example '[PATTERN]') with the given field
+    '''
+    # pattern may be there many times...
+    repl = False
+    pos = oTxt.String.find(pattern)
+    while pos >= 0:
+        #create a cursor
+        cursor = oTxt.createTextCursor()
+
+        # use it to select the pattern
+        cursor.collapseToStart()
+        cursor.goRight(pos, False)
+        cursor.goRight(len(pattern), True)
+
+        # remove the pattern from text
+        cursor.String = ''
+
+        # insert the field at cursor's position
+        cursor.collapseToStart()
+        oTxt.insertTextContent(cursor, oField, False)
+
+        # next occurrence of pattern
+        pos = oTxt.String.find(pattern)
+
+        repl = True
+    return repl
+

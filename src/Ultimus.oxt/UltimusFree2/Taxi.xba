@@ -40,7 +40,7 @@ Function uFindString_taxi(sString, oSheet) As Variant &apos; richiamata solo da 
  Dim aAddress As Variant
  Dim sFind As String
 &apos;print sString
- oCell = oSheet.GetCellbyPosition( 0, 0 )
+ oCell = oSheet.getCellByPosition( 0, 0 )
  oCursor = oSheet.createCursorByRange(oCell)
  oCursor.GotoEndOfUsedArea(True)
  aAddress = oCursor.RangeAddress
@@ -53,7 +53,7 @@ Function uFindString_taxi(sString, oSheet) As Variant &apos; richiamata solo da 
 &apos;print nEndRow
  For nCurCol = 0 To nEndCol &apos;Go through the range column by column,
  For nCurRow = 0 To nEndRow &apos;row by row.
- oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+ oCell = oSheet.getCellByPosition( nCurCol, nCurRow )
  sFind = oCell.String &apos;Get cell contents.
  If sFind = sString then
  uFindString_taxi = oCell
@@ -259,20 +259,20 @@ Function Trova_rangeSRC_Computo (oSheet as object)&apos;(anche_computo as boolea
 		sString$ = &quot;Fine Computo&quot;
 		oEnd=uFindString_taxi(sString$, oSheet) 
 		lrowEnd=oEnd.RangeAddress.EndRow 
-&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1,lrowend)) &apos;debug	
+&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1,lrowend)) &apos;debug	
 &apos;print lrowend
-		if oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or oSheet.GetCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;TOTALI num&quot; then
+		if oSheet.getCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;Comp TOTALI num&quot; _
+			or oSheet.getCellByPosition( 18, lrowEnd-1 ).cellstyle = &quot;TOTALI num&quot; then
 			&apos;	print &quot;caso 1&quot;
 			lrowend =lrowEnd-1
 		end if
-		if oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or oSheet.GetCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;TOTALI num&quot; then
+		if oSheet.getCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;Comp TOTALI num&quot; _
+			or oSheet.getCellByPosition( 18, lrowEnd-2 ).cellstyle = &quot;TOTALI num&quot; then
 					&apos;	print &quot;caso 2&quot;
 			lrowend =lrowEnd-2
 		end if		
-		if oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;Comp TOTALI num&quot; _
-			or oSheet.GetCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;TOTALI num&quot; then
+		if oSheet.getCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;Comp TOTALI num&quot; _
+			or oSheet.getCellByPosition( 18, lrowEnd-3 ).cellstyle = &quot;TOTALI num&quot; then
 			 &apos;	lrowend =lrowEnd-3
 		end if	&apos; queste per evitare di includere righe di totali in posizioni improprie
 		lrowend =lrowEnd-1
@@ -280,12 +280,12 @@ Function Trova_rangeSRC_Computo (oSheet as object)&apos;(anche_computo as boolea
 		
 		&apos;questo invece per trovare l&apos;inizio (che escluda righe di somme e totali)
 		For i = 1 to 7
-			if oSheet.GetCellByPosition( 17,i).cellstyle = &quot;livello-1-sopra&quot; _
-			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;Comp-Bianche sopra&quot; _
-			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;Livello-1-scritta&quot; _
-			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;livello2 sopra&quot; _
-			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;livello-1-sotto_&quot; _
-			 	or oSheet.GetCellByPosition( 17,i).cellstyle = &quot;comp In testa&quot; then
+			if oSheet.getCellByPosition( 17,i).cellstyle = &quot;livello-1-sopra&quot; _
+			 	or oSheet.getCellByPosition( 17,i).cellstyle = &quot;Comp-Bianche sopra&quot; _
+			 	or oSheet.getCellByPosition( 17,i).cellstyle = &quot;Livello-1-scritta&quot; _
+			 	or oSheet.getCellByPosition( 17,i).cellstyle = &quot;livello2 sopra&quot; _
+			 	or oSheet.getCellByPosition( 17,i).cellstyle = &quot;livello-1-sotto_&quot; _
+			 	or oSheet.getCellByPosition( 17,i).cellstyle = &quot;comp In testa&quot; then
 			 	lrowInizio = i
 			 	exit for
 			end if 
@@ -381,7 +381,7 @@ Function Focus_su_altro_Doc (optional sTargetURL as string, optional sSheetTarge
 	
 &apos; e se ci voglio scrivere
 &apos; if isnotNull(sStringa) then
-&apos;	 ThisComponent.Sheets.getByName(sSheetTarget).GetCellByPosition( 0,1).string =_
+&apos;	 ThisComponent.Sheets.getByName(sSheetTarget).getCellByPosition( 0,1).string =_
 &apos;	 sStringa
 &apos; &quot;Ho scritto veramente sulla tab &quot;&quot;leo&quot;&quot; nel doc &quot;&quot;Pippo&quot;&quot;?&quot; 
 &apos;end if
@@ -410,7 +410,7 @@ end sub
  End If
 &apos;print irows
 &apos;xray oSheet.getCellRangebyPosition(0,irows,0,irows+1)
- oCellAddress = oSheet.GetCellByPosition(0,irows).getCellAddress()
+ oCellAddress = oSheet.getCellByPosition(0,irows).getCellAddress()
  &apos;oCellAddress = oSheet.getCellRangeByName(&quot;a1&quot;) .getCellAddress() &apos;sembra che qualsiasi cella vada bene...?!
  sDefArea= &quot;$&apos;&quot; &amp; sSheetName &amp; &quot;&apos;.&quot; &amp; sAreaRange &apos; gli &apos; di delimitazione servono quando ci sono spazi nel nome sheet
  &apos; sDefArea= &quot;$&quot; &amp; sSheetName &amp; &quot;.&quot; &amp; sAreaRange 
@@ -824,9 +824,9 @@ sub Elimina_AP_da_EP
 
 
 	lrow = 1
-	oCell = oSheet.GetCellByPosition(lcolbase+8 , lrow )
+	oCell = oSheet.getCellByPosition(lcolbase+8 , lrow )
 
-	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,313).string = 1 then
+	IF ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,313).string = 1 then
 		goto nessuna_AP
 	end if
 	xA = oCell.string
@@ -837,17 +837,17 @@ sub Elimina_AP_da_EP
 			exit do
 		end if
 		lrow = lrow +1 
-		oCell = oSheet.GetCellByPosition( lcolbase+8, lrow )
+		oCell = oSheet.getCellByPosition( lcolbase+8, lrow )
 		xA = oCell.string
 	loop
 	lrow = lrow +1 
-	oCell = oSheet.GetCellByPosition( lcolbase+8, lrow )
+	oCell = oSheet.getCellByPosition( lcolbase+8, lrow )
 	xA = oCell.string	
 	lrowStart = oCell.RangeAddress.StartRow -1
 
 	do while xA = &quot;(AP)&quot;
 		lrow = lrow +1 
-		oCell = oSheet.GetCellByPosition(lcolbase+8, lrow )
+		oCell = oSheet.getCellByPosition(lcolbase+8, lrow )
 		xA = oCell.string
 	loop	
 	
@@ -893,8 +893,8 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 	&apos;oSheet = ThisComponent.currentController.activeSheet
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)
 
-	oCell = oSheet.GetCellByPosition( 5 , lrow) &apos;???????
-	oCell1 = oSheet.GetCellByPosition( 3 , lrow) &apos;??????
+	oCell = oSheet.getCellByPosition( 5 , lrow) &apos;???????
+	oCell1 = oSheet.getCellByPosition( 3 , lrow) &apos;??????
 
 	&apos;@ ThisComponent.CurrentController.Select(oCell)
  	if oCell.string = &quot;TOTALE&quot; OR (Trova_Attr_N (oCell1, oSheet)) = &quot;End_voce_ANALISI&quot; then
@@ -904,45 +904,45 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
 	&apos; trovo l&apos;inizio voce Analisi
 	Do While (oCell.string &lt;&gt; &quot;TOTALE&quot;) and ((Trova_Attr_N (oCell1, oSheet)) &lt;&gt; &quot;Start_voce_ANALISI&quot;)
 		 lrow = lrow - 1
- 		 oCell = oSheet.GetCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
-		 oCell1 = oSheet.GetCellByPosition( 3 , lrow)
+ 		 oCell = oSheet.getCellByPosition( 5 , lrow)&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;&apos;errore qui
+		 oCell1 = oSheet.getCellByPosition( 3 , lrow)
 	loop
 
 	saltarello:
 	lrowRisel = lrow
-	&apos;ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 0, lrow ) )&apos;debug
+	&apos;ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 0, lrow ) )&apos;debug
 		 &apos; print &quot;voilà&quot;		 
-	oCodAnalisi = oSheet.GetCellByPosition( 0, lrow ).string
+	oCodAnalisi = oSheet.getCellByPosition( 0, lrow ).string
 	&apos;	xA = oCell.string
- oCelle = oSheet.GetCellByPosition( 1, lrow ) 
+ oCelle = oSheet.getCellByPosition( 1, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oLdescAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
  	&apos; print oLdescAnalisi
  
- 	oCelle = oSheet.GetCellByPosition( 2, lrow ) 
+ 	oCelle = oSheet.getCellByPosition( 2, lrow ) 
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oLumAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
 	
- 	oCelle = oSheet.GetCellByPosition( 9, lrow ) &apos; rigagiuserpe
+ 	oCelle = oSheet.getCellByPosition( 9, lrow ) &apos; rigagiuserpe
 	oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
 	oConv.Address = oCelle.getCellAddress
 	oLsicAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
  	
-	oCelle = oSheet.GetCellByPosition( 6, lrow ) &apos; iflag è la colonna del prezzo
+	oCelle = oSheet.getCellByPosition( 6, lrow ) &apos; iflag è la colonna del prezzo
  &apos; diversa dopo la mofùdifica della struttura della voce di analisi
  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
  oConv.Address = oCelle.getCellAddress
  oLprezzoAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
  
  
- oCelle = oSheet.GetCellByPosition( 7, lrow ) 
+ oCelle = oSheet.getCellByPosition( 7, lrow ) 
  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
  oConv.Address = oCelle.getCellAddress
  oIncidAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
 	
- oCelle = oSheet.GetCellByPosition( 0, lrow ) 
+ oCelle = oSheet.getCellByPosition( 0, lrow ) 
  oConv = ThisComponent.createInstance(&quot;com.sun.star.table.CellAddressConversion&quot;)
  oConv.Address = oCelle.getCellAddress
  oLOrigPAnalisi = &quot;=$&quot; + oConv.UserInterfaceRepresentation
@@ -950,7 +950,7 @@ Sub ANALISI_IN_ELENCOPREZZI_Taxi (lrow as long) &apos; copia l&apos;analisi e la
  oAP = &quot;(AP)&quot;
  
  &apos;........ rimando di selezione sulla tab Analisi di prezzo
- oCella = oSheet.GetCellByPosition( 1, lrowRisel ) 
+ oCella = oSheet.getCellByPosition( 1, lrowRisel ) 
  ThisComponent.CurrentController.Select(oCella)
  &apos; .... per quando si torna sulla tab 
  
@@ -970,62 +970,62 @@ rem ----------------------------------------------------------------------
 	Print rIntest
 	fissa (0,idxRow+1)
 rem ----------------------------------------------------------------------	
- oCell = oSheet.GetCellByPosition( lcolbase+0,3 ) 
+ oCell = oSheet.getCellByPosition( lcolbase+0,3 ) 
  ThisComponent.CurrentController.Select(oCell)&apos;@
  
 	lrow = 3
 	oSheet.unprotect(&quot;&quot;)
 	insRows (lrow,1)
 &apos;	oSheet.getRows.insertByIndex(lrow,1)
-	oCell = oSheet.GetCellByPosition( lcolbase+0 , lrow)
+	oCell = oSheet.getCellByPosition( lcolbase+0 , lrow)
 	oCell.CellStyle=&quot;EP-Cs&quot;
 					
 	oCell.string= oCodAnalisi
 
 rem ----------------------------------------------------------------------
 rem sistemo i sommari
-	oSheet.GetCellByPosition(lcolbase+10 , lrow).formula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
-	oSheet.GetCellByPosition(lcolbase+10 , lrow).cellstyle = &quot;EP statistiche_q&quot;
+	oSheet.getCellByPosition(lcolbase+10 , lrow).formula = &quot;=sumif(AA;&quot; &amp; sCol &amp; i+1 &amp; &quot;;BB)&quot;
+	oSheet.getCellByPosition(lcolbase+10 , lrow).cellstyle = &quot;EP statistiche_q&quot;
 
-	oSheet.GetCellByPosition(lcolbase+11 , lrow).formula = &quot;=K&quot; &amp; i+1 &amp; &quot;*E&quot; &amp; i+1
-	oSheet.GetCellByPosition(lcolbase+11 , lrow).cellstyle = &quot;EP statistiche&quot;
+	oSheet.getCellByPosition(lcolbase+11 , lrow).formula = &quot;=K&quot; &amp; i+1 &amp; &quot;*E&quot; &amp; i+1
+	oSheet.getCellByPosition(lcolbase+11 , lrow).cellstyle = &quot;EP statistiche&quot;
 rem ----------------------------------------------------------------------
 
 	lscarto	= 0 &apos; dA USARE PER LA vER. 4
 
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +1 , lrow) 
+	oCell = oSheet.getCellByPosition( lcolbase+lscarto +1 , lrow) 
  oCell.formula = oLdescAnalisi
 	oCell.CellStyle=&quot;EP-C&quot;
  					
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +2 , lrow)
+	oCell = oSheet.getCellByPosition( lcolbase+lscarto +2 , lrow)
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
  	oCell.formula = oLumAnalisi
  	
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto +3 , lrow)&apos; rigagiuserpe
+	oCell = oSheet.getCellByPosition( lcolbase+lscarto +3 , lrow)&apos; rigagiuserpe
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
  	oCell.formula = oLsicAnalisi
  	
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 4 , lrow)
+	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 4 , lrow)
  	 oCell.CellStyle=&quot;EP-C mezzo&quot;
  	 oCell.formula = oLprezzoAnalisi 
 
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 5 , lrow)&apos;@@@@
+	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 5 , lrow)&apos;@@@@
 	 oCell.formula = oIncidAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo %&quot;
 	 					 
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 6 , lrow)&apos;@@@@
+	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 6 , lrow)&apos;@@@@
 	 oCell.formula = &quot;=F&quot; &amp; lrow+1 &amp; &quot;*E&quot; &amp; lrow+1
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
 	 		 					 
-	oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 7 , lrow)
+	oCell = oSheet.getCellByPosition( lcolbase+lscarto + 7 , lrow)
 	 oCell.formula = oLOrigPAnalisi
 	 oCell.CellStyle=&quot;EP-C mezzo&quot;
 	 
- oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 8 , lrow)
+ oCell = oSheet.getCellByPosition( lcolbase+lscarto + 8 , lrow)
  oCell.string = oAP 
 	oCell.CellStyle=&quot;EP-C mezzo&quot;
 	
- oCell = oSheet.GetCellByPosition( lcolbase+lscarto + 9 , lrow)
+ oCell = oSheet.getCellByPosition( lcolbase+lscarto + 9 , lrow)
  	&apos; oCell.CellBackColor = RGB(0,0,139)
  oCell.CellStyle=&quot;EP-sfondo&quot;
 

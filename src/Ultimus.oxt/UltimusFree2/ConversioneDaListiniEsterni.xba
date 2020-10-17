@@ -71,22 +71,22 @@ rem ----------------------------------------------------------------------
 	End Select
 
 	for i = primariga to lLastUrow
-		if len(oSheet.GetCellbyPosition( 2, i ).string) = 2 Then
+		if len(oSheet.getCellByPosition( 2, i ).string) = 2 Then
 rem UPPERCASE			oSheet.getCellByPosition (4,i).setstring(Ucase(oSheet.getCellByPosition (4,i).getstring()))
 			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
 			oRange.CellBackColor = colore1 
-&apos;					Print oSheet.GetCellbyPosition( 2, i ).String &amp; &quot; &quot; &amp; oSheet.GetCellbyPosition( 4, i ).String
-					AppendItem(elCap(), array ( oSheet.GetCellbyPosition( 2, i ).String &amp; &quot; &quot; &amp; oSheet.GetCellbyPosition( 4, i ).string, _
-												sname &amp; &quot;-&quot; &amp;  oSheet.GetCellbyPosition( 2, i ).String &amp; &quot;-leeno&quot;, i))
+&apos;					Print oSheet.getCellByPosition( 2, i ).String &amp; &quot; &quot; &amp; oSheet.getCellByPosition( 4, i ).String
+					AppendItem(elCap(), array ( oSheet.getCellByPosition( 2, i ).String &amp; &quot; &quot; &amp; oSheet.getCellByPosition( 4, i ).string, _
+												sname &amp; &quot;-&quot; &amp;  oSheet.getCellByPosition( 2, i ).String &amp; &quot;-leeno&quot;, i))
 &apos;					AppendItem(elRow(), array (i))
 			GoTo vai:
 		end if
-		if len(oSheet.GetCellbyPosition( 2, i ).string) &lt;= 5 Then
+		if len(oSheet.getCellByPosition( 2, i ).string) &lt;= 5 Then
 			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
 			oRange.CellBackColor = colore2 
 			GoTo vai:
 		end if
-		if len(oSheet.GetCellbyPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
+		if len(oSheet.getCellByPosition( 7, i ).string) = 0 then &apos; se non c&apos;è il prezzo
 			oRange = oSheet.getCellRangeByPosition (0,i,11,i)
 			oRange.CellBackColor = colore3 
 			GoTo vai:
@@ -113,9 +113,9 @@ rem torna su Listino
 	oSheet = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 	for i = 0 to lLastUrow
 &apos;	Print i
-&apos;	Print oSheet.GetCellByPosition(1 ,i).getstring
-&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(1 ,i))
-		if oSheet.GetCellByPosition(1 ,i).getstring = &quot;Capitoli:&quot; then
+&apos;	Print oSheet.getCellByPosition(1 ,i).getstring
+&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(1 ,i))
+		if oSheet.getCellByPosition(1 ,i).getstring = &quot;Capitoli:&quot; then
 			primariga = i+1
 			exit for
 		end If
@@ -131,9 +131,9 @@ rem colora indice capitoli
 	For Each el In elCap()
 		insrows (primariga, 1)
 		oSheet.getCellRangeByPosition(1,primariga,4,primariga).clearContents(Flag)
-		oSheet.GetCellbyPosition(1, primariga).String = el(0)
+		oSheet.getCellByPosition(1, primariga).String = el(0)
 		oSheet.getCellRangeByposition(1,primariga,2,primariga).Merge(True)
-		oSheet.GetCellbyPosition(4, primariga).String = el(1)
+		oSheet.getCellByPosition(4, primariga).String = el(1)
 		If test=1 Then
 			oSheet.getCellRangeByPosition (1,primariga,4,primariga).CellBackColor = colore1 &apos; RGB(255, 255, 112)
 			test=0
@@ -147,7 +147,7 @@ rem colora indice capitoli
 	k= riga2-riga1+1
 rem ----------------------------------------------------------------------
 &apos;	oSheet.getCellByPosition(3, riga1).CellBackColor = RGB(255, 0, 0)
-&apos;	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+&apos;	oSheet.getCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
 Barra_chiudi_sempre_4
 &apos;Exit Sub &apos;
 rem ----------------------------------------------------------------------
@@ -167,8 +167,8 @@ Focus_su_altro_Doc (newCap)
 		oSheetDest = ThisComponent.Sheets.getByName(&quot;Listino&quot;)
 		ThisComponent.CurrentController.Select(oSheetDest)
 insrows (riga1, riga2-riga1)
-		oDest = oSheetDest.GetCellByPosition(1,riga1).CellAddress
-		ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0, 0))
+		oDest = oSheetDest.getCellByPosition(1,riga1).CellAddress
+		ThisComponent.CurrentController.Select(oSheetDest.getCellByPosition(0, 0))
 rem ----------------------------------------------------------------------
 rem incollo l&apos;indice
 paste_noOBJ
@@ -193,13 +193,13 @@ copy_clip
 	unSelect &apos;unselect ranges
 Focus_su_altro_Doc (newCap)
 uriga=getLastUsedRow(oSheetDest)+1
-	ThisComponent.CurrentController.Select(oSheetDest.GetCellByPosition(0,uriga))
+	ThisComponent.CurrentController.Select(oSheetDest.getCellByPosition(0,uriga))
 &apos;ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;)
 ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	unSelect &apos;unselect ranges
 rem ----------------------------------------------------------------------
 rem inserisce il numero di prezzi
-oSheetDest.GetCellByPosition(5, riga1+ics).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+oSheetDest.getCellByPosition(5, riga1+ics).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp; uriga+1 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheetDest)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
 rem ----------------------------------------------------------------------
 rem copia/incolla Note
 Focus_su_altro_Doc (completo) &apos; torno sul listino completo
@@ -209,7 +209,7 @@ copy_clip
 	unSelect &apos;unselect ranges 	
 Focus_su_altro_Doc (newCap)
 	oSheetNote = ThisComponent.Sheets.getByName(&quot;Note&quot;)
-	ThisComponent.CurrentController.Select(oSheetNote.GetCellByPosition(0,0))
+	ThisComponent.CurrentController.Select(oSheetNote.getCellByPosition(0,0))
 &apos;ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;)
 ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 	unSelect &apos;unselect ranges
@@ -239,9 +239,9 @@ rem chiudo il capitolo
 rem ----------------------------------------------------------------------
 	Next i
 	oSheet.getCellByPosition (3,riga1).CellBackColor = RGB(255, 0, 0)
-	oSheet.GetCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
+	oSheet.getCellByPosition(5, riga1).formula = &quot;=CONCATENATE(COUNT(H&quot;&amp;  riga2+2 &amp;&quot;:H&quot; &amp; getLastUsedRow(oSheet)+1 &amp; &quot;);&quot;&quot; prezzi&quot;&quot;)&quot;
 Focus_su_altro_Doc (completo)
-	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Listino&quot;).GetCellByPosition(0,0))
+	ThisComponent.CurrentController.Select(ThisComponent.Sheets.getByName(&quot;Listino&quot;).getCellByPosition(0,0))
 rem ----------------------------------------------------------------------
 &apos; salvo il capitolo corrente
 	oDocFrame = ThisComponent.getCurrentController().getFrame()
@@ -257,14 +257,14 @@ Sub listino_venezia_2014 &apos;Giuseppe Vizziello 2014
 	oSheet=ThisComponent.currentController.activeSheet 
 	i = getLastUsedRow(oSheet)
 	Do While i &gt; 0
-		if oSheet.GetCellByPosition(0, i).string = &quot;&quot; and _
-			oSheet.GetCellByPosition(1, i).string &lt;&gt; &quot;&quot; and _
-			oSheet.GetCellByPosition(2, i).string = &quot;&quot; and _
-			oSheet.GetCellByPosition(3, i).string = &quot;&quot; Then
-			testo = oSheet.GetCellByPosition(1, i-1).String &amp; CHR$(10) &amp; oSheet.GetCellByPosition(1, i).String
+		if oSheet.getCellByPosition(0, i).string = &quot;&quot; and _
+			oSheet.getCellByPosition(1, i).string &lt;&gt; &quot;&quot; and _
+			oSheet.getCellByPosition(2, i).string = &quot;&quot; and _
+			oSheet.getCellByPosition(3, i).string = &quot;&quot; Then
+			testo = oSheet.getCellByPosition(1, i-1).String &amp; CHR$(10) &amp; oSheet.getCellByPosition(1, i).String
 &apos;	Print testo
-			oSheet.GetCellByPosition(1, i-1).String = testo
-			oSheet.GetCellByPosition(1, i).String = &quot;&quot;
+			oSheet.getCellByPosition(1, i-1).String = testo
+			oSheet.getCellByPosition(1, i).String = &quot;&quot;
 		EndIf
 	i=i-1
 	Loop 
@@ -277,13 +277,13 @@ Sub listino_venezia_2014_codici &apos;Giuseppe Vizziello 2014
 	uRow = getLastUsedRow(oSheet)
 	For i = 3 To uRow 
 Barra_Apri_Chiudi_5(&quot;                  Restano &quot;&amp; urow-i &amp;&quot; righe...&quot;, 0)
-		if len(oSheet.GetCellByPosition(2, i).string) &gt; 5 Then
-			testo = oSheet.GetCellByPosition(2, i).String
+		if len(oSheet.getCellByPosition(2, i).string) &gt; 5 Then
+			testo = oSheet.getCellByPosition(2, i).String
 			Else 
-			if len(oSheet.GetCellByPosition(2, i).string) &lt;= 3 and _
-				len(oSheet.GetCellByPosition(2, i).string) &gt; 0 Then
+			if len(oSheet.getCellByPosition(2, i).string) &lt;= 3 and _
+				len(oSheet.getCellByPosition(2, i).string) &gt; 0 Then
 
-				oSheet.GetCellByPosition(1, i).String = testo &amp; &quot;.&quot; &amp;	oSheet.GetCellByPosition(2, i).String
+				oSheet.getCellByPosition(1, i).String = testo &amp; &quot;.&quot; &amp;	oSheet.getCellByPosition(2, i).String
 			EndIf 
 		EndIf
 	next 
@@ -313,21 +313,21 @@ rem verifica la presenza dell&apos;intera stringa di una cella in un&apos;altra
 	oSheet=ThisComponent.currentController.activeSheet 
 	lRowE = getLastUsedRow(oSheet)
 	For i =1 to lRowE
-		str1 = oSheet.GetCellByPosition(1, i).String
-		str2 = oSheet.GetCellByPosition(2, i).String
+		str1 = oSheet.getCellByPosition(1, i).String
+		str2 = oSheet.getCellByPosition(2, i).String
 		lung = len (str1)
 	&apos;	If lung &gt; 0 Then
 			test = left (str1, lung-1)
 		&apos;	msgbox test &amp;&quot; -- &quot;&amp; str2 &amp;&quot; -- &quot;&amp; Instr (str2, test) 
 	&apos;	endif
 		If str1 = str2 or str2 = &quot;&quot; Then
-			oSheet.GetCellByPosition(3, i).String = str1
+			oSheet.getCellByPosition(3, i).String = str1
 			Else
 	&apos;	Print 	Instr (str2, test)
 			if Instr (str2, test) = 0 Then
-				oSheet.GetCellByPosition(3, i).String = str1 &amp; chr(10) &amp; str2
+				oSheet.getCellByPosition(3, i).String = str1 &amp; chr(10) &amp; str2
 				Else
-				oSheet.GetCellByPosition(3, i).String = str2
+				oSheet.getCellByPosition(3, i).String = str2
 			Endif
 		endif
 	Next 

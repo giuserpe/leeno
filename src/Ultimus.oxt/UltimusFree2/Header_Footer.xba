@@ -48,7 +48,7 @@ exit  SUB
 &apos;On Error Goto ErrorHandler
 &apos;Call SetModuleVars 
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
-		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+		If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 			on error goto Errore 
 		end if 
 	END IF
@@ -158,7 +158,7 @@ END SUB
 Sub Set_Header_Footer_Tutti__ &apos; ovvero va a modificare il testi 
 &apos; su una serie di Stili predefiniti - SOSPETTO DI INUTILITA&apos;
 sModulSubName = &quot;Set_Header_Footer_Tutti&quot;
-If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 	 on error goto Errore
  end if
 
@@ -445,7 +445,7 @@ SUB Set_HF_turbo (optional sMessaggio as string)
 &apos;Call SetModuleVars 
 sDocURL = thisComponent.getURL()
 &apos;	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then &apos; se la sheet esiste
-&apos;		If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1 then 
+&apos;		If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1 then 
 &apos;			on error goto Errore 
 &apos;		end if 
 &apos;	END IF

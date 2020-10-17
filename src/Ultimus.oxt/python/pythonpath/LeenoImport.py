@@ -1,31 +1,287 @@
 """
     LeenO - modulo di importazione prezzari
 """
-import logging
+import os
 import threading
-
-from xml.etree.ElementTree import ElementTree
-
 import uno
+from com.sun.star.beans import PropertyValue
 
-from com.sun.star.sheet.CellFlags import (VALUE, DATETIME, STRING,
-                                          ANNOTATION, FORMULA,
-                                          OBJECTS, EDITATTR)
+from io import StringIO
+import xml.etree.ElementTree as ET
 
 import LeenoUtils
 import pyleeno as PL
 import LeenoDialogs as DLG
-import LeenoToolbars as Toolbars
-from LeenoConfig import Config
+
+import SheetUtils
 
 import Dialogs
 
+import LeenoImport_XmlSix
+import LeenoImport_XmlToscana
+import LeenoImport_XmlSardegna
 
-def ImportErrorDlg(msg):
-    """ Generico dialogo di errore di importazione con messaggio
-        DA FARE
-    """
-    print("Import error:", msg)
+
+def fixParagraphSize(txt):
+    '''
+    corregge il paragrafo della descrizione negli elenchi prezzi
+    in modo che LibreOffice calcoli correttamente l'altezza della cella
+    '''
+    minLen = 130
+    splitted = txt.split('\n')
+    if len(splitted) > 1:
+        spl0 = splitted[0]
+        spl1 = splitted[1]
+        if len(spl0) + len(spl1) < minLen:
+            dl = minLen - len(spl0) - len(spl1)
+            spl0 = spl0 + dl * " "
+            txt = spl0 + '\n' + spl1
+            for t in splitted[2:]:
+                txt += '\n' + t
+    return txt
+
+
+def stripXMLNamespaces(data):
+    '''
+    prende una stringa contenente un file XML
+    elimina i namespaces dai dato
+    e ritorna il root dell' XML
+    '''
+    it = ET.iterparse(StringIO(data))
+    for _, el in it:
+        # strip namespaces
+        _, _, el.tag = el.tag.rpartition('}')
+    return it.root
+
+
+def findXmlParser(xmlText):
+    '''
+    fa un pre-esame del contenuto xml della stringa fornita
+    per determinare se si tratta di un tipo noto
+    (nel qual caso fornisce un parser adatto) oppure no
+    (nel qual caso avvisa di inviare il file allo staff)
+    '''
+
+    parsers = {
+        'xmlns="six.xsd"': LeenoImport_XmlSix.parseXML,
+        'autore="Regione Toscana"': LeenoImport_XmlToscana.parseXML,
+        'autore="Regione Sardegna"': LeenoImport_XmlSardegna.parseXML,
+    }
+
+    # controlla se il file è di tipo conosciuto...
+    for pattern, xmlParser in parsers.items():
+        if pattern in xmlText:
+            # si, ritorna il parser corrispondente
+            return xmlParser
+
+    # non trovato... ritorna None
+    return None
+
+def compilaElencoPrezzi(oDoc, dati, progress):
+    '''
+    Scrive la pagina dell' Elenco Prezzi di un documento LeenO
+    Il documento deve essere vuoto (appena creato)
+    I dati DEVONO essere nel formato seguente :
+
+        articolo = {
+            'codice': codice,
+            'desc': desc,
+            'um': um,
+            'prezzo': prezzo,
+            'mdo': mdo,
+            'sicurezza': oneriSic
+        }
+        artList = { codice : articolo, ... }
+
+        superCatList = { codice : descrizione, ... }
+        catList = { codice : descrizione, ... }
+
+        dati = {
+            'titolo': titolo,
+            'superCategorie': superCatList,
+            'categorie': catList,
+            'articoli' : artList
+        }
+
+        progress è una progressbar già visualizzata
+
+    '''
+
+    # inserisce supercategorie e categorie nella lista
+    # articoli, creando quindi un blocco unico
+    artList = dati['articoli']
+    superCatList = dati['superCategorie']
+    catList = dati['categorie']
+    for codice, desc in superCatList.items():
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': '',
+            'prezzo': '',
+            'mdo': '',
+            'sicurezza': ''
+        }
+    for codice, desc in catList.items():
+        artList[codice] = {
+            'codice': codice,
+            'desc': desc,
+            'um': '',
+            'prezzo': '',
+            'mdo': '',
+            'sicurezza': ''
+        }
+
+    # ordina l'elenco per codice articolo
+    sortedArtList = sorted(artList.items())
+
+    # ora, per velocità di compilazione, deve creare un array
+    # contenente tante tuples quanti articoli
+    # ognuna con la sequenza corretta per l'inserimento nel foglio
+    # (codice, desc, um, sicurezza, prezzo, mdo)
+    artArray = []
+    for item in sortedArtList:
+        itemData = item[1]
+        prezzo = itemData['prezzo']
+        mdo = itemData['mdo']
+        if isinstance(prezzo, str) or isinstance(mdo, str):
+            mdoVal = ''
+        else:
+            mdoVal = prezzo * mdo
+        artArray.append((
+            itemData['codice'],
+            itemData['desc'],
+            itemData['um'],
+            itemData['sicurezza'],
+            prezzo,
+            mdo,
+            mdoVal
+        ))
+
+    numItems = len(artArray)
+    numColumns = len(artArray[0])
+
+    oSheet = oDoc.getSheets().getByName('S2')
+    oSheet.getCellByPosition(2, 2).String = dati['titolo']
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oSheet.getCellByPosition(1, 1).String = dati['titolo']
+    oSheet.getRows().insertByIndex(4, numItems)
+
+    # riga e colonna di partenza del blocco da riempire
+    startRow = 4
+    startCol = 0
+
+    # fissa i limiti della progress
+    progress.setLimits(0, numItems)
+    progress.setValue(0)
+
+    item = 0
+    step = 100
+    while item < numItems:
+        progress.setValue(item)
+        sliced = artArray[item:item + step]
+        num = len(sliced)
+        oRange = oSheet.getCellRangeByPosition(
+            startCol,
+            startRow + item,
+            # l'indice parte da 0
+            startCol + numColumns - 1,
+            startRow + item + num - 1)
+        oRange.setDataArray(sliced)
+
+        item += step
+
+    oSheet.getRows().removeByIndex(3, 1)
+
+    return True
+
+
+def MENU_ImportElencoPrezziXML():
+    '''
+    Routine di importazione di un prezzario XML in tabella Elenco Prezzi
+    '''
+    filename = Dialogs.FileSelect('Scegli il file XML da importare', '*.xml')
+    if filename is None:
+        return
+
+    # se il file non contiene un titolo, utilizziamo il nome del file
+    # come titolo di default
+    defaultTitle = os.path.split(filename)[1]
+
+    # legge il file XML in una stringa
+    with open(filename, 'r', errors='ignore', encoding="utf8") as file:
+      data = file.read()
+
+    # cerca un parser adatto
+    xmlParser = findXmlParser(data)
+
+    # se non trovato, il file è di tipo sconosciuto
+    if xmlParser is None:
+        Dialogs.Exclamation(
+            Title = "File sconosciuto",
+            Text = "Il file fornito è di tipo sconosciuto\n"
+                   "Potete inviarne una copia allo staff di LeenO\n"
+                   "affinchè possa venire incluso nella prossima versione"
+        )
+        return
+
+    #try:
+    dati = xmlParser(data, defaultTitle)
+
+    #except Exception:
+    #    Dialogs.Exclamation(
+    #       Title="Errore nel file XML",
+    #       Text=f"Riscontrato errore nel file XML\n'{filename}'\nControllarlo e riprovare")
+    #    return
+
+    # il parser può gestirsi l'errore direttamente, nel qual caso
+    # ritorna None ed occorre uscire
+    if dati is None:
+        return
+
+    # creo nuovo file di computo
+    oDoc = PL.creaComputo(0)
+
+    # visualizza la progressbar
+    progress = Dialogs.Progress(
+        Title="Importazione prezzario",
+        Text="Compilazione prezzario in corso")
+    progress.show()
+
+    # compila l'elenco prezzi
+    compilaElencoPrezzi(oDoc, dati, progress)
+
+    # si posiziona sul foglio di computo appena caricato
+    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
+    oDoc.CurrentController.setActiveSheet(oSheet)
+
+    # messaggio di ok
+    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+
+    # nasconde la progressbar
+    progress.hide()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 ########################################################################
@@ -59,7 +315,7 @@ def importa_listino_leeno_run():
     #  viola(12632319,13684991,15790335)
     lista_articoli = list()
     nome = oSheet.getCellByPosition(2, 0).String
-    test = PL.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
+    test = SheetUtils.uFindStringCol('ATTENZIONE!', 5, oSheet) + 1
     assembla = DLG.DlgSiNo(
         '''Il riconoscimento di descrizioni e sottodescrizioni
 dipende dalla colorazione di sfondo delle righe.
@@ -84,7 +340,7 @@ Vuoi assemblare descrizioni e sottodescrizioni?''', 'Richiesta')
 
     PL.shutil.copyfile(orig, dest)
     madre = ''
-    for el in range(test, PL.getLastUsedCell(oSheet).EndRow + 1):
+    for el in range(test, SheetUtils.getLastUsedRow(oSheet) + 1):
         tariffa = oSheet.getCellByPosition(2, el).String
         descrizione = oSheet.getCellByPosition(4, el).String
         um = oSheet.getCellByPosition(6, el).String
@@ -178,264 +434,6 @@ Questa operazione potrebbe richiedere del tempo.''', 'Richiesta...')
     PL.autoexec()
 
 
-def MENU_XML_toscana_import():
-    '''
-    Importazione di un prezzario XML della regione Toscana
-    in tabella Elenco Prezzi del template COMPUTO.
-    '''
-    oDoc = LeenoUtils.getDocument()
-
-    DLG.MsgBox('Questa operazione potrebbe richiedere del tempo.', 'Avviso')
-    PL.New_file.computo(0)
-
-    try:
-        filename = Dialogs.FileSelect('Scegli il file XML Toscana da importare', '*.xml')
-        oDialogo_attesa = DLG.dlg_attesa()
-
-        # mostra il dialogo
-        DLG.attesa().start()
-        if filename is None:
-            return
-    except Exception:
-        ImportErrorDlg("Errore di importazione")
-        return
-
-    if not oDoc.getSheets().hasByName('COMPUTO'):
-        if (len(oDoc.getURL()) == 0 and
-                PL.getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndColumn == 0 and
-                PL.getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndRow == 0):
-            oDoc.close(True)
-
-    # effettua il parsing del file XML
-    tree = ElementTree()
-
-    try:
-        tree.parse(filename)
-    except Exception:
-        PL.ns_ins(filename)
-        tree.parse(filename)
-    # ~except Exception as e:
-        # ~MsgBox ("Eccezione " + str(type(e)) +
-        # ~"\nMessaggio: " + str(e.args) + '\n' +
-        # ~traceback.format_exc());
-        # ~return
-
-    root = tree.getroot()
-    iterator = tree.getiterator()
-
-    PRT = '{' + str(iterator[0].getchildren()[0]).split('}')[0].split('{')[-1] + '}'  # xmlns
-    # nome del prezzario
-    intestazione = root.find(PRT + 'intestazione')
-    titolo = ('Prezzario ' +
-              intestazione.get('autore') +
-              ' - ' +
-              intestazione[0].get('area') +
-              ' ' +
-              intestazione[0].get('anno'))
-
-    licenza = (intestazione[1].get('descrizione').split(':')[0] +
-               ' ' +
-               intestazione[1].get('tipo'))
-
-    titolo = (titolo +
-              '\nCopyright: ' +
-              licenza +
-              '\n\nhttp://prezzariollpp.regione.toscana.it')
-
-    # Contenuto = root.find(PRT+'Contenuto')
-
-    voci = root.getchildren()[1]
-
-    tipo_lista = list()
-    cap_lista = list()
-    lista_articoli = list()
-    lista_cap = list()
-    lista_subcap = list()
-    for el in voci:
-        if el.tag == PRT + 'Articolo':
-            codice = el.get('codice')
-            codicesp = codice.split('.')
-
-        voce = el.getchildren()[2].text
-        articolo = el.getchildren()[3].text
-
-        if articolo is None:
-            desc_voce = voce
-        else:
-            desc_voce = voce + ' ' + articolo
-        udm = el.getchildren()[4].text
-
-        try:
-            sic = float(el.getchildren()[-1][-4].get('valore'))
-        except IndexError:
-            sic = ''
-
-        try:
-            prezzo = float(el.getchildren()[5].text)
-        except Exception:
-            prezzo = float(el.getchildren()[5].text.split('.')[0] +
-                           el.getchildren()[5].text.split('.')[1] +
-                           '.' +
-                           el.getchildren()[5].text.split('.')[2])
-
-        try:
-            mdo = float(el.getchildren()[-1][-1].get('percentuale')) / 100
-            mdoE = mdo * prezzo
-        except IndexError:
-            mdo = ''
-            mdoE = ''
-
-        if codicesp[0] not in tipo_lista:
-            tipo_lista.append(codicesp[0])
-            cap = (codicesp[0], el.getchildren()[0].text, '', '', '', '', '')
-            lista_cap.append(cap)
-        if codicesp[0] + '.' + codicesp[1] not in cap_lista:
-            cap_lista.append(codicesp[0] + '.' + codicesp[1])
-            cap = (codicesp[0] +
-                   '.' +
-                   codicesp[1], el.getchildren()[1].text, '', '', '', '', '', '')
-
-            lista_subcap.append(cap)
-        voceel = (codice, desc_voce, udm, sic, prezzo, mdo, mdoE)
-        lista_articoli.append(voceel)
-
-    # compilo ##########################################################
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName('S2')
-    oSheet.getCellByPosition(2, 2).String = titolo
-    oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-    flags = (VALUE + DATETIME + STRING + ANNOTATION +
-             FORMULA + OBJECTS + EDITATTR)  # FORMATTED + HARDATTR
-    oSheet.getCellRangeByName('D1:V1').clearContents(flags)
-    oDoc.getSheets().getByName('COMPUTO').IsVisible = False
-    oSheet.getCellByPosition(1, 0).String = titolo
-    oSheet.getCellByPosition(2, 0).String = '''ATTENZIONE!
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
-
-N.B.: Si rimanda ad una attenta lettura delle note informative disponibili \
-sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
-
-    oSheet.getCellByPosition(1, 0).CellStyle = 'EP-mezzo'
-    n = 0
-
-    for el in (lista_articoli, lista_cap, lista_subcap):
-        oSheet.getRows().insertByIndex(4, len(el))
-        lista_come_array = tuple(el)
-        # Parametrizzo il range di celle a seconda della dimensione della lista
-        # scarto_colonne = 0  # numero colonne da saltare a partire da sinistra
-        # scarto_righe = 4  # numero righe da saltare a partire dall'alto
-        colonne_lista = len(lista_come_array[1])  # numero di colonne necessarie per ospitare i dati
-        righe_lista = len(lista_come_array)  # numero di righe necessarie per ospitare i dati
-        oRange = oSheet.getCellRangeByPosition(0, 4, colonne_lista + 0 - 1, righe_lista + 4 - 1)
-        oRange.setDataArray(lista_come_array)
-        # ~ oSheet.getRows().removeByIndex(3, 1)
-        oDoc.CurrentController.setActiveSheet(oSheet)
-
-        oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellStyle = "EP-aS"
-        oSheet.getCellRangeByPosition(1, 3, 1, righe_lista + 3 - 1).CellStyle = "EP-a"
-        oSheet.getCellRangeByPosition(2, 3, 7, righe_lista + 3 - 1).CellStyle = "EP-mezzo"
-        oSheet.getCellRangeByPosition(5, 3, 5, righe_lista + 3 - 1).CellStyle = "EP-mezzo %"
-        oSheet.getCellRangeByPosition(8, 3, 9, righe_lista + 3 - 1).CellStyle = "EP-sfondo"
-        oSheet.getCellRangeByPosition(11, 3, 11, righe_lista + 3 - 1).CellStyle = 'EP-mezzo %'
-        oSheet.getCellRangeByPosition(12, 3, 12, righe_lista + 3 - 1).CellStyle = 'EP statistiche_q'
-        oSheet.getCellRangeByPosition(13, 3, 13, righe_lista + 3 - 1).CellStyle = 'EP statistiche'
-        if n == 1:
-            oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = 16777120
-        elif n == 2:
-            oSheet.getCellRangeByPosition(0, 3, 0, righe_lista + 3 - 1).CellBackColor = 16777168
-        n += 1
-    # ~ set_larghezza_colonne()
-    Toolbars.Vedi()
-    # ~ adatta_altezza_riga('Elenco Prezzi')
-    # ~ riordina_ElencoPrezzi()
-    oDialogo_attesa.endExecute()
-    PL.struttura_Elenco()
-    oSheet.getCellRangeByName('F2').String = 'prezzi'
-    oSheet.getCellRangeByName('E2').Formula = ('=COUNT(E3:E' + str(PL.getLastUsedCell(oSheet).EndRow + 1) +
-                                               ')')
-    dest = filename[0:-4] + '.ods'
-    PL.salva_come(dest)
-    DLG.MsgBox('''
-Importazione eseguita con successo!
-
-ATTENZIONE:
-1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
-2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
-3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
-
-N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
-
-    ''', 'ATTENZIONE!')
-########################################################################
-
-
-def MENU_sardegna_2019():
-    '''
-    @@@ DA DOCUMENTARE
-    '''
-    oDoc = LeenoUtils.getDocument()
-
-    try:
-        oDoc.getSheets().insertNewByName('nuova_tabella', 2)
-    except Exception:
-        pass
-
-    oSheet0 = oDoc.getSheets().getByName('Worksheet')
-    oSheet1 = oDoc.getSheets().getByName('nuova_tabella')
-    # fine = PL.getLastUsedCell(oSheet0).EndRow + 1
-    n = 1
-    test1 = test2 = test3 = test4 = 1
-    for i in range(2, 50):
-        cod = oSheet0.getCellByPosition(0, i).String
-        cods = cod.split('.')
-        # ~ chi(cod)
-        cod0 = cods[0]
-        if test1 == 1:
-            cod1 = cods[1]
-            # ~ test1 =1
-        if test2 == 1:
-            cod2 = cods[2]
-            # ~ test2 =1
-        # if test3 == 1:
-        #    cod3 = cods[3]
-        # ~ test3 =1
-        cap1 = oSheet0.getCellByPosition(1, i).String
-        cap2 = oSheet0.getCellByPosition(2, i).String
-        cap3 = oSheet0.getCellByPosition(3, i).String
-        des = oSheet0.getCellByPosition(4, i).String
-        um = oSheet0.getCellByPosition(5, i).String
-        sic = oSheet0.getCellByPosition(10, i).Value
-        prz = oSheet0.getCellByPosition(7, i).Value
-        mdo = oSheet0.getCellByPosition(13, i).Value
-
-        if test1 == 1:
-            oSheet1.getCellByPosition(0, n).String = cod0
-            oSheet1.getCellByPosition(1, n).String = cap1
-            test1 = 0
-        elif test2 == 1:
-            n += 1
-            oSheet1.getCellByPosition(0, n).String = cod0 + '.' + cod1
-            oSheet1.getCellByPosition(1, n).String = cap2
-            test2 = 0
-        elif test3 == 1:
-            n += 1
-            oSheet1.getCellByPosition(0, n).String = cod0 + '.' + cod1 + '.' + cod2
-            oSheet1.getCellByPosition(1, n).String = cap3
-            test3 = 0
-        elif test4 == 1:
-            n += 1
-            oSheet1.getCellByPosition(0, n).String = cod
-            oSheet1.getCellByPosition(1, n).String = des
-            oSheet1.getCellByPosition(2, n).String = um
-            oSheet1.getCellByPosition(3, n).String = sic
-            oSheet1.getCellByPosition(4, n).String = prz
-            oSheet1.getCellByPosition(5, n).String = mdo
-            # ~ n += 1
-
-########################################################################
-
 
 def MENU_basilicata_2020():
     '''
@@ -449,7 +447,7 @@ def MENU_basilicata_2020():
         oSheet.getRows().removeByIndex(0, 1)
     oSheet = oDoc.getSheets().getByName('CATEGORIE')
     PL.GotoSheet('CATEGORIE')
-    fine = PL.getLastUsedCell(oSheet).EndRow + 1
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(0, fine):
         oSheet.getCellByPosition(1, i).String = (
             oSheet.getCellByPosition(0, i).String +
@@ -468,7 +466,7 @@ def MENU_basilicata_2020():
     PL.GotoSheet('unione_fogli')
     oSheet.getRows().removeByIndex(0, 1)
     PL.ordina_col(1)
-    fine = PL.getLastUsedCell(oSheet).EndRow + 1
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
     for i in range(0, fine):
         if len(oSheet.getCellByPosition(0, i).String.split('.')) == 3:
             madre = oSheet.getCellByPosition(1, i).String
@@ -498,7 +496,7 @@ def MENU_Piemonte_2019():
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
-    fine = PL.getLastUsedCell(oSheet).EndRow + 1
+    fine = SheetUtils.getLastUsedRow(oSheet) + 1
     elenco = list()
     for i in range(0, fine):
         if len(oSheet.getCellByPosition(1, i).String.split('.')) <= 2:
@@ -605,17 +603,16 @@ def MENU_fuf():
 
     oSheet.getCellRangeByPosition(
         0, 0,
-        getLastUsedCell(oSheet).EndColumn,
-        getLastUsedCell(oSheet).EndRow).Columns.OptimalWidth = True
+        SheetUtils.getLastUsedColumn(oSheet),
+        SheetUtils.getLastUsedRow(oSheet)).Columns.OptimalWidth = True
 
     return
-    copy_clip()
+    PL.copy_clip()
 
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
-    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
-        'com.sun.star.frame.DispatchHelper', ctx)
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
     oProp = []
     oProp0 = PropertyValue()
     oProp0.Name = 'Flags'
@@ -643,14 +640,9 @@ def MENU_fuf():
     oProp.append(oProp5)
     properties = tuple(oProp)
     #  _gotoCella(6,1)
+    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0, properties)
 
-    dispatchHelper.executeDispatch(oFrame, '.uno:InsertContents', '', 0,
-                                   properties)
-    oDoc.CurrentController.select(
-        oSheet.getCellRangeByPosition(0, 1, 5,
-                                      getLastUsedCell(oSheet).EndRow + 1))
-
-    ordina_col(3)
+    oDoc.CurrentController.select( oSheet.getCellRangeByPosition(0, 1, 5, SheetUtils.getLastUsedRow(oSheet) + 1))
+    PL.ordina_col(3)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
-

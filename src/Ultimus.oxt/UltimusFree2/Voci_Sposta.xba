@@ -36,7 +36,7 @@ FUNCTION Sposta_Voce_Analisi_Att &apos; sposta una analisi di prezzo in nuova po
 	If lSrow = -1 Then Exit Function
 &apos;rem ---------------------------------------------------------------------
 	oSheet = ThisComponent.currentController.activeSheet
-	oCell = oSheet.GetCellByPosition( 0 , lSrow)&apos; errata selezione di un range
+	oCell = oSheet.getCellByPosition( 0 , lSrow)&apos; errata selezione di un range
 	Select Case oCell.cellstyle
 		Case &quot;An.1v-Att Start&quot;, &quot;An-1_sigla&quot;, &quot;An-lavoraz-desc&quot;, &quot;An-lavoraz-Cod-sx&quot;, &quot;An-lavoraz-desc-CEN&quot;, &quot;An-sfondo-basso Att End&quot;
 			GoTo procedi:
@@ -73,7 +73,7 @@ rem ----------------------------------------------------------------------
 	lrowF=oEnd.CellAddress.Row 
 
 	If lrowF &lt; StartRow-1 then
-		oCellK = oSheet.GetCellByPosition( 0 , StartRow)
+		oCellK = oSheet.getCellByPosition( 0 , StartRow)
 		ThisComponent.CurrentController.Select(oCellK)
 		msgbox &quot; Hai selezionato una destinazione ESTERNA all&apos;area &quot; &amp; CHR$(10)_
 		&amp; &quot; definita dalla riga rossa di chiusura... &quot;&amp; CHR$(10) &amp; CHR$(10)_
@@ -105,7 +105,7 @@ Function Mettiti_esattamente_tra_due_Analisi_Att(ByVal lrow As Long)&apos;as str
 &apos; lrow = lrow -1 &apos; per tararlo 
 	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
 	
-	oCell = oSheet.GetCellByPosition( 1, lrow )
+	oCell = oSheet.getCellByPosition( 1, lrow )
 	xA = oCell.string
 		sString$ = &quot;Fine ANALISI&quot;
 	
@@ -116,7 +116,7 @@ Function Mettiti_esattamente_tra_due_Analisi_Att(ByVal lrow As Long)&apos;as str
 		exit FUNCTION
 	end if 
 	lrowF=oEnd.CellAddress.Row 
-	oCell=oSheet.GetCellbyPosition( 3, lrow)
+	oCell=oSheet.getCellByPosition( 3, lrow)
 	sAttributo_N = Trova_Attr_N (oCell, oSheet)
 	
 &apos;	ThisComponent.CurrentController.Select(oCell)
@@ -127,7 +127,7 @@ Function Mettiti_esattamente_tra_due_Analisi_Att(ByVal lrow As Long)&apos;as str
 	end if
 	
 	For nCurRow = lrow To lrowF
-		oCell=oSheet.GetCellbyPosition( 3, nCurRow)&apos; lrow )
+		oCell=oSheet.getCellByPosition( 3, nCurRow)&apos; lrow )
 					&apos;			ThisComponent.CurrentController.Select(oCell)
 &apos;	print
 		
@@ -140,7 +140,7 @@ Function Mettiti_esattamente_tra_due_Analisi_Att(ByVal lrow As Long)&apos;as str
 		if nCurRow = lrowF then
 			Do while (Trova_Attr_N (oCell, oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot;
 				nCurRow = nCurRow-1
-				oCell=oSheet.GetCellbyPosition( 0, nCurRow)
+				oCell=oSheet.getCellByPosition( 0, nCurRow)
 &apos;			ThisComponent.CurrentController.Select(oCell)
 &apos;			print
 			loop
@@ -160,20 +160,20 @@ dim lrowS as long
 dim lrowE as long
 	oSheet = ThisComponent.currentController.activeSheet 
 	lcol = 0
-	oCell = oSheet.GetCellByPosition( 3 , lrow)
+	oCell = oSheet.getCellByPosition( 3 , lrow)
 	nCurRow = lrow
 &apos;	print lrow
-	Do while Trova_Attr_N (oSheet.GetCellByPosition( 3 ,nCurRow ), oSheet) &lt;&gt; &quot;Start_voce_ANALISI&quot;
-			if oSheet.GetCellByPosition( 5, nCurRow).string = &quot;TOTALE&quot; then
+	Do while Trova_Attr_N (oSheet.getCellByPosition( 3 ,nCurRow ), oSheet) &lt;&gt; &quot;Start_voce_ANALISI&quot;
+			if oSheet.getCellByPosition( 5, nCurRow).string = &quot;TOTALE&quot; then
 				exit do
 			end if
 				nCurRow = nCurRow-1
 	loop
 	lrowS = nCurRow
 	nCurRow = lrow
-&apos;	Do while (Trova_Attr_N (oSheet.GetCellByPosition( 0 ,nCurRow ), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot; or _
-	Do while oSheet.GetCellByPosition( 0, nCurRow).cellstyle &lt;&gt; &quot;An-sfondo-basso Att End&quot; and _
-			oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;----&quot;
+&apos;	Do while (Trova_Attr_N (oSheet.getCellByPosition( 0 ,nCurRow ), oSheet)) &lt;&gt; &quot;End_voce_ANALISI&quot; or _
+	Do while oSheet.getCellByPosition( 0, nCurRow).cellstyle &lt;&gt; &quot;An-sfondo-basso Att End&quot; and _
+			oSheet.getCellByPosition( 0, nCurRow).string &lt;&gt; &quot;----&quot;
 				nCurRow = nCurRow+1
 	Loop
 	lrowE = nCurRow&apos;+1
@@ -202,7 +202,7 @@ dim xA as string
  &apos; lrow = lrow -1 &apos; per tararlo 
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
 
- oCell = oSheet.GetCellByPosition( 1, lrow )
+ oCell = oSheet.getCellByPosition( 1, lrow )
 	xA = oCell.string
  	sString$ = &quot;Fine ANALISI&quot;
 
@@ -214,8 +214,8 @@ dim xA as string
 		exit FUNCTION
 	end if 
 	lrowF=oEnd.CellAddress.Row 
-	oCell=oSheet.GetCellbyPosition( 3, lrow)
-	if oSheet.GetCellByPosition( 5, lrow).string = &quot;TOTALE&quot; then &apos; esattamente all&apos;inizio di una voce
+	oCell=oSheet.getCellByPosition( 3, lrow)
+	if oSheet.getCellByPosition( 5, lrow).string = &quot;TOTALE&quot; then &apos; esattamente all&apos;inizio di una voce
 		Mettiti_esattamente_tra_due_Analisi_Att = lrow&apos;+1
 		exit function
 	end if
@@ -223,16 +223,16 @@ dim xA as string
 	For nCurRow = lrow To lrowF
 	print nCurRow
 			ThisComponent.CurrentController.Select(oCell)
-			if oSheet.GetCellByPosition( 5, nCurRow).string = &quot;TOTALE&quot; then
+			if oSheet.getCellByPosition( 5, nCurRow).string = &quot;TOTALE&quot; then
 				&apos;lrow = ocell.celladdress.row
 			&apos;	print &quot;caso A &quot; &amp; lrow
 				Mettiti_esattamente_tra_due_Analisi = nCurRow&apos; + 1
 				exit function &apos;for
 			end if
 			if nCurRow = lrowF then
-				Do while oSheet.GetCellByPosition( 0, nCurRow).string &lt;&gt; &quot;----&quot;
+				Do while oSheet.getCellByPosition( 0, nCurRow).string &lt;&gt; &quot;----&quot;
 						nCurRow = nCurRow-1
-						oCell=oSheet.GetCellbyPosition( 0, nCurRow)
+						oCell=oSheet.getCellByPosition( 0, nCurRow)
 				&apos;	ThisComponent.CurrentController.Select(oCell)
 				&apos;	print
 			&apos;	print &quot;caso B &quot; &amp; lrow

@@ -25,11 +25,11 @@ Function cerca_riga_rossa(oNomeSheet) &apos; (c) Giuseppe Vizziello 2014
 	lastRow=getLastUsedRow(oSheet)
 
 	For i = 0 To lastRow
-&apos;print oSheet.GetCellByPosition(0,i).cellstyle
+&apos;print oSheet.getCellByPosition(0,i).cellstyle
 &apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i)
-		If oSheet.GetCellByPosition(0,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
-			oSheet.GetCellByPosition(1,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
-			oSheet.GetCellByPosition(2,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; Then
+		If oSheet.getCellByPosition(0,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
+			oSheet.getCellByPosition(1,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
+			oSheet.getCellByPosition(2,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; Then
 	cerca_riga_rossa = i
 			Exit For 
 		End If
@@ -67,12 +67,12 @@ print &quot;sModulSubName&quot; &amp; &quot; - &quot; &amp; Erl &amp; &quot; - &
 		&amp; &quot;&quot;&amp; CHR$(10), 292, &quot; ..........ERRORE..............&quot;) = 6 then
 	&apos;	print ErroreDet
 			ErroreDet = 0
-			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=0
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=0
 	&apos;		print ErroreDet
 		else 
 	&apos;	print ErroreDet
 			ErroreDet = 1
-			ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value=1
+			ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,300).value=1
 	&apos;		print ErroreDet
 	end if
 Clessid_lock_End	

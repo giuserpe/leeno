@@ -43,7 +43,7 @@ oSheets = odoc.Sheets
 		exit sub
 	end if
 	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
-	oCell = oSheet.GetCellByPosition( 0 , lrow)&apos; errata selezione di un range
+	oCell = oSheet.getCellByPosition( 0 , lrow)&apos; errata selezione di un range
 &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
 	lastUrow = getLastUsedRow(oSheet)
  	 lRow=oCell.CellAddress.Row
@@ -54,7 +54,7 @@ oSheets = odoc.Sheets
 	xA =oCell.String
 	do while xA = &quot;&quot; 
 		lrow = lrow -1
-		oCell = oSheet.GetCellByPosition( 0 , lrow)
+		oCell = oSheet.getCellByPosition( 0 , lrow)
 		xA =oCell.String
 	loop
 	
@@ -67,18 +67,18 @@ oSheets = odoc.Sheets
 &apos;print
  lrow = oRangeVC.RangeAddress.StartRow
 
-	 oCell = oSheet.GetCellByPosition( 0 , lrow)
+	 oCell = oSheet.getCellByPosition( 0 , lrow)
  &apos; ThisComponent.CurrentController.Select(oCell)
 
 	sRangeDest = &quot;COMPUTO.A&quot;+ (lrow+1 ) &apos;&quot;calculDPU.A29&quot;
 	
 	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
 
- oCell = oSheet.GetCellByPosition( 0 , lrow)
+ oCell = oSheet.getCellByPosition( 0 , lrow)
  
 	lrow = oRangeVC.RangeAddress.EndRow -1
 	lrowE = lrow
-oCell = oSheet.GetCellByPosition( 1 , lrow )
+oCell = oSheet.getCellByPosition( 1 , lrow )
  &apos;	 ThisComponent.CurrentController.Select(oCell)	
 
 	sRangeSRC = &quot;&apos;S1&apos;.$E$48:$Am$48&quot;
@@ -87,7 +87,7 @@ oCell = oSheet.GetCellByPosition( 1 , lrow )
 	&apos; ok! Sistemata anche la riga sommano
 	&apos; copiato tutto (formati, formule e contenuti) della riga sommano
 
- oCell = oSheet.GetCellByPosition( 1 , lrow-1)
+ oCell = oSheet.getCellByPosition( 1 , lrow-1)
  xA =oCell.String	
  &apos; ThisComponent.CurrentController.Select(oCell)
  
@@ -97,13 +97,13 @@ oCell = oSheet.GetCellByPosition( 1 , lrow )
  		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$Am$47&quot;	 
  		copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
  		lrow=lrow-1
- 	 oCell = oSheet.GetCellByPosition( 1 , lrow)
+ 	 oCell = oSheet.getCellByPosition( 1 , lrow)
  	 &apos; ThisComponent.CurrentController.Select(oCell)
  &apos;	 Print&quot; copiato&quot;
  	 xA =oCell.String	 
 	loop
 	
-	oCell = oSheet.GetCellByPosition( 1 , lrowE+3)
+	oCell = oSheet.getCellByPosition( 1 , lrowE+3)
 	 ThisComponent.CurrentController.Select(oCell)
 &apos; controllare anche le somme???	
 END SUB

@@ -207,7 +207,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Varie.elimina_riga?language=Basic&amp;location=application</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_elimina_righe</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/cross</value>
@@ -548,6 +548,7 @@
             <value>_self</value>
           </prop>
         </node>
+<!--
         <node oor:name="Ca35" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -565,6 +566,7 @@
             <value>_self</value>
           </prop>
         </node>
+-->
         <node oor:name="Ca45" oor:op="replace">
           <prop oor:name="Context" oor:type="xs:string">
             <value />
@@ -904,24 +906,10 @@
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
                 </prop>
                 <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport_XmlSix.MENU_Import_Ep_XML_SIX</value>
+                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_ImportElencoPrezziXML</value>
                 </prop>
                 <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzario XML-SIX</value>
-                </prop>
-                <prop oor:name="Target" oor:type="xs:string">
-                  <value>_self</value>
-                </prop>
-              </node>
-              <node oor:name="IE025" oor:op="replace">
-                <prop oor:name="Context" oor:type="xs:string">
-                  <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                </prop>
-                <prop oor:name="URL" oor:type="xs:string">
-                  <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_XML_toscana_import</value>
-                </prop>
-                <prop oor:name="Title" oor:type="xs:string">
-                  <value>Importa voci da prezzario Regione Toscana XML</value>
+                  <value>Importa voci da prezzari in formato XML</value>
                 </prop>
                 <prop oor:name="Target" oor:type="xs:string">
                   <value>_self</value>
@@ -1731,6 +1719,37 @@
               <value>_self</value>
             </prop>
           </node>
+
+          <node oor:name="mPrintSettings" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSettings.MENU_PrintSettings</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Impostazioni di stampa e export PDF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
+          <node oor:name="mExport" oor:op="replace">
+            <prop oor:name="Context" oor:type="xs:string">
+              <value>com.sun.star.sheet.SpreadsheetDocument</value>
+            </prop>
+            <prop oor:name="URL" oor:type="xs:string">
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoPdf.MENU_Pdf</value>
+            </prop>
+            <prop oor:name="Title" oor:type="xs:string">
+              <value>Esporta documenti in PDF</value>
+            </prop>
+            <prop oor:name="Target" oor:type="xs:string">
+              <value>_self</value>
+            </prop>
+          </node>
+
           <node oor:name="m30" oor:op="replace">
             <prop oor:name="Context" oor:type="xs:string">
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
@@ -1842,25 +1861,6 @@
                   <value>_self</value>
                 </prop>
               </node>
-              <!--
-                   <node oor:name="m13S8" oor:op="replace">
-                   <prop oor:name="Context" oor:type="xs:string">
-                   <value>com.sun.star.sheet.SpreadsheetDocument</value>
-                   </prop>
-                   <prop oor:name="URL" oor:type="xs:string">
-                   <value>vnd.sun.star.script:UltimusFree2.Finale_2.esporta_PDF_Foglio_Attivo?language=Basic&amp;location=application</value>
-                   </prop>
-                   <prop oor:name="ImageIdentifier" oor:type="xs:string">
-                   <value>%origin%/icons/pdf-icon</value>
-                   </prop>
-                   <prop oor:name="Title" oor:type="xs:string">
-                   <value>3) ESPORTA in PDF il foglio attivo  </value>
-                   </prop>
-                   <prop oor:name="Target" oor:type="xs:string">
-                   <value>_self</value>
-                   </prop>
-                   </node>
-              -->
               <node oor:name="m13S9" oor:op="replace">
                 <prop oor:name="Context" oor:type="xs:string">
                   <value>com.sun.star.sheet.SpreadsheetDocument</value>

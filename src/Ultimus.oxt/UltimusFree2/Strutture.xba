@@ -243,12 +243,12 @@ sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descriz
 	oRange = osheet.getCellRangeByPosition (0,3,5,lLastUrowNN )									
 	&apos;---------------
 	If thisComponent.Sheets.hasByName(&quot;S1&quot;) Then 
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value = &quot;&quot; then
+			If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,310).value = &quot;&quot; then
 				lAltezzaRiga = 1200
 			end if
-			If ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value &lt;&gt; &quot;&quot; then
+			If ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,310).value &lt;&gt; &quot;&quot; then
 				lAltezzaRiga =_
-				ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,310).value * 1000
+				ThisComponent.Sheets.getByName(&quot;S1&quot;).getCellByPosition(7,310).value * 1000
 			end if	
 		else
 			lAltezzaRiga = 1300
@@ -260,22 +260,22 @@ sub Tronca_Altezza_Analisi &apos; su Analisi limita l&apos;altezza delle descriz
 	if lrow &lt;= 1 then
 		lrow= 5 &apos;altrimenti si incasina con le successive...
 	end if
-	if oSheet.GetCellByPosition(1 ,lrow).Rows.OptimalHeight = false or _
-		oSheet.GetCellByPosition(1 ,lrow-1).Rows.OptimalHeight = false or _
-		oSheet.GetCellByPosition(1 ,lrow-2).Rows.OptimalHeight = false or _
-		oSheet.GetCellByPosition(1 ,lrow+1).Rows.OptimalHeight = false or _
-		oSheet.GetCellByPosition(1 ,lrow+2).Rows.OptimalHeight = false or _
-		oSheet.GetCellByPosition(1 ,lrow+3).Rows.OptimalHeight = false or _
-		oSheet.GetCellByPosition(1 ,lrow+4).Rows.OptimalHeight = false then
+	if oSheet.getCellByPosition(1 ,lrow).Rows.OptimalHeight = false or _
+		oSheet.getCellByPosition(1 ,lrow-1).Rows.OptimalHeight = false or _
+		oSheet.getCellByPosition(1 ,lrow-2).Rows.OptimalHeight = false or _
+		oSheet.getCellByPosition(1 ,lrow+1).Rows.OptimalHeight = false or _
+		oSheet.getCellByPosition(1 ,lrow+2).Rows.OptimalHeight = false or _
+		oSheet.getCellByPosition(1 ,lrow+3).Rows.OptimalHeight = false or _
+		oSheet.getCellByPosition(1 ,lrow+4).Rows.OptimalHeight = false then
 			&apos; se la riga corrente non &quot;adattata&quot; le allunga
 			oRange.Rows.OptimalHeight = true
 		 else
 		 	Barra_chiudi_sempre_4	
 			Barra_Apri_Chiudi_5(&quot;..Solo un attimo... Pazienta... &quot;, 60)
 			For i = 2 to lLastUrowNN
-				&apos;oSheet.GetCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R 
-				if	oSheet.GetCellByPosition(1 , (I)).rows.Height &gt;= lAltezzaRiga then 
-					 oSheet.GetCellByPosition(1 , (I)).rows.Height = lAltezzaRiga
+				&apos;oSheet.getCellByPosition(1 , (I)).CellStyle = &quot;comp Art-EP&quot; &amp; s_R 
+				if	oSheet.getCellByPosition(1 , (I)).rows.Height &gt;= lAltezzaRiga then 
+					 oSheet.getCellByPosition(1 , (I)).rows.Height = lAltezzaRiga
 				end if
 			next I
 	endif

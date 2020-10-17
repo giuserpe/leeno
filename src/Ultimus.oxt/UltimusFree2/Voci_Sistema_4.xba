@@ -33,7 +33,7 @@ dim sString$, xA, sTag as string
 	oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
 &apos;	ThisComponent.CurrentController.Select(oSheet)
 	iRrow = 3
-	oCell = oSheet.GetCellByPosition( 3 , iRrow)
+	oCell = oSheet.getCellByPosition( 3 , iRrow)
 &apos;	ThisComponent.CurrentController.Select(oCell)
 	lastUrow = getLastUsedRow(oSheet)
 	sString$ = &quot;Fine Computo&quot; &apos; DOPPIO CONTROLLO sulla fine della sheet
@@ -45,7 +45,7 @@ dim sString$, xA, sTag as string
 	end if 
 	lRowE=oEnd.RangeAddress.EndRow 
 	iRrow = 3
-	oCell = oSheet.GetCellByPosition( 3 , iRrow)
+	oCell = oSheet.getCellByPosition( 3 , iRrow)
 	xA = oCell.string
 
 	Do while iRrow &lt; lastUrow And iRrow &lt; lRowE
@@ -55,7 +55,7 @@ dim sString$, xA, sTag as string
 							exit do
 						end if		
 						iRrow = iRrow+1
- 						oCell = oSheet.GetCellByPosition( 3 , iRrow)
+ 						oCell = oSheet.getCellByPosition( 3 , iRrow)
  						xA = oCell.string
 		&apos;			ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
 	&apos;					print xA
@@ -63,7 +63,7 @@ dim sString$, xA, sTag as string
  		 if sTag = &quot;esci&quot; then
  		 		exit do
  		 end if
- 		 oCell = oSheet.GetCellByPosition( 3 , iRrow)
+ 		 oCell = oSheet.getCellByPosition( 3 , iRrow)
  	&apos;&apos;&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
  &apos;		 print &quot;prima &quot; &amp; iRrow
  		 
@@ -72,14 +72,14 @@ dim sString$, xA, sTag as string
  		iRrow =Riformatta_Voce_Computo_3_MOD (iRrow)
  &apos;	print &quot;torna &quot; &amp; iRrow
  		
- 	&apos;	oCell = oSheet.GetCellByPosition( 3 , iRrow)
+ 	&apos;	oCell = oSheet.getCellByPosition( 3 , iRrow)
  &apos;		 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
  &apos;		print &quot;dopo &quot; &amp; iRrow
 	&apos;	ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
 	&apos;	print &quot; posizione dopo l&apos;azione singila voce &quot; &amp; iRrow
 		iRrow = iRrow +2
 &apos;		print &quot;sommato &quot; &amp;iRrow
- 		oCell = oSheet.GetCellByPosition( 3 , iRrow)
+ 		oCell = oSheet.getCellByPosition( 3 , iRrow)
  		xA = oCell.string
  	&apos;	ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
  &apos;		print &quot;ciclo esterno&quot;
@@ -109,7 +109,7 @@ oSheets = odoc.Sheets
 
  &apos;	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	oCell = oSheet.getCellByPosition( 0 , lrow)
 &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
 	lastUrow = getLastUsedRow(oSheet)
  &apos;	 lRow=oCell.CellAddress.Row
@@ -120,7 +120,7 @@ oSheets = odoc.Sheets
 	xA =oCell.String
 	do while xA = &quot;&quot; 
 		lrow = lrow -1
-		oCell = oSheet.GetCellByPosition( 0 , lrow)
+		oCell = oSheet.getCellByPosition( 0 , lrow)
 		xA =oCell.String
 	loop
 	
@@ -131,18 +131,18 @@ oSheets = odoc.Sheets
 &apos;print
  lrow = oRangeVC.RangeAddress.StartRow
 	 lEndRow = oRangeVC.RangeAddress.EndRow-1
-	 oCell = oSheet.GetCellByPosition( 0 , lrow-1)
+	 oCell = oSheet.getCellByPosition( 0 , lrow-1)
  &apos; ThisComponent.CurrentController.Select(oCell)
 
 	sRangeDest = &quot;COMPUTO.B&quot;+ (lrow+1 ) &apos;
 	
 	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
 
- &apos; oCell = oSheet.GetCellByPosition( 0 , lrow)
+ &apos; oCell = oSheet.getCellByPosition( 0 , lrow)
  
 &apos;	lrow = oRangeVC.RangeAddress.EndRow -1
 &apos;&apos;	lrowE = lrow
-&apos;oCell = oSheet.GetCellByPosition( 1 , lrow )
+&apos;oCell = oSheet.getCellByPosition( 1 , lrow )
  &apos;	 ThisComponent.CurrentController.Select(oCell)	
 &apos;print &quot;appena copiato&quot;
 &apos;	sRangeSRC = &quot;&apos;S1&apos;.$E$48:$AI$48&quot;
@@ -151,7 +151,7 @@ oSheets = odoc.Sheets
 	&apos; ok! Sistemata anche la riga sommano
 	&apos; copiato tutto (formati, formule e contenuti) della riga sommano
 
- &apos; oCell = oSheet.GetCellByPosition( 1 , lrow-1)
+ &apos; oCell = oSheet.getCellByPosition( 1 , lrow-1)
  &apos; xA =oCell.String	
  &apos; ThisComponent.CurrentController.Select(oCell)
  
@@ -161,16 +161,16 @@ oSheets = odoc.Sheets
 &apos; 		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$AI$47&quot;	 
 &apos; 		copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
 &apos; 		lrow=lrow-1
-&apos; 	 oCell = oSheet.GetCellByPosition( 1 , lrow)
+&apos; 	 oCell = oSheet.getCellByPosition( 1 , lrow)
  	 &apos; ThisComponent.CurrentController.Select(oCell)
  &apos;	 Print&quot; copiato&quot;
 &apos; 	 xA =oCell.String	 
 &apos;	loop
 	
-	&apos;oCell = oSheet.GetCellByPosition( 1 , lrowE+3)
+	&apos;oCell = oSheet.getCellByPosition( 1 , lrowE+3)
 	
 	 Riformatta_Voce_Computo_3_MOD = lEndRow
-&apos;	 oCell = oSheet.GetCellByPosition( 1 , lEndRow)
+&apos;	 oCell = oSheet.getCellByPosition( 1 , lEndRow)
 &apos;	 ThisComponent.CurrentController.Select(oCell)
 &apos;	 print 
 
@@ -199,7 +199,7 @@ oSheets = odoc.Sheets
 
  &apos;	lrow= Range2Cell &apos; queste 4 righe per ridurre a cella iniziale una eventuale 
 	oSheet = ThisComponent.currentController.activeSheet &apos;controllo cella/range
-	oCell = oSheet.GetCellByPosition( 0 , lrow)
+	oCell = oSheet.getCellByPosition( 0 , lrow)
 &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; ok sono sulla cella giusta... @@@@ debug
 	lastUrow = getLastUsedRow(oSheet)
  &apos;	 lRow=oCell.CellAddress.Row
@@ -210,7 +210,7 @@ oSheets = odoc.Sheets
 	xA =oCell.String
 	do while xA = &quot;&quot; 
 		lrow = lrow -1
-		oCell = oSheet.GetCellByPosition( 0 , lrow)
+		oCell = oSheet.getCellByPosition( 0 , lrow)
 		xA =oCell.String
 	loop
 	
@@ -221,18 +221,18 @@ oSheets = odoc.Sheets
 &apos;print
  lrow = oRangeVC.RangeAddress.StartRow
 
-	 oCell = oSheet.GetCellByPosition( 0 , lrow)
+	 oCell = oSheet.getCellByPosition( 0 , lrow)
  &apos; ThisComponent.CurrentController.Select(oCell)
 
 	sRangeDest = &quot;COMPUTO.A&quot;+ (lrow+1 ) &apos;
 	
 	copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
 
- oCell = oSheet.GetCellByPosition( 0 , lrow)
+ oCell = oSheet.getCellByPosition( 0 , lrow)
  
 	lrow = oRangeVC.RangeAddress.EndRow -1
 	lrowE = lrow
-oCell = oSheet.GetCellByPosition( 1 , lrow )
+oCell = oSheet.getCellByPosition( 1 , lrow )
  &apos;	 ThisComponent.CurrentController.Select(oCell)	
 
 	sRangeSRC = &quot;&apos;S1&apos;.$E$48:$AI$48&quot;
@@ -241,7 +241,7 @@ oCell = oSheet.GetCellByPosition( 1 , lrow )
 	&apos; ok! Sistemata anche la riga sommano
 	&apos; copiato tutto (formati, formule e contenuti) della riga sommano
 
- oCell = oSheet.GetCellByPosition( 1 , lrow-1)
+ oCell = oSheet.getCellByPosition( 1 , lrow-1)
  xA =oCell.String	
  &apos; ThisComponent.CurrentController.Select(oCell)
  
@@ -251,13 +251,13 @@ oCell = oSheet.GetCellByPosition( 1 , lrow )
  		sRangeSRC = &quot;&apos;S1&apos;.$E$47:$AI$47&quot;	 
  		copiaFormati2 (lSheetSRC, sRangeSRC, lSheetDest, sRangeDest)
  		lrow=lrow-1
- 	 oCell = oSheet.GetCellByPosition( 1 , lrow)
+ 	 oCell = oSheet.getCellByPosition( 1 , lrow)
  	 &apos; ThisComponent.CurrentController.Select(oCell)
  &apos;	 Print&quot; copiato&quot;
  	 xA =oCell.String	 
 	loop
 	
-	oCell = oSheet.GetCellByPosition( 1 , lrowE+3)
+	oCell = oSheet.getCellByPosition( 1 , lrowE+3)
 	 Riformatta_Voce_Computo_3 = lrowE+3
 &apos;	 ThisComponent.CurrentController.Select(oCell)
 

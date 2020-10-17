@@ -92,29 +92,29 @@ rem attivo il registro di contabilità
 		oSheetReg.PageStyle = &quot;PageStyle_REGISTRO_A4&quot; &apos; imposta stile pagina
 rem riga di intestazione
 		oSheetReg.getCellRangeByPosition(fcol+0,fRow,10,fRow).CellStyle=&quot;An.1v-Att Start&quot; &apos;STILE
-		oSheetReg.GetCellByPosition(fcol+0,fRow).setstring(&quot;N. ord.&quot;+ chr(13) +&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
-		oSheetReg.GetCellByPosition(fcol+1,fRow).setstring(&quot;LAVORAZIONI&quot;+ chr(13) + &quot;E SOMMINISTRAZIONI&quot;)
-		oSheetReg.GetCellByPosition(fcol+2,fRow).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
-		oSheetReg.GetCellByPosition(fcol+3,fRow).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
-		oSheetReg.GetCellByPosition(fcol+4,fRow).setstring(&quot;U.M.&quot;)
-		oSheetReg.GetCellByPosition(fcol+5,fRow).setstring(&quot;Quantità&quot; + chr(13) + &quot;Positive&quot;)
-		oSheetReg.GetCellByPosition(fcol+6,fRow).setstring(&quot;Quantità&quot; + chr(13) + &quot;Negative&quot;)
-		oSheetReg.GetCellByPosition(fcol+7,fRow).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
-		oSheetReg.GetCellByPosition(fcol+8,fRow).setstring(&quot;Importo&quot; + chr(13) + &quot;debito&quot;)
-		oSheetReg.GetCellByPosition(fcol+9,fRow).setstring(&quot;Importo&quot; + chr(13) + &quot;pagamento&quot;)
-		oSheetReg.GetCellByPosition(fcol+10,fRow).setstring(&quot;Num.&quot; + chr(13) +&quot;Pag.&quot;)
+		oSheetReg.getCellByPosition(fcol+0,fRow).setstring(&quot;N. ord.&quot;+ chr(13) +&quot;Articolo&quot;+ chr(13) +&quot;Data&quot;)
+		oSheetReg.getCellByPosition(fcol+1,fRow).setstring(&quot;LAVORAZIONI&quot;+ chr(13) + &quot;E SOMMINISTRAZIONI&quot;)
+		oSheetReg.getCellByPosition(fcol+2,fRow).setstring(&quot;Lib.&quot; + chr(13) +&quot;N.&quot;)
+		oSheetReg.getCellByPosition(fcol+3,fRow).setstring(&quot;Lib.&quot; + chr(13) +&quot;P.&quot;)
+		oSheetReg.getCellByPosition(fcol+4,fRow).setstring(&quot;U.M.&quot;)
+		oSheetReg.getCellByPosition(fcol+5,fRow).setstring(&quot;Quantità&quot; + chr(13) + &quot;Positive&quot;)
+		oSheetReg.getCellByPosition(fcol+6,fRow).setstring(&quot;Quantità&quot; + chr(13) + &quot;Negative&quot;)
+		oSheetReg.getCellByPosition(fcol+7,fRow).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
+		oSheetReg.getCellByPosition(fcol+8,fRow).setstring(&quot;Importo&quot; + chr(13) + &quot;debito&quot;)
+		oSheetReg.getCellByPosition(fcol+9,fRow).setstring(&quot;Importo&quot; + chr(13) + &quot;pagamento&quot;)
+		oSheetReg.getCellByPosition(fcol+10,fRow).setstring(&quot;Num.&quot; + chr(13) +&quot;Pag.&quot;)
 rem larghezza colonne
-		oSheetReg.GetCellByPosition(fcol,fRow).Columns.Width = 1600 &apos;N. ord.
-		oSheetReg.GetCellByPosition(fcol+1,fRow).Columns.Width = 6600 &apos;LAVORAZIONI
-		oSheetReg.GetCellByPosition(fcol+2,fRow).Columns.Width = 650 &apos;Lib.N.
-		oSheetReg.GetCellByPosition(fcol+3,fRow).Columns.Width = 650 &apos;Lib.P.
-		oSheetReg.GetCellByPosition(fcol+4,fRow).Columns.Width = 1000 &apos;U.M.
-		oSheetReg.GetCellByPosition(fcol+5,fRow).Columns.Width = 1600 &apos;Positive
-		oSheetReg.GetCellByPosition(fcol+6,fRow).Columns.Width = 1600 &apos;Negative
-		oSheetReg.GetCellByPosition(fcol+7,fRow).Columns.Width = 1400 &apos;Prezzo
-		oSheetReg.GetCellByPosition(fcol+8,fRow).Columns.Width = 1950 &apos;debito
-		oSheetReg.GetCellByPosition(fcol+9,fRow).Columns.Width = 1950 &apos;pagamento
-		oSheetReg.GetCellByPosition(fcol+10,fRow).columns.OptimalWidth = true &apos;n.pag.
+		oSheetReg.getCellByPosition(fcol,fRow).Columns.Width = 1600 &apos;N. ord.
+		oSheetReg.getCellByPosition(fcol+1,fRow).Columns.Width = 6600 &apos;LAVORAZIONI
+		oSheetReg.getCellByPosition(fcol+2,fRow).Columns.Width = 650 &apos;Lib.N.
+		oSheetReg.getCellByPosition(fcol+3,fRow).Columns.Width = 650 &apos;Lib.P.
+		oSheetReg.getCellByPosition(fcol+4,fRow).Columns.Width = 1000 &apos;U.M.
+		oSheetReg.getCellByPosition(fcol+5,fRow).Columns.Width = 1600 &apos;Positive
+		oSheetReg.getCellByPosition(fcol+6,fRow).Columns.Width = 1600 &apos;Negative
+		oSheetReg.getCellByPosition(fcol+7,fRow).Columns.Width = 1400 &apos;Prezzo
+		oSheetReg.getCellByPosition(fcol+8,fRow).Columns.Width = 1950 &apos;debito
+		oSheetReg.getCellByPosition(fcol+9,fRow).Columns.Width = 1950 &apos;pagamento
+		oSheetReg.getCellByPosition(fcol+10,fRow).columns.OptimalWidth = true &apos;n.pag.
 		InsRow = fRow+1 &apos;prima riga inserimento in Registro
 	Case &gt;1
 	oSheetReg= thisComponent.Sheets.getByName(&quot;Registro&quot;)
@@ -143,21 +143,21 @@ rem Recupero i dati dal libretto
 &apos;Print dariga
 &apos;Print ariga
 	for i = daRiga to aRiga
-		if oSheet.GetCellByPosition(idxcol+0, i).cellstyle = &quot;Comp Start Attributo_R&quot; then &apos;i = inizio voce
+		if oSheet.getCellByPosition(idxcol+0, i).cellstyle = &quot;Comp Start Attributo_R&quot; then &apos;i = inizio voce
 			sStRange = Circoscrive_Voce_Computo_Att (i)
 			f = sStRange.RangeAddress.EndRow		&apos;fine voce
-			num		= oSheet.GetCellByPosition(idxcol+0, i+1).getstring &apos;num. voce
-			art		= oSheet.GetCellByPosition(idxcol+1, i+1).getstring &apos;articolo
-			data	= oSheet.GetCellByPosition(idxcol+1, i+2).getstring &apos;data
-			desc	= oSheet.GetCellByPosition(idxcol+2, i+1).getstring &apos;descrizione
-			um		= oSheet.GetCellByPosition(idxcol+9, i+1).getstring &apos;unità
-			Nlib	= oSheet.GetCellByPosition(idxcol+19, i+1).getvalue &apos;Lib. N.
-			Plib	= oSheet.GetCellByPosition(idxcol+20, i+1).getvalue &apos;Lib. P.
-			quant	= oSheet.GetCellByPosition(idxcol+9, f).getvalue &apos;quantità
-			prezzo	= oSheet.GetCellByPosition(idxcol+13, f).getvalue &apos;prezzo
-			importo	= oSheet.GetCellByPosition(idxcol+15, f).getvalue &apos;importo
-			sicurezza= oSheet.GetCellByPosition(idxcol+17, f).getvalue &apos;sicurezza
-			mdo		= oSheet.GetCellByPosition(idxcol+30, f).getvalue &apos;mdo
+			num		= oSheet.getCellByPosition(idxcol+0, i+1).getstring &apos;num. voce
+			art		= oSheet.getCellByPosition(idxcol+1, i+1).getstring &apos;articolo
+			data	= oSheet.getCellByPosition(idxcol+1, i+2).getstring &apos;data
+			desc	= oSheet.getCellByPosition(idxcol+2, i+1).getstring &apos;descrizione
+			um		= oSheet.getCellByPosition(idxcol+9, i+1).getstring &apos;unità
+			Nlib	= oSheet.getCellByPosition(idxcol+19, i+1).getvalue &apos;Lib. N.
+			Plib	= oSheet.getCellByPosition(idxcol+20, i+1).getvalue &apos;Lib. P.
+			quant	= oSheet.getCellByPosition(idxcol+9, f).getvalue &apos;quantità
+			prezzo	= oSheet.getCellByPosition(idxcol+13, f).getvalue &apos;prezzo
+			importo	= oSheet.getCellByPosition(idxcol+15, f).getvalue &apos;importo
+			sicurezza= oSheet.getCellByPosition(idxcol+17, f).getvalue &apos;sicurezza
+			mdo		= oSheet.getCellByPosition(idxcol+30, f).getvalue &apos;mdo
 		else
 	exit for
 		end if
@@ -175,24 +175,24 @@ rem completo la lista voci per la preparazione del SAL prima di passare alla com
 	aRiga=daRiga-1
 	daRiga=0	&apos;inizio dalla prima riga indipendendemente dal numero di sal corrente
 	for i = daRiga to aRiga
-		if oSheet.GetCellByPosition(idxcol+0, i).cellstyle = &quot;Comp Start Attributo_R&quot; then &apos;i = inizio voce
+		if oSheet.getCellByPosition(idxcol+0, i).cellstyle = &quot;Comp Start Attributo_R&quot; then &apos;i = inizio voce
 			sStRange = Circoscrive_Voce_Computo_Att (i)
 
 			f = sStRange.RangeAddress.EndRow		&apos;fine voce
-			num		= oSheet.GetCellByPosition(idxcol+0, i+1).getstring &apos;num. voce
-			art		= oSheet.GetCellByPosition(idxcol+1, i+1).getstring &apos;articolo
-			data	= oSheet.GetCellByPosition(idxcol+1, i+2).getstring &apos;data
-			desc	= oSheet.GetCellByPosition(idxcol+2, i+1).getstring &apos;descrizione
-			um		= oSheet.GetCellByPosition(idxcol+9, i+1).getstring &apos;unità
-&apos;			Nlib	= oSheet.GetCellByPosition(idxcol+19, i+1).getvalue &apos;Lib. N.
-			Plib	= oSheet.GetCellByPosition(idxcol+20, i+1).getvalue &apos;Lib. P.
-			quant	= oSheet.GetCellByPosition(idxcol+9, f).getvalue &apos;quantità
-			prezzo	= oSheet.GetCellByPosition(idxcol+13, f).getvalue &apos;prezzo
-			importo	= oSheet.GetCellByPosition(idxcol+15, f).getvalue &apos;importo
-			sicurezza= oSheet.GetCellByPosition(idxcol+17, f).getvalue &apos;sicurezza
-			mdo		= oSheet.GetCellByPosition(idxcol+30, f).getvalue &apos;mdo
+			num		= oSheet.getCellByPosition(idxcol+0, i+1).getstring &apos;num. voce
+			art		= oSheet.getCellByPosition(idxcol+1, i+1).getstring &apos;articolo
+			data	= oSheet.getCellByPosition(idxcol+1, i+2).getstring &apos;data
+			desc	= oSheet.getCellByPosition(idxcol+2, i+1).getstring &apos;descrizione
+			um		= oSheet.getCellByPosition(idxcol+9, i+1).getstring &apos;unità
+&apos;			Nlib	= oSheet.getCellByPosition(idxcol+19, i+1).getvalue &apos;Lib. N.
+			Plib	= oSheet.getCellByPosition(idxcol+20, i+1).getvalue &apos;Lib. P.
+			quant	= oSheet.getCellByPosition(idxcol+9, f).getvalue &apos;quantità
+			prezzo	= oSheet.getCellByPosition(idxcol+13, f).getvalue &apos;prezzo
+			importo	= oSheet.getCellByPosition(idxcol+15, f).getvalue &apos;importo
+			sicurezza= oSheet.getCellByPosition(idxcol+17, f).getvalue &apos;sicurezza
+			mdo		= oSheet.getCellByPosition(idxcol+30, f).getvalue &apos;mdo
 			
-&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(idxcol+19, i+1))
+&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(idxcol+19, i+1))
 &apos;	unSelect &apos;unselect ranges
 &apos;	Print Nlib
 rem ----------------------------------------------------------------------
@@ -305,28 +305,28 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	yS2=oEnd.RangeAddress.EndRow		&apos;riga
 	xS2=oEnd.RangeAddress.EndColumn	&apos;colonna
 	sCol = ColumnNameOf(xS2+nSal)
-	oS2.GetCellByPosition(xS2+nSal,yS2+4).formula = &quot;=&quot;&amp; sCol &amp; yS2+4 &amp; &quot;*$C$74&quot; &apos; iincidenza sicurezza su lavori a CORPO
-	oS2.GetCellByPosition(xS2+nSal,yS2+5).formula = &quot;=&quot;&amp; sCol &amp; yS2+4 &amp; &quot;*$C$76&quot; &apos; iincidenza sicurezza su lavori a CORPO
-	oS2.GetCellByPosition(xS2+nSal,yS2+8).value = SALamisura &apos; importo lavori a misura
-	oS2.GetCellByPosition(xS2+nSal,yS2+9).formula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp; &quot;*$C$74&quot; &apos; iincidenza sicurezza su lavori a MISURA
-	oS2.GetCellByPosition(xS2+nSal,yS2+10).formula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp; &quot;*$C$76&quot; &apos; iincidenza sicurezza su lavori a MISURA
+	oS2.getCellByPosition(xS2+nSal,yS2+4).formula = &quot;=&quot;&amp; sCol &amp; yS2+4 &amp; &quot;*$C$74&quot; &apos; iincidenza sicurezza su lavori a CORPO
+	oS2.getCellByPosition(xS2+nSal,yS2+5).formula = &quot;=&quot;&amp; sCol &amp; yS2+4 &amp; &quot;*$C$76&quot; &apos; iincidenza sicurezza su lavori a CORPO
+	oS2.getCellByPosition(xS2+nSal,yS2+8).value = SALamisura &apos; importo lavori a misura
+	oS2.getCellByPosition(xS2+nSal,yS2+9).formula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp; &quot;*$C$74&quot; &apos; iincidenza sicurezza su lavori a MISURA
+	oS2.getCellByPosition(xS2+nSal,yS2+10).formula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp; &quot;*$C$76&quot; &apos; iincidenza sicurezza su lavori a MISURA
 	sFormula = &quot;=&quot;&amp; sCol &amp; yS2+9 &amp;&quot;+&quot;&amp; sCol &amp; yS2+4 &amp; &quot;-&quot; &amp; sCol &amp; yS2+5 &amp; &quot;-&quot; &amp; sCol &amp; yS2+6 &amp; &quot;-&quot; &amp; sCol &amp; yS2+10 &amp; &quot;-&quot; &amp; sCol &amp; yS2+11
-	oS2.GetCellByPosition(xS2+nSal,yS2+12).formula = sFormula &apos; quota da ribassare
-	oS2.GetCellByPosition(xS2+nSal,yS2+13).formula = &quot;=&quot; &amp; sCol &amp; yS2+13 &amp;&quot;*$C$78&quot; &apos; ribasso
+	oS2.getCellByPosition(xS2+nSal,yS2+12).formula = sFormula &apos; quota da ribassare
+	oS2.getCellByPosition(xS2+nSal,yS2+13).formula = &quot;=&quot; &amp; sCol &amp; yS2+13 &amp;&quot;*$C$78&quot; &apos; ribasso
 	
-	oS2.GetCellByPosition(xS2+nSal,yS2+14).formula = &quot;=&quot; &amp; sCol &amp; yS2+9 &amp;&quot;-&quot;&amp; sCol &amp; yS2+14  &apos; Importo netto
+	oS2.getCellByPosition(xS2+nSal,yS2+14).formula = &quot;=&quot; &amp; sCol &amp; yS2+9 &amp;&quot;-&quot;&amp; sCol &amp; yS2+14  &apos; Importo netto
 	
-	oS2.GetCellByPosition(xS2+nSal,yS2+15).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$84&quot; &apos; Ritenute per garanzia
-	oS2.GetCellByPosition(xS2+nSal,yS2+16).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$85&quot; &apos; Ritenute per infortuni
-	oS2.GetCellByPosition(xS2+nSal,yS2+17).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$80&quot; &apos; Recupero anticipazioni
-	oS2.GetCellByPosition(xS2+nSal,yS2+18).formula = &quot;=subtotal(9;&quot; &amp; ColumnNameOf(xS2+1)&amp; yS2+19 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp;&quot;)&quot; &apos; Certificati precedenti / Ultimo riporto
-	oS2.GetCellByPosition(xS2+nSal,yS2+19).formula = &quot;=SUM(&quot;&amp; sCol &amp; yS2+16 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp; &quot;)&quot;&apos; totale detrazioni
+	oS2.getCellByPosition(xS2+nSal,yS2+15).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$84&quot; &apos; Ritenute per garanzia
+	oS2.getCellByPosition(xS2+nSal,yS2+16).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$85&quot; &apos; Ritenute per infortuni
+	oS2.getCellByPosition(xS2+nSal,yS2+17).formula = &quot;=&quot; &amp; sCol &amp; yS2+15 &amp;&quot;*$C$80&quot; &apos; Recupero anticipazioni
+	oS2.getCellByPosition(xS2+nSal,yS2+18).formula = &quot;=subtotal(9;&quot; &amp; ColumnNameOf(xS2+1)&amp; yS2+19 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp;&quot;)&quot; &apos; Certificati precedenti / Ultimo riporto
+	oS2.getCellByPosition(xS2+nSal,yS2+19).formula = &quot;=SUM(&quot;&amp; sCol &amp; yS2+16 &amp;&quot;:&quot;&amp; sCol &amp; yS2+19 &amp; &quot;)&quot;&apos; totale detrazioni
 	sFormula = &quot;=&quot;&amp; sCol &amp; yS2+15 &amp;&quot;-&quot;&amp; sCol &amp; yS2+20&apos; &amp; &quot;+&quot; &amp; sCol &amp; yS2+5 &amp; &quot;+&quot; &amp; sCol &amp; yS2+6 &amp; &quot;+&quot; &amp; sCol &amp; yS2+10 &amp; &quot;+&quot; &amp; sCol &amp; yS2+11
-	oS2.GetCellByPosition(xS2+nSal,yS2+20).formula = sFormula &apos; Importo Certificato di pagamento
+	oS2.getCellByPosition(xS2+nSal,yS2+20).formula = sFormula &apos; Importo Certificato di pagamento
 	
-&apos;	oS2.GetCellByPosition(xS2+nSal,yS2+8).formula = &quot;=(ROUND(SUBTOTAL(9;&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+6 &amp;&quot;:&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+9 &amp;&quot;);2)&quot;
-&apos;	oS2.GetCellByPosition(xS2+nSal,yS2+10).value = SALsicurezza &apos; di cui importo per la sicurezza
-&apos;	oS2.GetCellByPosition(xS2+nSal,yS2+11).value = SALmdo &apos; di cui importo per la mdo
+&apos;	oS2.getCellByPosition(xS2+nSal,yS2+8).formula = &quot;=(ROUND(SUBTOTAL(9;&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+6 &amp;&quot;:&quot;&amp; ColumnNameOf(xS2+nSal) &amp; yS2+9 &amp;&quot;);2)&quot;
+&apos;	oS2.getCellByPosition(xS2+nSal,yS2+10).value = SALsicurezza &apos; di cui importo per la sicurezza
+&apos;	oS2.getCellByPosition(xS2+nSal,yS2+11).value = SALmdo &apos; di cui importo per la mdo
 &apos;#########################################################################
 
 initRegistro: rem INIZIO COMPILAZIONE REGISTRO
@@ -340,49 +340,49 @@ initRegistro: rem INIZIO COMPILAZIONE REGISTRO
 	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(0,0,0,0))
 	&apos;fcol = 0 &apos;prima colonna inserimento in Registro
 rem RIGA RIPORTO
-	oSheetReg.GetCellByPosition(fcol+1, InsRow).setSTRING(&quot;R I P O R T O&quot;)
+	oSheetReg.getCellByPosition(fcol+1, InsRow).setSTRING(&quot;R I P O R T O&quot;)
 	
 	
-	oSheetReg.GetCellByPosition(fcol+8, InsRow).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2))&quot;)
-	oSheetReg.GetCellByPosition(fcol+9, InsRow).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2))&quot;)
+	oSheetReg.getCellByPosition(fcol+8, InsRow).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+8) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2))&quot;)
+	oSheetReg.getCellByPosition(fcol+9, InsRow).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$2:$&quot;&amp; ColumnNameOf(fcol+9) &amp;&quot;$&quot; &amp; InsRow &amp; &quot;);2))&quot;)
 	oSheetReg.getCellRangeByPosition (fcol+0,InsRow,fcol+9,InsRow).CellStyle = &quot;Ultimus_Bordo_sotto&quot;
 	InsRow=InsRow+1
-	oSheetReg.GetCellByPosition(fcol+1, InsRow).setSTRING(&quot;LAVORI A MISURA&quot;)
+	oSheetReg.getCellByPosition(fcol+1, InsRow).setSTRING(&quot;LAVORI A MISURA&quot;)
 	oSheetReg.getCellRangeByPosition (fcol+0,InsRow,fcol+9,InsRow).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
 	InsRow=InsRow+1
 rem ----------------------------------------------------------------------
 rem compilo il REGISTRO
 	for each el in elVoci()
 &apos;		for each n in el()
-			oSheetReg.GetCellByPosition(fcol, InsRow).setstring(el(0)+ chr(13) + el(1)+ chr(13) + el(2))&apos; num, art, data
-&apos;			oSheetReg.GetCellByPosition(fcol+1, InsRow).setstring(el(1)+ chr(13) + el(2))
-			oSheetReg.GetCellByPosition(fcol+1, InsRow).setstring(el(3)) &apos;descrizione
-			oSheetReg.GetCellByPosition(fcol+2, InsRow).setvalue(el(5)) &apos;Nlib
-			oSheetReg.GetCellByPosition(fcol+3, InsRow).setvalue(el(6)) &apos;Plib
-			oSheetReg.GetCellByPosition(fcol+4, InsRow).setstring(el(4)) &apos;um
+			oSheetReg.getCellByPosition(fcol, InsRow).setstring(el(0)+ chr(13) + el(1)+ chr(13) + el(2))&apos; num, art, data
+&apos;			oSheetReg.getCellByPosition(fcol+1, InsRow).setstring(el(1)+ chr(13) + el(2))
+			oSheetReg.getCellByPosition(fcol+1, InsRow).setstring(el(3)) &apos;descrizione
+			oSheetReg.getCellByPosition(fcol+2, InsRow).setvalue(el(5)) &apos;Nlib
+			oSheetReg.getCellByPosition(fcol+3, InsRow).setvalue(el(6)) &apos;Plib
+			oSheetReg.getCellByPosition(fcol+4, InsRow).setstring(el(4)) &apos;um
 			if el(7)&gt;0 then
-				oSheetReg.GetCellByPosition(fcol+5, InsRow).setvalue(el(7)) &apos;quantità
+				oSheetReg.getCellByPosition(fcol+5, InsRow).setvalue(el(7)) &apos;quantità
 				else
-				oSheetReg.GetCellByPosition(fcol+6, InsRow).setvalue(el(7)) &apos;quantità in meno
+				oSheetReg.getCellByPosition(fcol+6, InsRow).setvalue(el(7)) &apos;quantità in meno
 			end if
-			oSheetReg.GetCellByPosition(fcol+7, InsRow).setvalue(el(8)) &apos;prezzo
+			oSheetReg.getCellByPosition(fcol+7, InsRow).setvalue(el(8)) &apos;prezzo
 rem gli importi vanno tutti nella colonna DEBITO, anche se negativi
-			oSheetReg.GetCellByPosition(fcol+8, InsRow).setvalue(el(9)) &apos;debito
+			oSheetReg.getCellByPosition(fcol+8, InsRow).setvalue(el(9)) &apos;debito
 			InsRow=InsRow+1
 	Next
 	InsRow=InsRow+1
-	oSheetReg.GetCellByPosition(fcol+1, InsRow).setstring(&quot;Parziale dei Lavori a Misura €&quot;)
+	oSheetReg.getCellByPosition(fcol+1, InsRow).setstring(&quot;Parziale dei Lavori a Misura €&quot;)
 	ncol=ColumnNameOf(fcol+8)
-	oSheetReg.GetCellByPosition(fcol+8, InsRow).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
+	oSheetReg.getCellByPosition(fcol+8, InsRow).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
 	rem .formula o .setformula() è uguale
-	oSheetReg.GetCellByPosition(fcol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E   €&quot;&quot;)&quot;
+	oSheetReg.getCellByPosition(fcol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E   €&quot;&quot;)&quot;
 
-	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, InsRow+2))
+	ThisComponent.CurrentController.Select(oSheetReg.getCellByPosition(fcol+1, InsRow+2))
 copy_clip
 consolida_clip &apos; consolida la data
 	ncol=ColumnNameOf(fcol+8)
 	unSelect &apos;deseleziona
-	oSheetReg.GetCellByPosition(fcol+8, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
+	oSheetReg.getCellByPosition(fcol+8, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
 	
 &apos;	fineMisure = InsRow
 	inizioFirme = InsRow+3
@@ -449,18 +449,18 @@ adatta_altezza:
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;adatta_altezza_riga&quot;)
 
 i=1
-	Do While oSheetReg.GetCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
-&apos;		oSheetReg.GetCellByPosition(fcol+1 , fineFirme).setstring(&quot;Sto sistemando il Registro...&quot;)
+	Do While oSheetReg.getCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
+&apos;		oSheetReg.getCellByPosition(fcol+1 , fineFirme).setstring(&quot;Sto sistemando il Registro...&quot;)
 		insRows (fineFirme,1) &apos;insertByIndex non funziona
 		If i=3 Then
-			oSheetReg.GetCellByPosition(fcol+1, fineFirme).setstring(&quot;====================&quot;)
+			oSheetReg.getCellByPosition(fcol+1, fineFirme).setstring(&quot;====================&quot;)
 			daqui=fineFirme
 		End If
 		fineFirme = fineFirme+1
 		i=i+1
 	Loop
 	fineFirme = fineFirme-1
-&apos;	ThisComponent.CurrentController.Select(oSheetReg.GetCellByPosition(fcol+1, daqui))
+&apos;	ThisComponent.CurrentController.Select(oSheetReg.getCellByPosition(fcol+1, daqui))
 &apos;copy_clip
 &apos;	ThisComponent.CurrentController.Select(oSheetReg.getCellRangeByPosition(fcol+1, daqui, fcol+1, fineFirme-2))
 &apos;ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;)
@@ -483,25 +483,25 @@ rem LA RIPETIZIONE DEL SETTAGGIO DEGLI STILI E&apos; VOLUTA - VEDI rem DI SOPRA
 	oSheetReg.getCellByPosition(fcol+1 , inizioFirme+11).CellStyle = &quot;ULTIMUS&quot;
 	oSheetReg.getCellRangeByPosition (fcol+0,inizioFirme,fcol+9,inizioFirme).CellStyle = &quot;ULTIMUS&quot;
 rem ULTIMA RIGA:
-	oSheetReg.GetCellByPosition(fcol+1, fineFirme-1).setSTRING(&quot;A   R I P O R T A R E&quot;)
+	oSheetReg.getCellByPosition(fcol+1, fineFirme-1).setSTRING(&quot;A   R I P O R T A R E&quot;)
 	ncol=ColumnNameOf(fcol+8)
-	oSheetReg.GetCellByPosition(fcol+8, fineFirme-1).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2))&quot;)
+	oSheetReg.getCellByPosition(fcol+8, fineFirme-1).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2))&quot;)
 	ncol=ColumnNameOf(fcol+9)
-	oSheetReg.GetCellByPosition(fcol+9, fineFirme-1).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2))&quot;)
+	oSheetReg.getCellByPosition(fcol+9, fineFirme-1).setformula(&quot;=IF(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2)=0;&quot;&quot;&quot;&quot;;(ROUND(SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$2:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; fineFirme-1 &amp; &quot;);2))&quot;)
 	oSheetReg.getCellRangeByPosition (fcol+0,fineFirme-1,fcol+9,fineFirme-1).CellStyle = &quot;Ultimus_Bordo_sotto&quot;
 	
 rem trovo l&apos;ultimo effettivo numero di pagina 
 	If inumPag =0 Then	inumPag = 1
 	For i = precRowReg+1 to getLastUsedRow(oSheetReg)
-		if oSheetReg.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
+		if oSheetReg.getCellByPosition(0,i).rows.IsStartOfNewPage = True then 
 			inumPag = inumPag+1
 		end If
 	Next
 inumPag = inumPag-1 &apos;ultimo numero pagina ESCLUSA la copertina
 &apos;	Print inumPag
 rem annoto ultimo numero di pagina 
-&apos;	oSheetReg.GetCellByPosition(fcol+10 , fineFirme-1).value = inumPag-1
-&apos;	oSheetReg.GetCellByPosition(fcol+10 , fineFirme-1).CellStyle = &quot;num centro&quot;
+&apos;	oSheetReg.getCellByPosition(fcol+10 , fineFirme-1).value = inumPag-1
+&apos;	oSheetReg.getCellByPosition(fcol+10 , fineFirme-1).CellStyle = &quot;num centro&quot;
 &apos;end Sub
 &apos;Sub GENERA_SAL
 rem ----------------------------------------------------------------------
@@ -519,11 +519,11 @@ rem ci metto un po&apos; di informazioni
 	davoce=elVoci(0)(0) &apos;ultima voce
 	avoce=elVoci(ubound(elvoci()))(0) &apos;ultima voce
 	oSheetReg.getCellByPosition(1,ins).string = &quot;segue Registro n.&quot; &amp; nSal &amp; &quot; - &quot; &amp; davoce &amp; &quot;÷&quot; &amp; avoce
-	oSheetReg.GetCellByPosition(2,ins).value= nLib &apos;1 &apos; numero libretto
-	oSheetReg.GetCellByPosition(3,ins).value = inumPag &apos;ultimo numero pagina
-&apos;	oSheetReg.GetCellByPosition(23, ins).value= nSal &apos; numero SAL
-	oSheetReg.GetCellByPosition(8, ins).formula = &quot;=SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;)&quot;
-	oSheetReg.GetCellByPosition(8, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
+	oSheetReg.getCellByPosition(2,ins).value= nLib &apos;1 &apos; numero libretto
+	oSheetReg.getCellByPosition(3,ins).value = inumPag &apos;ultimo numero pagina
+&apos;	oSheetReg.getCellByPosition(23, ins).value= nSal &apos; numero SAL
+	oSheetReg.getCellByPosition(8, ins).formula = &quot;=SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;)&quot;
+	oSheetReg.getCellByPosition(8, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem ----------------------------------------------------------------------
 Struttura_contab (&quot;#Reg#&quot;)
 &apos;Struttura
@@ -563,22 +563,22 @@ rem idxCol e idxRow sono costanti settate nel modulo &quot;_variabili&quot;
 rem ----------------------------------------------------------------------
 rem riga di intestazione SAL
 			oSheetSAL.getCellRangeByPosition(idxCol+0,idxRow,7,idxRow).CellStyle=&quot;An.1v-Att Start&quot; &apos;STILE
-			oSheetSAL.GetCellByPosition(idxCol+0,idxRow).setstring(&quot;N. ord.&quot;+ chr(13) +&quot;Articolo&quot;)
-			oSheetSAL.GetCellByPosition(idxCol+1,idxRow).setstring(&quot;LAVORAZIONI&quot;+ chr(13) + &quot;E SOMMINISTRAZIONI&quot;)
-			oSheetSAL.GetCellByPosition(idxCol+2,idxRow).setstring(&quot;U.M.&quot;)
-			oSheetSAL.GetCellByPosition(idxCol+3,idxRow).setstring(&quot;Quantità&quot;)
-			oSheetSAL.GetCellByPosition(idxCol+4,idxRow).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
-			oSheetSAL.GetCellByPosition(idxCol+5,idxRow).setstring(&quot;Importo&quot;)
-			oSheetSAL.GetCellByPosition(idxCol+6,idxRow).setstring(&quot;Num.&quot; + chr(13) +&quot;Pag.&quot;)
+			oSheetSAL.getCellByPosition(idxCol+0,idxRow).setstring(&quot;N. ord.&quot;+ chr(13) +&quot;Articolo&quot;)
+			oSheetSAL.getCellByPosition(idxCol+1,idxRow).setstring(&quot;LAVORAZIONI&quot;+ chr(13) + &quot;E SOMMINISTRAZIONI&quot;)
+			oSheetSAL.getCellByPosition(idxCol+2,idxRow).setstring(&quot;U.M.&quot;)
+			oSheetSAL.getCellByPosition(idxCol+3,idxRow).setstring(&quot;Quantità&quot;)
+			oSheetSAL.getCellByPosition(idxCol+4,idxRow).setstring(&quot;Prezzo&quot; + chr(13) + &quot;unitario&quot;)
+			oSheetSAL.getCellByPosition(idxCol+5,idxRow).setstring(&quot;Importo&quot;)
+			oSheetSAL.getCellByPosition(idxCol+6,idxRow).setstring(&quot;Num.&quot; + chr(13) +&quot;Pag.&quot;)
 rem larghezza colonne SAL
 &apos;xray oSheetSAL
-			oSheetSAL.GetCellByPosition(idxCol,idxRow).Columns.Width = 1600 &apos;N. ord.
-			oSheetSAL.GetCellByPosition(idxCol+1,idxRow).Columns.Width = 10100 &apos;LAVORAZIONI
-			oSheetSAL.GetCellByPosition(idxCol+2,idxRow).Columns.Width = 1500 &apos;U.M.
-			oSheetSAL.GetCellByPosition(idxCol+3,idxRow).Columns.Width = 1800 &apos;Quantità
-			oSheetSAL.GetCellByPosition(idxCol+4,idxRow).Columns.Width = 1400 &apos;Prezzo
-			oSheetSAL.GetCellByPosition(idxCol+5,idxRow).Columns.Width = 1900 &apos;Importo
-			oSheetSAL.GetCellByPosition(idxCol+6,idxRow).Columns.OptimalWidth = true &apos;n.pag
+			oSheetSAL.getCellByPosition(idxCol,idxRow).Columns.Width = 1600 &apos;N. ord.
+			oSheetSAL.getCellByPosition(idxCol+1,idxRow).Columns.Width = 10100 &apos;LAVORAZIONI
+			oSheetSAL.getCellByPosition(idxCol+2,idxRow).Columns.Width = 1500 &apos;U.M.
+			oSheetSAL.getCellByPosition(idxCol+3,idxRow).Columns.Width = 1800 &apos;Quantità
+			oSheetSAL.getCellByPosition(idxCol+4,idxRow).Columns.Width = 1400 &apos;Prezzo
+			oSheetSAL.getCellByPosition(idxCol+5,idxRow).Columns.Width = 1900 &apos;Importo
+			oSheetSAL.getCellByPosition(idxCol+6,idxRow).Columns.OptimalWidth = true &apos;n.pag
 	
 		frow = getLastUsedRow(oSheetSAL)&apos;+1 &apos; trovo il primo rigo vuoto
 		Case &gt;1
@@ -611,12 +611,12 @@ rem inserimento dati SAL
 	num = 1
 &apos;	Print ubound (vociSAL())
 	for each el in vociSAL()
-		oSheetSAL.GetCellByPosition(idxCol, frow+num).String = num &amp; chr(13) &amp; el(0)&apos; num, art
-		oSheetSAL.GetCellByPosition(idxCol+1, frow+num).String = el(1)&apos; descrizione
-		oSheetSAL.GetCellByPosition(idxCol+2, frow+num).String = el(2)&apos; um
-		oSheetSAL.GetCellByPosition(idxCol+3, frow+num).value = el(3)&apos; quant
-		oSheetSAL.GetCellByPosition(idxCol+4, frow+num).value = el(4)&apos; prezzo
-		oSheetSAL.GetCellByPosition(idxCol+5, frow+num).value = el(5)&apos; importo
+		oSheetSAL.getCellByPosition(idxCol, frow+num).String = num &amp; chr(13) &amp; el(0)&apos; num, art
+		oSheetSAL.getCellByPosition(idxCol+1, frow+num).String = el(1)&apos; descrizione
+		oSheetSAL.getCellByPosition(idxCol+2, frow+num).String = el(2)&apos; um
+		oSheetSAL.getCellByPosition(idxCol+3, frow+num).value = el(3)&apos; quant
+		oSheetSAL.getCellByPosition(idxCol+4, frow+num).value = el(4)&apos; prezzo
+		oSheetSAL.getCellByPosition(idxCol+5, frow+num).value = el(5)&apos; importo
 		num=1+num
 	Next
 	dariga=frow
@@ -629,19 +629,19 @@ rem	gli do il colore SAL
 		oSheetSAL.getCellRangeByPosition(idxCol+4, daRiga+1, idxCol+5, ariga).cellstyle = &quot;List-num-euro&quot;	&apos;soldi
 rem ----------------------------------------------------------------------
 	InsRow=ariga+2
-	oSheetSal.GetCellByPosition(fcol+1, InsRow).setstring(&quot;Parziale dei Lavori a Misura €&quot;)
+	oSheetSal.getCellByPosition(fcol+1, InsRow).setstring(&quot;Parziale dei Lavori a Misura €&quot;)
 	ncol=ColumnNameOf(fcol+5)
-	oSheetSal.GetCellByPosition(fcol+5, InsRow).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
+	oSheetSal.getCellByPosition(fcol+5, InsRow).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
 	Row_Misura=InsRow &apos; posizione che serve per la pagina di riepilogo
 	rem .formula o .setformula() è uguale
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E   €&quot;&quot;)&quot;
+	oSheetSal.getCellByPosition(fcol+1, InsRow+2).formula = &quot;=CONCATENATE(&quot;&quot;Lavori a tutto il &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; - T O T A L E   €&quot;&quot;)&quot;
 
-	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, InsRow+2))
+	ThisComponent.CurrentController.Select(oSheetSal.getCellByPosition(fcol+1, InsRow+2))
 copy_clip
 consolida_clip &apos; consolida la data
 	ncol=ColumnNameOf(fcol+5)
 	unSelect &apos;deseleziona
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
+	oSheetSal.getCellByPosition(fcol+5, InsRow+2).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow+2 &amp; &quot;)&quot;)
 
 &apos;	inizioFirme = InsRow+7
 &apos;firme (inizioFirme)
@@ -693,15 +693,15 @@ rem serve a regolare bene l&apos;altezza delle celle e calcolare correttamente i
 	oSheetSal.getCellByPosition(fcol+1, InsRow+2).CellStyle = &quot;Ultimus_destra&quot;
 	oSheetSal.getCellByPosition(fcol+5, InsRow+2).CellStyle = &quot;Ultimus_destra_totali&quot;
 	i=1
-	Do While oSheetSal.GetCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
-&apos;		oSheetSal.GetCellByPosition(fcol+1 , fineFirme).setstring(&quot;Sto sistemando il SAL...&quot;)
+	Do While oSheetSal.getCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
+&apos;		oSheetSal.getCellByPosition(fcol+1 , fineFirme).setstring(&quot;Sto sistemando il SAL...&quot;)
 		insRows (fineFirme,1) &apos;insertByIndex non funziona
-			oSheetSal.GetCellByPosition(fcol+1, fineFirme).setstring(&quot;====================&quot;)
+			oSheetSal.getCellByPosition(fcol+1, fineFirme).setstring(&quot;====================&quot;)
 		fineFirme = fineFirme+1
 		i=i+1
 &apos;Barra_Apri_leggera
 &apos;				Barra_Apri_Chiudi_5(&quot;                                           &quot;&amp; _
-&apos;				 oSheetSal.GetCellByPosition(0,fineFirme).rows.IsStartOfNewPage, 0)
+&apos;				 oSheetSal.getCellByPosition(0,fineFirme).rows.IsStartOfNewPage, 0)
 	Loop
 &apos;Print InsRow
 &apos;Print fineFirme
@@ -719,7 +719,7 @@ rem pagina RIEPILOGO SAL
 rem ----------------------------------------------------------------------
 	insRow=getLastUsedRow(oSheetSal)+1 &apos; SERVE PER PROSEGUIRE CON LA PAGINA DI RIEPILOGO
 
-	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, fineFirme-1))
+	ThisComponent.CurrentController.Select(oSheetSal.getCellByPosition(fcol+1, fineFirme-1))
 	ThisComponent.CurrentController.setFirstVisibleRow (fineFirme)
 cancella_dati
 	unSelect &apos;deseleziona
@@ -728,10 +728,10 @@ rem LA RIPETIZIONE DEL SETTAGGIO DEGLI STILI E&apos; VOLUTA - VEDI rem DI SOPRA
 	oSheetSal.getCellRangeByPosition (fcol+0,fineFirme,fcol+5,fineFirme).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
 	fineFirme = fineFirme+1
 i=1
-	Do While oSheetSal.GetCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
-&apos;		oSheetSal.GetCellByPosition(fcol+1 , fineFirme).setstring(&quot;Sto sistemando il SAL...&quot;)
+	Do While oSheetSal.getCellByPosition(fcol+0,fineFirme).rows.IsStartOfNewPage = False
+&apos;		oSheetSal.getCellByPosition(fcol+1 , fineFirme).setstring(&quot;Sto sistemando il SAL...&quot;)
 		insRows (fineFirme,1) &apos;insertByIndex non funziona
-	&apos;		oSheetSal.GetCellByPosition(fcol+1, fineFirme).setstring(&quot;====================&quot;)
+	&apos;		oSheetSal.getCellByPosition(fcol+1, fineFirme).setstring(&quot;====================&quot;)
 		fineFirme = fineFirme+1
 		i=i+1
 	Loop 
@@ -741,55 +741,55 @@ i=1
 rem ----------------------------------------------------------------------
 rem Pagina di Riepilogo
 	oSheetSal.getCellByPosition(fcol+1, InsRow+1).CellStyle = &quot;Ultimus_centro_Dsottolineato&quot;
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+1).setstring(&quot;R I E P I L O G O   S A L&quot;)
+	oSheetSal.getCellByPosition(fcol+1, InsRow+1).setstring(&quot;R I E P I L O G O   S A L&quot;)
 rem ----------------------------------------------------------------------
 	oSheetSal.getCellRangeByPosition(fcol+1, InsRow+3, fcol+1, InsRow+4).CellStyle = &quot;Ultimus_sx_italic&quot;
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+3).setstring(&quot;Appalto: a misura&quot;)
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+4).setstring(&quot;Offerta: unico ribasso&quot;)
+	oSheetSal.getCellByPosition(fcol+1, InsRow+3).setstring(&quot;Appalto: a misura&quot;)
+	oSheetSal.getCellByPosition(fcol+1, InsRow+4).setstring(&quot;Offerta: unico ribasso&quot;)
 rem ----------------------------------------------------------------------
 REM 	IMPOSTA LA COLONNA DEI VALORI
 	oSheetSal.getCellRangeByPosition (fcol+5, InsRow+6,fcol+5, InsRow+15).CellStyle = &quot;ULTIMUS&quot;
 rem ----------------------------------------------------------------------
 	oSheetSal.getCellByPosition(fcol+1, InsRow+6).CellStyle = &quot;Ultimus_sx_bold&quot;
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+6).setstring(&quot;Lavori a Misura €&quot;)
+	oSheetSal.getCellByPosition(fcol+1, InsRow+6).setstring(&quot;Lavori a Misura €&quot;)
 rem ----------------------------------------------------------------------
 	ncol=ColumnNameOf(fcol+5)
 	oSheetSal.getCellRangeByPosition(fcol+1, InsRow+7, fcol+1, InsRow+8).CellStyle = &quot;Ultimus_sx&quot;
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+6).formula = &quot;=$&quot;&amp; ncol &amp;&quot;$&quot; &amp; Row_Misura+1
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+7).setstring(&quot;Di cui importo per la Sicurezza&quot;)
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+7).value= SALsicurezza*-1
+	oSheetSal.getCellByPosition(fcol+5, InsRow+6).formula = &quot;=$&quot;&amp; ncol &amp;&quot;$&quot; &amp; Row_Misura+1
+	oSheetSal.getCellByPosition(fcol+1, InsRow+7).setstring(&quot;Di cui importo per la Sicurezza&quot;)
+	oSheetSal.getCellByPosition(fcol+5, InsRow+7).value= SALsicurezza*-1
 
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+8).setstring(&quot;Di cui importo per la Manodopera&quot;)
+	oSheetSal.getCellByPosition(fcol+1, InsRow+8).setstring(&quot;Di cui importo per la Manodopera&quot;)
 	oSheetSal.getCellByPosition(fcol+5, InsRow+8).CellStyle = &quot;Ultimus_&quot;
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+8).value= SALmdo*-1
+	oSheetSal.getCellByPosition(fcol+5, InsRow+8).value= SALmdo*-1
 rem ----------------------------------------------------------------------
 	oSheetSal.getCellRangeByPosition(fcol+1, InsRow+9, fcol+1, InsRow+10).CellStyle = &quot;Ultimus_destra&quot;
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+9).string= &quot;Importo dei Lavori a Misura su cui applicare il ribasso&quot;
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+9).formula= &quot;=SUM(&quot; &amp; ncol &amp; InsRow+7 &amp; &quot;:&quot; &amp; ncol &amp; InsRow+9 &amp;&quot;)&quot;
+	oSheetSal.getCellByPosition(fcol+1, InsRow+9).string= &quot;Importo dei Lavori a Misura su cui applicare il ribasso&quot;
+	oSheetSal.getCellByPosition(fcol+5, InsRow+9).formula= &quot;=SUM(&quot; &amp; ncol &amp; InsRow+7 &amp; &quot;:&quot; &amp; ncol &amp; InsRow+9 &amp;&quot;)&quot;
 
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+10).formula= _
+	oSheetSal.getCellByPosition(fcol+1, InsRow+10).formula= _
 	&quot;=CONCATENATE(&quot;&quot;RIBASSO del &quot;&quot;;TEXT($S2.$C$78*100;&quot;&quot;#.##0,00&quot;&quot;);&quot;&quot;%&quot;&quot;)&quot;
 
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+10).formula= &quot;=-&quot;&amp; ncol &amp; InsRow+10 &amp;&quot;*$S2.$C$78&quot; &apos; RIBASSO
+	oSheetSal.getCellByPosition(fcol+5, InsRow+10).formula= &quot;=-&quot;&amp; ncol &amp; InsRow+10 &amp;&quot;*$S2.$C$78&quot; &apos; RIBASSO
 rem ----------------------------------------------------------------------
 	oSheetSal.getCellRangeByPosition(fcol+1, InsRow+11, fcol+1, InsRow+12).CellStyle = &quot;Ultimus_sx&quot;
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+11).setstring(&quot;Importo per la Sicurezza&quot;)
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+11).value= SALsicurezza
+	oSheetSal.getCellByPosition(fcol+1, InsRow+11).setstring(&quot;Importo per la Sicurezza&quot;)
+	oSheetSal.getCellByPosition(fcol+5, InsRow+11).value= SALsicurezza
 
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+12).setstring(&quot;Importo per la Manodopera&quot;)
+	oSheetSal.getCellByPosition(fcol+1, InsRow+12).setstring(&quot;Importo per la Manodopera&quot;)
 	oSheetSal.getCellByPosition(fcol+5, InsRow+12).CellStyle = &quot;Ultimus_&quot;
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+12).value= SALmdo
+	oSheetSal.getCellByPosition(fcol+5, InsRow+12).value= SALmdo
 rem ----------------------------------------------------------------------
 	oSheetSal.getCellRangeByPosition(fcol+1, InsRow+13, fcol+1, InsRow+13).CellStyle = &quot;Ultimus_destra_bold&quot;
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+13).string= &quot;PER I LAVORI A MISURA €&quot;
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+13).formula= &quot;=SUM(&quot; &amp; ncol &amp; InsRow+10 &amp; &quot;:&quot; &amp; ncol &amp; InsRow+13 &amp;&quot;)&quot;
+	oSheetSal.getCellByPosition(fcol+1, InsRow+13).string= &quot;PER I LAVORI A MISURA €&quot;
+	oSheetSal.getCellByPosition(fcol+5, InsRow+13).formula= &quot;=SUM(&quot; &amp; ncol &amp; InsRow+10 &amp; &quot;:&quot; &amp; ncol &amp; InsRow+13 &amp;&quot;)&quot;
 rem ----------------------------------------------------------------------
 REM IL TOTALE ANDRA&apos; RISISTEMATO QUANDO SARANNO PRONTE LE ALTRE MODALITA&apos; DI APPALTO: IN ECONOMIA E A CORPO
 	oSheetSal.getCellRangeByPosition(fcol+1, InsRow+15, fcol+1, InsRow+15).CellStyle = &quot;Ultimus_destra_bold&quot;
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+15).string= &quot;T O T A L E  €&quot;
+	oSheetSal.getCellByPosition(fcol+1, InsRow+15).string= &quot;T O T A L E  €&quot;
 	oSheetSal.getCellByPosition(fcol+5, InsRow+15).CellStyle = &quot;Ultimus_destra_totali&quot;
 
-	oSheetSal.GetCellByPosition(fcol+5, InsRow+15).formula= &quot;=SUM(&quot; &amp; ncol &amp; InsRow+10 &amp; &quot;:&quot; &amp; ncol &amp; InsRow+13 &amp;&quot;)&quot;
+	oSheetSal.getCellByPosition(fcol+5, InsRow+15).formula= &quot;=SUM(&quot; &amp; ncol &amp; InsRow+10 &amp; &quot;:&quot; &amp; ncol &amp; InsRow+13 &amp;&quot;)&quot;
 rem ----------------------------------------------------------------------
 firme (InsRow+17)
 
@@ -797,8 +797,8 @@ firme (InsRow+17)
 	seleziona_area(&quot;#SAL#&quot; &amp; nSal)
 &apos;Raggruppa_righe
 &apos;MOSTRA_righe (&quot;off&quot;)
-	oSheetSal.GetCellByPosition(fcol+1, InsRow+27).setstring(&quot;====================&quot;)
-	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol+1, InsRow+27))
+	oSheetSal.getCellByPosition(fcol+1, InsRow+27).setstring(&quot;====================&quot;)
+	ThisComponent.CurrentController.Select(oSheetSal.getCellByPosition(fcol+1, InsRow+27))
 copy_clip
 	ThisComponent.CurrentController.Select(oSheetSal.GetCellRangeByPosition(fcol+1, InsRow+27, fcol+1, getLastUsedRow(oSheetSal)-1))
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
@@ -812,7 +812,7 @@ rem ----------------------------------------------------------------------
 rem trovo l&apos;ultimo effettivo numero di pagina del sal
 	inumPag =0
 	For i = precRowSAL+1 to getLastUsedRow(oSheetSal)
-		if oSheetSal.GetCellByPosition(0,i).rows.IsStartOfNewPage = True then 
+		if oSheetSal.getCellByPosition(0,i).rows.IsStartOfNewPage = True then 
 			inumPag = inumPag+1
 		end If
 	Next
@@ -832,10 +832,10 @@ rem ci metto un po&apos; di informazioni
 	davoce=elVoci(0)(0) &apos;ultima voce
 	avoce=elVoci(ubound(elvoci()))(0) &apos;ultima voce
 	oSheetSal.getCellByPosition(1,ins).string = &quot;segue Stato di Avanzamento Lavori n.&quot; &amp; nSal &amp; &quot; - &quot; &amp; davoce &amp; &quot;÷&quot; &amp; avoce
-	oSheetSal.GetCellByPosition(6,ins).value = inumPag &apos;ultimo numero pagina
-	oSheetSal.GetCellByPosition(fcol+5, ins).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
-	oSheetSal.GetCellByPosition(fcol+5, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
-	ThisComponent.CurrentController.Select(oSheetSal.GetCellByPosition(fcol, ins))
+	oSheetSal.getCellByPosition(6,ins).value = inumPag &apos;ultimo numero pagina
+	oSheetSal.getCellByPosition(fcol+5, ins).setformula(&quot;=SUBTOTAL(9;$&quot;&amp; ncol &amp;&quot;$&quot;&amp; precRowSAL+1 &amp;&quot;:$&quot;&amp; ncol &amp;&quot;$&quot; &amp; InsRow &amp; &quot;)&quot;)
+	oSheetSal.getCellByPosition(fcol+5, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
+	ThisComponent.CurrentController.Select(oSheetSal.getCellByPosition(fcol, ins))
 rem ----------------------------------------------------------------------
 Struttura_Contab (&quot;#SAL#&quot;)
 end Sub &apos;genera_registro
@@ -848,106 +848,107 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	oEnd=uFindString(&quot;SITUAZIONE CONTABILE&quot;, oSheet)
 	Lrow=oEnd.RangeAddress.EndRow		&apos;riga
 	Lcol=oEnd.RangeAddress.EndColumn	&apos;colonna
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(lcol, lrow))
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(lcol, lrow))
 rem Compilo i titoli
-	oSheet.GetCellByPosition(Lcol,Lrow+1).string = &quot;S.A.L. n.&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+2).string = &quot;A tutto il&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+3).string = &quot;Lavori e somministrazioni a CORPO&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+4).string = &quot;Quota sicurezza non soggetta a ribasso&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+5).string = &quot;Quota MDO non soggetta a ribasso&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+6).string = &quot;Lavori in economia&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+7).string = &quot;&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+8).string = &quot;Lavori e somministrazioni a MISURA&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+9).string = &quot;Quota sicurezza non soggetta a ribasso&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+10).string = &quot;Quota MDO non soggetta a ribasso&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+11).string = &quot;&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+12).string = &quot;Importo su cui applicare il ribasso&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+13).formula = &quot;=CONCATENATE(&quot;&quot;Ribasso del &quot;&quot;;TEXT($S2.$C$78;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+14).string = &quot;Importo ribassato&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+15).formula = &quot;=CONCATENATE(&quot;&quot;Ritenute per garanzia &quot;&quot;;TEXT($S2.$C$84;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+16).formula = &quot;=CONCATENATE(&quot;&quot;Ritenute per infortuni &quot;&quot;;TEXT($S2.$C$85;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+17).formula = &quot;=CONCATENATE(&quot;&quot;Recupero anticipazione &quot;&quot;;TEXT($S2.$C$80;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+18).string = &quot;Certificati precedenti / Ultimo riporto&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+19).string = &quot;Totale detrazioni&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+20).string = &quot;Importo Certificato di pagamento&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+21).string = &quot;&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+22).string = &quot;&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+23).string = &quot;Data di stampa&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+24).string = &quot;Ultima voce registrata n.&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+25).string = &quot;Ultima pagina libretto n.&quot;
-	oSheet.GetCellByPosition(Lcol,Lrow+26).string = &quot;Ultimo disegno contabile n.&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+1).string = &quot;S.A.L. n.&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+2).string = &quot;A tutto il&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+3).string = &quot;Lavori e somministrazioni a CORPO&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+4).string = &quot;Quota sicurezza non soggetta a ribasso&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+5).string = &quot;Quota MDO non soggetta a ribasso&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+6).string = &quot;Lavori in economia&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+7).string = &quot;&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+8).string = &quot;Lavori e somministrazioni a MISURA&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+9).string = &quot;Quota sicurezza non soggetta a ribasso&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+10).string = &quot;Quota MDO non soggetta a ribasso&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+11).string = &quot;&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+12).string = &quot;Importo su cui applicare il ribasso&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+13).formula = &quot;=CONCATENATE(&quot;&quot;Ribasso del &quot;&quot;;TEXT($S2.$C$78;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+14).string = &quot;Importo ribassato&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+15).formula = &quot;=CONCATENATE(&quot;&quot;Ritenute per garanzia &quot;&quot;;TEXT($S2.$C$84;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+16).formula = &quot;=CONCATENATE(&quot;&quot;Ritenute per infortuni &quot;&quot;;TEXT($S2.$C$85;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+17).formula = &quot;=CONCATENATE(&quot;&quot;Recupero anticipazione &quot;&quot;;TEXT($S2.$C$80;&quot;&quot;0,00%&quot;&quot;);&quot;&quot;&quot;&quot;)&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+18).string = &quot;Certificati precedenti / Ultimo riporto&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+19).string = &quot;Totale detrazioni&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+20).string = &quot;Importo Certificato di pagamento&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+21).string = &quot;&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+22).string = &quot;&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+23).string = &quot;Data di stampa&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+24).string = &quot;Ultima voce registrata n.&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+25).string = &quot;Ultima pagina libretto n.&quot;
+	oSheet.getCellByPosition(Lcol,Lrow+26).string = &quot;Ultimo disegno contabile n.&quot;
 
 rem INPUT IMPORTO LAVORI SITUAZIONE CONTABILE
 &apos;	sFormulaSomma =&quot;=$CONTABILITA.$Z$&quot; &amp; iEndRow+1 
-&apos;	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+3).FORMULA = sFormulaSomma
+&apos;	oSheet.getCellByPosition(Lcol+iNumSal,Lrow+3).FORMULA = sFormulaSomma
 rem INPUT IMPORTO MANODOPERA SITUAZIONE CONTABILE
 &apos;	sFormulaSomma =&quot;=$CONTABILITA.$AE$&quot; &amp; iEndRow+1 
-&apos;	oSheet.GetCellByPosition(Lcol+iNumSal,Lrow+4).FORMULA = sFormulaSomma
+&apos;	oSheet.getCellByPosition(Lcol+iNumSal,Lrow+4).FORMULA = sFormulaSomma
 End Sub
 rem ######################################################################
 
 rem ######################################################################
 
-sub firme (lrow as long)&apos;, nr as long) &apos;(C) Giuseppe Vizziello 2014
+sub firme &apos; (lrow as long)&apos;, nr as long) &apos;(C) Giuseppe Vizziello 2014
 &apos;print &quot;idxrow &quot;&amp; idxrow 
 &apos;print &quot;idxcol &quot;&amp; idxcol
 	Dim oSheet as object
 	oSheet = ThisComponent.currentController.activeSheet
 	oSheet_S2=thisComponent.sheets.getbyname(&quot;S2&quot;)
-	datafirme=oSheet_S2.GetCellByPosition(2,3).getstring
+	datafirme=oSheet_S2.getCellByPosition(2,3).getstring
 	If datafirme=&quot;&quot; Then
 		datafirme=&quot;Data,&quot;
 		Else
 		datafirme = datafirme &amp; &quot;, &quot;
 	End If
+	LROW = getLastUsedRow(oSheet)
 	select Case oSheet.name
 		case = &quot;CONTABILITA&quot;
-			insRows (lrow,10) &apos;insertByIndex non funziona
+			oSheet.getRows().insertByIndex(lrow, 10)
 &apos;			osheet.getCellRangeByPosition (0,lrow,35,lrow+11).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
 			riga_corrente = lrow+1
 rem INSERISCI LA DATA E IL PROGETTISTA
-			oSheet.GetCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;&quot;&amp; datafirme  &amp;&quot;&quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+			oSheet.getCellByPosition(2 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;&quot;&amp; datafirme  &amp;&quot;&quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
 &apos;			osheet.getCellRangeByPosition (1,riga_corrente+3,1,riga_corrente+3).CellStyle = &quot;ULTIMUS&quot;
-			oSheet.GetCellByPosition(2 , riga_corrente+2).setformula(&quot;L&apos;Impresa esecutrice&quot;&amp; CHR$(10)&amp; _
-				&quot;(&quot; + oSheet_S2.GetCellByPosition(2 , 16).getstring + &quot;)&quot;)
-			oSheet.GetCellByPosition(2 , riga_corrente+6).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
-				&quot;(&quot; + oSheet_S2.GetCellByPosition(2 , 15).getstring + &quot;)&quot;)
+			oSheet.getCellByPosition(2 , riga_corrente+2).setformula(&quot;L&apos;Impresa esecutrice&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + oSheet_S2.getCellByPosition(2 , 16).getstring + &quot;)&quot;)
+			oSheet.getCellByPosition(2 , riga_corrente+6).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + oSheet_S2.getCellByPosition(2 , 15).getstring + &quot;)&quot;)
 rem CONSOLIDA LA DATA	
 			oRange = oSheet.getCellRangeByPosition (2,riga_corrente,frow+2,riga_corrente)
 			Flags = com.sun.star.sheet.CellFlags.FORMULA
 			aSaveData = oRange.getDataArray()
 			oRange.setDataArray(aSaveData)
 		case = &quot;Registro&quot;, &quot;SAL&quot;
-			If oSheet.Name = &quot;Registro&quot; Then insRows (lrow,20) &apos;insertByIndex non funziona
+			If oSheet.Name = &quot;Registro&quot; Then oSheet.getRows().insertByIndex(lrow, 20)
 			riga_corrente = lrow+1
 rem INSERISCI 
-			oSheet.GetCellByPosition(idxcol+1 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;&quot;&amp; datafirme  &amp; &quot;&quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
+			oSheet.getCellByPosition(idxcol+1 , riga_corrente).setformula(&quot;=CONCATENATE(&quot;&quot;&quot;&amp; datafirme  &amp; &quot;&quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;))&quot;)
 
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(idxcol+1 , riga_corrente))
-copy_clip
-consolida_clip &apos; consolida la data
+			ThisComponent.CurrentController.Select(oSheet.getCellByPosition(idxcol+1 , riga_corrente))
+&apos;copy_clip
+&apos;consolida_clip &apos; consolida la data
 			unSelect &apos;deseleziona
 		
-			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+2).setformula(&quot;L&apos;Impresa esecutrice&quot;&amp; CHR$(10)&amp; _
-				&quot;(&quot; + oSheet_S2.GetCellByPosition(2 , 16).getstring + &quot;)&quot;)
-			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+6).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
-				&quot;(&quot; + oSheet_S2.GetCellByPosition(2 , 15).getstring + &quot;)&quot;)
+			oSheet.getCellByPosition(idxcol+1 , riga_corrente+2).setformula(&quot;L&apos;Impresa esecutrice&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + oSheet_S2.getCellByPosition(2 , 16).getstring + &quot;)&quot;)
+			oSheet.getCellByPosition(idxcol+1 , riga_corrente+6).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + oSheet_S2.getCellByPosition(2 , 15).getstring + &quot;)&quot;)
 			osheet.getCellRangeByPosition (0,riga_corrente+2,5,riga_corrente+6).Rows.OptimalHeight = true
 			If oSheet.Name = &quot;SAL&quot; Then
 &apos;				firme = riga_corrente+6
 				Exit Sub
 			End If 
-			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+10).setformula _
+			oSheet.getCellByPosition(idxcol+1 , riga_corrente+10).setformula _
 			(&quot;=CONCATENATE(&quot;&quot;In data &quot;&quot;;TEXT(NOW();&quot;&quot;DD/MM/YYYY&quot;&quot;);&quot;&quot; è stato emesso il CERTIFICATO DI PAGAMENTO n.&quot; &amp; nSal &amp; &quot; per un importo di €&quot;&quot;)&quot;)
 rem CONSOLIDO
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(idxcol+1 , riga_corrente+10))
-copy_clip
-consolida_clip &apos; consolida la data
+			ThisComponent.CurrentController.Select(oSheet.getCellByPosition(idxcol+1 , riga_corrente+10))
+&apos;copy_clip
+&apos;consolida_clip &apos; consolida la data
 			unSelect &apos;deseleziona
 			ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
-			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+12).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
-				&quot;(&quot; + oSheet_S2.GetCellByPosition(idxcol+2 , 15).getstring + &quot;)&quot;)
-			oSheet.GetCellByPosition(idxcol+1 , riga_corrente+13).setformula(&quot;pezza&quot;) &apos;senza questa cancella la riga precedente
+			oSheet.getCellByPosition(idxcol+1 , riga_corrente+12).setformula(&quot;Il Direttore dei Lavori&quot;&amp; CHR$(10)&amp; _
+				&quot;(&quot; + oSheet_S2.getCellByPosition(idxcol+2 , 15).getstring + &quot;)&quot;)
+			oSheet.getCellByPosition(idxcol+1 , riga_corrente+13).setformula(&quot;pezza&quot;) &apos;senza questa cancella la riga precedente
 	end select
 end sub
 rem ######################################################################
@@ -958,9 +959,9 @@ sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 	oCell=thisComponent.getCurrentSelection()
 	lRow=oCell.RangeAddress.StartRow
 
-	if oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;  Then
+	if oSheet.getCellByPosition(0 , lrow).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;  Then
 		for i = 1 to 100
-			if oSheet.GetCellByPosition(0 , lrow-i).CellStyle &lt;&gt; &quot;Ultimus_centro_bordi_lati&quot; Then
+			if oSheet.getCellByPosition(0 , lrow-i).CellStyle &lt;&gt; &quot;Ultimus_centro_bordi_lati&quot; Then
 				uRow =lrow-i+1
 				exit for
 			end if
@@ -970,9 +971,9 @@ sub elimina_firme &apos;(C) Giuseppe Vizziello 2014
 		exit sub
 	end if
 
-	if oSheet.GetCellByPosition(0 , lrow).CellStyle = &quot;Ultimus_centro_bordi_lati&quot; then
+	if oSheet.getCellByPosition(0 , lrow).CellStyle = &quot;Ultimus_centro_bordi_lati&quot; then
 		for i = 1 to 100
-			if oSheet.GetCellByPosition(0 , lrow+i).CellStyle &lt;&gt; &quot;Ultimus_centro_bordi_lati&quot; then
+			if oSheet.getCellByPosition(0 , lrow+i).CellStyle &lt;&gt; &quot;Ultimus_centro_bordi_lati&quot; then
 				dRow =lrow+i-1
 				exit for
 			end if
@@ -1121,10 +1122,10 @@ rem recupero l&apos;ultima riga del documento
 rem ----------------------------------------------------------------------
 rem risistemo intestazioni
 				oSheet.getCellByPosition(25,ins).value = nSal-1
-				oSheet.GetCellByPosition(25,ins).cellstyle = &quot;Menu_sfondo _input_grasBig&quot;
-				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,daVoce-1))
+				oSheet.getCellByPosition(25,ins).cellstyle = &quot;Menu_sfondo _input_grasBig&quot;
+				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(25,daVoce-1))
 copy_clip
-				ThisComponent.CurrentController.Select(oSheet.getCellbyPosition(25,ins-1))
+				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(25,ins-1))
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 						oCell = oSheet.getCellRangeByPosition(0,daVoce,11,aVoce)
 						oCell.Rows.IsVisible=true
@@ -1247,9 +1248,9 @@ rem Recupero la prima riga non registrata
 		End With
 rem ----------------------------------------------------------------------
 rem recuperno l&apos;ultimo numero di pagina usato (serve in caso di libretto unico)
-		old_nPage=oSheetCont.getcellbyposition(20,lRow).value
+		old_nPage=oSheetCont.getCellByPosition(20,lRow).value
 &apos;Print old_nPage
-		daVoce = oSheetCont.getcellbyposition(0,daVoce).getstring()
+		daVoce = oSheetCont.getCellByPosition(0,daVoce).getstring()
 		If cint(davoce)=0 Then 
 			msgbox 	&quot;Non ci sono voci da registrare&quot;,48, &quot;AVVISO!&quot;
 			Exit sub
@@ -1298,9 +1299,9 @@ Visualizza_PageBreak
 	nomearea=&quot;#Lib#&quot;+nsal
 rem annota importo parziale SAL
 &apos;Print ultimariga &amp; &quot; - &quot; &amp; &quot;SAL n.&quot; &amp; nSal
-	oSheetCont.GetCellByPosition(25, ultimariga-1).string = &quot;SAL n.&quot; &amp; nSal
-	oSheetCont.GetCellByPosition(25, ultimariga).formula = &quot;=SUBTOTAL(9;P&quot; &amp; primariga+1 &amp; &quot;:P&quot; &amp; ultimariga+1 &amp; &quot;)&quot;
-	oSheetCont.GetCellByPosition(25, ultimariga).cellstyle = &quot;comp sotto Euro 3_R&quot;
+	oSheetCont.getCellByPosition(25, ultimariga-1).string = &quot;SAL n.&quot; &amp; nSal
+	oSheetCont.getCellByPosition(25, ultimariga).formula = &quot;=SUBTOTAL(9;P&quot; &amp; primariga+1 &amp; &quot;:P&quot; &amp; ultimariga+1 &amp; &quot;)&quot;
+	oSheetCont.getCellByPosition(25, ultimariga).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem immetti le firme
 	inizioFirme = ultimariga+1
 firme (ultimariga+1)&apos; riga di inserimento
@@ -1347,13 +1348,13 @@ Sbianca_celle
 rem ----------------------------------------------------------------------
  ThisComponent.CurrentController.setFirstVisibleRow (fineFirme-3) &apos;solo debug
 i=1
-	Do While oSheetCont.GetCellByPosition(1,fineFirme).rows.IsStartOfNewPage = False
-	&apos;	oSheetCont.GetCellByPosition(2 ,fineFirme).setstring(&quot;Sto sistemando il Libretto...&quot;)
+	Do While oSheetCont.getCellByPosition(1,fineFirme).rows.IsStartOfNewPage = False
+	&apos;	oSheetCont.getCellByPosition(2 ,fineFirme).setstring(&quot;Sto sistemando il Libretto...&quot;)
 	&apos;	insRows (fineFirme,1) &apos;insertByIndex non funziona
         oSheetCont.getRows().insertByIndex(fineFirme, 1)
 
 		If i=3 Then
-			oSheetCont.GetCellByPosition(2, fineFirme).String = &quot;====================&quot;
+			oSheetCont.getCellByPosition(2, fineFirme).String = &quot;====================&quot;
 			daqui=fineFirme
 		End If 
 		fineFirme = fineFirme+1
@@ -1378,10 +1379,10 @@ rem raggruppo
 	oCell = oSheetCont.getCellRangeByPosition(0,primariga,25,finefirme)
 	oSheetCont.getCellRangeByPosition (0,inizioFirme,25,finefirme).CellStyle = &quot;Ultimus_centro_bordi_lati&quot;
 	oCell = oSheetCont.getCellRangeByPosition (0,finefirme,35,finefirme)
-	oSheetCont.GetCellByPosition(2 , inizioFirme+1).CellStyle = &quot;ULTIMUS&quot; &apos;stile data
+	oSheetCont.getCellByPosition(2 , inizioFirme+1).CellStyle = &quot;ULTIMUS&quot; &apos;stile data
 rem recupero la data
-&apos;	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).Value, 10)
-	datafirma = Right (oSheetCont.GetCellByPosition(2 , inizioFirme+1).String, 10)
+&apos;	datafirma = Right (oSheetCont.getCellByPosition(2 , inizioFirme+1).Value, 10)
+	datafirma = Right (oSheetCont.getCellByPosition(2 , inizioFirme+1).String, 10)
 	ThisComponent.CurrentController.Select(oCell)
 bordo_sotto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
@@ -1406,10 +1407,10 @@ rem TROVO LA POSIZIONE DEL TITOLO
 	xS2=oEnd.RangeAddress.EndRow		&apos;riga
 	yS2=oEnd.RangeAddress.EndColumn	&apos;colonna
 	
-	oS2.GetCellByPosition(yS2+nSal,xS2+1).value = nSal &apos;numero sal
-	oS2.GetCellByPosition(yS2+nSal,xS2+2).Formula = &quot;=VALUE(&quot;&quot;&quot; &amp; datafirma &amp; &quot;&quot;&quot;)&quot;&apos;data
-	oS2.GetCellByPosition(yS2+nSal,xS2+24).value = aVoce &apos; ultima voce libretto
-	oS2.GetCellByPosition(yS2+nSal,xS2+25).value = inumPag &apos; ultima pagina libretto
+	oS2.getCellByPosition(yS2+nSal,xS2+1).value = nSal &apos;numero sal
+	oS2.getCellByPosition(yS2+nSal,xS2+2).Formula = &quot;=VALUE(&quot;&quot;&quot; &amp; datafirma &amp; &quot;&quot;&quot;)&quot;&apos;data
+	oS2.getCellByPosition(yS2+nSal,xS2+24).value = aVoce &apos; ultima voce libretto
+	oS2.getCellByPosition(yS2+nSal,xS2+25).value = inumPag &apos; ultima pagina libretto
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener)
 &apos;#########################################################################
 
@@ -1422,19 +1423,19 @@ Barra_Apri_Chiudi_5(&quot;                         Sto elaborando il Libetto del
 rem ----------------------------------------------------------------------
 rem col seguente ciclo FOR inserisco i dati ma non il numero di pagina
 	For i = primariga to fineFirme
-		IF 	oSheetCont.GetCellByPosition( 1 , i).cellstyle = &quot;comp Art-EP_R&quot; then
+		IF 	oSheetCont.getCellByPosition( 1 , i).cellstyle = &quot;comp Art-EP_R&quot; then
 			if primariga=0 then
 				sStRange = Circoscrive_Voce_Computo_Att (i)
 				With sStRange.RangeAddress
 					primariga =.StartRow
 				End With
 			end If
-			oSheetCont.GetCellByPosition(19, i).value= nLib &apos;1 &apos; numero libretto
-			oSheetCont.GetCellByPosition(22, i).string= &quot;#reg&quot; &apos; flag registrato
-			oSheetCont.GetCellByPosition(23, i).value= nSal &apos; numero SAL
-			oSheetCont.GetCellByPosition(23, i).cellstyle = &quot;Sal&quot;
+			oSheetCont.getCellByPosition(19, i).value= nLib &apos;1 &apos; numero libretto
+			oSheetCont.getCellByPosition(22, i).string= &quot;#reg&quot; &apos; flag registrato
+			oSheetCont.getCellByPosition(23, i).value= nSal &apos; numero SAL
+			oSheetCont.getCellByPosition(23, i).cellstyle = &quot;Sal&quot;
 &apos;		else
-&apos;		oSheetCont.GetCellByPosition( 1 , i).Rows.Height = 500 &apos;altezza riga
+&apos;		oSheetCont.getCellByPosition( 1 , i).Rows.Height = 500 &apos;altezza riga
 		end if
 	Next
 	inumPag = 0&apos;+ old_nPage &apos;SE IL LIBRETTO è UNICO
@@ -1450,13 +1451,13 @@ rem inserendo qui anche il resto dei dati ho numeri di pagina un po&apos; baller
 	For i = primariga to fineFirme
 		For n = LBound(IntPag) To UBound(IntPag)
 			if i &lt; IntPag(n).Position Then
-				if oSheetCont.GetCellByPosition( 1 , i).cellstyle = &quot;comp Art-EP_R&quot; then
+				if oSheetCont.getCellByPosition( 1 , i).cellstyle = &quot;comp Art-EP_R&quot; then
 					inumPag = n &apos; + old_nPage &apos;SE IL LIBRETTO è UNICO
-					oSheetCont.GetCellByPosition(20, i).value = inumPag &apos;numero Pagina
-				&apos;	oSheetCont.GetCellByPosition(19, i).value= nLib &apos;1 &apos; numero libretto
-				&apos;	oSheetCont.GetCellByPosition(22, i).string= &quot;#reg&quot; &apos; flag registrato
-				&apos;	oSheetCont.GetCellByPosition(23, i).value= nSal &apos; numero SAL
-				&apos;	oSheetCont.GetCellByPosition(23, i).cellstyle = &quot;Sal&quot;
+					oSheetCont.getCellByPosition(20, i).value = inumPag &apos;numero Pagina
+				&apos;	oSheetCont.getCellByPosition(19, i).value= nLib &apos;1 &apos; numero libretto
+				&apos;	oSheetCont.getCellByPosition(22, i).string= &quot;#reg&quot; &apos; flag registrato
+				&apos;	oSheetCont.getCellByPosition(23, i).value= nSal &apos; numero SAL
+				&apos;	oSheetCont.getCellByPosition(23, i).cellstyle = &quot;Sal&quot;
 					Exit For
 				end If
 			end if
@@ -1464,8 +1465,8 @@ rem inserendo qui anche il resto dei dati ho numeri di pagina un po&apos; baller
 	Next i
 rem ----------------------------------------------------------------------
 rem annoto ultimo numero di pagina 
-	oSheetCont.GetCellByPosition(20 , fineFirme).value = UBound(IntPag)&apos;inumPag
-	oSheetCont.GetCellByPosition(20 , fineFirme).CellStyle = &quot;num centro&quot;
+	oSheetCont.getCellByPosition(20 , fineFirme).value = UBound(IntPag)&apos;inumPag
+	oSheetCont.getCellByPosition(20 , fineFirme).CellStyle = &quot;num centro&quot;
 rem ----------------------------------------------------------------------
 &apos;fissa (0,idxrow+1)
 
@@ -1481,22 +1482,22 @@ fissa (0, ins + 1)
 rem ----------------------------------------------------------------------
 rem ci metto un po&apos; di informazioni
 	oSheetCont.getCellByPosition(2,ins).string = &quot;segue Libretto delle Misure n.&quot; &amp; nSal &amp; &quot; - &quot; &amp; davoce &amp; &quot;÷&quot; &amp; avoce
-	oSheetCont.GetCellByPosition(20,ins).value =  UBound(IntPag) &apos;ultimo numero pagina
-	oSheetCont.GetCellByPosition(19, ins).value= nLib &apos;1 &apos; numero libretto
-	oSheetCont.GetCellByPosition(23, ins).value= nSal &apos; numero SAL
-	oSheetCont.GetCellByPosition(25, ins).formula = &quot;=SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
-	oSheetCont.GetCellByPosition(25, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
+	oSheetCont.getCellByPosition(20,ins).value =  UBound(IntPag) &apos;ultimo numero pagina
+	oSheetCont.getCellByPosition(19, ins).value= nLib &apos;1 &apos; numero libretto
+	oSheetCont.getCellByPosition(23, ins).value= nSal &apos; numero SAL
+	oSheetCont.getCellByPosition(25, ins).formula = &quot;=SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
+	oSheetCont.getCellByPosition(25, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem ----------------------------------------------------------------------
 rem annoto il sal corrente sulla riga di intestazione
 	ins =uFindString(&quot;LAVORAZIONI&quot;+ chr(10) + &quot;O PROVVISTE&quot;, oSheetCont).RangeAddress.EndRow
 	oSheetCont.getCellByPosition(25,ins).value = nSal
-	oSheetCont.GetCellByPosition(25, ins).cellstyle = &quot;Menu_sfondo _input_grasBig&quot;
-&apos;	oSheetCont.GetCellByPosition(25, ins-1).formula = &quot;=SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
-	oSheetCont.GetCellByPosition(25, ins-1).formula = &quot;=$P$2-SUBTOTAL(9;$P$&quot; &amp; IdxRow &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
+	oSheetCont.getCellByPosition(25, ins).cellstyle = &quot;Menu_sfondo _input_grasBig&quot;
+&apos;	oSheetCont.getCellByPosition(25, ins-1).formula = &quot;=SUBTOTAL(9;$P$&quot; &amp; primariga+1 &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
+	oSheetCont.getCellByPosition(25, ins-1).formula = &quot;=$P$2-SUBTOTAL(9;$P$&quot; &amp; IdxRow &amp; &quot;:$P$&quot; &amp; ultimariga+2 &amp; &quot;)&quot;
 rem ----------------------------------------------------------------------
 rem fisso la riga alla prima voce
 For i= 2 To 100
-	If oSheetCont.getCellbyPosition(1,i).CellStyle = &quot;Comp-Bianche sopra_R&quot; Then
+	If oSheetCont.getCellByPosition(1,i).CellStyle = &quot;Comp-Bianche sopra_R&quot; Then
 	Exit For
 	EndIf
 	

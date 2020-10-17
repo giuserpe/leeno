@@ -9,28 +9,26 @@ import subprocess
 import time
 import atexit
 
-import inspect
 import importlib
 
-#
 from os import listdir
 from os.path import isfile, join
 
-import unohelper
-from com.sun.star.task import XJobExecutor
-#
-
 import uno
-from com.sun.star.beans import PropertyValue
 from com.sun.star.connection import NoConnectException
 
 # openoffice path
 # adapt to your system
-_sofficePath = '/usr/lib/libreoffice/program'
+if sys.platform == 'linux' or sys.platform == 'darwin':
+    _sofficePath = '/usr/lib/libreoffice/program'
+    calc = 'scalc'
+else:
+    _sofficePath = 'C:\\Program Files\\LibreOffice\\program'
+    calc = 'scalc.exe'
 
 OPENOFFICE_PORT = 8100
 OPENOFFICE_PATH    = _sofficePath
-OPENOFFICE_BIN     = os.path.join(OPENOFFICE_PATH, 'scalc')
+OPENOFFICE_BIN     = os.path.join(OPENOFFICE_PATH, calc)
 OPENOFFICE_LIBPATH = OPENOFFICE_PATH
 
 class OORunner:
@@ -201,32 +199,57 @@ reloadLeenoModules()
 
 desktop = lo['desktop']
 
-import uno
+
+
 def loadDocument(filename):
     url = uno.systemPathToFileUrl(filename)
     oDoc = desktop.loadComponentFromURL(url, "_blank", 0, tuple())
     return oDoc
 
-'''
-filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/EsempioComputoDaGiuseppe.xpwe"
-tree = ElementTree()
-tree.parse(filename)
+# ############################################################################
+from io import StringIO
+import xml.etree.ElementTree as ET
+import LeenoImport
 
-root = tree.getroot()
-misurazioni = root.find('PweMisurazioni')
+#filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/prezzario2019standardsix.xml"
 
-PweElencoPrezzi = misurazioni.getchildren()[0]
-# leggo l'elenco prezzi
-epitems = PweElencoPrezzi.findall('EPItem')
-'''
+filename = "/storage/Scaricati/COMPUTI_METRICI/LEENO/TESTS/TestPdfExport.ods"
+oDoc = loadDocument(filename)
 
-oDoc = loadDocument("/storage/Scaricati/COMPUTI_METRICI/LEENO/PREZZARI/PrezzarioEmiliaRomagna2019.ods")
-oSheet = oDoc.Sheets[0]
+sheet = oDoc.Sheets[0]
+pageStyleName = sheet.PageStyle
+pageStyles = oDoc.StyleFamilies.getByName('PageStyles')
+pageStyle = pageStyles.getByName(pageStyleName)
+footer = pageStyle.RightPageFooterContent
+rightText = footer.RightText
+
+pattern = '[PAGINA]'
+pos = rightText.String.find(pattern)
+cursor = rightText.createTextCursor()
+cursor.collapseToStart()
+cursor.goRight(pos, False)
+cursor.goRight(len(pattern), True)
+cursor.String = ''
+oField = oDoc.createInstance("com.sun.star.text.TextField.PageCount")
+cursor.collapseToStart()
+rightText.insertTextContent(cursor, oField, False)
+
+#fields = rightText.TextFields
+#field0 = fields[0]
+#anchor = field0.Anchor
+
+#oField = oDoc.createInstance("com.sun.star.text.TextField.DateTime")
+#oField.IsFixed = True
+#oField.NumberFormat = FindCreateNumberFormatStyle("DD. MMMM YYYY", oDoc)
+#rightText.insertTextContent(rightText.getEnd(), oField, False)
+
+pageStyle.RightPageFooterContent = footer
+
+
+
+
+
+import LeenoSettings
+LeenoSettings.MENU_PrintSettings()
 
 print("\nDONE\n")
-
-
-
-
-
-

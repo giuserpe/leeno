@@ -55,7 +55,7 @@ Function uFindString(sString$, oSheet ) As Variant &apos; richiamata da diverse 
 	Dim sFind As String
 	rem oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 	rem sString = &quot;TOTALI COMPUTO&quot;
-	oCell = oSheet.GetCellbyPosition(0,0)
+	oCell = oSheet.getCellByPosition(0,0)
 	oCursor = oSheet.createCursorByRange(oCell)
 	oCursor.GotoEndOfUsedArea(True)
 	aAddress = oCursor.RangeAddress
@@ -63,11 +63,11 @@ Function uFindString(sString$, oSheet ) As Variant &apos; richiamata da diverse 
 	nEndCol = aAddress.EndColumn
 	For nCurCol = 0 To nEndCol &apos;Go through the range column by column
 		For nCurRow = 0 To nEndRow &apos;row by row.
-			&apos;oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+			&apos;oCell = oSheet.getCellByPosition( nCurCol, nCurRow )
 			&apos;sFind = oCell.String &apos;Get cell contents.
 			&apos;If inStr(sFind, sString$) Then
-			If inStr (oSheet.GetCellByPosition(nCurCol, nCurRow).String , sString$) then
-						 uFindString = oSheet.GetCellByPosition(nCurCol, nCurRow)
+			If inStr (oSheet.getCellByPosition(nCurCol, nCurRow).String , sString$) then
+						 uFindString = oSheet.getCellByPosition(nCurCol, nCurRow)
 					 Exit Function
 			End If
 		Next
@@ -91,7 +91,7 @@ Function uFindString_1 (sString$ , oSheet , lcol) As Variant &apos;
  end if
 
  			
- oCell = oSheet.GetCellbyPosition( 0, 0 )
+ oCell = oSheet.getCellByPosition( 0, 0 )
  oCursor = oSheet.createCursorByRange(oCell)
  oCursor.GotoEndOfUsedArea(True)
  aAddress = oCursor.RangeAddress
@@ -100,7 +100,7 @@ Function uFindString_1 (sString$ , oSheet , lcol) As Variant &apos;
 &apos;print nEndRow
  For nCurCol = 0 To nEndCol &apos;Go through the range column by column,
  For nCurRow = 0 To nEndRow &apos;row by row.
- oCell = oSheet.GetCellByPosition( nCurCol, nCurRow )
+ oCell = oSheet.getCellByPosition( nCurCol, nCurRow )
  sFind = oCell.String &apos;Get cell contents.
  If sFind = sString then
  		 uFindString_1 = oCell

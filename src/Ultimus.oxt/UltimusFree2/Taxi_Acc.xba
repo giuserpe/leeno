@@ -57,7 +57,7 @@ dim ilastUrow as long
 		end if		
 
 		for n = 0 to ilastUCol
-			oCell = oSheet.GetCellByPosition( n , i) &apos;occhio Bart, tendi ad invertirli
+			oCell = oSheet.getCellByPosition( n , i) &apos;occhio Bart, tendi ad invertirli
 			if ocell.Type = com.sun.star.table.CellContentType.FORMULA then
 	 			sRif_1 = ocell.formula
 	 			s = InStr(2, sRif_1, &quot;.&quot;)-2

@@ -49,24 +49,7 @@ rem ----------------------------------------------------------------------
 	End Select
 	Filecopy sURL$, sNewURL$ &apos;agisce direttamente su disco in modo &quot;invisibile&quot;
 End Sub
-&apos;#########################################################################
-Sub file2template
-	Dim oSheet, oContr as Object
-	oSheet = thisComponent.sheets.getbyname(&quot;S1&quot;)
-	oSheet.isVisible = TRUE
-	oContr = ThisComponent.CurrentController
-	oContr.ZoomValue = 100
-	oContr.setactivesheet(oSheet)
-	oContr.setFirstVisibleColumn (0)
-	oContr.setFirstVisibleRow(190)
-
-	For Each sName In GetmyToolBarNames()
-		toolbar_on (sName, 0)
-	Next
-	toolbar_on (&quot;private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV&quot;, 0)
-	ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7, 316).Value = 0
-	salva_doc_come (LeenO_Path &amp; &quot;/template/leeno/Computo_template.ods&quot;)
-End Sub 
+ 
 &apos;#########################################################################
 Sub avvia_IDE
 	print &quot;OK per Python - Annulla per Basic&quot;

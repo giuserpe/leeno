@@ -17,20 +17,20 @@ SUB D_Accoda_CN(livelli as long, lRow as long)
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
  
-	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+	if oSheet.getCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getstring
 				else
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getvalue
 	end if
-	sUM = oSheet.GetCellByPosition( 6, lrow).string
-	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
-	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
-	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sUM = oSheet.getCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.getCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.getCellByPosition( 2, lrow).string
+	sAlfaNum1 = oSheet.getCellByPosition( 2, lrow-1).string
 	lAlfa0 = Len (sAlfaNum0)
-	oCell = oSheet.GetCellByPosition( 2, lrow )
+	oCell = oSheet.getCellByPosition( 2, lrow )
 	lAlfaA = Len(oCell.string)
-	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
-	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	sAlfac1 = oSheet.getCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.getCellByPosition( 0, lrow).string
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
 	
 	Select Case livelli
@@ -38,43 +38,43 @@ SUB D_Accoda_CN(livelli as long, lRow as long)
 	Case 1 &apos;&quot;CN&quot; 
 		Do while sAlfaNum0 = sAlfaNum1 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				&apos;lAlfaA = Len( oCell.string)
-				sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow).string			
+				sAlfaNum1 = oSheet.getCellByPosition( 2, lrow).string			
 		loop 
 		lrow = lrow+1
-		If oSheet.GetCellByPosition( 7, lrow).getvalue = 0 then 
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+		If oSheet.getCellByPosition( 7, lrow).getvalue = 0 then 
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			else
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow-1).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow-1).string
 		end if
 
 	Case 2 &apos; per Milano e Piemonte (se cella B9 è vuota Tipologia = 0)
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 	
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
 	
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			end if
 			
 &apos;		PRINT &quot;SECONDO&quot;
 			&apos;lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			
 			lAlfa0 = lAlfaA
@@ -82,64 +82,64 @@ SUB D_Accoda_CN(livelli as long, lRow as long)
 	
 			Do while lAlfaA = lAlfa0 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 			loop
 			IF lAlfaA &gt; lAlfa0 then
 				goto voce_completa
 			end if
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string			
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string			
+			oCell = oSheet.getCellByPosition( 2, lrow )
 
 	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
 	
 &apos;	print &quot;sono in tip 3&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print &quot;3a&quot;
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 &apos;	print &quot;1 &quot; &amp; sDescr1
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
 	
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			end if
 			
 &apos;		PRINT &quot;SECONDO&quot;
 			&apos;lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfa1 = Len( oCell.string)
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaB = Len( oCell.string)
 			IF lAlfaB &gt; lAlfa1 then
 					print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
 					Do while lAlfaB &gt;= lAlfa1
 						lrow = lrow-1
-						oCell = oSheet.GetCellByPosition( 2, lrow )
+						oCell = oSheet.getCellByPosition( 2, lrow )
 						lAlfaB = Len( oCell.string)
 					loop
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 				else
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 			end if
 		
 			IF lAlfaA &gt; lAlfa0 then
 			
 		&apos;&apos;		goto voce_completa
 			end if
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 
 
 	End select
@@ -218,20 +218,20 @@ SUB Accoda_DEA(livelli as long, lRow as long)
 	oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
  
-	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+	if oSheet.getCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getstring
 				else
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getvalue
 	end if
-	sUM = oSheet.GetCellByPosition( 6, lrow).string
-	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
-	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
-	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sUM = oSheet.getCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.getCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.getCellByPosition( 2, lrow).string
+	sAlfaNum1 = oSheet.getCellByPosition( 2, lrow-1).string
 	lAlfa0 = Len (sAlfaNum0)
-	oCell = oSheet.GetCellByPosition( 2, lrow )
+	oCell = oSheet.getCellByPosition( 2, lrow )
 	lAlfaA = Len(oCell.string)
-	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
-	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	sAlfac1 = oSheet.getCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.getCellByPosition( 0, lrow).string
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
 	if livelli = 2 then
 		livelli = 3
@@ -241,45 +241,45 @@ SUB Accoda_DEA(livelli as long, lRow as long)
 	Case 1 &apos;&quot;CN&quot; 
 		Do while sAlfaNum0 = sAlfaNum1 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				&apos;lAlfaA = Len( oCell.string)
-				sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow).string			
+				sAlfaNum1 = oSheet.getCellByPosition( 2, lrow).string			
 		loop 
 		lrow = lrow+1
-		If oSheet.GetCellByPosition( 7, lrow).getvalue = 0 then 
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+		If oSheet.getCellByPosition( 7, lrow).getvalue = 0 then 
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			else
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow-1).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow-1).string
 		end if
 
 	Case 2 
 	PRINT sDescr1 
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 	
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
 	
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			end if
 			
 &apos;		PRINT &quot;SECONDO&quot;
 
 			&apos;lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			
 			lAlfa0 = lAlfaA
@@ -287,41 +287,41 @@ SUB Accoda_DEA(livelli as long, lRow as long)
 	
 			Do while lAlfaA = lAlfa0 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 			loop
 			IF lAlfaA &gt; lAlfa0 then
 				goto voce_completa
 			end if
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string			
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string			
+			oCell = oSheet.getCellByPosition( 2, lrow )
 
 	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
 	
 &apos;	print sDescr0
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 	&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
 	&apos;			print &quot;3a&quot;
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 
 		&apos;	do while left &apos;
 &apos;		PRINT &quot;SECONDO&quot;
 
-			Do while Left( oSheet.GetCellByPosition( 2, lrow).string,3) &lt;&gt; &quot;CAP&quot; &apos; 
+			Do while Left( oSheet.getCellByPosition( 2, lrow).string,3) &lt;&gt; &quot;CAP&quot; &apos; 
 				lrow = lrow-1
 			loop 
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 			goto voce_completa
 &apos; FINISH QUI			
 
@@ -441,34 +441,34 @@ END SUB
 SUB Accoda_SCNVA(livelli as long, lrow as long)
 
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- oCell = oSheet.GetCellByPosition( 2, lrow-1 ) 
+ oCell = oSheet.getCellByPosition( 2, lrow-1 ) 
  &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
 
- If oSheet.GetCellByPosition( 8, lrow).getvalue = &quot;&quot; or _
- 	oSheet.GetCellByPosition( 8, lrow).getvalue = 0 then &apos;serve per acchiappare il dato anche se stringa
- 		sIncMan = oSheet.GetCellByPosition( 8, lrow).getstring
+ If oSheet.getCellByPosition( 8, lrow).getvalue = &quot;&quot; or _
+ 	oSheet.getCellByPosition( 8, lrow).getvalue = 0 then &apos;serve per acchiappare il dato anche se stringa
+ 		sIncMan = oSheet.getCellByPosition( 8, lrow).getstring
  	else
- 		sIncMan =oSheet.GetCellByPosition( 8, lrow).getvalue
+ 		sIncMan =oSheet.getCellByPosition( 8, lrow).getvalue
  end if
- sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+ sSicur = oSheet.getCellByPosition( 9, lrow).getvalue
 
  
-	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+	if oSheet.getCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getstring
 				else
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getvalue
 	end if
 
-	sUM = oSheet.GetCellByPosition( 6, lrow).string
-	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
-	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+	sUM = oSheet.getCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.getCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.getCellByPosition( 2, lrow).string
 	&apos; dovremmo aver acchiappato i dati della riga prezzo
-	Do while oSheet.GetCellByPosition( 2, lrow).string &lt;&gt; &quot;&quot;
+	Do while oSheet.getCellByPosition( 2, lrow).string &lt;&gt; &quot;&quot;
 		lrow = lrow-1
 	loop
 	&apos;adesso va su fino alla fine delle descrizioni 
-	Do while oSheet.GetCellByPosition( 2, lrow).string = &quot;&quot; and oSheet.GetCellByPosition( 4, lrow).string &lt;&gt; &quot;&quot;
+	Do while oSheet.getCellByPosition( 2, lrow).string = &quot;&quot; and oSheet.getCellByPosition( 4, lrow).string &lt;&gt; &quot;&quot;
 			lrow = lrow-1
 	loop
 	if livelli = 2 or livelli = 3 then
@@ -477,13 +477,13 @@ SUB Accoda_SCNVA(livelli as long, lrow as long)
 	if livelli = 1 then
 			lrow = lrow + 2
 	end if
-	sDescr3 = oSheet.GetCellByPosition( 4, lrow).string
+	sDescr3 = oSheet.getCellByPosition( 4, lrow).string
 	lrow = lrow + 1
 	
 	&apos;adesso torna giù accorpando le descrizioni
-	Do while oSheet.GetCellByPosition( 2, lrow).string = &quot;&quot; and oSheet.GetCellByPosition( 4, lrow).string &lt;&gt; &quot;&quot;
+	Do while oSheet.getCellByPosition( 2, lrow).string = &quot;&quot; and oSheet.getCellByPosition( 4, lrow).string &lt;&gt; &quot;&quot;
 		
-		sDescrA = oSheet.GetCellByPosition( 4, lrow).string
+		sDescrA = oSheet.getCellByPosition( 4, lrow).string
 		if sDescr3 &lt;&gt; &quot;&quot; then
 			&apos; sDescr3 = sDescr3 &amp; CHR(13) &amp; sDescrA
 			 sDescr3 = sDescr3 &amp; &quot; &quot; &amp; sDescrA
@@ -566,73 +566,73 @@ end sub
 SUB Accoda_Normale(livelli as long, lrow as long) &apos;
 
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- oCell = oSheet.GetCellByPosition( 2, lrow-1 ) 
+ oCell = oSheet.getCellByPosition( 2, lrow-1 ) 
  &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
  &apos; dim sIncMan as double
  
  &apos;&apos; 	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot; or _
 &apos; 		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
-	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+	&apos;	 sIncMan = oSheetTemp.getCellByPosition( 8, lrow).getvalue
 &apos;	end if
  
- &apos; sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
- &apos; sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+ &apos; sIncMan = oSheet.getCellByPosition( 8, lrow).getvalue
+ &apos; sSicur = oSheet.getCellByPosition( 9, lrow).getvalue
 
- &apos; If oSheet.GetCellByPosition( 8, lrow).getstring = &quot;&quot; then 
+ &apos; If oSheet.getCellByPosition( 8, lrow).getstring = &quot;&quot; then 
  &apos; 	sIncMan = &quot;&quot;
  &apos; end if
  
-	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
-		sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+	if (oSheet.getCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
+		sIncMan = oSheet.getCellByPosition( 8, lrow).getvalue
 	&apos;	print sIncman
 	end if	 
 	 
-	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.TEXT) then 
-		sIncMan = oSheet.GetCellByPosition( 8, lrow).getstring
+	if (oSheet.getCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.TEXT) then 
+		sIncMan = oSheet.getCellByPosition( 8, lrow).getstring
 	&apos;	print sIncman
 	end if
 	
 
-	if (oSheet.GetCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.VALUE) then
-			sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+	if (oSheet.getCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.VALUE) then
+			sSicur = oSheet.getCellByPosition( 9, lrow).getvalue
 		else 	
-			sSicur = oSheet.GetCellByPosition( 9, lrow).getstring
+			sSicur = oSheet.getCellByPosition( 9, lrow).getstring
 	end if
 
-	if 	oSheet.GetCellByPosition( 9, lrow).value = 0 and oSheet.GetCellByPosition( 10, lrow).value &lt;&gt; 0 then
+	if 	oSheet.getCellByPosition( 9, lrow).value = 0 and oSheet.getCellByPosition( 10, lrow).value &lt;&gt; 0 then
 	&apos;se la 9 è vuota e la 10 contiene una percentuale...
-		Sic_perc = oSheet.GetCellByPosition( 10, lrow).value 
+		Sic_perc = oSheet.getCellByPosition( 10, lrow).value 
 		&apos;	print &quot;abbiamo un %&quot;
 	end if
 	
 		
- &apos; 	if oSheet.GetCellByPosition( 9, lrow).string = &quot;&quot; then 
+ &apos; 	if oSheet.getCellByPosition( 9, lrow).string = &quot;&quot; then 
  &apos;			sSicur = &quot;&quot;
 &apos;	 else
-&apos;	 	sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+&apos;	 	sSicur = oSheet.getCellByPosition( 9, lrow).getvalue
 &apos;	end if
 &apos;xray sSicur
  
-	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+	if oSheet.getCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getstring
 				else
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getvalue
 	end if
 
-	sUM = oSheet.GetCellByPosition( 6, lrow).string
-	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sUM = oSheet.getCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.getCellByPosition( 4, lrow).string
 	
-	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
-&apos;	print oSheet.GetCellByPosition( 2, lrow).string
+	sAlfaNum0 = oSheet.getCellByPosition( 2, lrow).string
+&apos;	print oSheet.getCellByPosition( 2, lrow).string
 &apos;	print &quot;sAlfaNum0 &quot; &amp; sAlfaNum0
-	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sAlfaNum1 = oSheet.getCellByPosition( 2, lrow-1).string
 &apos;	print &quot;sAlfaNum1 &quot; &amp; sAlfaNum1
 	lAlfa0 = Len (sAlfaNum0)
-&apos;	oCell = oSheet.GetCellByPosition( 2, lrow )
-	lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
-	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
-	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+&apos;	oCell = oSheet.getCellByPosition( 2, lrow )
+	lAlfaA = Len(oSheet.getCellByPosition( 2, lrow ).string)
+	sAlfac1 = oSheet.getCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.getCellByPosition( 0, lrow).string
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
  
 	 &apos;	print lAlfa0
@@ -644,37 +644,37 @@ SUB Accoda_Normale(livelli as long, lrow as long) &apos;
 	&apos;	lAlfaA = Len(sAlfaNum1)
 	&apos;	Do while lAlfa0 = lAlfaA 
 	&apos;			lrow = lrow-1
-	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+	&apos;			oCell = oSheet.getCellByPosition( 2, lrow )
 				&apos;lAlfaA = Len( oCell.string)
-	&apos;			sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;			sAlfaNum1 = oSheet.getCellByPosition( 2, lrow).string	
 	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
 	&apos;			print &quot;AAA&quot;		
 	&apos;	loop 
 	&apos;	lrow = lrow+1
-	&apos;	sDescr1 = oSheet.GetCellByPosition( 4, lrow-1).string
+	&apos;	sDescr1 = oSheet.getCellByPosition( 4, lrow-1).string
 
 	Case 2 &apos; per Milano e Piemonte 
 &apos;	print &quot;2&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
-			lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
+			oCell = oSheet.getCellByPosition( 2, lrow )
+			lAlfaA = Len(oSheet.getCellByPosition( 2, lrow ).string)
 
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
-&apos;print &quot;ecco &quot; &amp; oSheet.GetCellByPosition( 2, lrow ).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
+&apos;print &quot;ecco &quot; &amp; oSheet.getCellByPosition( 2, lrow ).string
 			if lalfa0 = 0 then
 				lalfa0 =100
 			end if
-			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; or oSheet.GetCellByPosition( 6, lrow ).string &lt;&gt; &quot;&quot;
+			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; or oSheet.getCellByPosition( 6, lrow ).string &lt;&gt; &quot;&quot;
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print &quot;1 &quot; &amp; &quot;AAA&quot;
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 			if sAlfaNum0 = &quot;&quot; then
-				 sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow ).string
+				 sAlfaNum0 = oSheet.getCellByPosition( 2, lrow ).string
 			end if
 			&apos;print sAlfaNum0 
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
@@ -682,15 +682,15 @@ SUB Accoda_Normale(livelli as long, lrow as long) &apos;
 					goto voce_completa
 			end if
 			goto voce_completa
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfa0 = lAlfaA
 			lAlfaA = Len( oCell.string)
 	
 			Do while lAlfaA = lAlfa0 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print sAlfac1
 
@@ -698,67 +698,67 @@ SUB Accoda_Normale(livelli as long, lrow as long) &apos;
 			IF lAlfaA &gt; lAlfa0 then
 		&apos;		goto voce_completa
 			end if
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string			
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string			
+			oCell = oSheet.getCellByPosition( 2, lrow )
 
 	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
 	
 &apos;	print &quot;sono in tip 3&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;print sAlfac1
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 &apos;	print &quot;1 &quot; &amp; sDescr1
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
 	
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			end if
 			
 &apos;		PRINT &quot;SECONDO&quot;
 			&apos;lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 	&apos;	print &quot;dove&quot;	
 		&apos;	lAlfa1 = lAlfaA
 			lAlfa1 = Len( oCell.string)
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaB = Len( oCell.string)
 			IF lAlfaB &gt; lAlfa1 then
 			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
 					Do while lAlfaB &gt;= lAlfa1
 						lrow = lrow-1
-						oCell = oSheet.GetCellByPosition( 2, lrow )
+						oCell = oSheet.getCellByPosition( 2, lrow )
 						lAlfaB = Len( oCell.string)
 					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;		print &quot;3c&quot;
 					loop
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 				else
 				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;		print &quot;Altern&quot;
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 			end if
 		
 			IF lAlfaA &gt; lAlfa0 then
 			
 		&apos;&apos;		goto voce_completa
 			end if
-		&apos;	sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 		&apos;	print &quot;2 &quot; &amp; sDescr2			
-			oCell = oSheet.GetCellByPosition( 0, 0 )
-			&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 0, 0 )
+			&apos;			oCell = oSheet.getCellByPosition( 2, lrow )
 	End select
 	 
 
@@ -843,8 +843,8 @@ SUB Accoda_Normale(livelli as long, lrow as long) &apos;
 	
 	
 	iF Sic_perc &lt;&gt; 0 then 
-		oSheetTemp.GetCellByPosition( 8, 2).value = Sic_perc 
-		oSheetTemp.GetCellByPosition( 8, 2).cellstyle = Temp_%
+		oSheetTemp.getCellByPosition( 8, 2).value = Sic_perc 
+		oSheetTemp.getCellByPosition( 8, 2).cellstyle = Temp_%
 	end if
 	
 	sSicur = &quot;&quot; &apos; azzeriamole... non si sa mai... :)
@@ -889,7 +889,7 @@ end sub
 SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4 colonne Manodop Imp e %, Sicurezza imp e %
 &apos;print &quot;accoda 4&quot;
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- oCell = oSheet.GetCellByPosition( 2, lrow-1 )
+ oCell = oSheet.getCellByPosition( 2, lrow-1 )
  &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
  &apos; dim sIncMan as double
@@ -898,27 +898,27 @@ SUB Accoda_Normale_4(livelli as long, lrow as long) &apos;ovvero quello con le 4
  perc_IncMan = &quot;&quot;
  sDiverse = &quot; &quot;
 	&apos;Prezzo
-	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+	if oSheet.getCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getstring
 				else
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getvalue
 	end if
 
  &apos;manodopera
 goto saltalo
-	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
-		sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+	if (oSheet.getCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
+		sIncMan = oSheet.getCellByPosition( 8, lrow).getvalue
 	&apos;	print sIncman
 	end if	 
 	 
-	if (oSheet.GetCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.TEXT) then 
-		sIncMan = oSheet.GetCellByPosition( 8, lrow).getstring
+	if (oSheet.getCellByPosition( 8, lrow).Type = com.sun.star.table.CellContentType.TEXT) then 
+		sIncMan = oSheet.getCellByPosition( 8, lrow).getstring
 	&apos;	print sIncman
 	end if
 saltalo:
 	
-	if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0 and oSheet.GetCellByPosition( 9, lrow).value &lt;&gt; 0 then
-		if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; oSheet.GetCellByPosition( 9, lrow).value then &apos; e se non sono memmeno equivalenti
+	if 	oSheet.getCellByPosition( 8, lrow).value &lt;&gt; 0 and oSheet.getCellByPosition( 9, lrow).value &lt;&gt; 0 then
+		if 	oSheet.getCellByPosition( 8, lrow).value &lt;&gt; oSheet.getCellByPosition( 9, lrow).value then &apos; e se non sono memmeno equivalenti
 		 	sDiverse = &quot;(Inoltre - dato sconcertante - non sembrano nemmeno corrispondere...) &quot;
 		end if
 		ThisComponent.CurrentController.Select(oSheet.getCellRangeByPosition (8,lrow,9,lrow))	
@@ -932,40 +932,40 @@ saltalo:
 		exit sub
 	end if
  
-	if 	oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0 then &apos;and oSheet.GetCellByPosition( 8, lrow).value &lt;&gt; 0 then	 
-			perc_IncMan = oSheet.GetCellByPosition( 8, lrow).value 
+	if 	oSheet.getCellByPosition( 8, lrow).value &lt;&gt; 0 then &apos;and oSheet.getCellByPosition( 8, lrow).value &lt;&gt; 0 then	 
+			perc_IncMan = oSheet.getCellByPosition( 8, lrow).value 
 &apos;	print &quot;se c&apos;è una % &quot;
 		else 
-			if oSheet.GetCellByPosition( 9, lrow).value &lt;&gt; 0 or oSheet.GetCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot; then
-				if (oSheet.GetCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
-					sIncMan = oSheet.GetCellByPosition(9, lrow).getvalue
+			if oSheet.getCellByPosition( 9, lrow).value &lt;&gt; 0 or oSheet.getCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot; then
+				if (oSheet.getCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.VALUE) then	
+					sIncMan = oSheet.getCellByPosition(9, lrow).getvalue
 				end if
-			if (oSheet.GetCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.TEXT) then 
-				sIncMan = oSheet.GetCellByPosition( 9, lrow).getstring
+			if (oSheet.getCellByPosition( 9, lrow).Type = com.sun.star.table.CellContentType.TEXT) then 
+				sIncMan = oSheet.getCellByPosition( 9, lrow).getstring
 			end if	
 		end if	 
 	end if	
 
 &apos;sicurezza
-	if (oSheet.GetCellByPosition( 11, lrow).Type = com.sun.star.table.CellContentType.VALUE) then &apos;9
-			sSicur = oSheet.GetCellByPosition( 11, lrow).getvalue
+	if (oSheet.getCellByPosition( 11, lrow).Type = com.sun.star.table.CellContentType.VALUE) then &apos;9
+			sSicur = oSheet.getCellByPosition( 11, lrow).getvalue
 		else 	
-			sSicur = oSheet.GetCellByPosition( 11, lrow).getstring
+			sSicur = oSheet.getCellByPosition( 11, lrow).getstring
 	end if	
 
 	dim percent as string
-	percent = oSheet.GetCellByPosition( 10, lrow).formula
-&apos;	percent = oSheet.GetCellByPosition( 10, lrow).string
+	percent = oSheet.getCellByPosition( 10, lrow).formula
+&apos;	percent = oSheet.getCellByPosition( 10, lrow).string
 	dim percent2 as long
 	percent2 = percent
 	
-&apos;	percent2 = oSheet.GetCellByPosition( 10, lrow).formula
+&apos;	percent2 = oSheet.getCellByPosition( 10, lrow).formula
 	
 &apos;/100
-&apos;xray oSheet.GetCellByPosition( 10, lrow)
+&apos;xray oSheet.getCellByPosition( 10, lrow)
 
 &apos;dim p1 as double
-pp1 = oSheet.GetCellByPosition( 10, lrow).formula
+pp1 = oSheet.getCellByPosition( 10, lrow).formula
 
 dim pp2 as single &apos;integer &apos;long
 
@@ -982,13 +982,13 @@ percent2 = pp2
 		
 &apos;print oops
 &apos;exit sub
-&apos;print oSheet.GetCellByPosition( 11, lrow).value
-	if 	oSheet.GetCellByPosition( 11, lrow).value &lt;&gt; 0 and oSheet.GetCellByPosition( 10, lrow).value &lt;&gt; 0 then
+&apos;print oSheet.getCellByPosition( 11, lrow).value
+	if 	oSheet.getCellByPosition( 11, lrow).value &lt;&gt; 0 and oSheet.getCellByPosition( 10, lrow).value &lt;&gt; 0 then
 		&apos;print &quot;1 &quot; &amp; percent2*Prezzo
 		&apos;xray percent2
-	&apos;	print &quot;2 &quot; &amp; oSheet.GetCellByPosition( 11, lrow).value
-	&apos;	xray oSheet.GetCellByPosition( 11, lrow).value
-		if 	Prezzo*percent2 &lt;&gt; oSheet.GetCellByPosition( 11, lrow).value then &apos; e se non sono memmeno equivalenti
+	&apos;	print &quot;2 &quot; &amp; oSheet.getCellByPosition( 11, lrow).value
+	&apos;	xray oSheet.getCellByPosition( 11, lrow).value
+		if 	Prezzo*percent2 &lt;&gt; oSheet.getCellByPosition( 11, lrow).value then &apos; e se non sono memmeno equivalenti
 		 	sDiverse = &quot;(Inoltre - dato sconcertante - non sembrano nemmeno corrispondere tra loro...) &quot;
 		end if	
 		
@@ -1004,9 +1004,9 @@ percent2 = pp2
 				&amp; &quot;&quot;,16, &quot;Problema con la Sicurezza Inclusa&quot;			
 		exit sub
 	end if
-	if 	oSheet.GetCellByPosition( 11, lrow).value = 0 and oSheet.GetCellByPosition( 10, lrow).value &lt;&gt; 0 then
+	if 	oSheet.getCellByPosition( 11, lrow).value = 0 and oSheet.getCellByPosition( 10, lrow).value &lt;&gt; 0 then
 	&apos;se la 10 è vuota e la 11 contiene una percentuale...
-		Sic_perc = oSheet.GetCellByPosition( 10, lrow).value 
+		Sic_perc = oSheet.getCellByPosition( 10, lrow).value 
 		&apos;	print &quot;abbiamo un %&quot;
 	end if
 
@@ -1014,19 +1014,19 @@ percent2 = pp2
 
 	
 
-	sUM = oSheet.GetCellByPosition( 6, lrow).string
-	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
+	sUM = oSheet.getCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.getCellByPosition( 4, lrow).string
 	
-	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
-&apos;	print oSheet.GetCellByPosition( 2, lrow).string
+	sAlfaNum0 = oSheet.getCellByPosition( 2, lrow).string
+&apos;	print oSheet.getCellByPosition( 2, lrow).string
 &apos;	print &quot;sAlfaNum0 &quot; &amp; sAlfaNum0
-	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sAlfaNum1 = oSheet.getCellByPosition( 2, lrow-1).string
 &apos;	print &quot;sAlfaNum1 &quot; &amp; sAlfaNum1
 	lAlfa0 = Len (sAlfaNum0)
-&apos;	oCell = oSheet.GetCellByPosition( 2, lrow )
-	lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
-	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
-	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+&apos;	oCell = oSheet.getCellByPosition( 2, lrow )
+	lAlfaA = Len(oSheet.getCellByPosition( 2, lrow ).string)
+	sAlfac1 = oSheet.getCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.getCellByPosition( 0, lrow).string
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
  
 	 &apos;	print lAlfa0
@@ -1038,37 +1038,37 @@ percent2 = pp2
 	&apos;	lAlfaA = Len(sAlfaNum1)
 	&apos;	Do while lAlfa0 = lAlfaA 
 	&apos;			lrow = lrow-1
-	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+	&apos;			oCell = oSheet.getCellByPosition( 2, lrow )
 				&apos;lAlfaA = Len( oCell.string)
-	&apos;			sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;			sAlfaNum1 = oSheet.getCellByPosition( 2, lrow).string	
 	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
 	&apos;			print &quot;AAA&quot;		
 	&apos;	loop 
 	&apos;	lrow = lrow+1
-	&apos;	sDescr1 = oSheet.GetCellByPosition( 4, lrow-1).string
+	&apos;	sDescr1 = oSheet.getCellByPosition( 4, lrow-1).string
 
 	Case 2 &apos; per Milano e Piemonte 
 &apos;	print &quot;2&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
-			lAlfaA = Len(oSheet.GetCellByPosition( 2, lrow ).string)
+			oCell = oSheet.getCellByPosition( 2, lrow )
+			lAlfaA = Len(oSheet.getCellByPosition( 2, lrow ).string)
 
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
-&apos;print &quot;ecco &quot; &amp; oSheet.GetCellByPosition( 2, lrow ).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
+&apos;print &quot;ecco &quot; &amp; oSheet.getCellByPosition( 2, lrow ).string
 			if lalfa0 = 0 then
 				lalfa0 =100
 			end if
-			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; or oSheet.GetCellByPosition( 6, lrow ).string &lt;&gt; &quot;&quot;
+			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; or oSheet.getCellByPosition( 6, lrow ).string &lt;&gt; &quot;&quot;
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print &quot;1 &quot; &amp; &quot;AAA&quot;
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 			if sAlfaNum0 = &quot;&quot; then
-				 sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow ).string
+				 sAlfaNum0 = oSheet.getCellByPosition( 2, lrow ).string
 			end if
 			&apos;print sAlfaNum0 
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
@@ -1076,15 +1076,15 @@ percent2 = pp2
 					goto voce_completa
 			end if
 			goto voce_completa
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfa0 = lAlfaA
 			lAlfaA = Len( oCell.string)
 	
 			Do while lAlfaA = lAlfa0 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print sAlfac1
 
@@ -1092,67 +1092,67 @@ percent2 = pp2
 			IF lAlfaA &gt; lAlfa0 then
 		&apos;		goto voce_completa
 			end if
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string			
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string			
+			oCell = oSheet.getCellByPosition( 2, lrow )
 
 	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
 	
 &apos;	print &quot;sono in tip 3&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;print sAlfac1
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 &apos;	print &quot;1 &quot; &amp; sDescr1
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
 	
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			end if
 			
 &apos;		PRINT &quot;SECONDO&quot;
 			&apos;lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 	&apos;	print &quot;dove&quot;	
 		&apos;	lAlfa1 = lAlfaA
 			lAlfa1 = Len( oCell.string)
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaB = Len( oCell.string)
 			IF lAlfaB &gt; lAlfa1 then
 			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
 					Do while lAlfaB &gt;= lAlfa1
 						lrow = lrow-1
-						oCell = oSheet.GetCellByPosition( 2, lrow )
+						oCell = oSheet.getCellByPosition( 2, lrow )
 						lAlfaB = Len( oCell.string)
 					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;		print &quot;3c&quot;
 					loop
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 				else
 				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;		print &quot;Altern&quot;
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 			end if
 		
 			IF lAlfaA &gt; lAlfa0 then
 			
 		&apos;&apos;		goto voce_completa
 			end if
-		&apos;	sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 		&apos;	print &quot;2 &quot; &amp; sDescr2			
-			oCell = oSheet.GetCellByPosition( 0, 0 )
-			&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 0, 0 )
+			&apos;			oCell = oSheet.getCellByPosition( 2, lrow )
 	End select
 	 
 
@@ -1217,8 +1217,8 @@ percent2 = pp2
 	end if
 	
 	iF Sic_perc &lt;&gt; 0 then 
-		oSheetTemp.GetCellByPosition( 8, 2).value = Sic_perc 
-		oSheetTemp.GetCellByPosition( 8, 2).cellstyle = Temp_%
+		oSheetTemp.getCellByPosition( 8, 2).value = Sic_perc 
+		oSheetTemp.getCellByPosition( 8, 2).cellstyle = Temp_%
 	end if
 	
 	if perc_IncMan &lt;&gt; &quot;&quot; then &apos; se abbiamo la percentuale la scriviamo direttamente
@@ -1234,8 +1234,8 @@ percent2 = pp2
 	end if
 	
 	iF Sic_perc &lt;&gt; 0 then 
-		oSheetTemp.GetCellByPosition( 8, 2).value = Sic_perc 
-		oSheetTemp.GetCellByPosition( 8, 2).cellstyle = &quot;Temp_%&quot;
+		oSheetTemp.getCellByPosition( 8, 2).value = Sic_perc 
+		oSheetTemp.getCellByPosition( 8, 2).cellstyle = &quot;Temp_%&quot;
 	end if
 &apos;____	
 	
@@ -1276,37 +1276,37 @@ end sub
 
 SUB Accoda_CN08(livelli as long, lrow as long)
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- oCell = oSheet.GetCellByPosition( 2, lrow-1 ) 
+ oCell = oSheet.getCellByPosition( 2, lrow-1 ) 
  &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
  dim sIncMan as double
  
  	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot; or _
  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
-	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+	&apos;	 sIncMan = oSheetTemp.getCellByPosition( 8, lrow).getvalue
 	end if
 
- sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
- sSicur = oSheet.GetCellByPosition( 9, lrow).getvalue
+ sIncMan = oSheet.getCellByPosition( 8, lrow).getvalue
+ sSicur = oSheet.getCellByPosition( 9, lrow).getvalue
  &apos; print sIncMan
  
-	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+	if oSheet.getCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getstring
 				else
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getvalue
 	end if
 
-	sUM = oSheet.GetCellByPosition( 6, lrow).string
-	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
-	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+	sUM = oSheet.getCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.getCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.getCellByPosition( 2, lrow).string
 &apos;	print sAlfaNum0
-	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sAlfaNum1 = oSheet.getCellByPosition( 2, lrow-1).string
 &apos;	print sAlfaNum1
 	lAlfa0 = Len (sAlfaNum0)
-	oCell = oSheet.GetCellByPosition( 2, lrow )
+	oCell = oSheet.getCellByPosition( 2, lrow )
 	lAlfaA = Len(oCell.string)
-	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
-	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	sAlfac1 = oSheet.getCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.getCellByPosition( 0, lrow).string
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
  
 	Select Case livelli
@@ -1315,35 +1315,35 @@ SUB Accoda_CN08(livelli as long, lrow as long)
 			
 		
 	Case 2 
-			If oSheet.GetCellByPosition( 3, lrow).string = &quot;4&quot; then &apos; per Milano era &quot;p&quot;
+			If oSheet.getCellByPosition( 3, lrow).string = &quot;4&quot; then &apos; per Milano era &quot;p&quot;
 					goto voce_completa
 			end if
 			lrow = lrow-1
-			Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;4&quot; &apos; AND sAlfac1 &lt;&gt; &quot;P&quot; 
+			Do while oSheet.getCellByPosition( 3, lrow).string &lt;&gt; &quot;4&quot; &apos; AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
 			loop 
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 			goto voce_completa
 			
 	Case 3 &apos; 	
-			If oSheet.GetCellByPosition( 3, lrow).string = &quot;4&quot; then 
+			If oSheet.getCellByPosition( 3, lrow).string = &quot;4&quot; then 
 				lrow = lrow-1
-				Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;3&quot; &apos; 
+				Do while oSheet.getCellByPosition( 3, lrow).string &lt;&gt; &quot;3&quot; &apos; 
 					lrow = lrow-1
 				loop 
-				sDescr3 = oSheet.GetCellByPosition( 4, lrow).string
+				sDescr3 = oSheet.getCellByPosition( 4, lrow).string
 				goto voce_completa
 			end if
 			lrow = lrow-1
-			Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;4&quot; &apos; 
+			Do while oSheet.getCellByPosition( 3, lrow).string &lt;&gt; &quot;4&quot; &apos; 
 				lrow = lrow-1
 			loop 
 			vai3:
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
-			Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;3&quot; &apos; 
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string
+			Do while oSheet.getCellByPosition( 3, lrow).string &lt;&gt; &quot;3&quot; &apos; 
 				lrow = lrow-1
 			loop 
-			sDescr3 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr3 = oSheet.getCellByPosition( 4, lrow).string
 			goto voce_completa
 			
 	End select
@@ -1447,41 +1447,41 @@ end sub
 
 SUB Accoda_MS(livelli as long, lrow as long)
  oSheet = ThisComponent.currentController.activeSheet &apos; sheet corrente 
- oCell = oSheet.GetCellByPosition( 2, lrow-1 ) 
+ oCell = oSheet.getCellByPosition( 2, lrow-1 ) 
  &apos; ThisComponent.CurrentController.Select(oCell)&apos;debug	
  oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;) 
  dim sIncMan as double
  
  	if oSheetTemp.getCellByPosition(5,1).string = &quot;incid. manodopera&quot; or _
  		oSheetTemp.getCellByPosition(6,1).string &lt;&gt; &quot;&quot; then
-	&apos;	 sIncMan = oSheetTemp.GetCellByPosition( 8, lrow).getvalue
+	&apos;	 sIncMan = oSheetTemp.getCellByPosition( 8, lrow).getvalue
 	end if
 
- sIncMan = oSheet.GetCellByPosition( 8, lrow).getvalue
+ sIncMan = oSheet.getCellByPosition( 8, lrow).getvalue
  &apos; print sIncMan
- 	if oSheet.GetCellByPosition( 7, lrow).value = isNotANumber then
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getstring
+ 	if oSheet.getCellByPosition( 7, lrow).value = isNotANumber then
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getstring
 				else
-			Prezzo = oSheet.GetCellByPosition( 7, lrow).getvalue
+			Prezzo = oSheet.getCellByPosition( 7, lrow).getvalue
 	end if
-	sUM = oSheet.GetCellByPosition( 6, lrow).string
-	sDescr0 = oSheet.GetCellByPosition( 4, lrow).string
-	sAlfaNum0 = oSheet.GetCellByPosition( 2, lrow).string
+	sUM = oSheet.getCellByPosition( 6, lrow).string
+	sDescr0 = oSheet.getCellByPosition( 4, lrow).string
+	sAlfaNum0 = oSheet.getCellByPosition( 2, lrow).string
 &apos;	print sAlfaNum0
-	sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow-1).string
+	sAlfaNum1 = oSheet.getCellByPosition( 2, lrow-1).string
 &apos;	print sAlfaNum1
 	lAlfa0 = Len (sAlfaNum0)
-	oCell = oSheet.GetCellByPosition( 2, lrow )
+	oCell = oSheet.getCellByPosition( 2, lrow )
 	lAlfaA = Len(oCell.string)
-	sAlfac1 = oSheet.GetCellByPosition( 2, lrow-1).string
-	sCategoria = oSheet.GetCellByPosition( 0, lrow).string
+	sAlfac1 = oSheet.getCellByPosition( 2, lrow-1).string
+	sCategoria = oSheet.getCellByPosition( 0, lrow).string
 	oSheetTemp = thisComponent.sheets.getbyname(&quot;Temp&quot;)
  
  &apos;	print lAlfa0
 &apos;	print lAlfaA
 &apos;print livelli
-	IF oSheet.GetCellByPosition( 3, lrow).string = &quot;P&quot; And _
-		 oSheet.GetCellByPosition( 3, lrow-1).string = &quot;P&quot; THEN 
+	IF oSheet.getCellByPosition( 3, lrow).string = &quot;P&quot; And _
+		 oSheet.getCellByPosition( 3, lrow-1).string = &quot;P&quot; THEN 
 		goto voce_completa
 	end if
 	
@@ -1491,56 +1491,56 @@ SUB Accoda_MS(livelli as long, lrow as long)
 	&apos;	lAlfaA = Len(sAlfaNum1)
 	&apos;	Do while lAlfa0 = lAlfaA 
 	&apos;			lrow = lrow-1
-	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+	&apos;			oCell = oSheet.getCellByPosition( 2, lrow )
 				&apos;lAlfaA = Len( oCell.string)
-	&apos;			sAlfaNum1 = oSheet.GetCellByPosition( 2, lrow).string	
+	&apos;			sAlfaNum1 = oSheet.getCellByPosition( 2, lrow).string	
 	&apos;&apos;			ThisComponent.CurrentController.Select(oCell)&apos;debug	
 	&apos;			print &quot;AAA&quot;		
 	&apos;	loop 
 	&apos;	lrow = lrow+1
-	&apos;	sDescr1 = oSheet.GetCellByPosition( 4, lrow-1).string
+	&apos;	sDescr1 = oSheet.getCellByPosition( 4, lrow-1).string
 
 	Case 2 &apos; per Milano e Piemonte 
 &apos;	print &quot;2&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print &quot;AAA&quot;
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 &apos;	print sDescr1
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...	
 		&apos;	print &quot;MI&quot;
-		&apos;	PRINT oSheet.GetCellByPosition( 3, lrow-1).string
-			&apos;	Do while oSheet.GetCellByPosition( 7, lrow).string &lt;&gt; &quot;&quot;
+		&apos;	PRINT oSheet.getCellByPosition( 3, lrow-1).string
+			&apos;	Do while oSheet.getCellByPosition( 7, lrow).string &lt;&gt; &quot;&quot;
 				
-					&apos;IF oSheet.GetCellByPosition( 3, lrow-1).string = &quot;V&quot; THEN 
+					&apos;IF oSheet.getCellByPosition( 3, lrow-1).string = &quot;V&quot; THEN 
 						&apos;	sDescr1 = &quot;&quot;
 					&apos;	ELSE
-							sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
-						&apos;	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition( 4, lrow))&apos;debug	
-						&apos;	print oSheet.GetCellByPosition( 4, lrow).string
+							sDescr1 = oSheet.getCellByPosition( 4, lrow).string
+						&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition( 4, lrow))&apos;debug	
+						&apos;	print oSheet.getCellByPosition( 4, lrow).string
 					&apos;END if
 					goto voce_completa
 			end if
 			goto voce_completa
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfa0 = lAlfaA
 			lAlfaA = Len( oCell.string)
 	
 			Do while lAlfaA = lAlfa0 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 			&apos;		ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print sAlfac1
 
@@ -1548,67 +1548,67 @@ SUB Accoda_MS(livelli as long, lrow as long)
 			IF lAlfaA &gt; lAlfa0 then
 		&apos;		goto voce_completa
 			end if
-			sDescr2 = oSheet.GetCellByPosition( 4, lrow).string			
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			sDescr2 = oSheet.getCellByPosition( 4, lrow).string			
+			oCell = oSheet.getCellByPosition( 2, lrow )
 
 	Case 3 &apos; per 3 livelli (es Eletttrici Piemonte )
 	
 &apos;	print &quot;sono in tip 3&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaA = Len( oCell.string)
-			sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string
+			sAlfac1 = oSheet.getCellByPosition( 3, lrow).string
 
 			Do while lAlfaA = lAlfa0 AND sAlfac1 &lt;&gt; &quot;P&quot; 
 				lrow = lrow-1
-				oCell = oSheet.GetCellByPosition( 2, lrow )
+				oCell = oSheet.getCellByPosition( 2, lrow )
 				lAlfaA = Len( oCell.string)
-				sAlfac1 = oSheet.GetCellByPosition( 3, lrow).string			
+				sAlfac1 = oSheet.getCellByPosition( 3, lrow).string			
 			&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 			&apos;	print sAlfac1
 			loop 
-			sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+			sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 &apos;	print &quot;1 &quot; &amp; sDescr1
 			If sAlfac1 = &quot;P&quot; then &apos; se è milano...
 	
-					sDescr1 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr1 = oSheet.getCellByPosition( 4, lrow).string
 					goto voce_completa
 			end if
 			
 &apos;		PRINT &quot;SECONDO&quot;
 			&apos;lrow = lrow+1 
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 		&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 	&apos;	print &quot;dove&quot;	
 		&apos;	lAlfa1 = lAlfaA
 			lAlfa1 = Len( oCell.string)
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 2, lrow )
 			lAlfaB = Len( oCell.string)
 			IF lAlfaB &gt; lAlfa1 then
 			&apos;		print lAlfaB &amp; &quot; ancora &quot; &amp; lAlfa1
 					Do while lAlfaB &gt;= lAlfa1
 						lrow = lrow-1
-						oCell = oSheet.GetCellByPosition( 2, lrow )
+						oCell = oSheet.getCellByPosition( 2, lrow )
 						lAlfaB = Len( oCell.string)
 					&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;		print &quot;3c&quot;
 					loop
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 				else
 				&apos;	ThisComponent.CurrentController.Select(oCell)&apos;debug	
 				&apos;		print &quot;Altern&quot;
-					sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+					sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 			end if
 		
 			IF lAlfaA &gt; lAlfa0 then
 			
 		&apos;&apos;		goto voce_completa
 			end if
-		&apos;	sDescr2 = oSheet.GetCellByPosition( 4, lrow).string
+		&apos;	sDescr2 = oSheet.getCellByPosition( 4, lrow).string
 		&apos;	print &quot;2 &quot; &amp; sDescr2			
-			oCell = oSheet.GetCellByPosition( 0, 0 )
-	&apos;			oCell = oSheet.GetCellByPosition( 2, lrow )
+			oCell = oSheet.getCellByPosition( 0, 0 )
+	&apos;			oCell = oSheet.getCellByPosition( 2, lrow )
 
 
 	End select

@@ -61,37 +61,37 @@ function cerca_partenza
 		oSheet.getCellRangeByPosition(0, lRow, 49 , lRow).cellstyle = &quot;Reg_prog&quot;
 	end if
 	
-	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
-			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
+	if left((oSheet.getCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
+			left((oSheet.getCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
 				&apos;lrow = lrow-1
 			&apos;print &quot;wow&quot;
 			goto 	fai_e_basta
 	end if
-	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
-		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
+	If oSheet.getCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
+		do while oSheet.getCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
 			lRow = lRow-1
 		loop &apos;
 		&apos;lRow = lRow + 1
 		goto fai_e_basta &apos; FAI
 	end if
-	if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; then
-		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
-			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) = &quot;Reg-SAL&quot;then
-			do while left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot;
+	if left((oSheet.getCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; then
+		if left((oSheet.getCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
+			left((oSheet.getCellByPosition( 0 , lRow-1).cellstyle),7) = &quot;Reg-SAL&quot;then
+			do while left((oSheet.getCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot;
 				lrow = lrow+1
 			loop
 		&apos;	print lrow
 			goto FAI
 		end if
-		if left((oSheet.GetCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
-			left((oSheet.GetCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
+		if left((oSheet.getCellByPosition( 0 , lRow).cellstyle),7) = &quot;Reg-SAL&quot; and _
+			left((oSheet.getCellByPosition( 0 , lRow-1).cellstyle),7) &lt;&gt; &quot;Reg-SAL&quot;then
 			goto 	fai_e_basta
 		end if
-		if oSheet.GetCellByPosition( 0 , lRow-1).cellstyle = &quot;Comp End Attributo_R&quot; then
+		if oSheet.getCellByPosition( 0 , lRow-1).cellstyle = &quot;Comp End Attributo_R&quot; then
 				goto FAI
 		end if
 
-		if oSheet.GetCellByPosition( 0 , lRow+1).cellstyle = &quot;Comp Start Attributo_R&quot; then
+		if oSheet.getCellByPosition( 0 , lRow+1).cellstyle = &quot;Comp Start Attributo_R&quot; then
 				lRow = lRow
 			&apos;	print &quot;2 - &quot; &amp; lrow
 				goto FAI
@@ -99,20 +99,20 @@ function cerca_partenza
 		&apos;lrow = lrow+1		
 	end if	
 
-	if oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; then
+	if oSheet.getCellByPosition( 0 , lRow).cellstyle = &quot;Comp Start Attributo_R&quot; then
 		goto FAI
 	end if
-	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
+	If oSheet.getCellByPosition( 0 , lRow).cellstyle = &quot;Comp End Attributo_R&quot; then
 		
-		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
+		do while oSheet.getCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
 			lRow = lRow-1
 		loop &apos;
 		&apos;lRow = lRow + 1
 		goto FAI
 	end if
-	If oSheet.GetCellByPosition( 0 , lRow).cellstyle = &quot;comp 10 s_R&quot; or _
-		oSheet.GetCellByPosition( 0 ,lRow).cellstyle = &quot;comp 10 s_R&quot; then
-		do while oSheet.GetCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
+	If oSheet.getCellByPosition( 0 , lRow).cellstyle = &quot;comp 10 s_R&quot; or _
+		oSheet.getCellByPosition( 0 ,lRow).cellstyle = &quot;comp 10 s_R&quot; then
+		do while oSheet.getCellByPosition( 0 , lRow).cellstyle &lt;&gt; &quot;Comp Start Attributo_R&quot;
 			lRow = lRow-1
 		loop &apos;
 	end if

@@ -67,7 +67,7 @@ Function TrovaSTR(sTrova, oSheetC) As Variant &apos; richiamata da diverse cose
 			end if
  end if
  &apos;print lcolbase
- oCell = oSheetC.GetCellbyPosition(lcolbase + 0, 0 )
+ oCell = oSheetC.getCellByPosition(lcolbase + 0, 0 )
  oCursor = oSheetC.createCursorByRange(oCell)
  oCursor.GotoEndOfUsedArea(True)
  aAddress = oCursor.RangeAddress
@@ -96,7 +96,7 @@ Function TrovaSTR(sTrova, oSheetC) As Variant &apos; richiamata da diverse cose
 &apos;print nEndRow
  For nCurCol = lcolbase +0 To nEndCol &apos;Go through the range column by column,
  For nCurRow = lcolbase +0 To nEndRow &apos;row by row.
- oCell = oSheetC.GetCellByPosition( nCurCol, nCurRow )
+ oCell = oSheetC.getCellByPosition( nCurCol, nCurRow )
  sFind = oCell.String &apos;Get cell contents.
  If sFind = sTrova then
  		 TrovaSTR = oCell
@@ -125,15 +125,15 @@ Sub Scrivi_orfani(sCodOrfano as string)
  &apos; sNome = ThisComponent.NamedRanges.getByIndex(i).Name
  &apos; sRange = ThisComponent.NamedRanges.getByIndex(i).Content 
  &apos;	lrow = 1 	
-	oSheet.GetCellByPosition( 0 , lrow).string = &quot;codici NON trovati&quot;
-	oSheet.GetCellByPosition( 0 , lrow).CellStyle = &quot;EP-aS&quot;
-	oCell = oSheet.GetCellbyPosition( 0, 1 )
+	oSheet.getCellByPosition( 0 , lrow).string = &quot;codici NON trovati&quot;
+	oSheet.getCellByPosition( 0 , lrow).CellStyle = &quot;EP-aS&quot;
+	oCell = oSheet.getCellByPosition( 0, 1 )
 	oCursor = oSheet.createCursorByRange(oCell)
 	oCursor.GotoEndOfUsedArea(True)
 	aAddress = oCursor.RangeAddress
  	nEndRow = aAddress.EndRow
-	oSheet.GetCellByPosition( 0 , nEndRow+1).string = sCodOrfano
- oSheet.GetCellByPosition( 0 , nEndRow+1).CellStyle = &quot;EP-aS&quot;
+	oSheet.getCellByPosition( 0 , nEndRow+1).string = sCodOrfano
+ oSheet.getCellByPosition( 0 , nEndRow+1).CellStyle = &quot;EP-aS&quot;
 End sub
 
 Sub Search_replace (oSheet as object, sCerca as string, sSostituisci as string)

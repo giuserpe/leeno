@@ -34,7 +34,7 @@ dim oSheet as object
 		 
 		exit sub
 	end if
-	oCell = oSheet.GetCellByPosition( 3 , lrow)&apos; errata selezione di un range
+	oCell = oSheet.getCellByPosition( 3 , lrow)&apos; errata selezione di un range
 	ThisComponent.CurrentController.Select(oCell)
  oRange = Circoscrive_Voce_Computo_B (lrow)
 	lRow=oRange.RangeAddress.startRow +1
@@ -42,11 +42,11 @@ dim oSheet as object
 	if templateTipo = &quot;ATT&quot; then lcol5 = 3
 	if templateTipo = &quot;5C&quot; then lcol5 = 2
 
-	oCell = oSheet.GetCellByPosition( lcol5 , lrow)
+	oCell = oSheet.getCellByPosition( lcol5 , lrow)
 	xA = oCell.string
 				Do while xA &lt;&gt; &quot;SOMMANO &quot; &apos;and lrow &lt; lastUrow
 						lrow = lrow+1
- 						oCell = oSheet.GetCellByPosition( lcol5 , lrow)
+ 						oCell = oSheet.getCellByPosition( lcol5 , lrow)
  						xA = oCell.string
 		 		Loop
 rem ----------------------------------------------------------------------
@@ -56,13 +56,13 @@ rem ----------------------------------------------------------------------
  	&apos;	 Copia_superTag_tutto(lrow)
 rem ----------------------------------------------------------------------
  	&apos;	 exit sub
- 		 oCell = oSheet.GetCellByPosition( lcol5 , lrow)
- 		 Do while oSheet.GetCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;
+ 		 oCell = oSheet.getCellByPosition( lcol5 , lrow)
+ 		 Do while oSheet.getCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;
 			lrow = lrow+1
-			oCell = oSheet.GetCellByPosition( lcol5, lrow )
+			oCell = oSheet.getCellByPosition( lcol5, lrow )
 		loop
 		lrow = lrow+2
- 		oCell = oSheet.GetCellByPosition( lcol5 , lrow)
+ 		oCell = oSheet.getCellByPosition( lcol5 , lrow)
  		ThisComponent.CurrentController.Select(oCell)
 END SUB
 
@@ -94,7 +94,7 @@ dim lcol as long
 dim nome_sheet as string
 dim oSheet, oEnd, oCell as object 
  oSheet = ThisComponent.currentController.activeSheet
- oCell = oSheet.GetCellByPosition( 9 , lrow) 
+ oCell = oSheet.getCellByPosition( 9 , lrow) 
  &apos;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;&gt;
  Copia_Trattini_locale_Computo_0 (9, lrow) &apos; trattini (per controllo fine somma)
  Copia_Trattini_locale_Computo_0 (10, lrow)
@@ -117,7 +117,7 @@ dim oSheet, oEnd, oCell as object
  &apos; 	Copia_Formule_locale_LookUP_3 (16, lrow) &apos; reimposta il VlookUp del prezzo unitario
  &apos; ma se c&apos;è un prezzo &quot;forzato&quot; a manina si incasina il computo
 &apos; quindi facciamo un po&apos; di manipolazioni utili allo scopo
- oCellt = oSheet.GetCellByPosition( 11 , lrow)
+ oCellt = oSheet.getCellByPosition( 11 , lrow)
  	 if (oCellt.Type = com.sun.star.table.CellContentType.EMPTY) then
  	 	Copia_Formule_locale_LookUP_3 (11, lrow) &apos; se è vuota mette il vlookup da S1
  	 end if
@@ -140,23 +140,23 @@ END SUB
 Function Copia_superTag (lrow as long) &apos; NON inserisce link ai Tag nelle parziali
 &apos;lrow = 7
 oSheet = ThisComponent.currentController.activeSheet
-oCell = oSheet.GetCellByPosition( 9 , lrow)
+oCell = oSheet.getCellByPosition( 9 , lrow)
 ThisComponent.CurrentController.Select(oCell)
 &apos;print &quot;entrato in supertag &quot; &amp; lrow
 lrowOr = lrow +1&apos; mi sembra precario...
-	&apos;	Do while oSheet.GetCellByPosition( 3, lrow).string &lt;&gt; &quot;SOMMANO &quot;
-	&apos;	Do while oSheet.GetCellByPosition( 9, lrow).string &lt;&gt; &quot;-&quot;
-		Do while oSheet.GetCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot;
+	&apos;	Do while oSheet.getCellByPosition( 3, lrow).string &lt;&gt; &quot;SOMMANO &quot;
+	&apos;	Do while oSheet.getCellByPosition( 9, lrow).string &lt;&gt; &quot;-&quot;
+		Do while oSheet.getCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 9, lrow )
+			oCell = oSheet.getCellByPosition( 9, lrow )
 		&apos;	ThisComponent.CurrentController.Select(oCell)
 		loop	
 		sFormula = &quot;=AD&quot; &amp; lrowOr 
-		oSheet.GetCellByPosition( 29, lrow ).setformula(sFormula )
+		oSheet.getCellByPosition( 29, lrow ).setformula(sFormula )
 		sFormula = &quot;=AE&quot; &amp; lrowOr 
-		oSheet.GetCellByPosition( 30, lrow ).setformula(sFormula )
+		oSheet.getCellByPosition( 30, lrow ).setformula(sFormula )
 		sFormula = &quot;=AF&quot; &amp; lrowOr 
-		oSheet.GetCellByPosition( 31, lrow ).setformula(sFormula )
+		oSheet.getCellByPosition( 31, lrow ).setformula(sFormula )
  &apos; oCellB.setformula(sFormula )
  	&apos; copia strrr
  &apos;	print &quot;frma&quot;
@@ -183,7 +183,7 @@ Function Copia_superTag_tutto (lrow as long) &apos;Inserisce link ai Tag nelle p
 &apos;lrow = 7
 dim lrowOr as long
 oSheet = ThisComponent.currentController.activeSheet
-oCell = oSheet.GetCellByPosition( 9 , lrow)
+oCell = oSheet.getCellByPosition( 9 , lrow)
 
 	if templateTipo = &quot;ATT&quot; then lcol5 = 3
 	if templateTipo = &quot;5C&quot; then lcol5 = 2
@@ -191,27 +191,27 @@ oCell = oSheet.GetCellByPosition( 9 , lrow)
 &apos;ThisComponent.CurrentController.Select(oCell)
 &apos;print &quot;entrato in supertag &quot; &amp; lrow
 lrowOr = lrow +1&apos; mi sembra precario...
-		Do while oSheet.GetCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;
+		Do while oSheet.getCellByPosition( lcol5, lrow).string &lt;&gt; &quot;SOMMANO &quot;
 			lrow = lrow+1
-			oCell = oSheet.GetCellByPosition( lcol5, lrow )
+			oCell = oSheet.getCellByPosition( lcol5, lrow )
 					ThisComponent.CurrentController.Select(oCell)
 					print
 		loop 
 &apos;		ThisComponent.CurrentController.Select(oCell)
 &apos;	print &quot;fermala&quot;
 		&apos;lrow = lrow -1
-		&apos;Do while oSheet.GetCellByPosition( 9, lrow).string &lt;&gt; &quot;-&quot;
-		Do while oSheet.GetCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot;
+		&apos;Do while oSheet.getCellByPosition( 9, lrow).string &lt;&gt; &quot;-&quot;
+		Do while oSheet.getCellByPosition( 9, lrow).string &lt;&gt; &quot;&quot;
 			lrow = lrow-1
-			oCell = oSheet.GetCellByPosition( 9, lrow )
+			oCell = oSheet.getCellByPosition( 9, lrow )
 	&apos;		ThisComponent.CurrentController.Select(oCell)
 &apos;		print lrowOr
 		sFormula = &quot;=AD&quot; &amp; lrowOr 
-		oSheet.GetCellByPosition( 29, lrow ).setformula(sFormula )
+		oSheet.getCellByPosition( 29, lrow ).setformula(sFormula )
 		sFormula = &quot;=AE&quot; &amp; lrowOr 
-		oSheet.GetCellByPosition( 30, lrow ).setformula(sFormula )
+		oSheet.getCellByPosition( 30, lrow ).setformula(sFormula )
 		sFormula = &quot;=AF&quot; &amp; lrowOr 
-		oSheet.GetCellByPosition( 31, lrow ).setformula(sFormula )
+		oSheet.getCellByPosition( 31, lrow ).setformula(sFormula )
 		loop
  &apos; oCellB.setformula(sFormula )
  	&apos; copia strrr
@@ -247,7 +247,7 @@ dim xA as string
 	oCell = ThisComponent.CurrentSelection
 	 lrowE = lrow
 	 lcolB = 0
-	 oCell = oSheet.GetCellByPosition( lcolB , lrowE)
+	 oCell = oSheet.getCellByPosition( lcolB , lrowE)
 	xA = oCell.string
 &apos;		 print xA
 	do while xA = &quot;&quot;
@@ -258,7 +258,7 @@ dim xA as string
 	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	oSrc = oSheetSRC.getCellRangeByPosition(13,45,13,45).RangeAddress
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
- oDest = oSheetDest.GetCellByPosition(lcol,lrowE).CellAddress
+ oDest = oSheetDest.getCellByPosition(lcol,lrowE).CellAddress
  oSheetDest.copyRange(oDest, oSrc) 
  &apos;&apos;&apos; ThisComponent.CurrentController.Select(oCell) &apos; debug 
 &apos;print &quot;trattini finiti&quot;
@@ -278,14 +278,14 @@ dim oSheet, oEnd, oCell as object
 	oCell = ThisComponent.CurrentSelection
 &apos;	 lrow = oCell.CellAddress.row
 	 lrowE = lrow
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
+	 oCell = oSheet.getCellByPosition( lcol , lrow)
 &apos;&apos;&apos;	 ThisComponent.CurrentController.Select(oCell) &apos; debug
 
 	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
 	oSrc = oSheetSRC.getCellRangeByPosition(22,47,34,47).RangeAddress
 &apos;	oSrc = oSheetSRC.getCellRangeByPosition(22,47,32,47).RangeAddress
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
- oDest = oSheetDest.GetCellByPosition(lcol,lrow).CellAddress
+ oDest = oSheetDest.getCellByPosition(lcol,lrow).CellAddress
  oSheetDest.copyRange(oDest, oSrc)
 &apos;print &quot;link 1 finito&quot;
 end Function	
@@ -300,7 +300,7 @@ dim oSheet, oEnd, oCell as object
 &apos;	oCell = ThisComponent.CurrentSelection
 &apos;	 lrow = oCell.CellAddress.row
 	 lrowE = lrow
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
+	 oCell = oSheet.getCellByPosition( lcol , lrow)
 &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; debug
 &apos;print lrow
 	oSheetSRC = ThisComponent.Sheets.getByName(&quot;S1&quot;)
@@ -309,7 +309,7 @@ dim oSheet, oEnd, oCell as object
 
 	oSheetDest = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
 &apos;	print lcol &amp; &quot; &quot;&amp; lrow
- oDest = oSheetDest.GetCellByPosition(lcol,lrow).CellAddress
+ oDest = oSheetDest.getCellByPosition(lcol,lrow).CellAddress
  oSheetDest.copyRange(oDest, oSrc)
 &apos;print &quot;link 2 finito&quot;
 end Function
@@ -325,18 +325,18 @@ dim oSheet, oEnd, oCell as object
 	oSheet = ThisComponent.currentController.activeSheet
 &apos;	oCell = ThisComponent.CurrentSelection
 &apos;	 lrow = oCell.CellAddress.row
-	 oCell = oSheet.GetCellByPosition( lcol , lrow)
+	 oCell = oSheet.getCellByPosition( lcol , lrow)
 	oCellB = oCell
 	lcol = lcol -2
 	lrowE = lrow
 	 sCol= ColumnNameOf(lcol)
-	 oCell = oSheet.GetCellByPosition( lcol , lrowE)
+	 oCell = oSheet.getCellByPosition( lcol , lrowE)
 	 xA = oCell.string
 &apos;	 ThisComponent.CurrentController.Select(oCell) &apos; debug
 &apos;	 	 print 
 	 do while xA &lt;&gt; &quot;-&quot;
 	 	lrowE = lrowE-1
-	 	oCell = oSheet.GetCellByPosition( lcol , lrowE)
+	 	oCell = oSheet.getCellByPosition( lcol , lrowE)
 	 	xA = oCell.string
 &apos;	 	 ThisComponent.CurrentController.Select(oCell) &apos; debug
 &apos;	 	 print lrowe

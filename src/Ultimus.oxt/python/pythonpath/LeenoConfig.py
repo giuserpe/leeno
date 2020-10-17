@@ -6,6 +6,10 @@ import os
 import configparser
 
 from os.path import expanduser
+from datetime import date
+
+import LeenoUtils
+import PersistUtils
 
 class Borg:
     '''
@@ -43,7 +47,10 @@ class Config(Borg):
             except FileExistsError:
                 pass
 
-            self._parser = configparser.ConfigParser()
+            #self._parser = configparser.ConfigParser()
+
+            self._parser = configparser.RawConfigParser()
+            self._parser.optionxform = lambda option: option
 
             # load values from file, if exist
             self._load()
@@ -86,6 +93,34 @@ class Config(Borg):
             ('Contabilità', 'ricicla_da', 'COMPUTO'),
 
             ('Importazione', 'ordina_computo', '1'),
+
+            ('Lavoro', 'committente', '(str)'),
+            ('Lavoro', 'stazioneAppaltante', '(str)'),
+            ('Lavoro', 'progetto', '(str)'),
+            ('Lavoro', 'rup', '(str)'),
+            ('Lavoro', 'progettista', '(str)'),
+            ('Lavoro', 'data', '(date)' + LeenoUtils.date2String(date.today(), 1)),
+            ('Lavoro', 'revisione', '(str)'),
+            ('Lavoro', 'dataRevisione', '(date)' + LeenoUtils.date2String(date.today(), 1)),
+
+            ('ImpostazioniStampa', 'fileCopertine', '(str)'),
+            ('ImpostazioniStampa', 'copertina', '(str)'),
+            ('ImpostazioniStampa', 'intSx', '(str)[COMMITTENTE]'),
+            ('ImpostazioniStampa', 'intCenter', '(str)'),
+            ('ImpostazioniStampa', 'intDx', '(str)[PROGETTO]'),
+            ('ImpostazioniStampa', 'ppSx', '(str)[OGGETTO]'),
+            ('ImpostazioniStampa', 'ppCenter', '(str)'),
+            ('ImpostazioniStampa', 'ppDx', '(str)Pagina [PAGINA] di [PAGINE]'),
+
+            ('ImpostazioniExport', 'npElencoPrezzi', '(str)1'),
+            ('ImpostazioniExport', 'npComputoMetrico', '(str)2'),
+            ('ImpostazioniExport', 'npCostiManodopera', '(str)3'),
+            ('ImpostazioniExport', 'npQuadroEconomico', '(str)4'),
+            ('ImpostazioniExport', 'cbElencoPrezzi', '(bool)True'),
+            ('ImpostazioniExport', 'cbComputoMetrico', '(bool)True'),
+            ('ImpostazioniExport', 'cbCostiManodopera', '(bool)True'),
+            ('ImpostazioniExport', 'cbQuadroEconomico', '(bool)True'),
+
         )
 
         for param in parametri:
@@ -110,14 +145,39 @@ class Config(Borg):
         self._parser.write(fp)
         fp.close()
 
-    def read(self, section, option):
+    def read(self, section, option, convert=False):
         '''
         read an option from config
+        if convert is True, do the string->value conversion
+        (for latter, the string must have the correct format)
         '''
         try:
             return self._parser.get(section, option)
         except Exception:
             return None
+
+    def readBlock(self, section, convert=False):
+        '''
+        read a block of options from config given the section name
+        if convert is True, do the string->value conversion
+        (for latter, the strings must have the correct format)
+        '''
+        options = self._parser.options(section)
+        res = {}
+        for option in options:
+            val = self._parser.get(section, option)
+            if val is None:
+                continue
+            if convert:
+                try:
+                    val = PersistUtils.string2var(val)
+                    if val is not None:
+                        res[option] = val
+                except Exception:
+                    pass
+            else:
+                res[option] = val
+        return res
 
     def write(self, section, option, val):
         '''
@@ -129,4 +189,19 @@ class Config(Borg):
 
         # we must store on each write, because we can't know
         # when LeenoConfig gets destroyed with python
+        self._store()
+
+    def writeBlock(self, section, valDict, convert=False):
+        '''
+        write a block of options to config given the section name
+        if convert is True, do the value->string conversion
+        '''
+        if not self._parser.has_section(section):
+            self._parser.add_section(section)
+        for key, val in valDict.items():
+            if convert:
+                val = PersistUtils.var2string(val)
+                if val is None:
+                    continue
+            self._parser.set(section, key, val)
         self._store()

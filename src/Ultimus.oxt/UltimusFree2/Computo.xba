@@ -15,7 +15,7 @@ rem ######################################################################
 Function abs2name (nCol As Long, nRow As Long)
 &apos; converte da AbsoluteName a nome cella
 	osheet = thisComponent.CurrentController.ActiveSheet
-	idvoce = oSheet.GetCellByPosition(nCol, nRow).AbsoluteName
+	idvoce = oSheet.getCellByPosition(nCol, nRow).AbsoluteName
 	idvoce() = split (idvoce, &quot;$&quot;)
 	abs2name = idvoce(2) &amp; idvoce(3)
 End Function

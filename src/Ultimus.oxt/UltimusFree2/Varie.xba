@@ -15,231 +15,10 @@ Global codice as string
 
 Global xa As string
 
-Sub elimina_riga &apos; FUNZIONA su una riga o più righe...
-	dim nome as string
-	Dim oDoc As Object
-	Dim oSheets As Object
-	dim oCelle As Object
-	Dim CellRangeAddress As New com.sun.star.table.CellRangeAddress
-	Dim CellAddress As New com.sun.star.table.CellAddress
-	dim lrowStart as integer
-	dim lcolStart as integer
-	dim lrowEnd as integer
-	Dim oView As Object
-	Dim nome_sheet as string
-	Dim OcalcSheet as Object
-	Dim I as long
-	Dim oSheet_num as integer
-	dim oSelection As Object
-	nome_sheet = thisComponent.currentcontroller.activesheet.Name
-
-chiudi_dialoghi &apos; chiude tutti i dialoghi
-
-	If Constrolla_se_M1 = true then
-		if ThisComponent.Sheets.getByName(&quot;S1&quot;).GetCellByPosition(7,300).value = 1 Then
-				on error resume next
-		end if
-	end if	
-	lrow = range2Cell
-
-	if lrow = -1 Or lrow = 0 Then Exit Sub &apos; solo per evitare errore se ha selezionato altri oggetti
-	oDoc = thisComponent
-	oSelection = oDoc.CurrentSelection
-	lcolStart = oSelection.RangeAddress.StartColumn
-
-&apos;	oDoc.SupportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;)
-	with oSelection.RangeAddress
-		lrowStart= .startRow
-		lrowEnd= .Endrow
-	end with
-	oSheets = odoc.Sheets
-	oView = ThisComponent.CurrentController
-	oSheet=ThisComponent.currentController.activeSheet
-rem ----------------------------------------------------------------------
-rem controllo possibilità di procedere a secondo di alcuni stili di cella: CONTABILITA or COMPUTO or ANALISI or ELENCO
-
-	Select Case nome_sheet
-		Case &quot;CONTABILITA&quot;
-				If oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Data_bianca&quot; Then
-					CellAddress = oSheet.GetCellByPosition(1, lrow+1).CellAddress
-					
-					CellRangeAddress.Sheet = oSheet.RangeAddress.sheet
-					CellRangeAddress.StartColumn = 	1
-					CellRangeAddress.StartRow = lrow
-					CellRangeAddress.EndColumn = 1 &apos;espediente vomitevole...
-					CellRangeAddress.EndRow = lrow
-					
-					oSheet.copyRange(CellAddress, CellRangeAddress)
-&apos;					GoTo vai:
-				EndIf
-			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s_R&quot; And _
-				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo_R&quot; Then
-				If InStr (oSheet.GetCellByPosition(8, lrow).string, &quot;Somma positivi e negativi [&quot;) &lt;&gt; 0 Then Exit Sub
-			Else 
-				Exit Sub
-			EndIf
-		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;
-			If oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;comp 10 s&quot; And _
-				oSheet.GetCellByPosition(1, lrow).CellStyle = &quot;Comp-Bianche in mezzo&quot; Or _
-				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Livello-1-scritta&quot; Or _
-				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Livello-0-scritta&quot; Or _
-				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;livello-1-sopra&quot; Or _
-				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;ULTIMUS&quot; Or _
-				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Ultimus_destra_totali&quot; Or _
-				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;Ultimus_centro&quot; Or _
-				oSheet.GetCellByPosition(0, lrow).CellStyle = &quot;livello2 valuta&quot; Then
-			Else
-				Exit Sub
-			EndIf
-		Case &quot;Analisi di Prezzo&quot;
-			If oSheet.GetCellByPosition(0, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-Cod-sx&quot; And _
-				oSheet.GetCellByPosition(1, lrow).CellStyle &lt;&gt; &quot;An-lavoraz-generica&quot; Then Exit Sub
-		Case &quot;Elenco Prezzi&quot;
-&apos;			Exit Sub
-			Select Case oSheet.GetCellByPosition(0, lrow).CellStyle
-				Case &quot;EP-aS&quot; ,&quot;EP-a&quot;, &quot;EP-Cs&quot;
-					GoTo vai:
-				Case Else
-					Exit Sub
-			End Select
-	End Select
-vai:
-	Dim test As String
-	If oSheet.name = &quot;COMPUTO&quot; Or oSheet.name = &quot;VARIANTE&quot; Then
-		Select Case oSheet.GetCellByPosition(0 , lrow).CellStyle
-		Case &quot;livello2 valuta&quot;, &quot;Livello-1-scritta&quot;, &quot;livello-1-sopra&quot;
-			test = &quot;è Computo&quot;
-		End Select
-	EndIf
-	iSheet_num = oSheet.RangeAddress.sheet 
-	nome_sheet = oView.GetActiveSheet.Name
-	CellRangeAddress.Sheet = iSheet_num 
-	CellRangeAddress.StartColumn = 	0
-	CellRangeAddress.StartRow = lrowStart
-	CellRangeAddress.EndColumn = 1 &apos;espediente vomitevole...
-	CellRangeAddress.EndRow = lrowEnd
-
-	oSheet.removeRange(CellRangeAddress, com.sun.star.sheet.CellDeleteMode.ROWS)
-	oSheet=ThisComponent.currentController.activeSheet 	
-	oRangeSel = oSheet.getCellRangeByPosition (lcolStart,lrowStart,lcolStart,lrowStart )	
-	ThisComponent.CurrentController.Select(oRangeSel)
-rem ----------------------------------------------------------------------
-	Select Case nome_sheet
-		Case &quot;COMPUTO&quot;, &quot;VARIANTE&quot;, &quot;CONTABILITA&quot;
-			ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;parziale_verifica&quot;)
-			If osheet.getCellByPosition (0, lrow).CellStyle = &quot;Comp End Attributo&quot; Then Exit Sub
-			If test = &quot;è Computo&quot; Then ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;Rinumera_TUTTI_Capitoli2&quot;)
-	End Select
-END SUB
-rem ######################################################################
-Sub copia_TANTE_righe_Ent
-&apos;	ScriptPy(&quot;LeenoBasicBridge.py&quot;, &quot;copia_riga_computo&quot;)
-	For n = 0 To 30
-		copia_riga_Ent
-	Next n
-End Sub
-
 rem ######################################################################
 
 
 &apos;+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Function CNTR_Analisi (lrow)as long &apos; controllo se l&apos;utente si è posizionato sulla
-		&apos;riga giusta (mai fidarsi dell&apos;utente!)
-dim oSheet as object
-dim oCell as object
-dim xA as string
-dim xB as string
-
-		oSheet = thiscomponent.Sheets.getByName (&quot;Analisi di Prezzo&quot;)
-	&apos;	oCell = oSheet.GetCellByPosition( 0 , lrow)	
-	&apos;	xA = oCell.string
-	&apos;	oCell = oSheet.GetCellByPosition( 1 , lrow)	
-	&apos;	 ThisComponent.CurrentController.Select(oCell) 
-	&apos;	xB = oCell.string
-		&apos; se la colonna E contine una validation
-&apos;		print oSheet.GetCellByPosition( 4 , lrow).Validation.ErrorMessage
-		if oSheet.GetCellByPosition( 4 , lrow).Validation.ErrorMessage = &quot;Attento!!!&quot; then
-			CNTR_Analisi = 0
-			goto fine
-		end if
-&apos;print oSheet.GetCellByPosition( 0 , lrow).CellStyle
-		if oSheet.GetCellByPosition( 0 , lrow).CellStyle = &quot;An-sfondo-basso Att End&quot; then
-			CNTR_Analisi = -1
-			goto fine
-		end if
-		if oSheet.GetCellByPosition( 3 , lrow).CellStyle = &quot;An-lavoraz-%&quot; then
-			CNTR_Analisi = 2
-			goto fine
-		end if
-		if oSheet.GetCellByPosition( 4 , lrow).Validation.ErrorMessage &lt;&gt; &quot;Attento!!!&quot; and _
-			oSheet.GetCellByPosition( 3 , lrow).CellStyle = &quot;An-lavoraz-%&quot; Then
-			CNTR_Analisi = 1
-			goto segnala_errore_posizionamento
-		end If
-		if 	(Trova_Attr_N (oSheet.GetCellByPosition( 3, lrow ), oSheet)) = &quot;Start_voce_ANALISI&quot; or _
-			(Trova_Attr_N (oSheet.GetCellByPosition( 0, lrow ), oSheet)) = &quot;End_voce_ANALISI&quot; or _
-			 (oSheet.GetCellByPosition( 0 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 1 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 2 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 3 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 4 , lrow).string=&quot;&quot;) then
-				CNTR_Analisi = 1
-				goto segnala_errore_posizionamento
-		end if
-		if 	(Trova_Attr_N (oSheet.GetCellByPosition( 3, lrow-1 ), oSheet)) = &quot;Start_voce_ANALISI&quot; or _
-			(oSheet.GetCellByPosition( 0 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 1 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 2 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 3 , lrow).string=&quot;&quot; and _
-			 oSheet.GetCellByPosition( 4 , lrow).string=&quot;&quot;) then
-				CNTR_Analisi = lrow
-			&apos;	goto segnala_errore_posizionamento
-		end if
-	&apos;	if oSheet.GetCellByPosition( 0 , lrow).string = &quot;&quot; then
-	&apos;			goto segnala_errore_posizionamento
-	&apos;		else
-	&apos;			If oSheet.GetCellByPosition( 1 , lrow).string &lt;&gt; &quot;&quot;	 then
-	&apos;				goto	segnala_errore_posizionamento
-	&apos;			end if
-	&apos;	end if
-		
-	&apos;	CNTR_Analisi = 1
-		fine:
-		exit function
-segnala_errore_posizionamento:
-	&apos;	Msgbox &quot;Sei sicuro di voler aggiungere un componente o una lavorazione proprio in questo punto? &quot;&amp; CHR$(10) _
-		Msgbox &quot;Sei sicuro di voler aggiungere un componente o una lavorazione proprio SOTTO la riga selezionata? &quot;&amp; CHR$(10) _
-				&amp;&quot; ... non mi ruisulta una buona posizione... :-) &quot;&amp; CHR$(10) &amp; CHR$(10)_
-				&amp; &quot; Controlla e riprova...&quot;
-		&apos;CNTR_Analisi = 1
-End function
-
-
-Function CNTR_Computo (lrow)as long &apos; controllo se l&apos;utente si è posizionato sulla
-		&apos;riga giusta (mai fidarsi dell&apos;utente!)
-dim oSheet as object
-dim oCell as object
-dim xA as string
-dim xB as string
-&apos;
-		oSheet = thiscomponent.Sheets.getByName (&quot;COMPUTO&quot;)
-		if (oSheet.GetCellByPosition( 0 , lrow).string &lt;&gt; &quot;&quot; and _
-			oSheet.GetCellByPosition( 1 , lrow).string &lt;&gt; &quot;&quot;) or _
-			oSheet.GetCellByPosition( 9 , lrow).string = &quot;&quot; or _
-			oSheet.GetCellByPosition( 2 , lrow).string = &quot;SOMMANO &quot; or _
-			oSheet.GetCellByPosition(2, lrow).cellstyle = &quot;Comp-Bianche in mezzo Descr&quot; then &apos;girotondo
-		&apos;	print &quot;errore&quot;
-				goto segnala_errore_posizionamento
-		end if		
-		CNTR_Computo = 0
-		exit function
-		segnala_errore_posizionamento:
-		Msgbox &quot;Sei sicuro di voler copiare questa riga? &quot;&amp; CHR$(10) _
-		 &amp; &quot; (L&apos;eventualità di copiare questa riga non era prevista...) Controlla e riprova...&quot;
-		CNTR_Computo = 1
-End function
-
 
 Sub Inserisci_Utili
 Dim oCellAddress as object
@@ -250,21 +29,21 @@ Dim oRangeAddress as object
 	if (ThisComponent.NamedRanges.hasByName(&quot;oneri_sicurezza&quot;))= false then &apos;se il range non esiste lo ricrea completamente
 		oRanges.addNewByName(&quot;oneri_sicurezza&quot;, &quot;$S5.$B$93:$P$93&quot; , oCellAddress, 0)&apos;definisce l&apos;area
 		oSheet = ThisComponent.Sheets.getByName(&quot;S5&quot;)&apos;scegli il foglio S5
-	 oSheet.GetCellByPosition(1 , 92).CellStyle=&quot;An-lavoraz-desc-CEN&quot;
-	 oSheet.GetCellByPosition(2 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
- 	 oSheet.GetCellByPosition(3 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
- 	 oSheet.GetCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
-		oSheet.GetCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
- 	 oSheet.GetCellByPosition(5 , 92).CellStyle=&quot;An-lavoraz-%&quot;
-		oSheet.GetCellByPosition(5 , 92).setstring(&quot;=SE(O(E93=&quot;&quot;Spese Generali&quot;&quot;;E93=&quot;&quot;Spese Generali (calcolate su F)&quot;&quot;); $S1.$H$320;SE(O(E93=&quot;&quot;utili d&apos;impresa&quot;&quot;;E93=&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot;);$S1.$H$321;SE(E93=&quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;$S1.$H$322;SE(O(E93=&quot;&quot;Di cui sicurezza afferenti l&apos;impresa&quot;&quot;;SINISTRA(E93;18)=&quot;&quot;Oneri di Sicurezza&quot;&quot;);$S1.$H$319;SE(E93=&quot;&quot;Sconto&quot;&quot;;$S1.$H$324;SE(E93=&quot;&quot;Maggiorazione&quot;&quot;;$S1.$H$326))))))&quot;)
- 	 oSheet.GetCellByPosition(6 , 92).CellStyle=&quot;An-lavoraz-Utili-num sin&quot;
- 	 oSheet.GetCellByPosition(6 , 92).setstring(&quot;=SOMMA(H77:H89)*F93&quot;)
- 	 oSheet.GetCellByPosition(7 , 92).CellStyle=&quot;An-senza&quot;
- 	 oSheet.GetCellByPosition(8 , 92).CellStyle=&quot;An-senza-DX&quot;
- 	 oSheet.GetCellByPosition(9 , 92).CellStyle=&quot;An-lavoraz-dx%&quot;
- 	 oSheet.GetCellByPosition(10 , 92).CellStyle=&quot;An-lavoraz-generica&quot;
- 	 oSheet.GetCellByPosition(11 , 92).CellStyle=&quot;An-lavoraz-dx&quot;
- 	 oSheet.GetCellByPosition(11 , 92).setstring(&quot;=SE (RICERCA(&quot;&quot;sicurezza&quot;&quot;;E93);G93;&quot;&quot;)&quot;)
+	 oSheet.getCellByPosition(1 , 92).CellStyle=&quot;An-lavoraz-desc-CEN&quot;
+	 oSheet.getCellByPosition(2 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
+ 	 oSheet.getCellByPosition(3 , 92).CellStyle=&quot;An-lavoraz-Utili&quot;
+ 	 oSheet.getCellByPosition(4 , 92).CellStyle=&quot;An-lavoraz-Utili desc&quot;
+		oSheet.getCellByPosition(4 , 92).setstring(&quot;di cui Sicurezza afferenti l&apos;Impresa&quot;)
+ 	 oSheet.getCellByPosition(5 , 92).CellStyle=&quot;An-lavoraz-%&quot;
+		oSheet.getCellByPosition(5 , 92).setstring(&quot;=SE(O(E93=&quot;&quot;Spese Generali&quot;&quot;;E93=&quot;&quot;Spese Generali (calcolate su F)&quot;&quot;); $S1.$H$320;SE(O(E93=&quot;&quot;utili d&apos;impresa&quot;&quot;;E93=&quot;&quot;Utili d&apos;Impresa (calcolata su F+G)&quot;&quot;);$S1.$H$321;SE(E93=&quot;&quot;Spese Generali e Utili (sulle voci precedenti)&quot;&quot;;$S1.$H$322;SE(O(E93=&quot;&quot;Di cui sicurezza afferenti l&apos;impresa&quot;&quot;;SINISTRA(E93;18)=&quot;&quot;Oneri di Sicurezza&quot;&quot;);$S1.$H$319;SE(E93=&quot;&quot;Sconto&quot;&quot;;$S1.$H$324;SE(E93=&quot;&quot;Maggiorazione&quot;&quot;;$S1.$H$326))))))&quot;)
+ 	 oSheet.getCellByPosition(6 , 92).CellStyle=&quot;An-lavoraz-Utili-num sin&quot;
+ 	 oSheet.getCellByPosition(6 , 92).setstring(&quot;=SOMMA(H77:H89)*F93&quot;)
+ 	 oSheet.getCellByPosition(7 , 92).CellStyle=&quot;An-senza&quot;
+ 	 oSheet.getCellByPosition(8 , 92).CellStyle=&quot;An-senza-DX&quot;
+ 	 oSheet.getCellByPosition(9 , 92).CellStyle=&quot;An-lavoraz-dx%&quot;
+ 	 oSheet.getCellByPosition(10 , 92).CellStyle=&quot;An-lavoraz-generica&quot;
+ 	 oSheet.getCellByPosition(11 , 92).CellStyle=&quot;An-lavoraz-dx&quot;
+ 	 oSheet.getCellByPosition(11 , 92).setstring(&quot;=SE (RICERCA(&quot;&quot;sicurezza&quot;&quot;;E93);G93;&quot;&quot;)&quot;)
  	 oSheet.getCellRangeByPosition(12 ,92,15,92).CellStyle=&quot;Analisi_Sfondo&quot;
 	end if
 	lrow= Range2Cell &apos;riga corrente
@@ -274,20 +53,20 @@ Dim oRangeAddress as object
 		lrow=lrowFine-5
 	end if
 	for i = lrow to lrow+50
-		if 	oSheet.GetCellbyPosition( 0, i ).string = &quot;L&quot; or _
-			InStr (oSheet.GetCellbyPosition( 3, i ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 or _
-			oSheet.GetCellbyPosition( 0, i ).string = &quot;----&quot; then
+		if 	oSheet.getCellByPosition( 0, i ).string = &quot;L&quot; or _
+			InStr (oSheet.getCellByPosition( 3, i ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 or _
+			oSheet.getCellByPosition( 0, i ).string = &quot;----&quot; then
 			msgbox &quot;Riprova partendo almeno dalla riga &quot;&quot;I&quot;&quot; o riga già inserita.&quot;
 			exit sub
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;H&quot; and _
-			oSheet.GetCellbyPosition( 0, i+1 ).string = &quot;&quot; and _
-			InStr (oSheet.GetCellbyPosition( 3, i+1 ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 then &apos; se gli oneri di sicurezza esistono già
+		if oSheet.getCellByPosition( 0, i ).string = &quot;H&quot; and _
+			oSheet.getCellByPosition( 0, i+1 ).string = &quot;&quot; and _
+			InStr (oSheet.getCellByPosition( 3, i+1 ).string , &quot;Sicurezza&quot;) &lt;&gt; 0 then &apos; se gli oneri di sicurezza esistono già
 			msgbox &quot;La riga degli oneri per la sicurezza è già inserita!&quot;
-			ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,i+1)) &apos;focus cella
+			ThisComponent.CurrentController.Select(oSheet.getCellByPosition(4,i+1)) &apos;focus cella
 			exit sub
 		end if
-		if oSheet.GetCellbyPosition( 0, i ).string = &quot;I&quot; then &apos; se sei sul totale costi indiretti
+		if oSheet.getCellByPosition( 0, i ).string = &quot;I&quot; then &apos; se sei sul totale costi indiretti
 			lrow = i
 			exit for
 		end if
@@ -298,7 +77,7 @@ Dim oRangeAddress as object
 	oRangeAddress=ThisComponent.NamedRanges.oneri_sicurezza.ReferredCells.getRangeAddress &apos; utili è il nome del range
 	oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress() &apos; indirizzo dell&apos;inserimento
 	oSheet.copyRange(oCellAddress, oRangeAddress) &apos; inserimento
-	ThisComponent.CurrentController.Select(oSheet.GetCellByPosition(4,i)) &apos;focus cella
+	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(4,i)) &apos;focus cella
 end sub
 
 SUB Adatta_h_riga_intera_tabella(nSheet as string)
@@ -307,7 +86,7 @@ SUB Adatta_h_riga_intera_tabella(nSheet as string)
 	oSheet.getCellRANGEByPosition(0, 0, getLastUsedCol(oSheet),getLastUsedRow(oSheet)).Rows.OptimalHeight = True
 	Select Case nSheet
 	Case &quot;Elenco Prezzi&quot;, &quot;VARIANTE&quot;, &quot;COMPUTO&quot;, &quot;CONTABILITA&quot;
-		oSheet.GetCellByPosition(0,2).Rows.Height = 800
+		oSheet.getCellByPosition(0,2).Rows.Height = 800
 	End select
 	
 END SUB

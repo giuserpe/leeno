@@ -418,6 +418,26 @@ def uFindStringCol(sString, nCol, oSheet, start=2, equal=0):
         if sString in oSheet.getCellByPosition(nCol, nRow).String:
             return nRow
 
+def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
+    '''
+    sString { string }  : stringa da cercare
+    nCol    { integer } : indice di colonna
+    oSheet  { object }  :
+    start   { integer } : riga di partenza
+
+    Trova tutte le ricorrenze di una stringa (sString) nella
+    colonna nCol di un foglio di calcolo (oSheet) e restituisce
+    la lista delle righe
+    '''
+    oCell = oSheet.getCellByPosition(0, 0)
+    oCursor = oSheet.createCursorByRange(oCell)
+    oCursor.gotoEndOfUsedArea(True)
+    aAddress = oCursor.RangeAddress
+    ricorrenze = list()
+    for nRow in range(start, aAddress.EndRow + 1):
+        if sString in oSheet.getCellByPosition(nCol, nRow).String:
+            ricorrenze.append(nRow)
+    return ricorrenze
 
 def uFindString(sString, oSheet):
     '''

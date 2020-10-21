@@ -9154,25 +9154,15 @@ def MENU_filtro_descrizione():
     progress.setLimits(0, fine)
     progress.setValue(0)
     progress.show()
-    while y < fine:
-        test = SheetUtils.uFindStringCol(descrizione, 2, oSheet, y)
-        if test is not None:
-            y = test
-            oSheet.getCellByPosition(2, y).CellBackColor = 15757935
-            el_y.append(seleziona_voce(y))
-            try:
-                y = LeenoSheetUtils.prossimaVoce(oSheet, seleziona_voce(y)[1])
-            except TypeError:
-                DLG.MsgBox(
-                    '''Questo comando non produce risultato se il cursore
-è oltre la riga rossa di Fine Computo.''', 'ATTENZIONE!')
-                return
-            y += 1
-        y += 1
-        progress.setValue(y)
-    if len(el_y) == 0:
+    lRow = SheetUtils.sStrColtoList(descrizione, 2, oSheet, y)
+    if len(lRow) == 0:
+        progress.hide()
         DLG.MsgBox('''Testo non trovato.''', 'ATTENZIONE!')
         return
+    el_y = list()
+    for y in lRow:
+        oSheet.getCellByPosition(2, y).CellBackColor = 15757935
+        el_y.append(seleziona_voce(y))
     lista_y = list()
     lista_y.append(2)
     for el in el_y:

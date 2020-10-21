@@ -435,7 +435,7 @@ def sStrColtoList(sString, nCol, oSheet, start=2, equal=0):
     aAddress = oCursor.RangeAddress
     ricorrenze = list()
     for nRow in range(start, aAddress.EndRow + 1):
-        if sString in oSheet.getCellByPosition(nCol, nRow).String:
+        if sString.upper() in oSheet.getCellByPosition(nCol, nRow).String.upper():
             ricorrenze.append(nRow)
     return ricorrenze
 

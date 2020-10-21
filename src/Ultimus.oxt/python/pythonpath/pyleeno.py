@@ -9147,7 +9147,7 @@ def MENU_filtro_descrizione():
         testo = ''
     descrizione = InputBox(
         testo, t='Inserisci la descrizione da cercare o OK per conferma.')
-    if descrizione in (None, ''):
+    if descrizione in (None, '', ' '):
         return
     y = 4
     progress = Dialogs.Progress(Title='Applicazione filtro in corso...', Text="Lettura dati")
@@ -9161,12 +9161,14 @@ def MENU_filtro_descrizione():
         return
     el_y = list()
     for y in lRow:
+        progress.setValue(y)
         oSheet.getCellByPosition(2, y).CellBackColor = 15757935
         el_y.append(seleziona_voce(y))
     lista_y = list()
     lista_y.append(2)
     for el in el_y:
         y = el[0]
+        progress.setValue(y)
         lista_y.append(y)
         y = el[1]
         lista_y.append(y)

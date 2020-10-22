@@ -9187,6 +9187,7 @@ def MENU_filtro_descrizione():
             oSheet.getCellRangeByPosition(0, SR, 0,
                                           ER - 1).Rows.IsVisible = False
         i += 2
+    _gotoCella(2, lRow[0])
     progress.hide()
 
 ########################################################################

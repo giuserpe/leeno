@@ -7251,6 +7251,7 @@ def filtra_codice(voce=None):
     progress.setValue(0)
     progress.show()
 
+    qui = None
     lista_pt = list()
     _gotoCella(0, 0)
     for n in range(0, fine):
@@ -7263,7 +7264,9 @@ def filtra_codice(voce=None):
             sotto = sStRange.RangeAddress.EndRow
             if oSheet.getCellByPosition(1, sopra + 1).String != voce:
                 lista_pt.append((sopra, sotto))
-                #  lista_pt.append((sopra+2, sotto-1))
+            else:
+                if qui == None:
+                    qui = sopra + 1
     progress.setValue(fine)
     for el in lista_pt:
         oCellRangeAddr.StartRow = el[0]
@@ -7271,7 +7274,7 @@ def filtra_codice(voce=None):
         oSheet.group(oCellRangeAddr, 1)
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
-    _gotoCella(0, lrow)
+    _gotoCella(1, qui)
     EnableAutoCalc()
     progress.hide()
 

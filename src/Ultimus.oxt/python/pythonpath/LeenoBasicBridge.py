@@ -352,7 +352,9 @@ def EliminaVociDoppieElencoPrezzi():
 
 def Tutti_Subtotali():
     callAlert()
-    PL.Tutti_Subtotali()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    PL.Tutti_Subtotali(oSheet)
 
 
 def salva_come(nomefile=None):

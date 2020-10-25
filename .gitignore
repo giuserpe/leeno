@@ -4,6 +4,7 @@ bin/
 */leeno-bk/
 documentazione/*.pdf
 Esempio_LeenO.ods
+icons/Thumbs.db
 
 __pycache__/
 *.py[cod]

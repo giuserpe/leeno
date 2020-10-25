@@ -5836,11 +5836,11 @@ def ins_voce_contab(lrow=0, arg=1):
         if oSheet.getCellByPosition(1, n).CellStyle == 'Data_bianca':
             data = oSheet.getCellByPosition(1, n).Value
             break
-    try:
-        oSheet.getCellByPosition(1, sopra + 2).Value = data
-    except Exception:
+    if data == 0.0:
         oSheet.getCellByPosition(1, sopra +
                                  2).Value = date.today().toordinal() - 693594
+    else:
+        oSheet.getCellByPosition(1, sopra + 2).Value = data
 ########################################################################
 #  sformula = '=IF(LEN(VLOOKUP(B' + str(lrow+2) + ';elenco_prezzi;2;
 # FALSE()))<($S1.$H$337+$S1.H338);VLOOKUP(B' + str(lrow+2) +

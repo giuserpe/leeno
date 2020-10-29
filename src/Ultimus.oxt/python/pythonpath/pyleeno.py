@@ -3222,7 +3222,9 @@ def XPWE_out(elaborato, out_file):
     oDoc.CurrentController.setActiveSheet(oSheet)
     nVCItem = 2
     progress.setValue(6)
+    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
     for n in range(0, LeenoSheetUtils.cercaUltimaVoce(oSheet)):
+        progress.setValue(n)
         if oSheet.getCellByPosition(0,
                                     n).CellStyle in ('Comp Start Attributo',
                                                      'Comp Start Attributo_R'):
@@ -3331,10 +3333,12 @@ def XPWE_out(elaborato, out_file):
                             11, m).Value != 0:
                         Flags.text = '32769'
                         # quando vedi_voce guarda ad un valore negativo
-                        if test:
-                            Flags.text = '32768'
+                        try:
+                            if test:
+                                Flags.text = '32768'
+                        except:
+                            pass
             n = sotto + 1
-    progress.setValue(7)
     # #########################
     # ~out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
     # ~out_file = uno.fileUrlToSystemPath(oDoc.getURL())

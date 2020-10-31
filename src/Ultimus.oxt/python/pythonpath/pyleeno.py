@@ -2454,6 +2454,10 @@ def scelta_viste():
         oDialog1 = dp.createDialog(
             "vnd.sun.star.script:UltimusFree2.Dialogviste_N?language=Basic&location=application"
         )
+        if oSheet.getColumns().getByIndex(19).Columns.IsVisible:
+            oDialog1.getControl('vista_pre').State = 1
+        else:
+            oDialog1.getControl('vista_sem').State = 1
 
         sString = oDialog1.getControl('TextField3')
         sString.Text = oDoc.getSheets().getByName('S1').getCellRangeByName(
@@ -2478,6 +2482,11 @@ def scelta_viste():
         # oDialog1Model = oDialog1.Model
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
         oDialog1.execute()
+
+        if oDialog1.getControl('vista_pre').State:
+            LeenoSheetUtils.setLarghezzaColonne(oSheet)
+        if oDialog1.getControl('vista_sem').State:
+            LeenoSheetUtils.setVisibilitaColonne(oSheet, 'TTTFFTTTTTFTFTFTFFFFFFFFFFFFFFFFFFFFF')
 
         # il salvataggio anche su leeno.conf serve alla funzione voce_breve()
         if oDialog1.getControl('TextField3').getText() != '10000':

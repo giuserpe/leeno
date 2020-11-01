@@ -6894,6 +6894,9 @@ def parziale_core(oSheet, lrow):
     sopra = sStRange.RangeAddress.StartRow
     # sotto = sStRange.RangeAddress.EndRow
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        if(oSheet.getCellByPosition(2, lrow).String == '' and
+            oSheet.getCellByPosition(9, lrow).String == ''):
+                pass
         if(oSheet.getCellByPosition(0, lrow).CellStyle == 'comp 10 s' and
            oSheet.getCellByPosition(1, lrow).CellStyle == 'Comp-Bianche in mezzo' and
            oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a' or
@@ -6915,12 +6918,16 @@ def parziale_core(oSheet, lrow):
         oSheet.getCellByPosition(9, lrow).Formula = "=SUBTOTAL(9;J" + str(i) + ":J" + str(lrow + 1) + ")"
 
     if oSheet.Name in ('CONTABILITA'):
+        if(oSheet.getCellByPosition(2, lrow).String == '' and
+            oSheet.getCellByPosition(9, lrow).String == '' and
+            oSheet.getCellByPosition(11, lrow).String == ''):
+                pass
 
-        if(oSheet.getCellByPosition(0, lrow).CellStyle == "comp 10 s_R" and
-           oSheet.getCellByPosition(1, lrow).CellStyle == "Comp-Bianche in mezzo_R" and
-           oSheet.getCellByPosition(2, lrow).CellStyle == "comp 1-a" or
-           'Somma positivi e negativi [' in oSheet.getCellByPosition(8, lrow).String):
-            oSheet.getRows().insertByIndex(lrow, 1)
+        elif(oSheet.getCellByPosition(0, lrow).CellStyle == "comp 10 s_R" and
+             oSheet.getCellByPosition(1, lrow).CellStyle == "Comp-Bianche in mezzo_R" and
+             oSheet.getCellByPosition(2, lrow).CellStyle == "comp 1-a" or
+             'Somma positivi e negativi [' in oSheet.getCellByPosition(8, lrow).String):
+             oSheet.getRows().insertByIndex(lrow, 1)
         elif(oSheet.getCellByPosition(0, lrow).CellStyle == "Comp End Attributo_R" or
              oSheet.getCellByPosition(1, lrow).CellStyle == "Data_bianca" or
              oSheet.getCellByPosition(1, lrow).CellStyle == "comp Art-EP_R"):

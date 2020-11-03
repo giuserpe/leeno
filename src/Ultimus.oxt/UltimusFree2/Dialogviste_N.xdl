@@ -15,7 +15,6 @@
   <dlg:style dlg:style-id="10" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Bold" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="11" dlg:background-color="0xffffa6" dlg:border="simple" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="12" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Grassetto" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="13" dlg:font-name="Liberation Sans Narrow" dlg:font-height="11" dlg:font-stylename="Regular" dlg:font-family="swiss"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton3" dlg:tab-index="1" dlg:left="-150" dlg:top="-3" dlg:width="86" dlg:height="17" dlg:help-text="&amp;153.Dialogviste_N.CommandButton3.HelpText" dlg:value="&amp;154.Dialogviste_N.CommandButton3.Label" dlg:multiline="true">
@@ -96,8 +95,8 @@
    <dlg:title dlg:value="&amp;804.Dialogviste_N.FrameControl6.Label"/>
   </dlg:titledbox>
   <dlg:radiogroup>
-   <dlg:radio dlg:style-id="13" dlg:id="OptionButton2" dlg:tab-index="33" dlg:left="132" dlg:top="104" dlg:width="68" dlg:height="11" dlg:help-text="&amp;815.Dialogviste_N.OptionButton2.HelpText" dlg:value="&amp;816.Dialogviste_N.OptionButton2.Label" dlg:valign="center"/>
-   <dlg:radio dlg:style-id="13" dlg:id="vista_pre" dlg:tab-index="32" dlg:left="132" dlg:top="93" dlg:width="68" dlg:height="10" dlg:help-text="&amp;819.Dialogviste_N.vista_pre.HelpText" dlg:value="&amp;820.Dialogviste_N.vista_pre.Label" dlg:valign="center"/>
+   <dlg:radio dlg:style-id="7" dlg:id="vista_pre" dlg:tab-index="32" dlg:left="132" dlg:top="93" dlg:width="68" dlg:height="10" dlg:help-text="&amp;819.Dialogviste_N.vista_pre.HelpText" dlg:value="&amp;820.Dialogviste_N.vista_pre.Label" dlg:valign="center"/>
+   <dlg:radio dlg:style-id="7" dlg:id="vista_sem" dlg:tab-index="33" dlg:left="132" dlg:top="104" dlg:width="68" dlg:height="11" dlg:help-text="&amp;821.Dialogviste_N.vista_sem.HelpText" dlg:value="&amp;822.Dialogviste_N.vista_sem.Label" dlg:valign="center"/>
   </dlg:radiogroup>
  </dlg:bulletinboard>
 </dlg:window>

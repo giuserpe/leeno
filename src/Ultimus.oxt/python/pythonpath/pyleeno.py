@@ -9142,7 +9142,7 @@ def MENU_hl():
         try:
             if oSheet.getCellByPosition(1, el).String[1] == ':':
                 stringa = '=HYPERLINK("' + oSheet.getCellByPosition(
-                    1, el).String + '";"LINK")'
+                    1, el).String + '";">>>")'
                 oSheet.getCellByPosition(1, el).Formula = stringa
         except Exception:
             pass

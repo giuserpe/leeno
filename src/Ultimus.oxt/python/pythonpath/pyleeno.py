@@ -5479,124 +5479,153 @@ def rigenera_voce(lrow=None):
         return
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
-    for n in range(sopra + 2, sotto):
-        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            oSheet.getCellByPosition(
-                1, sopra + 1
-            ).CellStyle = 'comp Art-EP_R'
-            oSheet.getCellByPosition(
-                2, sopra + 1
-            ).Formula = '=IF(LEN(VLOOKUP(B' + str(
-                sopra + 2
-            ) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(
-                sopra + 2
-            ) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(
-                sopra + 2
-            ) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
-            oSheet.getCellByPosition(
-                8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B' + str(
-                    sopra + 2) + ';elenco_prezzi;3;FALSE());"]")'
-            oSheet.getCellByPosition(
-                9,
-                sotto).Formula = '=SUBTOTAL(9;J' + str(sopra +
-                                                       2) + ':J' + str(sotto +
-                                                                       1) + ')'
-            oSheet.getCellByPosition(11, sotto).Formula = '=VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;5;FALSE())'
-            oSheet.getCellByPosition(13, sotto).Formula = '=J' + str(sotto + 1)
-            oSheet.getCellByPosition(
-                17,
-                sotto).Formula = '=AB' + str(sotto + 1) + '*J' + str(sotto + 1)
-            #  oSheet.getCellByPosition(18, sotto).Formula = '=J'+ str(sotto+1) +'*L'+ str(sotto+1)
-            oSheet.getCellByPosition(
-                18, sotto).Formula = '=IF(VLOOKUP(B' + str(
-                    sopra + 2) + ';elenco_prezzi;3;FALSE())="%";J' + str(
-                        sotto + 1) + '*L' + str(sotto + 1) + '/100;J' + str(
-                            sotto + 1) + '*L' + str(sotto + 1) + ')'
-            oSheet.getCellByPosition(27, sotto).Formula = '=VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;4;FALSE())'
-            oSheet.getCellByPosition(
-                28,
-                sotto).Formula = '=S' + str(sotto + 1) + '-AE' + str(sotto + 1)
-            oSheet.getCellByPosition(29, sotto).Formula = '=VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;6;FALSE())'
-            oSheet.getCellByPosition(
-                30, sotto
-            ).Formula = '=IF(AD' + str(sotto + 1) + '<>""; PRODUCT(AD' + str(
-                sotto + 1) + '*S' + str(sotto + 1) + '))'
-            oSheet.getCellByPosition(35, sotto).Formula = '=B' + str(sopra + 2)
-            oSheet.getCellByPosition(
-                36, sotto
-            ).Formula = '=IF(ISERROR(S' + str(sotto + 1) + ');"";IF(S' + str(
-                sotto + 1) + '<>"";S' + str(sotto + 1) + ';""))'
-
-            if 'ROSSO' in (
-                    oSheet.getCellByPosition(2, n).CellStyle) or \
-                    oSheet.getCellByPosition(9, n).Value < 0:
-                oSheet.getCellByPosition(9, n).Formula = '=IF(PRODUCT(E' + str(
-                    n + 1) + ':I' + str(n + 1) + ')=0;"";-PRODUCT(E' + str(
-                        n + 1) + ':I' + str(n + 1) + '))'
-            elif 'comp 1-a' in (
-                    oSheet.getCellByPosition(2, n).CellStyle):
-                oSheet.getCellByPosition(9, n).Formula = '=IF(PRODUCT(E' + str(
-                    n + 1) + ':I' + str(n + 1) + ')=0;"";PRODUCT(E' + str(
-                        n + 1) + ':I' + str(n + 1) + '))'
-
-        if oSheet.Name in ('CONTABILITA'):
-            oSheet.getCellByPosition(
-                2, sopra + 1
-            ).Formula = '=IF(LEN(VLOOKUP(B' + str(
-                sopra + 2
-            ) + ';elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B' + str(
-                sopra + 2
-            ) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(
-                sopra + 2
-            ) + ';elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;2;FALSE());$S1.$H$336)))'
-            oSheet.getCellByPosition(
-                8, sotto - 1
-            ).Formula = '=CONCATENATE("Somma positivi e negativi [";VLOOKUP(B' + str(
+    
+    #~DisableAutoCalc()
+   
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        oSheet.getCellByPosition(
+            1, sopra + 1
+        ).CellStyle = 'comp Art-EP_R'
+        oSheet.getCellByPosition(
+            2, sopra + 1
+        ).Formula = '=IF(LEN(VLOOKUP(B' + str(
+            sopra + 2
+        ) + ';elenco_prezzi;2;FALSE()))<($S1.$H$337+$S1.$H$338);VLOOKUP(B' + str(
+            sopra + 2
+        ) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(
+            sopra + 2
+        ) + ';elenco_prezzi;2;FALSE());$S1.$H$337);" [...] ";RIGHT(VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;2;FALSE());$S1.$H$338)))'
+        oSheet.getCellByPosition(
+            8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B' + str(
                 sopra + 2) + ';elenco_prezzi;3;FALSE());"]")'
-            oSheet.getCellByPosition(
-                8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B' + str(
-                    sopra + 2) + ';elenco_prezzi;3;FALSE());"]")'
-            oSheet.getCellByPosition(
-                9, sotto -
-                1).Formula = '=IF(SUBTOTAL(9;J' + str(sopra + 2) + ':J' + str(
-                    sotto) + ')<0;"";SUBTOTAL(9;J' + str(
-                        sopra + 2) + ':J' + str(sotto) + '))'
-            oSheet.getCellByPosition(
-                11, sotto -
-                1).Formula = '=IF(SUBTOTAL(9;L' + str(sopra + 2) + ':L' + str(
-                    sotto) + ')<0;"";SUBTOTAL(9;L' + str(
-                        sopra + 2) + ':L' + str(sotto) + '))'
-            oSheet.getCellByPosition(
-                9, sotto).Formula = '=J' + str(sotto) + '-L' + str(sotto)
-            oSheet.getCellByPosition(13, sotto).Formula = '=VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;5;FALSE())'
-            oSheet.getCellByPosition(
-                15, sotto).Formula = '=IF(VLOOKUP(B' + str(
-                    sopra + 2) + ';elenco_prezzi;3;FALSE())="%";J' + str(
-                        sotto + 1) + '*N' + str(sotto + 1) + '/100;J' + str(
-                            sotto + 1) + '*N' + str(sotto + 1) + ')'
-            oSheet.getCellByPosition(
-                17,
-                sotto).Formula = '=J' + str(sotto + 1) + '*AB' + str(sotto + 1)
-            oSheet.getCellByPosition(27, sotto).Formula = '=VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;4;FALSE())'
-            oSheet.getCellByPosition(
-                28,
-                sotto).Formula = '=P' + str(sotto + 1) + '-AE' + str(sotto + 1)
-            oSheet.getCellByPosition(29, sotto).Formula = '=VLOOKUP(B' + str(
-                sopra + 2) + ';elenco_prezzi;6;FALSE())'
-            oSheet.getCellByPosition(
-                30, sotto
-            ).Formula = '=IF(AD' + str(sotto + 1) + '<>""; PRODUCT(AD' + str(
-                sotto + 1) + '*P' + str(sotto + 1) + '))'
-            oSheet.getCellRangeByName('A2').Formula = '=P2'
-            oSheet.getCellByPosition(9, sotto -
-                                     1).CellStyle = 'Comp-Variante num sotto'
+        oSheet.getCellByPosition(
+            9,
+            sotto).Formula = '=SUBTOTAL(9;J' + str(sopra +
+                                                   2) + ':J' + str(sotto +
+                                                                   1) + ')'
+        oSheet.getCellByPosition(11, sotto).Formula = '=VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;5;FALSE())'
+        oSheet.getCellByPosition(13, sotto).Formula = '=J' + str(sotto + 1)
+        oSheet.getCellByPosition(
+            17,
+            sotto).Formula = '=AB' + str(sotto + 1) + '*J' + str(sotto + 1)
+        #  oSheet.getCellByPosition(18, sotto).Formula = '=J'+ str(sotto+1) +'*L'+ str(sotto+1)
+        oSheet.getCellByPosition(
+            18, sotto).Formula = '=IF(VLOOKUP(B' + str(
+                sopra + 2) + ';elenco_prezzi;3;FALSE())="%";J' + str(
+                    sotto + 1) + '*L' + str(sotto + 1) + '/100;J' + str(
+                        sotto + 1) + '*L' + str(sotto + 1) + ')'
+        oSheet.getCellByPosition(27, sotto).Formula = '=VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;4;FALSE())'
+        oSheet.getCellByPosition(
+            28,
+            sotto).Formula = '=S' + str(sotto + 1) + '-AE' + str(sotto + 1)
+        oSheet.getCellByPosition(29, sotto).Formula = '=VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;6;FALSE())'
+        oSheet.getCellByPosition(
+            30, sotto
+        ).Formula = '=IF(AD' + str(sotto + 1) + '<>""; PRODUCT(AD' + str(
+            sotto + 1) + '*S' + str(sotto + 1) + '))'
+        oSheet.getCellByPosition(35, sotto).Formula = '=B' + str(sopra + 2)
+        oSheet.getCellByPosition(
+            36, sotto
+        ).Formula = '=IF(ISERROR(S' + str(sotto + 1) + ');"";IF(S' + str(
+            sotto + 1) + '<>"";S' + str(sotto + 1) + ';""))'
+
+        formule = []
+        for n in range (sopra + 2, sotto):
+            if 'ROSSO' in oSheet.getCellByPosition(5, n).CellStyle:
+                formule.append (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                    str(n + 1) + ')=0;"";-PRODUCT(E' + str(n + 1) +
+                    ':I' + str(n + 1) + '))'])
+            else:
+                formule.append (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                    str(n + 1) + ')=0;"";PRODUCT(E' + str(n + 1) +
+                    ':I' + str(n + 1) + '))'])
+
+        oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 9, sotto - 1)
+        formule = tuple(formule)
+        oRange.setFormulaArray(formule)
+        rigenera_parziali()
+
+    if oSheet.Name in ('CONTABILITA'):
+        oSheet.getCellByPosition(
+            2, sopra + 1
+        ).Formula = '=IF(LEN(VLOOKUP(B' + str(
+            sopra + 2
+        ) + ';elenco_prezzi;2;FALSE()))<($S1.$H$335+$S1.$H$336);VLOOKUP(B' + str(
+            sopra + 2
+        ) + ';elenco_prezzi;2;FALSE());CONCATENATE(LEFT(VLOOKUP(B' + str(
+            sopra + 2
+        ) + ';elenco_prezzi;2;FALSE());$S1.$H$335);" [...] ";RIGHT(VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;2;FALSE());$S1.$H$336)))'
+        oSheet.getCellByPosition(
+            8, sotto - 1
+        ).Formula = '=CONCATENATE("Somma positivi e negativi [";VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;3;FALSE());"]")'
+        oSheet.getCellByPosition(
+            8, sotto).Formula = '=CONCATENATE("SOMMANO [";VLOOKUP(B' + str(
+                sopra + 2) + ';elenco_prezzi;3;FALSE());"]")'
+        oSheet.getCellByPosition(
+            9, sotto -
+            1).Formula = '=IF(SUBTOTAL(9;J' + str(sopra + 2) + ':J' + str(
+                sotto) + ')<0;"";SUBTOTAL(9;J' + str(
+                    sopra + 2) + ':J' + str(sotto) + '))'
+        oSheet.getCellByPosition(
+            11, sotto -
+            1).Formula = '=IF(SUBTOTAL(9;L' + str(sopra + 2) + ':L' + str(
+                sotto) + ')<0;"";SUBTOTAL(9;L' + str(
+                    sopra + 2) + ':L' + str(sotto) + '))'
+        oSheet.getCellByPosition(
+            9, sotto).Formula = '=J' + str(sotto) + '-L' + str(sotto)
+        oSheet.getCellByPosition(13, sotto).Formula = '=VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;5;FALSE())'
+        oSheet.getCellByPosition(
+            15, sotto).Formula = '=IF(VLOOKUP(B' + str(
+                sopra + 2) + ';elenco_prezzi;3;FALSE())="%";J' + str(
+                    sotto + 1) + '*N' + str(sotto + 1) + '/100;J' + str(
+                        sotto + 1) + '*N' + str(sotto + 1) + ')'
+        oSheet.getCellByPosition(
+            17,
+            sotto).Formula = '=J' + str(sotto + 1) + '*AB' + str(sotto + 1)
+        oSheet.getCellByPosition(27, sotto).Formula = '=VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;4;FALSE())'
+        oSheet.getCellByPosition(
+            28,
+            sotto).Formula = '=P' + str(sotto + 1) + '-AE' + str(sotto + 1)
+        oSheet.getCellByPosition(29, sotto).Formula = '=VLOOKUP(B' + str(
+            sopra + 2) + ';elenco_prezzi;6;FALSE())'
+        oSheet.getCellByPosition(
+            30, sotto
+        ).Formula = '=IF(AD' + str(sotto + 1) + '<>""; PRODUCT(AD' + str(
+            sotto + 1) + '*P' + str(sotto + 1) + '))'
+        oSheet.getCellRangeByName('A2').Formula = '=P2'
+        oSheet.getCellByPosition(9, sotto -
+                                 1).CellStyle = 'Comp-Variante num sotto'
+        formule = []
+        for n in range (sopra + 2, sotto - 1):
+            if 'ROSSO' in oSheet.getCellByPosition(5, n).CellStyle:
+                formule.append (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                                str(n + 1) + ')>=0;"";PRODUCT(E' +
+                                str(n + 1) + ':I' + str(n + 1) + ')*-1)', '',
+                                '=IF(PRODUCT(E' + str(n+1) + ':I' +
+                                str(n+1) + ')<=0;"";PRODUCT(E' + str(
+                                n + 1) + ':I' + str(n+1) + '))'])
+            else:
+                formule.append (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                                str(n + 1) + ')<=0;"";PRODUCT(E' +
+                                str(n + 1) + ':I' + str(n + 1) + '))', '',
+                                '=IF(PRODUCT(E' + str(n+1) + ':I' +
+                                str(n+1) + ')>=0;"";PRODUCT(E' + str(
+                                n + 1) + ':I' + str(n+1) + ')*-1)'])
+
+        oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 11, sotto - 2)
+        formule = tuple(formule)
+        oRange.setFormulaArray(formule)
+        rigenera_parziali()
+
+    EnableAutoCalc()
 
 
 ########################################################################
@@ -5605,7 +5634,7 @@ def sistema_stili(lrow=None):
     Ripristina stili di cella per una singola voce.
     in COMPUTO, VARIANTE e CONTABILITA
     '''
-    lrow = LeggiPosizioneCorrente()[1]
+    #~lrow = LeggiPosizioneCorrente()[1]
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     try:
@@ -5653,7 +5682,7 @@ def sistema_stili(lrow=None):
         oSheet.getCellByPosition(11, sotto).CellStyle = 'comp sotto centro_R'
         oSheet.getCellByPosition(28, sotto).CellStyle = 'Comp-sotto euri'
         for x in range(sopra + 1, sotto):
-            oSheet.getCellByPosition(11, x).CellStyle = 'Blu ROSSO'
+            #~oSheet.getCellByPosition(11, x).CellStyle = 'Blu ROSSO'
             if 'comp 1-a' in oSheet.getCellByPosition(2, x).CellStyle:
                 oSheet.getCellByPosition(9, x).CellStyle = 'Blu'
             elif oSheet.getCellByPosition(
@@ -5749,6 +5778,7 @@ def rigenera_tutte(arg=None, ):
             while row < last:
                 progress.setValue(row)
                 rigenera_voce(row)
+                sistema_stili(row)
                 row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
             Rinumera_TUTTI_Capitoli2(oSheet)
         except Exception:
@@ -7538,6 +7568,7 @@ def autoexec():
     adegua_tmpl()  # esegue degli aggiustamenti del template
     Toolbars.Vedi()
     ScriviNomeDocumentoPrincipale()
+    EnableAutoCalc()
     #  if len(oDoc.getURL()) != 0:
     # scegli cosa visualizzare all'avvio:
     #  vedi = conf.read(path_conf, 'Generale', 'visualizza')

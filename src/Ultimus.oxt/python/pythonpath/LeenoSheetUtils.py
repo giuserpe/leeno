@@ -240,20 +240,22 @@ def prossimaVoce(oSheet, lrow, n=1):
                         se 1 sposta dopo della voce corrente
     sposta il cursore prima o dopo la voce corrente restituendo un idrow
     '''
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    stili = stili_computo + stili_contab
     noVoce = LeenoUtils.getGlobalVar('noVoce')
 
     # ~lrow = LeggiPosizioneCorrente()[1]
     if lrow == 0:
-        while oSheet.getCellByPosition(0, lrow).CellStyle not in stili_computo + stili_contab:
+        while oSheet.getCellByPosition(0, lrow).CellStyle not in stili:
             lrow += 1
         return lrow
     fine = cercaUltimaVoce(oSheet) + 1
-    # la parte che segue sposta il focus dopo della voce corrente (ad esempio sul titolo di categoria)
+    # la parte che segue sposta il focus alla voce successiva
     if lrow >= fine:
         return lrow
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_computo + stili_contab:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili:
         if n == 0:
             sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
             lrow = sopra
@@ -265,11 +267,9 @@ def prossimaVoce(oSheet, lrow, n=1):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
                 lrow = y
                 break
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
-        # ~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce:
+
+    while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce + stili_cat:
         lrow += 1
-    else:
-        return
     return lrow
 
 # ###############################################################

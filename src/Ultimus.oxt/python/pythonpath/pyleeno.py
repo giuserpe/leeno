@@ -5479,8 +5479,6 @@ def rigenera_voce(lrow=None):
         return
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
-    
-    #~DisableAutoCalc()
    
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         oSheet.getCellByPosition(
@@ -5535,19 +5533,30 @@ def rigenera_voce(lrow=None):
 
         formule = []
         for n in range (sopra + 2, sotto):
-            if 'ROSSO' in oSheet.getCellByPosition(5, n).CellStyle:
-                formule.append (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+            rosso = 0
+            for x in range (5, 8):
+                if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
+                    rosso = 1
+                    break
+            if rosso == 1:
+                formula = (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
                     str(n + 1) + ')=0;"";-PRODUCT(E' + str(n + 1) +
                     ':I' + str(n + 1) + '))'])
             else:
-                formule.append (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                formula = (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
                     str(n + 1) + ')=0;"";PRODUCT(E' + str(n + 1) +
                     ':I' + str(n + 1) + '))'])
+            if oSheet.getCellByPosition(4, n).Value < 0:
+                formula = (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
+                str(n + 1) + ')=0;"";PRODUCT(E' + str(n + 1) +
+                ':I' + str(n + 1) + '))'])
+            formule.append(formula)
 
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 9, sotto - 1)
         formule = tuple(formule)
+        #~oDoc.CurrentController.select(oRange)
+        #~DLG.chi(formule)
         oRange.setFormulaArray(formule)
-        rigenera_parziali()
 
     if oSheet.Name in ('CONTABILITA'):
         oSheet.getCellByPosition(
@@ -5605,7 +5614,12 @@ def rigenera_voce(lrow=None):
                                  1).CellStyle = 'Comp-Variante num sotto'
         formule = []
         for n in range (sopra + 2, sotto - 1):
-            if 'ROSSO' in oSheet.getCellByPosition(5, n).CellStyle:
+            rosso = 0
+            for x in range (5, 8):
+                if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
+                    rosso = 1
+                    break
+            if rosso == 1:
                 formule.append (['=IF(PRODUCT(E' + str(n + 1) + ':I' +
                                 str(n + 1) + ')>=0;"";PRODUCT(E' +
                                 str(n + 1) + ':I' + str(n + 1) + ')*-1)', '',
@@ -5623,9 +5637,48 @@ def rigenera_voce(lrow=None):
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 11, sotto - 2)
         formule = tuple(formule)
         oRange.setFormulaArray(formule)
-        rigenera_parziali()
+        
 
+########################################################################
+def rigenera_tutte(arg=None, ):
+    '''
+    Ripristina le formule in tutto il foglio
+    '''
+    DisableAutoCalc()
+    chiudi_dialoghi()
+    oDoc = LeenoUtils.getDocument()
+
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
+
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    nome = oSheet.Name
+
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Rigenerazione di ' + nome + ' in corso...', Text="Lettura dati")
+    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+    progress.setValue(0)
+    progress.show()
+    if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
+        try:
+            oSheet = oDoc.Sheets.getByName(nome)
+            row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1)
+            oDoc.CurrentController.select(oSheet.getCellByPosition(0, row))
+            last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
+            while row < last:
+                progress.setValue(row)
+                rigenera_voce(row)
+                #~sistema_stili(row)
+                row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+        except Exception:
+            pass
+    rigenera_parziali(True)
+    Rinumera_TUTTI_Capitoli2(oSheet)
+    numera_voci()
+    fissa()
+    progress.hide()
     EnableAutoCalc()
+    oDoc.CurrentController.ZoomValue = zoom
 
 
 ########################################################################
@@ -5696,35 +5749,35 @@ def sistema_stili(lrow=None):
                 if oSheet.getCellByPosition(y, x).String != '':
                     test = 1
                     break
+        for y in range (2, 8):
             rosso = 0
-            for y in range(2, 8):
-                if 'ROSSO' in oSheet.getCellByPosition(y, x).CellStyle:
-                    rosso = 1
-                    break
-            if str(test) + str(rosso) == '10':
-                oSheet.getCellByPosition(9, x).Formula = '=IF(PRODUCT(E' + str(
-                    x + 1) + ':I' + str(x + 1) + ')=0;"";PRODUCT(E' + str(
-                        x + 1) + ':I' + str(x + 1) + '))'
-                oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a'
-                oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU'
-                oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG'
-                oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG'
-                oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso'
-                oSheet.getCellByPosition(11, x).String = ''
-            if str(test) + str(rosso) == '11':
-                oSheet.getCellByPosition(
-                    11, x).Formula = '=IF(PRODUCT(E' + str(x + 1) + ':I' + str(
-                        x + 1) + ')=0;"";PRODUCT(E' + str(x + 1) + ':I' + str(
-                            x + 1) + '))'
-                oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a ROSSO'
-                oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU ROSSO'
-                oSheet.getCellByPosition(6,
-                                         x).CellStyle = 'comp 1-a LUNG ROSSO'
-                oSheet.getCellByPosition(7,
-                                         x).CellStyle = 'comp 1-a LARG ROSSO'
-                oSheet.getCellByPosition(8,
-                                         x).CellStyle = 'comp 1-a peso ROSSO'
-                oSheet.getCellByPosition(9, x).String = ''
+            if 'ROSSO' in oSheet.getCellByPosition(y, x).CellStyle:
+                rosso = 1
+                break
+        if str(test) + str(rosso) == '10':
+            oSheet.getCellByPosition(9, x).Formula = '=IF(PRODUCT(E' + str(
+                x + 1) + ':I' + str(x + 1) + ')=0;"";PRODUCT(E' + str(
+                    x + 1) + ':I' + str(x + 1) + '))'
+            oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a'
+            oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU'
+            oSheet.getCellByPosition(6, x).CellStyle = 'comp 1-a LUNG'
+            oSheet.getCellByPosition(7, x).CellStyle = 'comp 1-a LARG'
+            oSheet.getCellByPosition(8, x).CellStyle = 'comp 1-a peso'
+            oSheet.getCellByPosition(11, x).String = ''
+        if str(test) + str(rosso) == '11':
+            oSheet.getCellByPosition(
+                11, x).Formula = '=IF(PRODUCT(E' + str(x + 1) + ':I' + str(
+                    x + 1) + ')=0;"";PRODUCT(E' + str(x + 1) + ':I' + str(
+                        x + 1) + '))'
+            oSheet.getCellByPosition(2, x).CellStyle = 'comp 1-a ROSSO'
+            oSheet.getCellByPosition(5, x).CellStyle = 'comp 1-a PU ROSSO'
+            oSheet.getCellByPosition(6,
+                                     x).CellStyle = 'comp 1-a LUNG ROSSO'
+            oSheet.getCellByPosition(7,
+                                     x).CellStyle = 'comp 1-a LARG ROSSO'
+            oSheet.getCellByPosition(8,
+                                     x).CellStyle = 'comp 1-a peso ROSSO'
+            oSheet.getCellByPosition(9, x).String = ''
 
 
 ########################################################################
@@ -5749,45 +5802,6 @@ def rigenera_parziali (arg=False):
         if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
             parziale_core(oSheet, i)
     return
-########################################################################
-def rigenera_tutte(arg=None, ):
-    '''
-    Ripristina le formule in tutto il foglio
-    '''
-    chiudi_dialoghi()
-    oDoc = LeenoUtils.getDocument()
-
-    zoom = oDoc.CurrentController.ZoomValue
-    oDoc.CurrentController.ZoomValue = 400
-
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    DisableAutoCalc()
-    nome = oSheet.Name
-
-    # attiva la progressbar
-    progress = Dialogs.Progress(Title='Rigenerazione di ' + nome + ' in corso...', Text="Lettura dati")
-    progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
-    progress.setValue(0)
-    progress.show()
-
-    if nome in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
-        try:
-            oSheet = oDoc.Sheets.getByName(nome)
-            row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1)
-            last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
-            while row < last:
-                progress.setValue(row)
-                rigenera_voce(row)
-                sistema_stili(row)
-                row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-            Rinumera_TUTTI_Capitoli2(oSheet)
-        except Exception:
-            pass
-    numera_voci()
-    fissa()
-    progress.hide()
-    EnableAutoCalc()
-    oDoc.CurrentController.ZoomValue = zoom
 
 
 ########################################################################

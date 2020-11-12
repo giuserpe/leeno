@@ -29,17 +29,24 @@ def leggiAnagraficaGenerale(dati):
     ''' legge i dati anagrafici generali '''
 
     datiAnagrafici = {}
-    DatiGenerali = dati.getchildren()[0][0]
+    try:
+        DatiGenerali = dati.getchildren()[0][0]
 
-    datiAnagrafici['comune'] = DatiGenerali[1].text or ''
-    datiAnagrafici['oggetto'] = DatiGenerali[3].text or ''
-    datiAnagrafici['committente'] = DatiGenerali[4].text or ''
-    datiAnagrafici['impresa'] = DatiGenerali[5].text or ''
-    '''
-    datiAnagrafici['percprezzi'] = DatiGenerali[0].text or ''
-    datiAnagrafici['provincia'] = DatiGenerali[2].text or ''
-    datiAnagrafici['parteopera'] = DatiGenerali[6].text or ''
-    '''
+        datiAnagrafici['comune'] = DatiGenerali[1].text or ''
+        datiAnagrafici['oggetto'] = DatiGenerali[3].text or ''
+        datiAnagrafici['committente'] = DatiGenerali[4].text or ''
+        datiAnagrafici['impresa'] = DatiGenerali[5].text or ''
+        '''
+        datiAnagrafici['percprezzi'] = DatiGenerali[0].text or ''
+        datiAnagrafici['provincia'] = DatiGenerali[2].text or ''
+        datiAnagrafici['parteopera'] = DatiGenerali[6].text or ''
+        '''
+    except AttributeError:
+        datiAnagrafici['comune'] = ''
+        datiAnagrafici['oggetto'] = ''
+        datiAnagrafici['committente'] = ''
+        datiAnagrafici['impresa'] = ''
+
     return datiAnagrafici
 
 
@@ -213,26 +220,32 @@ def leggiCapitoliCategorie(dati):
 def leggiDatiGeneraliAnalisi(dati):
     ''' legge i dati generali di analisi '''
 
-    PweDGAnalisi = dati.find('PweDGModuli').getchildren()[0]
-
     try:
-        speseGenerali = float(PweDGAnalisi.find('SpeseGenerali').text) / 100
-    except ValueError:
+        PweDGAnalisi = dati.find('PweDGModuli').getchildren()[0]
+
+        try:
+            speseGenerali = float(PweDGAnalisi.find('SpeseGenerali').text) / 100
+        except ValueError:
+            speseGenerali = 0
+
+        try:
+            utiliImpresa = float(PweDGAnalisi.find('UtiliImpresa').text) / 100
+        except ValueError:
+            utiliImpresa = 0
+
+        try:
+            oneriAccessoriSicurezza = float(PweDGAnalisi.find('OneriAccessoriSc').text) / 100
+        except ValueError:
+            oneriAccessoriSicurezza = 0
+        '''
+        speseutili = PweDGAnalisi.find('SpeseUtili').text
+        confquantita = PweDGAnalisi.find('ConfQuantita').text
+        '''
+    except AttributeError:
         speseGenerali = 0
-
-    try:
-        utiliImpresa = float(PweDGAnalisi.find('UtiliImpresa').text) / 100
-    except ValueError:
         utiliImpresa = 0
-
-    try:
-        oneriAccessoriSicurezza = float(PweDGAnalisi.find('OneriAccessoriSc').text) / 100
-    except ValueError:
         oneriAccessoriSicurezza = 0
-    '''
-    speseutili = PweDGAnalisi.find('SpeseUtili').text
-    confquantita = PweDGAnalisi.find('ConfQuantita').text
-    '''
+
     return {
         'SpeseGenerali': speseGenerali,
         'UtiliImpresa': utiliImpresa,
@@ -243,7 +256,11 @@ def leggiDatiGeneraliAnalisi(dati):
 def leggiApprossimazioni(dati):
     ''' legge le impostazioni di approssimazione numerica '''
 
-    PweDGConfigNumeri = dati.find('PweDGConfigurazione')
+    try:
+        PweDGConfigNumeri = dati.find('PweDGConfigurazione')
+    except AttributeError:
+        PweDGConfigNumeri = None
+    
     if PweDGConfigNumeri is None:
         return {}
     PweDGConfigNumeri = PweDGConfigNumeri.getchildren()[0]

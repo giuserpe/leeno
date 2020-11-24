@@ -2782,7 +2782,8 @@ def XPWE_out(elaborato, out_file):
 
     il nome file risulterà out_file-elaborato.xpwe
     '''
-
+    if out_file == None:
+        return
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Esportazione di ' + elaborato + ' in corso...', Text="Lettura dati")
     progress.setLimits(0, 7)

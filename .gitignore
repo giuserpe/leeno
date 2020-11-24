@@ -1,5 +1,11 @@
 *~
 *.*#
+*.xba
+*.xdl
+*.xlb
+.directory
+DialogStrings_it_IT.*
+RegisteredFlag
 bin/
 */leeno-bk/
 documentazione/*.pdf

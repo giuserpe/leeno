@@ -2664,8 +2664,8 @@ def riordina_ElencoPrezzi(oDoc):
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
     test = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet))
-    #~SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-    #~SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
     oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SC = oRangeAddress.StartColumn
     EC = oRangeAddress.EndColumn
@@ -6103,6 +6103,7 @@ def MENU_partita_detrai():
     partita('SI DETRAE PARTITA PROVVISORIA')
 
 
+########################################################################
 def genera_libretto():
     '''
     @@ DA DOCUMENTARE
@@ -6116,42 +6117,95 @@ def genera_libretto():
         return
     numera_voci()
     oRanges = oDoc.NamedRanges
-    try:
-        oRanges.removeByName("#Lib#1")
-    except:
-        pass
+    
+    #~try:
+        #~oRanges.removeByName("#Lib#1")
+    #~except:
+        #~pass
+        
     #~return
+    #trovo il numero del nuovo sal
+    oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
     nSal = 0
     for i in reversed(range(1, 50)):
-        if oRanges.hasByName("#Lib#" + str(i)):
-            nSal = i
+        if oRanges.hasByName("#Lib#" + str(i)) == True:
+            nSal = i +1
             break
-    #  Recupero la prima riga non registrata
-    oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
-    if nSal > 0:
-        oNamedRange = oRanges.getByName("#Lib#" +
-                                        str(nSal)).ReferredCells.RangeAddress
-        frow = oNamedRange.StartRow
-        lrow = oNamedRange.EndRow
-        daVoce = oNamedRange.EndRow + 2
-    #  recupero l'ultimo numero di pagina usato (serve in caso di libretto unico)
-    #  oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
-        old_nPage = int(oSheetCont.getCellByPosition(20, lrow).Value)
-        daVoce = int(oSheetCont.getCellByPosition(0, daVoce).Value)
-        if daVoce == 0:
+        else:
+            nSal = 1
+            daVoce = 1
+            old_nPage = 1
+
+    try:
+        oRanges.hasByName("#Lib#1")
+        daVoce = int(oSheetCont.getCellByPosition(
+            2, 2 + nSal - 1).String.split('÷')[1]) + 1
+        DLG.chi(daVoce)
+        oCellRange = oSheetCont.getCellRangeByPosition(
+            0, 3, 0,
+            SheetUtils.getUsedArea(oSheetCont).EndRow - 2)
+
+        if daVoce >= int(oCellRange.computeFunction(MAX)):
             DLG.MsgBox('Non ci sono voci di misurazione da registrare.', 'ATTENZIONE!')
             return
-        oCell = oSheetCont.getCellRangeByPosition(0, frow, 25, lrow)
-    #  'Raggruppa_righe
-        oCell.Rows.IsVisible = False
-    else:
-        nSal = 1
-        daVoce = 1
-        old_nPage = 1
+    except:
+        pass
+        #~nSal = 1
+        #~daVoce = 1
+        #~old_nPage = 1
+
+    nomearea="#Lib#" + str(nSal)
+
+    #  Recupero la prima riga non registrata
+    
+
+    #~if nSal > 0:
+        #~oNamedRange = oRanges.getByName("#Lib#" +
+                                        #~str(nSal)).ReferredCells.RangeAddress
+        #~frow = oNamedRange.StartRow
+        #~lrow = oNamedRange.EndRow
+        #~daVoce = oNamedRange.EndRow + 2
+    #~#  recupero l'ultimo numero di pagina usato (serve in caso di libretto unico)
+    #~#  oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
+        #~old_nPage = int(oSheetCont.getCellByPosition(20, lrow).Value)
+        #~daVoce = int(oSheetCont.getCellByPosition(0, daVoce).Value)
+        #~if daVoce == 0:
+            #~DLG.MsgBox('Non ci sono voci di misurazione da registrare.', 'ATTENZIONE!')
+            #~return
+        #~oCell = oSheetCont.getCellRangeByPosition(0, frow, 25, lrow)
+    #~#  Raggruppa_righe
+        #~oCell.Rows.IsVisible = False
+        #~#cerca prima voce da registrare
+        #~for el in reversed(range(0, lrow)):
+            #~if oSheetCont.getCellByPosition(0, el).Value > 0:
+                #~daVoce = int(oSheetCont.getCellByPosition(0, el).Value + 1)
+                #~break
+    #~else:
+        #~nSal = 1
+        #~daVoce = 1
+        #~old_nPage = 1
     #############
-    # PRIMA RIGA
-    #~daVoce = InputBox(str(daVoce), "Registra voci Libretto da n.")
-    daVoce = '1'
+    # PRIMA VOCE
+    
+    
+    #~DLG.chi(2 + nSal - 1)
+    #~return
+    
+    #~if nSal > 1:
+        #~DLG.chi(int(oSheetCont.getCellByPosition(2, 2 + nSal - 1).String.split('÷')[1]) +1)
+        #~oLibNamedRange = oRanges.getByName("#Lib#" + str(nSal - 1)).ReferredCells.RangeAddress
+        #~oLibNamedRange.EndRow
+        #~DLG.chi(oLibNamedRange.EndRow)
+        #~for el in reversed(range(0, oLibNamedRange.EndRow)):
+            #~DLG.chi(oSheetCont.getCellByPosition(0, el).Value)
+            #~if oSheetCont.getCellByPosition(0, el).Value > 0:
+                #~daVoce = oSheetCont.getCellByPosition(0, el).Value
+            #~break
+
+    daVoce = InputBox(str(daVoce), "Registra voci Libretto da n.")
+    if len(daVoce) ==0:
+        return
+
     try:
         lrow = int(SheetUtils.uFindStringCol(daVoce, 0, oSheet))
     except TypeError:
@@ -6159,14 +6213,26 @@ def genera_libretto():
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     primariga = sStRange.RangeAddress.StartRow
     #############
-    #  ULTIMA RIGA
+    #  ULTIMA VOCE
     oCellRange = oSheetCont.getCellRangeByPosition(
         0, 3, 0,
         SheetUtils.getUsedArea(oSheetCont).EndRow - 2)
     aVoce = int(oCellRange.computeFunction(MAX))
-    #~aVoce = InputBox(str(aVoce), "A voce n.:")
-    aVoce = '3'
 
+    #~aVoce = InputBox(str(aVoce), "A voce n.:")
+    aVoce = str(int(daVoce) + 10)
+    if len(aVoce) == 0:
+        return
+
+    DLG.chi((daVoce, aVoce))
+    #~return
+
+    progress = Dialogs.Progress(Title='Generazione elaborato...', Text="Libretto delle Misure")
+    progress.setLimits(1, 6)
+    progress.setValue(0)
+    #~progress.show()
+
+    progress.setValue(1)
     try:
         lrow = int(SheetUtils.uFindStringCol(aVoce, 0, oSheet))
     except TypeError:
@@ -6183,8 +6249,6 @@ def genera_libretto():
     oSheetCont.removeAllManualPageBreaks()
     visualizza_PageBreak()
 
-    nomearea="#Lib#" + str(nSal)
-
     #~DLG.chi(str(ultimariga) + " - SAL n." + str(nSal))
     oSheetCont.getCellByPosition(25, ultimariga - 1).String = "SAL n." + str(nSal)
     oSheetCont.getCellByPosition(25, ultimariga).Formula = (
@@ -6196,7 +6260,7 @@ def genera_libretto():
     MENU_firme_in_calce (ultimariga+1) # riga di inserimento
     fineFirme = ultimariga + 10
 
-
+    progress.setValue(2)
     area="$A$" + str(primariga + 1) + ":$AJ$" + str(fineFirme + 1)
 #  'Print area
     LeenoBasicBridge.rifa_nomearea(oDoc, "CONTABILITA", area , nomearea)
@@ -6232,14 +6296,17 @@ def genera_libretto():
     oSheetCont.setTitleRows(oTitles)
     oSheetCont.setPrintAreas((oCellRangeAddr,))
     oSheetCont.setPrintTitleRows(True)
-    
+
+    progress.setValue(3)
     adatta_altezza_riga(oSheetCont.Name)
+
     # sbianco l'area di stampa
     oSheetCont.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1 
     #~DLG.chi(oDoc.CurrentSelection.CellBackColor)
     chiusura = []
 
     i = 0
+    progress.setValue(4)
     while oSheetCont.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == False:
         oSheetCont.getRows().insertByIndex(fineFirme, 1)
         i += 1
@@ -6278,8 +6345,10 @@ def genera_libretto():
     oS2.getCellByPosition(yS2 + nSal, xS2 + 25).Value = inumPag      #ultima pagina libretto
 ########################################################################
 
-#  inumPag = 0'+ old_nPage 'SE IL LIBRETTO è UNICO    
+#  inumPag = 0'+ old_nPage 'SE IL LIBRETTO è UNICO
+
     #inserisco i dati
+    progress.setValue(5)
     for i in range(primariga, fineFirme):
         if oSheetCont.getCellByPosition(1, i).CellStyle == "comp Art-EP_R":
             if primariga == 0:
@@ -6293,16 +6362,39 @@ def genera_libretto():
                 if i < oSheetCont.RowPageBreaks[nPag].Position:
                     oSheetCont.getCellByPosition(20, i).Value = nPag   #pagina
                     break
+
+    progress.setValue(6)
     # annoto ultimo numero di pagina
     oSheetCont.getCellByPosition(20 , fineFirme).Value = nPag
     oSheetCont.getCellByPosition(20 , fineFirme).CellStyle = "num centro"
 #  inumPag = nPag ' + old_nPage 'SE IL LIBRETTO è UNICO
 
-    visualizza_PageBreak(False)
+    #~visualizza_PageBreak(False)
     
     # inserisco la prima riga GIALLA del LIBRETTO
     oSheetCont.getRows().insertByIndex(daRiga, 1)
     oSheetCont.getCellRangeByPosition (0, daRiga, 36, daRiga).CellStyle = "uuuuu"
+    
+    try:
+        oPrevRange=oRanges.getByName("#Lib#" + str(nSal - 1)).ReferredCells.RangeAddress
+        # ~ oPrevRange.EndRow = 1
+        oSheetCont.ungroup(oPrevRange, 1)
+        oSheetCont.group(oPrevRange, 1)
+    except:
+        pass
+    #~oSheetCont.getCellRangeByPosition(daColonna, daRiga, aColonna, fineFirme).Rows.IsVisible = False
+    #~return
+    
+    
+
+
+    #~oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
+    
+    #range del #Lib#
+    #~daRiga = oNamedRange.StartRow
+    
+
+    
 
     oSheetCont.getCellByPosition(2,  daRiga).String = "segue Libretto delle Misure n." + str(nSal) + " - " + str(daVoce) + "÷" + str(aVoce)
     oSheetCont.getCellByPosition(20, daRiga).Value =  nPag  #Pagina
@@ -6321,7 +6413,9 @@ def genera_libretto():
     oNamedRange.EndRow = fineFirme + 1
     oSheetCont.group(oNamedRange, 1)
     oSheetCont.getCellRangeByPosition(daColonna, daRiga, aColonna, fineFirme,).Rows.IsVisible = True
- 
+    
+    #~progress.hide()
+    
 #  Protezione_area ("CONTABILITA",nomearea)
 #  Struttura_Contab ("#Lib#")
 #  Genera_REGISTRO
@@ -9256,7 +9350,7 @@ def somma():
 ########################################################################
 
 def MENU_debug():
-    LeenoEvents.assegna()
+    genera_libretto()
     return
     ###
     '''
@@ -9309,26 +9403,6 @@ def MENU_debug():
             oDoc.CurrentController.select(oSheet.getCellByPosition(8, i))
             MENU_elimina_righe()
             # ~return
-    return
-    somma()
-    return
-    '''
-    Ricalcola i parziali di una voce
-    '''
-    oDoc = LeenoUtils.getDocument()
-    #~oSheet = oDoc.getSheets().getByName('VARIANTE')
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-
-    lrow = LeggiPosizioneCorrente()[1]
-    sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-    sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-    for i in range(sopra, sotto):
-        #~DLG.chi(oSheet.getCellByPosition(8, i).String)
-        if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
-            parziale_core(oSheet, i)
-            #~oDoc.CurrentController.select(oSheet.getCellByPosition(8, i))
-            #~MENU_parziale()
-    #~somma()
     return
     ###
     lr = SheetUtils.getLastUsedRow(oSheet) + 1

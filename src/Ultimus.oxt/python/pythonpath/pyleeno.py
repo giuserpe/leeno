@@ -2782,8 +2782,7 @@ def XPWE_out(elaborato, out_file):
 
     il nome file risulterà out_file-elaborato.xpwe
     '''
-    if out_file == None:
-        return
+
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Esportazione di ' + elaborato + ' in corso...', Text="Lettura dati")
     progress.setLimits(0, 7)
@@ -5838,6 +5837,8 @@ def ins_voce_contab(lrow=0, arg=1):
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+
     if lrow == 0:
         lrow = LeggiPosizioneCorrente()[1]
     # nome = oSheet.Name
@@ -5872,7 +5873,7 @@ def ins_voce_contab(lrow=0, arg=1):
         #  else
     elif stile == 'Comp TOTALI':
         pass
-    elif stile in stili_contab:
+    elif stile in (stili_contab + stili_cat):
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)

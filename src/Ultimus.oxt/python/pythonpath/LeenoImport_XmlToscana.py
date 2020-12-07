@@ -13,7 +13,7 @@ import SheetUtils
 
 from com.sun.star.sheet.CellFlags import \
     VALUE, DATETIME, STRING, ANNOTATION, FORMULA, HARDATTR, OBJECTS, EDITATTR, FORMATTED
-    
+
 def parseXML(data, defaultTitle=None):
     '''
     estrae dal file XML i dati dell'elenco prezzi
@@ -39,6 +39,15 @@ def parseXML(data, defaultTitle=None):
             'articoli' : artList
         }
     '''
+    # alcuni files sono degli XML-SIX con un bug
+    # consistente nella mancata dichiarazione del namespace
+    # quindi lo aggiungiamo a manina nei dati
+    if data.find("xmlns:PRT=") < 0:
+        pattern = "<PRT:Prezzario>"
+        pos = data.find(pattern) + len(pattern) - 1
+        data = data[:pos] + ' xmlns:PRT="mynamespace"' + data[pos:]
+        print(data[:1000])
+
     # elimina i namespaces dai dati ed ottiene
     # elemento radice dell' albero XML
     root = LeenoImport.stripXMLNamespaces(data)
@@ -228,7 +237,7 @@ def ns_ins(filename):
 
 def MENU_XML_toscana_import(arg=None):
     '''
-    Importazione di un prezzario XML della regione Toscana 
+    Importazione di un prezzario XML della regione Toscana
     in tabella Elenco Prezzi del template COMPUTO.
     '''
     oDoc = PL.creaComputo(0)
@@ -244,7 +253,7 @@ def MENU_XML_toscana_import(arg=None):
         getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndColumn ==0 and \
         getLastUsedCell(oDoc.CurrentController.ActiveSheet).EndRow ==0:
             oDoc.close(True)
-     
+
     # effettua il parsing del file XML
     tree = ET.ElementTree()
     try:
@@ -288,7 +297,7 @@ def MENU_XML_toscana_import(arg=None):
         if el.tag == PRT+'Articolo':
             codice = el.get('codice').replace('TOS21_', '')
             codicesp = codice.split('.')
-        
+
         voce = el.getchildren()[2].text
         articolo = el.getchildren()[3].text
         if articolo == None:

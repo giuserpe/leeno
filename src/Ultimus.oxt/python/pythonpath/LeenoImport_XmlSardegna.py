@@ -29,15 +29,6 @@ def parseXML(data, defaultTitle):
         }
     '''
 
-    # il file della Regione Sardegna è un XML-SIX con un bug
-    # consistente nella mancata dichiarazione del namespace
-    # quindi lo aggiungiamo a manina nei dati
-    if data.find("xmlns:PRT=") < 0:
-        pattern = "<PRT:Prezzario>"
-        pos = data.find(pattern) + len(pattern) - 1
-        data = data[:pos] + ' xmlns:PRT="mynamespace"' + data[pos:]
-        print(data[:1000])
-
-    # a parte il baco sul namespace, il formato è quello della toscana
+    # il formato è quello della toscana
     return LeenoImport_XmlToscana.parseXML(data, defaultTitle)
 

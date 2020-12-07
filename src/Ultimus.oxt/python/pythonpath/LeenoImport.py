@@ -260,7 +260,34 @@ def MENU_ImportElencoPrezziXML():
     # nasconde la progressbar
     progress.hide()
 
+    # aggiunge informazioni nel foglio
+    oSheet.getRows().insertByIndex(3, 1)
+    oSheet.getCellByPosition(0, 3).String = '000'
+    oSheet.getCellByPosition(1, 3).String = '''ATTENZIONE!
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
 
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale di riferimento prima di accedere al prezzario.'''
+    # evidenzia e struttura i capitoli
+    PL.struttura_Elenco()
+    oSheet.getCellRangeByName('F2').String = 'prezzi'
+    oSheet.getCellRangeByName('E2').Formula = '=COUNT(E3:E' + str(SheetUtils.getLastUsedRow(oSheet)+1) +')'
+    dest = filename[0:-4]+ '.ods'
+    # salva il file col nome del file di origine
+    PL.salva_come(dest)
+    PL._gotoCella(0, 3)
+    DLG.MsgBox('''
+Importazione eseguita con successo!
+
+ATTENZIONE:
+1. Lo staff di LeenO non si assume alcuna responsabilità riguardo al contenuto del prezzario.
+2. L’utente finale è tenuto a verificare il contenuto dei prezzari sulla base di documenti ufficiali.
+3. L’utente finale è il solo responsabile degli elaborati ottenuti con l'uso di questo prezzario.
+
+N.B.: Si rimanda ad una attenta lettura delle note informative disponibili sul sito istituzionale ufficiale prima di accedere al Prezzario.
+
+    ''','ATTENZIONE!')
 
 
 

@@ -235,7 +235,7 @@ def ns_ins(filename):
 
 ########################################################################
 
-def MENU_XML_toscana_import(arg=None):
+def MENU_XML_toscana_import_old(arg=None):
     '''
     Importazione di un prezzario XML della regione Toscana
     in tabella Elenco Prezzi del template COMPUTO.

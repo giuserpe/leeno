@@ -6794,8 +6794,16 @@ def struct_colore(level):
             oSheet.group(oCellRangeAddr, 0)
             oSheet.getCellRangeByPosition(n, 0, n, 0).Columns.IsVisible = False
     test = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Lettura dati")
+    progress.setLimits(0, test)
+    progress.setValue(0)
+    progress.show()
     lista = list()
+    x = 0
     for n in range(0, test):
+        x += 1
+        progress.setValue(x)
         if oSheet.getCellByPosition(0, n).CellBackColor == colore:
             oSheet.getCellByPosition(0, n).Rows.Height = hriga
             sopra = n + 1
@@ -6811,6 +6819,7 @@ def struct_colore(level):
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
     oDoc.CurrentController.ZoomValue = zoom
+    progress.hide()
     return
 
 
@@ -6843,26 +6852,11 @@ Vuoi procedere con la creazione della struttura dei capitoli?''',
 
 
 ########################################################################
-def ns_ins(filename=None):
-    '''
-    Se assente, inserisce il namespace nel file XML.
-    '''
-    f = codecs.open(filename, 'r', 'utf-8')
-    out_file = '.'.join(filename.split('.')[:-1]) + '.bak'
-    of = codecs.open(out_file, 'w', 'utf-8')
-
-    for row in f:
-        nrow = row.replace(
-            '<PRT:Prezzario>',
-            '<PRT:Prezzario xmlns="http://www.regione.toscana.it/Prezzario" xmlns:PRT="http://www.regione.toscana.it/Prezzario/Prezzario.xsd">'
-        )
-        of.write(nrow)
-    f.close()
-    of.close()
-    shutil.move(out_file, filename)
+# ns_ins moved to LeenoImport_XmlToscana.py
+########################################################################
 
 ########################################################################
-# XML_toscana_import moved to LeenoImport.py
+# XML_toscana_import moved to LeenoImport_XmlToscana.py
 ########################################################################
 
 ########################################################################

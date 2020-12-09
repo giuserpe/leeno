@@ -7362,6 +7362,8 @@ def filtra_codice(voce=None):
     try:
         _gotoCella(1, qui)
     except:
+        struttura_off()
+        progress.hide()
         Dialogs.Info(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
     EnableAutoCalc()
     progress.hide()

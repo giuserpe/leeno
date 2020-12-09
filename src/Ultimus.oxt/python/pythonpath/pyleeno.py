@@ -7359,7 +7359,10 @@ def filtra_codice(voce=None):
         oSheet.group(oCellRangeAddr, 1)
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
-    _gotoCella(1, qui)
+    try:
+        _gotoCella(1, qui)
+    except:
+        Dialogs.Info(Title = 'Ricerca conclusa', Text='Nessuna corrispondenza trovata')
     EnableAutoCalc()
     progress.hide()
 

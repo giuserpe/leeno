@@ -7360,7 +7360,7 @@ def filtra_codice(voce=None):
         oSheet.getCellRangeByPosition(0, el[0], 0,
                                       el[1]).Rows.IsVisible = False
     try:
-        _gotoCella(1, qui)
+        _gotoCella(0, qui)
     except:
         struttura_off()
         progress.hide()

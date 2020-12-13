@@ -1918,20 +1918,22 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
-    # attiva la progressbar
-    progress = Dialogs.Progress(Title='Esportazione di ' + oSheet.Name + ' in corso...', Text="Lettura dati")
-    progress.setLimits(0, 4)
-    progress.setValue(0)
-    progress.show()
+    zoom = oDoc.CurrentController.ZoomValue
+    oDoc.CurrentController.ZoomValue = 400
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
     SR = oRange.StartRow + 1
     ER = oRange.EndRow + 1
     lista_prezzi = list()
-    progress.setValue(1)
     for n in range(SR, ER):
         lista_prezzi.append(oSheet.getCellByPosition(0, n).String)
     lista = list()
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Ricerca delle voci da eliminare in corso...', Text="Lettura dati")
+    n = 0
+    progress.setLimits(n, len(lista_prezzi))
+    progress.show()
+    progress.setValue(1)
     for tab in ('COMPUTO', 'Analisi di Prezzo', 'VARIANTE', 'CONTABILITA'):
         try:
             oSheet = oDoc.getSheets().getByName(tab)
@@ -1940,25 +1942,27 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
             else:
                 col = 1
             for el in lista_prezzi:
+                n += 1
+                progress.setValue(n)
                 if SheetUtils.uFindStringCol(el, col, oSheet):
                     lista.append(el)
         except Exception:
             pass
+    progress.setLimits(0, 5)
     progress.setValue(2)
+    da_cancellare = set(lista_prezzi).difference(set(lista))
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
-
-    da_cancellare = set(lista_prezzi).difference(set(lista))
     iSheet = oSheet.RangeAddress.Sheet
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
-
+    progress.setValue(3)
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 0, ER))
     struttura_off()
     struttura_off()
     struttura_off()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
-    progress.setValue(3)
+    progress.setValue(4)
     for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:
             oSheet.Rows.removeByIndex(n, 1)
@@ -1966,10 +1970,12 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
            oSheet.getCellByPosition(1, n).String == '' and
            oSheet.getCellByPosition(4, n).String == ''):
             oSheet.Rows.removeByIndex(n, 1)
-        progress.setValue(4)
+    progress.setValue(5)
     oDoc.enableAutomaticCalculation(True)
     progress.hide()
     _gotoCella(0, 3)
+    oDoc.CurrentController.ZoomValue = zoom
+    Dialogs.Info(Title = 'Ricerca conclusa', Text='Eliminate ' + str(len(da_cancellare)) + " voci dall'elenco prezzi.")
 
 
 ########################################################################

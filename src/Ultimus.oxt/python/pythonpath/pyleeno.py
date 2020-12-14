@@ -2485,7 +2485,7 @@ def scelta_viste():
                 sString.Text = '20'
         sString = oDialog1.getControl('ComboBox3')
         sString.Text = cfg.read('Contabilità', 'ricicla_da')
-            
+
         # oDialog1Model = oDialog1.Model
         oDialog1.getControl('Dettaglio').State = cfg.read('Generale', 'dettaglio')
         oDialog1.execute()
@@ -2509,7 +2509,7 @@ def scelta_viste():
             cfg.write('Contabilità', 'ricicla_da', 'COMPUTO')
         else:
             cfg.write('Contabilità', 'ricicla_da', 'VARIANTE')
-            
+
         if oDialog1.getControl('Dettaglio').State == 0:
             cfg.write('Generale', 'dettaglio', '0')
             dettaglio_misure(0)
@@ -3406,7 +3406,7 @@ def MENU_firme_in_calce(lrowF=None):
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
         oSheet.getRows().insertByIndex(lrowF, 10)
         riga_corrente = lrowF + 1
-        
+
     # INSERISCI LA DATA E IL PROGETTISTA
         #~DLG.chi(datafirme)
         oSheet.getCellByPosition(2 , riga_corrente).Formula = (
@@ -3417,7 +3417,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellByPosition(2 , riga_corrente + 6).Formula = (
             "Il Direttore dei Lavori\n(" + oSheet_S2.getCellByPosition(
                 2, 15).String + ")")
-#~rem CONSOLIDA LA DATA    
+#~rem CONSOLIDA LA DATA
         oRange = oSheet.getCellRangeByPosition (2, riga_corrente, 40, riga_corrente)
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
@@ -3434,7 +3434,7 @@ def MENU_firme_in_calce(lrowF=None):
 
         oSheet.getCellByPosition(1, riga_corrente + 2).Formula = (
             "L'Impresa esecutrice\n(" + oSheet_S2.getCellRangeByName('$S2.C17').String + ")")
-    
+
         oSheet.getCellByPosition(1, riga_corrente + 6).Formula = (
             "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName('$S2.C16').String + ")")
         oSheet.getCellRangeByPosition (0, riga_corrente + 2, 5,riga_corrente + 6).Rows.OptimalHeight = True
@@ -3448,7 +3448,7 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellByPosition(1, riga_corrente + 10).Formula = (
         '=CONCATENATE("In data ";TEXT(NOW();"DD/MM/YYYY");" è stato emesso il CERTIFICATO DI PAGAMENTO n.' + str(nSal) + ' per un importo di €")')
         oRange = oSheet.getCellRangeByPosition (1, riga_corrente + 10, 40, riga_corrente + 10)
-        
+
         aSaveData = oRange.getDataArray()
         oRange.setDataArray(aSaveData)
 
@@ -4000,7 +4000,7 @@ def MENU_azzera_voce():
         # ~numera_voci(1)
     except Exception:
         pass
-
+    _gotoCella(0, fine)
     EnableAutoCalc()
 
 
@@ -4208,27 +4208,26 @@ def elimina_voce(lrow=None, msg=1):
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     SR = seleziona_voce()[0]
     ER = seleziona_voce()[1]
-    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
-        0, SR, 250, ER))
-    #~DLG.chi(oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName)
     if msg == 1:
         if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
-            messaggio = """            *** A T T E N Z I O N E ! ***\n
+            _gotoCella(9, ER)
+            comando ('ShowDependents')
+            messaggio= """
 Da questa voce dipende almeno un Vedi Voce.
-         VUOI PROCEDERE UGUALMENTE?"""
+VUOI PROCEDERE UGUALMENTE?"""
         else:
             messaggio = """OPERAZIONE NON ANNULLABILE!\n
 Stai per eliminare la voce selezionata.
             Voi Procedere?\n"""
-        if DLG.DlgSiNo(messaggio, 'AVVISO!') == 2:
+        if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+            Text= messaggio) == 1:
+            comando ('Undo')
             delete('R')
-            # ~ oSheet.getRows().removeByIndex(SR, ER-SR+1)
-            numera_voci(0)
         else:
+            comando ('Undo')
             return
     elif msg == 0:
         delete('R')
-        # ~ oSheet.getRows().removeByIndex(SR, ER-SR+1)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
@@ -4288,7 +4287,7 @@ def MENU_elimina_righe():
     rigenera_parziali()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     EnableAutoCalc()
-    
+
 ########################################################################
 def copia_riga_computo(lrow):
     # ~def debug(lrow):
@@ -4880,7 +4879,7 @@ def dettaglio_misure(bit):
     progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
     progress.setValue(0)
     progress.show()
-    
+
     if bit == 1:
         for lrow in range(0, ER):
             progress.setValue(lrow)
@@ -5003,13 +5002,22 @@ def debug_ConditionalFormat():
 
 
 ########################################################################
-def rimuovi_area_di_stampa():
+def comando(cmd):
+    '''
+    Esegue un comando di menù.
+    cmd       { string }  : nome del comando di menù
+
+    Elenco comandi:
+    'DeletePrintArea'   = Cancella l'area di stampa
+    'ShowDependents'    = Mostra le celle dipendenti
+    'Undo'              = Annulla ultimo comando
+    '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()
     oFrame = desktop.getCurrentFrame()
     dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
         'com.sun.star.frame.DispatchHelper', ctx)
-    dispatchHelper.executeDispatch(oFrame, ".uno:DeletePrintArea", "", 0,
+    dispatchHelper.executeDispatch(oFrame, ".uno:" + cmd, "", 0,
                                    list())
 
 
@@ -5492,7 +5500,7 @@ def rigenera_voce(lrow=None):
         return
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
-   
+
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         oSheet.getCellByPosition(
             1, sopra + 1
@@ -5650,7 +5658,7 @@ def rigenera_voce(lrow=None):
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 11, sotto - 2)
         formule = tuple(formule)
         oRange.setFormulaArray(formule)
-        
+
 
 ########################################################################
 def rigenera_tutte(arg=None, ):
@@ -5808,7 +5816,7 @@ def rigenera_parziali (arg=False):
         lrow = LeggiPosizioneCorrente()[1]
         sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-    
+
     for i in range(sopra, sotto):
         # ~if oSheet.getCellByPosition(8, i).String == '0,000':
             # ~oSheet.getCellByPosition(8, i).String = ''
@@ -6125,12 +6133,12 @@ def genera_libretto():
         return
     numera_voci()
     oRanges = oDoc.NamedRanges
-    
+
     #~try:
         #~oRanges.removeByName("#Lib#1")
     #~except:
         #~pass
-        
+
     #~return
     #trovo il numero del nuovo sal
     oSheetCont = oDoc.Sheets.getByName('CONTABILITA')
@@ -6165,7 +6173,7 @@ def genera_libretto():
     nomearea="#Lib#" + str(nSal)
 
     #  Recupero la prima riga non registrata
-    
+
 
     #~if nSal > 0:
         #~oNamedRange = oRanges.getByName("#Lib#" +
@@ -6194,11 +6202,11 @@ def genera_libretto():
         #~old_nPage = 1
     #############
     # PRIMA VOCE
-    
-    
+
+
     #~DLG.chi(2 + nSal - 1)
     #~return
-    
+
     #~if nSal > 1:
         #~DLG.chi(int(oSheetCont.getCellByPosition(2, 2 + nSal - 1).String.split('÷')[1]) +1)
         #~oLibNamedRange = oRanges.getByName("#Lib#" + str(nSal - 1)).ReferredCells.RangeAddress
@@ -6250,8 +6258,7 @@ def genera_libretto():
 
     lrowDown = SheetUtils.uFindStringCol("T O T A L E", 2, oSheetCont)
 
-    rimuovi_area_di_stampa()
-    
+    comando ('DeletePrintArea')
     #~oDoc.CurrentController.select(
         #~oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))  # unselect
     oSheetCont.removeAllManualPageBreaks()
@@ -6273,12 +6280,12 @@ def genera_libretto():
 #  'Print area
     LeenoBasicBridge.rifa_nomearea(oDoc, "CONTABILITA", area , nomearea)
     #~DLG.chi(oRanges.hasByName(nomearea))
-    
+
 
     oSheetCont.getCellRangeByPosition(0, inizioFirme, 32, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
 
     oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
-    
+
     #range del #Lib#
     daRiga = oNamedRange.StartRow
     aRiga = oNamedRange.EndRow
@@ -6309,7 +6316,7 @@ def genera_libretto():
     adatta_altezza_riga(oSheetCont.Name)
 
     # sbianco l'area di stampa
-    oSheetCont.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1 
+    oSheetCont.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
     #~DLG.chi(oDoc.CurrentSelection.CellBackColor)
     chiusura = []
 
@@ -6378,11 +6385,11 @@ def genera_libretto():
 #  inumPag = nPag ' + old_nPage 'SE IL LIBRETTO è UNICO
 
     #~visualizza_PageBreak(False)
-    
+
     # inserisco la prima riga GIALLA del LIBRETTO
     oSheetCont.getRows().insertByIndex(daRiga, 1)
     oSheetCont.getCellRangeByPosition (0, daRiga, 36, daRiga).CellStyle = "uuuuu"
-    
+
     try:
         oPrevRange=oRanges.getByName("#Lib#" + str(nSal - 1)).ReferredCells.RangeAddress
         # ~ oPrevRange.EndRow = 1
@@ -6392,17 +6399,17 @@ def genera_libretto():
         pass
     #~oSheetCont.getCellRangeByPosition(daColonna, daRiga, aColonna, fineFirme).Rows.IsVisible = False
     #~return
-    
-    
+
+
 
 
     #~oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
-    
+
     #range del #Lib#
     #~daRiga = oNamedRange.StartRow
-    
 
-    
+
+
 
     oSheetCont.getCellByPosition(2,  daRiga).String = "segue Libretto delle Misure n." + str(nSal) + " - " + str(daVoce) + "÷" + str(aVoce)
     oSheetCont.getCellByPosition(20, daRiga).Value =  nPag  #Pagina
@@ -6410,7 +6417,7 @@ def genera_libretto():
     oSheetCont.getCellByPosition(23, daRiga).Value= nSal    #SAL
     oSheetCont.getCellByPosition(25, daRiga).Formula = "=SUBTOTAL(9;$P$" + str(primariga + 1) + ":$P$" + str(ultimariga + 2) + ")"
     oSheetCont.getCellByPosition(25, daRiga).CellStyle = "comp sotto Euro 3_R"
-    
+
     # annoto il sal corrente sulla riga di intestazione
     oSheetCont.getCellByPosition(25, 2).Value = nSal
     oSheetCont.getCellByPosition(25, 2).CellStyle = "Menu_sfondo _input_grasBig"
@@ -6421,9 +6428,9 @@ def genera_libretto():
     oNamedRange.EndRow = fineFirme + 1
     oSheetCont.group(oNamedRange, 1)
     oSheetCont.getCellRangeByPosition(daColonna, daRiga, aColonna, fineFirme,).Rows.IsVisible = True
-    
+
     #~progress.hide()
-    
+
 #  Protezione_area ("CONTABILITA",nomearea)
 #  Struttura_Contab ("#Lib#")
 #  Genera_REGISTRO
@@ -8526,7 +8533,7 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
         progress = Dialogs.Progress(Title='Esportazione di ' + oSheet.Name + ' in corso...', Text="Lettura dati")
         progress.setLimits(0, SheetUtils.getUsedArea(oSheet).EndRow)
         progress.setValue(0)
-    
+
         if oSheet.Name not in ('COMPUTO', 'VARIANTE'):
             return
         descrizione = InputBox(t='inserisci una descrizione per la nuova riga')
@@ -9375,7 +9382,7 @@ def MENU_debug():
         tot = '50'
     if col == 3:
         tot = '10'
-    
+
     SheetUtils.getLastUsedRow(oSheet)
     # ~cat = ('LINGUISTICI', 'MATEMATICI', 'DEDUTTIVI', 'GENERICI')
 

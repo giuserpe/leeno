@@ -4209,9 +4209,14 @@ def elimina_voce(lrow=None, msg=1):
     SR = seleziona_voce()[0]
     ER = seleziona_voce()[1]
     if msg == 1:
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+            0, SR, 250, ER))
         if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
             _gotoCella(9, ER)
+            comando ('ClearArrowDependents')
             comando ('ShowDependents')
+            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+                0, SR, 250, ER))
             messaggio= """
 Da questa voce dipende almeno un Vedi Voce.
 VUOI PROCEDERE UGUALMENTE?"""
@@ -4222,12 +4227,19 @@ Stai per eliminare la voce selezionata.
         if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
             Text= messaggio) == 1:
             comando ('Undo')
-            delete('R')
+            oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+            _gotoCella(0, SR-1)
+            numera_voci(0)
+            _gotoCella(0, SR+1)
         else:
-            comando ('Undo')
+            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+                0, SR, 250, ER))
             return
     elif msg == 0:
-        delete('R')
+        oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+        _gotoCella(0, SR-1)
+        numera_voci(0)
+        _gotoCella(0, SR+1)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
@@ -5008,9 +5020,10 @@ def comando(cmd):
     cmd       { string }  : nome del comando di menù
 
     Elenco comandi:
-    'DeletePrintArea'   = Cancella l'area di stampa
-    'ShowDependents'    = Mostra le celle dipendenti
-    'Undo'              = Annulla ultimo comando
+    'DeletePrintArea'       = Cancella l'area di stampa
+    'ShowDependents'        = Mostra le celle dipendenti
+    'ClearArrowDependents'  = elimina frecce celle dipendenti
+    'Undo'                  = Annulla ultimo comando
     '''
     ctx = LeenoUtils.getComponentContext()
     desktop = LeenoUtils.getDesktop()

@@ -3236,6 +3236,7 @@ def XPWE_out(elaborato, out_file):
     oSheet = oDoc.getSheets().getByName(elaborato)
     PweVociComputo = SubElement(PweMisurazioni, 'PweVociComputo')
     oDoc.CurrentController.setActiveSheet(oSheet)
+    Rinumera_TUTTI_Capitoli2(oSheet)
     nVCItem = 2
     progress.setValue(6)
     progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
@@ -3271,16 +3272,22 @@ def XPWE_out(elaborato, out_file):
             ##########################
             IDSpCat = SubElement(VCItem, 'IDSpCat')
             IDSpCat.text = str(oSheet.getCellByPosition(31, sotto).String)
+            if elaborato == 'CONTABILITA':
+                IDSpCat.text = str(oSheet.getCellByPosition(31, sotto + 1).String)
             if IDSpCat.text == '':
                 IDSpCat.text = '0'
             # #########################
             IDCat = SubElement(VCItem, 'IDCat')
             IDCat.text = str(oSheet.getCellByPosition(32, sotto).String)
+            if elaborato == 'CONTABILITA':
+                IDCat.text = str(oSheet.getCellByPosition(32, sotto + 1).String)
             if IDCat.text == '':
                 IDCat.text = '0'
             # #########################
             IDSbCat = SubElement(VCItem, 'IDSbCat')
             IDSbCat.text = str(oSheet.getCellByPosition(33, sotto).String)
+            if elaborato == 'CONTABILITA':
+                IDSbCat.text = str(oSheet.getCellByPosition(33, sotto + 1).String)
             if IDSbCat.text == '':
                 IDSbCat.text = '0'
             # #########################
@@ -4015,11 +4022,20 @@ def MENU_elimina_voci_azzerate():
     try:
         if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
             ER = SheetUtils.getUsedArea(oSheet).EndRow
+                # attiva la progressbar
+            progress = Dialogs.Progress(Title='Esecuzione in corso...', Text="Cancellazione voci azzerate")
+            n = 0
+            progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+            progress.setValue(n)
+            progress.show()
             for lrow in reversed(range(0, ER)):
+                n += 1
+                progress.setValue(n)
                 if oSheet.getCellByPosition(
                         2, lrow).String == '*** VOCE AZZERATA ***':
                     elimina_voce(lrow=lrow, msg=0)
             numera_voci(1)
+            progress.hide()
     except Exception:
         return
 

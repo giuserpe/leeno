@@ -267,9 +267,8 @@ def prossimaVoce(oSheet, lrow, n=1):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
                 lrow = y
                 break
-
-    while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce + stili_cat:
-        lrow += 1
+    #~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce + stili_cat:
+        #~lrow += 1
     return lrow
 
 # ###############################################################

@@ -39,6 +39,7 @@ function getRange(sTitolo as string) as string
 	do while sA = &quot;&quot; 
 		wait iConta
 		iConta = iConta + iConta
+&apos;		if sA = &quot;ANNULLA&quot; then
 		if sA = &quot;ANNULLA&quot; then
 			exit do
 		end if

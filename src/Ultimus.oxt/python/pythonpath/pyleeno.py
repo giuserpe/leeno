@@ -470,6 +470,9 @@ def MENU_invia_voce():
         ER = oRangeAddress.EndRow
         ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 100, ER))
+        
+        oSheet.getCellRangeByPosition(0, SR, 100, ER).CellBackColor = 15757935
+        
         lista = list()
         for el in range(SR, ER + 1):
             if oSheet.getCellByPosition(0, el).CellStyle in ('Comp Start Attributo'):
@@ -483,6 +486,7 @@ def MENU_invia_voce():
             return
         if nSheetDCC in ('COMPUTO', 'VARIANTE'):
             copy_clip()
+            # arrivo
             _gotoDoc(LeenoUtils.getGlobalVar('sUltimus'))
             ddcDoc = LeenoUtils.getDocument()
             dccSheet = ddcDoc.getSheets().getByName(nSheet)
@@ -566,10 +570,10 @@ def MENU_invia_voce():
         #~EliminaVociDoppieElencoPrezzi()
     adatta_altezza_riga('Elenco Prezzi')
     GotoSheet(nSheetDCC)
-    adatta_altezza_riga(nSheetDCC)
     if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         _gotoCella(2, lrow + 1)
+    adatta_altezza_riga(nSheetDCC)
 
 
 ########################################################################
@@ -1800,6 +1804,8 @@ def adatta_altezza_riga(nSheet=None):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = oDoc.CurrentController.getFirstVisibleRow()
+
     if not oDoc.getSheets().hasByName('S1'):
         return
     nSheet = oSheet.Name
@@ -1841,6 +1847,7 @@ def adatta_altezza_riga(nSheet=None):
             oSheet.getCellRangeByPosition(0, y,
                                           SheetUtils.getUsedArea(oSheet).EndColumn,
                                           y).Rows.OptimalHeight = True
+    oDoc.CurrentController.setFirstVisibleRow(lrow)
     return
 
 
@@ -3408,7 +3415,7 @@ def MENU_firme_in_calce(lrowF=None):
     else:
         datafirme = datafirme + ", "
 
-    if oSheet.Name == "CONTABILITA":
+    if oSheet.Name == "CONTABILITA_Disattivato":
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
         oSheet.getRows().insertByIndex(lrowF, 10)
@@ -3505,7 +3512,7 @@ def MENU_firme_in_calce(lrowF=None):
             1, riga_corrente + 6
         ).Formula = '=CONCATENATE($S2.$C$13)'  # senza concatenate, se la cella di origine è vuota il risultato è '0,00'
 
-    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CompuM_NoP'):
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA', 'CompuM_NoP'):
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 2
         oDoc.CurrentController.setFirstVisibleRow(lrowF - 2)
@@ -3525,6 +3532,10 @@ def MENU_firme_in_calce(lrowF=None):
             ae = 30
             ss = 41
             col = 'S'
+            if oSheet.Name == 'CONTABILITA':
+                ii = 13
+                vv = 15
+                col = 'P'
         else:
             ii = 8
             vv = 9
@@ -3555,7 +3566,15 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getCellByPosition(ae, riga_corrente).String = 'Importo\nMDO €'
         inizio_gruppo = riga_corrente
         riga_corrente += 1
+
+    # attiva la progressbar
+        progress = Dialogs.Progress(Title='Esecuzione in corso...', Text="Cancellazione voci azzerate")
+        i = 0
+        progress.setLimits(0, LeenoSheetUtils.cercaUltimaVoce(oSheet))
+        progress.setValue(i)
+        progress.show()
         for i in range(0, lrowF):
+            progress.setValue(i)
 
             if oSheet.getCellByPosition(1, i).CellStyle == 'Livello-0-scritta':
                 oSheet.getRows().insertByIndex(riga_corrente, 1)
@@ -3646,6 +3665,7 @@ def MENU_firme_in_calce(lrowF=None):
                 oSheet.getCellByPosition(
                     ae, riga_corrente).Formula = '=AE' + str(i + 1)
                 riga_corrente += 1
+        progress.hide()
         oSheet.getCellRangeByPosition(
             2, inizio_gruppo, ae, inizio_gruppo).CellStyle = "Ultimus_centro"
         oSheet.getCellByPosition(ii, riga_corrente).Value = 100
@@ -7418,7 +7438,7 @@ def struttura_ComputoM():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.clearOutline()
-    # attiva la progressbar
+    #~# attiva la progressbar
     progress = Dialogs.Progress(Title='Creazione vista struttura in corso...', Text="Lettura dati")
     progress.setLimits(0, 5)
     progress.setValue(0)
@@ -9393,6 +9413,16 @@ def somma():
 ########################################################################
 
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
+    _gotoCella(0, lrow)
+    return
+
+    oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 3, 100, 156))
+        
+    oSheet.getCellRangeByPosition(0, 3, 100, 156).CellBackColor = 15757935
+    return
     genera_libretto()
     return
     ###

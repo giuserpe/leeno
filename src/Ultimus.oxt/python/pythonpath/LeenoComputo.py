@@ -100,7 +100,8 @@ def ins_voce_computo():
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     lrow = PL.LeggiPosizioneCorrente()[1]
     if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo):
-        lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+        #~lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
+        lrow += 1
     else:
         return
     insertVoceComputoGrezza(oSheet, lrow)

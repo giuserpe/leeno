@@ -1944,7 +1944,10 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
+<!--
               <value>.uno:OpenHyperlink?URL:string=https://leeno.org/donazioni/</value>
+-->
+              <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.dlg_donazioni</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/leeno</value>

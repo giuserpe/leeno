@@ -470,9 +470,9 @@ def MENU_invia_voce():
         ER = oRangeAddress.EndRow
         ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 100, ER))
-        
+
         oSheet.getCellRangeByPosition(0, SR, 100, ER).CellBackColor = 15757935
-        
+
         lista = list()
         for el in range(SR, ER + 1):
             if oSheet.getCellByPosition(0, el).CellStyle in ('Comp Start Attributo'):
@@ -818,6 +818,7 @@ def Ins_Categorie(n):
     '''
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
@@ -853,6 +854,7 @@ def Ins_Categorie(n):
     _gotoCella(2, lrow)
     Rinumera_TUTTI_Capitoli2(oSheet)
     #~oDoc.CurrentController.ZoomValue = zoom
+    oDoc.enableAutomaticCalculation(True)
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
@@ -1929,7 +1931,7 @@ Vuoi procedere comunque?''', 'AVVISO!') == 3:
     oDoc.CurrentController.ZoomValue = 400
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    SR = oRange.StartRow + 1
+    SR = oRange.StartRow
     ER = oRange.EndRow + 1
     lista_prezzi = list()
     for n in range(SR, ER):
@@ -2663,7 +2665,9 @@ def MENU_riordina_ElencoPrezzi():
     Riordina l'Elenco Prezzi secondo l'ordine alfabetico dei codici di prezzo
     '''
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     riordina_ElencoPrezzi(oDoc)
+    oDoc.enableAutomaticCalculation(True)
 
 
 def riordina_ElencoPrezzi(oDoc):
@@ -2677,10 +2681,17 @@ def riordina_ElencoPrezzi(oDoc):
     if SheetUtils.uFindStringCol('Fine elenco', 0, oSheet) is None:
         LeenoSheetUtils.inserisciRigaRossa(oSheet)
     test = str(SheetUtils.uFindStringCol('Fine elenco', 0, oSheet))
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
-    SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
-    oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    SC = oRangeAddress.StartColumn
+    try:
+        oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    except:
+        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+        oRangeAddress = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
+    SR = oRangeAddress.StartRow + 1
+    if SR != 3:
+        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$AF$" + test, 'elenco_prezzi')
+        SheetUtils.NominaArea(oDoc, 'Elenco Prezzi', "$A$3:$A$" + test, 'Lista')
+    SC = 0 #oRangeAddress.StartColumn
     EC = oRangeAddress.EndColumn
     SR = oRangeAddress.StartRow + 1
     ER = oRangeAddress.EndRow
@@ -4260,12 +4271,13 @@ VUOI PROCEDERE UGUALMENTE?"""
             messaggio = """OPERAZIONE NON ANNULLABILE!\n
 Stai per eliminare la voce selezionata.
             Voi Procedere?\n"""
+        return
         if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
             Text= messaggio) == 1:
             comando ('Undo')
             oSheet.getRows().removeByIndex(SR, ER - SR + 1)
             _gotoCella(0, SR-1)
-            numera_voci(0)
+            #~numera_voci(0)
             _gotoCella(0, SR+1)
         else:
             oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
@@ -4274,11 +4286,12 @@ Stai per eliminare la voce selezionata.
     elif msg == 0:
         oSheet.getRows().removeByIndex(SR, ER - SR + 1)
         _gotoCella(0, SR-1)
-        numera_voci(0)
+        #~numera_voci(0)
         _gotoCella(0, SR+1)
+    numera_voci(0)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-
+        
 
 ########################################################################
 
@@ -8283,6 +8296,12 @@ def DlgMain():
                     "A1:AT1").CellBackColor = 16773632  # 13434777 giallo
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP: Questo documento'
+            else:
+                oSheet.getCellRangeByName(
+                    "A1:AT1").clearContents(HARDATTR)
+                oSheet.getCellRangeByName(
+                    d[el]).String = 'DP:'
+                
         except Exception:
             pass
     return
@@ -9297,7 +9316,8 @@ def MENU_filtro_descrizione():
     oCellRangeAddr.Sheet = iSheet
     fine = SheetUtils.getUsedArea(oSheet).EndRow + 1
     el_y = list()
-    if oDoc.getCurrentSelection().CellStyle == 'comp 1-a':
+    if 'comp 1-a' in oDoc.getCurrentSelection().CellStyle or \
+    'Descr' in oDoc.getCurrentSelection().CellStyle:
         testo = oDoc.getCurrentSelection().String
     else:
         testo = ''
@@ -9413,6 +9433,8 @@ def somma():
 ########################################################################
 
 def MENU_debug():
+    elimina_voci_doppie()
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
@@ -9420,7 +9442,7 @@ def MENU_debug():
     return
 
     oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, 3, 100, 156))
-        
+
     oSheet.getCellRangeByPosition(0, 3, 100, 156).CellBackColor = 15757935
     return
     genera_libretto()

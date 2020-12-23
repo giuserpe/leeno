@@ -246,7 +246,7 @@ def prossimaVoce(oSheet, lrow, n=1):
     stili = stili_computo + stili_contab
     noVoce = LeenoUtils.getGlobalVar('noVoce')
 
-    # ~lrow = LeggiPosizioneCorrente()[1]
+    # ~lrow = PL.LeggiPosizioneCorrente()[1]
     if lrow == 0:
         while oSheet.getCellByPosition(0, lrow).CellStyle not in stili:
             lrow += 1
@@ -267,6 +267,8 @@ def prossimaVoce(oSheet, lrow, n=1):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
                 lrow = y
                 break
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+        lrow += 1
     #~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce + stili_cat:
         #~lrow += 1
     return lrow

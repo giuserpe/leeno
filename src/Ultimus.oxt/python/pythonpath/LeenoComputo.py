@@ -98,10 +98,10 @@ def ins_voce_computo():
     oSheet = oDoc.CurrentController.ActiveSheet
     noVoce = LeenoUtils.getGlobalVar('noVoce')
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
     lrow = PL.LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo):
-        #~lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
-        lrow += 1
+    if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo + stili_cat):
+        lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
     else:
         return
     insertVoceComputoGrezza(oSheet, lrow)
@@ -112,3 +112,4 @@ def ins_voce_computo():
     LeenoSheetUtils.numeraVoci(oSheet, lrow + 1, False)
     if LeenoConfig.Config().read('Generale', 'pesca_auto') == '1':
         PL.pesca_cod()
+

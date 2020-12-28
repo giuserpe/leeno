@@ -4291,7 +4291,7 @@ Stai per eliminare la voce selezionata.
     numera_voci(0)
     oDoc.CurrentController.select(
         oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
-        
+
 
 ########################################################################
 
@@ -4345,7 +4345,7 @@ def MENU_elimina_righe():
             oSheet.getRows().removeByIndex(y, 1)
             if stile in ('Livello-0-scritta mini', 'Livello-1-scritta mini', 'livello2_'):
                 Rinumera_TUTTI_Capitoli2(oSheet)
-    rigenera_parziali()
+    rigenera_parziali(False)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     EnableAutoCalc()
 
@@ -4397,46 +4397,35 @@ def copia_riga_contab(lrow):
     Inserisce una nuova riga di misurazione in contabilità
     '''
     oDoc = LeenoUtils.getDocument()
+
+    # vado alla vecchia maniera ## copio il range di righe computo da S5 ##
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheetto = oDoc.getSheets().getByName('S5')
+    oRangeAddress = oSheetto.getCellRangeByPosition(0, 24, 42, 24).getRangeAddress()
     #  lrow = LeggiPosizioneCorrente()[1]
     stile = oSheet.getCellByPosition(1, lrow).CellStyle
     if oSheet.getCellByPosition(1,
                                 lrow + 1).CellStyle == 'comp sotto Bianche_R':
         return
     if stile in ('comp Art-EP_R', 'Data_bianca', 'Comp-Bianche in mezzo_R'):
+
         lrow = lrow + 1  # PER INSERIMENTO SOTTO RIGA CORRENTE
+
+        oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
         oSheet.getRows().insertByIndex(lrow, 1)
-        # imposto gli stili
-        oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo_R'
-        oSheet.getCellByPosition(2, lrow).CellStyle = 'comp 1-a'
-        oSheet.getCellByPosition(5, lrow).CellStyle = 'comp 1-a PU'
-        oSheet.getCellByPosition(6, lrow).CellStyle = 'comp 1-a LUNG'
-        oSheet.getCellByPosition(7, lrow).CellStyle = 'comp 1-a LARG'
-        oSheet.getCellByPosition(8, lrow).CellStyle = 'comp 1-a peso'
-        oSheet.getCellRangeByPosition(
-            11, lrow, 23, lrow).CellStyle = 'Comp-Bianche in mezzo_R'
-        oSheet.getCellByPosition(8, lrow).CellStyle = 'comp 1-a peso'
-        oSheet.getCellRangeByPosition(9, lrow, 11, lrow).CellStyle = 'Blu'
-        # ci metto le formule
-        oSheet.getCellByPosition(
-            9, lrow).Formula = '=IF(PRODUCT(E' + str(lrow + 1) + ':I' + str(
-                lrow + 1) + ')<=0;"";PRODUCT(E' + str(lrow +
-                                                      1) + ':I' + str(lrow +
-                                                                      1) + '))'
-        oSheet.getCellByPosition(
-            11, lrow).Formula = '=IF(PRODUCT(E' + str(lrow+1) + ':I' + str(
-                lrow+1) + ')>=0;"";PRODUCT(E' + str(lrow +
-                                                    1) + ':I' + str(lrow+1) + ')*-1)'
-        # preserva la data di misura
-        if oSheet.getCellByPosition(1, lrow + 1).CellStyle == 'Data_bianca':
-            oRangeAddress = oSheet.getCellByPosition(1, lrow +
-                                                     1).getRangeAddress()
-            oCellAddress = oSheet.getCellByPosition(1, lrow).getCellAddress()
-            oSheet.copyRange(oCellAddress, oRangeAddress)
-            oSheet.getCellByPosition(1, lrow + 1).String = ""
-            oSheet.getCellByPosition(1, lrow +
-                                     1).CellStyle = 'Comp-Bianche in mezzo_R'
-        _gotoCella(2, lrow)
+        oSheet.copyRange(oCellAddress, oRangeAddress)
+
+
+        oRangeAddress = oSheet.getCellByPosition(1, lrow +
+                                                 1).getRangeAddress()
+        oCellAddress = oSheet.getCellByPosition(1, lrow).getCellAddress()
+        oSheet.copyRange(oCellAddress, oRangeAddress)
+        oSheet.getCellByPosition(1, lrow + 1).String = ""
+        oSheet.getCellByPosition(1, lrow +
+                                 1).CellStyle = 'Comp-Bianche in mezzo_R'
+    _gotoCella(2, lrow)
+    return
+
 
 
 def copia_riga_analisi(lrow):
@@ -4703,6 +4692,7 @@ def MENU_ricicla_misure():
     partendo da voci già inserite in COMPUTO o VARIANTE.
     '''
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name == 'CONTABILITA':
         try:
@@ -4742,23 +4732,18 @@ def MENU_ricicla_misure():
         oDest = oDoc.getSheets().getByName('CONTABILITA')
         oCellAddress = oDest.getCellByPosition(2, partenza[1] + 1).getCellAddress()
         GotoSheet('CONTABILITA')
-        for n in range(sopra, sotto):
-            copia_riga_contab(partenza[1])
-            #  if oDest.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO':
-            #  chi(n -3 + partenza[1])
-            #  chi(partenza)
-            #  LeenoSheetUtils.invertiUnSegno(oDest, n - 2 + partenza[1])
+
+        if sotto != sopra:
+            oDest.getRows().insertByIndex(partenza[1] + 2, sotto - sopra)
+            oDest.getCellRangeByPosition(1, partenza[1] + 2, 1, partenza[1] +
+                sotto - sopra +1).CellStyle = 'Comp-Bianche in mezzo_R'
+
         oDest.copyRange(oCellAddress, oSrc)
         oDest.getCellByPosition(1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
-        rigenera_parziali()
-        start = LeggiPosizioneCorrente()[1]
-        end = sotto - sopra + start + 1
-        for n in range(start, end):
-            #  chi(n)
-            if oDest.getCellByPosition(2, n).CellStyle == 'comp 1-a ROSSO':
-
-                LeenoSheetUtils.invertiUnSegno(oDest, n)
+        rigenera_voce(partenza[1])
+        rigenera_parziali(False)
         _gotoCella(2, partenza[1] + 1)
+    oDoc.enableAutomaticCalculation(True)
 
 def MENU_inverti_segno():
     inverti_segno()
@@ -5879,11 +5864,21 @@ def rigenera_parziali (arg=False):
         sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
 
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Parziali")
+    progress.setLimits(0, sotto - sopra)
+    n = 0
+    progress.setValue(n)
+    progress.show()
+
     for i in range(sopra, sotto):
+        n += 1
+        progress.setValue(n)
         # ~if oSheet.getCellByPosition(8, i).String == '0,000':
             # ~oSheet.getCellByPosition(8, i).String = ''
         if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
             parziale_core(oSheet, i)
+    progress.hide()
     return
 
 
@@ -7019,7 +7014,7 @@ def MENU_parziale():
     lrow = LeggiPosizioneCorrente()[1]
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         parziale_core(oSheet, lrow)
-        rigenera_parziali()
+        rigenera_parziali(False)
 
 
 ###
@@ -8301,7 +8296,7 @@ def DlgMain():
                     "A1:AT1").clearContents(HARDATTR)
                 oSheet.getCellRangeByName(
                     d[el]).String = 'DP:'
-                
+
         except Exception:
             pass
     return
@@ -8443,11 +8438,12 @@ class version_code:
             code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
                                                 'leeno_version_code')
         f = open(code_file, 'r')
-        Ldev = str (int(f.readline().split('-')[0].split('.')[-1]) + 1)
+        Ldev = str (int(f.readline().split('LeenO-')[1].split('-')[0].split('.')[-1]) + 1)
         tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
         of = open(code_file, 'w')
 
         new = (
+            'LeenO-' +
             str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
             str(LeenoUtils.getGlobalVar('Lminor')) + '.' +
             LeenoUtils.getGlobalVar('Lsubv').split('.')[0] + '.' +
@@ -9433,7 +9429,7 @@ def somma():
 ########################################################################
 
 def MENU_debug():
-    elimina_voci_doppie()
+    rigenera_voce(LeggiPosizioneCorrente()[1])
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)

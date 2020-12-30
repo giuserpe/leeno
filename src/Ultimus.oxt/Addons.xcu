@@ -794,7 +794,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_fuf</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoImport.MENU_fuf</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/falegname</value>

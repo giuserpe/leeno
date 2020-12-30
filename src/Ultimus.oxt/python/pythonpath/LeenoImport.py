@@ -632,7 +632,10 @@ def MENU_fuf():
         0, 0,
         SheetUtils.getLastUsedColumn(oSheet),
         SheetUtils.getLastUsedRow(oSheet)).Columns.OptimalWidth = True
-
+    oDoc.CurrentController.freezeAtPosition(0, 1)
+    PL._gotoCella(0, 1)
+    oDoc.CurrentController.ShowGrid = True
+    oSheet.getCellRangeByName('A1:F1').CellStyle = 'Accent 3'
     return
     PL.copy_clip()
 

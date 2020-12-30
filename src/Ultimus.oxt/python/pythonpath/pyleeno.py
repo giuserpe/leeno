@@ -4741,7 +4741,7 @@ def MENU_ricicla_misure():
         oDest.copyRange(oCellAddress, oSrc)
         oDest.getCellByPosition(1, partenza[1]).String = oSheet.getCellByPosition(1, sopra - 1).String
         rigenera_voce(partenza[1])
-        rigenera_parziali(False)
+        #~rigenera_parziali(False)
         _gotoCella(2, partenza[1] + 1)
     oDoc.enableAutomaticCalculation(True)
 
@@ -5547,8 +5547,15 @@ def rigenera_voce(lrow=None):
         return
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Formule")
+    progress.setLimits(0, sotto - sopra)
+    k = 0
+    progress.setValue(k)
+    progress.show()
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        progress.setValue(10)
         oSheet.getCellByPosition(
             1, sopra + 1
         ).CellStyle = 'comp Art-EP_R'
@@ -5601,6 +5608,8 @@ def rigenera_voce(lrow=None):
 
         formule = []
         for n in range (sopra + 2, sotto):
+            k += 1
+            progress.setValue(k)
             rosso = 0
             for x in range (5, 8):
                 if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
@@ -5627,6 +5636,7 @@ def rigenera_voce(lrow=None):
         oRange.setFormulaArray(formule)
 
     if oSheet.Name in ('CONTABILITA'):
+        progress.setValue(10)
         oSheet.getCellByPosition(
             2, sopra + 1
         ).Formula = '=IF(LEN(VLOOKUP(B' + str(
@@ -5682,6 +5692,8 @@ def rigenera_voce(lrow=None):
                                  1).CellStyle = 'Comp-Variante num sotto'
         formule = []
         for n in range (sopra + 2, sotto - 1):
+            k += 1
+            progress.setValue(k)
             rosso = 0
             for x in range (5, 8):
                 if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
@@ -5705,6 +5717,8 @@ def rigenera_voce(lrow=None):
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 11, sotto - 2)
         formule = tuple(formule)
         oRange.setFormulaArray(formule)
+    progress.hide()
+
 
 
 ########################################################################
@@ -5927,7 +5941,7 @@ def ins_voce_contab(lrow=0, arg=1):
         pass
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     nSal = 0
-    if stile == 'comp Int_colonna_R_prima':
+    if stile in (stili_cat + tuple('comp Int_colonna_R_prima')):
         lrow += 1
     elif stile == 'Ultimus_centro_bordi_lati':
         i = lrow
@@ -5944,7 +5958,7 @@ def ins_voce_contab(lrow=0, arg=1):
         #  else
     elif stile == 'Comp TOTALI':
         pass
-    elif stile in (stili_contab + stili_cat):
+    elif stile in (stili_contab):
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)
@@ -9071,7 +9085,7 @@ def fissa():
     ):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('CONTABILITA'):
-        _gotoCella(0, 3)
+        _Cella(0, 3)
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
@@ -9427,9 +9441,12 @@ def somma():
 
 
 ########################################################################
-
+import LeenoImport
 def MENU_debug():
+    LeenoImport.MENU_fuf()
+    return
     rigenera_voce(LeggiPosizioneCorrente()[1])
+    rigenera_parziali(False)
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)

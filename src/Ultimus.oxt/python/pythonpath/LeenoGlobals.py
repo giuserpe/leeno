@@ -14,8 +14,7 @@ if LeenoUtils.getGlobalVar('Lmajor') is None:
                     'comp Int_colonna_R_prima'),
 
         'stili_computo': ('Comp Start Attributo', 'comp progress', 'comp 10 s',
-        
-                          'Comp End Attributo'),
+                        'comp Int_colonna' ,  'Comp End Attributo'),
 
         'stili_contab': ('Comp Start Attributo_R', 'comp 10 s_R',
                          'Comp End Attributo_R', 'Comp TOTALI'),

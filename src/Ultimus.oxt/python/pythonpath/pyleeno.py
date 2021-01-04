@@ -5941,7 +5941,7 @@ def ins_voce_contab(lrow=0, arg=1):
         pass
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     nSal = 0
-    if stile in (stili_cat + tuple('comp Int_colonna_R_prima')):
+    if stile in stili_cat:
         lrow += 1
     elif stile == 'Ultimus_centro_bordi_lati':
         i = lrow

@@ -12,6 +12,8 @@ documentazione/*.pdf
 Esempio_LeenO.ods
 icons/Thumbs.db
 
+src/Ultimus.oxt/python/pythonpath/.eric6project/
+ 
 __pycache__/
 *.py[cod]
 

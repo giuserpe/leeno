@@ -781,11 +781,11 @@ def avvia_IDE():
                          uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
-        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
-                         dest +
-                         '/python/pythonpath/pyleeno.py',
-                         shell=True,
-                         stdout=subprocess.PIPE)
+#        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
+#                         dest +
+#                         '/python/pythonpath/pyleeno.py',
+#                         shell=True,
+#                         stdout=subprocess.PIPE)
     return
 
 
@@ -5548,14 +5548,14 @@ def rigenera_voce(lrow=None):
     sopra = sStRange.RangeAddress.StartRow
     sotto = sStRange.RangeAddress.EndRow
     # attiva la progressbar
-    progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Formule")
-    progress.setLimits(0, sotto - sopra)
-    k = 0
-    progress.setValue(k)
-    progress.show()
+#    progress = Dialogs.Progress(Title='Rigenerazione in corso...', Text="Formule")
+#    progress.setLimits(0, sotto - sopra)
+#    k = 0
+#    progress.setValue(k)
+#    progress.show()
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-        progress.setValue(10)
+#        progress.setValue(10)
         oSheet.getCellByPosition(
             1, sopra + 1
         ).CellStyle = 'comp Art-EP_R'
@@ -5608,8 +5608,8 @@ def rigenera_voce(lrow=None):
 
         formule = []
         for n in range (sopra + 2, sotto):
-            k += 1
-            progress.setValue(k)
+#            k += 1
+#            progress.setValue(k)
             rosso = 0
             for x in range (5, 8):
                 if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
@@ -5636,7 +5636,7 @@ def rigenera_voce(lrow=None):
         oRange.setFormulaArray(formule)
 
     if oSheet.Name in ('CONTABILITA'):
-        progress.setValue(10)
+#        progress.setValue(10)
         oSheet.getCellByPosition(
             2, sopra + 1
         ).Formula = '=IF(LEN(VLOOKUP(B' + str(
@@ -5692,8 +5692,8 @@ def rigenera_voce(lrow=None):
                                  1).CellStyle = 'Comp-Variante num sotto'
         formule = []
         for n in range (sopra + 2, sotto - 1):
-            k += 1
-            progress.setValue(k)
+#            k += 1
+#            progress.setValue(k)
             rosso = 0
             for x in range (5, 8):
                 if 'ROSSO' in oSheet.getCellByPosition(x, n).CellStyle:
@@ -5717,7 +5717,7 @@ def rigenera_voce(lrow=None):
         oRange = oSheet.getCellRangeByPosition(9, sopra + 2, 11, sotto - 2)
         formule = tuple(formule)
         oRange.setFormulaArray(formule)
-    progress.hide()
+#    progress.hide()
 
 
 
@@ -9085,7 +9085,6 @@ def fissa():
     ):
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('CONTABILITA'):
-        _Cella(0, 3)
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
@@ -9441,10 +9440,7 @@ def somma():
 
 
 ########################################################################
-import LeenoImport
 def MENU_debug():
-    LeenoImport.MENU_fuf()
-    return
     rigenera_voce(LeggiPosizioneCorrente()[1])
     rigenera_parziali(False)
     return
@@ -9596,3 +9592,4 @@ g_exportedScripts = donazioni
 # vedi pag.264 di "Manuel du programmeur oBasic"
 # <<< vedi in description.xml
 ########################################################################
+

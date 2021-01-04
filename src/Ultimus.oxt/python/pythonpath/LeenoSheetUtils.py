@@ -10,7 +10,7 @@ import LeenoUtils
 import SheetUtils
 import LeenoAnalysis
 import LeenoComputo
-import LeenoDialogs as DLG
+#import LeenoDialogs as DLG
 
 
 
@@ -244,7 +244,7 @@ def prossimaVoce(oSheet, lrow, n=1):
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
     stili = stili_computo + stili_contab
-    noVoce = LeenoUtils.getGlobalVar('noVoce')
+#    noVoce = LeenoUtils.getGlobalVar('noVoce')
 
     # ~lrow = PL.LeggiPosizioneCorrente()[1]
     if lrow == 0:
@@ -304,17 +304,36 @@ def inserisciRigaRossa(oSheet):
         oSheet.getRows().insertByIndex(lrow, 1)
         oSheet.getCellByPosition(0, lrow).String = 'Fine Computo'
         oSheet.getCellRangeByPosition(0, lrow, 34, lrow).CellStyle = 'Riga_rossa_Chiudi'
+        oSheet.getCellByPosition(2, lrow
+        ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
     elif nome == 'Analisi di Prezzo':
         lrow = cercaUltimaVoce(oSheet) + 2
         oSheet.getCellByPosition(0, lrow).String = 'Fine ANALISI'
         oSheet.getCellRangeByPosition(0, lrow, 10, lrow).CellStyle = 'Riga_rossa_Chiudi'
+        oSheet.getCellByPosition(1, lrow
+        ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
     elif nome == 'Elenco Prezzi':
         lrow = cercaUltimaVoce(oSheet) + 1
+        if oSheet.getCellByPosition(0, lrow).CellStyle != 'Riga_rossa_Chiudi':
+            lrow += 1
         oSheet.getCellByPosition(0, lrow).String = 'Fine elenco'
-        oSheet.getCellRangeByPosition(0, lrow, 7, lrow).CellStyle = 'Riga_rossa_Chiudi'
-    oSheet.getCellByPosition(2, lrow
-    ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
-
+        oSheet.getCellRangeByPosition(0, lrow, 9, lrow).CellStyle = 'Riga_rossa_Chiudi'
+        oSheet.getCellRangeByPosition(11, lrow, 21, lrow).CellStyle = 'EP statistiche_Contab'
+        oSheet.getCellRangeByPosition(23, lrow, 25, lrow).CellStyle = 'EP statistiche'
+        oSheet.getCellRangeByPosition(26, lrow, 26, lrow).CellStyle = 'EP-mezzo %'
+        s = str(lrow + 1)
+        oSheet.getCellByPosition(12, lrow).String = 'TOTALE'
+        oSheet.getCellByPosition(13, lrow).Formula = '=SUBTOTAL(9;N3:N' + s + ')'
+        oSheet.getCellByPosition(16, lrow).String = 'TOTALE'
+        oSheet.getCellByPosition(17, lrow).Formula = '=SUBTOTAL(9;R3:R' + s + ')'
+        oSheet.getCellByPosition(20, lrow).String = 'TOTALE'
+        oSheet.getCellByPosition(21, lrow).Formula = '=SUBTOTAL(9;V3:V' + s + ')'
+        oSheet.getCellByPosition(23, lrow).String = 'TOTALE'
+        oSheet.getCellByPosition(24, lrow).Formula = '=SUBTOTAL(9;Y3:Y' + s + ')'
+        oSheet.getCellByPosition(25, lrow).Formula = '=SUBTOTAL(9;Z3:Z' + s + ')'
+        oSheet.getCellByPosition(26, lrow).Formula = '=IFERROR(IFS(AND(N' + s + '>R' + s + ';R' + s + '=0);-1;AND(N' + s + '<R' + s + ';N' + s + '=0);1;N' + s + '=R' + s + ';"--";N' + s + '>R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ';N'+ s + '<R' + s + ';-(N' + s + '-R' + s + ')/N' + s + ');"--")'
+        oSheet.getCellByPosition(1, lrow
+        ).String = 'Questa riga NON deve essere cancellata, MAI!!!(ma può rimanere tranquillamente NASCOSTA!)'
 
 # ###############################################################
 

@@ -9441,6 +9441,8 @@ def somma():
 
 ########################################################################
 def MENU_debug():
+    MENU_inserisci_Riga_rossa()
+    return
     rigenera_voce(LeggiPosizioneCorrente()[1])
     rigenera_parziali(False)
     return

@@ -104,6 +104,8 @@ def ins_voce_computo():
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
     else:
         return
+    if lrow == 2:
+        lrow += 1
     insertVoceComputoGrezza(oSheet, lrow)
     # @@ PROVVISORIO !!!
     PL._gotoCella(1, lrow + 1)

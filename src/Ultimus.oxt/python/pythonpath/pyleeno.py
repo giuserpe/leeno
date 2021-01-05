@@ -4606,9 +4606,12 @@ def cerca_in_elenco():
         return
     if codice_da_cercare != '':
         oCell = SheetUtils.uFindString(codice_da_cercare, oSheet)
-        # ~_gotoCella(oCell[0], oCell[1])
-        oDoc.CurrentController.select(
-            oSheet.getCellRangeByPosition(oCell[0], oCell[1], 30, oCell[1]))
+        try:
+            oDoc.CurrentController.select(
+                oSheet.getCellRangeByPosition(oCell[0], oCell[1], 30, oCell[1]))
+        except:
+            _gotoCella(1,  2)
+    return
 
 ########################################################################
 
@@ -6389,7 +6392,7 @@ def genera_libretto():
     # sbianco l'area di stampa
     oSheetCont.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
     #~DLG.chi(oDoc.CurrentSelection.CellBackColor)
-    chiusura = []
+#    chiusura = []
 
     i = 0
     progress.setValue(4)
@@ -7816,28 +7819,26 @@ def adegua_tmpl():
         basic_LeenO('_variabili.autoexec')  # rinvia a autoexec in basic
     adegua_a = 216  # VERSIONE CORRENTE
     if ver_tmpl < adegua_a:
-        if DLG.DlgSiNo(
-                '''Vuoi procedere con l'adeguamento di questo file
-alla versione di LeenO installata?
+        if Dialogs.YesNoDialog(Title='Informazione',
+        Text= '''Vuoi procedere con l'adeguamento di questo file
+alla versione di LeenO installata?''') == 0:
+            Dialogs.Info(Title = 'Avviso!',
+                         Text='''Non avendo effettuato l'adeguamento del file alla versione di LeenO installata, potresti avere dei malfunzionamenti!''')
 
-In caso affermativo dovrai attendere il completamento
-dell'operazione che terminerà con un avviso.
-''', "Richiesta") != 2:
-            DLG.MsgBox(
-                '''Non avendo effettuato l'adeguamento del file alla versione di LeenO installata, potresti avere dei malfunzionamenti!''',
-                'Avviso!')
             return
         sproteggi_sheet_TUTTE()
-        oDialogo_attesa = DLG.dlg_attesa(
-            "Adeguamento file alla versione di LeenO installata...")
         zoom = oDoc.CurrentController.ZoomValue
         oDoc.CurrentController.ZoomValue = 400
-        DLG.attesa().start()  # mostra il dialogo
-        #  adeguo gli stili secondo il template corrente
-        # stili = oDoc.StyleFamilies.getByName('CellStyles').getElementNames()
-        # diz_stili = dict()
+        # attiva la progressbar
+        progress = Dialogs.Progress(Title='Adeguamento del lavoro in corso...',
+                                    Text="Lettura dati")
+        progress.setLimits(0, 10)
+        progress.setValue(0)
+        progress.show()
+
         ############
         # aggiungi stili di cella
+        progress.setValue(1)
         for el in ('comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG',
                    'comp 1-a peso', 'comp 1-a', 'Blu',
                    'Comp-Variante num sotto'):
@@ -7846,6 +7847,7 @@ dell'operazione che terminerà con un avviso.
                 oDoc.StyleFamilies.getByName('CellStyles').insertByName(
                     el, oStileCella)
                 oStileCella.ParentStyle = 'comp 1-a'
+        progress.setValue(2)
         for el in ('comp 1-a PU', 'comp 1-a LUNG', 'comp 1-a LARG',
                    'comp 1-a peso', 'comp 1-a', 'Blu',
                    'Comp-Variante num sotto'):
@@ -7862,6 +7864,7 @@ dell'operazione che terminerà con un avviso.
 #  styles = oDoc.getStyleFamilies()
 #  styles.loadStylesFromURL(sUrl, list())
 ############
+        progress.setValue(3)
         oSheet = oDoc.getSheets().getByName('S1')
         oSheet.getCellRangeByName('S1.H291').Value = \
             oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 216
@@ -7872,6 +7875,7 @@ dell'operazione che terminerà con un avviso.
             oDoc.getSheets().getByName(el).IsVisible = False
         # dal template 212
         flags = VALUE + DATETIME + STRING + ANNOTATION + FORMULA + OBJECTS + EDITATTR  # FORMATTED + HARDATTR
+        progress.setValue(4)
         GotoSheet('M1')
         oSheet = oDoc.getSheets().getByName('M1')
         oSheet.getCellRangeByName('B23:E30').clearContents(flags)
@@ -7935,6 +7939,7 @@ dell'operazione che terminerà con un avviso.
                          MAYBEVOID + REMOVEABLE + MAYBEDEFAULT,
                          str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
                          str(LeenoUtils.getGlobalVar('Lminor')) + '.x')
+        progress.setValue(5)
         for el in ('COMPUTO', 'VARIANTE'):
             if oDoc.getSheets().hasByName(el):
                 GotoSheet(el)
@@ -8004,6 +8009,7 @@ dell'operazione che terminerà con un avviso.
                         oSheet.getCellByPosition(5, y).Formula = '=J$' + n
 #  contatta il canale Telegram
 #  https://t.me/leeno_computometrico''', 'AVVISO!')
+        progress.setValue(6)
         GotoSheet('S5')
         oSheet = oDoc.getSheets().getByName('S5')
         oSheet.getCellRangeByPosition(
@@ -8031,12 +8037,17 @@ dell'operazione che terminerà con un avviso.
 
         oSheet.getCellRangeByName('J11').Formula = '=IF(PRODUCT(E11:I11)=0;"";PRODUCT(E11:I11))'
         oSheet.getCellRangeByName('J25').CellStyle = 'Blu'
+        oSheet.getCellRangeByName('J25').Formula = '=IF(PRODUCT(E25:I25)<=0;"";PRODUCT(E25:I25))'
+
         oSheet.getCellRangeByName('L25').CellStyle = 'Blu ROSSO'
+        oSheet.getCellRangeByName('L25').Formula = '=IF(PRODUCT(E25:I25)>=0;"";PRODUCT(E25:I25)*-1)'
+
         oSheet.getCellRangeByName('J26').Formula = '=IF(SUBTOTAL(9;J24:J26)<0;"";SUBTOTAL(9;J24:J26))'
         oSheet.getCellRangeByName('L26').Formula = '=IF(SUBTOTAL(9;L24:L26)<0;"";SUBTOTAL(9;L24:L26))'
         oSheet.getCellRangeByName('L26').CellStyle = 'Comp-Variante num sotto ROSSO'
 
         # CONTABILITA CONTABILITA CONTABILITA CONTABILITA CONTABILITA
+        progress.setValue(7)
         if oDoc.getSheets().hasByName('CONTABILITA'):
             GotoSheet('CONTABILITA')
             oSheet = oDoc.getSheets().getByName('CONTABILITA')
@@ -8073,10 +8084,21 @@ dell'operazione che terminerà con un avviso.
             adatta_altezza_riga(el)
         oDoc.CurrentController.ZoomValue = zoom
         GotoSheet('COMPUTO')
-        oDialogo_attesa.endExecute()  # chiude il dialogo
+#        oDialogo_attesa.endExecute()  # chiude il dialogo
+        progress.setValue(8)
         mostra_fogli_principali()
-        DLG.MsgBox("Adeguamento del file completato con successo.", "Avviso")
-
+#    if Dialogs.YesNoDialog(Title='Informazione',
+#        Text= '''Vuoi procedere con la rigenerazione di tutte le formule di ogni foglio?
+#        Questo richidere del tempo.''') == 1:
+        for el in ('COMPUTO',  'VARIANTE',  'CONTABILITA'):
+            try:
+                oSheet = oDoc.getSheets().getByName(el)
+                GotoSheet(el)
+                rigenera_tutte()
+            except:
+                pass
+        progress.hide()
+        Dialogs.Info(Title = 'Avviso', Text='Adeguamento del file completato con successo.')
     EnableAutoCalc()
 
 
@@ -9441,7 +9463,7 @@ def somma():
 
 ########################################################################
 def MENU_debug():
-    MENU_inserisci_Riga_rossa()
+    rigenera_tutte()
     return
     rigenera_voce(LeggiPosizioneCorrente()[1])
     rigenera_parziali(False)

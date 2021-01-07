@@ -42,6 +42,7 @@ import LeenoSheetUtils
 import LeenoToolbars as Toolbars
 import LeenoFormat
 import LeenoComputo
+import LeenoContab
 import LeenoEvents
 import LeenoBasicBridge
 
@@ -781,11 +782,11 @@ def avvia_IDE():
                          uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
-#        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
-#                         dest +
-#                         '/python/pythonpath/pyleeno.py',
-#                         shell=True,
-#                         stdout=subprocess.PIPE)
+        subprocess.Popen('"C:/Program Files (x86)/Geany/bin/geany.exe" ' +
+                         dest +
+                         '/python/pythonpath/pyleeno.py',
+                         shell=True,
+                         stdout=subprocess.PIPE)
     return
 
 
@@ -2708,8 +2709,8 @@ def riordina_ElencoPrezzi(oDoc):
 
 
 def MENU_doppioni():
-    EliminaVociDoppieElencoPrezzi()
-    #~elimina_voci_doppie()
+    #~EliminaVociDoppieElencoPrezzi()
+    elimina_voci_doppie()
 
 
 def EliminaVociDoppieElencoPrezzi():
@@ -4253,6 +4254,15 @@ def elimina_voce(lrow=None, msg=1):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    if oSheet.Name == 'Elenco Prezzi':
+        Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
+devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
+        return
+
+    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
+        return
+
     SR = seleziona_voce()[0]
     ER = seleziona_voce()[1]
     if msg == 1:
@@ -4303,6 +4313,14 @@ def MENU_elimina_righe():
     DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    if oSheet.Name == 'Elenco Prezzi':
+        Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
+devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
+        return
+
+    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
+        return
 
     try:
         oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
@@ -4540,25 +4558,26 @@ def sblocca_cont():
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name in ('CONTABILITA'):
         partenza = cerca_partenza()
-        DLG.chi(partenza[2])
-        DLG.chi(LeenoUtils.getGlobalVar('sblocca_computo'))
+        # ~ DLG.chi(partenza[2])
+        # ~ DLG.chi(LeenoUtils.getGlobalVar('sblocca_computo'))
         if LeenoUtils.getGlobalVar('sblocca_computo') == 1:
             pass
         else:
             if partenza[2] == '':
                 pass
             if partenza[2] == '#reg':
-                if DLG.DlgSiNo(
-                        """Lavorando in questo punto del foglio,
+                if Dialogs.YesNoDialog(Title='Avviso: Voce già registrata!',
+                
+                Text= """Lavorando in questo punto del foglio,
 comprometterai la validità degli atti contabili già emessi.
 
 Vuoi procedere?
 
-SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!""", 'Voce già registrata!') == 3:
+SCEGLIENDO SI' SARAI COSTRETTO A RIGENERARLI!""") == 0:
                     pass
                 else:
                     LeenoUtils.setGlobalVar('sblocca_computo', 1)
-        DLG.chi(LeenoUtils.getGlobalVar('sblocca_computo'))
+        # ~ DLG.chi(LeenoUtils.getGlobalVar('sblocca_computo'))
 
 
 ########################################################################
@@ -5873,12 +5892,18 @@ def rigenera_parziali (arg=False):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    
+    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
+        return
 
     sopra = 4
     sotto = SheetUtils.getLastUsedRow(oSheet) + 1
     if arg == False:
         lrow = LeggiPosizioneCorrente()[1]
-        sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+        try:
+            sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+        except:
+            return
         sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
 
     # attiva la progressbar
@@ -5906,11 +5931,14 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeggiPosizioneCorrente()[1]
+
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         LeenoComputo.ins_voce_computo()
     elif oSheet.Name == 'Analisi di Prezzo':
         inizializza_analisi()
     elif oSheet.Name == 'CONTABILITA':
+        # ~ LeenoContab.insertVoceContabilita(oSheet, lrow)  <<< non va
         ins_voce_contab()
     elif oSheet.Name == 'Elenco Prezzi':
         ins_voce_elenco()
@@ -5924,11 +5952,18 @@ def ins_voce_contab(lrow=0, arg=1):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     if lrow == 0:
+        # ~ lrow = LeggiPosizioneCorrente()[1]
         lrow = LeggiPosizioneCorrente()[1]
+        if oSheet.getCellByPosition(0, lrow + 1).CellStyle == 'uuuuu':
+            return
+        else:
+            lrow += 1
     # nome = oSheet.Name
     try:
         # controllo che non ci siano atti registrati
@@ -6225,7 +6260,6 @@ def genera_libretto():
             nSal = 1
             daVoce = 1
             old_nPage = 1
-
     try:
         oRanges.hasByName("#Lib#1")
         daVoce = int(oSheetCont.getCellByPosition(
@@ -6310,7 +6344,7 @@ def genera_libretto():
     aVoce = int(oCellRange.computeFunction(MAX))
 
     #~aVoce = InputBox(str(aVoce), "A voce n.:")
-    aVoce = str(int(daVoce) + 10)
+    aVoce = str(int(daVoce) + 3)
     if len(aVoce) == 0:
         return
 
@@ -7161,12 +7195,13 @@ def MENU_vedi_voce():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
-        if oSheet.Name in ('COMPUTO', 'VARIANTE'):
-            copia_riga_computo(lrow)
-        elif oSheet.Name in ('CONTABILITA'):
-            copia_riga_contab(lrow)
-        lrow += 1
+    if oSheet.getCellByPosition(2, lrow).String != '#N/A':
+        if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
+            if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+                copia_riga_computo(lrow)
+            elif oSheet.Name in ('CONTABILITA'):
+                copia_riga_contab(lrow)
+            lrow += 1
     if oSheet.getCellByPosition(2, lrow).CellStyle == 'comp 1-a':
         to = basic_LeenO('ListenersSelectRange.getRange',
                          "Seleziona voce di riferimento o indica n. d'ordine")
@@ -7503,11 +7538,13 @@ def struttura_off():
     Cancella la vista in struttura
     '''
     oDoc = LeenoUtils.getDocument()
+    x = LeggiPosizioneCorrente()[0]
     lrow = LeggiPosizioneCorrente()[1]
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.clearOutline()
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 4)
+    _gotoCella( x, lrow)
 
 
 def struct(level):
@@ -9463,10 +9500,15 @@ def somma():
 
 ########################################################################
 def MENU_debug():
-    rigenera_tutte()
-    return
+    # ~ genera_libretto()
+    # ~ return
     rigenera_voce(LeggiPosizioneCorrente()[1])
     rigenera_parziali(False)
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
+    LeenoContab.insertVoceContabilita(oSheet, lrow)
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
@@ -9478,8 +9520,7 @@ def MENU_debug():
 
     oSheet.getCellRangeByPosition(0, 3, 100, 156).CellBackColor = 15757935
     return
-    genera_libretto()
-    return
+    
     ###
     '''
     risposte dei test di psicoattitudinali.com
@@ -9616,4 +9657,3 @@ g_exportedScripts = donazioni
 # vedi pag.264 di "Manuel du programmeur oBasic"
 # <<< vedi in description.xml
 ########################################################################
-

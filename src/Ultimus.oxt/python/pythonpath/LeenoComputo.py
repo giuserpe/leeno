@@ -32,8 +32,11 @@ def circoscriveVoceComputo(oSheet, lrow):
             y += 1
         lrowE = y
         y = lrow
-        while oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
-            y -= 1
+        try:
+            while oSheet.getCellByPosition(0, y).CellStyle not in ('Comp Start Attributo', 'Comp Start Attributo_R'):
+                y -= 1
+        except:
+            return
         lrowS = y
     celle = oSheet.getCellRangeByPosition(0, lrowS, 250, lrowE)
     return celle

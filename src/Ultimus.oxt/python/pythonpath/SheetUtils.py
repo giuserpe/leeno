@@ -512,3 +512,25 @@ def NominaArea(oDoc, sSheet, sRange, sName):
 
 # ###############################################################
 
+
+def visualizza_PageBreak(arg=True):
+    '''
+    Mostra i salti di pagina dell'area di stampa definita.
+    arg       { boolean }
+    '''
+    # oDoc = LeenoUtils.getDocument()
+    #  oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    oProp = PropertyValue()
+    oProp.Name = 'PagebreakMode'
+    oProp.Value = arg
+    properties = (oProp, )
+
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext('com.sun.star.frame.DispatchHelper', ctx)
+    dispatchHelper.executeDispatch(oFrame, ".uno:PagebreakMode", "", 0, properties)
+
+
+# ###############################################################
+

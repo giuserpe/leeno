@@ -2696,7 +2696,7 @@ def YesNoCancel(*, Title='', Text=''):
     return res
 
 
-def pickDate(curDate):
+def pickDate(curDate=None):
     '''
     Allow to pick a date from a calendar
     '''

@@ -60,7 +60,7 @@ def attiva_contabilita():
     attiva_contabilita
     '''
     callAlert()
-    PL.attiva_contabilita()
+    LeenOContab.attiva_contabilita()
 
 
 def genera_variante():
@@ -298,11 +298,6 @@ def struttura_off():
 def setTabColor(color):
     callAlert()
     PL.setTabColor(color)
-
-
-def adatta_altezza_riga(nSheet=None):
-    callAlert()
-    PL.adatta_altezza_riga(nSheet)
 
 
 def paste_clip(arg=None, insCells=0):

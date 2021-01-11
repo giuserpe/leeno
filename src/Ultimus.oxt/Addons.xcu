@@ -55,7 +55,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.adatta_altezza_riga</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSheetUtils.adattaAltezzaRiga</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/adattaH</value>
@@ -711,7 +711,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_partita_aggiungi</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoContab.MENU_partita_aggiungi</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/part_agg</value>
@@ -728,7 +728,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_partita_detrai</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoContab.MENU_partita_detrai</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/part_det</value>

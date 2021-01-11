@@ -1101,7 +1101,9 @@ def MENU_XPWE_import():
     '''
     PL.DisableAutoCalc()
     isLeenoDoc = LeenoUtils.isLeenoDocument()
-
+    if isLeenoDoc == False:
+        PL.creaComputo(0)
+        isLeenoDoc = LeenoUtils.isLeenoDocument()
     # legge i totali dal documento
     if isLeenoDoc:
         oDoc = LeenoUtils.getDocument()
@@ -1275,5 +1277,6 @@ def MENU_XPWE_import():
     progress.hide()
     oDoc.CurrentController.ZoomValue = zoom
     PL.EnableAutoCalc()
-    PL.adatta_altezza_riga()
+    oSheet = oDoc.getSheets().getByName(elaborato)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     Dialogs.Ok(Text='Importazione di\n\n' + elaborato + '\n\neseguita con successo!')

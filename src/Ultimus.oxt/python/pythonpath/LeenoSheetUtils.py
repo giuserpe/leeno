@@ -7,9 +7,11 @@ from com.sun.star.sheet.CellFlags import HARDATTR, EDITATTR, FORMATTED
 
 import pyleeno as PL
 import LeenoUtils
+import LeenoSheetUtils
 import SheetUtils
 import LeenoAnalysis
 import LeenoComputo
+import Dialogs
 #import LeenoDialogs as DLG
 
 
@@ -137,7 +139,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('Z').Columns.Width = 1600
         oSheet.getColumns().getByName('AA').Columns.Width = 1600
         SheetUtils.freezeRowCol(oSheet, 0, 3)
-    PL.adatta_altezza_riga(oSheet.Name)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 # ###############################################################
 
@@ -277,6 +279,8 @@ def prossimaVoce(oSheet, lrow, n=1):
 
 def eliminaVoce(oSheet, lrow):
     '''
+    usata in PL.MENU_elimina_voci_azzerate()
+    
     Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
     lrow { long }  : numero riga
     '''
@@ -285,6 +289,67 @@ def eliminaVoce(oSheet, lrow):
     ER = voce[1]
 
     oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+    
+def elimina_voce(lrow=None, msg=1):
+    '''
+    @@@ MODIFICA IN CORSO CON 'LeenoSheetUtils.eliminaVoce'
+    Elimina una voce in COMPUTO, VARIANTE, CONTABILITA o Analisi di Prezzo
+    lrow { long }  : numero riga
+    msg  { bit }   : 1 chiedi conferma con messaggio
+                     0 esegui senza conferma
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    if oSheet.Name == 'Elenco Prezzi':
+        Dialogs.Info(Title = 'Info', Text="""Per eliminare una o più voci dall'Elenco Prezzi
+devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
+        return
+
+    if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
+        return
+
+    SR = PL.seleziona_voce()[0]
+    ER = PL.seleziona_voce()[1]
+    if msg == 1:
+        oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+            0, SR, 250, ER))
+        if '$C$' in oSheet.getCellByPosition(9, ER).queryDependents(False).AbsoluteName:
+            undo = 1
+            PL._gotoCella(9, ER)
+            PL.comando ('ClearArrowDependents')
+            PL.comando ('ShowDependents')
+            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+                0, SR, 250, ER))
+            messaggio= """
+Da questa voce dipende almeno un Vedi Voce.
+VUOI PROCEDERE UGUALMENTE?"""
+        else:
+            messaggio = """OPERAZIONE NON ANNULLABILE!\n
+Stai per eliminare la voce selezionata.
+            Voi Procedere?\n"""
+        # ~return
+        if Dialogs.YesNoDialog(Title='*** A T T E N Z I O N E ! ***',
+            Text= messaggio) == 1:
+            try:
+                undo
+                comando ('Undo')
+            except: 
+                pass
+            oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+            PL._gotoCella(0, SR+1)
+        else:
+            oDoc.CurrentController.select(oSheet.getCellRangeByPosition(
+                0, SR, 250, ER))
+            return
+    elif msg == 0:
+        oSheet.getRows().removeByIndex(SR, ER - SR + 1)
+    if oSheet.Name != 'Analisi di Prezzo':
+        PL.numera_voci(0)
+    else:
+        PL._gotoCella(0, SR+2)
+    oDoc.CurrentController.select(
+        oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
 
 # ###############################################################
 

@@ -237,6 +237,7 @@ def selezionaVoce(oSheet, lrow):
 
 def prossimaVoce(oSheet, lrow, n=1):
     '''
+    oSheet { obect }
     lrow { double }   : riga di riferimento
     n    { integer }  : se 0 sposta prima della voce corrente
                         se 1 sposta dopo della voce corrente
@@ -246,7 +247,6 @@ def prossimaVoce(oSheet, lrow, n=1):
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
     stili = stili_computo + stili_contab
-#    noVoce = LeenoUtils.getGlobalVar('noVoce')
 
     # ~lrow = PL.LeggiPosizioneCorrente()[1]
     if lrow == 0:
@@ -269,10 +269,8 @@ def prossimaVoce(oSheet, lrow, n=1):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
                 lrow = y
                 break
-    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
         lrow += 1
-    #~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce + stili_cat:
-        #~lrow += 1
     return lrow
 
 # ###############################################################

@@ -176,4 +176,8 @@ Sub invia_voce
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;invia_voce&quot;)
 End Sub
 rem ######################################################################
+Sub GeneraAttiContabili
+	ScriptPy(&quot;LeenoContab&quot;,&quot;GeneraAttiContabili&quot;)
+End Sub
+rem ######################################################################
 </script:module>

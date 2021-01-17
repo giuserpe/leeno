@@ -139,7 +139,7 @@ def setLarghezzaColonne(oSheet):
         oSheet.getColumns().getByName('Z').Columns.Width = 1600
         oSheet.getColumns().getByName('AA').Columns.Width = 1600
         SheetUtils.freezeRowCol(oSheet, 0, 3)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    adattaAltezzaRiga(oSheet)
 
 # ###############################################################
 
@@ -269,7 +269,7 @@ def prossimaVoce(oSheet, lrow, n=1):
             if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
                 lrow = y
                 break
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
         lrow += 1
     #~while oSheet.getCellByPosition(0, lrow).CellStyle in noVoce + stili_cat:
         #~lrow += 1
@@ -407,8 +407,11 @@ def adattaAltezzaRiga(oSheet):
     '''
     Adatta l'altezza delle righe al contenuto delle celle.
     imposta l'altezza ottimale delle celle
+    usata in PL.Menu_adattaAltezzaRiga()
     '''
-    oDoc = SheetUtils.getDocumentFromSheet(oSheet)
+    oDoc = LeenoUtils.getDocument()
+
+    # ~oDoc = SheetUtils.getDocumentFromSheet(oSheet)
     if not oDoc.getSheets().hasByName('S1'):
         return
 

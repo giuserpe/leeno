@@ -3,8 +3,61 @@ import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
 import LeenoConfig
+import LeenoDialogs as DLG
 
 import pyleeno as PL
+
+def datiVoceComputo (oSheet, lrow):
+    '''
+    Ricava i dati dalla voce di COMPUTO / CONTABILITA
+    '''
+
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~lrow = PL.LeggiPosizioneCorrente()[1]
+
+    sStRange = circoscriveVoceComputo(oSheet, lrow)
+    i = sStRange.RangeAddress.StartRow
+    f = sStRange.RangeAddress.EndRow
+    # ~DLG.chi((i, f))
+    # ~return
+    num      = oSheet.getCellByPosition(0,  i+1).String
+    art      = oSheet.getCellByPosition(1,  i+1).String 
+    desc     = oSheet.getCellByPosition(2,  i+1).String
+    quantP    = oSheet.getCellByPosition(9,    f).Value
+    mdo      = oSheet.getCellByPosition(30,   f).Value
+    sic      = oSheet.getCellByPosition(17,    f).Value
+    voce = []
+    REG = []
+    SAL = []
+    if oSheet.Name in ('CONTABILITA'):
+        quantN = ''
+        if quantP < 0:
+            quantN = quantP
+            quantP = ''
+        data     = oSheet.getCellByPosition(1,  i+2).String
+        um       = oSheet.getCellByPosition(9,  i+1).String
+        Nlib     = int(oSheet.getCellByPosition(19, i+1).Value)
+        Plib     = int(oSheet.getCellByPosition(20, i+1).Value)
+        flag     = oSheet.getCellByPosition(22, i+1).String
+        nSal     = int(oSheet.getCellByPosition(23, i+1).Value)
+        prezzo   = oSheet.getCellByPosition(13,   f).Value
+        importo  = oSheet.getCellByPosition(15,   f).Value
+
+        REG = ((num + '\n' + art + '\n' + data), desc, Nlib, Plib, um, quantP,
+            quantN, prezzo, importo)#, sic, mdo, flag, nSal)
+        if quantP != 0:
+            quant = quantP
+        else:
+            quant = quantN
+        SAL = (art,  desc, um, quant, prezzo, importo)
+        return REG, SAL
+    elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        um = oSheet.getCellByPosition(8, f).String.split('[')[-1].split('[')[0]
+        prezzo   = oSheet.getCellByPosition(11,   f).Value
+        importo  = oSheet.getCellByPosition(18,   f).Value
+        voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo,)
+        return voce
 
 
 def circoscriveVoceComputo(oSheet, lrow):

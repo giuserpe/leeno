@@ -569,10 +569,10 @@ def MENU_invia_voce():
     oSheet = oDoc.getSheets().getByName('Elenco Prezzi')
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
     GotoSheet(nSheetDCC)
-    if el in ('COMPUTO', 'VARIANTE'):
+    if nSheetDCC in ('COMPUTO', 'VARIANTE'):
         lrow = LeggiPosizioneCorrente()[1]
         _gotoCella(2, lrow + 1)
-    oSheet = oDoc.getSheets().getByName(el)
+    oSheet = oDoc.getSheets().getByName(nSheetDCC)
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
@@ -816,6 +816,7 @@ def Ins_Categorie(n):
     1 = Categoria
     2 = SubCategoria
     '''
+    DisableAutoCalc()
     # datarif = datetime.now()
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
@@ -858,6 +859,7 @@ def Ins_Categorie(n):
     oDoc.CurrentController.setFirstVisibleColumn(0)
     oDoc.CurrentController.setFirstVisibleRow(lrow - 5)
     # MsgBox('eseguita in ' + str((datetime.now() - datarif).total_seconds()) + ' secondi!','')
+    EnableAutoCalc()
 
 
 ########################################################################
@@ -902,10 +904,12 @@ def MENU_Rinumera_TUTTI_Capitoli2():
 
 def Rinumera_TUTTI_Capitoli2(oSheet):
     # sistemo gli idcat voce per voce
+    DisableAutoCalc()
     Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet)
 
     # ricalcola i totali di categorie e subcategorie
     Tutti_Subtotali(oSheet)
+    EnableAutoCalc()
 
 
 def Tutti_Subtotali(oSheet):
@@ -1796,6 +1800,11 @@ def loVersion():
 # adatta_altezza_riga moved to LeenoSheetUtils.py as adattaAltezzaRiga
 ########################################################################
 
+def Menu_adattaAltezzaRiga():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+
 def voce_breve():
     '''
     Cambia il numero di caratteri visualizzati per la descrizione voce in COMPUTO,
@@ -1855,13 +1864,14 @@ def cancella_voci_non_usate():
     '''
     chiudi_dialoghi()
 
-    if DLG.DlgSiNo(
-            '''Questo comando ripulisce l'Elenco Prezzi
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Questo comando ripulisce l'Elenco Prezzi
 dalle voci non utilizzate in nessuno degli altri elaborati.
 
 LA PROCEDURA POTREBBE RICHIEDERE DEL TEMPO.
 
-Vuoi procedere comunque?''', 'AVVISO!') == 3:
+Vuoi procedere comunque?''') == 0:
         return
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(False)
@@ -5797,6 +5807,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     '''
     Contestualizza in ogni tabella l'inserimento delle voci.
     '''
+    DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
@@ -5810,7 +5821,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
         ins_voce_contab()
     elif oSheet.Name == 'Elenco Prezzi':
         ins_voce_elenco()
-
+    EnableAutoCalc()
 
 # nuova_voce_contab  ##################################################
 def ins_voce_contab(lrow=0, arg=1):
@@ -6792,8 +6803,11 @@ def filtra_codice(voce=None):
     if oSheet.Name == "Elenco Prezzi":
         oCell = oSheet.getCellRangeByName('C2')
         voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(
-            0,
-            LeggiPosizioneCorrente()[1]).String
+            0, LeggiPosizioneCorrente()[1]).String
+        # colora la descrizione scelta
+        oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(
+            1, LeggiPosizioneCorrente()[1]).CellBackColor = 16777120
+
         if oCell.String == '<DIALOGO>' or oCell.String == '':
             try:
                 elaborato = DLG.ScegliElaborato('Ricerca di ' + voce)
@@ -6844,6 +6858,8 @@ def filtra_codice(voce=None):
             if oSheet.getCellByPosition(1, sopra + 1).String != voce:
                 lista_pt.append((sopra, sotto))
             else:
+                # colora lo sfondo della voce filtrata
+                oSheet.getCellRangeByPosition(0, sopra, 40, sotto).CellBackColor = 16777120
                 if qui == None:
                     qui = sopra + 1
     progress.setValue(fine)
@@ -8519,6 +8535,8 @@ def fissa():
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
+    elif oSheet.Name in ('Registro'):
+        oDoc.CurrentController.freezeAtPosition(0, 1)
     # ~_gotoCella(lcol, lrow)
 
 
@@ -8873,8 +8891,28 @@ def somma():
 ########################################################################
 import LeenoContab
 def MENU_debug():
-    # ~MENU_firme_in_calce(20)
-    LeenoContab.GeneraAttiContabili()
+    # ~'''
+    # ~0    1    2     3     4     5     6   7       8       9       10
+    # ~num, art, data, desc, Nlib, Plib, um, quantP, quantN, prezzo, importo, sic, mdo, flag, nSal
+    # ~'''
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~lrow = LeggiPosizioneCorrente()[1]
+    # ~voce = LeenoComputo.datiVoceComputo(oSheet, lrow)
+
+    # ~DLG.chi(voce)
+    # ~return
+    # ~LeenoComputo.datiVoceComputo()
+    
+    # ~LeenoContab.GeneraAttiContabili()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~LeenoContab.GeneraRegistro(oDoc)
+    # ~return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    row = LeggiPosizioneCorrente()[1]
+    row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+    _gotoCella(0, row)
     return
     rigenera_voce(LeggiPosizioneCorrente()[1])
     rigenera_parziali(False)
@@ -8882,7 +8920,7 @@ def MENU_debug():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
-    LeenoContab.insertVoceContabilita(oSheet, lrow)
+    DLG.chi(lrow)
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
@@ -9018,7 +9056,7 @@ def MENU_debug():
 
 ########################################################################
 # ELENCO DEGLI SCRIPT VISUALIZZATI NEL SELETTORE DI MACRO              #
-g_exportedScripts = donazioni
+# ~g_exportedScripts = donazioni
 ########################################################################
 ########################################################################
 # ... here is the python script code

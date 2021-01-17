@@ -19,6 +19,7 @@ import SheetUtils
 import LeenoUtils
 import LeenoSheetUtils
 import LeenoComputo
+import LeenoContab
 
 # builtins dictionary in portable way... sigh
 if type(__builtins__) == type(sys):
@@ -60,7 +61,7 @@ def attiva_contabilita():
     attiva_contabilita
     '''
     callAlert()
-    LeenOContab.attiva_contabilita()
+    LeenoContab.attiva_contabilita()
 
 
 def genera_variante():
@@ -298,6 +299,11 @@ def struttura_off():
 def setTabColor(color):
     callAlert()
     PL.setTabColor(color)
+
+
+# ~def adatta_altezza_riga(nSheet=None):
+    # ~callAlert()
+    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 def paste_clip(arg=None, insCells=0):

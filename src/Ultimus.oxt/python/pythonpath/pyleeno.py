@@ -5635,6 +5635,8 @@ def rigenera_tutte(arg=None, ):
 
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     nome = oSheet.Name
+    stili_cat = LeenoUtils.getGlobalVar('stili_cat')
+
 
     # attiva la progressbar
     progress = Dialogs.Progress(Title='Rigenerazione di ' + nome + ' in corso...', Text="Lettura dati")
@@ -5645,6 +5647,9 @@ def rigenera_tutte(arg=None, ):
         try:
             oSheet = oDoc.Sheets.getByName(nome)
             row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1)
+            if oSheet.getCellByPosition(0, row).CellStyle in stili_cat:
+                while oSheet.getCellByPosition(0, lrow).CellStyle in C:
+                    lrow += 1
             oDoc.CurrentController.select(oSheet.getCellByPosition(0, row))
             last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             while row < last:
@@ -5652,6 +5657,9 @@ def rigenera_tutte(arg=None, ):
                 rigenera_voce(row)
                 # ~sistema_stili(row)
                 row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
+                if oSheet.getCellByPosition(0, row).CellStyle in stili_cat:
+                    while oSheet.getCellByPosition(0, lrow).CellStyle in C:
+                        lrow += 1
         except Exception:
             pass
     rigenera_parziali(True)

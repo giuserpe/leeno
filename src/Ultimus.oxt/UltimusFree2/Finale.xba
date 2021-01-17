@@ -1010,7 +1010,7 @@ end sub
 &apos;------------------------------------------------------------------------
 
 Sub Set_Area_Stampa_N (optional sSMS as string) &apos; imposta l&apos; area di stampa su un foglio
-rimuovi_area_di_stampa
+&apos;rimuovi_area_di_stampa
 	togli_salti_pagina
 	dim oCellStart as object
 	dim lrowE as long

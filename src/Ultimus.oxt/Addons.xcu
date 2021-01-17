@@ -55,7 +55,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>service:org.giuseppe-vizziello.leeno.dispatcher?LeenoSheetUtils.adattaAltezzaRiga</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.Menu_adattaAltezzaRiga</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/adattaH</value>

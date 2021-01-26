@@ -504,24 +504,25 @@ def GeneraLibretto(oDoc):
     aColonna = oNamedRange.EndColumn
 
     iSheet = oSheet.RangeAddress.Sheet
-    # imposta area di stampa / riga da ripetere
+    # imposta area di stampa
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oCellRangeAddr.Sheet = iSheet
     oCellRangeAddr.StartColumn = daColonna
     oCellRangeAddr.StartRow = daRiga
     oCellRangeAddr.EndColumn = 11
     oCellRangeAddr.EndRow = aRiga
-
+    
+    # imposta riga da ripetere
     oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
     oTitles.Sheet = iSheet
     oTitles.StartColumn = 0
     oTitles.StartRow = 2
     oTitles.EndColumn = 11
     oTitles.EndRow = 2
-
     oSheet.setTitleRows(oTitles)
     oSheet.setPrintAreas((oCellRangeAddr,))
     oSheet.setPrintTitleRows(True)
+    
     oSheet.PageStyle = "Page_Style_Libretto_Misure2" 
     
     progress.setValue(3)
@@ -530,17 +531,26 @@ def GeneraLibretto(oDoc):
     # sbianco l'area di stampa
     oSheet.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
 
-    i = 0
     progress.setValue(4)
-    while oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == False:
+    # ~i = 0
+    # ~while oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == False:
+        # ~oSheet.getRows().insertByIndex(fineFirme, 1)
+        # ~i += 1
+        # ~if i >= 3:
+            # ~oSheet.getCellByPosition(2, fineFirme).String = "===================="
+            # ~daqui=fineFirme
+        # ~fineFirme += 1
+
+    for i in range(0, 100):
         oSheet.getRows().insertByIndex(fineFirme, 1)
-        i += 1
-        if i >= 3:
-            oSheet.getCellByPosition(2, fineFirme).String = "===================="
-            daqui=fineFirme
+        oSheet.getCellByPosition(2, fineFirme).String = "===================="
         fineFirme += 1
-    oSheet.getRows().removeByIndex(fineFirme, 1)
-    fineFirme -=1
+        if oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == True:
+            fineFirme -= 1
+            oSheet.getRows().removeByIndex(fineFirme, 1)
+            break
+    # ~oSheet.getRows().removeByIndex(fineFirme, 1)
+    # ~fineFirme -=1
 
     oBordo = oSheet.getCellRangeByPosition(0, fineFirme, 32, fineFirme)
     bordo = oBordo.BottomBorder
@@ -601,10 +611,7 @@ def GeneraLibretto(oDoc):
     oSheet.getRows().insertByIndex(daRiga, 1)
     oSheet.getCellRangeByPosition (0, daRiga, 36, daRiga).CellStyle = "uuuuu"
 
-    # ~oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
     #range del #Lib#
-    # ~daRiga = oNamedRange.StartRow
-
 
     oSheet.getCellByPosition(2,  daRiga).String = (
         "segue Libretto delle Misure n." + str(nSal) +
@@ -665,10 +672,10 @@ def GeneraLibretto(oDoc):
 #  
 def GeneraRegistro(oDoc):
     '''
-    CONTABILITA' - genera un nuovo foglio 'REGISTRO' Si ottiene una riga gialla con l'indicazione delle
-    voci di misurazione registrate ed un parziale dell'importo del SAL a
-    cui segue la visualizzazione in struttura delle voci registrate nel
-    Libretto delle Misure.
+    CONTABILITA' - genera un nuovo foglio 'Registro'. Si ottiene una riga
+    gialla con l'indicazione delle voci di misurazione registrate ed un
+    parziale dell'importo del SAL a cui segue la visualizzazione in
+    struttura delle relative voci registrate nel Libretto delle Misure.
     '''
     # ~zoom = oDoc.CurrentController.ZoomValue
     # ~oDoc.CurrentController.ZoomValue = 400
@@ -677,7 +684,10 @@ def GeneraRegistro(oDoc):
     # ~lista = GeneraLibretto(oDoc)
     # ~DLG.chi(lista)
     # ~return
-    nSal, daVoce, aVoce, primariga, ultimariga = GeneraLibretto(oDoc)
+    try:
+        nSal, daVoce, aVoce, primariga, ultimariga = GeneraLibretto(oDoc)
+    except:
+        return
     # ~DLG.chi((nSal, daVoce, aVoce, primariga, ultimariga))
     # ~return
     
@@ -735,6 +745,7 @@ def GeneraRegistro(oDoc):
     except:
         # recupera il registro precedente
         oSheet= oDoc.Sheets.getByName("Registro")
+        DLG.chi("#Reg#" + str(nSal - 1))
         oSheet.getByName("#Reg#" + str(nSal - 1)).ReferredCells.RangeAddress
 
         frow = oSheet.StartRow
@@ -771,21 +782,61 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(8, insRow).Formula = "=SUBTOTAL(9;I" + str(insRow +2) + ":I" + str(lastRow +2) + ")"
     oSheet.getCellByPosition(8, insRow).CellStyle = "comp sotto Euro 3_R"
 # ----------------------------------------------------------------------
+    inizioFirme = lastRow + 2
+    PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
+    fineFirme = inizioFirme + 18
+ 
+    for i in range(0, 100):
+        oSheet.getCellByPosition(1, fineFirme).String = "===================="
+        fineFirme += 1
+        if oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == True:
+            fineFirme -= 1
+            oSheet.getRows().removeByIndex(fineFirme, 1)
+            break
+    oSheet.getCellRangeByPosition(0, inizioFirme, 9, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
+
 # set area del REGISTRO
-# ~ncol=ColumnNameOf(fcol+9)
-    area="$A$" + str(insRow +2) + ":$J$" + str(lastRow +2)
+    area="$A$" + str(insRow +2) + ":$J$" + str(fineFirme + 1)
     nomearea = "#Reg#" + str(nSal)
     LeenoBasicBridge.rifa_nomearea(oDoc, "Registro", area , nomearea)
-# set area di stampa
-        # ~oNamedRange=oRanges.getByName(nomearea).referredCells
-        # ~With oNamedRange.RangeAddress
-            # ~daRiga = .StartRow
-            # ~aRiga = .EndRow
-            # ~daColonna = .StartColumn
-            # ~aColonna = .EndColumn
-        # ~End With
 
-        # ~ThisComponent.CurrentController.setFirstVisibleRow(daRiga)
+    oRanges = oDoc.NamedRanges
+    oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
+
+    #range del #Reg#
+    daRiga = oNamedRange.StartRow
+    aRiga = oNamedRange.EndRow
+    daColonna = oNamedRange.StartColumn
+    aColonna = oNamedRange.EndColumn
+
+    iSheet = oSheet.RangeAddress.Sheet
+    # imposta area di stampa
+    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oCellRangeAddr.Sheet = iSheet
+    oCellRangeAddr.StartColumn = daColonna
+    oCellRangeAddr.StartRow = daRiga
+    oCellRangeAddr.EndColumn = 9
+    oCellRangeAddr.EndRow = aRiga
+
+    # imposta riga da ripetere
+    oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oTitles.Sheet = iSheet
+    # ~oTitles.StartColumn = 0
+    oTitles.StartRow = 0
+    # ~oTitles.EndColumn = 9
+    # ~oTitles.EndRow = 0
+    oSheet.setTitleRows(oTitles)
+    oSheet.setPrintAreas((oCellRangeAddr,))
+    oSheet.setPrintTitleRows(True)
+    
+    oPrintArea = oSheet.getPrintAreas()
+    oSheet.group(oPrintArea[0], 1)
+    return
+
+
+    
+
+    # ~ThisComponent.CurrentController.setFirstVisibleRow(daRiga)
     # ~oDoc.CurrentController.ZoomValue = zoom
 
 def rrrrrrrrrrrrrrrrrrrrr():# ~sub Genera_REGISTRO '(C) Giuseppe Vizziello 2014
@@ -1482,14 +1533,15 @@ def GeneraAttiContabili():
         return
     if Dialogs.YesNoDialog(Title='Avviso',
         Text= '''Prima di procedere è consigliabile salvare il lavoro.
-        
-PUOI CONTINUARE, MA A TUO RISCHIO!
 
-Se decidi di continuare, devi attendere il messaggio di
-procedura completata senza interferire con mouse e/o tastiera.
+Se decidi di continuare, devi attendere il messaggio di procedura completata.
+
 Procedo senza salvare?''') == 0:
         return
-    nSal, daVoce, aVoce, fpRow, lpRow = GeneraLibretto(oDoc)
+    try:
+        nSal, daVoce, aVoce, fpRow, lpRow = GeneraLibretto(oDoc)
+    except:
+        return
     GeneraRegistro(oDoc)
     DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
     Dialogs.Info(Title = 'Voci registrate!',

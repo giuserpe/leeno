@@ -20,6 +20,7 @@ import LeenoUtils
 import LeenoSheetUtils
 import LeenoComputo
 import LeenoContab
+# ~import uno
 
 # builtins dictionary in portable way... sigh
 if type(__builtins__) == type(sys):

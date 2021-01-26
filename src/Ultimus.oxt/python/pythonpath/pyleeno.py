@@ -1922,6 +1922,14 @@ Vuoi procedere comunque?''') == 0:
     struttura_off()
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges")) #'unselect
     progress.setValue(4)
+
+    # ~for el in da_cancellare:
+        # ~oCellRangeAddr.StartRow = el
+        # ~oCellRangeAddr.EndRow = el
+        # ~oSheet.group(oCellRangeAddr, 1)
+        # ~oSheet.getCellRangeByPosition(0, el, 0,
+                                  # ~el).Rows.IsVisible = False
+
     for n in reversed(range(SR, ER)):
         if oSheet.getCellByPosition(0, n).String in da_cancellare:
             oSheet.Rows.removeByIndex(n, 1)
@@ -1929,6 +1937,7 @@ Vuoi procedere comunque?''') == 0:
            oSheet.getCellByPosition(1, n).String == '' and
            oSheet.getCellByPosition(4, n).String == ''):
             oSheet.Rows.removeByIndex(n, 1)
+
     progress.setValue(5)
     oDoc.enableAutomaticCalculation(True)
     progress.hide()
@@ -3401,7 +3410,7 @@ def MENU_firme_in_calce(lrowF=None):
         if lrowF == None:
             lrowF = SheetUtils.getLastUsedRow(oSheet)
         # ~DLG.chi(lrowF)
-        oSheet.getRows().insertByIndex(lrowF, 20)
+        oSheet.getRows().insertByIndex(lrowF, 13)
         riga_corrente = lrowF + 1
         oSheet.getCellByPosition(1 , riga_corrente).Formula = '=CONCATENATE("' + datafirme + '";TEXT(NOW();"GG/mm/aaaa"))'
         oRange = oSheet.getCellRangeByPosition (1, riga_corrente, 40, riga_corrente)
@@ -3409,10 +3418,12 @@ def MENU_firme_in_calce(lrowF=None):
         oRange.setDataArray(aSaveData)
 
         oSheet.getCellByPosition(1, riga_corrente + 2).Formula = (
-            "L'Impresa esecutrice\n(" + oSheet_S2.getCellRangeByName('$S2.C17').String + ")")
+            "L'Impresa esecutrice\n(" + oSheet_S2.getCellRangeByName(
+                '$S2.C17').String + ")")
 
         oSheet.getCellByPosition(1, riga_corrente + 6).Formula = (
-            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName('$S2.C16').String + ")")
+            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
+            '$S2.C16').String + ")")
         oSheet.getCellRangeByPosition (0, riga_corrente + 2, 5,riga_corrente + 6).Rows.OptimalHeight = True
         if oSheet.Name == "SAL":
             return
@@ -3429,8 +3440,8 @@ def MENU_firme_in_calce(lrowF=None):
         oRange.setDataArray(aSaveData)
 
         oSheet.getCellByPosition(1 , riga_corrente + 12).Formula = (
-            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellByPosition(
-                2, 15).String + ")")
+            "Il Direttore dei Lavori\n(" + oSheet_S2.getCellRangeByName(
+                '$S2.C16').String + ")")
     if oSheet.Name in ('Analisi di Prezzo', 'Elenco Prezzi'):
         if lrowF == None:
             lrowF = LeenoSheetUtils.cercaUltimaVoce(oSheet) + 1
@@ -3928,7 +3939,7 @@ def MENU_azzera_voce():
                         0, x).CellStyle == 'Comp End Attributo_R':
                     fini.append(x - 2)
         idx = 0
-        for lrow in fini:
+        for lrow in reversed(fini):
             lrow += idx
             try:
                 sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
@@ -7241,6 +7252,7 @@ def adegua_tmpl():
     - dal 214 assegna un'approssimazione diversa per ognuno dei valori di misurazione
     - dal 215 adegua del formule degli importi ai prezzi in %
     - dal 216 aggiorna le formule in CONTABILITA
+    - dal 217 aggiorna le formule in COMPUTO
     '''
     DisableAutoCalc()
 
@@ -7250,7 +7262,9 @@ def adegua_tmpl():
     ver_tmpl = oDoc.getDocumentProperties().getUserDefinedProperties().Versione
     if ver_tmpl > 200:
         basic_LeenO('_variabili.autoexec')  # rinvia a autoexec in basic
-    adegua_a = 216  # VERSIONE CORRENTE
+
+    adegua_a = 217  # VERSIONE CORRENTE
+
     if ver_tmpl < adegua_a:
         if Dialogs.YesNoDialog(Title='Informazione',
         Text= '''Vuoi procedere con l'adeguamento di questo file
@@ -7260,6 +7274,8 @@ alla versione di LeenO installata?''') == 0:
 
             return
         sproteggi_sheet_TUTTE()
+        if oDoc.getSheets().hasByName('S4'):
+            oDoc.Sheets.removeByName('S4')
         zoom = oDoc.CurrentController.ZoomValue
         oDoc.CurrentController.ZoomValue = 400
         # attiva la progressbar
@@ -7300,7 +7316,7 @@ alla versione di LeenO installata?''') == 0:
         progress.setValue(3)
         oSheet = oDoc.getSheets().getByName('S1')
         oSheet.getCellRangeByName('S1.H291').Value = \
-            oDoc.getDocumentProperties().getUserDefinedProperties().Versione = 216
+            oDoc.getDocumentProperties().getUserDefinedProperties().Versione = adegua_a
         for el in oDoc.Sheets.ElementNames:
             oDoc.getSheets().getByName(el).IsVisible = True
             oDoc.CurrentController.setActiveSheet(oDoc.getSheets().getByName(el))
@@ -8913,9 +8929,9 @@ def MENU_debug():
     # ~LeenoComputo.datiVoceComputo()
     
     # ~LeenoContab.GeneraAttiContabili()
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~LeenoContab.GeneraRegistro(oDoc)
-    # ~return
+    oDoc = LeenoUtils.getDocument()
+    LeenoContab.GeneraRegistro(oDoc)
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     row = LeggiPosizioneCorrente()[1]

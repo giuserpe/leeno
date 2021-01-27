@@ -91,9 +91,15 @@ def circoscriveVoceComputo(oSheet, lrow):
         except:
             return
         lrowS = y
+    elif 'ULTIMUS' in oSheet.getCellByPosition(0, lrow).CellStyle:
+        lrowS = LeenoSheetUtils.cercaUltimaVoce(oSheet) +2
+        lrowE = LeenoSheetUtils.rRow(oSheet) -1
+    else:
+        return
     celle = oSheet.getCellRangeByPosition(0, lrowS, 250, lrowE)
     return celle
 
+    
 def insertVoceComputoGrezza(oSheet, lrow):
 
     # lrow = LeggiPosizioneCorrente()[1]

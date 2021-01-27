@@ -7426,6 +7426,8 @@ alla versione di LeenO installata?''') == 0:
                 test = SheetUtils.getUsedArea(oSheet).EndRow + 1
                 for y in range(0, test):
                     # aggiorna formula vedi voce #214
+                    if ver_tmpl > 214:
+                        break
                     if(oSheet.getCellByPosition(2, y).Type.value == 'FORMULA' and
                        oSheet.getCellByPosition(2, y).CellStyle == 'comp 1-a' and
                        oSheet.getCellByPosition(5, y).Type.value == 'FORMULA'):
@@ -7532,7 +7534,6 @@ alla versione di LeenO installata?''') == 0:
             oSheet = oDoc.getSheets().getByName(el)
             LeenoSheetUtils.adattaAltezzaRiga(oSheet)
         oDoc.CurrentController.ZoomValue = zoom
-        GotoSheet('COMPUTO')
 #        oDialogo_attesa.endExecute()  # chiude il dialogo
         progress.setValue(8)
         mostra_fogli_principali()
@@ -7546,9 +7547,11 @@ alla versione di LeenO installata?''') == 0:
                 rigenera_tutte()
             except:
                 pass
+        GotoSheet('COMPUTO')
         progress.hide()
         Dialogs.Info(Title = 'Avviso', Text='Adeguamento del file completato con successo.')
     EnableAutoCalc()
+    
 
 
 ########################################################################

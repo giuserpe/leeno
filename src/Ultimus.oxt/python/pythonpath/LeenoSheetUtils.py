@@ -142,6 +142,16 @@ def setLarghezzaColonne(oSheet):
     adattaAltezzaRiga(oSheet)
 
 # ###############################################################
+def rRow(oSheet):
+    '''
+    Restituisce la posizione della riga rossa
+    '''
+    nRow = SheetUtils.getLastUsedRow(oSheet) +10
+    for n in reversed(range(0, nRow)):
+        if oSheet.getCellByPosition(
+                0,
+                n).CellStyle == 'Riga_rossa_Chiudi':
+            return n
 
 def cercaUltimaVoce(oSheet):
     nRow = SheetUtils.getLastUsedRow(oSheet)
@@ -307,7 +317,10 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE', 'Analisi di Prezzo'):
         return
 
-    SR = PL.seleziona_voce()[0]
+    try:
+        SR = PL.seleziona_voce()[0]
+    except:
+        return
     ER = PL.seleziona_voce()[1]
     if msg == 1:
         oDoc.CurrentController.select(oSheet.getCellRangeByPosition(

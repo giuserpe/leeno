@@ -4194,10 +4194,12 @@ def seleziona_voce(lrow=None):
         ###
     except Exception:
         return
-    sStRange.RangeAddress
-    SR = sStRange.RangeAddress.StartRow
-    ER = sStRange.RangeAddress.EndRow
-    # ~oDoc.CurrentController.select(oSheet.getCellRangeByPosition(0, SR, 250, ER))
+    try:
+        sStRange.RangeAddress
+        SR = sStRange.RangeAddress.StartRow
+        ER = sStRange.RangeAddress.EndRow
+    except:
+        return
     return (SR, ER)
 
 
@@ -8918,6 +8920,12 @@ def somma():
 ########################################################################
 import LeenoContab
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = LeggiPosizioneCorrente()[1]
+    LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
+    
+    return
     # ~'''
     # ~0    1    2     3     4     5     6   7       8       9       10
     # ~num, art, data, desc, Nlib, Plib, um, quantP, quantN, prezzo, importo, sic, mdo, flag, nSal

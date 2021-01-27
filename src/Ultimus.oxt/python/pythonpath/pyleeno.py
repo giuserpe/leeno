@@ -7128,8 +7128,12 @@ def autoexec():
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(True)
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    oLayout.hideElement(
-        "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+    if 'giuserpe' in os.getenv("HOMEPATH"):
+        oLayout.showElement(
+            "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
+    else:
+        oLayout.hideElement(
+            "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     #  RegularExpressions Wildcards are mutually exclusive, only one can have the value TRUE.
     #  If both are set to TRUE via API calls then the last one set takes precedence.
     try:
@@ -8920,11 +8924,7 @@ def somma():
 ########################################################################
 import LeenoContab
 def MENU_debug():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    lrow = LeggiPosizioneCorrente()[1]
-    LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-    
+    DLG.chi(os.getenv("HOMEPATH"))
     return
     # ~'''
     # ~0    1    2     3     4     5     6   7       8       9       10

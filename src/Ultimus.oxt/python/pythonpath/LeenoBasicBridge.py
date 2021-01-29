@@ -40,14 +40,6 @@ def callAlert():
 
 import pyleeno as PL
 
-def MENU_debug():
-    '''
-    MENU_debug
-    '''
-    callAlert()
-    PL.MENU_debug()
-    # MAH...CHE DEVE FARE ???
-
 
 def DlgMain():
     '''
@@ -186,14 +178,6 @@ def riordina_ElencoPrezzi():
     PL.riordina_ElencoPrezzi(oDoc)
 
 
-def struttura_Elenco():
-    '''
-    struttura_Elenco
-    '''
-    callAlert()
-    PL.struttura_Elenco()
-
-
 def cancella_voci_non_usate():
     '''
     cancella_voci_non_usate
@@ -292,9 +276,9 @@ def autoexec_off():
     PL.autoexec_off()
 
 
-def struttura_off():
-    callAlert()
-    PL.struttura_off()
+# ~def struttura_off():
+    # ~callAlert()
+    # ~PL.struttura_off()
 
 
 def setTabColor(color):
@@ -400,23 +384,23 @@ def numera_voci(bit=1):
     LeenoSheetUtils.numeraVoci(oSheet, lrow, True if bit == 1 else False)
 
 
-def parziale_verifica():
-    '''
-    Controlla l'esattezza del calcolo del parziale quanto le righe di
-    misura vengono aggiunte o cancellate.
-    '''
-    callAlert()
-    PL.parziale_verifica()
+# ~def parziale_verifica():
+    # ~'''
+    # ~Controlla l'esattezza del calcolo del parziale quanto le righe di
+    # ~misura vengono aggiunte o cancellate.
+    # ~'''
+    # ~callAlert()
+    # ~PL.parziale_verifica()
 
 
-def struttura_ComputoM():
-    callAlert()
-    PL.struttura_ComputoM()
+# ~def struttura_ComputoM():
+    # ~callAlert()
+    # ~PL.struttura_ComputoM()
 
 
-def struttura_Analisi():
-    callAlert()
-    PL.struttura_Analisi()
+# ~def struttura_Analisi():
+    # ~callAlert()
+    # ~PL.struttura_Analisi()
 
 
 def voce_breve_ep():
@@ -424,11 +408,11 @@ def voce_breve_ep():
     PL.voce_breve_ep()
 
 
-def inserisci_Riga_rossa():
-    callAlert()
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.CurrentController.ActiveSheet
-    LeenoSheetUtils.inserisciRigaRossa(oSheet)
+# ~def inserisci_Riga_rossa():
+    # ~callAlert()
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.CurrentController.ActiveSheet
+    # ~LeenoSheetUtils.inserisciRigaRossa(oSheet)
 
 
 def Rinumera_TUTTI_Capitoli2():

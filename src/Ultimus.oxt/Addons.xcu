@@ -266,7 +266,7 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_on</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
             <value>%origin%/icons/image8</value>
@@ -1466,7 +1466,7 @@
               <value>com.sun.star.sheet.SpreadsheetDocument</value>
             </prop>
             <prop oor:name="URL" oor:type="xs:string">
-              <value>vnd.sun.star.script:UltimusFree2.Strutture.Struttura?language=Basic&amp;location=application</value>
+                <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_struttura_on</value>
             </prop>
             <prop oor:name="ImageIdentifier" oor:type="xs:string">
               <value>%origin%/icons/image8</value>

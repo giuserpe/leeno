@@ -6899,6 +6899,21 @@ def filtra_codice(voce=None):
     EnableAutoCalc()
     progress.hide()
 
+########################################################################
+
+def MENU_struttura_on():
+
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+        struttura_ComputoM()
+    elif oSheet.Name == 'Elenco Prezzi':
+        struttura_Elenco()
+    elif oSheet.Name == 'Analisi di Prezzo':
+        struttura_Analisi()
+    elif oSheet.Name in ('CONTABILITA', 'Registro', 'SAL'):
+        LeenoContab.struttura_CONTAB()
 
 def struttura_ComputoM():
     '''
@@ -7608,6 +7623,8 @@ def XPWE_export_run():
             if Dialog_XPWE.getControl(el).State == 1:
                 lista.append(el)
     out_file = Dialogs.FileSelect('Salva con nome...', '*.xpwe', 1)
+    if out_file == '':
+        return
     testo = '\n'
     for el in lista:
         XPWE_out(el, out_file)
@@ -8924,8 +8941,8 @@ def somma():
 ########################################################################
 import LeenoContab
 def MENU_debug():
-    DLG.chi(os.getenv("HOMEPATH"))
-    return
+    # ~MENU_struttura_on()
+    # ~return
     # ~'''
     # ~0    1    2     3     4     5     6   7       8       9       10
     # ~num, art, data, desc, Nlib, Plib, um, quantP, quantN, prezzo, importo, sic, mdo, flag, nSal
@@ -8933,6 +8950,7 @@ def MENU_debug():
     # ~oDoc = LeenoUtils.getDocument()
     # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # ~lrow = LeggiPosizioneCorrente()[1]
+
     # ~voce = LeenoComputo.datiVoceComputo(oSheet, lrow)
 
     # ~DLG.chi(voce)
@@ -8940,8 +8958,17 @@ def MENU_debug():
     # ~LeenoComputo.datiVoceComputo()
     
     # ~LeenoContab.GeneraAttiContabili()
+    # ~DLG.chi(oSheet.getCellByPosition(1, lrow).Rows.IsStartOfNewPage)
+    # ~return
     oDoc = LeenoUtils.getDocument()
     LeenoContab.GeneraRegistro(oDoc)
+    return
+
+    LeenoSheetUtils.SbiancaCellePrintArea()
+    return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet.getCellByPosition(1, 11).CellBackColor = 16777215 #sbianca
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)

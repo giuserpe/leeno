@@ -32,14 +32,14 @@ rem rimuovo le aree di stampa che non interessano
 
 			ThisComponent.CurrentController.Select(ThisComponent.Sheets.GetByName(oSh.Name).getCellByPosition(0,0))
 &apos;	Print  
-			rimuovi_area_di_stampa
+		&apos;	rimuovi_area_di_stampa
 			oSh.IsVisible = False
 		Else
 
 			Set_Area_Stampa_N(&quot;NO_messaggio&quot;)
 			If 	oSh.Name = oActiveSheet Then 
 				ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh),getLastUsedRow(oSh)))
-				if msgbox (CHR$(10) &amp;&quot;Preferisci nascondere i colori?&quot;,36, &quot;&quot;) = 6 Then	SBIANCA_celle
+				if msgbox (CHR$(10) &amp;&quot;Preferisci nascondere i colori?&quot;,36, &quot;&quot;) = 6 Then	ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;SbiancaCellePrintArea&quot;)
 				unSelect &apos;unselect ranges 
 			Else
 			End If
@@ -110,7 +110,7 @@ rem rimuovo le aree di stampa che non interessano
 &apos;     oSh.IsVisible = True
 &apos;Next
 	ThisComponent.CurrentController.Select(oSh.getCellRangeByposition(0,0,getLastUsedCol(oSh)+100,getLastUsedRow(oSh)+100))
-	SBIANCA_ANNULLA
+&apos;	SBIANCA_ANNULLA
 	unSelect &apos;unselect ranges
 	
 &apos;	Rimetti_in_ordine_tab

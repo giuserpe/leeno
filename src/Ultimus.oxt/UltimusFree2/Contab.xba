@@ -525,7 +525,7 @@ rem ci metto un po&apos; di informazioni
 	oSheetReg.getCellByPosition(8, ins).formula = &quot;=SUBTOTAL(9;I&quot; &amp; primariga+1 &amp; &quot;:I&quot; &amp; fineFirme &amp; &quot;)&quot;
 	oSheetReg.getCellByPosition(8, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 rem ----------------------------------------------------------------------
-Struttura_contab (&quot;#Reg#&quot;)
+&apos;Struttura_contab (&quot;#Reg#&quot;)
 &apos;Struttura
 rem ----------------------------------------------------------------------
 Ripristina_statusLine 
@@ -837,7 +837,7 @@ rem ci metto un po&apos; di informazioni
 	oSheetSal.getCellByPosition(fcol+5, ins).cellstyle = &quot;comp sotto Euro 3_R&quot;
 	ThisComponent.CurrentController.Select(oSheetSal.getCellByPosition(fcol, ins))
 rem ----------------------------------------------------------------------
-Struttura_Contab (&quot;#SAL#&quot;)
+&apos;Struttura_Contab (&quot;#SAL#&quot;)
 end Sub &apos;genera_registro
 rem ######################################################################
 
@@ -1133,7 +1133,7 @@ copy_clip
 &apos;seleziona_area (prefix &amp; nSal-1)
 &apos;Print  (prefix &amp; nSal-1)
 definisci_area_di_stampa
-sbianca_celle
+ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;SbiancaCellePrintArea&quot;)
 						Else
 rem cancello i riepiloghi ini intestazione
 						oSheet.getCellRangeByPosition(25, ins-1, 25, ins).ClearContents(1+4+16)
@@ -1168,7 +1168,7 @@ rem recupero l&apos;ultima riga del documento
 						ThisComponent.CurrentController.Select(oCell)
 &apos;seleziona_area (prefix &amp; nSal-1)
 definisci_area_di_stampa
-sbianca_celle
+ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;SbiancaCellePrintArea&quot;)
 					End If
 fineSelect:
 		End Select
@@ -1292,7 +1292,7 @@ Dim oCellRange as object
 	lrowDown =uFindString(&quot;T O T A L E&quot;, oSheetCont).RangeAddress.EndRow
 	oCell = oSheetCont.getCellRangeByPosition(19,primariga,25,lrowDown)&apos;ultimariga) rem ultima riga del range
 	ThisComponent.CurrentController.Select(oCell)
-rimuovi_area_di_stampa
+&apos;rimuovi_area_di_stampa
 &apos;Cancella_dati &apos;pulisco le colonne Lib.N., Lib.P., flag, SAL N., Importo parziale
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 togli_salti_pagina
@@ -1343,9 +1343,9 @@ rem ----------------------------------------------------------------------
 rem sbianco i dati e l&apos;intestazione
 	ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, daRiga, 11, fineFirme))
 &apos;	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;adatta_altezza_riga&quot;)
-Sbianca_celle
+ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;SbiancaCellePrintArea&quot;)
 	ThisComponent.CurrentController.Select(oSheetCont.getCellRangeByPosition(0, 2, 11, 2))
-Sbianca_celle
+ScriptPy(&quot;LeenoSheetUtils.py&quot;,&quot;SbiancaCellePrintArea&quot;)
 	ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 rem ----------------------------------------------------------------------
  ThisComponent.CurrentController.setFirstVisibleRow (fineFirme-3) &apos;solo debug
@@ -1508,7 +1508,7 @@ Next
 ThisComponent.CurrentController().freezeAtPosition(0,idxRow+1)
 Ripristina_statusLine &apos;Barra_chiudi_sempre_4
 Protezione_area (&quot;CONTABILITA&quot;,nomearea)
-Struttura_Contab (&quot;#Lib#&quot;)
+&apos;Struttura_Contab (&quot;#Lib#&quot;)
 RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene cambiata
 	Genera_REGISTRO
 end Sub

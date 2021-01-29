@@ -308,7 +308,7 @@ def partita(testo):
             x += 1
         oSheet.getCellByPosition(2, x).String = testo
         oSheet.getCellRangeByPosition(2, x, 8, x).CellBackColor = 16777113
-        _gotoCella(5, x)
+        PL._gotoCella(5, x)
 
 
 def MENU_partita_aggiungi():
@@ -326,6 +326,42 @@ def MENU_partita_detrai():
 
 
 ########################################################################
+def struttura_CONTAB():
+    '''
+    Visualizza in modalità struttura i documenti contabili
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    PL.struttura_off()
+    oRanges = oDoc.NamedRanges
+    
+    if oSheet.Name == 'CONTABILITA':
+        pref = "#Lib#"
+        y = 3
+    elif oSheet.Name == 'Registro':
+        pref = "#Reg#"
+        y = 1
+    elif oSheet.Name == 'SAL':
+        pref = "#SAL#"
+        y = 1
+
+    for i in range(1, 50):
+        try:
+            oRange=oRanges.getByName(pref + str(i)).ReferredCells.RangeAddress
+            # ~oSheet.ungroup(oRange, 1)
+            oSheet.group(oRange, 1)
+            oSheet.getCellRangeByPosition(0, oRange.StartRow,
+                11, oRange.EndRow).Rows.IsVisible = False
+        except:
+            try:
+                oSheet.getCellRangeByPosition(0, oRange.StartRow,
+                    11, oRange.EndRow).Rows.IsVisible = True
+                PL._gotoCella(0, oRange.StartRow -1)
+                oDoc.CurrentController.setFirstVisibleRow(y)
+            except:
+                pass
+            return
+
 def GeneraLibretto(oDoc):
     '''
     CONTABILITA' - Si ottiene una riga gialla con l'indicazione delle
@@ -455,7 +491,8 @@ def GeneraLibretto(oDoc):
         0, 3, 0, SheetUtils.getUsedArea(oSheet).EndRow - 2)
     aVoce = int(oCellRange.computeFunction(MAX))
 
-    aVoce = PL.InputBox(str(aVoce), "A voce n.:")
+    # ~aVoce = PL.InputBox(str(aVoce), "A voce n.:")
+    aVoce = str(int(daVoce) + 1)
     if len(aVoce) == 0:
         return
 
@@ -495,6 +532,9 @@ def GeneraLibretto(oDoc):
     LeenoBasicBridge.rifa_nomearea(oDoc, "CONTABILITA", area , nomearea)
 
     oSheet.getCellRangeByPosition(0, inizioFirme, 32, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
+    #applico gli stili corretti ad alcuni dati della firma
+    oSheet.getCellByPosition(2, inizioFirme + 1).CellStyle = "Ultimus_destra"
+
     oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
 
     #range del #Lib#
@@ -505,12 +545,12 @@ def GeneraLibretto(oDoc):
 
     iSheet = oSheet.RangeAddress.Sheet
     # imposta area di stampa
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    oCellRangeAddr.StartColumn = daColonna
-    oCellRangeAddr.StartRow = daRiga
-    oCellRangeAddr.EndColumn = 11
-    oCellRangeAddr.EndRow = aRiga
+    # ~oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    # ~oCellRangeAddr.Sheet = iSheet
+    # ~oCellRangeAddr.StartColumn = daColonna
+    # ~oCellRangeAddr.StartRow = daRiga
+    # ~oCellRangeAddr.EndColumn = 11
+    # ~oCellRangeAddr.EndRow = aRiga
     
     # imposta riga da ripetere
     oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -520,28 +560,21 @@ def GeneraLibretto(oDoc):
     oTitles.EndColumn = 11
     oTitles.EndRow = 2
     oSheet.setTitleRows(oTitles)
-    oSheet.setPrintAreas((oCellRangeAddr,))
+    # ~oSheet.setPrintAreas((oCellRangeAddr,))
+    oNamedRange.EndColumn = 11
+    oSheet.setPrintAreas((oNamedRange,))
     oSheet.setPrintTitleRows(True)
     
     oSheet.PageStyle = "Page_Style_Libretto_Misure2" 
     
     progress.setValue(3)
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     # sbianco l'area di stampa
     oSheet.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
 
     progress.setValue(4)
-    # ~i = 0
-    # ~while oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == False:
-        # ~oSheet.getRows().insertByIndex(fineFirme, 1)
-        # ~i += 1
-        # ~if i >= 3:
-            # ~oSheet.getCellByPosition(2, fineFirme).String = "===================="
-            # ~daqui=fineFirme
-        # ~fineFirme += 1
 
-    for i in range(0, 100):
+    for i in range(0, 50):
         oSheet.getRows().insertByIndex(fineFirme, 1)
         oSheet.getCellByPosition(2, fineFirme).String = "===================="
         fineFirme += 1
@@ -634,25 +667,21 @@ def GeneraLibretto(oDoc):
     oSheet.getCellByPosition(25, 1).Formula = (
         "=$P$2-SUBTOTAL(9;$P$2:$P$" + str(ultimariga + 2) + ")"
         )
-    oDoc.CurrentController.select(oSheet.getCellByPosition(25, 1))
+    # ~oDoc.CurrentController.select(oSheet.getCellByPosition(25, 1))
 
     # corregge raggruppamento libretto precedente dopo inserimento riga gialle
-    try:
-        oPrevRange=oRanges.getByName("#Lib#" + str(nSal - 1)).ReferredCells.RangeAddress
-        # oPrevRange.EndRow = 1
-        oSheet.ungroup(oPrevRange, 1)
-        oSheet.group(oPrevRange, 1)
-        oSheet.getCellRangeByPosition(oPrevRange.StartColumn,
-            oPrevRange.StartRow, oPrevRange.EndColumn, oPrevRange.EndRow
-            ).Rows.IsVisible = False
-    except:
-        pass
+    # ~try:
+        # ~oPrevRange=oRanges.getByName("#Lib#" + str(nSal - 1)).ReferredCells.RangeAddress
+        # ~oSheet.ungroup(oPrevRange, 1)
+        # ~oSheet.group(oPrevRange, 1)
+        # ~oSheet.getCellRangeByPosition(oPrevRange.StartColumn,
+            # ~oPrevRange.StartRow, oPrevRange.EndColumn, oPrevRange.EndRow
+            # ~).Rows.IsVisible = False
+    # ~except:
+        # ~pass
 
-    oPrintArea = oSheet.getPrintAreas()
-    # ~oRange = oSheet.getCellRangeByPosition(
-        # ~oPrintArea[0].StartColumn, oPrintArea[0].StartRow,
-        # ~oPrintArea[0].EndColumn, oPrintArea[0].EndRow)
-    oSheet.group(oPrintArea[0], 1)
+    # ~oPrintArea = oSheet.getPrintAreas()
+    # ~oSheet.group(oPrintArea[0], 1)
 
     PL._gotoCella(0, daRiga)
     # ~_gotoCella(0, inizioFirme)
@@ -661,6 +690,7 @@ def GeneraLibretto(oDoc):
 #  Protezione_area ("CONTABILITA",nomearea)
 #  Struttura_Contab ("#Lib#")
 #  Genera_REGISTRO
+    struttura_CONTAB()
     return nSal, daVoce, aVoce, primariga+1, ultimariga+1
 
 
@@ -714,7 +744,6 @@ def GeneraRegistro(oDoc):
         oDoc.getSheets().insertNewByName('Registro',5)
         PL.GotoSheet('Registro')
         oSheet = oDoc.Sheets.getByName('Registro')
-        oSheet.PageStyle = 'PageStyle_REGISTRO_A4'
 
     # riga di intestazione
         oSheet.getCellRangeByPosition(0,0,9,0).CellStyle="An.1v-Att Start"
@@ -744,18 +773,22 @@ def GeneraRegistro(oDoc):
         insRow = 1 #'prima riga inserimento in Registro
     except:
         # recupera il registro precedente
+        PL.GotoSheet('Registro')
         oSheet= oDoc.Sheets.getByName("Registro")
-        DLG.chi("#Reg#" + str(nSal - 1))
-        oSheet.getByName("#Reg#" + str(nSal - 1)).ReferredCells.RangeAddress
+        # ~DLG.chi("#Reg#" + str(nSal - 1))
+        oRanges = oDoc.NamedRanges
+        oPrevRange = oRanges.getByName("#Reg#" + str(nSal - 1)).ReferredCells.RangeAddress
 
-        frow = oSheet.StartRow
-        lrow = oSheet.EndRow
-        insRow = oSheet.EndRow + 1
+        fRow = oPrevRange.StartRow
+        lRow = oPrevRange.EndRow
+        insRow = oPrevRange.EndRow + 1
         
         # chiudo il registro precedente
         oCell = oSheet.getCellRangeByPosition(0,fRow,11,lRow)
         oCell.Rows.IsVisible=False
-        
+
+    oSheet.PageStyle = 'PageStyle_REGISTRO_A4'
+
     # compilo il Registro
     lastRow = insRow + len(REG) -1
     oRange = oSheet.getCellRangeByPosition(0, insRow, 8, lastRow)
@@ -764,7 +797,7 @@ def GeneraRegistro(oDoc):
     # ~DLG.chi(insRow)
     # ~DLG.chi(len (reg[0]))
     oRange.setDataArray(reg)
-
+    
 # do gli stili al Registro
     oSheet.getCellRangeByPosition(0, insRow, 1, lastRow).CellStyle = "List-stringa-sin"
     oSheet.getCellRangeByPosition(2, insRow, 4, lastRow).CellStyle = "List-num-centro"
@@ -782,21 +815,39 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(8, insRow).Formula = "=SUBTOTAL(9;I" + str(insRow +2) + ":I" + str(lastRow +2) + ")"
     oSheet.getCellByPosition(8, insRow).CellStyle = "comp sotto Euro 3_R"
 # ----------------------------------------------------------------------
-    inizioFirme = lastRow + 2
+
+# RIGA RIPORTO
+    insRow += 1
+    oSheet.getRows().insertByIndex(insRow, 1)
+    oSheet.getCellByPosition(1, insRow).String = "R I P O R T O"
+    oSheet.getCellByPosition(8, insRow).Formula = (
+        '=IF(SUBTOTAL(9;$I$2:$I$' + str(insRow) + ')=0;"";SUBTOTAL(9;$I$2:$I$' + str(insRow))
+    oSheet.getCellByPosition(9, insRow).Formula = (
+        '=IF(SUBTOTAL(9;$J$2:$J$' + str(insRow) + ')=0;"";SUBTOTAL(9;$J$2:$J$' + str(insRow))
+        
+    oSheet.getCellRangeByPosition (0, insRow, 9, insRow).CellStyle = "Ultimus_Bordo_sotto"
+    # ~DLG.chi(insRow)
+    insRow += 1
+    oSheet.getRows().insertByIndex(insRow, 1)
+
+    oSheet.getCellByPosition(1, insRow).String = "LAVORI A MISURA"
+    oSheet.getCellRangeByPosition(0, insRow, 9, insRow).CellStyle = "Ultimus_centro_bordi_lati"
+    PL._gotoCella(1, insRow)
+    
+    
+    # ~DLG.chi(insRow)
+
+    # ~insRow += 1
+
+    lastRow = insRow + len(REG)
+
+    # ~return
+    inizioFirme = lastRow + 5
     PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 18
- 
-    for i in range(0, 100):
-        oSheet.getCellByPosition(1, fineFirme).String = "===================="
-        fineFirme += 1
-        if oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == True:
-            fineFirme -= 1
-            oSheet.getRows().removeByIndex(fineFirme, 1)
-            break
-    oSheet.getCellRangeByPosition(0, inizioFirme, 9, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
 
 # set area del REGISTRO
-    area="$A$" + str(insRow +2) + ":$J$" + str(fineFirme + 1)
+    area="$A$" + str(insRow) + ":$J$" + str(fineFirme + 1)
     nomearea = "#Reg#" + str(nSal)
     LeenoBasicBridge.rifa_nomearea(oDoc, "Registro", area , nomearea)
 
@@ -811,12 +862,12 @@ def GeneraRegistro(oDoc):
 
     iSheet = oSheet.RangeAddress.Sheet
     # imposta area di stampa
-    oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    oCellRangeAddr.Sheet = iSheet
-    oCellRangeAddr.StartColumn = daColonna
-    oCellRangeAddr.StartRow = daRiga
-    oCellRangeAddr.EndColumn = 9
-    oCellRangeAddr.EndRow = aRiga
+    # ~oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    # ~oCellRangeAddr.Sheet = iSheet
+    # ~oCellRangeAddr.StartColumn = daColonna
+    # ~oCellRangeAddr.StartRow = daRiga
+    # ~oCellRangeAddr.EndColumn = 9
+    # ~oCellRangeAddr.EndRow = aRiga
 
     # imposta riga da ripetere
     oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
@@ -826,11 +877,51 @@ def GeneraRegistro(oDoc):
     # ~oTitles.EndColumn = 9
     # ~oTitles.EndRow = 0
     oSheet.setTitleRows(oTitles)
-    oSheet.setPrintAreas((oCellRangeAddr,))
+    # ~oSheet.setPrintAreas((oCellRangeAddr,))
+    oSheet.setPrintAreas((oNamedRange,))
     oSheet.setPrintTitleRows(True)
+
+    # ~oPrintArea = oSheet.getPrintAreas()
+    # ~oSheet.group(oPrintArea[0], 1)
+
+    oSheet.getCellRangeByPosition(0, lastRow +1, 9, fineFirme).CellStyle = "Ultimus_centro_bordi_lati"
+
+    #torno su a completare...
+    oSheet.getCellByPosition(1, lastRow + 2).String = "Parziale dei Lavori a Misura €"
+    oSheet.getCellByPosition(1, lastRow + 2).CellStyle = "Ultimus_destra"
+    oSheet.getCellByPosition(8, lastRow + 2).Formula = (
+        '=SUBTOTAL(9;$I$2:$I$' + str(fineFirme))
+    oSheet.getCellByPosition(8, lastRow + 2).CellStyle = "Ultimus_destra_totali"
     
-    oPrintArea = oSheet.getPrintAreas()
-    oSheet.group(oPrintArea[0], 1)
+    oSheet.getCellByPosition(1, lastRow + 4).String = 'Lavori a tutto il ' + PL.oggi() + ' - T O T A L E   €'
+    oSheet.getCellByPosition(1, lastRow + 4).CellStyle = "Ultimus_destra"
+    oSheet.getCellByPosition(8, lastRow + 4).Formula = (
+        '=SUBTOTAL(9;$I$2:$I$' + str(fineFirme))
+    oSheet.getCellByPosition(8, lastRow + 4).CellStyle = "Ultimus_destra_totali"
+
+    #applico gli stili corretti ad alcuni dati della firma
+    oSheet.getCellByPosition(1, lastRow + 6).CellStyle = "Ultimus_destra"
+    oSheet.getCellByPosition(1, lastRow + 16).CellStyle = "Ultimus_destra"
+
+    
+    # ~LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    for i in range(0, 50):
+        oSheet.getRows().insertByIndex(fineFirme, 1)
+        oSheet.getCellByPosition(1, fineFirme).String = "===================="
+        fineFirme += 1
+        if oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == True:
+            fineFirme -= 1
+            oSheet.getRows().removeByIndex(fineFirme, 1)
+            break
+    # ~oSheet.getCellRangeByPosition(0, fineFirme, 9, fineFirme).CellStyle = "comp Descr"
+    oSheet.getCellByPosition(1,fineFirme).String = "A   R I P O R T A R E"
+    oSheet.getCellByPosition(8, fineFirme).Formula = (
+        '=IF(SUBTOTAL(9;$I$2:$I$' + str(fineFirme) + ')=0;"";SUBTOTAL(9;$I$2:$I$' + str(fineFirme))
+    oSheet.getCellByPosition(9, fineFirme).Formula = (
+        '=IF(SUBTOTAL(9;$J$2:$J$' + str(fineFirme) + ')=0;"";SUBTOTAL(9;$J$2:$J$' + str(fineFirme))
+    oSheet.getCellRangeByPosition (0, fineFirme, 9, fineFirme).CellStyle = "Ultimus_Bordo_sotto"
+
+    struttura_CONTAB()
     return
 
 

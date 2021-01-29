@@ -15,7 +15,6 @@ import Dialogs
 #import LeenoDialogs as DLG
 
 
-
 def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
     '''
     Indica qual è il Documento Principale
@@ -49,6 +48,24 @@ def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
     oSheet.getCellRangeByName(cell).String = 'DP: ' + sUltimus
     oSheet.getCellRangeByName("A1:AT1").clearContents(EDITATTR + FORMATTED + HARDATTR)
 
+# ###############################################################
+
+def SbiancaCellePrintArea():
+    '''
+    area 
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    
+    oPrintArea = oSheet.getPrintAreas()
+
+    oSheet.getCellRangeByPosition(
+        oPrintArea[0].StartColumn, oPrintArea[0].StartRow,
+        oPrintArea[0].EndColumn, oPrintArea[0].EndRow
+        ).CellBackColor = 16777215 #sbianca
+    return
+
+# ###############################################################
 
 def setVisibilitaColonne(oSheet, sValori):
     '''

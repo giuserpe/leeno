@@ -91,6 +91,16 @@ def circoscriveVoceComputo(oSheet, lrow):
         except:
             return
         lrowS = y
+    #trova il range di firme in CONTABILITA
+    elif oSheet.getCellByPosition(0, lrow).CellStyle == 'Ultimus_centro_bordi_lati':
+        for y in reversed (range(0, lrow)):
+            if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
+                lrowS = y + 1
+                break
+        for y in range(lrow, SheetUtils.getLastUsedRow(oSheet)):
+            if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
+                lrowE = y - 1 
+                break
     elif 'ULTIMUS' in oSheet.getCellByPosition(0, lrow).CellStyle:
         lrowS = LeenoSheetUtils.cercaUltimaVoce(oSheet) +2
         lrowE = LeenoSheetUtils.rRow(oSheet) -1

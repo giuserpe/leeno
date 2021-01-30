@@ -13,29 +13,6 @@
 &apos;_______________________________________________________________________________________
 
 
-FUNCTION Controllo_riga_rossa() 
-
-sNameSheet=ThisComponent.currentcontroller.activesheet.name
-oSheet = ThisComponent.currentController.activeSheet
-&apos;xray osheet
-&apos;print sAttributo
-Select Case sNameSheet
-	Case &quot;Elenco Prezzi&quot;
-		sString$ = &quot;Fine elenco&quot;
-	Case &quot;Analisi di Prezzo&quot;
-		sString$ = &quot;Fine ANALISI&quot;
-	Case &quot;COMPUTO&quot; 
-		sString$ = &quot;Fine Computo&quot;
-End select
-&apos;print &quot; 2&quot;
-		oEnd=uFindString(sString$, oSheet) 
-&apos;print &quot;3&quot;	
-		if isNull (oEnd) or isEmpty (oEnd) then
-			Controllo_riga_rossa = &quot;Fallito&quot;
-			Controllo_riga_rossa = &quot;&quot;
-		end if
-END FUNCTION	
-
 
 Sub Clear_Contents(oRange as object) &apos; pulisce un range a modino&apos;
 &apos; cioè usando dei flag

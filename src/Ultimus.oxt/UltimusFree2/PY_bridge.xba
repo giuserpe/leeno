@@ -136,9 +136,9 @@ Sub riordina_ElencoPrezzi
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;riordina_ElencoPrezzi&quot;)
 End Sub
 rem ######################################################################
-Sub struttura_Elenco
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;struttura_Elenco&quot;)
-End Sub
+&apos;Sub struttura_Elenco
+&apos;	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;struttura_Elenco&quot;)
+&apos;End Sub
 rem ######################################################################
 Sub cancella_voci_non_usate
 	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;cancella_voci_non_usate&quot;)

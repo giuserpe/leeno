@@ -1128,7 +1128,7 @@ unSelect &apos;deseleziona
 		oStart=uFindString(&quot;DESCRIZIONE DEI LAVORI&quot; &amp; chr$(10) &amp; &quot;E DELLE SOMMINISTRAZIONI&quot;, oSheet)
 		rIntest=oStart.CellAddress.Row
 
-	lLastUrow=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
+&apos;	lLastUrow=cerca_riga_rossa (&quot;Elenco Prezzi&quot;)
 		&apos;lLastUrow = lRowE+10
 		selArea(0).StartColumn = 0
 		selArea(0).StartRow = rIntest

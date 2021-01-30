@@ -19,43 +19,6 @@ Global oActiveCell1
 Global SGenericoMemo
 Global sMemoPesca
 
-Function cerca_riga_rossa(oNomeSheet) &apos; (c) Giuseppe Vizziello 2014
-&apos;	oNomeSheet = ThisComponent.currentcontroller.activesheet.Name
-	oSheet = ThisComponent.Sheets.getByName(oNomeSheet)
-	lastRow=getLastUsedRow(oSheet)
-
-	For i = 0 To lastRow
-&apos;print oSheet.getCellByPosition(0,i).cellstyle
-&apos;	ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, i)
-		If oSheet.getCellByPosition(0,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
-			oSheet.getCellByPosition(1,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; And _
-			oSheet.getCellByPosition(2,i).cellstyle = &quot;Riga_rossa_Chiudi&quot; Then
-	cerca_riga_rossa = i
-			Exit For 
-		End If
-	Next
-	if  cerca_riga_rossa = 0 Then
-&apos;		msgbox (&quot;Quasi certamente manca la riga rossa di chiusura della tabella!&quot;&amp; CHR(10)_
-&apos;		&amp; &quot;Controlla e PROVVEDI!&quot;, 16, &quot;ERRORE!&quot;)
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)+1))
-	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;inserisci_riga_rossa&quot;)
-&apos;		Exit Function 
-	End If
-cerca_riga_rossa = i
-End Function
-
-FUNCTION Controllo_riga_rossa_EP () &apos; sperimentale... visto che ho contaop 24 controlli forse è
-&apos; meglio accentrarli?
-	sString$ = &quot;Fine elenco&quot;
-	oEnd=uFindString(sString$, oSheet)
-	If isNull (oEnd) or isEmpty (oEnd) then 
-		ThisComponent.CurrentController.Select(oSheet.getCellByPosition(0, getLastUsedRow(oSheet)))
-		msgbox (&quot;Quasi certamente manca la riga rossa di chiusura della tabella!&quot;&amp; CHR(10)_
-		&amp; &quot;Controlla e PROVVEDI!&quot;, 16, &quot;ERRORE!&quot;)
-		Controllo_riga_rossa_EP = &quot;assente&quot;
-	end if 
-End FUNCTION
-
 Sub DETENTORE_GENERALE_ERRORI(sModulSubName as string, Erl as string, Err as string, Error$ as string )
 
 print &quot;sModulSubName&quot; &amp; &quot; - &quot; &amp; Erl &amp; &quot; - &quot; &amp; Err &amp; &quot; - &quot; &amp; Error$

@@ -359,6 +359,10 @@ def struttura_CONTAB():
                 PL._gotoCella(0, oRange.StartRow -1)
                 oDoc.CurrentController.setFirstVisibleRow(y)
             except:
+                Dialogs.NotifyDialog(Image='Icons-Big/info.png',
+                        Title = 'Info',
+                        Text='''In questo Libretto delle Misure
+non ci sono misure registrate.''')
                 pass
             return
 
@@ -406,7 +410,8 @@ def GeneraLibretto(oDoc):
     if daVoce >= int(oCellRange.computeFunction(MAX)):
         Dialogs.NotifyDialog(Image='Icons-Big/exclamation.png',
                 Title = 'ATTENZIONE!',
-                Text='Non ci sono voci di misurazione da registrare.')
+                Text='''Tutte le voci di questo Libretto delle Misure
+sono già registrate.''')
         return
     # ~try:
         # ~oRanges.hasByName("#Lib#1")
@@ -491,8 +496,8 @@ def GeneraLibretto(oDoc):
         0, 3, 0, SheetUtils.getUsedArea(oSheet).EndRow - 2)
     aVoce = int(oCellRange.computeFunction(MAX))
 
-    # ~aVoce = PL.InputBox(str(aVoce), "A voce n.:")
-    aVoce = str(int(daVoce) + 1)
+    aVoce = PL.InputBox(str(aVoce), "A voce n.:")
+    # ~aVoce = str(int(daVoce) + 1)
     if len(aVoce) == 0:
         return
 
@@ -804,19 +809,20 @@ def GeneraRegistro(oDoc):
     oSheet.getCellRangeByPosition(5, insRow, 6, lastRow).CellStyle = "comp 1a"
     oSheet.getCellRangeByPosition(7, insRow, 9, lastRow).CellStyle = "List-num-euro"
 
-# inserisco la prima riga GIALLA del REGISTRO
+# inserisco la prima riga GIALLA
     oSheet.getRows().insertByIndex(insRow, 1)
     oSheet.getCellRangeByPosition (0, insRow, 9, insRow).CellStyle = "uuuuu"
     PL.fissa()
-    # ci metto un po' di informazioni
+    # ci metto le informazioni
     oSheet.getCellByPosition(1, insRow).String = "segue Registro n." + str(nSal) + " - " + str(daVoce) + "÷" + str(aVoce)
     oSheet.getCellByPosition(2, insRow).Value= nSal        #numero libretto
     oSheet.getCellByPosition(3, insRow).Value = REG[-1][3] #ultimo numero pagina
-    oSheet.getCellByPosition(8, insRow).Formula = "=SUBTOTAL(9;I" + str(insRow +2) + ":I" + str(lastRow +2) + ")"
+    # indico il parziale del SAL relativo:
+    oSheet.getCellByPosition(8, insRow).Formula = (
+        "=SUBTOTAL(9;I" + str(insRow +2) + ":I" + str(lastRow +2) + ")")
     oSheet.getCellByPosition(8, insRow).CellStyle = "comp sotto Euro 3_R"
-# ----------------------------------------------------------------------
 
-# RIGA RIPORTO
+    # RIGA RIPORTO
     insRow += 1
     oSheet.getRows().insertByIndex(insRow, 1)
     oSheet.getCellByPosition(1, insRow).String = "R I P O R T O"
@@ -826,7 +832,7 @@ def GeneraRegistro(oDoc):
         '=IF(SUBTOTAL(9;$J$2:$J$' + str(insRow) + ')=0;"";SUBTOTAL(9;$J$2:$J$' + str(insRow))
         
     oSheet.getCellRangeByPosition (0, insRow, 9, insRow).CellStyle = "Ultimus_Bordo_sotto"
-    # ~DLG.chi(insRow)
+
     insRow += 1
     oSheet.getRows().insertByIndex(insRow, 1)
 
@@ -834,14 +840,8 @@ def GeneraRegistro(oDoc):
     oSheet.getCellRangeByPosition(0, insRow, 9, insRow).CellStyle = "Ultimus_centro_bordi_lati"
     PL._gotoCella(1, insRow)
     
-    
-    # ~DLG.chi(insRow)
-
-    # ~insRow += 1
-
     lastRow = insRow + len(REG)
 
-    # ~return
     inizioFirme = lastRow + 5
     PL.MENU_firme_in_calce (inizioFirme) # riga di inserimento
     fineFirme = inizioFirme + 18
@@ -855,19 +855,12 @@ def GeneraRegistro(oDoc):
     oNamedRange=oRanges.getByName(nomearea).ReferredCells.RangeAddress
 
     #range del #Reg#
-    daRiga = oNamedRange.StartRow
-    aRiga = oNamedRange.EndRow
-    daColonna = oNamedRange.StartColumn
-    aColonna = oNamedRange.EndColumn
+    # ~daRiga = oNamedRange.StartRow
+    # ~aRiga = oNamedRange.EndRow
+    # ~daColonna = oNamedRange.StartColumn
+    # ~aColonna = oNamedRange.EndColumn
 
     iSheet = oSheet.RangeAddress.Sheet
-    # imposta area di stampa
-    # ~oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
-    # ~oCellRangeAddr.Sheet = iSheet
-    # ~oCellRangeAddr.StartColumn = daColonna
-    # ~oCellRangeAddr.StartRow = daRiga
-    # ~oCellRangeAddr.EndColumn = 9
-    # ~oCellRangeAddr.EndRow = aRiga
 
     # imposta riga da ripetere
     oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')

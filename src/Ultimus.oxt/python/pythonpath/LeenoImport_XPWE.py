@@ -804,14 +804,21 @@ def compilaAnalisiPrezzi(oDoc, elencoPrezzi, progress):
                     # per gli inserimenti liberi (L)
                     else:
                         oSheet.getCellByPosition(0, n).String = ''
-                        oSheet.getCellByPosition(1, n).String = x[1]
+                        try:
+                            oSheet.getCellByPosition(1, n).String = x[1]
+                        except:
+                            oSheet.getCellByPosition(1, n).String = ''
                         oSheet.getCellByPosition(2, n).String = x[2]
                         try:
                             float(x[3].replace(',', '.'))
                             oSheet.getCellByPosition(3, n).Value = float(x[3].replace(',', '.'))
                         except Exception:
                             oSheet.getCellByPosition(3, n).Value = 0
-                        oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',', '.'))
+                        try:
+                            float(x[4].replace(',', '.'))
+                            oSheet.getCellByPosition(4, n).Value = float(x[4].replace(',', '.'))
+                        except:
+                            oSheet.getCellByPosition(4, n).Value = 0
                     if el[3][y][1] not in (
                        'MANODOPERA', 'MATERIALI', 'NOLI', 'TRASPORTI',
                        'ALTRE FORNITURE E PRESTAZIONI', 'overflow'):

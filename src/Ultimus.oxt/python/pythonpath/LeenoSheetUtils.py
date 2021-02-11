@@ -273,6 +273,7 @@ def prossimaVoce(oSheet, lrow, n=1):
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
+    noVoce = LeenoUtils.getGlobalVar('noVoce')
     stili = stili_computo + stili_contab
 
     # ~lrow = PL.LeggiPosizioneCorrente()[1]
@@ -291,15 +292,11 @@ def prossimaVoce(oSheet, lrow, n=1):
         elif n == 1:
             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in ('Ultimus_centro_bordi_lati', ):
-        for y in range(lrow, SheetUtils.getUsedArea(oSheet).EndRow + 1):
-            if oSheet.getCellByPosition(0, y).CellStyle != 'Ultimus_centro_bordi_lati':
-                lrow = y
-                break
     elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
         lrow += 1
+    while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati'):
+        lrow += 1
     return lrow
-
 # ###############################################################
 
 def eliminaVoce(oSheet, lrow):

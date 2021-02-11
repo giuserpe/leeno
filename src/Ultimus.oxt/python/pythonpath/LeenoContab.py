@@ -12,6 +12,8 @@ import pyleeno as PL
 import LeenoEvents
 import LeenoBasicBridge
 import uno
+import itertools
+import operator
 
 
 def sbloccaContabilita(oSheet, lrow):
@@ -359,10 +361,10 @@ def struttura_CONTAB():
                 PL._gotoCella(0, oRange.StartRow -1)
                 oDoc.CurrentController.setFirstVisibleRow(y)
             except:
-                Dialogs.NotifyDialog(Image='Icons-Big/info.png',
-                        Title = 'Info',
-                        Text='''In questo Libretto delle Misure
-non ci sono misure registrate.''')
+                # ~Dialogs.NotifyDialog(Image='Icons-Big/info.png',
+                        # ~Title = 'Info',
+                        # ~Text='''In questo Libretto delle Misure
+# ~non ci sono misure registrate.''')
                 pass
             return
 
@@ -410,8 +412,8 @@ def GeneraLibretto(oDoc):
     if daVoce >= int(oCellRange.computeFunction(MAX)):
         Dialogs.NotifyDialog(Image='Icons-Big/exclamation.png',
                 Title = 'ATTENZIONE!',
-                Text='''Tutte le voci di questo Libretto delle Misure
-sono già registrate.''')
+                Text='Tutte le voci di questo Libretto delle Misure\n'
+                    'sono già registrate.')
         return
     # ~try:
         # ~oRanges.hasByName("#Lib#1")
@@ -496,8 +498,8 @@ sono già registrate.''')
         0, 3, 0, SheetUtils.getUsedArea(oSheet).EndRow - 2)
     aVoce = int(oCellRange.computeFunction(MAX))
 
-    aVoce = PL.InputBox(str(aVoce), "A voce n.:")
-    # ~aVoce = str(int(daVoce) + 1)
+    # ~aVoce = PL.InputBox(str(aVoce), "A voce n.:")
+    aVoce = str(int(daVoce) + 1)
     if len(aVoce) == 0:
         return
 
@@ -574,8 +576,8 @@ sono già registrate.''')
     
     progress.setValue(3)
 
-    # sbianco l'area di stampa
-    oSheet.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
+    # sbiancA l'area di stampa
+    # ~oSheet.getCellRangeByPosition(daColonna, daRiga, 11, aRiga).CellBackColor = -1
 
     progress.setValue(4)
 
@@ -726,25 +728,78 @@ def GeneraRegistro(oDoc):
     # ~DLG.chi((nSal, daVoce, aVoce, primariga, ultimariga))
     # ~return
     
-    
-    # Recupero i dati dal libretto
+    # Recupero i dati per il Registro
     oSheet = oDoc.Sheets.getByName("CONTABILITA")
     REG = []
-    SAL = []
     i = primariga
     while i < ultimariga:
         '''
-        voce = (num, art, data, desc, Nlib, Plib, um, quantP, quantN,
-                prezzo, importo, sic, mdo, flag, nSal)
-        prendo solo i dati utili [0:11]
+        REG = ((num + '\n' + art + '\n' + data), desc, Nlib, Plib, um,
+            quantP, quantN, prezzo, importo)
         '''
-        reg, sal = LeenoComputo.datiVoceComputo(oSheet, i)[0:11]
+        reg = LeenoComputo.datiVoceComputo(oSheet, i)[0]
         REG.append(reg)
+        i= LeenoSheetUtils.prossimaVoce(oSheet, i)
+
+    # Recupero i dati per il SAL
+    SAL = []
+    i = 5
+    while i < ultimariga:
+        '''
+        SAL = (art,  desc, um, quant, prezzo, importo)
+        EP = elenco articoli
+        '''
+        # ~DLG.chi (len(LeenoComputo.datiVoceComputo(oSheet, i)))
+        # ~return
+        
+        sal = LeenoComputo.datiVoceComputo(oSheet, i)[1]
         SAL.append(sal)
         i= LeenoSheetUtils.prossimaVoce(oSheet, i)
-    # ~DLG.chi(REG)
+    # ~SAL = sorted(SAL)
     # ~DLG.chi(SAL)
+    # ~return
+
+    # ~r=list()
+    # ~for k, g in itertools.groupby(sorted(m), operator.itemgetter(0,1,2)): 
+        # ~s=sum(float(t[3]) for t in g)
+        # ~k = list(k)
+        # ~k.append(s)
+        # ~r.append(k)
     
+    r=list()
+    for k, g in itertools.groupby(sorted(SAL), operator.itemgetter(0,1,2)):
+        quant = sum(float(q[3]) for q in g)
+        # ~DLG.chi(quant)
+        # ~impor=sum(float(t[5]) for t in g)
+        # ~DLG.chi(impor)
+        # ~DLG.chi([quant, impor])
+        k = list(k)
+        # ~k.append([quant, impor])
+        k.append(quant)
+        r.append(k)
+    DLG.chi(r)
+    return
+    
+# sommo i valori degli articoli ricorrenti
+    # ~For Each art In articoli()
+        # ~quant=0
+        # ~importo=0
+        # ~sicurezza=0
+        # ~mdo=0
+        # ~For Each i In lista()
+            # ~If art=i(1) Then
+                # ~desc = i(3)
+                # ~um = i(4)
+                # ~quant=quant+i(7)
+                # ~prezzo = i(8)
+                # ~importo=importo+i(9)
+                # ~sicurezza=sicurezza+i(10)
+                # ~mdo=mdo+i(11)
+            # ~End If
+        # ~Next
+        # ~AppendItem (vociSAL(), array (art, desc, um,  quant, prezzo, importo, sicurezza, mdo))
+    # ~Next    
+
     try:
         oDoc.getSheets().insertNewByName('Registro',5)
         PL.GotoSheet('Registro')
@@ -752,17 +807,17 @@ def GeneraRegistro(oDoc):
 
     # riga di intestazione
         oSheet.getCellRangeByPosition(0,0,9,0).CellStyle="An.1v-Att Start"
-        oSheet.getCellByPosition(0,0).String = ("N. ord."+ chr(13) +"Articolo"+ chr(13) +"Data")
-        oSheet.getCellByPosition(1,0).String = ("LAVORAZIONI"+ chr(13) + "E SOMMINISTRAZIONI")
-        oSheet.getCellByPosition(2,0).String = ("Lib." + chr(13) +"N.")
-        oSheet.getCellByPosition(3,0).String = ("Lib." + chr(13) +"P.")
+        oSheet.getCellByPosition(0,0).String = ("N. ord.\nArticolo\nData")
+        oSheet.getCellByPosition(1,0).String = ("LAVORAZIONI\nE SOMMINISTRAZIONI")
+        oSheet.getCellByPosition(2,0).String = ("Lib.\nN.")
+        oSheet.getCellByPosition(3,0).String = ("Lib.\nP.")
         oSheet.getCellByPosition(4,0).String = ("U.M.")
-        oSheet.getCellByPosition(5,0).String = ("Quantità" + chr(13) + "Positive")
-        oSheet.getCellByPosition(6,0).String = ("Quantità" + chr(13) + "Negative")
-        oSheet.getCellByPosition(7,0).String = ("Prezzo" + chr(13) + "unitario")
-        oSheet.getCellByPosition(8,0).String = ("Importo" + chr(13) + "debito")
-        oSheet.getCellByPosition(9,0).String = ("Importo" + chr(13) + "pagamento")
-        # ~oSheet.getCellByPosition(10,0).String = ("Num." + chr(13) +"Pag.")
+        oSheet.getCellByPosition(5,0).String = ("Quantità\nPositive")
+        oSheet.getCellByPosition(6,0).String = ("Quantità\nNegative")
+        oSheet.getCellByPosition(7,0).String = ("Prezzo\nunitario")
+        oSheet.getCellByPosition(8,0).String = ("Importo\ndebito")
+        oSheet.getCellByPosition(9,0).String = ("Importo\npagamento")
+        # ~oSheet.getCellByPosition(10,0).String = ("Num.\nPag.")
     # larghezza colonne
         oSheet.getCellByPosition(0,0).Columns.Width = 1600 #'N. ord.
         oSheet.getCellByPosition(1,0).Columns.Width = 6600 #'LAVORAZIONI
@@ -789,8 +844,8 @@ def GeneraRegistro(oDoc):
         insRow = oPrevRange.EndRow + 1
         
         # chiudo il registro precedente
-        oCell = oSheet.getCellRangeByPosition(0,fRow,11,lRow)
-        oCell.Rows.IsVisible=False
+        # ~oCell = oSheet.getCellRangeByPosition(0,fRow,11,lRow)
+        # ~oCell.Rows.IsVisible=False
 
     oSheet.PageStyle = 'PageStyle_REGISTRO_A4'
 
@@ -917,7 +972,43 @@ def GeneraRegistro(oDoc):
     struttura_CONTAB()
     return
 
+def GeneraSAL (oDoc):
+    try:
+        oDoc.getSheets().insertNewByName('SAL',6)
+        PL.GotoSheet('SAL')
+        oSheet = oDoc.Sheets.getByName('SAL')
 
+    # riga di intestazione
+        oSheet.getCellRangeByPosition(0,0,6,0).CellStyle="An.1v-Att Start"
+        oSheet.getCellByPosition(0,0).String = ("N. ord.\nArticolo\nData")
+        oSheet.getCellByPosition(1,0).String = ("LAVORAZIONI\nE SOMMINISTRAZIONI")
+        oSheet.getCellByPosition(2,0).String = ("U.M.")
+        oSheet.getCellByPosition(3,0).String = ("Quantità")
+        oSheet.getCellByPosition(4,0).String = ("Prezzo\nunitario")
+        oSheet.getCellByPosition(5,0).String = ("Importo")
+        oSheet.getCellByPosition(6,0).String = ("Num.\nPag.")
+    # larghezza colonne
+        oSheet.getCellByPosition(0,0).Columns.Width = 1600 #'N. ord.
+        oSheet.getCellByPosition(1,0).Columns.Width = 6600 #'LAVORAZIONI
+        oSheet.getCellByPosition(2,0).Columns.Width = 1000 #'U.M.
+        oSheet.getCellByPosition(3,0).Columns.Width = 1600 #'Quantità
+        oSheet.getCellByPosition(4,0).Columns.Width = 1400 #'Prezzo
+        oSheet.getCellByPosition(5,0).Columns.Width = 1950 #'Importo
+        oSheet.getCellByPosition(6,0).Columns.OptimalWidth = True #'n.pag.
+        insRow = 1 #'prima riga inserimento in Registro
+    except:
+        # recupera il registro precedente
+        PL.GotoSheet('SAL')
+        oSheet= oDoc.Sheets.getByName("SAL")
+        # ~DLG.chi("#SAL#" + str(nSal - 1))
+        oRanges = oDoc.NamedRanges
+        oPrevRange = oRanges.getByName("#SAL#" + str(nSal - 1)).ReferredCells.RangeAddress
+
+        fRow = oPrevRange.StartRow
+        lRow = oPrevRange.EndRow
+        insRow = oPrevRange.EndRow + 1
+
+    oSheet.PageStyle = 'PageStyle_REGISTRO_A4'
     
 
     # ~ThisComponent.CurrentController.setFirstVisibleRow(daRiga)
@@ -987,11 +1078,10 @@ def rrrrrrrrrrrrrrrrrrrrr():# ~sub Genera_REGISTRO '(C) Giuseppe Vizziello 2014
 # ----------------------------------------------------------------------
 # serve ad allungare la lista
 # non viene preso in considerazione  per il FOR successivo, ma è necessario che ci sia per non mandarlo in errore
-# evito il resume next perché impedisce il debug
-    # ~'On Error Resume Next 
+
     # ~Appenditem (lista(), "ultimavocelistasolodiservizio")
 # ELIMINA I DOPPIONI e trasferisco i dati puliti in articoli()
-# ~'xray lista
+
     # ~For I = 0 To UBound(lista) -1
         # ~If lista(I) <> lista(I + 1) Then     Appenditem (articoli(), lista(I))
     # ~Next I
@@ -1021,22 +1111,11 @@ def rrrrrrrrrrrrrrrrrrrrr():# ~sub Genera_REGISTRO '(C) Giuseppe Vizziello 2014
                 # ~importo=importo+i(9)
                 # ~sicurezza=sicurezza+i(10)
                 # ~mdo=mdo+i(11)
-# ~'    Print i(7) &" - "& i(9) &" - "& i(10) &" - "& i(11)    
-# ~'    Print  i(1) &" - "& quant &" - "& importo &" - "& sicurezza &" - "& mdo
             # ~End If
-# ~'Print i(1) &" - "& quant &" - "& importo &" - "& sicurezza &" - "& mdo
         # ~Next
         # ~AppendItem (vociSAL(), array (art, desc, um,  quant, prezzo, importo, sicurezza, mdo))
-# ~'        AppendItem (vociSAL(), array (art, i(3), i(4),  quant, i(8), importo, sicurezza, mdo)
     # ~Next
-# ~'Print ubound (vociSAL())
-# ~' Print "vocisal"
-# ~'xray (vocisal())
-# ~'For Each el In vocisal
-# ~'print (el(0))
-# ~'next
-# ~'Exit Sub 
-# ~'0        1        2        3        4        5        6        7        8        9            10            11
+#    1      2       3        4         5       6        7        8         9       10          11
 # ~'num,    art,    data,    desc,     um,     Nlib,    Plib,    quant,    prezzo, importo,    sicurezza,    mdo 
 # ----------------------------------------------------------------------
 # elimino i doppioni
@@ -1044,11 +1123,8 @@ def rrrrrrrrrrrrrrrrrrrrr():# ~sub Genera_REGISTRO '(C) Giuseppe Vizziello 2014
     # ~ReDim vociSAL()
     # ~nn = UBound(lista)+1
     # ~ReDim Preserve lista(nn)
-# ~'xray lista
-# ~'Print UBound(lista()) 
 # ~i=0
     # ~Do While I < UBound(lista) '-1
-# ~'        Print lista(I)(0)
         # ~If lista(I)(0) = lista(I+1)(0) Then
             # ~If Not isempty (lista(I+1)) Then Appenditem (vocisal(), lista(I+1))
             # ~i=i+1
@@ -1616,11 +1692,9 @@ def GeneraAttiContabili():
     if oSheet.Name != "CONTABILITA":
         return
     if Dialogs.YesNoDialog(Title='Avviso',
-        Text= '''Prima di procedere è consigliabile salvare il lavoro.
-
-Se decidi di continuare, devi attendere il messaggio di procedura completata.
-
-Procedo senza salvare?''') == 0:
+        Text= 'Prima di procedere è consigliabile salvare il lavoro.\n\n'
+            'Se continui, devi attendere il messaggio di procedura completata.\n'
+            'Procedo senza salvare?') == 0:
         return
     try:
         nSal, daVoce, aVoce, fpRow, lpRow = GeneraLibretto(oDoc)
@@ -1629,8 +1703,8 @@ Procedo senza salvare?''') == 0:
     GeneraRegistro(oDoc)
     DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
     Dialogs.Info(Title = 'Voci registrate!',
-                 Text='''La generazione degli allegati contabili è stata completata.
-Grazie per l'attesa.''')
+        Text="La generazione degli allegati contabili è stata completata.\n"
+            "Grazie per l'attesa.")
 
 
 # CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA ## CONTABILITA #

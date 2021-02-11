@@ -5831,7 +5831,7 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     DisableAutoCalc()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    lrow = LeggiPosizioneCorrente()[1]
+#    lrow = LeggiPosizioneCorrente()[1]
 
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
         LeenoComputo.ins_voce_computo()
@@ -7143,7 +7143,11 @@ def autoexec():
     oDoc = LeenoUtils.getDocument()
     oDoc.enableAutomaticCalculation(True)
     oLayout = oDoc.CurrentController.getFrame().LayoutManager
-    if 'giuserpe' in os.getenv("HOMEPATH"):
+    if sys.platform == 'linux' or sys.platform == 'darwin':
+        var = 'HOME'
+    else:
+        var = 'HOMEPATH'
+    if 'giuserpe' in os.getenv(var):
         oLayout.showElement(
             "private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     else:
@@ -7999,7 +8003,7 @@ def make_pack(bar=0):
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
-        oLayout = oDoc.CurrentController.getFrame().LayoutManager
+#        oLayout = oDoc.CurrentController.getFrame().LayoutManager
         # ~oLayout.hideElement(
             # ~"private:resource/toolbar/addon_ULTIMUS_3.OfficeToolBar_DEV")
     oxt_path = uno.fileUrlToSystemPath(LeenO_path())
@@ -8100,7 +8104,7 @@ class inserisci_nuova_riga_con_descrizione_th(threading.Thread):
         threading.Thread.__init__(self)
 
     def run(self):
-        oDialogo_attesa = DLG.dlg_attesa()
+#        oDialogo_attesa = DLG.dlg_attesa()
         oDoc = LeenoUtils.getDocument()
         oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
 
@@ -8940,15 +8944,68 @@ def somma():
 
 ########################################################################
 import LeenoContab
+import itertools
+import operator
 def MENU_debug():
-    # ~MENU_struttura_on()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lrow = SheetUtils.getLastUsedRow(oSheet)
+    el = 4
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Ricerca delle voci da eliminare in corso...', Text="Lettura dati")
+    progress.setLimits(el, lrow)
+    progress.show()
+#    while el < lrow:
+#        progress.setValue(el)
+#        el += 1
+#        test = oSheet.getCellByPosition(0, el).String.split('.')
+#        if len (test) == 3:
+#            mask = oSheet.getCellByPosition(1, el).String
+#        if len (test) == 4:
+#            daug = oSheet.getCellByPosition(1, el).String
+#            oSheet.getCellByPosition(1, el).String = daug.split(mask)[-1]
+#    # ~progress.hide()
+#    el = 4
+    while el < lrow:
+        progress.setValue(el)
+        el += 1
+        test = oSheet.getCellByPosition(0, el).String.split('.')
+        if len (test) == 2:
+            mask = oSheet.getCellByPosition(1, el).String
+        if len (test) ==3:
+            daug = oSheet.getCellByPosition(1, el).String
+            oSheet.getCellByPosition(1, el).String = daug.split(mask)[-1]
+    progress.hide()
+    for el in reversed(range (4,  lrow)):
+        for x in (1,  2,  4):
+            if oSheet.getCellByPosition(x, el).Type.value == 'EMPTY':
+                oSheet.getRows().removeByIndex(x, 1)
+
+    # ~m=[["aaa", "bbb", "ccc", 12],
+         # ~["aaa", "bbb", "ccc", 33],
+         # ~["aaa", "bbb", "ccc", 51],
+         # ~["abb", "ddd", "eee", 15],
+         # ~["abb", "ddd", "eee", 40]]
+    # ~r=list()
+    # ~for k, g in itertools.groupby(sorted(m), operator.itemgetter(0,1,2)): 
+        # ~s=sum(float(t[3]) for t in g)
+        # ~k = list(k)
+        # ~k.append(s)
+        # ~r.append(k)
+    # ~DLG.chi(r)
+    # ~return
+
+    # ~oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~i = LeggiPosizioneCorrente()[1]
+    # ~i = LeenoSheetUtils.prossimaVoce(oSheet, i)
+    # ~_gotoCella(0, i)
     # ~return
     # ~'''
     # ~0    1    2     3     4     5     6   7       8       9       10
     # ~num, art, data, desc, Nlib, Plib, um, quantP, quantN, prezzo, importo, sic, mdo, flag, nSal
     # ~'''
-    # ~oDoc = LeenoUtils.getDocument()
-    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
     # ~lrow = LeggiPosizioneCorrente()[1]
 
     # ~voce = LeenoComputo.datiVoceComputo(oSheet, lrow)
@@ -8962,6 +9019,7 @@ def MENU_debug():
     # ~return
     oDoc = LeenoUtils.getDocument()
     LeenoContab.GeneraRegistro(oDoc)
+    # ~LeenoContab.GeneraSAL(oDoc)
     return
 
     LeenoSheetUtils.SbiancaCellePrintArea()

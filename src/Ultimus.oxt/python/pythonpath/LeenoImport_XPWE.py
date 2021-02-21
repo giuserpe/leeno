@@ -859,7 +859,11 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
     # crea / attiva l'elaborato del tipo scelto
     if elaborato == 'VARIANTE':
-        oSheet = LeenoVariante.generaVariante(oDoc, False)
+        if oDoc.getSheets().hasByName('VARIANTE'):
+            oSheet = LeenoVariante.generaVariante(oDoc, False)
+        else:
+            oSheet = LeenoVariante.generaVariante(oDoc, True)
+            oSheet.getRows().removeByIndex(2, 4)
     elif elaborato == 'CONTABILITA':
         #PL.attiva_contabilita()
         oSheet = LeenoContab.generaContabilita(oDoc)
@@ -912,37 +916,38 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
         # le varie 'testspcat', 'testcat' e 'testsbcat' servono per
         # evitare la ripetizione per voci consecutive
 
-        # supercategoria
-        try:
-            if idspcat != testspcat:
-                testspcat = idspcat
-                testcat = '0'
-                # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
-                lrow += 1
-        except UnboundLocalError:
-            pass
+        if elaborato != 'CONTABILITA':
+            # supercategoria
+            try:
+                if idspcat != testspcat:
+                    testspcat = idspcat
+                    testcat = '0'
+                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
+                    LeenoSheetUtils.inserSuperCapitolo(oSheet, lrow, capitoliCategorie['SuperCategorie'][eval(idspcat) - 1][1])
+                    lrow += 1
+            except UnboundLocalError:
+                pass
 
-        # categoria
-        try:
-            if idcat != testcat:
-                testcat = idcat
-                testsbcat = '0'
-                # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
-                lrow += 1
-        except UnboundLocalError:
-            pass
+            # categoria
+            try:
+                if idcat != testcat:
+                    testcat = idcat
+                    testsbcat = '0'
+                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
+                    LeenoSheetUtils.inserCapitolo(oSheet, lrow, capitoliCategorie['Categorie'][eval(idcat) - 1][1])
+                    lrow += 1
+            except UnboundLocalError:
+                pass
 
-        # sottocategoria
-        try:
-            if idsbcat != testsbcat:
-                testsbcat = idsbcat
-                # non capisco il perchè dell' EVAL ma mi adeguo, per ora
-                LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
-                lrow += 1
-        except UnboundLocalError:
-            pass
+            # sottocategoria
+            try:
+                if idsbcat != testsbcat:
+                    testsbcat = idsbcat
+                    # non capisco il perchè dell' EVAL ma mi adeguo, per ora
+                    LeenoSheetUtils.inserSottoCapitolo(oSheet, lrow, capitoliCategorie['SottoCategorie'][eval(idsbcat) - 1][1])
+                    lrow += 1
+            except UnboundLocalError:
+                pass
 
         if elaborato == 'CONTABILITA':
             LeenoContab.insertVoceContabilita(oSheet, lrow)
@@ -1049,7 +1054,8 @@ def compilaComputo(oDoc, elaborato, capitoliCategorie, elencoPrezzi, listaMisure
 
                 if mis[8] == '2':
                     PL.parziale_core(oSheet, startRow)
-                    oSheet.getRows().removeByIndex(startRow + 1, 1)
+                    if elaborato != 'CONTABILITA':
+                        oSheet.getRows().removeByIndex(startRow + 1, 1)
                     descrizione = ''
 
                 if mis[9] != '-2':
@@ -1242,6 +1248,8 @@ def MENU_XPWE_import():
 
     # compilo Elenco Prezzi
     progress.setText("Compilazione elenco prezzi")
+    if elaborato == 'CONTABILITA':
+        capitoliCategorie = {'SuperCapitoli': [], 'Capitoli': [], 'SottoCapitoli': [], 'SuperCategorie': [], 'Categorie': [], 'SottoCategorie': []}
     compilaElencoPrezzi(oDoc, capitoliCategorie, elencoPrezzi, progress)
 
     # Compilo Analisi di prezzo

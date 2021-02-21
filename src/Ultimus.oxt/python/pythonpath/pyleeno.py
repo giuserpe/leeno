@@ -1813,10 +1813,10 @@ def voce_breve():
     chiudi_dialoghi()
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    oSheet.getCellRangeByPosition(
-        0, 0,
-        SheetUtils.getUsedArea(oSheet).EndColumn,
-        SheetUtils.getUsedArea(oSheet).EndRow).Rows.OptimalHeight = True
+    # ~oSheet.getCellRangeByPosition(
+        # ~0, 0,
+        # ~SheetUtils.getUsedArea(oSheet).EndColumn,
+        # ~SheetUtils.getUsedArea(oSheet).EndRow).Rows.OptimalHeight = True
     if not oDoc.getSheets().hasByName('S1'):
         return
     if oSheet.Name in ('COMPUTO', 'VARIANTE'):
@@ -1832,7 +1832,6 @@ def voce_breve():
             oSheet.getCellRangeByName('S1.H338').Value = 10000
         else:
             oSheet.getCellRangeByName('S1.H338').Value = int(cfg.read('Computo', 'fine_voci_abbreviate'))
-        LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     elif oSheet.Name == 'CONTABILITA':
         oSheet = oDoc.getSheets().getByName('S1')
@@ -1852,7 +1851,7 @@ def voce_breve():
                 oSheet.getCellRangeByName('S1.H336').Value = 10000
             else:
                 oSheet.getCellRangeByName('S1.H336').Value = int(cfg.read('Contabilità', 'cont_fine_voci_abbreviate'))
-            LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
 
 ########################################################################
@@ -1881,7 +1880,7 @@ Vuoi procedere comunque?''') == 0:
     oDoc.CurrentController.ZoomValue = 400
 
     oRange = oDoc.NamedRanges.elenco_prezzi.ReferredCells.RangeAddress
-    SR = oRange.StartRow
+    SR = oRange.StartRow + 1
     ER = oRange.EndRow + 1
     lista_prezzi = list()
     for n in range(SR, ER):
@@ -6825,9 +6824,10 @@ def filtra_codice(voce=None):
         oCell = oSheet.getCellRangeByName('C2')
         voce = oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(
             0, LeggiPosizioneCorrente()[1]).String
+
         # colora la descrizione scelta
-        oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(
-            1, LeggiPosizioneCorrente()[1]).CellBackColor = 16777120
+        # ~oDoc.Sheets.getByName('Elenco Prezzi').getCellByPosition(
+            # ~1, LeggiPosizioneCorrente()[1]).CellBackColor = 16777120
 
         if oCell.String == '<DIALOGO>' or oCell.String == '':
             try:
@@ -6879,8 +6879,10 @@ def filtra_codice(voce=None):
             if oSheet.getCellByPosition(1, sopra + 1).String != voce:
                 lista_pt.append((sopra, sotto))
             else:
-                # colora lo sfondo della voce filtrata
-                oSheet.getCellRangeByPosition(0, sopra, 40, sotto).CellBackColor = 16777120
+
+                # ~# colora lo sfondo della voce filtrata
+                # ~oSheet.getCellRangeByPosition(0, sopra, 40, sotto).CellBackColor = 16777120
+
                 if qui == None:
                     qui = sopra + 1
     progress.setValue(fine)
@@ -8411,6 +8413,10 @@ def MENU_sistema_pagine():
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('M1'):
         return
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet.removeAllManualPageBreaks()
+    SheetUtils.visualizza_PageBreak()
+
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
     # committente = oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String  # committente
     # luogo = oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
@@ -8947,6 +8953,26 @@ import LeenoContab
 import itertools
 import operator
 def MENU_debug():
+    '''
+    PREVENTIVI VETERINARIO SATURNO
+    Sostituisce hiperlink alla stringa nelle colonne B, se questa è un
+    indirizzo di file o cartella
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    for el in range(2, SheetUtils.getUsedArea(oSheet).EndRow + 1):
+        try:
+            # ~ for x in range(0, SheetUtils.getUsedArea(oSheet).EndColumn + 1):
+
+            for x in (8, 11):
+                    stringa = '=HYPERLINK("' + oSheet.getCellByPosition(
+                        x, el).String +'";"' + oSheet.getCellByPosition(x - 2, el).String + '"'
+                    oSheet.getCellByPosition(x - 2, el).Formula = stringa
+        except Exception:
+            pass
+    return
+    somma()
+    return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = SheetUtils.getLastUsedRow(oSheet)

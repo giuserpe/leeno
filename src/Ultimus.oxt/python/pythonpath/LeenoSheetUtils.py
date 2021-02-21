@@ -210,9 +210,14 @@ def cercaPartenza(oSheet, lrow):
     # CONTABILITA
     elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_contab:
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
-        partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1,
-                    oSheet.getCellByPosition(22,
-                    sStRange.RangeAddress.StartRow + 1).String)
+
+        try:
+            partenza = (oSheet.Name, sStRange.RangeAddress.StartRow + 1,
+                        oSheet.getCellByPosition(22,
+                        sStRange.RangeAddress.StartRow + 1).String)
+        except:
+            lrow = 3
+            partenza = (oSheet.Name, lrow, '')
 
     # ANALISI o riga totale
     elif oSheet.getCellByPosition(0, lrow).CellStyle in ('An-lavoraz-Cod-sx', 'Comp TOTALI'):
@@ -435,17 +440,18 @@ def adattaAltezzaRiga(oSheet):
     usata in PL.Menu_adattaAltezzaRiga()
     '''
     oDoc = LeenoUtils.getDocument()
-
     # ~oDoc = SheetUtils.getDocumentFromSheet(oSheet)
     if not oDoc.getSheets().hasByName('S1'):
         return
 
     usedArea = SheetUtils.getUsedArea(oSheet)
-    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+    # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
 
     # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
-    if float(PL.loVersion()[:5].replace('.', '')) >= 642:
-        return
+    # DALLA VERSIONE 7 IL PROBLEMA è PRESENTE
+    # ~if float(PL.loVersion()[:5].replace('.', '')) >= 642:
+        # ~return
+
     # se la versione di LibreOffice è maggiore della 5.2
     # esegue il comando agendo direttamente sullo stile
     lista_stili = ('comp 1-a', 'Comp-Bianche in mezzo Descr_R',
@@ -462,9 +468,11 @@ def adattaAltezzaRiga(oSheet):
                 pass
 
         test = usedArea.EndRow + 1
+
         for y in range(0, test):
             if oSheet.getCellByPosition(2, y).CellStyle in lista_stili:
                 oSheet.getCellRangeByPosition(0, y, usedArea.EndColumn, y).Rows.OptimalHeight = True
+
     if oSheet.Name in ('Elenco Prezzi', 'VARIANTE', 'COMPUTO', 'CONTABILITA'):
         oSheet.getCellByPosition(0, 2).Rows.Height = 800
     if oSheet.Name == 'Elenco Prezzi':

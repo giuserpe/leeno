@@ -389,7 +389,7 @@ procedi:
 	lLastUrow = getLastUsedRow(oSheet)
 &apos;#########################################################################
 	ThisComponent.CurrentController.Select(oSheet)
-	MOSTRA_colonne (&quot;on&quot;)
+&apos;	MOSTRA_colonne (&quot;on&quot;)
 	unSelect &apos;unselect ranges 	
 &apos; in caso di tebella del computo o cotabilità
 	Select Case oSheet.Name
@@ -1144,7 +1144,7 @@ unSelect &apos;deseleziona
 		oSheet.setPrintTitleRows(true)
 		oSheet.setTitleRows(oTitles)
 		
-		oSheet.setPrintareas(selArea())
+&apos;		oSheet.setPrintareas(selArea())
 
 	rem RIDUCI ALTEZZA PRIMA RIGA
 	oPrimaCella = oSheet.getCellByPosition( 0 , rIntest)
@@ -1512,6 +1512,7 @@ Sub AddPageNumber &apos; esempio trovato in rete... anche questo funziona...
 End Sub
 
 sub togli_salti_pagina &apos;(C) Giuseppe Vizziello 2014
+	exit sub
 	oSheet = ThisComponent.currentController.activeSheet
 	oSheet.removeAllManualPageBreaks
 end sub

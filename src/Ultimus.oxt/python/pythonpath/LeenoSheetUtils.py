@@ -445,12 +445,12 @@ def adattaAltezzaRiga(oSheet):
         return
 
     usedArea = SheetUtils.getUsedArea(oSheet)
-    # ~oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
+    oSheet.getCellRangeByPosition(0, 0, usedArea.EndColumn, usedArea.EndRow).Rows.OptimalHeight = True
 
     # DALLA VERSIONE 6.4.2 IL PROBLEMA è RISOLTO
     # DALLA VERSIONE 7 IL PROBLEMA è PRESENTE
-    # ~if float(PL.loVersion()[:5].replace('.', '')) >= 642:
-        # ~return
+    if float(PL.loVersion()[:5].replace('.', '')) >= 642:
+        return
 
     # se la versione di LibreOffice è maggiore della 5.2
     # esegue il comando agendo direttamente sullo stile

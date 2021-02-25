@@ -12,7 +12,6 @@ import SheetUtils
 import LeenoAnalysis
 import LeenoComputo
 import Dialogs
-#import LeenoDialogs as DLG
 
 
 def ScriviNomeDocumentoPrincipaleInFoglio(oSheet):
@@ -297,7 +296,7 @@ def prossimaVoce(oSheet, lrow, n=1):
         elif n == 1:
             sotto = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
             lrow = sotto + 1
-    elif oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
+    if oSheet.getCellByPosition(0, lrow).CellStyle in stili_cat:
         lrow += 1
     while oSheet.getCellByPosition(0, lrow).CellStyle in ('uuuuu', 'Ultimus_centro_bordi_lati'):
         lrow += 1

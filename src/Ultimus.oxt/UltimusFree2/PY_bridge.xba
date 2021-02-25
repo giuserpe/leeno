@@ -72,7 +72,7 @@ End Sub
 rem ######################################################################
 Sub attiva_contabilita
 	chiudi_dialoghi
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;attiva_contabilita&quot;)
+	ScriptPy(&quot;LeenoContab&quot;,&quot;attiva_contabilita&quot;)
 End Sub
 rem ######################################################################
 Sub genera_variante
@@ -173,7 +173,7 @@ Sub donazioni
 End Sub
 rem ######################################################################
 Sub invia_voce
-	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;invia_voce&quot;)
+	ScriptPy(&quot;pyleeno&quot;,&quot;MENU_invia_voce&quot;)
 End Sub
 rem ######################################################################
 Sub GeneraAttiContabili

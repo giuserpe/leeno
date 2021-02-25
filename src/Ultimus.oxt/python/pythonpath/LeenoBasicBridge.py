@@ -49,12 +49,12 @@ def DlgMain():
     PL.DlgMain()
 
 
-def attiva_contabilita():
-    '''
-    attiva_contabilita
-    '''
-    callAlert()
-    LeenoContab.attiva_contabilita()
+# ~def attiva_contabilita():
+    # ~'''
+    # ~attiva_contabilita
+    # ~'''
+    # ~callAlert()
+    # ~LeenoContab.attiva_contabilita()
 
 
 def genera_variante():

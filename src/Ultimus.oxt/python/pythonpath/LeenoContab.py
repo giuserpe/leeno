@@ -238,8 +238,6 @@ def svuotaContabilita(oDoc):
     oSheet.getCellByPosition(0, 4).String = 'Fine Computo'
     oSheet.getCellRangeByPosition(0, 4, 36, 4).CellStyle = 'Riga_rossa_Chiudi'
 
-    # @@_gotoCella(0, 2)
-
     LeenoSheetUtils.setLarghezzaColonne(oSheet)
 
     return oSheet
@@ -286,9 +284,9 @@ def attiva_contabilita():
                     PL.GotoSheet(el)
         else:
             oDoc.Sheets.insertNewByName('CONTABILITA', 5)
-            PL.GotoSheet('CONTABILITA')
             svuotaContabilita(oDoc)
-            PL.ins_voce_contab()
+            PL.GotoSheet('CONTABILITA')
+            PL._gotoCella(0, 2)
         PL.GotoSheet('CONTABILITA')
     LeenoBasicBridge.ScriviNomeDocumentoPrincipale()
     LeenoEvents.assegna()

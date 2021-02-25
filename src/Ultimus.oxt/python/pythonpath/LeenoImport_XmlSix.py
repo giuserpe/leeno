@@ -3,6 +3,7 @@
 """
 import Dialogs
 import LeenoImport
+import LeenoDialogs as DLG
 
 def parseXML(data, defaultTitle):
     '''
@@ -232,6 +233,13 @@ def parseXML(data, defaultTitle):
             desc = textBreve
         else:
             desc = textEstesa
+
+        try:
+            desc.split('\n')[1]
+            if desc.split('\n')[0] in desc.split('\n')[1]:
+                desc = desc.split('\n')[1]
+        except:
+            pass
 
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella

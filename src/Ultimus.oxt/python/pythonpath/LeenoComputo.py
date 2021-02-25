@@ -165,7 +165,11 @@ def insertVoceComputoGrezza(oSheet, lrow):
 
 
 # TROPPO LENTA
-def ins_voce_computo():
+def ins_voce_computo(cod=None):
+    '''
+    cod    { string }
+    Se cod è presente, viene usato come codice di voce
+    '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.CurrentController.ActiveSheet
     noVoce = LeenoUtils.getGlobalVar('noVoce')
@@ -179,6 +183,8 @@ def ins_voce_computo():
     if lrow == 2:
         lrow += 1
     insertVoceComputoGrezza(oSheet, lrow)
+    if cod:
+        oSheet.getCellByPosition(1, lrow + 1).String = cod
     # @@ PROVVISORIO !!!
     PL._gotoCella(1, lrow + 1)
 

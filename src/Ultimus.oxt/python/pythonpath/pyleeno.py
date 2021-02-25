@@ -289,6 +289,48 @@ def MENU_nuovo_usobollo():
 
 ########################################################################
 
+def invia_voce_interno():
+    '''
+    Invia le voci di Elenco Prezzi verso uno degli altri elaborati.
+    Richiede comunque la scelta del DP
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    elenco = seleziona()
+    codici = []
+    for el in elenco:
+        cod = oSheet.getCellByPosition(0, el).String
+        codici.append(cod)
+    dest = oSheet.getCellRangeByName('C2').String
+    
+    if dest == 'VARIANTE':
+        genera_variante()
+    elif dest == 'CONTABILITA':
+        LeenoContab.attiva_contabilita()
+        # ~ins_voce_contab()
+    elif dest == 'COMPUTO':
+        GotoSheet(dest)
+    else:
+        Dialogs.Exclamation(Title='AVVISO!',
+    Text='''Per procedere devi prima scegliere,
+dalla cella "C2", l'elaborato a cui
+inviare le voci di prezzo selezionate.
+
+Se l'elaborato è già esistente,
+assicurati di aver scelto anche
+la posizione di destinazione.''')
+        _gotoCella(2, 1)
+        return
+    oSheet = oDoc.getSheets().getByName(dest)
+    for el in codici:
+        if oSheet.Name == 'CONTABILITA':
+            GotoSheet(dest)
+            ins_voce_contab(el)
+        else:
+            LeenoComputo.ins_voce_computo(el)
+        lrow = SheetUtils.getLastUsedRow(oSheet)
+    return
 
 def MENU_invia_voce():
     '''
@@ -304,10 +346,15 @@ def MENU_invia_voce():
     nSheet = oSheet.Name
     fpartenza = uno.fileUrlToSystemPath(oDoc.getURL())
     if fpartenza == LeenoUtils.getGlobalVar('sUltimus'):
-        DLG.MsgBox("Questo file coincide con il Documento Principale (DP).", "Attenzione!")
+        if nSheet == 'Elenco Prezzi':
+            invia_voce_interno()
+        else:
+            Dialogs.Exclamation(Title='ATTENZIONE!',
+                Text="Questo file coincide con il Documento Principale (DP).")
         return
     elif LeenoUtils.getGlobalVar('sUltimus') == '':
-        DLG.MsgBox("E' necessario impostare il Documento Principale (DP).", "Attenzione!")
+        Dialogs.Exclamation(Title='ATTENZIONE!',
+            Text="E' necessario impostare il Documento Principale (DP).")
         return
     nSheetDCC = getDCCSheet()
     lrow = LeggiPosizioneCorrente()[1]
@@ -1851,7 +1898,7 @@ def voce_breve():
                 oSheet.getCellRangeByName('S1.H336').Value = 10000
             else:
                 oSheet.getCellRangeByName('S1.H336').Value = int(cfg.read('Contabilità', 'cont_fine_voci_abbreviate'))
-    LeenoSheetUtils.adattaAltezzaRiga(oSheet)
+    Menu_adattaAltezzaRiga()
 
 
 ########################################################################
@@ -4089,32 +4136,30 @@ def seleziona(lrow=None):
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+
+    if lrow == None:
+        lrow = LeggiPosizioneCorrente()[1]
+
+        try:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+        except AttributeError:
+            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
     if oSheet.Name in ('Elenco Prezzi'):
-        return
-    if oSheet.Name in ('COMPUTO', 'VARIANTE'):
+
+        el_y = []
+        lista_y = []
         try:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
-        except AttributeError:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
-        try:
-            if lrow is not None:
-                SR = oRangeAddress.StartRow
-                SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
-            else:
-                SR = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
-        except AttributeError:
-            DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
-            return 0
-        if lrow is not None:
-            ER = oRangeAddress.EndRow
-            ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
-        else:
-            ER = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-    if oSheet.Name == 'Analisi di Prezzo':
-        try:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
-        except AttributeError:
-            oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+            len(oRangeAddress)
+            for el in oRangeAddress:
+                el_y.append((el.StartRow, el.EndRow))
+        except TypeError:
+            el_y.append((oRangeAddress.StartRow, oRangeAddress.EndRow))
+        for y in el_y:
+            for el in range(y[0], y[1] + 1):
+                lista_y.append(el)
+
+  
+    if oSheet.Name in ('COMPUTO', 'VARIANTE', 'Analisi di Prezzo'):
         try:
             if lrow is not None:
                 SR = oRangeAddress.StartRow
@@ -4129,6 +4174,26 @@ def seleziona(lrow=None):
             ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         else:
             ER = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
+        lista_y = [SR, ER]
+    # ~if oSheet.Name == 'Analisi di Prezzo':
+        # ~try:
+            # ~oRangeAddress = oDoc.getCurrentSelection().getRangeAddresses()
+        # ~except AttributeError:
+            # ~oRangeAddress = oDoc.getCurrentSelection().getRangeAddress()
+        # ~try:
+            # ~if lrow is not None:
+                # ~SR = oRangeAddress.StartRow
+                # ~SR = LeenoComputo.circoscriveVoceComputo(oSheet, SR).RangeAddress.StartRow
+            # ~else:
+                # ~SR = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
+        # ~except AttributeError:
+            # ~DLG.MsgBox('La selezione deve essere contigua.', 'ATTENZIONE!')
+            # ~return 0
+        # ~if lrow is not None:
+            # ~ER = oRangeAddress.EndRow
+            # ~ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
+        # ~else:
+            # ~ER = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
     if oSheet.Name == 'CONTABILITA':
         partenza = cerca_partenza()
         if partenza[2] == '#reg':
@@ -4156,8 +4221,8 @@ def seleziona(lrow=None):
             ER = LeenoComputo.circoscriveVoceComputo(oSheet, ER).RangeAddress.EndRow
         else:
             ER = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.EndRow
-    return oDoc.CurrentController.select(
-        oSheet.getCellRangeByPosition(0, SR, 50, ER))
+        lista_y = [SR, ER]
+    return lista_y
 
 
 ########################################################################
@@ -5844,25 +5909,24 @@ def MENU_nuova_voce_scelta():  # assegnato a ctrl-shift-n
     EnableAutoCalc()
 
 # nuova_voce_contab  ##################################################
-def ins_voce_contab(lrow=0, arg=1):
+def ins_voce_contab(lrow=0, arg=1, cod=None):
     '''
     @@@ MODIFICA IN CORSO CON 'LeenoContab.insertVoceContabilita
     Inserisce una nuova voce in CONTABILITA.
     '''
     oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet = oDoc.Sheets.getByName('CONTABILITA')
 
     stili_contab = LeenoUtils.getGlobalVar('stili_contab')
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
 
     if lrow == 0:
-        # ~lrow = LeggiPosizioneCorrente()[1]
         lrow = LeggiPosizioneCorrente()[1]
         if oSheet.getCellByPosition(0, lrow + 1).CellStyle == 'uuuuu':
             return
-        else:
-            lrow += 1
+        # ~else:
+            # ~lrow += 1
     # nome = oSheet.Name
     try:
         # controllo che non ci siano atti registrati
@@ -5876,11 +5940,17 @@ def ins_voce_contab(lrow=0, arg=1):
         ###
     except Exception:
         pass
+
+    # ~DLG.chi(lrow)
+    # ~oDoc.CurrentController.select(oSheet.getCellByPosition(0, lrow))
+    # ~DLG.chi(888)
+    # ~DLG.chi(oSheet.getCellByPosition(0, lrow).CellStyle)
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     nSal = 0
-    if stile in stili_cat:
-        lrow += 1
-    elif stile == 'Ultimus_centro_bordi_lati':
+    # ~if stile in stili_cat:
+        # ~lrow += 1
+        # ~stile = oSheet.getCellByPosition(0, lrow).CellStyle
+    if stile == 'Ultimus_centro_bordi_lati':
         i = lrow
         while i != 0:
             if oSheet.getCellByPosition(23, i).Value != 0:
@@ -5895,12 +5965,13 @@ def ins_voce_contab(lrow=0, arg=1):
         #  else
     elif stile == 'Comp TOTALI':
         pass
-    elif stile in (stili_contab):
+    if stile in (stili_contab):
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)
-    else:
-        return
+    if stile == 'comp Int_colonna_R_prima':
+        lrow += 1
+
     oSheetto = oDoc.getSheets().getByName('S5')
     oRangeAddress = oSheetto.getCellRangeByPosition(0, 22, 48, 26).getRangeAddress()
     oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
@@ -5963,6 +6034,8 @@ def ins_voce_contab(lrow=0, arg=1):
         4).Formula = '=IF(ISERROR(P' + str(sopra + 5) + ');"";IF(P' + str(
             sopra + 5) + '<>"";P' + str(sopra + 5) + ';""))'
     oSheet.getCellByPosition(36, sopra + 4).CellStyle = "comp -controolo"
+    if cod:
+        oSheet.getCellByPosition(1, sopra + 1).String = cod
     numera_voci(0)
     if cfg.read('Generale', 'pesca_auto') == '1':
         if arg == 0:
@@ -8953,6 +9026,8 @@ import LeenoContab
 import itertools
 import operator
 def MENU_debug():
+    ins_voce_elenco()
+    return
     '''
     PREVENTIVI VETERINARIO SATURNO
     Sostituisce hiperlink alla stringa nelle colonne B, se questa è un
@@ -9066,7 +9141,6 @@ def MENU_debug():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeenoSheetUtils.prossimaVoce(oSheet, LeggiPosizioneCorrente()[1], 1)
-    DLG.chi(lrow)
     return
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)

@@ -6366,9 +6366,12 @@ def struct_colore(level):
     col1 = 16777072
     col2 = 16777120
     col3 = 16777168
+    col4 = 12632319
     # attribuisce i colori
     for y in range(3, SheetUtils.getUsedArea(oSheet).EndRow):
         if oSheet.getCellByPosition(0, y).String == '':
+            oSheet.getCellByPosition(0, y).CellBackColor = col4
+        elif len(oSheet.getCellByPosition(0, y).String.split('.')) == 3:
             oSheet.getCellByPosition(0, y).CellBackColor = col3
         elif len(oSheet.getCellByPosition(0, y).String.split('.')) == 2:
             oSheet.getCellByPosition(0, y).CellBackColor = col2
@@ -6383,6 +6386,9 @@ def struct_colore(level):
     elif level == 2:
         colore = col3
         myrange = (col1, col2, col3, col0)
+    elif level == 3:
+        colore = col0
+        myrange = (col1, col2, col3, col4, col0)
 
         for n in (3, 7):
             oCellRangeAddr.StartColumn = n
@@ -6444,6 +6450,7 @@ Vuoi procedere con la creazione della struttura dei capitoli?''',
     struct_colore(0)  # attribuisce i colori
     struct_colore(1)
     struct_colore(2)
+    struct_colore(3)
     return
 
 

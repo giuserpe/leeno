@@ -326,9 +326,9 @@ la posizione di destinazione.''')
     for el in codici:
         if oSheet.Name == 'CONTABILITA':
             GotoSheet(dest)
-            ins_voce_contab(el)
+            ins_voce_contab(cod=el)
         else:
-            LeenoComputo.ins_voce_computo(el)
+            LeenoComputo.ins_voce_computo(cod=el)
         lrow = SheetUtils.getLastUsedRow(oSheet)
     return
 
@@ -5941,10 +5941,6 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
     except Exception:
         pass
 
-    # ~DLG.chi(lrow)
-    # ~oDoc.CurrentController.select(oSheet.getCellByPosition(0, lrow))
-    # ~DLG.chi(888)
-    # ~DLG.chi(oSheet.getCellByPosition(0, lrow).CellStyle)
     stile = oSheet.getCellByPosition(0, lrow).CellStyle
     nSal = 0
     # ~if stile in stili_cat:

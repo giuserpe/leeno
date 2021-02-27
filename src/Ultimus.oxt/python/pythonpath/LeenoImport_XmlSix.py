@@ -139,6 +139,7 @@ def parseXML(data, defaultTitle):
     artList = {}
 
     productList = prezzario.findall('prodotto')
+    madre = ''
     for product in productList:
         attr = product.attrib
 
@@ -234,16 +235,15 @@ def parseXML(data, defaultTitle):
         else:
             desc = textEstesa
 
-        try:
-            desc.split('\n')[1]
-            if desc.split('\n')[0] in desc.split('\n')[1]:
-                desc = desc.split('\n')[1]
-        except:
-            pass
+        if len(codice.split('.')) == 4:
+            madre = desc
+        if len(codice.split('.')) > 4:
+            if madre not in desc:
+                desc = madre + '\n' + desc
 
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella
-        desc = LeenoImport.fixParagraphSize(desc)
+        # ~desc = LeenoImport.fixParagraphSize(desc)
 
         # gruppo, nel caso ci sia
         try:

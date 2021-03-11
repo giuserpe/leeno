@@ -43,6 +43,8 @@ def datiVoceComputo (oSheet, lrow):
         nSal     = int(oSheet.getCellByPosition(23, i+1).Value)
         prezzo   = oSheet.getCellByPosition(13,   f).Value
         importo  = oSheet.getCellByPosition(15,   f).Value
+        sic  = oSheet.getCellByPosition(17,   f).Value
+        mdo  = oSheet.getCellByPosition(30,   f).Value
 
         REG = ((num + '\n' + art + '\n' + data), desc, Nlib, Plib, um, quantP,
             quantN, prezzo, importo)#, sic, mdo, flag, nSal)
@@ -50,13 +52,13 @@ def datiVoceComputo (oSheet, lrow):
             quant = quantP
         else:
             quant = quantN
-        SAL = (art,  desc, um, quant, prezzo, importo)
+        SAL = (art,  desc, um, quant, prezzo, importo, sic, mdo)
         return REG, SAL
     elif oSheet.Name in ('COMPUTO', 'VARIANTE'):
         um = oSheet.getCellByPosition(8, f).String.split('[')[-1].split('[')[0]
         prezzo   = oSheet.getCellByPosition(11,   f).Value
         importo  = oSheet.getCellByPosition(18,   f).Value
-        voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo,)
+        voce = (num, art, desc, um, quantP, prezzo, importo, sic, mdo)
         return voce
 
 

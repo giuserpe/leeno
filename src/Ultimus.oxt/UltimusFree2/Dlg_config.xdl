@@ -65,21 +65,22 @@
   <dlg:textfield dlg:style-id="2" dlg:id="TextField13" dlg:tab-index="29" dlg:left="53" dlg:top="226" dlg:width="50" dlg:height="12" dlg:help-text="&amp;668.Dlg_config.TextField13.HelpText" dlg:align="center" dlg:value="&amp;669.Dlg_config.TextField13.Text"/>
   <dlg:combobox dlg:style-id="1" dlg:id="ComboBox4" dlg:tab-index="30" dlg:left="174" dlg:top="88" dlg:width="55" dlg:height="12" dlg:help-text="&amp;719.Dlg_config.ComboBox4.HelpText" dlg:value="&amp;720.Dlg_config.ComboBox4.Text" dlg:align="center" dlg:spin="true" dlg:maxlength="2">
    <dlg:menupopup>
-    <dlg:menuitem dlg:value="&amp;721.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;722.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;723.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;724.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;725.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;726.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;727.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;728.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;729.ComboBox4.StringItemList"/>
-    <dlg:menuitem dlg:value="&amp;730.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;823.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;824.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;825.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;826.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;827.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;828.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;829.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;830.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;831.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;832.ComboBox4.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;833.ComboBox4.StringItemList"/>
    </dlg:menupopup>
   </dlg:combobox>
   <dlg:text dlg:style-id="1" dlg:id="Label4" dlg:tab-index="31" dlg:left="124" dlg:top="88" dlg:width="48" dlg:height="12" dlg:help-text="&amp;731.Dlg_config.Label4.HelpText" dlg:value="&amp;732.Dlg_config.Label4.Label" dlg:valign="center"/>
   <dlg:text dlg:style-id="1" dlg:id="Label8" dlg:tab-index="32" dlg:left="124" dlg:top="105" dlg:width="48" dlg:height="12" dlg:help-text="&amp;733.Dlg_config.Label8.HelpText" dlg:value="&amp;734.Dlg_config.Label8.Label" dlg:valign="center"/>
-  <dlg:textfield dlg:style-id="1" dlg:id="TextField5" dlg:tab-index="33" dlg:left="174" dlg:top="105" dlg:width="55" dlg:height="13" dlg:help-text="&amp;737.Dlg_config.TextField5.HelpText" dlg:align="center" dlg:valign="center" dlg:value="&amp;738.Dlg_config.TextField5.Text"/>
+  <dlg:textfield dlg:style-id="1" dlg:id="TextField5" dlg:tab-index="33" dlg:left="279" dlg:top="105" dlg:width="55" dlg:height="13" dlg:help-text="&amp;737.Dlg_config.TextField5.HelpText" dlg:align="center" dlg:valign="center" dlg:value="&amp;738.Dlg_config.TextField5.Text"/>
   <dlg:titledbox dlg:id="FrameControl1" dlg:tab-index="34" dlg:left="5" dlg:top="10" dlg:width="102" dlg:height="113" dlg:help-text="&amp;765.Dlg_config.FrameControl1.HelpText">
    <dlg:title dlg:value="&amp;766.Dlg_config.FrameControl1.Label"/>
   </dlg:titledbox>
@@ -93,5 +94,18 @@
    <dlg:title dlg:value="&amp;772.Dlg_config.FrameControl5.Label"/>
   </dlg:titledbox>
   <dlg:button dlg:id="CommandButton2" dlg:tab-index="38" dlg:left="204" dlg:top="128" dlg:width="25" dlg:height="15" dlg:help-text="&amp;773.Dlg_config.CommandButton2.HelpText" dlg:value="&amp;774.Dlg_config.CommandButton2.Label" dlg:button-type="ok"/>
+  <dlg:combobox dlg:id="ComboBox5" dlg:tab-index="39" dlg:left="174" dlg:top="105" dlg:width="55" dlg:height="12" dlg:help-text="&amp;834.Dlg_config.ComboBox5.HelpText" dlg:value="&amp;835.Dlg_config.ComboBox5.Text" dlg:align="center" dlg:autocomplete="false" dlg:spin="true">
+   <dlg:menupopup>
+    <dlg:menuitem dlg:value="&amp;855.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;856.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;857.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;858.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;859.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;860.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;861.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;862.ComboBox5.StringItemList"/>
+    <dlg:menuitem dlg:value="&amp;863.ComboBox5.StringItemList"/>
+   </dlg:menupopup>
+  </dlg:combobox>
  </dlg:bulletinboard>
 </dlg:window>

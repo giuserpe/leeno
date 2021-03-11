@@ -167,8 +167,14 @@ def MENU_leeno_conf():
 
     sString = oDlg_config.getControl('ComboBox4')
     sString.Text = cfg.read('Generale', 'copie_backup')
-    sString = oDlg_config.getControl('TextField5')
-    sString.Text = cfg.read('Generale', 'pausa_backup')
+    if int(cfg.read('Generale', 'copie_backup')) != 0:
+        sString = oDlg_config.getControl('ComboBox5')
+        sString.Text = cfg.read('Generale', 'pausa_backup')
+    # ~else: 
+        # ~oDlg_config.getControl('ComboBox5').setEnable(False)
+        # ~oDlg_config.execute()
+        # ~DLG.chi(oDlg_config.getControl('ComboBox5'))
+
 
     # MOSTRA IL DIALOGO
     oDlg_config.execute()
@@ -223,7 +229,7 @@ def MENU_leeno_conf():
     LeenoSheetUtils.adattaAltezzaRiga(oSheet)
 
     cfg.write('Generale', 'copie_backup', oDlg_config.getControl('ComboBox4').getText())
-    cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('TextField5').getText())
+    cfg.write('Generale', 'pausa_backup', oDlg_config.getControl('ComboBox5').getText())
     autorun()
 
 ########################################################################
@@ -7182,10 +7188,17 @@ def autorun():
     '''
     @@ DA DOCUMENTARE
     '''
-    #  global utsave
-    utsave = trun()
-    utsave._stop()
-    utsave.start()
+    # ~global utsave
+    if int(cfg.read('Generale', 'copie_backup')) != 0:
+        utsave = trun()
+        utsave._stop()
+        utsave.start()
+    else:
+        try:
+            utsave._stop()
+            utsave = False
+        except:
+            pass
 
 
 ########################################################################
@@ -8671,7 +8684,7 @@ def fissa():
         oDoc.CurrentController.freezeAtPosition(0, 3)
     elif oSheet.Name in ('Analisi di Prezzo'):
         oDoc.CurrentController.freezeAtPosition(0, 2)
-    elif oSheet.Name in ('Registro'):
+    elif oSheet.Name in ('Registro', 'SAL'):
         oDoc.CurrentController.freezeAtPosition(0, 1)
     # ~_gotoCella(lcol, lrow)
 
@@ -9028,8 +9041,46 @@ def somma():
 import LeenoContab
 import itertools
 import operator
+import functools
 def MENU_debug():
-    ins_voce_elenco()
+    oDoc = LeenoUtils.getDocument()
+    # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~DLG.chi(oSheet.getCellRangeByName('B123').Rows.IsStartOfNewPage)
+    # ~return
+    
+    LeenoContab.GeneraAttiContabili(oDoc)
+    # ~LeenoContab.GeneraRegistro(oDoc)
+    # ~LeenoContab.GeneraSAL(oDoc)
+    return
+    # ~m=[["aaa", "bbb", "ccc", 12],
+         # ~["aaa", "bbb", "ccc", 33],
+         # ~["aaa", "bbb", "ccc", 51],
+         # ~["abb", "ddd", "eee", 15],
+         # ~["abb", "ddd", "eee", 40]]
+    m=[["aaa", "bbb", "ccc", 12, "eee", 54],
+        ["aaa", "bbb", "ccc", 33, "eee", 45],
+        ["aaa", "bbb", "ccc", 51, "eee", 12],
+        ["abb", "ddd", "eee", 15, "ggg", 45],
+        ["abb", "ddd", "eee", 40, "ggg", 45]]
+    r=list()
+    b=list()
+    # ~DLG.chi(itertools.groupby(sorted(m)))
+    for k, g in itertools.groupby(sorted(m), operator.itemgetter(0, 1)): 
+        s=sum(float(t[3]) for t in g)
+        k = list(k)
+        k.append(s)
+        r.append(k)
+    DLG.chi(r)
+    # ~for k, g in itertools.groupby(sorted(m), operator.itemgetter(0, 1)): 
+        # ~s=sum(float(t[5]) for t in g)
+        # ~el = (str(t[5]) for t in g)
+        # ~DLG.chi(el)
+
+        # ~k = list(k)
+        # ~k.append(s)
+        # ~r.append(k)
+    # ~ DLG.chi(itertools)
+    
     return
     '''
     PREVENTIVI VETERINARIO SATURNO

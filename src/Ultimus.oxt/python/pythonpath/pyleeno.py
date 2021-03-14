@@ -4392,7 +4392,6 @@ def copia_riga_contab(lrow):
     Inserisce una nuova riga di misurazione in contabilità
     '''
     oDoc = LeenoUtils.getDocument()
-
     # vado alla vecchia maniera ## copio il range di righe computo da S5 ##
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheetto = oDoc.getSheets().getByName('S5')
@@ -4409,18 +4408,18 @@ def copia_riga_contab(lrow):
         oCellAddress = oSheet.getCellByPosition(0, lrow).getCellAddress()
         oSheet.getRows().insertByIndex(lrow, 1)
         oSheet.copyRange(oCellAddress, oRangeAddress)
-
-
-        oRangeAddress = oSheet.getCellByPosition(1, lrow +
-                                                 1).getRangeAddress()
-        oCellAddress = oSheet.getCellByPosition(1, lrow).getCellAddress()
-        oSheet.copyRange(oCellAddress, oRangeAddress)
-        oSheet.getCellByPosition(1, lrow + 1).String = ""
-        oSheet.getCellByPosition(1, lrow +
-                                 1).CellStyle = 'Comp-Bianche in mezzo_R'
+        if stile in ('comp Art-EP_R'):
+            oRangeAddress = oSheet.getCellByPosition(1, lrow +
+                                                     1).getRangeAddress()
+            oCellAddress = oSheet.getCellByPosition(1, lrow).getCellAddress()
+            oSheet.copyRange(oCellAddress, oRangeAddress)
+            oSheet.getCellByPosition(1, lrow + 1).String = ""
+            oSheet.getCellByPosition(1, lrow + 1
+                                ).CellStyle = 'Comp-Bianche in mezzo_R'
+        else:
+            oSheet.getCellByPosition(1, lrow).CellStyle = 'Comp-Bianche in mezzo_R'
     _gotoCella(2, lrow)
     return
-
 
 
 def copia_riga_analisi(lrow):

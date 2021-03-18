@@ -6547,6 +6547,9 @@ def MENU_parziale():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
+    if oSheet.getCellByPosition(1, lrow-1).CellStyle in ('comp Art-EP_R') or \
+        lrow == 0:
+        return
     if oSheet.Name in ('COMPUTO', 'VARIANTE', 'CONTABILITA'):
         parziale_core(oSheet, lrow)
         rigenera_parziali(False)
@@ -6557,9 +6560,6 @@ def parziale_core(oSheet, lrow):
     '''
     lrow    { double } : id della riga di inserimento
     '''
-
-    if lrow == 0:
-        return
     sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
     sopra = sStRange.RangeAddress.StartRow
     # sotto = sStRange.RangeAddress.EndRow
@@ -6679,7 +6679,7 @@ def MENU_vedi_voce():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lrow = LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(2, lrow).String != '#N/A':
+    if oSheet.getCellByPosition(2, lrow).String not in ('#N/A', '#RIF!'):
         if oSheet.getCellByPosition(2, lrow).Type.value != 'EMPTY':
             if oSheet.Name in ('COMPUTO', 'VARIANTE'):
                 copia_riga_computo(lrow)
@@ -9042,6 +9042,21 @@ import itertools
 import operator
 import functools
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oCellRangeAddr = uno.createUnoStruct(
+        'com.sun.star.table.CellRangeAddress')
+    # ~ oCellRangeAddr.Sheet = iSheet
+
+    for el in range(2, SheetUtils.getUsedArea(oSheet).EndRow + 1):
+        if 'concedente' not in oSheet.getCellByPosition(1, el).String or \
+        oSheet.getCellByPosition(1, el).Type.value == 'EMPTY':
+            oCellRangeAddr.StartColumn = 1
+            oCellRangeAddr.EndColumn = 1
+            oCellRangeAddr.StartRow = el
+            oCellRangeAddr.EndRow = el
+            oSheet.group(oCellRangeAddr, 1)
+    return
     oDoc = LeenoUtils.getDocument()
     # ~oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # ~DLG.chi(oSheet.getCellRangeByName('B123').Rows.IsStartOfNewPage)

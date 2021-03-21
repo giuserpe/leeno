@@ -4315,6 +4315,7 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
         for el in range(y[0], y[1] + 1):
             lista_y.append(el)
     oCellRangeAddr = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    rigen = False
     for y in reversed(lista_y):
         if oSheet.getCellByPosition(2, y).CellStyle not in ('An-lavoraz-generica',
                                                             'comp 1-a',
@@ -4328,6 +4329,8 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
         'SOMMANO' in oSheet.getCellByPosition(8, y).String:
             pass
         else:
+            if oSheet.getCellByPosition(2, y).CellStyle in ('comp sotto centro'):
+                rigen = True
             if oSheet.getCellByPosition(1, y).CellStyle == 'Data_bianca':
                 oCellAddress = oSheet.getCellByPosition(1, y+1).getCellAddress()
                 oCellRangeAddr.Sheet = oSheet.RangeAddress.Sheet
@@ -4340,7 +4343,8 @@ devi selezionarle ed utilizzare il comando 'Elimina righe' di Calc.""")
             oSheet.getRows().removeByIndex(y, 1)
             if stile in ('Livello-0-scritta mini', 'Livello-1-scritta mini', 'livello2_'):
                 Rinumera_TUTTI_Capitoli2(oSheet)
-    rigenera_parziali(False)
+    if rigen == True:
+        rigenera_parziali(False)
     oDoc.CurrentController.select(oDoc.createInstance("com.sun.star.sheet.SheetCellRanges"))
     EnableAutoCalc()
 

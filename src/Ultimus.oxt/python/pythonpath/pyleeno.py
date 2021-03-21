@@ -5970,7 +5970,9 @@ def ins_voce_contab(lrow=0, arg=1, cod=None):
         #  else
     elif stile == 'Comp TOTALI':
         pass
-    if stile in (stili_contab):
+    if stile in stili_cat:
+        lrow += 1
+    elif stile in (stili_contab):
         sStRange = LeenoComputo.circoscriveVoceComputo(oSheet, lrow)
         nSal = int(oSheet.getCellByPosition(23, sStRange.RangeAddress.StartRow + 1).Value)
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow)

@@ -178,7 +178,10 @@ def ins_voce_computo(cod=None):
     stili_computo = LeenoUtils.getGlobalVar('stili_computo')
     stili_cat = LeenoUtils.getGlobalVar('stili_cat')
     lrow = PL.LeggiPosizioneCorrente()[1]
-    if oSheet.getCellByPosition(0, lrow).CellStyle in (noVoce + stili_computo + stili_cat):
+    stile = oSheet.getCellByPosition(0, lrow).CellStyle
+    if stile in stili_cat:
+        lrow += 1
+    elif stile  in (noVoce + stili_computo):
         lrow = LeenoSheetUtils.prossimaVoce(oSheet, lrow, 1)
     else:
         return

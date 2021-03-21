@@ -1086,7 +1086,7 @@ rem chiedo se posso procedere
 				Case &quot;Libretto&quot;
 					oNamedRange=oRanges.getByName(prefix &amp; nSal).referredCells
 ThisComponent.CurrentController.Select(oNamedRange)
-SEPARA_righe
+&apos;SEPARA_righe
 		oNamedRange.cellprotection.IsLocked = False
 rem recupero l&apos;ultima riga del documento
 					With oNamedRange.RangeAddress
@@ -1095,7 +1095,7 @@ rem recupero l&apos;ultima riga del documento
 					End With
 seleziona_area (prefix &amp; nSal)
 &apos;Print davoce &amp;&quot; &quot;&amp; avoce 
-MOSTRA_righe (&quot;on&quot;)
+&apos;MOSTRA_righe (&quot;on&quot;)
 rem ripulisco le colonne da VALUE+STRING+FORMULA
 					oSheet.getCellRangeByPosition(19, daVoce, 25, aVoce).ClearContents(1+4+16)
 rem elimino la formattazione forzata (lo sbiancamento) da HARDATTR
@@ -1124,7 +1124,7 @@ rem risistemo intestazioni
 				oSheet.getCellByPosition(25,ins).value = nSal-1
 				oSheet.getCellByPosition(25,ins).cellstyle = &quot;Menu_sfondo _input_grasBig&quot;
 				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(25,daVoce-1))
-copy_clip
+&apos;copy_clip
 				ThisComponent.CurrentController.Select(oSheet.getCellByPosition(25,ins-1))
 	ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;paste_clip&quot;, &quot;0&quot;) &apos;sovrappone dati
 						oCell = oSheet.getCellRangeByPosition(0,daVoce,11,aVoce)
@@ -1152,7 +1152,7 @@ rem recupero prima e ultima riga del documento
 					End With
 					oSheet.rows.removeByIndex (daVoce-1, 1) &apos;elimina riga di informazione
 seleziona_area (prefix &amp; nSal)
-MOSTRA_righe (&quot;on&quot;)
+&apos;MOSTRA_righe (&quot;on&quot;)
 elimina_righe
 					ThisComponent.currentController.removeRangeSelectionListener(oRangeSelectionListener) &apos;deseleziona
 					If nSal-1&lt;&gt;0 Then
@@ -1512,4 +1512,147 @@ Protezione_area (&quot;CONTABILITA&quot;,nomearea)
 RiDefinisci_Area_Elenco_prezzi &apos; non capisco come mai l&apos;area di elenco_prezzi viene cambiata
 	Genera_REGISTRO
 end Sub
+
+rem ######################################################################
+rem ###                                                    ###############
+rem ### RIPRISTINATE IN ATTESA DELLA RISCRITTURA IN PYTHON ###############
+rem ###                                                    ###############
+rem ######################################################################
+
+rem ######################################################################
+
+sub seleziona_area (nome_area As string) &apos;da registratore macro
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document   as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem ----------------------------------------------------------------------
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = &quot;ToPoint&quot;
+	args1(0).Value = nome_area&apos;&quot;#Lib#1&quot;
+	
+	dispatcher.executeDispatch(document, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args1())
+	
+	
+end sub
+
+rem ######################################################################
+
+sub Elimina_righe &apos;da registratore macro
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document   as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem ----------------------------------------------------------------------
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = &quot;Flags&quot;
+	args1(0).Value = &quot;R&quot;
+	
+	dispatcher.executeDispatch(document, &quot;.uno:DeleteCell&quot;, &quot;&quot;, 0, args1())
+end Sub
+
+rem ######################################################################
+
+sub definisci_area_di_stampa
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document   as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem ----------------------------------------------------------------------
+	dispatcher.executeDispatch(document, &quot;.uno:DefinePrintArea&quot;, &quot;&quot;, 0, Array())
+	
+end sub
+
+rem ######################################################################
+
+sub SEPARA_righe &apos;da registratore macro
+	
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document   as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem ----------------------------------------------------------------------
+	dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = &quot;RowOrCol&quot;
+	args1(0).Value = &quot;R&quot;
+	
+	dispatcher.executeDispatch(document, &quot;.uno:Ungroup&quot;, &quot;&quot;, 0, args1())
+	
+	
+end sub
+
+rem ######################################################################
+
+sub MOSTRA_righe (switch As String)&apos; &quot;on&quot; per mostrare, &quot;off&quot; per nascondere
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document   as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	If switch =&quot;on&quot; Then azione =&quot;.uno:ShowRow&quot;
+	If switch =&quot;off&quot; Then azione =&quot;.uno:HideRow&quot;
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem ----------------------------------------------------------------------
+	dispatcher.executeDispatch(document, azione, &quot;&quot;, 0, Array())
+	
+end sub
+
+rem ######################################################################
+
+sub copy_clip &apos;registratore macro
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document   as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem ----------------------------------------------------------------------
+	dispatcher.executeDispatch(document, &quot;.uno:Copy&quot;, &quot;&quot;, 0, Array())
+	
+	
+End Sub
+
+rem ######################################################################
+
+sub Cancella_dati &apos;da registratore macro
+	rem ----------------------------------------------------------------------
+	rem define variables
+	dim document   as object
+	dim dispatcher as object
+	rem ----------------------------------------------------------------------
+	rem get access to the document
+	document   = ThisComponent.CurrentController.Frame
+	dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+	
+	rem ----------------------------------------------------------------------
+	dispatcher.executeDispatch(document, &quot;.uno:ClearContents&quot;, &quot;&quot;, 0, Array())
+	
+	
+end sub
 </script:module>

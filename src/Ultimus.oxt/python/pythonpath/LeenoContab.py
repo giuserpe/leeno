@@ -1003,7 +1003,7 @@ def GeneraRegistro(oDoc):
 
         if oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage == True:
             oDoc.CurrentController.select(oSheet.getCellByPosition(1, fineFirme))
-            DLG.chi(oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage)
+            # ~ DLG.chi(oSheet.getCellByPosition(1, fineFirme).Rows.IsStartOfNewPage)
             # ~fineFirme -= 1
             # ~oSheet.getRows().removeByIndex(fineFirme, 1)
             break
@@ -1117,11 +1117,11 @@ def GeneraRegistro(oDoc):
 
 
 ########################################################################
-def GeneraAttiContabili(oDoc):
+def GeneraAttiContabili():
     '''
     @@ DA DOCUMENTARE
     '''
-    # ~oDoc = LeenoUtils.getDocument()
+    oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name != "CONTABILITA":
         return
@@ -1135,6 +1135,7 @@ def GeneraAttiContabili(oDoc):
     # ~except:
         # ~return
     GeneraRegistro(oDoc)
+    PL.GotoSheet('CONTABILITA')
     # ~DLG.chi((nSal, daVoce, aVoce, daRiga, aRiga))
     Dialogs.Info(Title = 'Voci registrate!',
         Text="La generazione degli allegati contabili è stata completata.\n"

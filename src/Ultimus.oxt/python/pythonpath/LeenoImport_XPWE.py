@@ -59,13 +59,16 @@ def leggiSuperCapitoli(CapCat):
         PweDGSuperCapitoli = CapCat.find('PweDGSuperCapitoli').getchildren()
         for elem in PweDGSuperCapitoli:
             id_sc = elem.get('ID')
-            codice = elem.find('Codice').text
+            #~ codice = elem.find('Codice').text
             try:
                 codice = elem.find('Codice').text
             except AttributeError:
                 codice = ''
             dessintetica = elem.find('DesSintetica').text
-            percentuale = elem.find('Percentuale').text
+            try:
+                percentuale = elem.find('Percentuale').text
+            except:
+                percentuale = ''
             diz = {}
             diz['id_sc'] = id_sc
             diz['codice'] = codice
@@ -84,13 +87,16 @@ def leggiCapitoli(CapCat):
         PweDGCapitoli = CapCat.find('PweDGCapitoli').getchildren()
         for elem in PweDGCapitoli:
             id_sc = elem.get('ID')
-            codice = elem.find('Codice').text
+            #~ codice = elem.find('Codice').text
             try:
                 codice = elem.find('Codice').text
             except AttributeError:
                 codice = ''
             dessintetica = elem.find('DesSintetica').text
-            percentuale = elem.find('Percentuale').text
+            try:
+                percentuale = elem.find('Percentuale').text
+            except:
+                percentuale = ''
             diz = {}
             diz['id_sc'] = id_sc
             diz['codice'] = codice
@@ -109,13 +115,19 @@ def leggiSottoCapitoli(CapCat):
         PweDGSubCapitoli = CapCat.find('PweDGSubCapitoli').getchildren()
         for elem in PweDGSubCapitoli:
             id_sc = elem.get('ID')
-            codice = elem.find('Codice').text
+            try:
+                codice = elem.find('Codice').text
+            except AttributeError:
+                codice = ''
             try:
                 codice = elem.find('Codice').text
             except AttributeError:
                 codice = ''
             dessintetica = elem.find('DesSintetica').text
-            percentuale = elem.find('Percentuale').text
+            try:
+                percentuale = elem.find('Percentuale').text
+            except:
+                percentuale = ''
             diz = {}
             diz['id_sc'] = id_sc
             diz['codice'] = codice
@@ -585,9 +597,17 @@ def leggiMisurazioni(misurazioni, ordina):
                 else:
                     descrizione = ''
                 partiuguali = el.find('PartiUguali').text
+                if '  ' in partiuguali:
+                    partiuguali = None
                 lunghezza = el.find('Lunghezza').text
+                if '  ' in lunghezza:
+                    lunghezza = None
                 larghezza = el.find('Larghezza').text
+                if '  ' in larghezza:
+                    larghezza = None
                 hpeso = el.find('HPeso').text
+                if '  ' in hpeso:
+                    hpeso = None
                 quantita = el.find('Quantita').text
                 flags = el.find('Flags').text
                 riga_misura = (

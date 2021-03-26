@@ -301,10 +301,10 @@ def partita(testo):
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     if oSheet.Name != "CONTABILITA":
         return
-    x = LeggiPosizioneCorrente()[1]
+    x = PL.LeggiPosizioneCorrente()[1]
     if oSheet.getCellByPosition(0, x).CellStyle == 'comp 10 s_R':
         if oSheet.getCellByPosition(2, x).Type.value != 'EMPTY':
-            Copia_riga_Ent()
+            PL.Copia_riga_Ent()
             x += 1
         oSheet.getCellByPosition(2, x).String = testo
         oSheet.getCellRangeByPosition(2, x, 8, x).CellBackColor = 16777113

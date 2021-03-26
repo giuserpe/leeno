@@ -44,6 +44,7 @@ import LeenoFormat
 import LeenoComputo
 import LeenoContab
 import LeenoDialogs as DLG
+import PersistUtils as PU
 import LeenoEvents
 import LeenoBasicBridge
 
@@ -5884,14 +5885,19 @@ def rigenera_parziali (arg=False):
     n = 0
     progress.setValue(n)
     progress.show()
-
+    test = 1
+    if lrow:
+        sopra = lrow 
     for i in range(sopra, sotto):
         n += 1
         progress.setValue(n)
-        # ~if oSheet.getCellByPosition(8, i).String == '0,000':
-            # ~oSheet.getCellByPosition(8, i).String = ''
-        if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
-            parziale_core(oSheet, i)
+        if test < 3:
+            if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
+                parziale_core(oSheet, i)
+                test += 1
+        else:
+            progress.hide()
+            return
     progress.hide()
     return
 
@@ -9050,6 +9056,7 @@ import functools
 def MENU_debug():
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    # ~DLG.chi(PU.var2string(oSheet))
     oCellRangeAddr = uno.createUnoStruct(
         'com.sun.star.table.CellRangeAddress')
     # ~ oCellRangeAddr.Sheet = iSheet

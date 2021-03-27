@@ -41,7 +41,7 @@ def leggiAnagraficaGenerale(dati):
         datiAnagrafici['provincia'] = DatiGenerali[2].text or ''
         datiAnagrafici['parteopera'] = DatiGenerali[6].text or ''
         '''
-    except AttributeError:
+    except:
         datiAnagrafici['comune'] = ''
         datiAnagrafici['oggetto'] = ''
         datiAnagrafici['committente'] = ''
@@ -253,7 +253,8 @@ def leggiDatiGeneraliAnalisi(dati):
         speseutili = PweDGAnalisi.find('SpeseUtili').text
         confquantita = PweDGAnalisi.find('ConfQuantita').text
         '''
-    except AttributeError:
+    # ~except AttributeError:
+    except:
         speseGenerali = 0
         utiliImpresa = 0
         oneriAccessoriSicurezza = 0
@@ -381,7 +382,10 @@ def leggiElencoPrezzi(misurazioni):
     for elem in epitems:
         id_ep = elem.get('ID')
         dizionarioArticolo = {}
-        tipoep = elem.find('TipoEP').text
+        try:
+            tipoep = elem.find('TipoEP').text
+        except:
+            tipoep = '0'
         tariffa = elem.find('Tariffa').text or ''
         articolo = elem.find('Articolo').text
         desridotta = elem.find('DesRidotta').text
@@ -400,10 +404,22 @@ def leggiElencoPrezzi(misurazioni):
             prezzo1 = ''
         else:
             prezzo1 = float(elem.find('Prezzo1').text)
-        prezzo2 = elem.find('Prezzo2').text
-        prezzo3 = elem.find('Prezzo3').text
-        prezzo4 = elem.find('Prezzo4').text
-        prezzo5 = elem.find('Prezzo5').text
+        try:
+            prezzo2 = elem.find('Prezzo2').text
+        except:
+            prezzo2 = '0'
+        try:
+            prezzo3 = elem.find('Prezzo3').text
+        except:
+            prezzo3 = '0'
+        try:
+            prezzo4 = elem.find('Prezzo4').text
+        except:
+            prezzo4 = '0'
+        try:
+            prezzo5 = elem.find('Prezzo5').text
+        except:
+            prezzo5 = '0'
         try:
             idspcap = elem.find('IDSpCap').text
         except AttributeError:
@@ -454,10 +470,10 @@ def leggiElencoPrezzi(misurazioni):
             adrinternet = elem.find('AdrInternet').text
         except AttributeError:
             adrinternet = ''
-        if elem.find('PweEPAnalisi').text is None:
-            pweepanalisi = ''
-        else:
+        try:
             pweepanalisi = elem.find('PweEPAnalisi').text
+        except:
+            pweepanalisi = ''
 
         dizionarioArticolo['tipoep'] = tipoep
         dizionarioArticolo['tariffa'] = tariffa
@@ -494,7 +510,10 @@ def leggiElencoPrezzi(misurazioni):
         # leggo analisi di prezzo
 
         pweepanalisi = elem.find('PweEPAnalisi')
-        PweEPAR = pweepanalisi.find('PweEPAR')
+        try:
+            PweEPAR = pweepanalisi.find('PweEPAR')
+        except:
+            PweEPAR = None
         if PweEPAR is not None:
             EPARItem = PweEPAR.findall('EPARItem')
             analisi = []
@@ -597,17 +616,21 @@ def leggiMisurazioni(misurazioni, ordina):
                 else:
                     descrizione = ''
                 partiuguali = el.find('PartiUguali').text
-                if '  ' in partiuguali:
-                    partiuguali = None
+                if partiuguali != None:
+                    if '  ' in partiuguali:
+                        partiuguali = None
                 lunghezza = el.find('Lunghezza').text
-                if '  ' in lunghezza:
-                    lunghezza = None
+                if lunghezza != None:
+                    if '  ' in lunghezza:
+                        lunghezza = None
                 larghezza = el.find('Larghezza').text
-                if '  ' in larghezza:
-                    larghezza = None
+                if larghezza != None:
+                    if '  ' in larghezza:
+                        larghezza = None
                 hpeso = el.find('HPeso').text
-                if '  ' in hpeso:
-                    hpeso = None
+                if hpeso != None:
+                    if '  ' in hpeso:
+                        hpeso = None
                 quantita = el.find('Quantita').text
                 flags = el.find('Flags').text
                 riga_misura = (
@@ -658,16 +681,15 @@ def leggiMisurazioni(misurazioni, ordina):
                 listaMisure.append(el[1])
 
     except IndexError:
-        DLG.MsgBox(
-            "Nel file scelto non risultano esserci voci di misurazione,\n"
+        Dialogs.Exclamation(Title="Attenzione",
+        Text="Nel file scelto non risultano esserci voci di misurazione,\n"
             "perciò saranno importate le sole voci di Elenco Prezzi.\n\n"
             "Si tenga conto che:\n"
             "- sarà importato solo il 'Prezzo 1' dell'elenco;\n"
             "- a seconda della versione, il formato XPWE potrebbe\n"
             "  non conservare alcuni dati come le incidenze di\n"
-            "  sicurezza e di manodopera!",
-            'ATTENZIONE!'
-        )
+            "  sicurezza e di manodopera!"
+            )
 
     return listaMisure
 
@@ -1208,6 +1230,8 @@ def MENU_XPWE_import():
 
     # va alla sezione dei dati generali
     dati = root.find('PweDatiGenerali')
+    if dati == None:
+        dati = root.getchildren()[0].find('PweDatiGenerali')
 
     # legge i dati anagrafici generali
     datiAnagrafici = leggiAnagraficaGenerale(dati)
@@ -1226,9 +1250,13 @@ def MENU_XPWE_import():
     progress.setValue(4)
 
     misurazioni = root.find('PweMisurazioni')
+    if misurazioni == None:
+        misurazioni = root.getchildren()[0].find('PweMisurazioni')
 
     # legge l'elenco prezzi
     elencoPrezzi = leggiElencoPrezzi(misurazioni)
+    # ~DLG.chi(elencoPrezzi)
+    # ~return
     progress.setValue(5)
 
     # legge le misurazioni

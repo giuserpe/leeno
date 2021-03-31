@@ -439,5 +439,15 @@ def ins_voce_contab(lrow=0, arg=1):
     callAlert()
     PL.ins_voce_contab(lrow, arg)
 
-
+def Duplica_Sheet_new_doc_No_Cons():
+    '''
+    pezza per Sub Duplica_Sheet_new_doc_No_Cons
+    '''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    end = SheetUtils.getLastUsedRow(oSheet)
+    for el in range(2, end):
+        if oSheet.getCellByPosition(9, el).CellStyle == 'comp sotto Euro Originale':
+            oSheet.getCellByPosition(9, el).Formula = '=I' + str(el+1) + '*H' + str(el+1)
+    return
 

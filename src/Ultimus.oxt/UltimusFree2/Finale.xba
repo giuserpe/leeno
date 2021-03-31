@@ -561,8 +561,10 @@ procedi:
 &apos;	Next i
 	
 &apos;#########################################################################
+	ScriptPy(&quot;LeenoBasicBridge&quot;,&quot;Duplica_Sheet_new_doc_No_Cons&quot;)
 	msgbox &quot;Questo è un nuovo documento indipendente dal file di origine.&quot;&amp; CHR$(10)_
 		&amp; &quot;Conviene salvarlo subito.&quot;, 48, &quot;AVVISO!&quot;
+	
 	exit sub
 	Gestione_Errore:
 	Barra_Apri_Chiudi_4

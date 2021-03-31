@@ -9053,7 +9053,61 @@ import LeenoContab
 import itertools
 import operator
 import functools
+# ~from xml.etree.ElementTree import ElementTree, ParseError
+from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
+
+
+# ~from xml.etree.ElementTree import ElementTree, ParseError
+from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
+
+
 def MENU_debug():
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    end = SheetUtils.getLastUsedRow(oSheet)
+    for el in range(2, end):
+        if oSheet.getCellByPosition(9, el).CellStyle == 'comp sotto Euro Originale':
+            oSheet.getCellByPosition(9, el).Formula = '=I' + str(el+1) + '*H' + str(el+1)
+    return
+    if os.altsep:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
+                                            'leeno_version_code')
+        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
+                                            'description.xml')
+    else:
+        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
+                                            'leeno_version_code')
+        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
+                                            'description.xml')
+    f = open(code_file, 'r')
+    DLG.chi(f.readlines()[:7])
+    Ldev = str (int(f.readline().split('LeenO-')[1].split('-')[0].split('.')[-1]) + 1)
+    tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
+    # ~of = open(code_file, 'w')
+    newl= []
+    new = (
+        'LeenO-' +
+        str(LeenoUtils.getGlobalVar('Lmajor')) + '.' +
+        str(LeenoUtils.getGlobalVar('Lminor')) + '.' +
+        LeenoUtils.getGlobalVar('Lsubv').split('.')[0] + '.' +
+        Ldev + '-TESTING-' +
+        tempo[:-6]
+        )
+    f = open(desc_file, 'r')
+
+    for el in f.readlines():
+        if '<version value=' in el:
+            newl.append('<version value="' + new + '" />')
+        else:
+            newl.append(el)
+    str1 = ''
+    (str1.join(newl))
+    of = open(desc_file, 'w')
+    of.write(str1)
+    of.close()
+
+    return
+
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     # ~DLG.chi(PU.var2string(oSheet))

@@ -8028,6 +8028,7 @@ def bak():
 
 
 ########################################################################
+
 class version_code:
     """ Gestisce il nome del file OXT in leeno_version_code"""
 
@@ -8070,6 +8071,34 @@ class version_code:
         of.close()
         return new
 
+def description_upd():
+    '''
+    Aggiorna il valore di versione del file description.xml
+    '''
+    if os.altsep:
+        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
+                                            'description.xml')
+    else:
+        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
+                                            'description.xml')
+    f = open(desc_file, 'r')
+    oxt_name = version_code.read()
+
+    new = []
+    for el in f.readlines():
+        if '<version value=' in el:
+            el.split('''"''')
+            el = el.split('''"''')[0] +'''"'''+ oxt_name[6:100] +'''"'''+ el.split('''"''')[2]
+        new.append(el)
+
+    str_join = ''.join(new)
+    
+    of = open(desc_file, 'w')
+    of.write(str_join)
+    of.close()
+    return
+
+
 
 ########################################################################
 def MENU_grid_switch():
@@ -8080,7 +8109,7 @@ def MENU_grid_switch():
 
 def MENU_make_pack():
     '''
-    @@ DA DOCUMENTARE
+    Produce il pacchetto installabile 
     '''
     make_pack()
 
@@ -8088,8 +8117,8 @@ def MENU_make_pack():
 def make_pack(bar=0):
     '''
     bar { integer } : toolbar 0=spenta 1=accesa
-    Pacchettizza l'estensione in duplice copia: LeenO.oxt e LeenO-yyyymmddhhmm.oxt
-    in una directory precisa(per ora - da parametrizzare)
+    Pacchettizza l'estensione in duplice copia: LeenO.oxt e LeenO-x.xx.x.xxx-TESTING-yyyymmdd.oxt
+    in una directory precisa (da parametrizzare...)
     '''
     oDoc = LeenoUtils.getDocument()
     try:
@@ -8102,6 +8131,7 @@ def make_pack(bar=0):
     except Exception:
         pass
     oxt_name = version_code.write()
+    description_upd() # aggiorna description.xml
     if bar == 0:
         oDoc = LeenoUtils.getDocument()
         Toolbars.AllOff()
@@ -9062,25 +9092,9 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 
 
 def MENU_debug():
-    oDoc = LeenoUtils.getDocument()
-    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    end = SheetUtils.getLastUsedRow(oSheet)
-    for el in range(2, end):
-        if oSheet.getCellByPosition(9, el).CellStyle == 'comp sotto Euro Originale':
-            oSheet.getCellByPosition(9, el).Formula = '=I' + str(el+1) + '*H' + str(el+1)
+    description_upd()
     return
-    if os.altsep:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                            'leeno_version_code')
-        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.altsep +
-                                            'description.xml')
-    else:
-        code_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                            'leeno_version_code')
-        desc_file = uno.fileUrlToSystemPath(LeenO_path() + os.sep +
-                                            'description.xml')
-    f = open(code_file, 'r')
-    DLG.chi(f.readlines()[:7])
+            # ~newl.append('<version value="' + new + '" />')
     Ldev = str (int(f.readline().split('LeenO-')[1].split('-')[0].split('.')[-1]) + 1)
     tempo = ''.join(''.join(''.join(str(datetime.now()).split('.')[0].split(' ')).split('-')).split(':'))
     # ~of = open(code_file, 'w')

@@ -815,7 +815,7 @@ def avvia_IDE():
                          uno.fileUrlToSystemPath(LeenO_path()),
                          shell=True,
                          stdout=subprocess.PIPE)
-        subprocess.Popen('eric6 ' + dest + '/pyleeno.py',
+        subprocess.Popen('geany ' + dest + '/pyleeno.py',
                          shell=True,
                          stdout=subprocess.PIPE)
     elif sys.platform == 'win32':
@@ -9079,6 +9079,23 @@ def somma():
 
 
 ########################################################################
+
+def calendario():
+    #calendario
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    x = LeggiPosizioneCorrente()[0]
+    y = LeggiPosizioneCorrente()[1]
+    testo = Dialogs.pickDate()
+    lst = str(testo).split('-')
+    try:
+        testo = lst[2] + '/' + lst[1] + '/' + lst[0]
+        oSheet.getCellByPosition(x, y).String = testo
+    except:
+        pass
+    return
+
+########################################################################
 import LeenoContab
 import itertools
 import operator
@@ -9090,9 +9107,37 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 
-
 def MENU_debug():
-    description_upd()
+    
+    # ~ MENU_join_sheets()
+    # ~ return
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+    # ~flags = OBJECTS
+    # ~oSheet.getCellRangeByPosition(0, 0, 42, lr).clearContents(
+        # ~flags)
+    for i in reversed (range(1, lr)):
+        # ~if len (oSheet.getCellByPosition(0, i).String.split('.')) == 4 and \
+        # ~oSheet.getCellByPosition(1, i).String in oSheet.getCellByPosition(1, i + 1).String:
+        if oSheet.getCellByPosition(0, i).String == oSheet.getCellByPosition(0, i + 1).String:
+
+        # ~if oSheet.getCellByPosition(1, i).Type.value != 'EMPTY':
+            # ~oSheet.getCellByPosition(8, i).String = "CAM"
+
+        # ~ if oSheet.getCellByPosition(2, i).Type.value == 'EMPTY' or \
+         # ~ oSheet.getCellByPosition(2, i).String == 'Descrizione estesa':
+        # ~ if oSheet.getCellByPosition(5, i).Type.value != 'EMPTY':
+            # ~ oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(5, i).Value * oSheet.getCellByPosition(7, i).Value 
+
+        # ~ if oSheet.getCellByPosition(0, i).String == oSheet.getCellByPosition(0, i+1).String:
+            _gotoCella(0, i)
+            return
+            # ~DLG.chi(oSheet.getCellByPosition(1, i).String.split('.'))
+            # ~oSheet.getRows().removeByIndex(i, 1)
+
+        # ~else:
+            # ~DLG.chi('ihio')
     return
             # ~newl.append('<version value="' + new + '" />')
     Ldev = str (int(f.readline().split('LeenO-')[1].split('-')[0].split('.')[-1]) + 1)

@@ -9106,7 +9106,6 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
-
 def MENU_debug():
     
     # ~ MENU_join_sheets()
@@ -9133,6 +9132,8 @@ def MENU_debug():
         # ~ if oSheet.getCellByPosition(0, i).String == oSheet.getCellByPosition(0, i+1).String:
             _gotoCella(0, i)
             return
+        else:
+            _gotoCella(0, i)
             # ~DLG.chi(oSheet.getCellByPosition(1, i).String.split('.'))
             # ~oSheet.getRows().removeByIndex(i, 1)
 

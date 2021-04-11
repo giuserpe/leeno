@@ -622,7 +622,10 @@ def GeneraLibretto(oDoc):
     oSheet.getCellByPosition(20, daRiga).Value =  nPag  #Pagina
     oSheet.getCellByPosition(19, daRiga).Value= nLib    #Libretto
     oSheet.getCellByPosition(23, daRiga).Value= nSal    #SAL
-    oSheet.getCellByPosition(15, daRiga).Formula = "=Z" + str(daRiga + 1)
+    oSheet.getCellByPosition(15, daRiga).Formula =(
+        "=SUBTOTAL(9;$P$" + str(primariga + 2) + ":$P$" + str(
+        ultimariga + 2) + ")"
+        )
     oSheet.getCellByPosition(15, daRiga).CellStyle = "comp sotto Euro 3_R"
     oSheet.getCellByPosition(25, daRiga).Formula =(
         "=SUBTOTAL(9;$P$" + str(primariga + 2) + ":$P$" + str(

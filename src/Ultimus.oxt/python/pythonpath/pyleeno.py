@@ -9107,19 +9107,23 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
-    
-    # ~ MENU_join_sheets()
-    # ~ return
     oDoc = LeenoUtils.getDocument()
+    # ~oS = oDoc.getSheets().getByName('dcf')
+    # ~lst = []
+    # ~for i in range(1, 17514):
+        # ~lst.append(oS.getCellByPosition(0, i).String)
+
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lr = SheetUtils.getLastUsedRow(oSheet) + 1
-    # ~flags = OBJECTS
-    # ~oSheet.getCellRangeByPosition(0, 0, 42, lr).clearContents(
-        # ~flags)
+    lr = oDoc.CurrentSelection.CellAddress.Row
     for i in reversed (range(1, lr)):
-        # ~if len (oSheet.getCellByPosition(0, i).String.split('.')) == 4 and \
-        # ~oSheet.getCellByPosition(1, i).String in oSheet.getCellByPosition(1, i + 1).String:
-        if oSheet.getCellByPosition(0, i).String == oSheet.getCellByPosition(0, i + 1).String:
+        # ~if oSheet.getCellByPosition(7, i).String == "CAM":
+            # ~oSheet.getCellByPosition(0, i).String = oSheet.getCellByPosition(0, i).String + ".CAM"
+
+
+        if len (oSheet.getCellByPosition(0, i).String.split('.')) == 4 and \
+            oSheet.getCellByPosition(4, i).Type.value == 'EMPTY':
+        # ~if oSheet.getCellByPosition(0, i).String in lst:
 
         # ~if oSheet.getCellByPosition(1, i).Type.value != 'EMPTY':
             # ~oSheet.getCellByPosition(8, i).String = "CAM"
@@ -9130,10 +9134,11 @@ def MENU_debug():
             # ~ oSheet.getCellByPosition(4, i).Value = oSheet.getCellByPosition(5, i).Value * oSheet.getCellByPosition(7, i).Value 
 
         # ~ if oSheet.getCellByPosition(0, i).String == oSheet.getCellByPosition(0, i+1).String:
+            # ~ _gotoCella(0, i)
+            # ~ return
+        # ~ else:
             _gotoCella(0, i)
             return
-        else:
-            _gotoCella(0, i)
             # ~DLG.chi(oSheet.getCellByPosition(1, i).String.split('.'))
             # ~oSheet.getRows().removeByIndex(i, 1)
 

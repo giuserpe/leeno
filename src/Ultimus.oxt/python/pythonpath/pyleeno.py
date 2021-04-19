@@ -1284,7 +1284,7 @@ def Sincronizza_SottoCap_Tag_Capitolo_Cor(oSheet):
 ########################################################################
 
 
-def MENU_join_sheets():
+def MENU_unisci_fogli():
     '''
     unisci fogli
     serve per unire tanti fogli in un unico foglio
@@ -9115,15 +9115,20 @@ def MENU_debug():
 
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     lr = SheetUtils.getLastUsedRow(oSheet) + 1
-    lr = oDoc.CurrentSelection.CellAddress.Row
+    # ~lr = oDoc.CurrentSelection.CellAddress.Row
     for i in reversed (range(1, lr)):
         # ~if oSheet.getCellByPosition(7, i).String == "CAM":
             # ~oSheet.getCellByPosition(0, i).String = oSheet.getCellByPosition(0, i).String + ".CAM"
 
-
-        if len (oSheet.getCellByPosition(0, i).String.split('.')) == 4 and \
-            oSheet.getCellByPosition(4, i).Type.value == 'EMPTY':
+        try:
+            lst = oSheet.getCellByPosition(0, i).String.split('.')
+            if len (lst) == 3:
+                if len(lst[2]) < 3:
+                    oSheet.getCellByPosition(0, i).String = lst[0] + '.' + lst[1] + '.0' + lst[2]# + '.0' + lst[3]# + '.' + lst[4]
+        except:
+            pass
         # ~if oSheet.getCellByPosition(0, i).String in lst:
+        
 
         # ~if oSheet.getCellByPosition(1, i).Type.value != 'EMPTY':
             # ~oSheet.getCellByPosition(8, i).String = "CAM"
@@ -9137,8 +9142,8 @@ def MENU_debug():
             # ~ _gotoCella(0, i)
             # ~ return
         # ~ else:
-            _gotoCella(0, i)
-            return
+            # ~_gotoCella(0, i)
+            # ~return
             # ~DLG.chi(oSheet.getCellByPosition(1, i).String.split('.'))
             # ~oSheet.getRows().removeByIndex(i, 1)
 

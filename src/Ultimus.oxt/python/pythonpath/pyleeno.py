@@ -5734,9 +5734,6 @@ def rigenera_tutte(arg=None, ):
         try:
             oSheet = oDoc.Sheets.getByName(nome)
             row = LeenoSheetUtils.prossimaVoce(oSheet, 0, 1)
-            if oSheet.getCellByPosition(0, row).CellStyle in stili_cat:
-                while oSheet.getCellByPosition(0, lrow).CellStyle in C:
-                    lrow += 1
             oDoc.CurrentController.select(oSheet.getCellByPosition(0, row))
             last = LeenoSheetUtils.cercaUltimaVoce(oSheet)
             while row < last:
@@ -5744,9 +5741,6 @@ def rigenera_tutte(arg=None, ):
                 rigenera_voce(row)
                 # ~sistema_stili(row)
                 row = LeenoSheetUtils.prossimaVoce(oSheet, row, 1)
-                if oSheet.getCellByPosition(0, row).CellStyle in stili_cat:
-                    while oSheet.getCellByPosition(0, lrow).CellStyle in C:
-                        lrow += 1
         except Exception:
             pass
     rigenera_parziali(True)
@@ -5871,8 +5865,9 @@ def rigenera_parziali (arg=False):
 
     sopra = 4
     sotto = SheetUtils.getLastUsedRow(oSheet) + 1
+    lrow = LeggiPosizioneCorrente()[1]
+
     if arg == False:
-        lrow = LeggiPosizioneCorrente()[1]
         try:
             sopra = LeenoComputo.circoscriveVoceComputo(oSheet, lrow).RangeAddress.StartRow
         except:
@@ -5886,7 +5881,7 @@ def rigenera_parziali (arg=False):
     progress.setValue(n)
     progress.show()
     test = 1
-    if lrow:
+    if lrow == True:
         sopra = lrow 
     for i in range(sopra, sotto):
         n += 1
@@ -9107,6 +9102,7 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
+    # ~rigenera_tutte()
     oDoc = LeenoUtils.getDocument()
     # ~oS = oDoc.getSheets().getByName('dcf')
     # ~lst = []
@@ -9114,6 +9110,8 @@ def MENU_debug():
         # ~lst.append(oS.getCellByPosition(0, i).String)
 
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    lr = LeggiPosizioneCorrente()[1]
+    row = LeenoSheetUtils.prossimaVoce(oSheet, lr, 1)
     lr = SheetUtils.getLastUsedRow(oSheet) + 1
     # ~lr = oDoc.CurrentSelection.CellAddress.Row
     for i in reversed (range(1, lr)):

@@ -845,13 +845,13 @@ def GeneraRegistro(oDoc):
     oSheet.getCellByPosition(1, lastRow + 2).String = "Parziale dei Lavori a Misura €"
     oSheet.getCellByPosition(1, lastRow + 2).CellStyle = "Ultimus_destra"
     oSheet.getCellByPosition(8, lastRow + 2).Formula = (
-        '=SUBTOTAL(9;$I$2:$I$' + str(fineFirme))
+        '=SUBTOTAL(9;$I$2:$I$' + str(inizioFirme))
     oSheet.getCellByPosition(8, lastRow + 2).CellStyle = "Ultimus_destra_totali"
     
     oSheet.getCellByPosition(1, lastRow + 4).String = 'Lavori a tutto il ' + PL.oggi() + ' - T O T A L E   €'
     oSheet.getCellByPosition(1, lastRow + 4).CellStyle = "Ultimus_destra"
     oSheet.getCellByPosition(8, lastRow + 4).Formula = (
-        '=SUBTOTAL(9;$I$2:$I$' + str(fineFirme))
+        '=SUBTOTAL(9;$I$2:$I$' + str(inizioFirme))
     oSheet.getCellByPosition(8, lastRow + 4).CellStyle = "Ultimus_destra_totali"
 
     #applico gli stili corretti ad alcuni dati della firma
@@ -872,9 +872,9 @@ def GeneraRegistro(oDoc):
     # ~oSheet.getCellRangeByPosition(0, fineFirme, 9, fineFirme).CellStyle = "comp Descr"
     oSheet.getCellByPosition(1,fineFirme).String = "A   R I P O R T A R E"
     oSheet.getCellByPosition(8, fineFirme).Formula = (
-        '=IF(SUBTOTAL(9;$I$2:$I$' + str(fineFirme) + ')=0;"";SUBTOTAL(9;$I$2:$I$' + str(fineFirme))
-    oSheet.getCellByPosition(9, fineFirme).Formula = (
-        '=IF(SUBTOTAL(9;$J$2:$J$' + str(fineFirme) + ')=0;"";SUBTOTAL(9;$J$2:$J$' + str(fineFirme))
+        '=IF(SUBTOTAL(9;$I$2:$I$' + str(inizioFirme) + ')=0;"";SUBTOTAL(9;$I$2:$I$' + str(inizioFirme))
+    oSheet.getCellByPosition(9, inizioFirme).Formula = (
+        '=IF(SUBTOTAL(9;$J$2:$J$' + str(inizioFirme) + ')=0;"";SUBTOTAL(9;$J$2:$J$' + str(inizioFirme))
     oSheet.getCellRangeByPosition (0, fineFirme, 9, fineFirme).CellStyle = "Ultimus_Bordo_sotto"
 
     struttura_CONTAB()
@@ -987,12 +987,12 @@ def GeneraRegistro(oDoc):
 #torno su a completare...
     oSheet.getCellByPosition(1, lastRow + 2).String = "Parziale dei Lavori a Misura €"
     oSheet.getCellByPosition(5, lastRow + 2).Formula = (
-        '=SUBTOTAL(9;$F$2:$F$' + str(lastRow + 2))
+        '=SUBTOTAL(9;$F$' + str(insRow) + ':$F$' + str(lastRow + 2))
     rigaPsal = lastRow + 2
     
     oSheet.getCellByPosition(1, lastRow + 4).String = 'Lavori a tutto il ' + PL.oggi() + ' - T O T A L E   €'
     oSheet.getCellByPosition(5, lastRow + 4).Formula = (
-        '=SUBTOTAL(9;$F$2:$F$' + str(lastRow + 2))
+        '=SUBTOTAL(9;$F$' + str(insRow) + ':$F$' + str(lastRow + 2))
 
     progress.setValue(5)
 

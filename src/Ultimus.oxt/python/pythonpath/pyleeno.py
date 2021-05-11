@@ -9102,7 +9102,11 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
+    sistema_cose()
+    return
     # ~rigenera_tutte()
+    trova_ricorrenze()
+    return
     oDoc = LeenoUtils.getDocument()
     # ~oS = oDoc.getSheets().getByName('dcf')
     # ~lst = []

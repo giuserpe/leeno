@@ -76,7 +76,8 @@ def parseXML(data, defaultTitle=None):
 
     for articolo in articoli:
         # rimuovo il 'TOS20_' dal codice
-        codice = articolo.attrib['codice'].split('_')[1]
+        # ~codice = articolo.attrib['codice'].split('_')[1]
+        codice = articolo.attrib['codice']
 
         # divide il codice per ottenere i codici di supercategoria e categoria
         codiceSplit = codice.split('.')
@@ -103,7 +104,16 @@ def parseXML(data, defaultTitle=None):
 
         # giochino per garantire che la prima stringa abbia una lunghezza minima
         # in modo che LO formatti correttamente la cella
-        desc = LeenoImport.fixParagraphSize(desc)
+        # ~desc = LeenoImport.fixParagraphSize(desc)
+
+        # un po' di pulizia nel testo
+        desc = desc.replace(
+            '\t', ' ').replace('\n', ' ').replace('\n\n', '\n').replace('Ã¨', 'è').replace(
+                'Â°', '°').replace('Ã', 'à').replace(' $', '')
+        while '  ' in desc:
+            desc = desc.replace('  ', ' ')
+        while '\n\n' in desc:
+            desc = desc.replace('\n\n', '\n')
 
         um = articolo.find('um').text
         prezzo = articolo.find('prezzo').text

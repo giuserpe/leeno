@@ -322,13 +322,13 @@
             <value>com.sun.star.sheet.SpreadsheetDocument</value>
           </prop>
           <prop oor:name="URL" oor:type="xs:string">
-            <value>vnd.sun.star.script:UltimusFree2.Pulizia_0.DOPPIONI_TROVA_manuale?language=Basic&amp;location=application</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_doppioni</value>
           </prop>
           <prop oor:name="ImageIdentifier" oor:type="xs:string">
-            <value>%origin%/icons/image21</value>
+              <value>%origin%/icons/image21B</value>
           </prop>
           <prop oor:name="Title" oor:type="xs:string">
-            <value>Trova Codici Doppi in El.Prezzi</value>
+            <value>service:org.giuseppe-vizziello.leeno.dispatcher?pyleeno.MENU_doppioni</value>
           </prop>
           <prop oor:name="Target" oor:type="xs:string">
             <value>_self</value>

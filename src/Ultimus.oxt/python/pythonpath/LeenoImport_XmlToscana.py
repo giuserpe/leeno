@@ -218,7 +218,7 @@ def MENU_XML_toscana_import():
     oDoc.CurrentController.setActiveSheet(oSheet)
 
     # messaggio di ok
-    Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
+    # ~Dialogs.Ok(Text=f'Importate {len(dati["articoli"])} voci\ndi elenco prezzi')
 
     # nasconde la progressbar
     progress.hide()

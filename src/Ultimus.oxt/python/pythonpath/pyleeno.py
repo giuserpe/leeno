@@ -5880,19 +5880,20 @@ def rigenera_parziali (arg=False):
     n = 0
     progress.setValue(n)
     progress.show()
-    test = 1
+    test = sopra
     if lrow == True:
         sopra = lrow 
     for i in range(sopra, sotto):
         n += 1
         progress.setValue(n)
-        if test < 3:
+        if test < lrow +1:
+            test += 1
             if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
                 parziale_core(oSheet, i)
-                test += 1
         else:
-            progress.hide()
-            return
+            if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
+                parziale_core(oSheet, i)
+                break
     progress.hide()
     return
 

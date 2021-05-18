@@ -5858,6 +5858,7 @@ def rigenera_parziali (arg=False):
     Rigenera i parziali di tutte le voci
     '''
     oDoc = LeenoUtils.getDocument()
+    oDoc.enableAutomaticCalculation(False)
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     
     if oSheet.Name not in ('COMPUTO', 'CONTABILITA', 'VARIANTE'):
@@ -5893,6 +5894,7 @@ def rigenera_parziali (arg=False):
         else:
             if 'Parziale [' in oSheet.getCellByPosition(8, i).Formula:
                 parziale_core(oSheet, i)
+                oDoc.enableAutomaticCalculation(True)
                 break
     progress.hide()
     return
@@ -6662,6 +6664,9 @@ def vedi_voce_xpwe(oSheet, lrow, vRif):
                 um + ';" ";TEXT(' +
                 quantity + ';"0,00");"]";)')
     oSheet.getCellByPosition(2, lrow).Formula = sformula
+    # aggiunge commento, annotazione
+    oSheet.Annotations.insertNew(oSheet.getCellByPosition(2, lrow).CellAddress,
+    'Se non usi questo rigo di misura per il "Vedi voce precedente", eliminalo ed aggiungine uno nuovo.')
     oSheet.getCellByPosition(4, lrow).Formula = '=' + quantity
     if '-' in val:
         # ~if oSheet.Name == 'CONTABILITA':
@@ -9103,12 +9108,7 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
-    sistema_cose()
     return
-    # ~rigenera_tutte()
-    trova_ricorrenze()
-    return
-    oDoc = LeenoUtils.getDocument()
     # ~oS = oDoc.getSheets().getByName('dcf')
     # ~lst = []
     # ~for i in range(1, 17514):

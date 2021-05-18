@@ -96,14 +96,14 @@ def MessageBox(ParentWin, MsgText, MsgTitle, MsgType=MESSAGEBOX, MsgButtons=BUTT
 # [　入手元　]
 
 
-# ~def mri(target):
-    # ~'''
-    # ~@@ DA DOCUMENTARE... MA A CHE SERVE ???
-    # ~'''
-    # ~ctx = LeenoUtils.getComponentContext()
-    # ~mrii = ctx.ServiceManager.createInstanceWithContext('mytools.Mri', ctx)
-    # ~mrii.inspect(target)
-    # ~MsgBox('MRI in corso...', 'avviso')
+def mri(target):
+    '''
+    Inspector https://extensions.openoffice.org/project/MRI
+    '''
+    ctx = LeenoUtils.getComponentContext()
+    mrii = ctx.ServiceManager.createInstanceWithContext('mytools.Mri', ctx)
+    mrii.inspect(target)
+    MsgBox('MRI in corso...', 'avviso')
 
 
 #######################################################################

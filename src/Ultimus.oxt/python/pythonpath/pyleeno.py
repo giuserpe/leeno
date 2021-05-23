@@ -43,6 +43,7 @@ import LeenoToolbars as Toolbars
 import LeenoFormat
 import LeenoComputo
 import LeenoContab
+import LeenoAnalysis
 import LeenoDialogs as DLG
 import PersistUtils as PU
 import LeenoEvents
@@ -3510,6 +3511,8 @@ def MENU_firme_in_calce(lrowF=None):
         oSheet.getRows().insertByIndex(lrowF, 15)
         oSheet.getCellRangeByPosition(0, lrowF, 100, lrowF + 15 -
                                       1).CellStyle = "Ultimus_centro"
+        oSheet.getCellRangeByPosition(0, lrowF + 15 - 1, 100, lrowF + 15 -
+                                      1).CellStyle = "Comp-Bianche in mezzo Descr_R"
         # raggruppo i righi di mirura
         iSheet = oSheet.RangeAddress.Sheet
         oCellRangeAddr = uno.createUnoStruct(
@@ -8534,16 +8537,75 @@ def GetRegistryKeyContent(sKeyName, bForUpdate):
 
 
 ########################################################################
+
+
+def set_area_stampa():
+    ''' Imposta area di stampa il relazione all'elaborato da produrre'''
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    oSheet.removeAllManualPageBreaks()
+    ER = SheetUtils.getLastUsedRow(oSheet)
+
+    iSheet = oSheet.RangeAddress.Sheet
+    oTitles = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oTitles.Sheet = iSheet
+
+    if oSheet.Name in ("VARIANTE", "COMPUTO", "COMPUTO_print", 'Elenco Prezzi', 'CONTABILITA'):
+
+        oSheet.getCellByPosition(0, 2).Rows.Height = 800
+        SR = 2
+        EC = 41
+        # riga da ripetere
+        oTitles.StartRow = 2
+        oTitles.EndRow = 2
+        oSheet.setTitleRows(oTitles)
+        oSheet.setPrintTitleRows(True)
+        if oSheet.Name == 'Elenco Prezzi':
+            EC = 6
+        if oSheet.Name == 'CONTABILITA':
+            EC = 15
+            if oDoc.NamedRanges.hasByName('#Lib#1'):
+                return
+    if oSheet.Name in ('Analisi di Prezzo'):
+        EC = 7
+        SR = 1
+        ER -= 1
+        oSheet.setPrintTitleRows(False)
+# imposta area di stampa
+    oStampa = uno.createUnoStruct('com.sun.star.table.CellRangeAddress')
+    oStampa.Sheet = iSheet
+    oStampa.StartColumn = 0
+    oStampa.StartRow = SR
+    oStampa.EndColumn = EC
+    oStampa.EndRow = ER
+    oSheet.setPrintAreas((oStampa,))
+    return
+
+
+########################################################################
+
+
 def MENU_sistema_pagine():
     '''
     Configura intestazioni e pie' di pagina degli stili di stampa
     e propone un'anteprima
     '''
-    basic_LeenO('Finale.Set_Area_Stampa_N')
-    basic_LeenO('Finale.Pulisci_Tabella_Tutta')
     oDoc = LeenoUtils.getDocument()
     if not oDoc.getSheets().hasByName('M1'):
         return
+
+    set_area_stampa()
+
+    if Dialogs.YesNoDialog(Title='AVVISO!',
+    Text='''Vuoi attribuire il colore bianco allo sfondo delle celle?
+Le formattazioni dirette impostate durante il lavoro andranno perse.
+
+Per ripristinare i colori, tipici dei fogli di LeenO, basterà selezionare
+le celle ed usare "CTRL+M".
+
+Procedo cambiando i colori?''') == 1:
+        LeenoSheetUtils.SbiancaCellePrintArea()
+
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
     oSheet.removeAllManualPageBreaks()
     SheetUtils.visualizza_PageBreak()
@@ -8704,6 +8766,9 @@ def MENU_sistema_pagine():
         # bordo.LineWidth = 0
         # bordo.OuterLineWidth = 0
         # oAktPage.RightBorder = bordo
+    LeenoAnalysis.MENU_impagina_analisi()
+    last = SheetUtils.getUsedArea(oSheet).EndRow
+    oSheet.getCellRangeByPosition(1, 0, 41, last).Rows.OptimalHeight = True
     return
 
 
@@ -9108,6 +9173,9 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
+    LeenoAnalysis.MENU_impagina_analisi()
+    # ~set_area_stampa()
+    # ~MENU_sistema_pagine()
     return
     # ~oS = oDoc.getSheets().getByName('dcf')
     # ~lst = []

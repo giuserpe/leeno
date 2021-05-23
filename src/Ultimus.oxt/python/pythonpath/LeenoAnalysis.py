@@ -120,3 +120,15 @@ def copiaRigaAnalisi(oSheet, lrow):
             oSheet.copyRange(oCellAddress, oRangeAddress)
         oSheet.getCellByPosition(0, lrow).String = 'Cod. Art.?'
 
+def MENU_impagina_analisi():
+    PL.set_area_stampa()
+    oDoc = LeenoUtils.getDocument()
+    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
+    if oSheet.Name != 'Analisi di Prezzo':
+        return
+    lr = SheetUtils.getLastUsedRow(oSheet) + 1
+    oSheet.removeAllManualPageBreaks()
+    for el in range (1, lr):
+        if oSheet.getCellByPosition(0, el).String == '----':
+            if oSheet.getCellByPosition(0, el + 2).CellStyle != 'Ultimus_centro':
+                oSheet.getCellByPosition(0, el + 2).Rows.IsStartOfNewPage = True

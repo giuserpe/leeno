@@ -1,20 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="celle" script:language="StarBasic">rem ***** BASIC *****
-rem questa funziona solo se la cella ha già una annotazione
-function add_nota &apos;(icol as integer, irow as integer, testo as string)
-	oSel = thisComponent.getCurrentSelection
-	&apos;isheet=oSel.celladdress.sheet
-	icol=oSel.celladdress.column
-	irow=oSel.celladdress.row
- 	oSheet = ThisComponent.currentController.activeSheet
-	cella=oSheet.getCellByPosition(icol,irow)
-	cella.annotation.setString(&quot;&quot;)
-end function
-sub fds
-add_nota (8,15,&quot;prova&quot;)
-end sub
-
 rem controlla l&apos;appartenenza di una cella ad un range
 sub intersect
 sheet = ThisComponent.Sheets.GetByName(&quot;CONTABILITA&quot;)

@@ -7295,6 +7295,39 @@ def computo_terra_terra():
 
 
 ########################################################################
+
+
+def catalogo_stili_cella():
+    '''
+    Apre un nuovo foglio e vi inserisce tutti gli stili di cella
+    con relativo esempio
+    '''
+    oDoc = LeenoUtils.getDocument()
+    sty = oDoc.StyleFamilies.getByName("CellStyles").getElementNames()
+    if oDoc.Sheets.hasByName("stili"):
+        oSheet = oDoc.Sheets.getByName("stili")
+    else:
+        sheet = oDoc.createInstance("com.sun.star.sheet.Spreadsheet")
+        unione = oDoc.Sheets.insertByName('stili', sheet)
+        oSheet = oDoc.Sheets.getByName("stili")
+    GotoSheet("stili")
+    # attiva la progressbar
+    progress = Dialogs.Progress(Title='Stili cella', Text="Scrittura in corso...")
+    progress.setLimits(0, len(sty))
+    progress.show()
+    i = 0
+    sty = sorted(sty)
+    for el in sty:
+        oSheet.getCellByPosition( 0, i).String = el
+        oSheet.getCellByPosition( 1, i).CellStyle = el
+        oSheet.getCellByPosition( 3, i).CellStyle = el
+        oSheet.getCellByPosition( 1, i).Value = 2000.00
+        oSheet.getCellByPosition( 3, i).String = "LeenO"
+        i += 2
+        progress.setValue(i)
+    progress.hide()
+
+
 def elimina_stili_cella():
     '''
     @@ DA DOCUMENTARE
@@ -9173,6 +9206,8 @@ from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tos
 # ~from xml.etree.ElementTree import ElementTree, ParseError
 from xml.etree.ElementTree import ElementTree, Element, SubElement, Comment, tostring
 def MENU_debug():
+    catalogo_stili_cella()
+    return
     LeenoAnalysis.MENU_impagina_analisi()
     # ~set_area_stampa()
     # ~MENU_sistema_pagine()

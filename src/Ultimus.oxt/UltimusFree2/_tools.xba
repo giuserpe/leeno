@@ -189,35 +189,6 @@ rem	+ com.sun.star.sheet.CellFlags.EDITATTR)
 &apos;	oSheet1.Protect &quot;&quot;
 End Sub
 
-sub stili_cella rem crea una sheet e vi inserisce tutti gli stili di cella con relativo esempio
-	dim sty()
-	dim Doc as object
-	dim Sheet as object
-	sty()=Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getElementNames()
-	Doc = ThisComponent
-	If Doc.Sheets.hasByName(&quot;stili&quot;) Then
-		Sheet = Doc.Sheets.getByName(&quot;stili&quot;)
-		Else
-		Sheet = Doc.createInstance(&quot;com.sun.star.sheet.Spreadsheet&quot;)
-		Doc.Sheets.insertByName(&quot;stili&quot;, Sheet)
-		Sheet = Doc.Sheets.getByName(&quot;stili&quot;)
-	End If
-	ThisComponent.CurrentController.Select(Sheet.getCellByPosition(0,0))
-	imax=UBound(sty())
-	i =0
-	for each el in BubbleSortlist(sty())
-		Sheet.getCellByPosition( 0, i).setstring(el)
-		Sheet.getCellByPosition( 1, i).cellstyle = el
-		Sheet.getCellByPosition( 3, i).cellstyle = el
-		Sheet.getCellByPosition( 1, i).setvalue(2000,00)
-		Sheet.getCellByPosition( 3, i).String =&quot;LeenO&quot;
-		oStile = Thiscomponent.StyleFamilies.getByName(&quot;CellStyles&quot;).getByName(sty(i))
-	i=i+2
-	Barra_Apri_Chiudi_5(&quot; Restano &quot;&amp; imax-i &amp;&quot; righe...&quot;, 0)
-	next	
-print &quot;ok&quot;
-end sub
-
 SUB Elimina_Nomi_Area_errati &apos;nome eloquente
 	Dim Doc As Object
 	Dim Sheet As Object
@@ -252,45 +223,6 @@ ELIMINA_I_NOMI_DI_AREA_ERRATI:
  Next
 	Doc.Sheets.removeByName(&quot;duplicati&quot;)
 END SUB
-
-SUB DOLO rem SOLO MANUTENZIONE
-	&apos;if not ThisComponent.NamedRanges.hasByName(&quot;Serv_gen1_8&quot;) then
-&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$88:$L$88&quot; , &quot;manodopera&quot;)
-&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$89:$L$89&quot; , &quot;materiali&quot;)
-&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$90:$L$90&quot; , &quot;noli&quot;)
-&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$91:$L$91&quot; , &quot;trasporti&quot;)
-&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$92:$L$92&quot; , &quot;altre_forniture&quot;)
-		rem VECCHIO BLOCCO ANALISI_BART
-		rem BLOCCO ANALISI AVCP
-&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot;, &quot;$B$115:$O$115&quot; , &quot;riga_analisi&quot;)
-&apos;		ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Elenco Prezzi&quot;, &quot;$A$3:$R$1065&quot; , &quot;elenco_prezzi&quot;)
-Exit Sub
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;Temp&quot;, &quot;$C$1:$C$18&quot; , &quot;nome_CC2&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$B$108:$P$133&quot; , &quot;blocco_analisi&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$D$4&quot; , &quot;Bozza_8&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$C$19&quot; , &quot;data_prog_8&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$E$4&quot; , &quot;oData_8&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$C$4&quot; , &quot;progetto_8&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$B$116:$O$116&quot; , &quot;riga_analisi&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$A$9:$AP12&quot; , &quot;Serv_gen1_8&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$A$23:$AW$27&quot; , &quot;Serv_gen_cont&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;M1&quot; , &quot;$B$4&quot; , &quot;Super_ego_8&quot;)
-ScriptPy(&quot;LeenoBasicBridge.py&quot;,&quot;rifa_nomearea&quot;, ThisComponent, &quot;S5&quot; , &quot;$B$128:$O$128&quot; , &quot;utili&quot;)
- oDoc = ThisComponent
- oAree=oDoc.NamedRanges&apos;
-END Sub
-
-sub ripara_computo
-	oSheet = ThisComponent.Sheets.getByName(&quot;COMPUTO&quot;)
-	lLastUrow = getLastUsedRow(oSheet)
-	print lLastUrow
-	for i= 0 to lLastUrow
-		if oSheet.getCellByPosition(17, i).cellstyle = &quot;Comp-sotto euri&quot; then &apos;importo sicurezza
-			oSheet.getCellByPosition(17 , i).setformula(&quot;=J&quot; &amp; i+1 &amp; &quot;*AB&quot; &amp; i+1)
-		end if
-	next
-	
-end Sub
 
 sub ripara_analisi_ rem cerrate - ho escluso la manodopera dalle maggiorazioni
 	oSheet = ThisComponent.Sheets.getByName(&quot;Analisi di Prezzo&quot;)

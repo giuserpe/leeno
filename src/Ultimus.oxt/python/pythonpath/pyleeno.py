@@ -8669,8 +8669,9 @@ Procedo cambiando i colori?''') == 1:
     SheetUtils.visualizza_PageBreak()
 
     #  committente = oDoc.NamedRanges.Super_ego_8.ReferredCells.String
-    # committente = oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String  # committente
-    # luogo = oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
+    oggetto = oDoc.getSheets().getByName('S2').getCellRangeByName("C3").String + '\n\n'
+    committente = "\nCommittente: " + oDoc.getSheets().getByName('S2').getCellRangeByName("C6").String
+    luogo = '\nLocalità: ' + oDoc.getSheets().getByName('S2').getCellRangeByName("C4").String
 
     # try:
     #    oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
@@ -8733,7 +8734,7 @@ Procedo cambiando i colori?''') == 1:
         if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo',
                                     'PageStyle_COMPUTO_A4',
                                     'PageStyle_Elenco Prezzi'):
-            htxt = 8.0
+            htxt = 8.0 / 100 * oAktPage.PageScale
             # if oAktPage.DisplayName in ('PageStyle_Analisi di Prezzo'):
             #     htxt = 10.0
             bordo = oAktPage.TopBorder
@@ -8750,12 +8751,6 @@ Procedo cambiando i colori?''') == 1:
             bordo.LineWidth = 0
             bordo.OuterLineWidth = 0
             oAktPage.LeftBorder = bordo
-            # bordo lato destro attivo in attesa di LibreOffice 6.2
-            #  bordo = oAktPage.RightBorder
-            #  bordo.Color = 0
-            #  bordo.LineWidth = 2
-            #  bordo.OuterLineWidth = 2
-            #  oAktPage.RightBorder = bordo
             # Adatto lo zoom alla larghezza pagina
             oAktPage.PageScale = 0
             oAktPage.ScaleToPagesX = 1
@@ -8764,23 +8759,28 @@ Procedo cambiando i colori?''') == 1:
             # ~HEADER
             oHeader = oAktPage.RightPageHeaderContent
             # ~oAktPage.PageScale = 95
-            # oHLText = oHeader.LeftText.Text.String = committente
-            # oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            # oHRText = oHeader.LeftText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
-            # oHRText = oHeader.RightText.Text.String = luogo
-            # oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            # oHRText = oHeader.RightText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
+            oHLText = oHeader.LeftText.Text.String = committente
+            oHRText = oHeader.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHRText = oHeader.LeftText.Text.Text.CharHeight = htxt
+
+            oHLText = oHeader.CenterText.Text.String = oggetto
+            oHRText = oHeader.CenterText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHRText = oHeader.CenterText.Text.Text.CharHeight = htxt
+
+            oHRText = oHeader.RightText.Text.String = luogo
+            oHRText = oHeader.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
+            oHRText = oHeader.RightText.Text.Text.CharHeight = htxt
 
             oAktPage.RightPageHeaderContent = oHeader
             # ~FOOTER
             oFooter = oAktPage.RightPageFooterContent
             oHLText = oFooter.CenterText.Text.String = ''
             nomefile = oDoc.getURL().replace('%20',' ')
-            oHLText = oFooter.LeftText.Text.String = "realizzato con LeenO.org\n" + os.path.basename(nomefile)
+            oHLText = oFooter.LeftText.Text.String = "\nrealizzato con LeenO" # + os.path.basename(nomefile)
             oHLText = oFooter.LeftText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
+            oHLText = oFooter.LeftText.Text.Text.CharHeight = htxt
             oHLText = oFooter.RightText.Text.Text.CharFontName = 'Liberation Sans Narrow'
-            oHLText = oFooter.RightText.Text.Text.CharHeight = htxt  # / 100 * oAktPage.PageScale
+            oHLText = oFooter.RightText.Text.Text.CharHeight = htxt
             # ~oHLText = oFooter.RightText.Text.String = '#/##'
             oAktPage.RightPageFooterContent = oFooter
 

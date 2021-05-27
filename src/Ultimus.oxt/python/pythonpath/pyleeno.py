@@ -6734,14 +6734,33 @@ def strall(el, n=3, pos=0):
 
 
 ########################################################################
+
+
+def setFormatoNumeri(valore):
+    '''
+    valore   { integer } : id formato
+    attribuisce alla selezione di celle un formato numerico a scelta
+    valore = 36 (dd/mm/yyyy)
+    '''
+
+    ctx = LeenoUtils.getComponentContext()
+    desktop = LeenoUtils.getDesktop()
+    oFrame = desktop.getCurrentFrame()
+    dispatchHelper = ctx.ServiceManager.createInstanceWithContext(
+        'com.sun.star.frame.DispatchHelper', ctx)
+    oProp = PropertyValue()
+    oProp.Name = 'NumberFormatValue'
+    oProp.Value = valore
+    properties = (oProp, )
+    dispatchHelper.executeDispatch(oFrame, '.uno:NumberFormatValue', '', 0,
+                                   properties)
+
 def MENU_converti_stringhe():
     '''
-    Converte in numeri le stinghe o viceversa.
+    Converte in numeri le stringhe o viceversa.
     '''
     oDoc = LeenoUtils.getDocument()
     oSheet = oDoc.getSheets().getByName(oDoc.CurrentController.ActiveSheet.Name)
-    # ctx = LeenoUtils.getComponentContext()
-    # desktop = LeenoUtils.getDesktop()
     try:
         sRow = oDoc.getCurrentSelection().getRangeAddresses()[0].StartRow
         sCol = oDoc.getCurrentSelection().getRangeAddresses()[0].StartColumn
@@ -6752,14 +6771,18 @@ def MENU_converti_stringhe():
         sCol = oDoc.getCurrentSelection().getRangeAddress().StartColumn
         eRow = oDoc.getCurrentSelection().getRangeAddress().EndRow
         eCol = oDoc.getCurrentSelection().getRangeAddress().EndColumn
-    # oRange = oSheet.getCellRangeByPosition(sCol, sRow, eCol, eRow)
     for y in range(sCol, eCol + 1):
         for x in range(sRow, eRow + 1):
             try:
                 if oSheet.getCellByPosition(y, x).Type.value == 'TEXT':
-                    oSheet.getCellByPosition(y, x).Value = float(
-                        oSheet.getCellByPosition(y,
-                                                 x).String.replace(',', '.'))
+                    if '/' in oSheet.getCellByPosition(y, x).String:
+                        setNumberFormat(36) #imposta il formato numerico data dd/mm/yyyy
+                        oSheet.getCellByPosition(y, x).Formula = '=DATEVALUE("' + oSheet.getCellByPosition(y, x).String + '")'
+                        oSheet.getCellByPosition(y, x).Value = oSheet.getCellByPosition(y, x).Value
+                    else:
+                        oSheet.getCellByPosition(y, x).Value = float(
+                            oSheet.getCellByPosition(y,
+                                                x).String.replace(',', '.'))
                 else:
                     oSheet.getCellByPosition(
                         y, x).String = oSheet.getCellByPosition(y, x).String
@@ -6769,6 +6792,8 @@ def MENU_converti_stringhe():
 
 
 ########################################################################
+
+
 def ssUltimus():
     '''
     Scrive la variabile globale che individua il Documento Principale (DCC)
